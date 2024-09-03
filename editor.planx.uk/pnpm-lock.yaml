@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.1
     version: 1.0.0-alpha.1
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d46df8d
-    version: github.com/theopensystemslab/planx-core/d46df8d(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#931d4db
+    version: github.com/theopensystemslab/planx-core/931d4db(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -9260,7 +9260,7 @@ packages:
     dev: true
 
   /batch@0.6.1:
-    resolution: {integrity: sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=}
+    resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
     dev: true
 
   /bfj@7.1.0:
@@ -9400,7 +9400,7 @@ packages:
     dev: true
 
   /bytes@3.0.0:
-    resolution: {integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=}
+    resolution: {integrity: sha512-pMhOfFDPiv9t5jjIXkHosWmkSyQbvsgEVNkz0ERHbuLh2T/7j4Mqqpz523Fe8MVY89KC6Sh/QfS2sM+SjgFDcw==}
     engines: {node: '>= 0.8'}
     dev: true
 
@@ -21379,9 +21379,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/d46df8d(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d46df8d}
-    id: github.com/theopensystemslab/planx-core/d46df8d
+  github.com/theopensystemslab/planx-core/931d4db(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/931d4db}
+    id: github.com/theopensystemslab/planx-core/931d4db
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
