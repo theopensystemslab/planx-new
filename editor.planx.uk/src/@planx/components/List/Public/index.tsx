@@ -60,8 +60,7 @@ const ActiveListCard: React.FC<{
     }
   }, []);
 
-  // TODO - hide "Cancel" button on initial card
-  const _isInitialCard =
+  const isInitialCard =
     activeIndex === 0 && formik.values?.schemaData?.length === 1;
 
   return (
@@ -87,11 +86,19 @@ const ActiveListCard: React.FC<{
           <Button
             variant="contained"
             color="primary"
+            data-testid="save-item-button"
             onClick={async () => await saveItem()}
           >
             Save
           </Button>
-          {!isPageComponent && <Button onClick={cancelEditItem}>Cancel</Button>}
+          {!isPageComponent && !isInitialCard && (
+            <Button
+              data-testid="cancel-edit-item-button"
+              onClick={cancelEditItem}
+            >
+              Cancel
+            </Button>
+          )}
         </Box>
       </ListCard>
     </ErrorWrapper>
