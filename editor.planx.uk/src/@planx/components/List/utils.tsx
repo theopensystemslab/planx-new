@@ -44,19 +44,22 @@ export function formatSchemaDisplayValue(
       return matchingOption?.data.text;
     }
     case "map": {
-      const feature = value[0];
       return (
         <>
           {/* @ts-ignore */}
           <my-map
             id="inactive-list-map"
             basemap={field.data.mapOptions?.basemap}
-            geojsonData={JSON.stringify(feature)}
+            geojsonData={JSON.stringify({
+              type: "FeatureCollection",
+              features: value,
+            })}
             geojsonColor={field.data.mapOptions?.drawColor}
             geojsonFill
             geojsonBuffer={20}
-            osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+            osProxyEndpoint={`${
+              import.meta.env.VITE_APP_API_URL
+            }/proxy/ordnance-survey`}
             hideResetControl
             staticMode
             style={{ width: "100%", height: "30vh" }}
@@ -165,9 +168,9 @@ export function flatten<T extends Record<string, any>>(
 
     return isObject && depth > 0
       ? {
-        ...acc,
-        ...flatten(value, { depth: depth - 1, path: newPath, separator }),
-      }
+          ...acc,
+          ...flatten(value, { depth: depth - 1, path: newPath, separator }),
+        }
       : { ...acc, [newPath]: value };
   }, {} as T);
 }

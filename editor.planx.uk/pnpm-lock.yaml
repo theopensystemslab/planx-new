@@ -44,8 +44,8 @@ dependencies:
     specifier: ^5.15.11
     version: 5.15.11(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: 1.0.0-alpha.1
-    version: 1.0.0-alpha.1
+    specifier: 1.0.0-alpha.2
+    version: 1.0.0-alpha.2
   '@opensystemslab/planx-core':
     specifier: git+https://github.com/theopensystemslab/planx-core#d46df8d
     version: github.com/theopensystemslab/planx-core/d46df8d(@types/react@18.2.45)
@@ -5610,13 +5610,13 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@1.0.0-alpha.1:
-    resolution: {integrity: sha512-T8foDyKS18algLun1uV4o4j0VL+TfsvNL0YnqKj26E8m6x6RMx6gbo5njjRH0bRnj14E8IsLaRN546fGoZhrWw==}
+  /@opensystemslab/map@1.0.0-alpha.2:
+    resolution: {integrity: sha512-S7amFaUpI3C+/8UKc/EO2JTysV2S300ANFDVUzSb2KWyZSPyQUBOgiy+RWJhrOQmjTozbopLwCbaZY+sAURXLQ==}
     dependencies:
       '@turf/union': 7.0.0
       accessible-autocomplete: 2.0.4
       file-saver: 2.0.5
-      govuk-frontend: 5.4.1
+      govuk-frontend: 5.6.0
       jspdf: 2.5.1
       lit: 3.1.4
       ol: 9.2.4
@@ -12505,8 +12505,8 @@ packages:
     dependencies:
       get-intrinsic: 1.2.4
 
-  /govuk-frontend@5.4.1:
-    resolution: {integrity: sha512-Gmd8LV++TRh9OF6tA+9KQTpwvlsLcri7qRjViz9ji4YuwZvX+c9TD7tyE+dnJcqsQsJfhr9Fp38m3Hu3H7EIcQ==}
+  /govuk-frontend@5.6.0:
+    resolution: {integrity: sha512-yNA4bL7i7mNrg36wPNZ3RctHo9mjl82Phs8MWs1lwovxJuQ4ogEo/XWn2uB1HxkXNqgMlW4wnd0iiKgRMfxYfw==}
     engines: {node: '>= 4.2.0'}
     dev: false
 

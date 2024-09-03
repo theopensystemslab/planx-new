@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { Feature, GeoJsonObject } from "geojson";
+import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -163,11 +163,18 @@ const PlotFeatureToBegin = () => (
 );
 
 const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps, errors } =
-    useMapAndLabelContext();
+  const {
+    validateAndSubmitForm,
+    mapAndLabelProps,
+    errors,
+    addFeature,
+    schema,
+    formik,
+  } = useMapAndLabelContext();
   const {
     title,
     description,
+    fn,
     info,
     policyRef,
     howMeasured,
@@ -178,19 +185,28 @@ const Root = () => {
     latitude,
     longitude,
     boundaryBBox,
+    previouslySubmittedData,
   } = mapAndLabelProps;
 
-  const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
-  const { addFeature, schema } = useMapAndLabelContext();
+  const previousFeatures = previouslySubmittedData?.data?.[
+    fn
+  ] as FeatureCollection;
+  const [features, setFeatures] = useState<Feature[] | undefined>(
+    previousFeatures?.features?.length > 0
+      ? previousFeatures.features
+      : undefined,
+  );
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
+        formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
         addFeature();
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
+        formik.setFieldValue("geoData", undefined);
       }
     };
 
@@ -228,6 +244,13 @@ const Root = () => {
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
+              drawGeojsonData={
+                features &&
+                JSON.stringify({
+                  type: "FeatureCollection",
+                  features: features,
+                })
+              }
               drawMany
               drawColor={drawColor}
               drawType={drawType}
@@ -299,7 +322,7 @@ function MapAndLabelComponent(props: Props) {
       {...props}
       latitude={latitude}
       longitude={longitude}
-      boundaryBBox={teamSettings.boundaryBBox}
+      boundaryBBox={teamSettings?.boundaryBBox}
     />
   );
 }
