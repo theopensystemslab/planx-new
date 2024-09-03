@@ -84,3 +84,15 @@ export const createChecklist = async (
   }
   await page.locator("button").filter({ hasText: "Create checklist" }).click();
 };
+
+export const createTextInput = async (
+  page: Page,
+  locatingNode: Locator,
+  inputTitle: string,
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.locator("select").selectOption({ label: "Text Input" });
+  await page.getByPlaceholder("Title").fill(inputTitle);
+  await page.locator("button").filter({ hasText: "Create text-input" }).click();
+};
