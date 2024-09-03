@@ -1,16 +1,21 @@
-import { test, expect, Browser } from "@playwright/test";
+import { Browser, expect, test } from "@playwright/test";
+import type { Context } from "../context";
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
 } from "../context";
 import {
-  createAuthenticatedSession,
   answerQuestion,
   clickContinue,
+  createAuthenticatedSession,
 } from "../globalHelpers";
-import type { Context } from "../context";
-import { getTeamPage, isGetUserRequest } from "./helpers";
+import {
+  createNotice,
+  createQuestionWithOptions,
+  getTeamPage,
+  isGetUserRequest,
+} from "./helpers";
 
 test.describe("Navigation", () => {
   let context: Context = {
@@ -52,7 +57,7 @@ test.describe("Navigation", () => {
     let isRepeatedRequestMade = false;
     page.on(
       "request",
-      (req) => (isRepeatedRequestMade = isGetUserRequest(req)),
+      (req) => (isRepeatedRequestMade = isGetUserRequest(req))
     );
 
     Promise.all([
@@ -102,42 +107,33 @@ test.describe("Navigation", () => {
     // update context to allow flow to be torn down
     context.flow = { ...serviceProps };
 
-    await page.locator("li.hanger > a").click();
-    await page.getByRole("dialog").waitFor();
-
     const questionText = "Is this a test?";
-    await page.getByPlaceholder("Text").fill(questionText);
-
-    await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").fill("Yes");
-
-    await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").nth(1).fill("No");
-
-    await page.locator("button").filter({ hasText: "Create question" }).click();
+    await createQuestionWithOptions(page, "li.hanger > a", questionText, [
+      "Yes",
+      "No",
+    ]);
     await expect(
-      page.locator("a").filter({ hasText: questionText }),
+      page.locator("a").filter({ hasText: questionText })
     ).toBeVisible();
 
     // Add a notice to the "Yes" path
     const yesBranch = page.locator("#flow .card .options .option").nth(0);
-    await yesBranch.locator(".hanger > a").click();
-    await page.getByRole("dialog").waitFor();
 
-    await page.locator("select").selectOption({ label: "Notice" });
     const yesBranchNoticeText = "Yes! this is a test";
-    await page.getByPlaceholder("Notice").fill(yesBranchNoticeText);
-    await page.locator("button").filter({ hasText: "Create notice" }).click();
+    await createNotice(
+      page,
+      yesBranch.locator(".hanger > a"),
+      yesBranchNoticeText
+    );
 
     // Add a notice to the "No" path
     const noBranch = page.locator("#flow .card .options .option").nth(1);
-    await noBranch.locator(".hanger > a").click();
-    await page.getByRole("dialog").waitFor();
-
-    await page.locator("select").selectOption({ label: "Notice" });
     const noBranchNoticeText = "Sorry, this is a test";
-    await page.getByPlaceholder("Notice").fill(noBranchNoticeText);
-    await page.locator("button").filter({ hasText: "Create notice" }).click();
+    await createNotice(
+      page,
+      noBranch.locator(".hanger > a"),
+      noBranchNoticeText
+    );
 
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
@@ -156,7 +152,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
     );
 
     await expect(page.getByText("Not Found")).toBeVisible();
@@ -190,11 +186,11 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
     );
 
     await expect(
-      page.getByRole("heading", { level: 1, name: "Offline" }),
+      page.getByRole("heading", { level: 1, name: "Offline" })
     ).toBeVisible();
   });
 
@@ -213,7 +209,7 @@ test.describe("Navigation", () => {
     page.getByLabel("Offline").click();
     page.getByRole("button", { name: "Save", disabled: false }).click();
     await expect(
-      page.getByText("Service settings updated successfully"),
+      page.getByText("Service settings updated successfully")
     ).toBeVisible();
 
     // Exit back to main Editor page
@@ -236,13 +232,13 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
     );
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });
     await expect(
-      page.locator("h1", { hasText: "Yes! this is a test" }),
+      page.locator("h1", { hasText: "Yes! this is a test" })
     ).toBeVisible();
 
     await page.getByTestId("backButton").click();
@@ -250,7 +246,7 @@ test.describe("Navigation", () => {
     await answerQuestion({ page, title: "Is this a test?", answer: "No" });
     await clickContinue({ page });
     await expect(
-      page.locator("h1", { hasText: "Sorry, this is a test" }),
+      page.locator("h1", { hasText: "Sorry, this is a test" })
     ).toBeVisible();
   });
 });
