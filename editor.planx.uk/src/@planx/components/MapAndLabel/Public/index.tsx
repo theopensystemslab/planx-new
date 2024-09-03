@@ -62,8 +62,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
           onChange={(_e, newValue) => {
             editFeature(parseInt(newValue, 10));
           }}
-          // TODO!
-          aria-label="Vertical tabs example"
+          aria-label="Select a feature to enter data"
           sx={{ borderRight: 1, borderColor: "divider" }}
         >
           {features.map((feature, i) => (
@@ -87,6 +86,8 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             key={`tabpanel-${i}`}
             value={i.toString()}
             sx={{ width: "100%" }}
+            aria-labelledby={`vertical-tab-${i}`}
+            id={`vertical-tabpanel-${i}`}
           >
             <Box
               sx={{
@@ -241,6 +242,7 @@ const Root = () => {
             {/* @ts-ignore */}
             <my-map
               id="map-and-label-map"
+              data-testid="map-and-label-map"
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
