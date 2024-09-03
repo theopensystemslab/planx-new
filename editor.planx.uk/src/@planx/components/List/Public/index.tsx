@@ -60,6 +60,10 @@ const ActiveListCard: React.FC<{
     }
   }, []);
 
+  // TODO - hide "Cancel" button on initial card
+  const _isInitialCard =
+    activeIndex === 0 && formik.values?.schemaData?.length === 1;
+
   return (
     <ErrorWrapper
       error={errors.unsavedItem ? "Please save in order to continue" : ""}
