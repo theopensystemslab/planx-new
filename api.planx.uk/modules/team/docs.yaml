@@ -23,26 +23,6 @@ components:
           type: string
           enum: ["teamViewer", "teamEditor"]
 paths:
-  /team/{teamSlug}/add-member:
-    put:
-      summary: Add user to team, and assign them a role
-      description: "Requires authentication via a Cloudflare WARP client
-        \n\n
-        Please login at [https://api.editor.planx.uk/team](https://api.editor.planx.uk/team)"
-      tags: ["team"]
-      parameters:
-        - $ref: "#/components/parameters/teamSlug"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpsertMember"
-      responses:
-        "200":
-          $ref: "#/components/responses/SuccessMessage"
-        "500":
-          $ref: "#/components/responses/ErrorMessage"
   /team/{teamSlug}/change-member-role:
     patch:
       summary: Change role of an existing team member

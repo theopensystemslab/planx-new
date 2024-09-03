@@ -101,7 +101,7 @@ const presentationalComponents: {
   [TYPES.InternalPortal]: undefined,
   [TYPES.FileUploadAndLabel]: FileUploadAndLabel,
   [TYPES.List]: List,
-  [TYPES.MapAndLabel]: undefined,
+  [TYPES.MapAndLabel]: MapAndLabel,
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
@@ -353,6 +353,16 @@ function List(props: ComponentProps) {
     <>
       <Box component="dt">{props.node.data.title}</Box>
       <Box component="dd">{summary}</Box>
+    </>
+  );
+}
+
+function MapAndLabel(props: ComponentProps) {
+  const geojson = props.passport.data?.[props.node.data.fn];
+  return (
+    <>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd">{`${geojson?.features?.length || 0} features`}</Box>
     </>
   );
 }
