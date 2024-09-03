@@ -37,7 +37,7 @@ export const createQuestionWithOptions = async (
   page: Page,
   locatingNodeSelector: string,
   questionText: string,
-  options: string[]
+  options: string[],
 ) => {
   await page.locator(locatingNodeSelector).click();
   await page.getByRole("dialog").waitFor();
@@ -56,7 +56,7 @@ export const createQuestionWithOptions = async (
 export const createNotice = async (
   page: Page,
   locatingNode: Locator,
-  noticeText: string
+  noticeText: string,
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -69,7 +69,7 @@ export const createChecklist = async (
   page: Page,
   locatingNode: Locator,
   checklistTitle: string,
-  checklistOptions: string[]
+  checklistOptions: string[],
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -88,7 +88,7 @@ export const createChecklist = async (
 export const createTextInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string
+  inputTitle: string,
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -101,7 +101,7 @@ export const createNumberInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputUnits: string
+  inputUnits: string,
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -117,7 +117,7 @@ export const createNumberInput = async (
 export const createDateInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string
+  inputTitle: string,
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
