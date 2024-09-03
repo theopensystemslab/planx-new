@@ -66,7 +66,7 @@ export const Trees: Schema = {
         title: "Where is it? Plot as many as apply",
         fn: "features",
         mapOptions: {
-          basemap: "OSVectorTile",
+          basemap: "MapboxSatellite",
           drawType: "Point",
           drawColor: "#66ff00",
           drawMany: true,
