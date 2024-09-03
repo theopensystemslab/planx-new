@@ -11,6 +11,7 @@ import {
   createAuthenticatedSession,
 } from "../globalHelpers";
 import {
+  createChecklist,
   createNotice,
   createQuestionWithOptions,
   getTeamPage,
@@ -135,10 +136,20 @@ test.describe("Navigation", () => {
       noBranchNoticeText
     );
 
+    // add a checklist
+    // TODO: find a nicer way to find the next node
+    const nextNode = page.locator(".hanger > a").nth(5);
+    createChecklist(page, nextNode, "A checklist title", [
+      "Checklist item 1",
+      "Second checklist item",
+      "The third checklist item",
+    ]);
+
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
     await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
+    await expect(nodes.getByText("Checklist item 1")).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({

@@ -64,3 +64,23 @@ export const createNotice = async (
   await page.getByPlaceholder("Notice").fill(noticeText);
   await page.locator("button").filter({ hasText: "Create notice" }).click();
 };
+
+export const createChecklist = async (
+  page: Page,
+  locatingNode: Locator,
+  checklistTitle: string,
+  checklistOptions: string[]
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.locator("select").selectOption({ label: "Checklist" });
+  await page.getByPlaceholder("Text").fill(checklistTitle);
+
+  let index = 0;
+  for (const option of checklistOptions) {
+    await page.locator("button").filter({ hasText: "add new option" }).click();
+    await page.getByPlaceholder("Option").nth(index).fill(option);
+    index++;
+  }
+  await page.locator("button").filter({ hasText: "Create checklist" }).click();
+};
