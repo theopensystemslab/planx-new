@@ -5,7 +5,7 @@ import { getSessionData, getTeamEmailSettings } from "../email/service.js";
 export async function downloadApplicationFiles(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   const sessionId: string = req.params?.sessionId;
   if (!sessionId || !req.query?.email || !req.query?.localAuthority) {
@@ -17,10 +17,10 @@ export async function downloadApplicationFiles(
 
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
-    const { sendToEmail } = await getTeamEmailSettings(
-      req.query.localAuthority as string,
+    const { notifyPersonalisation } = await getTeamEmailSettings(
+      req.query.localAuthority as string
     );
-    if (sendToEmail !== req.query.email) {
+    if (notifyPersonalisation.sendToEmail !== req.query.email) {
       return next({
         status: 403,
         message:

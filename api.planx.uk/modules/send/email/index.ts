@@ -11,7 +11,7 @@ import {
 export async function sendToEmail(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -28,9 +28,9 @@ export async function sendToEmail(
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { sendToEmail, notifyPersonalisation } =
+    const { notifyPersonalisation } =
       await getTeamEmailSettings(localAuthority);
-    if (!sendToEmail) {
+    if (!notifyPersonalisation.sendToEmail) {
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
@@ -47,13 +47,17 @@ export async function sendToEmail(
         serviceName: flowName,
         sessionId: payload.sessionId,
         applicantEmail: email,
-        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${sendToEmail}&localAuthority=${localAuthority}`,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${notifyPersonalisation.sendToEmail}&localAuthority=${localAuthority}`,
         ...notifyPersonalisation,
       },
     };
 
     // Send the email
-    const response = await sendEmail("submit", sendToEmail, config);
+    const response = await sendEmail(
+      "submit",
+      notifyPersonalisation.sendToEmail,
+      config
+    );
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
     markSessionAsSubmitted(payload.sessionId);
@@ -62,14 +66,14 @@ export async function sendToEmail(
     insertAuditEntry(
       payload.sessionId,
       localAuthority,
-      sendToEmail,
+      notifyPersonalisation.sendToEmail,
       config,
-      response,
+      response
     );
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: sendToEmail,
+      inbox: notifyPersonalisation.sendToEmail,
       govuk_notify_template: "Submit",
     });
   } catch (error) {
