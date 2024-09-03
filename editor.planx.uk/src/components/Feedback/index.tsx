@@ -362,7 +362,7 @@ const Feedback: React.FC = () => {
     const commentFormInputs: FeedbackFormInput[] = [
       {
         name: "userComment",
-        label: "What's you comment?",
+        label: "What's your comment?",
         id: "comment-input",
       },
     ];
