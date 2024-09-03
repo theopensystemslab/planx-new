@@ -21,7 +21,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   const editableFeatures = props.formik.values.schemaData?.[props.activeIndex]
     ?.features as Feature[];
   const [features, setFeatures] = useState<Feature[] | undefined>(
-    editableFeatures.length > 0 ? editableFeatures : undefined,
+    editableFeatures?.length > 0 ? editableFeatures : undefined,
   );
 
   useEffect(() => {
