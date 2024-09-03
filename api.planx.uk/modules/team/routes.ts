@@ -6,11 +6,6 @@ import { validate } from "../../shared/middleware/validate.js";
 const router = Router();
 
 router.use("/team/", AuthMiddleware.usePlatformAdminAuth);
-router.put(
-  "/team/:teamSlug/add-member",
-  validate(Controller.upsertMemberSchema),
-  Controller.addMember,
-);
 router.patch(
   "/team/:teamSlug/change-member-role",
   validate(Controller.upsertMemberSchema),
