@@ -396,6 +396,7 @@ describe("Building a list", () => {
     async () => {
       const {
         getByLabelText,
+        getByText,
         user,
         queryByText,
         getByTestId,
@@ -433,7 +434,7 @@ describe("Building a list", () => {
       await user.click(secondCancelButton);
 
       expect(queryByText("my.new.email@test.com")).not.toBeInTheDocument();
-      expect(secondEmail).toBeInTheDocument();
+      expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
     },
   );
 });
