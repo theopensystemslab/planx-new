@@ -13,6 +13,7 @@ import {
 import {
   createChecklist,
   createNotice,
+  createNumberInput,
   createQuestionWithOptions,
   createTextInput,
   getTeamPage,
@@ -149,12 +150,16 @@ test.describe("Navigation", () => {
     nextNode = page.locator(".hanger > a").nth(7);
     await createTextInput(page, nextNode, "Tell us about your trees.");
 
+    nextNode = page.locator(".hanger > a").nth(8);
+    await createNumberInput(page, nextNode, "How old are you?", "years");
+
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
     await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
     await expect(nodes.getByText("Checklist item 1")).toBeVisible();
     await expect(nodes.getByText("Tell us about your trees.")).toBeVisible();
+    await expect(nodes.getByText("How old are you?")).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({
