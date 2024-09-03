@@ -70,6 +70,11 @@ const ActiveListCard: React.FC<{
           {!isPageComponent && ` ${i + 1}`}
         </Typography>
         <SchemaFields
+          sx={(theme) => ({
+            display: "flex",
+            flexDirection: "column",
+            gap: theme.spacing(2),
+          })}
           schema={schema}
           activeIndex={activeIndex}
           formik={formik}
