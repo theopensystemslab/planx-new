@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import type { MapField } from "@planx/components/shared/Schema/model";
 import { Feature } from "geojson";
@@ -11,7 +12,7 @@ import { getFieldProps, Props } from ".";
 export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   const {
     formik,
-    data: { title, mapOptions },
+    data: { title, description, mapOptions },
   } = props;
   const { id, errorMessage, name } = getFieldProps(props);
 
@@ -47,6 +48,11 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
 
   return (
     <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
+      {description && (
+        <Typography variant="body2" mb={1.5}>
+          {description}
+        </Typography>
+      )}
       <ErrorWrapper error={errorMessage} id={id}>
         <MapContainer environment="standalone">
           {/* @ts-ignore */}

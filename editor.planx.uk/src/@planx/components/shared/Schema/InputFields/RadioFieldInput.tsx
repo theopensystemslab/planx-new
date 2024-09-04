@@ -1,6 +1,7 @@
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
+import Typography from "@mui/material/Typography";
 import type { QuestionField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -26,6 +27,11 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
       >
         {data.title}
       </FormLabel>
+      {data.description && (
+        <Typography variant="body2" mb={1.5}>
+          {data.description}
+        </Typography>
+      )}
       <ErrorWrapper id={`${id}-error`} error={errorMessage}>
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${id}`}

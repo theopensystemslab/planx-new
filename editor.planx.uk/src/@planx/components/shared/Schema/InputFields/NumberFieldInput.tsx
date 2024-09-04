@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import type { NumberField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
@@ -15,6 +16,11 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
+      {data.description && (
+        <Typography variant="body2" mb={1.5}>
+          {data.description}
+        </Typography>
+      )}
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
           {...fieldProps}

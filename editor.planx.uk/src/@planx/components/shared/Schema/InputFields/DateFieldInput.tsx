@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { paddedDate } from "@planx/components/DateInput/model";
 import type { DateField } from "@planx/components/shared/Schema/model";
 import React from "react";
@@ -13,6 +14,11 @@ export const DateFieldInput: React.FC<Props<DateField>> = (props) => {
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
+      {data.description && (
+        <Typography variant="body2" mb={1.5}>
+          {data.description}
+        </Typography>
+      )}
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <DateInput
           value={value?.toString()}

@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import type { TextField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
@@ -13,6 +14,11 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
+      {data.description && (
+        <Typography variant="body2" mb={1.5}>
+          {data.description}
+        </Typography>
+      )}
       <Input
         {...fieldProps}
         onChange={formik.handleChange}
