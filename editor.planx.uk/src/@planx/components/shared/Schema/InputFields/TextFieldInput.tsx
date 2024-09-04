@@ -1,4 +1,3 @@
-import Typography from "@mui/material/Typography";
 import type { TextField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
@@ -6,6 +5,7 @@ import Input from "ui/shared/Input";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const fieldProps = getFieldProps(props);
@@ -15,9 +15,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   return (
     <InputLabel label={data.title} htmlFor={id}>
       {data.description && (
-        <Typography variant="body2" mb={1.5}>
-          {data.description}
-        </Typography>
+        <FieldInputDescription description={data.description} />
       )}
       <Input
         {...fieldProps}

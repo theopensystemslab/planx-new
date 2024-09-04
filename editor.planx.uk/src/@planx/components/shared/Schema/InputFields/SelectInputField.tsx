@@ -1,5 +1,4 @@
 import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
 import type { QuestionField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput";
@@ -7,6 +6,7 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { data, formik } = props;
@@ -15,9 +15,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   return (
     <InputLabel label={data.title} id={`select-label-${id}`}>
       {data.description && (
-        <Typography variant="body2" mb={1.5}>
-          {data.description}
-        </Typography>
+        <FieldInputDescription description={data.description} />
       )}
       <ErrorWrapper id={`${id}-error`} error={errorMessage}>
         <SelectInput

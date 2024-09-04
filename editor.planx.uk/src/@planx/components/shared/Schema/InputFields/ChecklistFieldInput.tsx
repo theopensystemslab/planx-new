@@ -1,5 +1,4 @@
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import type { ChecklistField } from "@planx/components/shared/Schema/model";
 import React from "react";
@@ -8,6 +7,7 @@ import ChecklistItem from "ui/shared/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
   const {
@@ -39,11 +39,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
 
   return (
     <InputLabel label={title} id={`checklist-label-${id}`}>
-      {description && (
-        <Typography variant="body2" mb={1.5}>
-          {description}
-        </Typography>
-      )}
+      {description && <FieldInputDescription description={description} />}
       <ErrorWrapper error={errorMessage} id={id}>
         <Grid container component="fieldset">
           <legend style={visuallyHidden}>{title}</legend>
