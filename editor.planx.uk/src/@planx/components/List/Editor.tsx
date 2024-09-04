@@ -20,8 +20,10 @@ import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
 import { ExistingAndProposedUsesGLA } from "./schemas/GLA/ExistingAndProposedUses";
 import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
+import { ParkingGLA } from "./schemas/GLA/ParkingGLA";
 import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { MaterialDetails } from "./schemas/Materials";
+import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
@@ -63,6 +65,8 @@ export const SCHEMAS = [
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
   { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
+  { name: "Parking details", schema: Parking },
+  { name: "Parking details (GLA)", schema: ParkingGLA },
   ...(hasFeatureFlag("TREES")
     ? [
         { name: "Trees", schema: Trees },
