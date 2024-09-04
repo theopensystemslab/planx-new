@@ -137,7 +137,6 @@ export const createAddressInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-
   inputDataField: string
 ) => {
   await locatingNode.click();
@@ -151,3 +150,22 @@ export const createAddressInput = async (
     .filter({ hasText: "Create address-input" })
     .click();
 };
+
+export const createContactInput = async (
+  page: Page,
+  locatingNode: Locator,
+  inputTitle: string,
+  inputDataField: string
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.locator("select").selectOption({ label: "Contact Input" });
+  await page.getByPlaceholder("Title").fill(inputTitle);
+  await page.getByPlaceholder("Data Field").fill(inputDataField);
+
+  await page
+    .locator("button")
+    .filter({ hasText: "Create contact-input" })
+    .click();
+};
+

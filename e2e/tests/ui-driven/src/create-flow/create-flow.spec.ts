@@ -13,6 +13,7 @@ import {
 import {
   createAddressInput,
   createChecklist,
+  createContactInput,
   createDateInput,
   createNotice,
   createNumberInput,
@@ -161,12 +162,21 @@ test.describe("Navigation", () => {
     nextNode = page.locator(".hanger > a").nth(9);
     await createDateInput(page, nextNode, "When is your birthday?");
 
-    // add a address input
-    nextNode = page.locator(".hanger > a").nth(9);
+    // add an address input
+    nextNode = page.locator(".hanger > a").nth(10);
     await createAddressInput(
       page,
       nextNode,
       "What is your address?",
+      "some data field"
+    );
+
+    // add a contact input
+    nextNode = page.locator(".hanger > a").nth(11);
+    await createContactInput(
+      page,
+      nextNode,
+      "What is your contact info?",
       "some data field"
     );
 
@@ -179,6 +189,8 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("How old are you?")).toBeVisible();
     await expect(nodes.getByText("When is your birthday?")).toBeVisible();
     await expect(nodes.getByText("What is your address?")).toBeVisible();
+    await expect(nodes.getByText("What is your contact info?")).toBeVisible();
+
   });
 
   test("Cannot preview an unpublished flow", async ({
