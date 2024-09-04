@@ -120,10 +120,7 @@ const InactiveListCard: React.FC<{
       <Table>
         <TableBody>
           {schema.fields.map((field, j) => (
-            <TableRow
-              key={`tableRow-${j}`}
-              sx={{ "& > *": { verticalAlign: "top" } }}
-            >
+            <TableRow key={`tableRow-${j}`} sx={{ verticalAlign: "top" }}>
               <TableCell
                 sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, maxWidth: "100px" }}
               >
