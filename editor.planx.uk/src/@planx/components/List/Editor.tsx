@@ -29,6 +29,7 @@ import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Remov
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { Trees } from "./schemas/Trees";
+import { TreesMapFirst } from "./schemas/TreesMapFirst";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -62,7 +63,12 @@ export const SCHEMAS = [
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },
   { name: "Open spaces (GLA)", schema: OpenSpaceGLA },
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
-  ...(hasFeatureFlag("TREES") ? [{ name: "Trees", schema: Trees }] : []),
+  ...(hasFeatureFlag("TREES")
+    ? [
+        { name: "Trees", schema: Trees },
+        { name: "Trees (Map first)", schema: TreesMapFirst },
+      ]
+    : []),
 ];
 
 function ListComponent(props: Props) {

@@ -41,8 +41,8 @@ export const contextDefaults: Context = {
     },
     settings: {
       homepage: "planx.uk",
+      submissionEmail: "simulate-delivered@notifications.service.gov.uk",
     },
-    submissionEmail: "simulate-delivered@notifications.service.gov.uk",
   },
 };
 
@@ -58,9 +58,9 @@ export async function setUpTestContext(
     context.team.id = await $admin.team.create({
       slug: context.team.slug,
       name: context.team.name,
-      submissionEmail: context.team.submissionEmail,
       settings: {
         homepage: context.team.settings?.homepage,
+        submissionEmail: context.team.submissionEmail,
       },
     });
   }

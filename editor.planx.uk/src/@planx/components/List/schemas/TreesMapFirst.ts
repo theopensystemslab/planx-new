@@ -1,9 +1,22 @@
 import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-export const Trees: Schema = {
+export const TreesMapFirst: Schema = {
   type: "Tree",
   fields: [
+    {
+      type: "map",
+      data: {
+        title: "Where is it? Plot as many as apply",
+        fn: "features",
+        mapOptions: {
+          basemap: "MapboxSatellite",
+          drawType: "Point",
+          drawColor: "#66ff00",
+          drawMany: true,
+        },
+      },
+    },
     {
       type: "text",
       data: {
@@ -58,19 +71,6 @@ export const Trees: Schema = {
       data: {
         title: "Expected completion date",
         fn: "completionDate",
-      },
-    },
-    {
-      type: "map",
-      data: {
-        title: "Where is it? Plot as many as apply",
-        fn: "features",
-        mapOptions: {
-          basemap: "MapboxSatellite",
-          drawType: "Point",
-          drawColor: "#66ff00",
-          drawMany: true,
-        },
       },
     },
   ],

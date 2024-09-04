@@ -11,14 +11,11 @@ export const DateFieldInput: React.FC<Props<DateField>> = (props) => {
   const { data, formik } = props;
   const { id, errorMessage, name, value } = getFieldProps(props);
 
-  if (typeof value !== "string")
-    throw Error("'value' prop for DateFieldInput must be of type string");
-
   return (
     <InputLabel label={data.title} htmlFor={id}>
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <DateInput
-          value={value}
+          value={value?.toString()}
           bordered
           onChange={(newDate: string, eventType: string) => {
             formik.setFieldValue(name, paddedDate(newDate, eventType));

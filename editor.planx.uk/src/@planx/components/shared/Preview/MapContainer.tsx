@@ -10,7 +10,7 @@ interface MapContainerProps {
 
 export const MapContainer = styled(Box)<MapContainerProps>(
   ({ theme, environment, size }) => ({
-    padding: theme.spacing(1, 0, 1, 0),
+    padding: theme.spacing(0.5, 0, 0.5, 0),
     width: "100%",
     maxWidth: "none",
     "& my-map": {

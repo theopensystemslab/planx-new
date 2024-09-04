@@ -3,13 +3,14 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Tab from "@mui/material/Tab";
+import { lighten, styled } from "@mui/material/styles";
+import Tab, { tabClasses, TabProps } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { Feature, GeoJsonObject } from "geojson";
+import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -39,6 +40,20 @@ function a11yProps(index: number) {
   };
 }
 
+const StyledTab = styled((props: TabProps) => (
+  <Tab {...props} disableFocusRipple disableTouchRipple disableRipple />
+))<TabProps>(({ theme }) => ({
+  textTransform: "none",
+  textAlign: "right",
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  fontSize: theme.typography.body1.fontSize,
+  minWidth: "120px",
+  [`&.${tabClasses.selected}`]: {
+    background: lighten(theme.palette.border.light, 0.2),
+    color: theme.palette.text.primary,
+  },
+})) as typeof Tab;
+
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
@@ -62,21 +77,28 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
           onChange={(_e, newValue) => {
             editFeature(parseInt(newValue, 10));
           }}
-          // TODO!
-          aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider" }}
+          aria-label="Select a feature to enter data"
+          TabIndicatorProps={{
+            style: {
+              width: "4px",
+            },
+          }}
+          sx={{
+            borderRight: 1,
+            borderColor: (theme) => theme.palette.border.main,
+          }}
         >
           {features.map((feature, i) => (
-            <Tab
+            <StyledTab
               key={`tab-${i}`}
               value={i.toString()}
               label={`${schema.type} ${feature.properties?.label}`}
+              disableRipple
+              disableTouchRipple
               {...a11yProps(i)}
               {...(isFeatureInvalid(i) && {
                 sx: (theme) => ({
-                  borderRight: `12px solid ${theme.palette.error.main}`,
-                  // Appear over tab indicator
-                  zIndex: 2,
+                  borderLeft: `5px solid ${theme.palette.error.main}`,
                 }),
               })}
             />
@@ -87,6 +109,8 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             key={`tabpanel-${i}`}
             value={i.toString()}
             sx={{ width: "100%" }}
+            aria-labelledby={`vertical-tab-${i}`}
+            id={`vertical-tabpanel-${i}`}
           >
             <Box
               sx={{
@@ -97,7 +121,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               }}
             >
               <Box>
-                <Typography component="h2" variant="h3">
+                <Typography component="h2" variant="h3" gutterBottom>
                   {`${schema.type} ${feature.properties?.label}`}
                 </Typography>
                 <Typography variant="body2" mb={2}>
@@ -163,11 +187,18 @@ const PlotFeatureToBegin = () => (
 );
 
 const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps, errors } =
-    useMapAndLabelContext();
+  const {
+    validateAndSubmitForm,
+    mapAndLabelProps,
+    errors,
+    addFeature,
+    schema,
+    formik,
+  } = useMapAndLabelContext();
   const {
     title,
     description,
+    fn,
     info,
     policyRef,
     howMeasured,
@@ -178,19 +209,28 @@ const Root = () => {
     latitude,
     longitude,
     boundaryBBox,
+    previouslySubmittedData,
   } = mapAndLabelProps;
 
-  const [features, setFeatures] = useState<Feature[] | undefined>(undefined);
-  const { addFeature, schema } = useMapAndLabelContext();
+  const previousFeatures = previouslySubmittedData?.data?.[
+    fn
+  ] as FeatureCollection;
+  const [features, setFeatures] = useState<Feature[] | undefined>(
+    previousFeatures?.features?.length > 0
+      ? previousFeatures.features
+      : undefined,
+  );
 
   useEffect(() => {
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
       if (geojson["EPSG:3857"]?.features) {
         setFeatures(geojson["EPSG:3857"].features);
+        formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
         addFeature();
       } else {
         // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
         setFeatures(undefined);
+        formik.setFieldValue("geoData", undefined);
       }
     };
 
@@ -225,9 +265,17 @@ const Root = () => {
             {/* @ts-ignore */}
             <my-map
               id="map-and-label-map"
+              data-testid="map-and-label-map"
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
+              drawGeojsonData={
+                features &&
+                JSON.stringify({
+                  type: "FeatureCollection",
+                  features: features,
+                })
+              }
               drawMany
               drawColor={drawColor}
               drawType={drawType}
@@ -299,7 +347,7 @@ function MapAndLabelComponent(props: Props) {
       {...props}
       latitude={latitude}
       longitude={longitude}
-      boundaryBBox={teamSettings.boundaryBBox}
+      boundaryBBox={teamSettings?.boundaryBBox}
     />
   );
 }
