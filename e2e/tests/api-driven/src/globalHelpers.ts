@@ -2,7 +2,7 @@ import { TEST_EMAIL } from "../../ui-driven/src/helpers/globalHelpers";
 import { $admin } from "./client";
 
 export function createTeam(
-  args?: Partial<Parameters<typeof $admin.team.create>[0]>
+  args?: Partial<Parameters<typeof $admin.team.create>[0]>,
 ) {
   return safely(() =>
     $admin.team.create({
@@ -13,12 +13,12 @@ export function createTeam(
         homepage: "http://www.planx.uk",
       },
       ...args,
-    })
+    }),
   );
 }
 
 export function createUser(
-  args?: Partial<Parameters<typeof $admin.user.create>[0]>
+  args?: Partial<Parameters<typeof $admin.user.create>[0]>,
 ) {
   return safely(() =>
     $admin.user.create({
@@ -26,18 +26,18 @@ export function createUser(
       lastName: "Test",
       email: TEST_EMAIL,
       ...args,
-    })
+    }),
   );
 }
 
 export function createFlow(
-  args: Omit<Parameters<typeof $admin.flow.create>[0], "data">
+  args: Omit<Parameters<typeof $admin.flow.create>[0], "data">,
 ) {
   return safely(() =>
     $admin.flow.create({
       data: { dummy: "flowData " },
       ...args,
-    })
+    }),
   );
 }
 

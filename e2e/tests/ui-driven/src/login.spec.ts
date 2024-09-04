@@ -67,7 +67,7 @@ test.describe("Login", () => {
       route.continue();
     });
     await expect(
-      page.locator("h1").filter({ hasText: "Services" })
+      page.locator("h1").filter({ hasText: "Services" }),
     ).toBeVisible();
     await expect(page.getByText(toastText)).toBeHidden();
   });

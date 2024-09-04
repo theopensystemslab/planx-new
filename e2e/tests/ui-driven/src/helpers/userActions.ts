@@ -203,7 +203,7 @@ export async function answerFindProperty(page: Page) {
 
 async function setupOSMockResponse(page: Page) {
   const ordnanceSurveryPlacesEndpoint = new RegExp(
-    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/
+    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/,
   );
   await page.route(ordnanceSurveryPlacesEndpoint, async (route) => {
     await route.fulfill({
@@ -225,7 +225,7 @@ export async function answerContactInput(
     lastName: string;
     phoneNumber: string;
     email: string;
-  }
+  },
 ) {
   await page.getByLabel("First name").fill(firstName);
   await page.getByLabel("Last name").fill(lastName);

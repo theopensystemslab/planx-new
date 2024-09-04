@@ -71,7 +71,7 @@ export async function getPaymentRequestBySessionId({
             }
           }
         `,
-        { sessionId }
+        { sessionId },
       );
     return paymentRequests[0];
   } catch (e) {

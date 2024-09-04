@@ -74,9 +74,9 @@ export async function setFeatureFlag(page: Page, featureFlag: string) {
     (featureFlag: string) =>
       window.localStorage.setItem(
         "FEATURE_FLAGS",
-        JSON.stringify([featureFlag])
+        JSON.stringify([featureFlag]),
       ),
-    featureFlag
+    featureFlag,
   );
 }
 
@@ -95,7 +95,7 @@ export async function addSessionToContext(page: Page, context: Context) {
 
 export async function waitForPaymentResponse(
   page: Page,
-  context: Context
+  context: Context,
 ): Promise<{ paymentId: string; state?: { status: string } }> {
   const { payment_id: paymentId, state } = await page
     .waitForResponse((response) => {
@@ -135,7 +135,7 @@ export async function modifyFlow({
       flowId: context.flow!.id,
       userId: context.user!.id,
       data: modifiedFlow,
-    }
+    },
   );
 }
 export const isGetUserRequest = (req: Request) =>
