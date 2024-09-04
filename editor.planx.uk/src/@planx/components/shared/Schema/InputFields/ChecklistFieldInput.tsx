@@ -7,10 +7,11 @@ import ChecklistItem from "ui/shared/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
   const {
-    data: { title, options },
+    data: { title, description, options },
     formik,
   } = props;
   const { id, errorMessage, name, value } = getFieldProps(props);
@@ -38,6 +39,7 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
 
   return (
     <InputLabel label={title} id={`checklist-label-${id}`}>
+      {description && <FieldInputDescription description={description} />}
       <ErrorWrapper error={errorMessage} id={id}>
         <Grid container component="fieldset">
           <legend style={visuallyHidden}>{title}</legend>

@@ -7,6 +7,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import BasicRadio from "../../Radio/BasicRadio";
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { data, formik } = props;
@@ -26,6 +27,9 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
       >
         {data.title}
       </FormLabel>
+      {data.description && (
+        <FieldInputDescription description={data.description} />
+      )}
       <ErrorWrapper id={`${id}-error`} error={errorMessage}>
         <RadioGroup
           aria-labelledby={`radio-buttons-group-label-${id}`}

@@ -85,6 +85,7 @@ export type MapField = {
   type: "map";
   data: {
     title: string;
+    description?: string;
     fn: string;
     mapOptions?: {
       basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
