@@ -1,18 +1,19 @@
-import { test, expect, Page, APIRequestContext } from "@playwright/test";
+import { PaymentRequest, Session } from "@opensystemslab/planx-core/types";
+import { APIRequestContext, Page, expect, test } from "@playwright/test";
+import { GraphQLClient, gql } from "graphql-request";
 import { v4 as uuidV4 } from "uuid";
-import { fillGovUkCardDetails, cards } from "../globalHelpers";
-import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   Context,
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "../context";
-import { mockPaymentRequestDetails, mockSessionData } from "./mocks";
-import { GraphQLClient, gql } from "graphql-request";
-import { PaymentRequest, Session } from "@opensystemslab/planx-core/types";
+} from "../helpers/context";
+import { cards } from "../helpers/globalHelpers";
+import { fillGovUkCardDetails } from "../helpers/userActions";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import { getPaymentRequestBySessionId } from "./helpers";
+import { mockPaymentRequestDetails, mockSessionData } from "./mocks";
 
 let context: Context = {
   ...contextDefaults,
@@ -48,10 +49,10 @@ test.describe("Nominee journey @regression", async () => {
     await navigateToPaymentRequestPage(paymentRequest, page);
 
     await expect(
-      page.getByRole("heading", { name: "Pay for your application" }),
+      page.getByRole("heading", { name: "Pay for your application" })
     ).toBeVisible();
     await expect(
-      page.locator("#main-content").getByText("Invite to pay test"),
+      page.locator("#main-content").getByText("Invite to pay test")
     ).toBeVisible();
     await expect(page.getByText("123, Test Street, Testville")).toBeVisible();
 
@@ -123,7 +124,7 @@ test.describe("Nominee journey @regression", async () => {
 
 async function navigateToPaymentRequestPage(
   paymentRequest: PaymentRequest,
-  page: Page,
+  page: Page
 ) {
   const paymentRequestURL = `/${context.team!.slug!}/${context.flow!
     .slug!}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
@@ -132,7 +133,7 @@ async function navigateToPaymentRequestPage(
 }
 
 async function setupPaymentRequest(
-  request: APIRequestContext,
+  request: APIRequestContext
 ): Promise<
   Record<"paymentRequest", PaymentRequest> & Record<"sessionId", string>
 > {
@@ -184,13 +185,13 @@ async function createSession({
  */
 async function createPaymentRequest(
   request: APIRequestContext,
-  sessionId: string,
+  sessionId: string
 ) {
   const response = await request.post(
     `http://localhost:${process.env.API_PORT}/invite-to-pay/${sessionId}`,
     {
       data: mockPaymentRequestDetails,
-    },
+    }
   );
   return response.json();
 }

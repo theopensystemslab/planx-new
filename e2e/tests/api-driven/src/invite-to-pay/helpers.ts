@@ -1,20 +1,20 @@
-import { CustomWorld } from "./steps";
-import axios from "axios";
-import { readFileSync } from "node:fs";
 import type {
   FlowGraph,
   PaymentRequest,
 } from "@opensystemslab/planx-core/types";
+import axios from "axios";
+import gql from "graphql-tag";
+import { readFileSync } from "node:fs";
+import { TEST_EMAIL } from "../../../ui-driven/src/helpers/globalHelpers";
+import { $admin } from "../client";
+import { createTeam, createUser } from "../globalHelpers";
 import {
   inviteToPayFlowGraph,
-  sendNodeWithDestination,
   mockBreadcrumbs,
   mockPassport,
+  sendNodeWithDestination,
 } from "./mocks";
-import { $admin } from "../client";
-import { TEST_EMAIL } from "../../../ui-driven/src/globalHelpers";
-import { createTeam, createUser } from "../globalHelpers";
-import gql from "graphql-tag";
+import { CustomWorld } from "./steps";
 
 export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
@@ -67,7 +67,7 @@ export async function buildSessionForFlow(flowId: string): Promise<string> {
 }
 
 export async function buildPaymentRequestForSession(
-  sessionId: string,
+  sessionId: string
 ): Promise<PaymentRequest> {
   await $admin.session.lock(sessionId);
   return $admin.paymentRequest.create({
@@ -80,14 +80,14 @@ export async function buildPaymentRequestForSession(
 }
 
 export async function markPaymentRequestAsPaid(
-  paymentRequestId: string,
+  paymentRequestId: string
 ): Promise<boolean> {
   return await $admin.paymentRequest._markAsPaid(paymentRequestId);
 }
 
 export async function getSendResponse(
   destination: string,
-  sessionId: string,
+  sessionId: string
 ): Promise<unknown> {
   switch (destination.toLowerCase()) {
     case "bops":
@@ -127,7 +127,7 @@ export async function waitForResponse({
 }
 
 export async function getSessionSubmittedAt(
-  sessionId: string,
+  sessionId: string
 ): Promise<string | undefined> {
   const detailedSession = await $admin.session.findDetails(sessionId);
   return detailedSession?.submittedAt;
@@ -180,7 +180,7 @@ const setupMockBopsSubmissionUrl = async (teamId: number) => {
     {
       teamId,
       stagingBopsSubmissionUrl: "http://mock-server:8080",
-    },
+    }
   );
 };
 

@@ -1,11 +1,11 @@
-import { test, expect } from "@playwright/test";
-import { createAuthenticatedSession } from "./globalHelpers";
+import { expect, test } from "@playwright/test";
+import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./context";
-import type { Context } from "./context";
+} from "./helpers/context";
+import { createAuthenticatedSession } from "./helpers/globalHelpers";
 
 test.describe("Login", () => {
   let context: Context = {
@@ -67,7 +67,7 @@ test.describe("Login", () => {
       route.continue();
     });
     await expect(
-      page.locator("h1").filter({ hasText: "Services" }),
+      page.locator("h1").filter({ hasText: "Services" })
     ).toBeVisible();
     await expect(page.getByText(toastText)).toBeHidden();
   });

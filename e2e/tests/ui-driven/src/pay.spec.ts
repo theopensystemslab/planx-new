@@ -1,23 +1,22 @@
-import { test, expect } from "@playwright/test";
-import {
-  cards,
-  fillGovUkCardDetails,
-  getSessionId,
-  log,
-  submitCardDetails,
-  waitForPaymentResponse,
-} from "./globalHelpers";
-import type { Page } from "@playwright/test";
-import payFlow from "./mocks/flows/pay-flow.json";
-import { gql, GraphQLClient } from "graphql-request";
 import type { SessionData } from "@opensystemslab/planx-core/types";
-import type { Context } from "./context";
+import type { Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { GraphQLClient, gql } from "graphql-request";
+import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "./context";
+} from "./helpers/context";
+import {
+  cards,
+  getSessionId,
+  log,
+  waitForPaymentResponse,
+} from "./helpers/globalHelpers";
+import { fillGovUkCardDetails, submitCardDetails } from "./helpers/userActions";
+import payFlow from "./mocks/flows/pay-flow.json";
 
 let context: Context = {
   ...contextDefaults,
@@ -69,7 +68,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId: paymentId,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -93,7 +92,7 @@ test.describe("Gov Pay integration @regression", async () => {
 
     const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
       page,
-      context,
+      context
     );
     expect(failedPaymentRef).toBeTruthy();
 
@@ -103,7 +102,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "failed",
         paymentId: failedPaymentRef,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -128,7 +127,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId: paymentId,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -151,7 +150,7 @@ test.describe("Gov Pay integration @regression", async () => {
     await page.locator("#return-url").click();
     const { paymentId: failedPaymentRef } = await waitForPaymentResponse(
       page,
-      context,
+      context
     );
     expect(failedPaymentRef).toBeTruthy();
 
@@ -161,7 +160,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "failed", // note: GovPay returns "failed" rather than "cancelled"
         paymentId: failedPaymentRef,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     await page.getByText("Retry payment").click();
@@ -179,7 +178,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId: paymentId,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -212,7 +211,7 @@ test.describe("Gov Pay integration @regression", async () => {
       sessionId,
     });
     expect(initialSession?.data?.govUkPayment?.state?.status).toEqual(
-      "created",
+      "created"
     );
     // ensure a audit log entry was created
     expect(
@@ -220,7 +219,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "created",
         paymentId: initialSession!.data!.govUkPayment!.payment_id,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     // retry the payment
@@ -237,7 +236,7 @@ test.describe("Gov Pay integration @regression", async () => {
         status: "success",
         paymentId,
         adminGQLClient,
-      }),
+      })
     ).toBe(true);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -280,7 +279,7 @@ test.describe("Gov Pay integration @regression", async () => {
     await submitCardDetails(page);
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
-      context,
+      context
     );
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -308,7 +307,7 @@ test.describe("Gov Pay integration @regression", async () => {
     await submitCardDetails(page);
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
-      context,
+      context
     );
     await expect(page.getByText("Application sent")).toBeVisible();
     await expect(page.getByText(actualPaymentId)).toBeVisible();
@@ -317,12 +316,12 @@ test.describe("Gov Pay integration @regression", async () => {
     await page.goBack();
     // Unable to make another payment - just get a status page...
     await expect(
-      page.locator("h1").getByText("Your payment was successful"),
+      page.locator("h1").getByText("Your payment was successful")
     ).toBeVisible();
     // ...with a link back to PlanX
     await page.locator("a").getByText("View your payment summary").click();
     await expect(
-      page.locator("h1").getByText("Application sent"),
+      page.locator("h1").getByText("Application sent")
     ).toBeVisible();
   });
 });
@@ -361,7 +360,7 @@ async function hasPaymentStatus({
             }
           }
         `,
-        { paymentId, status },
+        { paymentId, status }
       );
     if (
       response.payment_status.length === 1 &&
@@ -393,7 +392,7 @@ async function findSession({
           }
         }
       `,
-      { sessionId },
+      { sessionId }
     );
   return response.lowcal_sessions[0];
 }

@@ -1,15 +1,4 @@
 import { Browser, expect, test } from "@playwright/test";
-import type { Context } from "../context";
-import {
-  contextDefaults,
-  setUpTestContext,
-  tearDownTestContext,
-} from "../context";
-import {
-  answerQuestion,
-  clickContinue,
-  createAuthenticatedSession,
-} from "../globalHelpers";
 import {
   createAddressInput,
   createChecklist,
@@ -19,9 +8,19 @@ import {
   createNumberInput,
   createQuestionWithOptions,
   createTextInput,
-  getTeamPage,
+} from "../helpers/addComponent";
+import type { Context } from "../helpers/context";
+import {
+  contextDefaults,
+  setUpTestContext,
+  tearDownTestContext,
+} from "../helpers/context";
+import { getTeamPage } from "../helpers/getPage";
+import {
+  createAuthenticatedSession,
   isGetUserRequest,
-} from "./helpers";
+} from "../helpers/globalHelpers";
+import { answerQuestion, clickContinue } from "../helpers/userActions";
 
 test.describe("Navigation", () => {
   let context: Context = {
@@ -190,7 +189,6 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("When is your birthday?")).toBeVisible();
     await expect(nodes.getByText("What is your address?")).toBeVisible();
     await expect(nodes.getByText("What is your contact info?")).toBeVisible();
-
   });
 
   test("Cannot preview an unpublished flow", async ({

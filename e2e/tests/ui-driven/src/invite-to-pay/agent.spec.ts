@@ -1,13 +1,18 @@
-import { test, expect, Page, BrowserContext } from "@playwright/test";
-import { addSessionToContext, modifyFlow } from "../globalHelpers";
-import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
+import { BrowserContext, Page, expect, test } from "@playwright/test";
 import {
   Context,
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "../context";
+} from "../helpers/context";
+import { addSessionToContext, modifyFlow } from "../helpers/globalHelpers";
+import {
+  clickContinue,
+  returnToSession,
+  saveSession,
+} from "../helpers/userActions";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   answerInviteToPayForm,
   getPaymentRequestBySessionId,
@@ -15,7 +20,6 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
-import { saveSession, returnToSession, clickContinue } from "../globalHelpers";
 
 let context: Context = {
   ...contextDefaults,
@@ -52,7 +56,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(toggleInviteToPayButton).toBeVisible();
     await toggleInviteToPayButton.click();
     const inviteToPayFormHeader = page.getByText(
-      "Invite someone else to pay for this application",
+      "Invite someone else to pay for this application"
     );
     await expect(inviteToPayFormHeader).toBeVisible();
 
@@ -61,7 +65,7 @@ test.describe("Agent journey @regression", async () => {
     await page.waitForResponse((res) => res.url().includes("invite-to-pay"));
 
     const errorMessage = page.getByText(
-      "Error generating payment request, please try again",
+      "Error generating payment request, please try again"
     );
     await expect(errorMessage).toBeHidden();
 
@@ -109,7 +113,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       secondPage.getByRole("heading", {
         name: "Resume your application",
-      }),
+      })
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
@@ -117,7 +121,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       secondPage.getByRole("heading", {
         name: "Sorry, you can't make changes to this application",
-      }),
+      })
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
@@ -139,14 +143,14 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       secondPage.getByRole("heading", {
         name: "Resume your application",
-      }),
+      })
     ).toBeVisible();
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
 
     // Reconciliation ignored
     const reconciliationText = secondPage.getByText(
-      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue.",
+      "This service has been updated since you last saved your application. We will ask you to answer any updated questions again when you continue."
     );
     await expect(reconciliationText).toBeHidden();
 
@@ -154,7 +158,7 @@ test.describe("Agent journey @regression", async () => {
     await expect(
       secondPage.getByRole("heading", {
         name: "Sorry, you can't make changes to this application",
-      }),
+      })
     ).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
@@ -173,7 +177,7 @@ test.describe("Agent journey @regression", async () => {
     await answerInviteToPayForm(tab1);
     await tab1.getByRole("button", { name: "Send invitation to pay" }).click();
     await tab1.waitForResponse(
-      (resp) => resp.url().includes("/v1/graphql") && resp.status() === 200,
+      (resp) => resp.url().includes("/v1/graphql") && resp.status() === 200
     );
     const paymentRequest = await getPaymentRequestBySessionId({
       sessionId,
@@ -186,7 +190,7 @@ test.describe("Agent journey @regression", async () => {
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(
-      "Cannot initialise a new payment for locked session",
+      "Cannot initialise a new payment for locked session"
     );
     await expect(errorMessage).toBeVisible();
   });
@@ -213,7 +217,7 @@ test.describe("Agent journey @regression", async () => {
 
     // ...and fail to do so
     const errorMessage = tab2.getByText(
-      "Error generating payment request, please try again",
+      "Error generating payment request, please try again"
     );
     await expect(errorMessage).toBeVisible();
   });
