@@ -5,7 +5,7 @@ const createBaseInput = async (
   locatingNode: Locator,
   type: string,
   title?: string,
-  options?: string[]
+  options?: string[],
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -70,7 +70,7 @@ export const createQuestionWithOptions = async (
   page: Page,
   locatingNode: Locator,
   questionText: string,
-  options: string[]
+  options: string[],
 ) => {
   await createBaseInput(page, locatingNode, "Question", questionText, options);
 };
@@ -78,7 +78,7 @@ export const createQuestionWithOptions = async (
 export const createNotice = async (
   page: Page,
   locatingNode: Locator,
-  noticeText: string
+  noticeText: string,
 ) => {
   await createBaseInput(page, locatingNode, "Notice", noticeText);
 };
@@ -87,21 +87,21 @@ export const createChecklist = async (
   page: Page,
   locatingNode: Locator,
   checklistTitle: string,
-  checklistOptions: string[]
+  checklistOptions: string[],
 ) => {
   createBaseInput(
     page,
     locatingNode,
     "Checklist",
     checklistTitle,
-    checklistOptions
+    checklistOptions,
   );
 };
 
 export const createTextInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string
+  inputTitle: string,
 ) => {
   await createBaseInput(page, locatingNode, "Text Input", inputTitle);
 };
@@ -110,7 +110,7 @@ export const createNumberInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputUnits: string
+  inputUnits: string,
 ) => {
   await createBaseInput(page, locatingNode, "Number Input", inputTitle, [
     inputUnits,
@@ -120,7 +120,7 @@ export const createNumberInput = async (
 export const createDateInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string
+  inputTitle: string,
 ) => {
   await createBaseInput(page, locatingNode, "Date Input", inputTitle);
 };
@@ -129,7 +129,7 @@ export const createAddressInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string
+  inputDataField: string,
 ) => {
   await createBaseInput(page, locatingNode, "Address Input", inputTitle, [
     inputDataField,
@@ -140,7 +140,7 @@ export const createContactInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string
+  inputDataField: string,
 ) => {
   await createBaseInput(page, locatingNode, "Contact Input", inputTitle, [
     inputDataField,
@@ -149,7 +149,7 @@ export const createContactInput = async (
 async function createOptions(
   options: string[],
   buttonText: string,
-  page: Page
+  page: Page,
 ) {
   let index = 0;
   for (const option of options) {
