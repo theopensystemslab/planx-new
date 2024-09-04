@@ -49,8 +49,10 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            sendToEmail: "planning.office.example@council.gov.uk",
-            settings: { emailReplyToId: "abc123" },
+            notifyPersonalisation: {
+              emailReplyToId: "abc123",
+              sendToEmail: "planning.office.example@council.gov.uk",
+            },
           },
         ],
       },
@@ -152,8 +154,10 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            sendToEmail: null,
-            settings: { emailReplyToId: "abc123" },
+            notifyPersonalisation: {
+              emailReplyToId: "abc123",
+              sendToEmail: null,
+            },
           },
         ],
       },
@@ -200,7 +204,13 @@ describe(`downloading application data received by email`, () => {
       name: "GetTeamEmailSettings",
       matchOnVariables: false,
       data: {
-        teams: [{ sendToEmail: "planning.office.example@council.gov.uk" }],
+        teams: [
+          {
+            notifyPersonalisation: {
+              sendToEmail: "planning.office.example@council.gov.uk",
+            },
+          },
+        ],
       },
       variables: { slug: "southwark" },
     });
