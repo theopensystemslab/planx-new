@@ -10,9 +10,9 @@ import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
+import { Feature, GeoJsonObject } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -22,7 +22,7 @@ import CardHeader from "../../shared/Preview/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import type { MapAndLabel } from "./../model";
-import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
+import { MAP_ID, MapAndLabelProvider, useMapAndLabelContext } from "./Context";
 import { CopyFeature } from "./CopyFeature";
 
 type Props = PublicProps<MapAndLabel>;
@@ -57,8 +57,14 @@ const StyledTab = styled((props: TabProps) => (
 const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   features,
 }) => {
-  const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
-    useMapAndLabelContext();
+  const {
+    schema,
+    activeIndex,
+    formik,
+    editFeature,
+    isFeatureInvalid,
+    removeFeature,
+  } = useMapAndLabelContext();
 
   return (
     <Box
@@ -148,11 +154,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               formik={formik}
             />
             <Button
-              onClick={() =>
-                console.log(
-                  `TODO - Remove ${schema.type} ${feature.properties?.label}`,
-                )
-              }
+              onClick={() => removeFeature(activeIndex)}
               sx={{
                 fontWeight: FONT_WEIGHT_SEMI_BOLD,
                 gap: (theme) => theme.spacing(2),
@@ -187,14 +189,8 @@ const PlotFeatureToBegin = () => (
 );
 
 const Root = () => {
-  const {
-    validateAndSubmitForm,
-    mapAndLabelProps,
-    errors,
-    addFeature,
-    schema,
-    formik,
-  } = useMapAndLabelContext();
+  const { validateAndSubmitForm, mapAndLabelProps, errors } =
+    useMapAndLabelContext();
   const {
     title,
     description,
@@ -209,39 +205,8 @@ const Root = () => {
     latitude,
     longitude,
     boundaryBBox,
-    previouslySubmittedData,
   } = mapAndLabelProps;
-
-  const previousFeatures = previouslySubmittedData?.data?.[
-    fn
-  ] as FeatureCollection;
-  const [features, setFeatures] = useState<Feature[] | undefined>(
-    previousFeatures?.features?.length > 0
-      ? previousFeatures.features
-      : undefined,
-  );
-
-  useEffect(() => {
-    const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features) {
-        setFeatures(geojson["EPSG:3857"].features);
-        formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
-        addFeature();
-      } else {
-        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
-        setFeatures(undefined);
-        formik.setFieldValue("geoData", undefined);
-      }
-    };
-
-    const map: HTMLElement | null =
-      document.getElementById("map-and-label-map");
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
-
-    return function cleanup() {
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-    };
-  }, [setFeatures, addFeature]);
+  const { features, schema } = useMapAndLabelContext();
 
   const rootError: string =
     (errors.min &&
@@ -264,8 +229,7 @@ const Root = () => {
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map
-              id="map-and-label-map"
-              data-testid="map-and-label-map"
+              id={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode

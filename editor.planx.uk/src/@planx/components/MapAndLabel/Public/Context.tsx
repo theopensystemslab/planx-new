@@ -9,7 +9,8 @@ import {
   makeData,
 } from "@planx/components/shared/utils";
 import { FormikProps, useFormik } from "formik";
-import { FeatureCollection } from "geojson";
+import { Feature, FeatureCollection } from "geojson";
+import { GeoJSONChange, GeoJSONChangeEvent, useGeoJSONChange } from "lib/gis";
 import { get } from "lodash";
 import React, {
   createContext,
@@ -20,15 +21,18 @@ import React, {
 
 import { PresentationalProps } from ".";
 
+export const MAP_ID = "map-and-label-map";
+
 interface MapAndLabelContextValue {
   schema: Schema;
+  features?: Feature[];
   activeIndex: number;
   editFeature: (index: number) => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   isFeatureInvalid: (index: number) => boolean;
-  addFeature: () => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
+  removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
     min: boolean;
@@ -93,14 +97,38 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     },
   });
 
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
 
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
 
+  const handleGeoJSONChange = (event: GeoJSONChangeEvent) => {
+    // If the user clicks 'reset' on the map, geojson will be empty object
+    const userHitsReset = !event.detail["EPSG:3857"];
+
+    if (userHitsReset) {
+      removeAllFeaturesFromMap();
+      removeAllFeaturesFromForm();
+      return;
+    }
+
+    addFeatureToMap(event.detail);
+    addFeatureToForm();
+  };
+
+  const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
+
   const resetErrors = () => {
     setMinError(false);
     setMaxError(false);
+    formik.setErrors({});
+  };
+
+  const removeAllFeaturesFromMap = () => setFeatures(undefined);
+
+  const removeAllFeaturesFromForm = () => {
+    formik.setFieldValue("schemaData", []);
+    setActiveIndex(-1);
   };
 
   const validateAndSubmitForm = () => {
@@ -119,7 +147,14 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const isFeatureInvalid = (index: number) =>
     Boolean(get(formik.errors, ["schemaData", index]));
 
-  const addFeature = () => {
+  const addFeatureToMap = (geojson: GeoJSONChange) => {
+    resetErrors();
+
+    setFeatures(geojson["EPSG:3857"].features);
+    formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
+  };
+
+  const addFeatureToForm = () => {
     resetErrors();
 
     const currentFeatures = formik.values.schemaData;
@@ -130,6 +165,8 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     if (schema.max && updatedFeatures.length > schema.max) {
       setMaxError(true);
     }
+
+    setActiveIndex(activeIndex + 1);
   };
 
   const copyFeature = (sourceIndex: number, destinationIndex: number) => {
@@ -137,17 +174,37 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.setFieldValue(`schemaData[${destinationIndex}]`, sourceFeature);
   };
 
+  const removeFeatureFromForm = (index: number) => {
+    formik.setFieldValue(
+      "schemaData",
+      formik.values.schemaData.filter((_, i) => i !== index),
+    );
+  };
+
+  const removeFeatureFromMap = (index: number) => {
+    // TODO: Actually remove from map layer, not just feature array
+    setFeatures(features?.filter((_, i) => i !== index));
+  };
+
+  const removeFeature = (index: number) => {
+    resetErrors();
+    setActiveIndex(activeIndex - 1);
+    removeFeatureFromForm(index);
+    removeFeatureFromMap(index);
+  };
+
   return (
     <MapAndLabelContext.Provider
       value={{
+        features,
         activeIndex,
         schema,
         mapAndLabelProps: props,
         editFeature,
         formik,
         validateAndSubmitForm,
-        addFeature,
         copyFeature,
+        removeFeature,
         isFeatureInvalid,
         errors: {
           min: minError,
