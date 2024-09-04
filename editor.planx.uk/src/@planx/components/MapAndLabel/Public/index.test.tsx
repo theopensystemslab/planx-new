@@ -6,7 +6,7 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { point1 } from "../test/mocks/geojson";
+import { point1, point2 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import { addFeaturesToMap } from "../test/utils";
 
@@ -109,7 +109,33 @@ describe("validation and error handling", () => {
     });
   });
   // it shows all fields are required in a tab
-  test.todo("all fields are required, for all feature tabs");
+  it("should show all fields are required, for all feature tabs", async () => {
+    const { getByTestId, getByRole, user, getAllByTestId } = setup(
+      <MapAndLabel {...props} />,
+    );
+    const map = getByTestId("map-and-label-map");
+    expect(map).toBeInTheDocument();
+
+    addFeaturesToMap(map, [point1, point2]);
+
+    const firstTab = getByRole("tab", { name: /Tree 1/ });
+    const secondTab = getByRole("tab", { name: /Tree 2/ });
+
+    expect(firstTab).toBeInTheDocument();
+    expect(secondTab).toBeInTheDocument();
+
+    const continueButton = getByRole("button", { name: /Continue/ });
+
+    user.click(continueButton);
+
+    const errorMessagesOne = getAllByTestId(/error-message-input/);
+    expect(errorMessagesOne).toHaveLength(8);
+
+    user.click(secondTab);
+
+    const errorMessagesTwo = getAllByTestId(/error-message-input/);
+    expect(errorMessagesTwo).toHaveLength(8);
+  });
   // it shows all fields are required across different tabs
   test.todo("an error displays if the minimum number of items is not met");
   // ??

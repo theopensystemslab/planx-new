@@ -16,6 +16,7 @@ export const Trees: Schema = {
       type: "text",
       data: {
         title: "Proposed work",
+        description: "This is the wee descy",
         fn: "work",
         type: TextInputType.Short,
       },
