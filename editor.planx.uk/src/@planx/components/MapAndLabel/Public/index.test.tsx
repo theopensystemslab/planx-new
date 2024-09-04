@@ -84,44 +84,89 @@ describe("Basic UI", () => {
 
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
-  test.todo("all fields are required");
+  it("shows all fields are required", async () => {
+    const { getAllByTestId, getByTestId, getByRole, user } = setup(
+      <MapAndLabel {...props} />,
+    );
+    const map = getByTestId("map-and-label-map");
+    expect(map).toBeInTheDocument();
+
+    addFeaturesToMap(map, [point1]);
+
+    expect(getByRole("tab", { name: /Tree 1/ })).toBeInTheDocument();
+
+    const continueButton = getByRole("button", { name: /Continue/ });
+
+    user.click(continueButton);
+
+    const errorMessages = getAllByTestId(/error-message-input/);
+
+    // 5 error message inputs + 3 for date inputs (one per input and one wrapper)
+    expect(errorMessages).toHaveLength(8);
+
+    errorMessages.forEach((message) => {
+      expect(message).toBeEmptyDOMElement();
+    });
+  });
+  // it shows all fields are required in a tab
   test.todo("all fields are required, for all feature tabs");
+  // it shows all fields are required across different tabs
   test.todo("an error displays if the minimum number of items is not met");
+  // ??
   test.todo("an error displays if the maximum number of items is exceeded");
+  // ??
   test.todo(
     "an error state is applied to a tabpanel button, when it's associated feature is invalid",
   );
+  // shows the error state on a tab when it's invalid
 });
 
 describe("basic interactions - happy path", () => {
   test.todo("adding an item to the map adds a feature tab");
+  // add feature, see a tab (one feature only)
   test.todo("a user can input details on a single feature and submit");
+  // only one feature, fill out form, submit
   test.todo("adding multiple features to the map adds multiple feature tabs");
+  // add more than one feature, see multiple tabs
   test.todo("a user can input details on multiple features and submit");
+  // add details to more than one tab, submit
   test.todo("a user can input details on feature tabs in any order");
+  // ??
 });
 
 describe("copy feature select", () => {
   it.todo("is disabled if only a single feature is present");
+  // no copy select if only one feature
   it.todo("is enabled once multiple features are present");
+  // copy select enabled once you add more features
   it.todo(
     "lists all other features as options (the current feature is not listed)",
   );
+  // current tree is not an option in the copy select
   it.todo("copies all data from one feature to another");
+  // all data fields are populated from one field to another
   it.todo("should not have any accessibility violations");
+  // axe checks
 });
 
 describe("remove feature button", () => {
   it.todo("removes a feature from the form");
+  // click remove - feature is removed
+  // not tab
   it.todo("removes a feature from the map");
+  // click remove - feature is removed
+  // no map icon
 });
 
 describe("payload generation", () => {
   test.todo("a submitted payload contains a GeoJSON feature collection");
+  // check payload contains GeoJSON feature collection
   test.todo(
     "the feature collection contains all geospatial data inputted by the user",
   );
+  // feature collection matches the mocked data
   test.todo(
     "each feature's properties correspond with the details entered for that feature",
   );
+  // feature properties contain the answers to inputs
 });
