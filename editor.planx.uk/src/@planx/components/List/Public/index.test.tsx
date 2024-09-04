@@ -25,8 +25,14 @@ describe("Basic UI", () => {
   });
 
   it("parses provided schema to render expected form", async () => {
-    const { getByLabelText, getByText, user, getByRole, queryAllByRole } =
-      setup(<ListComponent {...mockZooProps} />);
+    const {
+      getByLabelText,
+      getByText,
+      user,
+      getByRole,
+      queryAllByRole,
+      queryByTestId,
+    } = setup(<ListComponent {...mockZooProps} />);
 
     // Text inputs are generated from schema...
     const textInput = getByLabelText(/What's their name?/) as HTMLInputElement;
@@ -87,8 +93,12 @@ describe("Basic UI", () => {
     expect(radioButton1).not.toBeChecked();
     expect(radioButton2).not.toBeChecked();
 
-    expect(getByText(/Save/, { selector: "button" })).toBeInTheDocument();
-    expect(getByText(/Cancel/, { selector: "button" })).toBeInTheDocument();
+    const saveButton = queryByTestId("save-item-button");
+    expect(saveButton).toBeInTheDocument();
+
+    // Hidden on initial item
+    const cancelButton = queryByTestId("cancel-edit-item-button");
+    expect(cancelButton).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {
@@ -349,41 +359,79 @@ describe("Building a list", () => {
     },
   );
 
-  test("Cancelling an invalid (new) item removes it", async () => {
-    const { getAllByTestId, getByText, user, queryAllByTestId } = setup(
-      <ListComponent {...mockZooProps} />,
-    );
+  test(
+    "Cancelling an invalid (new) item removes it",
+    { timeout: 20000 },
+    async () => {
+      const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
+        setup(<ListComponent {...mockZooProps} />);
 
-    let cards = getAllByTestId(/list-card/);
-    expect(cards).toHaveLength(1);
+      let cards = getAllByTestId(/list-card/);
+      expect(cards).toHaveLength(1);
 
-    const cancelButton = getByText(/Cancel/, { selector: "button" });
-    await user.click(cancelButton);
+      // "Cancel" is hidden from initial item, so fill out an item first
+      await fillInResponse(user);
 
-    cards = queryAllByTestId(/list-card/);
-    expect(cards).toHaveLength(0);
-  });
+      const addItemButton = getByTestId("list-add-button");
+      await user.click(addItemButton);
+
+      const [_firstCard, secondCard] = getAllByTestId(/list-card/);
+
+      // Second card is active
+      expect(
+        within(secondCard!).getByLabelText(/What's their name?/),
+      ).toBeInTheDocument();
+
+      const cancelButton = getByText(/Cancel/, { selector: "button" });
+      await user.click(cancelButton);
+
+      cards = queryAllByTestId(/list-card/);
+      expect(cards).toHaveLength(1);
+    },
+  );
 
   test(
     "Cancelling a valid (existing) item resets previous state",
     { timeout: 20000 },
     async () => {
-      const { getByLabelText, getByText, user, queryByText } = setup(
-        <ListComponent {...mockZooProps} />,
-      );
+      const {
+        getByLabelText,
+        getByText,
+        user,
+        queryByText,
+        getByTestId,
+        getAllByTestId,
+        getAllByText,
+      } = setup(<ListComponent {...mockZooProps} />);
 
       await fillInResponse(user);
 
-      expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
+      const addItemButton = getByTestId("list-add-button");
+      await user.click(addItemButton);
 
-      const editButton = getByText(/Edit/, { selector: "button" });
-      await user.click(editButton);
+      const [_firstCard, secondCard] = getAllByTestId(/list-card/);
+
+      // Second card is active
+      expect(
+        within(secondCard!).getByLabelText(/What's their name?/),
+      ).toBeInTheDocument();
+
+      // "Cancel" button was hidden on first item, so fill in second item
+      await fillInResponse(user);
+
+      const secondEmail = getAllByText("richard.parker@pi.com")[1];
+      expect(secondEmail).toBeInTheDocument();
+
+      const secondEditButton = getAllByText(/Edit/, { selector: "button" })[1];
+      await user.click(secondEditButton);
 
       const emailInput = getByLabelText(/email/);
       await user.type(emailInput, "my.new.email@test.com");
 
-      const cancelButton = getByText(/Cancel/, { selector: "button" });
-      await user.click(cancelButton);
+      const secondCancelButton = getAllByText(/Cancel/, {
+        selector: "button",
+      })[1];
+      await user.click(secondCancelButton);
 
       expect(queryByText("my.new.email@test.com")).not.toBeInTheDocument();
       expect(getByText("richard.parker@pi.com")).toBeInTheDocument();
@@ -533,22 +581,31 @@ describe("Form validation and error handling", () => {
     });
   });
 
-  test("an error displays if the minimum number of items is not met", async () => {
-    const { user, getByRole, getByTestId, getByText } = setup(
-      <ListComponent {...mockZooProps} />,
-    );
+  test(
+    "an error displays if the minimum number of items is not met",
+    { timeout: 10000 },
+    async () => {
+      const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
+        schema: { min: 2 },
+      });
+      const { user, getByTestId, getByText } = setup(
+        <ListComponent {...mockWithMinTwo} />,
+      );
 
-    const minNumberOfItems = mockZooProps.schema.min;
-    expect(minNumberOfItems).toEqual(1);
+      const minNumberOfItems = mockWithMinTwo.schema.min;
+      expect(minNumberOfItems).toEqual(2);
 
-    await user.click(getByRole("button", { name: /Cancel/ }));
-    await user.click(getByTestId("continue-button"));
+      // Fill in one response only
+      await fillInResponse(user);
 
-    const minItemsErrorMessage = getByText(
-      `You must provide at least ${minNumberOfItems} response(s)`,
-    );
-    expect(minItemsErrorMessage).toBeVisible();
-  });
+      await user.click(getByTestId("continue-button"));
+
+      const minItemsErrorMessage = getByText(
+        `You must provide at least ${minNumberOfItems} response(s)`,
+      );
+      expect(minItemsErrorMessage).toBeVisible();
+    },
+  );
 
   test(
     "an error displays if the maximum number of items is exceeded",
