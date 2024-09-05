@@ -68,7 +68,7 @@ test.describe("Navigation", () => {
     let isRepeatedRequestMade = false;
     page.on(
       "request",
-      (req) => (isRepeatedRequestMade = isGetUserRequest(req))
+      (req) => (isRepeatedRequestMade = isGetUserRequest(req)),
     );
 
     Promise.all([
@@ -126,7 +126,7 @@ test.describe("Navigation", () => {
       "No",
     ]);
     await expect(
-      page.locator("a").filter({ hasText: questionText })
+      page.locator("a").filter({ hasText: questionText }),
     ).toBeVisible();
 
     // Add a notice to the "Yes" path
@@ -136,7 +136,7 @@ test.describe("Navigation", () => {
     await createNotice(
       page,
       yesBranch.locator(".hanger > a"),
-      yesBranchNoticeText
+      yesBranchNoticeText,
     );
 
     // Add a notice to the "No" path
@@ -145,7 +145,7 @@ test.describe("Navigation", () => {
     await createNotice(
       page,
       noBranch.locator(".hanger > a"),
-      noBranchNoticeText
+      noBranchNoticeText,
     );
 
     // TODO: find a nicer way to find the next node
@@ -170,7 +170,7 @@ test.describe("Navigation", () => {
       page,
       nextNode,
       "What is your address?",
-      "some data field"
+      "some data field",
     );
 
     nextNode = page.locator(".hanger > a").nth(11);
@@ -178,7 +178,7 @@ test.describe("Navigation", () => {
       page,
       nextNode,
       "What is your contact info?",
-      "some data field"
+      "some data field",
     );
 
     nextNode = page.locator(".hanger > a").nth(12);
@@ -221,7 +221,7 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("Planning constraints")).toBeVisible();
     await expect(nodes.getByText("Next steps")).toBeVisible();
     await expect(
-      nodes.getByText("Check your answers before sending your application")
+      nodes.getByText("Check your answers before sending your application"),
     ).toBeVisible();
   });
 
@@ -236,7 +236,7 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await expect(page.getByText("Not Found")).toBeVisible();
@@ -270,11 +270,11 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await expect(
-      page.getByRole("heading", { level: 1, name: "Offline" })
+      page.getByRole("heading", { level: 1, name: "Offline" }),
     ).toBeVisible();
   });
 
@@ -293,7 +293,7 @@ test.describe("Navigation", () => {
     page.getByLabel("Offline").click();
     page.getByRole("button", { name: "Save", disabled: false }).click();
     await expect(
-      page.getByText("Service settings updated successfully")
+      page.getByText("Service settings updated successfully"),
     ).toBeVisible();
 
     // Exit back to main Editor page
@@ -316,13 +316,13 @@ test.describe("Navigation", () => {
     });
 
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
     await answerQuestion({ page, title: "Is this a test?", answer: "Yes" });
     await clickContinue({ page });
     await expect(
-      page.locator("h1", { hasText: "Yes! this is a test" })
+      page.locator("h1", { hasText: "Yes! this is a test" }),
     ).toBeVisible();
 
     await page.getByTestId("backButton").click();
@@ -330,7 +330,7 @@ test.describe("Navigation", () => {
     await answerQuestion({ page, title: "Is this a test?", answer: "No" });
     await clickContinue({ page });
     await expect(
-      page.locator("h1", { hasText: "Sorry, this is a test" })
+      page.locator("h1", { hasText: "Sorry, this is a test" }),
     ).toBeVisible();
   });
 });
