@@ -205,6 +205,40 @@ const Root = () => {
     );
   }
 
+  const listContent = (
+    <ErrorWrapper error={rootError}>
+      <>
+        {formik.values.schemaData.map((_, i) =>
+          i === activeIndex ? (
+            <ActiveListCard key={`card-${i}`} index={i} />
+          ) : (
+            <InactiveListCard key={`card-${i}`} index={i} />
+          ),
+        )}
+        {shouldShowAddAnotherButton && (
+          <ErrorWrapper
+            error={
+              errors.addItem
+                ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
+                : ""
+            }
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={addNewItem}
+              sx={{ "@media (min-width: 768px)": { width: "100%" } }}
+              size="large"
+              data-testid="list-add-button"
+            >
+              + Add another {schema.type.toLowerCase()}
+            </Button>
+          </ErrorWrapper>
+        )}
+      </>
+    </ErrorWrapper>
+  );
+
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
@@ -214,38 +248,11 @@ const Root = () => {
         policyRef={policyRef}
         howMeasured={howMeasured}
       />
-      <FullWidthWrapper>
-        <ErrorWrapper error={rootError}>
-          <>
-            {formik.values.schemaData.map((_, i) =>
-              i === activeIndex ? (
-                <ActiveListCard key={`card-${i}`} index={i} />
-              ) : (
-                <InactiveListCard key={`card-${i}`} index={i} />
-              ),
-            )}
-            {shouldShowAddAnotherButton && (
-              <ErrorWrapper
-                error={
-                  errors.addItem
-                    ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
-                    : ""
-                }
-              >
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={addNewItem}
-                  sx={{ width: "100%" }}
-                  data-testid="list-add-button"
-                >
-                  + Add another {schema.type.toLowerCase()}
-                </Button>
-              </ErrorWrapper>
-            )}
-          </>
-        </ErrorWrapper>
-      </FullWidthWrapper>
+      {hasMapField ? (
+        <FullWidthWrapper>{listContent}</FullWidthWrapper>
+      ) : (
+        listContent
+      )}
     </Card>
   );
 };
