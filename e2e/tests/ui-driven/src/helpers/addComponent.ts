@@ -67,17 +67,26 @@ const createBaseComponent = async (
       }
       break;
     case "Review":
-      // Don't need to change anything so dummy click to get through switch statement
+      // Don't need to change anything so dummy click
       await page
         .getByPlaceholder("Check your answers before sending your application")
         .click();
+      break;
+    case "Find property":
+      // use default placeholder 'Find the property'
+      await page.getByPlaceholder("Title").click();
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
 
   // convert type name to lowercase, with dashes if there are spaces
-  const buttonName = type.toLowerCase().replace(/\s/g, "-");
+  // or custom name if it doesn't fit the pattern
+  const buttonName =
+    type === "Find property"
+      ? "find-property-merged"
+      : type.toLowerCase().replace(/\s/g, "-");
+
   await page
     .locator("button")
     .filter({
@@ -190,6 +199,13 @@ export const createTaskList = async (
 
 export const createReview = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, "Review");
+};
+
+export const createFindPropertyComponent = async (
+  page: Page,
+  locatingNode: Locator
+) => {
+  await createBaseComponent(page, locatingNode, "Find property");
 };
 
 async function createComponentOptions(

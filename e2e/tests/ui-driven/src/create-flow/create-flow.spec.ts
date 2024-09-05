@@ -4,6 +4,7 @@ import {
   createChecklist,
   createContactInput,
   createDateInput,
+  createFindPropertyComponent,
   createNotice,
   createNumberInput,
   createQuestionWithOptions,
@@ -184,6 +185,9 @@ test.describe("Navigation", () => {
     ]);
 
     nextNode = page.locator(".hanger > a").nth(13);
+    await createFindPropertyComponent(page, nextNode);
+
+    nextNode = page.locator(".hanger > a").nth(14);
     await createReview(page, nextNode);
 
     const nodes = page.locator(".card");
@@ -197,6 +201,7 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("What is your address?")).toBeVisible();
     await expect(nodes.getByText("What is your contact info?")).toBeVisible();
     await expect(nodes.getByText("What you should do next")).toBeVisible();
+    await expect(nodes.getByText("Find property")).toBeVisible();
     await expect(
       nodes.getByText("Check your answers before sending your application")
     ).toBeVisible();
