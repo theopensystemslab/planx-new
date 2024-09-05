@@ -6,6 +6,7 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { data, formik } = props;
@@ -13,6 +14,9 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
 
   return (
     <InputLabel label={data.title} id={`select-label-${id}`}>
+      {data.description && (
+        <FieldInputDescription description={data.description} />
+      )}
       <ErrorWrapper id={`${id}-error`} error={errorMessage}>
         <SelectInput
           bordered

@@ -5,6 +5,7 @@ import Input from "ui/shared/Input";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const fieldProps = getFieldProps(props);
@@ -13,6 +14,9 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
+      {data.description && (
+        <FieldInputDescription description={data.description} />
+      )}
       <Input
         {...fieldProps}
         onChange={formik.handleChange}

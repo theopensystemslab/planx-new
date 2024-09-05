@@ -39,6 +39,12 @@ describe("Basic UI", () => {
     expect(textInput).toBeInTheDocument();
     expect(textInput.type).toBe("text");
 
+    // Input field descriptions are generated from schema if they exist...
+    const textInputDescription = getByText(
+      /Please make it cute/,
+    ) as HTMLElement;
+    expect(textInputDescription).toBeInTheDocument();
+
     // Props are correctly read
     const emailInput = getByLabelText(
       /What's their email address?/,

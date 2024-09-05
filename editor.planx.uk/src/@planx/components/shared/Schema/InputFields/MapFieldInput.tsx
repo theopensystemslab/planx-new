@@ -7,11 +7,12 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   const {
     formik,
-    data: { title, mapOptions },
+    data: { title, description, mapOptions },
   } = props;
   const { id, errorMessage, name } = getFieldProps(props);
 
@@ -47,6 +48,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
 
   return (
     <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
+      {description && <FieldInputDescription description={description} />}
       <ErrorWrapper error={errorMessage} id={id}>
         <MapContainer environment="standalone">
           {/* @ts-ignore */}

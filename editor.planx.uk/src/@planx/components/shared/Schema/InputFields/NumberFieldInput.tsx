@@ -7,6 +7,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
 import { getFieldProps, Props } from ".";
+import { FieldInputDescription } from "./shared";
 
 export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
   const fieldProps = getFieldProps(props);
@@ -15,6 +16,9 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
+      {data.description && (
+        <FieldInputDescription description={data.description} />
+      )}
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <Input
           {...fieldProps}
