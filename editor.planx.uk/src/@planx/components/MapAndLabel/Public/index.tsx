@@ -196,8 +196,14 @@ const PlotFeatureToBegin = () => (
 );
 
 const Root = () => {
-  const { errors, features, mapAndLabelProps, schema, validateAndSubmitForm } =
-    useMapAndLabelContext();
+  const {
+    errors,
+    features,
+    mapAndLabelProps,
+    schema,
+    updateMap,
+    validateAndSubmitForm,
+  } = useMapAndLabelContext();
   const {
     title,
     description,
@@ -230,7 +236,7 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <ErrorWrapper error={rootError}>
+        <ErrorWrapper error={rootError} key={updateMap ? 1 : 0}>
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map

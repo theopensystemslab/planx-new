@@ -26,6 +26,7 @@ export const MAP_ID = "map-and-label-map";
 interface MapAndLabelContextValue {
   schema: Schema;
   features?: Feature[];
+  updateMap: boolean;
   activeIndex: number;
   editFeature: (index: number) => void;
   formik: FormikProps<SchemaUserData>;
@@ -117,6 +118,8 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
 
+  const [updateMap, setUpdateMap] = useState<boolean>(false);
+
   const resetErrors = () => {
     setMinError(false);
     setMaxError(false);
@@ -180,8 +183,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   };
 
   const removeFeatureFromMap = (index: number) => {
-    // TODO: Actually remove from map layer, not just feature array
     setFeatures(features?.filter((_, i) => i !== index));
+    // `updateMap` is set as the `key` prop on the map container to force a re-render of its children (aka <my-map />) on change
+    setUpdateMap(true);
   };
 
   const removeFeature = (index: number) => {
@@ -195,6 +199,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     <MapAndLabelContext.Provider
       value={{
         features,
+        updateMap,
         activeIndex,
         schema,
         mapAndLabelProps: props,
