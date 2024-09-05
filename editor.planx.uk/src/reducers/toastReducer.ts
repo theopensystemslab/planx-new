@@ -7,7 +7,7 @@ export const toastReducer = (state: ToastState, action: ToastAction) => {
         ...state,
         toasts: [...state.toasts, action.payload],
       };
-    case "DELETE_TOAST": {
+    case "REMOVE_TOAST": {
       const updatedToasts = state.toasts.filter(
         (toast) => toast.id !== action.payload.id,
       );

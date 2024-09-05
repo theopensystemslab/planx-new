@@ -10,7 +10,8 @@ import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { Feature, GeoJsonObject } from "geojson";
+import { GeoJsonObject } from "geojson";
+import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -54,17 +55,23 @@ const StyledTab = styled((props: TabProps) => (
   },
 })) as typeof Tab;
 
-const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
-  features,
-}) => {
+const VerticalFeatureTabs: React.FC = () => {
   const {
     schema,
     activeIndex,
     formik,
+    features,
     editFeature,
     isFeatureInvalid,
     removeFeature,
   } = useMapAndLabelContext();
+
+  if (!features) {
+    throw new Error("Cannot render MapAndLabel tabs without features");
+  }
+
+  // Features is inherently sorted by recently added/modified, order tabs by stable labels
+  const sortedFeatures = sortBy(features, ["properties.label"]);
 
   return (
     <Box
@@ -94,7 +101,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             borderColor: (theme) => theme.palette.border.main,
           }}
         >
-          {features.map((feature, i) => (
+          {sortedFeatures.map((feature, i) => (
             <StyledTab
               key={`tab-${i}`}
               value={i.toString()}
@@ -110,7 +117,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             />
           ))}
         </Tabs>
-        {features.map((feature, i) => (
+        {sortedFeatures.map((feature, i) => (
           <TabPanel
             key={`tabpanel-${i}`}
             value={i.toString()}
@@ -189,12 +196,11 @@ const PlotFeatureToBegin = () => (
 );
 
 const Root = () => {
-  const { validateAndSubmitForm, mapAndLabelProps, errors } =
+  const { errors, features, mapAndLabelProps, schema, validateAndSubmitForm } =
     useMapAndLabelContext();
   const {
     title,
     description,
-    fn,
     info,
     policyRef,
     howMeasured,
@@ -206,7 +212,6 @@ const Root = () => {
     longitude,
     boundaryBBox,
   } = mapAndLabelProps;
-  const { features, schema } = useMapAndLabelContext();
 
   const rootError: string =
     (errors.min &&
@@ -263,7 +268,7 @@ const Root = () => {
           </MapContainer>
         </ErrorWrapper>
         {features && features?.length > 0 ? (
-          <VerticalFeatureTabs features={features} />
+          <VerticalFeatureTabs />
         ) : (
           <PlotFeatureToBegin />
         )}

@@ -8,6 +8,14 @@ More info about e2e tests is available in our [testing approach documentation](h
 
 We use [Playwright](https://playwright.dev/docs/api/class-test) to run UI driven tests where user interactions are simulated via a web browser.
 
+### Running UI-driven tests
+
+1. Navigate to `/tests/ui-driven`
+2. Run `pnpm install` to install the Playwright package.
+3. Run `pnpm exec playwright install` to install the Playwright test browsers.
+4. Run the tests with `pnpm test`
+
+
 
 ## API driven tests
 

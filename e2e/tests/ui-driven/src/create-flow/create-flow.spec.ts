@@ -1,16 +1,26 @@
-import { test, expect, Browser } from "@playwright/test";
+import { Browser, expect, test } from "@playwright/test";
+import {
+  createAddressInput,
+  createChecklist,
+  createContactInput,
+  createDateInput,
+  createNotice,
+  createNumberInput,
+  createQuestionWithOptions,
+  createTextInput,
+} from "../helpers/addComponent";
+import type { Context } from "../helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "../context";
+} from "../helpers/context";
+import { getTeamPage } from "../helpers/getPage";
 import {
   createAuthenticatedSession,
-  answerQuestion,
-  clickContinue,
-} from "../globalHelpers";
-import type { Context } from "../context";
-import { getTeamPage, isGetUserRequest } from "./helpers";
+  isGetUserRequest,
+} from "../helpers/globalHelpers";
+import { answerQuestion, clickContinue } from "../helpers/userActions";
 
 test.describe("Navigation", () => {
   let context: Context = {
@@ -102,47 +112,79 @@ test.describe("Navigation", () => {
     // update context to allow flow to be torn down
     context.flow = { ...serviceProps };
 
-    await page.locator("li.hanger > a").click();
-    await page.getByRole("dialog").waitFor();
+    const firstNode = page.locator("li.hanger > a").first();
 
     const questionText = "Is this a test?";
-    await page.getByPlaceholder("Text").fill(questionText);
-
-    await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").fill("Yes");
-
-    await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").nth(1).fill("No");
-
-    await page.locator("button").filter({ hasText: "Create question" }).click();
+    await createQuestionWithOptions(page, firstNode, questionText, [
+      "Yes",
+      "No",
+    ]);
     await expect(
       page.locator("a").filter({ hasText: questionText }),
     ).toBeVisible();
 
     // Add a notice to the "Yes" path
     const yesBranch = page.locator("#flow .card .options .option").nth(0);
-    await yesBranch.locator(".hanger > a").click();
-    await page.getByRole("dialog").waitFor();
 
-    await page.locator("select").selectOption({ label: "Notice" });
     const yesBranchNoticeText = "Yes! this is a test";
-    await page.getByPlaceholder("Notice").fill(yesBranchNoticeText);
-    await page.locator("button").filter({ hasText: "Create notice" }).click();
+    await createNotice(
+      page,
+      yesBranch.locator(".hanger > a"),
+      yesBranchNoticeText,
+    );
 
     // Add a notice to the "No" path
     const noBranch = page.locator("#flow .card .options .option").nth(1);
-    await noBranch.locator(".hanger > a").click();
-    await page.getByRole("dialog").waitFor();
-
-    await page.locator("select").selectOption({ label: "Notice" });
     const noBranchNoticeText = "Sorry, this is a test";
-    await page.getByPlaceholder("Notice").fill(noBranchNoticeText);
-    await page.locator("button").filter({ hasText: "Create notice" }).click();
+    await createNotice(
+      page,
+      noBranch.locator(".hanger > a"),
+      noBranchNoticeText,
+    );
+
+    // TODO: find a nicer way to find the next node
+    let nextNode = page.locator(".hanger > a").nth(5);
+    await createChecklist(page, nextNode, "A checklist title", [
+      "Checklist item 1",
+      "Second checklist item",
+      "The third checklist item",
+    ]);
+
+    nextNode = page.locator(".hanger > a").nth(7);
+    await createTextInput(page, nextNode, "Tell us about your trees.");
+
+    nextNode = page.locator(".hanger > a").nth(8);
+    await createNumberInput(page, nextNode, "How old are you?", "years");
+
+    nextNode = page.locator(".hanger > a").nth(9);
+    await createDateInput(page, nextNode, "When is your birthday?");
+
+    nextNode = page.locator(".hanger > a").nth(10);
+    await createAddressInput(
+      page,
+      nextNode,
+      "What is your address?",
+      "some data field",
+    );
+
+    nextNode = page.locator(".hanger > a").nth(11);
+    await createContactInput(
+      page,
+      nextNode,
+      "What is your contact info?",
+      "some data field",
+    );
 
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
     await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
     await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
+    await expect(nodes.getByText("Checklist item 1")).toBeVisible();
+    await expect(nodes.getByText("Tell us about your trees.")).toBeVisible();
+    await expect(nodes.getByText("How old are you?")).toBeVisible();
+    await expect(nodes.getByText("When is your birthday?")).toBeVisible();
+    await expect(nodes.getByText("What is your address?")).toBeVisible();
+    await expect(nodes.getByText("What is your contact info?")).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({

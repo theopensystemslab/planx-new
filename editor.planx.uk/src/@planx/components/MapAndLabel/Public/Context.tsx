@@ -55,21 +55,20 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     previousValues: getPreviouslySubmittedData(props),
   });
 
-  // Deconstruct GeoJSON saved to passport back into schemaData & geoData
+  // Deconstruct GeoJSON saved to passport back into form data and map data
   const previousGeojson = previouslySubmittedData?.data?.[
     fn
   ] as FeatureCollection;
-  const previousSchemaData = previousGeojson?.features.map(
+  const previousFormData = previousGeojson?.features.map(
     (feature) => feature.properties,
   ) as SchemaUserResponse[];
-  const previousGeoData = previousGeojson?.features;
+  const _previousMapData = previousGeojson?.features;
 
   const formik = useFormik<SchemaUserData>({
     ...formikConfig,
     // The user interactions are map driven - start with no values added
     initialValues: {
-      schemaData: previousSchemaData || [],
-      geoData: previousGeoData || [],
+      schemaData: previousFormData || [],
     },
     onSubmit: (values) => {
       const geojson: FeatureCollection = {
@@ -77,7 +76,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         features: [],
       };
 
-      values.geoData?.forEach((feature, i) => {
+      features?.forEach((feature, i) => {
         // Store user inputs as GeoJSON properties
         const mergedProperties = {
           ...feature.properties,
@@ -151,7 +150,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     resetErrors();
 
     setFeatures(geojson["EPSG:3857"].features);
-    formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
   };
 
   const addFeatureToForm = () => {

@@ -1,23 +1,23 @@
-import { test, expect } from "@playwright/test";
-import {
-  simpleSendFlow,
-  modifiedSimpleSendFlow,
-} from "./mocks/flows/save-and-return-flows";
+import { expect, test } from "@playwright/test";
+import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./context";
+} from "./helpers/context";
+import { modifyFlow } from "./helpers/globalHelpers";
 import {
-  fillInEmail,
-  clickContinue,
-  findQuestion,
   answerQuestion,
+  clickContinue,
+  fillInEmail,
+  findQuestion,
   returnToSession,
   saveSession,
-  modifyFlow,
-} from "./globalHelpers";
-import type { Context } from "./context";
+} from "./helpers/userActions";
+import {
+  modifiedSimpleSendFlow,
+  simpleSendFlow,
+} from "./mocks/flows/save-and-return-flows";
 
 test.describe("Save and return", () => {
   let context: Context = {

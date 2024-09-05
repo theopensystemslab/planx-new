@@ -128,7 +128,6 @@ export type SchemaUserResponse = Record<
  */
 export type SchemaUserData = {
   schemaData: SchemaUserResponse[];
-  geoData?: Feature[];
 };
 
 /**

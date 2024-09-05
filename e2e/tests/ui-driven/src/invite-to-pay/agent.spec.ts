@@ -1,13 +1,18 @@
-import { test, expect, Page, BrowserContext } from "@playwright/test";
-import { addSessionToContext, modifyFlow } from "../globalHelpers";
-import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
+import { BrowserContext, Page, expect, test } from "@playwright/test";
 import {
   Context,
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "../context";
+} from "../helpers/context";
+import { addSessionToContext, modifyFlow } from "../helpers/globalHelpers";
+import {
+  clickContinue,
+  returnToSession,
+  saveSession,
+} from "../helpers/userActions";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import {
   answerInviteToPayForm,
   getPaymentRequestBySessionId,
@@ -15,7 +20,6 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
-import { saveSession, returnToSession, clickContinue } from "../globalHelpers";
 
 let context: Context = {
   ...contextDefaults,
