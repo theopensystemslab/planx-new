@@ -170,7 +170,7 @@ test.describe("Navigation", () => {
 
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
+    page.getByRole("button", { name: "Publish" }).click();
     page.getByRole("button", { name: "PUBLISH", exact: true }).click();
 
     const previewLink = page.getByRole("link", {
