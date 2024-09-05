@@ -7,9 +7,10 @@ import {
 } from "components/Toast/types";
 import React, { createContext, ReactNode, useReducer } from "react";
 import { toastReducer } from "reducers/toastReducer";
+import { v4 as uuidv4 } from "uuid";
 
 const defaultCreateContextValue = {
-  remove: (_id: number) => {},
+  remove: (_id: string) => {},
   addToast: (_type: ToastType, _message: string) => {},
   success: (_message: string) => {},
   warning: (_message: string) => {},
@@ -30,11 +31,11 @@ export const ToastContextProvider = ({
 }: Readonly<{ children: ReactNode }>) => {
   const [state, dispatch] = useReducer(toastReducer, initialState);
   const addToast = (type: ToastType, message: string) => {
-    const id = Math.floor(Math.random() * 10_000_000);
+    const id = uuidv4();
     dispatch({ type: "ADD_TOAST", payload: { id, message, type } });
   };
-  const remove = (id: number) => {
-    dispatch({ type: "DELETE_TOAST", payload: { id } });
+  const remove = (id: string) => {
+    dispatch({ type: "REMOVE_TOAST", payload: { id } });
   };
   const success = (message: string) => {
     addToast("success", message);

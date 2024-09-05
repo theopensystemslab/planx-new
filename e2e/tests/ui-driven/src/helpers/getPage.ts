@@ -1,8 +1,5 @@
-import { Browser, Page, Request } from "@playwright/test";
-import { createAuthenticatedSession } from "../globalHelpers";
-
-export const isGetUserRequest = (req: Request) =>
-  req.url().includes("/user/me");
+import { Browser, Page } from "@playwright/test";
+import { createAuthenticatedSession } from "./globalHelpers";
 
 export async function getAdminPage({
   browser,

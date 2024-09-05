@@ -1,23 +1,22 @@
-import { test, expect } from "@playwright/test";
-import {
-  cards,
-  fillGovUkCardDetails,
-  getSessionId,
-  log,
-  submitCardDetails,
-  waitForPaymentResponse,
-} from "./globalHelpers";
-import type { Page } from "@playwright/test";
-import payFlow from "./mocks/flows/pay-flow.json";
-import { gql, GraphQLClient } from "graphql-request";
 import type { SessionData } from "@opensystemslab/planx-core/types";
-import type { Context } from "./context";
+import type { Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { GraphQLClient, gql } from "graphql-request";
+import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "./context";
+} from "./helpers/context";
+import {
+  cards,
+  getSessionId,
+  log,
+  waitForPaymentResponse,
+} from "./helpers/globalHelpers";
+import { fillGovUkCardDetails, submitCardDetails } from "./helpers/userActions";
+import payFlow from "./mocks/flows/pay-flow.json";
 
 let context: Context = {
   ...contextDefaults,

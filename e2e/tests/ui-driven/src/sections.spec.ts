@@ -1,26 +1,26 @@
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
-import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow";
+import { gql } from "graphql-request";
+import type { Context } from "./helpers/context";
 import {
   contextDefaults,
+  getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-  getGraphQLClient,
-} from "./context";
+} from "./helpers/context";
 import {
-  fillInEmail,
-  answerQuestion,
   answerChecklist,
-  clickContinue,
+  answerQuestion,
   clickBack,
+  clickContinue,
+  expectConfirmation,
   expectNotice,
   expectSections,
-  expectConfirmation,
-  saveSession,
+  fillInEmail,
   returnToSession,
-} from "./globalHelpers";
-import { gql } from "graphql-request";
-import type { Context } from "./context";
-import type { FlowGraph } from "@opensystemslab/planx-core/types";
+  saveSession,
+} from "./helpers/userActions";
+import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow";
 
 // TODO: move this type to planx-core
 // also defined in editor.planx.uk/src/types.ts

@@ -1,7 +1,7 @@
 export interface Toast {
   message: string;
   type: ToastType;
-  id: number;
+  id: string;
 }
 export type ToastType = "success" | "warning" | "info" | "error";
 
@@ -9,21 +9,21 @@ export type ToastState = {
   toasts: Toast[];
 };
 
-export type ToastAction = AddToast | DeleteToast;
+export type ToastAction = AddToast | RemoveToast;
 
 type AddToast = {
   type: "ADD_TOAST";
   payload: Toast;
 };
 
-type DeleteToast = {
-  type: "DELETE_TOAST";
-  payload: { id: number };
+type RemoveToast = {
+  type: "REMOVE_TOAST";
+  payload: { id: string };
 };
 
 export type ToastContextType = {
   addToast: (type: ToastType, message: string) => void;
-  remove: (id: number) => void;
+  remove: (id: string) => void;
   success: (message: string) => void;
   warning: (message: string) => void;
   info: (message: string) => void;
