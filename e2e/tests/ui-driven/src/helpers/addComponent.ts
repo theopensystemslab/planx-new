@@ -1,9 +1,25 @@
 import { Locator, Page } from "@playwright/test";
 
+enum PlanXEditorComponent {
+  QUESTION = "Question",
+  NOTICE = "Notice",
+  CHECKLIST = "Checklist",
+  TEXT = "Text Input",
+  NUMBER = "Number Input",
+  DATE = "Date Input",
+  ADDRESS = "Address Input",
+  CONTACT = "Contact Input",
+  TASKLIST = "Task List",
+  REVIEW = "Review",
+  FIND_PROPERTY = "Find property",
+  PLANNING_CONSTRAINTS = "Planning constraints",
+  DRAW_BOUNDARY = "Draw boundary",
+}
+
 const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
-  type: string,
+  type: PlanXEditorComponent,
   title?: string,
   options?: string[]
 ) => {
@@ -12,29 +28,29 @@ const createBaseComponent = async (
   await page.locator("select").selectOption({ label: type });
 
   switch (type) {
-    case "Question":
+    case PlanXEditorComponent.QUESTION:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new", page);
       }
       break;
-    case "Notice":
+    case PlanXEditorComponent.NOTICE:
       await page.getByPlaceholder("Notice").fill(title || "");
       break;
-    case "Checklist":
+    case PlanXEditorComponent.CHECKLIST:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new option", page);
       }
       break;
-    case "Text Input":
+    case PlanXEditorComponent.TEXT:
       await page.getByPlaceholder("Title").fill(title || "");
       break;
-    case "Number Input":
+    case PlanXEditorComponent.NUMBER:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("eg square metres").fill(options?.[0] || "");
       break;
-    case "Date Input":
+    case PlanXEditorComponent.DATE:
       await page.getByPlaceholder("Title").fill(title || "");
       // fill with hardcoded dates for now
       await page.locator("id=undefined-min-day").fill("01");
@@ -44,15 +60,15 @@ const createBaseComponent = async (
       await page.locator("id=undefined-max-month").fill("12");
       await page.locator("id=undefined-max-year").fill("2199");
       break;
-    case "Address Input":
+    case PlanXEditorComponent.ADDRESS:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
-    case "Contact Input":
+    case PlanXEditorComponent.CONTACT:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
-    case "Task List":
+    case PlanXEditorComponent.TASKLIST:
       await page.getByPlaceholder("Main Title").fill(title || "");
       if (options) {
         let index = 0;
@@ -66,20 +82,20 @@ const createBaseComponent = async (
         }
       }
       break;
-    case "Review":
+    case PlanXEditorComponent.REVIEW:
       // Don't need to change anything so dummy click
       await page
         .getByPlaceholder("Check your answers before sending your application")
         .click();
       break;
-    case "Find property":
+    case PlanXEditorComponent.FIND_PROPERTY:
       // use default placeholder 'Find the property'
       await page.getByPlaceholder("Title").click();
       break;
-    case "Planning constraints":
+    case PlanXEditorComponent.PLANNING_CONSTRAINTS:
       await page.getByPlaceholder(type).click();
       break;
-    case "Draw boundary":
+    case PlanXEditorComponent.DRAW_BOUNDARY:
       page.getByPlaceholder(type);
       break;
     default:
@@ -89,7 +105,7 @@ const createBaseComponent = async (
   // convert type name to lowercase, with dashes if there are spaces
   // or custom name if it doesn't fit the pattern
   const buttonName =
-    type === "Find property"
+    type === PlanXEditorComponent.FIND_PROPERTY
       ? "find-property-merged"
       : type.toLowerCase().replace(/\s/g, "-");
 
@@ -110,7 +126,7 @@ export const createQuestionWithOptions = async (
   await createBaseComponent(
     page,
     locatingNode,
-    "Question",
+    PlanXEditorComponent.QUESTION,
     questionText,
     options
   );
@@ -121,7 +137,12 @@ export const createNotice = async (
   locatingNode: Locator,
   noticeText: string
 ) => {
-  await createBaseComponent(page, locatingNode, "Notice", noticeText);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.NOTICE,
+    noticeText
+  );
 };
 
 export const createChecklist = async (
@@ -133,7 +154,7 @@ export const createChecklist = async (
   createBaseComponent(
     page,
     locatingNode,
-    "Checklist",
+    PlanXEditorComponent.CHECKLIST,
     checklistTitle,
     checklistOptions
   );
@@ -144,7 +165,12 @@ export const createTextInput = async (
   locatingNode: Locator,
   inputTitle: string
 ) => {
-  await createBaseComponent(page, locatingNode, "Text Input", inputTitle);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.TEXT,
+    inputTitle
+  );
 };
 
 export const createNumberInput = async (
@@ -153,9 +179,13 @@ export const createNumberInput = async (
   inputTitle: string,
   inputUnits: string
 ) => {
-  await createBaseComponent(page, locatingNode, "Number Input", inputTitle, [
-    inputUnits,
-  ]);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.NUMBER,
+    inputTitle,
+    [inputUnits]
+  );
 };
 
 export const createDateInput = async (
@@ -163,7 +193,12 @@ export const createDateInput = async (
   locatingNode: Locator,
   inputTitle: string
 ) => {
-  await createBaseComponent(page, locatingNode, "Date Input", inputTitle);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.DATE,
+    inputTitle
+  );
 };
 
 export const createAddressInput = async (
@@ -172,9 +207,13 @@ export const createAddressInput = async (
   inputTitle: string,
   inputDataField: string
 ) => {
-  await createBaseComponent(page, locatingNode, "Address Input", inputTitle, [
-    inputDataField,
-  ]);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.ADDRESS,
+    inputTitle,
+    [inputDataField]
+  );
 };
 
 export const createContactInput = async (
@@ -183,9 +222,13 @@ export const createContactInput = async (
   inputTitle: string,
   inputDataField: string
 ) => {
-  await createBaseComponent(page, locatingNode, "Contact Input", inputTitle, [
-    inputDataField,
-  ]);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.CONTACT,
+    inputTitle,
+    [inputDataField]
+  );
 };
 
 export const createTaskList = async (
@@ -197,29 +240,41 @@ export const createTaskList = async (
   await createBaseComponent(
     page,
     locatingNode,
-    "Task List",
+    PlanXEditorComponent.TASKLIST,
     title,
     taskListOptions
   );
 };
 
 export const createReview = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(page, locatingNode, "Review");
+  await createBaseComponent(page, locatingNode, PlanXEditorComponent.REVIEW);
 };
 
 export const createFindProperty = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(page, locatingNode, "Find property");
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.FIND_PROPERTY
+  );
 };
 
 export const createPlanningConstraints = async (
   page: Page,
   locatingNode: Locator
 ) => {
-  await createBaseComponent(page, locatingNode, "Planning constraints");
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.PLANNING_CONSTRAINTS
+  );
 };
 
 export const createDrawBoundary = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(page, locatingNode, "Draw boundary");
+  await createBaseComponent(
+    page,
+    locatingNode,
+    PlanXEditorComponent.DRAW_BOUNDARY
+  );
 };
 
 async function createComponentOptions(
