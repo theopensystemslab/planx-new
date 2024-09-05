@@ -77,7 +77,10 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Title").click();
       break;
     case "Planning constraints":
-        await page.getByPlaceholder(type).click();
+      await page.getByPlaceholder(type).click();
+      break;
+    case "Draw boundary":
+      page.getByPlaceholder(type);
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
@@ -204,19 +207,20 @@ export const createReview = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, "Review");
 };
 
-export const createFindPropertyComponent = async (
-  page: Page,
-  locatingNode: Locator
-) => {
+export const createFindProperty = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, "Find property");
 };
 
-export const createPlanningConstraintsComponent = async (
-    page: Page,
-    locatingNode: Locator
-  ) => {
-    await createBaseComponent(page, locatingNode, "Planning constraints");
-  };
+export const createPlanningConstraints = async (
+  page: Page,
+  locatingNode: Locator
+) => {
+  await createBaseComponent(page, locatingNode, "Planning constraints");
+};
+
+export const createDrawBoundary = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, "Draw boundary");
+};
 
 async function createComponentOptions(
   options: string[],
