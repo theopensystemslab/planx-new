@@ -4,6 +4,45 @@ export const ResidentialUnitsGLAGained: Schema = {
   type: "Gained residential unit type",
   fields: [
     {
+      type: "question",
+      data: {
+        title: "What best describes the type of this unit?",
+        fn: "type",
+        options: [
+          { id: "terraced", data: { text: "Terraced home", val: "terraced" } },
+          {
+            id: "semiDetached",
+            data: { text: "Semi detached home", val: "semiDetached" },
+          },
+          { id: "detached", data: { text: "Detached home", val: "detached" } },
+          {
+            id: "flat",
+            data: { text: "Flat/apartment or maisonette", val: "flat" },
+          },
+          { id: "LW", data: { text: "Live/work unit", val: "LW" } },
+          { id: "cluster", data: { text: "Cluster flat", val: "cluster" } },
+          { id: "studio", data: { text: "Studio or bedsit", val: "studio" } },
+          { id: "coLiving", data: { text: "Co living unit", val: "coLiving" } },
+          { id: "hostel", data: { text: "Hostel room", val: "hostel" } },
+          { id: "HMO", data: { text: "HMO", val: "HMO" } },
+          {
+            id: "student",
+            data: { text: "Student accommodation", val: "student" },
+          },
+          { id: "other", data: { text: "Other", val: "other" } },
+        ],
+      },
+    },
+    {
+      type: "number",
+      data: {
+        title: "What will be the Gross Internal Floor Area (GIA) of this unit?",
+        units: "m²",
+        fn: "area",
+        allowNegatives: false,
+      },
+    },
+    {
       type: "number",
       data: {
         title: "How many habitable rooms will this unit have?",
@@ -64,36 +103,6 @@ export const ResidentialUnitsGLAGained: Schema = {
           {
             id: "marketForSale",
             data: { text: "Market for sale", val: "marketForSale" },
-          },
-          { id: "other", data: { text: "Other", val: "other" } },
-        ],
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title: "What best describes the type of this unit?",
-        fn: "type",
-        options: [
-          { id: "terraced", data: { text: "Terraced home", val: "terraced" } },
-          {
-            id: "semiDetached",
-            data: { text: "Semi detached home", val: "semiDetached" },
-          },
-          { id: "detached", data: { text: "Detached home", val: "detached" } },
-          {
-            id: "flat",
-            data: { text: "Flat/apartment or maisonette", val: "flat" },
-          },
-          { id: "LW", data: { text: "Live/work unit", val: "LW" } },
-          { id: "cluster", data: { text: "Cluster flat", val: "cluster" } },
-          { id: "studio", data: { text: "Studio or bedsit", val: "studio" } },
-          { id: "coLiving", data: { text: "Co living unit", val: "coLiving" } },
-          { id: "hostel", data: { text: "Hostel room", val: "hostel" } },
-          { id: "HMO", data: { text: "HMO", val: "HMO" } },
-          {
-            id: "student",
-            data: { text: "Student accommodation", val: "student" },
           },
           { id: "other", data: { text: "Other", val: "other" } },
         ],
@@ -163,21 +172,12 @@ export const ResidentialUnitsGLAGained: Schema = {
     {
       type: "question",
       data: {
-        title: "Is this unit built on garden land?",
+        title: "Will this unit be built on garden land?",
         fn: "garden",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
           { id: "false", data: { text: "No", val: "false" } },
         ],
-      },
-    },
-    {
-      type: "number",
-      data: {
-        title: "What will be the Gross Internal Floor Area (GIA) of this unit?",
-        units: "m²",
-        fn: "area",
-        allowNegatives: false,
       },
     },
     {
