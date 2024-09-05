@@ -76,6 +76,9 @@ const createBaseComponent = async (
       // use default placeholder 'Find the property'
       await page.getByPlaceholder("Title").click();
       break;
+    case "Planning constraints":
+        await page.getByPlaceholder(type).click();
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -207,6 +210,13 @@ export const createFindPropertyComponent = async (
 ) => {
   await createBaseComponent(page, locatingNode, "Find property");
 };
+
+export const createPlanningConstraintsComponent = async (
+    page: Page,
+    locatingNode: Locator
+  ) => {
+    await createBaseComponent(page, locatingNode, "Planning constraints");
+  };
 
 async function createComponentOptions(
   options: string[],

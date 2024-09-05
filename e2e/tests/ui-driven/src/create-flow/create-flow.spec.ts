@@ -7,6 +7,7 @@ import {
   createFindPropertyComponent,
   createNotice,
   createNumberInput,
+  createPlanningConstraintsComponent,
   createQuestionWithOptions,
   createReview,
   createTaskList,
@@ -188,6 +189,9 @@ test.describe("Navigation", () => {
     await createFindPropertyComponent(page, nextNode);
 
     nextNode = page.locator(".hanger > a").nth(14);
+    await createPlanningConstraintsComponent(page, nextNode);
+
+    nextNode = page.locator(".hanger > a").nth(15);
     await createReview(page, nextNode);
 
     const nodes = page.locator(".card");
@@ -202,6 +206,8 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("What is your contact info?")).toBeVisible();
     await expect(nodes.getByText("What you should do next")).toBeVisible();
     await expect(nodes.getByText("Find property")).toBeVisible();
+    await expect(nodes.getByText("Planning constraints")).toBeVisible();
+
     await expect(
       nodes.getByText("Check your answers before sending your application")
     ).toBeVisible();
