@@ -26,7 +26,7 @@ export async function getTeamEmailSettings(localAuthority: string) {
     `,
     {
       slug: localAuthority,
-    }
+    },
   );
 
   return response?.teams[0];
@@ -47,7 +47,7 @@ export async function getSessionData(sessionId: string) {
     `,
     {
       id: sessionId,
-    }
+    },
   );
 
   return response?.session?.data;
@@ -78,12 +78,12 @@ export async function getSessionEmailDetailsById(sessionId: string) {
     `,
     {
       id: sessionId,
-    }
+    },
   );
 
   if (!response.session)
     throw Error(
-      `Cannot find session ${sessionId} in GetSessionEmailDetails query`
+      `Cannot find session ${sessionId} in GetSessionEmailDetails query`,
     );
 
   return response.session;
@@ -103,7 +103,7 @@ export async function insertAuditEntry(
   sendEmailResponse: {
     message: string;
     expiryDate?: string;
-  }
+  },
 ) {
   const response = await $api.client.request<CreateEmailApplication>(
     gql`
@@ -133,7 +133,7 @@ export async function insertAuditEntry(
       recipient: recipient,
       request: notifyRequest,
       response: sendEmailResponse,
-    }
+    },
   );
 
   return response?.application?.id;

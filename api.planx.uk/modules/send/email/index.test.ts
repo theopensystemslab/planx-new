@@ -239,7 +239,7 @@ describe(`downloading application data received by email`, () => {
   it("errors if email query param does not match the stored database value for this team", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark"
+        "/download-application-files/123?email=wrong@council.gov.uk&localAuthority=southwark",
       )
       .expect(403)
       .then((res) => {
@@ -261,12 +261,12 @@ describe(`downloading application data received by email`, () => {
 
     await supertest(app)
       .get(
-        "/download-application-files/456?email=planning.office.example@council.gov.uk&localAuthority=southwark"
+        "/download-application-files/456?email=planning.office.example@council.gov.uk&localAuthority=southwark",
       )
       .expect(400)
       .then((res) => {
         expect(res.body.error).toMatch(
-          /Failed to find session data for this sessionId/
+          /Failed to find session data for this sessionId/,
         );
       });
   });
@@ -274,7 +274,7 @@ describe(`downloading application data received by email`, () => {
   it("calls addTemplateFilesToZip()", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=planning.office.example@council.gov.uk&localAuthority=southwark"
+        "/download-application-files/123?email=planning.office.example@council.gov.uk&localAuthority=southwark",
       )
       .expect(200)
       .then((_res) => {

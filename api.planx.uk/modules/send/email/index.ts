@@ -11,7 +11,7 @@ import {
 export async function sendToEmail(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -55,7 +55,7 @@ export async function sendToEmail(
     const response = await sendEmail(
       "submit",
       teamSettings.submissionEmail,
-      config
+      config,
     );
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
@@ -67,7 +67,7 @@ export async function sendToEmail(
       localAuthority,
       teamSettings.submissionEmail,
       config,
-      response
+      response,
     );
 
     return res.status(200).send({

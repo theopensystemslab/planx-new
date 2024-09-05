@@ -5,7 +5,7 @@ import { getSessionData, getTeamEmailSettings } from "../email/service.js";
 export async function downloadApplicationFiles(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const sessionId: string = req.params?.sessionId;
   if (!sessionId || !req.query?.email || !req.query?.localAuthority) {
@@ -18,7 +18,7 @@ export async function downloadApplicationFiles(
   try {
     // Confirm that the provided email matches the stored team settings for the provided localAuthority
     const { teamSettings } = await getTeamEmailSettings(
-      req.query.localAuthority as string
+      req.query.localAuthority as string,
     );
     if (teamSettings.submissionEmail !== req.query.email) {
       return next({
