@@ -1,38 +1,27 @@
 import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
-import {
-  NotifyPersonalisation,
-  Session,
-} from "@opensystemslab/planx-core/types";
+import { Session, TeamContactSettings } from "@opensystemslab/planx-core/types";
 import { EmailSubmissionNotifyConfig } from "../../../types.js";
 
-interface GetTeamEmailSettings {
-  teams: {
-    notifyPersonalisation: NotifyPersonalisation & { sendToEmail: string };
-  }[];
-}
-
 export async function getTeamEmailSettings(localAuthority: string) {
-  const response = await $api.client.request<GetTeamEmailSettings>(
+  const response = await $api.client.request<TeamContactSettings>(
     gql`
       query GetTeamEmailSettings($slug: String) {
-        teams(where: { slug: { _eq: $slug } }) {
-          notifyPersonalisation: team_settings {
-            helpEmail: help_email
-            helpPhone: help_phone
-            emailReplyToId: email_reply_to_id
-            helpOpeningHours: help_opening_hours
-            sendToEmail: submission_email
-          }
+        team_settings(where: { slug: { _eq: $slug } }) {
+          helpEmail: help_email
+          helpPhone: help_phone
+          emailReplyToId: email_reply_to_id
+          helpOpeningHours: help_opening_hours
+          submissionEmail: submission_email
         }
       }
     `,
     {
       slug: localAuthority,
-    },
+    }
   );
 
-  return response?.teams[0];
+  return response;
 }
 
 interface GetSessionData {
@@ -50,7 +39,7 @@ export async function getSessionData(sessionId: string) {
     `,
     {
       id: sessionId,
-    },
+    }
   );
 
   return response?.session?.data;
@@ -81,12 +70,12 @@ export async function getSessionEmailDetailsById(sessionId: string) {
     `,
     {
       id: sessionId,
-    },
+    }
   );
 
   if (!response.session)
     throw Error(
-      `Cannot find session ${sessionId} in GetSessionEmailDetails query`,
+      `Cannot find session ${sessionId} in GetSessionEmailDetails query`
     );
 
   return response.session;
@@ -106,7 +95,7 @@ export async function insertAuditEntry(
   sendEmailResponse: {
     message: string;
     expiryDate?: string;
-  },
+  }
 ) {
   const response = await $api.client.request<CreateEmailApplication>(
     gql`
@@ -136,7 +125,7 @@ export async function insertAuditEntry(
       recipient: recipient,
       request: notifyRequest,
       response: sendEmailResponse,
-    },
+    }
   );
 
   return response?.application?.id;
