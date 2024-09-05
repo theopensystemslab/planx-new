@@ -11,6 +11,7 @@ import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
+import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -60,6 +61,9 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
   const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
     useMapAndLabelContext();
 
+  // Features is inherently sorted by recently added/modified, order tabs by stable labels
+  const sortedFeatures = sortBy(features, ["properties.label"]);
+
   return (
     <Box
       sx={{
@@ -88,7 +92,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             borderColor: (theme) => theme.palette.border.main,
           }}
         >
-          {features.map((feature, i) => (
+          {sortedFeatures.map((feature, i) => (
             <StyledTab
               key={`tab-${i}`}
               value={i.toString()}
@@ -104,7 +108,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             />
           ))}
         </Tabs>
-        {features.map((feature, i) => (
+        {sortedFeatures.map((feature, i) => (
           <TabPanel
             key={`tabpanel-${i}`}
             value={i.toString()}
