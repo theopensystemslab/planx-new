@@ -14,6 +14,8 @@ const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.2em 0",
+  // Temp hide for demo
+  display: "none",
 }));
 
 const TestEnvironmentBanner: React.FC = () => {
