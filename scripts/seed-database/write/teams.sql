@@ -8,7 +8,6 @@ CREATE TEMPORARY TABLE sync_teams (
   settings jsonb,
   notify_personalisation jsonb,
   domain text,
-  submission_email text,
   boundary jsonb,
   reference_code text
 );
