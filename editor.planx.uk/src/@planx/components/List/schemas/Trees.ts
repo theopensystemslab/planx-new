@@ -2,7 +2,7 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const Trees: Schema = {
-  type: "Tree",
+  type: "Tree type",
   fields: [
     {
       type: "text",
