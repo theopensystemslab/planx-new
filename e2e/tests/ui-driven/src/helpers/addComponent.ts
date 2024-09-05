@@ -23,7 +23,7 @@ const createBaseComponent = async (
   locatingNode: Locator,
   type: PlanXEditorComponent,
   title?: string,
-  options?: string[]
+  options?: string[],
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -136,27 +136,27 @@ export const createQuestionWithOptions = async (
   page: Page,
   locatingNode: Locator,
   questionText: string,
-  options: string[]
+  options: string[],
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.QUESTION,
     questionText,
-    options
+    options,
   );
 };
 
 export const createNotice = async (
   page: Page,
   locatingNode: Locator,
-  noticeText: string
+  noticeText: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.NOTICE,
-    noticeText
+    noticeText,
   );
 };
 
@@ -164,27 +164,27 @@ export const createChecklist = async (
   page: Page,
   locatingNode: Locator,
   checklistTitle: string,
-  checklistOptions: string[]
+  checklistOptions: string[],
 ) => {
   createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.CHECKLIST,
     checklistTitle,
-    checklistOptions
+    checklistOptions,
   );
 };
 
 export const createTextInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string
+  inputTitle: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.TEXT,
-    inputTitle
+    inputTitle,
   );
 };
 
@@ -192,27 +192,27 @@ export const createNumberInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputUnits: string
+  inputUnits: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.NUMBER,
     inputTitle,
-    [inputUnits]
+    [inputUnits],
   );
 };
 
 export const createDateInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string
+  inputTitle: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.DATE,
-    inputTitle
+    inputTitle,
   );
 };
 
@@ -220,14 +220,14 @@ export const createAddressInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string
+  inputDataField: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.ADDRESS,
     inputTitle,
-    [inputDataField]
+    [inputDataField],
   );
 };
 
@@ -235,14 +235,14 @@ export const createContactInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string
+  inputDataField: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.CONTACT,
     inputTitle,
-    [inputDataField]
+    [inputDataField],
   );
 };
 
@@ -250,14 +250,14 @@ export const createTaskList = async (
   page: Page,
   locatingNode: Locator,
   title: string,
-  taskListOptions: string[]
+  taskListOptions: string[],
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.TASKLIST,
     title,
-    taskListOptions
+    taskListOptions,
   );
 };
 
@@ -269,18 +269,18 @@ export const createFindProperty = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.FIND_PROPERTY
+    PlanXEditorComponent.FIND_PROPERTY,
   );
 };
 
 export const createPlanningConstraints = async (
   page: Page,
-  locatingNode: Locator
+  locatingNode: Locator,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.PLANNING_CONSTRAINTS
+    PlanXEditorComponent.PLANNING_CONSTRAINTS,
   );
 };
 
@@ -288,42 +288,42 @@ export const createDrawBoundary = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.DRAW_BOUNDARY
+    PlanXEditorComponent.DRAW_BOUNDARY,
   );
 };
 
 export const createNextSteps = async (
   page: Page,
   locatingNode: Locator,
-  nextSteps: string[]
+  nextSteps: string[],
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.NEXT_STEPS,
     undefined,
-    nextSteps
+    nextSteps,
   );
 };
 
 export const createFileUpload = async (
   page: Page,
   locatingNode: Locator,
-  dataField: string
+  dataField: string,
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     PlanXEditorComponent.FILE_UPLOAD,
     undefined,
-    [dataField]
+    [dataField],
   );
 };
 
 async function createComponentOptions(
   options: string[],
   buttonText: string,
-  page: Page
+  page: Page,
 ) {
   let index = 0;
   for (const option of options) {
