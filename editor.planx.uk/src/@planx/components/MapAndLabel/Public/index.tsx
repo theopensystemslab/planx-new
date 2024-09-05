@@ -235,6 +235,7 @@ const Root = () => {
             {/* @ts-ignore */}
             <my-map
               id={MAP_ID}
+              data-testid="map-and-label-map"
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
