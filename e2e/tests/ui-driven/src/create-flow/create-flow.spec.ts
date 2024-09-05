@@ -7,6 +7,7 @@ import {
   createNotice,
   createNumberInput,
   createQuestionWithOptions,
+  createReview,
   createTaskList,
   createTextInput,
 } from "../helpers/addComponent";
@@ -182,6 +183,9 @@ test.describe("Navigation", () => {
       "Continue through this flow",
     ]);
 
+    nextNode = page.locator(".hanger > a").nth(13);
+    await createReview(page, nextNode);
+
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
     await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
@@ -193,6 +197,9 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("What is your address?")).toBeVisible();
     await expect(nodes.getByText("What is your contact info?")).toBeVisible();
     await expect(nodes.getByText("What you should do next")).toBeVisible();
+    await expect(
+      nodes.getByText("Check your answers before sending your application")
+    ).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({

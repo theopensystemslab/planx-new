@@ -66,6 +66,12 @@ const createBaseComponent = async (
         }
       }
       break;
+    case "Review":
+      // Don't need to change anything so dummy click to get through switch statement
+      await page
+        .getByPlaceholder("Check your answers before sending your application")
+        .click();
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -86,7 +92,13 @@ export const createQuestionWithOptions = async (
   questionText: string,
   options: string[]
 ) => {
-  await createBaseComponent(page, locatingNode, "Question", questionText, options);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    "Question",
+    questionText,
+    options
+  );
 };
 
 export const createNotice = async (
@@ -176,10 +188,14 @@ export const createTaskList = async (
   );
 };
 
+export const createReview = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, "Review");
+};
+
 async function createComponentOptions(
   options: string[],
   buttonText: string,
-  page: Page,
+  page: Page
 ) {
   let index = 0;
   for (const option of options) {
