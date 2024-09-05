@@ -26,7 +26,6 @@ export const getMicrosoftOidcStrategy = (client: Client): Strategy<Client> => {
       client: client,
       params: {
         scope: "openid email profile",
-        // TODO: verify that this is the appropriate response_mode
         response_mode: "form_post",
       },
       // need the request in the verify callback to validate the returned nonce
@@ -34,7 +33,6 @@ export const getMicrosoftOidcStrategy = (client: Client): Strategy<Client> => {
     },
     async (req: any, tokenSet: TokenSet, done: any): Promise<void> => {
       // TODO: use tokenSet.state to pass the redirectTo query param through the auth flow
-
       const claims = tokenSet.claims();
       const email = claims.email;
       const returned_nonce = claims.nonce;

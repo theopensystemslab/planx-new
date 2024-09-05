@@ -8,6 +8,7 @@ export const failedLogin: RequestHandler = (_req, _res, next) =>
   });
 
 export const logout: RequestHandler = (req, res) => {
+  // TODO: implement dual purpose as Microsoft frontend logout channel
   req.logout(() => {
     // do nothing
   });

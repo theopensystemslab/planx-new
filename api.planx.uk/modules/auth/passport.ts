@@ -25,14 +25,14 @@ export default async (): Promise<Authenticator> => {
     getMicrosoftOidcStrategy(microsoftOidcClient),
   );
 
-  // do other aspects of passport setup which can be handled here
-  // TODO: replace types here (e.g. user: Express.User - but verify this first)
+  // note that we don't serialize the user in any meaningful way - we just store the entire jwt in session
+  // i.e. req.session.passport.user == { jwt: "..." }
   customPassport.use("google", googleStrategy);
-  customPassport.serializeUser((user: any, done) => {
+  customPassport.serializeUser((user: Express.User, done) => {
     done(null, user);
   });
-  customPassport.deserializeUser((obj: any, done) => {
-    done(null, obj);
+  customPassport.deserializeUser((user: Express.User, done) => {
+    done(null, user);
   });
 
   // tsc dislikes the use of 'this' in the passportjs codebase, so we cast explicitly

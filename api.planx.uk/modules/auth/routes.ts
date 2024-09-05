@@ -7,6 +7,7 @@ export default (passport: Authenticator): Router => {
   const router = Router();
 
   router.get("/logout", Controller.logout);
+  // router.get("/auth/frontchannel-logout", Controller.frontChannelLogout)
   router.get("/auth/login/failed", Controller.failedLogin);
   router.get("/auth/google", Middleware.getGoogleAuthHandler(passport));
   router.get(

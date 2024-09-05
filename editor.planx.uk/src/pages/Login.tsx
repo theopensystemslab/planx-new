@@ -67,12 +67,11 @@ const Login: React.FC = () => {
           </Box>
         </LoginButton>
         <LoginButton
-          disabled
           variant="contained"
           color="secondary"
           href={`${
-            process.env.REACT_APP_MICROSOFT_OAUTH_OVERRIDE ??
-            process.env.REACT_APP_API_URL
+            import.meta.env.VITE_APP_MICROSOFT_OAUTH_OVERRIDE ??
+            import.meta.env.VITE_APP_API_URL
           }/auth/microsoft`}
         >
           <Box component="span">
