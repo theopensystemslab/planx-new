@@ -1,11 +1,11 @@
 import { Locator, Page } from "@playwright/test";
 
-const createBaseInput = async (
+const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
   type: string,
   title?: string,
-  options?: string[],
+  options?: string[]
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -15,7 +15,7 @@ const createBaseInput = async (
     case "Question":
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
-        await createOptions(options, "add new", page);
+        await createComponentOptions(options, "add new", page);
       }
       break;
     case "Notice":
@@ -24,7 +24,7 @@ const createBaseInput = async (
     case "Checklist":
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
-        await createOptions(options, "add new option", page);
+        await createComponentOptions(options, "add new option", page);
       }
       break;
     case "Text Input":
@@ -52,6 +52,20 @@ const createBaseInput = async (
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
+    case "Task List":
+      await page.getByPlaceholder("Main Title").fill(title || "");
+      if (options) {
+        let index = 0;
+        for (const option of options) {
+          await page.locator("button").filter({ hasText: "add new" }).click();
+          await page
+            .getByPlaceholder("Title")
+            .nth(index + 1) // ignore the main title field
+            .fill(option);
+          index++;
+        }
+      }
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -70,49 +84,49 @@ export const createQuestionWithOptions = async (
   page: Page,
   locatingNode: Locator,
   questionText: string,
-  options: string[],
+  options: string[]
 ) => {
-  await createBaseInput(page, locatingNode, "Question", questionText, options);
+  await createBaseComponent(page, locatingNode, "Question", questionText, options);
 };
 
 export const createNotice = async (
   page: Page,
   locatingNode: Locator,
-  noticeText: string,
+  noticeText: string
 ) => {
-  await createBaseInput(page, locatingNode, "Notice", noticeText);
+  await createBaseComponent(page, locatingNode, "Notice", noticeText);
 };
 
 export const createChecklist = async (
   page: Page,
   locatingNode: Locator,
   checklistTitle: string,
-  checklistOptions: string[],
+  checklistOptions: string[]
 ) => {
-  createBaseInput(
+  createBaseComponent(
     page,
     locatingNode,
     "Checklist",
     checklistTitle,
-    checklistOptions,
+    checklistOptions
   );
 };
 
 export const createTextInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string,
+  inputTitle: string
 ) => {
-  await createBaseInput(page, locatingNode, "Text Input", inputTitle);
+  await createBaseComponent(page, locatingNode, "Text Input", inputTitle);
 };
 
 export const createNumberInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputUnits: string,
+  inputUnits: string
 ) => {
-  await createBaseInput(page, locatingNode, "Number Input", inputTitle, [
+  await createBaseComponent(page, locatingNode, "Number Input", inputTitle, [
     inputUnits,
   ]);
 };
@@ -120,18 +134,18 @@ export const createNumberInput = async (
 export const createDateInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string,
+  inputTitle: string
 ) => {
-  await createBaseInput(page, locatingNode, "Date Input", inputTitle);
+  await createBaseComponent(page, locatingNode, "Date Input", inputTitle);
 };
 
 export const createAddressInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string,
+  inputDataField: string
 ) => {
-  await createBaseInput(page, locatingNode, "Address Input", inputTitle, [
+  await createBaseComponent(page, locatingNode, "Address Input", inputTitle, [
     inputDataField,
   ]);
 };
@@ -140,13 +154,29 @@ export const createContactInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string,
+  inputDataField: string
 ) => {
-  await createBaseInput(page, locatingNode, "Contact Input", inputTitle, [
+  await createBaseComponent(page, locatingNode, "Contact Input", inputTitle, [
     inputDataField,
   ]);
 };
-async function createOptions(
+
+export const createTaskList = async (
+  page: Page,
+  locatingNode: Locator,
+  title: string,
+  taskListOptions: string[]
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    "Task List",
+    title,
+    taskListOptions
+  );
+};
+
+async function createComponentOptions(
   options: string[],
   buttonText: string,
   page: Page,
