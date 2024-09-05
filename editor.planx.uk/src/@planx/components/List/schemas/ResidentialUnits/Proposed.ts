@@ -62,9 +62,9 @@ export const ResidentialUnitsProposed: Schema = {
     {
       type: "number",
       data: {
-        title: "How many units of the type described above are proposed?",
+        title: "How many units of the type described above are you proposing?",
         description:
-          "This is the number of units of the type described above that will be on the site after completion of the project.",
+          "This is the total number of units of this type that will be on the site after completion of the project.",
         fn: "identicalUnits",
         allowNegatives: false,
       },
