@@ -5,12 +5,9 @@ CREATE TEMPORARY TABLE sync_teams (
   slug text,
   created_at timestamptz,
   updated_at timestamptz,
-  settings jsonb,
-  notify_personalisation jsonb,
   domain text,
   submission_email text,
-  boundary jsonb,
-  reference_code text
+  boundary jsonb
 );
 
 \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -19,27 +16,18 @@ INSERT INTO teams (
   id,
   name,
   slug,
-  settings,
-  notify_personalisation,
-  boundary,
-  reference_code
+  boundary
 )
 SELECT
   id,
   name,
   slug,
-  settings,
-  notify_personalisation,
-  boundary,
-  reference_code
+  boundary
 FROM sync_teams
 ON CONFLICT (id) DO UPDATE
 SET
   name = EXCLUDED.name,
   slug = EXCLUDED.slug,
-  settings = EXCLUDED.settings,
-  notify_personalisation = EXCLUDED.notify_personalisation,
-  boundary = EXCLUDED.boundary,
-  reference_code = EXCLUDED.reference_code;
+  boundary = EXCLUDED.boundary;
 
 SELECT setval('teams_id_seq', max(id)) FROM teams;

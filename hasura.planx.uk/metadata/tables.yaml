@@ -2052,10 +2052,7 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - settings
           - slug
-          - submission_email
           - updated_at
   select_permissions:
     - role: api
@@ -2066,11 +2063,7 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
-          - submission_email
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -2082,9 +2075,6 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
         computed_fields:
@@ -2098,9 +2088,6 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
         computed_fields:
@@ -2113,9 +2100,6 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
         computed_fields:
@@ -2127,38 +2111,9 @@
         columns:
           - domain
           - name
-          - notify_personalisation
-          - settings
           - slug
-          - submission_email
         filter: {}
         check: null
-- table:
-    name: teams_summary
-    schema: public
-  select_permissions:
-    - role: platformAdmin
-      permission:
-        columns:
-          - govpay_enabled
-          - planning_data_enabled
-          - id
-          - govnotify_personalisation
-          - action_colour
-          - article_4s_enabled
-          - bops_submission_url
-          - favicon
-          - homepage
-          - link_colour
-          - logo
-          - name
-          - primary_colour
-          - reference_code
-          - send_to_email_address
-          - slug
-          - subdomain
-        filter: {}
-      comment: ""
 - table:
     name: uniform_applications
     schema: public
