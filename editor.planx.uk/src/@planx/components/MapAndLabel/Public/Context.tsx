@@ -28,10 +28,11 @@ interface MapAndLabelContextValue {
   features?: Feature[];
   updateMapKey: number;
   activeIndex: number;
-  editFeature: (index: number) => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   isFeatureInvalid: (index: number) => boolean;
+  addInitialFeaturesToMap: (features: Feature[]) => void;
+  editFeature: (index: number) => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
   removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
@@ -151,8 +152,13 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const addFeatureToMap = (geojson: GeoJSONChange) => {
     resetErrors();
-
     setFeatures(geojson["EPSG:3857"].features);
+    setActiveIndex((features && features?.length - 2) || activeIndex + 1);
+  };
+
+  const addInitialFeaturesToMap = (features: Feature[]) => {
+    setFeatures(features);
+    // TODO: setActiveIndex ?
   };
 
   const addFeatureToForm = () => {
@@ -189,15 +195,13 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
       (f) => f.properties?.label !== label,
     );
 
-    // If the removed feature was not the final one in the array, shift all feature labels after the removed feature so they remain incremental
-    if (features && features?.length > index) {
-      filteredFeatures?.map((f) => {
-        if (f.properties && Number(f.properties?.label) > Number(label)) {
-          const newLabel = Number(f.properties.label) - 1;
-          Object.assign(f, { properties: { label: `${newLabel}` } });
-        }
-      });
-    }
+    // Shift any feature labels that are larger than the removed feature label so they remain incremental
+    filteredFeatures?.map((f) => {
+      if (f.properties && Number(f.properties?.label) > Number(label)) {
+        const newLabel = Number(f.properties.label) - 1;
+        Object.assign(f, { properties: { label: `${newLabel}` } });
+      }
+    });
     setFeatures(filteredFeatures);
 
     // `updateMapKey` is set as a unique `key` prop on the map container to force a re-render of its children (aka <my-map />) on change
@@ -220,9 +224,10 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         activeIndex,
         schema,
         mapAndLabelProps: props,
-        editFeature,
         formik,
         validateAndSubmitForm,
+        addInitialFeaturesToMap,
+        editFeature,
         copyFeature,
         removeFeature,
         isFeatureInvalid,
