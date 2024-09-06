@@ -25,12 +25,12 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { MaterialDetails } from "./schemas/Materials";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
+import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
+import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
 import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
 import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
 import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
-import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
-import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { Trees } from "./schemas/Trees";
 import { TreesMapFirst } from "./schemas/TreesMapFirst";
@@ -77,12 +77,8 @@ export const SCHEMAS = [
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
   { name: "Parking details", schema: Parking },
   { name: "Parking details (GLA)", schema: ParkingGLA },
-  ...(hasFeatureFlag("TREES")
-    ? [
-        { name: "Trees", schema: Trees },
-        { name: "Trees (Map first)", schema: TreesMapFirst },
-      ]
-    : []),
+  { name: "Trees", schema: Trees },
+  { name: "Trees (Map first)", schema: TreesMapFirst },
 ];
 
 function ListComponent(props: Props) {
