@@ -60,7 +60,7 @@ export async function setUpTestContext(
       name: context.team.name,
       settings: {
         homepage: context.team.settings?.homepage,
-        submissionEmail: context.team.submissionEmail,
+        submissionEmail: context.team.settings?.submissionEmail,
       },
     });
   }

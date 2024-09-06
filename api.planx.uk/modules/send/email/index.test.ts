@@ -49,9 +49,9 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            notifyPersonalisation: {
+            teamSettings: {
               emailReplyToId: "abc123",
-              sendToEmail: "planning.office.example@council.gov.uk",
+              submissionEmail: "planning.office.example@council.gov.uk",
             },
           },
         ],
@@ -154,9 +154,9 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         teams: [
           {
-            notifyPersonalisation: {
+            teamSettings: {
               emailReplyToId: "abc123",
-              sendToEmail: null,
+              submissionEmail: null,
             },
           },
         ],
@@ -206,8 +206,8 @@ describe(`downloading application data received by email`, () => {
       data: {
         teams: [
           {
-            notifyPersonalisation: {
-              sendToEmail: "planning.office.example@council.gov.uk",
+            teamSettings: {
+              submissionEmail: "planning.office.example@council.gov.uk",
             },
           },
         ],
