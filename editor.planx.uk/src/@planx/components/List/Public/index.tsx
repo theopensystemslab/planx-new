@@ -124,9 +124,7 @@ const InactiveListCard: React.FC<{
   const { schema, formik, removeItem, editItem, isPageComponent } =
     useListContext();
 
-  const mapPreview = schema.fields.find(
-    (field) => field.data.fn === "features",
-  );
+  const mapPreview = schema.fields.find((field) => field.type === "map");
 
   return (
     <ListCard data-testid={`list-card-${i}`}>
@@ -147,7 +145,7 @@ const InactiveListCard: React.FC<{
           <TableBody>
             {schema.fields.map(
               (field, j) =>
-                field.data.fn !== "features" && (
+                field.type !== "map" && (
                   <TableRow key={`tableRow-${j}`} sx={{ verticalAlign: "top" }}>
                     <TableCell
                       sx={{
