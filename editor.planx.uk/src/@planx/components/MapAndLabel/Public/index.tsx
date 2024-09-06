@@ -201,7 +201,7 @@ const Root = () => {
     features,
     mapAndLabelProps,
     schema,
-    updateMap,
+    updateMapKey,
     validateAndSubmitForm,
   } = useMapAndLabelContext();
   const {
@@ -236,12 +236,12 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <ErrorWrapper error={rootError} key={updateMap ? 1 : 0}>
+        <ErrorWrapper error={rootError} key={updateMapKey}>
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map
               id={MAP_ID}
-              data-testid="map-and-label-map"
+              data-testid={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
