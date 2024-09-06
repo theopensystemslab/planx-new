@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#931d4db
-    version: github.com/theopensystemslab/planx-core/931d4db
+    specifier: git+https://github.com/theopensystemslab/planx-core#ec52620
+    version: github.com/theopensystemslab/planx-core/ec52620
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -2719,8 +2719,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /type-fest@4.25.0:
-    resolution: {integrity: sha512-bRkIGlXsnGBRBQRAY56UXBm//9qH4bmJfFvq83gSz41N282df+fjy8ofcEgc1sM8geNt5cl6mC2g9Fht1cs8Aw==}
+  /type-fest@4.26.0:
+    resolution: {integrity: sha512-OduNjVJsFbifKb57UqZ2EMP1i4u64Xwow3NYXUtBbD4vIwJdQd4+xl8YDou1dlm4DVrtwT/7Ky8z8WyCULVfxw==}
     engines: {node: '>=16'}
     dev: false
 
@@ -2931,8 +2931,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/931d4db:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/931d4db}
+  github.com/theopensystemslab/planx-core/ec52620:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ec52620}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2958,7 +2958,7 @@ packages:
       prettier: 3.3.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.25.0
+      type-fest: 4.26.0
       uuid: 10.0.0
       zod: 3.23.8
     transitivePeerDependencies:

@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import type { MapField } from "@planx/components/shared/Schema/model";
 import { Feature } from "geojson";
@@ -47,47 +48,52 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   }, [setFeatures]);
 
   return (
-    <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
-      {description && <FieldInputDescription description={description} />}
-      <ErrorWrapper error={errorMessage} id={id}>
-        <MapContainer environment="standalone">
-          {/* @ts-ignore */}
-          <my-map
-            id={id}
-            // TODO
-            // ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
-            height={400}
-            basemap={mapOptions?.basemap}
-            drawMode
-            drawGeojsonData={
-              features &&
-              JSON.stringify({ type: "FeatureCollection", features: features })
-            }
-            drawMany={mapOptions?.drawMany}
-            drawColor={mapOptions?.drawColor}
-            drawType={mapOptions?.drawType}
-            drawPointer="crosshair"
-            zoom={20}
-            maxZoom={23}
-            latitude={Number(passport?.data?._address?.latitude)}
-            longitude={Number(passport?.data?._address?.longitude)}
-            osProxyEndpoint={`${
-              import.meta.env.VITE_APP_API_URL
-            }/proxy/ordnance-survey`}
-            osCopyright={
-              mapOptions?.basemap === "OSVectorTile"
-                ? `Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
-                : ``
-            }
-            clipGeojsonData={
-              teamSettings?.boundaryBBox &&
-              JSON.stringify(teamSettings?.boundaryBBox)
-            }
-            mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
-            collapseAttributions
-          />
-        </MapContainer>
-      </ErrorWrapper>
-    </InputLabel>
+    <Box sx={{ "& > label": { maxWidth: "100% !important" } }}>
+      <InputLabel label={title} id={`map-label-${id}`} htmlFor={id}>
+        {description && <FieldInputDescription description={description} />}
+        <ErrorWrapper error={errorMessage} id={id}>
+          <MapContainer environment="standalone">
+            {/* @ts-ignore */}
+            <my-map
+              id={id}
+              // TODO
+              // ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
+              height={400}
+              basemap={mapOptions?.basemap}
+              drawMode
+              drawGeojsonData={
+                features &&
+                JSON.stringify({
+                  type: "FeatureCollection",
+                  features: features,
+                })
+              }
+              drawMany={mapOptions?.drawMany}
+              drawColor={mapOptions?.drawColor}
+              drawType={mapOptions?.drawType}
+              drawPointer="crosshair"
+              zoom={20}
+              maxZoom={23}
+              latitude={Number(passport?.data?._address?.latitude)}
+              longitude={Number(passport?.data?._address?.longitude)}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
+              osCopyright={
+                mapOptions?.basemap === "OSVectorTile"
+                  ? `Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  : ``
+              }
+              clipGeojsonData={
+                teamSettings?.boundaryBBox &&
+                JSON.stringify(teamSettings?.boundaryBBox)
+              }
+              mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
+              collapseAttributions
+            />
+          </MapContainer>
+        </ErrorWrapper>
+      </InputLabel>
+    </Box>
   );
 };

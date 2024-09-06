@@ -1,8 +1,8 @@
 import {
   FlowStatus,
   GovUKPayment,
-  NotifyPersonalisation,
   Team,
+  TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
@@ -116,7 +116,7 @@ export interface AdminPanelData {
   subdomain?: string;
   planningDataEnabled: boolean;
   article4sEnabled: string;
-  govnotifyPersonalisation?: NotifyPersonalisation;
+  govnotifyPersonalisation?: TeamContactSettings;
   govpayEnabled: boolean;
   sendToEmailAddress?: string;
   bopsSubmissionURL?: string;
