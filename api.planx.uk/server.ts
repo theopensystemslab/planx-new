@@ -4,11 +4,12 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors, { CorsOptions } from "cors";
-import express, { ErrorRequestHandler } from "express";
+import express from "express";
+import type { ErrorRequestHandler, Request } from "express";
 import "express-async-errors";
 import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
-import { Server } from "http";
+import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
 import noir from "pino-noir";
 import airbrake from "./airbrake.js";
@@ -193,6 +194,14 @@ declare global {
       sub?: string;
       "https://hasura.io/jwt/claims"?: {
         "x-hasura-allowed-roles": Role[];
+      };
+    }
+  }
+
+  namespace Http {
+    interface IncomingMessageWithSession extends IncomingMessage {
+      session?: {
+        nonce: string;
       };
     }
   }

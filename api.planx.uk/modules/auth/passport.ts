@@ -1,6 +1,5 @@
 import { Issuer } from "openid-client";
-import type { Authenticator } from "passport";
-import passport from "passport";
+import passport, { type Authenticator } from "passport";
 
 import { googleStrategy } from "./strategy/google.js";
 import {

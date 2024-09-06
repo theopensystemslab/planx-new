@@ -1,4 +1,9 @@
-import type { TokenSet, Client, ClientMetadata } from "openid-client";
+import type {
+  Client,
+  ClientMetadata,
+  IdTokenClaims,
+  StrategyVerifyCallbackReq,
+} from "openid-client";
 import { Strategy } from "openid-client";
 import { buildJWT } from "../service.js";
 
@@ -31,36 +36,34 @@ export const getMicrosoftOidcStrategy = (client: Client): Strategy<Client> => {
       // need the request in the verify callback to validate the returned nonce
       passReqToCallback: true,
     },
-    async (req: any, tokenSet: TokenSet, done: any): Promise<void> => {
-      // TODO: use tokenSet.state to pass the redirectTo query param through the auth flow
-      const claims = tokenSet.claims();
-      const email = claims.email;
-      const returned_nonce = claims.nonce;
-
-      if (returned_nonce != req.session.nonce) {
-        return done(
-          new Error("Returned nonce does not match session nonce"),
-          null,
-        );
-      }
-
-      if (!email) {
-        return done(new Error("Unable to authenticate without email"), null);
-      }
-
-      const jwt = await buildJWT(email);
-
-      if (!jwt) {
-        return done(
-          {
-            status: 404,
-            message: `User (${email}) not found. Do you need to log in to a different Microsoft Account?`,
-          } as any,
-          null,
-        );
-      }
-
-      return done(null, { jwt });
-    },
+    verifyCallback,
   );
+};
+
+const verifyCallback: StrategyVerifyCallbackReq<Express.User> = async (
+  req: Http.IncomingMessageWithSession,
+  tokenSet,
+  done,
+): Promise<void> => {
+  // TODO: use tokenSet.state to pass the redirectTo query param through the auth flow
+  const claims: IdTokenClaims = tokenSet.claims();
+  const email = claims.email;
+  const returned_nonce = claims.nonce;
+
+  if (returned_nonce != req.session?.nonce) {
+    return done(new Error("Returned nonce does not match session nonce"));
+  }
+  if (!email) {
+    return done(new Error("Unable to authenticate without email"));
+  }
+
+  const jwt = await buildJWT(email);
+  if (!jwt) {
+    return done({
+      status: 404,
+      message: `User (${email}) not found. Do you need to log in to a different Microsoft Account?`,
+    });
+  }
+
+  return done(null, { jwt });
 };
