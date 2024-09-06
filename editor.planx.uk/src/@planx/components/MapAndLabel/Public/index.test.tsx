@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { waitFor } from "@testing-library/react";
+import { waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -9,6 +9,7 @@ import { axe } from "vitest-axe";
 import { point1, point2 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import { addFeaturesToMap } from "../test/utils";
+import { exp } from "mathjs";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -46,14 +47,14 @@ describe("Basic UI", () => {
 
     await waitFor(() =>
       expect(
-        queryByText("Plot a feature on the map to begin"),
-      ).not.toBeInTheDocument(),
+        queryByText("Plot a feature on the map to begin")
+      ).not.toBeInTheDocument()
     );
   });
 
   it("renders the schema name as the tab title", async () => {
     const { queryByText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -68,7 +69,7 @@ describe("Basic UI", () => {
 
   it("should not have any accessibility violations", async () => {
     const { queryByText, getByTestId, container } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -86,7 +87,7 @@ describe("Basic UI", () => {
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
     const { getAllByTestId, getByTestId, getByRole, user } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -111,7 +112,7 @@ describe("validation and error handling", () => {
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user, getAllByTestId } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -121,28 +122,44 @@ describe("validation and error handling", () => {
     const firstTab = getByRole("tab", { name: /Tree 1/ });
     const secondTab = getByRole("tab", { name: /Tree 2/ });
 
+    const firstTabPanel = getByRole("tabpanel", { name: /Tree 1/ });
+
     expect(firstTab).toBeInTheDocument();
     expect(secondTab).toBeInTheDocument();
 
+    expect(firstTabPanel).toBeVisible();
+
     const continueButton = getByRole("button", { name: /Continue/ });
 
-    user.click(continueButton);
+    await user.click(continueButton);
 
     const errorMessagesOne = getAllByTestId(/error-message-input/);
     expect(errorMessagesOne).toHaveLength(8);
 
-    user.click(secondTab);
+    await user.click(secondTab);
 
     const errorMessagesTwo = getAllByTestId(/error-message-input/);
     expect(errorMessagesTwo).toHaveLength(8);
   });
   // it shows all fields are required across different tabs
-  test.todo("an error displays if the minimum number of items is not met");
-  // ??
-  test.todo("an error displays if the maximum number of items is exceeded");
+  it("should show an error if the minimum number of items is not met", async () => {
+    const { getByTestId, getByRole, user, getByText } = setup(
+      <MapAndLabel {...props} />
+    );
+    const map = getByTestId("map-and-label-map");
+    expect(map).toBeInTheDocument();
+
+    const continueButton = getByRole("button", { name: /Continue/ });
+
+    await user.click(continueButton);
+
+    const errorWrapper = getByTestId(/error-wrapper/);
+
+    const errorMessage = getByText(/You must plot /);
+  });
   // ??
   test.todo(
-    "an error state is applied to a tabpanel button, when it's associated feature is invalid",
+    "an error state is applied to a tabpanel button, when it's associated feature is invalid"
   );
   // shows the error state on a tab when it's invalid
 });
@@ -166,7 +183,7 @@ describe("copy feature select", () => {
   it.todo("is enabled once multiple features are present");
   // copy select enabled once you add more features
   it.todo(
-    "lists all other features as options (the current feature is not listed)",
+    "lists all other features as options (the current feature is not listed)"
   );
   // current tree is not an option in the copy select
   it.todo("copies all data from one feature to another");
@@ -188,11 +205,11 @@ describe("payload generation", () => {
   test.todo("a submitted payload contains a GeoJSON feature collection");
   // check payload contains GeoJSON feature collection
   test.todo(
-    "the feature collection contains all geospatial data inputted by the user",
+    "the feature collection contains all geospatial data inputted by the user"
   );
   // feature collection matches the mocked data
   test.todo(
-    "each feature's properties correspond with the details entered for that feature",
+    "each feature's properties correspond with the details entered for that feature"
   );
   // feature properties contain the answers to inputs
 });
