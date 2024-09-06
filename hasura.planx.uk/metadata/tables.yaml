@@ -2047,7 +2047,6 @@
       permission:
         check: {}
         columns:
-          - boundary
           - created_at
           - domain
           - id
@@ -2058,7 +2057,6 @@
     - role: api
       permission:
         columns:
-          - boundary
           - created_at
           - domain
           - id
@@ -2077,13 +2075,10 @@
           - name
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: public
       permission:
         columns:
-          - boundary
           - created_at
           - domain
           - id

@@ -6,8 +6,7 @@ CREATE TEMPORARY TABLE sync_teams (
   created_at timestamptz,
   updated_at timestamptz,
   domain text,
-  submission_email text,
-  boundary jsonb
+  submission_email text
 );
 
 \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
@@ -15,19 +14,16 @@ CREATE TEMPORARY TABLE sync_teams (
 INSERT INTO teams (
   id,
   name,
-  slug,
-  boundary
+  slug
 )
 SELECT
   id,
   name,
-  slug,
-  boundary
+  slug
 FROM sync_teams
 ON CONFLICT (id) DO UPDATE
 SET
   name = EXCLUDED.name,
-  slug = EXCLUDED.slug,
-  boundary = EXCLUDED.boundary;
+  slug = EXCLUDED.slug;
 
 SELECT setval('teams_id_seq', max(id)) FROM teams;
