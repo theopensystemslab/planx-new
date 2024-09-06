@@ -54,8 +54,8 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <StyledForm>
         <FeedbackDisclaimer>
-          Do not share personal or financial information in your feedback. If
-          you do we’ll act according to our{" "}
+          Don't share any personal or financial information in your feedback. If
+          you do we will act according to our{" "}
           <Link
             href="https://www.planx.uk/privacy"
             target="_blank"
@@ -67,10 +67,9 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
         </FeedbackDisclaimer>
         <FormInputs inputs={inputs} />
         <FeedbackDisclaimer>
-          This information is not monitored frequently by planning officers, do
-          not use it to provide extra information or queries with regard to your
-          application or project. Any information of this nature will be
-          disregarded.
+          The information collected here isn't monitored by planning officers.
+          Don't use it to give extra information about your project or
+          submission. If you do, it cannot be used to assess your project.
         </FeedbackDisclaimer>
         <Button
           type="submit"
