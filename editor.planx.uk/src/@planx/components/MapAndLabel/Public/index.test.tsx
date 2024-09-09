@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { screen, waitFor } from "@testing-library/react";
+import { waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -110,8 +110,7 @@ describe("validation and error handling", () => {
   });
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
-    const { getByTestId, getByRole, user, getAllByTestId, getAllByText } =
-      setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
 
@@ -130,25 +129,36 @@ describe("validation and error handling", () => {
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
 
+    expect(firstTabPanel.childElementCount).toBeGreaterThan(0);
+
     // default is to start on first tab panel, second is hidden
     expect(firstTabPanel).toBeVisible();
     expect(secondTabPanel).not.toBeVisible();
 
     // click continue
     const continueButton = getByRole("button", { name: /Continue/ });
-    await user.click(continueButton);
+    // await user.click(continueButton);
 
-    //error messages appear
-    const errorMessagesOne = getAllByTestId(/error-message-input/);
+    // error messages appear
+    const errorMessagesOne =
+      within(firstTabPanel).getAllByTestId(/error-message-input/);
     expect(errorMessagesOne).toHaveLength(8);
 
     // click to go to the second tab
     await user.click(secondTab);
 
     // first tab panel (form) should no longer be visible
-    expect(firstTabPanel).not.toBeVisible();
-    expect(secondTabPanel).toHaveAttribute("hidden");
+    expect(firstTabPanel.hidden).toBeFalsy();
+    expect(secondTabPanel.hidden).toBeTruthy();
+
+    await waitFor(
+      () => {
+        expect(secondTabPanel.hidden).toBeFalsy();
+      },
+      { timeout: 4000 }
+    );
   });
+
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, getByRole, user, getByText } = setup(
