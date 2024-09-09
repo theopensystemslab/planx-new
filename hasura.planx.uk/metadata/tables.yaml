@@ -2157,6 +2157,110 @@
         filter: {}
       comment: ""
 - table:
+    name: teams_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - govpay_enabled
+          - planning_data_enabled
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - article_4s_enabled
+          - bops_submission_url
+          - favicon
+          - homepage
+          - link_colour
+          - logo
+          - name
+          - primary_colour
+          - reference_code
+          - send_to_email_address
+          - slug
+          - subdomain
+        filter: {}
+      comment: ""
+- table:
+    name: teams_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - govpay_enabled
+          - planning_data_enabled
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - article_4s_enabled
+          - bops_submission_url
+          - favicon
+          - homepage
+          - link_colour
+          - logo
+          - name
+          - primary_colour
+          - reference_code
+          - send_to_email_address
+          - slug
+          - subdomain
+        filter: {}
+      comment: ""
+- table:
+    name: teams_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - govpay_enabled
+          - planning_data_enabled
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - article_4s_enabled
+        url: "{{$base_url}}/webhooks/hasura/send-slack-notification"
+          - favicon
+          - homepage
+          - link_colour
+          - logo
+          - name
+          - primary_colour
+          - reference_code
+          - send_to_email_address
+          - slug
+          - subdomain
+        filter: {}
+          columns: "*"
+- table:
+    name: teams_summary
+    schema: public
+  select_permissions:
+    - role: platformAdmin
+      permission:
+        columns:
+          - govpay_enabled
+          - planning_data_enabled
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - article_4s_enabled
+          - bops_submission_url
+          - favicon
+          - homepage
+          - link_colour
+          - logo
+          - name
+          - primary_colour
+          - reference_code
+          - send_to_email_address
+          - slug
+          - subdomain
+        filter: {}
+      comment: ""
+- table:
     name: uniform_applications
     schema: public
   insert_permissions:
