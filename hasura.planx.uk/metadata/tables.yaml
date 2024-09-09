@@ -2055,7 +2055,6 @@
           - notify_personalisation
           - settings
           - slug
-          - submission_email
           - updated_at
   select_permissions:
     - role: api
@@ -2070,7 +2069,6 @@
           - reference_code
           - settings
           - slug
-          - submission_email
           - updated_at
         computed_fields:
           - boundary_bbox
@@ -2130,7 +2128,6 @@
           - notify_personalisation
           - settings
           - slug
-          - submission_email
         filter: {}
         check: null
 - table:
