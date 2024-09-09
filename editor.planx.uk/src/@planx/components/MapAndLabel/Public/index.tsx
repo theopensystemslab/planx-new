@@ -265,6 +265,7 @@ const Root = () => {
                   features: features,
                 })
               }
+              drawGeojsonDataBuffer={25}
               drawMany
               drawColor={drawColor}
               drawType={drawType}
