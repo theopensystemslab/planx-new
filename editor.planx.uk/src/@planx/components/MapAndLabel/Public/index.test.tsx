@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { waitFor, within } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -9,7 +9,6 @@ import { axe } from "vitest-axe";
 import { point1, point2 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import { addFeaturesToMap } from "../test/utils";
-import { exp } from "mathjs";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -111,35 +110,44 @@ describe("validation and error handling", () => {
   });
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
-    const { getByTestId, getByRole, user, getAllByTestId } = setup(
-      <MapAndLabel {...props} />
-    );
+    const { getByTestId, getByRole, user, getAllByTestId, getAllByText } =
+      setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1, point2]);
 
+    // vertical side tabs... problem is with definition of tab
     const firstTab = getByRole("tab", { name: /Tree 1/ });
     const secondTab = getByRole("tab", { name: /Tree 2/ });
-
-    const firstTabPanel = getByRole("tabpanel", { name: /Tree 1/ });
 
     expect(firstTab).toBeInTheDocument();
     expect(secondTab).toBeInTheDocument();
 
+    expect(secondTab.tagName.toLowerCase()).toBe("button");
+
+    // form for each tab
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+    const secondTabPanel = getByTestId("vertical-tabpanel-1");
+
+    // default is to start on first tab panel, second is hidden
     expect(firstTabPanel).toBeVisible();
+    expect(secondTabPanel).not.toBeVisible();
 
+    // click continue
     const continueButton = getByRole("button", { name: /Continue/ });
-
     await user.click(continueButton);
 
+    //error messages appear
     const errorMessagesOne = getAllByTestId(/error-message-input/);
     expect(errorMessagesOne).toHaveLength(8);
 
+    // click to go to the second tab
     await user.click(secondTab);
 
-    const errorMessagesTwo = getAllByTestId(/error-message-input/);
-    expect(errorMessagesTwo).toHaveLength(8);
+    // first tab panel (form) should no longer be visible
+    expect(firstTabPanel).not.toBeVisible();
+    expect(secondTabPanel).toHaveAttribute("hidden");
   });
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {

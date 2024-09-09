@@ -128,6 +128,7 @@ const VerticalFeatureTabs: React.FC = () => {
             sx={{ width: "100%" }}
             aria-labelledby={`vertical-tab-${i}`}
             id={`vertical-tabpanel-${i}`}
+            data-testid={`vertical-tabpanel-${i}`}
           >
             <Box
               sx={{
@@ -145,7 +146,7 @@ const VerticalFeatureTabs: React.FC = () => {
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
-                        coord.toFixed(5),
+                        coord.toFixed(5)
                       )})`
                     : ` (area ${
                         feature.properties?.["area.squareMetres"] || 0
@@ -165,7 +166,15 @@ const VerticalFeatureTabs: React.FC = () => {
               formik={formik}
             />
             <Button
+<<<<<<< HEAD
               onClick={() => removeFeature(activeIndex)}
+=======
+              onClick={() =>
+                console.log(
+                  `TODO - Remove ${schema.type} ${feature.properties?.label}`
+                )
+              }
+>>>>>>> a83a3345 (debug commit for tab2 button)
               sx={{
                 fontWeight: FONT_WEIGHT_SEMI_BOLD,
                 gap: (theme) => theme.spacing(2),
@@ -226,11 +235,44 @@ const Root = () => {
     previouslySubmittedData,
   } = mapAndLabelProps;
 
+<<<<<<< HEAD
   // If coming "back" or "changing", load initial features & tabs onto the map
   //   Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
   if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
     addInitialFeaturesToMap(previouslySubmittedData?.data?.[fn]?.features);
   }
+=======
+  const previousFeatures = previouslySubmittedData?.data?.[
+    fn
+  ] as FeatureCollection;
+  const [features, setFeatures] = useState<Feature[] | undefined>(
+    previousFeatures?.features?.length > 0
+      ? previousFeatures.features
+      : undefined
+  );
+
+  useEffect(() => {
+    const geojsonChangeHandler = ({ detail: geojson }: any) => {
+      if (geojson["EPSG:3857"]?.features) {
+        setFeatures(geojson["EPSG:3857"].features);
+        formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
+        addFeature();
+      } else {
+        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
+        setFeatures(undefined);
+        formik.setFieldValue("geoData", undefined);
+      }
+    };
+
+    const map: HTMLElement | null =
+      document.getElementById("map-and-label-map");
+    map?.addEventListener("geojsonChange", geojsonChangeHandler);
+
+    return function cleanup() {
+      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
+    };
+  }, [setFeatures, addFeature]);
+>>>>>>> a83a3345 (debug commit for tab2 button)
 
   const rootError: string =
     (errors.min &&
