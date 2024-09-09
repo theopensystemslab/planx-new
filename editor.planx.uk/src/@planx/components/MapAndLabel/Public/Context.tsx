@@ -9,7 +9,8 @@ import {
   makeData,
 } from "@planx/components/shared/utils";
 import { FormikProps, useFormik } from "formik";
-import { FeatureCollection } from "geojson";
+import { Feature, FeatureCollection } from "geojson";
+import { GeoJSONChange, GeoJSONChangeEvent, useGeoJSONChange } from "lib/gis";
 import { get } from "lodash";
 import React, {
   createContext,
@@ -20,15 +21,20 @@ import React, {
 
 import { PresentationalProps } from ".";
 
+export const MAP_ID = "map-and-label-map";
+
 interface MapAndLabelContextValue {
   schema: Schema;
+  features?: Feature[];
+  updateMapKey: number;
   activeIndex: number;
-  editFeature: (index: number) => void;
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   isFeatureInvalid: (index: number) => boolean;
-  addFeature: () => void;
+  addInitialFeaturesToMap: (features: Feature[]) => void;
+  editFeature: (index: number) => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
+  removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
     min: boolean;
@@ -51,21 +57,20 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     previousValues: getPreviouslySubmittedData(props),
   });
 
-  // Deconstruct GeoJSON saved to passport back into schemaData & geoData
+  // Deconstruct GeoJSON saved to passport back into form data and map data
   const previousGeojson = previouslySubmittedData?.data?.[
     fn
   ] as FeatureCollection;
-  const previousSchemaData = previousGeojson?.features.map(
+  const previousFormData = previousGeojson?.features.map(
     (feature) => feature.properties,
   ) as SchemaUserResponse[];
-  const previousGeoData = previousGeojson?.features;
+  const _previousMapData = previousGeojson?.features;
 
   const formik = useFormik<SchemaUserData>({
     ...formikConfig,
     // The user interactions are map driven - start with no values added
     initialValues: {
-      schemaData: previousSchemaData || [],
-      geoData: previousGeoData || [],
+      schemaData: previousFormData || [],
     },
     onSubmit: (values) => {
       const geojson: FeatureCollection = {
@@ -73,7 +78,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         features: [],
       };
 
-      values.geoData?.forEach((feature, i) => {
+      features?.forEach((feature, i) => {
         // Store user inputs as GeoJSON properties
         const mergedProperties = {
           ...feature.properties,
@@ -93,14 +98,40 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     },
   });
 
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [activeIndex, setActiveIndex] = useState<number>(-1);
 
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
 
+  const handleGeoJSONChange = (event: GeoJSONChangeEvent) => {
+    // If the user clicks 'reset' on the map, geojson will be empty object
+    const userHitsReset = !event.detail["EPSG:3857"];
+
+    if (userHitsReset) {
+      removeAllFeaturesFromMap();
+      removeAllFeaturesFromForm();
+      return;
+    }
+
+    addFeatureToMap(event.detail);
+    addFeatureToForm();
+  };
+
+  const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
+
+  const [updateMapKey, setUpdateMapKey] = useState<number>(0);
+
   const resetErrors = () => {
     setMinError(false);
     setMaxError(false);
+    formik.setErrors({});
+  };
+
+  const removeAllFeaturesFromMap = () => setFeatures(undefined);
+
+  const removeAllFeaturesFromForm = () => {
+    formik.setFieldValue("schemaData", []);
+    setActiveIndex(-1);
   };
 
   const validateAndSubmitForm = () => {
@@ -119,7 +150,18 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const isFeatureInvalid = (index: number) =>
     Boolean(get(formik.errors, ["schemaData", index]));
 
-  const addFeature = () => {
+  const addFeatureToMap = (geojson: GeoJSONChange) => {
+    resetErrors();
+    setFeatures(geojson["EPSG:3857"].features);
+    setActiveIndex((features && features?.length - 2) || activeIndex + 1);
+  };
+
+  const addInitialFeaturesToMap = (features: Feature[]) => {
+    setFeatures(features);
+    // TODO: setActiveIndex ?
+  };
+
+  const addFeatureToForm = () => {
     resetErrors();
 
     const currentFeatures = formik.values.schemaData;
@@ -130,6 +172,8 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     if (schema.max && updatedFeatures.length > schema.max) {
       setMaxError(true);
     }
+
+    setActiveIndex(activeIndex + 1);
   };
 
   const copyFeature = (sourceIndex: number, destinationIndex: number) => {
@@ -137,17 +181,55 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.setFieldValue(`schemaData[${destinationIndex}]`, sourceFeature);
   };
 
+  const removeFeatureFromForm = (index: number) => {
+    formik.setFieldValue(
+      "schemaData",
+      formik.values.schemaData.filter((_, i) => i !== index),
+    );
+  };
+
+  const removeFeatureFromMap = (index: number) => {
+    // Order of features can vary by change/modification, filter on label not array position
+    const label = `${index + 1}`;
+    const filteredFeatures = features?.filter(
+      (f) => f.properties?.label !== label,
+    );
+
+    // Shift any feature labels that are larger than the removed feature label so they remain incremental
+    filteredFeatures?.map((f) => {
+      if (f.properties && Number(f.properties?.label) > Number(label)) {
+        const newLabel = Number(f.properties.label) - 1;
+        Object.assign(f, { properties: { label: `${newLabel}` } });
+      }
+    });
+    setFeatures(filteredFeatures);
+
+    // `updateMapKey` is set as a unique `key` prop on the map container to force a re-render of its children (aka <my-map />) on change
+    setUpdateMapKey(updateMapKey + 1);
+  };
+
+  const removeFeature = (index: number) => {
+    resetErrors();
+    removeFeatureFromForm(index);
+    removeFeatureFromMap(index);
+    // Set active index as highest tab after removal, so that when you "add" a new feature the tabs increment correctly
+    setActiveIndex((features && features.length - 2) || activeIndex - 1);
+  };
+
   return (
     <MapAndLabelContext.Provider
       value={{
+        features,
+        updateMapKey,
         activeIndex,
         schema,
         mapAndLabelProps: props,
-        editFeature,
         formik,
         validateAndSubmitForm,
-        addFeature,
+        addInitialFeaturesToMap,
+        editFeature,
         copyFeature,
+        removeFeature,
         isFeatureInvalid,
         errors: {
           min: minError,
