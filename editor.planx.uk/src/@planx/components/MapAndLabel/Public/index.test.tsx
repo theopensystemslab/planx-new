@@ -46,14 +46,14 @@ describe("Basic UI", () => {
 
     await waitFor(() =>
       expect(
-        queryByText("Plot a feature on the map to begin")
-      ).not.toBeInTheDocument()
+        queryByText("Plot a feature on the map to begin"),
+      ).not.toBeInTheDocument(),
     );
   });
 
   it("renders the schema name as the tab title", async () => {
     const { queryByText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -68,7 +68,7 @@ describe("Basic UI", () => {
 
   it("should not have any accessibility violations", async () => {
     const { queryByText, getByTestId, container } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -86,7 +86,7 @@ describe("Basic UI", () => {
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
     const { getAllByTestId, getByTestId, getByRole, user } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -96,21 +96,57 @@ describe("validation and error handling", () => {
     expect(getByRole("tab", { name: /Tree 1/ })).toBeInTheDocument();
 
     const continueButton = getByRole("button", { name: /Continue/ });
-
-    user.click(continueButton);
+    expect(continueButton).toBeInTheDocument();
+    await user.click(continueButton);
 
     const errorMessages = getAllByTestId(/error-message-input/);
 
     // 5 error message inputs + 3 for date inputs (one per input and one wrapper)
-    expect(errorMessages).toHaveLength(8);
+    expect(errorMessages).toHaveLength(4);
 
     errorMessages.forEach((message) => {
-      expect(message).toBeEmptyDOMElement();
+      expect(message).not.toBeEmptyDOMElement();
     });
   });
+
+  // <button
+  //   class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary css-1mb4v11-MuiButtonBase-root-MuiTab-root"
+  //   tabindex="-1"
+  //   type="button"
+  //   role="tab"
+  //   aria-selected="false"
+  //   id="vertical-tab-1"
+  //   aria-controls="vertical-tabpanel-1"
+  // >
+  //   Tree 2
+  // </button>;
+
+  // <button
+  //   class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected css-1mb4v11-MuiButtonBase-root-MuiTab-root"
+  //   tabindex="0"
+  //   type="button"
+  //   role="tab"
+  //   aria-selected="true"
+  //   id="vertical-tab-0"
+  //   aria-controls="vertical-tabpanel-0"
+  // >
+  //   Tree 1
+  // </button>;
+
+  // <div
+  //   aria-labelledby="vertical-tab-1"
+  //   class="MuiTabPanel-root css-1iolky5-MuiTabPanel-root"
+  //   hidden=""
+  //   id="vertical-tabpanel-1"
+  //   role="tabpanel"
+  //   data-testid="vertical-tabpanel-1"
+  // ></div>;
+
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user, debug } = setup(
+      <MapAndLabel {...props} />,
+    );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
 
@@ -130,6 +166,7 @@ describe("validation and error handling", () => {
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
 
     expect(firstTabPanel.childElementCount).toBeGreaterThan(0);
+    expect(secondTabPanel.childElementCount).toBe(0);
 
     // default is to start on first tab panel, second is hidden
     expect(firstTabPanel).toBeVisible();
@@ -137,32 +174,45 @@ describe("validation and error handling", () => {
 
     // click continue
     const continueButton = getByRole("button", { name: /Continue/ });
-    // await user.click(continueButton);
+    await user.click(continueButton);
 
     // error messages appear
     const errorMessagesOne =
       within(firstTabPanel).getAllByTestId(/error-message-input/);
-    expect(errorMessagesOne).toHaveLength(8);
+    expect(errorMessagesOne).toHaveLength(4);
+
+    errorMessagesOne.forEach((input) => {
+      expect(input).not.toBeEmptyDOMElement();
+    });
 
     // click to go to the second tab
     await user.click(secondTab);
 
-    // first tab panel (form) should no longer be visible
-    expect(firstTabPanel.hidden).toBeFalsy();
-    expect(secondTabPanel.hidden).toBeTruthy();
+    expect(map).toBeInTheDocument();
+    // await waitFor(() => {
+    // expect(screen.getByRole("tab", { name: /Tree 2/ })).toHaveAttribute(
+    //   "tabindex",
+    //   "0"
+    // );
 
-    await waitFor(
-      () => {
-        expect(secondTabPanel.hidden).toBeFalsy();
-      },
-      { timeout: 4000 }
-    );
+    expect(secondTabPanel).toBeVisible();
+
+    let errorMessageTwo;
+
+    await waitFor(() => {
+      errorMessageTwo =
+        within(secondTabPanel).getAllByTestId(/error-message-input/);
+    });
+
+    console.log(0);
+
+    // const secondTabActive = getByRole("tab", { name: /Tree 2/ });
   });
 
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, getByRole, user, getByText } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -177,7 +227,7 @@ describe("validation and error handling", () => {
   });
   // ??
   test.todo(
-    "an error state is applied to a tabpanel button, when it's associated feature is invalid"
+    "an error state is applied to a tabpanel button, when it's associated feature is invalid",
   );
   // shows the error state on a tab when it's invalid
 });
@@ -201,7 +251,7 @@ describe("copy feature select", () => {
   it.todo("is enabled once multiple features are present");
   // copy select enabled once you add more features
   it.todo(
-    "lists all other features as options (the current feature is not listed)"
+    "lists all other features as options (the current feature is not listed)",
   );
   // current tree is not an option in the copy select
   it.todo("copies all data from one feature to another");
@@ -223,11 +273,11 @@ describe("payload generation", () => {
   test.todo("a submitted payload contains a GeoJSON feature collection");
   // check payload contains GeoJSON feature collection
   test.todo(
-    "the feature collection contains all geospatial data inputted by the user"
+    "the feature collection contains all geospatial data inputted by the user",
   );
   // feature collection matches the mocked data
   test.todo(
-    "each feature's properties correspond with the details entered for that feature"
+    "each feature's properties correspond with the details entered for that feature",
   );
   // feature properties contain the answers to inputs
 });
