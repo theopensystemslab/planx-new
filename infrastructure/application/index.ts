@@ -352,9 +352,23 @@ export = async () => {
             name: "GOOGLE_CLIENT_SECRET",
             value: config.requireSecret("google-client-secret"),
           },
-          { name: "SESSION_SECRET", value: config.requireSecret("session-secret") },
+          {
+            name: "MICROSOFT_CLIENT_ID",
+            value: config.require("microsoft-client-id"),
+          },
+          {
+            name: "MICROSOFT_CLIENT_SECRET",
+            value: config.requireSecret("microsoft-client-secret"),
+          },
+          {
+            name: "SESSION_SECRET",
+            value: config.requireSecret("session-secret"),
+          },
           { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
-          { name: "BOPS_API_TOKEN", value: config.requireSecret("bops-api-token") },
+          {
+            name: "BOPS_API_TOKEN",
+            value: config.requireSecret("bops-api-token"),
+          },
           { name: "JWT_SECRET", value: config.requireSecret("jwt-secret") },
           { name: "PORT", value: String(API_PORT) },
           {

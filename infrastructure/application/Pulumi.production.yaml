@@ -37,6 +37,10 @@ config:
     secure: AAABAKQ6L5aOwZWpj9YOsaW8bOOukjt1mZuTgdKjM/3nSmF/0nM/f9c9W9DXygUFj2wtq5/iugo1UTS0+bhEn8Dr9k1Qzr2EmuGpQw==
   application:metabasePgPassword:
     secure: AAABACVXNwP6Fo0v2/PoiWklNGRECTSYLRX/Ypk6APtvt9e4iOdqPVt5+tZULOxwqnfO+1bL4B6AAJxjt8gAbQ==
+  application:microsoft-client-id:
+    secure: AAABAMnDXxOB4BNSG0Sn7gZ34DiliUfgCwQ5qYzrm7QOu+mNEkXafFu6RBvaoMIeTBF3Pb0/mPJ8MM/rN4ILgX3B1PM=
+  application:microsoft-client-secret:
+    secure: AAABALqkvTVysZDJq8P01oKWVQ+aFv5oEgE2CNr81Y5WvOhyYAp5cPo4zZr/sH89EiZGfeVUzxzgRnncOefAmh+nzz2bF107
   application:ordnance-survey-api-key:
     secure: AAABAE+wD6ahxO45tq/JWp6odrHX9jOhdjlMsCqS6kFqBgJ+3T56fOSgpZ26nEftv9IwWZQh/v93tRtTDEb+uw==
   application:session-secret:
