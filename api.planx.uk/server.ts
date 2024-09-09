@@ -4,21 +4,21 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import cors, { CorsOptions } from "cors";
-import express, { ErrorRequestHandler } from "express";
+import express from "express";
+import type { ErrorRequestHandler, Request } from "express";
 import "express-async-errors";
 import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
-import { Server } from "http";
+import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
-import passport from "passport";
 import noir from "pino-noir";
 import airbrake from "./airbrake.js";
 import { useSwaggerDocs } from "./docs/index.js";
 import { ServerError } from "./errors/index.js";
 import adminRoutes from "./modules/admin/routes.js";
 import analyticsRoutes from "./modules/analytics/routes.js";
-import authRoutes from "./modules/auth/routes.js";
-import { googleStrategy } from "./modules/auth/strategy/google.js";
+import getPassport from "./modules/auth/passport.js";
+import getAuthRoutes from "./modules/auth/routes.js";
 import fileRoutes from "./modules/file/routes.js";
 import flowRoutes from "./modules/flows/routes.js";
 import gisRoutes from "./modules/gis/routes.js";
@@ -122,18 +122,15 @@ app.use(
 // register stubs after cookieSession middleware initialisation
 app.use(registerSessionStubs);
 
-passport.use("google", googleStrategy);
-
-passport.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-passport.deserializeUser(function (obj: Express.User, cb) {
-  cb(null, obj);
-});
+// equip passport with auth strategies early on, so we can pass it to route handlers
+const passport = await getPassport();
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// auth routes rely on the passport class we've just initialised
+const authRoutes = await getAuthRoutes(passport);
 
 // Setup API routes
 app.use(adminRoutes);
@@ -197,6 +194,14 @@ declare global {
       sub?: string;
       "https://hasura.io/jwt/claims"?: {
         "x-hasura-allowed-roles": Role[];
+      };
+    }
+  }
+
+  namespace Http {
+    interface IncomingMessageWithSession extends IncomingMessage {
+      session?: {
+        nonce: string;
       };
     }
   }
