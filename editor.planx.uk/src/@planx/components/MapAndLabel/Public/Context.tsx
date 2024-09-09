@@ -152,13 +152,14 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const addFeatureToMap = (geojson: GeoJSONChange) => {
     resetErrors();
-    setFeatures(geojson["EPSG:3857"].features);
-    setActiveIndex((features && features?.length - 2) || activeIndex + 1);
+    const newFeatures = geojson["EPSG:3857"].features;
+    setFeatures(newFeatures);
+    setActiveIndex(newFeatures.length - 1);
   };
 
   const addInitialFeaturesToMap = (features: Feature[]) => {
     setFeatures(features);
-    // TODO: setActiveIndex ?
+    // setActiveIndex(features.length - 1);
   };
 
   const addFeatureToForm = () => {
@@ -212,8 +213,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     resetErrors();
     removeFeatureFromForm(index);
     removeFeatureFromMap(index);
+
     // Set active index as highest tab after removal, so that when you "add" a new feature the tabs increment correctly
-    setActiveIndex((features && features.length - 2) || activeIndex - 1);
+    setActiveIndex((features && features.length - 2) || 0);
   };
 
   return (

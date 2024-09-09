@@ -70,8 +70,12 @@ const VerticalFeatureTabs: React.FC = () => {
     throw new Error("Cannot render MapAndLabel tabs without features");
   }
 
-  // Features is inherently sorted by recently added/modified, order tabs by stable labels
-  const sortedFeatures = sortBy(features, ["properties.label"]);
+  // Features is inherently sorted by recently added/modified, order tabs by stable labels (labels are integers stored as strings)
+  const sortedFeatures = sortBy(features, [
+    function (f) {
+      return Number(f.properties?.label);
+    },
+  ]);
 
   return (
     <Box
@@ -261,6 +265,7 @@ const Root = () => {
                   features: features,
                 })
               }
+              drawGeojsonDataBuffer={25}
               drawMany
               drawColor={drawColor}
               drawType={drawType}
