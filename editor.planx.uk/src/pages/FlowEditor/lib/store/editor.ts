@@ -1,6 +1,10 @@
 import { gql } from "@apollo/client";
-import { sortFlow } from "@opensystemslab/planx-core";
-import { FlowGraph, OrderedFlow } from "@opensystemslab/planx-core/types";
+import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
+import {
+  ComponentType,
+  FlowGraph,
+  OrderedFlow,
+} from "@opensystemslab/planx-core/types";
 import {
   add,
   clone,
@@ -107,6 +111,7 @@ export interface EditorStore extends Store.Store {
     name: string;
     href: string;
   }) => void;
+  getURLForNode: (nodeId: string) => string;
 }
 
 export const editorStore: StateCreator<
@@ -486,5 +491,37 @@ export const editorStore: StateCreator<
     const externalPortals = get().externalPortals;
     externalPortals[id] = { name, href };
     set({ externalPortals });
+  },
+
+  getURLForNode: (nodeId) => {
+    const { orderedFlow: flow, flowSlug, teamSlug } = get();
+    if (!flow) throw Error("Missing ordered flow!");
+
+    const [node, parent, grandparent, ...rest] = getPathForNode({
+      nodeId,
+      flow,
+    });
+    console.log({ node, parent, grandparent, rest });
+    const internalPortals = rest.filter(
+      ({ type }) => type === ComponentType.InternalPortal,
+    );
+    console.log({ internalPortals });
+
+    // based on node type, construct URL
+    // Answer nodes use parent and grandparent
+    let urlPath = `/${teamSlug}/${flowSlug}`;
+    if (internalPortals.length) {
+      const portalPath = internalPortals.map(({ id }) => id).join(",");
+      urlPath += `/${portalPath}`;
+    }
+
+    if (node.type === ComponentType.Answer) {
+      urlPath += `/nodes/${grandparent.id}/nodes/${parent.id}/edit`;
+    } else {
+      urlPath += `/nodes/${parent.id}/nodes/${node.id}/edit`;
+    }
+
+    console.log(urlPath);
+    return urlPath;
   },
 });
