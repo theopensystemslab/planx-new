@@ -3,4 +3,5 @@ export const mockTreeData = {
   work: "Chopping it down",
   justification: "Cause I can",
   urgency: "High",
+  completionDate: { day: "", month: "", year: "" },
 };
