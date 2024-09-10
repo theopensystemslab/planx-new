@@ -497,31 +497,24 @@ export const editorStore: StateCreator<
     const { orderedFlow: flow, flowSlug, teamSlug } = get();
     if (!flow) throw Error("Missing ordered flow!");
 
-    const [node, parent, grandparent, ...rest] = getPathForNode({
-      nodeId,
-      flow,
-    });
-    console.log({ node, parent, grandparent, rest });
-    const internalPortals = rest.filter(
+    const path = getPathForNode({ nodeId, flow });
+    const internalPortals = path.filter(
       ({ type }) => type === ComponentType.InternalPortal,
     );
-    console.log({ internalPortals });
+    const [node, parent, grandparent] = path;
 
-    // based on node type, construct URL
-    // Answer nodes use parent and grandparent
-    let urlPath = `/${teamSlug}/${flowSlug}`;
-    if (internalPortals.length) {
-      const portalPath = internalPortals.map(({ id }) => id).join(",");
-      urlPath += `/${portalPath}`;
-    }
+    // Construct the internal portal path if applicable
+    const portalPath = internalPortals.length
+      ? "," + internalPortals.map(({ id }) => id).join(",")
+      : "";
 
-    if (node.type === ComponentType.Answer) {
-      urlPath += `/nodes/${grandparent.id}/nodes/${parent.id}/edit`;
-    } else {
-      urlPath += `/nodes/${parent.id}/nodes/${node.id}/edit`;
-    }
+    // Determine node path based on the node type
+    const nodePath =
+      node.type === ComponentType.Answer
+        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit`
+        : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
-    console.log(urlPath);
+    const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
     return urlPath;
   },
 });
