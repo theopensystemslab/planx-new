@@ -1,6 +1,7 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
+import { Feature, Point } from "geojson";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -9,6 +10,17 @@ import { axe } from "vitest-axe";
 import { point1, point2 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import { addFeaturesToMap } from "../test/utils";
+
+const addMultipleFeatures = (
+  featureArray: Feature<Point, { label: string }>[],
+) => {
+  const map = screen.getByTestId("map-and-label-map");
+  const pointsAddedArray: Feature<Point, { label: string }>[] = [];
+  featureArray.forEach((feature) => {
+    pointsAddedArray.push(feature);
+    addFeaturesToMap(map, pointsAddedArray);
+  });
+};
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -109,39 +121,6 @@ describe("validation and error handling", () => {
     });
   });
 
-  // <button
-  //   class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary css-1mb4v11-MuiButtonBase-root-MuiTab-root"
-  //   tabindex="-1"
-  //   type="button"
-  //   role="tab"
-  //   aria-selected="false"
-  //   id="vertical-tab-1"
-  //   aria-controls="vertical-tabpanel-1"
-  // >
-  //   Tree 2
-  // </button>;
-
-  // <button
-  //   class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected css-1mb4v11-MuiButtonBase-root-MuiTab-root"
-  //   tabindex="0"
-  //   type="button"
-  //   role="tab"
-  //   aria-selected="true"
-  //   id="vertical-tab-0"
-  //   aria-controls="vertical-tabpanel-0"
-  // >
-  //   Tree 1
-  // </button>;
-
-  // <div
-  //   aria-labelledby="vertical-tab-1"
-  //   class="MuiTabPanel-root css-1iolky5-MuiTabPanel-root"
-  //   hidden=""
-  //   id="vertical-tabpanel-1"
-  //   role="tabpanel"
-  //   data-testid="vertical-tabpanel-1"
-  // ></div>;
-
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user, debug } = setup(
@@ -149,8 +128,9 @@ describe("validation and error handling", () => {
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
+    debug();
 
-    addFeaturesToMap(map, [point1, point2]);
+    addMultipleFeatures([point1, point2]);
 
     // vertical side tabs... problem is with definition of tab
     const firstTab = getByRole("tab", { name: /Tree 1/ });
@@ -165,23 +145,23 @@ describe("validation and error handling", () => {
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
 
-    expect(firstTabPanel.childElementCount).toBeGreaterThan(0);
-    expect(secondTabPanel.childElementCount).toBe(0);
+    expect(secondTabPanel.childElementCount).toBeGreaterThan(0);
+    expect(firstTabPanel.childElementCount).toBe(0);
 
     // default is to start on first tab panel, second is hidden
-    expect(firstTabPanel).toBeVisible();
-    expect(secondTabPanel).not.toBeVisible();
+    expect(firstTabPanel).not.toBeVisible();
+    expect(secondTabPanel).toBeVisible();
 
     // click continue
     const continueButton = getByRole("button", { name: /Continue/ });
     await user.click(continueButton);
 
     // error messages appear
-    const errorMessagesOne =
-      within(firstTabPanel).getAllByTestId(/error-message-input/);
-    expect(errorMessagesOne).toHaveLength(4);
+    const errorMessages =
+      within(secondTabPanel).getAllByTestId(/error-message-input/);
+    expect(errorMessages).toHaveLength(4);
 
-    errorMessagesOne.forEach((input) => {
+    errorMessages.forEach((input) => {
       expect(input).not.toBeEmptyDOMElement();
     });
 
