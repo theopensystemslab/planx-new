@@ -1,6 +1,5 @@
 alter table "public"."teams" add column "submission_email" text;
-alter table "public"."teams" alter column "submission_email" drop not null;
-comment on column "public"."teams"."submission_email" is E'Teams are core way we organise `flows` and configure settings like theme colour, logo, and contact info; name usually reflects a council but not exclusively';
+comment on column "public"."teams"."submission_email" is E'Referenced by Send component when configured to email planning office';
 
 
  CREATE OR REPLACE VIEW "public"."teams_summary" AS
