@@ -1,7 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { screen, waitFor, within } from "@testing-library/react";
-import { Feature, Point } from "geojson";
+import { waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -9,18 +8,7 @@ import { axe } from "vitest-axe";
 
 import { point1, point2 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
-import { addFeaturesToMap } from "../test/utils";
-
-const addMultipleFeatures = (
-  featureArray: Feature<Point, { label: string }>[],
-) => {
-  const map = screen.getByTestId("map-and-label-map");
-  const pointsAddedArray: Feature<Point, { label: string }>[] = [];
-  featureArray.forEach((feature) => {
-    pointsAddedArray.push(feature);
-    addFeaturesToMap(map, pointsAddedArray);
-  });
-};
+import { addFeaturesToMap, addMultipleFeatures } from "../test/utils";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
