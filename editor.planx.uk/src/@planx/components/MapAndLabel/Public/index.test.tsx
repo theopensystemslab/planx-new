@@ -132,61 +132,49 @@ describe("validation and error handling", () => {
 
     addMultipleFeatures([point1, point2]);
 
-    // vertical side tabs... problem is with definition of tab
+    // vertical side tab query
     const firstTab = getByRole("tab", { name: /Tree 1/ });
     const secondTab = getByRole("tab", { name: /Tree 2/ });
 
+    // side tab validation
     expect(firstTab).toBeInTheDocument();
     expect(secondTab).toBeInTheDocument();
-
-    expect(secondTab.tagName.toLowerCase()).toBe("button");
 
     // form for each tab
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
 
-    expect(secondTabPanel.childElementCount).toBeGreaterThan(0);
-    expect(firstTabPanel.childElementCount).toBe(0);
-
-    // default is to start on first tab panel, second is hidden
+    // default is to start on seond tab panel, second is hidden
     expect(firstTabPanel).not.toBeVisible();
     expect(secondTabPanel).toBeVisible();
 
-    // click continue
+    // Form is generate for secondTabPanel but not the first
+    expect(secondTabPanel.childElementCount).toBeGreaterThan(0);
+    expect(firstTabPanel.childElementCount).toBe(0);
+
     const continueButton = getByRole("button", { name: /Continue/ });
     await user.click(continueButton);
 
     // error messages appear
-    const errorMessages =
+    const errorMessagesTabTwo =
       within(secondTabPanel).getAllByTestId(/error-message-input/);
-    expect(errorMessages).toHaveLength(4);
+    expect(errorMessagesTabTwo).toHaveLength(4);
 
-    errorMessages.forEach((input) => {
+    // error messages are empty but visible before error state induced
+    // this ensures they contain the error message text
+    errorMessagesTabTwo.forEach((input) => {
       expect(input).not.toBeEmptyDOMElement();
     });
 
     // click to go to the second tab
-    await user.click(secondTab);
+    await user.click(firstTab);
 
-    expect(map).toBeInTheDocument();
-    // await waitFor(() => {
-    // expect(screen.getByRole("tab", { name: /Tree 2/ })).toHaveAttribute(
-    //   "tabindex",
-    //   "0"
-    // );
+    expect(firstTabPanel).toBeVisible();
 
-    expect(secondTabPanel).toBeVisible();
-
-    let errorMessageTwo;
-
-    await waitFor(() => {
-      errorMessageTwo =
-        within(secondTabPanel).getAllByTestId(/error-message-input/);
-    });
-
-    console.log(0);
-
-    // const secondTabActive = getByRole("tab", { name: /Tree 2/ });
+    // error messages persist
+    const errorMessagesTabOne =
+      within(firstTabPanel).getAllByTestId(/error-message-input/);
+    expect(errorMessagesTabOne).toHaveLength(4);
   });
 
   // it shows all fields are required across different tabs
