@@ -2035,43 +2035,27 @@
           table:
             name: team_members
             schema: public
-  computed_fields:
-    - name: boundary_bbox
-      definition:
-        function:
-          name: boundary_bbox
-          schema: public
-      comment: Bounding box of the team's full boundary
   insert_permissions:
     - role: platformAdmin
       permission:
         check: {}
         columns:
-          - boundary
           - created_at
           - domain
           - id
           - name
-          - notify_personalisation
-          - settings
           - slug
           - updated_at
   select_permissions:
     - role: api
       permission:
         columns:
-          - boundary
           - created_at
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: platformAdmin
       permission:
@@ -2080,29 +2064,18 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: public
       permission:
         columns:
-          - boundary
           - created_at
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: teamEditor
       permission:
@@ -2111,13 +2084,8 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
   update_permissions:
     - role: platformAdmin
@@ -2125,37 +2093,9 @@
         columns:
           - domain
           - name
-          - notify_personalisation
-          - settings
           - slug
         filter: {}
         check: null
-- table:
-    name: teams_summary
-    schema: public
-  select_permissions:
-    - role: platformAdmin
-      permission:
-        columns:
-          - govpay_enabled
-          - planning_data_enabled
-          - id
-          - govnotify_personalisation
-          - action_colour
-          - article_4s_enabled
-          - bops_submission_url
-          - favicon
-          - homepage
-          - link_colour
-          - logo
-          - name
-          - primary_colour
-          - reference_code
-          - send_to_email_address
-          - slug
-          - subdomain
-        filter: {}
-      comment: ""
 - table:
     name: uniform_applications
     schema: public
