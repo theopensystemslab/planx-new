@@ -194,9 +194,47 @@ describe("validation and error handling", () => {
     expect(errorMessage).not.toBeEmptyDOMElement();
   });
   // ??
-  test.todo(
-    "an error state is applied to a tabpanel button, when it's associated feature is invalid",
-  );
+  it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
+    const { getByTestId, getByRole, user, getAllByTestId } = setup(
+      <MapAndLabel {...props} />,
+    );
+    const map = getByTestId("map-and-label-map");
+    expect(map).toBeInTheDocument();
+
+    addFeaturesToMap(map, [point1]);
+
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+
+    expect(tabOne).toBeInTheDocument();
+
+    const continueButton = getByRole("button", { name: /Continue/ });
+    expect(continueButton).toBeInTheDocument();
+    await user.click(continueButton);
+
+    const errorMessages = getAllByTestId(/error-message-input/);
+
+    // check error messages are correct amount and contain info
+    expect(errorMessages).toHaveLength(4);
+
+    errorMessages.forEach((message) => {
+      expect(message).not.toBeEmptyDOMElement();
+    });
+
+    expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
+
+    addFeaturesToMap(map, [point1, point2]);
+
+    const tabTwo = getByRole("tab", { name: /Tree 2/ });
+
+    expect(tabTwo).toBeInTheDocument();
+
+    expect(tabOne).not.toHaveStyle("border-left: 5px solid #D4351C");
+
+    await user.click(continueButton);
+
+    expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
+    expect(tabTwo).toHaveStyle("border-left: 5px solid #D4351C");
+  });
   // shows the error state on a tab when it's invalid
 });
 
