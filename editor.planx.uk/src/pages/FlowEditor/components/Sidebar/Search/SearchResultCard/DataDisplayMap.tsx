@@ -1,4 +1,7 @@
 import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
+import { Calculate } from "@planx/components/Calculate/model";
+import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
+import { List } from "@planx/components/List/model";
 import { SearchResult } from "hooks/useSearch";
 import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
@@ -34,7 +37,7 @@ const DISPLAY_DATA: Partial<ComponentMap> = {
       displayKey: "Option (data)",
       getTitle: ({ item }) => {
         const parentNode = useStore.getState().flow[item.parentId];
-        return parentNode!.data.text!;
+        return parentNode.data.text;
       },
       getHeadline: ({ item, key }) => get(item, key)?.toString(),
     },
@@ -44,37 +47,36 @@ const DISPLAY_DATA: Partial<ComponentMap> = {
     default: {
       displayKey: "File type (data)",
       getHeadline: ({ item, refIndex }) =>
-        (item["data"]?.["fileTypes"] as [])[refIndex]["fn"],
+        (item["data"] as unknown as FileUploadAndLabel)["fileTypes"][refIndex][
+          "fn"
+        ],
     },
   },
   // Calculate contains both input and output data values
   [ComponentType.Calculate]: {
     formula: {
       displayKey: "Formula",
-      getHeadline: ({ item }) => item.data!.formula as string,
+      getHeadline: ({ item }) => (item.data as unknown as Calculate).formula,
     },
     "data.output": {
       displayKey: "Output (data)",
-      getHeadline: ({ item }) => item.data!.output as string,
+      getHeadline: ({ item }) => (item.data as unknown as Calculate).output,
     },
   },
   // List contains data variables nested within its schema
   [ComponentType.List]: {
     "data.schema.fields.data.fn": {
-      getHeadline: ({ item, refIndex }) => {
-        // TODO: Add type guards, remove "as"
-        return (item.data as any).schema.fields[refIndex].data.fn;
-      },
+      getHeadline: ({ item, refIndex }) =>
+        (item.data as unknown as List).schema.fields[refIndex].data.fn,
     },
     "data.schema.fields.data.options.data.val": {
       displayKey: "Option (data)",
       getHeadline: ({ item, refIndex }) => {
         // Fuse.js flattens deeply nested arrays when using refIndex
-        // TODO: Add type guards, remove "as"
-        const options = (item.data as any).schema.fields.flatMap(
-          (field: any) => field.data.options,
-        );
-        return options[refIndex].data.val;
+        const options = (item.data as unknown as List).schema.fields
+          .filter((field) => field.type === "question")
+          .flatMap((field) => field.data.options);
+        return options[refIndex].data.val || "";
       },
     },
   },
