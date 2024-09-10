@@ -179,9 +179,7 @@ describe("validation and error handling", () => {
 
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
-    const { getByTestId, getByRole, user, getByText } = setup(
-      <MapAndLabel {...props} />,
-    );
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
 
@@ -191,7 +189,9 @@ describe("validation and error handling", () => {
 
     const errorWrapper = getByTestId(/error-wrapper/);
 
-    const errorMessage = getByText(/You must plot /);
+    const errorMessage = within(errorWrapper).getByText(/You must plot /);
+
+    expect(errorMessage).not.toBeEmptyDOMElement();
   });
   // ??
   test.todo(
