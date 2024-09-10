@@ -2,7 +2,6 @@ import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
-import { QuestionField } from "@planx/components/shared/Schema/model";
 import { SearchResult } from "hooks/useSearch";
 import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
@@ -75,8 +74,7 @@ const DISPLAY_DATA: Partial<ComponentMap> = {
       getHeadline: ({ item, refIndex }) => {
         // Fuse.js flattens deeply nested arrays when using refIndex
         const options = (item.data as unknown as List).schema.fields
-          // TODO: Remove type guard when bumping to TS v5.5
-          .filter((field): field is QuestionField => field.type === "question")
+          .filter((field) => field.type === "question")
           .flatMap((field) => field.data.options);
         return options[refIndex].data.val || "";
       },
