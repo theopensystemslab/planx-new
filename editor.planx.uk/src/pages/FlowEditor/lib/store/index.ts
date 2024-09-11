@@ -29,7 +29,7 @@ export declare namespace Store {
     auto?: boolean;
     override?: Record<string, any>;
   };
-  export type breadcrumbs = Record<NodeId, userData>;
+  export type Breadcrumbs = Record<NodeId, userData>;
   export type cachedBreadcrumbs = Record<NodeId, userData> | undefined;
   /**
    * Looser Node type with `any` data

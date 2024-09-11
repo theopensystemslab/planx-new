@@ -10,7 +10,7 @@ import { NavigationStore } from "./navigation";
 
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   childNodesOf: (id?: NodeId) => Store.Node[];
   flow: Store.flow;
   flowSlug: string;

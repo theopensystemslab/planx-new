@@ -25,7 +25,7 @@ describe("changeAnswer", () => {
         answers: ["X9JjnbPpnd"],
         auto: true,
       },
-    } as Store.breadcrumbs;
+    } as Store.Breadcrumbs;
     const cachedBreadcrumbs = {} as Store.cachedBreadcrumbs;
 
     setState({

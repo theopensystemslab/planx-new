@@ -21,7 +21,7 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.flow;
-  getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
+  getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
 }
 
@@ -110,7 +110,7 @@ export const navigationStore: StateCreator<
   //    so we can render section node titles as h2s and the following nodes as individual SummaryLists
   getSortedBreadcrumbsBySection: () => {
     const { breadcrumbs, sectionNodes, hasSections } = get();
-    const sortedBreadcrumbsBySection: Store.breadcrumbs[] = [];
+    const sortedBreadcrumbsBySection: Store.Breadcrumbs[] = [];
     if (hasSections) {
       const sortedNodeIdsBySection: string[][] = [];
       Object.keys(sectionNodes).forEach((sectionId, i) => {

@@ -12,7 +12,7 @@ export default Component;
 interface Props {
   title: string;
   description: string;
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   flow: Store.flow;
   passport: Store.Passport;
   handleSubmit?: handleSubmit;
@@ -22,7 +22,7 @@ interface Props {
 
 function Component(props: Props) {
   // ensure questions & answers display in expected order
-  const sortedBreadcrumbs: Store.breadcrumbs = sortBreadcrumbs(
+  const sortedBreadcrumbs: Store.Breadcrumbs = sortBreadcrumbs(
     props.breadcrumbs,
     props.flow,
   );

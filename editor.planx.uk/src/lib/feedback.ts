@@ -6,7 +6,7 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { publicClient } from "./graphql";
 
 type UserData = {
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   passport: Store.Passport;
 };
 

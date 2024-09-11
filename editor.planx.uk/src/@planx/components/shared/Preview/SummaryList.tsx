@@ -122,7 +122,7 @@ const presentationalComponents: {
   [TYPES.TextInput]: TextInput,
 } as const;
 
-type BreadcrumbEntry = [NodeId, Store.breadcrumbs];
+type BreadcrumbEntry = [NodeId, Store.Breadcrumbs];
 
 interface SummaryListBaseProps {
   flow: Store.flow;
@@ -132,7 +132,7 @@ interface SummaryListBaseProps {
 }
 
 interface SummaryListsBySectionsProps extends SummaryListBaseProps {
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   sectionComponent: React.ElementType<any> | undefined;
 }
 
@@ -169,7 +169,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.breadcrumbs,
+    section: Store.Breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
     const entries = Object.entries(section) as BreadcrumbEntry[];

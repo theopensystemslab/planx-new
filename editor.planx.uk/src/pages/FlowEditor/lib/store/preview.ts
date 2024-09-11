@@ -34,7 +34,7 @@ import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
-let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
+let memoizedBreadcrumb: Store.Breadcrumbs | undefined = undefined;
 
 export interface Response {
   question: Node & { id: NodeId };
@@ -670,7 +670,7 @@ export const previewStore: StateCreator<
 
 const knownNots = (
   flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
   nots = {},
 ) =>
   Object.entries(breadcrumbs).reduce(
@@ -702,7 +702,7 @@ interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
   flow: Store.flow;
   userData: Store.userData;
-  breadcrumbs: Store.cachedBreadcrumbs | Store.breadcrumbs;
+  breadcrumbs: Store.cachedBreadcrumbs | Store.Breadcrumbs;
 }
 
 export const removeOrphansFromBreadcrumbs = ({
@@ -712,7 +712,7 @@ export const removeOrphansFromBreadcrumbs = ({
   breadcrumbs,
 }: RemoveOrphansFromBreadcrumbsProps):
   | Store.cachedBreadcrumbs
-  | Store.breadcrumbs => {
+  | Store.Breadcrumbs => {
   // this will prevent a user from "Continuing", therefore log error don't throw it
   if (!flow[id]) {
     logger.notify(
@@ -736,12 +736,12 @@ export const removeOrphansFromBreadcrumbs = ({
         breadcrumbs: acc,
       });
     },
-    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.breadcrumbs,
+    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.Breadcrumbs,
   );
 };
 
 export const getResultData = (
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
   flow: Store.flow,
   flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
   overrides?: Parameters<PreviewStore["resultData"]>[1],
@@ -828,7 +828,7 @@ export const getResultData = (
 };
 
 export const sortBreadcrumbs = (
-  nextBreadcrumbs: Store.breadcrumbs,
+  nextBreadcrumbs: Store.Breadcrumbs,
   flow: Store.flow,
   editingNodes?: string[],
 ) => {
@@ -836,7 +836,7 @@ export const sortBreadcrumbs = (
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
         (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-        {} as Store.breadcrumbs,
+        {} as Store.Breadcrumbs,
       );
 };
 
@@ -853,7 +853,7 @@ function handleNodesWithPassport({
   cachedBreadcrumbs: Store.cachedBreadcrumbs;
   userData: Store.userData;
   currentNodesPendingEdit: string[];
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
 }) {
   let nodesPendingEdit = [...currentNodesPendingEdit];
   let newBreadcrumbs: Store.cachedBreadcrumbs = { ...cachedBreadcrumbs };
@@ -893,9 +893,9 @@ function handleNodesWithPassport({
 // XXX: This logic assumes only one "FindProperty" component per flow.
 export const removeNodesDependentOnPassport = (
   flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
 ): {
-  breadcrumbsWithoutPassportData: Store.breadcrumbs;
+  breadcrumbsWithoutPassportData: Store.Breadcrumbs;
   removedNodeIds: string[];
 } => {
   const DEPENDENT_TYPES = [

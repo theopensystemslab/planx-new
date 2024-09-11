@@ -63,7 +63,7 @@ export interface SendEmailPayload {
 }
 export type Session = {
   passport: Store.Passport;
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   sessionId: string;
   // TODO: replace `id` with `flow: { id, published_flow_id }`
   id: SharedStore["id"];
@@ -79,7 +79,7 @@ export interface ReconciliationResponse {
 
 // re-export store types
 export type Passport = Store.Passport;
-export type Breadcrumbs = Store.breadcrumbs;
+export type Breadcrumbs = Store.Breadcrumbs;
 
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",

@@ -9,7 +9,7 @@ const { getState, setState } = useStore;
 
 let breadcrumbsDependentOnPassport = cloneDeep(
   breadcrumbsDependentOnPassportMock,
-) as Store.breadcrumbs;
+) as Store.Breadcrumbs;
 
 let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
@@ -28,7 +28,7 @@ beforeEach(() => {
   resetPreview();
   breadcrumbsDependentOnPassport = cloneDeep(
     breadcrumbsDependentOnPassportMock,
-  ) as Store.breadcrumbs;
+  ) as Store.Breadcrumbs;
   flowWithPassportComponents = cloneDeep(
     flowWithPassportComponentsMock,
   ) as Store.flow;

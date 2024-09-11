@@ -108,7 +108,7 @@ type SectionsOverviewListProps = {
   nextQuestion: () => void;
   sectionNodes: Record<string, SectionNode>;
   currentCard: Store.Node | null;
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
   isReconciliation?: boolean;
   alteredSectionIds?: string[];

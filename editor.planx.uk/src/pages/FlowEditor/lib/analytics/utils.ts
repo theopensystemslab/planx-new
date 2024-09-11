@@ -66,7 +66,7 @@ export function getNodeMetadata(
   node: Store.Node,
   resultData: any,
   nodeId: string,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
 ) {
   const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
   switch (node?.type) {
@@ -103,7 +103,7 @@ export function isAllowListKey(key: any): key is AllowListKey {
 export function getAnswers(
   nodeId: string,
   flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const { data } = flow[nodeId];
   const nodeFn: string | undefined = data?.fn || data?.val;
@@ -145,8 +145,8 @@ export function getData(
 }
 
 export function determineLogDirection(
-  breadcrumbs: Store.breadcrumbs,
-  previousBreadcrumbs: Store.breadcrumbs | undefined,
+  breadcrumbs: Store.Breadcrumbs,
+  previousBreadcrumbs: Store.Breadcrumbs | undefined,
 ) {
   if (!previousBreadcrumbs) return;
   const curLength = Object.keys(breadcrumbs).length;
@@ -156,8 +156,8 @@ export function determineLogDirection(
 }
 
 export function findUpdatedBreadcrumbKeys(
-  breadcrumbs: Store.breadcrumbs,
-  previousBreadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
+  previousBreadcrumbs: Store.Breadcrumbs,
 ): string[] | undefined {
   const currentKeys = Object.keys(breadcrumbs);
   const previousKeys = Object.keys(previousBreadcrumbs);
@@ -176,7 +176,7 @@ export function getAllowListAnswers(
   nodeId: string,
   breadcrumb: Store.userData,
   flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const answers = getAnswers(nodeId, flow, breadcrumbs);
   const data = getData(breadcrumb);
