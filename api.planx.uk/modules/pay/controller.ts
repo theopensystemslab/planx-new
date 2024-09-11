@@ -1,7 +1,7 @@
 import assert from "assert";
 import { Request } from "express";
 import { responseInterceptor } from "http-proxy-middleware";
-import { logPaymentStatus } from "./helpers.js";
+import { handleGovPayErrors, logPaymentStatus } from "./helpers.js";
 import { usePayProxy } from "./proxy.js";
 import { $api } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
@@ -46,9 +46,12 @@ export const makePaymentViaProxy: PaymentProxyController = async (
       pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
       selfHandleResponse: true,
       onProxyRes: responseInterceptor(
-        async (responseBuffer, _proxyRes, _req, _res) => {
+        async (responseBuffer, _proxyRes, _req, { statusCode }) => {
           const responseString = responseBuffer.toString("utf8");
           const govUkResponse = JSON.parse(responseString);
+
+          if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
+
           await logPaymentStatus({
             sessionId,
             flowId,
@@ -79,27 +82,32 @@ export const makeInviteToPayPaymentViaProxy: PaymentRequestProxyController = (
     {
       pathRewrite: (path) => path.replace(/^\/pay.*$/, ""),
       selfHandleResponse: true,
-      onProxyRes: responseInterceptor(async (responseBuffer) => {
-        const responseString = responseBuffer.toString("utf8");
-        const govUkResponse = JSON.parse(responseString);
-        await logPaymentStatus({
-          sessionId,
-          flowId,
-          teamSlug,
-          govUkResponse,
-        });
+      onProxyRes: responseInterceptor(
+        async (responseBuffer, _proxyRes, _req, { statusCode }) => {
+          const responseString = responseBuffer.toString("utf8");
+          const govUkResponse = JSON.parse(responseString);
 
-        try {
-          await addGovPayPaymentIdToPaymentRequest(
-            paymentRequestId,
+          if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
+
+          await logPaymentStatus({
+            sessionId,
+            flowId,
+            teamSlug,
             govUkResponse,
-          );
-        } catch (error) {
-          throw Error(error as string);
-        }
+          });
 
-        return responseBuffer;
-      }),
+          try {
+            await addGovPayPaymentIdToPaymentRequest(
+              paymentRequestId,
+              govUkResponse,
+            );
+          } catch (error) {
+            throw Error(error as string);
+          }
+
+          return responseBuffer;
+        },
+      ),
     },
     req,
     res,
@@ -125,32 +133,36 @@ export function fetchPaymentViaProxyWithCallback(
       {
         pathRewrite: () => `/${req.params.paymentId}`,
         selfHandleResponse: true,
-        onProxyRes: responseInterceptor(async (responseBuffer) => {
-          const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
+        onProxyRes: responseInterceptor(
+          async (responseBuffer, _proxyRes, _req, { statusCode }) => {
+            const govUkResponse = JSON.parse(responseBuffer.toString("utf8"));
 
-          await logPaymentStatus({
-            sessionId,
-            flowId,
-            teamSlug,
-            govUkResponse,
-          });
+            if (statusCode >= 400) return handleGovPayErrors(govUkResponse);
 
-          try {
-            await callback(req, govUkResponse);
-          } catch (e) {
-            throw Error(e as string);
-          }
+            await logPaymentStatus({
+              sessionId,
+              flowId,
+              teamSlug,
+              govUkResponse,
+            });
 
-          // only return payment status, filter out PII
-          return JSON.stringify({
-            payment_id: govUkResponse.payment_id,
-            amount: govUkResponse.amount,
-            state: govUkResponse.state,
-            _links: {
-              next_url: govUkResponse._links?.next_url,
-            },
-          });
-        }),
+            try {
+              await callback(req, govUkResponse);
+            } catch (e) {
+              throw Error(e as string);
+            }
+
+            // only return payment status, filter out PII
+            return JSON.stringify({
+              payment_id: govUkResponse.payment_id,
+              amount: govUkResponse.amount,
+              state: govUkResponse.state,
+              _links: {
+                next_url: govUkResponse._links?.next_url,
+              },
+            });
+          },
+        ),
       },
       req,
       res,

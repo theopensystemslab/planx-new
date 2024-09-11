@@ -2,6 +2,17 @@ import { gql } from "graphql-request";
 import airbrake from "../../airbrake.js";
 import { $api } from "../../client/index.js";
 
+/**
+ * Gracefully handle GovPay errors
+ * Docs: https://docs.payments.service.gov.uk/api_reference/#responses
+ */
+export const handleGovPayErrors = (res: unknown) =>
+  JSON.stringify({
+    message:
+      "GovPay responded with an error when attempting to proxy to their API",
+    govPayResponse: res,
+  });
+
 export async function logPaymentStatus({
   sessionId,
   flowId,
