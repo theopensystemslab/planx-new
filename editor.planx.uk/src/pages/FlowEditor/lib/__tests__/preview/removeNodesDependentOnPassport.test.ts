@@ -13,7 +13,7 @@ let breadcrumbsDependentOnPassport = cloneDeep(
 
 let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
-) as Store.flow;
+) as Store.Flow;
 
 const {
   record,
@@ -31,7 +31,7 @@ beforeEach(() => {
   ) as Store.Breadcrumbs;
   flowWithPassportComponents = cloneDeep(
     flowWithPassportComponentsMock,
-  ) as Store.flow;
+  ) as Store.Flow;
 });
 
 describe("removeNodesDependentOnPassport", () => {
@@ -57,7 +57,7 @@ describe("removeNodesDependentOnPassport", () => {
     const breadcrumbs = { ...mockBreadcrumbs };
 
     const { breadcrumbsWithoutPassportData, removedNodeIds } =
-      removeNodesDependentOnPassport(mockFlowData as Store.flow, breadcrumbs);
+      removeNodesDependentOnPassport(mockFlowData as Store.Flow, breadcrumbs);
 
     const expectedBreadcrumbs = { ...mockBreadcrumbs };
 

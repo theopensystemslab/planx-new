@@ -669,7 +669,7 @@ export const previewStore: StateCreator<
 });
 
 const knownNots = (
-  flow: Store.flow,
+  flow: Store.Flow,
   breadcrumbs: Store.Breadcrumbs,
   nots = {},
 ) =>
@@ -700,7 +700,7 @@ const knownNots = (
 
 interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
-  flow: Store.flow;
+  flow: Store.Flow;
   userData: Store.userData;
   breadcrumbs: Store.cachedBreadcrumbs | Store.Breadcrumbs;
 }
@@ -742,7 +742,7 @@ export const removeOrphansFromBreadcrumbs = ({
 
 export const getResultData = (
   breadcrumbs: Store.Breadcrumbs,
-  flow: Store.flow,
+  flow: Store.Flow,
   flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
   overrides?: Parameters<PreviewStore["resultData"]>[1],
 ) => {
@@ -829,7 +829,7 @@ export const getResultData = (
 
 export const sortBreadcrumbs = (
   nextBreadcrumbs: Store.Breadcrumbs,
-  flow: Store.flow,
+  flow: Store.Flow,
   editingNodes?: string[],
 ) => {
   return editingNodes?.length
@@ -848,7 +848,7 @@ function handleNodesWithPassport({
   currentNodesPendingEdit,
   breadcrumbs,
 }: {
-  flow: Store.flow;
+  flow: Store.Flow;
   id: string;
   cachedBreadcrumbs: Store.cachedBreadcrumbs;
   userData: Store.userData;
@@ -892,7 +892,7 @@ function handleNodesWithPassport({
 // when changing answers from review component to guarantee that their values are updated.
 // XXX: This logic assumes only one "FindProperty" component per flow.
 export const removeNodesDependentOnPassport = (
-  flow: Store.flow,
+  flow: Store.Flow,
   breadcrumbs: Store.Breadcrumbs,
 ): {
   breadcrumbsWithoutPassportData: Store.Breadcrumbs;

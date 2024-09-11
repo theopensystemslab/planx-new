@@ -125,7 +125,7 @@ const presentationalComponents: {
 type BreadcrumbEntry = [NodeId, Store.Breadcrumbs];
 
 interface SummaryListBaseProps {
-  flow: Store.flow;
+  flow: Store.Flow;
   passport: Store.Passport;
   changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;
@@ -336,7 +336,7 @@ function SummaryList(props: SummaryListProps) {
 interface ComponentProps {
   node: any;
   userData?: Store.userData;
-  flow: Store.flow;
+  flow: Store.Flow;
   passport: Store.Passport;
   nodeId: NodeId;
 }

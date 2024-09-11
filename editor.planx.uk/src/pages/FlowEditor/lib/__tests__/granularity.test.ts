@@ -4,7 +4,7 @@ import { Store, useStore } from "../store";
 
 const { getState, setState } = useStore;
 
-const flow: Store.flow = {
+const flow: Store.Flow = {
   _root: {
     edges: ["whatisit"],
   },

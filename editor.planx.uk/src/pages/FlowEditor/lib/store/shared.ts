@@ -12,7 +12,7 @@ export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.Breadcrumbs;
   childNodesOf: (id?: NodeId) => Store.Node[];
-  flow: Store.flow;
+  flow: Store.Flow;
   flowSlug: string;
   flowName: string;
   flowAnalyticsLink: string | null;
@@ -27,7 +27,7 @@ export interface SharedStore extends Store.Store {
     flowStatus,
   }: {
     id?: string;
-    flow?: Store.flow;
+    flow?: Store.Flow;
     flowSlug?: string;
     flowName?: string;
     flowStatus?: FlowStatus;

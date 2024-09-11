@@ -22,7 +22,7 @@ import { UserStore, userStore } from "./user";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
-  export type flow = Record<NodeId, Node>;
+  export type Flow = Record<NodeId, Node>;
   export type userData = {
     answers?: Array<string>;
     data?: Record<string, any>;

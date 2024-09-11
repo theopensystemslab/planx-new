@@ -20,7 +20,7 @@ export interface NavigationStore {
   sectionNodes: Record<string, SectionNode>;
   initNavigationStore: () => void;
   updateSectionData: () => void;
-  filterFlowByType: (type: TYPES) => Store.flow;
+  filterFlowByType: (type: TYPES) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
 }
@@ -93,7 +93,7 @@ export const navigationStore: StateCreator<
    * Get a subset of the full flow, by type
    * Returned in correct order, based on _root node's edges
    */
-  filterFlowByType: (type: TYPES): Store.flow => {
+  filterFlowByType: (type: TYPES): Store.Flow => {
     const flow = get().flow;
     const rootEdges = flow._root.edges || [];
     const filteredFlow = Object.fromEntries(

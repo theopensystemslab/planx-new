@@ -13,7 +13,7 @@ interface Props {
   title: string;
   description: string;
   breadcrumbs: Store.Breadcrumbs;
-  flow: Store.flow;
+  flow: Store.Flow;
   passport: Store.Passport;
   handleSubmit?: handleSubmit;
   changeAnswer: (id: NodeId) => void;

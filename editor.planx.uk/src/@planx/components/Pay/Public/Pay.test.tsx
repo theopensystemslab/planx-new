@@ -24,7 +24,7 @@ vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";
 
-const flowWithUndefinedFee: Store.flow = {
+const flowWithUndefinedFee: Store.Flow = {
   _root: {
     edges: ["setValue", "pay"],
   },
@@ -44,7 +44,7 @@ const flowWithUndefinedFee: Store.flow = {
   },
 };
 
-const flowWithZeroFee: Store.flow = {
+const flowWithZeroFee: Store.Flow = {
   _root: {
     edges: ["setValue", "pay"],
   },

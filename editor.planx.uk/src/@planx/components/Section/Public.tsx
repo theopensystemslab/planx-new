@@ -102,7 +102,7 @@ export const Root = ({
 );
 
 type SectionsOverviewListProps = {
-  flow: Store.flow;
+  flow: Store.Flow;
   showChange: boolean;
   changeAnswer: (sectionId: string) => void;
   nextQuestion: () => void;

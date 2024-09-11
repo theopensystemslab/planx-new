@@ -18,10 +18,10 @@ export const rootFlowPath = (includePortals = false) => {
 export const rootTeamPath = () =>
   window.location.pathname.split("/").slice(0, 2).join("/");
 
-export const isSaveReturnFlow = (flowData: Store.flow): boolean =>
+export const isSaveReturnFlow = (flowData: Store.Flow): boolean =>
   Boolean(Object.values(flowData).find((node) => node.type === NodeTypes.Send));
 
-export const setPath = (flowData: Store.flow, req: NaviRequest) => {
+export const setPath = (flowData: Store.Flow, req: NaviRequest) => {
   // XXX: store.path is SingleSession by default
   if (!isSaveReturnFlow(flowData)) return;
 

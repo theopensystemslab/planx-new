@@ -18,7 +18,7 @@ interface PublishedViewSettings {
 }
 
 interface PublishedFlow extends Flow {
-  publishedFlows: Record<"data", Store.flow>[];
+  publishedFlows: Record<"data", Store.Flow>[];
 }
 
 /**

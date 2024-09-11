@@ -3,7 +3,7 @@ import { Store, useStore } from "../store";
 const { getState, setState } = useStore;
 
 // https://github.com/theopensystemslab/planx-new/pull/430#issue-625111571
-const flow: Store.flow = {
+const flow: Store.Flow = {
   _root: {
     edges: ["Dq7qLvn9If", "GZAmDGuV3J"],
   },

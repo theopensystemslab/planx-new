@@ -5,7 +5,7 @@ import flowWithAutoAnswersMock from "../mocks/flowWithAutoAnswers.json";
 
 const { getState, setState } = useStore;
 
-const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
+const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.Flow;
 
 const { record, changeAnswer, computePassport } = getState();
 

@@ -35,7 +35,7 @@ export function extractNodeTitle(node: Store.Node): string {
 
 export function getTargetNodeDataFromFlow(
   nodeId: string,
-  flow: Store.flow,
+  flow: Store.Flow,
 ): BackwardsTargetMetadata {
   const node = flow[nodeId];
   const nodeType = node?.type ? TYPES[node.type] : null;
@@ -49,7 +49,7 @@ export function getTargetNodeDataFromFlow(
 
 export function generateBackwardsNavigationMetadata(
   initiator: BackwardsNavigationInitiatorType,
-  flow: Store.flow,
+  flow: Store.Flow,
   nodeId?: string,
 ): BackwardsNavigationMetadata {
   const targetNodeMetadata = nodeId
@@ -102,7 +102,7 @@ export function isAllowListKey(key: any): key is AllowListKey {
  */
 export function getAnswers(
   nodeId: string,
-  flow: Store.flow,
+  flow: Store.Flow,
   breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const { data } = flow[nodeId];
@@ -175,7 +175,7 @@ export function findUpdatedBreadcrumbKeys(
 export function getAllowListAnswers(
   nodeId: string,
   breadcrumb: Store.userData,
-  flow: Store.flow,
+  flow: Store.Flow,
   breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const answers = getAnswers(nodeId, flow, breadcrumbs);
