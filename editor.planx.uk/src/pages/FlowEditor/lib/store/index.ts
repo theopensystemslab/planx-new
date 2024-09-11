@@ -1,4 +1,7 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeId,
+} from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "routes/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
@@ -19,21 +22,20 @@ import { UserStore, userStore } from "./user";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
-  export type nodeId = string;
-  export type flow = Record<nodeId, node>;
+  export type flow = Record<NodeId, node>;
   export type userData = {
     answers?: Array<string>;
     data?: Record<string, any>;
     auto?: boolean;
     override?: Record<string, any>;
   };
-  export type breadcrumbs = Record<nodeId, userData>;
-  export type cachedBreadcrumbs = Record<nodeId, userData> | undefined;
+  export type breadcrumbs = Record<NodeId, userData>;
+  export type cachedBreadcrumbs = Record<NodeId, userData> | undefined;
   export type node = {
-    id?: nodeId;
+    id?: NodeId;
     type?: TYPES;
     data?: any;
-    edges?: nodeId[];
+    edges?: NodeId[];
   };
   export interface passport {
     data?: Record<string, any>;

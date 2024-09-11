@@ -3,6 +3,7 @@ import type {
   FlagSet,
   GovUKPayment,
   Node,
+  NodeId,
 } from "@opensystemslab/planx-core/types";
 import {
   DEFAULT_FLAG_CATEGORY,
@@ -36,21 +37,21 @@ let memoizedPreviousCardId: string | undefined = undefined;
 let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
-    upToNodeId: Store.nodeId,
+    upToNodeId: NodeId,
     visited?: Array<string>,
   ) => Array<string>;
-  currentCard: ({ id: Store.nodeId } & Store.node) | null;
+  currentCard: ({ id: NodeId } & Store.node) | null;
   setCurrentCard: () => void;
-  getCurrentCard: () => ({ id: Store.nodeId } & Store.node) | null;
+  getCurrentCard: () => ({ id: NodeId } & Store.node) | null;
   hasPaid: () => boolean;
   previousCard: (
     node: Store.node | null,
-    upcomingCardIds?: Store.nodeId[],
-  ) => Store.nodeId | undefined;
+    upcomingCardIds?: NodeId[],
+  ) => NodeId | undefined;
   canGoBack: (node: Store.node | null) => boolean;
   getType: (node: Store.node | null) => TYPES | undefined;
   computePassport: () => Readonly<Store.passport>;
-  record: (id: Store.nodeId, userData?: Store.userData) => void;
+  record: (id: NodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
     overrides?: {
@@ -65,7 +66,7 @@ export interface PreviewStore extends Store.Store {
   };
   resumeSession: (session: Session) => void;
   sessionId: string;
-  upcomingCardIds: () => Store.nodeId[];
+  upcomingCardIds: () => NodeId[];
   isFinalCard: () => boolean;
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
@@ -396,10 +397,10 @@ export const previewStore: StateCreator<
       computePassport().data?._nots,
     );
 
-    const ids: Set<Store.nodeId> = new Set();
-    const visited: Set<Store.nodeId> = new Set();
+    const ids: Set<NodeId> = new Set();
+    const visited: Set<NodeId> = new Set();
 
-    const nodeIdsConnectedFrom = (source: Store.nodeId): void => {
+    const nodeIdsConnectedFrom = (source: NodeId): void => {
       return (flow[source]?.edges ?? [])
         .filter((id) => {
           if (visited.has(id)) return false;
@@ -542,8 +543,8 @@ export const previewStore: StateCreator<
                 return acc;
               },
               { edges: [] } as {
-                responseWithNoValueId?: Store.nodeId;
-                edges: Array<Store.nodeId>;
+                responseWithNoValueId?: NodeId;
+                edges: Array<NodeId>;
               },
             );
 
@@ -570,7 +571,7 @@ export const previewStore: StateCreator<
       // of all the answers collected so far
       Object.values(breadcrumbs)
         // in reverse order
-        .flatMap(({ answers }) => answers as Array<Store.nodeId>)
+        .flatMap(({ answers }) => answers as Array<NodeId>)
         // .filter(Boolean)
         .reverse()
         // ending with _root
@@ -671,7 +672,7 @@ const knownNots = (
 
       const _knownNotVals = difference(
         flow[id].edges,
-        answers as Array<Store.nodeId>,
+        answers as Array<NodeId>,
       );
 
       if (flow[id].data?.fn) {

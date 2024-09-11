@@ -1,3 +1,4 @@
+import { NodeId } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
@@ -15,7 +16,7 @@ interface Props {
   flow: Store.flow;
   passport: Store.passport;
   handleSubmit?: handleSubmit;
-  changeAnswer: (id: Store.nodeId) => void;
+  changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;
 }
 

@@ -1,6 +1,6 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Auth } from "@opensystemslab/planx-core/dist/requests/graphql";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import { FlowStatus, NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { removeSessionIdSearchParam } from "utils";
 import type { StateCreator } from "zustand";
@@ -11,13 +11,13 @@ import { NavigationStore } from "./navigation";
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
-  childNodesOf: (id?: Store.nodeId) => Store.node[];
+  childNodesOf: (id?: NodeId) => Store.node[];
   flow: Store.flow;
   flowSlug: string;
   flowName: string;
   flowAnalyticsLink: string | null;
   id: string;
-  getNode: (id: Store.nodeId) => Store.node | undefined;
+  getNode: (id: NodeId) => Store.node | undefined;
   resetPreview: () => void;
   setFlow: ({
     id,
@@ -32,7 +32,7 @@ export interface SharedStore extends Store.Store {
     flowName?: string;
     flowStatus?: FlowStatus;
   }) => void;
-  wasVisited: (id: Store.nodeId) => boolean;
+  wasVisited: (id: NodeId) => boolean;
   previewEnvironment: PreviewEnvironment;
   setPreviewEnvironment: (previewEnvironment: PreviewEnvironment) => void;
   setFlowSlug: (flowSlug: string) => void;
