@@ -128,6 +128,7 @@ const VerticalFeatureTabs: React.FC = () => {
             sx={{ width: "100%" }}
             aria-labelledby={`vertical-tab-${i}`}
             id={`vertical-tabpanel-${i}`}
+            data-testid={`vertical-tabpanel-${i}`}
           >
             <Box
               sx={{
