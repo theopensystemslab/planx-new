@@ -23,14 +23,14 @@ import { UserStore, userStore } from "./user";
 export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
   export type Flow = Record<NodeId, Node>;
-  export type userData = {
+  export type UserData = {
     answers?: Array<string>;
     data?: Record<string, any>;
     auto?: boolean;
     override?: Record<string, any>;
   };
-  export type Breadcrumbs = Record<NodeId, userData>;
-  export type CachedBreadcrumbs = Record<NodeId, userData> | undefined;
+  export type Breadcrumbs = Record<NodeId, UserData>;
+  export type CachedBreadcrumbs = Record<NodeId, UserData> | undefined;
   /**
    * Looser Node type with `any` data
    * @deprecated Should share type with PlanX core once `Value` is retired and Flow Graph is typed

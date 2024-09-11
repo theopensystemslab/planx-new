@@ -33,7 +33,7 @@ export interface IQuestion {
     description?: string;
     img?: string;
   }[];
-  previouslySubmittedData?: Store.userData;
+  previouslySubmittedData?: Store.UserData;
   handleSubmit: handleSubmit;
 }
 

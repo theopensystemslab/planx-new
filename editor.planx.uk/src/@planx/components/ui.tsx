@@ -51,7 +51,7 @@ export type PublicProps<Data> = Data & {
   resetButton?: boolean;
   resetPreview?: () => void;
   autoFocus?: boolean;
-  previouslySubmittedData?: Store.userData;
+  previouslySubmittedData?: Store.UserData;
 };
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves

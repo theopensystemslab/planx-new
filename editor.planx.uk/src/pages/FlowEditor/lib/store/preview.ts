@@ -58,7 +58,7 @@ export interface PreviewStore extends Store.Store {
   canGoBack: (node: Store.Node | null) => boolean;
   getType: (node: Store.Node | null) => TYPES | undefined;
   computePassport: () => Readonly<Store.Passport>;
-  record: (id: NodeId, userData?: Store.userData) => void;
+  record: (id: NodeId, userData?: Store.UserData) => void;
   resultData: (
     flagSet?: string,
     overrides?: {
@@ -303,7 +303,7 @@ export const previewStore: StateCreator<
       // add breadcrumb
       const { answers = [], data = {}, auto = false, override } = userData;
 
-      const breadcrumb: Store.userData = { auto: Boolean(auto) };
+      const breadcrumb: Store.UserData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
 
       const filteredData = objectWithoutNullishValues(data);
@@ -701,7 +701,7 @@ const knownNots = (
 interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
   flow: Store.Flow;
-  userData: Store.userData;
+  userData: Store.UserData;
   breadcrumbs: Store.CachedBreadcrumbs | Store.Breadcrumbs;
 }
 
@@ -851,7 +851,7 @@ function handleNodesWithPassport({
   flow: Store.Flow;
   id: string;
   cachedBreadcrumbs: Store.CachedBreadcrumbs;
-  userData: Store.userData;
+  userData: Store.UserData;
   currentNodesPendingEdit: string[];
   breadcrumbs: Store.Breadcrumbs;
 }) {

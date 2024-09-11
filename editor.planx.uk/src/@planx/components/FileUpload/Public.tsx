@@ -18,7 +18,7 @@ interface Props extends MoreInformation {
   fn: string;
   description?: string;
   handleSubmit: handleSubmit;
-  previouslySubmittedData?: Store.userData;
+  previouslySubmittedData?: Store.UserData;
 }
 
 export interface FileUploadSlot {

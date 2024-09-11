@@ -139,7 +139,7 @@ interface SummaryListsBySectionsProps extends SummaryListBaseProps {
 interface SummaryBreadcrumb {
   component: React.FC<ComponentProps>;
   nodeId: NodeId;
-  userData: Store.userData;
+  userData: Store.UserData;
   node: Store.Node;
 }
 
@@ -335,7 +335,7 @@ function SummaryList(props: SummaryListProps) {
 
 interface ComponentProps {
   node: any;
-  userData?: Store.userData;
+  userData?: Store.UserData;
   flow: Store.Flow;
   passport: Store.Passport;
   nodeId: NodeId;

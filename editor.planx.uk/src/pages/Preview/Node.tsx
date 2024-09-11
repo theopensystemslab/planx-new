@@ -36,7 +36,7 @@ import { exhaustiveCheck } from "utils";
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (userData?: Store.userData | Event) => void;
+export type handleSubmit = (userData?: Store.UserData | Event) => void;
 
 interface Props {
   handleSubmit: handleSubmit;

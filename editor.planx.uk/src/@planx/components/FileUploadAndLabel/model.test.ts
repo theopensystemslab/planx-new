@@ -433,7 +433,7 @@ describe("getRecoveredData function", () => {
     };
 
     // Mock breadcrumb data with FileType.fn -> UserFile mapped
-    const previouslySubmittedData: Store.userData = {
+    const previouslySubmittedData: Store.UserData = {
       data: {
         requiredFileFn: [
           {

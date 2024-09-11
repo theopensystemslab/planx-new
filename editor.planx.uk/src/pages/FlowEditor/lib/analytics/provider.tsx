@@ -321,7 +321,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function updateLastVisibleNodeLogWithAllowListAnswers(
     nodeId: string,
-    breadcrumb: Store.userData,
+    breadcrumb: Store.UserData,
   ) {
     if (shouldSkipTracking()) return;
 

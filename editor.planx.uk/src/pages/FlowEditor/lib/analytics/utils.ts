@@ -129,7 +129,7 @@ export function getAnswers(
  * e.g. data set automatically by components such as DrawBoundary
  */
 export function getData(
-  breadcrumb: Store.userData,
+  breadcrumb: Store.UserData,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const dataSetByNode = breadcrumb.data;
   if (!dataSetByNode) return;
@@ -174,7 +174,7 @@ export function findUpdatedBreadcrumbKeys(
  */
 export function getAllowListAnswers(
   nodeId: string,
-  breadcrumb: Store.userData,
+  breadcrumb: Store.UserData,
   flow: Store.Flow,
   breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {

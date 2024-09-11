@@ -254,8 +254,8 @@ const getUpdatedRequestedFiles = (fileList: FileList) => {
  * Generate payload for FileUploadAndLabel breadcrumb
  * Not responsible for validation - this happens at the component level
  */
-export const generatePayload = (fileList: FileList): Store.userData => {
-  const newPassportData: Store.userData["data"] = {};
+export const generatePayload = (fileList: FileList): Store.UserData => {
+  const newPassportData: Store.UserData["data"] = {};
 
   const uploadedFiles = [
     ...fileList.required,
@@ -279,14 +279,14 @@ export const generatePayload = (fileList: FileList): Store.userData => {
 
 const getCachedSlotsFromPreviousData = (
   userFile: UserFile,
-  previouslySubmittedData: Store.userData | undefined,
+  previouslySubmittedData: Store.UserData | undefined,
 ): FileUploadSlot[] =>
   previouslySubmittedData?.data?.[userFile.fn]?.map(
     (file: FormattedUserFile) => file.cachedSlot,
   );
 
 const getRecoveredSlots = (
-  previouslySubmittedData: Store.userData | undefined,
+  previouslySubmittedData: Store.UserData | undefined,
   fileList: FileList,
 ) => {
   const allFiles = [
@@ -307,7 +307,7 @@ const getRecoveredSlots = (
 };
 
 const getRecoveredFileList = (
-  previouslySubmittedData: Store.userData | undefined,
+  previouslySubmittedData: Store.UserData | undefined,
   fileList: FileList,
 ) => {
   const recoveredFileList = cloneDeep(fileList);
@@ -327,7 +327,7 @@ const getRecoveredFileList = (
 };
 
 export const getRecoveredData = (
-  previouslySubmittedData: Store.userData | undefined,
+  previouslySubmittedData: Store.UserData | undefined,
   fileList: FileList,
 ) => {
   const recoveredSlots = getRecoveredSlots(previouslySubmittedData, fileList);

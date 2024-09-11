@@ -27,7 +27,7 @@ export interface Props {
   reasonsTitle?: string;
   responses: Array<Response>;
   disclaimer?: TextContent;
-  previouslySubmittedData?: Store.userData;
+  previouslySubmittedData?: Store.UserData;
 }
 
 const DisclaimerContent = styled(Typography)(({ theme }) => ({
