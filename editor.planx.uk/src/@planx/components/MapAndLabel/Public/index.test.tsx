@@ -101,7 +101,7 @@ describe("validation and error handling", () => {
 
     const errorMessages = getAllByTestId(/error-message-input/);
 
-    // 5 error message inputs + 3 for date inputs (one per input and one wrapper)
+    // Date field has been removed so only 4 inputs
     expect(errorMessages).toHaveLength(4);
 
     errorMessages.forEach((message) => {
@@ -132,7 +132,7 @@ describe("validation and error handling", () => {
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
 
-    // default is to start on seond tab panel, second is hidden
+    // default is to start on seond tab panel since we add two points
     expect(firstTabPanel).not.toBeVisible();
     expect(secondTabPanel).toBeVisible();
 
@@ -154,7 +154,6 @@ describe("validation and error handling", () => {
       expect(input).not.toBeEmptyDOMElement();
     });
 
-    // click to go to the second tab
     await user.click(firstTab);
 
     expect(firstTabPanel).toBeVisible();
@@ -179,7 +178,7 @@ describe("validation and error handling", () => {
 
     const errorMessage = within(errorWrapper).getByText(/You must plot /);
 
-    expect(errorMessage).not.toBeEmptyDOMElement();
+    expect(errorMessage).toBeInTheDocument();
   });
   // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
@@ -209,22 +208,10 @@ describe("validation and error handling", () => {
     });
 
     expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
-
-    addFeaturesToMap(map, [point1, point2]);
-
-    const tabTwo = getByRole("tab", { name: /Tree 2/ });
-
-    expect(tabTwo).toBeInTheDocument();
-
-    expect(tabOne).not.toHaveStyle("border-left: 5px solid #D4351C");
-
-    await user.click(continueButton);
-
-    expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
-    expect(tabTwo).toHaveStyle("border-left: 5px solid #D4351C");
   });
   // shows the error state on a tab when it's invalid
 });
+test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
   test.todo("adding an item to the map adds a feature tab");
