@@ -49,6 +49,7 @@ export const results: SearchResults<IndexedNode> = [
     },
     key: "data.val",
     matchIndices: [[0, 2]],
+    refIndex: 0,
   },
   {
     item: {
@@ -62,5 +63,6 @@ export const results: SearchResults<IndexedNode> = [
     },
     key: "data.val",
     matchIndices: [[0, 2]],
+    refIndex: 0,
   },
 ];
