@@ -69,7 +69,7 @@ export const editorUIStore: StateCreator<
 });
 
 interface PublishFlowResponse {
-  alteredNodes: Store.node[];
+  alteredNodes: Store.Node[];
   message: string;
 }
 

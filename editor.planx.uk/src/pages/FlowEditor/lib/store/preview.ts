@@ -35,21 +35,28 @@ import type { SharedStore } from "./shared";
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
 let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
+
+export interface Response {
+  question: Node & { id: NodeId };
+  selections: Array<Node & { id: NodeId }>;
+  hidden: boolean;
+}
+
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
     upToNodeId: NodeId,
     visited?: Array<string>,
   ) => Array<string>;
-  currentCard: ({ id: NodeId } & Store.node) | null;
+  currentCard: ({ id: NodeId } & Store.Node) | null;
   setCurrentCard: () => void;
-  getCurrentCard: () => ({ id: NodeId } & Store.node) | null;
+  getCurrentCard: () => ({ id: NodeId } & Store.Node) | null;
   hasPaid: () => boolean;
   previousCard: (
-    node: Store.node | null,
+    node: Store.Node | null,
     upcomingCardIds?: NodeId[],
   ) => NodeId | undefined;
-  canGoBack: (node: Store.node | null) => boolean;
-  getType: (node: Store.node | null) => TYPES | undefined;
+  canGoBack: (node: Store.Node | null) => boolean;
+  getType: (node: Store.Node | null) => TYPES | undefined;
   computePassport: () => Readonly<Store.passport>;
   record: (id: NodeId, userData?: Store.userData) => void;
   resultData: (
@@ -60,7 +67,7 @@ export interface PreviewStore extends Store.Store {
   ) => {
     [category: string]: {
       flag: Flag;
-      responses: any[];
+      responses: Array<Response | null>;
       displayText: { heading: string; description: string };
     };
   };
@@ -159,7 +166,7 @@ export const previewStore: StateCreator<
     );
   },
 
-  previousCard: (node: Store.node | null) => {
+  previousCard: (node: Store.Node | null) => {
     const { breadcrumbs, flow, _nodesPendingEdit, changedNode } = get();
     const goBackable = Object.entries(breadcrumbs)
       .filter(([, v]) => !v.auto)
@@ -189,14 +196,14 @@ export const previewStore: StateCreator<
     return previousCardId;
   },
 
-  canGoBack: (node: Store.node | null) => {
+  canGoBack: (node: Store.Node | null) => {
     // XXX: node is a required param until upcomingNodes().shift() is
     //      optimised/memoized, see related isFinalCard() comment below
     const { hasPaid, previousCard } = get();
     return Boolean(node?.id) && Boolean(previousCard(node)) && !hasPaid();
   },
 
-  getType: (node: Store.node | null) => {
+  getType: (node: Store.Node | null) => {
     const { flow } = get();
     if (!node?.id) return;
     const currentNodeType = flow[node.id]?.type;
@@ -816,7 +823,7 @@ export const getResultData = (
 
       return acc;
     },
-    {} as ReturnType<PreviewStore["resultData"]>,
+    {},
   );
 };
 

@@ -140,7 +140,7 @@ interface SummaryBreadcrumb {
   component: React.FC<ComponentProps>;
   nodeId: NodeId;
   userData: Store.userData;
-  node: Store.node;
+  node: Store.Node;
 }
 
 interface SummaryListProps extends SummaryListBaseProps {

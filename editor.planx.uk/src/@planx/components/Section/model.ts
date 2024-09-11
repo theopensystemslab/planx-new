@@ -25,7 +25,7 @@ export function computeSectionStatuses({
   alteredSectionIds,
 }: {
   sectionNodes: Record<string, SectionNode>;
-  currentCard: Store.node | null;
+  currentCard: Store.Node | null;
   breadcrumbs: Store.breadcrumbs;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
   isReconciliation?: boolean;

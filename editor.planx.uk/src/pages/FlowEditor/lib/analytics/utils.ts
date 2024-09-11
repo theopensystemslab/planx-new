@@ -13,7 +13,7 @@ import {
 /**
  * Generate meaningful title for content analytic log
  */
-export function getContentTitle(node: Store.node): string {
+export function getContentTitle(node: Store.Node): string {
   const dom = new DOMParser().parseFromString(node.data.content, "text/html");
   const h1 = dom.body.getElementsByTagName("h1")[0]?.textContent;
   const text = h1 || dom.body.textContent;
@@ -25,7 +25,7 @@ export function getContentTitle(node: Store.node): string {
   return title;
 }
 
-export function extractNodeTitle(node: Store.node): string {
+export function extractNodeTitle(node: Store.Node): string {
   const nodeTitle =
     node?.type === TYPES.Content
       ? getContentTitle(node)
@@ -63,7 +63,7 @@ export function generateBackwardsNavigationMetadata(
 }
 
 export function getNodeMetadata(
-  node: Store.node,
+  node: Store.Node,
   resultData: any,
   nodeId: string,
   breadcrumbs: Store.breadcrumbs,

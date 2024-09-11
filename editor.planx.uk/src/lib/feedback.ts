@@ -17,7 +17,7 @@ export type FeedbackMetadata = {
   nodeType?: string | null;
   device: Bowser.Parser.ParsedResult;
   userData: UserData;
-  nodeData: Store.node["data"];
+  nodeData: Store.Node["data"];
 };
 
 export async function getInternalFeedbackMetadata(): Promise<FeedbackMetadata> {
@@ -56,7 +56,7 @@ export async function insertFeedbackMutation(data: {
   userContext?: string;
   userComment: string;
   feedbackType: string;
-  nodeData?: Store.node["data"];
+  nodeData?: Store.Node["data"];
 }) {
   const result = await publicClient.mutate({
     mutation: gql`

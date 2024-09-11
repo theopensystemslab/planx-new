@@ -40,7 +40,7 @@ export type handleSubmit = (userData?: Store.userData | Event) => void;
 
 interface Props {
   handleSubmit: handleSubmit;
-  node: Store.node;
+  node: Store.Node;
   data?: any;
 }
 

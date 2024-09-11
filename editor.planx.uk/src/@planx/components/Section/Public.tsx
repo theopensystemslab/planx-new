@@ -63,7 +63,7 @@ interface RootProps
   currentSectionIndex: number;
   flowName: string;
   sectionNodes: Record<string, SectionNode>;
-  currentCard: Store.node | null;
+  currentCard: Store.Node | null;
   sectionCount: number;
 }
 
@@ -107,7 +107,7 @@ type SectionsOverviewListProps = {
   changeAnswer: (sectionId: string) => void;
   nextQuestion: () => void;
   sectionNodes: Record<string, SectionNode>;
-  currentCard: Store.node | null;
+  currentCard: Store.Node | null;
   breadcrumbs: Store.breadcrumbs;
   cachedBreadcrumbs?: Store.cachedBreadcrumbs;
   isReconciliation?: boolean;

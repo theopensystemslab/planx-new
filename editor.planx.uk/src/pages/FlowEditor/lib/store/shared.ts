@@ -11,13 +11,13 @@ import { NavigationStore } from "./navigation";
 export type PreviewEnvironment = "editor" | "standalone";
 export interface SharedStore extends Store.Store {
   breadcrumbs: Store.breadcrumbs;
-  childNodesOf: (id?: NodeId) => Store.node[];
+  childNodesOf: (id?: NodeId) => Store.Node[];
   flow: Store.flow;
   flowSlug: string;
   flowName: string;
   flowAnalyticsLink: string | null;
   id: string;
-  getNode: (id: NodeId) => Store.node | undefined;
+  getNode: (id: NodeId) => Store.Node | undefined;
   resetPreview: () => void;
   setFlow: ({
     id,
