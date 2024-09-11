@@ -1,7 +1,7 @@
 import ReactJson from "@microlink/react-json-view";
-import LanguageIcon from "@mui/icons-material/Language";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
+import CoPresentIcon from "@mui/icons-material/CoPresent";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import SlowMotionVideoIcon from "@mui/icons-material/SlowMotionVideo";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,14 +12,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
 import Tabs from "@mui/material/Tabs";
-import Tooltip from "@mui/material/Tooltip";
+import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { AxiosError } from "axios";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
 import Input from "ui/shared/Input";
@@ -80,9 +82,53 @@ const Header = styled("header")(({ theme }) => ({
   },
   "& svg": {
     cursor: "pointer",
-    opacity: "0.7",
-    margin: "6px 4px 1px 4px",
-    fontSize: "1.2rem",
+    margin: theme.spacing(0, 0.6),
+    fontSize: "1.75rem",
+  },
+}));
+
+const PlatformLink = styled(Link)(() => ({
+  color: "inherit",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+})) as typeof Link;
+
+const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip
+    {...props}
+    arrow
+    placement="bottom"
+    classes={{ popper: className }}
+  />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.background.dark,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.background.dark,
+    fontSize: "0.8em",
+    borderRadius: 0,
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  },
+}));
+
+const OnlineSwitch = styled(Switch)(({ theme }) => ({
+  width: "102px",
+  left: 0,
+  marginRight: 0,
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    transform: "translateX(58px)",
+  },
+  "& .MuiSwitch-track": {
+    "&::before": {
+      content: "'ONLINE'",
+      left: "10px",
+    },
+    "&::after": {
+      content: "'OFFLINE'",
+      right: "14px",
+    },
   },
 }));
 
@@ -251,60 +297,76 @@ const Sidebar: React.FC<{
 
   return (
     <Root>
-      <Header>
-        <Box width="100%" display="flex">
-          <input
-            type="text"
-            disabled
-            value={props.url.replace("/published", "/preview")}
-          />
+      <Header sx={{ paddingBottom: "5px" }}>
+        <Box
+          width="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          pt={0.5}
+          px={0.25}
+        >
+          <Box display="flex">
+            <Permission.IsPlatformAdmin>
+              <StyledTooltip arrow title="Open draft service">
+                <PlatformLink
+                  href={props.url.replace("/published", "/draft")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SlowMotionVideoIcon />
+                </PlatformLink>
+              </StyledTooltip>
+            </Permission.IsPlatformAdmin>
 
-          <Permission.IsPlatformAdmin>
-            <Tooltip arrow title="Open draft service">
-              <Link
-                href={props.url.replace("/published", "/draft")}
+            <StyledTooltip arrow title="Open preview of changes to publish">
+              <PlatformLink
+                href={props.url.replace("/published", "/preview")}
                 target="_blank"
                 rel="noopener noreferrer"
-                color="inherit"
               >
-                <OpenInNewOffIcon />
-              </Link>
-            </Tooltip>
-          </Permission.IsPlatformAdmin>
+                <PlayCircleOutlineIcon />
+              </PlatformLink>
+            </StyledTooltip>
 
-          <Tooltip arrow title="Open preview of changes to publish">
-            <Link
-              href={props.url.replace("/published", "/preview")}
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
+            {isFlowPublished ? (
+              <StyledTooltip arrow title="Open published service">
+                <PlatformLink
+                  href={props.url + "?analytics=false"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <CoPresentIcon />
+                </PlatformLink>
+              </StyledTooltip>
+            ) : (
+              <StyledTooltip arrow title="Flow not yet published">
+                <Box>
+                  <PlatformLink
+                    component={"button"}
+                    disabled
+                    aria-disabled={true}
+                  >
+                    <CoPresentIcon />
+                  </PlatformLink>
+                </Box>
+              </StyledTooltip>
+            )}
+          </Box>
+          <Box>
+            <Button
+              variant="help"
+              sx={{
+                fontSize: "0.85em",
+                color: (theme) => theme.palette.text.primary,
+              }}
             >
-              <OpenInNewIcon />
-            </Link>
-          </Tooltip>
-
-          {isFlowPublished ? (
-            <Tooltip arrow title="Open published service">
-              <Link
-                href={props.url + "?analytics=false"}
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <LanguageIcon />
-              </Link>
-            </Tooltip>
-          ) : (
-            <Tooltip arrow title="Flow not yet published">
-              <Box>
-                <Link component={"button"} disabled aria-disabled={true}>
-                  <LanguageIcon />
-                </Link>
-              </Box>
-            </Tooltip>
-          )}
-        </Box>
-        <Box width="100%" mt={2}>
+              Share links
+            </Button>
+          </Box>
+          <Box>
+            <OnlineSwitch />
+          </Box>
           <Box display="flex" flexDirection="column" alignItems="flex-end">
             <Badge
               sx={{ width: "100%" }}
@@ -319,7 +381,7 @@ const Sidebar: React.FC<{
                 disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 onClick={handleCheckForChangesToPublish}
               >
-                CHECK FOR CHANGES TO PUBLISH
+                Publish
               </Button>
             </Badge>
             <Dialog
@@ -385,9 +447,6 @@ const Sidebar: React.FC<{
                 </Button>
               </DialogActions>
             </Dialog>
-            <Box mr={0}>
-              <Typography variant="caption">{lastPublishedTitle}</Typography>
-            </Box>
           </Box>
         </Box>
       </Header>
