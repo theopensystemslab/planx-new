@@ -4,6 +4,7 @@ import { $public, getClient } from "../../../client/index.js";
 import { Team } from "@opensystemslab/planx-core/types";
 
 export const moveFlow = async (flowId: string, teamSlug: string) => {
+  const $client = getClient();
   const team = await $public.team.getBySlug(teamSlug);
   if (!team)
     throw Error(
