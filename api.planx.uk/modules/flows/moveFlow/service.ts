@@ -4,7 +4,8 @@ import { $public, getClient } from "../../../client/index.js";
 import { Team } from "@opensystemslab/planx-core/types";
 
 export const moveFlow = async (flowId: string, teamSlug: string) => {
-  const team = await $public.team.getBySlug(teamSlug);
+  const $client = getClient();
+  const team = await $client.team.getBySlug(teamSlug);
   if (!team)
     throw Error(
       `Unable to find a team matching slug ${teamSlug}, exiting move`,
