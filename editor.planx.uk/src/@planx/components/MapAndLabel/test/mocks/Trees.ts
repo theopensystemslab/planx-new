@@ -5,7 +5,6 @@ import { Trees } from "../../schemas/Trees";
 
 const mockTreeSchema: Schema = {
   ...Trees,
-
   fields: Trees.fields.filter((field) => field.type !== "date"),
 };
 
