@@ -27,7 +27,7 @@ export function computeSectionStatuses({
   sectionNodes: Record<string, SectionNode>;
   currentCard: Store.Node | null;
   breadcrumbs: Store.Breadcrumbs;
-  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  cachedBreadcrumbs?: Store.CachedBreadcrumbs;
   isReconciliation?: boolean;
   alteredSectionIds?: string[];
 }): Record<string, SectionStatus> {

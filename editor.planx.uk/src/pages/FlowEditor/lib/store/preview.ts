@@ -77,7 +77,7 @@ export interface PreviewStore extends Store.Store {
   isFinalCard: () => boolean;
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
-  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  cachedBreadcrumbs?: Store.CachedBreadcrumbs;
   analyticsId?: number;
   setAnalyticsId: (analyticsId: number) => void;
   restore: boolean;
@@ -702,7 +702,7 @@ interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
   flow: Store.Flow;
   userData: Store.userData;
-  breadcrumbs: Store.cachedBreadcrumbs | Store.Breadcrumbs;
+  breadcrumbs: Store.CachedBreadcrumbs | Store.Breadcrumbs;
 }
 
 export const removeOrphansFromBreadcrumbs = ({
@@ -711,7 +711,7 @@ export const removeOrphansFromBreadcrumbs = ({
   userData,
   breadcrumbs,
 }: RemoveOrphansFromBreadcrumbsProps):
-  | Store.cachedBreadcrumbs
+  | Store.CachedBreadcrumbs
   | Store.Breadcrumbs => {
   // this will prevent a user from "Continuing", therefore log error don't throw it
   if (!flow[id]) {
@@ -736,7 +736,7 @@ export const removeOrphansFromBreadcrumbs = ({
         breadcrumbs: acc,
       });
     },
-    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.Breadcrumbs,
+    { ...breadcrumbs } as Store.CachedBreadcrumbs | Store.Breadcrumbs,
   );
 };
 
@@ -850,13 +850,13 @@ function handleNodesWithPassport({
 }: {
   flow: Store.Flow;
   id: string;
-  cachedBreadcrumbs: Store.cachedBreadcrumbs;
+  cachedBreadcrumbs: Store.CachedBreadcrumbs;
   userData: Store.userData;
   currentNodesPendingEdit: string[];
   breadcrumbs: Store.Breadcrumbs;
 }) {
   let nodesPendingEdit = [...currentNodesPendingEdit];
-  let newBreadcrumbs: Store.cachedBreadcrumbs = { ...cachedBreadcrumbs };
+  let newBreadcrumbs: Store.CachedBreadcrumbs = { ...cachedBreadcrumbs };
 
   const POPULATE_PASSPORT = [TYPES.FindProperty, TYPES.DrawBoundary];
   const breadcrumbPopulatesPassport =

@@ -30,7 +30,7 @@ export declare namespace Store {
     override?: Record<string, any>;
   };
   export type Breadcrumbs = Record<NodeId, userData>;
-  export type cachedBreadcrumbs = Record<NodeId, userData> | undefined;
+  export type CachedBreadcrumbs = Record<NodeId, userData> | undefined;
   /**
    * Looser Node type with `any` data
    * @deprecated Should share type with PlanX core once `Value` is retired and Flow Graph is typed

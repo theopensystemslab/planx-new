@@ -26,7 +26,7 @@ describe("changeAnswer", () => {
         auto: true,
       },
     } as Store.Breadcrumbs;
-    const cachedBreadcrumbs = {} as Store.cachedBreadcrumbs;
+    const cachedBreadcrumbs = {} as Store.CachedBreadcrumbs;
 
     setState({
       flow,
@@ -62,7 +62,7 @@ describe("changeAnswer", () => {
         answers: ["X9JjnbPpnd"],
         auto: true,
       },
-    } as Store.cachedBreadcrumbs;
+    } as Store.CachedBreadcrumbs;
 
     // Confirm that our original answer is still preserved in cachedBreadcrumbs, but not included in current breadcrumbs
     expect(getState().breadcrumbs).not.toContain(originalAnswer);

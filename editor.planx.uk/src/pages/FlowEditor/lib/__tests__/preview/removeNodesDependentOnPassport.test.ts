@@ -70,7 +70,7 @@ describe("nodesDependentOnPassport with record", () => {
   test("should remove Draw Boundary and Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
-    } as Store.cachedBreadcrumbs;
+    } as Store.CachedBreadcrumbs;
     const userData = {
       data: {
         _address: {
@@ -118,7 +118,7 @@ describe("nodesDependentOnPassport with record", () => {
   test("should remove Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
-    } as Store.cachedBreadcrumbs;
+    } as Store.CachedBreadcrumbs;
     const userData = {
       data: {
         "property.boundary.site": {
