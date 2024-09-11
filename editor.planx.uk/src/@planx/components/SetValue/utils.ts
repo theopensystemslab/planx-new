@@ -7,8 +7,8 @@ type PreviousValues = string | string[] | undefined;
 type HandleSetValue = (params: {
   nodeData: SetValue;
   previousValues: PreviousValues;
-  passport: Store.passport;
-}) => Store.passport;
+  passport: Store.Passport;
+}) => Store.Passport;
 
 /**
  * Handle modifying passport values when passing through a SetValue component

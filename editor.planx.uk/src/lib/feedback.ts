@@ -7,7 +7,7 @@ import { publicClient } from "./graphql";
 
 type UserData = {
   breadcrumbs: Store.breadcrumbs;
-  passport: Store.passport;
+  passport: Store.Passport;
 };
 
 export type FeedbackMetadata = {

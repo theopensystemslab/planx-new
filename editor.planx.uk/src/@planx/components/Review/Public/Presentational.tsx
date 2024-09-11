@@ -14,7 +14,7 @@ interface Props {
   description: string;
   breadcrumbs: Store.breadcrumbs;
   flow: Store.flow;
-  passport: Store.passport;
+  passport: Store.Passport;
   handleSubmit?: handleSubmit;
   changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;

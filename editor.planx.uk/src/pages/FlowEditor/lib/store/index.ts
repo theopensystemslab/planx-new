@@ -38,7 +38,7 @@ export declare namespace Store {
   export interface Node extends PlanXCoreNode {
     data?: any;
   }
-  export interface passport {
+  export interface Passport {
     data?: Record<string, any>;
   }
 }

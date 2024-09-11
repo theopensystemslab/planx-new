@@ -57,7 +57,7 @@ export interface PreviewStore extends Store.Store {
   ) => NodeId | undefined;
   canGoBack: (node: Store.Node | null) => boolean;
   getType: (node: Store.Node | null) => TYPES | undefined;
-  computePassport: () => Readonly<Store.passport>;
+  computePassport: () => Readonly<Store.Passport>;
   record: (id: NodeId, userData?: Store.userData) => void;
   resultData: (
     flagSet?: string,
@@ -218,7 +218,7 @@ export const previewStore: StateCreator<
 
         const key = flow[id].data?.fn;
 
-        const passportData: Store.passport["data"] = {};
+        const passportData: Store.Passport["data"] = {};
 
         if (key) {
           const passportValue = answers
@@ -252,10 +252,10 @@ export const previewStore: StateCreator<
             _acc![id] = value;
             return _acc;
           },
-          {} as Store.passport["data"],
+          {} as Store.Passport["data"],
         );
 
-        let passport: Store.passport = {
+        let passport: Store.Passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -277,7 +277,7 @@ export const previewStore: StateCreator<
       },
       {
         data: {},
-      } as Store.passport,
+      } as Store.Passport,
     );
 
     return passport;

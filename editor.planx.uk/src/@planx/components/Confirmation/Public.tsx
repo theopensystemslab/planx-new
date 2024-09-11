@@ -142,7 +142,7 @@ export function Presentational(props: PresentationalProps) {
 }
 
 // TODO - Retire in favor of ODP Schema application type descriptions or fallback to flowName
-function getWorkStatus(passport: Store.passport): string | undefined {
+function getWorkStatus(passport: Store.Passport): string | undefined {
   switch (passport?.data?.["application.type"]?.toString()) {
     case "ldc.existing":
       return "existing";

@@ -122,7 +122,7 @@ export const createFileList = ({
   passport,
   fileTypes,
 }: {
-  passport: Readonly<Store.passport>;
+  passport: Readonly<Store.Passport>;
   fileTypes: FileType[];
 }): FileList => {
   const fileList: FileList = { required: [], recommended: [], optional: [] };
@@ -160,7 +160,7 @@ const populateFileList = ({
 }: {
   fileList: FileList;
   fileType: FileType;
-  passport: Store.passport;
+  passport: Store.Passport;
 }): boolean => {
   switch (fileType.rule.condition) {
     case Condition.AlwaysRequired:
@@ -192,7 +192,7 @@ const populateFileList = ({
 };
 
 export const isRuleMet = (
-  passport: Store.passport,
+  passport: Store.Passport,
   rule: ConditionalRule<Condition.RequiredIf | Condition.RecommendedIf>,
 ): boolean => {
   const passportVal = passport.data?.[rule.fn];

@@ -126,7 +126,7 @@ type BreadcrumbEntry = [NodeId, Store.breadcrumbs];
 
 interface SummaryListBaseProps {
   flow: Store.flow;
-  passport: Store.passport;
+  passport: Store.Passport;
   changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;
 }
@@ -337,7 +337,7 @@ interface ComponentProps {
   node: any;
   userData?: Store.userData;
   flow: Store.flow;
-  passport: Store.passport;
+  passport: Store.Passport;
   nodeId: NodeId;
 }
 

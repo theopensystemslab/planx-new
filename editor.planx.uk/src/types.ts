@@ -62,7 +62,7 @@ export interface SendEmailPayload {
   };
 }
 export type Session = {
-  passport: Store.passport;
+  passport: Store.Passport;
   breadcrumbs: Store.breadcrumbs;
   sessionId: string;
   // TODO: replace `id` with `flow: { id, published_flow_id }`
@@ -78,7 +78,7 @@ export interface ReconciliationResponse {
 }
 
 // re-export store types
-export type Passport = Store.passport;
+export type Passport = Store.Passport;
 export type Breadcrumbs = Store.breadcrumbs;
 
 export enum SectionStatus {
