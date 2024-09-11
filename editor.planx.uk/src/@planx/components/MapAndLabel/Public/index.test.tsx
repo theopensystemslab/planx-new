@@ -8,7 +8,11 @@ import { axe } from "vitest-axe";
 
 import { point1, point2 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
-import { addFeaturesToMap, addMultipleFeatures } from "../test/utils";
+import {
+  addFeaturesToMap,
+  addMultipleFeatures,
+  fillOutForm,
+} from "../test/utils";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -46,14 +50,14 @@ describe("Basic UI", () => {
 
     await waitFor(() =>
       expect(
-        queryByText("Plot a feature on the map to begin"),
-      ).not.toBeInTheDocument(),
+        queryByText("Plot a feature on the map to begin")
+      ).not.toBeInTheDocument()
     );
   });
 
   it("renders the schema name as the tab title", async () => {
     const { queryByText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -68,7 +72,7 @@ describe("Basic UI", () => {
 
   it("should not have any accessibility violations", async () => {
     const { queryByText, getByTestId, container } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -86,7 +90,7 @@ describe("Basic UI", () => {
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
     const { getAllByTestId, getByTestId, getByRole, user } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -112,7 +116,7 @@ describe("validation and error handling", () => {
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user, debug } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -183,7 +187,7 @@ describe("validation and error handling", () => {
   // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
     const { getByTestId, getByRole, user, getAllByTestId } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
@@ -214,9 +218,46 @@ describe("validation and error handling", () => {
 test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
-  test.todo("adding an item to the map adds a feature tab");
+  it("adding an item to the map adds a feature tab", async () => {
+    const { getByTestId, getByRole } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+    expect(map).toBeInTheDocument();
+
+    addFeaturesToMap(map, [point1]);
+
+    expect(getByRole("tab", { name: /Tree 1/ })).toBeInTheDocument();
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+  });
   // add feature, see a tab (one feature only)
-  test.todo("a user can input details on a single feature and submit");
+  it.only("a user can input details on a single feature and submit", async () => {
+    const { getAllByTestId, getByTestId, getByRole, user, debug } = setup(
+      <MapAndLabel {...props} />
+    );
+    const map = getByTestId("map-and-label-map");
+    expect(map).toBeInTheDocument();
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    const continueButton = getByRole("button", { name: /Continue/ });
+    expect(continueButton).toBeInTheDocument();
+
+    const errorMessages = getAllByTestId(/error-message-input/);
+
+    await user.click(continueButton);
+
+    errorMessages.forEach((message) => {
+      expect(message.textContent).toBeFalsy();
+    });
+  });
   // only one feature, fill out form, submit
   test.todo("adding multiple features to the map adds multiple feature tabs");
   // add more than one feature, see multiple tabs
@@ -232,7 +273,7 @@ describe("copy feature select", () => {
   it.todo("is enabled once multiple features are present");
   // copy select enabled once you add more features
   it.todo(
-    "lists all other features as options (the current feature is not listed)",
+    "lists all other features as options (the current feature is not listed)"
   );
   // current tree is not an option in the copy select
   it.todo("copies all data from one feature to another");
@@ -254,11 +295,11 @@ describe("payload generation", () => {
   test.todo("a submitted payload contains a GeoJSON feature collection");
   // check payload contains GeoJSON feature collection
   test.todo(
-    "the feature collection contains all geospatial data inputted by the user",
+    "the feature collection contains all geospatial data inputted by the user"
   );
   // feature collection matches the mocked data
   test.todo(
-    "each feature's properties correspond with the details entered for that feature",
+    "each feature's properties correspond with the details entered for that feature"
   );
   // feature properties contain the answers to inputs
 });
