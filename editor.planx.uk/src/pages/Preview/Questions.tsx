@@ -14,7 +14,7 @@ import { ApplicationPath, Session } from "types";
 
 import ErrorFallback from "../../components/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
-import Node, { handleSubmit } from "./Node";
+import Node, { HandleSubmit } from "./Node";
 
 const BackBar = styled(Box)(() => ({
   top: 0,
@@ -123,7 +123,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   }, [breadcrumbs]);
 
   const handleSubmit =
-    (id: string): handleSubmit =>
+    (id: string): HandleSubmit =>
     (userData) => {
       const {
         data = undefined,

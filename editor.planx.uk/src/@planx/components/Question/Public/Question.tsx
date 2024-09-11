@@ -10,7 +10,7 @@ import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio";
 import { useFormik } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
-import { handleSubmit } from "pages/Preview/Node";
+import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -34,7 +34,7 @@ export interface IQuestion {
     img?: string;
   }[];
   previouslySubmittedData?: Store.UserData;
-  handleSubmit: handleSubmit;
+  handleSubmit: HandleSubmit;
 }
 
 export enum QuestionLayout {

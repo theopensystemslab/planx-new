@@ -8,7 +8,7 @@ import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { handleSubmit } from "pages/Preview/Node";
+import { HandleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
 import type { Session } from "types";
@@ -19,7 +19,7 @@ import Confirm from "./Confirm";
 
 export default Component;
 interface Props extends Pay {
-  handleSubmit: handleSubmit;
+  handleSubmit: HandleSubmit;
 }
 
 type ComponentState =

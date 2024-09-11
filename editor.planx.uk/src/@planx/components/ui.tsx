@@ -28,7 +28,7 @@ import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
 import ImgInput from "ui/editor/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -47,7 +47,7 @@ export interface EditorProps<Type, Data> {
 
 export type PublicProps<Data> = Data & {
   id?: string;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
   resetButton?: boolean;
   resetPreview?: () => void;
   autoFocus?: boolean;

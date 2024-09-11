@@ -7,7 +7,7 @@ import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { Response } from "pages/FlowEditor/lib/store/preview";
-import type { handleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import type { TextContent } from "types";
@@ -17,7 +17,7 @@ import ResultSummary from "./ResultSummary";
 
 export interface Props {
   allowChanges?: boolean;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
   headingColor: {
     text: string;
     background: string;

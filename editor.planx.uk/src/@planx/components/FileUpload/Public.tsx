@@ -2,7 +2,7 @@ import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useRef, useState } from "react";
 import { FileWithPath } from "react-dropzone";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -17,7 +17,7 @@ interface Props extends MoreInformation {
   title?: string;
   fn: string;
   description?: string;
-  handleSubmit: handleSubmit;
+  handleSubmit: HandleSubmit;
   previouslySubmittedData?: Store.UserData;
 }
 

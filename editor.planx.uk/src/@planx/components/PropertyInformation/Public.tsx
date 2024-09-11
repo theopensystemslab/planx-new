@@ -12,7 +12,7 @@ import { publicClient } from "lib/graphql";
 import find from "lodash/find";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { handleSubmit } from "pages/Preview/Node";
+import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 import type { SiteAddress } from "../FindProperty/model";
@@ -89,7 +89,7 @@ export interface PresentationalProps {
   titleBoundary?: Feature;
   blpuCodes?: any;
   overrideAnswer: (fn: string) => void;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
 }
 
 // Export this component for testing visual presentation with mocked props

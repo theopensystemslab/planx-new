@@ -4,7 +4,7 @@ import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { Store } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
-import type { handleSubmit } from "pages/Preview/Node";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
 export default Component;
@@ -15,7 +15,7 @@ interface Props {
   breadcrumbs: Store.Breadcrumbs;
   flow: Store.Flow;
   passport: Store.Passport;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
   changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;
 }
