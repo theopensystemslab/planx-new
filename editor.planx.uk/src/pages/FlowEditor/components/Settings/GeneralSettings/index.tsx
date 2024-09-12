@@ -1,8 +1,13 @@
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { TeamSettings } from "@opensystemslab/planx-core/types";
+import {
+  TeamContactSettings,
+  TeamSettings,
+} from "@opensystemslab/planx-core/types";
 import { FormikConfig } from "formik";
+import gql from "graphql-tag";
 import { useToast } from "hooks/useToast";
+import { client } from "lib/graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -17,6 +22,12 @@ export interface FormProps {
   onSuccess: () => void;
 }
 
+interface GetTeamEmailSettings {
+  teams: {
+    teamSettings: TeamContactSettings;
+  }[];
+}
+
 const GeneralSettings: React.FC = () => {
   const [formikConfig, setFormikConfig] = useState<
     FormikConfig<TeamSettings> | undefined
@@ -26,11 +37,14 @@ const GeneralSettings: React.FC = () => {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
-        if (!fetchedTeam) throw Error("Unable to find team");
+        const fetchedTeamSettings = await useStore
+          .getState()
+          .fetchCurrentTeamSettings();
+        console.log(fetchedTeamSettings);
+        if (!fetchedTeamSettings.settings) throw Error("Unable to find team");
 
         setFormikConfig({
-          initialValues: fetchedTeam.settings,
+          initialValues: fetchedTeamSettings.settings,
           onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,
