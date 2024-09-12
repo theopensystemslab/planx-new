@@ -11908,8 +11908,6 @@ packages:
 
   /fast-xml-parser@4.5.0:
     resolution: {integrity: sha512-/PlTQCI96+fZMAOLMZK4CWG1ItCbfZ/0jx7UIJFChPNrx7tcEgerUgWbeieCM9MfHInUDyK8DWYZ+YrywDJuTg==}
-  /fast-xml-parser@4.5.0:
-    resolution: {integrity: sha512-/PlTQCI96+fZMAOLMZK4CWG1ItCbfZ/0jx7UIJFChPNrx7tcEgerUgWbeieCM9MfHInUDyK8DWYZ+YrywDJuTg==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -14376,14 +14374,11 @@ packages:
 
   /json-schema-to-typescript@15.0.2:
     resolution: {integrity: sha512-+cRBw+bBJ3k783mZroDIgz1pLNPB4hvj6nnbHTWwEVl0dkW8qdZ+M9jWhBb+Y0FAdHvNsXACga3lewGO8lktrw==}
-  /json-schema-to-typescript@15.0.2:
-    resolution: {integrity: sha512-+cRBw+bBJ3k783mZroDIgz1pLNPB4hvj6nnbHTWwEVl0dkW8qdZ+M9jWhBb+Y0FAdHvNsXACga3lewGO8lktrw==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
       '@apidevtools/json-schema-ref-parser': 11.6.4
       '@types/json-schema': 7.0.15
-      '@types/lodash': 4.17.7
       '@types/lodash': 4.17.7
       glob: 10.4.5
       is-glob: 4.0.3
@@ -14934,8 +14929,6 @@ packages:
       react: 18.3.1
     dev: true
 
-  /marked@14.1.2:
-    resolution: {integrity: sha512-f3r0yqpz31VXiDB/wj9GaOB0a2PRLQl6vJmXiFrniNwjkKdvakqJRULhjFKJpxOchlCRiG5fcacoUZY5Xa6PEQ==}
   /marked@14.1.2:
     resolution: {integrity: sha512-f3r0yqpz31VXiDB/wj9GaOB0a2PRLQl6vJmXiFrniNwjkKdvakqJRULhjFKJpxOchlCRiG5fcacoUZY5Xa6PEQ==}
     engines: {node: '>= 18'}
@@ -20003,8 +19996,6 @@ packages:
 
   /type-fest@4.26.1:
     resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
-  /type-fest@4.26.1:
-    resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
     engines: {node: '>=16'}
     dev: false
 
@@ -21388,9 +21379,6 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/94b20aa(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/94b20aa}
-    id: github.com/theopensystemslab/planx-core/94b20aa
   github.com/theopensystemslab/planx-core/ab05224(@types/react@18.2.45):
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ab05224}
     id: github.com/theopensystemslab/planx-core/ab05224
@@ -21411,18 +21399,14 @@ packages:
       docx: 8.5.0
       eslint: 8.57.0
       fast-xml-parser: 4.5.0
-      fast-xml-parser: 4.5.0
       graphql: 16.9.0
       graphql-request: 6.1.0(graphql@16.9.0)
       json-schema-to-typescript: 15.0.2
-      json-schema-to-typescript: 15.0.2
       lodash: 4.17.21
-      marked: 14.1.2
       marked: 14.1.2
       prettier: 3.3.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.26.1
       type-fest: 4.26.1
       uuid: 10.0.0
       zod: 3.23.8
