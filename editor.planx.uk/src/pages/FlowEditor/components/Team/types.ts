@@ -13,6 +13,12 @@ export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
 }
+export interface UpdateEditorModalProps {
+  showUpdateModal: boolean;
+  setShowUpdateModal: React.Dispatch<SetStateAction<boolean>>;
+  initialValues: AddNewEditorFormValues;
+  userId: number;
+}
 
 export interface AddNewEditorFormValues {
   email: string;

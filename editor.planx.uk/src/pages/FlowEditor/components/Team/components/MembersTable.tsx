@@ -11,8 +11,9 @@ import { AddButton } from "pages/Team";
 import React, { useState } from "react";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
-import { MembersTableProps } from "./../types";
+import { MembersTableProps, TeamMember } from "./../types";
 import { AddNewEditorModal } from "./AddNewEditorModal";
+import { UpdateEditorModal } from "./UpdateEditorModel";
 
 const TableButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -30,6 +31,8 @@ export const MembersTable = ({
   showAddMemberButton,
 }: MembersTableProps) => {
   const [showModal, setShowModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -118,7 +121,14 @@ export const MembersTable = ({
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
                 <TableCell>
-                  <TableButton>Edit</TableButton>
+                  <TableButton
+                    onClick={() => {
+                      setShowUpdateModal(true);
+                      setInitialValues(member);
+                    }}
+                  >
+                    Edit
+                  </TableButton>
                 </TableCell>
               </StyledTableRow>
             ))}
@@ -136,6 +146,16 @@ export const MembersTable = ({
       </TableContainer>
       {showModal && (
         <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
+      )}
+      {showUpdateModal && (
+        <UpdateEditorModal
+          showUpdateModal={showUpdateModal}
+          setShowUpdateModal={setShowUpdateModal}
+          initialValues={
+            initialValues || { firstName: "", lastName: "", email: "" }
+          }
+          userId={initialValues?.id || 1}
+        />
       )}
     </>
   );
