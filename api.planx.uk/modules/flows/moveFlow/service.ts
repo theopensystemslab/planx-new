@@ -1,6 +1,6 @@
 import { gql } from "graphql-request";
 import { Flow } from "../../../types.js";
-import { $public, getClient } from "../../../client/index.js";
+import { getClient } from "../../../client/index.js";
 import { Team } from "@opensystemslab/planx-core/types";
 
 export const moveFlow = async (flowId: string, teamSlug: string) => {
@@ -8,7 +8,7 @@ export const moveFlow = async (flowId: string, teamSlug: string) => {
   const team = await $client.team.getBySlug(teamSlug);
   if (!team)
     throw Error(
-      `Unable to find a team matching slug ${teamSlug}, exiting move`,
+      `Unable to find a team matching slug ${teamSlug}, exiting move`
     );
 
   await updateFlow(flowId, team.id);
@@ -20,7 +20,7 @@ interface UpdateFlow {
 
 const updateFlow = async (
   flowId: Flow["id"],
-  teamId: Team["id"],
+  teamId: Team["id"]
 ): Promise<Flow["id"]> => {
   const { client: $client } = getClient();
   const { flow } = await $client.request<UpdateFlow>(
@@ -37,7 +37,7 @@ const updateFlow = async (
     {
       id: flowId,
       team_id: teamId,
-    },
+    }
   );
 
   return flow.id;
