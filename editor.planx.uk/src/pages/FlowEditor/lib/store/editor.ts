@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType,
+  FlowGraph,
   NodeId,
   OrderedFlow,
 } from "@opensystemslab/planx-core/types";
