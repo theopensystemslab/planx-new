@@ -7,6 +7,12 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
+vi.mock("react-navi", () => ({
+  useNavigation: () => ({
+    navigate: vi.fn(),
+  }),
+}));
+
 import Search from ".";
 import { flow } from "./mocks/simple";
 

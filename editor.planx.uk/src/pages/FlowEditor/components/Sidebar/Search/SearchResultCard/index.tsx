@@ -5,7 +5,9 @@ import Typography from "@mui/material/Typography";
 import { IndexedNode } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import type { SearchResult } from "hooks/useSearch";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { Headline } from "../Headline";
@@ -25,11 +27,12 @@ export const SearchResultCard: React.FC<{
     getDisplayDetailsForResult(result);
   const Icon = ICONS[iconKey];
 
+  const getURLForNode = useStore((state) => state.getURLForNode);
+  const { navigate } = useNavigation();
+
   const handleClick = () => {
-    console.log({ result });
-    // get path for node
-    // generate url from path
-    // navigate to url
+    const url = getURLForNode(result.item.id);
+    navigate(url);
   };
 
   return (
