@@ -17,9 +17,13 @@ import {
   AddNewEditorErrors,
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
-import { addNewEditorFormSchema } from "../formSchema";
+import { addNewEditorFormSchema, UpdateEditorFormSchema } from "../formSchema";
 import { updateUser } from "../queries/updateUser";
-import { AddNewEditorFormValues, UpdateEditorModalProps } from "../types";
+import {
+  AddNewEditorFormValues,
+  TeamMember,
+  UpdateEditorModalProps,
+} from "../types";
 
 export const UpdateEditorModal = ({
   showUpdateModal,
@@ -40,23 +44,31 @@ export const UpdateEditorModal = ({
     values: AddNewEditorFormValues,
     { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
-    const response = await updateUser(userId, formik.values).catch((err) => {
-      if (isUserAlreadyExistsError(err.message)) {
-        setShowUserAlreadyExistsError(true);
-      }
-      if (err.message === "Unable to create user") {
-        toast.error("Failed to update the user, please try again");
-      }
-      console.error(err);
-    });
+    const response = await useStore
+      .getState()
+      .updateTeamMember(userId, formik.values)
+      .catch((err) => {
+        if (isUserAlreadyExistsError(err.message)) {
+          setShowUserAlreadyExistsError(true);
+        }
+        if (err.message === "Unable to update user") {
+          toast.error("Failed to update the user, please try again");
+        }
+        console.error(err);
+      });
 
     if (!response) {
       return;
     }
 
+    const team = useStore.getState().teamMembers;
+    console.log(team);
     clearErrors();
     toast.success("Successfully updated a user");
     resetForm({ values });
+    setTimeout(() => {
+      setShowUpdateModal(false);
+    }, 750);
   };
 
   const formik = useFormik<AddNewEditorFormValues>({
@@ -65,7 +77,7 @@ export const UpdateEditorModal = ({
       lastName: initialValues.lastName,
       email: initialValues.email,
     },
-    validationSchema: addNewEditorFormSchema,
+    validationSchema: UpdateEditorFormSchema,
     onSubmit: handleSubmit,
   });
 
