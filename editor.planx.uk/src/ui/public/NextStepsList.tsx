@@ -6,16 +6,16 @@ import { styled, Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Step as StyledListItem } from "@planx/components/NextSteps/model";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { handleSubmit } from "pages/Preview/Node";
+import { HandleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 
 interface NextStepsListProps {
   steps: StyledListItem[];
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
 }
 
 interface ListItemProps extends StyledListItem {
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
   handleSelectingUrl?: (url: string) => void;
 }
 

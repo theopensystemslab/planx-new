@@ -63,7 +63,7 @@ interface RootProps
   currentSectionIndex: number;
   flowName: string;
   sectionNodes: Record<string, SectionNode>;
-  currentCard: Store.node | null;
+  currentCard: Store.Node | null;
   sectionCount: number;
 }
 
@@ -102,14 +102,14 @@ export const Root = ({
 );
 
 type SectionsOverviewListProps = {
-  flow: Store.flow;
+  flow: Store.Flow;
   showChange: boolean;
   changeAnswer: (sectionId: string) => void;
   nextQuestion: () => void;
   sectionNodes: Record<string, SectionNode>;
-  currentCard: Store.node | null;
-  breadcrumbs: Store.breadcrumbs;
-  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  currentCard: Store.Node | null;
+  breadcrumbs: Store.Breadcrumbs;
+  cachedBreadcrumbs?: Store.CachedBreadcrumbs;
   isReconciliation?: boolean;
   alteredSectionIds?: string[];
 };

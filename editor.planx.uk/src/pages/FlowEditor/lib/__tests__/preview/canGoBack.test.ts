@@ -7,7 +7,7 @@ const { canGoBack, getCurrentCard, resetPreview, record, changeAnswer } =
   getState();
 
 // https://imgur.com/VFV64ax
-const flow: Store.flow = {
+const flow: Store.Flow = {
   _root: {
     edges: ["Question", "Pay", "Content", "Confirmation"],
   },

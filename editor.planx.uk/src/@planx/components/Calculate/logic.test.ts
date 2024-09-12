@@ -41,7 +41,7 @@ test("When formatOutputForAutomations is false, Calculate writes a number and fu
   expect(upcomingCardIds()).toEqual(["Question"]);
 });
 
-const flowWithAutomation: Store.flow = {
+const flowWithAutomation: Store.Flow = {
   _root: {
     edges: ["Calculate", "Question"],
   },
@@ -95,7 +95,7 @@ const flowWithAutomation: Store.flow = {
   },
 };
 
-const flowWithoutAutomation: Store.flow = {
+const flowWithoutAutomation: Store.Flow = {
   _root: {
     edges: ["Calculate", "Question"],
   },

@@ -3,7 +3,10 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeId,
+} from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
@@ -119,25 +122,25 @@ const presentationalComponents: {
   [TYPES.TextInput]: TextInput,
 } as const;
 
-type BreadcrumbEntry = [Store.nodeId, Store.breadcrumbs];
+type BreadcrumbEntry = [NodeId, Store.Breadcrumbs];
 
 interface SummaryListBaseProps {
-  flow: Store.flow;
-  passport: Store.passport;
-  changeAnswer: (id: Store.nodeId) => void;
+  flow: Store.Flow;
+  passport: Store.Passport;
+  changeAnswer: (id: NodeId) => void;
   showChangeButton: boolean;
 }
 
 interface SummaryListsBySectionsProps extends SummaryListBaseProps {
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
   sectionComponent: React.ElementType<any> | undefined;
 }
 
 interface SummaryBreadcrumb {
   component: React.FC<ComponentProps>;
-  nodeId: Store.nodeId;
-  userData: Store.userData;
-  node: Store.node;
+  nodeId: NodeId;
+  userData: Store.UserData;
+  node: Store.Node;
 }
 
 interface SummaryListProps extends SummaryListBaseProps {
@@ -166,7 +169,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
   };
 
   const removeNonPresentationalNodes = (
-    section: Store.breadcrumbs,
+    section: Store.Breadcrumbs,
   ): BreadcrumbEntry[] => {
     // Typecast to preserve Store.userData
     const entries = Object.entries(section) as BreadcrumbEntry[];
@@ -247,7 +250,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
 function SummaryList(props: SummaryListProps) {
   const { trackEvent } = useAnalyticsTracking();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [nodeToChange, setNodeToChange] = useState<Store.nodeId | undefined>(
+  const [nodeToChange, setNodeToChange] = useState<NodeId | undefined>(
     undefined,
   );
 
@@ -264,7 +267,7 @@ function SummaryList(props: SummaryListProps) {
     }
   };
 
-  const handleChange = (nodeId: Store.nodeId) => {
+  const handleChange = (nodeId: NodeId) => {
     setNodeToChange(nodeId);
     setIsDialogOpen(true);
   };
@@ -332,10 +335,10 @@ function SummaryList(props: SummaryListProps) {
 
 interface ComponentProps {
   node: any;
-  userData?: Store.userData;
-  flow: Store.flow;
-  passport: Store.passport;
-  nodeId: Store.nodeId;
+  userData?: Store.UserData;
+  flow: Store.Flow;
+  passport: Store.Passport;
+  nodeId: NodeId;
 }
 
 function List(props: ComponentProps) {

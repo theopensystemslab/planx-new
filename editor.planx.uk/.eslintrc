@@ -42,16 +42,22 @@
           },
           {
             "name": "@testing-library/react",
-            "importNames": ["render"],
+            "importNames": [
+              "render"
+            ],
             "message": "Please import setup() from testUtils to render test component"
           },
           {
             "name": "@mui/styles",
-            "importNames": ["styled"],
+            "importNames": [
+              "styled"
+            ],
             "message": "Please import styled from '@mui/material/styles'. Reason: https://mui.com/system/styled/#what-problems-does-it-solve"
           }
         ],
-        "patterns": ["@mui/*/*/*"]
+        "patterns": [
+          "@mui/*/*/*"
+        ]
       }
     ],
     "@typescript-eslint/no-unused-vars": [
@@ -68,6 +74,19 @@
     "@typescript-eslint/no-empty-function": "warn",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "typeLike",
+        "format": [
+          "PascalCase"
+        ],
+        "custom": {
+          "regex": "^[A-Z]",
+          "match": true
+        }
+      }
+    ],
     "no-nested-ternary": "error"
   },
   "settings": {
@@ -80,7 +99,9 @@
       "files": [
         "**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)"
       ],
-      "extends": ["plugin:testing-library/react"]
+      "extends": [
+        "plugin:testing-library/react"
+      ]
     }
   ]
 }

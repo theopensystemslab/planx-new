@@ -1,15 +1,15 @@
 declare module "nanoid-good";
 
 export namespace OT {
-  export type path = Array<string | number>;
+  export type Path = Array<string | number>;
 
   export namespace Object {
     export interface Add {
-      p: OT.path;
+      p: OT.Path;
       oi: any;
     }
     export interface Remove {
-      p: OT.path;
+      p: OT.Path;
       od: any;
     }
     export type Replace = OT.Object.Remove & OT.Object.Add;
@@ -17,11 +17,11 @@ export namespace OT {
 
   export namespace Array {
     export interface Add {
-      p: OT.path;
+      p: OT.Path;
       li: any;
     }
     export interface Remove {
-      p: OT.path;
+      p: OT.Path;
       ld: any;
     }
     export type Replace = OT.Array.Remove & OT.Array.Add;

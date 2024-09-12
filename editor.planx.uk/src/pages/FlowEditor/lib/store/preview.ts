@@ -3,6 +3,7 @@ import type {
   FlagSet,
   GovUKPayment,
   Node,
+  NodeId,
 } from "@opensystemslab/planx-core/types";
 import {
   DEFAULT_FLAG_CATEGORY,
@@ -33,24 +34,31 @@ import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
 let memoizedPreviousCardId: string | undefined = undefined;
-let memoizedBreadcrumb: Store.breadcrumbs | undefined = undefined;
+let memoizedBreadcrumb: Store.Breadcrumbs | undefined = undefined;
+
+export interface Response {
+  question: Node & { id: NodeId };
+  selections: Array<Node & { id: NodeId }>;
+  hidden: boolean;
+}
+
 export interface PreviewStore extends Store.Store {
   collectedFlags: (
-    upToNodeId: Store.nodeId,
+    upToNodeId: NodeId,
     visited?: Array<string>,
   ) => Array<string>;
-  currentCard: ({ id: Store.nodeId } & Store.node) | null;
+  currentCard: ({ id: NodeId } & Store.Node) | null;
   setCurrentCard: () => void;
-  getCurrentCard: () => ({ id: Store.nodeId } & Store.node) | null;
+  getCurrentCard: () => ({ id: NodeId } & Store.Node) | null;
   hasPaid: () => boolean;
   previousCard: (
-    node: Store.node | null,
-    upcomingCardIds?: Store.nodeId[],
-  ) => Store.nodeId | undefined;
-  canGoBack: (node: Store.node | null) => boolean;
-  getType: (node: Store.node | null) => TYPES | undefined;
-  computePassport: () => Readonly<Store.passport>;
-  record: (id: Store.nodeId, userData?: Store.userData) => void;
+    node: Store.Node | null,
+    upcomingCardIds?: NodeId[],
+  ) => NodeId | undefined;
+  canGoBack: (node: Store.Node | null) => boolean;
+  getType: (node: Store.Node | null) => TYPES | undefined;
+  computePassport: () => Readonly<Store.Passport>;
+  record: (id: NodeId, userData?: Store.UserData) => void;
   resultData: (
     flagSet?: string,
     overrides?: {
@@ -59,17 +67,17 @@ export interface PreviewStore extends Store.Store {
   ) => {
     [category: string]: {
       flag: Flag;
-      responses: any[];
+      responses: Array<Response | null>;
       displayText: { heading: string; description: string };
     };
   };
   resumeSession: (session: Session) => void;
   sessionId: string;
-  upcomingCardIds: () => Store.nodeId[];
+  upcomingCardIds: () => NodeId[];
   isFinalCard: () => boolean;
   govUkPayment?: GovUKPayment;
   setGovUkPayment: (govUkPayment: GovUKPayment) => void;
-  cachedBreadcrumbs?: Store.cachedBreadcrumbs;
+  cachedBreadcrumbs?: Store.CachedBreadcrumbs;
   analyticsId?: number;
   setAnalyticsId: (analyticsId: number) => void;
   restore: boolean;
@@ -158,7 +166,7 @@ export const previewStore: StateCreator<
     );
   },
 
-  previousCard: (node: Store.node | null) => {
+  previousCard: (node: Store.Node | null) => {
     const { breadcrumbs, flow, _nodesPendingEdit, changedNode } = get();
     const goBackable = Object.entries(breadcrumbs)
       .filter(([, v]) => !v.auto)
@@ -188,14 +196,14 @@ export const previewStore: StateCreator<
     return previousCardId;
   },
 
-  canGoBack: (node: Store.node | null) => {
+  canGoBack: (node: Store.Node | null) => {
     // XXX: node is a required param until upcomingNodes().shift() is
     //      optimised/memoized, see related isFinalCard() comment below
     const { hasPaid, previousCard } = get();
     return Boolean(node?.id) && Boolean(previousCard(node)) && !hasPaid();
   },
 
-  getType: (node: Store.node | null) => {
+  getType: (node: Store.Node | null) => {
     const { flow } = get();
     if (!node?.id) return;
     const currentNodeType = flow[node.id]?.type;
@@ -210,7 +218,7 @@ export const previewStore: StateCreator<
 
         const key = flow[id].data?.fn;
 
-        const passportData: Store.passport["data"] = {};
+        const passportData: Store.Passport["data"] = {};
 
         if (key) {
           const passportValue = answers
@@ -244,10 +252,10 @@ export const previewStore: StateCreator<
             _acc![id] = value;
             return _acc;
           },
-          {} as Store.passport["data"],
+          {} as Store.Passport["data"],
         );
 
-        let passport: Store.passport = {
+        let passport: Store.Passport = {
           ...acc,
           data: {
             ...acc.data,
@@ -269,7 +277,7 @@ export const previewStore: StateCreator<
       },
       {
         data: {},
-      } as Store.passport,
+      } as Store.Passport,
     );
 
     return passport;
@@ -295,7 +303,7 @@ export const previewStore: StateCreator<
       // add breadcrumb
       const { answers = [], data = {}, auto = false, override } = userData;
 
-      const breadcrumb: Store.userData = { auto: Boolean(auto) };
+      const breadcrumb: Store.UserData = { auto: Boolean(auto) };
       if (answers?.length > 0) breadcrumb.answers = answers;
 
       const filteredData = objectWithoutNullishValues(data);
@@ -396,10 +404,10 @@ export const previewStore: StateCreator<
       computePassport().data?._nots,
     );
 
-    const ids: Set<Store.nodeId> = new Set();
-    const visited: Set<Store.nodeId> = new Set();
+    const ids: Set<NodeId> = new Set();
+    const visited: Set<NodeId> = new Set();
 
-    const nodeIdsConnectedFrom = (source: Store.nodeId): void => {
+    const nodeIdsConnectedFrom = (source: NodeId): void => {
       return (flow[source]?.edges ?? [])
         .filter((id) => {
           if (visited.has(id)) return false;
@@ -542,8 +550,8 @@ export const previewStore: StateCreator<
                 return acc;
               },
               { edges: [] } as {
-                responseWithNoValueId?: Store.nodeId;
-                edges: Array<Store.nodeId>;
+                responseWithNoValueId?: NodeId;
+                edges: Array<NodeId>;
               },
             );
 
@@ -570,7 +578,7 @@ export const previewStore: StateCreator<
       // of all the answers collected so far
       Object.values(breadcrumbs)
         // in reverse order
-        .flatMap(({ answers }) => answers as Array<Store.nodeId>)
+        .flatMap(({ answers }) => answers as Array<NodeId>)
         // .filter(Boolean)
         .reverse()
         // ending with _root
@@ -661,8 +669,8 @@ export const previewStore: StateCreator<
 });
 
 const knownNots = (
-  flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  flow: Store.Flow,
+  breadcrumbs: Store.Breadcrumbs,
   nots = {},
 ) =>
   Object.entries(breadcrumbs).reduce(
@@ -671,7 +679,7 @@ const knownNots = (
 
       const _knownNotVals = difference(
         flow[id].edges,
-        answers as Array<Store.nodeId>,
+        answers as Array<NodeId>,
       );
 
       if (flow[id].data?.fn) {
@@ -692,9 +700,9 @@ const knownNots = (
 
 interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
-  flow: Store.flow;
-  userData: Store.userData;
-  breadcrumbs: Store.cachedBreadcrumbs | Store.breadcrumbs;
+  flow: Store.Flow;
+  userData: Store.UserData;
+  breadcrumbs: Store.CachedBreadcrumbs | Store.Breadcrumbs;
 }
 
 export const removeOrphansFromBreadcrumbs = ({
@@ -703,8 +711,8 @@ export const removeOrphansFromBreadcrumbs = ({
   userData,
   breadcrumbs,
 }: RemoveOrphansFromBreadcrumbsProps):
-  | Store.cachedBreadcrumbs
-  | Store.breadcrumbs => {
+  | Store.CachedBreadcrumbs
+  | Store.Breadcrumbs => {
   // this will prevent a user from "Continuing", therefore log error don't throw it
   if (!flow[id]) {
     logger.notify(
@@ -728,13 +736,13 @@ export const removeOrphansFromBreadcrumbs = ({
         breadcrumbs: acc,
       });
     },
-    { ...breadcrumbs } as Store.cachedBreadcrumbs | Store.breadcrumbs,
+    { ...breadcrumbs } as Store.CachedBreadcrumbs | Store.Breadcrumbs,
   );
 };
 
 export const getResultData = (
-  breadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
+  breadcrumbs: Store.Breadcrumbs,
+  flow: Store.Flow,
   flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
   overrides?: Parameters<PreviewStore["resultData"]>[1],
 ) => {
@@ -815,20 +823,20 @@ export const getResultData = (
 
       return acc;
     },
-    {} as ReturnType<PreviewStore["resultData"]>,
+    {},
   );
 };
 
 export const sortBreadcrumbs = (
-  nextBreadcrumbs: Store.breadcrumbs,
-  flow: Store.flow,
+  nextBreadcrumbs: Store.Breadcrumbs,
+  flow: Store.Flow,
   editingNodes?: string[],
 ) => {
   return editingNodes?.length
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
         (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-        {} as Store.breadcrumbs,
+        {} as Store.Breadcrumbs,
       );
 };
 
@@ -840,15 +848,15 @@ function handleNodesWithPassport({
   currentNodesPendingEdit,
   breadcrumbs,
 }: {
-  flow: Store.flow;
+  flow: Store.Flow;
   id: string;
-  cachedBreadcrumbs: Store.cachedBreadcrumbs;
-  userData: Store.userData;
+  cachedBreadcrumbs: Store.CachedBreadcrumbs;
+  userData: Store.UserData;
   currentNodesPendingEdit: string[];
-  breadcrumbs: Store.breadcrumbs;
+  breadcrumbs: Store.Breadcrumbs;
 }) {
   let nodesPendingEdit = [...currentNodesPendingEdit];
-  let newBreadcrumbs: Store.cachedBreadcrumbs = { ...cachedBreadcrumbs };
+  let newBreadcrumbs: Store.CachedBreadcrumbs = { ...cachedBreadcrumbs };
 
   const POPULATE_PASSPORT = [TYPES.FindProperty, TYPES.DrawBoundary];
   const breadcrumbPopulatesPassport =
@@ -884,10 +892,10 @@ function handleNodesWithPassport({
 // when changing answers from review component to guarantee that their values are updated.
 // XXX: This logic assumes only one "FindProperty" component per flow.
 export const removeNodesDependentOnPassport = (
-  flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  flow: Store.Flow,
+  breadcrumbs: Store.Breadcrumbs,
 ): {
-  breadcrumbsWithoutPassportData: Store.breadcrumbs;
+  breadcrumbsWithoutPassportData: Store.Breadcrumbs;
   removedNodeIds: string[];
 } => {
   const DEPENDENT_TYPES = [

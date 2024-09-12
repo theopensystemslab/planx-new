@@ -1,4 +1,7 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  Node as PlanXCoreNode,
+  NodeId,
+} from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "routes/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
 
@@ -19,23 +22,23 @@ import { UserStore, userStore } from "./user";
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Store {
   export type Store = Record<string | number | symbol, unknown>;
-  export type nodeId = string;
-  export type flow = Record<nodeId, node>;
-  export type userData = {
+  export type Flow = Record<NodeId, Node>;
+  export type UserData = {
     answers?: Array<string>;
     data?: Record<string, any>;
     auto?: boolean;
     override?: Record<string, any>;
   };
-  export type breadcrumbs = Record<nodeId, userData>;
-  export type cachedBreadcrumbs = Record<nodeId, userData> | undefined;
-  export type node = {
-    id?: nodeId;
-    type?: TYPES;
+  export type Breadcrumbs = Record<NodeId, UserData>;
+  export type CachedBreadcrumbs = Record<NodeId, UserData> | undefined;
+  /**
+   * Looser Node type with `any` data
+   * @deprecated Should share type with PlanX core once `Value` is retired and Flow Graph is typed
+   */
+  export interface Node extends PlanXCoreNode {
     data?: any;
-    edges?: nodeId[];
-  };
-  export interface passport {
+  }
+  export interface Passport {
     data?: Record<string, any>;
   }
 }

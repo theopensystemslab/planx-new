@@ -11,7 +11,7 @@ import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { handleSubmit } from "pages/Preview/Node";
+import { HandleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
@@ -368,7 +368,7 @@ interface ConstraintsFetchErrorProps {
   title: string;
   description: string;
   refreshConstraints: () => void;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
 }
 
 const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
@@ -400,7 +400,7 @@ const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
 interface ConstraintsGraphErrorProps {
   title: string;
   description: string;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
 }
 
 const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (

@@ -6,7 +6,7 @@ import type { StateCreator } from "zustand";
 import { PreviewStore } from "./preview";
 import { SharedStore } from "./shared";
 
-export interface SectionNode extends Store.node {
+export interface SectionNode extends Store.Node {
   data: {
     title: string;
   };
@@ -20,8 +20,8 @@ export interface NavigationStore {
   sectionNodes: Record<string, SectionNode>;
   initNavigationStore: () => void;
   updateSectionData: () => void;
-  filterFlowByType: (type: TYPES) => Store.flow;
-  getSortedBreadcrumbsBySection: () => Store.breadcrumbs[];
+  filterFlowByType: (type: TYPES) => Store.Flow;
+  getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
 }
 
@@ -93,7 +93,7 @@ export const navigationStore: StateCreator<
    * Get a subset of the full flow, by type
    * Returned in correct order, based on _root node's edges
    */
-  filterFlowByType: (type: TYPES): Store.flow => {
+  filterFlowByType: (type: TYPES): Store.Flow => {
     const flow = get().flow;
     const rootEdges = flow._root.edges || [];
     const filteredFlow = Object.fromEntries(
@@ -110,7 +110,7 @@ export const navigationStore: StateCreator<
   //    so we can render section node titles as h2s and the following nodes as individual SummaryLists
   getSortedBreadcrumbsBySection: () => {
     const { breadcrumbs, sectionNodes, hasSections } = get();
-    const sortedBreadcrumbsBySection: Store.breadcrumbs[] = [];
+    const sortedBreadcrumbsBySection: Store.Breadcrumbs[] = [];
     if (hasSections) {
       const sortedNodeIdsBySection: string[][] = [];
       Object.keys(sectionNodes).forEach((sectionId, i) => {

@@ -140,7 +140,7 @@ function Component(props: Props) {
     }
 
     if (address) {
-      const newPassportData: Store.userData["data"] = {};
+      const newPassportData: Store.UserData["data"] = {};
       newPassportData["_address"] = address;
       if (address?.planx_value) {
         newPassportData["property.type"] = [address.planx_value];

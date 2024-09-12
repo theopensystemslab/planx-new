@@ -6,17 +6,18 @@ import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
-import type { handleSubmit } from "pages/Preview/Node";
+import { Response } from "pages/FlowEditor/lib/store/preview";
+import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import type { Node, TextContent } from "types";
+import type { TextContent } from "types";
 
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
 
 export interface Props {
   allowChanges?: boolean;
-  handleSubmit?: handleSubmit;
+  handleSubmit?: HandleSubmit;
   headingColor: {
     text: string;
     background: string;
@@ -26,13 +27,7 @@ export interface Props {
   reasonsTitle?: string;
   responses: Array<Response>;
   disclaimer?: TextContent;
-  previouslySubmittedData?: Store.userData;
-}
-
-interface Response {
-  question: Node;
-  selections: Array<Node>;
-  hidden: boolean;
+  previouslySubmittedData?: Store.UserData;
 }
 
 const DisclaimerContent = styled(Typography)(({ theme }) => ({
@@ -85,7 +80,7 @@ const Responses = ({
             id={question.id}
             question={question}
             showChangeButton={allowChanges && !breadcrumbs[question.id].auto}
-            response={selections.map((s) => s.data.text).join(",")}
+            response={selections.map((s) => s.data?.text).join(",")}
             flagColor={flagColor}
           />
         ))}

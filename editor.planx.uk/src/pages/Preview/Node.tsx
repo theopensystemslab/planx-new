@@ -36,11 +36,11 @@ import { exhaustiveCheck } from "utils";
 import type { Store } from "../FlowEditor/lib/store";
 import { useStore } from "../FlowEditor/lib/store";
 
-export type handleSubmit = (userData?: Store.userData | Event) => void;
+export type HandleSubmit = (userData?: Store.UserData | Event) => void;
 
 interface Props {
-  handleSubmit: handleSubmit;
-  node: Store.node;
+  handleSubmit: HandleSubmit;
+  node: Store.Node;
   data?: any;
 }
 
