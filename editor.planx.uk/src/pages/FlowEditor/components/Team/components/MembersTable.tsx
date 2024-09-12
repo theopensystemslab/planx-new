@@ -1,4 +1,6 @@
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,6 +13,17 @@ import React, { useState } from "react";
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps } from "./../types";
 import { AddNewEditorModal } from "./AddNewEditorModal";
+
+const TableButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: "underline",
+  boxShadow: "none",
+  "&:hover": {
+    boxShadow: "none",
+    color: theme.palette.primary.main,
+    textDecoration: "underline",
+  },
+}));
 
 export const MembersTable = ({
   members,
@@ -74,7 +87,8 @@ export const MembersTable = ({
               </TableCell>
               <TableCell>
                 <strong>Email</strong>
-              </TableCell>
+              </TableCell>{" "}
+              <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody
@@ -103,6 +117,9 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
+                <TableCell>
+                  <TableButton>Edit</TableButton>
+                </TableCell>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
