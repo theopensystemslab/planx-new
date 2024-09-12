@@ -1,5 +1,6 @@
-import { Response, Request } from "express";
-import { fixRequestBody, Options } from "http-proxy-middleware";
+import type { Response, Request } from "express";
+import type { Options } from "http-proxy-middleware";
+import { fixRequestBody } from "http-proxy-middleware";
 import { useProxy } from "../../shared/middleware/proxy.js";
 
 export const usePayProxy = (

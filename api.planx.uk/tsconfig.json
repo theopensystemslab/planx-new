@@ -16,8 +16,7 @@
     "target": "esnext",
     "types": ["vitest/globals"],
     // ensure the code is ready for per-file transpilation by tsx (used in dev mode)
-    "isolatedModules": true,
-    // TODO: implement "verbatimModuleSyntax" option (laborious)
+    "verbatimModuleSyntax": true,
   },
   "exclude": ["node_modules", "dist"],
 }

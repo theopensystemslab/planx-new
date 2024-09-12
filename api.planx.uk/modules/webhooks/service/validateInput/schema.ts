@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import { isCleanHTML, isObjectValid } from "./utils.js";
 
 // Definition: https://hasura.io/docs/latest/schema/postgres/input-validations/#response

@@ -1,4 +1,5 @@
 import supertest from "supertest";
+import type planxCore from "@opensystemslab/planx-core";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
 
@@ -11,8 +12,7 @@ const mockGenerateCSVData = vi.fn().mockResolvedValue([
 ]);
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-  const actualCore =
-    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCore = await importOriginal<typeof planxCore>();
   const actualCoreDomainClient = actualCore.CoreDomainClient;
 
   return {

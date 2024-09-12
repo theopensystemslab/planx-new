@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig, isAxiosError } from "axios";
-import { NextFunction, Request, Response } from "express";
+import type { AxiosRequestConfig } from "axios";
+import axios, { isAxiosError } from "axios";
+import type { NextFunction, Request, Response } from "express";
 import FormData from "form-data";
 import fs from "fs";
 import { gql } from "graphql-request";

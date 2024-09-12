@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { sendEmail } from "../../../lib/notify/index.js";
-import { EmailSubmissionNotifyConfig } from "../../../types.js";
+import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import {
   getSessionEmailDetailsById,

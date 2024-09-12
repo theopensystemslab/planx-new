@@ -1,4 +1,4 @@
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
 import { ServerError } from "../../../errors/index.js";
 import { moveFlow } from "./service.js";

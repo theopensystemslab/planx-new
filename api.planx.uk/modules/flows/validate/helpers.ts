@@ -1,9 +1,9 @@
-import {
+import type {
   ComponentType,
   FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
-import { Entry } from "type-fest";
+import type { Entry } from "type-fest";
 
 export const isComponentType = (
   entry: Entry<FlowGraph>,

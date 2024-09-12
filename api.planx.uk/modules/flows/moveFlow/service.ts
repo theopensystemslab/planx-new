@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
-import { Flow } from "../../../types.js";
+import type { Flow } from "../../../types.js";
 import { getClient } from "../../../client/index.js";
-import { Team } from "@opensystemslab/planx-core/types";
+import type { Team } from "@opensystemslab/planx-core/types";
 
 export const moveFlow = async (flowId: string, teamSlug: string) => {
   const $client = getClient();

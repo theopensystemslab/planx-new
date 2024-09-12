@@ -3,7 +3,7 @@ import app from "../../../../server.js";
 import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import { flowWithInviteToPay } from "../../../../tests/mocks/inviteToPayData.js";
-import { MockedFunction } from "vitest";
+import type { MockedFunction } from "vitest";
 
 vi.mock("../../../../lib/hasura/metadata");
 const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<

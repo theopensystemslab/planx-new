@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
-import { Flow } from "../../../types.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import type { Flow } from "../../../types.js";
 import { ServerError } from "../../../errors/index.js";
 import { copyFlow } from "./service.js";
 

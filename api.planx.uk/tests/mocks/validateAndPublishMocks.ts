@@ -1,4 +1,4 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 
 export const mockFlowData: FlowGraph = {
   _root: {

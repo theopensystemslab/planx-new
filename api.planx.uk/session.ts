@@ -1,4 +1,4 @@
-import { RequestHandler } from "http-proxy-middleware";
+import type { RequestHandler } from "http-proxy-middleware";
 
 // this middleware registers dummy methods on req.session to resolve passport/cookie-session incompatibility
 export const registerSessionStubs: RequestHandler = (req, _res, next): void => {

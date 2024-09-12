@@ -1,5 +1,5 @@
-import { Request, RequestHandler, Response, NextFunction } from "express";
-import { z } from "zod";
+import type { Request, RequestHandler, Response, NextFunction } from "express";
+import type { z } from "zod";
 
 /**
  * Middleware to validate incoming requests to the API

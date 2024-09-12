@@ -1,9 +1,10 @@
-import axios, { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
-import { Passport } from "../../../types.js";
+import type { Passport } from "../../../types.js";
 import { uploadPrivateFile } from "../../file/service/uploadFile.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { isApplicationTypeSupported } from "../utils/helpers.js";

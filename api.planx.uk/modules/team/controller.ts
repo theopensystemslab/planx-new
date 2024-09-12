@@ -1,6 +1,6 @@
 import { z } from "zod";
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import { ServerError } from "../../errors/index.js";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import * as Service from "./service.js";
 
 interface TeamMemberResponse {

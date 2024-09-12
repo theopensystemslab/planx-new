@@ -1,14 +1,14 @@
 import crypto from "crypto";
 import assert from "assert";
 import { ServerError } from "../../errors/index.js";
-import { Template } from "../../lib/notify/index.js";
+import type { Template } from "../../lib/notify/index.js";
 import { expressjwt } from "express-jwt";
 import { generators } from "openid-client";
-import { Authenticator } from "passport";
-import { RequestHandler } from "http-proxy-middleware";
-import { Role } from "@opensystemslab/planx-core/types";
+import type { Authenticator } from "passport";
+import type { RequestHandler } from "http-proxy-middleware";
+import type { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
-import { Request } from "express";
+import type { Request } from "express";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 

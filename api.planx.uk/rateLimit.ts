@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import rateLimit from "express-rate-limit";
 
 // Broad limiter to prevent egregious abuse

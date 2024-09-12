@@ -1,13 +1,18 @@
-import {
+import type {
   GovUKPayment,
   PaymentRequest,
   Session,
   Team,
 } from "@opensystemslab/planx-core/types";
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
-import { Breadcrumb, Flow, LowCalSession, Passport } from "../../../types.js";
+import type {
+  Breadcrumb,
+  Flow,
+  LowCalSession,
+  Passport,
+} from "../../../types.js";
 import { $api } from "../../../client/index.js";
 
 /**

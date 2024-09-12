@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
-import { Request } from "express";
+import type { Request } from "express";
 import { fetchPaymentViaProxyWithCallback } from "../../controller.js";
-import { GovUKPayment } from "@opensystemslab/planx-core/types";
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { $api } from "../../../../client/index.js";
 import { postPaymentNotificationToSlack } from "../utils.js";
 

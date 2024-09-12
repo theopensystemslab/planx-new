@@ -1,16 +1,19 @@
 import assert from "assert";
-import { Request } from "express";
+import type { Request } from "express";
 import { responseInterceptor } from "http-proxy-middleware";
 import { handleGovPayErrors, logPaymentStatus } from "./helpers.js";
 import { usePayProxy } from "./proxy.js";
 import { $api } from "../../client/index.js";
 import { ServerError } from "../../errors/index.js";
-import { GovUKPayment, PaymentRequest } from "@opensystemslab/planx-core/types";
+import type {
+  GovUKPayment,
+  PaymentRequest,
+} from "@opensystemslab/planx-core/types";
 import {
   addGovPayPaymentIdToPaymentRequest,
   postPaymentNotificationToSlack,
 } from "./service/utils.js";
-import {
+import type {
   InviteToPayController,
   PaymentProxyController,
   PaymentRequestProxyController,

@@ -1,7 +1,7 @@
-import { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 import { ServerError } from "../../../errors/index.js";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { dataMerged } from "../../../helpers.js";
 
 type FlattenFlowDataResponse = FlowGraph;

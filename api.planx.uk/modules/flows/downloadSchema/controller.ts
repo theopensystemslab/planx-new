@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { stringify } from "csv-stringify";
 import { getFlowSchema } from "./service.js";
 import { ServerError } from "../../../errors/index.js";

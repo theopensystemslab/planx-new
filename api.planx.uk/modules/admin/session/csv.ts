@@ -1,5 +1,5 @@
 import { stringify } from "csv-stringify";
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { $api } from "../../../client/index.js";
 
 /**

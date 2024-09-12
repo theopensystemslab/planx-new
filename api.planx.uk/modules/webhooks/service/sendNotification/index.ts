@@ -1,6 +1,6 @@
 import { Passport } from "@opensystemslab/planx-core";
 import SlackNotify from "slack-notify";
-import {
+import type {
   BOPSEventData,
   EmailEventData,
   EventData,

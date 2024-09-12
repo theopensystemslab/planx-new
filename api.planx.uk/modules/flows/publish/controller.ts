@@ -1,5 +1,5 @@
-import { Node } from "@opensystemslab/planx-core/types";
-import { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import type { Node } from "@opensystemslab/planx-core/types";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
 import { publishFlow } from "./service.js";
 import { ServerError } from "../../../errors/index.js";

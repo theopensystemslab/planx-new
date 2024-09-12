@@ -1,4 +1,4 @@
-import { GovUKPayment } from "@opensystemslab/planx-core/types";
+import type { GovUKPayment } from "@opensystemslab/planx-core/types";
 import { isTestPayment } from "./utils.js";
 
 describe("isTestPayment() helper function", () => {
