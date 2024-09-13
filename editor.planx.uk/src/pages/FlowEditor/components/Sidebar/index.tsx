@@ -9,7 +9,7 @@ import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
 import { hasFeatureFlag } from "lib/featureFlags";
-import React, { useState } from "react";
+import React from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
@@ -22,7 +22,7 @@ import { PublishFlowButton } from "./Publish/PublishFlowButton";
 import Search from "./Search";
 import StyledTab from "./StyledTab";
 
-type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
+export type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 
 const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
 
@@ -104,14 +104,19 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [resetPreview, isFlowPublished] = useStore((state) => [
-    state.resetPreview,
-    state.isFlowPublished,
-  ]);
+  const [resetPreview, isFlowPublished, activeTab, setActiveTab] = useStore(
+    (state) => [
+      state.resetPreview,
+      state.isFlowPublished,
+      state.activeSidebarTab,
+      state.setActiveSidebarTab,
+    ],
+  );
 
-  const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
-
-  const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    newValue: SidebarTabs,
+  ) => {
     setActiveTab(newValue);
   };
 

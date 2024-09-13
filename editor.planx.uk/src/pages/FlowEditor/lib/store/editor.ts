@@ -25,6 +25,7 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
+import { SidebarTabs } from "pages/FlowEditor/components/Sidebar";
 import type { StateCreator } from "zustand";
 
 import { FlowLayout } from "../../components/Flow";
@@ -48,6 +49,8 @@ export interface EditorUIStore {
   togglePreview: () => void;
   isTestEnvBannerVisible: boolean;
   hideTestEnvBanner: () => void;
+  activeSidebarTab: SidebarTabs;
+  setActiveSidebarTab: (tab: SidebarTabs) => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -67,6 +70,10 @@ export const editorUIStore: StateCreator<
   isTestEnvBannerVisible: !window.location.href.includes(".uk"),
 
   hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
+
+  activeSidebarTab: "PreviewBrowser",
+
+  setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
 });
 
 interface PublishFlowResponse {
