@@ -17,15 +17,17 @@ import {
   AddNewEditorErrors,
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
-import { addNewEditorFormSchema } from "../formSchema";
+import { editorFormSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
-import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
+import { AddNewEditorFormValues, EditorModalProps } from "../types";
 import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMembersTable";
 
 export const AddNewEditorModal = ({
   showModal,
   setShowModal,
-}: AddNewEditorModalProps) => {
+  initialValues,
+  actionType,
+}: EditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
 
@@ -39,12 +41,23 @@ export const AddNewEditorModal = ({
     values: AddNewEditorFormValues,
     { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
+    switch (actionType) {
+      case "add":
+        handleNewSubmit();
+        break;
+      case "edit":
+        handleUpdateSubmit();
+    }
+    resetForm({ values });
+  };
+
+  const handleNewSubmit = async () => {
     const { teamId, teamSlug } = useStore.getState();
 
     const createUserResult = await createAndAddUserToTeam(
-      values.email,
-      values.firstName,
-      values.lastName,
+      formik.values.email,
+      formik.values.firstName,
+      formik.values.lastName,
       teamId,
       teamSlug,
     ).catch((err) => {
@@ -61,19 +74,43 @@ export const AddNewEditorModal = ({
       return;
     }
     clearErrors();
-    optimisticallyUpdateMembersTable(values, createUserResult.id);
+    optimisticallyUpdateMembersTable(formik.values, createUserResult.id);
     setShowModal(false);
     toast.success("Successfully added a user");
-    resetForm({ values });
+  };
+  const handleUpdateSubmit = async () => {
+    console.log(initialValues.id, formik.values);
+    const response = await useStore
+      .getState()
+      .updateTeamMember(initialValues.id, formik.values)
+      .catch((err) => {
+        if (isUserAlreadyExistsError(err.message)) {
+          setShowUserAlreadyExistsError(true);
+        }
+        if (err.message === "Unable to update user") {
+          toast.error("Failed to update the user, please try again");
+        }
+        console.error(err);
+      });
+
+    if (!response) {
+      return;
+    }
+
+    const team = useStore.getState().teamMembers;
+    console.log(team);
+    clearErrors();
+    setShowModal(false);
+    toast.success("Successfully updated a user");
   };
 
   const formik = useFormik<AddNewEditorFormValues>({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: initialValues.firstName,
+      lastName: initialValues.lastName,
+      email: initialValues.email,
     },
-    validationSchema: addNewEditorFormSchema,
+    validationSchema: editorFormSchema,
     onSubmit: handleSubmit,
   });
 
@@ -112,6 +149,7 @@ export const AddNewEditorModal = ({
                     ? formik.errors.firstName
                     : undefined
                 }
+                value={formik.values.firstName}
               />
             </InputLabel>
             <InputLabel label="Last name" htmlFor="lastName">
@@ -124,6 +162,7 @@ export const AddNewEditorModal = ({
                     ? formik.errors.lastName
                     : undefined
                 }
+                value={formik.values.lastName}
               />
             </InputLabel>
             <InputLabel label="Email address" htmlFor="email">
@@ -136,6 +175,7 @@ export const AddNewEditorModal = ({
                     ? formik.errors.email
                     : undefined
                 }
+                value={formik.values.email}
               />
             </InputLabel>
           </InputGroup>
@@ -161,8 +201,9 @@ export const AddNewEditorModal = ({
                   color="prompt"
                   type="submit"
                   data-testid="modal-create-user-button"
+                  disabled={!formik.dirty}
                 >
-                  Create user
+                  {actionType === "add" ? "Create user" : "Update user"}
                 </Button>
                 <Button
                   variant="contained"

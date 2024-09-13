@@ -13,7 +13,6 @@ import React, { useState } from "react";
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
 import { AddNewEditorModal } from "./AddNewEditorModal";
-import { UpdateEditorModal } from "./UpdateEditorModel";
 
 const TableButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -30,9 +29,15 @@ export const MembersTable = ({
   members,
   showAddMemberButton,
 }: MembersTableProps) => {
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
+  const [initialValues, setInitialValues] = useState<TeamMember>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    id: 0,
+    role: "platformAdmin",
+  });
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -58,7 +63,7 @@ export const MembersTable = ({
           {showAddMemberButton && (
             <TableRow>
               <TableCell colSpan={3}>
-                <AddButton onClick={() => setShowModal(true)}>
+                <AddButton onClick={() => setShowAddModal(true)}>
                   Add a new editor
                 </AddButton>
               </TableCell>
@@ -66,10 +71,12 @@ export const MembersTable = ({
           )}
         </Table>
 
-        {showModal && (
+        {showAddModal && (
           <AddNewEditorModal
-            showModal={showModal}
-            setShowModal={setShowModal}
+            showModal={showAddModal}
+            setShowModal={setShowAddModal}
+            initialValues={initialValues}
+            actionType={"add"}
           />
         )}
       </>
@@ -135,7 +142,7 @@ export const MembersTable = ({
             {showAddMemberButton && (
               <TableRow>
                 <TableCell colSpan={3}>
-                  <AddButton onClick={() => setShowModal(true)}>
+                  <AddButton onClick={() => setShowAddModal(true)}>
                     Add a new editor
                   </AddButton>
                 </TableCell>
@@ -144,17 +151,23 @@ export const MembersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      {showModal && (
-        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
+      {showAddModal && (
+        <AddNewEditorModal
+          showModal={showAddModal}
+          setShowModal={setShowAddModal}
+          initialValues={initialValues}
+          actionType={"add"}
+        />
       )}
       {showUpdateModal && (
-        <UpdateEditorModal
-          showUpdateModal={showUpdateModal}
-          setShowUpdateModal={setShowUpdateModal}
+        <AddNewEditorModal
+          showModal={showUpdateModal}
+          setShowModal={setShowUpdateModal}
           initialValues={
             initialValues || { firstName: "", lastName: "", email: "" }
           }
           userId={initialValues?.id || 1}
+          actionType={"edit"}
         />
       )}
     </>

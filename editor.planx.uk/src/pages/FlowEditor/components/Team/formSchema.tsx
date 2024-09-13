@@ -6,7 +6,7 @@ export const addNewEditorFormSchema = Yup.object({
   email: Yup.string().email("Invalid email address").required("Required"),
 });
 
-export const UpdateEditorFormSchema = Yup.object({
+export const editorFormSchema = Yup.object({
   firstName: Yup.string().required("Enter a first name"),
   lastName: Yup.string().required("Enter a last name"),
   email: Yup.string()

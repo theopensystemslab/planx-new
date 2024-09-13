@@ -185,7 +185,10 @@ export const teamStore: StateCreator<
         },
       },
     });
-
-    return response;
+    console.log(response.data);
+    if (response.data) {
+      return response.data;
+    }
+    throw new Error("Unable to update user");
   },
 });
