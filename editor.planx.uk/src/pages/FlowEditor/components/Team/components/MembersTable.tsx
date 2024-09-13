@@ -29,8 +29,8 @@ export const MembersTable = ({
   members,
   showAddMemberButton,
 }: MembersTableProps) => {
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<TeamMember>({
     firstName: "",
     lastName: "",
