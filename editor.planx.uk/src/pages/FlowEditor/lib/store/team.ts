@@ -169,9 +169,7 @@ export const teamStore: StateCreator<
         mutation UpdateUser($userId: Int, $userValues: users_set_input) {
           update_users(where: { id: { _eq: $userId } }, _set: $userValues) {
             returning {
-              first_name
-              email
-              last_name
+              id
             }
           }
         }
@@ -185,7 +183,7 @@ export const teamStore: StateCreator<
         },
       },
     });
-    console.log(response.data);
+    console.log(response);
     if (response.data) {
       return response.data;
     }

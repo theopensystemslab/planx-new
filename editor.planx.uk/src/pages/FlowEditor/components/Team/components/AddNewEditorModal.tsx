@@ -114,11 +114,13 @@ export const AddNewEditorModal = ({
     validationSchema: editorFormSchema,
     onSubmit: handleSubmit,
   });
-
+  console.log(formik.isValid);
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid="dialog-create-user"
+      data-testid={
+        actionType === "add" ? "dialog-create-user" : "dialog-edit-user"
+      }
       PaperProps={{
         sx: (theme) => ({
           width: "100%",
@@ -133,7 +135,11 @@ export const AddNewEditorModal = ({
       onClose={() => setShowModal(false)}
     >
       <form onSubmit={formik.handleSubmit}>
-        <DialogContent data-testid="modal-create-user">
+        <DialogContent
+          data-testid={
+            actionType === "add" ? "modal-create-user" : "modal-edit-user"
+          }
+        >
           <Box sx={{ mt: 1, mb: 4 }}>
             <Typography variant="h3" component="h2" id="dialog-heading">
               Add a new editor
@@ -201,8 +207,12 @@ export const AddNewEditorModal = ({
                   variant="contained"
                   color="prompt"
                   type="submit"
-                  data-testid="modal-create-user-button"
-                  disabled={!formik.dirty}
+                  data-testid={
+                    actionType === "add"
+                      ? "modal-create-user-button"
+                      : "modal-edit-user-button"
+                  }
+                  disabled={!formik.dirty || !formik.isValid}
                 >
                   {actionType === "add" ? "Create user" : "Update user"}
                 </Button>

@@ -7,3 +7,11 @@ export const alreadyExistingUser: TeamMember = {
   id: 3,
   role: "teamEditor",
 };
+
+export const emptyTeamMemberObj: TeamMember = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  id: 3,
+  role: "teamEditor",
+};

@@ -70,7 +70,6 @@ export const MembersTable = ({
             </TableRow>
           )}
         </Table>
-
         {showAddModal && (
           <AddNewEditorModal
             showModal={showAddModal}
@@ -104,7 +103,7 @@ export const MembersTable = ({
           <TableBody
             data-testid={`members-table${showAddMemberButton && "-add-editor"}`}
           >
-            {members.map((member) => (
+            {members.map((member, i) => (
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{
@@ -133,6 +132,7 @@ export const MembersTable = ({
                       setShowUpdateModal(true);
                       setInitialValues(member);
                     }}
+                    data-testId={`edit-button-${i}`}
                   >
                     Edit
                   </TableButton>
