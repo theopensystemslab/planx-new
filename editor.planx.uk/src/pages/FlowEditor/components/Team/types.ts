@@ -22,7 +22,7 @@ export interface AddNewEditorFormValues {
 export interface EditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
-  initialValues: TeamMember;
+  initialValues?: TeamMember;
   userId?: number;
   actionType: "add" | "edit";
 }

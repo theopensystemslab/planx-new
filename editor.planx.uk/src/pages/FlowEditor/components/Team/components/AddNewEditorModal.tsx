@@ -85,6 +85,9 @@ export const AddNewEditorModal = ({
     toast.success("Successfully added a user");
   };
   const handleUpdateSubmit = async () => {
+    if (!initialValues) {
+      return;
+    }
     const response = await updateTeamMember(
       initialValues.id,
       formik.values,
@@ -110,14 +113,14 @@ export const AddNewEditorModal = ({
 
   const formik = useFormik<AddNewEditorFormValues>({
     initialValues: {
-      firstName: initialValues.firstName,
-      lastName: initialValues.lastName,
-      email: initialValues.email,
+      firstName: initialValues?.firstName || "",
+      lastName: initialValues?.lastName || "",
+      email: initialValues?.email || "",
     },
     validationSchema: editorFormSchema,
     onSubmit: handleSubmit,
   });
-  console.log(formik.isValid);
+
   return (
     <Dialog
       aria-labelledby="dialog-heading"

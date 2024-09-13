@@ -31,13 +31,7 @@ export const MembersTable = ({
 }: MembersTableProps) => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
-  const [initialValues, setInitialValues] = useState<TeamMember>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    id: 0,
-    role: "platformAdmin",
-  });
+  const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -63,7 +57,12 @@ export const MembersTable = ({
           {showAddMemberButton && (
             <TableRow>
               <TableCell colSpan={3}>
-                <AddButton onClick={() => setShowAddModal(true)}>
+                <AddButton
+                  onClick={() => {
+                    setInitialValues(undefined);
+                    setShowAddModal(true);
+                  }}
+                >
                   Add a new editor
                 </AddButton>
               </TableCell>
@@ -142,7 +141,12 @@ export const MembersTable = ({
             {showAddMemberButton && (
               <TableRow>
                 <TableCell colSpan={3}>
-                  <AddButton onClick={() => setShowAddModal(true)}>
+                  <AddButton
+                    onClick={() => {
+                      setInitialValues(undefined);
+                      setShowAddModal(true);
+                    }}
+                  >
                     Add a new editor
                   </AddButton>
                 </TableCell>
@@ -163,9 +167,7 @@ export const MembersTable = ({
         <AddNewEditorModal
           showModal={showUpdateModal}
           setShowModal={setShowUpdateModal}
-          initialValues={
-            initialValues || { firstName: "", lastName: "", email: "" }
-          }
+          initialValues={initialValues}
           userId={initialValues?.id || 1}
           actionType={"edit"}
         />
