@@ -5,7 +5,6 @@ import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header";
 import React, { useRef } from "react";
 
-import { rootFlowPath } from "../../routes/utils";
 import Flow from "./components/Flow";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
@@ -38,11 +37,7 @@ const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
         </Box>
       </Box>
-      {showSidebar && (
-        <Sidebar
-          url={`${window.location.origin}${rootFlowPath(false)}/published`}
-        />
-      )}
+      {showSidebar && <Sidebar />}
     </EditorContainer>
   );
 };
