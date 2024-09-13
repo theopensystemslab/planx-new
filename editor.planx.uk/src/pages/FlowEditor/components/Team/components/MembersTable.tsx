@@ -9,6 +9,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AddButton } from "pages/Team";
 import React, { useState } from "react";
+import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
@@ -125,17 +126,19 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
-                <TableCell>
-                  <TableButton
-                    onClick={() => {
-                      setShowUpdateModal(true);
-                      setInitialValues(member);
-                    }}
-                    data-testId={`edit-button-${i}`}
-                  >
-                    Edit
-                  </TableButton>
-                </TableCell>
+                <Permission.IsPlatformAdmin>
+                  <TableCell>
+                    <TableButton
+                      onClick={() => {
+                        setShowUpdateModal(true);
+                        setInitialValues(member);
+                      }}
+                      data-testId={`edit-button-${i}`}
+                    >
+                      Edit
+                    </TableButton>
+                  </TableCell>
+                </Permission.IsPlatformAdmin>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
