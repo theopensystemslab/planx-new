@@ -74,7 +74,7 @@ export const AddNewEditorModal = ({
       return;
     }
     clearErrors();
-    optimisticallyUpdateMembersTable(formik.values, createUserResult.id);
+    optimisticallyUpdateMembersTable(formik.values, createUserResult.id, "add");
     setShowModal(false);
     toast.success("Successfully added a user");
   };
@@ -100,6 +100,7 @@ export const AddNewEditorModal = ({
     const team = useStore.getState().teamMembers;
     console.log(team);
     clearErrors();
+    optimisticallyUpdateMembersTable(formik.values, initialValues.id, "edit");
     setShowModal(false);
     toast.success("Successfully updated a user");
   };
