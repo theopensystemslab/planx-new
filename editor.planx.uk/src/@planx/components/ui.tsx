@@ -6,6 +6,7 @@ import CloudUpload from "@mui/icons-material/CloudUpload";
 import ContactPage from "@mui/icons-material/ContactPage";
 import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
+import DoorFrontOutlined from "@mui/icons-material/DoorFrontOutlined";
 import Event from "@mui/icons-material/Event";
 import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
 import FunctionsIcon from "@mui/icons-material/Functions";
@@ -74,7 +75,7 @@ export const ICONS: {
   [TYPES.Filter]: FilterAltOutlined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
-  [TYPES.InternalPortal]: undefined,
+  [TYPES.InternalPortal]: DoorFrontOutlined,
   [TYPES.List]: ListAlt,
   [TYPES.MapAndLabel]: ShapeLine,
   [TYPES.Notice]: ReportProblemOutlined,
