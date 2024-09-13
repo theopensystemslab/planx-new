@@ -308,7 +308,7 @@ const NavBar: React.FC = () => {
       {isVisible && (
         <StyledNavBar data-testid="navigation-bar">
           <Container
-            maxWidth={false}
+            maxWidth="contentWrap"
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -370,7 +370,7 @@ const PublicToolbar: React.FC<{
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
       <PublicHeader disableGutters>
-        <Container maxWidth={false}>
+        <Container maxWidth="contentWrap">
           <InnerContainer>
             <LeftBox>
               {teamTheme?.logo ? <TeamLogo /> : <Breadcrumbs />}
