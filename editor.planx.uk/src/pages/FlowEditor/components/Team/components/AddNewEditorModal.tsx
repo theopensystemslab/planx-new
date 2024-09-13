@@ -79,7 +79,6 @@ export const AddNewEditorModal = ({
     toast.success("Successfully added a user");
   };
   const handleUpdateSubmit = async () => {
-    console.log(initialValues.id, formik.values);
     const response = await useStore
       .getState()
       .updateTeamMember(initialValues.id, formik.values)
@@ -97,8 +96,6 @@ export const AddNewEditorModal = ({
       return;
     }
 
-    const team = useStore.getState().teamMembers;
-    console.log(team);
     clearErrors();
     optimisticallyUpdateMembersTable(formik.values, initialValues.id, "edit");
     setShowModal(false);
