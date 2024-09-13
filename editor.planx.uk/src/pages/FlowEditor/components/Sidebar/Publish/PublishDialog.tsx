@@ -25,7 +25,7 @@ import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Caret from "ui/icons/Caret";
 
-import { useStore } from "../../lib/store";
+import { useStore } from "../../../lib/store";
 
 export interface AlteredNode {
   id: string;
