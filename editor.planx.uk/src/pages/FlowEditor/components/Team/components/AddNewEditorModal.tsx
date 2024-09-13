@@ -20,7 +20,10 @@ import {
 import { editorFormSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
-import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMembersTable";
+import {
+  optimisticallyAddNewMember,
+  optimisticallyUpdateExistingMember,
+} from "./lib/optimisticallyUpdateMembersTable";
 
 export const AddNewEditorModal = ({
   showModal,
@@ -74,7 +77,7 @@ export const AddNewEditorModal = ({
       return;
     }
     clearErrors();
-    optimisticallyUpdateMembersTable(formik.values, createUserResult.id, "add");
+    optimisticallyAddNewMember(formik.values, createUserResult.id);
     setShowModal(false);
     toast.success("Successfully added a user");
   };
@@ -97,7 +100,7 @@ export const AddNewEditorModal = ({
     }
 
     clearErrors();
-    optimisticallyUpdateMembersTable(formik.values, initialValues.id, "edit");
+    optimisticallyUpdateExistingMember(formik.values, initialValues.id);
     setShowModal(false);
     toast.success("Successfully updated a user");
   };

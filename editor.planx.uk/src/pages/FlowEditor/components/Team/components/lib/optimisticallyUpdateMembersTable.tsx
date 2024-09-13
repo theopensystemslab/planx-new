@@ -2,27 +2,11 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import { AddNewEditorFormValues, TeamMember } from "../../types";
 
-export const optimisticallyUpdateMembersTable = async (
+export const optimisticallyAddNewMember = async (
   values: AddNewEditorFormValues,
   userId: number,
-  actionType: "edit" | "add",
 ) => {
   const existingMembers = useStore.getState().teamMembers;
-  switch (actionType) {
-    case "add":
-      await updateNewMember(values, userId, existingMembers);
-      break;
-    case "edit":
-      await updateExistingMember(values, userId, existingMembers);
-      break;
-  }
-};
-
-const updateNewMember = async (
-  values: AddNewEditorFormValues,
-  userId: number,
-  existingMembers: TeamMember[],
-) => {
   const newMember: TeamMember = {
     ...values,
     role: "teamEditor",
@@ -32,11 +16,11 @@ const updateNewMember = async (
   await useStore.getState().setTeamMembers([...existingMembers, newMember]);
 };
 
-const updateExistingMember = async (
+export const optimisticallyUpdateExistingMember = async (
   values: AddNewEditorFormValues,
   userId: number,
-  existingMembers: TeamMember[],
 ) => {
+  const existingMembers = useStore.getState().teamMembers;
   const updatedMembers: TeamMember[] = existingMembers.map((member) => {
     if (member.id === userId) {
       return { ...values, id: userId, role: member.role };
