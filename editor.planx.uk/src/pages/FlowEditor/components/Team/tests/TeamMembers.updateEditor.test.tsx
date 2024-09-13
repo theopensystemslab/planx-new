@@ -1,10 +1,8 @@
 import { screen, waitFor, within } from "@testing-library/react";
-import { exp } from "mathjs";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { vi } from "vitest";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { userEntersInput } from "./helpers/userEntersInput";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 
 vi.mock("pages/FlowEditor/components/lib/store", () => ({
