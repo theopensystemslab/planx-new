@@ -46,7 +46,7 @@ const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
         fontWeight={FONT_WEIGHT_SEMI_BOLD}
         ml={1}
       >
-        Internal portal - {portalName}
+        {portalName}
       </Typography>
     </HeaderRoot>
   );
