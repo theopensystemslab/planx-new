@@ -5,12 +5,14 @@ import { vi } from "vitest";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 
-vi.mock("pages/FlowEditor/components/lib/store", () => ({
-  updateTeamMember: vi.fn().mockResolvedValue({
-    id: 1,
-    __typename: "users_mutation_response",
+vi.mock(
+  "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
+  () => ({
+    updateTeamMember: vi.fn().mockResolvedValue({
+      id: 1,
+    }),
   }),
-}));
+);
 
 describe("when a user presses 'edit button'", () => {
   beforeEach(async () => {
@@ -119,8 +121,7 @@ describe("when a user updates a field correctly", () => {
 });
 
 describe("when a user correctly updates an Editor", () => {
-  beforeEach(async () => {});
-  it("updates the member table with new details", async () => {
+  beforeEach(async () => {
     useStore.setState({ teamMembers: mockTeamMembersData });
     const { user } = await setupTeamMembersScreen();
 
@@ -137,19 +138,21 @@ describe("when a user correctly updates an Editor", () => {
     const updateUserButton = await screen.findByRole("button", {
       name: "Update user",
     });
-    expect(updateUserButton).not.toBeDisabled();
-    await user.click(updateUserButton);
 
-    expect(updateUserButton).toBeDisabled();
+    await user.click(updateUserButton);
+  });
+  it("updates the member table with new details", async () => {
     const membersTable = await screen.findByTestId("members-table-add-editor");
     await waitFor(() => {
-      expect(within(membersTable).getByText(/Bill/)).toBeInTheDocument();
+      expect(within(membersTable).getByText(/Billbo/)).toBeInTheDocument();
     });
+    expect(
+      await screen.findByText(/Successfully updated a user/),
+    ).toBeInTheDocument();
   });
   it("closes the modal", async () => {
-    const modal = await screen.findByRole("dialog");
     await waitFor(() => {
-      expect(modal).not.toBeInTheDocument();
+      expect(screen.queryByTestId("modal-edit-user")).not.toBeInTheDocument();
     });
   });
   it("shows a success message", async () => {

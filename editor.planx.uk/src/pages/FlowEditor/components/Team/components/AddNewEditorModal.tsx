@@ -18,7 +18,10 @@ import {
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
 import { editorFormSchema } from "../formSchema";
-import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
+import {
+  createAndAddUserToTeam,
+  updateTeamMember,
+} from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 import {
   optimisticallyAddNewMember,
@@ -82,18 +85,18 @@ export const AddNewEditorModal = ({
     toast.success("Successfully added a user");
   };
   const handleUpdateSubmit = async () => {
-    const response = await useStore
-      .getState()
-      .updateTeamMember(initialValues.id, formik.values)
-      .catch((err) => {
-        if (isUserAlreadyExistsError(err.message)) {
-          setShowUserAlreadyExistsError(true);
-        }
-        if (err.message === "Unable to update user") {
-          toast.error("Failed to update the user, please try again");
-        }
-        console.error(err);
-      });
+    const response = await updateTeamMember(
+      initialValues.id,
+      formik.values,
+    ).catch((err) => {
+      if (isUserAlreadyExistsError(err.message)) {
+        setShowUserAlreadyExistsError(true);
+      }
+      if (err.message === "Unable to update user") {
+        toast.error("Failed to update the user, please try again");
+      }
+      console.error(err);
+    });
 
     if (!response) {
       return;

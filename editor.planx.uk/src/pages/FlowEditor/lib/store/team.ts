@@ -1,4 +1,3 @@
-import { FetchResult } from "@apollo/client";
 import {
   Team,
   TeamIntegrations,
@@ -7,10 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
-import {
-  AddNewEditorFormValues,
-  TeamMember,
-} from "pages/FlowEditor/components/Team/types";
+import { TeamMember } from "pages/FlowEditor/components/Team/types";
 import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
@@ -34,10 +30,6 @@ export interface TeamStore {
   updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
   createTeam: (newTeam: { name: string; slug: string }) => Promise<number>;
   setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
-  updateTeamMember: (
-    userId: number,
-    userValues: AddNewEditorFormValues,
-  ) => Promise<FetchResult>;
 }
 
 export const teamStore: StateCreator<
@@ -158,35 +150,5 @@ export const teamStore: StateCreator<
 
   setTeamMembers: async (teamMembers: TeamMember[]) => {
     set(() => ({ teamMembers }));
-  },
-
-  updateTeamMember: async (
-    userId: number,
-    userValues: AddNewEditorFormValues,
-  ) => {
-    const response = await client.mutate({
-      mutation: gql`
-        mutation UpdateUser($userId: Int, $userValues: users_set_input) {
-          update_users(where: { id: { _eq: $userId } }, _set: $userValues) {
-            returning {
-              id
-            }
-          }
-        }
-      `,
-      variables: {
-        userId: userId,
-        userValues: {
-          first_name: userValues.firstName,
-          last_name: userValues.lastName,
-          email: userValues.email,
-        },
-      },
-    });
-    console.log(response);
-    if (response.data) {
-      return response.data;
-    }
-    throw new Error("Unable to update user");
   },
 });
