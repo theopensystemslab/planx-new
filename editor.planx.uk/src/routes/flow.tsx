@@ -228,29 +228,14 @@ const routes = compose(
     "/": route(async (req) => {
       return {
         title: makeTitle([req.params.team, req.params.flow].join("/")),
-        view: () => {
-          const [flow, ...breadcrumbs] = req.params.flow.split(",");
-          return (
-            <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
-          );
-        },
+        // Default view of FlowEditor (single instance held in layout)
+        view: () => null,
       };
     }),
 
     "/feedback": lazy(() => import("./feedback")),
 
-    "/nodes": compose(
-      withView((req) => {
-        const [flow, ...breadcrumbs] = req.params.flow.split(",");
-        return (
-          <>
-            <FlowEditor key={flow} flow={flow} breadcrumbs={breadcrumbs} />
-            <View />
-          </>
-        );
-      }),
-      nodeRoutes,
-    ),
+    "/nodes": nodeRoutes,
 
     "/service": compose(
       withView(SettingsContainer),
