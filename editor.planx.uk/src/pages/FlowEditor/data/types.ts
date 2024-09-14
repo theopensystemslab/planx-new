@@ -23,6 +23,7 @@ export const SLUGS: {
   [TYPES.NextSteps]: "next-steps",
   [TYPES.Notice]: "notice",
   [TYPES.NumberInput]: "number-input",
+  [TYPES.Page]: "page",
   [TYPES.Pay]: "pay",
   [TYPES.PlanningConstraints]: "planning-constraints",
   [TYPES.PropertyInformation]: "property-information",

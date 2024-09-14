@@ -1,4 +1,5 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import Article from "@mui/icons-material/Article";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
@@ -81,6 +82,7 @@ export const ICONS: {
   [TYPES.Notice]: ReportProblemOutlined,
   [TYPES.NextSteps]: ArrowForwardIcon,
   [TYPES.NumberInput]: Pin,
+  [TYPES.Page]: Article,
   [TYPES.Pay]: PaymentOutlined,
   [TYPES.PlanningConstraints]: Map,
   [TYPES.PropertyInformation]: LocationOnOutlined,
