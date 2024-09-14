@@ -5,7 +5,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import React from "react";
+import { useLoadingRoute } from "react-navi";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
@@ -46,6 +48,9 @@ const LoginButton = styled(Button)(({ theme }) => ({
 }));
 
 const Login: React.FC = () => {
+  const isLoading = useLoadingRoute();
+  if (isLoading) return <DelayedLoadingIndicator />;
+
   return (
     <Wrapper>
       <LoginContainer>
