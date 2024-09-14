@@ -185,27 +185,6 @@ const routes = compose(
     }),
 
     "/nodes": nodeRoutes,
-
-    "/service-flags": compose(
-      withView(SettingsContainer),
-
-      route(async (req) => ({
-        getData: await getFlowSettings(req),
-        title: makeTitle(
-          [req.params.team, req.params.flow, "service-flags"].join("/"),
-        ),
-        view: ServiceFlags,
-      })),
-    ),
-
-    "/data": compose(
-      withView(SettingsContainer),
-
-      route(async (req) => ({
-        title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
-        view: DataManagerSettings,
-      })),
-    ),
   }),
 );
 
