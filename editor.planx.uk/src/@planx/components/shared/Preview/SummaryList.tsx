@@ -108,6 +108,8 @@ const presentationalComponents: {
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
+  // TODO!
+  [TYPES.Page]: undefined,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
   [TYPES.PropertyInformation]: undefined,
