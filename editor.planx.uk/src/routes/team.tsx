@@ -74,6 +74,12 @@ const routes = compose(
       return import("./flow");
     }),
 
+    "/:flow/feedback": lazy(() => import("./feedback")),
+
+    "/:flow/service": lazy(() => import("./serviceSettings")),
+
+    "/:flow/submissions-log": lazy(() => import("./submissionsLog")),
+
     "/members": lazy(() => import("./teamMembers")),
     "/design": compose(
       route(async (req) => ({

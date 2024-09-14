@@ -1,36 +1,25 @@
 import { gql } from "@apollo/client";
-import {
-  ComponentType as TYPES,
-  FlowStatus,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import natsort from "natsort";
 import {
   compose,
-  lazy,
   map,
   Matcher,
   mount,
-  NaviRequest,
   redirect,
   route,
   withData,
   withView,
 } from "navi";
-import DataManagerSettings from "pages/FlowEditor/components/Settings/DataManagerSettings";
-import ServiceFlags from "pages/FlowEditor/components/Settings/ServiceFlags";
-import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
-import Submissions from "pages/FlowEditor/components/Settings/Submissions";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
-import { View } from "react-navi";
 
 import { client } from "../lib/graphql";
-import FlowEditor from "../pages/FlowEditor";
 import components from "../pages/FlowEditor/components/forms";
 import FormModal from "../pages/FlowEditor/components/forms/FormModal";
 import { SLUGS } from "../pages/FlowEditor/data/types";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import type { Flow, FlowSettings } from "../types";
+import type { Flow } from "../types";
 import { makeTitle } from "./utils";
 import { flowEditorView } from "./views/flowEditor";
 
@@ -179,44 +168,6 @@ const nodeRoutes = mount({
   "/:parent/nodes/:id/edit": editNode,
 });
 
-const SettingsContainer = () => <View />;
-
-interface GetFlowSettings {
-  flows: {
-    id: string;
-    settings: FlowSettings;
-    status: FlowStatus;
-  }[];
-}
-
-export const getFlowSettings = async (req: NaviRequest) => {
-  const {
-    data: {
-      flows: [{ settings, status }],
-    },
-  } = await client.query<GetFlowSettings>({
-    query: gql`
-      query GetFlow($slug: String!, $team_slug: String!) {
-        flows(
-          limit: 1
-          where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
-        ) {
-          id
-          settings
-          status
-        }
-      }
-    `,
-    variables: {
-      slug: req.params.flow,
-      team_slug: req.params.team,
-    },
-  });
-
-  useStore.getState().setFlowSettings(settings);
-  useStore.getState().setFlowStatus(status);
-};
-
 const routes = compose(
   withData((req) => ({
     flow: req.params.flow.split(",")[0],
@@ -233,21 +184,7 @@ const routes = compose(
       };
     }),
 
-    "/feedback": lazy(() => import("./feedback")),
-
     "/nodes": nodeRoutes,
-
-    "/service": compose(
-      withView(SettingsContainer),
-
-      route(async (req) => ({
-        getData: await getFlowSettings(req),
-        title: makeTitle(
-          [req.params.team, req.params.flow, "service"].join("/"),
-        ),
-        view: ServiceSettings,
-      })),
-    ),
 
     "/service-flags": compose(
       withView(SettingsContainer),
@@ -267,17 +204,6 @@ const routes = compose(
       route(async (req) => ({
         title: makeTitle([req.params.team, req.params.flow, "data"].join("/")),
         view: DataManagerSettings,
-      })),
-    ),
-
-    "/submissions-log": compose(
-      withView(SettingsContainer),
-
-      route(async (req) => ({
-        title: makeTitle(
-          [req.params.team, req.params.flow, "submissions-log"].join("/"),
-        ),
-        view: Submissions,
       })),
     ),
   }),
