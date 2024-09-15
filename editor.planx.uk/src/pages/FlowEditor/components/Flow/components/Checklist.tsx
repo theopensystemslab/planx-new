@@ -86,8 +86,13 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           onContextMenu={handleContext}
           ref={drag}
         >
-          {Icon && <Icon />}
-          <span>{props.text}</span>
+          <div className="question-icon-wrapper">
+            {Icon && <Icon />}
+            <span className="question-text">{props.text}</span>
+          </div>
+          {props.data?.fn && (
+            <div className="question-schema">{props.data.fn}</div>
+          )}
         </Link>
         {groupedOptions ? (
           <ol className="categories">

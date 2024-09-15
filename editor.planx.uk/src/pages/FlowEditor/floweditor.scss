@@ -250,7 +250,7 @@ $fontMonospace: "Source Code Pro", monospace;
     flex-direction: column;
     padding: 0;
     min-width: 60px;
-    max-width: 200px;
+    max-width: fit-content;
   }
   .band {
     width: 100%;
@@ -261,6 +261,51 @@ $fontMonospace: "Source Code Pro", monospace;
     align-self: center;
     margin: 0;
     padding: 6px 12px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $optionBorder;
+  }
+  .schema {
+    background-color: $hangerBackground;
+    font-family: $fontMonospace;
+    align-self: center;
+    margin: 0;
+    margin-bottom: -$nodeBorderWidth;
+    padding: 6px 12px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $optionBorder;
+  }
+}
+
+.question {
+  > a {
+    border-color: $nodeBorder;
+    flex-direction: column;
+    padding: 0;
+    min-width: 60px;
+    max-width: 300px;
+  }
+  .question-icon-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding: 6px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $nodeBorder;
+  }
+  .question-text {
+    align-self: center;
+    margin: 0;
+    padding: 6px 12px;
+    width: 100%;
+  }
+  .question-schema {
+    background-color: $hangerBackground;
+    font-family: $fontMonospace;
+    align-self: center;
+    margin: 0;
+    margin-bottom: -$nodeBorderWidth;
+    padding: 6px 12px;
+    width: 100%;
+    border-bottom: $nodeBorderWidth solid $nodeBorder;
   }
 }
 
