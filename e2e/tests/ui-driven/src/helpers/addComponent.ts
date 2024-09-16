@@ -1,58 +1,41 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Locator, Page } from "@playwright/test";
-
-enum PlanXEditorComponent {
-  QUESTION = "Question",
-  NOTICE = "Notice",
-  CHECKLIST = "Checklist",
-  TEXT = "Text Input",
-  NUMBER = "Number Input",
-  DATE = "Date Input",
-  ADDRESS = "Address Input",
-  CONTACT = "Contact Input",
-  TASKLIST = "Task List",
-  REVIEW = "Review",
-  FIND_PROPERTY = "Find property",
-  PLANNING_CONSTRAINTS = "Planning constraints",
-  DRAW_BOUNDARY = "Draw boundary",
-  NEXT_STEPS = "Next steps",
-  FILE_UPLOAD = "File Upload",
-}
 
 const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
-  type: PlanXEditorComponent,
+  type: ComponentType,
   title?: string,
   options?: string[]
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
-  await page.locator("select").selectOption({ label: type });
+  await page.locator("select").selectOption({ value: type.toString() });
 
   switch (type) {
-    case PlanXEditorComponent.QUESTION:
+    case ComponentType.Question:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new", page);
       }
       break;
-    case PlanXEditorComponent.NOTICE:
+    case ComponentType.Notice:
       await page.getByPlaceholder("Notice").fill(title || "");
       break;
-    case PlanXEditorComponent.CHECKLIST:
+    case ComponentType.Checklist:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new option", page);
       }
       break;
-    case PlanXEditorComponent.TEXT:
+    case ComponentType.TextInput:
       await page.getByPlaceholder("Title").fill(title || "");
       break;
-    case PlanXEditorComponent.NUMBER:
+    case ComponentType.NumberInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("eg square metres").fill(options?.[0] || "");
       break;
-    case PlanXEditorComponent.DATE:
+    case ComponentType.DateInput:
       await page.getByPlaceholder("Title").fill(title || "");
       // fill with hardcoded dates for now
       await page.locator("id=undefined-min-day").fill("01");
@@ -62,15 +45,15 @@ const createBaseComponent = async (
       await page.locator("id=undefined-max-month").fill("12");
       await page.locator("id=undefined-max-year").fill("2199");
       break;
-    case PlanXEditorComponent.ADDRESS:
+    case ComponentType.AddressInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
-    case PlanXEditorComponent.CONTACT:
+    case ComponentType.ContactInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
-    case PlanXEditorComponent.TASKLIST:
+    case ComponentType.TaskList:
       await page.getByPlaceholder("Main Title").fill(title || "");
       if (options) {
         let index = 0;
@@ -84,19 +67,19 @@ const createBaseComponent = async (
         }
       }
       break;
-    case PlanXEditorComponent.REVIEW:
+    case ComponentType.Review:
       // Don't need to change anything so dummy click
       await page
         .getByPlaceholder("Check your answers before sending your application")
         .click();
       break;
-    case PlanXEditorComponent.FIND_PROPERTY:
+    case ComponentType.FindProperty:
       break;
-    case PlanXEditorComponent.PLANNING_CONSTRAINTS:
+    case ComponentType.PlanningConstraints:
       break;
-    case PlanXEditorComponent.DRAW_BOUNDARY:
+    case ComponentType.DrawBoundary:
       break;
-    case PlanXEditorComponent.NEXT_STEPS:
+    case ComponentType.NextSteps:
       if (options) {
         let index = 0;
         for (const option of options) {
@@ -109,7 +92,7 @@ const createBaseComponent = async (
         }
       }
       break;
-    case PlanXEditorComponent.FILE_UPLOAD:
+    case ComponentType.FileUpload:
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
 
       break;
@@ -117,19 +100,7 @@ const createBaseComponent = async (
       throw new Error(`Unsupported type: ${type}`);
   }
 
-  // convert type name to lowercase, with dashes if there are spaces
-  // or custom name if it doesn't fit the pattern
-  const buttonName =
-    type === PlanXEditorComponent.FIND_PROPERTY
-      ? "find-property-merged"
-      : type.toLowerCase().replace(/\s/g, "-");
-
-  await page
-    .locator("button")
-    .filter({
-      hasText: `Create ${buttonName}`,
-    })
-    .click();
+  await page.locator('button[form="modal"][type="submit"]').click();
 };
 
 export const createQuestionWithOptions = async (
@@ -141,7 +112,7 @@ export const createQuestionWithOptions = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.QUESTION,
+    ComponentType.Question,
     questionText,
     options
   );
@@ -155,7 +126,7 @@ export const createNotice = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.NOTICE,
+    ComponentType.Notice,
     noticeText
   );
 };
@@ -169,7 +140,7 @@ export const createChecklist = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.CHECKLIST,
+    ComponentType.Checklist,
     checklistTitle,
     checklistOptions
   );
@@ -183,7 +154,7 @@ export const createTextInput = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.TEXT,
+    ComponentType.TextInput,
     inputTitle
   );
 };
@@ -197,7 +168,7 @@ export const createNumberInput = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.NUMBER,
+    ComponentType.NumberInput,
     inputTitle,
     [inputUnits]
   );
@@ -211,7 +182,7 @@ export const createDateInput = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.DATE,
+    ComponentType.DateInput,
     inputTitle
   );
 };
@@ -225,7 +196,7 @@ export const createAddressInput = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.ADDRESS,
+    ComponentType.AddressInput,
     inputTitle,
     [inputDataField]
   );
@@ -240,7 +211,7 @@ export const createContactInput = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.CONTACT,
+    ComponentType.ContactInput,
     inputTitle,
     [inputDataField]
   );
@@ -255,22 +226,18 @@ export const createTaskList = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.TASKLIST,
+    ComponentType.TaskList,
     title,
     taskListOptions
   );
 };
 
 export const createReview = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(page, locatingNode, PlanXEditorComponent.REVIEW);
+  await createBaseComponent(page, locatingNode, ComponentType.Review);
 };
 
 export const createFindProperty = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(
-    page,
-    locatingNode,
-    PlanXEditorComponent.FIND_PROPERTY
-  );
+  await createBaseComponent(page, locatingNode, ComponentType.FindProperty);
 };
 
 export const createPlanningConstraints = async (
@@ -280,16 +247,12 @@ export const createPlanningConstraints = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.PLANNING_CONSTRAINTS
+    ComponentType.PlanningConstraints
   );
 };
 
 export const createDrawBoundary = async (page: Page, locatingNode: Locator) => {
-  await createBaseComponent(
-    page,
-    locatingNode,
-    PlanXEditorComponent.DRAW_BOUNDARY
-  );
+  await createBaseComponent(page, locatingNode, ComponentType.DrawBoundary);
 };
 
 export const createNextSteps = async (
@@ -300,7 +263,7 @@ export const createNextSteps = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.NEXT_STEPS,
+    ComponentType.NextSteps,
     undefined,
     nextSteps
   );
@@ -314,7 +277,7 @@ export const createFileUpload = async (
   await createBaseComponent(
     page,
     locatingNode,
-    PlanXEditorComponent.FILE_UPLOAD,
+    ComponentType.FileUpload,
     undefined,
     [dataField]
   );
