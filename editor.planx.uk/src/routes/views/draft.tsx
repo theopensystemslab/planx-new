@@ -84,6 +84,7 @@ const fetchSettingsForDraftView = async (
               }
               slug
             }
+            settings
             slug
             name
           }

@@ -84,6 +84,7 @@ const fetchDataForStandaloneView = async (
               }
               slug
             }
+            settings
           }
 
           globalSettings: global_settings {

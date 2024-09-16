@@ -110,6 +110,7 @@ export const fetchSettingsForPublishedView = async (
               }
               slug
             }
+            settings
             status
             publishedFlows: published_flows(
               limit: 1
