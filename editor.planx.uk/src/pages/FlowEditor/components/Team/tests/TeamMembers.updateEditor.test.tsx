@@ -4,6 +4,7 @@ import { vi } from "vitest";
 
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
+import { mockPlainUser, mockPlatformAdminUser } from "./mocks/mockUsers";
 
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
@@ -16,13 +17,18 @@ vi.mock(
 
 describe("when a user presses 'edit button'", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData });
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlatformAdminUser,
+    });
+
     const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
       "edit-button-0",
     );
+
     user.click(addEditorButton);
     // Start each test with an open modal
   });
@@ -32,7 +38,7 @@ describe("when a user presses 'edit button'", () => {
     const firstNameInput = await screen.findByLabelText("First name");
     const lastNameInput = await screen.findByLabelText("Last name");
     const emailInput = await screen.findByLabelText("Email address");
-
+    // 29 - 159
     // Sorted based on first letter of first name Bill > Donella in Mocks
     expect(firstNameInput).toHaveDisplayValue(mockTeamMembersData[1].firstName);
     expect(lastNameInput).toHaveDisplayValue(mockTeamMembersData[1].lastName);
@@ -159,5 +165,23 @@ describe("when a user correctly updates an Editor", () => {
     expect(
       await screen.findByText(/Successfully updated a user/),
     ).toBeInTheDocument();
+  });
+});
+
+describe("when a user is not a platform admin", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlainUser,
+    });
+
+    await setupTeamMembersScreen();
+  });
+  it("does not show an edit button", async () => {
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    const addEditorButton =
+      within(teamEditorsTable).queryByTestId("edit-button-0");
+
+    expect(addEditorButton).not.toBeInTheDocument();
   });
 });
