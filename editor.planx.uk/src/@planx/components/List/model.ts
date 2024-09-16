@@ -24,6 +24,6 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
 
 export const validationSchema = object({
   schema: object({
-    max: number().optional().min(2, "Please use a Page component - the maximum must be greater than 1 item"),
+    max: number().optional().min(2, "The maximum must be greater than 1 - a Page component should be used when max is equal to 1"),
   }),
 });
