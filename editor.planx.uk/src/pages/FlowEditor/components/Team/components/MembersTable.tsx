@@ -13,7 +13,7 @@ import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
-import { AddNewEditorModal } from "./AddNewEditorModal";
+import { EditorUpsertModal } from "./AddNewEditorModal";
 
 const TableButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -71,7 +71,7 @@ export const MembersTable = ({
           )}
         </Table>
         {showAddModal && (
-          <AddNewEditorModal
+          <EditorUpsertModal
             showModal={showAddModal}
             setShowModal={setShowAddModal}
             initialValues={initialValues}
@@ -159,7 +159,7 @@ export const MembersTable = ({
         </Table>
       </TableContainer>
       {showAddModal && (
-        <AddNewEditorModal
+        <EditorUpsertModal
           showModal={showAddModal}
           setShowModal={setShowAddModal}
           initialValues={initialValues}
@@ -167,7 +167,7 @@ export const MembersTable = ({
         />
       )}
       {showUpdateModal && (
-        <AddNewEditorModal
+        <EditorUpsertModal
           showModal={showUpdateModal}
           setShowModal={setShowUpdateModal}
           initialValues={initialValues}
