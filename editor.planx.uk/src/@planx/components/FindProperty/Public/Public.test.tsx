@@ -30,6 +30,7 @@ const osAddressProps = {
     planx_value: "residential.HMO.parent",
     administrative_area: "SOUTHWARK",
     local_custodian_code: "SOUTHWARK",
+    ward: "E05011109",
     source: "os",
   },
   "property.type": ["residential.HMO.parent"],

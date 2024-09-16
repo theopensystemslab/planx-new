@@ -53,10 +53,14 @@ export interface SiteAddress extends MinimumSiteAddress {
   blpu_code?: string;
   organisation?: string | null;
   sao?: string | null;
+  saoEnd?: string | null;
   pao?: string;
+  paoEnd?: string;
   street?: string;
   town?: string;
   postcode?: string;
+  ward?: string;
+  parish?: string;
   single_line_address?: string;
   planx_description?: string; // joined via table blpu_codes
   planx_value?: string; // joined via table blpu_codes
