@@ -1,4 +1,5 @@
 import { cloneDeep } from "lodash";
+import { number, object } from "yup";
 
 import { MoreInformation, parseMoreInformation } from "../shared";
 import { Schema } from "../shared/Schema/model";
@@ -19,4 +20,10 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   schemaName: data?.schemaName || SCHEMAS[0].name,
   schema: cloneDeep(data?.schema) || SCHEMAS[0].schema,
   ...parseMoreInformation(data),
+});
+
+export const validationSchema = object({
+  schema: object({
+    max: number().optional().min(2, "The maximum must be greater than 1 - a Page component should be used when max is equal to 1"),
+  }),
 });

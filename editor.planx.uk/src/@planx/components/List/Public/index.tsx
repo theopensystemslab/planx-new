@@ -61,7 +61,6 @@ const ActiveListCard: React.FC<{
     saveItem,
     cancelEditItem,
     errors,
-    isPageComponent,
     formik,
     activeIndex,
   } = useListContext();
@@ -82,8 +81,7 @@ const ActiveListCard: React.FC<{
     >
       <ListCard data-testid={`list-card-${i}`} ref={ref}>
         <Typography component="h2" variant="h3">
-          {schema.type}
-          {!isPageComponent && ` ${i + 1}`}
+          {`${schema.type} ${i + 1}`}
         </Typography>
         <SchemaFields
           sx={(theme) => ({
@@ -104,7 +102,7 @@ const ActiveListCard: React.FC<{
           >
             Save
           </Button>
-          {!isPageComponent && !isInitialCard && (
+          {!isInitialCard && (
             <CardButton
               data-testid="cancel-edit-item-button"
               onClick={cancelEditItem}
@@ -121,7 +119,7 @@ const ActiveListCard: React.FC<{
 const InactiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, formik, removeItem, editItem, isPageComponent } =
+  const { schema, formik, removeItem, editItem } =
     useListContext();
 
   const mapPreview = schema.fields.find((field) => field.type === "map");
@@ -129,8 +127,7 @@ const InactiveListCard: React.FC<{
   return (
     <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
-        {schema.type}
-        {!isPageComponent && ` ${i + 1}`}
+        {`${schema.type} ${i + 1}`}
       </Typography>
       <InactiveListCardLayout>
         {mapPreview && (
