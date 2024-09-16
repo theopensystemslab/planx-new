@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, lazy, mount, route, withData, withView } from "navi";
+import { compose, lazy, map, mount, route, withData, withView } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import React from "react";
@@ -13,6 +13,13 @@ import { teamView } from "./views/team";
 let cached: { flowSlug?: string; teamSlug?: string } = {
   flowSlug: undefined,
   teamSlug: undefined,
+};
+
+const setFlowAndLazyLoad = (importComponent: Parameters<typeof lazy>[0]) => {
+  return map(async (request) => {
+    useStore.getState().setFlowSlug(request.params.flow);
+    return lazy(importComponent);
+  });
 };
 
 const routes = compose(
@@ -74,11 +81,11 @@ const routes = compose(
       return import("./flow");
     }),
 
-    "/:flow/feedback": lazy(() => import("./feedback")),
+    "/:flow/feedback": setFlowAndLazyLoad(() => import("./feedback")),
 
-    "/:flow/service": lazy(() => import("./serviceSettings")),
+    "/:flow/service": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
-    "/:flow/submissions-log": lazy(() => import("./submissionsLog")),
+    "/:flow/submissions-log": setFlowAndLazyLoad(() => import("./submissionsLog")),
 
     "/members": lazy(() => import("./teamMembers")),
     "/design": compose(
