@@ -35,14 +35,6 @@ interface ListContextValue {
   formik: FormikProps<SchemaUserData>;
   validateAndSubmitForm: () => void;
   listProps: PublicProps<List>;
-  /**
-   * @deprecated
-   * @description
-   * Hide features if the schema is temporarily mocking a "Page" component
-   * @todo
-   * Refactor and allow a single-item "Page" component to properly manage this
-   */
-  isPageComponent: boolean;
   errors: {
     addItem: boolean;
     unsavedItem: boolean;
@@ -196,8 +188,6 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
   const resetItemToPreviousState = () =>
     formik.setFieldValue(`schemaData[${activeIndex}]`, activeItemInitialState);
 
-  const isPageComponent = schema.max === 1;
-
   return (
     <ListContext.Provider
       value={{
@@ -211,7 +201,6 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
         cancelEditItem,
         formik,
         validateAndSubmitForm,
-        isPageComponent,
         errors: {
           addItem: addItemError,
           unsavedItem: unsavedItemError,
