@@ -9,12 +9,15 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
+import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+
+import { SchemaUserResponse } from "../Schema/model";
 
 export default SummaryListsBySections;
 
@@ -108,8 +111,7 @@ const presentationalComponents: {
   [TYPES.Notice]: undefined,
   [TYPES.NextSteps]: undefined,
   [TYPES.NumberInput]: NumberInput,
-  // TODO!
-  [TYPES.Page]: undefined,
+  [TYPES.Page]: Page,
   [TYPES.Pay]: undefined,
   [TYPES.PlanningConstraints]: undefined,
   [TYPES.PropertyInformation]: undefined,
@@ -613,6 +615,25 @@ function FileUploadAndLabel(props: ComponentProps) {
               ))
             : "No files uploaded"}
         </ul>
+      </Box>
+    </>
+  );
+}
+
+function Page(props: ComponentProps) {
+  const answers = getAnswersByNode(props) as SchemaUserResponse[];
+  const fields = (props.node.data as Page).schema.fields;
+
+  return (
+    <>
+      <Box component="dt">{props.node.data.title}</Box>
+      <Box component="dd" sx={{ gap: 2, display: "flex", flexDirection: "column" }}>
+        {fields.map((field) => (
+          <Box>
+            <Typography fontWeight={FONT_WEIGHT_SEMI_BOLD}>{field.data.title}</Typography>
+            <Typography>{answers[0][field.data.fn]}</Typography>
+          </Box>
+        ))}
       </Box>
     </>
   );
