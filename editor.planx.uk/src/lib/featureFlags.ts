@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["SEARCH", "ADD_NEW_EDITOR"] as const;
+const AVAILABLE_FEATURE_FLAGS = ["SEARCH", "ADD_NEW_EDITOR", "PAGE"] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 

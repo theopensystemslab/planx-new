@@ -18,6 +18,7 @@ import MapAndLabel from "@planx/components/MapAndLabel/Public";
 import NextSteps from "@planx/components/NextSteps/Public";
 import Notice from "@planx/components/Notice/Public";
 import NumberInput from "@planx/components/NumberInput/Public";
+import Page from "@planx/components/Page/Public";
 import Pay from "@planx/components/Pay/Public";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Public";
 import PropertyInformation from "@planx/components/PropertyInformation/Public";
@@ -143,6 +144,9 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.NumberInput:
       return <NumberInput {...allProps} />;
+
+    case TYPES.Page:
+      return <Page {...allProps} />;
 
     case TYPES.Pay:
       return <Pay {...allProps} />;
