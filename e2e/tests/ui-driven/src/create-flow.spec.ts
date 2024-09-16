@@ -1,21 +1,4 @@
 import { Browser, expect, test } from "@playwright/test";
-import { PlaywrightEditor } from "./pages/Editor";
-import {
-  createAddressInput,
-  createChecklist,
-  createContactInput,
-  createDateInput,
-  createDrawBoundary,
-  createFileUpload,
-  createFindProperty,
-  createNextSteps,
-  createNotice,
-  createNumberInput,
-  createPlanningConstraints,
-  createReview,
-  createTaskList,
-  createTextInput,
-} from "./helpers/addComponent";
 import type { Context } from "./helpers/context";
 import {
   contextDefaults,
@@ -28,6 +11,7 @@ import {
   isGetUserRequest,
 } from "./helpers/globalHelpers";
 import { answerQuestion, clickContinue } from "./helpers/userActions";
+import { PlaywrightEditor } from "./pages/Editor";
 
 test.describe("Navigation", () => {
   let context: Context = {
@@ -122,89 +106,39 @@ test.describe("Navigation", () => {
     context.flow = { ...serviceProps };
 
     await editor.createQuestion();
+    await editor.createNoticeOnEachBranch();
+    await editor.createChecklist();
+    await editor.createTextInput();
+    await editor.createNumberInput();
+    await editor.createDateInput();
+    await editor.createAddressInput();
+    await editor.createContactInput();
+    await editor.createTaskList();
+    await editor.createFindProperty();
+    await editor.createDrawBoundary();
+    await editor.createPlanningConstraints();
+    await editor.createFileUpload();
+    await editor.createNextSteps();
+    await editor.createReview();
 
-    // Add a notice to the "Yes" path
-    const yesBranch = page.locator("#flow .card .options .option").nth(0);
-
-    const yesBranchNoticeText = "Yes! this is a test";
-    await createNotice(
-      page,
-      yesBranch.locator(".hanger > a"),
-      yesBranchNoticeText
-    );
-
-    // Add a notice to the "No" path
-    const noBranch = page.locator("#flow .card .options .option").nth(1);
-    const noBranchNoticeText = "Sorry, this is a test";
-    await createNotice(
-      page,
-      noBranch.locator(".hanger > a"),
-      noBranchNoticeText
-    );
-
-    const getNextNode = () => page.locator(".hanger > a").last();
-
-    await createChecklist(page, getNextNode(), "A checklist title", [
+    await expect(editor.nodeList).toContainText([
+      "Is this a test?",
+      "Yes! this is a test",
+      "Sorry, this is a test",
       "Checklist item 1",
-      "Second checklist item",
-      "The third checklist item",
-    ]);
-
-    await createTextInput(page, getNextNode(), "Tell us about your trees.");
-    await createNumberInput(page, getNextNode(), "How old are you?", "years");
-    await createDateInput(page, getNextNode(), "When is your birthday?");
-
-    await createAddressInput(
-      page,
-      getNextNode(),
+      "Tell us about your trees.",
+      "How old are you?",
+      "When is your birthday?",
       "What is your address?",
-      "some data field"
-    );
-
-    await createContactInput(
-      page,
-      getNextNode(),
       "What is your contact info?",
-      "some data field"
-    );
-
-    await createTaskList(page, getNextNode(), "What you should do next", [
-      "Have a cup of tea",
-      "Continue through this flow",
+      "What you should do next",
+      "Find property",
+      "Confirm your location plan",
+      "Planning constraints",
+      "File upload",
+      "Next steps",
+      "Check your answers before sending your application",
     ]);
-
-    await createFindProperty(page, getNextNode());
-    await createDrawBoundary(page, getNextNode());
-    await createPlanningConstraints(page, getNextNode());
-    await createFileUpload(page, getNextNode(), "some data field");
-
-    await createNextSteps(page, getNextNode(), [
-      "A possible next step",
-      "Another option",
-    ]);
-
-    await createReview(page, getNextNode());
-
-    const nodes = page.locator(".card");
-    editor.inspectNodes();
-    await expect(nodes.getByText(yesBranchNoticeText)).toBeVisible();
-    await expect(nodes.getByText(noBranchNoticeText)).toBeVisible();
-    await expect(nodes.getByText("Checklist item 1")).toBeVisible();
-    await expect(nodes.getByText("Tell us about your trees.")).toBeVisible();
-    await expect(nodes.getByText("How old are you?")).toBeVisible();
-    await expect(nodes.getByText("When is your birthday?")).toBeVisible();
-    await expect(nodes.getByText("What is your address?")).toBeVisible();
-    await expect(nodes.getByText("What is your contact info?")).toBeVisible();
-    await expect(nodes.getByText("What you should do next")).toBeVisible();
-    await expect(nodes.getByText("Find property")).toBeVisible();
-    await expect(nodes.getByText("Confirm your location plan")).toBeVisible();
-    await expect(nodes.getByText("Planning constraints")).toBeVisible();
-    await expect(nodes.getByText("File upload")).toBeVisible();
-
-    await expect(nodes.getByText("Next steps")).toBeVisible();
-    await expect(
-      nodes.getByText("Check your answers before sending your application")
-    ).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({
