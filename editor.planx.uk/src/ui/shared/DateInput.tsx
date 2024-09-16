@@ -20,7 +20,7 @@ const INPUT_YEAR_WIDTH = "84px";
 
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",
-  alignItems: "bottom",
+  alignItems: "flex-end",
   // Adds a uniform horizontal spacing between all child elements.
   // The `* + *` selector makes sure the first element doesn't get this margin.
   "& > * + *": {
@@ -31,7 +31,7 @@ const Root = styled(Box)(({ theme }) => ({
 const Label = styled(Typography)(({ theme }) => ({
   minWidth: INPUT_DATE_WIDTH,
   alignSelf: "end",
-  marginBottom: theme.spacing(0.5),
+  marginBottom: theme.spacing(1),
   display: "inline-block",
 })) as typeof Typography;
 

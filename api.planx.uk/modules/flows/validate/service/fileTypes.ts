@@ -1,13 +1,10 @@
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
-import {
-  ComponentType,
-  FlowGraph,
-  Node,
-} from "@opensystemslab/planx-core/types";
+import type { FlowGraph, Node } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import countBy from "lodash/countBy.js";
 
 import { isComponentType } from "../helpers.js";
-import { FlowValidationResponse } from "./index.js";
+import type { FlowValidationResponse } from "./index.js";
 
 const validateFileTypes = (flowGraph: FlowGraph): FlowValidationResponse => {
   // Get all passport variables set by FileUpload and/or FileUploadAndLabel

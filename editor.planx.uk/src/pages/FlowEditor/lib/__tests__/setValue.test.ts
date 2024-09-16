@@ -6,7 +6,7 @@ import { Store, useStore } from "../store";
 const { getState, setState } = useStore;
 const { resetPreview, record, computePassport, getCurrentCard } = getState();
 
-const baseFlow: Store.flow = {
+const baseFlow: Store.Flow = {
   _root: {
     edges: ["setValue1", "middleOfService", "setValue2", "endOfService"],
   },

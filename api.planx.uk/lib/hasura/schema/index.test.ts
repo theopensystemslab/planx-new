@@ -4,7 +4,7 @@ import type { Mocked } from "vitest";
 
 describe("runSQL", () => {
   vi.mock("axios", async (importOriginal) => {
-    const actualAxios = await importOriginal<typeof import("axios")>();
+    const actualAxios = await importOriginal<typeof axios>();
     return {
       default: {
         ...actualAxios,

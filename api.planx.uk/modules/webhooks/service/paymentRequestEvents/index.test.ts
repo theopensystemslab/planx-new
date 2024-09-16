@@ -1,8 +1,8 @@
 import supertest from "supertest";
 import app from "../../../../server.js";
 import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
-import { CreatePaymentEvent } from "./schema.js";
-import { MockedFunction } from "vitest";
+import type { CreatePaymentEvent } from "./schema.js";
+import type { MockedFunction } from "vitest";
 
 const { post } = supertest(app);
 

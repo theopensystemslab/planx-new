@@ -9,11 +9,11 @@ const { getState, setState } = useStore;
 
 let breadcrumbsDependentOnPassport = cloneDeep(
   breadcrumbsDependentOnPassportMock,
-) as Store.breadcrumbs;
+) as Store.Breadcrumbs;
 
 let flowWithPassportComponents = cloneDeep(
   flowWithPassportComponentsMock,
-) as Store.flow;
+) as Store.Flow;
 
 const {
   record,
@@ -28,10 +28,10 @@ beforeEach(() => {
   resetPreview();
   breadcrumbsDependentOnPassport = cloneDeep(
     breadcrumbsDependentOnPassportMock,
-  ) as Store.breadcrumbs;
+  ) as Store.Breadcrumbs;
   flowWithPassportComponents = cloneDeep(
     flowWithPassportComponentsMock,
-  ) as Store.flow;
+  ) as Store.Flow;
 });
 
 describe("removeNodesDependentOnPassport", () => {
@@ -57,7 +57,7 @@ describe("removeNodesDependentOnPassport", () => {
     const breadcrumbs = { ...mockBreadcrumbs };
 
     const { breadcrumbsWithoutPassportData, removedNodeIds } =
-      removeNodesDependentOnPassport(mockFlowData as Store.flow, breadcrumbs);
+      removeNodesDependentOnPassport(mockFlowData as Store.Flow, breadcrumbs);
 
     const expectedBreadcrumbs = { ...mockBreadcrumbs };
 
@@ -70,7 +70,7 @@ describe("nodesDependentOnPassport with record", () => {
   test("should remove Draw Boundary and Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
-    } as Store.cachedBreadcrumbs;
+    } as Store.CachedBreadcrumbs;
     const userData = {
       data: {
         _address: {
@@ -118,7 +118,7 @@ describe("nodesDependentOnPassport with record", () => {
   test("should remove Planning constraints from cachedBreadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
-    } as Store.cachedBreadcrumbs;
+    } as Store.CachedBreadcrumbs;
     const userData = {
       data: {
         "property.boundary.site": {

@@ -26,11 +26,14 @@ const GeneralSettings: React.FC = () => {
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const fetchedTeam = await useStore.getState().fetchCurrentTeam();
-        if (!fetchedTeam) throw Error("Unable to find team");
+        const fetchedTeamSettings = await useStore
+          .getState()
+          .fetchCurrentTeamSettings();
+
+        if (!fetchedTeamSettings) throw Error("Unable to find team");
 
         setFormikConfig({
-          initialValues: fetchedTeam.settings,
+          initialValues: fetchedTeamSettings,
           onSubmit: () => {},
           validateOnBlur: false,
           validateOnChange: false,

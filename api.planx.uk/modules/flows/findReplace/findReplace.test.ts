@@ -3,7 +3,7 @@ import supertest from "supertest";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { authHeader } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
-import { Flow } from "../../../types.js";
+import type { Flow } from "../../../types.js";
 
 const auth = authHeader({ role: "platformAdmin" });
 

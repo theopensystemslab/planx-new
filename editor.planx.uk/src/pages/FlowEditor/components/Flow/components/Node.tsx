@@ -77,6 +77,8 @@ const Node: React.FC<any> = (props) => {
       return <Question {...allProps} text={node?.data?.title ?? "Notice"} />;
     case TYPES.NumberInput:
       return <Question {...allProps} text={node?.data?.title ?? "Number"} />;
+    case TYPES.Page:
+      return <Question {...allProps} text={node?.data?.title ?? "Page"} />;
     case TYPES.Pay:
       return <Question {...allProps} text={node?.data?.title ?? "Pay"} />;
     case TYPES.PlanningConstraints:
@@ -147,7 +149,7 @@ const Node: React.FC<any> = (props) => {
   }
 };
 
-const getSetValueText = ({ operation, fn, val }: Store.node["data"]) => {
+const getSetValueText = ({ operation, fn, val }: Store.Node["data"]) => {
   switch (operation) {
     case "append":
       return `Append ${val} to ${fn}`;

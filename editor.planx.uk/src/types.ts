@@ -1,8 +1,8 @@
 import {
   FlowStatus,
   GovUKPayment,
-  NotifyPersonalisation,
   Team,
+  TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
 import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
@@ -41,16 +41,6 @@ export interface TextContent {
   show: boolean;
 }
 
-export interface Node {
-  id: string;
-  data: {
-    text: string;
-    flag?: string;
-    info?: string;
-    policyRef?: string;
-  };
-}
-
 /**
  * Describes the different paths through which a flow can be navigated by a user
  */
@@ -72,8 +62,8 @@ export interface SendEmailPayload {
   };
 }
 export type Session = {
-  passport: Store.passport;
-  breadcrumbs: Store.breadcrumbs;
+  passport: Store.Passport;
+  breadcrumbs: Store.Breadcrumbs;
   sessionId: string;
   // TODO: replace `id` with `flow: { id, published_flow_id }`
   id: SharedStore["id"];
@@ -88,8 +78,8 @@ export interface ReconciliationResponse {
 }
 
 // re-export store types
-export type Passport = Store.passport;
-export type Breadcrumbs = Store.breadcrumbs;
+export type Passport = Store.Passport;
+export type Breadcrumbs = Store.Breadcrumbs;
 
 export enum SectionStatus {
   NeedsUpdated = "NEW INFORMATION NEEDED",
@@ -100,7 +90,7 @@ export enum SectionStatus {
   Completed = "COMPLETED",
 }
 
-export interface SectionNode extends Store.node {
+export interface SectionNode extends Store.Node {
   data: {
     title: string;
     description?: string;
@@ -116,7 +106,7 @@ export interface AdminPanelData {
   subdomain?: string;
   planningDataEnabled: boolean;
   article4sEnabled: string;
-  govnotifyPersonalisation?: NotifyPersonalisation;
+  govnotifyPersonalisation?: TeamContactSettings;
   govpayEnabled: boolean;
   sendToEmailAddress?: string;
   bopsSubmissionURL?: string;

@@ -6,6 +6,27 @@ export const ResidentialUnitsExisting: Schema = {
     {
       type: "question",
       data: {
+        title: "What best describes the type of this unit?",
+        fn: "type",
+        options: [
+          { id: "house", data: { text: "House", val: "house" } },
+          {
+            id: "flat",
+            data: { text: "Flat, apartment or maisonette", val: "flat" },
+          },
+          {
+            id: "sheltered",
+            data: { text: "Sheltered housing", val: "sheltered" },
+          },
+          { id: "studio", data: { text: "Studio or bedsit", val: "studio" } },
+          { id: "cluster", data: { text: "Cluster flat", val: "cluster" } },
+          { id: "other", data: { text: "Other", val: "other" } },
+        ],
+      },
+    },
+    {
+      type: "question",
+      data: {
         title: "What best describes the tenure of this unit?",
         fn: "tenure",
         options: [
@@ -31,27 +52,6 @@ export const ResidentialUnitsExisting: Schema = {
       },
     },
     {
-      type: "question",
-      data: {
-        title: "What best describes the type of this unit?",
-        fn: "type",
-        options: [
-          { id: "house", data: { text: "House", val: "house" } },
-          {
-            id: "flat",
-            data: { text: "Flat, apartment or maisonette", val: "flat" },
-          },
-          {
-            id: "sheltered",
-            data: { text: "Sheltered housing", val: "sheltered" },
-          },
-          { id: "studio", data: { text: "Studio or bedsit", val: "studio" } },
-          { id: "cluster", data: { text: "Cluster flat", val: "cluster" } },
-          { id: "other", data: { text: "Other", val: "other" } },
-        ],
-      },
-    },
-    {
       type: "number",
       data: {
         title: "How many bedrooms does this unit have?",
@@ -62,7 +62,7 @@ export const ResidentialUnitsExisting: Schema = {
     {
       type: "number",
       data: {
-        title: "How many existing units fit the descriptions above?",
+        title: "How many units of the type described above exist on the site?",
         fn: "identicalUnits",
         allowNegatives: false,
       },

@@ -168,3 +168,38 @@ describe("fetching status of a GOV.UK payment", () => {
       });
   });
 });
+
+test("handling GovPay error responses", async () => {
+  const govUKErrorResponse = {
+    code: "govUKErrorResponse",
+    description:
+      "Account is not fully configured. Please refer to documentation to setup your account or contact support with your error code - https://www.payments.service.gov.uk/support/ .",
+  };
+
+  nock("https://publicapi.payments.service.gov.uk/v1/payments")
+    .post("")
+    .reply(400, govUKErrorResponse);
+
+  await supertest(app)
+    .post(
+      "/pay/southwark?flowId=7cd1c4b4-4229-424f-8d04-c9fdc958ef4e&sessionId=f2d8ca1d-a43b-43ec-b3d9-a9fec63ff19c",
+    )
+    .send({
+      amount: 100,
+      reference: "12343543",
+      description: "New application",
+      return_url: "https://editor.planx.uk",
+      metadata: {
+        source: "PlanX",
+        flow: "apply-for-a-lawful-development-certificate",
+        inviteToPay: false,
+      },
+    })
+    .expect(400)
+    .then((res) => {
+      expect(res.body.message).toMatch(
+        /GovPay responded with an error when attempting to proxy to their API/,
+      );
+      expect(res.body.govPayResponse).toEqual(govUKErrorResponse);
+    });
+});

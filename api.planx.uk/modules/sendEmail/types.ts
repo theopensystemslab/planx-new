@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
+import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 
 interface SendEmailResponse {
   message: string;

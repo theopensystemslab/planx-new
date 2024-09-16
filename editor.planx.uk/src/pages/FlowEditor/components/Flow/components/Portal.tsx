@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
-import DoorFrontOutlined from "@mui/icons-material/DoorFrontOutlined";
 import MoreVert from "@mui/icons-material/MoreVert";
+import { ComponentType } from "@opensystemslab/planx-core/types";
+import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -125,6 +126,8 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
+  const Icon = ICONS[ComponentType.InternalPortal];
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -135,7 +138,7 @@ const InternalPortal: React.FC<any> = (props) => {
           ref={drag}
           onContextMenu={handleContext}
         >
-          <DoorFrontOutlined />
+          {Icon && <Icon />}
           <span>{props.data.text}</span>
         </Link>
         <Link href={editHref} prefetch={false} className="portalMenu">

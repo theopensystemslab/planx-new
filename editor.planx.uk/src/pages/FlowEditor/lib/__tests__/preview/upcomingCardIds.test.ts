@@ -5,7 +5,7 @@ import { Store, useStore } from "../../store";
 const { getState, setState } = useStore;
 const { upcomingCardIds, resetPreview, record, getCurrentCard } = getState();
 
-const flow: Store.flow = {
+const flow: Store.Flow = {
   _root: {
     edges: ["SetValue", "Content", "AutomatedQuestion"],
   },

@@ -1,5 +1,5 @@
-import { CookieOptions, RequestHandler, Response } from "express";
-import { Request } from "express-jwt";
+import type { CookieOptions, RequestHandler, Response } from "express";
+import type { Request } from "express-jwt";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
@@ -8,6 +8,7 @@ export const failedLogin: RequestHandler = (_req, _res, next) =>
   });
 
 export const logout: RequestHandler = (req, res) => {
+  // TODO: implement dual purpose as Microsoft frontend logout channel
   req.logout(() => {
     // do nothing
   });

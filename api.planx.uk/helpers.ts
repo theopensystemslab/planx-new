@@ -1,7 +1,8 @@
 import { gql } from "graphql-request";
 import capitalize from "lodash/capitalize.js";
-import { Flow, Node } from "./types.js";
-import { ComponentType, FlowGraph } from "@opensystemslab/planx-core/types";
+import type { Flow, Node } from "./types.js";
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client/index.js";
 
 export interface FlowData {

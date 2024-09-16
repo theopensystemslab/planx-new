@@ -21,7 +21,7 @@ describe("calculateNewValues() helper function", () => {
           fn: mockKey,
           val: "lion",
         };
-        const mockPassport: Store.passport = {
+        const mockPassport: Store.Passport = {
           data: { mockNode: mockSetValue, [mockKey]: previous },
         };
 
@@ -57,7 +57,7 @@ describe("calculateNewValues() helper function", () => {
           fn: mockKey,
           val: "lion",
         };
-        const mockPassport: Store.passport = {
+        const mockPassport: Store.Passport = {
           data: { mockNode: mockSetValue, [mockKey]: previous },
         };
 
@@ -93,7 +93,7 @@ describe("calculateNewValues() helper function", () => {
           fn: mockKey,
           val: "lion",
         };
-        const mockPassport: Store.passport = {
+        const mockPassport: Store.Passport = {
           data: { mockNode: mockSetValue, [mockKey]: previous },
         };
 
@@ -129,7 +129,7 @@ describe("calculateNewValues() helper function", () => {
           fn: mockKey,
           val: "lion",
         };
-        const mockPassport: Store.passport = {
+        const mockPassport: Store.Passport = {
           data: { mockNode: mockSetValue, [mockKey]: previous },
         };
 

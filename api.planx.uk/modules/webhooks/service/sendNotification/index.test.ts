@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import app from "../../../../server.js";
 import SlackNotify from "slack-notify";
-import { BOPSBody, EmailBody, S3Body, UniformBody } from "./types.js";
+import type { BOPSBody, EmailBody, S3Body, UniformBody } from "./types.js";
 import { $api } from "../../../../client/index.js";
 
 const mockSessionWithFee = {

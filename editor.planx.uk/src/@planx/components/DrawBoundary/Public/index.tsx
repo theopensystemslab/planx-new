@@ -138,7 +138,7 @@ export default function Component(props: Props) {
   }, [boundary]);
 
   const validateAndSubmit = () => {
-    const newPassportData: Store.userData["data"] = {};
+    const newPassportData: Store.UserData["data"] = {};
 
     // Used the map
     if (page === "draw") {

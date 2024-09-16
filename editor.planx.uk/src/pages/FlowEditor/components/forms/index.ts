@@ -18,6 +18,7 @@ import MapAndLabel from "@planx/components/MapAndLabel/Editor";
 import NextSteps from "@planx/components/NextSteps/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
+import Page from "@planx/components/Page/Editor";
 import Pay from "@planx/components/Pay/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
@@ -58,6 +59,7 @@ const components: {
   "next-steps": NextSteps,
   notice: Notice,
   "number-input": NumberInput,
+  page: Page,
   pay: Pay,
   "planning-constraints": PlanningConstraints,
   "property-information": PropertyInformation,

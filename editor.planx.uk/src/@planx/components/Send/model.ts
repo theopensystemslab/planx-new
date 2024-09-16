@@ -38,7 +38,7 @@ export function getCombinedEventsPayload({
 }: {
   destinations: Destination[];
   teamSlug: string;
-  passport: Store.passport;
+  passport: Store.Passport;
   sessionId: string;
 }) {
   const combinedEventsPayload: Record<string, EventPayload> = {};

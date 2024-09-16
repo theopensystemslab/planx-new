@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { $api } from "../../client/index.js";
-import { User, Role } from "@opensystemslab/planx-core/types";
+import type { User, Role } from "@opensystemslab/planx-core/types";
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {
   await checkUserCanAccessEnv(email, process.env.NODE_ENV);

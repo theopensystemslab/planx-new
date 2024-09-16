@@ -1,3 +1,4 @@
+import { screen } from "@testing-library/react";
 import { Feature, Point, Polygon } from "geojson";
 import { act } from "react-dom/test-utils";
 
@@ -15,4 +16,15 @@ export const addFeaturesToMap = async (
     },
   });
   act(() => map.dispatchEvent(mockEvent));
+};
+
+export const addMultipleFeatures = (
+  featureArray: Feature<Point, { label: string }>[],
+) => {
+  const map = screen.getByTestId("map-and-label-map");
+  const pointsAddedArray: Feature<Point, { label: string }>[] = [];
+  featureArray.forEach((feature) => {
+    pointsAddedArray.push(feature);
+    addFeaturesToMap(map, pointsAddedArray);
+  });
 };

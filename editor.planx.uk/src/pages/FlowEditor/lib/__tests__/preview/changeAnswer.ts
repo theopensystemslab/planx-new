@@ -5,7 +5,7 @@ import flowWithAutoAnswersMock from "../mocks/flowWithAutoAnswers.json";
 
 const { getState, setState } = useStore;
 
-const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.flow;
+const flowWithAutoAnswers = cloneDeep(flowWithAutoAnswersMock) as Store.Flow;
 
 const { record, changeAnswer, computePassport } = getState();
 
@@ -25,8 +25,8 @@ describe("changeAnswer", () => {
         answers: ["X9JjnbPpnd"],
         auto: true,
       },
-    } as Store.breadcrumbs;
-    const cachedBreadcrumbs = {} as Store.cachedBreadcrumbs;
+    } as Store.Breadcrumbs;
+    const cachedBreadcrumbs = {} as Store.CachedBreadcrumbs;
 
     setState({
       flow,
@@ -62,7 +62,7 @@ describe("changeAnswer", () => {
         answers: ["X9JjnbPpnd"],
         auto: true,
       },
-    } as Store.cachedBreadcrumbs;
+    } as Store.CachedBreadcrumbs;
 
     // Confirm that our original answer is still preserved in cachedBreadcrumbs, but not included in current breadcrumbs
     expect(getState().breadcrumbs).not.toContain(originalAnswer);

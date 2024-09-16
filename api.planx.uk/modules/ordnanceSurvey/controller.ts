@@ -1,6 +1,6 @@
 import { useProxy } from "../../shared/middleware/proxy.js";
-import { NextFunction, Request, Response } from "express";
-import { IncomingMessage } from "http";
+import type { NextFunction, Request, Response } from "express";
+import type { IncomingMessage } from "http";
 
 export const OS_DOMAIN = "https://api.os.uk";
 

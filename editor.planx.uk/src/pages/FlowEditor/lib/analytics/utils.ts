@@ -13,7 +13,7 @@ import {
 /**
  * Generate meaningful title for content analytic log
  */
-export function getContentTitle(node: Store.node): string {
+export function getContentTitle(node: Store.Node): string {
   const dom = new DOMParser().parseFromString(node.data.content, "text/html");
   const h1 = dom.body.getElementsByTagName("h1")[0]?.textContent;
   const text = h1 || dom.body.textContent;
@@ -25,7 +25,7 @@ export function getContentTitle(node: Store.node): string {
   return title;
 }
 
-export function extractNodeTitle(node: Store.node): string {
+export function extractNodeTitle(node: Store.Node): string {
   const nodeTitle =
     node?.type === TYPES.Content
       ? getContentTitle(node)
@@ -35,7 +35,7 @@ export function extractNodeTitle(node: Store.node): string {
 
 export function getTargetNodeDataFromFlow(
   nodeId: string,
-  flow: Store.flow,
+  flow: Store.Flow,
 ): BackwardsTargetMetadata {
   const node = flow[nodeId];
   const nodeType = node?.type ? TYPES[node.type] : null;
@@ -49,7 +49,7 @@ export function getTargetNodeDataFromFlow(
 
 export function generateBackwardsNavigationMetadata(
   initiator: BackwardsNavigationInitiatorType,
-  flow: Store.flow,
+  flow: Store.Flow,
   nodeId?: string,
 ): BackwardsNavigationMetadata {
   const targetNodeMetadata = nodeId
@@ -63,10 +63,10 @@ export function generateBackwardsNavigationMetadata(
 }
 
 export function getNodeMetadata(
-  node: Store.node,
+  node: Store.Node,
   resultData: any,
   nodeId: string,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
 ) {
   const isAutoAnswered = breadcrumbs[nodeId]?.auto || false;
   switch (node?.type) {
@@ -102,8 +102,8 @@ export function isAllowListKey(key: any): key is AllowListKey {
  */
 export function getAnswers(
   nodeId: string,
-  flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  flow: Store.Flow,
+  breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const { data } = flow[nodeId];
   const nodeFn: string | undefined = data?.fn || data?.val;
@@ -129,7 +129,7 @@ export function getAnswers(
  * e.g. data set automatically by components such as DrawBoundary
  */
 export function getData(
-  breadcrumb: Store.userData,
+  breadcrumb: Store.UserData,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const dataSetByNode = breadcrumb.data;
   if (!dataSetByNode) return;
@@ -145,8 +145,8 @@ export function getData(
 }
 
 export function determineLogDirection(
-  breadcrumbs: Store.breadcrumbs,
-  previousBreadcrumbs: Store.breadcrumbs | undefined,
+  breadcrumbs: Store.Breadcrumbs,
+  previousBreadcrumbs: Store.Breadcrumbs | undefined,
 ) {
   if (!previousBreadcrumbs) return;
   const curLength = Object.keys(breadcrumbs).length;
@@ -156,8 +156,8 @@ export function determineLogDirection(
 }
 
 export function findUpdatedBreadcrumbKeys(
-  breadcrumbs: Store.breadcrumbs,
-  previousBreadcrumbs: Store.breadcrumbs,
+  breadcrumbs: Store.Breadcrumbs,
+  previousBreadcrumbs: Store.Breadcrumbs,
 ): string[] | undefined {
   const currentKeys = Object.keys(breadcrumbs);
   const previousKeys = Object.keys(previousBreadcrumbs);
@@ -174,9 +174,9 @@ export function findUpdatedBreadcrumbKeys(
  */
 export function getAllowListAnswers(
   nodeId: string,
-  breadcrumb: Store.userData,
-  flow: Store.flow,
-  breadcrumbs: Store.breadcrumbs,
+  breadcrumb: Store.UserData,
+  flow: Store.Flow,
+  breadcrumbs: Store.Breadcrumbs,
 ): Partial<Record<AllowListKey, any>> | undefined {
   const answers = getAnswers(nodeId, flow, breadcrumbs);
   const data = getData(breadcrumb);

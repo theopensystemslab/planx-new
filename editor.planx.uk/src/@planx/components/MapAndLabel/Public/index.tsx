@@ -10,10 +10,10 @@ import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { Feature, FeatureCollection, GeoJsonObject } from "geojson";
+import { GeoJsonObject } from "geojson";
 import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -23,7 +23,7 @@ import CardHeader from "../../shared/Preview/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import type { MapAndLabel } from "./../model";
-import { MapAndLabelProvider, useMapAndLabelContext } from "./Context";
+import { MAP_ID, MapAndLabelProvider, useMapAndLabelContext } from "./Context";
 import { CopyFeature } from "./CopyFeature";
 
 type Props = PublicProps<MapAndLabel>;
@@ -55,14 +55,27 @@ const StyledTab = styled((props: TabProps) => (
   },
 })) as typeof Tab;
 
-const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
-  features,
-}) => {
-  const { schema, activeIndex, formik, editFeature, isFeatureInvalid } =
-    useMapAndLabelContext();
+const VerticalFeatureTabs: React.FC = () => {
+  const {
+    schema,
+    activeIndex,
+    formik,
+    features,
+    editFeature,
+    isFeatureInvalid,
+    removeFeature,
+  } = useMapAndLabelContext();
 
-  // Features is inherently sorted by recently added/modified, order tabs by stable labels
-  const sortedFeatures = sortBy(features, ["properties.label"]);
+  if (!features) {
+    throw new Error("Cannot render MapAndLabel tabs without features");
+  }
+
+  // Features is inherently sorted by recently added/modified, order tabs by stable labels (labels are integers stored as strings)
+  const sortedFeatures = sortBy(features, [
+    function (f) {
+      return Number(f.properties?.label);
+    },
+  ]);
 
   return (
     <Box
@@ -115,6 +128,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
             sx={{ width: "100%" }}
             aria-labelledby={`vertical-tab-${i}`}
             id={`vertical-tabpanel-${i}`}
+            data-testid={`vertical-tabpanel-${i}`}
           >
             <Box
               sx={{
@@ -152,11 +166,7 @@ const VerticalFeatureTabs: React.FC<{ features: Feature[] }> = ({
               formik={formik}
             />
             <Button
-              onClick={() =>
-                console.log(
-                  `TODO - Remove ${schema.type} ${feature.properties?.label}`,
-                )
-              }
+              onClick={() => removeFeature(activeIndex)}
               sx={{
                 fontWeight: FONT_WEIGHT_SEMI_BOLD,
                 gap: (theme) => theme.spacing(2),
@@ -192,12 +202,13 @@ const PlotFeatureToBegin = () => (
 
 const Root = () => {
   const {
-    validateAndSubmitForm,
-    mapAndLabelProps,
     errors,
-    addFeature,
+    features,
+    mapAndLabelProps,
     schema,
-    formik,
+    updateMapKey,
+    validateAndSubmitForm,
+    addInitialFeaturesToMap,
   } = useMapAndLabelContext();
   const {
     title,
@@ -216,36 +227,11 @@ const Root = () => {
     previouslySubmittedData,
   } = mapAndLabelProps;
 
-  const previousFeatures = previouslySubmittedData?.data?.[
-    fn
-  ] as FeatureCollection;
-  const [features, setFeatures] = useState<Feature[] | undefined>(
-    previousFeatures?.features?.length > 0
-      ? previousFeatures.features
-      : undefined,
-  );
-
-  useEffect(() => {
-    const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features) {
-        setFeatures(geojson["EPSG:3857"].features);
-        formik.setFieldValue("geoData", geojson["EPSG:3857"].features);
-        addFeature();
-      } else {
-        // if the user clicks 'reset' on the map, geojson will be empty object, so set features to undefined
-        setFeatures(undefined);
-        formik.setFieldValue("geoData", undefined);
-      }
-    };
-
-    const map: HTMLElement | null =
-      document.getElementById("map-and-label-map");
-    map?.addEventListener("geojsonChange", geojsonChangeHandler);
-
-    return function cleanup() {
-      map?.removeEventListener("geojsonChange", geojsonChangeHandler);
-    };
-  }, [setFeatures, addFeature]);
+  // If coming "back" or "changing", load initial features & tabs onto the map
+  //   Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
+  if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
+    addInitialFeaturesToMap(previouslySubmittedData?.data?.[fn]?.features);
+  }
 
   const rootError: string =
     (errors.min &&
@@ -264,12 +250,12 @@ const Root = () => {
         howMeasured={howMeasured}
       />
       <FullWidthWrapper>
-        <ErrorWrapper error={rootError}>
+        <ErrorWrapper error={rootError} key={updateMapKey}>
           <MapContainer environment="standalone">
             {/* @ts-ignore */}
             <my-map
-              id="map-and-label-map"
-              data-testid="map-and-label-map"
+              id={MAP_ID}
+              data-testid={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               drawMode
@@ -280,6 +266,7 @@ const Root = () => {
                   features: features,
                 })
               }
+              drawGeojsonDataBuffer={25}
               drawMany
               drawColor={drawColor}
               drawType={drawType}
@@ -303,7 +290,7 @@ const Root = () => {
           </MapContainer>
         </ErrorWrapper>
         {features && features?.length > 0 ? (
-          <VerticalFeatureTabs features={features} />
+          <VerticalFeatureTabs />
         ) : (
           <PlotFeatureToBegin />
         )}

@@ -1,4 +1,4 @@
-import { Role } from "@opensystemslab/planx-core/types";
+import type { Role } from "@opensystemslab/planx-core/types";
 import { sign } from "jsonwebtoken";
 
 function getJWT({ role }: { role: Role }) {

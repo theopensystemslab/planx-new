@@ -5,7 +5,7 @@ import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
 import { sendEmail } from "../../../lib/notify/index.js";
-import { LowCalSession } from "../../../types.js";
+import type { LowCalSession } from "../../../types.js";
 import {
   DAYS_UNTIL_EXPIRY,
   calculateExpiryDate,

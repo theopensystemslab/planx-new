@@ -1,4 +1,4 @@
-import { Request } from "express";
+import type { Request } from "express";
 import nock from "nock";
 import supertest from "supertest";
 import app from "../../server.js";

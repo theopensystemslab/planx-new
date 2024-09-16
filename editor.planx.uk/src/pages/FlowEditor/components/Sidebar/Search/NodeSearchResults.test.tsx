@@ -1,10 +1,17 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "testUtils";
+import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { flow, results } from "./mocks/simple";
 import { NodeSearchResults } from "./NodeSearchResults";
+
+vi.mock("react-navi", () => ({
+  useNavigation: () => ({
+    navigate: vi.fn(),
+  }),
+}));
 
 beforeAll(() => useStore.setState({ flow }));
 

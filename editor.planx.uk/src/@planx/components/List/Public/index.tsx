@@ -15,6 +15,7 @@ import { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
@@ -26,18 +27,30 @@ import { ListProvider, useListContext } from "./Context";
 export type Props = PublicProps<List>;
 
 const ListCard = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: theme.spacing(2.5),
   backgroundColor: theme.palette.background.paper,
-  border: "1px solid darkgray",
+  border: `1px solid ${theme.palette.border.main}`,
   display: "flex",
   flexDirection: "column",
-  gap: theme.spacing(2),
+  gap: theme.spacing(3),
   marginBottom: theme.spacing(2),
+  "& label, & table": {
+    maxWidth: theme.breakpoints.values.formWrap,
+  },
 }));
 
 const CardButton = styled(Button)(({ theme }) => ({
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  gap: theme.spacing(1),
+  background: theme.palette.common.white,
+}));
+
+const InactiveListCardLayout = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
   gap: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+  },
 }));
 
 const ActiveListCard: React.FC<{
@@ -92,12 +105,12 @@ const ActiveListCard: React.FC<{
             Save
           </Button>
           {!isPageComponent && !isInitialCard && (
-            <Button
+            <CardButton
               data-testid="cancel-edit-item-button"
               onClick={cancelEditItem}
             >
               Cancel
-            </Button>
+            </CardButton>
           )}
         </Box>
       </ListCard>
@@ -111,39 +124,56 @@ const InactiveListCard: React.FC<{
   const { schema, formik, removeItem, editItem, isPageComponent } =
     useListContext();
 
+  const mapPreview = schema.fields.find((field) => field.type === "map");
+
   return (
     <ListCard data-testid={`list-card-${i}`}>
       <Typography component="h2" variant="h3">
         {schema.type}
         {!isPageComponent && ` ${i + 1}`}
       </Typography>
-      <Table>
-        <TableBody>
-          {schema.fields.map((field, j) => (
-            <TableRow key={`tableRow-${j}`} sx={{ verticalAlign: "top" }}>
-              <TableCell
-                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD, maxWidth: "100px" }}
-              >
-                {field.data.title}
-              </TableCell>
-              <TableCell>
-                {formatSchemaDisplayValue(
-                  formik.values.schemaData[i][field.data.fn],
-                  schema.fields[j],
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <InactiveListCardLayout>
+        {mapPreview && (
+          <Box sx={{ flexBasis: "50%" }}>
+            {formatSchemaDisplayValue(
+              formik.values.schemaData[i][mapPreview.data.fn],
+              mapPreview,
+            )}
+          </Box>
+        )}
+        <Table>
+          <TableBody>
+            {schema.fields.map(
+              (field, j) =>
+                field.type !== "map" && (
+                  <TableRow key={`tableRow-${j}`} sx={{ verticalAlign: "top" }}>
+                    <TableCell
+                      sx={{
+                        fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                        maxWidth: "160px",
+                      }}
+                    >
+                      {field.data.title}
+                    </TableCell>
+                    <TableCell>
+                      {formatSchemaDisplayValue(
+                        formik.values.schemaData[i][field.data.fn],
+                        schema.fields[j],
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ),
+            )}
+          </TableBody>
+        </Table>
+      </InactiveListCardLayout>
       <Box display="flex" gap={2}>
         <CardButton onClick={() => removeItem(i)}>
           <DeleteIcon color="warning" fontSize="medium" />
           Remove
         </CardButton>
         <CardButton onClick={() => editItem(i)}>
-          {/* TODO: Is primary colour really right here? */}
-          <EditIcon color="primary" fontSize="medium" />
+          <EditIcon fontSize="medium" />
           Edit
         </CardButton>
       </Box>
@@ -201,6 +231,40 @@ const Root = () => {
     );
   }
 
+  const listContent = (
+    <ErrorWrapper error={rootError}>
+      <>
+        {formik.values.schemaData.map((_, i) =>
+          i === activeIndex ? (
+            <ActiveListCard key={`card-${i}`} index={i} />
+          ) : (
+            <InactiveListCard key={`card-${i}`} index={i} />
+          ),
+        )}
+        {shouldShowAddAnotherButton && (
+          <ErrorWrapper
+            error={
+              errors.addItem
+                ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
+                : ""
+            }
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={addNewItem}
+              sx={{ "@media (min-width: 768px)": { width: "100%" } }}
+              size="large"
+              data-testid="list-add-button"
+            >
+              + Add another {schema.type.toLowerCase()}
+            </Button>
+          </ErrorWrapper>
+        )}
+      </>
+    </ErrorWrapper>
+  );
+
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
@@ -210,36 +274,11 @@ const Root = () => {
         policyRef={policyRef}
         howMeasured={howMeasured}
       />
-      <ErrorWrapper error={rootError}>
-        <>
-          {formik.values.schemaData.map((_, i) =>
-            i === activeIndex ? (
-              <ActiveListCard key={`card-${i}`} index={i} />
-            ) : (
-              <InactiveListCard key={`card-${i}`} index={i} />
-            ),
-          )}
-          {shouldShowAddAnotherButton && (
-            <ErrorWrapper
-              error={
-                errors.addItem
-                  ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
-                  : ""
-              }
-            >
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={addNewItem}
-                sx={{ width: "100%" }}
-                data-testid="list-add-button"
-              >
-                + Add another {schema.type.toLowerCase()}
-              </Button>
-            </ErrorWrapper>
-          )}
-        </>
-      </ErrorWrapper>
+      {hasMapField ? (
+        <FullWidthWrapper>{listContent}</FullWidthWrapper>
+      ) : (
+        listContent
+      )}
     </Card>
   );
 };

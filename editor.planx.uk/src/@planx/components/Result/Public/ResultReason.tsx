@@ -9,16 +9,14 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
-import type { Node } from "../../../../types";
-
 interface IResultReason {
   id: string;
-  question: Node;
+  question: Store.Node;
   response: string;
   showChangeButton?: boolean;
   flagColor?: string;

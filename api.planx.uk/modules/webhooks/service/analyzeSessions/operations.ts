@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 
 import { Passport } from "@opensystemslab/planx-core";
 import { $api } from "../../../../client/index.js";
-import { Operation } from "../sanitiseApplicationData/types.js";
+import type { Operation } from "../sanitiseApplicationData/types.js";
 
 /**
  * ALLOW_LIST should stay in sync with

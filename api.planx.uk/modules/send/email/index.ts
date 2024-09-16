@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { sendEmail } from "../../../lib/notify/index.js";
-import { EmailSubmissionNotifyConfig } from "../../../types.js";
+import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import {
   getSessionEmailDetailsById,
@@ -28,9 +28,8 @@ export async function sendToEmail(
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
-    const { notifyPersonalisation } =
-      await getTeamEmailSettings(localAuthority);
-    if (!notifyPersonalisation.sendToEmail) {
+    const { teamSettings } = await getTeamEmailSettings(localAuthority);
+    if (!teamSettings.submissionEmail) {
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
@@ -47,15 +46,15 @@ export async function sendToEmail(
         serviceName: flowName,
         sessionId: payload.sessionId,
         applicantEmail: email,
-        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${notifyPersonalisation.sendToEmail}&localAuthority=${localAuthority}`,
-        ...notifyPersonalisation,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${teamSettings.submissionEmail}&localAuthority=${localAuthority}`,
+        ...teamSettings,
       },
     };
 
     // Send the email
     const response = await sendEmail(
       "submit",
-      notifyPersonalisation.sendToEmail,
+      teamSettings.submissionEmail,
       config,
     );
 
@@ -66,14 +65,14 @@ export async function sendToEmail(
     insertAuditEntry(
       payload.sessionId,
       localAuthority,
-      notifyPersonalisation.sendToEmail,
+      teamSettings.submissionEmail,
       config,
       response,
     );
 
     return res.status(200).send({
       message: `Successfully sent to email`,
-      inbox: notifyPersonalisation.sendToEmail,
+      inbox: teamSettings.submissionEmail,
       govuk_notify_template: "Submit",
     });
   } catch (error) {

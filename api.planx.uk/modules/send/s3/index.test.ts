@@ -1,4 +1,5 @@
 import supertest from "supertest";
+import type planxCore from "@opensystemslab/planx-core";
 import app from "../../../server.js";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
@@ -8,8 +9,7 @@ vi.mock("../../saveAndReturn/service/utils", () => ({
 }));
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-  const actualCore =
-    await importOriginal<typeof import("@opensystemslab/planx-core")>();
+  const actualCore = await importOriginal<typeof planxCore>();
   const actualCoreDomainClient = actualCore.CoreDomainClient;
 
   return {

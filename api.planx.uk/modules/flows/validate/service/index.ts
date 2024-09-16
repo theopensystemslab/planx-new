@@ -1,4 +1,8 @@
-import { ComponentType, Edges, Node } from "@opensystemslab/planx-core/types";
+import type {
+  ComponentType,
+  Edges,
+  Node,
+} from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
 
 import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers.js";

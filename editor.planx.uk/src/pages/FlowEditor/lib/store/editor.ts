@@ -1,6 +1,11 @@
 import { gql } from "@apollo/client";
-import { sortFlow } from "@opensystemslab/planx-core";
-import { FlowGraph, OrderedFlow } from "@opensystemslab/planx-core/types";
+import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
+import {
+  ComponentType,
+  FlowGraph,
+  NodeId,
+  OrderedFlow,
+} from "@opensystemslab/planx-core/types";
 import {
   add,
   clone,
@@ -65,38 +70,38 @@ export const editorUIStore: StateCreator<
 });
 
 interface PublishFlowResponse {
-  alteredNodes: Store.node[];
+  alteredNodes: Store.Node[];
   message: string;
 }
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
-  connect: (src: Store.nodeId, tgt: Store.nodeId, object?: any) => void;
-  connectTo: (id: Store.nodeId) => void;
+  connect: (src: NodeId, tgt: NodeId, object?: any) => void;
+  connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
-  copyNode: (id: Store.nodeId) => void;
+  copyNode: (id: NodeId) => void;
   createFlow: (teamId: any, newSlug: any, newName: string) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
-  isClone: (id: Store.nodeId) => boolean;
+  isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
   isFlowPublished: boolean;
-  makeUnique: (id: Store.nodeId, parent?: Store.nodeId) => void;
+  makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (flowId: string, teamSlug: string) => Promise<any>;
   moveNode: (
-    id: Store.nodeId,
-    parent?: Store.nodeId,
-    toBefore?: Store.nodeId,
-    toParent?: Store.nodeId,
+    id: NodeId,
+    parent?: NodeId,
+    toBefore?: NodeId,
+    toParent?: NodeId,
   ) => void;
-  pasteNode: (toParent: Store.nodeId, toBefore: Store.nodeId) => void;
+  pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
   publishFlow: (
     flowId: string,
     summary?: string,
   ) => Promise<PublishFlowResponse>;
-  removeNode: (id: Store.nodeId, parent: Store.nodeId) => void;
+  removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
   undoOperation: (ops: OT.Op[]) => void;
   orderedFlow?: OrderedFlow;
@@ -107,6 +112,7 @@ export interface EditorStore extends Store.Store {
     name: string;
     href: string;
   }) => void;
+  getURLForNode: (nodeId: string) => string;
 }
 
 export const editorStore: StateCreator<
@@ -486,5 +492,30 @@ export const editorStore: StateCreator<
     const externalPortals = get().externalPortals;
     externalPortals[id] = { name, href };
     set({ externalPortals });
+  },
+
+  getURLForNode: (nodeId) => {
+    const { orderedFlow: flow, flowSlug, teamSlug } = get();
+    if (!flow) throw Error("Missing ordered flow!");
+
+    const path = getPathForNode({ nodeId, flow });
+    const internalPortals = path.filter(
+      ({ type }) => type === ComponentType.InternalPortal,
+    );
+    const [node, parent, grandparent] = path;
+
+    // Construct the internal portal path if applicable
+    const portalPath = internalPortals.length
+      ? "," + internalPortals.map(({ id }) => id).join(",")
+      : "";
+
+    // Determine node path based on the node type
+    const nodePath =
+      node.type === ComponentType.Answer
+        ? `nodes/${grandparent.id}/nodes/${parent.id}/edit`
+        : `nodes/${parent.id}/nodes/${node.id}/edit`;
+
+    const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
+    return urlPath;
   },
 });

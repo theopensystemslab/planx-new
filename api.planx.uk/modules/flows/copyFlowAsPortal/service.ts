@@ -1,5 +1,5 @@
 import { getFlowData, getChildren, makeUniqueFlow } from "../../../helpers.js";
-import { Flow } from "../../../types.js";
+import type { Flow } from "../../../types.js";
 
 /**
  * Copies an internal portal and transforms it to be an independent flow

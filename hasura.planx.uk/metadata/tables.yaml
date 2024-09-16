@@ -2035,45 +2035,27 @@
           table:
             name: team_members
             schema: public
-  computed_fields:
-    - name: boundary_bbox
-      definition:
-        function:
-          name: boundary_bbox
-          schema: public
-      comment: Bounding box of the team's full boundary
   insert_permissions:
     - role: platformAdmin
       permission:
         check: {}
         columns:
-          - boundary
           - created_at
           - domain
           - id
           - name
-          - notify_personalisation
-          - settings
           - slug
-          - submission_email
           - updated_at
   select_permissions:
     - role: api
       permission:
         columns:
-          - boundary
           - created_at
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
-          - submission_email
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: platformAdmin
       permission:
@@ -2082,29 +2064,18 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: public
       permission:
         columns:
-          - boundary
           - created_at
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
     - role: teamEditor
       permission:
@@ -2113,13 +2084,8 @@
           - domain
           - id
           - name
-          - notify_personalisation
-          - reference_code
-          - settings
           - slug
           - updated_at
-        computed_fields:
-          - boundary_bbox
         filter: {}
   update_permissions:
     - role: platformAdmin
@@ -2127,10 +2093,7 @@
         columns:
           - domain
           - name
-          - notify_personalisation
-          - settings
           - slug
-          - submission_email
         filter: {}
         check: null
 - table:

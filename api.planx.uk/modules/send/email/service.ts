@@ -1,14 +1,14 @@
 import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
-import {
-  NotifyPersonalisation,
+import type {
   Session,
+  TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
-import { EmailSubmissionNotifyConfig } from "../../../types.js";
+import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 
 interface GetTeamEmailSettings {
   teams: {
-    notifyPersonalisation: NotifyPersonalisation & { sendToEmail: string };
+    teamSettings: TeamContactSettings;
   }[];
 }
 
@@ -17,12 +17,12 @@ export async function getTeamEmailSettings(localAuthority: string) {
     gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
-          notifyPersonalisation: team_settings {
+          teamSettings: team_settings {
             helpEmail: help_email
             helpPhone: help_phone
             emailReplyToId: email_reply_to_id
             helpOpeningHours: help_opening_hours
-            sendToEmail: submission_email
+            submissionEmail: submission_email
           }
         }
       }

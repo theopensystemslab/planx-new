@@ -18,7 +18,7 @@ interface PublishedViewSettings {
 }
 
 interface PublishedFlow extends Flow {
-  publishedFlows: Record<"data", Store.flow>[];
+  publishedFlows: Record<"data", Store.Flow>[];
 }
 
 /**
@@ -110,6 +110,7 @@ export const fetchSettingsForPublishedView = async (
               }
               slug
             }
+            settings
             status
             publishedFlows: published_flows(
               limit: 1
