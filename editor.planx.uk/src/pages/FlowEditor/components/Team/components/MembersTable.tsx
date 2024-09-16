@@ -13,7 +13,7 @@ import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
-import { EditorUpsertModal } from "./AddNewEditorModal";
+import { EditorUpsertModal } from "./EditorUpsertModal";
 
 const TableButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,

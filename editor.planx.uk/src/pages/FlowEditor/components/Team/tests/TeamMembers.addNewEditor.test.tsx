@@ -7,7 +7,7 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { setup } from "../../../../../testUtils";
-import { AddNewEditorModal } from "../components/AddNewEditorModal";
+import { EditorUpsertModal } from "../components/EditorUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
@@ -78,7 +78,7 @@ describe("when the addNewEditor modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
-        <AddNewEditorModal
+        <EditorUpsertModal
           showModal={true}
           setShowModal={() => {}}
           initialValues={emptyTeamMemberObj}
