@@ -17,7 +17,7 @@ import {
   AddNewEditorErrors,
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
-import { editorFormSchema } from "../formSchema";
+import { upsertEditorSchema } from "../formSchema";
 import {
   createAndAddUserToTeam,
   updateTeamMember,
@@ -49,15 +49,15 @@ export const EditorUpsertModal = ({
   ) => {
     switch (actionType) {
       case "add":
-        handleNewSubmit();
+        handleSubmitToAddNewUser();
         break;
       case "edit":
-        handleUpdateSubmit();
+        handleSubmitToUpdateUser();
     }
     resetForm({ values });
   };
 
-  const handleNewSubmit = async () => {
+  const handleSubmitToAddNewUser = async () => {
     const { teamId, teamSlug } = useStore.getState();
 
     const createUserResult = await createAndAddUserToTeam(
@@ -84,7 +84,7 @@ export const EditorUpsertModal = ({
     setShowModal(false);
     toast.success("Successfully added a user");
   };
-  const handleUpdateSubmit = async () => {
+  const handleSubmitToUpdateUser = async () => {
     if (!initialValues) {
       return;
     }
@@ -117,7 +117,7 @@ export const EditorUpsertModal = ({
       lastName: initialValues?.lastName || "",
       email: initialValues?.email || "",
     },
-    validationSchema: editorFormSchema,
+    validationSchema: upsertEditorSchema,
     onSubmit: handleSubmit,
   });
 

@@ -38,11 +38,10 @@ describe("when a user presses 'edit button'", () => {
     const firstNameInput = await screen.findByLabelText("First name");
     const lastNameInput = await screen.findByLabelText("Last name");
     const emailInput = await screen.findByLabelText("Email address");
-    // 29 - 159
     // Sorted based on first letter of first name Bill > Donella in Mocks
-    expect(firstNameInput).toHaveDisplayValue(mockTeamMembersData[1].firstName);
-    expect(lastNameInput).toHaveDisplayValue(mockTeamMembersData[1].lastName);
-    expect(emailInput).toHaveDisplayValue(mockTeamMembersData[1].email);
+    expect(firstNameInput).toHaveDisplayValue("Bill");
+    expect(lastNameInput).toHaveDisplayValue("Sharpe");
+    expect(emailInput).toHaveDisplayValue("bill@example.com");
   });
   it("disables the update user button", async () => {
     // find whole modal

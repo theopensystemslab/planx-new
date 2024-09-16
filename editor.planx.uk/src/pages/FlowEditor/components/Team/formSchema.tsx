@@ -1,12 +1,6 @@
 import * as Yup from "yup";
 
-export const addNewEditorFormSchema = Yup.object({
-  firstName: Yup.string().required("Required"),
-  lastName: Yup.string().required("Required"),
-  email: Yup.string().email("Invalid email address").required("Required"),
-});
-
-export const editorFormSchema = Yup.object({
+export const upsertEditorSchema = Yup.object({
   firstName: Yup.string().required("Enter a first name"),
   lastName: Yup.string().required("Enter a last name"),
   email: Yup.string()

@@ -18,24 +18,6 @@ export const emptyTeamMemberObj: TeamMember = {
   role: "teamEditor",
 };
 
-export const mockPlatformAdminUser: User = {
-  isPlatformAdmin: true,
-  firstName: "r",
-  lastName: "r",
-  email: "r",
-  id: 909,
-  teams: [
-    {
-      role: "teamEditor",
-      team: {
-        name: "planX",
-        slug: "planx",
-        id: 0,
-      },
-    },
-  ],
-};
-
 export const mockPlainUser: User = {
   isPlatformAdmin: false,
   firstName: "r",
@@ -52,4 +34,8 @@ export const mockPlainUser: User = {
       },
     },
   ],
+};
+export const mockPlatformAdminUser: User = {
+  ...mockPlainUser,
+  isPlatformAdmin: true,
 };

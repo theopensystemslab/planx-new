@@ -26,9 +26,3 @@ export interface EditorModalProps {
   userId?: number;
   actionType: "add" | "edit";
 }
-export interface EditorFormValues {
-  email: string;
-  firstName: string;
-  lastName: string;
-  id?: number;
-}

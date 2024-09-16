@@ -15,7 +15,7 @@ import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
 import { EditorUpsertModal } from "./EditorUpsertModal";
 
-const TableButton = styled(Button)(({ theme }) => ({
+const EditUserButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: "underline",
   boxShadow: "none",
@@ -128,7 +128,7 @@ export const MembersTable = ({
                 <TableCell>{member.email}</TableCell>
                 <Permission.IsPlatformAdmin>
                   <TableCell>
-                    <TableButton
+                    <EditUserButton
                       onClick={() => {
                         setShowUpdateModal(true);
                         setInitialValues(member);
@@ -136,7 +136,7 @@ export const MembersTable = ({
                       data-testId={`edit-button-${i}`}
                     >
                       Edit
-                    </TableButton>
+                    </EditUserButton>
                   </TableCell>
                 </Permission.IsPlatformAdmin>
               </StyledTableRow>
