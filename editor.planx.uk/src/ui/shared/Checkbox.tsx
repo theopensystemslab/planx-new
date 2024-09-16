@@ -5,14 +5,14 @@ import { borderedFocusStyle } from "theme";
 
 const Root = styled(Box, {
   shouldForwardProp: (prop) =>
-    !["disabled", "compact"].includes(prop.toString()),
-})<BoxProps & { disabled?: boolean; compact?: boolean }>(
-  ({ theme, disabled, compact }) => ({
+    !["disabled", "variant"].includes(prop.toString()),
+})<BoxProps & { disabled?: boolean; variant?: "default" | "compact" }>(
+  ({ theme, disabled, variant }) => ({
     display: "inline-flex",
     flexShrink: 0,
     position: "relative",
-    width: compact ? 24 : 40,
-    height: compact ? 24 : 40,
+    width: variant === "compact" ? 24 : 40,
+    height: variant === "compact" ? 24 : 40,
     borderColor: theme.palette.text.primary,
     border: "2px solid",
     backgroundColor: theme.palette.common.white,
@@ -24,37 +24,39 @@ const Root = styled(Box, {
   }),
 );
 
-const Input = styled("input")<{ compact?: boolean }>(({ compact }) => ({
-  opacity: 0,
-  width: compact ? 16 : 24,
-  height: compact ? 16 : 24,
-  cursor: "pointer",
-}));
+const Input = styled("input")<{ variant?: "default" | "compact" }>(
+  ({ variant }) => ({
+    opacity: 0,
+    width: variant === "compact" ? 16 : 24,
+    height: variant === "compact" ? 16 : 24,
+    cursor: "pointer",
+  }),
+);
 
 interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   checked: boolean;
   disabled?: boolean;
-  compact?: boolean;
+  variant?: "default" | "compact";
 }
 
 const Icon = styled("span", {
   shouldForwardProp: (prop) =>
-    !["checked", "disabled", "compact"].includes(prop.toString()),
-})<IconProps>(({ theme, checked, disabled, compact }) => ({
+    !["checked", "disabled", "variant"].includes(prop.toString()),
+})<IconProps>(({ theme, checked, disabled, variant }) => ({
   display: checked ? "block" : "none",
   content: "''",
   position: "absolute",
-  height: compact ? 12 : 24,
-  width: compact ? 7 : 12,
-  borderBottom: compact ? "3px solid" : "5px solid",
-  borderRight: compact ? "3px solid" : "5px solid",
+  height: variant === "compact" ? 12 : 24,
+  width: variant === "compact" ? 7 : 12,
+  borderBottom: variant === "compact" ? "3px solid" : "5px solid",
+  borderRight: variant === "compact" ? "3px solid" : "5px solid",
   left: "50%",
-  top: "42%",
+  top: variant === "compact" ? "44%" : "42%",
   transform: "translate(-50%, -50%) rotate(45deg)",
   cursor: "pointer",
   ...(disabled && {
-    borderBottom: compact ? "3px solid" : "5px solid",
-    borderRight: compact ? "3px solid" : "5px solid",
+    borderBottom: variant === "compact" ? "3px solid" : "5px solid",
+    borderRight: variant === "compact" ? "3px solid" : "5px solid",
     borderColor: theme.palette.common.white,
   }),
 }));
@@ -64,7 +66,7 @@ export interface Props {
   checked: boolean;
   onChange?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-  compact?: boolean;
+  variant?: "default" | "compact";
 }
 
 export default function Checkbox({
@@ -72,7 +74,7 @@ export default function Checkbox({
   checked,
   onChange,
   inputProps,
-  compact,
+  variant = "default",
 }: Props): FCReturn {
   const handleChange = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
@@ -83,7 +85,7 @@ export default function Checkbox({
     <Root
       onClick={handleChange}
       disabled={inputProps?.disabled}
-      compact={compact}
+      variant={variant}
     >
       <Input
         defaultChecked={checked}
@@ -91,12 +93,12 @@ export default function Checkbox({
         id={id}
         data-testid={id}
         {...inputProps}
-        compact={compact}
+        variant={variant}
       />
       <Icon
         checked={checked}
         disabled={inputProps?.disabled}
-        compact={compact}
+        variant={variant}
       />
     </Root>
   );
