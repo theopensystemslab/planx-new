@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -357,22 +357,90 @@ describe("copy feature select", () => {
     expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
   });
   // copy select enabled once you add more features
-  it.todo(
-    "lists all other features as options (the current feature is not listed)"
-  );
+  it("lists all other features as options (the current feature is not listed)", async () => {
+    const { getByTestId, getByTitle, user, queryByRole } = setup(
+      <MapAndLabel {...props} />
+    );
+    const map = getByTestId("map-and-label-map");
+    addMultipleFeatures([point1, point2]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
+
+    await user.click(copyInput);
+
+    // Current item would be Tree 2 since we added two points
+    const listItemTwo = queryByRole("option", { name: "Tree 2" });
+
+    expect(listItemTwo).not.toBeInTheDocument();
+  });
   // current tree is not an option in the copy select
   it("copies all data from one feature to another", async () => {
-    const { getByTestId, getByTitle, user, queryByRole, getByRole } = setup(
+    const { getByTestId, getByTitle, user, getByLabelText, getByRole } = setup(
       <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
     addMultipleFeatures([point1, point2]);
     const tabOne = getByRole("tab", { name: /Tree 1/ });
 
-    await fillForm;
+    await fillOutForm(user);
+
+    const speciesInputTwo = getByLabelText("Species");
+    const workInputTwo = getByLabelText("Proposed work");
+    const justificationInputTwo = getByLabelText("Justification");
+    const urgencyDivTwo = getByTitle("Urgency");
+    const urgencySelectTwo = within(urgencyDivTwo).getByRole("combobox");
+
+    expect(speciesInputTwo).toHaveDisplayValue("Larch");
+    expect(workInputTwo).toHaveDisplayValue("Chopping it down");
+    expect(justificationInputTwo).toHaveDisplayValue("Cause I can");
+    expect(urgencySelectTwo).toHaveTextContent("Low");
+
+    await user.click(tabOne);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox", {
+      name: "Copy from",
+    });
+    await user.click(copyInput);
+    const listItemTwo = getByRole("option", { name: "Tree 2" });
+
+    await user.click(listItemTwo);
+
+    const speciesInputOne = getByLabelText("Species");
+    const workInputOne = getByLabelText("Proposed work");
+    const justificationInputOne = getByLabelText("Justification");
+    const urgencyDivOne = getByTitle("Urgency");
+    const urgencySelectOne = within(urgencyDivOne).getByRole("combobox");
+
+    expect(speciesInputOne).toHaveDisplayValue("Larch");
+    expect(workInputOne).toHaveDisplayValue("Chopping it down");
+    expect(justificationInputOne).toHaveDisplayValue("Cause I can");
+    expect(urgencySelectOne).toHaveTextContent("Low");
   });
   // all data fields are populated from one field to another
-  it.todo("should not have any accessibility violations");
+  it("should not have any accessibility violations", async () => {
+    const { getByTestId, getByTitle, user, container } = setup(
+      <MapAndLabel {...props} />
+    );
+    const map = getByTestId("map-and-label-map");
+    addMultipleFeatures([point1, point2]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
+
+    await user.click(copyInput);
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
   // axe checks
 });
 
