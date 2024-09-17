@@ -7,10 +7,11 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { setup } from "../../../../../testUtils";
-import { AddNewEditorModal } from "../components/AddNewEditorModal";
+import { EditorUpsertModal } from "../components/EditorUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
+import { emptyTeamMemberObj } from "./mocks/mockUsers";
 
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
@@ -77,7 +78,12 @@ describe("when the addNewEditor modal is rendered", () => {
   it("should not have any accessibility issues", async () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
-        <AddNewEditorModal showModal={true} setShowModal={() => {}} />
+        <EditorUpsertModal
+          showModal={true}
+          setShowModal={() => {}}
+          initialValues={emptyTeamMemberObj}
+          actionType="add"
+        />
       </DndProvider>,
     );
     await screen.findByTestId("modal-create-user");
