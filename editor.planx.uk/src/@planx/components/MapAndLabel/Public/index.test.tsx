@@ -361,7 +361,16 @@ describe("copy feature select", () => {
     "lists all other features as options (the current feature is not listed)"
   );
   // current tree is not an option in the copy select
-  it.todo("copies all data from one feature to another");
+  it("copies all data from one feature to another", async () => {
+    const { getByTestId, getByTitle, user, queryByRole, getByRole } = setup(
+      <MapAndLabel {...props} />
+    );
+    const map = getByTestId("map-and-label-map");
+    addMultipleFeatures([point1, point2]);
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+
+    await fillForm;
+  });
   // all data fields are populated from one field to another
   it.todo("should not have any accessibility violations");
   // axe checks
