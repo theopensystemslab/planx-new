@@ -320,15 +320,19 @@ describe("basic interactions - happy path", () => {
   });
   // add details to more than one tab, submit
   it("a user can input details on feature tabs in any order", async () => {
-    const { getByTestId, getByRole, user, getByLabelText, getByTitle } = setup(
-      <MapAndLabel {...props} />,
-    );
+    const {
+      getByTestId,
+      getByRole,
+      user,
+      getByLabelText,
+      getByTitle,
+      getAllByTestId,
+    } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
     expect(map).toBeInTheDocument();
 
-    addMultipleFeatures([point1, point2, point3]);
+    addMultipleFeatures([point1, point2]);
 
-    // vertical side tab query
     const firstTab = getByRole("tab", { name: /Tree 1/ });
     const secondTab = getByRole("tab", { name: /Tree 2/ });
 
@@ -340,27 +344,53 @@ describe("basic interactions - happy path", () => {
     const firstSpeciesInput = within(firstTabPanel).getByLabelText("Species");
     expect(firstSpeciesInput).not.toHaveDisplayValue("Larch");
 
-    await user.type(firstSpeciesInput, mockTreeData.species);
+    // partially fill out firstTabPanel
+    await user.type(firstSpeciesInput, "Larch");
     const firstWorkInput = getByLabelText("Proposed work");
-    await user.type(firstWorkInput, mockTreeData.work);
+    await user.type(firstWorkInput, "Chopping it down");
 
     await user.click(secondTab);
 
+    // partially fill out secondTabPanel
     const secondSpeciesInput = within(secondTabPanel).getByLabelText("Species");
     expect(secondSpeciesInput).not.toHaveDisplayValue("Larch");
-    await user.type(secondSpeciesInput, mockTreeData.species);
+    await user.type(secondSpeciesInput, "Larch");
     const secondWorkInput = getByLabelText("Proposed work");
-    await user.type(secondWorkInput, mockTreeData.work);
+    await user.type(secondWorkInput, "Chopping it down");
 
     await user.click(firstTab);
-
+    // check that the data stays within the firstTabPanel
     expect(firstSpeciesInput).toHaveDisplayValue("Larch");
-    const justificationInput = getByLabelText("Justification");
-    await user.type(justificationInput, mockTreeData.justification);
-    const urgencyDiv = getByTitle("Urgency");
-    const urgencySelect = within(urgencyDiv).getByRole("combobox");
-    await user.click(urgencySelect);
+    // Complete the filling out of the firstTabPanel
+    const firstJustificationInput = getByLabelText("Justification");
+    await user.type(firstJustificationInput, "Cause I can");
+    const firstUrgencyDiv = getByTitle("Urgency");
+    const firstUrgencySelect = within(firstUrgencyDiv).getByRole("combobox");
+    await user.click(firstUrgencySelect);
     await user.click(getByRole("option", { name: /low/i }));
+
+    await user.click(secondTab);
+
+    // check that the data stays within the secondTabPanel
+    expect(secondSpeciesInput).toHaveDisplayValue("Larch");
+    // Complete the filling out of the secondTabPanel
+    const secondJustificationInput = getByLabelText("Justification");
+    await user.type(secondJustificationInput, "Cause I can");
+    const secondUrgencyDiv = getByTitle("Urgency");
+    const secondUrgencySelect = within(secondUrgencyDiv).getByRole("combobox");
+    await user.click(secondUrgencySelect);
+    await user.click(getByRole("option", { name: /low/i }));
+
+    const continueButton = getByRole("button", { name: /Continue/ });
+    expect(continueButton).toBeInTheDocument();
+
+    const errorMessages = getAllByTestId(/error-message-input/);
+
+    await user.click(continueButton);
+
+    errorMessages.forEach((message) => {
+      expect(message.textContent).toBeFalsy();
+    });
   });
 });
 
