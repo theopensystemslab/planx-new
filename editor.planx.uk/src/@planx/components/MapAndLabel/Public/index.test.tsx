@@ -347,10 +347,65 @@ describe("copy feature select", () => {
 });
 
 describe("remove feature button", () => {
-  it.todo("removes a feature from the form");
-  // click remove - feature is removed
-  // not tab
-  it.todo("removes a feature from the map");
+  it("removes a feature from the form - single feature", async () => {
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+    const tabOnePanel = getByRole("tabpanel", { name: /Tree 1/ });
+
+    const removeButton = getByRole("button", { name: "Remove" });
+
+    await user.click(removeButton);
+
+    expect(tabOne).not.toBeInTheDocument();
+    expect(tabOnePanel).not.toBeInTheDocument();
+  });
+  it("removes a feature from the form - multiple features", async () => {
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+
+    addMultipleFeatures([point1, point2]);
+
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+    const tabTwo = getByRole("tab", { name: /Tree 2/ });
+    const tabTwoPanel = getByRole("tabpanel", { name: /Tree 2/ });
+
+    const removeButton = getByRole("button", { name: "Remove" });
+
+    await user.click(removeButton);
+
+    expect(tabTwo).not.toBeInTheDocument();
+    expect(tabTwoPanel).not.toBeInTheDocument();
+
+    const tabOnePanel = getByRole("tabpanel", { name: /Tree 1/ });
+
+    // Ensure tab one remains
+    expect(tabOne).toBeInTheDocument();
+    expect(tabOnePanel).toBeInTheDocument();
+  });
+
+  it("removes a feature from the map", async () => {
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const removeButton = getByRole("button", { name: "Remove" });
+
+    await user.click(removeButton);
+
+    const mapTwo = getByTestId("map-and-label-map");
+
+    await waitFor(() => {
+      expect(mapTwo).toHaveAttribute(
+        "drawgeojsondata",
+        `{"type":"FeatureCollection","features":[]}`
+      );
+    });
+  });
   // click remove - feature is removed
   // no map icon
 });
