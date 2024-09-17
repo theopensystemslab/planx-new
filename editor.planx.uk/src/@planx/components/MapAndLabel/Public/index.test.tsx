@@ -332,9 +332,30 @@ describe("basic interactions - happy path", () => {
 });
 
 describe("copy feature select", () => {
-  it.todo("is disabled if only a single feature is present");
+  it("is disabled if only a single feature is present", async () => {
+    const { getByTestId, getByTitle } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).toHaveAttribute("aria-disabled", "true");
+  });
   // no copy select if only one feature
-  it.todo("is enabled once multiple features are present");
+  it("is enabled once multiple features are present", async () => {
+    const { getByTestId, getByTitle } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+    addMultipleFeatures([point1, point2]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
+  });
   // copy select enabled once you add more features
   it.todo(
     "lists all other features as options (the current feature is not listed)"
