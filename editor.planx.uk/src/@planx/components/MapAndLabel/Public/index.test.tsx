@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -494,14 +494,86 @@ describe("remove feature button", () => {
 });
 
 describe("payload generation", () => {
-  test.todo("a submitted payload contains a GeoJSON feature collection");
+  it("a submitted payload contains a GeoJSON feature collection", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = setup(
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    );
+
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    await clickContinue(user);
+
+    await checkErrorMessagesEmpty();
+    expect(handleSubmit).toHaveBeenCalled();
+    const output = handleSubmit.mock.calls[0][0].data.MockFn.type;
+
+    expect(output).toEqual("FeatureCollection");
+  });
   // check payload contains GeoJSON feature collection
-  test.todo(
-    "the feature collection contains all geospatial data inputted by the user"
-  );
+  it("the feature collection contains all geospatial data inputted by the user", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = setup(
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    );
+
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    await clickContinue(user);
+
+    await checkErrorMessagesEmpty();
+    expect(handleSubmit).toHaveBeenCalled();
+    const output =
+      handleSubmit.mock.calls[0][0].data.MockFn.features[0].geometry
+        .coordinates;
+
+    expect(output[0]).toEqual(-3.685929607119201);
+    expect(output[1]).toEqual(57.15301433687542);
+  });
   // feature collection matches the mocked data
-  test.todo(
-    "each feature's properties correspond with the details entered for that feature"
-  );
+  it("each feature's properties correspond with the details entered for that feature", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = setup(
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    );
+
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    await clickContinue(user);
+
+    await checkErrorMessagesEmpty();
+    expect(handleSubmit).toHaveBeenCalled();
+    const output =
+      handleSubmit.mock.calls[0][0].data.MockFn.features[0].properties;
+
+    expect(output.species).toEqual("Larch");
+    expect(output.work).toEqual("Chopping it down");
+    expect(output.justification).toEqual("Cause I can");
+    expect(output.urgency).toEqual("low");
+  });
   // feature properties contain the answers to inputs
 });
