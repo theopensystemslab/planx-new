@@ -12,7 +12,7 @@ function ErrorFallback(props: { error: Error }) {
     <Card>
       <ErrorSummaryContainer role="alert">
         <Typography variant="h4" component="h1" gutterBottom>
-          Something went wrong
+          {(props.error.cause as string) || "Something went wrong"}
         </Typography>
         <Typography>
           {props.error?.message && (
