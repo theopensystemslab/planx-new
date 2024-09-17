@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
@@ -107,16 +108,18 @@ export const MembersTable = ({
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{
-                    display: "flex",
+                    display: "table-cell",
                     flexDirection: "row",
                     alignItems: "center",
                   }}
                 >
-                  <StyledAvatar>
-                    {member.firstName[0]}
-                    {member.lastName[0]}
-                  </StyledAvatar>
-                  {member.firstName} {member.lastName}
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <StyledAvatar>
+                      {member.firstName[0]}
+                      {member.lastName[0]}
+                    </StyledAvatar>
+                    {member.firstName} {member.lastName}
+                  </Box>
                 </TableCell>
                 <TableCell>
                   <Chip
