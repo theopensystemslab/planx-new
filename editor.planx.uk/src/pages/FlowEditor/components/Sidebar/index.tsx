@@ -24,14 +24,6 @@ import StyledTab from "./StyledTab";
 
 type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 
-const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
-
-export const urls = {
-  preview: baseUrl + "/preview",
-  draft: baseUrl + "/draft",
-  analytics: baseUrl + "/published" + "?analytics=false",
-};
-
 const Root = styled(Box)(({ theme }) => ({
   position: "relative",
   top: "0",
@@ -111,8 +103,19 @@ const Sidebar: React.FC = React.memo(() => {
 
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: SidebarTabs) => {
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    newValue: SidebarTabs,
+  ) => {
     setActiveTab(newValue);
+  };
+
+  const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
+
+  const urls = {
+    preview: baseUrl + "/preview",
+    draft: baseUrl + "/draft",
+    analytics: baseUrl + "/published" + "?analytics=false",
   };
 
   return (
@@ -166,7 +169,7 @@ const Sidebar: React.FC = React.memo(() => {
             </Tooltip>
           )}
         </Box>
-        <PublishFlowButton />
+        <PublishFlowButton previewURL={urls.preview} />
       </Header>
       <TabList>
         <Tabs onChange={handleChange} value={activeTab} aria-label="">
