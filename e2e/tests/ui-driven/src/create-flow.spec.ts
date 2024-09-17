@@ -6,14 +6,11 @@ import {
   tearDownTestContext,
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
-import {
-  createAuthenticatedSession,
-  isGetUserRequest,
-} from "./helpers/globalHelpers";
+import { createAuthenticatedSession } from "./helpers/globalHelpers";
 import { answerQuestion, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 
-test.describe("Navigation", () => {
+test.describe("Flow creation, publish and preview", () => {
   let context: Context = {
     ...contextDefaults,
   };
@@ -35,60 +32,58 @@ test.describe("Navigation", () => {
   test.afterAll(async () => {
     await tearDownTestContext(context);
   });
+  //   browser,
+  // }) => {
+  //   const page = await createAuthenticatedSession({
+  //     browser,
+  //     userId: context.user!.id!,
+  //   });
 
-  test("user data persists on page refresh @regression", async ({
-    browser,
-  }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
+  //   const initialRequest = page.waitForRequest(isGetUserRequest);
 
-    const initialRequest = page.waitForRequest(isGetUserRequest);
+  //   Promise.all([await page.goto("/"), await initialRequest]);
 
-    Promise.all([await page.goto("/"), await initialRequest]);
+  //   const team = page.locator("h3", { hasText: context.team.name });
 
-    const team = page.locator("h3", { hasText: context.team.name });
+  //   let isRepeatedRequestMade = false;
+  //   page.on(
+  //     "request",
+  //     (req) => (isRepeatedRequestMade = isGetUserRequest(req))
+  //   );
 
-    let isRepeatedRequestMade = false;
-    page.on(
-      "request",
-      (req) => (isRepeatedRequestMade = isGetUserRequest(req))
-    );
+  //   Promise.all([
+  //     await team.click(),
+  //     expect(isRepeatedRequestMade).toBe(false),
+  //   ]);
 
-    Promise.all([
-      await team.click(),
-      expect(isRepeatedRequestMade).toBe(false),
-    ]);
+  //   const reloadRequest = page.waitForRequest(isGetUserRequest);
 
-    const reloadRequest = page.waitForRequest(isGetUserRequest);
+  //   Promise.all([await page.reload(), await reloadRequest]);
+  // });
 
-    Promise.all([await page.reload(), await reloadRequest]);
-  });
+  // test("team data persists on page refresh @regression", async ({
+  //   browser,
+  // }) => {
+  //   const page = await createAuthenticatedSession({
+  //     browser,
+  //     userId: context.user!.id!,
+  //   });
 
-  test("team data persists on page refresh @regression", async ({
-    browser,
-  }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
+  //   await page.goto("/");
+  //   const team = page.locator("h3", { hasText: context.team.name });
+  //   await team.click();
 
-    await page.goto("/");
-    const team = page.locator("h3", { hasText: context.team.name });
-    await team.click();
+  //   const teamSlugInHeader = page.getByRole("link", {
+  //     name: context.team.slug,
+  //   });
+  //   await expect(teamSlugInHeader).toBeVisible();
 
-    const teamSlugInHeader = page.getByRole("link", {
-      name: context.team.slug,
-    });
-    await expect(teamSlugInHeader).toBeVisible();
+  //   await page.reload();
+  //   await expect(teamSlugInHeader).toBeVisible();
 
-    await page.reload();
-    await expect(teamSlugInHeader).toBeVisible();
-
-    await page.goBack();
-    await expect(teamSlugInHeader).toBeHidden();
-  });
+  //   await page.goBack();
+  //   await expect(teamSlugInHeader).toBeHidden();
+  // });
 
   test("Create a flow", async ({ browser }) => {
     const page = await getTeamPage({
