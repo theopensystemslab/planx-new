@@ -2,5 +2,3 @@
 . "$(dirname -- "$0")/_/husky.sh"
 cd api.planx.uk
 pnpm dlx lint-staged
-cd ../e2e
-pnpm dlx lint-staged

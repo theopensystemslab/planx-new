@@ -14,7 +14,6 @@ import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/shared/Input";
 
-import { urls } from "..";
 import {
   AlteredNode,
   AlteredNodesSummaryContent,
@@ -22,7 +21,9 @@ import {
   ValidationChecks,
 } from "./PublishDialog";
 
-export const PublishFlowButton = () => {
+export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
+  previewURL,
+}) => {
   const [
     flowId,
     publishFlow,
@@ -147,7 +148,7 @@ export const PublishFlowButton = () => {
                 <Box pb={2}>
                   <Typography variant="body2">
                     {`Preview these content changes in-service before publishing `}
-                    <Link href={urls.preview} target="_blank">
+                    <Link href={previewURL} target="_blank">
                       {`here (opens in a new tab).`}
                     </Link>
                   </Typography>

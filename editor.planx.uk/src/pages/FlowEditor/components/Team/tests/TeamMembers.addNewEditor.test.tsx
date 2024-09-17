@@ -27,7 +27,7 @@ let initialState: FullStore;
 
 describe("when a user presses 'add a new editor'", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
     const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -46,7 +46,7 @@ describe("when a user presses 'add a new editor'", () => {
 describe("when a user fills in the 'add a new editor' form correctly", () => {
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
     const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
   });
@@ -90,5 +90,22 @@ describe("when the addNewEditor modal is rendered", () => {
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+});
+
+describe("'add a new editor' button is hidden from Templates team", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      teamSlug: "templates",
+    });
+  });
+
+  it("hides the button on the Templates team", async () => {
+    const { user: _user } = await setupTeamMembersScreen();
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    const addEditorButton =
+      within(teamEditorsTable).queryByText("Add a new editor");
+    expect(addEditorButton).not.toBeInTheDocument();
   });
 });

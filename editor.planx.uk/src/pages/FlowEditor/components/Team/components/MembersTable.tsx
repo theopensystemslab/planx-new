@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
@@ -29,6 +30,7 @@ const EditUserButton = styled(Button)(({ theme }) => ({
 export const MembersTable = ({
   members,
   showAddMemberButton,
+  showEditMemberButton,
 }: MembersTableProps) => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
@@ -107,16 +109,18 @@ export const MembersTable = ({
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{
-                    display: "flex",
+                    display: "table-cell",
                     flexDirection: "row",
                     alignItems: "center",
                   }}
                 >
-                  <StyledAvatar>
-                    {member.firstName[0]}
-                    {member.lastName[0]}
-                  </StyledAvatar>
-                  {member.firstName} {member.lastName}
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <StyledAvatar>
+                      {member.firstName[0]}
+                      {member.lastName[0]}
+                    </StyledAvatar>
+                    {member.firstName} {member.lastName}
+                  </Box>
                 </TableCell>
                 <TableCell>
                   <Chip
@@ -126,19 +130,21 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
-                <Permission.IsPlatformAdmin>
-                  <TableCell>
-                    <EditUserButton
-                      onClick={() => {
-                        setShowUpdateModal(true);
-                        setInitialValues(member);
-                      }}
-                      data-testId={`edit-button-${i}`}
-                    >
-                      Edit
-                    </EditUserButton>
-                  </TableCell>
-                </Permission.IsPlatformAdmin>
+                {showEditMemberButton && (
+                  <Permission.IsPlatformAdmin>
+                    <TableCell>
+                      <EditUserButton
+                        onClick={() => {
+                          setShowUpdateModal(true);
+                          setInitialValues(member);
+                        }}
+                        data-testId={`edit-button-${i}`}
+                      >
+                        Edit
+                      </EditUserButton>
+                    </TableCell>
+                  </Permission.IsPlatformAdmin>
+                )}
               </StyledTableRow>
             ))}
             {showAddMemberButton && (

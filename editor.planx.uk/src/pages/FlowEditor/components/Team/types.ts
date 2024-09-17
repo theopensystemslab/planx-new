@@ -8,6 +8,7 @@ export type TeamMember = Omit<User, "teams" | "isPlatformAdmin"> & {
 export interface MembersTableProps {
   members: TeamMember[];
   showAddMemberButton?: boolean;
+  showEditMemberButton?: boolean;
 }
 export interface AddNewEditorModalProps {
   showModal: boolean;
