@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header";
 import React, { useRef } from "react";
+import { useCurrentRoute } from "react-navi";
 
 import Flow from "./components/Flow";
 import Sidebar from "./components/Sidebar";
@@ -18,7 +19,9 @@ const EditorContainer = styled(Box)(() => ({
   maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
 }));
 
-const FlowEditor: React.FC<any> = ({ flow, breadcrumbs }) => {
+const FlowEditor = () => {
+  const [ flow, ...breadcrumbs ] = useCurrentRoute().url.pathname.split("/").at(-1)?.split(",") || [];
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
   const showSidebar = useStore((state) => state.showSidebar);
