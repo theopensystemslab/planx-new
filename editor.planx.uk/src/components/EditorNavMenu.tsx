@@ -13,8 +13,8 @@ import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
-import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
+import React from "react";
+import { useCurrentRoute, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import EditorIcon from "ui/icons/Editor";
 
@@ -24,11 +24,6 @@ interface Route {
   route: string;
   accessibleBy: Role[];
   disabled?: boolean;
-}
-
-interface RoutesForURL {
-  routes: Route[];
-  compact: boolean;
 }
 
 const MENU_WIDTH_COMPACT = "51px";
@@ -109,7 +104,6 @@ const MenuButton = styled(IconButton, {
 function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
-  const isRouteLoading = useLoadingRoute();
   const [teamSlug, flowSlug, user, canUserEditTeam, flowAnalyticsLink] =
     useStore((state) => [
       state.teamSlug,
@@ -231,29 +225,14 @@ function EditorNavMenu() {
     ...flowAnalyticsRoute,
   ];
 
-  const defaultRoutes: RoutesForURL = {
-    routes: globalLayoutRoutes,
-    compact: false,
-  };
-  const previousRoutes = useRef<RoutesForURL>(defaultRoutes);
-
-  const getRoutesForUrl = (url: string): RoutesForURL => {
-    // Return the previous value when route is loading to avoid flash of incorrect version
-    if (isRouteLoading) return previousRoutes.current;
-
-    let result: RoutesForURL;
-
-    if (flowSlug && url.includes(flowSlug)) {
-      result = { routes: flowLayoutRoutes, compact: true };
-    } else if (teamSlug && url.includes(teamSlug)) {
-      result = { routes: teamLayoutRoutes, compact: false };
-    } else {
-      result = defaultRoutes;
-    }
-
-    previousRoutes.current = result;
-
-    return result;
+  const getRoutesForUrl = (
+    url: string,
+  ): { routes: Route[]; compact: boolean } => {
+    if (flowSlug && url.includes(flowSlug))
+      return { routes: flowLayoutRoutes, compact: true };
+    if (teamSlug && url.includes(teamSlug))
+      return { routes: teamLayoutRoutes, compact: false };
+    return { routes: globalLayoutRoutes, compact: false };
   };
 
   const { routes, compact } = getRoutesForUrl(url.href);
