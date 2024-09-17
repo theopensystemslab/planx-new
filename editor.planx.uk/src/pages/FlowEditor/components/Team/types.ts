@@ -13,9 +13,16 @@ export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
 }
-
 export interface AddNewEditorFormValues {
   email: string;
   firstName: string;
   lastName: string;
+}
+
+export interface EditorModalProps {
+  showModal: boolean;
+  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  initialValues?: TeamMember;
+  userId?: number;
+  actionType: "add" | "edit";
 }

@@ -1,19 +1,19 @@
 import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
 import SelectInput from "ui/editor/SelectInput";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
-import { List, parseContent } from "./model";
+import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
@@ -90,6 +90,8 @@ function ListComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnChange: false,
   });
 
   return (
@@ -124,29 +126,31 @@ function ListComponent(props: Props) {
               required
             />
           </InputRow>
-          <InputRow>
-            <InputRowLabel>Schema</InputRowLabel>
-            <InputRowItem>
-              <SelectInput
-                value={formik.values.schemaName}
-                onChange={(e) => {
-                  formik.setFieldValue("schemaName", e.target.value);
-                  formik.setFieldValue(
-                    "schema",
-                    SCHEMAS.find(
-                      ({ name }) => name === (e.target.value as string),
-                    )?.schema,
-                  );
-                }}
-              >
-                {SCHEMAS.map(({ name }) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </SelectInput>
-            </InputRowItem>
-          </InputRow>
+          <ErrorWrapper error={formik.errors.schema?.max}>
+            <InputRow>
+              <InputRowLabel>Schema</InputRowLabel>
+              <InputRowItem>
+                <SelectInput
+                  value={formik.values.schemaName}
+                  onChange={(e) => {
+                    formik.setFieldValue("schemaName", e.target.value);
+                    formik.setFieldValue(
+                      "schema",
+                      SCHEMAS.find(
+                        ({ name }) => name === (e.target.value as string),
+                      )?.schema,
+                    );
+                  }}
+                >
+                  {SCHEMAS.map(({ name }) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </SelectInput>
+              </InputRowItem>
+            </InputRow>
+          </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation

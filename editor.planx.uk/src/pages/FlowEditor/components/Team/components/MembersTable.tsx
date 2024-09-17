@@ -1,4 +1,6 @@
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,16 +9,30 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AddButton } from "pages/Team";
 import React, { useState } from "react";
+import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
-import { MembersTableProps } from "./../types";
-import { AddNewEditorModal } from "./AddNewEditorModal";
+import { MembersTableProps, TeamMember } from "./../types";
+import { EditorUpsertModal } from "./EditorUpsertModal";
+
+const EditUserButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: "underline",
+  boxShadow: "none",
+  "&:hover": {
+    boxShadow: "none",
+    color: theme.palette.primary.main,
+    textDecoration: "underline",
+  },
+}));
 
 export const MembersTable = ({
   members,
   showAddMemberButton,
 }: MembersTableProps) => {
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
@@ -42,18 +58,24 @@ export const MembersTable = ({
           {showAddMemberButton && (
             <TableRow>
               <TableCell colSpan={3}>
-                <AddButton onClick={() => setShowModal(true)}>
+                <AddButton
+                  onClick={() => {
+                    setInitialValues(undefined);
+                    setShowAddModal(true);
+                  }}
+                >
                   Add a new editor
                 </AddButton>
               </TableCell>
             </TableRow>
           )}
         </Table>
-
-        {showModal && (
-          <AddNewEditorModal
-            showModal={showModal}
-            setShowModal={setShowModal}
+        {showAddModal && (
+          <EditorUpsertModal
+            showModal={showAddModal}
+            setShowModal={setShowAddModal}
+            initialValues={initialValues}
+            actionType={"add"}
           />
         )}
       </>
@@ -74,13 +96,14 @@ export const MembersTable = ({
               </TableCell>
               <TableCell>
                 <strong>Email</strong>
-              </TableCell>
+              </TableCell>{" "}
+              <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
           <TableBody
             data-testid={`members-table${showAddMemberButton && "-add-editor"}`}
           >
-            {members.map((member) => (
+            {members.map((member, i) => (
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{
@@ -103,12 +126,30 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
+                <Permission.IsPlatformAdmin>
+                  <TableCell>
+                    <EditUserButton
+                      onClick={() => {
+                        setShowUpdateModal(true);
+                        setInitialValues(member);
+                      }}
+                      data-testId={`edit-button-${i}`}
+                    >
+                      Edit
+                    </EditUserButton>
+                  </TableCell>
+                </Permission.IsPlatformAdmin>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
               <TableRow>
                 <TableCell colSpan={3}>
-                  <AddButton onClick={() => setShowModal(true)}>
+                  <AddButton
+                    onClick={() => {
+                      setInitialValues(undefined);
+                      setShowAddModal(true);
+                    }}
+                  >
                     Add a new editor
                   </AddButton>
                 </TableCell>
@@ -117,8 +158,22 @@ export const MembersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      {showModal && (
-        <AddNewEditorModal showModal={showModal} setShowModal={setShowModal} />
+      {showAddModal && (
+        <EditorUpsertModal
+          showModal={showAddModal}
+          setShowModal={setShowAddModal}
+          initialValues={initialValues}
+          actionType={"add"}
+        />
+      )}
+      {showUpdateModal && (
+        <EditorUpsertModal
+          showModal={showUpdateModal}
+          setShowModal={setShowUpdateModal}
+          initialValues={initialValues}
+          userId={initialValues?.id || 1}
+          actionType={"edit"}
+        />
       )}
     </>
   );

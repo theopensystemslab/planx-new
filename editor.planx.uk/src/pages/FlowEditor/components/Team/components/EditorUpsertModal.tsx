@@ -17,15 +17,21 @@ import {
   AddNewEditorErrors,
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
-import { addNewEditorFormSchema } from "../formSchema";
+import { upsertEditorSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
-import { AddNewEditorFormValues, AddNewEditorModalProps } from "../types";
-import { optimisticallyUpdateMembersTable } from "./lib/optimisticallyUpdateMembersTable";
+import { AddNewEditorFormValues, EditorModalProps } from "../types";
+import {
+  optimisticallyAddNewMember,
+  optimisticallyUpdateExistingMember,
+} from "./lib/optimisticallyUpdateMembersTable";
+import { updateTeamMember } from "../queries/updateUser";
 
-export const AddNewEditorModal = ({
+export const EditorUpsertModal = ({
   showModal,
   setShowModal,
-}: AddNewEditorModalProps) => {
+  initialValues,
+  actionType,
+}: EditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
 
@@ -37,16 +43,27 @@ export const AddNewEditorModal = ({
 
   const handleSubmit = async (
     values: AddNewEditorFormValues,
-    { resetForm }: FormikHelpers<AddNewEditorFormValues>,
+    { resetForm }: FormikHelpers<AddNewEditorFormValues>
   ) => {
+    switch (actionType) {
+      case "add":
+        handleSubmitToAddNewUser();
+        break;
+      case "edit":
+        handleSubmitToUpdateUser();
+    }
+    resetForm({ values });
+  };
+
+  const handleSubmitToAddNewUser = async () => {
     const { teamId, teamSlug } = useStore.getState();
 
     const createUserResult = await createAndAddUserToTeam(
-      values.email,
-      values.firstName,
-      values.lastName,
+      formik.values.email,
+      formik.values.firstName,
+      formik.values.lastName,
       teamId,
-      teamSlug,
+      teamSlug
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
@@ -61,26 +78,53 @@ export const AddNewEditorModal = ({
       return;
     }
     clearErrors();
-    optimisticallyUpdateMembersTable(values, createUserResult.id);
+    optimisticallyAddNewMember(formik.values, createUserResult.id);
     setShowModal(false);
     toast.success("Successfully added a user");
-    resetForm({ values });
+  };
+  const handleSubmitToUpdateUser = async () => {
+    if (!initialValues) {
+      return;
+    }
+    const response = await updateTeamMember(
+      initialValues.id,
+      formik.values
+    ).catch((err) => {
+      if (isUserAlreadyExistsError(err.message)) {
+        setShowUserAlreadyExistsError(true);
+      }
+      if (err.message === "Unable to update user") {
+        toast.error("Failed to update the user, please try again");
+      }
+      console.error(err);
+    });
+
+    if (!response) {
+      return;
+    }
+
+    clearErrors();
+    optimisticallyUpdateExistingMember(formik.values, initialValues.id);
+    setShowModal(false);
+    toast.success("Successfully updated a user");
   };
 
   const formik = useFormik<AddNewEditorFormValues>({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: initialValues?.firstName || "",
+      lastName: initialValues?.lastName || "",
+      email: initialValues?.email || "",
     },
-    validationSchema: addNewEditorFormSchema,
+    validationSchema: upsertEditorSchema,
     onSubmit: handleSubmit,
   });
 
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid="dialog-create-user"
+      data-testid={
+        actionType === "add" ? "dialog-create-user" : "dialog-edit-user"
+      }
       PaperProps={{
         sx: (theme) => ({
           width: "100%",
@@ -95,7 +139,11 @@ export const AddNewEditorModal = ({
       onClose={() => setShowModal(false)}
     >
       <form onSubmit={formik.handleSubmit}>
-        <DialogContent data-testid="modal-create-user">
+        <DialogContent
+          data-testid={
+            actionType === "add" ? "modal-create-user" : "modal-edit-user"
+          }
+        >
           <Box sx={{ mt: 1, mb: 4 }}>
             <Typography variant="h3" component="h2" id="dialog-heading">
               Add a new editor
@@ -112,6 +160,7 @@ export const AddNewEditorModal = ({
                     ? formik.errors.firstName
                     : undefined
                 }
+                value={formik.values.firstName}
               />
             </InputLabel>
             <InputLabel label="Last name" htmlFor="lastName">
@@ -124,6 +173,7 @@ export const AddNewEditorModal = ({
                     ? formik.errors.lastName
                     : undefined
                 }
+                value={formik.values.lastName}
               />
             </InputLabel>
             <InputLabel label="Email address" htmlFor="email">
@@ -136,6 +186,7 @@ export const AddNewEditorModal = ({
                     ? formik.errors.email
                     : undefined
                 }
+                value={formik.values.email}
               />
             </InputLabel>
           </InputGroup>
@@ -160,9 +211,14 @@ export const AddNewEditorModal = ({
                   variant="contained"
                   color="prompt"
                   type="submit"
-                  data-testid="modal-create-user-button"
+                  data-testid={
+                    actionType === "add"
+                      ? "modal-create-user-button"
+                      : "modal-edit-user-button"
+                  }
+                  disabled={!formik.dirty || !formik.isValid}
                 >
-                  Create user
+                  {actionType === "add" ? "Create user" : "Update user"}
                 </Button>
                 <Button
                   variant="contained"
