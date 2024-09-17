@@ -1,12 +1,12 @@
 import { Browser, expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
+import type { Context } from "../helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
-import { getTeamPage } from "./helpers/getPage";
-import { createAuthenticatedSession } from "./helpers/globalHelpers";
+} from "../helpers/context";
+import { getTeamPage } from "../helpers/getPage";
+import { createAuthenticatedSession } from "../helpers/globalHelpers";
 import {
   answerAddressInput,
   answerChecklist,
@@ -17,8 +17,8 @@ import {
   answerQuestion,
   answerTextInput,
   clickContinue,
-} from "./helpers/userActions";
-import { PlaywrightEditor } from "./pages/Editor";
+} from "../helpers/userActions";
+import { PlaywrightEditor } from "../pages/Editor";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: Context = {
