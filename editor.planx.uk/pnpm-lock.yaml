@@ -152,8 +152,8 @@ dependencies:
     specifier: ^2.30.0
     version: 2.30.0
   dompurify:
-    specifier: ^3.0.6
-    version: 3.0.6
+    specifier: ^3.1.6
+    version: 3.1.6
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -10793,8 +10793,8 @@ packages:
     dev: false
     optional: true
 
-  /dompurify@3.0.6:
-    resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
+  /dompurify@3.1.6:
+    resolution: {integrity: sha512-cTOAhc36AalkjtBpfG6O8JimdTMWNXjiePT2xQH/ppBGi/4uIpmj8eKyIkMJErXWARyINV/sB38yf8JCLF5pbQ==}
     dev: false
 
   /domutils@1.7.0:
