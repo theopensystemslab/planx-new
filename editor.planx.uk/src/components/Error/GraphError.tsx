@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import React from "react";
 
@@ -29,12 +28,11 @@ export const GraphErrorComponent: React.FC<{ error: GraphError }> = ({
   error,
 }) => (
   <Card>
-    <CardHeader />
     <ErrorSummaryContainer
       role="status"
       data-testid="error-summary-invalid-graph"
     >
-      <Typography variant="h4" component="h2" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom>
         Invalid graph
       </Typography>
       <Typography variant="body2">
