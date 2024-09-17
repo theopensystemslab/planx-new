@@ -399,12 +399,10 @@ describe("remove feature button", () => {
 
     const mapTwo = getByTestId("map-and-label-map");
 
-    await waitFor(() => {
-      expect(mapTwo).toHaveAttribute(
-        "drawgeojsondata",
-        `{"type":"FeatureCollection","features":[]}`
-      );
-    });
+    expect(mapTwo).toHaveAttribute(
+      "drawgeojsondata",
+      `{"type":"FeatureCollection","features":[]}`
+    );
   });
   // click remove - feature is removed
   // no map icon
