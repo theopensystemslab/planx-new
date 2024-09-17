@@ -7,7 +7,17 @@ import {
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import { answerQuestion, clickContinue } from "./helpers/userActions";
+import {
+  answerAddressInput,
+  answerChecklist,
+  answerContactInput,
+  answerDateInput,
+  answerFindProperty,
+  answerNumberInput,
+  answerQuestion,
+  answerTextInput,
+  clickContinue,
+} from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 
 test.describe("Flow creation, publish and preview", () => {
@@ -32,58 +42,6 @@ test.describe("Flow creation, publish and preview", () => {
   test.afterAll(async () => {
     await tearDownTestContext(context);
   });
-  //   browser,
-  // }) => {
-  //   const page = await createAuthenticatedSession({
-  //     browser,
-  //     userId: context.user!.id!,
-  //   });
-
-  //   const initialRequest = page.waitForRequest(isGetUserRequest);
-
-  //   Promise.all([await page.goto("/"), await initialRequest]);
-
-  //   const team = page.locator("h3", { hasText: context.team.name });
-
-  //   let isRepeatedRequestMade = false;
-  //   page.on(
-  //     "request",
-  //     (req) => (isRepeatedRequestMade = isGetUserRequest(req))
-  //   );
-
-  //   Promise.all([
-  //     await team.click(),
-  //     expect(isRepeatedRequestMade).toBe(false),
-  //   ]);
-
-  //   const reloadRequest = page.waitForRequest(isGetUserRequest);
-
-  //   Promise.all([await page.reload(), await reloadRequest]);
-  // });
-
-  // test("team data persists on page refresh @regression", async ({
-  //   browser,
-  // }) => {
-  //   const page = await createAuthenticatedSession({
-  //     browser,
-  //     userId: context.user!.id!,
-  //   });
-
-  //   await page.goto("/");
-  //   const team = page.locator("h3", { hasText: context.team.name });
-  //   await team.click();
-
-  //   const teamSlugInHeader = page.getByRole("link", {
-  //     name: context.team.slug,
-  //   });
-  //   await expect(teamSlugInHeader).toBeVisible();
-
-  //   await page.reload();
-  //   await expect(teamSlugInHeader).toBeVisible();
-
-  //   await page.goBack();
-  //   await expect(teamSlugInHeader).toBeHidden();
-  // });
 
   test("Create a flow", async ({ browser }) => {
     const page = await getTeamPage({
@@ -243,5 +201,65 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.locator("h1", { hasText: "Sorry, this is a test" }),
     ).toBeVisible();
+    await clickContinue({ page });
+    await answerChecklist({
+      page,
+      title: "A checklist title",
+      answers: ["Checklist item 1", "Second checklist item"],
+    });
+    await clickContinue({ page });
+    await expect(
+      page.locator("p", { hasText: "Tell us about your trees." }),
+    ).toBeVisible();
+    await answerTextInput(page, { answer: "My trees are lovely" });
+    await clickContinue({ page });
+    await expect(
+      page.locator("p", { hasText: "How old are you?" }),
+    ).toBeVisible();
+    await answerNumberInput(page, { answer: 30 });
+    await clickContinue({ page });
+    await expect(
+      page.locator("h1", { hasText: "When is your birthday?" }),
+    ).toBeVisible();
+    await answerDateInput(page, { day: 30, month: 12, year: 1980 });
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "What is your address?" }),
+    ).toBeVisible();
+    await answerAddressInput(page, {
+      addressLineOne: "1 Silver Street",
+      town: "Bamburgh",
+      postcode: "BG1 2SS",
+    });
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "What is your contact info?" }),
+    ).toBeVisible();
+    await answerContactInput(page, {
+      firstName: "Freddie",
+      lastName: "Mercury",
+      phoneNumber: "01234 555555",
+      email: "freddie@queen.com",
+    });
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "What you should do next" }),
+    ).toBeVisible();
+    await expect(
+      page.locator("h2", { hasText: "Have a cup of tea" }),
+    ).toBeVisible();
+    await expect(
+      page.locator("h2", { hasText: "Continue through this flow" }),
+    ).toBeVisible();
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "Find the property" }),
+    ).toBeVisible();
+    await answerFindProperty(page);
+    await clickContinue({ page });
   });
 });

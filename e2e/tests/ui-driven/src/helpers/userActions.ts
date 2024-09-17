@@ -232,3 +232,59 @@ export async function answerContactInput(
   await page.getByLabel("Phone number").fill(phoneNumber);
   await page.getByLabel("Email address").fill(email);
 }
+
+export async function answerTextInput(
+  page: Page,
+  {
+    answer,
+  }: {
+    answer: string;
+  },
+) {
+  await page.locator("label div input[type='text']").fill(answer);
+}
+
+export async function answerNumberInput(
+  page: Page,
+  {
+    answer,
+  }: {
+    answer: number;
+  },
+) {
+  await page.locator("label div input[type='number']").fill(answer.toString());
+}
+
+export async function answerDateInput(
+  page: Page,
+  {
+    day,
+    month,
+    year,
+  }: {
+    day: number;
+    month: number;
+    year: number;
+  },
+) {
+  await page.getByLabel("Day").fill(day.toString());
+  await page.getByLabel("Month").fill(month.toString());
+  await page.getByLabel("Year").fill(year.toString());
+}
+
+export async function answerAddressInput(
+  page: Page,
+  {
+    addressLineOne,
+    town,
+    postcode,
+  }: {
+    addressLineOne: string;
+    town: string;
+    postcode: string;
+  },
+) {
+  await page.getByLabel("Address line 1").fill(addressLineOne);
+  await page.getByLabel("Town").fill(town);
+  await page.getByLabel("Postcode").fill(postcode);
+}
