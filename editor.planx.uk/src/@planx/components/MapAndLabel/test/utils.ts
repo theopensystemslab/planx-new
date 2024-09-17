@@ -60,3 +60,26 @@ export const fillOutSecondHalfOfForm = async (user: UserEvent) => {
   await user.click(urgencySelect);
   await user.click(screen.getByRole("option", { name: /low/i }));
 };
+
+export const clickContinue = async (user: UserEvent) => {
+  const continueButton = screen.getByRole("button", { name: /Continue/ });
+  await user.click(continueButton);
+};
+
+export const checkErrorMessagesEmpty = async () => {
+  const errorMessages = screen.getAllByTestId(/error-message-input/);
+
+  errorMessages.forEach((message) => {
+    expect(message.textContent).toBeFalsy();
+  });
+};
+
+export const checkErrorMessagesPopulated = async () => {
+  const errorMessages = screen.getAllByTestId(/error-message-input/);
+
+  expect(errorMessages).toHaveLength(4);
+
+  errorMessages.forEach((message) => {
+    expect(message).not.toBeEmptyDOMElement();
+  });
+};

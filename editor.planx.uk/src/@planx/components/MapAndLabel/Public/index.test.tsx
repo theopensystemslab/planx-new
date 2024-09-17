@@ -11,6 +11,9 @@ import { props } from "../test/mocks/Trees";
 import {
   addFeaturesToMap,
   addMultipleFeatures,
+  checkErrorMessagesEmpty,
+  checkErrorMessagesPopulated,
+  clickContinue,
   fillOutFirstHalfOfForm,
   fillOutForm,
   fillOutSecondHalfOfForm,
@@ -88,27 +91,19 @@ describe("Basic UI", () => {
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
-    const { getAllByTestId, getByTestId, getByRole, user } = setup(
+    const { getByTestId, user, queryByRole } = setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
 
-    getByRole("tab", { name: /Tree 1/ });
+    const tabOne = queryByRole("tab", { name: /Tree 1/ });
+    expect(tabOne).toBeInTheDocument();
 
-    const continueButton = getByRole("button", { name: /Continue/ });
+    await clickContinue(user);
 
-    await user.click(continueButton);
-
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    // Date field has been removed so only 4 inputs
-    expect(errorMessages).toHaveLength(4);
-
-    errorMessages.forEach((message) => {
-      expect(message).not.toBeEmptyDOMElement();
-    });
+    await checkErrorMessagesPopulated();
   });
 
   // it shows all fields are required in a tab
@@ -133,38 +128,25 @@ describe("validation and error handling", () => {
     expect(secondTabPanel.childElementCount).toBeGreaterThan(0);
     expect(firstTabPanel.childElementCount).toBe(0);
 
-    const continueButton = getByRole("button", { name: /Continue/ });
-    await user.click(continueButton);
+    await clickContinue(user);
 
     // error messages appear
-    const errorMessagesTabTwo =
-      within(secondTabPanel).getAllByTestId(/error-message-input/);
-    expect(errorMessagesTabTwo).toHaveLength(4);
-
-    // error messages are empty but visible before error state induced
-    // this ensures they contain the error message text
-    errorMessagesTabTwo.forEach((input) => {
-      expect(input).not.toBeEmptyDOMElement();
-    });
+    await checkErrorMessagesPopulated();
 
     await user.click(firstTab);
 
     expect(firstTabPanel).toBeVisible();
 
     // error messages persist
-    const errorMessagesTabOne =
-      within(firstTabPanel).getAllByTestId(/error-message-input/);
-    expect(errorMessagesTabOne).toHaveLength(4);
+    await checkErrorMessagesPopulated();
   });
 
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, user } = setup(<MapAndLabel {...props} />);
     getByTestId("map-and-label-map");
 
-    const continueButton = getByRole("button", { name: /Continue/ });
-
-    await user.click(continueButton);
+    await clickContinue(user);
 
     const errorWrapper = getByTestId(/error-wrapper/);
 
@@ -173,7 +155,7 @@ describe("validation and error handling", () => {
   });
   // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
-    const { getByTestId, getByRole, user, getAllByTestId, queryByRole } = setup(
+    const { getByTestId, user, queryByRole } = setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -184,18 +166,9 @@ describe("validation and error handling", () => {
 
     expect(tabOne).toBeInTheDocument();
 
-    const continueButton = getByRole("button", { name: /Continue/ });
+    await clickContinue(user);
 
-    await user.click(continueButton);
-
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    // check error messages are correct amount and contain info
-    expect(errorMessages).toHaveLength(4);
-
-    errorMessages.forEach((message) => {
-      expect(message).not.toBeEmptyDOMElement();
-    });
+    await checkErrorMessagesPopulated();
 
     expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
   });
@@ -218,9 +191,7 @@ describe("basic interactions - happy path", () => {
   });
   // add feature, see a tab (one feature only)
   it("a user can input details on a single feature and submit", async () => {
-    const { getAllByTestId, getByTestId, getByRole, user } = setup(
-      <MapAndLabel {...props} />,
-    );
+    const { getByTestId, user } = setup(<MapAndLabel {...props} />);
 
     const map = getByTestId("map-and-label-map");
 
@@ -232,15 +203,9 @@ describe("basic interactions - happy path", () => {
 
     await fillOutForm(user);
 
-    const continueButton = getByRole("button", { name: /Continue/ });
+    await clickContinue(user);
 
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    await user.click(continueButton);
-
-    errorMessages.forEach((message) => {
-      expect(message.textContent).toBeFalsy();
-    });
+    await checkErrorMessagesEmpty();
   });
   // only one feature, fill out form, submit
   it("adding multiple features to the map adds multiple feature tabs", async () => {
@@ -292,15 +257,9 @@ describe("basic interactions - happy path", () => {
 
     await fillOutForm(user);
 
-    const continueButton = getByRole("button", { name: /Continue/ });
+    await clickContinue(user);
 
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    await user.click(continueButton);
-
-    errorMessages.forEach((message) => {
-      expect(message.textContent).toBeFalsy();
-    });
+    await checkErrorMessagesEmpty();
   });
   // add details to more than one tab, submit
   it("a user can input details on feature tabs in any order", async () => {
@@ -348,15 +307,9 @@ describe("basic interactions - happy path", () => {
     // Complete the filling out of the secondTabPanel
     await fillOutSecondHalfOfForm(user);
 
-    const continueButton = getByRole("button", { name: /Continue/ });
+    await clickContinue(user);
 
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    await user.click(continueButton);
-
-    errorMessages.forEach((message) => {
-      expect(message.textContent).toBeFalsy();
-    });
+    await checkErrorMessagesEmpty();
   });
 });
 
