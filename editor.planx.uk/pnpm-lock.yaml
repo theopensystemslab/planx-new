@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.3
     version: 1.0.0-alpha.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d47553e
-    version: github.com/theopensystemslab/planx-core/d47553e(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#5ed4195
+    version: github.com/theopensystemslab/planx-core/5ed4195(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -21061,6 +21061,7 @@ packages:
 
   /workbox-google-analytics@6.6.0:
     resolution: {integrity: sha512-p4DJa6OldXWd6M9zRl0H6vB9lkrmqYFkRQ2xEiNdBFp9U0LhsGO7hsBscVEyH9H2/3eZZt8c97NB2FD9U2NJ+Q==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 6.6.0
       workbox-core: 6.6.0
@@ -21360,9 +21361,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/d47553e(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d47553e}
-    id: github.com/theopensystemslab/planx-core/d47553e
+  github.com/theopensystemslab/planx-core/5ed4195(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5ed4195}
+    id: github.com/theopensystemslab/planx-core/5ed4195
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
