@@ -3,21 +3,24 @@ import Card from "@planx/components/shared/Preview/Card";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import React from "react";
 
-import { logger } from "../airbrake";
+import { logger } from "../../airbrake";
+import { GraphErrorComponent, isGraphError } from "./GraphError";
 
-function ErrorFallback(props: { error: Error }) {
-  logger.notify(props.error);
+const ErrorFallback: React.FC<{ error: Error }> = ({ error }) => {
+  if (isGraphError(error)) return <GraphErrorComponent error={error} />;
+
+  logger.notify(error);
 
   return (
     <Card>
       <ErrorSummaryContainer role="alert">
         <Typography variant="h4" component="h1" gutterBottom>
-          {(props.error.cause as string) || "Something went wrong"}
+          Something went wrong
         </Typography>
         <Typography>
-          {props.error?.message && (
+          {error.message && (
             <pre style={{ color: "#E91B0C", whiteSpace: "pre-line" }}>
-              {props.error.message}
+              {error.message}
             </pre>
           )}
         </Typography>
@@ -27,6 +30,6 @@ function ErrorFallback(props: { error: Error }) {
       </ErrorSummaryContainer>
     </Card>
   );
-}
+};
 
 export default ErrorFallback;
