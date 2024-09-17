@@ -1,7 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
 import { waitFor, within } from "@testing-library/react";
-import { exp } from "mathjs";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -12,7 +11,9 @@ import { props } from "../test/mocks/Trees";
 import {
   addFeaturesToMap,
   addMultipleFeatures,
+  fillOutFirstHalfOfForm,
   fillOutForm,
+  fillOutSecondHalfOfForm,
 } from "../test/utils";
 
 beforeAll(() => {
@@ -303,14 +304,9 @@ describe("basic interactions - happy path", () => {
   });
   // add details to more than one tab, submit
   it("a user can input details on feature tabs in any order", async () => {
-    const {
-      getByTestId,
-      getByRole,
-      user,
-      getByLabelText,
-      getByTitle,
-      getAllByTestId,
-    } = setup(<MapAndLabel {...props} />);
+    const { getByTestId, getByRole, user, getAllByTestId } = setup(
+      <MapAndLabel {...props} />,
+    );
     const map = getByTestId("map-and-label-map");
 
     addMultipleFeatures([point1, point2]);
@@ -327,41 +323,30 @@ describe("basic interactions - happy path", () => {
     expect(firstSpeciesInput).not.toHaveDisplayValue("Larch");
 
     // partially fill out firstTabPanel
-    await user.type(firstSpeciesInput, "Larch");
-    const firstWorkInput = getByLabelText("Proposed work");
-    await user.type(firstWorkInput, "Chopping it down");
+    await fillOutFirstHalfOfForm(user);
 
     await user.click(secondTab);
-
-    // partially fill out secondTabPanel
     const secondSpeciesInput = within(secondTabPanel).getByLabelText("Species");
     expect(secondSpeciesInput).not.toHaveDisplayValue("Larch");
-    await user.type(secondSpeciesInput, "Larch");
-    const secondWorkInput = getByLabelText("Proposed work");
-    await user.type(secondWorkInput, "Chopping it down");
+
+    // partially fill out secondTabPanel
+    await fillOutFirstHalfOfForm(user);
 
     await user.click(firstTab);
+
     // check that the data stays within the firstTabPanel
     expect(firstSpeciesInput).toHaveDisplayValue("Larch");
+
     // Complete the filling out of the firstTabPanel
-    const firstJustificationInput = getByLabelText("Justification");
-    await user.type(firstJustificationInput, "Cause I can");
-    const firstUrgencyDiv = getByTitle("Urgency");
-    const firstUrgencySelect = within(firstUrgencyDiv).getByRole("combobox");
-    await user.click(firstUrgencySelect);
-    await user.click(getByRole("option", { name: /low/i }));
+    await fillOutSecondHalfOfForm(user);
 
     await user.click(secondTab);
 
     // check that the data stays within the secondTabPanel
     expect(secondSpeciesInput).toHaveDisplayValue("Larch");
+
     // Complete the filling out of the secondTabPanel
-    const secondJustificationInput = getByLabelText("Justification");
-    await user.type(secondJustificationInput, "Cause I can");
-    const secondUrgencyDiv = getByTitle("Urgency");
-    const secondUrgencySelect = within(secondUrgencyDiv).getByRole("combobox");
-    await user.click(secondUrgencySelect);
-    await user.click(getByRole("option", { name: /low/i }));
+    await fillOutSecondHalfOfForm(user);
 
     const continueButton = getByRole("button", { name: /Continue/ });
 
