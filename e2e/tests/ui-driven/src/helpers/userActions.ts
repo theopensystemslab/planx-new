@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { mockOSPlacesResponse } from "../mocks/osPlacesResponse";
+import { setupOSMockResponse } from "../mocks/osPlacesResponse";
 import type { Context } from "./context";
 import { findSessionId, getGraphQLClient } from "./context";
 import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers";
@@ -121,7 +121,7 @@ export async function answerChecklist({
   title: string;
   answers: string[];
 }) {
-  const checklist = await page.getByRole("heading").filter({
+  const checklist = page.getByRole("heading").filter({
     hasText: title,
   });
   await expect(checklist).toBeVisible();
@@ -202,18 +202,6 @@ export async function answerFindProperty(page: Page) {
   await page.getByLabel("Postcode").fill("SW1 1AA");
   await page.getByLabel("Select an address").click();
   await page.getByRole("option").first().click();
-}
-
-async function setupOSMockResponse(page: Page) {
-  const ordnanceSurveryPlacesEndpoint = new RegExp(
-    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/,
-  );
-  await page.route(ordnanceSurveryPlacesEndpoint, async (route) => {
-    await route.fulfill({
-      status: 200,
-      body: JSON.stringify(mockOSPlacesResponse),
-    });
-  });
 }
 
 export async function answerContactInput(

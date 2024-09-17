@@ -1,3 +1,5 @@
+import { Page } from "@playwright/test";
+
 export const mockOSPlacesResponse = {
   header: {
     uri: "https://api.os.uk/search/places/v1/postcode?postcode=SW1%201AA&dataset=LPI&maxResults=100&output_srs=EPSG%3A4326&lr=EN&offset=0",
@@ -58,3 +60,14 @@ export const mockOSPlacesResponse = {
     },
   ],
 };
+export async function setupOSMockResponse(page: Page) {
+  const ordnanceSurveryPlacesEndpoint = new RegExp(
+    /proxy\/ordnance-survey\/search\/places\/v1\/postcode\/*/,
+  );
+  await page.route(ordnanceSurveryPlacesEndpoint, async (route) => {
+    await route.fulfill({
+      status: 200,
+      body: JSON.stringify(mockOSPlacesResponse),
+    });
+  });
+}
