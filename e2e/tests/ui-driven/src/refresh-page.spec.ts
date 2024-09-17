@@ -46,7 +46,7 @@ test.describe("Refresh page", () => {
     let isRepeatedRequestMade = false;
     page.on(
       "request",
-      (req) => (isRepeatedRequestMade = isGetUserRequest(req))
+      (req) => (isRepeatedRequestMade = isGetUserRequest(req)),
     );
 
     Promise.all([
