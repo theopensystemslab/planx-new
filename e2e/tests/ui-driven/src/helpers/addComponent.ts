@@ -1,40 +1,41 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Locator, Page } from "@playwright/test";
 
-const createBaseInput = async (
+const createBaseComponent = async (
   page: Page,
   locatingNode: Locator,
-  type: string,
+  type: ComponentType,
   title?: string,
   options?: string[],
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
-  await page.locator("select").selectOption({ label: type });
+  await page.locator("select").selectOption({ value: type.toString() });
 
   switch (type) {
-    case "Question":
+    case ComponentType.Question:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
-        await createOptions(options, "add new", page);
+        await createComponentOptions(options, "add new", page);
       }
       break;
-    case "Notice":
+    case ComponentType.Notice:
       await page.getByPlaceholder("Notice").fill(title || "");
       break;
-    case "Checklist":
+    case ComponentType.Checklist:
       await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
-        await createOptions(options, "add new option", page);
+        await createComponentOptions(options, "add new option", page);
       }
       break;
-    case "Text Input":
+    case ComponentType.TextInput:
       await page.getByPlaceholder("Title").fill(title || "");
       break;
-    case "Number Input":
+    case ComponentType.NumberInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("eg square metres").fill(options?.[0] || "");
       break;
-    case "Date Input":
+    case ComponentType.DateInput:
       await page.getByPlaceholder("Title").fill(title || "");
       // fill with hardcoded dates for now
       await page.locator("id=undefined-min-day").fill("01");
@@ -44,26 +45,62 @@ const createBaseInput = async (
       await page.locator("id=undefined-max-month").fill("12");
       await page.locator("id=undefined-max-year").fill("2199");
       break;
-    case "Address Input":
+    case ComponentType.AddressInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
-    case "Contact Input":
+    case ComponentType.ContactInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      break;
+    case ComponentType.TaskList:
+      await page.getByPlaceholder("Main Title").fill(title || "");
+      if (options) {
+        let index = 0;
+        for (const option of options) {
+          await page.locator("button").filter({ hasText: "add new" }).click();
+          await page
+            .getByPlaceholder("Title")
+            .nth(index + 1) // ignore the main title field
+            .fill(option);
+          index++;
+        }
+      }
+      break;
+    case ComponentType.Review:
+      // Don't need to change anything so dummy click
+      await page
+        .getByPlaceholder("Check your answers before sending your application")
+        .click();
+      break;
+    case ComponentType.FindProperty:
+      break;
+    case ComponentType.PlanningConstraints:
+      break;
+    case ComponentType.DrawBoundary:
+      break;
+    case ComponentType.NextSteps:
+      if (options) {
+        let index = 0;
+        for (const option of options) {
+          await page.locator("button").filter({ hasText: "add new" }).click();
+          await page
+            .getByPlaceholder("Title")
+            .nth(index + 1) // ignore the main title field
+            .fill(option);
+          index++;
+        }
+      }
+      break;
+    case ComponentType.FileUpload:
+      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
 
-  // convert type name to lowercase, with dashes if there are spaces
-  const buttonName = type.toLowerCase().replace(/\s/g, "-");
-  await page
-    .locator("button")
-    .filter({
-      hasText: `Create ${buttonName}`,
-    })
-    .click();
+  await page.locator('button[form="modal"][type="submit"]').click();
 };
 
 export const createQuestionWithOptions = async (
@@ -72,7 +109,13 @@ export const createQuestionWithOptions = async (
   questionText: string,
   options: string[],
 ) => {
-  await createBaseInput(page, locatingNode, "Question", questionText, options);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.Question,
+    questionText,
+    options,
+  );
 };
 
 export const createNotice = async (
@@ -80,7 +123,12 @@ export const createNotice = async (
   locatingNode: Locator,
   noticeText: string,
 ) => {
-  await createBaseInput(page, locatingNode, "Notice", noticeText);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.Notice,
+    noticeText,
+  );
 };
 
 export const createChecklist = async (
@@ -89,10 +137,10 @@ export const createChecklist = async (
   checklistTitle: string,
   checklistOptions: string[],
 ) => {
-  createBaseInput(
+  await createBaseComponent(
     page,
     locatingNode,
-    "Checklist",
+    ComponentType.Checklist,
     checklistTitle,
     checklistOptions,
   );
@@ -103,7 +151,12 @@ export const createTextInput = async (
   locatingNode: Locator,
   inputTitle: string,
 ) => {
-  await createBaseInput(page, locatingNode, "Text Input", inputTitle);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.TextInput,
+    inputTitle,
+  );
 };
 
 export const createNumberInput = async (
@@ -112,9 +165,13 @@ export const createNumberInput = async (
   inputTitle: string,
   inputUnits: string,
 ) => {
-  await createBaseInput(page, locatingNode, "Number Input", inputTitle, [
-    inputUnits,
-  ]);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.NumberInput,
+    inputTitle,
+    [inputUnits],
+  );
 };
 
 export const createDateInput = async (
@@ -122,7 +179,12 @@ export const createDateInput = async (
   locatingNode: Locator,
   inputTitle: string,
 ) => {
-  await createBaseInput(page, locatingNode, "Date Input", inputTitle);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.DateInput,
+    inputTitle,
+  );
 };
 
 export const createAddressInput = async (
@@ -131,9 +193,13 @@ export const createAddressInput = async (
   inputTitle: string,
   inputDataField: string,
 ) => {
-  await createBaseInput(page, locatingNode, "Address Input", inputTitle, [
-    inputDataField,
-  ]);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.AddressInput,
+    inputTitle,
+    [inputDataField],
+  );
 };
 
 export const createContactInput = async (
@@ -142,11 +208,82 @@ export const createContactInput = async (
   inputTitle: string,
   inputDataField: string,
 ) => {
-  await createBaseInput(page, locatingNode, "Contact Input", inputTitle, [
-    inputDataField,
-  ]);
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.ContactInput,
+    inputTitle,
+    [inputDataField],
+  );
 };
-async function createOptions(
+
+export const createTaskList = async (
+  page: Page,
+  locatingNode: Locator,
+  title: string,
+  taskListOptions: string[],
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.TaskList,
+    title,
+    taskListOptions,
+  );
+};
+
+export const createReview = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Review);
+};
+
+export const createFindProperty = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.FindProperty);
+};
+
+export const createPlanningConstraints = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.PlanningConstraints,
+  );
+};
+
+export const createDrawBoundary = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.DrawBoundary);
+};
+
+export const createNextSteps = async (
+  page: Page,
+  locatingNode: Locator,
+  nextSteps: string[],
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.NextSteps,
+    undefined,
+    nextSteps,
+  );
+};
+
+export const createFileUpload = async (
+  page: Page,
+  locatingNode: Locator,
+  dataField: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.FileUpload,
+    undefined,
+    [dataField],
+  );
+};
+
+async function createComponentOptions(
   options: string[],
   buttonText: string,
   page: Page,

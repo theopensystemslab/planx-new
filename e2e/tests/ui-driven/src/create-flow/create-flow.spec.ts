@@ -4,9 +4,16 @@ import {
   createChecklist,
   createContactInput,
   createDateInput,
+  createDrawBoundary,
+  createFileUpload,
+  createFindProperty,
+  createNextSteps,
   createNotice,
   createNumberInput,
+  createPlanningConstraints,
   createQuestionWithOptions,
+  createReview,
+  createTaskList,
   createTextInput,
 } from "../helpers/addComponent";
 import type { Context } from "../helpers/context";
@@ -142,38 +149,48 @@ test.describe("Navigation", () => {
       noBranchNoticeText,
     );
 
-    // TODO: find a nicer way to find the next node
-    let nextNode = page.locator(".hanger > a").nth(5);
-    await createChecklist(page, nextNode, "A checklist title", [
+    const getNextNode = () => page.locator(".hanger > a").last();
+
+    await createChecklist(page, getNextNode(), "A checklist title", [
       "Checklist item 1",
       "Second checklist item",
       "The third checklist item",
     ]);
 
-    nextNode = page.locator(".hanger > a").nth(7);
-    await createTextInput(page, nextNode, "Tell us about your trees.");
+    await createTextInput(page, getNextNode(), "Tell us about your trees.");
+    await createNumberInput(page, getNextNode(), "How old are you?", "years");
+    await createDateInput(page, getNextNode(), "When is your birthday?");
 
-    nextNode = page.locator(".hanger > a").nth(8);
-    await createNumberInput(page, nextNode, "How old are you?", "years");
-
-    nextNode = page.locator(".hanger > a").nth(9);
-    await createDateInput(page, nextNode, "When is your birthday?");
-
-    nextNode = page.locator(".hanger > a").nth(10);
     await createAddressInput(
       page,
-      nextNode,
+      getNextNode(),
       "What is your address?",
       "some data field",
     );
 
-    nextNode = page.locator(".hanger > a").nth(11);
     await createContactInput(
       page,
-      nextNode,
+      getNextNode(),
       "What is your contact info?",
       "some data field",
     );
+
+    await createTaskList(page, getNextNode(), "What you should do next", [
+      "Have a cup of tea",
+      "Continue through this flow",
+    ]);
+
+    await createFindProperty(page, getNextNode());
+    await createDrawBoundary(page, getNextNode());
+    await createPlanningConstraints(page, getNextNode());
+    await createFileUpload(page, getNextNode(), "some data field");
+
+    await createNextSteps(page, getNextNode(), [
+      "A possible next step",
+      "Another option",
+    ]);
+
+    await createReview(page, getNextNode());
 
     const nodes = page.locator(".card");
     await expect(nodes.getByText(questionText)).toBeVisible();
@@ -185,6 +202,16 @@ test.describe("Navigation", () => {
     await expect(nodes.getByText("When is your birthday?")).toBeVisible();
     await expect(nodes.getByText("What is your address?")).toBeVisible();
     await expect(nodes.getByText("What is your contact info?")).toBeVisible();
+    await expect(nodes.getByText("What you should do next")).toBeVisible();
+    await expect(nodes.getByText("Find property")).toBeVisible();
+    await expect(nodes.getByText("Confirm your location plan")).toBeVisible();
+    await expect(nodes.getByText("Planning constraints")).toBeVisible();
+    await expect(nodes.getByText("File upload")).toBeVisible();
+
+    await expect(nodes.getByText("Next steps")).toBeVisible();
+    await expect(
+      nodes.getByText("Check your answers before sending your application"),
+    ).toBeVisible();
   });
 
   test("Cannot preview an unpublished flow", async ({
