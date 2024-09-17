@@ -202,37 +202,41 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h1", { hasText: "Sorry, this is a test" }),
     ).toBeVisible();
     await clickContinue({ page });
+
     await answerChecklist({
       page,
       title: "A checklist title",
       answers: ["Checklist item 1", "Second checklist item"],
     });
     await clickContinue({ page });
-    await expect(
-      page.locator("p", { hasText: "Tell us about your trees." }),
-    ).toBeVisible();
-    await answerTextInput(page, { answer: "My trees are lovely" });
-    await clickContinue({ page });
-    await expect(
-      page.locator("p", { hasText: "How old are you?" }),
-    ).toBeVisible();
-    await answerNumberInput(page, { answer: 30 });
-    await clickContinue({ page });
-    await expect(
-      page.locator("h1", { hasText: "When is your birthday?" }),
-    ).toBeVisible();
-    await answerDateInput(page, { day: 30, month: 12, year: 1980 });
-    await clickContinue({ page });
 
-    await expect(
-      page.locator("h1", { hasText: "What is your address?" }),
-    ).toBeVisible();
+    await answerTextInput(page, {
+      expectedQuestion: "Tell us about your trees.",
+      answer: "My trees are lovely",
+      continueToNext: true,
+    });
+
+    await answerNumberInput(page, {
+      expectedQuestion: "How old are you?",
+      answer: 30,
+      continueToNext: true,
+    });
+
+    await answerDateInput(page, {
+      expectedQuestion: "When is your birthday?",
+      day: 30,
+      month: 12,
+      year: 1980,
+      continueToNext: true,
+    });
+
     await answerAddressInput(page, {
+      expectedQuestion: "What is your address?",
       addressLineOne: "1 Silver Street",
       town: "Bamburgh",
       postcode: "BG1 2SS",
+      continueToNext: true,
     });
-    await clickContinue({ page });
 
     await expect(
       page.locator("h1", { hasText: "What is your contact info?" }),
@@ -256,9 +260,6 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    await expect(
-      page.locator("h1", { hasText: "Find the property" }),
-    ).toBeVisible();
     await answerFindProperty(page);
     await clickContinue({ page });
   });

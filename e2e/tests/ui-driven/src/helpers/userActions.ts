@@ -196,6 +196,9 @@ export async function submitCardDetails(page: Page) {
 
 export async function answerFindProperty(page: Page) {
   await setupOSMockResponse(page);
+  await expect(
+    page.locator("h1", { hasText: "Find the property" }),
+  ).toBeVisible();
   await page.getByLabel("Postcode").fill("SW1 1AA");
   await page.getByLabel("Select an address").click();
   await page.getByRole("option").first().click();
@@ -236,55 +239,92 @@ export async function answerContactInput(
 export async function answerTextInput(
   page: Page,
   {
+    expectedQuestion,
     answer,
+    continueToNext,
   }: {
+    expectedQuestion: string;
     answer: string;
+    continueToNext: boolean;
   },
 ) {
+  await expect(page.locator("p", { hasText: expectedQuestion })).toBeVisible();
   await page.locator("label div input[type='text']").fill(answer);
+  if (continueToNext) {
+    await clickContinue({ page });
+  }
 }
 
 export async function answerNumberInput(
   page: Page,
   {
+    expectedQuestion,
     answer,
+    continueToNext,
   }: {
+    expectedQuestion: string;
     answer: number;
+    continueToNext: boolean;
   },
 ) {
+  await expect(page.locator("p", { hasText: expectedQuestion })).toBeVisible();
   await page.locator("label div input[type='number']").fill(answer.toString());
+  if (continueToNext) {
+    await clickContinue({ page });
+  }
 }
 
 export async function answerDateInput(
   page: Page,
   {
+    expectedQuestion,
+
     day,
     month,
     year,
+    continueToNext,
   }: {
+    expectedQuestion: string;
+
     day: number;
     month: number;
     year: number;
+    continueToNext: boolean;
   },
 ) {
+  await expect(page.locator("h1", { hasText: expectedQuestion })).toBeVisible();
   await page.getByLabel("Day").fill(day.toString());
   await page.getByLabel("Month").fill(month.toString());
   await page.getByLabel("Year").fill(year.toString());
+
+  if (continueToNext) {
+    await clickContinue({ page });
+  }
 }
 
 export async function answerAddressInput(
   page: Page,
   {
+    expectedQuestion,
+
     addressLineOne,
     town,
     postcode,
+    continueToNext,
   }: {
+    expectedQuestion: string;
+
     addressLineOne: string;
     town: string;
     postcode: string;
+    continueToNext: boolean;
   },
 ) {
+  await expect(page.locator("h1", { hasText: expectedQuestion })).toBeVisible();
   await page.getByLabel("Address line 1").fill(addressLineOne);
   await page.getByLabel("Town").fill(town);
   await page.getByLabel("Postcode").fill(postcode);
+  if (continueToNext) {
+    await clickContinue({ page });
+  }
 }
