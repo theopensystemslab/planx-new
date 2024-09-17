@@ -3,6 +3,7 @@ import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import EditorNavMenu from "components/EditorNavMenu";
 import { HEADER_HEIGHT_EDITOR } from "components/Header";
+import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import React, { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -36,6 +37,7 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => (
   <>
+    <RouteLoadingIndicator />
     <Header />
     <DashboardWrap>
       <EditorNavMenu />
