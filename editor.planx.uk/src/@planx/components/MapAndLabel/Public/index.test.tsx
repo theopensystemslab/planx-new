@@ -121,7 +121,6 @@ describe("validation and error handling", () => {
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
-    getByTestId("map-and-label-map");
 
     addMultipleFeatures([point1, point2]);
 
@@ -156,7 +155,6 @@ describe("validation and error handling", () => {
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, user } = setup(<MapAndLabel {...props} />);
-    getByTestId("map-and-label-map");
 
     await clickContinue(user);
 
@@ -235,8 +233,7 @@ describe("basic interactions - happy path", () => {
   });
 
   it("adding multiple features to the map adds multiple feature tabs", async () => {
-    const { getByTestId, queryByRole } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
+    const { queryByRole } = setup(<MapAndLabel {...props} />);
 
     addMultipleFeatures([point1, point2, point3]);
 
@@ -288,7 +285,6 @@ describe("basic interactions - happy path", () => {
   });
   it("a user can input details on feature tabs in any order", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
 
     addMultipleFeatures([point1, point2]);
 
