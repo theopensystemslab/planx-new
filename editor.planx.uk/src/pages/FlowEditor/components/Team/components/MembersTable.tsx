@@ -16,14 +16,29 @@ import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
 import { EditorUpsertModal } from "./EditorUpsertModal";
 
-const EditUserButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.main,
+const TableRowButton = styled(Button)(() => ({
   textDecoration: "underline",
   boxShadow: "none",
   "&:hover": {
     boxShadow: "none",
-    color: theme.palette.primary.main,
     textDecoration: "underline",
+    backgroundColor: "transparent",
+  },
+}));
+const EditUserButton = styled(TableRowButton)(({ theme }) => ({
+  color: theme.palette.primary.light,
+  textDecoration: "underline",
+  boxShadow: "none",
+  "&:hover": {
+    boxShadow: "none",
+    color: theme.palette.primary.dark,
+    textDecoration: "underline",
+  },
+}));
+const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
+  color: theme.palette.secondary.dark,
+  "&:hover": {
+    color: theme.palette.secondary.contrastText,
   },
 }));
 
@@ -130,6 +145,7 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
+<<<<<<< HEAD
                 {showEditMemberButton && (
                   <Permission.IsPlatformAdmin>
                     <TableCell>
@@ -145,6 +161,34 @@ export const MembersTable = ({
                     </TableCell>
                   </Permission.IsPlatformAdmin>
                 )}
+=======
+                <Permission.IsPlatformAdmin>
+                  <TableCell>
+                    <EditUserButton
+                      onClick={() => {
+                        setShowUpdateModal(true);
+                        setInitialValues(member);
+                      }}
+                      data-testId={`edit-button-${i}`}
+                    >
+                      Edit
+                    </EditUserButton>
+                  </TableCell>
+                </Permission.IsPlatformAdmin>
+                <Permission.IsPlatformAdmin>
+                  <TableCell>
+                    <RemoveUserButton
+                      onClick={() => {
+                        setShowUpdateModal(true);
+                        setInitialValues(member);
+                      }}
+                      data-testId={`remove-button-${i}`}
+                    >
+                      Remove
+                    </RemoveUserButton>
+                  </TableCell>
+                </Permission.IsPlatformAdmin>
+>>>>>>> 1a9cc18b (init remove button work)
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
