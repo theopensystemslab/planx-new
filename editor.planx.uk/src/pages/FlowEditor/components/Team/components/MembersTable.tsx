@@ -29,6 +29,7 @@ const EditUserButton = styled(Button)(({ theme }) => ({
 export const MembersTable = ({
   members,
   showAddMemberButton,
+  showEditMemberButton,
 }: MembersTableProps) => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
@@ -126,19 +127,21 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
-                <Permission.IsPlatformAdmin>
-                  <TableCell>
-                    <EditUserButton
-                      onClick={() => {
-                        setShowUpdateModal(true);
-                        setInitialValues(member);
-                      }}
-                      data-testId={`edit-button-${i}`}
-                    >
-                      Edit
-                    </EditUserButton>
-                  </TableCell>
-                </Permission.IsPlatformAdmin>
+                {showEditMemberButton && (
+                  <Permission.IsPlatformAdmin>
+                    <TableCell>
+                      <EditUserButton
+                        onClick={() => {
+                          setShowUpdateModal(true);
+                          setInitialValues(member);
+                        }}
+                        data-testId={`edit-button-${i}`}
+                      >
+                        Edit
+                      </EditUserButton>
+                    </TableCell>
+                  </Permission.IsPlatformAdmin>
+                )}
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
