@@ -91,7 +91,7 @@ describe("Basic UI", () => {
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
-    const { getByTestId, user, queryByRole } = setup(
+    const { getByTestId, user, queryByRole, getAllByTestId } = setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -101,9 +101,21 @@ describe("validation and error handling", () => {
     const tabOne = queryByRole("tab", { name: /Tree 1/ });
     expect(tabOne).toBeInTheDocument();
 
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+    const firstSpeciesInput = within(firstTabPanel).getByLabelText("Species");
+
+    // check input is empty
+    expect(firstSpeciesInput).toHaveDisplayValue("");
+
     await clickContinue(user);
 
-    await checkErrorMessagesPopulated();
+    const errorMessages = getAllByTestId(/error-message-input/);
+
+    expect(errorMessages).toHaveLength(4);
+
+    errorMessages.forEach((message) => {
+      expect(message).not.toBeEmptyDOMElement();
+    });
   });
 
   // it shows all fields are required in a tab
@@ -178,18 +190,16 @@ test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
   it("adding an item to the map adds a feature tab", async () => {
-    const { getByTestId, getByRole } = setup(<MapAndLabel {...props} />);
+    const { getByTestId } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
-
-    getByRole("tab", { name: /Tree 1/ });
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
     expect(firstTabPanel).toBeVisible();
   });
-  // add feature, see a tab (one feature only)
+
   it("a user can input details on a single feature and submit", async () => {
     const { getByTestId, user } = setup(<MapAndLabel {...props} />);
 
@@ -207,7 +217,7 @@ describe("basic interactions - happy path", () => {
 
     await checkErrorMessagesEmpty();
   });
-  // only one feature, fill out form, submit
+
   it("adding multiple features to the map adds multiple feature tabs", async () => {
     const { getByTestId, queryByRole } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
@@ -220,6 +230,7 @@ describe("basic interactions - happy path", () => {
     const thirdTab = queryByRole("tab", { name: /Tree 3/ });
     const fourthTab = queryByRole("tab", { name: /Tree 4/ });
 
+    // check the right amount are in the document
     expect(firstTab).toBeInTheDocument();
     expect(secondTab).toBeInTheDocument();
     expect(thirdTab).toBeInTheDocument();
@@ -229,7 +240,7 @@ describe("basic interactions - happy path", () => {
     expect(secondTab).toHaveAttribute("aria-selected", "false");
     expect(firstTab).toHaveAttribute("aria-selected", "false");
   });
-  // add more than one feature, see multiple tabs
+
   it("a user can input details on multiple features and submit", async () => {
     const { getByTestId, getByRole, user, getAllByTestId } = setup(
       <MapAndLabel {...props} />,
@@ -263,9 +274,7 @@ describe("basic interactions - happy path", () => {
   });
   // add details to more than one tab, submit
   it("a user can input details on feature tabs in any order", async () => {
-    const { getByTestId, getByRole, user, getAllByTestId } = setup(
-      <MapAndLabel {...props} />,
-    );
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
 
     addMultipleFeatures([point1, point2]);
