@@ -364,8 +364,7 @@ describe("remove feature button", () => {
     expect(tabOnePanel).not.toBeInTheDocument();
   });
   it("removes a feature from the form - multiple features", async () => {
-    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
+    const { getByRole, user } = setup(<MapAndLabel {...props} />);
 
     addMultipleFeatures([point1, point2]);
 
