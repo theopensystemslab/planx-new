@@ -344,7 +344,7 @@ describe("copy feature select", () => {
 
     expect(copyInput).toHaveAttribute("aria-disabled", "true");
   });
-  // no copy select if only one feature
+
   it("is enabled once multiple features are present", async () => {
     const { getByTitle } = setup(<MapAndLabel {...props} />);
 
@@ -356,7 +356,7 @@ describe("copy feature select", () => {
 
     expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
   });
-  // copy select enabled once you add more features
+
   it("lists all other features as options (the current feature is not listed)", async () => {
     const { getByTitle, user, queryByRole } = setup(<MapAndLabel {...props} />);
     addMultipleFeatures([point1, point2]);
@@ -374,7 +374,7 @@ describe("copy feature select", () => {
 
     expect(listItemTwo).not.toBeInTheDocument();
   });
-  // current tree is not an option in the copy select
+
   it("copies all data from one feature to another", async () => {
     const { getByTitle, user, getByLabelText, getByRole } = setup(
       <MapAndLabel {...props} />
@@ -418,7 +418,7 @@ describe("copy feature select", () => {
     expect(justificationInputOne).toHaveDisplayValue("Cause I can");
     expect(urgencySelectOne).toHaveTextContent("Low");
   });
-  // all data fields are populated from one field to another
+
   it("should not have any accessibility violations", async () => {
     const { getByTitle, user, container } = setup(<MapAndLabel {...props} />);
     addMultipleFeatures([point1, point2]);
@@ -434,7 +434,6 @@ describe("copy feature select", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
-  // axe checks
 });
 
 describe("remove feature button", () => {
