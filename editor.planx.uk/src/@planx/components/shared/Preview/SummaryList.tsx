@@ -627,11 +627,20 @@ function Page(props: ComponentProps) {
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
-      <Box component="dd" sx={{ gap: 2, display: "flex", flexDirection: "column" }}>
+      <Box
+        component="dd"
+        sx={{ gap: 2, display: "flex", flexDirection: "column" }}
+      >
         {fields.map((field) => (
-          <Box>
-            <Typography fontWeight={FONT_WEIGHT_SEMI_BOLD}>{field.data.title}</Typography>
-            <Typography>{answers[0][field.data.fn]}</Typography>
+          <Box key={field.data.fn}>
+            <Typography fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+              {field.data.title}
+            </Typography>
+            <Typography>
+              {field.type === "map"
+                ? `${answers[0][field.data.fn].length || 0} features`
+                : answers[0][field.data.fn]}
+            </Typography>
           </Box>
         ))}
       </Box>
