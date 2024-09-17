@@ -18,15 +18,13 @@ import {
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
 import { upsertEditorSchema } from "../formSchema";
-import {
-  createAndAddUserToTeam,
-  updateTeamMember,
-} from "../queries/createAndAddUserToTeam";
+import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 import {
   optimisticallyAddNewMember,
   optimisticallyUpdateExistingMember,
 } from "./lib/optimisticallyUpdateMembersTable";
+import { updateTeamMember } from "../queries/updateUser";
 
 export const EditorUpsertModal = ({
   showModal,
@@ -45,7 +43,7 @@ export const EditorUpsertModal = ({
 
   const handleSubmit = async (
     values: AddNewEditorFormValues,
-    { resetForm }: FormikHelpers<AddNewEditorFormValues>,
+    { resetForm }: FormikHelpers<AddNewEditorFormValues>
   ) => {
     switch (actionType) {
       case "add":
@@ -65,7 +63,7 @@ export const EditorUpsertModal = ({
       formik.values.firstName,
       formik.values.lastName,
       teamId,
-      teamSlug,
+      teamSlug
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
@@ -90,7 +88,7 @@ export const EditorUpsertModal = ({
     }
     const response = await updateTeamMember(
       initialValues.id,
-      formik.values,
+      formik.values
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
