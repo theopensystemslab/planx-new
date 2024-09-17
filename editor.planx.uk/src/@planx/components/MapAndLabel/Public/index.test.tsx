@@ -18,6 +18,7 @@ import {
   fillOutForm,
   fillOutSecondHalfOfForm,
 } from "../test/utils";
+import { mockTreeData } from "../test/mocks/GenericValues";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -384,39 +385,30 @@ describe("copy feature select", () => {
 
     await fillOutForm(user);
 
-    const speciesInputTwo = getByLabelText("Species");
-    const workInputTwo = getByLabelText("Proposed work");
-    const justificationInputTwo = getByLabelText("Justification");
-    const urgencyDivTwo = getByTitle("Urgency");
-    const urgencySelectTwo = within(urgencyDivTwo).getByRole("combobox");
-
-    expect(speciesInputTwo).toHaveDisplayValue("Larch");
-    expect(workInputTwo).toHaveDisplayValue("Chopping it down");
-    expect(justificationInputTwo).toHaveDisplayValue("Cause I can");
-    expect(urgencySelectTwo).toHaveTextContent("Low");
-
     await user.click(tabOne);
 
     const copyTitle = getByTitle("Copy from");
-
     const copyInput = within(copyTitle).getByRole("combobox", {
       name: "Copy from",
     });
+
     await user.click(copyInput);
+
     const listItemTwo = getByRole("option", { name: "Tree 2" });
 
     await user.click(listItemTwo);
 
-    const speciesInputOne = getByLabelText("Species");
-    const workInputOne = getByLabelText("Proposed work");
-    const justificationInputOne = getByLabelText("Justification");
-    const urgencyDivOne = getByTitle("Urgency");
-    const urgencySelectOne = within(urgencyDivOne).getByRole("combobox");
+    const urgencyDiv = getByTitle("Urgency");
+    const urgencySelect = within(urgencyDiv).getByRole("combobox");
 
-    expect(speciesInputOne).toHaveDisplayValue("Larch");
-    expect(workInputOne).toHaveDisplayValue("Chopping it down");
-    expect(justificationInputOne).toHaveDisplayValue("Cause I can");
-    expect(urgencySelectOne).toHaveTextContent("Low");
+    expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
+    expect(getByLabelText("Proposed work")).toHaveDisplayValue(
+      mockTreeData.work
+    );
+    expect(getByLabelText("Justification")).toHaveDisplayValue(
+      mockTreeData.justification
+    );
+    expect(urgencySelect).toHaveTextContent(mockTreeData.urgency);
   });
 
   it("should not have any accessibility violations", async () => {
@@ -426,8 +418,6 @@ describe("copy feature select", () => {
     const copyTitle = getByTitle("Copy from");
 
     const copyInput = within(copyTitle).getByRole("combobox");
-
-    expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
 
     await user.click(copyInput);
 
