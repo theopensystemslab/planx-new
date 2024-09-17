@@ -208,7 +208,7 @@ it("does not trigger handleSubmit when errors exist", async () => {
 test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
-  it.only("adding an item to the map adds a feature tab", async () => {
+  it("adding an item to the map adds a feature tab", async () => {
     const { getByTestId } = setup(<MapAndLabel {...props} />);
 
     let map = getByTestId("map-and-label-map");
