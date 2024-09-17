@@ -7,7 +7,6 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { mockTreeData } from "../test/mocks/GenericValues";
 import { point1, point2, point3 } from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import {
@@ -46,7 +45,6 @@ describe("Basic UI", () => {
   it("removes the prompt once a feature is added", async () => {
     const { queryByText, getByTestId } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
@@ -64,7 +62,6 @@ describe("Basic UI", () => {
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
@@ -79,7 +76,6 @@ describe("Basic UI", () => {
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
@@ -95,14 +91,13 @@ describe("validation and error handling", () => {
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
-    expect(getByRole("tab", { name: /Tree 1/ })).toBeInTheDocument();
+    getByRole("tab", { name: /Tree 1/ });
 
     const continueButton = getByRole("button", { name: /Continue/ });
-    expect(continueButton).toBeInTheDocument();
+
     await user.click(continueButton);
 
     const errorMessages = getAllByTestId(/error-message-input/);
@@ -118,24 +113,18 @@ describe("validation and error handling", () => {
   // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
+    getByTestId("map-and-label-map");
 
     addMultipleFeatures([point1, point2]);
 
     // vertical side tab query
     const firstTab = getByRole("tab", { name: /Tree 1/ });
-    const secondTab = getByRole("tab", { name: /Tree 2/ });
-
-    // side tab validation
-    expect(firstTab).toBeInTheDocument();
-    expect(secondTab).toBeInTheDocument();
 
     // form for each tab
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
 
-    // default is to start on seond tab panel since we add two points
+    // default is to start on second tab panel since we add two points
     expect(firstTabPanel).not.toBeVisible();
     expect(secondTabPanel).toBeVisible();
 
@@ -170,8 +159,7 @@ describe("validation and error handling", () => {
   // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
+    getByTestId("map-and-label-map");
 
     const continueButton = getByRole("button", { name: /Continue/ });
 
@@ -180,25 +168,23 @@ describe("validation and error handling", () => {
     const errorWrapper = getByTestId(/error-wrapper/);
 
     const errorMessage = within(errorWrapper).getByText(/You must plot /);
-
-    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toBeVisible();
   });
   // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
-    const { getByTestId, getByRole, user, getAllByTestId } = setup(
+    const { getByTestId, getByRole, user, getAllByTestId, queryByRole } = setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
-    const tabOne = getByRole("tab", { name: /Tree 1/ });
+    const tabOne = queryByRole("tab", { name: /Tree 1/ });
 
     expect(tabOne).toBeInTheDocument();
 
     const continueButton = getByRole("button", { name: /Continue/ });
-    expect(continueButton).toBeInTheDocument();
+
     await user.click(continueButton);
 
     const errorMessages = getAllByTestId(/error-message-input/);
@@ -220,11 +206,10 @@ describe("basic interactions - happy path", () => {
   it("adding an item to the map adds a feature tab", async () => {
     const { getByTestId, getByRole } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
-    expect(getByRole("tab", { name: /Tree 1/ })).toBeInTheDocument();
+    getByRole("tab", { name: /Tree 1/ });
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
@@ -232,12 +217,11 @@ describe("basic interactions - happy path", () => {
   });
   // add feature, see a tab (one feature only)
   it("a user can input details on a single feature and submit", async () => {
-    const { getAllByTestId, getByTestId, getByRole, user, debug } = setup(
+    const { getAllByTestId, getByTestId, getByRole, user } = setup(
       <MapAndLabel {...props} />,
     );
 
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addFeaturesToMap(map, [point1]);
 
@@ -248,7 +232,6 @@ describe("basic interactions - happy path", () => {
     await fillOutForm(user);
 
     const continueButton = getByRole("button", { name: /Continue/ });
-    expect(continueButton).toBeInTheDocument();
 
     const errorMessages = getAllByTestId(/error-message-input/);
 
@@ -260,23 +243,25 @@ describe("basic interactions - happy path", () => {
   });
   // only one feature, fill out form, submit
   it("adding multiple features to the map adds multiple feature tabs", async () => {
-    const { getByTestId, getByRole, user, getByLabelText, getAllByTestId } =
-      setup(<MapAndLabel {...props} />);
+    const { getByTestId, queryByRole } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addMultipleFeatures([point1, point2, point3]);
 
     // vertical side tab query
-    const firstTab = getByRole("tab", { name: /Tree 1/ });
-    const secondTab = getByRole("tab", { name: /Tree 2/ });
-    const thirdTab = getByRole("tab", { name: /Tree 3/ });
+    const firstTab = queryByRole("tab", { name: /Tree 1/ });
+    const secondTab = queryByRole("tab", { name: /Tree 2/ });
+    const thirdTab = queryByRole("tab", { name: /Tree 3/ });
+    const fourthTab = queryByRole("tab", { name: /Tree 4/ });
 
     expect(firstTab).toBeInTheDocument();
     expect(secondTab).toBeInTheDocument();
     expect(thirdTab).toBeInTheDocument();
+    expect(fourthTab).not.toBeInTheDocument();
 
     expect(thirdTab).toHaveAttribute("aria-selected", "true");
+    expect(secondTab).toHaveAttribute("aria-selected", "false");
+    expect(firstTab).toHaveAttribute("aria-selected", "false");
   });
   // add more than one feature, see multiple tabs
   it("a user can input details on multiple features and submit", async () => {
@@ -284,7 +269,6 @@ describe("basic interactions - happy path", () => {
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addMultipleFeatures([point1, point2]);
 
@@ -308,7 +292,6 @@ describe("basic interactions - happy path", () => {
     await fillOutForm(user);
 
     const continueButton = getByRole("button", { name: /Continue/ });
-    expect(continueButton).toBeInTheDocument();
 
     const errorMessages = getAllByTestId(/error-message-input/);
 
@@ -329,7 +312,6 @@ describe("basic interactions - happy path", () => {
       getAllByTestId,
     } = setup(<MapAndLabel {...props} />);
     const map = getByTestId("map-and-label-map");
-    expect(map).toBeInTheDocument();
 
     addMultipleFeatures([point1, point2]);
 
@@ -382,7 +364,6 @@ describe("basic interactions - happy path", () => {
     await user.click(getByRole("option", { name: /low/i }));
 
     const continueButton = getByRole("button", { name: /Continue/ });
-    expect(continueButton).toBeInTheDocument();
 
     const errorMessages = getAllByTestId(/error-message-input/);
 
