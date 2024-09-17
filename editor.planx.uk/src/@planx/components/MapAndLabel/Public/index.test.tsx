@@ -6,7 +6,12 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { point1, point2, point3 } from "../test/mocks/geojson";
+import {
+  mockFeaturePointObj,
+  point1,
+  point2,
+  point3,
+} from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import {
   addFeaturesToMap,
@@ -203,15 +208,18 @@ it("does not trigger handleSubmit when errors exist", async () => {
 test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
-  it("adding an item to the map adds a feature tab", async () => {
+  it.only("adding an item to the map adds a feature tab", async () => {
     const { getByTestId } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
 
+    let map = getByTestId("map-and-label-map");
     addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
     expect(firstTabPanel).toBeVisible();
+
+    map = getByTestId("map-and-label-map");
+    expect(map).toHaveAttribute("drawgeojsondata", mockFeaturePointObj);
   });
 
   it("a user can input details on a single feature and submit", async () => {
@@ -345,7 +353,6 @@ describe("copy feature select", () => {
   it.todo("should not have any accessibility violations");
   // axe checks
 });
-
 describe("remove feature button", () => {
   it("removes a feature from the form - single feature", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
@@ -385,10 +392,9 @@ describe("remove feature button", () => {
     expect(tabOne).toBeInTheDocument();
     expect(tabOnePanel).toBeInTheDocument();
   });
-
   it("removes a feature from the map", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
+    let map = getByTestId("map-and-label-map");
 
     addFeaturesToMap(map, [point1]);
 
@@ -396,9 +402,9 @@ describe("remove feature button", () => {
 
     await user.click(removeButton);
 
-    const mapTwo = getByTestId("map-and-label-map");
+    map = getByTestId("map-and-label-map");
 
-    expect(mapTwo).toHaveAttribute(
+    expect(map).toHaveAttribute(
       "drawgeojsondata",
       `{"type":"FeatureCollection","features":[]}`
     );
