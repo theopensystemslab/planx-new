@@ -12,12 +12,13 @@ import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { NotFoundBoundary, Router, View } from "react-navi";
+import { NotFoundBoundary, Router, useLoadingRoute, View } from "react-navi";
 import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
 
 // init airbrake before everything else
 import * as airbrake from "./airbrake";
+import DelayedLoadingIndicator from "./components/DelayedLoadingIndicator";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
@@ -54,6 +55,8 @@ const hasJWT = (): boolean | void => {
 const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const isLoading = useLoadingRoute();
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       // set the page title based on whatever heading is currently shown
@@ -79,7 +82,11 @@ const Layout: React.FC<{
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={defaultTheme}>
         <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
-          {children}
+          {isLoading ? (
+            <DelayedLoadingIndicator msDelayBeforeVisible={500} />
+          ) : (
+            children
+          )}
         </NotFoundBoundary>
       </ThemeProvider>
     </StyledEngineProvider>
