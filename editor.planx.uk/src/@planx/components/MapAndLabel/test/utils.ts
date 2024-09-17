@@ -11,7 +11,7 @@ import { mockTreeData } from "./mocks/GenericValues";
  */
 export const addFeaturesToMap = async (
   map: HTMLElement,
-  features: Feature<Point | Polygon, { label: string }>[],
+  features: Feature<Point | Polygon, { label: string }>[]
 ) => {
   const mockEvent = new CustomEvent("geojsonChange", {
     detail: {
@@ -22,7 +22,7 @@ export const addFeaturesToMap = async (
 };
 
 export const addMultipleFeatures = (
-  featureArray: Feature<Point, { label: string }>[],
+  featureArray: Feature<Point, { label: string }>[]
 ) => {
   const map = screen.getByTestId("map-and-label-map");
   const pointsAddedArray: Feature<Point, { label: string }>[] = [];
@@ -30,19 +30,6 @@ export const addMultipleFeatures = (
     pointsAddedArray.push(feature);
     addFeaturesToMap(map, pointsAddedArray);
   });
-};
-
-export const fillOutForm = async (user: UserEvent) => {
-  const speciesInput = screen.getByLabelText("Species");
-  await user.type(speciesInput, mockTreeData.species);
-  const workInput = screen.getByLabelText("Proposed work");
-  await user.type(workInput, mockTreeData.work);
-  const justificationInput = screen.getByLabelText("Justification");
-  await user.type(justificationInput, mockTreeData.justification);
-  const urgencyDiv = screen.getByTitle("Urgency");
-  const urgencySelect = within(urgencyDiv).getByRole("combobox");
-  await user.click(urgencySelect);
-  await user.click(screen.getByRole("option", { name: /low/i }));
 };
 
 export const fillOutFirstHalfOfForm = async (user: UserEvent) => {
@@ -59,6 +46,11 @@ export const fillOutSecondHalfOfForm = async (user: UserEvent) => {
   const urgencySelect = within(urgencyDiv).getByRole("combobox");
   await user.click(urgencySelect);
   await user.click(screen.getByRole("option", { name: /low/i }));
+};
+
+export const fillOutForm = async (user: UserEvent) => {
+  await fillOutFirstHalfOfForm(user);
+  await fillOutSecondHalfOfForm(user);
 };
 
 export const clickContinue = async (user: UserEvent) => {
