@@ -1,9 +1,9 @@
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
+import { logger } from "airbrake";
 import React from "react";
 
-import { logger } from "../../airbrake";
 import { GraphErrorComponent, isGraphError } from "./GraphError";
 
 const ErrorFallback: React.FC<{ error: Error }> = ({ error }) => {
