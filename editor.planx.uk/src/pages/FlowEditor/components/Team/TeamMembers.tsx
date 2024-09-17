@@ -15,7 +15,13 @@ import { MembersTable } from "./components/MembersTable";
 import { TeamMember } from "./types";
 
 export const TeamMembers = () => {
-  const teamMembers = useStore((state) => state.teamMembers);
+  const [teamMembers, teamSlug] = useStore((state) => [
+    state.teamMembers, 
+    state.teamSlug,
+  ]);
+
+  // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
+  const isNotTemplatesTeam = teamSlug !== "templates";
 
   const teamMembersByRole = groupBy(teamMembers, "role") as Record<
     Role,
@@ -42,7 +48,7 @@ export const TeamMembers = () => {
         <Typography variant="body1">
           Editors have access to edit your services.
         </Typography>
-        <MembersTable members={activeMembers} showAddMemberButton />
+        <MembersTable members={activeMembers} showAddMemberButton={isNotTemplatesTeam} showEditMemberButton={isNotTemplatesTeam} />
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
@@ -51,7 +57,7 @@ export const TeamMembers = () => {
         <Typography variant="body1">
           Admins have editor access across all teams.
         </Typography>
-        <MembersTable members={platformAdmins} />
+        <MembersTable members={platformAdmins} showEditMemberButton={isNotTemplatesTeam} />
       </SettingsSection>
       {archivedMembers.length > 0 && (
         <SettingsSection>

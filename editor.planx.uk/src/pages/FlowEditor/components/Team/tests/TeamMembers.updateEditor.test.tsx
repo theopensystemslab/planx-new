@@ -17,6 +17,7 @@ describe("when a user presses 'edit button'", () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
+      teamSlug: "planx",
     });
 
     const { user } = await setupTeamMembersScreen();
@@ -56,7 +57,7 @@ describe("when a user presses 'edit button'", () => {
 
 describe("when a user deletes an input value", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
   });
   it("displays an error message when clicking away", async () => {
     const { user } = await setupTeamMembersScreen();
@@ -92,7 +93,7 @@ describe("when a user deletes an input value", () => {
 
 describe("when a user updates a field correctly", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
     const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -124,7 +125,7 @@ describe("when a user updates a field correctly", () => {
 
 describe("when a user correctly updates an Editor", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData });
+    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
     const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -164,11 +165,25 @@ describe("when a user correctly updates an Editor", () => {
   });
 });
 
+describe("'edit' button is hidden from Templates team", () => {
+  beforeEach(async() => {
+    useStore.setState({ teamMembers: mockTeamMembersData, user: mockPlatformAdminUser, teamSlug: "templates" });
+  });
+
+  it("hides the button on the Templates team", async () => {
+    const { user: _user } = await setupTeamMembersScreen();
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    const editButton = within(teamEditorsTable).queryByTestId("edit-button-0");
+    expect(editButton).not.toBeInTheDocument();
+  });
+});
+
 describe("when a user is not a platform admin", () => {
   beforeEach(async () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
+      team: "planx",
     });
 
     await setupTeamMembersScreen();
