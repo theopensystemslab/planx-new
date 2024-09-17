@@ -1,6 +1,9 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
+import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { Feature, Point, Polygon } from "geojson";
 import { act } from "react-dom/test-utils";
+
+import { mockTreeData } from "./mocks/GenericValues";
 
 /**
  * Helper to mock a user's interaction with the @opensystemslab/map element
@@ -8,7 +11,7 @@ import { act } from "react-dom/test-utils";
  */
 export const addFeaturesToMap = async (
   map: HTMLElement,
-  features: Feature<Point | Polygon, { label: string }>[],
+  features: Feature<Point | Polygon, { label: string }>[]
 ) => {
   const mockEvent = new CustomEvent("geojsonChange", {
     detail: {
@@ -19,12 +22,56 @@ export const addFeaturesToMap = async (
 };
 
 export const addMultipleFeatures = (
-  featureArray: Feature<Point, { label: string }>[],
+  featureArray: Feature<Point, { label: string }>[]
 ) => {
   const map = screen.getByTestId("map-and-label-map");
   const pointsAddedArray: Feature<Point, { label: string }>[] = [];
   featureArray.forEach((feature) => {
     pointsAddedArray.push(feature);
     addFeaturesToMap(map, pointsAddedArray);
+  });
+};
+
+export const fillOutFirstHalfOfForm = async (user: UserEvent) => {
+  const speciesInput = screen.getByLabelText("Species");
+  await user.type(speciesInput, mockTreeData.species);
+  const workInput = screen.getByLabelText("Proposed work");
+  await user.type(workInput, mockTreeData.work);
+};
+
+export const fillOutSecondHalfOfForm = async (user: UserEvent) => {
+  const justificationInput = screen.getByLabelText("Justification");
+  await user.type(justificationInput, mockTreeData.justification);
+  const urgencyDiv = screen.getByTitle("Urgency");
+  const urgencySelect = within(urgencyDiv).getByRole("combobox");
+  await user.click(urgencySelect);
+  await user.click(screen.getByRole("option", { name: /low/i }));
+};
+
+export const fillOutForm = async (user: UserEvent) => {
+  await fillOutFirstHalfOfForm(user);
+  await fillOutSecondHalfOfForm(user);
+};
+
+export const clickContinue = async (user: UserEvent) => {
+  const continueButton = screen.getByRole("button", { name: /Continue/ });
+  await user.click(continueButton);
+};
+
+export const checkErrorMessagesEmpty = async () => {
+  const errorMessages = screen.getAllByTestId(/error-message-input/);
+
+  errorMessages.forEach((message) => {
+    expect(message.textContent).toBeFalsy();
+  });
+};
+
+export const checkErrorMessagesPopulated = async () => {
+  const errorMessages = screen.getAllByTestId(/error-message-input/);
+
+  expect(errorMessages).toHaveLength(4);
+
+  errorMessages.forEach((message) => {
+    expect(message).not.toBeEmptyDOMElement();
   });
 };
