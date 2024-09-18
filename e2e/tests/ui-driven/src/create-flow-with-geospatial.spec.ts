@@ -84,7 +84,7 @@ test.describe("Flow creation, publish and preview", () => {
     page.getByLabel("Offline").click();
     page.getByRole("button", { name: "Save", disabled: false }).click();
     await expect(
-      page.getByText("Service settings updated successfully")
+      page.getByText("Service settings updated successfully"),
     ).toBeVisible();
 
     // Exit back to main Editor page
@@ -96,9 +96,11 @@ test.describe("Flow creation, publish and preview", () => {
 
     // view published flow
     await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`
+      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
-
+    await expect(
+      page.locator("h1", { hasText: "Find the property" }),
+    ).toBeVisible();
     await answerFindProperty(page);
     await clickContinue({ page });
   });

@@ -12,7 +12,6 @@ import {
   answerChecklist,
   answerContactInput,
   answerDateInput,
-  answerFindProperty,
   answerNumberInput,
   answerQuestion,
   answerTextInput,
@@ -251,6 +250,5 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h2", { hasText: "Continue through this flow" }),
     ).toBeVisible();
     await clickContinue({ page });
-
   });
 });
