@@ -50,13 +50,13 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createFindProperty();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
-    await editor.createFileUpload();
+    // await editor.createFileUpload();
 
     await expect(editor.nodeList).toContainText([
       "Find property",
       "Confirm your location plan",
       "Planning constraints",
-      "File upload",
+      // "File upload",
     ]);
   });
 

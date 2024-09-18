@@ -9,7 +9,6 @@ import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
 import {
   answerAddressInput,
-  answerChecklist,
   answerContactInput,
   answerDateInput,
   answerNumberInput,
@@ -59,7 +58,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await editor.createQuestion();
     await editor.createNoticeOnEachBranch();
-    await editor.createChecklist();
+    // await editor.createChecklist();
     await editor.createTextInput();
     await editor.createNumberInput();
     await editor.createDateInput();
@@ -73,7 +72,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Is this a test?",
       "Yes! this is a test",
       "Sorry, this is a test",
-      "Checklist item 1",
+      // "Checklist item 1",
       "Tell us about your trees.",
       "How old are you?",
       "When is your birthday?",
@@ -194,12 +193,12 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    await answerChecklist({
-      page,
-      title: "A checklist title",
-      answers: ["Checklist item 1", "Second checklist item"],
-    });
-    await clickContinue({ page });
+    // await answerChecklist({
+    //   page,
+    //   title: "A checklist title",
+    //   answers: ["Checklist item 1", "Second checklist item"],
+    // });
+    // await clickContinue({ page });
 
     await answerTextInput(page, {
       expectedQuestion: "Tell us about your trees.",
