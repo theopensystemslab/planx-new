@@ -1,5 +1,5 @@
 import { FlowGraph, IndexedNode } from "@opensystemslab/planx-core/types";
-import { SearchResults } from "hooks/useSearch";
+import type { SearchResults } from "hooks/useSearch/types";
 
 export const flow: FlowGraph = {
   _root: {

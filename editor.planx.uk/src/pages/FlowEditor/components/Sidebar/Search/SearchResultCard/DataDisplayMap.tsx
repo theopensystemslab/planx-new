@@ -2,7 +2,7 @@ import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
-import { SearchResult } from "hooks/useSearch";
+import type { SearchResult } from "hooks/useSearch/types";
 import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";

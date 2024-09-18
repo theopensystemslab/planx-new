@@ -1,19 +1,7 @@
-import Fuse, { FuseOptionKey, IFuseOptions } from "fuse.js";
+import Fuse, { IFuseOptions } from "fuse.js";
 import { useEffect, useMemo, useState } from "react";
 
-interface UseSearchProps<T extends object> {
-  list: T[];
-  keys: Array<FuseOptionKey<T>>;
-}
-
-export interface SearchResult<T extends object> {
-  item: T;
-  key: string;
-  matchIndices: [number, number][];
-  refIndex: number;
-}
-
-export type SearchResults<T extends object> = SearchResult<T>[];
+import { SearchResults, UseSearchProps } from "./types";
 
 export const useSearch = <T extends object>({
   list,

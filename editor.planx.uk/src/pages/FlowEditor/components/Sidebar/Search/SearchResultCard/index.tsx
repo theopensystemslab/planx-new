@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType, IndexedNode } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
-import type { SearchResult } from "hooks/useSearch";
+import type { SearchResult } from "hooks/useSearch/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useNavigation } from "react-navi";

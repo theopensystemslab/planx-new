@@ -3,7 +3,7 @@ import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { IndexedNode } from "@opensystemslab/planx-core/types";
-import type { SearchResults } from "hooks/useSearch";
+import type { SearchResults } from "hooks/useSearch/types";
 import React from "react";
 
 import { SearchResultCard } from "./SearchResultCard";

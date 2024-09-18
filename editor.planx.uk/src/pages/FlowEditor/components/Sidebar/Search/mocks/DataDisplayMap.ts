@@ -1,6 +1,6 @@
 import { FlowGraph, IndexedNode } from "@opensystemslab/planx-core/types";
 
-import { SearchResult } from "../../../../../../hooks/useSearch";
+import type { SearchResult } from "../../../../../../hooks/useSearch/types";
 
 /** Simple flow which contains an example of each component which has unique rules for finding data values and displaying these as search results  */
 export const mockFlow: FlowGraph = {
