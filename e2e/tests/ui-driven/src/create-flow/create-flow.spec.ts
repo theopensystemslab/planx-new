@@ -260,6 +260,9 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    await expect(
+      page.locator("h1", { hasText: "Find the property" }),
+    ).toBeVisible();
     await answerFindProperty(page);
     await clickContinue({ page });
   });
