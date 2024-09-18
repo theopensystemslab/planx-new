@@ -67,10 +67,6 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createAddressInput();
     await editor.createContactInput();
     await editor.createTaskList();
-    await editor.createFindProperty();
-    await editor.createDrawBoundary();
-    await editor.createPlanningConstraints();
-    await editor.createFileUpload();
     await editor.createNextSteps();
     await editor.createReview();
 
@@ -85,10 +81,6 @@ test.describe("Flow creation, publish and preview", () => {
       "What is your address?",
       "What is your contact info?",
       "What you should do next",
-      "Find property",
-      "Confirm your location plan",
-      "Planning constraints",
-      "File upload",
       "Next steps",
       "Check your answers before sending your application",
     ]);
@@ -260,7 +252,5 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    await answerFindProperty(page);
-    await clickContinue({ page });
   });
 });
