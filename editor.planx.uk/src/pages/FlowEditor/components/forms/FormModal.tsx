@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
-import ErrorFallback from "components/ErrorFallback";
+import ErrorFallback from "components/Error/ErrorFallback";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";

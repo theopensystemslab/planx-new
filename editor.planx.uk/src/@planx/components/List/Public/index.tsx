@@ -8,11 +8,8 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { SiteAddress } from "@planx/components/FindProperty/model";
-import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/ui";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -56,14 +53,8 @@ const InactiveListCardLayout = styled(Box)(({ theme }) => ({
 const ActiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const {
-    schema,
-    saveItem,
-    cancelEditItem,
-    errors,
-    formik,
-    activeIndex,
-  } = useListContext();
+  const { schema, saveItem, cancelEditItem, errors, formik, activeIndex } =
+    useListContext();
 
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -119,8 +110,7 @@ const ActiveListCard: React.FC<{
 const InactiveListCard: React.FC<{
   index: number;
 }> = ({ index: i }) => {
-  const { schema, formik, removeItem, editItem } =
-    useListContext();
+  const { schema, formik, removeItem, editItem } = useListContext();
 
   const mapPreview = schema.fields.find((field) => field.type === "map");
 
@@ -189,8 +179,7 @@ const Root = () => {
     listProps,
   } = useListContext();
 
-  const { title, description, info, policyRef, howMeasured, handleSubmit } =
-    listProps;
+  const { title, description, info, policyRef, howMeasured } = listProps;
 
   const rootError: string =
     (errors.min && `You must provide at least ${schema.min} response(s)`) ||
@@ -201,32 +190,7 @@ const Root = () => {
   const shouldShowAddAnotherButton =
     schema.max !== 1 || formik.values.schemaData.length < 1;
 
-  // If the selected schema has a "map" field, ensure there's a FindProperty component preceding it (eg address data in state to position map view)
   const hasMapField = schema.fields.some((field) => field.type === "map");
-  const { longitude, latitude } = useStore(
-    (state) =>
-      (state.computePassport()?.data?.["_address"] as SiteAddress) || {},
-  );
-
-  if (hasMapField && (!longitude || !latitude)) {
-    return (
-      <Card handleSubmit={handleSubmit} isValid>
-        <CardHeader title={title} description={description} />
-        <ErrorSummaryContainer
-          role="status"
-          data-testid="error-summary-invalid-graph"
-        >
-          <Typography variant="h4" component="h2" gutterBottom>
-            Invalid graph
-          </Typography>
-          <Typography variant="body2">
-            Edit this flow so that "List" is positioned after "FindProperty"; an
-            address is required for schemas that include a "map" field.
-          </Typography>
-        </ErrorSummaryContainer>
-      </Card>
-    );
-  }
 
   const listContent = (
     <ErrorWrapper error={rootError}>

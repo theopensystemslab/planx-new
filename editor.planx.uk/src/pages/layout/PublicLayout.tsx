@@ -6,7 +6,7 @@ import {
   ThemeProvider,
 } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import ErrorFallback from "components/ErrorFallback";
+import ErrorFallback from "components/Error/ErrorFallback";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";

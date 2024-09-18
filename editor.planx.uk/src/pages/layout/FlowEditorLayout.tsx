@@ -1,4 +1,4 @@
-import ErrorFallback from "components/ErrorFallback";
+import ErrorFallback from "components/Error/ErrorFallback";
 import FlowEditor from "pages/FlowEditor";
 import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";

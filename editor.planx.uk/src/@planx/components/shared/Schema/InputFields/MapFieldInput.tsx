@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
+import { SiteAddress } from "@opensystemslab/planx-core/types";
 import { MapContainer } from "@planx/components/shared/Preview/MapContainer";
 import type { MapField } from "@planx/components/shared/Schema/model";
+import { GraphError } from "components/Error/GraphError";
 import { Feature } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -11,6 +13,15 @@ import { getFieldProps, Props } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
+  // Ensure there's a FindProperty component preceding this field (eg address data in state to position map view)
+  const { longitude, latitude } = useStore(
+    (state) =>
+      (state.computePassport()?.data?.["_address"] as SiteAddress) || {},
+  );
+
+  if (!longitude || !latitude)
+    throw new GraphError("mapInputFieldMustFollowFindProperty");
+
   const {
     formik,
     data: { title, description, mapOptions },

@@ -8,8 +8,8 @@ import Tab, { tabClasses, TabProps } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { SiteAddress } from "@planx/components/FindProperty/model";
-import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
+import { GraphError } from "components/Error/GraphError";
 import { GeoJsonObject } from "geojson";
 import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -305,24 +305,6 @@ export const Presentational: React.FC<PresentationalProps> = (props) => (
   </MapAndLabelProvider>
 );
 
-const GraphError = (props: Props) => (
-  <Card handleSubmit={props.handleSubmit} isValid>
-    <CardHeader title={props.title} description={props.description} />
-    <ErrorSummaryContainer
-      role="status"
-      data-testid="error-summary-invalid-graph"
-    >
-      <Typography variant="h4" component="h2" gutterBottom>
-        Invalid graph
-      </Typography>
-      <Typography variant="body2">
-        Edit this flow so that "MapAndLabel" is positioned after "FindProperty";
-        an initial address is required to correctly display the map.
-      </Typography>
-    </ErrorSummaryContainer>
-  </Card>
-);
-
 function MapAndLabelComponent(props: Props) {
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
@@ -330,7 +312,7 @@ function MapAndLabelComponent(props: Props) {
     (passport?.data?._address as SiteAddress) || {};
 
   if (!latitude || !longitude) {
-    return <GraphError {...props} />;
+    throw new GraphError("nodeMustFollowFindProperty");
   }
 
   return (

@@ -1,12 +1,12 @@
 import { useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import type { PublicProps } from "@planx/components/ui";
+import { GraphError } from "components/Error/GraphError";
 import { Feature } from "geojson";
 import { publicClient } from "lib/graphql";
 import find from "lodash/find";
@@ -17,7 +17,6 @@ import React from "react";
 
 import type { SiteAddress } from "../FindProperty/model";
 import { FETCH_BLPU_CODES } from "../FindProperty/Public";
-import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import { MapContainer } from "../shared/Preview/MapContainer";
 import type { PropertyInformation } from "./model";
 
@@ -32,7 +31,10 @@ function Component(props: PublicProps<PropertyInformation>) {
     client: publicClient,
   });
 
-  return passport.data?._address ? (
+  if (!passport.data?._address)
+    throw new GraphError("nodeMustFollowFindProperty");
+
+  return (
     <Presentational
       title={props.title}
       description={props.description}
@@ -60,21 +62,6 @@ function Component(props: PublicProps<PropertyInformation>) {
         });
       }}
     />
-  ) : (
-    <Card>
-      <ErrorSummaryContainer
-        role="status"
-        data-testid="error-summary-invalid-graph"
-      >
-        <Typography variant="h4" component="h2" gutterBottom>
-          Invalid graph
-        </Typography>
-        <Typography variant="body2">
-          Edit this flow so that "Property information" is positioned after
-          "Find property"; an address is required to render.
-        </Typography>
-      </ErrorSummaryContainer>
-    </Card>
   );
 }
 
