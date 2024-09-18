@@ -85,7 +85,9 @@ const routes = compose(
 
     "/:flow/service": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
-    "/:flow/submissions-log": setFlowAndLazyLoad(() => import("./submissionsLog")),
+    "/:flow/submissions-log": setFlowAndLazyLoad(
+      () => import("./submissionsLog"),
+    ),
 
     "/members": lazy(() => import("./teamMembers")),
     "/design": compose(

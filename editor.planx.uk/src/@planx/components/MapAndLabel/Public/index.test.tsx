@@ -60,14 +60,14 @@ describe("Basic UI", () => {
 
     await waitFor(() =>
       expect(
-        queryByText("Plot a feature on the map to begin")
-      ).not.toBeInTheDocument()
+        queryByText("Plot a feature on the map to begin"),
+      ).not.toBeInTheDocument(),
     );
   });
 
   it("renders the schema name as the tab title", async () => {
     const { queryByText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -81,7 +81,7 @@ describe("Basic UI", () => {
 
   it("should not have any accessibility violations", async () => {
     const { queryByText, getByTestId, container } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -98,7 +98,7 @@ describe("Basic UI", () => {
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
     const { getByTestId, user, queryByRole, getAllByTestId } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
 
@@ -172,7 +172,7 @@ describe("validation and error handling", () => {
   // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
     const { getByTestId, user, queryByRole } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
 
@@ -194,7 +194,7 @@ describe("validation and error handling", () => {
 it("does not trigger handleSubmit when errors exist", async () => {
   const handleSubmit = vi.fn();
   const { getByTestId, user } = setup(
-    <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    <MapAndLabel {...props} handleSubmit={handleSubmit} />,
   );
   const map = getByTestId("map-and-label-map");
 
@@ -497,11 +497,11 @@ describe("payload generation", () => {
   test.todo("a submitted payload contains a GeoJSON feature collection");
   // check payload contains GeoJSON feature collection
   test.todo(
-    "the feature collection contains all geospatial data inputted by the user"
+    "the feature collection contains all geospatial data inputted by the user",
   );
   // feature collection matches the mocked data
   test.todo(
-    "each feature's properties correspond with the details entered for that feature"
+    "each feature's properties correspond with the details entered for that feature",
   );
   // feature properties contain the answers to inputs
 });

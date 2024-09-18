@@ -20,7 +20,8 @@ const EditorContainer = styled(Box)(() => ({
 }));
 
 const FlowEditor = () => {
-  const [ flow, ...breadcrumbs ] = useCurrentRoute().url.pathname.split("/").at(-1)?.split(",") || [];
+  const [flow, ...breadcrumbs] =
+    useCurrentRoute().url.pathname.split("/").at(-1)?.split(",") || [];
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
