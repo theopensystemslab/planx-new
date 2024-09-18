@@ -405,8 +405,6 @@ describe("copy feature select", () => {
       hidden: true,
     });
 
-    screen.logTestingPlaygroundURL(urgencyDiv);
-
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
     expect(getByLabelText("Proposed work")).toHaveDisplayValue(
       mockTreeData.work
