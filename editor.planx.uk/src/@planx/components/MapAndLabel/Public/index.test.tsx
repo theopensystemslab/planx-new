@@ -6,7 +6,12 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { point1, point2, point3 } from "../test/mocks/geojson";
+import {
+  mockFeaturePointObj,
+  point1,
+  point2,
+  point3,
+} from "../test/mocks/geojson";
 import { props } from "../test/mocks/Trees";
 import {
   addFeaturesToMap,
@@ -206,13 +211,16 @@ test.todo("an error displays if the maximum number of items is exceeded");
 describe("basic interactions - happy path", () => {
   it("adding an item to the map adds a feature tab", async () => {
     const { getByTestId } = setup(<MapAndLabel {...props} />);
-    const map = getByTestId("map-and-label-map");
 
+    let map = getByTestId("map-and-label-map");
     addFeaturesToMap(map, [point1]);
 
     const firstTabPanel = getByTestId("vertical-tabpanel-0");
 
     expect(firstTabPanel).toBeVisible();
+
+    map = getByTestId("map-and-label-map");
+    expect(map).toHaveAttribute("drawgeojsondata", mockFeaturePointObj);
   });
 
   it("a user can input details on a single feature and submit", async () => {
@@ -425,12 +433,62 @@ describe("copy feature select", () => {
     expect(results).toHaveNoViolations();
   });
 });
-
 describe("remove feature button", () => {
-  it.todo("removes a feature from the form");
-  // click remove - feature is removed
-  // not tab
-  it.todo("removes a feature from the map");
+  it("removes a feature from the form - single feature", async () => {
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+    const tabOnePanel = getByRole("tabpanel", { name: /Tree 1/ });
+
+    const removeButton = getByRole("button", { name: "Remove" });
+
+    await user.click(removeButton);
+
+    expect(tabOne).not.toBeInTheDocument();
+    expect(tabOnePanel).not.toBeInTheDocument();
+  });
+  it("removes a feature from the form - multiple features", async () => {
+    const { getByRole, user } = setup(<MapAndLabel {...props} />);
+
+    addMultipleFeatures([point1, point2]);
+
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+    const tabTwo = getByRole("tab", { name: /Tree 2/ });
+    const tabTwoPanel = getByRole("tabpanel", { name: /Tree 2/ });
+
+    const removeButton = getByRole("button", { name: "Remove" });
+
+    await user.click(removeButton);
+
+    expect(tabTwo).not.toBeInTheDocument();
+    expect(tabTwoPanel).not.toBeInTheDocument();
+
+    const tabOnePanel = getByRole("tabpanel", { name: /Tree 1/ });
+
+    // Ensure tab one remains
+    expect(tabOne).toBeInTheDocument();
+    expect(tabOnePanel).toBeInTheDocument();
+  });
+  it("removes a feature from the map", async () => {
+    const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
+    let map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const removeButton = getByRole("button", { name: "Remove" });
+
+    await user.click(removeButton);
+
+    map = getByTestId("map-and-label-map");
+
+    expect(map).toHaveAttribute(
+      "drawgeojsondata",
+      `{"type":"FeatureCollection","features":[]}`
+    );
+  });
   // click remove - feature is removed
   // no map icon
 });
