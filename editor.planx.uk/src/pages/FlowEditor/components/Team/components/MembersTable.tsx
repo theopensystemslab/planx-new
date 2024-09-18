@@ -15,14 +15,15 @@ import Permission from "ui/editor/Permission";
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { MembersTableProps, TeamMember } from "./../types";
 import { EditorUpsertModal } from "./EditorUpsertModal";
+import { DeleteUserModal } from "./DeleteUserModal";
 
-const TableRowButton = styled(Button)(() => ({
+const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
   boxShadow: "none",
   "&:hover": {
     boxShadow: "none",
     textDecoration: "underline",
-    backgroundColor: "transparent",
+    backgroundColor: theme.palette.action.hover,
   },
 }));
 const EditUserButton = styled(TableRowButton)(({ theme }) => ({
@@ -36,7 +37,7 @@ const EditUserButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
-  color: theme.palette.secondary.dark,
+  color: theme.palette.text.secondary,
   "&:hover": {
     color: theme.palette.secondary.contrastText,
   },
@@ -49,6 +50,7 @@ export const MembersTable = ({
 }: MembersTableProps) => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<string, string> = {
@@ -145,23 +147,6 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
-<<<<<<< HEAD
-                {showEditMemberButton && (
-                  <Permission.IsPlatformAdmin>
-                    <TableCell>
-                      <EditUserButton
-                        onClick={() => {
-                          setShowUpdateModal(true);
-                          setInitialValues(member);
-                        }}
-                        data-testId={`edit-button-${i}`}
-                      >
-                        Edit
-                      </EditUserButton>
-                    </TableCell>
-                  </Permission.IsPlatformAdmin>
-                )}
-=======
                 <Permission.IsPlatformAdmin>
                   <TableCell>
                     <EditUserButton
@@ -179,7 +164,7 @@ export const MembersTable = ({
                   <TableCell>
                     <RemoveUserButton
                       onClick={() => {
-                        setShowUpdateModal(true);
+                        setShowDeleteModal(true);
                         setInitialValues(member);
                       }}
                       data-testId={`remove-button-${i}`}
@@ -188,7 +173,6 @@ export const MembersTable = ({
                     </RemoveUserButton>
                   </TableCell>
                 </Permission.IsPlatformAdmin>
->>>>>>> 1a9cc18b (init remove button work)
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
@@ -225,6 +209,13 @@ export const MembersTable = ({
           initialValues={initialValues}
           userId={initialValues?.id || 1}
           actionType={"edit"}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteUserModal
+          showModal={showDeleteModal}
+          setShowModal={setShowDeleteModal}
+          initialValues={initialValues}
         />
       )}
     </>
