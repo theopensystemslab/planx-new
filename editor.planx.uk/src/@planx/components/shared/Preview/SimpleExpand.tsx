@@ -48,7 +48,7 @@ const SimpleExpand: React.FC<PropsWithChildren<Props>> = ({
           />
         </StyledButton>
       </Box>
-      <Collapse in={show} id={id}>
+      <Collapse in={show} id={id} data-testid={id}>
         {children}
       </Collapse>
     </>
