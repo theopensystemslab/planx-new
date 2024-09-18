@@ -1,21 +1,27 @@
 import ErrorFallback from "components/Error/ErrorFallback";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { act } from "react-dom/test-utils";
 import { ErrorBoundary } from "react-error-boundary";
+import swr from "swr";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
+import { simpleBreadcrumbs, simpleFlow } from "./mocks/simpleFlow";
 import PlanningConstraints from "./Public";
+
+const swrMock = (swr as jest.Mock).mock;
 
 vi.mock("swr", () => ({
   default: vi.fn((url: () => string) => {
     const isGISRequest = url()?.startsWith(
-      `${import.meta.env.VITE_APP_API_URL}/gis/`,
+      `${import.meta.env.VITE_APP_API_URL}/gis`,
     );
     const isRoadsRequest = url()?.startsWith(
-      `${import.meta.env.VITE_APP_API_URL}/roads/`,
+      `${import.meta.env.VITE_APP_API_URL}/roads`,
     );
 
     if (isGISRequest) return { data: digitalLandResponseMock };
@@ -27,8 +33,6 @@ vi.mock("swr", () => ({
 
 describe("error state", () => {
   it("renders an error if no addres is present in the passport", async () => {
-    const handleSubmit = vi.fn();
-
     const { getByRole, getByTestId } = setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
@@ -36,9 +40,8 @@ describe("error state", () => {
           description="Things that might affect your project"
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-          handleSubmit={handleSubmit}
+          handleSubmit={vi.fn()}
         />
-        ,
       </ErrorBoundary>,
     );
 
@@ -55,7 +58,6 @@ describe("error state", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         />
-        ,
       </ErrorBoundary>,
     );
     const results = await axe(container);
@@ -63,10 +65,130 @@ describe("error state", () => {
   });
 });
 
-it.todo("renders correctly");
+describe("following a FindProperty component", () => {
+  beforeAll(() => {
+    act(() =>
+      useStore.setState({
+        breadcrumbs: simpleBreadcrumbs,
+        flow: simpleFlow,
+        teamIntegrations: {
+          hasPlanningData: true,
+        },
+      }),
+    );
+  });
 
-it.todo("should not have any accessibility violations");
+  it("renders correctly", async () => {
+    const handleSubmit = vi.fn();
 
-it.todo("fetches classified roads only when we have a siteBoundary"); // using expect(spy).toHaveBeenCalled() ??
+    const { user, getByRole, getByTestId } = setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={handleSubmit}
+      />,
+    );
 
-it.todo("fetches planning constraints when we have lng,lat or siteBoundary");
+    expect(
+      getByRole("heading", { name: "Planning constraints" }),
+    ).toBeInTheDocument();
+
+    await user.click(getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalled();
+  });
+
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+      />,
+    );
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+
+  it("fetches planning constraints when we have lng, lat or siteBoundary", async () => {
+    setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+      />,
+    );
+
+    expect(swr).toHaveBeenCalled();
+
+    // Planning data is called first
+    const swrURL = swrMock.calls[0][0]();
+    const swrResponse = swrMock.results[0].value;
+
+    expect(swrURL).toContain("/gis");
+    expect(swrResponse).toEqual({ data: digitalLandResponseMock });
+  });
+
+  it("fetches classified roads only when we have a siteBoundary", () => {
+    setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+      />,
+    );
+
+    expect(swr).toHaveBeenCalled();
+
+    // Classified roads are called second
+    const swrURL = swrMock.calls[1][0]();
+    const swrResponse = swrMock.results[1].value;
+
+    expect(swrURL).toContain("/roads");
+    expect(swrResponse).toEqual({ data: classifiedRoadsResponseMock });
+  });
+
+  test("basic layout and interactions", async () => {
+    const { user, getByRole, queryByRole, getByTestId } = setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+      />,
+    );
+
+    // Positive constraints visible by default
+    expect(
+      getByRole("heading", { name: /These are the planning constraints/ }),
+    ).toBeVisible();
+    expect(getByRole("button", { name: /Parks and gardens/ })).toBeVisible();
+
+    // Negative constraints hidden by default
+    const showNegativeConstraintsButton = getByRole("button", {
+      name: /Constraints that don't apply/,
+    });
+    expect(showNegativeConstraintsButton).toBeVisible();
+
+    const negativeConstraintsContainer = getByTestId(
+      "negative-constraints-list",
+    );
+    expect(negativeConstraintsContainer).not.toBeVisible();
+
+    expect(queryByRole("heading", { name: /Ecology/ })).not.toBeInTheDocument();
+
+    // Negative constraints viewable on toggle
+    await user.click(showNegativeConstraintsButton);
+
+    expect(negativeConstraintsContainer).toBeVisible();
+    expect(getByRole("heading", { name: /Ecology/ })).toBeVisible();
+  });
+});
