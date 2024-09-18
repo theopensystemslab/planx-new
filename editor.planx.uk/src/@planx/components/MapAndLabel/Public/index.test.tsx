@@ -123,8 +123,6 @@ describe("validation and error handling", () => {
       expect(message).not.toBeEmptyDOMElement();
     });
   });
-
-  // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
 
@@ -157,8 +155,6 @@ describe("validation and error handling", () => {
     // error messages persist
     await checkErrorMessagesPopulated();
   });
-
-  // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, user } = setup(<MapAndLabel {...props} />);
 
@@ -169,7 +165,6 @@ describe("validation and error handling", () => {
     const errorMessage = within(errorWrapper).getByText(/You must plot /);
     expect(errorMessage).toBeVisible();
   });
-  // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
     const { getByTestId, user, queryByRole } = setup(
       <MapAndLabel {...props} />
@@ -188,7 +183,6 @@ describe("validation and error handling", () => {
 
     expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
   });
-  // shows the error state on a tab when it's invalid
 });
 
 it("does not trigger handleSubmit when errors exist", async () => {
@@ -384,7 +378,7 @@ describe("copy feature select", () => {
     expect(listItemTwo).not.toBeInTheDocument();
   });
 
-  it.only("copies all data from one feature to another", async () => {
+  it("copies all data from one feature to another", async () => {
     const { getByTitle, user, getByLabelText, getByRole } = setup(
       <MapAndLabel {...props} />
     );
@@ -493,8 +487,6 @@ describe("remove feature button", () => {
       `{"type":"FeatureCollection","features":[]}`
     );
   });
-  // click remove - feature is removed
-  // no map icon
 });
 
 describe("payload generation", () => {
@@ -522,7 +514,7 @@ describe("payload generation", () => {
 
     expect(output).toEqual("FeatureCollection");
   });
-  // check payload contains GeoJSON feature collection
+
   it("the feature collection contains all geospatial data inputted by the user", async () => {
     const handleSubmit = vi.fn();
     const { getByTestId, user } = setup(
@@ -550,7 +542,7 @@ describe("payload generation", () => {
     expect(output[0]).toEqual(point1.geometry.coordinates[0]);
     expect(output[1]).toEqual(point1.geometry.coordinates[1]);
   });
-  // feature collection matches the mocked data
+
   it("each feature's properties correspond with the details entered for that feature", async () => {
     const handleSubmit = vi.fn();
     const { getByTestId, user } = setup(
@@ -579,5 +571,4 @@ describe("payload generation", () => {
     expect(output.justification).toEqual(mockTreeData.justification);
     expect(output.urgency).toEqual(mockTreeData.urgency);
   });
-  // feature properties contain the answers to inputs
 });
