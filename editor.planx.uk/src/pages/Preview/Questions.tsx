@@ -12,7 +12,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath, Session } from "types";
 
-import ErrorFallback from "../../components/ErrorFallback";
+import ErrorFallback from "../../components/Error/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { HandleSubmit } from "./Node";
 

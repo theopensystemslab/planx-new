@@ -9,6 +9,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import { GraphError } from "components/Error/GraphError";
 import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { HandleSubmit } from "pages/Preview/Node";
@@ -63,6 +64,8 @@ function Component(props: Props) {
 
   // PlanningConstraints must come after at least a FindProperty in the graph
   const showGraphError = !x || !y || !longitude || !latitude;
+  if (showGraphError)
+    throw new GraphError("mapInputFieldMustFollowFindProperty");
 
   // Even though this component will fetch fresh GIS data when coming "back",
   //   still prepopulate any previously marked inaccurateConstraints
@@ -144,8 +147,6 @@ function Component(props: Props) {
     ...data?.metadata,
     ...roads?.metadata,
   };
-
-  if (showGraphError) return <ConstraintsGraphError {...props} />;
 
   const isLoading = isValidating || isValidatingRoads;
   if (isLoading)
@@ -393,31 +394,6 @@ const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
           <button onClick={props.refreshConstraints}>Search again</button>
         </>
       )}
-    </ErrorSummaryContainer>
-  </Card>
-);
-
-interface ConstraintsGraphErrorProps {
-  title: string;
-  description: string;
-  handleSubmit?: HandleSubmit;
-}
-
-const ConstraintsGraphError = (props: ConstraintsGraphErrorProps) => (
-  <Card handleSubmit={props.handleSubmit} isValid>
-    <CardHeader title={props.title} description={props.description} />
-    <ErrorSummaryContainer
-      role="status"
-      data-testid="error-summary-invalid-graph"
-    >
-      <Typography variant="h4" component="h2" gutterBottom>
-        Invalid graph
-      </Typography>
-      <Typography variant="body2">
-        Edit this flow so that "Planning constraints" is positioned after "Find
-        property"; an address or site boundary drawing is required to fetch
-        data.
-      </Typography>
     </ErrorSummaryContainer>
   </Card>
 );

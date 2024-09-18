@@ -1,6 +1,8 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { screen } from "@testing-library/react";
+import ErrorFallback from "components/Error/ErrorFallback";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
@@ -18,10 +20,12 @@ const defaultPresentationalProps: PresentationalProps = {
 test("renders a warning for editors if address data is not in state", async () => {
   setup(
     <MockedProvider>
-      <PropertyInformation
-        title="About the property"
-        description="This is the information we currently have about the property"
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <PropertyInformation
+          title="About the property"
+          description="This is the information we currently have about the property"
+        />
+      </ErrorBoundary>
     </MockedProvider>,
   );
 

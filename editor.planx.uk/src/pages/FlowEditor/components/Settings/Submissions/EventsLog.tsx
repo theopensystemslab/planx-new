@@ -15,7 +15,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
-import ErrorFallback from "components/ErrorFallback";
+import ErrorFallback from "components/Error/ErrorFallback";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary";
