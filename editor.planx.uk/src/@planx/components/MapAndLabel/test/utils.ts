@@ -11,7 +11,7 @@ import { mockTreeData } from "./mocks/GenericValues";
  */
 export const addFeaturesToMap = async (
   map: HTMLElement,
-  features: Feature<Point | Polygon, { label: string }>[]
+  features: Feature<Point | Polygon, { label: string }>[],
 ) => {
   const mockEvent = new CustomEvent("geojsonChange", {
     detail: {
@@ -22,7 +22,7 @@ export const addFeaturesToMap = async (
 };
 
 export const addMultipleFeatures = (
-  featureArray: Feature<Point, { label: string }>[]
+  featureArray: Feature<Point, { label: string }>[],
 ) => {
   const map = screen.getByTestId("map-and-label-map");
   const pointsAddedArray: Feature<Point, { label: string }>[] = [];

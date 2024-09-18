@@ -94,14 +94,18 @@ describe("when the addNewEditor modal is rendered", () => {
 });
 
 describe("'add a new editor' button is hidden from Templates team", () => {
-  beforeEach(async() => {
-    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "templates" });
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      teamSlug: "templates",
+    });
   });
 
   it("hides the button on the Templates team", async () => {
     const { user: _user } = await setupTeamMembersScreen();
     const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = within(teamEditorsTable).queryByText("Add a new editor");
+    const addEditorButton =
+      within(teamEditorsTable).queryByText("Add a new editor");
     expect(addEditorButton).not.toBeInTheDocument();
   });
 });

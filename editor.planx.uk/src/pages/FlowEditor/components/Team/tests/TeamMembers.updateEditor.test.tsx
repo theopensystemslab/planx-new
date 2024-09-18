@@ -24,7 +24,7 @@ describe("when a user presses 'edit button'", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0"
+      "edit-button-0",
     );
 
     user.click(addEditorButton);
@@ -64,7 +64,7 @@ describe("when a user deletes an input value", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0"
+      "edit-button-0",
     );
     await user.click(addEditorButton);
 
@@ -98,7 +98,7 @@ describe("when a user updates a field correctly", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0"
+      "edit-button-0",
     );
     await user.click(addEditorButton);
 
@@ -112,7 +112,7 @@ describe("when a user updates a field correctly", () => {
   it("updates the field", async () => {
     const firstNameInput = await screen.findByLabelText("First name");
     expect(firstNameInput).toHaveDisplayValue(
-      mockTeamMembersData[1].firstName + "bo"
+      mockTeamMembersData[1].firstName + "bo",
     );
   });
   it("enables the update user button", async () => {
@@ -130,7 +130,7 @@ describe("when a user correctly updates an Editor", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0"
+      "edit-button-0",
     );
     await user.click(addEditorButton);
 
@@ -150,7 +150,7 @@ describe("when a user correctly updates an Editor", () => {
       expect(within(membersTable).getByText(/Billbo/)).toBeInTheDocument();
     });
     expect(
-      await screen.findByText(/Successfully updated a user/)
+      await screen.findByText(/Successfully updated a user/),
     ).toBeInTheDocument();
   });
   it("closes the modal", async () => {
@@ -160,14 +160,18 @@ describe("when a user correctly updates an Editor", () => {
   });
   it("shows a success message", async () => {
     expect(
-      await screen.findByText(/Successfully updated a user/)
+      await screen.findByText(/Successfully updated a user/),
     ).toBeInTheDocument();
   });
 });
 
 describe("'edit' button is hidden from Templates team", () => {
-  beforeEach(async() => {
-    useStore.setState({ teamMembers: mockTeamMembersData, user: mockPlatformAdminUser, teamSlug: "templates" });
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlatformAdminUser,
+      teamSlug: "templates",
+    });
   });
 
   it("hides the button on the Templates team", async () => {
