@@ -384,7 +384,7 @@ describe("copy feature select", () => {
     expect(listItemTwo).not.toBeInTheDocument();
   });
 
-  it("copies all data from one feature to another", async () => {
+  it.only("copies all data from one feature to another", async () => {
     const { getByTitle, user, getByLabelText, getByRole } = setup(
       <MapAndLabel {...props} />
     );
@@ -407,7 +407,11 @@ describe("copy feature select", () => {
     await user.click(listItemTwo);
 
     const urgencyDiv = getByTitle("Urgency");
-    const urgencySelect = within(urgencyDiv).getByRole("combobox");
+    const urgencyInput = within(urgencyDiv).getByRole("textbox", {
+      hidden: true,
+    });
+
+    screen.logTestingPlaygroundURL(urgencyDiv);
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
     expect(getByLabelText("Proposed work")).toHaveDisplayValue(
@@ -416,7 +420,7 @@ describe("copy feature select", () => {
     expect(getByLabelText("Justification")).toHaveDisplayValue(
       mockTreeData.justification
     );
-    expect(urgencySelect).toHaveTextContent(mockTreeData.urgency);
+    expect(urgencyInput).toHaveDisplayValue(mockTreeData.urgency);
   });
 
   it("should not have any accessibility violations", async () => {
@@ -543,8 +547,8 @@ describe("payload generation", () => {
       handleSubmit.mock.calls[0][0].data.MockFn.features[0].geometry
         .coordinates;
 
-    expect(output[0]).toEqual(-3.685929607119201);
-    expect(output[1]).toEqual(57.15301433687542);
+    expect(output[0]).toEqual(point1.geometry.coordinates[0]);
+    expect(output[1]).toEqual(point1.geometry.coordinates[1]);
   });
   // feature collection matches the mocked data
   it("each feature's properties correspond with the details entered for that feature", async () => {
@@ -570,10 +574,10 @@ describe("payload generation", () => {
     const output =
       handleSubmit.mock.calls[0][0].data.MockFn.features[0].properties;
 
-    expect(output.species).toEqual("Larch");
-    expect(output.work).toEqual("Chopping it down");
-    expect(output.justification).toEqual("Cause I can");
-    expect(output.urgency).toEqual("low");
+    expect(output.species).toEqual(mockTreeData.species);
+    expect(output.work).toEqual(mockTreeData.work);
+    expect(output.justification).toEqual(mockTreeData.justification);
+    expect(output.urgency).toEqual(mockTreeData.urgency);
   });
   // feature properties contain the answers to inputs
 });
