@@ -1,4 +1,8 @@
-export const mockSingleFeaturePayload = {
+import { FeatureCollection } from "geojson";
+import { mockTreeData } from "./GenericValues";
+export type MockPayload = { data: { MockFn: FeatureCollection } };
+
+export const mockSingleFeaturePayload: MockPayload = {
   data: {
     MockFn: {
       features: [
@@ -7,13 +11,7 @@ export const mockSingleFeaturePayload = {
             coordinates: [-3.685929607119201, 57.15301433687542],
             type: "Point",
           },
-          properties: {
-            justification: "Cause I can",
-            label: "1",
-            species: "Larch",
-            urgency: "low",
-            work: "Chopping it down",
-          },
+          properties: { mockTreeData },
           type: "Feature",
         },
       ],
