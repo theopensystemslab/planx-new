@@ -10,8 +10,12 @@ import { axe } from "vitest-axe";
 
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
-import { simpleBreadcrumbs, simpleFlow } from "./mocks/simpleFlow";
+import { breadcrumbsWithoutUSRN, simpleBreadcrumbs, simpleFlow } from "./mocks/simpleFlow";
 import PlanningConstraints from "./Public";
+
+const { setState } = useStore;
+
+beforeEach(() => vi.clearAllMocks());
 
 const swrMock = (swr as jest.Mock).mock;
 
@@ -66,9 +70,9 @@ describe("error state", () => {
 });
 
 describe("following a FindProperty component", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     act(() =>
-      useStore.setState({
+      setState({
         breadcrumbs: simpleBreadcrumbs,
         flow: simpleFlow,
         teamIntegrations: {
@@ -134,7 +138,7 @@ describe("following a FindProperty component", () => {
     expect(swrResponse).toEqual({ data: digitalLandResponseMock });
   });
 
-  it("fetches classified roads only when we have a siteBoundary", () => {
+  it("fetches classified roads when a USRN is provided", () => {
     setup(
       <PlanningConstraints
         title="Planning constraints"
@@ -153,6 +157,44 @@ describe("following a FindProperty component", () => {
 
     expect(swrURL).toContain("/roads");
     expect(swrResponse).toEqual({ data: classifiedRoadsResponseMock });
+  });
+
+  it("does not fetch classified roads when a USRN is not provided", async () => {
+    act(() =>
+      setState({
+        breadcrumbs: breadcrumbsWithoutUSRN,
+        flow: simpleFlow,
+        teamIntegrations: {
+          hasPlanningData: true,
+        },
+      })
+    );
+
+    setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+      />,
+    );
+
+    expect(swr).toHaveBeenCalled();
+
+    // Planning constraints API still called
+    const planingConstraintsURL = swrMock.calls[0][0]();
+    const planingConstraintsResponse = swrMock.results[0].value;
+
+    expect(planingConstraintsURL).toContain("/gis");
+    expect(planingConstraintsResponse).toEqual({ data: digitalLandResponseMock });
+
+    // Classified roads API not called due to missing USRN
+    const swrURL = swrMock.calls[1][0]();
+    const swrResponse = swrMock.results[1].value;
+
+    expect(swrURL).toBeNull();
+    expect(swrResponse).toEqual({ data: null });
   });
 
   test("basic layout and interactions", async () => {

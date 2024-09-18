@@ -1,3 +1,4 @@
+import { cloneDeep, merge } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 
 export const simpleFlow: Store.Flow = {
@@ -93,3 +94,5 @@ export const simpleBreadcrumbs: Store.Breadcrumbs = {
     },
   },
 };
+
+export const breadcrumbsWithoutUSRN = merge(cloneDeep(simpleBreadcrumbs), { findProperty: { data: { _address: { usrn: null }}}});
