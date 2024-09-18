@@ -18,6 +18,7 @@ import {
   fillOutForm,
   fillOutSecondHalfOfForm,
 } from "../test/utils";
+import { mockTreeData } from "../test/mocks/GenericValues";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -332,18 +333,97 @@ describe("basic interactions - happy path", () => {
 });
 
 describe("copy feature select", () => {
-  it.todo("is disabled if only a single feature is present");
-  // no copy select if only one feature
-  it.todo("is enabled once multiple features are present");
-  // copy select enabled once you add more features
-  it.todo(
-    "lists all other features as options (the current feature is not listed)"
-  );
-  // current tree is not an option in the copy select
-  it.todo("copies all data from one feature to another");
-  // all data fields are populated from one field to another
-  it.todo("should not have any accessibility violations");
-  // axe checks
+  it("is disabled if only a single feature is present", async () => {
+    const { getByTestId, getByTitle } = setup(<MapAndLabel {...props} />);
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("is enabled once multiple features are present", async () => {
+    const { getByTitle } = setup(<MapAndLabel {...props} />);
+
+    addMultipleFeatures([point1, point2]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("lists all other features as options (the current feature is not listed)", async () => {
+    const { getByTitle, user, queryByRole } = setup(<MapAndLabel {...props} />);
+    addMultipleFeatures([point1, point2]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
+
+    await user.click(copyInput);
+
+    // Current item would be Tree 2 since we added two points
+    const listItemTwo = queryByRole("option", { name: "Tree 2" });
+
+    expect(listItemTwo).not.toBeInTheDocument();
+  });
+
+  it("copies all data from one feature to another", async () => {
+    const { getByTitle, user, getByLabelText, getByRole } = setup(
+      <MapAndLabel {...props} />
+    );
+    addMultipleFeatures([point1, point2]);
+    const tabOne = getByRole("tab", { name: /Tree 1/ });
+
+    await fillOutForm(user);
+
+    await user.click(tabOne);
+
+    const copyTitle = getByTitle("Copy from");
+    const copyInput = within(copyTitle).getByRole("combobox", {
+      name: "Copy from",
+    });
+
+    await user.click(copyInput);
+
+    const listItemTwo = getByRole("option", { name: "Tree 2" });
+
+    await user.click(listItemTwo);
+
+    const urgencyDiv = getByTitle("Urgency");
+    const urgencySelect = within(urgencyDiv).getByRole("combobox");
+
+    expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
+    expect(getByLabelText("Proposed work")).toHaveDisplayValue(
+      mockTreeData.work
+    );
+    expect(getByLabelText("Justification")).toHaveDisplayValue(
+      mockTreeData.justification
+    );
+    expect(urgencySelect).toHaveTextContent(mockTreeData.urgency);
+  });
+
+  it("should not have any accessibility violations", async () => {
+    const { getByTitle, user, container } = setup(<MapAndLabel {...props} />);
+    addMultipleFeatures([point1, point2]);
+
+    const copyTitle = getByTitle("Copy from");
+
+    const copyInput = within(copyTitle).getByRole("combobox");
+
+    await user.click(copyInput);
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 describe("remove feature button", () => {
