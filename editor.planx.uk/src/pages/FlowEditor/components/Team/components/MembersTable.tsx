@@ -148,7 +148,7 @@ export const MembersTable = ({
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <Permission.IsNotPlatformAdmin>
+              <Permission.IsPlatformAdmin>
                 <TableRow>
                   <TableCell colSpan={3}>
                     <AddButton
@@ -161,7 +161,7 @@ export const MembersTable = ({
                     </AddButton>
                   </TableCell>
                 </TableRow>
-              </Permission.IsNotPlatformAdmin>
+              </Permission.IsPlatformAdmin>
             )}
           </TableBody>
         </Table>
