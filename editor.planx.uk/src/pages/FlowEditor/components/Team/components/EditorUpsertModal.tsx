@@ -26,7 +26,6 @@ import {
 } from "./lib/optimisticallyUpdateMembersTable";
 
 export const EditorUpsertModal = ({
-  showModal,
   setShowModal,
   initialValues,
   actionType,

@@ -115,6 +115,10 @@ export const MembersTable = ({
               <TableCell>
                 <strong>Email</strong>
               </TableCell>{" "}
+              {
+                // empty table cells for styling across buttons
+              }
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
@@ -148,30 +152,34 @@ export const MembersTable = ({
                 <TableCell>{member.email}</TableCell>
                 <Permission.IsPlatformAdmin>
                   <TableCell>
-                    <EditUserButton
-                      onClick={() => {
-                        setActionType("edit");
-                        setShowAddModal(true);
-                        setInitialValues(member);
-                      }}
-                      data-testId={`edit-button-${i}`}
-                    >
-                      Edit
-                    </EditUserButton>
+                    {showEditMemberButton && (
+                      <EditUserButton
+                        onClick={() => {
+                          setActionType("edit");
+                          setShowAddModal(true);
+                          setInitialValues(member);
+                        }}
+                        data-testId={`edit-button-${i}`}
+                      >
+                        Edit
+                      </EditUserButton>
+                    )}
                   </TableCell>
                 </Permission.IsPlatformAdmin>
                 <Permission.IsPlatformAdmin>
                   <TableCell>
-                    <RemoveUserButton
-                      onClick={() => {
-                        setActionType("delete");
-                        setShowAddModal(true);
-                        setInitialValues(member);
-                      }}
-                      data-testId={`remove-button-${i}`}
-                    >
-                      Remove
-                    </RemoveUserButton>
+                    {showEditMemberButton && (
+                      <RemoveUserButton
+                        onClick={() => {
+                          setActionType("delete");
+                          setShowAddModal(true);
+                          setInitialValues(member);
+                        }}
+                        data-testId={`remove-button-${i}`}
+                      >
+                        Remove
+                      </RemoveUserButton>
+                    )}
                   </TableCell>
                 </Permission.IsPlatformAdmin>
               </StyledTableRow>
