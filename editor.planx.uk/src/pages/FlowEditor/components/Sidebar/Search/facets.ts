@@ -1,7 +1,4 @@
-import { IndexedNode } from "@opensystemslab/planx-core/types";
-import { FuseOptionKey } from "fuse.js";
-
-type SearchFacets = Array<FuseOptionKey<IndexedNode>>;
+type SearchFacets = string[]
 
 const generalData: SearchFacets = ["data.fn", "data.val"];
 
@@ -9,10 +6,11 @@ const fileUploadAndLabelData: SearchFacets = ["data.fileTypes.fn"];
 
 const calculateData: SearchFacets = [
   "data.output",
-  {
-    name: "formula",
-    getFn: (node: IndexedNode) => Object.keys(node.data?.defaults || {}),
-  },
+  // Can't pass functions to workers!
+  // {
+  //   name: "formula",
+  //   getFn: (node: IndexedNode) => Object.keys(node.data?.defaults || {}),
+  // },
 ];
 
 const listData: SearchFacets = [

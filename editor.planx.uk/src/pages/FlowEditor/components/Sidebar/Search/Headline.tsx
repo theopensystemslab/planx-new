@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD } from "theme";
 
 interface Props {
   text: string;
-  matchIndices: [number, number][];
+  matchIndices: readonly [number, number][];
   variant: "data";
 }
 

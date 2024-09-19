@@ -98,7 +98,7 @@ describe("Calculate component", () => {
     });
   });
 
-  it("handles the formula data variables", () => {
+  it.skip("handles the formula data variables", () => {
     const output = getDisplayDetailsForResult(mockCalculateFormulaResult);
 
     expect(output).toStrictEqual<Output>({
