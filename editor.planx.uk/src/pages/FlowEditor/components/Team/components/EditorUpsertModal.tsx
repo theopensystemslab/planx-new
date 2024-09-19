@@ -56,6 +56,9 @@ export const EditorUpsertModal = ({
   const handleSubmitToAddNewUser = async () => {
     const { teamId, teamSlug } = useStore.getState();
 
+    if (formik.values.email === null) {
+      return;
+    }
     const createUserResult = await createAndAddUserToTeam(
       formik.values.email,
       formik.values.firstName,

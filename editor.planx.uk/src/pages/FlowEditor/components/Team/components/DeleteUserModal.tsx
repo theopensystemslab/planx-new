@@ -8,6 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { EditorModalProps } from "../types";
+import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
 
 export const DeleteUserModal = ({
   setShowModal,
@@ -26,8 +27,12 @@ export const DeleteUserModal = ({
       return;
     }
 
-    toast.success("Successfully deleted user");
+    optimisticallyUpdateExistingMember(
+      { ...initialValues, email: null },
+      initialValues.id,
+    );
     setShowModal(false);
+    toast.success("Successfully deleted user");
   };
 
   return (

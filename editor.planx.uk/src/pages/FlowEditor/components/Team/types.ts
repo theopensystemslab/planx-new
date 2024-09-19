@@ -1,8 +1,9 @@
 import { Role, User } from "@opensystemslab/planx-core/types";
 import React, { SetStateAction } from "react";
 
-export type TeamMember = Omit<User, "teams" | "isPlatformAdmin"> & {
+export type TeamMember = Omit<User, "teams" | "isPlatformAdmin" | "email"> & {
   role: Role;
+  email: string | null;
 };
 
 export interface MembersTableProps {
@@ -15,7 +16,7 @@ export interface AddNewEditorModalProps {
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
 }
 export interface AddNewEditorFormValues {
-  email: string;
+  email: string | null;
   firstName: string;
   lastName: string;
 }
