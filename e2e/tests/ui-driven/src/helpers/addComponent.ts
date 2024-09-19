@@ -96,6 +96,10 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
 
       break;
+    case ComponentType.List:
+      await page.getByPlaceholder("Title").fill(title || "");
+      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -295,3 +299,18 @@ async function createComponentOptions(
     index++;
   }
 }
+
+export const createList = async (
+  page: Page,
+  locatingNode: Locator,
+  inputTitle: string,
+  inputDataField: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.List,
+    inputTitle,
+    [inputDataField],
+  );
+};

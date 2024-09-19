@@ -7,6 +7,7 @@ import {
   createDrawBoundary,
   createFileUpload,
   createFindProperty,
+  createList,
   createNextSteps,
   createNotice,
   createNumberInput,
@@ -170,5 +171,14 @@ export class PlaywrightEditor {
 
   async createReview() {
     await createReview(this.page, this.getNextNode());
+  }
+
+  async createList() {
+    await createList(
+      this.page,
+      this.getNextNode(),
+      "A list title",
+      "some data field",
+    );
   }
 }

@@ -11,6 +11,7 @@ import {
   answerAddressInput,
   answerContactInput,
   answerDateInput,
+  answerListInput,
   answerNumberInput,
   answerQuestion,
   answerTextInput,
@@ -64,6 +65,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createDateInput();
     await editor.createAddressInput();
     await editor.createContactInput();
+    await editor.createList();
     await editor.createTaskList();
     await editor.createNextSteps();
     await editor.createReview();
@@ -78,6 +80,7 @@ test.describe("Flow creation, publish and preview", () => {
       "When is your birthday?",
       "What is your address?",
       "What is your contact info?",
+      "A list title",
       "What you should do next",
       "Next steps",
       "Check your answers before sending your application",
@@ -238,6 +241,14 @@ test.describe("Flow creation, publish and preview", () => {
       email: "freddie@queen.com",
     });
     await clickContinue({ page });
+
+    await answerListInput(page, {
+      unitType: "House",
+      tenure: "Market housing",
+      numBedrooms: 4,
+      numUnits: 3,
+      continueToNext: true,
+    });
 
     await expect(
       page.locator("h1", { hasText: "What you should do next" }),
