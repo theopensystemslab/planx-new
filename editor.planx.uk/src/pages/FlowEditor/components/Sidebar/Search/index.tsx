@@ -3,8 +3,9 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useSearch } from "hooks/useSearch";
+import { debounce } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
 
@@ -12,8 +13,10 @@ import { ExternalPortalList } from "./ExternalPortalList";
 import { DATA_FACETS } from "./facets";
 import { NodeSearchResults } from "./NodeSearchResults";
 
+const DEBOUNCE_MS = 500;
+
 interface SearchNodes {
-  input: string;
+  pattern: string;
   facets: typeof DATA_FACETS;
 }
 
@@ -28,9 +31,9 @@ const Search: React.FC = () => {
   }, [orderedFlow, setOrderedFlow]);
 
   const formik = useFormik<SearchNodes>({
-    initialValues: { input: "", facets: DATA_FACETS },
-    onSubmit: ({ input }) => {
-      search(input);
+    initialValues: { pattern: "", facets: DATA_FACETS },
+    onSubmit: ({ pattern }) => {
+      debouncedSearch(pattern);
     },
   });
 
@@ -39,12 +42,20 @@ const Search: React.FC = () => {
     keys: formik.values.facets,
   });
 
+  const debouncedSearch = useMemo(
+    () => debounce((pattern: string) => {
+      console.debug("Search term: ", pattern)
+      return search(pattern);
+    }, DEBOUNCE_MS),
+    [search]
+  );
+
   return (
     <Container component={Box} p={3}>
       <form onSubmit={formik.handleSubmit}>
         <Typography
           component={"label"}
-          htmlFor="search"
+          htmlFor="pattern"
           variant="h3"
           mb={1}
           display={"block"}
@@ -52,11 +63,11 @@ const Search: React.FC = () => {
           Search this flow and internal portals
         </Typography>
         <Input
-          id="search"
-          name="search"
-          value={formik.values.input}
+          id="pattern"
+          name="pattern"
+          value={formik.values.pattern}
           onChange={(e) => {
-            formik.setFieldValue("input", e.target.value);
+            formik.setFieldValue("pattern", e.target.value);
             formik.handleSubmit();
           }}
           inputProps={{ spellCheck: false }}
@@ -66,10 +77,10 @@ const Search: React.FC = () => {
           id={"search-data-field-facet"}
           checked
           inputProps={{ disabled: true }}
-          onChange={() => {}}
+          onChange={() => { }}
         />
         <Box pt={3}>
-          {formik.values.input && (
+          {formik.values.pattern && (
             <>
               <NodeSearchResults results={results} />
               <ExternalPortalList />
