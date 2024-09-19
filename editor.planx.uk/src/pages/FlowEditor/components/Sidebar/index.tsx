@@ -8,7 +8,6 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
@@ -175,9 +174,7 @@ const Sidebar: React.FC = React.memo(() => {
         <Tabs onChange={handleChange} value={activeTab} aria-label="">
           <StyledTab value="PreviewBrowser" label="Preview" />
           <StyledTab value="History" label="History" />
-          {hasFeatureFlag("SEARCH") && (
-            <StyledTab value="Search" label="Search" />
-          )}
+          <StyledTab value="Search" label="Search" />
           <StyledTab value="Console" label="Console" />
         </Tabs>
       </TabList>
