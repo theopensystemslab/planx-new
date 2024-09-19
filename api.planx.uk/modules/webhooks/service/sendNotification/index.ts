@@ -44,8 +44,8 @@ const getMessageForEventType = (data: EventData, type: EventType) => {
   }
 
   if (type === "s3-submission") {
-    const { session_id, team_slug } = data as S3EventData;
-    return `New S3 + Power Automate submission *${session_id}* [${team_slug}]`;
+    const { session_id, team_slug, webhook_request } = data as S3EventData;
+    return `New S3 + Power Automate submission "${webhook_request.data.service}" *${session_id}* [${team_slug}]`;
   }
 };
 

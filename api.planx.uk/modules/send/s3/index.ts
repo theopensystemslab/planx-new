@@ -49,6 +49,7 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
 
     const session = await $api.session.find(sessionId);
     const passport = session?.data?.passport as Passport;
+    const flowName = session?.flow?.name;
 
     // Generate the ODP Schema JSON, skipping validation if not a supported application type
     const doValidation = isApplicationTypeSupported(passport);
@@ -73,6 +74,7 @@ const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
       },
       data: {
         message: "New submission from PlanX",
+        service: flowName,
         environment: env,
         file: fileUrl,
         payload: doValidation ? "Validated ODP Schema" : "Discretionary",
