@@ -18,6 +18,7 @@ import {
   createReview,
   createTaskList,
   createTextInput,
+  createUploadAndLabel,
 } from "../helpers/addComponent";
 
 export class PlaywrightEditor {
@@ -162,6 +163,15 @@ export class PlaywrightEditor {
 
   async createFileUpload() {
     await createFileUpload(this.page, this.getNextNode(), "some data field");
+  }
+
+  async createUploadAndLabel() {
+    await createUploadAndLabel(
+      this.page,
+      this.getNextNode(),
+      "Property title deeds",
+      "some data field",
+    );
   }
 
   async createNextSteps() {

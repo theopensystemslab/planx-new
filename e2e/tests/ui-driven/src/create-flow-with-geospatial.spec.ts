@@ -48,6 +48,7 @@ test.describe("Flow creation, publish and preview", () => {
     context.flow = { ...serviceProps };
 
     await editor.createFindProperty();
+    await editor.createUploadAndLabel();
     // TODO: editor.createPropertyInfo()
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
@@ -55,6 +56,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await expect(editor.nodeList).toContainText([
       "Find property",
+      "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
       // "File upload",
@@ -104,7 +106,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await answerFindProperty(page);
     await clickContinue({ page });
-
+    // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
   });
 });

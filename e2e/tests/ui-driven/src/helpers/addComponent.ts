@@ -31,6 +31,7 @@ const createBaseComponent = async (
     case ComponentType.TextInput:
       await page.getByPlaceholder("Title").fill(title || "");
       break;
+
     case ComponentType.NumberInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("eg square metres").fill(options?.[0] || "");
@@ -98,7 +99,10 @@ const createBaseComponent = async (
       break;
     case ComponentType.FileUpload:
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
-
+      break;
+    case ComponentType.FileUploadAndLabel:
+      await page.getByPlaceholder("File type").fill(options?.[0] || "");
+      await page.getByPlaceholder("Data Field").fill(options?.[1] || "");
       break;
     case ComponentType.List:
       await page.getByPlaceholder("Title").fill(title || "");
@@ -325,4 +329,19 @@ export const createResult = async (page: Page, locatingNode: Locator) => {
 
 export const createConfirmation = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, ComponentType.Confirmation);
+};
+
+export const createUploadAndLabel = async (
+  page: Page,
+  locatingNode: Locator,
+  fileType: string,
+  dataField: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.FileUploadAndLabel,
+    undefined,
+    [fileType, dataField],
+  );
 };
