@@ -10,7 +10,6 @@ import React from "react";
 import { EditorModalProps } from "../types";
 
 export const DeleteUserModal = ({
-  showModal,
   setShowModal,
   initialValues,
 }: EditorModalProps) => {
