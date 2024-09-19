@@ -66,6 +66,15 @@ export const s3SubmissionSchema = z.object({
         new: z.object({
           session_id: z.string(),
           team_slug: z.string(),
+          webhook_request: z.object({
+            data: z.object({
+              message: z.string(),
+              service: z.string(),
+              environment: z.string(),
+              file: z.string(),
+              payload: z.string(),
+            }),
+          }),
         }),
       }),
     }),

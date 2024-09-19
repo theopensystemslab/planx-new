@@ -351,6 +351,15 @@ describe("Send Slack notifications endpoint", () => {
           new: {
             session_id: "s3-pa-123",
             team_slug: "test-team",
+            webhook_request: {
+              data: {
+                service: "Test flow",
+                message: "New submission from PlanX",
+                payload: "Discretionary",
+                environment: "Staging",
+                file: "api.editor.planx.dev/private/file/test",
+              },
+            },
           },
         },
       },
