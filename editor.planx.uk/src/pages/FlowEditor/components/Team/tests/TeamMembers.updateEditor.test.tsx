@@ -6,8 +6,8 @@ import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { mockPlainUser, mockPlatformAdminUser } from "./mocks/mockUsers";
 
-vi.mock("pages/FlowEditor/components/Team/queries/updateUser.tsx", () => ({
-  updateTeamMember: vi.fn().mockResolvedValue({
+vi.mock("pages/FlowEditor/lib/store/team.ts", () => ({
+  deleteUser: vi.fn().mockResolvedValue({
     id: 1,
   }),
 }));

@@ -11,12 +11,11 @@ export const SettingsModal = ({
   initialValues,
   actionType,
 }: EditorModalProps) => {
+  "dialog-create-user";
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid={
-        actionType === "add" ? "dialog-create-user" : "dialog-edit-user"
-      }
+      data-testid={`dialog-${actionType}-user`}
       PaperProps={{
         sx: (theme) => ({
           width: "100%",
