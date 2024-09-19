@@ -108,6 +108,12 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
       break;
+    case ComponentType.Content:
+      await page
+        .locator("p[data-placeholder='Content']")
+        .fill(options?.[0] || "");
+
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -343,5 +349,19 @@ export const createUploadAndLabel = async (
     ComponentType.FileUploadAndLabel,
     undefined,
     [fileType, dataField],
+  );
+};
+
+export const createContent = async (
+  page: Page,
+  locatingNode: Locator,
+  content: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.Content,
+    undefined,
+    [content],
   );
 };

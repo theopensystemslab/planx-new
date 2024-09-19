@@ -67,6 +67,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createContactInput();
     await editor.createList();
     await editor.createTaskList();
+    await editor.createContent();
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -84,6 +85,7 @@ test.describe("Flow creation, publish and preview", () => {
       "What is your contact info?",
       "A list title",
       "What you should do next",
+      "Some content",
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
@@ -263,6 +265,9 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.locator("h2", { hasText: "Continue through this flow" }),
     ).toBeVisible();
+    await clickContinue({ page });
+
+    await expect(page.locator("p", { hasText: "Some content" })).toBeVisible();
     await clickContinue({ page });
 
     await expect(page.locator("h1", { hasText: "No result" })).toBeVisible();

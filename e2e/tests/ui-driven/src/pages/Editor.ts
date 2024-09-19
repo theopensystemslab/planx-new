@@ -4,6 +4,7 @@ import {
   createChecklist,
   createConfirmation,
   createContactInput,
+  createContent,
   createDateInput,
   createDrawBoundary,
   createFileUpload,
@@ -199,5 +200,9 @@ export class PlaywrightEditor {
 
   async createConfirmation() {
     await createConfirmation(this.page, this.getNextNode());
+  }
+
+  async createContent() {
+    await createContent(this.page, this.getNextNode(), "Some content");
   }
 }
