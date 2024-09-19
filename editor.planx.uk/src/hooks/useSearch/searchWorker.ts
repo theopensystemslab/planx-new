@@ -1,6 +1,6 @@
 import Fuse, { FuseResult } from "fuse.js";
-import { exhaustiveCheck } from "utils";
 
+import { exhaustiveCheck } from "../../utils";
 import {
   SearchResult,
   WorkerInitMessage,
