@@ -48,6 +48,7 @@ test.describe("Flow creation, publish and preview", () => {
     context.flow = { ...serviceProps };
 
     await editor.createFindProperty();
+    // TODO: editor.createPropertyInfo()
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
@@ -103,5 +104,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await answerFindProperty(page);
     await clickContinue({ page });
+
+    // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
   });
 });
