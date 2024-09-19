@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import {
   createAddressInput,
   createChecklist,
+  createConfirmation,
   createContactInput,
   createDateInput,
   createDrawBoundary,
@@ -184,5 +185,9 @@ export class PlaywrightEditor {
   }
   async createResult() {
     await createResult(this.page, this.getNextNode());
+  }
+
+  async createConfirmation() {
+    await createConfirmation(this.page, this.getNextNode());
   }
 }
