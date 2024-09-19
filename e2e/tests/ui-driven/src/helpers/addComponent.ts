@@ -79,6 +79,8 @@ const createBaseComponent = async (
       break;
     case ComponentType.DrawBoundary:
       break;
+    case ComponentType.Result:
+      break;
     case ComponentType.NextSteps:
       if (options) {
         let index = 0;
@@ -313,4 +315,8 @@ export const createList = async (
     inputTitle,
     [inputDataField],
   );
+};
+
+export const createResult = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Result);
 };

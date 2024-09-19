@@ -13,6 +13,7 @@ import {
   createNumberInput,
   createPlanningConstraints,
   createQuestionWithOptions,
+  createResult,
   createReview,
   createTaskList,
   createTextInput,
@@ -180,5 +181,8 @@ export class PlaywrightEditor {
       "A list title",
       "some data field",
     );
+  }
+  async createResult() {
+    await createResult(this.page, this.getNextNode());
   }
 }
