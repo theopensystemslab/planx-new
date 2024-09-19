@@ -10,20 +10,20 @@ import React from "react";
 import { EditorModalProps } from "../types";
 import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
 
-export const DeleteUserModal = ({
+export const ArchiveUserModal = ({
   setShowModal,
   initialValues,
 }: EditorModalProps) => {
   const toast = useToast();
 
-  const deleteUser = useStore.getState().deleteUser;
+  const archiveUser = useStore.getState().deleteUser;
   const handleClick = async () => {
     if (!initialValues?.id) {
       return;
     }
-    const response = await deleteUser(initialValues.id);
+    const response = await archiveUser(initialValues.id);
     if (!response) {
-      toast.error("Failed to delete user, please try again");
+      toast.error("Failed to archive the user, please try again");
       return;
     }
 
@@ -32,20 +32,23 @@ export const DeleteUserModal = ({
       initialValues.id,
     );
     setShowModal(false);
-    toast.success("Successfully deleted user");
+    toast.success("Successfully archived user");
   };
 
   return (
     <>
-      <DialogContent data-testid={"modal-delete-user"} sx={{ p: 2.5 }}>
+      <DialogContent data-testid={"modal-archive-user"} sx={{ p: 2.5 }}>
         <Box sx={{ mb: 2 }}>
           <Typography variant="h3" component="h2" id="dialog-heading">
-            Delete a user
+            Archive a user
           </Typography>
         </Box>
         <Box sx={{}}>
           <Typography variant="body1" component="p" id="dialog-body">
-            {`Do you want to delete ${initialValues?.firstName} ${initialValues?.lastName}?`}
+            {`Do you want to archive ${initialValues?.firstName} ${initialValues?.lastName}?`}
+          </Typography>
+          <Typography variant="body1" component="p" id="dialog-body">
+            {`The user will be moved to Archived Users and no longer have access to PlanX`}
           </Typography>
         </Box>
       </DialogContent>
@@ -62,10 +65,10 @@ export const DeleteUserModal = ({
             variant="contained"
             color="prompt"
             type="submit"
-            data-testid={"modal-delete-user-button"}
+            data-testid={"modal-archive-user-button"}
             onClick={handleClick}
           >
-            Delete user
+            Archive user
           </Button>
           <Button
             variant="contained"
