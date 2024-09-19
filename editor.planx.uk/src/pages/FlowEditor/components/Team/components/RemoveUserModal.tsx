@@ -5,48 +5,53 @@ import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
+import React, { useState } from "react";
 
 import { EditorModalProps } from "../types";
 import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
 
-export const ArchiveUserModal = ({
+export const RemoveUserModal = ({
   setShowModal,
   initialValues,
 }: EditorModalProps) => {
   const toast = useToast();
 
-  const archiveUser = useStore.getState().deleteUser;
+  const removeUser = useStore.getState().deleteUser;
   const handleClick = async () => {
     if (!initialValues?.id) {
       return;
     }
-    const response = await archiveUser(initialValues.id);
+    const response = await removeUser(initialValues.id).catch((err) => {
+      if (err.message === "Unable to remove user") {
+        toast.error("Failed to remove new user, please try again");
+      }
+      console.error(err);
+    });
+
     if (!response) {
-      toast.error("Failed to archive the user, please try again");
       return;
     }
-
     optimisticallyUpdateExistingMember(
       { ...initialValues, email: null },
       initialValues.id,
     );
     setShowModal(false);
-    toast.success("Successfully archived user");
+    toast.success("Successfully removed the user");
   };
 
   return (
     <>
-      <DialogContent data-testid={"modal-archive-user"} sx={{ p: 2.5 }}>
+      <DialogContent data-testid={"modal-remove-user"} sx={{ p: 2.5 }}>
         <Box sx={{ mb: 2 }}>
           <Typography variant="h3" component="h2" id="dialog-heading">
-            Archive a user
+            Remove a user
           </Typography>
         </Box>
         <Box sx={{}}>
           <Typography variant="body1" component="p" id="dialog-body">
-            {`Do you want to archive ${initialValues?.firstName} ${initialValues?.lastName}?`}
+            {`Do you want to remove ${initialValues?.firstName} ${initialValues?.lastName}?`}
           </Typography>
+          <br />
           <Typography variant="body1" component="p" id="dialog-body">
             {`The user will be moved to Archived Users and no longer have access to PlanX`}
           </Typography>
@@ -65,10 +70,10 @@ export const ArchiveUserModal = ({
             variant="contained"
             color="prompt"
             type="submit"
-            data-testid={"modal-archive-user-button"}
+            data-testid={"modal-remove-user-button"}
             onClick={handleClick}
           >
-            Archive user
+            Remove user
           </Button>
           <Button
             variant="contained"

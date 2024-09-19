@@ -2,8 +2,8 @@ import Dialog from "@mui/material/Dialog";
 import React from "react";
 
 import { EditorModalProps } from "../types";
-import { ArchiveUserModal } from "./ArchiveUserModal";
 import { EditorUpsertModal } from "./EditorUpsertModal";
+import { RemoveUserModal } from "./RemoveUserModal";
 
 export const SettingsModal = ({
   showModal,
@@ -29,8 +29,8 @@ export const SettingsModal = ({
       open={showModal || false}
       onClose={() => setShowModal(false)}
     >
-      {actionType === "archive" ? (
-        <ArchiveUserModal
+      {actionType === "remove" ? (
+        <RemoveUserModal
           setShowModal={setShowModal}
           initialValues={initialValues}
         />

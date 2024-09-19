@@ -160,6 +160,10 @@ export const teamStore: StateCreator<
   },
   deleteUser: async (userId: number) => {
     const { $client } = get();
-    return await $client.user.delete(userId);
+    const response = await $client.user.delete(userId);
+    if (!response) {
+      throw new Error("Unable to remove user");
+    }
+    return response;
   },
 });

@@ -35,7 +35,7 @@ const EditUserButton = styled(TableRowButton)(({ theme }) => ({
     textDecoration: "underline",
   },
 }));
-const ArchiveUserButton = styled(TableRowButton)(({ theme }) => ({
+const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
   color: theme.palette.text.secondary,
   "&:hover": {
     color: theme.palette.secondary.contrastText,
@@ -169,16 +169,16 @@ export const MembersTable = ({
                 <Permission.IsPlatformAdmin>
                   <TableCell>
                     {showEditMemberButton && (
-                      <ArchiveUserButton
+                      <RemoveUserButton
                         onClick={() => {
-                          setActionType("archive");
+                          setActionType("remove");
                           setShowAddModal(true);
                           setInitialValues(member);
                         }}
-                        data-testId={`archive-button-${i}`}
+                        data-testId={`remove-button-${i}`}
                       >
-                        Archive
-                      </ArchiveUserButton>
+                        Remove
+                      </RemoveUserButton>
                     )}
                   </TableCell>
                 </Permission.IsPlatformAdmin>

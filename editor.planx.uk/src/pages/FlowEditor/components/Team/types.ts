@@ -21,7 +21,7 @@ export interface AddNewEditorFormValues {
   lastName: string;
 }
 
-export type ActionType = "add" | "edit" | "archive";
+export type ActionType = "add" | "edit" | "remove";
 
 export interface EditorModalProps {
   showModal?: boolean;
