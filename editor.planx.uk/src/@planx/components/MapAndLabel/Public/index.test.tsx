@@ -5,7 +5,6 @@ import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
-
 import {
   mockFeaturePointObj,
   point1,
@@ -23,7 +22,11 @@ import {
   fillOutForm,
   fillOutSecondHalfOfForm,
 } from "../test/utils";
-import { mockTreeData } from "../test/mocks/GenericValues";
+import { mockTreeData, TreeData } from "../test/mocks/GenericValues";
+import {
+  MockPayload,
+  mockSingleFeaturePayload,
+} from "../test/mocks/mockPayload";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -60,14 +63,14 @@ describe("Basic UI", () => {
 
     await waitFor(() =>
       expect(
-        queryByText("Plot a feature on the map to begin"),
-      ).not.toBeInTheDocument(),
+        queryByText("Plot a feature on the map to begin")
+      ).not.toBeInTheDocument()
     );
   });
 
   it("renders the schema name as the tab title", async () => {
     const { queryByText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -81,7 +84,7 @@ describe("Basic UI", () => {
 
   it("should not have any accessibility violations", async () => {
     const { queryByText, getByTestId, container } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -98,7 +101,7 @@ describe("Basic UI", () => {
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
     const { getByTestId, user, queryByRole, getAllByTestId } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
 
@@ -123,8 +126,6 @@ describe("validation and error handling", () => {
       expect(message).not.toBeEmptyDOMElement();
     });
   });
-
-  // it shows all fields are required in a tab
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
 
@@ -157,8 +158,6 @@ describe("validation and error handling", () => {
     // error messages persist
     await checkErrorMessagesPopulated();
   });
-
-  // it shows all fields are required across different tabs
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, user } = setup(<MapAndLabel {...props} />);
 
@@ -169,10 +168,9 @@ describe("validation and error handling", () => {
     const errorMessage = within(errorWrapper).getByText(/You must plot /);
     expect(errorMessage).toBeVisible();
   });
-  // ??
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
     const { getByTestId, user, queryByRole } = setup(
-      <MapAndLabel {...props} />,
+      <MapAndLabel {...props} />
     );
     const map = getByTestId("map-and-label-map");
 
@@ -188,13 +186,12 @@ describe("validation and error handling", () => {
 
     expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
   });
-  // shows the error state on a tab when it's invalid
 });
 
 it("does not trigger handleSubmit when errors exist", async () => {
   const handleSubmit = vi.fn();
   const { getByTestId, user } = setup(
-    <MapAndLabel {...props} handleSubmit={handleSubmit} />,
+    <MapAndLabel {...props} handleSubmit={handleSubmit} />
   );
   const map = getByTestId("map-and-label-map");
 
@@ -407,7 +404,9 @@ describe("copy feature select", () => {
     await user.click(listItemTwo);
 
     const urgencyDiv = getByTitle("Urgency");
-    const urgencySelect = within(urgencyDiv).getByRole("combobox");
+    const urgencyInput = within(urgencyDiv).getByRole("textbox", {
+      hidden: true,
+    });
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
     expect(getByLabelText("Proposed work")).toHaveDisplayValue(
@@ -416,7 +415,7 @@ describe("copy feature select", () => {
     expect(getByLabelText("Justification")).toHaveDisplayValue(
       mockTreeData.justification
     );
-    expect(urgencySelect).toHaveTextContent(mockTreeData.urgency);
+    expect(urgencyInput).toHaveDisplayValue(mockTreeData.urgency);
   });
 
   it("should not have any accessibility violations", async () => {
@@ -489,19 +488,85 @@ describe("remove feature button", () => {
       `{"type":"FeatureCollection","features":[]}`
     );
   });
-  // click remove - feature is removed
-  // no map icon
 });
 
 describe("payload generation", () => {
-  test.todo("a submitted payload contains a GeoJSON feature collection");
-  // check payload contains GeoJSON feature collection
-  test.todo(
-    "the feature collection contains all geospatial data inputted by the user",
-  );
-  // feature collection matches the mocked data
-  test.todo(
-    "each feature's properties correspond with the details entered for that feature",
-  );
-  // feature properties contain the answers to inputs
+  it("a submitted payload contains a GeoJSON feature collection", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = setup(
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    );
+
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    await clickContinue(user);
+
+    await checkErrorMessagesEmpty();
+    expect(handleSubmit).toHaveBeenCalled();
+    const output = handleSubmit.mock.calls[0][0].data.MockFn.type;
+
+    expect(output).toEqual("FeatureCollection");
+  });
+
+  it("the feature collection contains all geospatial data inputted by the user", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = setup(
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    );
+
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    await clickContinue(user);
+
+    await checkErrorMessagesEmpty();
+    expect(handleSubmit).toHaveBeenCalled();
+    const output =
+      handleSubmit.mock.calls[0][0].data.MockFn.features[0].geometry
+        .coordinates;
+
+    expect(output[0]).toEqual(point1.geometry.coordinates[0]);
+    expect(output[1]).toEqual(point1.geometry.coordinates[1]);
+  });
+
+  it("each feature's properties correspond with the details entered for that feature", async () => {
+    const handleSubmit = vi.fn();
+    const { getByTestId, user } = setup(
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    );
+
+    const map = getByTestId("map-and-label-map");
+
+    addFeaturesToMap(map, [point1]);
+
+    const firstTabPanel = getByTestId("vertical-tabpanel-0");
+
+    expect(firstTabPanel).toBeVisible();
+
+    await fillOutForm(user);
+
+    await clickContinue(user);
+
+    await checkErrorMessagesEmpty();
+    expect(handleSubmit).toHaveBeenCalled();
+    const output =
+      handleSubmit.mock.calls[0][0].data.MockFn.features[0].properties;
+
+    expect(output).toEqual(mockTreeData);
+  });
 });
