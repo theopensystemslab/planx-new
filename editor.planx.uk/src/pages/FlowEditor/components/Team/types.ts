@@ -20,10 +20,12 @@ export interface AddNewEditorFormValues {
   lastName: string;
 }
 
+export type ActionType = "add" | "edit" | "delete";
+
 export interface EditorModalProps {
-  showModal: boolean;
+  showModal?: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
   initialValues?: TeamMember;
   userId?: number;
-  actionType: "add" | "edit";
+  actionType?: ActionType;
 }

@@ -1,22 +1,26 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
-import { FormikHelpers } from "formik";
 import { useToast } from "hooks/useToast";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { AddNewEditorFormValues } from "../types";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { deleteUser } from "@opensystemslab/planx-core";
+import { EditorModalProps } from "../types";
 
-export const DeleteUserModal = ({ showModal, setShowModal, initialValues }) => {
+export const DeleteUserModal = ({
+  showModal,
+  setShowModal,
+  initialValues,
+}: EditorModalProps) => {
   const toast = useToast();
-  console.log(initialValues.id);
-  const { teamName, deleteUser } = useStore.getState();
+
+  const deleteUser = useStore.getState().deleteUser;
   const handleClick = async () => {
+    if (!initialValues?.id) {
+      return;
+    }
     const response = await deleteUser(initialValues.id);
     if (!response) {
       toast.error("Failed to delete user, please try again");
@@ -28,22 +32,7 @@ export const DeleteUserModal = ({ showModal, setShowModal, initialValues }) => {
   };
 
   return (
-    <Dialog
-      aria-labelledby="dialog-heading"
-      data-testid={"dialog-edit-user"}
-      PaperProps={{
-        sx: (theme) => ({
-          width: "100%",
-          maxWidth: theme.breakpoints.values.md,
-          borderRadius: 0,
-          borderTop: `20px solid ${theme.palette.primary.main}`,
-          background: theme.palette.background.paper,
-          margin: theme.spacing(2),
-        }),
-      }}
-      open={showModal}
-      onClose={() => setShowModal(false)}
-    >
+    <>
       <DialogContent data-testid={"modal-delete-user"} sx={{ p: 2.5 }}>
         <Box sx={{ mb: 2 }}>
           <Typography variant="h3" component="h2" id="dialog-heading">
@@ -52,7 +41,7 @@ export const DeleteUserModal = ({ showModal, setShowModal, initialValues }) => {
         </Box>
         <Box sx={{}}>
           <Typography variant="body1" component="p" id="dialog-body">
-            {`Do you want to delete ${initialValues.firstName} ${initialValues.lastName} from the ${teamName} team? `}
+            {`Do you want to delete ${initialValues?.firstName} ${initialValues?.lastName}?`}
           </Typography>
         </Box>
       </DialogContent>
@@ -86,6 +75,6 @@ export const DeleteUserModal = ({ showModal, setShowModal, initialValues }) => {
           </Button>
         </Box>
       </DialogActions>
-    </Dialog>
+    </>
   );
 };

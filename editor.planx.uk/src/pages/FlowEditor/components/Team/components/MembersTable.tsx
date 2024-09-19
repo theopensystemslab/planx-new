@@ -13,9 +13,8 @@ import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
-import { MembersTableProps, TeamMember } from "./../types";
-import { EditorUpsertModal } from "./EditorUpsertModal";
-import { DeleteUserModal } from "./DeleteUserModal";
+import { ActionType, MembersTableProps, TeamMember } from "./../types";
+import { SettingsModal } from "./SettingsModal";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -49,8 +48,7 @@ export const MembersTable = ({
   showEditMemberButton,
 }: MembersTableProps) => {
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
-  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<ActionType>("add");
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<string, string> = {
@@ -79,6 +77,7 @@ export const MembersTable = ({
               <TableCell colSpan={3}>
                 <AddButton
                   onClick={() => {
+                    setActionType("add");
                     setInitialValues(undefined);
                     setShowAddModal(true);
                   }}
@@ -90,11 +89,11 @@ export const MembersTable = ({
           )}
         </Table>
         {showAddModal && (
-          <EditorUpsertModal
+          <SettingsModal
             showModal={showAddModal}
             setShowModal={setShowAddModal}
             initialValues={initialValues}
-            actionType={"add"}
+            actionType={actionType}
           />
         )}
       </>
@@ -151,7 +150,8 @@ export const MembersTable = ({
                   <TableCell>
                     <EditUserButton
                       onClick={() => {
-                        setShowUpdateModal(true);
+                        setActionType("edit");
+                        setShowAddModal(true);
                         setInitialValues(member);
                       }}
                       data-testId={`edit-button-${i}`}
@@ -164,7 +164,8 @@ export const MembersTable = ({
                   <TableCell>
                     <RemoveUserButton
                       onClick={() => {
-                        setShowDeleteModal(true);
+                        setActionType("delete");
+                        setShowAddModal(true);
                         setInitialValues(member);
                       }}
                       data-testId={`remove-button-${i}`}
@@ -176,46 +177,29 @@ export const MembersTable = ({
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <Permission.IsPlatformAdmin>
-                <TableRow>
-                  <TableCell colSpan={3}>
-                    <AddButton
-                      onClick={() => {
-                        setInitialValues(undefined);
-                        setShowAddModal(true);
-                      }}
-                    >
-                      Add a new editor
-                    </AddButton>
-                  </TableCell>
-                </TableRow>
-              </Permission.IsPlatformAdmin>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <AddButton
+                    onClick={() => {
+                      setActionType("add");
+                      setInitialValues(undefined);
+                      setShowAddModal(true);
+                    }}
+                  >
+                    Add a new editor
+                  </AddButton>
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
       {showAddModal && (
-        <EditorUpsertModal
+        <SettingsModal
           showModal={showAddModal}
           setShowModal={setShowAddModal}
           initialValues={initialValues}
-          actionType={"add"}
-        />
-      )}
-      {showUpdateModal && (
-        <EditorUpsertModal
-          showModal={showUpdateModal}
-          setShowModal={setShowUpdateModal}
-          initialValues={initialValues}
-          userId={initialValues?.id || 1}
-          actionType={"edit"}
-        />
-      )}
-      {showDeleteModal && (
-        <DeleteUserModal
-          showModal={showDeleteModal}
-          setShowModal={setShowDeleteModal}
-          initialValues={initialValues}
+          actionType={actionType}
         />
       )}
     </>
