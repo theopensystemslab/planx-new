@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { vi } from "vitest";
 
@@ -6,10 +6,8 @@ import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { mockPlatformAdminUser } from "./mocks/mockUsers";
 
-vi.mock("pages/FlowEditor/components/Team/queries/updateUser.tsx", () => ({
-  updateTeamMember: vi.fn().mockResolvedValue({
-    id: 1,
-  }),
+vi.mock("pages/FlowEditor/lib/store/index.ts", () => ({
+  deleteUser: vi.fn().mockResolvedValue(true),
 }));
 
 describe("when a user presses 'archive' button", () => {
@@ -79,5 +77,12 @@ describe("when a user clicks 'Archive user' button", () => {
     });
 
     await user.click(archiveButton);
+  });
+
+  it("should close the modal", async () => {
+    await waitFor(() => {
+      const archiveModal = screen.queryByTestId("modal-archive-user");
+      expect(archiveModal).not.toBeInTheDocument();
+    });
   });
 });
