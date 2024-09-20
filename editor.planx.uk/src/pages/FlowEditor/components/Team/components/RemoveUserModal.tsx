@@ -18,7 +18,6 @@ export const RemoveUserModal = ({
 
   const removeUser = useStore.getState().deleteUser;
   const handleClick = async () => {
-    console.log("handle click called");
     if (!initialValues?.id) {
       return;
     }
