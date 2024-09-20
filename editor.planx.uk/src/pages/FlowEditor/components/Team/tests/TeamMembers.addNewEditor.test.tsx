@@ -11,7 +11,11 @@ import { EditorUpsertModal } from "../components/EditorUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import { emptyTeamMemberObj } from "./mocks/mockUsers";
+import {
+  emptyTeamMemberObj,
+  mockPlainUser,
+  mockPlatformAdminUser,
+} from "./mocks/mockUsers";
 
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
@@ -27,7 +31,11 @@ let initialState: FullStore;
 
 describe("when a user presses 'add a new editor'", () => {
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlatformAdminUser,
+      teamSlug: "planx",
+    });
     const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
@@ -45,8 +53,13 @@ describe("when a user presses 'add a new editor'", () => {
 
 describe("when a user fills in the 'add a new editor' form correctly", () => {
   afterAll(() => useStore.setState(initialState));
+
   beforeEach(async () => {
-    useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlatformAdminUser,
+      teamSlug: "planx",
+    });
     const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
   });
@@ -97,11 +110,30 @@ describe("'add a new editor' button is hidden from Templates team", () => {
   beforeEach(async () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
+      user: mockPlatformAdminUser,
       teamSlug: "templates",
     });
   });
 
   it("hides the button on the Templates team", async () => {
+    const { user: _user } = await setupTeamMembersScreen();
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    const addEditorButton =
+      within(teamEditorsTable).queryByText("Add a new editor");
+    expect(addEditorButton).not.toBeInTheDocument();
+  });
+});
+
+describe("when a user is not a platform admin", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlainUser,
+      teamSlug: "templates",
+    });
+  });
+
+  it("hides the button from non-admin users", async () => {
     const { user: _user } = await setupTeamMembersScreen();
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton =

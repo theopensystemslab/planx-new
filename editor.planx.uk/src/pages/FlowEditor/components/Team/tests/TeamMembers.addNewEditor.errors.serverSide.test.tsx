@@ -5,7 +5,7 @@ import { vi } from "vitest";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import { alreadyExistingUser } from "./mocks/mockUsers";
+import { alreadyExistingUser, mockPlatformAdminUser } from "./mocks/mockUsers";
 
 let initialState: FullStore;
 vi.mock(
@@ -22,6 +22,7 @@ describe("when a user fills in the 'add a new editor' form correctly but there i
   beforeEach(async () => {
     useStore.setState({
       teamMembers: [...mockTeamMembersData, alreadyExistingUser],
+      user: mockPlatformAdminUser,
     });
 
     const { user } = await setupTeamMembersScreen();

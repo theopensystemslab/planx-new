@@ -5,7 +5,7 @@ import { vi } from "vitest";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import { alreadyExistingUser } from "./mocks/mockUsers";
+import { alreadyExistingUser, mockPlatformAdminUser } from "./mocks/mockUsers";
 
 vi.mock(
   "pages/FlowEditor/components/Team/queries/createAndAddUserToTeam.tsx",
@@ -23,6 +23,7 @@ describe("when a user fills in the 'add a new editor' form correctly but the use
   beforeEach(async () => {
     useStore.setState({
       teamMembers: [...mockTeamMembersData, alreadyExistingUser],
+      user: mockPlatformAdminUser,
     });
 
     const { user } = await setupTeamMembersScreen();

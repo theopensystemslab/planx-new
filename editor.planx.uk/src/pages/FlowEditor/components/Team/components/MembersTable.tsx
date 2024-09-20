@@ -148,18 +148,20 @@ export const MembersTable = ({
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <AddButton
-                    onClick={() => {
-                      setInitialValues(undefined);
-                      setShowAddModal(true);
-                    }}
-                  >
-                    Add a new editor
-                  </AddButton>
-                </TableCell>
-              </TableRow>
+              <Permission.IsPlatformAdmin>
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <AddButton
+                      onClick={() => {
+                        setInitialValues(undefined);
+                        setShowAddModal(true);
+                      }}
+                    >
+                      Add a new editor
+                    </AddButton>
+                  </TableCell>
+                </TableRow>
+              </Permission.IsPlatformAdmin>
             )}
           </TableBody>
         </Table>

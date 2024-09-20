@@ -192,6 +192,7 @@ describe("when a user is not a platform admin", () => {
 
     await setupTeamMembersScreen();
   });
+
   it("does not show an edit button", async () => {
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton =
