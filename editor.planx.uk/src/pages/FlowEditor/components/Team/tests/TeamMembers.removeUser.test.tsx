@@ -1,24 +1,44 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
+import React from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { setup } from "testUtils";
+import { vi } from "vitest";
+import { axe } from "vitest-axe";
 
+import { RemoveUserModal } from "../components/RemoveUserModal";
+import { SettingsModal } from "../components/SettingsModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
-import { mockPlatformAdminUser } from "./mocks/mockUsers";
+import { mockPlainUser, mockPlatformAdminUser } from "./mocks/mockUsers";
+
+const mockRemoveUser = vi.fn().mockResolvedValue(true);
+vi.mock("@opensystemslab/planx-core", () => {
+  return {
+    CoreDomainClient: vi.fn().mockImplementation(() => ({
+      user: {
+        delete: () => mockRemoveUser(),
+      },
+    })),
+  };
+});
 
 describe("when a user presses 'remove' button", () => {
+  let axeContainer: HTMLElement;
   beforeEach(async () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
     });
-    const { user } = await setupTeamMembersScreen();
+    const { user, container } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const removeRowButton = await within(teamEditorsTable).findByTestId(
       "remove-button-0",
     );
-
+    axeContainer = container;
     await user.click(removeRowButton);
     // Start each test with an open modal
   });
@@ -46,6 +66,12 @@ describe("when a user presses 'remove' button", () => {
 
     expect(removeButton).toBeInTheDocument();
   });
+
+  it("should not have any accessibility issues", async () => {
+    await screen.findByTestId("modal-remove-user");
+    const results = await axe(axeContainer);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 describe("when a user clicks 'Remove user' button", () => {
@@ -55,31 +81,77 @@ describe("when a user clicks 'Remove user' button", () => {
       user: mockPlatformAdminUser,
       teamSlug: "planx",
     });
-
     const { user } = await setupTeamMembersScreen();
 
     const teamEditorsTable = screen.getByTestId("team-editors");
-    const removeRowButton = await within(teamEditorsTable).findByTestId(
-      "remove-button-0",
-    );
+
+    const removeRowButton =
+      within(teamEditorsTable).getByTestId("remove-button-0");
 
     await user.click(removeRowButton);
-    // Start each test with an open modal
 
-    const removeButton = screen.getByRole("button", {
-      name: /Remove user/,
-    });
-
+    const removeButton = screen.getByTestId("modal-remove-user-button");
     await user.click(removeButton);
   });
 
   it("should close the modal", async () => {
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const removedUser = within(teamEditorsTable).queryByText("Donella");
-    expect(removedUser).not.toBeInTheDocument();
+    expect(mockRemoveUser).toHaveBeenCalled();
     const removeModal = screen.queryByTestId("modal-remove-user");
+
     await waitFor(() => {
       expect(removeModal).not.toBeInTheDocument();
     });
+  });
+
+  it("should move the user to Archived Members table", async () => {
+    const archiveTable = screen.getByTestId("archived-members");
+
+    const archivedBill = within(archiveTable).queryByText(/Bilbo/);
+
+    expect(archivedBill).toBeInTheDocument();
+  });
+
+  it("should display a success toast message", async () => {
+    const successToast = screen.queryByText(
+      /Successfully removed Bilbo Baggins/i,
+    );
+    expect(successToast).toBeInTheDocument();
+  });
+});
+
+describe("'remove' button is hidden from Templates team", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlatformAdminUser,
+      teamSlug: "templates",
+    });
+  });
+
+  it("hides the button on the Templates team", async () => {
+    const { user: _user } = await setupTeamMembersScreen();
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    const editButton =
+      within(teamEditorsTable).queryByTestId("remove-button-0");
+    expect(editButton).not.toBeInTheDocument();
+  });
+});
+
+describe("when a user is not a platform admin", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamMembers: mockTeamMembersData,
+      user: mockPlainUser,
+      team: "planx",
+    });
+
+    await setupTeamMembersScreen();
+  });
+  it("does not show a remove button", async () => {
+    const teamEditorsTable = screen.getByTestId("team-editors");
+    const addEditorButton =
+      within(teamEditorsTable).queryByTestId("remove-button-0");
+
+    expect(addEditorButton).not.toBeInTheDocument();
   });
 });

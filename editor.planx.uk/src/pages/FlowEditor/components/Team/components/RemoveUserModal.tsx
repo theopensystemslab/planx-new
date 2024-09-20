@@ -18,6 +18,7 @@ export const RemoveUserModal = ({
 
   const removeUser = useStore.getState().deleteUser;
   const handleClick = async () => {
+    console.log("handle click called");
     if (!initialValues?.id) {
       return;
     }
@@ -36,7 +37,9 @@ export const RemoveUserModal = ({
       initialValues.id,
     );
     setShowModal(false);
-    toast.success("Successfully removed the user");
+    toast.success(
+      `Successfully removed ${initialValues.firstName} ${initialValues.lastName}`,
+    );
   };
 
   return (

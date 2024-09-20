@@ -67,7 +67,7 @@ export const TeamMembers = () => {
         />
       </SettingsSection>
       {archivedMembers.length > 0 && (
-        <SettingsSection>
+        <SettingsSection testId="archived-members">
           <Typography variant="h2" component="h3" gutterBottom>
             Archived team editors
           </Typography>
