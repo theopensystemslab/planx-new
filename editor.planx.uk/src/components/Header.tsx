@@ -2,6 +2,7 @@ import Edit from "@mui/icons-material/Edit";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Person from "@mui/icons-material/Person";
 import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
@@ -432,15 +433,25 @@ const PublicToolbar: React.FC<{
 
 const ServiceTitle: React.FC = () => {
   const flowName = useStore((state) => state.flowName);
+  const route = useCurrentRoute();
+  const path = route.url.pathname.split("/").slice(-1)[0];
 
   return (
     <ServiceTitleRoot data-testid="service-title">
-      <Chip
-        label="Preview"
-        variant="notApplicableTag"
-        size="medium"
-        icon={<OpenInNewIcon />}
-      />
+      {(path === "preview" || path === "draft") && (
+        <Chip
+          label={capitalize(path)}
+          variant="notApplicableTag"
+          size="medium"
+          icon={
+            path === "preview" ? (
+              <OpenInNewIcon fontSize="small" />
+            ) : (
+              <OpenInNewOffIcon fontSize="small" />
+            )
+          }
+        />
+      )}
       <Typography component="span" variant="h4">
         {flowName}
       </Typography>
