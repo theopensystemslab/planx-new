@@ -23,7 +23,9 @@ export const RemoveUserModal = ({
     }
     const response = await removeUser(initialValues.id).catch((err) => {
       if (err.message === "Unable to remove user") {
-        toast.error("Failed to remove new user, please try again");
+        toast.error(
+          `Failed to remove ${initialValues.firstName} ${initialValues.lastName}, try again`,
+        );
       }
       console.error(err);
     });
@@ -55,7 +57,7 @@ export const RemoveUserModal = ({
           </Typography>
           <br />
           <Typography variant="body1" component="p" id="dialog-body">
-            {`The user will be moved to Archived Users and no longer have access to PlanX`}
+            {`They will be moved to Archived Users and no longer have access to PlanX`}
           </Typography>
         </Box>
       </DialogContent>
