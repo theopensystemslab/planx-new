@@ -164,18 +164,19 @@ export const MembersTable = ({
                 </Permission.IsPlatformAdmin>
                 <Permission.IsPlatformAdmin>
                   <TableCell>
-                    {showEditMemberButton && (
-                      <RemoveUserButton
-                        onClick={() => {
-                          setActionType("remove");
-                          setShowModal(true);
-                          setInitialValues(member);
-                        }}
-                        data-testId={`remove-button-${i}`}
-                      >
-                        Remove
-                      </RemoveUserButton>
-                    )}
+                    {showEditMemberButton &&
+                      member.role !== "platformAdmin" && (
+                        <RemoveUserButton
+                          onClick={() => {
+                            setActionType("remove");
+                            setShowModal(true);
+                            setInitialValues(member);
+                          }}
+                          data-testId={`remove-button-${i}`}
+                        >
+                          Remove
+                        </RemoveUserButton>
+                      )}
                   </TableCell>
                 </Permission.IsPlatformAdmin>
               </StyledTableRow>
