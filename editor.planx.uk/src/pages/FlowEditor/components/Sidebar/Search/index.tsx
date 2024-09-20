@@ -43,11 +43,12 @@ const Search: React.FC = () => {
   });
 
   const debouncedSearch = useMemo(
-    () => debounce((pattern: string) => {
-      console.debug("Search term: ", pattern)
-      return search(pattern);
-    }, DEBOUNCE_MS),
-    [search]
+    () =>
+      debounce((pattern: string) => {
+        console.debug("Search term: ", pattern);
+        return search(pattern);
+      }, DEBOUNCE_MS),
+    [search],
   );
 
   return (
@@ -77,7 +78,8 @@ const Search: React.FC = () => {
           id={"search-data-field-facet"}
           checked
           inputProps={{ disabled: true }}
-          onChange={() => { }}
+          onChange={() => {}}
+          variant="compact"
         />
         <Box pt={3}>
           {formik.values.pattern && (
