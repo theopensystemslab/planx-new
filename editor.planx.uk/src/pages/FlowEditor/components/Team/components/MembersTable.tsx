@@ -27,12 +27,8 @@ const TableRowButton = styled(Button)(({ theme }) => ({
 }));
 const EditUserButton = styled(TableRowButton)(({ theme }) => ({
   color: theme.palette.primary.light,
-  textDecoration: "underline",
-  boxShadow: "none",
   "&:hover": {
-    boxShadow: "none",
     color: theme.palette.primary.dark,
-    textDecoration: "underline",
   },
 }));
 const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
@@ -47,7 +43,7 @@ export const MembersTable = ({
   showAddMemberButton,
   showEditMemberButton,
 }: MembersTableProps) => {
-  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [actionType, setActionType] = useState<ActionType>("add");
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
@@ -79,7 +75,7 @@ export const MembersTable = ({
                   onClick={() => {
                     setActionType("add");
                     setInitialValues(undefined);
-                    setShowAddModal(true);
+                    setShowModal(true);
                   }}
                 >
                   Add a new editor
@@ -88,10 +84,10 @@ export const MembersTable = ({
             </TableRow>
           )}
         </Table>
-        {showAddModal && (
+        {showModal && (
           <SettingsModal
-            showModal={showAddModal}
-            setShowModal={setShowAddModal}
+            showModal={showModal}
+            setShowModal={setShowModal}
             initialValues={initialValues}
             actionType={actionType}
           />
@@ -156,7 +152,7 @@ export const MembersTable = ({
                       <EditUserButton
                         onClick={() => {
                           setActionType("edit");
-                          setShowAddModal(true);
+                          setShowModal(true);
                           setInitialValues(member);
                         }}
                         data-testId={`edit-button-${i}`}
@@ -172,7 +168,7 @@ export const MembersTable = ({
                       <RemoveUserButton
                         onClick={() => {
                           setActionType("remove");
-                          setShowAddModal(true);
+                          setShowModal(true);
                           setInitialValues(member);
                         }}
                         data-testId={`remove-button-${i}`}
@@ -191,7 +187,7 @@ export const MembersTable = ({
                     onClick={() => {
                       setActionType("add");
                       setInitialValues(undefined);
-                      setShowAddModal(true);
+                      setShowModal(true);
                     }}
                   >
                     Add a new editor
@@ -202,10 +198,10 @@ export const MembersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      {showAddModal && (
+      {showModal && (
         <SettingsModal
-          showModal={showAddModal}
-          setShowModal={setShowAddModal}
+          showModal={showModal}
+          setShowModal={setShowModal}
           initialValues={initialValues}
           actionType={actionType}
         />

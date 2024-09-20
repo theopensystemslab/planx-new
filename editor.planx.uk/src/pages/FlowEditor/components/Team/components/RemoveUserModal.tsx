@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React from "react";
 
 import { EditorModalProps } from "../types";
 import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
