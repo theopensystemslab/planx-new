@@ -1,11 +1,13 @@
 import Edit from "@mui/icons-material/Edit";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Person from "@mui/icons-material/Person";
 import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
@@ -172,6 +174,8 @@ const SkipLink = styled("a")(({ theme }) => ({
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
   display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(1),
   flexGrow: 1,
   flexShrink: 1,
   lineHeight: LINE_HEIGHT_BASE,
@@ -431,6 +435,12 @@ const ServiceTitle: React.FC = () => {
 
   return (
     <ServiceTitleRoot data-testid="service-title">
+      <Chip
+        label="Preview"
+        variant="notApplicableTag"
+        size="medium"
+        icon={<OpenInNewIcon />}
+      />
       <Typography component="span" variant="h4">
         {flowName}
       </Typography>
