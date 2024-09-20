@@ -1,14 +1,8 @@
 import { screen, waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { RemoveUserModal } from "../components/RemoveUserModal";
-import { SettingsModal } from "../components/SettingsModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { mockPlainUser, mockPlatformAdminUser } from "./mocks/mockUsers";
