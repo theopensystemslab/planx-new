@@ -11,8 +11,8 @@ const Root = styled(Box, {
     display: "inline-flex",
     flexShrink: 0,
     position: "relative",
-    width: variant === "compact" ? 24 : 40,
-    height: variant === "compact" ? 24 : 40,
+    width: 40,
+    height: 40,
     borderColor: theme.palette.text.primary,
     border: "2px solid",
     backgroundColor: theme.palette.common.white,
@@ -21,15 +21,23 @@ const Root = styled(Box, {
       border: `2px solid ${theme.palette.grey[400]}`,
       backgroundColor: theme.palette.grey[400],
     }),
+    ...(variant === "compact" && {
+      width: 24,
+      height: 24,
+    }),
   }),
 );
 
 const Input = styled("input")<{ variant?: "default" | "compact" }>(
   ({ variant }) => ({
     opacity: 0,
-    width: variant === "compact" ? 16 : 24,
-    height: variant === "compact" ? 16 : 24,
+    width: 24,
+    height: 24,
     cursor: "pointer",
+    ...(variant === "compact" && {
+      width: 16,
+      height: 16,
+    }),
   }),
 );
 
@@ -46,18 +54,29 @@ const Icon = styled("span", {
   display: checked ? "block" : "none",
   content: "''",
   position: "absolute",
-  height: variant === "compact" ? 12 : 24,
-  width: variant === "compact" ? 7 : 12,
-  borderBottom: variant === "compact" ? "3px solid" : "5px solid",
-  borderRight: variant === "compact" ? "3px solid" : "5px solid",
+  height: 24,
+  width: 12,
+  borderBottom: "5px solid",
+  borderRight: "5px solid",
   left: "50%",
-  top: variant === "compact" ? "44%" : "42%",
+  top: "42%",
   transform: "translate(-50%, -50%) rotate(45deg)",
   cursor: "pointer",
+  ...(variant === "compact" && {
+    height: 12,
+    width: 7,
+    borderBottom: "3px solid",
+    borderRight: "3px solid",
+    top: "44%",
+  }),
   ...(disabled && {
-    borderBottom: variant === "compact" ? "3px solid" : "5px solid",
-    borderRight: variant === "compact" ? "3px solid" : "5px solid",
+    borderBottom: "5px solid",
+    borderRight: "5px solid",
     borderColor: theme.palette.common.white,
+    ...(variant === "compact" && {
+      borderBottom: "3px solid",
+      borderRight: "3px solid",
+    }),
   }),
 }));
 

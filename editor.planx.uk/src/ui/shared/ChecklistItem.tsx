@@ -27,7 +27,7 @@ interface Props {
   checked: boolean;
   onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-  variant: "default" | "compact";
+  variant?: "default" | "compact";
 }
 
 export default function ChecklistItem({
