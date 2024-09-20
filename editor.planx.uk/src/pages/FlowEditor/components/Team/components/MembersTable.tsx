@@ -186,7 +186,7 @@ export const MembersTable = ({
             ))}
             {showAddMemberButton && (
               <TableRow>
-                <TableCell colSpan={3}>
+                <TableCell colSpan={5}>
                   <AddButton
                     onClick={() => {
                       setActionType("add");
