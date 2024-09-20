@@ -2,7 +2,7 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import type { StateCreator } from "zustand";
-import { client } from "lib/graphql";
+
 import { EditorStore } from "./editor";
 
 export interface UserStore {

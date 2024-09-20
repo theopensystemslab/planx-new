@@ -76,7 +76,7 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
 
   it("closes the modal", async () => {
     await waitFor(() => {
-      expect(screen.queryByTestId("modal-add-user")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("modal-create-user")).not.toBeInTheDocument();
     });
   });
 
