@@ -64,6 +64,7 @@ const VerticalFeatureTabs: React.FC = () => {
     editFeature,
     isFeatureInvalid,
     removeFeature,
+    saveFeature,
   } = useMapAndLabelContext();
 
   if (!features) {
@@ -165,17 +166,23 @@ const VerticalFeatureTabs: React.FC = () => {
               activeIndex={activeIndex}
               formik={formik}
             />
-            <Button
-              onClick={() => removeFeature(activeIndex)}
-              sx={{
-                fontWeight: FONT_WEIGHT_SEMI_BOLD,
-                gap: (theme) => theme.spacing(2),
-                marginTop: 2,
-              }}
-            >
-              <DeleteIcon color="warning" fontSize="medium" />
-              Remove
-            </Button>
+            <Box display="flex" gap={2} mt={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                data-testid="save-item-button"
+                onClick={() => saveFeature(activeIndex)}
+              >
+                Save
+              </Button>
+              <Button
+                onClick={() => removeFeature(activeIndex)}
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                <DeleteIcon color="warning" fontSize="medium" />
+                Remove
+              </Button>
+            </Box>
           </TabPanel>
         ))}
       </TabContext>
