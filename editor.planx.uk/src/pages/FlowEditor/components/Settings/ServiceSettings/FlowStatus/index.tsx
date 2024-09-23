@@ -18,7 +18,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { useStore } from "../../../../lib/store";
 import { PublicLink } from "./PublicLink";
 
-export const FlowStatusSection = () => {
+export const FlowStatus = () => {
   const [
     flowStatus,
     updateFlowStatus,
@@ -90,7 +90,6 @@ export const FlowStatusSection = () => {
     );
   };
 
-
   return (
     <Box component="form" onSubmit={statusForm.handleSubmit}>
       <SettingsSection>
@@ -121,9 +120,7 @@ export const FlowStatusSection = () => {
               onChange={() =>
                 statusForm.setFieldValue(
                   "status",
-                  statusForm.values.status === "online"
-                    ? "offline"
-                    : "online",
+                  statusForm.values.status === "online" ? "offline" : "online",
                 )
               }
             />
@@ -132,8 +129,8 @@ export const FlowStatusSection = () => {
         <SettingsDescription>
           <p>Toggle your service between "offline" and "online".</p>
           <p>
-            A service must be online to be accessed by the public, and to
-            enable analytics gathering.
+            A service must be online to be accessed by the public, and to enable
+            analytics gathering.
           </p>
           <p>Offline services can still be edited and published as normal.</p>
         </SettingsDescription>
@@ -166,5 +163,5 @@ export const FlowStatusSection = () => {
         </Box>
       </SettingsSection>
     </Box>
-  )
-}
+  );
+};
