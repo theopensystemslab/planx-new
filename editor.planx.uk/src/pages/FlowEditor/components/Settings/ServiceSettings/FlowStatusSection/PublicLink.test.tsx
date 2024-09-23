@@ -4,7 +4,7 @@ import { vi } from "vitest";
 
 import setupServiceSettingsScreen, {
   mockWindowLocationObject,
-} from "../helpers/setupServiceSettingsScreen";
+} from "./testUtils";
 
 const { getState, setState } = useStore;
 
@@ -62,6 +62,7 @@ describe("A team with a subdomain has an offline, published service.", () => {
 
     await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -83,6 +84,7 @@ describe("A team with a subdomain has an online, unpublished service.", () => {
 
     await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -107,11 +109,13 @@ describe("A team with a subdomain has an online, published service.", () => {
     await setupServiceSettingsScreen();
     await activeLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
   it("has an enabled copy button", async () => {
     // render the <ServiceSettings/> comp
     await setupServiceSettingsScreen();
     enabledCopyCheck();
   });
+
   it("can be copied to the clipboard", async () => {
     const { flowSlug, teamDomain } = getState();
     // render the <ServiceSettings/> comp
@@ -127,6 +131,7 @@ describe("A team with a subdomain has an online, published service.", () => {
     );
   });
 });
+
 describe("A team with a subdomain has an offline, unpublished service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
@@ -145,8 +150,10 @@ describe("A team with a subdomain has an offline, unpublished service.", () => {
 
     await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
   it("has a disabled copy button", disabledCopyCheck);
 });
+
 describe("A team without a subdomain has an offline, published service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
@@ -168,6 +175,7 @@ describe("A team without a subdomain has an offline, published service.", () => 
   it("has a public link with the url in a <p> tag", async () => {
     await inactiveLinkCheck(publishedUrl);
   });
+
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -192,6 +200,7 @@ describe("A team without a subdomain has an online, unpublished service.", () =>
   it("has a public link with the url in a <p> tag", async () => {
     await inactiveLinkCheck(publishedUrl);
   });
+
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -219,6 +228,7 @@ describe("A team without a subdomain has an online, published service.", () => {
     setupServiceSettingsScreen();
     await activeLinkCheck(publishedUrl);
   });
+
   it("has an enabled copy button", () => {
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
@@ -258,5 +268,6 @@ describe("A team without a subdomain has an offline, unpublished service.", () =
   it("has a public link with the url in a <p> tag", async () => {
     await inactiveLinkCheck(publishedUrl);
   });
+
   it("has a disabled copy button", disabledCopyCheck);
 });
