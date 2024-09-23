@@ -7,13 +7,15 @@ import { View } from "react-navi";
 import { client } from "../../lib/graphql";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
-interface FlowMetadata {
+interface FlowEditorData {
+  id: string,
   flowAnalyticsLink: string;
   isFlowPublished: boolean;
 }
 
-interface GetFlowMetadata {
+interface GetFlowEditorData {
   flows: {
+    id: string,
     flowAnalyticsLink: string;
     publishedFlowsAggregate: {
       aggregate: {
@@ -23,13 +25,13 @@ interface GetFlowMetadata {
   }[];
 }
 
-const getFlowMetadata = async (
+export const getFlowEditorData = async (
   flowSlug: string,
   team: string,
-): Promise<FlowMetadata> => {
+): Promise<FlowEditorData> => {
   const {
     data: { flows },
-  } = await client.query<GetFlowMetadata>({
+  } = await client.query<GetFlowEditorData>({
     query: gql`
       query GetFlowMetadata($slug: String!, $team_slug: String!) {
         flows(
@@ -55,11 +57,13 @@ const getFlowMetadata = async (
   const flow = flows[0];
   if (!flows) throw new NotFoundError(`Flow ${flowSlug} not found for ${team}`);
 
-  const metadata = {
+  const flowEditorData: FlowEditorData = {
+    id: flow.id,
     flowAnalyticsLink: flow.flowAnalyticsLink,
     isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
   };
-  return metadata;
+
+  return flowEditorData;
 };
 
 /**
@@ -67,11 +71,11 @@ const getFlowMetadata = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
-  const { flowAnalyticsLink, isFlowPublished } = await getFlowMetadata(
+  const { id, flowAnalyticsLink, isFlowPublished } = await getFlowEditorData(
     flow,
     req.params.team,
   );
-  useStore.setState({ flowAnalyticsLink, isFlowPublished });
+  useStore.setState({ id, flowAnalyticsLink, isFlowPublished });
 
   return (
     <FlowEditorLayout>

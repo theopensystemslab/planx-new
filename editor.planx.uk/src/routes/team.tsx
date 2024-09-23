@@ -8,6 +8,7 @@ import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
 import Team from "../pages/Team";
 import { makeTitle } from "./utils";
+import { getFlowEditorData } from "./views/flowEditor";
 import { teamView } from "./views/team";
 
 let cached: { flowSlug?: string; teamSlug?: string } = {
@@ -17,7 +18,9 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 
 const setFlowAndLazyLoad = (importComponent: Parameters<typeof lazy>[0]) => {
   return map(async (request) => {
-    useStore.getState().setFlowSlug(request.params.flow);
+    const data = await getFlowEditorData(request.params.flow, request.params.team);
+    useStore.setState({ ...data, flowSlug: request.params.flow });
+    
     return lazy(importComponent);
   });
 };
