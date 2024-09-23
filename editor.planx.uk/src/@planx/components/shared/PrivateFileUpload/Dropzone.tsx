@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { FileUploadSlot } from "@planx/components/FileUpload/Public";
+import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
 import { uploadPrivateFile } from "api/upload";
 import { nanoid } from "nanoid";
