@@ -25,8 +25,8 @@ import Input, { Props as InputProps } from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import type { FlowSettings } from "../../../../types";
-import { useStore } from "../../lib/store";
+import type { FlowSettings } from "../../../../../types";
+import { useStore } from "../../../lib/store";
 
 const CopyButton = (props: { link: string; isActive: boolean }) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");

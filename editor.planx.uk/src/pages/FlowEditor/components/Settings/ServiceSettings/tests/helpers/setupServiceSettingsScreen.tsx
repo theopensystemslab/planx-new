@@ -5,7 +5,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import ServiceSettings from "../../ServiceSettings";
+import ServiceSettings from "../..";
 
 export default async function setupServiceSettingsScreen() {
   const { user } = setup(
