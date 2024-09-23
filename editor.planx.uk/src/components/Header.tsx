@@ -444,11 +444,10 @@ const ServiceTitle: React.FC = () => {
           variant="notApplicableTag"
           size="medium"
           icon={
-            path === "preview" ? (
-              <OpenInNewIcon fontSize="small" />
-            ) : (
-              <OpenInNewOffIcon fontSize="small" />
-            )
+            {
+              preview: <OpenInNewIcon fontSize="small" />,
+              draft: <OpenInNewOffIcon fontSize="small" />,
+            }[path]
           }
         />
       )}
