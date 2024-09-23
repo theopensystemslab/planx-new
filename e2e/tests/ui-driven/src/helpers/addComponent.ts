@@ -31,6 +31,7 @@ const createBaseComponent = async (
     case ComponentType.TextInput:
       await page.getByPlaceholder("Title").fill(title || "");
       break;
+
     case ComponentType.NumberInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByPlaceholder("eg square metres").fill(options?.[0] || "");
@@ -79,6 +80,10 @@ const createBaseComponent = async (
       break;
     case ComponentType.DrawBoundary:
       break;
+    case ComponentType.Result:
+      break;
+    case ComponentType.Confirmation:
+      break;
     case ComponentType.NextSteps:
       if (options) {
         let index = 0;
@@ -94,6 +99,19 @@ const createBaseComponent = async (
       break;
     case ComponentType.FileUpload:
       await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      break;
+    case ComponentType.FileUploadAndLabel:
+      await page.getByPlaceholder("File type").fill(options?.[0] || "");
+      await page.getByPlaceholder("Data Field").fill(options?.[1] || "");
+      break;
+    case ComponentType.List:
+      await page.getByPlaceholder("Title").fill(title || "");
+      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      break;
+    case ComponentType.Content:
+      await page
+        .locator("p[data-placeholder='Content']")
+        .fill(options?.[0] || "");
 
       break;
     default:
@@ -295,3 +313,55 @@ async function createComponentOptions(
     index++;
   }
 }
+
+export const createList = async (
+  page: Page,
+  locatingNode: Locator,
+  inputTitle: string,
+  inputDataField: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.List,
+    inputTitle,
+    [inputDataField],
+  );
+};
+
+export const createResult = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Result);
+};
+
+export const createConfirmation = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Confirmation);
+};
+
+export const createUploadAndLabel = async (
+  page: Page,
+  locatingNode: Locator,
+  fileType: string,
+  dataField: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.FileUploadAndLabel,
+    undefined,
+    [fileType, dataField],
+  );
+};
+
+export const createContent = async (
+  page: Page,
+  locatingNode: Locator,
+  content: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.Content,
+    undefined,
+    [content],
+  );
+};

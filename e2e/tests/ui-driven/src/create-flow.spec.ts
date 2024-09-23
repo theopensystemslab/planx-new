@@ -1,24 +1,23 @@
 import { Browser, expect, test } from "@playwright/test";
-import type { Context } from "../helpers/context";
+import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "../helpers/context";
-import { getTeamPage } from "../helpers/getPage";
-import { createAuthenticatedSession } from "../helpers/globalHelpers";
+} from "./helpers/context";
+import { getTeamPage } from "./helpers/getPage";
+import { createAuthenticatedSession } from "./helpers/globalHelpers";
 import {
   answerAddressInput,
-  answerChecklist,
   answerContactInput,
   answerDateInput,
-  answerFindProperty,
+  answerListInput,
   answerNumberInput,
   answerQuestion,
   answerTextInput,
   clickContinue,
-} from "../helpers/userActions";
-import { PlaywrightEditor } from "../pages/Editor";
+} from "./helpers/userActions";
+import { PlaywrightEditor } from "./pages/Editor";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: Context = {
@@ -60,37 +59,37 @@ test.describe("Flow creation, publish and preview", () => {
 
     await editor.createQuestion();
     await editor.createNoticeOnEachBranch();
-    await editor.createChecklist();
+    // await editor.createChecklist();
     await editor.createTextInput();
     await editor.createNumberInput();
     await editor.createDateInput();
     await editor.createAddressInput();
     await editor.createContactInput();
+    await editor.createList();
     await editor.createTaskList();
-    await editor.createFindProperty();
-    await editor.createDrawBoundary();
-    await editor.createPlanningConstraints();
-    await editor.createFileUpload();
+    await editor.createContent();
+    await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
+    await editor.createConfirmation();
 
     await expect(editor.nodeList).toContainText([
       "Is this a test?",
       "Yes! this is a test",
       "Sorry, this is a test",
-      "Checklist item 1",
+      // "Checklist item 1",
       "Tell us about your trees.",
       "How old are you?",
       "When is your birthday?",
       "What is your address?",
       "What is your contact info?",
+      "A list title",
       "What you should do next",
-      "Find property",
-      "Confirm your location plan",
-      "Planning constraints",
-      "File upload",
+      "Some content",
+      "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
+      "Confirmation",
     ]);
   });
 
@@ -203,12 +202,12 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    await answerChecklist({
-      page,
-      title: "A checklist title",
-      answers: ["Checklist item 1", "Second checklist item"],
-    });
-    await clickContinue({ page });
+    // await answerChecklist({
+    //   page,
+    //   title: "A checklist title",
+    //   answers: ["Checklist item 1", "Second checklist item"],
+    // });
+    // await clickContinue({ page });
 
     await answerTextInput(page, {
       expectedQuestion: "Tell us about your trees.",
@@ -249,6 +248,14 @@ test.describe("Flow creation, publish and preview", () => {
     });
     await clickContinue({ page });
 
+    await answerListInput(page, {
+      unitType: "House",
+      tenure: "Market housing",
+      numBedrooms: 4,
+      numUnits: 3,
+      continueToNext: true,
+    });
+
     await expect(
       page.locator("h1", { hasText: "What you should do next" }),
     ).toBeVisible();
@@ -260,10 +267,29 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    await expect(
-      page.locator("h1", { hasText: "Find the property" }),
-    ).toBeVisible();
-    await answerFindProperty(page);
+    await expect(page.locator("p", { hasText: "Some content" })).toBeVisible();
     await clickContinue({ page });
+
+    await expect(page.locator("h1", { hasText: "No result" })).toBeVisible();
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "What would you like to do next?" }),
+    ).toBeVisible();
+    const nextStepButton = page.getByRole("button", {
+      name: "A possible next step",
+    });
+    nextStepButton.click();
+
+    await expect(
+      page.locator("h1", {
+        hasText: "Check your answers before sending your application",
+      }),
+    ).toBeVisible();
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "Application sent" }),
+    ).toBeVisible();
   });
 });

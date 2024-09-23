@@ -10,7 +10,11 @@ import { axe } from "vitest-axe";
 
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
-import { breadcrumbsWithoutUSRN, simpleBreadcrumbs, simpleFlow } from "./mocks/simpleFlow";
+import {
+  breadcrumbsWithoutUSRN,
+  simpleBreadcrumbs,
+  simpleFlow,
+} from "./mocks/simpleFlow";
 import PlanningConstraints from "./Public";
 
 const { setState } = useStore;
@@ -167,7 +171,7 @@ describe("following a FindProperty component", () => {
         teamIntegrations: {
           hasPlanningData: true,
         },
-      })
+      }),
     );
 
     setup(
@@ -187,7 +191,9 @@ describe("following a FindProperty component", () => {
     const planingConstraintsResponse = swrMock.results[0].value;
 
     expect(planingConstraintsURL).toContain("/gis");
-    expect(planingConstraintsResponse).toEqual({ data: digitalLandResponseMock });
+    expect(planingConstraintsResponse).toEqual({
+      data: digitalLandResponseMock,
+    });
 
     // Classified roads API not called due to missing USRN
     const swrURL = swrMock.calls[1][0]();

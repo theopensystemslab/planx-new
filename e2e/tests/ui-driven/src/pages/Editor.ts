@@ -2,19 +2,24 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import {
   createAddressInput,
   createChecklist,
+  createConfirmation,
   createContactInput,
+  createContent,
   createDateInput,
   createDrawBoundary,
   createFileUpload,
   createFindProperty,
+  createList,
   createNextSteps,
   createNotice,
   createNumberInput,
   createPlanningConstraints,
   createQuestionWithOptions,
+  createResult,
   createReview,
   createTaskList,
   createTextInput,
+  createUploadAndLabel,
 } from "../helpers/addComponent";
 
 export class PlaywrightEditor {
@@ -161,6 +166,15 @@ export class PlaywrightEditor {
     await createFileUpload(this.page, this.getNextNode(), "some data field");
   }
 
+  async createUploadAndLabel() {
+    await createUploadAndLabel(
+      this.page,
+      this.getNextNode(),
+      "Property title deeds",
+      "some data field",
+    );
+  }
+
   async createNextSteps() {
     await createNextSteps(this.page, this.getNextNode(), [
       "A possible next step",
@@ -170,5 +184,25 @@ export class PlaywrightEditor {
 
   async createReview() {
     await createReview(this.page, this.getNextNode());
+  }
+
+  async createList() {
+    await createList(
+      this.page,
+      this.getNextNode(),
+      "A list title",
+      "some data field",
+    );
+  }
+  async createResult() {
+    await createResult(this.page, this.getNextNode());
+  }
+
+  async createConfirmation() {
+    await createConfirmation(this.page, this.getNextNode());
+  }
+
+  async createContent() {
+    await createContent(this.page, this.getNextNode(), "Some content");
   }
 }
