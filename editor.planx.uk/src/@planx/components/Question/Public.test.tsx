@@ -4,9 +4,10 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Question, { IQuestion, QuestionLayout } from "./Public";
+import type { Question } from "./model";
+import QuestionComponent, { QuestionLayout } from "./Public";
 
-const responses: { [key in QuestionLayout]: IQuestion["responses"] } = {
+const responses: { [key in QuestionLayout]: Question["responses"] } = {
   [QuestionLayout.Basic]: [
     {
       id: "pizza_id",
@@ -59,7 +60,7 @@ describe("Question component", () => {
         const handleSubmit = vi.fn();
 
         const { user, getByTestId, getByRole, getByText } = setup(
-          <Question
+          <QuestionComponent
             text="Best food"
             responses={responses[type]}
             handleSubmit={handleSubmit}
@@ -82,7 +83,7 @@ describe("Question component", () => {
       it(`should display previously selected answer on back or change`, async () => {
         const handleSubmit = vi.fn();
         const { user, getByRole, getByTestId } = setup(
-          <Question
+          <QuestionComponent
             text="Best food"
             responses={responses[type]}
             previouslySubmittedData={{
@@ -112,7 +113,7 @@ describe("Question component", () => {
       it(`should not have any accessibility violations`, async () => {
         const handleSubmit = vi.fn();
         const { container } = setup(
-          <Question
+          <QuestionComponent
             text="Best food"
             responses={responses[type]}
             handleSubmit={handleSubmit}
@@ -127,7 +128,7 @@ describe("Question component", () => {
         const errorMessage = /Select your answer before continuing/;
 
         const { user, getByTestId, getByText, queryByText } = setup(
-          <Question
+          <QuestionComponent
             text="Best food"
             responses={responses[type]}
             handleSubmit={handleSubmit}
