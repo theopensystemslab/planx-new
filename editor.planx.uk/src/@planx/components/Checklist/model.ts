@@ -8,6 +8,11 @@ export interface Group<T> {
   children: Array<T>;
 }
 
+export interface Category {
+  title: string;
+  count: number;
+}
+
 export interface Checklist extends MoreInformation {
   fn?: string;
   description?: string;
@@ -16,6 +21,7 @@ export interface Checklist extends MoreInformation {
   groupedOptions?: Array<Group<Option>>;
   img?: string;
   allRequired?: boolean;
+  categories?: Array<Category>;
 }
 
 interface ChecklistExpandableProps {
