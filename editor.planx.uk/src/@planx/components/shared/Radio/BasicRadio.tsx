@@ -1,6 +1,7 @@
 import FormControlLabel, {
   FormControlLabelProps,
 } from "@mui/material/FormControlLabel";
+import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import React from "react";
 
@@ -26,7 +27,7 @@ const BasicRadio: React.FC<Props> = ({
     sx={(theme) => ({
       mb: variant === "default" ? 1 : 0,
       alignItems: "flex-start",
-      ".MuiFormControlLabel-label": {
+      [`& .${formControlLabelClasses.label}`]: {
         paddingTop: theme.spacing(0.95),
       },
     })}
