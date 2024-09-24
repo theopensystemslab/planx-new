@@ -88,7 +88,7 @@ const QuestionComponent: React.FC<Question> = (props) => {
             >
               <Grid
                 container
-                spacing={layout === QuestionLayout.Basic ? 0 : 2}
+                spacing={layout === QuestionLayout.Images ? 2 : 0}
                 alignItems="stretch"
               >
                 {props.responses?.map((response) => {
@@ -116,16 +116,16 @@ const QuestionComponent: React.FC<Question> = (props) => {
                       );
                     case QuestionLayout.Descriptions:
                       return (
-                        <Grid
-                          item
-                          xs={12}
-                          sm={6}
-                          contentWrap={4}
-                          key={response.id}
-                          data-testid="description-radio"
-                        >
-                          <DescriptionRadio {...buttonProps} {...response} />
-                        </Grid>
+                        <FormWrapper key={`wrapper-${response.id}`}>
+                          <Grid
+                            item
+                            xs={12}
+                            key={`grid-${response.id}`}
+                            data-testid="description-radio"
+                          >
+                            <DescriptionRadio {...buttonProps} {...response} />
+                          </Grid>
+                        </FormWrapper>
                       );
                     case QuestionLayout.Images:
                       return (
