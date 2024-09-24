@@ -9,33 +9,13 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio";
 import { useFormik } from "formik";
-import { Store } from "pages/FlowEditor/lib/store";
-import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { mixed, object, string } from "yup";
 
-export interface IQuestion {
-  id?: string;
-  text?: string;
-  description?: string;
-  info?: string;
-  policyRef?: string;
-  howMeasured?: string;
-  definitionImg?: string;
-  img?: string;
-  responses: {
-    id: string;
-    responseKey: string | number;
-    title: string;
-    description?: string;
-    img?: string;
-  }[];
-  previouslySubmittedData?: Store.UserData;
-  handleSubmit: HandleSubmit;
-}
+import { Question } from "../model";
 
 export enum QuestionLayout {
   Basic,
@@ -43,7 +23,7 @@ export enum QuestionLayout {
   Descriptions,
 }
 
-const Question: React.FC<IQuestion> = (props) => {
+const QuestionComponent: React.FC<Question> = (props) => {
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
     (response) => response.id === previousResponseId,
@@ -170,4 +150,4 @@ const Question: React.FC<IQuestion> = (props) => {
   );
 };
 
-export default Question;
+export default QuestionComponent;
