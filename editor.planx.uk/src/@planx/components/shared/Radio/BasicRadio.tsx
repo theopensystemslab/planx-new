@@ -23,7 +23,13 @@ const BasicRadio: React.FC<Props> = ({
     onChange={onChange}
     control={<Radio variant={variant} />}
     label={title}
-    sx={variant === "default" ? { pb: 1 } : {}}
+    sx={(theme) => ({
+      mb: variant === "default" ? 1 : 0,
+      alignItems: "flex-start",
+      ".MuiFormControlLabel-label": {
+        paddingTop: theme.spacing(0.95),
+      },
+    })}
   />
 );
 
