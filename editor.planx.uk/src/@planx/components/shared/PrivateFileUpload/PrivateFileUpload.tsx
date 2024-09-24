@@ -1,4 +1,4 @@
-import { FileUploadSlot } from "@planx/components/FileUpload/Public";
+import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { Dropzone } from "@planx/components/shared/PrivateFileUpload/Dropzone";
 import { UploadedFileCard } from "@planx/components/shared/PrivateFileUpload/UploadedFileCard";
 import React, { useState } from "react";

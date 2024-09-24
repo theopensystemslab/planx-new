@@ -1,59 +1,13 @@
-import { MoreInformation } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
-import type { HandleSubmit } from "pages/Preview/Node";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
-import { FileWithPath } from "react-dropzone";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import { array } from "yup";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-
-interface Props extends MoreInformation {
-  id?: string;
-  title?: string;
-  fn: string;
-  description?: string;
-  handleSubmit: HandleSubmit;
-  previouslySubmittedData?: Store.UserData;
-}
-
-export interface FileUploadSlot {
-  file: FileWithPath;
-  status: "success" | "error" | "uploading";
-  progress: number;
-  id: string;
-  url?: string;
-  cachedSlot?: Omit<FileUploadSlot, "cachedSlot">;
-}
-
-const slotsSchema = array()
-  .required()
-  .test({
-    name: "nonUploading",
-    message: "Upload at least one file",
-    test: (slots?: Array<FileUploadSlot>) => {
-      return Boolean(
-        slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "uploading"),
-      );
-    },
-  })
-  .test({
-    name: "errorStatus",
-    message: "Remove files which failed to upload",
-    test: (slots?: Array<FileUploadSlot>) => {
-      return Boolean(
-        slots &&
-          slots.length > 0 &&
-          !slots.some((slot) => slot.status === "error"),
-      );
-    },
-  });
+import { FileUploadSlot, Props, slotsSchema } from "./model";
 
 const FileUpload: React.FC<Props> = (props) => {
   const recoveredSlots = getPreviouslySubmittedData(props)?.map(

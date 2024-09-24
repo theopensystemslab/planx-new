@@ -8,7 +8,7 @@ import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { FileUploadSlot } from "@planx/components/FileUpload/Public";
+import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import ImagePreview from "components/ImagePreview";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";

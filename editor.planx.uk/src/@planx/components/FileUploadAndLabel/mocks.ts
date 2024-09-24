@@ -1,4 +1,4 @@
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import { Condition, FileList, FileType, Operator, Rule } from "./model";
 
 const mockAlwaysRequiredRule: Rule = {

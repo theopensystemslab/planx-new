@@ -18,7 +18,7 @@ import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo } from "react";
 import { borderedFocusStyle } from "theme";
 
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import {
   addOrAppendSlots,
   FileList,
