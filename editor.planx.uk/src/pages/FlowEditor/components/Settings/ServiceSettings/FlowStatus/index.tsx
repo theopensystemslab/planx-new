@@ -5,7 +5,7 @@ import FormControlLabel, {
 } from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
@@ -18,7 +18,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { useStore } from "../../../../lib/store";
 import { PublicLink } from "./PublicLink";
 
-export const FlowStatus = () => {
+const FlowStatus = () => {
   const [
     flowStatus,
     updateFlowStatus,
@@ -165,3 +165,5 @@ export const FlowStatus = () => {
     </Box>
   );
 };
+
+export default FlowStatus;
