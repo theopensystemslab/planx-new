@@ -402,6 +402,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^5.58.0
     version: 5.58.0(eslint@8.44.0)(typescript@5.6.2)
+  '@vitest/eslint-plugin':
+    specifier: ^1.1.4
+    version: 1.1.4(eslint@8.44.0)(typescript@5.6.2)(vitest@1.6.0)
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.32)
@@ -4334,7 +4337,7 @@ packages:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/icons': 1.2.12(react-dom@18.2.0)(react@18.2.0)
-      '@types/lodash': 4.17.9
+      '@types/lodash': 4.14.202
       color-convert: 2.0.1
       dequal: 2.0.3
       lodash: 4.17.21
@@ -4394,14 +4397,14 @@ packages:
   /@storybook/client-logger@6.5.16:
     resolution: {integrity: sha512-pxcNaCj3ItDdicPTXTtmYJE3YC1SjxFrBmHcyrN+nffeNyiMuViJdOOZzzzucTUG0wcOOX8jaSyak+nnHg5H1Q==}
     dependencies:
-      core-js: 3.38.1
+      core-js: 3.31.0
       global: 4.4.0
     dev: true
 
-  /@storybook/components@8.3.3(storybook@8.3.1):
-    resolution: {integrity: sha512-i2JYtesFGkdu+Hwuj+o9fLuO3yo+LPT1/8o5xBVYtEqsgDtEAyuRUWjSz8d8NPtzloGPOv5kvR6MokWDfbeMfw==}
+  /@storybook/components@8.3.4(storybook@8.3.1):
+    resolution: {integrity: sha512-iQzLJd87uGbFBbYNqlrN/ABrnx3dUrL0tjPCarzglzshZoPCNOsllJeJx5TJwB9kCxSZ8zB9TTOgr7NXl+oyVA==}
     peerDependencies:
-      storybook: ^8.3.3
+      storybook: ^8.3.4
     dependencies:
       storybook: 8.3.1
     dev: true
@@ -4499,10 +4502,10 @@ packages:
       storybook: 8.3.1
     dev: true
 
-  /@storybook/preview-api@8.3.3(storybook@8.3.1):
-    resolution: {integrity: sha512-GP2QlaF3BBQGAyo248N7549YkTQjCentsc1hUvqPnFWU4xfjkejbnFk8yLaIw0VbYbL7jfd7npBtjZ+6AnphMQ==}
+  /@storybook/preview-api@8.3.4(storybook@8.3.1):
+    resolution: {integrity: sha512-/YKQ3QDVSHmtFXXCShf5w0XMlg8wkfTpdYxdGv1CKFV8DU24f3N7KWulAgeWWCWQwBzZClDa9kzxmroKlQqx3A==}
     peerDependencies:
-      storybook: ^8.3.3
+      storybook: ^8.3.4
     dependencies:
       storybook: 8.3.1
     dev: true
@@ -4566,10 +4569,10 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@storybook/components': 8.3.3(storybook@8.3.1)
+      '@storybook/components': 8.3.4(storybook@8.3.1)
       '@storybook/global': 5.0.0
       '@storybook/manager-api': 8.3.1(storybook@8.3.1)
-      '@storybook/preview-api': 8.3.3(storybook@8.3.1)
+      '@storybook/preview-api': 8.3.4(storybook@8.3.1)
       '@storybook/react-dom-shim': 8.3.1(react-dom@18.2.0)(react@18.2.0)(storybook@8.3.1)
       '@storybook/test': 8.3.1(storybook@8.3.1)
       '@storybook/theming': 8.3.1(storybook@8.3.1)
@@ -5535,6 +5538,7 @@ packages:
 
   /@types/lodash@4.17.9:
     resolution: {integrity: sha512-w9iWudx1XWOHW5lQRS9iKpK/XuRhnN+0T7HvdCCd802FYkT1AMTnxndJHGrNJwRoRHkslGr4S29tjm1cT7x/7w==}
+    dev: false
 
   /@types/markdown-it@14.1.2:
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
@@ -5962,6 +5966,26 @@ packages:
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: false
+
+  /@vitest/eslint-plugin@1.1.4(eslint@8.44.0)(typescript@5.6.2)(vitest@1.6.0):
+    resolution: {integrity: sha512-kudjgefmJJ7xQ2WfbUU6pZbm7Ou4gLYRaao/8Ynide3G0QhVKHd978sDyWX4KOH0CCMH9cyrGAkFd55eGzJ48Q==}
+    peerDependencies:
+      '@typescript-eslint/utils': '>= 8.0'
+      eslint: '>= 8.57.0'
+      typescript: '>= 5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/utils':
+        optional: true
+      typescript:
+        optional: true
+      vitest:
+        optional: true
+    dependencies:
+      eslint: 8.44.0
+      typescript: 5.6.2
+      vitest: 1.6.0(@types/node@17.0.45)(sass@1.71.1)
+    dev: true
 
   /@vitest/expect@1.6.0:
     resolution: {integrity: sha512-ixEvFVQjycy/oNgHjqsL6AZCDduC+tflRluaHIzKIsdbzkLn2U/iBnVeJwB6HsIjQBdfMR8Z0tRxKUsvFJEeWQ==}
@@ -6975,7 +6999,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.25.6
       '@types/raf': 3.4.3
-      core-js: 3.38.1
+      core-js: 3.31.0
       raf: 3.4.1
       regenerator-runtime: 0.13.11
       rgbcolor: 1.0.1
@@ -7410,6 +7434,7 @@ packages:
   /core-js@3.38.1:
     resolution: {integrity: sha512-OP35aUorbU3Zvlx7pjsFdu1rGNnD4pgw/CWoYzRY3t2EzoVT7shKHY1dlAy3f41cGIO7ZDPQimhGFTlEYkG/Hw==}
     requiresBuild: true
+    dev: true
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -10606,7 +10631,7 @@ packages:
       fflate: 0.8.2
     optionalDependencies:
       canvg: 3.0.10
-      core-js: 3.38.1
+      core-js: 3.31.0
       dompurify: 2.5.7
       html2canvas: 1.4.1
     dev: false

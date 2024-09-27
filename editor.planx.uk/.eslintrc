@@ -5,13 +5,15 @@
     "react-hooks",
     "simple-import-sort",
     "jsx-a11y",
-    "testing-library"
+    "testing-library",
+    "@vitest"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "plugin:@vitest/legacy-recommended"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
