@@ -5,7 +5,9 @@ import Typography from "@mui/material/Typography";
 import { IndexedNode } from "@opensystemslab/planx-core/types";
 import type { SearchResults } from "hooks/useSearch";
 import React from "react";
+import { Virtuoso } from "react-virtuoso";
 
+import { ExternalPortalList } from "./ExternalPortalList";
 import { SearchResultCard } from "./SearchResultCard";
 
 export const Root = styled(List)(({ theme }) => ({
@@ -26,11 +28,16 @@ export const NodeSearchResults: React.FC<{
     </Typography>
 
     <Root>
-      {results.map((result) => (
-        <ListItem key={result.item.id} disablePadding>
-          <SearchResultCard result={result} />
-        </ListItem>
-      ))}
+      <Virtuoso
+        style={{ height: "400px" }}
+        totalCount={results.length}
+        components={{ Footer: ExternalPortalList }}
+        itemContent={(index) => (
+          <ListItem key={results[index].item.id} disablePadding sx={{ mb: 2 }}>
+            <SearchResultCard result={results[index]} />
+          </ListItem>
+        )}
+      />
     </Root>
   </>
 );

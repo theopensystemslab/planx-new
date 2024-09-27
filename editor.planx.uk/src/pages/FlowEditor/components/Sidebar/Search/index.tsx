@@ -10,7 +10,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
 
-import { ExternalPortalList } from "./ExternalPortalList";
 import { DATA_FACETS } from "./facets";
 import { NodeSearchResults } from "./NodeSearchResults";
 
@@ -107,12 +106,7 @@ const Search: React.FC = () => {
           variant="compact"
         />
         <Box pt={3}>
-          {formik.values.pattern && (
-            <>
-              <NodeSearchResults results={results} />
-              <ExternalPortalList />
-            </>
-          )}
+          {formik.values.pattern && <NodeSearchResults results={results} />}
         </Box>
       </form>
     </Container>
