@@ -6,6 +6,7 @@ import { axe } from "vitest-axe";
 
 import { flow, results } from "./mocks/simple";
 import { NodeSearchResults } from "./NodeSearchResults";
+import { VirtuosoWrapper } from "./testUtils";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
@@ -16,14 +17,20 @@ vi.mock("react-navi", () => ({
 beforeAll(() => useStore.setState({ flow }));
 
 it("Displays a warning if no results are returned", () => {
-  const { getByText, getByRole } = setup(<NodeSearchResults results={[]} />);
+  const { getByText, getByRole } = setup(
+    <VirtuosoWrapper>
+      <NodeSearchResults results={[]} />
+    </VirtuosoWrapper>,
+  );
   expect(getByText("No matches found")).toBeInTheDocument();
   expect(getByRole("list")).toBeEmptyDOMElement();
 });
 
 it("Displays the count for a single result", () => {
   const { getByText, getByRole, getAllByRole } = setup(
-    <NodeSearchResults results={[results[0]]} />,
+    <VirtuosoWrapper>
+      <NodeSearchResults results={[results[0]]} />
+    </VirtuosoWrapper>,
   );
   expect(getByText("1 result:")).toBeInTheDocument();
   expect(getByRole("list")).not.toBeEmptyDOMElement();
@@ -32,7 +39,9 @@ it("Displays the count for a single result", () => {
 
 it("Displays the count for multiple results", () => {
   const { getByText, getByRole, getAllByRole } = setup(
-    <NodeSearchResults results={results} />,
+    <VirtuosoWrapper>
+      <NodeSearchResults results={results} />
+    </VirtuosoWrapper>,
   );
   expect(getByText("2 results:")).toBeInTheDocument();
   expect(getByRole("list")).not.toBeEmptyDOMElement();
@@ -40,7 +49,11 @@ it("Displays the count for multiple results", () => {
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = setup(<NodeSearchResults results={results} />);
+  const { container } = setup(
+    <VirtuosoWrapper>
+      <NodeSearchResults results={results} />
+    </VirtuosoWrapper>,
+  );
   const axeResults = await axe(container);
   expect(axeResults).toHaveNoViolations();
 });
