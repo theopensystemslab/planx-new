@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { containerClasses } from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import EditorNavMenu from "components/EditorNavMenu";
-import { HEADER_HEIGHT_EDITOR } from "components/Header";
 import RouteLoadingIndicator from "components/RouteLoadingIndicator";
 import React, { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
@@ -23,7 +22,6 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   width: "100%",
-  minHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
   overflow: "hidden",
   [`& > .${containerClasses.root}`]: {
     paddingTop: theme.spacing(3),

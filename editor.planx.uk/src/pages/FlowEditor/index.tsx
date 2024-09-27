@@ -11,12 +11,16 @@ import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const EditorContainer = styled(Box)(() => ({
+const EditorContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isTestEnvBannerVisible",
+})<{ isTestEnvBannerVisible?: boolean }>(({ isTestEnvBannerVisible }) => ({
   display: "flex",
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
-  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+  maxHeight: isTestEnvBannerVisible
+    ? `calc(100vh - ${HEADER_HEIGHT_EDITOR * 2}px)`
+    : `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
 }));
 
 const FlowEditor = () => {
@@ -27,8 +31,15 @@ const FlowEditor = () => {
   useScrollControlsAndRememberPosition(scrollContainerRef);
   const showSidebar = useStore((state) => state.showSidebar);
 
+  const isTestEnvBannerVisible = useStore(
+    (state) => state.isTestEnvBannerVisible,
+  );
+
   return (
-    <EditorContainer id="editor-container">
+    <EditorContainer
+      id="editor-container"
+      isTestEnvBannerVisible={isTestEnvBannerVisible}
+    >
       <Box
         sx={{
           display: "flex",
