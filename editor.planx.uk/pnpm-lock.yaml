@@ -402,6 +402,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^5.58.0
     version: 5.58.0(eslint@8.44.0)(typescript@5.6.2)
+  '@vitest/eslint-plugin':
+    specifier: ^1.1.4
+    version: 1.1.4(eslint@8.44.0)(typescript@5.6.2)(vitest@1.6.0)
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.32)
@@ -5959,6 +5962,26 @@ packages:
     transitivePeerDependencies:
       - '@swc/helpers'
     dev: false
+
+  /@vitest/eslint-plugin@1.1.4(eslint@8.44.0)(typescript@5.6.2)(vitest@1.6.0):
+    resolution: {integrity: sha512-kudjgefmJJ7xQ2WfbUU6pZbm7Ou4gLYRaao/8Ynide3G0QhVKHd978sDyWX4KOH0CCMH9cyrGAkFd55eGzJ48Q==}
+    peerDependencies:
+      '@typescript-eslint/utils': '>= 8.0'
+      eslint: '>= 8.57.0'
+      typescript: '>= 5.0.0'
+      vitest: '*'
+    peerDependenciesMeta:
+      '@typescript-eslint/utils':
+        optional: true
+      typescript:
+        optional: true
+      vitest:
+        optional: true
+    dependencies:
+      eslint: 8.44.0
+      typescript: 5.6.2
+      vitest: 1.6.0(@types/node@17.0.45)(sass@1.71.1)
+    dev: true
 
   /@vitest/expect@1.6.0:
     resolution: {integrity: sha512-ixEvFVQjycy/oNgHjqsL6AZCDduC+tflRluaHIzKIsdbzkLn2U/iBnVeJwB6HsIjQBdfMR8Z0tRxKUsvFJEeWQ==}

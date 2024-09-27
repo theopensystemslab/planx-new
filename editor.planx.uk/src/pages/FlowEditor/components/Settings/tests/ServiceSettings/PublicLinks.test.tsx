@@ -57,11 +57,14 @@ describe("A team with a subdomain has an offline, published service.", () => {
     setupServiceSettingsScreen();
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in a <p> tag", async () => {
     const { flowSlug, teamDomain } = getState();
 
     await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -78,11 +81,14 @@ describe("A team with a subdomain has an online, unpublished service.", () => {
     setupServiceSettingsScreen();
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in a <p> tag", async () => {
     const { flowSlug, teamDomain } = getState();
 
     await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -100,6 +106,7 @@ describe("A team with a subdomain has an online, published service.", () => {
     );
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in an <a> tag", async () => {
     // render the <ServiceSettings/> comp
     const { flowSlug, teamDomain } = getState();
@@ -107,11 +114,14 @@ describe("A team with a subdomain has an online, published service.", () => {
     await setupServiceSettingsScreen();
     await activeLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has an enabled copy button", async () => {
     // render the <ServiceSettings/> comp
     await setupServiceSettingsScreen();
     enabledCopyCheck();
   });
+
   it("can be copied to the clipboard", async () => {
     const { flowSlug, teamDomain } = getState();
     // render the <ServiceSettings/> comp
@@ -127,6 +137,7 @@ describe("A team with a subdomain has an online, published service.", () => {
     );
   });
 });
+
 describe("A team with a subdomain has an offline, unpublished service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
@@ -140,13 +151,17 @@ describe("A team with a subdomain has an offline, unpublished service.", () => {
     setupServiceSettingsScreen();
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in a <p> tag", async () => {
     const { flowSlug, teamDomain } = getState();
 
     await inactiveLinkCheck(`https://${teamDomain}/${flowSlug}`);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
 });
+
 describe("A team without a subdomain has an offline, published service.", () => {
   beforeEach(async () => {
     // setup state values that <ServiceSettings/> depends on
@@ -165,9 +180,12 @@ describe("A team without a subdomain has an offline, published service.", () => 
     setupServiceSettingsScreen();
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the url in a <p> tag", async () => {
     await inactiveLinkCheck(publishedUrl);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -189,9 +207,12 @@ describe("A team without a subdomain has an online, unpublished service.", () =>
     setupServiceSettingsScreen();
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the url in a <p> tag", async () => {
     await inactiveLinkCheck(publishedUrl);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
 });
 
@@ -214,11 +235,14 @@ describe("A team without a subdomain has an online, published service.", () => {
     );
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the subdomain url in an <a> tag", async () => {
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
     await activeLinkCheck(publishedUrl);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has an enabled copy button", () => {
     // render the <ServiceSettings/> comp
     setupServiceSettingsScreen();
@@ -255,8 +279,11 @@ describe("A team without a subdomain has an offline, unpublished service.", () =
     setupServiceSettingsScreen();
   });
 
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a public link with the url in a <p> tag", async () => {
     await inactiveLinkCheck(publishedUrl);
   });
+
+  // eslint-disable-next-line @vitest/expect-expect
   it("has a disabled copy button", disabledCopyCheck);
 });

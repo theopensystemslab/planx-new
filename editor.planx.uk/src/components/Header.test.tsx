@@ -172,11 +172,11 @@ for (const route of ["/published", "/preview", "/draft", "/pay", "/invite"]) {
       expect(screen.getByText("test flow")).toBeInTheDocument();
     });
 
-    // it("should not have any accessibility violations", async () => {
-    //   const { container } = setup(<Header />);
-    //   const results = await axe(container);
-    //   expect(results).toHaveNoViolations();
-    // });
+    it("should not have any accessibility violations", async () => {
+      const { container } = setup(<Header />);
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 }
 
@@ -224,13 +224,13 @@ describe("Section navigation bar", () => {
       expect(screen.getByText("First section")).toBeInTheDocument();
     });
 
-    // it("should not have any accessibility violations", async () => {
-    //   act(() => setState({ flow: flowWithThreeSections }));
-    //   act(() => getState().initNavigationStore());
-    //   const { container } = setup(<Header />);
+    it("should not have any accessibility violations", async () => {
+      act(() => setState({ flow: flowWithThreeSections }));
+      act(() => getState().initNavigationStore());
+      const { container } = setup(<Header />);
 
-    //   const results = await axe(container);
-    //   expect(results).toHaveNoViolations();
-    // });
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
   });
 });
