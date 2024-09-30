@@ -52,6 +52,7 @@ export const TeamMembers = () => {
           members={activeMembers}
           showAddMemberButton={isNotTemplatesTeam}
           showEditMemberButton={isNotTemplatesTeam}
+          showRemoveMemberButton={isNotTemplatesTeam}
         />
       </SettingsSection>
       <SettingsSection>

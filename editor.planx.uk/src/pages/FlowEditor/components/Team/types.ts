@@ -10,6 +10,7 @@ export interface MembersTableProps {
   members: TeamMember[];
   showAddMemberButton?: boolean;
   showEditMemberButton?: boolean;
+  showRemoveMemberButton?: boolean;
 }
 export interface AddNewEditorModalProps {
   showModal: boolean;

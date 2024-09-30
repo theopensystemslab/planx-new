@@ -42,6 +42,7 @@ export const MembersTable = ({
   members,
   showAddMemberButton,
   showEditMemberButton,
+  showRemoveMemberButton,
 }: MembersTableProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [actionType, setActionType] = useState<ActionType>("add");
@@ -164,19 +165,18 @@ export const MembersTable = ({
                 </TableCell>
                 <TableCell>
                   <Permission.IsPlatformAdmin>
-                    {showEditMemberButton &&
-                      member.role !== "platformAdmin" && (
-                        <RemoveUserButton
-                          onClick={() => {
-                            setActionType("remove");
-                            setShowModal(true);
-                            setInitialValues(member);
-                          }}
-                          data-testId={`remove-button-${i}`}
-                        >
-                          Remove
-                        </RemoveUserButton>
-                      )}
+                    {showRemoveMemberButton && (
+                      <RemoveUserButton
+                        onClick={() => {
+                          setActionType("remove");
+                          setShowModal(true);
+                          setInitialValues(member);
+                        }}
+                        data-testId={`remove-button-${i}`}
+                      >
+                        Remove
+                      </RemoveUserButton>
+                    )}
                   </Permission.IsPlatformAdmin>
                 </TableCell>
               </StyledTableRow>
