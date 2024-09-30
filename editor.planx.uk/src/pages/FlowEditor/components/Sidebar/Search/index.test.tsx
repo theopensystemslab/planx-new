@@ -55,7 +55,7 @@ test("entering a search term displays a series of cards", async () => {
     </VirtuosoWrapper>,
   );
 
-  expect(queryByRole("list")).not.toBeInTheDocument();
+  expect(queryByRole("list")).toBeEmptyDOMElement();
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
