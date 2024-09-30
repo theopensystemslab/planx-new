@@ -168,7 +168,7 @@ export const MembersTable = ({
                         onClick={() => {
                           editUser(member);
                         }}
-                        data-testId={`edit-button-${i}`}
+                        data-testId={`edit-button-${member.id}`}
                       >
                         Edit
                       </EditUserButton>
@@ -182,7 +182,7 @@ export const MembersTable = ({
                         onClick={() => {
                           removeUser(member);
                         }}
-                        data-testId={`remove-button-${i}`}
+                        data-testId={`remove-button-${member.id}`}
                       >
                         Remove
                       </RemoveUserButton>

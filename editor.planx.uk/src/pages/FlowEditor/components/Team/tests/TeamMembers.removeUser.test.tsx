@@ -30,7 +30,7 @@ describe("when a user presses 'remove' button", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const removeRowButton = await within(teamEditorsTable).findByTestId(
-      "remove-button-0",
+      "remove-button-3",
     );
     axeContainer = container;
     await user.click(removeRowButton);
@@ -80,7 +80,7 @@ describe("when a user clicks 'Remove user' button", () => {
     const teamEditorsTable = screen.getByTestId("team-editors");
 
     const removeRowButton =
-      within(teamEditorsTable).getByTestId("remove-button-0");
+      within(teamEditorsTable).getByTestId("remove-button-3");
 
     await user.click(removeRowButton);
 
@@ -126,7 +126,7 @@ describe("'remove' button is hidden from Templates team", () => {
     const { user: _user } = await setupTeamMembersScreen();
     const teamEditorsTable = screen.getByTestId("team-editors");
     const editButton =
-      within(teamEditorsTable).queryByTestId("remove-button-0");
+      within(teamEditorsTable).queryByTestId("remove-button-3");
     expect(editButton).not.toBeInTheDocument();
   });
 });
