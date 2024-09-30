@@ -19,12 +19,12 @@ import {
 import { upsertEditorSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { updateTeamMember } from "../queries/updateUser";
+import { SettingsDialog } from "../styles";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 import {
   optimisticallyAddNewMember,
   optimisticallyUpdateExistingMember,
 } from "./lib/optimisticallyUpdateMembersTable";
-import { SettingsDialog } from "./MembersTable";
 
 export const EditorUpsertModal = ({
   setShowModal,

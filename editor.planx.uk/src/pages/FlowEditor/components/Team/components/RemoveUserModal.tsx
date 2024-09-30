@@ -7,9 +7,9 @@ import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
+import { SettingsDialog } from "../styles";
 import { EditorModalProps } from "../types";
 import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
-import { SettingsDialog } from "./MembersTable";
 
 export const RemoveUserModal = ({
   setShowModal,

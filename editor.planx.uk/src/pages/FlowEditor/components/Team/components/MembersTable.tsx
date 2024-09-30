@@ -40,17 +40,6 @@ const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
   },
 }));
 
-export const SettingsDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialog-paper": {
-    width: "100%",
-    maxWidth: theme.breakpoints.values.md,
-    borderRadius: 0,
-    borderTop: `20px solid ${theme.palette.primary.main}`,
-    background: theme.palette.background.paper,
-    margin: theme.spacing(2),
-  },
-}));
-
 export const MembersTable = ({
   members,
   showAddMemberButton,
