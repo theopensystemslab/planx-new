@@ -11,7 +11,6 @@ export const SettingsModal = ({
   initialValues,
   actionType,
 }: EditorModalProps) => {
-  "dialog-create-user";
   return (
     <Dialog
       aria-labelledby="dialog-heading"

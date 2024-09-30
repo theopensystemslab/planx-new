@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AddButton } from "pages/Team";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
@@ -54,6 +54,22 @@ export const MembersTable = ({
     teamViewer: "Viewer",
   };
 
+  const editUser = (member: TeamMember) => {
+    setActionType("edit");
+    setShowModal(true);
+    setInitialValues(member);
+  };
+  const removeUser = (member: TeamMember) => {
+    setActionType("remove");
+    setShowModal(true);
+    setInitialValues(member);
+  };
+  const addUser = () => {
+    setActionType("add");
+    setInitialValues(undefined);
+    setShowModal(true);
+  };
+
   const getRoleLabel = (role: string) => {
     return roleLabels[role] || role;
   };
@@ -74,9 +90,7 @@ export const MembersTable = ({
               <TableCell colSpan={3}>
                 <AddButton
                   onClick={() => {
-                    setActionType("add");
-                    setInitialValues(undefined);
-                    setShowModal(true);
+                    addUser();
                   }}
                 >
                   Add a new editor
@@ -152,9 +166,7 @@ export const MembersTable = ({
                     {showEditMemberButton && (
                       <EditUserButton
                         onClick={() => {
-                          setActionType("edit");
-                          setShowModal(true);
-                          setInitialValues(member);
+                          editUser(member);
                         }}
                         data-testId={`edit-button-${i}`}
                       >
@@ -168,9 +180,7 @@ export const MembersTable = ({
                     {showRemoveMemberButton && (
                       <RemoveUserButton
                         onClick={() => {
-                          setActionType("remove");
-                          setShowModal(true);
-                          setInitialValues(member);
+                          removeUser(member);
                         }}
                         data-testId={`remove-button-${i}`}
                       >
@@ -186,9 +196,7 @@ export const MembersTable = ({
                 <TableCell colSpan={5}>
                   <AddButton
                     onClick={() => {
-                      setActionType("add");
-                      setInitialValues(undefined);
-                      setShowModal(true);
+                      addUser();
                     }}
                   >
                     Add a new editor
