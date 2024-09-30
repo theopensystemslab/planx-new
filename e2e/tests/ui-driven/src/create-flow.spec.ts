@@ -9,6 +9,7 @@ import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
 import {
   answerAddressInput,
+  answerChecklist,
   answerContactInput,
   answerDateInput,
   answerListInput,
@@ -68,8 +69,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createList();
     await editor.createTaskList();
     await editor.createContent();
-    await editor.createFilter();
-    await editor.createInternalPortal();
+
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -88,8 +88,6 @@ test.describe("Flow creation, publish and preview", () => {
       "A list title",
       "What you should do next",
       "Some content",
-      "(Flags Filter)",
-      "an internal portal",
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
@@ -206,12 +204,12 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    // await answerChecklist({
-    //   page,
-    //   title: "A checklist title",
-    //   answers: ["Checklist item 1", "Second checklist item"],
-    // });
-    // await clickContinue({ page });
+    await answerChecklist({
+      page,
+      title: "A checklist title",
+      answers: ["Checklist item 1", "Second checklist item"],
+    });
+    await clickContinue({ page });
 
     await answerTextInput(page, {
       expectedQuestion: "Tell us about your trees.",
