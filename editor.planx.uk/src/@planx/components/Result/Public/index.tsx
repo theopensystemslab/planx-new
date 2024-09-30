@@ -2,33 +2,19 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import { Store, useStore } from "pages/FlowEditor/lib/store";
+import { PublicProps } from "@planx/components/ui";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { Response } from "pages/FlowEditor/lib/store/preview";
-import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import type { TextContent } from "types";
 
+import { PresentationalProps, Result } from "../model";
 import ResultReason from "./ResultReason";
 import ResultSummary from "./ResultSummary";
-
-export interface Props {
-  allowChanges?: boolean;
-  handleSubmit?: HandleSubmit;
-  headingColor: {
-    text: string;
-    background: string;
-  };
-  headingTitle?: string;
-  description?: string;
-  reasonsTitle?: string;
-  responses: Array<Response>;
-  disclaimer?: TextContent;
-  previouslySubmittedData?: Store.UserData;
-}
 
 const DisclaimerContent = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(1),
@@ -88,7 +74,7 @@ const Responses = ({
   );
 };
 
-const Result: React.FC<Props> = ({
+export const Presentational: React.FC<PresentationalProps> = ({
   allowChanges = false,
   handleSubmit,
   headingColor,
@@ -159,4 +145,36 @@ const Result: React.FC<Props> = ({
     </Box>
   );
 };
-export default Result;
+
+type Props = PublicProps<Result>;
+
+const ResultComponent: React.FC<Props> = (props) => {
+  const [hasPaid, flowSettings, resultData] = useStore((state) => [
+    state.hasPaid(),
+    state.flowSettings,
+    state.resultData,
+  ]);
+
+  const flagSet = props.flagSet || DEFAULT_FLAG_CATEGORY;
+  const data = resultData(flagSet, props.overrides);
+
+  const { flag, responses, displayText } = data[flagSet];
+
+  return (
+    <Presentational
+      {...props}
+      allowChanges={!hasPaid}
+      headingColor={{
+        text: flag.color,
+        background: flag.bgColor,
+      }}
+      headingTitle={displayText.heading}
+      description={displayText.description}
+      reasonsTitle="Reasons"
+      responses={responses}
+      disclaimer={flowSettings?.elements?.legalDisclaimer}
+    />
+  );
+};
+
+export default ResultComponent;

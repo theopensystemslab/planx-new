@@ -5,7 +5,7 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { useStore } from "../../../pages/FlowEditor/lib/store";
-import Result from "./Public";
+import { Presentational } from "./Public";
 
 const { getState, setState } = useStore;
 
@@ -17,7 +17,7 @@ test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <Result
+    <Presentational
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[]}
       handleSubmit={handleSubmit}
@@ -32,7 +32,7 @@ test("renders correctly", async () => {
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
-    <Result
+    <Presentational
       headingColor={{ text: "#000", background: "#fff" }}
       responses={[
         {
@@ -58,7 +58,7 @@ it("should not have any accessibility violations", async () => {
 describe("showing and hiding change capabilities", () => {
   it("hides the change button by default", () => {
     setup(
-      <Result
+      <Presentational
         responses={[
           {
             question: { data: { text: "How's the weather?" }, id: "a" },
@@ -66,7 +66,7 @@ describe("showing and hiding change capabilities", () => {
             selections: [],
           },
         ]}
-        handleSubmit={() => {}}
+        handleSubmit={() => { }}
         headingColor={{ text: "pink", background: "white" }}
       />,
     );
@@ -154,23 +154,21 @@ describe("showing and hiding change capabilities", () => {
     ];
 
     scenarios.forEach(({ allowChanges, autoAnswered, shouldBeChangeable }) => {
-      it(`${
-        shouldBeChangeable ? "shows" : "hides"
-      } the change button when allowChanges is ${allowChanges} and question ${
-        autoAnswered ? "was" : "wasn't"
-      } auto-answered`, () => {
-        setup(
-          <Result
-            {...{ allowChanges, responses }}
-            handleSubmit={() => {}}
-            headingColor={{ text: "pink", background: "white" }}
-          />,
-        );
+      it(`${shouldBeChangeable ? "shows" : "hides"
+        } the change button when allowChanges is ${allowChanges} and question ${autoAnswered ? "was" : "wasn't"
+        } auto-answered`, () => {
+          setup(
+            <Presentational
+              {...{ allowChanges, responses }}
+              handleSubmit={() => { }}
+              headingColor={{ text: "pink", background: "white" }}
+            />,
+          );
 
-        expect(Boolean(screen.queryByText("Change"))).toEqual(
-          shouldBeChangeable,
-        );
-      });
+          expect(Boolean(screen.queryByText("Change"))).toEqual(
+            shouldBeChangeable,
+          );
+        });
     });
   });
 });
