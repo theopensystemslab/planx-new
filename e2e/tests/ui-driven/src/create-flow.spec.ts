@@ -59,7 +59,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await editor.createQuestion();
     await editor.createNoticeOnEachBranch();
-    // await editor.createChecklist();
+    await editor.createChecklist();
     await editor.createTextInput();
     await editor.createNumberInput();
     await editor.createDateInput();
@@ -70,7 +70,6 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createContent();
     await editor.createFilter();
     await editor.createInternalPortal();
-    // create external portal
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -80,7 +79,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Is this a test?",
       "Yes! this is a test",
       "Sorry, this is a test",
-      // "Checklist item 1",
+      "Checklist item 1",
       "Tell us about your trees.",
       "How old are you?",
       "When is your birthday?",
