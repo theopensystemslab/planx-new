@@ -135,6 +135,7 @@
     "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.58.0",
+    "@vitest/eslint-plugin": "^1.1.4",
     "autoprefixer": "^10.4.16",
     "css-loader": "^6.10.0",
     "esbuild": "^0.21.3",
@@ -176,6 +177,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "mkdir -p build && storybook build --quiet --output-dir ./build/storybook",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src",
+    "lint:error": "eslint --quiet 'src/**/*.{js,jsx,ts,tsx}' && prettier -c ./src",
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier -w ./src",
     "check": "tsc --noEmit && pnpm lint",
     "prepare": "cd .. && husky install editor.planx.uk/.husky"
