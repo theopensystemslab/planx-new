@@ -146,8 +146,8 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
-                <Permission.IsPlatformAdmin>
-                  <TableCell>
+                <TableCell>
+                  <Permission.IsPlatformAdmin>
                     {showEditMemberButton && (
                       <EditUserButton
                         onClick={() => {
@@ -160,10 +160,10 @@ export const MembersTable = ({
                         Edit
                       </EditUserButton>
                     )}
-                  </TableCell>
-                </Permission.IsPlatformAdmin>
-                <Permission.IsPlatformAdmin>
-                  <TableCell>
+                  </Permission.IsPlatformAdmin>
+                </TableCell>
+                <TableCell>
+                  <Permission.IsPlatformAdmin>
                     {showEditMemberButton &&
                       member.role !== "platformAdmin" && (
                         <RemoveUserButton
@@ -177,8 +177,8 @@ export const MembersTable = ({
                           Remove
                         </RemoveUserButton>
                       )}
-                  </TableCell>
-                </Permission.IsPlatformAdmin>
+                  </Permission.IsPlatformAdmin>
+                </TableCell>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
