@@ -231,8 +231,8 @@ export const previewStore: StateCreator<
           if (passportValue.length > 0) {
             const existingValue = acc.data?.[key] ?? [];
 
-            const combined = existingValue
-              .concat(passportValue)
+            const combined = passportValue
+              .concat(existingValue)
               .reduce(
                 (acc: string[], curr: string, _i: number, arr: string[]) => {
                   if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
