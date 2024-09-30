@@ -10,6 +10,7 @@ import {
   createFileUpload,
   createFilter,
   createFindProperty,
+  createInternalPortal,
   createList,
   createNextSteps,
   createNotice,
@@ -209,5 +210,13 @@ export class PlaywrightEditor {
 
   async createFilter() {
     await createFilter(this.page, this.getNextNode());
+  }
+
+  async createInternalPortal() {
+    await createInternalPortal(
+      this.page,
+      this.getNextNode(),
+      "an internal portal",
+    );
   }
 }
