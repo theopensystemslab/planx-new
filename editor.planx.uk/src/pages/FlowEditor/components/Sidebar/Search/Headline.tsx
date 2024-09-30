@@ -15,17 +15,21 @@ export const Headline: React.FC<Props> = ({ text, matchIndices, variant }) => {
   return (
     <>
       {text.split("").map((char, index) => (
-        <Typography
-          component="span"
-          variant={variant}
-          key={`headline-character-${index}`}
-          sx={(theme) => ({
-            fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",
-            fontSize: theme.typography.body2.fontSize,
-          })}
-        >
-          {char}
-        </Typography>
+        <>
+          <Typography
+            component="span"
+            variant={variant}
+            key={`headline-character-${index}`}
+            sx={(theme) => ({
+              fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",
+              fontSize: theme.typography.body2.fontSize,
+            })}
+          >
+            {char}
+          </Typography>
+          {/* Add wordbreak after special characters */}
+          {char.match(/\W/) && <wbr />}
+        </>
       ))}
     </>
   );
