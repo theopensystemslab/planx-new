@@ -24,9 +24,11 @@ import {
   optimisticallyAddNewMember,
   optimisticallyUpdateExistingMember,
 } from "./lib/optimisticallyUpdateMembersTable";
+import { SettingsDialog } from "./MembersTable";
 
 export const EditorUpsertModal = ({
   setShowModal,
+  showModal,
   initialValues,
   actionType,
 }: EditorModalProps) => {
@@ -121,102 +123,109 @@ export const EditorUpsertModal = ({
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <DialogContent
-        data-testid={
-          actionType === "add" ? "modal-create-user" : "modal-edit-user"
-        }
-      >
-        <Box sx={{ mt: 1, mb: 4 }}>
-          <Typography variant="h3" component="h2" id="dialog-heading">
-            Add a new editor
-          </Typography>
-        </Box>
-        <InputGroup flowSpacing>
-          <InputLabel label="First name" htmlFor="firstName">
-            <Input
-              id="firstName"
-              type="text"
-              {...formik.getFieldProps("firstName")}
-              errorMessage={
-                formik.touched.firstName && formik.errors.firstName
-                  ? formik.errors.firstName
-                  : undefined
-              }
-              value={formik.values.firstName}
-            />
-          </InputLabel>
-          <InputLabel label="Last name" htmlFor="lastName">
-            <Input
-              id="lastName"
-              type="text"
-              {...formik.getFieldProps("lastName")}
-              errorMessage={
-                formik.touched.lastName && formik.errors.lastName
-                  ? formik.errors.lastName
-                  : undefined
-              }
-              value={formik.values.lastName}
-            />
-          </InputLabel>
-          <InputLabel label="Email address" htmlFor="email">
-            <Input
-              id="email"
-              type="email"
-              {...formik.getFieldProps("email")}
-              errorMessage={
-                formik.touched.email && formik.errors.email
-                  ? formik.errors.email
-                  : undefined
-              }
-              value={formik.values.email}
-            />
-          </InputLabel>
-        </InputGroup>
-      </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          padding: 2,
-        }}
-      >
-        <ErrorWrapper
-          error={
-            showUserAlreadyExistsError
-              ? AddNewEditorErrors.USER_ALREADY_EXISTS.errorMessage
-              : undefined
+    <SettingsDialog
+      aria-labelledby="dialog-heading"
+      data-testid={`dialog-${actionType}-user`}
+      open={showModal || false}
+      onClose={() => setShowModal(false)}
+    >
+      <form onSubmit={formik.handleSubmit}>
+        <DialogContent
+          data-testid={
+            actionType === "add" ? "modal-create-user" : "modal-edit-user"
           }
         >
-          <Box>
-            <>
-              <Button
-                variant="contained"
-                color="prompt"
-                type="submit"
-                data-testid={
-                  actionType === "add"
-                    ? "modal-create-user-button"
-                    : "modal-edit-user-button"
-                }
-                disabled={!formik.dirty || !formik.isValid}
-              >
-                {actionType === "add" ? "Create user" : "Update user"}
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="reset"
-                sx={{ ml: 1.5 }}
-                onClick={() => setShowModal(false)}
-                data-testid="modal-cancel-button"
-              >
-                Cancel
-              </Button>
-            </>
+          <Box sx={{ mt: 1, mb: 4 }}>
+            <Typography variant="h3" component="h2" id="dialog-heading">
+              Add a new editor
+            </Typography>
           </Box>
-        </ErrorWrapper>
-      </DialogActions>
-    </form>
+          <InputGroup flowSpacing>
+            <InputLabel label="First name" htmlFor="firstName">
+              <Input
+                id="firstName"
+                type="text"
+                {...formik.getFieldProps("firstName")}
+                errorMessage={
+                  formik.touched.firstName && formik.errors.firstName
+                    ? formik.errors.firstName
+                    : undefined
+                }
+                value={formik.values.firstName}
+              />
+            </InputLabel>
+            <InputLabel label="Last name" htmlFor="lastName">
+              <Input
+                id="lastName"
+                type="text"
+                {...formik.getFieldProps("lastName")}
+                errorMessage={
+                  formik.touched.lastName && formik.errors.lastName
+                    ? formik.errors.lastName
+                    : undefined
+                }
+                value={formik.values.lastName}
+              />
+            </InputLabel>
+            <InputLabel label="Email address" htmlFor="email">
+              <Input
+                id="email"
+                type="email"
+                {...formik.getFieldProps("email")}
+                errorMessage={
+                  formik.touched.email && formik.errors.email
+                    ? formik.errors.email
+                    : undefined
+                }
+                value={formik.values.email}
+              />
+            </InputLabel>
+          </InputGroup>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            display: "flex",
+            justifyContent: "flex-start",
+            padding: 2,
+          }}
+        >
+          <ErrorWrapper
+            error={
+              showUserAlreadyExistsError
+                ? AddNewEditorErrors.USER_ALREADY_EXISTS.errorMessage
+                : undefined
+            }
+          >
+            <Box>
+              <>
+                <Button
+                  variant="contained"
+                  color="prompt"
+                  type="submit"
+                  data-testid={
+                    actionType === "add"
+                      ? "modal-create-user-button"
+                      : "modal-edit-user-button"
+                  }
+                  disabled={!formik.dirty || !formik.isValid}
+                >
+                  {actionType === "add" ? "Create user" : "Update user"}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="reset"
+                  sx={{ ml: 1.5 }}
+                  onClick={() => setShowModal(false)}
+                  data-testid="modal-cancel-button"
+                >
+                  Cancel
+                </Button>
+              </>
+            </Box>
+          </ErrorWrapper>
+        </DialogActions>
+      </form>
+    </SettingsDialog>
   );
 };

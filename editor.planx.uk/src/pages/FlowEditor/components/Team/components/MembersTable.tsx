@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,12 +10,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { AddButton } from "pages/Team";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { ActionType, MembersTableProps, TeamMember } from "./../types";
-import { SettingsModal } from "./SettingsModal";
+import { EditorUpsertModal } from "./EditorUpsertModal";
+import { RemoveUserModal } from "./RemoveUserModal";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -35,6 +37,17 @@ const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
   color: theme.palette.text.secondary,
   "&:hover": {
     color: theme.palette.secondary.contrastText,
+  },
+}));
+
+export const SettingsDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-paper": {
+    width: "100%",
+    maxWidth: theme.breakpoints.values.md,
+    borderRadius: 0,
+    borderTop: `20px solid ${theme.palette.primary.main}`,
+    background: theme.palette.background.paper,
+    margin: theme.spacing(2),
   },
 }));
 
@@ -66,8 +79,8 @@ export const MembersTable = ({
   };
   const addUser = () => {
     setActionType("add");
-    setInitialValues(undefined);
     setShowModal(true);
+    setInitialValues(undefined);
   };
 
   const getRoleLabel = (role: string) => {
@@ -100,7 +113,7 @@ export const MembersTable = ({
           )}
         </Table>
         {showModal && (
-          <SettingsModal
+          <EditorUpsertModal
             showModal={showModal}
             setShowModal={setShowModal}
             initialValues={initialValues}
@@ -168,7 +181,7 @@ export const MembersTable = ({
                         onClick={() => {
                           editUser(member);
                         }}
-                        data-testId={`edit-button-${member.id}`}
+                        data-testid={`edit-button-${member.id}`}
                       >
                         Edit
                       </EditUserButton>
@@ -182,7 +195,7 @@ export const MembersTable = ({
                         onClick={() => {
                           removeUser(member);
                         }}
-                        data-testId={`remove-button-${member.id}`}
+                        data-testid={`remove-button-${member.id}`}
                       >
                         Remove
                       </RemoveUserButton>
@@ -207,14 +220,22 @@ export const MembersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      {showModal && (
-        <SettingsModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          initialValues={initialValues}
-          actionType={actionType}
-        />
-      )}
+      {showModal &&
+        (actionType === "remove" ? (
+          <RemoveUserModal
+            setShowModal={setShowModal}
+            showModal={showModal}
+            initialValues={initialValues}
+            actionType={actionType}
+          />
+        ) : (
+          <EditorUpsertModal
+            setShowModal={setShowModal}
+            showModal={showModal}
+            initialValues={initialValues}
+            actionType={actionType}
+          />
+        ))}
     </>
   );
 };

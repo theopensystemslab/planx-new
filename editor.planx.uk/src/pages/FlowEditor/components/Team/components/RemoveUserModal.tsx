@@ -9,9 +9,12 @@ import React from "react";
 
 import { EditorModalProps } from "../types";
 import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
+import { SettingsDialog } from "./MembersTable";
 
 export const RemoveUserModal = ({
   setShowModal,
+  showModal,
+  actionType,
   initialValues,
 }: EditorModalProps) => {
   const toast = useToast();
@@ -44,7 +47,13 @@ export const RemoveUserModal = ({
   };
 
   return (
-    <>
+    <SettingsDialog
+      aria-labelledby="dialog-heading"
+      data-testid={`dialog-${actionType}-user`}
+      open={showModal || false}
+      onClose={() => setShowModal(false)}
+      fullWidth
+    >
       <DialogContent data-testid={"modal-remove-user"} sx={{ p: 2.5 }}>
         <Box sx={{ mb: 2 }}>
           <Typography variant="h3" component="h2" id="dialog-heading">
@@ -91,6 +100,6 @@ export const RemoveUserModal = ({
           </Button>
         </Box>
       </DialogActions>
-    </>
+    </SettingsDialog>
   );
 };
