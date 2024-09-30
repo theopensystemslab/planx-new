@@ -45,7 +45,7 @@ const ListComponent = React.forwardRef<HTMLUListElement>((props, ref) => (
  * Accessibility - Render the Virtuoso item as a HTMLLiElement, not a HTMLDivElement
  */
 const ListItemComponent = React.forwardRef<HTMLLIElement>((props, ref) => (
-  <ListItem disablePadding sx={{ mb: 2 }} {...props} ref={ref} />
+  <ListItem disablePadding sx={{ pb: 2 }} {...props} ref={ref} />
 )) as Components<Data, Context>["Item"];
 
 /**

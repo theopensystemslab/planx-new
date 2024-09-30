@@ -31,7 +31,7 @@ export const ExternalPortalList: Components<Data, Context>["Footer"] = ({
   if (!context.results.length && !context.formik.values.pattern) return null;
 
   return (
-    <Box pt={2} mx={3}>
+    <Box mx={3} pb={2}>
       <Typography variant="body1" mb={2}>
         Your service also contains the following external portals, which have
         not been searched:

@@ -23,7 +23,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
   }, [formik.values.pattern, lastPattern, setIsSearching]);
 
   return (
-    <Box mx={3} component="form" onSubmit={formik.handleSubmit}>
+    <Box mx={3} pt={3} component="form" onSubmit={formik.handleSubmit}>
       <Typography
         component={"label"}
         htmlFor="pattern"
