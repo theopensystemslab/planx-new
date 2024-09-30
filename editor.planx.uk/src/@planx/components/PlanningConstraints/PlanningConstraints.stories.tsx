@@ -7,10 +7,8 @@ import classifiedRoadsNegativeResponseMock from "./mocks/classifiedRoadsNegative
 import classifiedRoadsResponseMock from "./mocks/classifiedRoadsResponseMock";
 import digitalLandNegativeResponseMock from "./mocks/digitalLandNegativeResponseMock";
 import digitalLandResponseMock from "./mocks/digitalLandResponseMock";
-import Public, {
-  PlanningConstraintsContent,
-  PlanningConstraintsContentProps,
-} from "./Public";
+import { Presentational, PresentationalProps } from "./Presentational";
+import Public from "./Public";
 
 /**
  * PlanningConstraints fetches data about constraints from DLUHC's planning.data.gov.uk & data about classified roads from the Ordnance Survey Features API.
@@ -27,7 +25,7 @@ export default {
   component: Public,
 } satisfies Meta<typeof Public>;
 
-const propsWithIntersections: PlanningConstraintsContentProps = {
+const propsWithIntersections: PresentationalProps = {
   title: "Planning constraints",
   description:
     "Planning constraints might limit how you can develop or use the property",
@@ -48,7 +46,7 @@ const propsWithIntersections: PlanningConstraintsContentProps = {
   setInaccurateConstraints: () => {},
 };
 
-const propsWithoutIntersections: PlanningConstraintsContentProps = {
+const propsWithoutIntersections: PresentationalProps = {
   title: "Planning constraints",
   description:
     "Planning constraints might limit how you can develop or use the property",
@@ -70,11 +68,11 @@ const propsWithoutIntersections: PlanningConstraintsContentProps = {
 };
 
 export const WithIntersections = {
-  render: () => <PlanningConstraintsContent {...propsWithIntersections} />,
+  render: () => <Presentational {...propsWithIntersections} />,
 };
 
 export const WithoutIntersections = {
-  render: () => <PlanningConstraintsContent {...propsWithoutIntersections} />,
+  render: () => <Presentational {...propsWithoutIntersections} />,
 };
 
 export const WithEditor = () => <Wrapper Editor={Editor} Public={Public} />;

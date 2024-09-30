@@ -1,7 +1,4 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
-import Typography from "@mui/material/Typography";
 import type {
-  Constraint,
   EnhancedGISResponse,
   GISResponse,
 } from "@opensystemslab/planx-core/types";
@@ -10,24 +7,17 @@ import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { GraphError } from "components/Error/GraphError";
-import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { HandleSubmit } from "pages/Preview/Node";
 import React, { useState } from "react";
 import useSWR, { Fetcher } from "swr";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
-import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
-import SimpleExpand from "../shared/Preview/SimpleExpand";
-import { WarningContainer } from "../shared/Preview/WarningContainer";
-import ConstraintsList from "./List";
 import {
-  DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
+import { Presentational } from "./Presentational";
 import { handleOverrides } from "./utils";
 
 type Props = PublicProps<PlanningConstraints>;
@@ -148,6 +138,77 @@ function Component(props: Props) {
     ...roads?.metadata,
   };
 
+  const handleSubmit = () => {
+    // `_constraints` & `_overrides` are responsible for auditing
+    const _constraints: Array<
+      EnhancedGISResponse | GISResponse["constraints"]
+    > = [];
+    if (hasPlanningData) {
+      if (data && !dataError)
+        _constraints.push({
+          ...data,
+          planxRequest: teamGisEndpoint,
+        } as EnhancedGISResponse);
+      if (roads && !roadsError)
+        _constraints.push({
+          ...roads,
+          planxRequest: classifiedRoadsEndpoint,
+        } as EnhancedGISResponse);
+    } else {
+      if (data) _constraints.push(data as GISResponse["constraints"]);
+    }
+
+    const hasInaccurateConstraints =
+      inaccurateConstraints && Object.keys(inaccurateConstraints).length > 0;
+    const _overrides = hasInaccurateConstraints
+      ? { ...priorOverrides, [props.fn]: inaccurateConstraints }
+      : undefined;
+
+    // `planningConstraints.action` is for analytics
+    const userAction = hasInaccurateConstraints
+      ? "Reported at least one inaccurate planning constraint"
+      : "Accepted all planning constraints";
+
+    // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
+    const _nots: IntersectingConstraints = {};
+    const intersectingConstraints: IntersectingConstraints = {};
+    Object.entries(constraints).forEach(([key, data]) => {
+      if (data.value) {
+        intersectingConstraints[props.fn] ||= [];
+        intersectingConstraints[props.fn].push(key);
+      } else {
+        _nots[props.fn] ||= [];
+        _nots[props.fn].push(key);
+      }
+    });
+
+    // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
+    const {
+      nots: notsAfterOverrides,
+      intersectingConstraints: intersectingConstraintsAfterOverrides,
+    } = handleOverrides(
+      props.fn,
+      constraints,
+      inaccurateConstraints,
+      intersectingConstraints,
+      _nots,
+    );
+
+    const passportData = {
+      _constraints,
+      _overrides,
+      "planningConstraints.action": userAction,
+      _nots: notsAfterOverrides,
+      ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0
+        ? undefined
+        : intersectingConstraintsAfterOverrides),
+    };
+
+    props.handleSubmit?.({
+      data: passportData,
+    });
+  };
+
   const isLoading = isValidating || isValidatingRoads;
   if (isLoading)
     return (
@@ -161,240 +222,17 @@ function Component(props: Props) {
     );
 
   return (
-    <PlanningConstraintsContent
+    <Presentational
       title={props.title}
       description={props.description || ""}
       fn={props.fn}
       disclaimer={props.disclaimer}
       constraints={constraints}
       metadata={metadata}
-      handleSubmit={() => {
-        // `_constraints` & `_overrides` are responsible for auditing
-        const _constraints: Array<
-          EnhancedGISResponse | GISResponse["constraints"]
-        > = [];
-        if (hasPlanningData) {
-          if (data && !dataError)
-            _constraints.push({
-              ...data,
-              planxRequest: teamGisEndpoint,
-            } as EnhancedGISResponse);
-          if (roads && !roadsError)
-            _constraints.push({
-              ...roads,
-              planxRequest: classifiedRoadsEndpoint,
-            } as EnhancedGISResponse);
-        } else {
-          if (data) _constraints.push(data as GISResponse["constraints"]);
-        }
-
-        const hasInaccurateConstraints =
-          inaccurateConstraints &&
-          Object.keys(inaccurateConstraints).length > 0;
-        const _overrides = hasInaccurateConstraints
-          ? { ...priorOverrides, [props.fn]: inaccurateConstraints }
-          : undefined;
-
-        // `planningConstraints.action` is for analytics
-        const userAction = hasInaccurateConstraints
-          ? "Reported at least one inaccurate planning constraint"
-          : "Accepted all planning constraints";
-
-        // `[props.fn]` & `_nots[props.fn]` are responsible for future service automations
-        const _nots: IntersectingConstraints = {};
-        const intersectingConstraints: IntersectingConstraints = {};
-        Object.entries(constraints).forEach(([key, data]) => {
-          if (data.value) {
-            intersectingConstraints[props.fn] ||= [];
-            intersectingConstraints[props.fn].push(key);
-          } else {
-            _nots[props.fn] ||= [];
-            _nots[props.fn].push(key);
-          }
-        });
-
-        // If the user reported inaccurate constraints, ensure they are correctly reflected in `[props.fn]` & `_nots[props.fn]`
-        const {
-          nots: notsAfterOverrides,
-          intersectingConstraints: intersectingConstraintsAfterOverrides,
-        } = handleOverrides(
-          props.fn,
-          constraints,
-          inaccurateConstraints,
-          intersectingConstraints,
-          _nots,
-        );
-
-        const passportData = {
-          _constraints,
-          _overrides,
-          "planningConstraints.action": userAction,
-          _nots: notsAfterOverrides,
-          ...(intersectingConstraintsAfterOverrides[props.fn]?.length === 0
-            ? undefined
-            : intersectingConstraintsAfterOverrides),
-        };
-
-        props.handleSubmit?.({
-          data: passportData,
-        });
-      }}
+      handleSubmit={handleSubmit}
       refreshConstraints={() => mutate()}
       inaccurateConstraints={inaccurateConstraints}
       setInaccurateConstraints={setInaccurateConstraints}
     />
   );
 }
-
-export type PlanningConstraintsContentProps = {
-  title: string;
-  description: string;
-  fn: string;
-  disclaimer: string;
-  constraints: GISResponse["constraints"];
-  metadata: GISResponse["metadata"];
-  handleSubmit: () => void;
-  refreshConstraints: () => void;
-  inaccurateConstraints: InaccurateConstraints;
-  setInaccurateConstraints: (
-    value: React.SetStateAction<InaccurateConstraints>,
-  ) => void;
-};
-
-export function PlanningConstraintsContent(
-  props: PlanningConstraintsContentProps,
-) {
-  const {
-    title,
-    description,
-    constraints,
-    metadata,
-    refreshConstraints,
-    disclaimer,
-    inaccurateConstraints,
-    setInaccurateConstraints,
-  } = props;
-  const error = constraints.error || undefined;
-  const showError = error || !Object.values(constraints)?.length;
-  if (showError) return <ConstraintsFetchError error={error} {...props} />;
-
-  const positiveConstraints = Object.values(constraints).filter(
-    (v: Constraint, _i) => v.text && v.value,
-  );
-  const negativeConstraints = Object.values(constraints).filter(
-    (v: Constraint, _i) => v.text && !v.value,
-  );
-
-  return (
-    <Card handleSubmit={props.handleSubmit}>
-      <CardHeader title={title} description={description} />
-      {positiveConstraints.length > 0 && (
-        <>
-          <Typography variant="h3" component="h2" mt={3}>
-            These are the planning constraints we think apply to this property
-          </Typography>
-          <ConstraintsList
-            data={positiveConstraints}
-            metadata={metadata}
-            inaccurateConstraints={inaccurateConstraints}
-            setInaccurateConstraints={setInaccurateConstraints}
-          />
-          {negativeConstraints.length > 0 && (
-            <SimpleExpand
-              id="negative-constraints-list"
-              data-testid="negative-constraints-list"
-              buttonText={{
-                open: "Constraints that don't apply to this property",
-                closed: "Hide constraints that don't apply",
-              }}
-            >
-              <ConstraintsList
-                data={negativeConstraints}
-                metadata={metadata}
-                inaccurateConstraints={inaccurateConstraints}
-                setInaccurateConstraints={setInaccurateConstraints}
-              />
-            </SimpleExpand>
-          )}
-          <Disclaimer text={disclaimer} />
-        </>
-      )}
-      {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
-        <>
-          <Typography variant="h3" component="h2" gutterBottom mt={3}>
-            It looks like there are no constraints on this property
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Based on the information you've given it looks like there are no
-            planning constraints on your property that might limit what you can
-            do.
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            Continue with your application to tell us more about your project.
-          </Typography>
-          <SimpleExpand
-            id="negative-constraints-list"
-            buttonText={{
-              open: "Show the things we checked",
-              closed: "Hide constraints that don't apply",
-            }}
-          >
-            <ConstraintsList
-              data={negativeConstraints}
-              metadata={metadata}
-              inaccurateConstraints={inaccurateConstraints}
-              setInaccurateConstraints={setInaccurateConstraints}
-            />
-          </SimpleExpand>
-          <Disclaimer text={disclaimer} />
-        </>
-      )}
-    </Card>
-  );
-}
-
-const Disclaimer = (props: { text: string }) => (
-  <WarningContainer>
-    <ErrorOutline />
-    <Typography variant="body1" component="div" ml={2} mb={1}>
-      <ReactMarkdownOrHtml
-        source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
-        openLinksOnNewTab
-      />
-    </Typography>
-  </WarningContainer>
-);
-
-interface ConstraintsFetchErrorProps {
-  error: any;
-  title: string;
-  description: string;
-  refreshConstraints: () => void;
-  handleSubmit?: HandleSubmit;
-}
-
-const ConstraintsFetchError = (props: ConstraintsFetchErrorProps) => (
-  <Card handleSubmit={props.handleSubmit} isValid>
-    <CardHeader title={props.title} description={props.description} />
-    <ErrorSummaryContainer role="status" data-testid="error-summary-no-info">
-      <Typography variant="h4" component="h2" gutterBottom>
-        No information available
-      </Typography>
-      {props.error &&
-      typeof props.error === "string" &&
-      props.error.endsWith("local authority") ? (
-        <Typography variant="body2">{capitalize(props.error)}</Typography>
-      ) : (
-        <>
-          <Typography variant="body2">
-            We couldn't find any information about your property. Click search
-            again to try again. You can continue your application without this
-            information but it might mean we ask additional questions about your
-            project.
-          </Typography>
-          <button onClick={props.refreshConstraints}>Search again</button>
-        </>
-      )}
-    </ErrorSummaryContainer>
-  </Card>
-);
