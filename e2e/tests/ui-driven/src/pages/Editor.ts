@@ -8,6 +8,7 @@ import {
   createDateInput,
   createDrawBoundary,
   createFileUpload,
+  createFilter,
   createFindProperty,
   createList,
   createNextSteps,
@@ -204,5 +205,9 @@ export class PlaywrightEditor {
 
   async createContent() {
     await createContent(this.page, this.getNextNode(), "Some content");
+  }
+
+  async createFilter() {
+    await createFilter(this.page, this.getNextNode());
   }
 }

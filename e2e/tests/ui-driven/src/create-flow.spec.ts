@@ -68,6 +68,9 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createList();
     await editor.createTaskList();
     await editor.createContent();
+    await editor.createFilter();
+    // create internal portal
+    // create external portal
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -86,6 +89,7 @@ test.describe("Flow creation, publish and preview", () => {
       "A list title",
       "What you should do next",
       "Some content",
+      "(Flags Filter)",
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",

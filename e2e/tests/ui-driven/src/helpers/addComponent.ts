@@ -112,7 +112,8 @@ const createBaseComponent = async (
       await page
         .locator("p[data-placeholder='Content']")
         .fill(options?.[0] || "");
-
+      break;
+    case ComponentType.Filter:
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
@@ -364,4 +365,8 @@ export const createContent = async (
     undefined,
     [content],
   );
+};
+
+export const createFilter = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Filter);
 };
