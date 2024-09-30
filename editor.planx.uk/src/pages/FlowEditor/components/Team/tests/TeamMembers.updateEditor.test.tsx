@@ -24,7 +24,7 @@ describe("when a user presses 'edit button'", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
 
     user.click(addEditorButton);
@@ -64,7 +64,7 @@ describe("when a user deletes an input value", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
     await user.click(addEditorButton);
 
@@ -98,7 +98,7 @@ describe("when a user updates a field correctly", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
     await user.click(addEditorButton);
 
@@ -130,7 +130,7 @@ describe("when a user correctly updates an Editor", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
     await user.click(addEditorButton);
 
@@ -196,7 +196,7 @@ describe("when a user is not a platform admin", () => {
   it("does not show an edit button", async () => {
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton =
-      within(teamEditorsTable).queryByTestId("edit-button-0");
+      within(teamEditorsTable).queryByTestId("edit-button-3");
 
     expect(addEditorButton).not.toBeInTheDocument();
   });
