@@ -75,11 +75,13 @@ const sendEmail = async (
       ? JSON.stringify(error?.response?.data?.errors?.[0])
       : error?.message;
     throw Error(
-      `Error: Failed to send email using Notify client. Details: ${{
-        notifyError,
-        config,
-        template,
-      }}`,
+      `Error: Failed to send email using Notify client. Details: ${JSON.stringify(
+        {
+          notifyError,
+          config,
+          template,
+        },
+      )}`,
     );
   }
 };
