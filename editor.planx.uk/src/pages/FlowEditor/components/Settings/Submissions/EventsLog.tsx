@@ -1,3 +1,4 @@
+import CloudDownload from "@mui/icons-material/CloudDownload";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import Payment from "@mui/icons-material/Payment";
@@ -17,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { format } from "date-fns";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary";
 
@@ -77,7 +79,8 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 350 }}>
               <strong>Session ID</strong>
             </TableCell>
-            <TableCell sx={{ width: 60 }}></TableCell>
+            <TableCell sx={{ width: 50 }}></TableCell>
+            <TableCell sx={{ width: 50 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -92,6 +95,16 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
 
 const CollapsibleRow: React.FC<Submission> = (submission) => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
+    state.teamSlug,
+    state.canUserEditTeam,
+    state.teamSettings?.submissionEmail, // TODO teamSettings are undefined on submissions log route
+  ]);
+
+  // TODO and submission event created within last 30 days ??
+  const showDownloadButton =
+    canUserEditTeam(teamSlug) && submission.status === "Success";
 
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
@@ -122,6 +135,25 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
         <TableCell>{submission.sessionId}</TableCell>
         <TableCell>
+          {showDownloadButton && (
+            <IconButton
+              aria-label="download application"
+              size="small"
+              onClick={async () => {
+                await fetch(
+                  `${
+                    import.meta.env.VITE_APP_API_URL
+                  }/download-application-files/${
+                    submission.sessionId
+                  }?localAuthority=${teamSlug}&email=${submissionEmail}`,
+                ).catch((error) => console.log(error));
+              }}
+            >
+              <CloudDownload />
+            </IconButton>
+          )}
+        </TableCell>
+        <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -132,7 +164,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ padding: 0, border: "none" }} colSpan={5}>
+        <TableCell sx={{ padding: 0, border: "none" }} colSpan={6}>
           <Collapse
             in={open}
             timeout="auto"
