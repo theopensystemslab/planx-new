@@ -1,6 +1,6 @@
 import { SchemaOf, string } from "yup";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export type UserData = string;
 
@@ -64,7 +64,7 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
       },
     });
 
-export interface TextInput extends MoreInformation {
+export interface TextInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
@@ -78,5 +78,5 @@ export const parseTextInput = (
   description: data?.description,
   fn: data?.fn,
   type: data?.type,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

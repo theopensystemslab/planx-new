@@ -1,10 +1,10 @@
-import { MoreInformation } from "@planx/components/shared";
+import { BaseNodeData } from "@planx/components/shared";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import { FileWithPath } from "react-dropzone";
 import { array } from "yup";
 
-export interface FileUpload extends MoreInformation {
+export interface FileUpload extends BaseNodeData {
   id?: string;
   title?: string;
   fn: string;

@@ -1,6 +1,6 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface Content extends MoreInformation {
+export interface Content extends BaseNodeData {
   content: string;
   color?: string;
 }
@@ -10,5 +10,5 @@ export const parseContent = (
 ): Content => ({
   content: data?.content || "",
   color: data?.color,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

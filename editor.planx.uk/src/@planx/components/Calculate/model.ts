@@ -1,8 +1,8 @@
 import * as math from "mathjs";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface Calculate extends MoreInformation {
+export interface Calculate extends BaseNodeData {
   title?: string;
   output: string;
   defaults: Record<string, number>;
@@ -19,7 +19,7 @@ export interface Input {
 export const parseCalculate = (
   data: Record<string, any> | undefined,
 ): Calculate => ({
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
   output: data?.output || "",
   defaults: data?.defaults || {},
   formula: data?.formula || "",

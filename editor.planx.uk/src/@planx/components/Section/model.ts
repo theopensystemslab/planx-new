@@ -1,9 +1,9 @@
 import type { Store } from "pages/FlowEditor/lib/store";
 import { SectionNode, SectionStatus } from "types";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface Section extends MoreInformation {
+export interface Section extends BaseNodeData {
   title: string;
   description?: string;
 }
@@ -13,7 +13,7 @@ export const parseSection = (
 ): Section => ({
   title: data?.title || "",
   description: data?.description,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 export function computeSectionStatuses({

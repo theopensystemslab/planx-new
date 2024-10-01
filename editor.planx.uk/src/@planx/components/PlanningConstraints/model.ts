@@ -1,6 +1,6 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface PlanningConstraints extends MoreInformation {
+export interface PlanningConstraints extends BaseNodeData {
   title: string;
   description: string;
   fn: string;
@@ -16,7 +16,7 @@ export const parseContent = (
     "Planning constraints might limit how you can develop or use the property",
   fn: data?.fn || DEFAULT_FN,
   disclaimer: data?.disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 export type IntersectingConstraints = Record<string, string[]>;

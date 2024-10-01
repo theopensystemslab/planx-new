@@ -10,7 +10,7 @@ import {
 } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/model";
-import { MoreInformation } from "../shared";
+import { BaseNodeData, MoreInformation } from "../shared";
 import {
   checkIfConditionalRule,
   Condition,
@@ -30,6 +30,10 @@ const moreInformationSchema: SchemaOf<MoreInformation> = object({
   notes: string(),
   definitionImg: string(),
 });
+
+const baseNodeDataSchema: SchemaOf<BaseNodeData> = object({
+  tags: array(mixed().oneOf(["placeholder"])),
+}).concat(moreInformationSchema);
 
 const valFnSchema = mixed().when("condition", {
   is: checkIfConditionalRule,
@@ -63,7 +67,7 @@ export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = object({
   fn: string(),
   fileTypes: array().of(fileTypeSchema).required().min(1),
   hideDropZone: boolean(),
-}).concat(moreInformationSchema);
+}).concat(baseNodeDataSchema);
 
 interface SlotsSchemaTestContext extends TestContext {
   fileList: FileList;

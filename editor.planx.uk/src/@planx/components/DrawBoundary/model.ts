@@ -1,4 +1,4 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export enum DrawBoundaryUserAction {
   Accept = "Accepted the title boundary",
@@ -7,7 +7,7 @@ export enum DrawBoundaryUserAction {
   Upload = "Uploaded a location plan",
 }
 
-export interface DrawBoundary extends MoreInformation {
+export interface DrawBoundary extends BaseNodeData {
   title: string;
   description: string;
   titleForUploading: string;
@@ -24,7 +24,7 @@ export interface DrawBoundary extends MoreInformation {
 export const parseDrawBoundary = (
   data: Record<string, any> | undefined,
 ): DrawBoundary => ({
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
   title: data?.title || defaultContent?.["title"],
   description: data?.description || defaultContent?.["description"],
   titleForUploading:

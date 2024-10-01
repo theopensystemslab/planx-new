@@ -11,7 +11,7 @@ import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { Option, parseMoreInformation } from "../shared";
+import { Option, parseBaseNodeData } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
@@ -135,7 +135,7 @@ export const Question: React.FC<Props> = (props) => {
       img: props.node?.data?.img || "",
       options: props.options || [],
       text: props.node?.data?.text || "",
-      ...parseMoreInformation(props.node?.data),
+      ...parseBaseNodeData(props.node?.data),
     },
     onSubmit: ({ options, ...values }) => {
       const children = options

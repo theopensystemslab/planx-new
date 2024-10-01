@@ -17,9 +17,9 @@ SetValue = 380,
 3. `model.ts`
 
 ```typescript
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface SetValue extends MoreInformation {
+export interface SetValue extends BaseNodeData {
   fn: string;
 }
 
@@ -27,7 +27,7 @@ export const parseContent = (
   data: Record<string, any> | undefined,
 ): SetValue => ({
   fn: data?.fn || "",
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 ```
 

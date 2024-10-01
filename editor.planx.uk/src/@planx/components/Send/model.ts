@@ -1,5 +1,5 @@
 import type { Store } from "../../../pages/FlowEditor/lib/store";
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export enum Destination {
   BOPS = "bops",
@@ -16,7 +16,7 @@ interface EventPayload {
   };
 }
 
-export interface Send extends MoreInformation {
+export interface Send extends BaseNodeData {
   title: string;
   destinations: Destination[];
 }
@@ -25,7 +25,7 @@ export const DEFAULT_TITLE = "Send";
 export const DEFAULT_DESTINATION = Destination.Email;
 
 export const parseContent = (data: Record<string, any> | undefined): Send => ({
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
   title: data?.title || DEFAULT_TITLE,
   destinations: data?.destinations || [DEFAULT_DESTINATION],
 });

@@ -1,6 +1,6 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface PropertyInformation extends MoreInformation {
+export interface PropertyInformation extends BaseNodeData {
   title: string;
   description: string;
   showPropertyTypeOverride?: boolean;
@@ -14,5 +14,5 @@ export const parseContent = (
     data?.description ||
     "This is the information we currently have about the property, including its title boundary shown in blue from the Land Registry",
   showPropertyTypeOverride: data?.showPropertyTypeOverride || false,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

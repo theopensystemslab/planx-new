@@ -1,6 +1,6 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface BaseSetValue extends MoreInformation {
+export interface BaseSetValue extends BaseNodeData {
   fn: string;
 }
 
@@ -22,5 +22,5 @@ export const parseSetValue = (
   fn: data?.fn || "",
   val: data?.val || "",
   operation: data?.operation || "replace",
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

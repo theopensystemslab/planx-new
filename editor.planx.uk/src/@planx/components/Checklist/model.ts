@@ -1,6 +1,6 @@
 import { array } from "yup";
 
-import { MoreInformation, Option } from "../shared";
+import { BaseNodeData, Option } from "../shared";
 import { ChecklistLayout } from "./Public";
 
 export interface Group<T> {
@@ -13,7 +13,7 @@ export interface Category {
   count: number;
 }
 
-export interface Checklist extends MoreInformation {
+export interface Checklist extends BaseNodeData {
   fn?: string;
   description?: string;
   text?: string;
