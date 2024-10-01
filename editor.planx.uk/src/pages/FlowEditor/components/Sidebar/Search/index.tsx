@@ -13,7 +13,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Components, Virtuoso } from "react-virtuoso";
 
 import { ExternalPortalList } from "./ExternalPortalList";
-import { DATA_FACETS } from "./facets";
+import { ALL_FACETS, SearchFacets } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";
 
@@ -21,7 +21,7 @@ const DEBOUNCE_MS = 500;
 
 interface SearchNodes {
   pattern: string;
-  facets: typeof DATA_FACETS;
+  facets: SearchFacets;
 }
 
 // Types for Virtuoso
@@ -64,7 +64,7 @@ const Search: React.FC = () => {
 
   // Set up search input form
   const formik = useFormik<SearchNodes>({
-    initialValues: { pattern: "", facets: DATA_FACETS },
+    initialValues: { pattern: "", facets: ALL_FACETS },
     onSubmit: ({ pattern }) => {
       debouncedSearch(pattern);
     },

@@ -1,7 +1,7 @@
 import { IndexedNode } from "@opensystemslab/planx-core/types";
 import { FuseOptionKey } from "fuse.js";
 
-type SearchFacets = Array<FuseOptionKey<IndexedNode>>;
+export type SearchFacets = Array<FuseOptionKey<IndexedNode>>;
 
 const generalData: SearchFacets = ["data.fn", "data.val"];
 
@@ -26,10 +26,29 @@ const drawBoundaryData: SearchFacets = [
 ];
 
 /** Data fields used across PlanX components */
-export const DATA_FACETS = [
+export const DATA_FACETS: SearchFacets = [
   ...generalData,
   ...fileUploadAndLabelData,
   ...calculateData,
   ...listData,
   ...drawBoundaryData,
+];
+
+const basicFields: SearchFacets = [
+  "data.text",
+  "data.title",
+  "data.description",
+];
+
+const moreInformation: SearchFacets = [
+  "data.notes",
+  "data.howMeasured",
+  "data.policyRef",
+  "data.info",
+];
+
+export const ALL_FACETS: SearchFacets = [
+  ...basicFields,
+  ...moreInformation,
+  ...DATA_FACETS,
 ];
