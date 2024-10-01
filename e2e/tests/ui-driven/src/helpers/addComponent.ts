@@ -112,7 +112,11 @@ const createBaseComponent = async (
       await page
         .locator("p[data-placeholder='Content']")
         .fill(options?.[0] || "");
-
+      break;
+    case ComponentType.Filter:
+      break;
+    case ComponentType.InternalPortal:
+      await page.getByPlaceholder("Portal name").fill(title || "");
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
@@ -363,5 +367,22 @@ export const createContent = async (
     ComponentType.Content,
     undefined,
     [content],
+  );
+};
+
+export const createFilter = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Filter);
+};
+
+export const createInternalPortal = async (
+  page: Page,
+  locatingNode: Locator,
+  portalName: string,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.InternalPortal,
+    portalName,
   );
 };
