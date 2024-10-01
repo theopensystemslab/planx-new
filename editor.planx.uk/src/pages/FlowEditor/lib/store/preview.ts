@@ -67,7 +67,7 @@ export interface PreviewStore extends Store.Store {
   ) => {
     [category: string]: {
       flag: Flag;
-      responses: Array<Response | null>;
+      responses: Array<Response>;
       displayText: { heading: string; description: string };
     };
   };
@@ -231,8 +231,8 @@ export const previewStore: StateCreator<
           if (passportValue.length > 0) {
             const existingValue = acc.data?.[key] ?? [];
 
-            const combined = existingValue
-              .concat(passportValue)
+            const combined = passportValue
+              .concat(existingValue)
               .reduce(
                 (acc: string[], curr: string, _i: number, arr: string[]) => {
                   if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
@@ -595,8 +595,6 @@ export const previewStore: StateCreator<
     // OSL Slack explanation: https://bit.ly/3x38IRY
     return false;
 
-    const { upcomingCardIds } = get();
-    return upcomingCardIds().length === 1;
   },
 
   restore: false,

@@ -25,16 +25,16 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { Option, parseMoreInformation } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
-import type { Checklist, Group } from "./model";
+import type { Category, Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
 
-interface ChecklistProps extends Checklist {
+export interface ChecklistProps extends Checklist {
   text: string;
   handleSubmit?: Function;
   node?: {
     data?: {
       allRequired?: boolean;
-      categories?: any;
+      categories?: Array<Category>;
       definitionImg?: string;
       description?: string;
       fn?: string;

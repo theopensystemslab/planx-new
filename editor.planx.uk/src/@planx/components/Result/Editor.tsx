@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
-import { Flag, FlagSet, flatFlags } from "@opensystemslab/planx-core/types";
+import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
@@ -11,8 +11,8 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../ui";
-import type { Result } from "./model";
+import { EditorProps, ICONS } from "../ui";
+import { FlagDisplayText, Result } from "./model";
 
 type FlagWithValue = Flag & { value: NonNullable<Flag["value"]> };
 
@@ -20,16 +20,6 @@ const flagsWithValues = flatFlags.filter((flag): flag is FlagWithValue =>
   Boolean(flag.value),
 );
 const flags = groupBy(flagsWithValues, (f) => f.category);
-
-interface FormData {
-  flagSet: FlagSet;
-  overrides?: { [flagId: string]: FlagDisplayText };
-}
-
-interface FlagDisplayText {
-  heading?: string;
-  description?: string;
-}
 
 const FlagEditor: React.FC<{
   flag: Flag;
@@ -82,8 +72,10 @@ const FlagEditor: React.FC<{
   );
 };
 
-const ResultComponent: React.FC<Result> = (props) => {
-  const formik = useFormik<FormData>({
+type Props = EditorProps<TYPES.Result, Result>;
+
+const ResultComponent: React.FC<Props> = (props) => {
+  const formik = useFormik<Result>({
     initialValues: {
       flagSet: props.node?.data?.flagSet || Object.keys(flags)[0],
       overrides: props.node?.data?.overrides || {},
@@ -93,7 +85,7 @@ const ResultComponent: React.FC<Result> = (props) => {
         props.handleSubmit({ type: TYPES.Result, data: newValues });
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const allFlagsForSet = flags[formik.values.flagSet];

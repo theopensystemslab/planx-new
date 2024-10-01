@@ -6,14 +6,14 @@
     "simple-import-sort",
     "jsx-a11y",
     "testing-library",
-    "jest"
+    "@vitest"
   ],
   "extends": [
     "eslint:recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:jest/recommended"
+    "plugin:@vitest/legacy-recommended"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
@@ -88,11 +88,6 @@
       }
     ],
     "no-nested-ternary": "error"
-  },
-  "settings": {
-    "jest": {
-      "version": 27
-    }
   },
   "overrides": [
     {

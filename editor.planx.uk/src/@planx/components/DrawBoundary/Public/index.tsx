@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { FileUploadSlot } from "@planx/components/FileUpload/Public";
+import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";

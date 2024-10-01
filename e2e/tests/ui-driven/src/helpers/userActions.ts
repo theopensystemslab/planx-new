@@ -313,3 +313,49 @@ export async function answerAddressInput(
     await clickContinue({ page });
   }
 }
+
+export async function answerListInput(
+  page: Page,
+  {
+    unitType,
+    tenure,
+    numBedrooms,
+    numUnits,
+    continueToNext,
+  }: {
+    unitType: string;
+    tenure: string;
+    numBedrooms: number;
+    numUnits: number;
+    continueToNext: boolean;
+  },
+) {
+  await expect(
+    page.locator("h2", { hasText: "Existing residential unit type 1" }),
+  ).toBeVisible(); // assume the default list for now
+  await page
+    .getByRole("combobox", { name: "What best describes the type" })
+    .click();
+  await page.getByRole("option", { name: unitType }).click();
+
+  await page
+    .getByRole("combobox", {
+      name: "What best describes the tenure of this unit? ",
+    })
+    .click();
+  await page.getByRole("option", { name: tenure }).click();
+
+  await page
+    .getByLabel("How many bedrooms does this unit have?")
+    .fill(numBedrooms.toString());
+  await page
+    .getByLabel("How many units of the type described above exist on the site?")
+    .fill(numUnits.toString());
+
+  const saveButton = page.getByTestId("save-item-button");
+  await saveButton.click();
+
+  if (continueToNext) {
+    await clickContinue({ page });
+  }
+}

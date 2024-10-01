@@ -18,7 +18,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import { MoreInformation } from "../shared";
 import Card from "../shared/Preview/Card";
 import CardHeader, { Image } from "../shared/Preview/CardHeader";

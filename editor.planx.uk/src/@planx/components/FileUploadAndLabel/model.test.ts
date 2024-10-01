@@ -1,7 +1,7 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import {
   mockFileList,
   mockFileListManyTagsOneSlot,

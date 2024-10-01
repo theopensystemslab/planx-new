@@ -4,7 +4,7 @@ import uniqBy from "lodash/uniqBy";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import { MoreInformation, parseMoreInformation } from "../shared";
 
 export const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles" as const;

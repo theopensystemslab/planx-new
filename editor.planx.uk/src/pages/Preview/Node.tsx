@@ -1,6 +1,5 @@
 import {
   ComponentType as TYPES,
-  DEFAULT_FLAG_CATEGORY,
 } from "@opensystemslab/planx-core/types";
 import AddressInput from "@planx/components/AddressInput/Public";
 import Calculate from "@planx/components/Calculate/Public";
@@ -48,20 +47,14 @@ interface Props {
 const Node: React.FC<Props> = (props) => {
   const [
     childNodesOf,
-    resultData,
-    hasPaid,
     isFinalCard,
     resetPreview,
     cachedBreadcrumbs,
-    flowSettings,
   ] = useStore((state) => [
     state.childNodesOf,
-    state.resultData,
-    state.hasPaid(),
     state.isFinalCard(),
     state.resetPreview,
     state.cachedBreadcrumbs,
-    state.flowSettings,
   ]);
 
   const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
@@ -151,28 +144,8 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Pay:
       return <Pay {...allProps} />;
 
-    case TYPES.Result: {
-      const flagSet = props.node?.data?.flagSet || DEFAULT_FLAG_CATEGORY;
-      const data = resultData(flagSet, props.node?.data?.overrides);
-
-      const { flag, responses, displayText } = data[flagSet];
-
-      return (
-        <Result
-          {...allProps}
-          allowChanges={!hasPaid}
-          headingColor={{
-            text: flag.color,
-            background: flag.bgColor,
-          }}
-          headingTitle={displayText.heading}
-          description={displayText.description}
-          reasonsTitle="Reasons"
-          responses={responses}
-          disclaimer={flowSettings?.elements?.legalDisclaimer}
-        />
-      );
-    }
+    case TYPES.Result:
+      return <Result {...allProps} />;
 
     case TYPES.Review:
       return <Review {...allProps} />;

@@ -9,7 +9,7 @@ import {
   ValidationError,
 } from "yup";
 
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import { MoreInformation } from "../shared";
 import {
   checkIfConditionalRule,

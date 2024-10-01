@@ -8,12 +8,15 @@ import { visuallyHidden } from "@mui/utils";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
+import { HEADER_HEIGHT_EDITOR } from "./Header";
+
 const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.2em 0",
+  minHeight: HEADER_HEIGHT_EDITOR,
 }));
 
 const TestEnvironmentBanner: React.FC = () => {

@@ -1,4 +1,4 @@
-import { FileUploadSlot } from "../FileUpload/Public";
+import { FileUploadSlot } from "../FileUpload/model";
 import { mockFileList, mockFileTypes, mockRules } from "./mocks";
 import { Condition, FileType, Operator } from "./model";
 import {
