@@ -41,7 +41,7 @@ export const TeamMembers = () => {
 
   return (
     <Container maxWidth="contentWrap">
-      <SettingsSection testId="team-editors">
+      <SettingsSection data-testid="team-editors">
         <Typography variant="h2" component="h3" gutterBottom>
           Team editors
         </Typography>
@@ -68,7 +68,7 @@ export const TeamMembers = () => {
         />
       </SettingsSection>
       {archivedMembers.length > 0 && (
-        <SettingsSection testId="archived-members">
+        <SettingsSection data-testid="archived-members">
           <Typography variant="h2" component="h3" gutterBottom>
             Archived team editors
           </Typography>

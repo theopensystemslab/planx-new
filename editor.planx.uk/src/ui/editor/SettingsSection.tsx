@@ -3,14 +3,7 @@ import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import React, { ReactNode } from "react";
 
-interface RootProps extends BoxProps {
-  background?: boolean;
-  "data-testid"?: string;
-}
-
-const Root = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "background",
-})<RootProps>(({ background, theme }) => ({
+const Root = styled(Box)(({ bgcolor, theme }) => ({
   display: "block",
   width: "100%",
   marginTop: theme.spacing(2),
@@ -21,7 +14,7 @@ const Root = styled(Box, {
   "& > * + *, & > form > * + *": {
     ...contentFlowSpacing(theme),
   },
-  ...(background && {
+  ...(bgcolor && {
     background: theme.palette.background.paper,
     marginTop: theme.spacing(2),
     padding: theme.spacing(2.5),
@@ -29,18 +22,8 @@ const Root = styled(Box, {
   }),
 }));
 
-export default function SettingsSection({
-  children,
-  background,
-  testId,
-}: {
-  children: ReactNode;
-  background?: boolean;
-  testId?: string;
-}) {
-  return (
-    <Root data-testid={testId} background={background}>
-      {children}
-    </Root>
-  );
+export default function SettingsSection(
+  props: { children: ReactNode } & Partial<BoxProps>,
+) {
+  return <Root {...props}>{props.children}</Root>;
 }
