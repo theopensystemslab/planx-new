@@ -1,8 +1,8 @@
 import { object, string } from "yup";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface NumberInput extends MoreInformation {
+export interface NumberInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
@@ -28,7 +28,7 @@ export const parseNumberInput = (
   fn: data?.fn || "",
   units: data?.units,
   allowNegatives: data?.allowNegatives || false,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 export const numberInputValidationSchema = (input: NumberInput) =>

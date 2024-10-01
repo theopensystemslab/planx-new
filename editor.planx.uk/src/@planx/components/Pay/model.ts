@@ -8,9 +8,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath, Passport } from "types";
 import { array, boolean, object, string } from "yup";
 
-import type { MoreInformation } from "../shared";
+import type { BaseNodeData } from "../shared";
 
-export interface Pay extends MoreInformation {
+export interface Pay extends BaseNodeData {
   title: string;
   bannerTitle?: string;
   description?: string;

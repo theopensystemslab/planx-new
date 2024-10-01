@@ -13,7 +13,7 @@ import {
   REQUIRED_GOVPAY_METADATA,
   validationSchema,
 } from "@planx/components/Pay/model";
-import { parseMoreInformation } from "@planx/components/shared";
+import { parseBaseNodeData } from "@planx/components/shared";
 import {
   EditorProps,
   ICONS,
@@ -180,7 +180,7 @@ const Component: React.FC<Props> = (props: Props) => {
         value: "@paidViaInviteToPay",
       },
     ],
-    ...parseMoreInformation(props.node?.data),
+    ...parseBaseNodeData(props.node?.data),
   };
 
   const onSubmit = (newValues: Pay) => {

@@ -1,7 +1,7 @@
-import type { MoreInformation } from "../shared";
-import { parseMoreInformation } from "../shared";
+import type { BaseNodeData } from "../shared";
+import { parseBaseNodeData } from "../shared";
 
-export interface TaskList extends MoreInformation {
+export interface TaskList extends BaseNodeData {
   title: string;
   description?: string;
   tasks: Array<Task>;
@@ -24,5 +24,5 @@ export const parseTaskList = (
   tasks: data?.taskList?.tasks || data?.tasks || [],
   title: data?.title || "",
   description: data?.description || "",
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

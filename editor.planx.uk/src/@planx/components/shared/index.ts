@@ -1,4 +1,9 @@
+import { NodeTags } from "@opensystemslab/planx-core/types";
 import trim from "lodash/trim";
+import { Store } from "pages/FlowEditor/lib/store";
+
+/** Shared properties across all node types */
+export type BaseNodeData = NodeTags & MoreInformation;
 
 export interface MoreInformation {
   howMeasured?: string;
@@ -8,14 +13,15 @@ export interface MoreInformation {
   definitionImg?: string;
 }
 
-export const parseMoreInformation = (
-  data: Record<string, any> | undefined,
-): MoreInformation => ({
+export const parseBaseNodeData = (
+  data: Store.Node["data"] | undefined,
+): BaseNodeData => ({
   notes: data?.notes,
   definitionImg: data?.definitionImg,
   howMeasured: data?.howMeasured,
   policyRef: data?.policyRef,
   info: data?.info,
+  tags: data?.tags,
 });
 
 export interface Option {

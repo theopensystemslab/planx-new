@@ -1,7 +1,7 @@
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export type Contact = {
   title?: string;
@@ -41,7 +41,7 @@ export const userDataSchema: SchemaOf<Contact> = object({
   },
 });
 
-export interface ContactInput extends MoreInformation {
+export interface ContactInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
@@ -53,5 +53,5 @@ export const parseContactInput = (
   title: data?.title || "",
   description: data?.description,
   fn: data?.fn || "",
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 import { Schema } from "../shared/Schema/model";
 import { PAGE_SCHEMAS } from "./Editor";
 
@@ -9,7 +9,7 @@ export interface PageSchema extends Schema {
   max: 1;
 }
 
-export interface Page extends MoreInformation {
+export interface Page extends BaseNodeData {
   fn: string;
   title: string;
   description?: string;
@@ -23,5 +23,5 @@ export const parsePage = (data: Record<string, any> | undefined): Page => ({
   description: data?.description,
   schemaName: data?.schemaName || PAGE_SCHEMAS[0].name,
   schema: cloneDeep(data?.schema) || PAGE_SCHEMAS[0].schema,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
