@@ -11,6 +11,7 @@ import {
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import { AddTagButton } from "ui/editor/AddTagButton";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -33,6 +34,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      <AddTagButton formik={formik} />
       <ModalSection>
         <ModalSectionContent
           title="Number input"
