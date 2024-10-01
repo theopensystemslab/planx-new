@@ -577,7 +577,7 @@ describe("payload generation", () => {
 });
 
 describe("back navigation", () => {
-  it.skip("sets the latest feature as the active tab when coming back", async () => {
+  it("sets the latest feature as the active tab when coming back", async () => {
     const breadcrumb = {
       auto: false,
       data: {
@@ -621,11 +621,14 @@ describe("back navigation", () => {
 
     // `previouslySubmittedData` is set when coming "back" or via Review "change"
     const { getByTestId } = setup(
-      <MapAndLabel {...props} previouslySubmittedData={breadcrumb} />,
+      <MapAndLabel
+        {...props}
+        fn="trees"
+        previouslySubmittedData={breadcrumb}
+      />,
     );
 
     const map = getByTestId("map-and-label-map");
-    // TODO figure out why this isn't getting set
     expect(map).toHaveAttribute(
       "drawgeojsondata",
       JSON.stringify(breadcrumb["data"]["trees"]),
@@ -633,6 +636,6 @@ describe("back navigation", () => {
 
     const secondTabPanel = getByTestId("vertical-tabpanel-1");
     expect(secondTabPanel).toBeVisible();
-    expect(secondTabPanel).toHaveTextContent("Test Two");
+    expect(secondTabPanel).toHaveTextContent("Tree 2");
   });
 });
