@@ -61,7 +61,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     const bopsResponse = await axios({
       method: "POST",
       url: bopsSubmissionURL,
-    adapter: "http",
+      adapter: "http",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${bopsToken}`,

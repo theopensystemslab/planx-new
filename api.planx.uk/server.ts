@@ -71,7 +71,7 @@ app.use(
       "Origin",
       "X-Requested-With",
     ],
-  })
+  }),
 );
 
 app.use(bodyParser.json({ limit: "100mb" }));
@@ -94,7 +94,7 @@ if (process.env.NODE_ENV !== "test") {
           return isAWSHealthchecker || isLocalDockerHealthchecker;
         },
       },
-    })
+    }),
   );
 }
 
@@ -115,7 +115,7 @@ app.use(
     maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
-  })
+  }),
 );
 
 // register stubs after cookieSession middleware initialisation
