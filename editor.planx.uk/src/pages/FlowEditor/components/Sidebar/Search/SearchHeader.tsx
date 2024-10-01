@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useEffect } from "react";
 import { Components } from "react-virtuoso";
 import ChecklistItem from "ui/shared/ChecklistItem";
@@ -59,7 +60,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
         label="Search only data fields"
         id={"search-data-field-facet"}
         checked
-        inputProps={{ disabled: true }}
+        inputProps={{ disabled: !hasFeatureFlag("DATA_ONLY_SEARCH") }}
         onChange={() => {}}
         variant="compact"
       />
