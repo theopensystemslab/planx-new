@@ -48,8 +48,11 @@ test.describe("Flow creation, publish and preview", () => {
     context.flow = { ...serviceProps };
 
     await editor.createFindProperty();
-    await editor.createFilter();
+    await expect(editor.nodeList).toContainText(["Find property"]);
     await editor.createInternalPortal();
+    await editor.populateInternalPortal();
+    await page.getByRole("link", { name: "start" }).click(); // return to main flow
+    await editor.createFilter();
     await editor.createUploadAndLabel();
     // TODO: editor.createPropertyInfo()
     await editor.createDrawBoundary();
@@ -58,8 +61,8 @@ test.describe("Flow creation, publish and preview", () => {
 
     await expect(editor.nodeList).toContainText([
       "Find property",
-      "(Flags Filter)",
-      "an internal portal",
+      "an internal portalEdit Portal",
+      "(Flags Filter)ImmuneMissing informationPermission neededPrior approvalNoticePermitted developmentNot development(No Result)",
       "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
@@ -110,8 +113,13 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await answerFindProperty(page);
     await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "A notice inside a portal!" }),
+    ).toBeVisible();
+    await clickContinue({ page });
+
     // TODO: answer filter?
-    // TODO: answer internal portal?
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
   });
