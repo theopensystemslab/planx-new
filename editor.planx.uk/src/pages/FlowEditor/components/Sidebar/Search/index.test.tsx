@@ -15,6 +15,7 @@ vi.mock("react-navi", () => ({
 
 import Search from ".";
 import { flow } from "./mocks/simple";
+import { VirtuosoWrapper } from "./testUtils";
 
 const { setState, getState } = useStore;
 
@@ -35,7 +36,11 @@ vi.mock("@opensystemslab/planx-core", async (originalModule) => {
 });
 
 test("data field checkbox is checked and disabled", () => {
-  const { getByLabelText } = setup(<Search />);
+  const { getByLabelText } = setup(
+    <VirtuosoWrapper>
+      <Search />
+    </VirtuosoWrapper>,
+  );
   const checkbox = getByLabelText("Search only data fields");
 
   expect(checkbox).toBeInTheDocument();
@@ -45,10 +50,12 @@ test("data field checkbox is checked and disabled", () => {
 
 test("entering a search term displays a series of cards", async () => {
   const { user, queryByRole, getByRole, getAllByRole, getByLabelText } = setup(
-    <Search />,
+    <VirtuosoWrapper>
+      <Search />
+    </VirtuosoWrapper>,
   );
 
-  expect(queryByRole("list")).not.toBeInTheDocument();
+  expect(queryByRole("list")).toBeEmptyDOMElement();
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
@@ -58,7 +65,11 @@ test("entering a search term displays a series of cards", async () => {
 });
 
 test.todo("cards link to their associated nodes", async () => {
-  const { user, getAllByRole, getByLabelText } = setup(<Search />);
+  const { user, getAllByRole, getByLabelText } = setup(
+    <VirtuosoWrapper>
+      <Search />
+    </VirtuosoWrapper>,
+  );
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
@@ -74,7 +85,11 @@ test.todo("cards link to their associated nodes", async () => {
 it("orderedFlow is set in the store on render of Search", async () => {
   expect(getState().orderedFlow).toBeUndefined();
 
-  setup(<Search />);
+  setup(
+    <VirtuosoWrapper>
+      <Search />
+    </VirtuosoWrapper>,
+  );
 
   expect(getState().orderedFlow).toBeDefined();
 });
@@ -83,7 +98,11 @@ test("setOrderedFlow is only called once on initial render", async () => {
   const sortFlowSpy = vi.spyOn(planxCore, "sortFlow");
   expect(sortFlowSpy).not.toHaveBeenCalled();
 
-  const { user, getAllByRole, getByLabelText } = setup(<Search />);
+  const { user, getAllByRole, getByLabelText } = setup(
+    <VirtuosoWrapper>
+      <Search />
+    </VirtuosoWrapper>,
+  );
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
@@ -94,7 +113,12 @@ test("setOrderedFlow is only called once on initial render", async () => {
 });
 
 it("should not have any accessibility violations on initial load", async () => {
-  const { container } = setup(<Search />);
+  const { container } = setup(
+    <VirtuosoWrapper>
+      <Search />
+    </VirtuosoWrapper>,
+  );
+
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });

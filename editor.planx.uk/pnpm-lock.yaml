@@ -244,6 +244,9 @@ dependencies:
   react-use:
     specifier: ^17.5.0
     version: 17.5.0(react-dom@18.2.0)(react@18.2.0)
+  react-virtuoso:
+    specifier: ^4.10.4
+    version: 4.10.4(react-dom@18.2.0)(react@18.2.0)
   reconnecting-websocket:
     specifier: ^4.4.0
     version: 4.4.0
@@ -12856,6 +12859,17 @@ packages:
       throttle-debounce: 3.0.1
       ts-easing: 0.2.0
       tslib: 2.7.0
+    dev: false
+
+  /react-virtuoso@4.10.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-G/gprhTbK+lzMxoo/iStcZxVEGph/cIhc3WANEpt92RuMw+LiCZOmBfKoeoZOHlm/iyftTrDJhGaTCpxyucnkQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18'
+      react-dom: '>=16 || >=17 || >= 18'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react@18.2.0:

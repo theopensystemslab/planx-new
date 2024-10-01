@@ -200,7 +200,7 @@ const Sidebar: React.FC = React.memo(() => {
         </SidebarContainer>
       )}
       {activeTab === "Search" && (
-        <SidebarContainer py={3}>
+        <SidebarContainer>
           <Search />
         </SidebarContainer>
       )}
