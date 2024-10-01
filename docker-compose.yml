@@ -121,7 +121,6 @@ services:
       AWS_S3_BUCKET: ${AWS_S3_BUCKET}
       AWS_S3_REGION: ${AWS_S3_REGION}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY}
-      BOPS_API_TOKEN: ${BOPS_API_TOKEN}
       # This is controlled via generateCORSAllowList() in staging and production
       CORS_ALLOWLIST: ${EDITOR_URL_EXT}, ${API_URL_EXT}, https://login.live.com, https://login.microsoftonline.com
       EDITOR_URL_EXT: ${EDITOR_URL_EXT}
