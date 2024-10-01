@@ -159,11 +159,12 @@ export const teamStore: StateCreator<
     set(() => ({ teamMembers }));
   },
   deleteUser: async (userId: number) => {
-    const { $client } = get();
-    const response = await $client.user.delete(userId);
-    if (!response) {
-      throw new Error("Unable to remove user");
+    try {
+      const { $client } = get();
+      const response = await $client.user.delete(userId);
+      return response;
+    } catch (error) {
+      throw new Error(`Unable to remove user. ${error}`);
     }
-    return response;
   },
 });
