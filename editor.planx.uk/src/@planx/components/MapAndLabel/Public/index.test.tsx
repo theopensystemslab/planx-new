@@ -5,6 +5,8 @@ import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
+
+import { mockTreeData } from "../test/mocks/GenericValues";
 import {
   mockFeaturePointObj,
   point1,
@@ -22,11 +24,6 @@ import {
   fillOutForm,
   fillOutSecondHalfOfForm,
 } from "../test/utils";
-import { mockTreeData, TreeData } from "../test/mocks/GenericValues";
-import {
-  MockPayload,
-  mockSingleFeaturePayload,
-} from "../test/mocks/mockPayload";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
@@ -63,14 +60,14 @@ describe("Basic UI", () => {
 
     await waitFor(() =>
       expect(
-        queryByText("Plot a feature on the map to begin")
-      ).not.toBeInTheDocument()
+        queryByText("Plot a feature on the map to begin"),
+      ).not.toBeInTheDocument(),
     );
   });
 
   it("renders the schema name as the tab title", async () => {
     const { queryByText, getByRole, getByTestId } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -84,7 +81,7 @@ describe("Basic UI", () => {
 
   it("should not have any accessibility violations", async () => {
     const { queryByText, getByTestId, container } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     expect(queryByText(/Tree 1/)).not.toBeInTheDocument();
 
@@ -101,7 +98,7 @@ describe("Basic UI", () => {
 describe("validation and error handling", () => {
   it("shows all fields are required", async () => {
     const { getByTestId, user, queryByRole, getAllByTestId } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
 
@@ -126,6 +123,7 @@ describe("validation and error handling", () => {
       expect(message).not.toBeEmptyDOMElement();
     });
   });
+
   it("should show all fields are required, for all feature tabs", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
 
@@ -158,6 +156,7 @@ describe("validation and error handling", () => {
     // error messages persist
     await checkErrorMessagesPopulated();
   });
+
   it("should show an error if the minimum number of items is not met", async () => {
     const { getByTestId, user } = setup(<MapAndLabel {...props} />);
 
@@ -168,9 +167,10 @@ describe("validation and error handling", () => {
     const errorMessage = within(errorWrapper).getByText(/You must plot /);
     expect(errorMessage).toBeVisible();
   });
+
   it("an error state is applied to a tabpanel button, when it's associated feature is invalid", async () => {
     const { getByTestId, user, queryByRole } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
 
@@ -191,7 +191,7 @@ describe("validation and error handling", () => {
 it("does not trigger handleSubmit when errors exist", async () => {
   const handleSubmit = vi.fn();
   const { getByTestId, user } = setup(
-    <MapAndLabel {...props} handleSubmit={handleSubmit} />
+    <MapAndLabel {...props} handleSubmit={handleSubmit} />,
   );
   const map = getByTestId("map-and-label-map");
 
@@ -203,6 +203,7 @@ it("does not trigger handleSubmit when errors exist", async () => {
 
   expect(handleSubmit).not.toBeCalled();
 });
+
 test.todo("an error displays if the maximum number of items is exceeded");
 
 describe("basic interactions - happy path", () => {
@@ -289,6 +290,7 @@ describe("basic interactions - happy path", () => {
 
     await checkErrorMessagesEmpty();
   });
+
   it("a user can input details on feature tabs in any order", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
 
@@ -383,7 +385,7 @@ describe("copy feature select", () => {
 
   it("copies all data from one feature to another", async () => {
     const { getByTitle, user, getByLabelText, getByRole } = setup(
-      <MapAndLabel {...props} />
+      <MapAndLabel {...props} />,
     );
     addMultipleFeatures([point1, point2]);
     const tabOne = getByRole("tab", { name: /Tree 1/ });
@@ -410,10 +412,10 @@ describe("copy feature select", () => {
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
     expect(getByLabelText("Proposed work")).toHaveDisplayValue(
-      mockTreeData.work
+      mockTreeData.work,
     );
     expect(getByLabelText("Justification")).toHaveDisplayValue(
-      mockTreeData.justification
+      mockTreeData.justification,
     );
     expect(urgencyInput).toHaveDisplayValue(mockTreeData.urgency);
   });
@@ -432,6 +434,7 @@ describe("copy feature select", () => {
     expect(results).toHaveNoViolations();
   });
 });
+
 describe("remove feature button", () => {
   it("removes a feature from the form - single feature", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
@@ -449,6 +452,7 @@ describe("remove feature button", () => {
     expect(tabOne).not.toBeInTheDocument();
     expect(tabOnePanel).not.toBeInTheDocument();
   });
+
   it("removes a feature from the form - multiple features", async () => {
     const { getByRole, user } = setup(<MapAndLabel {...props} />);
 
@@ -471,6 +475,7 @@ describe("remove feature button", () => {
     expect(tabOne).toBeInTheDocument();
     expect(tabOnePanel).toBeInTheDocument();
   });
+
   it("removes a feature from the map", async () => {
     const { getByTestId, getByRole, user } = setup(<MapAndLabel {...props} />);
     let map = getByTestId("map-and-label-map");
@@ -485,7 +490,7 @@ describe("remove feature button", () => {
 
     expect(map).toHaveAttribute(
       "drawgeojsondata",
-      `{"type":"FeatureCollection","features":[]}`
+      `{"type":"FeatureCollection","features":[]}`,
     );
   });
 });
@@ -494,7 +499,7 @@ describe("payload generation", () => {
   it("a submitted payload contains a GeoJSON feature collection", async () => {
     const handleSubmit = vi.fn();
     const { getByTestId, user } = setup(
-      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />,
     );
 
     const map = getByTestId("map-and-label-map");
@@ -519,7 +524,7 @@ describe("payload generation", () => {
   it("the feature collection contains all geospatial data inputted by the user", async () => {
     const handleSubmit = vi.fn();
     const { getByTestId, user } = setup(
-      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />,
     );
 
     const map = getByTestId("map-and-label-map");
@@ -547,7 +552,7 @@ describe("payload generation", () => {
   it("each feature's properties correspond with the details entered for that feature", async () => {
     const handleSubmit = vi.fn();
     const { getByTestId, user } = setup(
-      <MapAndLabel {...props} handleSubmit={handleSubmit} />
+      <MapAndLabel {...props} handleSubmit={handleSubmit} />,
     );
 
     const map = getByTestId("map-and-label-map");
@@ -568,5 +573,69 @@ describe("payload generation", () => {
       handleSubmit.mock.calls[0][0].data.MockFn.features[0].properties;
 
     expect(output).toEqual(mockTreeData);
+  });
+});
+
+describe("back navigation", () => {
+  it("sets the latest feature as the active tab when coming back", async () => {
+    const breadcrumb = {
+      auto: false,
+      data: {
+        trees: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [-0.07592108771419526, 51.485800675106645],
+              },
+              properties: {
+                label: "1",
+                species: "Test One",
+                work: "Test",
+                justification: "Test",
+                urgency: "low",
+                completionDate: "2002-10-01",
+              },
+            },
+            {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [-0.07586476132488253, 51.485828233968135],
+              },
+              properties: {
+                label: "2",
+                species: "Test Two",
+                work: "Test",
+                justification: "Test",
+                urgency: "low",
+                completionDate: "2002-10-01",
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    // `previouslySubmittedData` is set when coming "back" or via Review "change"
+    const { getByTestId } = setup(
+      <MapAndLabel
+        {...props}
+        fn="trees"
+        previouslySubmittedData={breadcrumb}
+      />,
+    );
+
+    const map = getByTestId("map-and-label-map");
+    expect(map).toHaveAttribute(
+      "drawgeojsondata",
+      JSON.stringify(breadcrumb["data"]["trees"]),
+    );
+
+    const secondTabPanel = getByTestId("vertical-tabpanel-1");
+    expect(secondTabPanel).toBeVisible();
+    expect(secondTabPanel).toHaveTextContent("Tree 2");
   });
 });

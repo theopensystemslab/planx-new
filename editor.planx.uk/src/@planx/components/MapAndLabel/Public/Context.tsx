@@ -98,7 +98,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     },
   });
 
-  const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [activeIndex, setActiveIndex] = useState<number>(
+    previousFormData?.length - 1 || -1,
+  );
 
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
