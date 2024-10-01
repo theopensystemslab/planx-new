@@ -11,7 +11,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import Tooltip from "@mui/material/Tooltip";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
@@ -136,7 +136,12 @@ const Sidebar: React.FC = React.memo(() => {
   ]);
 
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
-  const [isSidebarMinimised, setIsSidebarMinimised] = useState(false);
+  const [isSidebarMinimised, setIsSidebarMinimised] = useState<boolean>(
+    () => {
+      const savedState = localStorage.getItem("isSidebarMinimised");
+      return savedState === 'true';
+    }
+  );
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -146,7 +151,11 @@ const Sidebar: React.FC = React.memo(() => {
   };
 
   const togglePreview = () => {
-    setIsSidebarMinimised(!isSidebarMinimised);
+    setIsSidebarMinimised((prev) => {
+      const newState = !prev;
+      localStorage.setItem("isSidebarMinimised", JSON.stringify(newState));
+      return newState;
+    });
   };
 
   const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
