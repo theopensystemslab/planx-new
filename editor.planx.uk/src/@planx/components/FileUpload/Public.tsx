@@ -7,9 +7,9 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import { FileUploadSlot, Props, slotsSchema } from "./model";
+import { FileUpload, FileUploadSlot, slotsSchema } from "./model";
 
-const FileUpload: React.FC<Props> = (props) => {
+const FileUploadComponent: React.FC<FileUpload> = (props) => {
   const recoveredSlots = getPreviouslySubmittedData(props)?.map(
     (slot: FileUploadSlot) => slot.cachedSlot,
   );
@@ -96,4 +96,4 @@ const FileUpload: React.FC<Props> = (props) => {
   );
 };
 
-export default FileUpload;
+export default FileUploadComponent;

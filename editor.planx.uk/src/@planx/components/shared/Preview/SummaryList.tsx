@@ -385,7 +385,7 @@ function Question(props: ComponentProps) {
   function getNodeText() {
     try {
       const answerId = getAnswers(props)[0];
-      return props.flow[answerId].data.text;
+      return props.flow[answerId].data?.text;
     } catch (err) {
       return "";
     }
@@ -393,11 +393,11 @@ function Question(props: ComponentProps) {
 }
 
 function FindProperty(props: ComponentProps) {
-  const { source } = props.passport.data?._address;
+  const { source } = props.passport.data?._address || {};
 
   if (source === "os") {
     const { postcode, single_line_address, town } =
-      props.passport.data?._address;
+      props.passport.data?._address || {};
     return (
       <>
         <Box component="dt">{FIND_PROPERTY_DT}</Box>
@@ -432,7 +432,7 @@ function Checklist(props: ComponentProps) {
       <Box component="dd">
         <ul>
           {getAnswers(props).map((nodeId, i: number) => (
-            <li key={i}>{props.flow[nodeId].data.text}</li>
+            <li key={i}>{props.flow[nodeId].data?.text}</li>
           ))}
         </ul>
       </Box>

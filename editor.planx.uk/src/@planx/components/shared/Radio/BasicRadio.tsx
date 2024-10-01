@@ -6,7 +6,7 @@ import Radio from "@mui/material/Radio";
 import React from "react";
 
 export interface Props {
-  id: string;
+  id?: string;
   title: string;
   onChange: FormControlLabelProps["onChange"];
   variant?: "default" | "compact";

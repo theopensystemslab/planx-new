@@ -34,7 +34,7 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
 }));
 
 const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
-  const portalName = useStore((state) => state.flow)[portalId].data.text;
+  const portalName = useStore((state) => state.flow)[portalId].data?.text;
   const Icon = ICONS[ComponentType.InternalPortal];
 
   return (

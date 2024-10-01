@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import React, { useLayoutEffect, useRef, useState } from "react";
 
 export interface Props {
-  id: string;
+  id?: string;
   title: string;
   description?: string;
   responseKey?: string | number;

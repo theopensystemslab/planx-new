@@ -14,7 +14,7 @@ import {
  * Generate meaningful title for content analytic log
  */
 export function getContentTitle(node: Store.Node): string {
-  const dom = new DOMParser().parseFromString(node.data.content, "text/html");
+  const dom = new DOMParser().parseFromString(node.data?.content, "text/html");
   const h1 = dom.body.getElementsByTagName("h1")[0]?.textContent;
   const text = h1 || dom.body.textContent;
   if (!text) return `Content: ${node.id}`;

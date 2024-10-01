@@ -37,7 +37,7 @@ const DISPLAY_DATA: Partial<ComponentMap> = {
       displayKey: "Option (data)",
       getTitle: ({ item }) => {
         const parentNode = useStore.getState().flow[item.parentId];
-        return parentNode.data.text;
+        return parentNode.data?.text;
       },
       getHeadline: ({ item, key }) => get(item, key)?.toString(),
     },
