@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.3
     version: 1.0.0-alpha.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#79b6409
-    version: github.com/theopensystemslab/planx-core/79b6409(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#7712ff7
+    version: github.com/theopensystemslab/planx-core/7712ff7(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -244,6 +244,9 @@ dependencies:
   react-use:
     specifier: ^17.5.0
     version: 17.5.0(react-dom@18.2.0)(react@18.2.0)
+  react-virtuoso:
+    specifier: ^4.10.4
+    version: 4.10.4(react-dom@18.2.0)(react@18.2.0)
   reconnecting-websocket:
     specifier: ^4.4.0
     version: 4.4.0
@@ -12858,6 +12861,17 @@ packages:
       tslib: 2.7.0
     dev: false
 
+  /react-virtuoso@4.10.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-G/gprhTbK+lzMxoo/iStcZxVEGph/cIhc3WANEpt92RuMw+LiCZOmBfKoeoZOHlm/iyftTrDJhGaTCpxyucnkQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18'
+      react-dom: '>=16 || >=17 || >= 18'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
@@ -15338,9 +15352,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/79b6409(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/79b6409}
-    id: github.com/theopensystemslab/planx-core/79b6409
+  github.com/theopensystemslab/planx-core/7712ff7(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/7712ff7}
+    id: github.com/theopensystemslab/planx-core/7712ff7
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

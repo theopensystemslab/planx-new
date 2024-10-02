@@ -31,6 +31,7 @@ export interface TeamStore {
   updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
   createTeam: (newTeam: { name: string; slug: string }) => Promise<number>;
   setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
+  deleteUser: (userId: number) => Promise<boolean>;
 }
 
 export const teamStore: StateCreator<
@@ -156,5 +157,14 @@ export const teamStore: StateCreator<
 
   setTeamMembers: async (teamMembers: TeamMember[]) => {
     set(() => ({ teamMembers }));
+  },
+  deleteUser: async (userId: number) => {
+    try {
+      const { $client } = get();
+      const response = await $client.user.delete(userId);
+      return response;
+    } catch (error) {
+      throw new Error(`Unable to remove user. ${error}`);
+    }
   },
 });

@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
@@ -19,16 +18,17 @@ import {
 } from "../errors/addNewEditorErrors";
 import { upsertEditorSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
+import { updateTeamMember } from "../queries/updateUser";
+import { SettingsDialog } from "../styles";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 import {
   optimisticallyAddNewMember,
   optimisticallyUpdateExistingMember,
 } from "./lib/optimisticallyUpdateMembersTable";
-import { updateTeamMember } from "../queries/updateUser";
 
 export const EditorUpsertModal = ({
-  showModal,
   setShowModal,
+  showModal,
   initialValues,
   actionType,
 }: EditorModalProps) => {
@@ -43,7 +43,7 @@ export const EditorUpsertModal = ({
 
   const handleSubmit = async (
     values: AddNewEditorFormValues,
-    { resetForm }: FormikHelpers<AddNewEditorFormValues>
+    { resetForm }: FormikHelpers<AddNewEditorFormValues>,
   ) => {
     switch (actionType) {
       case "add":
@@ -63,7 +63,7 @@ export const EditorUpsertModal = ({
       formik.values.firstName,
       formik.values.lastName,
       teamId,
-      teamSlug
+      teamSlug,
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
@@ -88,7 +88,7 @@ export const EditorUpsertModal = ({
     }
     const response = await updateTeamMember(
       initialValues.id,
-      formik.values
+      formik.values,
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
@@ -120,22 +120,10 @@ export const EditorUpsertModal = ({
   });
 
   return (
-    <Dialog
+    <SettingsDialog
       aria-labelledby="dialog-heading"
-      data-testid={
-        actionType === "add" ? "dialog-create-user" : "dialog-edit-user"
-      }
-      PaperProps={{
-        sx: (theme) => ({
-          width: "100%",
-          maxWidth: theme.breakpoints.values.md,
-          borderRadius: 0,
-          borderTop: `20px solid ${theme.palette.primary.main}`,
-          background: theme.palette.background.paper,
-          margin: theme.spacing(2),
-        }),
-      }}
-      open={showModal}
+      data-testid={`dialog-${actionType}-user`}
+      open={showModal || false}
       onClose={() => setShowModal(false)}
     >
       <form onSubmit={formik.handleSubmit}>
@@ -235,6 +223,6 @@ export const EditorUpsertModal = ({
           </ErrorWrapper>
         </DialogActions>
       </form>
-    </Dialog>
+    </SettingsDialog>
   );
 };

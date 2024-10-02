@@ -56,6 +56,7 @@ const teamMembersRoutes = compose(
       } = await client.query<GetUsersForTeam>({
         query: GET_USERS_FOR_TEAM_QUERY,
         variables: { teamSlug },
+        fetchPolicy: "no-cache",
       });
 
       const teamMembers: TeamMember[] = users.map((user) => ({

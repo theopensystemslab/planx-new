@@ -31,7 +31,7 @@ describe("when a user fills in the 'add a new editor' form correctly but the use
   });
 
   it("shows an appropriate error message", async () => {
-    const addNewEditorModal = await screen.findByTestId("dialog-create-user");
+    const addNewEditorModal = await screen.findByTestId("dialog-add-user");
 
     expect(
       await within(addNewEditorModal).findByText(/User already exists/),

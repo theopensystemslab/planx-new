@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import type { CorsOptions } from "cors";
 import cors from "cors";
-import type { ErrorRequestHandler, Request } from "express";
+import type { ErrorRequestHandler } from "express";
 import express from "express";
 import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
@@ -106,7 +106,6 @@ app.use(helmet());
 
 assert(process.env.GOVUK_NOTIFY_API_KEY);
 assert(process.env.HASURA_PLANX_API_KEY);
-assert(process.env.BOPS_API_TOKEN);
 assert(process.env.UNIFORM_TOKEN_URL);
 assert(process.env.UNIFORM_SUBMISSION_URL);
 

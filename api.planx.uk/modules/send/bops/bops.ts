@@ -64,7 +64,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${bopsToken || process.env.BOPS_API_TOKEN}`,
+        Authorization: `Bearer ${bopsToken}`,
       },
       data: exportData,
     })

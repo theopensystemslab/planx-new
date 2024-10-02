@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -13,17 +14,29 @@ import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
-import { MembersTableProps, TeamMember } from "./../types";
+import { ActionType, MembersTableProps, TeamMember } from "./../types";
 import { EditorUpsertModal } from "./EditorUpsertModal";
+import { RemoveUserModal } from "./RemoveUserModal";
 
-const EditUserButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.main,
+const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
   boxShadow: "none",
   "&:hover": {
     boxShadow: "none",
-    color: theme.palette.primary.main,
     textDecoration: "underline",
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+const EditUserButton = styled(TableRowButton)(({ theme }) => ({
+  color: theme.palette.primary.light,
+  "&:hover": {
+    color: theme.palette.primary.dark,
+  },
+}));
+const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  "&:hover": {
+    color: theme.palette.secondary.contrastText,
   },
 }));
 
@@ -31,15 +44,32 @@ export const MembersTable = ({
   members,
   showAddMemberButton,
   showEditMemberButton,
+  showRemoveMemberButton,
 }: MembersTableProps) => {
-  const [showAddModal, setShowAddModal] = useState<boolean>(false);
-  const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<ActionType>("add");
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<string, string> = {
     platformAdmin: "Admin",
     teamEditor: "Editor",
     teamViewer: "Viewer",
+  };
+
+  const editUser = (member: TeamMember) => {
+    setActionType("edit");
+    setShowModal(true);
+    setInitialValues(member);
+  };
+  const removeUser = (member: TeamMember) => {
+    setActionType("remove");
+    setShowModal(true);
+    setInitialValues(member);
+  };
+  const addUser = () => {
+    setActionType("add");
+    setShowModal(true);
+    setInitialValues(undefined);
   };
 
   const getRoleLabel = (role: string) => {
@@ -62,8 +92,7 @@ export const MembersTable = ({
               <TableCell colSpan={3}>
                 <AddButton
                   onClick={() => {
-                    setInitialValues(undefined);
-                    setShowAddModal(true);
+                    addUser();
                   }}
                 >
                   Add a new editor
@@ -72,12 +101,12 @@ export const MembersTable = ({
             </TableRow>
           )}
         </Table>
-        {showAddModal && (
+        {showModal && (
           <EditorUpsertModal
-            showModal={showAddModal}
-            setShowModal={setShowAddModal}
+            showModal={showModal}
+            setShowModal={setShowModal}
             initialValues={initialValues}
-            actionType={"add"}
+            actionType={actionType}
           />
         )}
       </>
@@ -99,6 +128,10 @@ export const MembersTable = ({
               <TableCell>
                 <strong>Email</strong>
               </TableCell>{" "}
+              {
+                // empty table cells for styling across buttons
+              }
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </StyledTableRow>
           </TableHead>
@@ -130,59 +163,68 @@ export const MembersTable = ({
                   />
                 </TableCell>
                 <TableCell>{member.email}</TableCell>
-                {showEditMemberButton && (
+                <TableCell>
                   <Permission.IsPlatformAdmin>
-                    <TableCell>
+                    {showEditMemberButton && (
                       <EditUserButton
                         onClick={() => {
-                          setShowUpdateModal(true);
-                          setInitialValues(member);
+                          editUser(member);
                         }}
-                        data-testId={`edit-button-${i}`}
+                        data-testid={`edit-button-${member.id}`}
                       >
                         Edit
                       </EditUserButton>
-                    </TableCell>
+                    )}
                   </Permission.IsPlatformAdmin>
-                )}
+                </TableCell>
+                <TableCell>
+                  <Permission.IsPlatformAdmin>
+                    {showRemoveMemberButton && (
+                      <RemoveUserButton
+                        onClick={() => {
+                          removeUser(member);
+                        }}
+                        data-testid={`remove-button-${member.id}`}
+                      >
+                        Remove
+                      </RemoveUserButton>
+                    )}
+                  </Permission.IsPlatformAdmin>
+                </TableCell>
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <Permission.IsPlatformAdmin>
-                <TableRow>
-                  <TableCell colSpan={3}>
-                    <AddButton
-                      onClick={() => {
-                        setInitialValues(undefined);
-                        setShowAddModal(true);
-                      }}
-                    >
-                      Add a new editor
-                    </AddButton>
-                  </TableCell>
-                </TableRow>
-              </Permission.IsPlatformAdmin>
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <AddButton
+                    onClick={() => {
+                      addUser();
+                    }}
+                  >
+                    Add a new editor
+                  </AddButton>
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
-      {showAddModal && (
-        <EditorUpsertModal
-          showModal={showAddModal}
-          setShowModal={setShowAddModal}
-          initialValues={initialValues}
-          actionType={"add"}
-        />
-      )}
-      {showUpdateModal && (
-        <EditorUpsertModal
-          showModal={showUpdateModal}
-          setShowModal={setShowUpdateModal}
-          initialValues={initialValues}
-          userId={initialValues?.id || 1}
-          actionType={"edit"}
-        />
-      )}
+      {showModal &&
+        (actionType === "remove" ? (
+          <RemoveUserModal
+            setShowModal={setShowModal}
+            showModal={showModal}
+            initialValues={initialValues}
+            actionType={actionType}
+          />
+        ) : (
+          <EditorUpsertModal
+            setShowModal={setShowModal}
+            showModal={showModal}
+            initialValues={initialValues}
+            actionType={actionType}
+          />
+        ))}
     </>
   );
 };
