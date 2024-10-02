@@ -1,6 +1,10 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { AddNewEditorFormValues, TeamMember } from "../../types";
+import {
+  AddNewEditorFormValues,
+  TeamMember,
+  UpdateEditorFormValues,
+} from "../../types";
 
 export const optimisticallyAddNewMember = async (
   values: AddNewEditorFormValues,
@@ -17,7 +21,7 @@ export const optimisticallyAddNewMember = async (
 };
 
 export const optimisticallyUpdateExistingMember = async (
-  values: AddNewEditorFormValues,
+  values: UpdateEditorFormValues,
   userId: number,
 ) => {
   const existingMembers = useStore.getState().teamMembers;

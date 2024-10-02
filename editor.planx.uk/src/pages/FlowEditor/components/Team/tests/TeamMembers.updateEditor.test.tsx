@@ -24,7 +24,7 @@ describe("when a user presses 'edit button'", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
 
     user.click(addEditorButton);
@@ -37,9 +37,9 @@ describe("when a user presses 'edit button'", () => {
     const lastNameInput = await screen.findByLabelText("Last name");
     const emailInput = await screen.findByLabelText("Email address");
     // Sorted based on first letter of first name Bill > Donella in Mocks
-    expect(firstNameInput).toHaveDisplayValue("Bill");
-    expect(lastNameInput).toHaveDisplayValue("Sharpe");
-    expect(emailInput).toHaveDisplayValue("bill@example.com");
+    expect(firstNameInput).toHaveDisplayValue("Bilbo");
+    expect(lastNameInput).toHaveDisplayValue("Baggins");
+    expect(emailInput).toHaveDisplayValue("bil.bags@email.com");
   });
   it("disables the update user button", async () => {
     // find whole modal
@@ -64,13 +64,13 @@ describe("when a user deletes an input value", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
     await user.click(addEditorButton);
 
     const modal = await screen.findByRole("dialog");
     const firstNameInput = await screen.findByLabelText("First name");
-    expect(firstNameInput).toHaveDisplayValue(mockTeamMembersData[1].firstName);
+    expect(firstNameInput).toHaveDisplayValue(mockTeamMembersData[2].firstName);
 
     await user.clear(firstNameInput);
 
@@ -98,7 +98,7 @@ describe("when a user updates a field correctly", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
     await user.click(addEditorButton);
 
@@ -112,7 +112,7 @@ describe("when a user updates a field correctly", () => {
   it("updates the field", async () => {
     const firstNameInput = await screen.findByLabelText("First name");
     expect(firstNameInput).toHaveDisplayValue(
-      mockTeamMembersData[1].firstName + "bo",
+      mockTeamMembersData[2].firstName + "bo",
     );
   });
   it("enables the update user button", async () => {
@@ -130,7 +130,7 @@ describe("when a user correctly updates an Editor", () => {
 
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton = await within(teamEditorsTable).findByTestId(
-      "edit-button-0",
+      "edit-button-3",
     );
     await user.click(addEditorButton);
 
@@ -147,7 +147,7 @@ describe("when a user correctly updates an Editor", () => {
   it("updates the member table with new details", async () => {
     const membersTable = await screen.findByTestId("members-table-add-editor");
     await waitFor(() => {
-      expect(within(membersTable).getByText(/Billbo/)).toBeInTheDocument();
+      expect(within(membersTable).getByText(/Bilbobo/)).toBeInTheDocument();
     });
     expect(
       await screen.findByText(/Successfully updated a user/),
@@ -196,7 +196,7 @@ describe("when a user is not a platform admin", () => {
   it("does not show an edit button", async () => {
     const teamEditorsTable = screen.getByTestId("team-editors");
     const addEditorButton =
-      within(teamEditorsTable).queryByTestId("edit-button-0");
+      within(teamEditorsTable).queryByTestId("edit-button-3");
 
     expect(addEditorButton).not.toBeInTheDocument();
   });
