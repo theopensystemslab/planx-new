@@ -12,6 +12,10 @@ export enum TextInputType {
   Phone = "phone",
 }
 
+export const shortTextLimit = 120;
+export const longTextLimit = 250;
+export const extraLongTextLimit = 750;
+
 export const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -26,13 +30,13 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
           return "Enter your answer before continuing";
         }
         if (type === TextInputType.Short) {
-          return "Your answer must be 120 characters or fewer.";
+          return `Your answer must be ${shortTextLimit} characters or fewer.`;
         }
         if (type === TextInputType.Long) {
-          return "Your answer must be 250 characters or fewer.";
+          return `Your answer must be ${longTextLimit} characters or fewer.`;
         }
         if (type === TextInputType.ExtraLong) {
-          return "Your answer must be 750 characters or fewer.";
+          return `Your answer must be ${extraLongTextLimit} characters or fewer.`;
         }
         if (type === TextInputType.Email) {
           return "Enter an email address in the correct format, like name@example.com";
@@ -46,13 +50,13 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
           return true;
         }
         if (type === TextInputType.Short) {
-          return Boolean(value && value.length <= 120);
+          return Boolean(value && value.length <= shortTextLimit);
         }
         if (type === TextInputType.Long) {
-          return Boolean(value && value.length <= 250);
+          return Boolean(value && value.length <= longTextLimit);
         }
         if (type === TextInputType.ExtraLong) {
-          return Boolean(value && value.length <= 750);
+          return Boolean(value && value.length <= extraLongTextLimit);
         }
         if (type === TextInputType.Email) {
           return Boolean(value && emailRegex.test(value));

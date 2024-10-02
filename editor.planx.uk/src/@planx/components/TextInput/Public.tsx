@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
@@ -11,7 +12,12 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { userDataSchema } from "./model";
+import {
+  extraLongTextLimit,
+  longTextLimit,
+  shortTextLimit,
+  userDataSchema,
+} from "./model";
 
 export type Props = PublicProps<TextInput>;
 
@@ -30,6 +36,20 @@ const TextInputComponent: React.FC<Props> = (props) => {
       text: userDataSchema(props),
     }),
   });
+
+  let characterLimit = 0;
+
+  switch (props.type) {
+    case "short":
+      characterLimit = shortTextLimit;
+      break;
+    case "long":
+      characterLimit = longTextLimit;
+      break;
+    case "extraLong":
+      characterLimit = extraLongTextLimit;
+      break;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -69,6 +89,13 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 .join(" "),
             }}
           />
+          <Typography
+            variant="body2"
+            color={"GrayText"}
+            aria-live="polite"
+          >{`You have ${
+            characterLimit - formik.values.text.length
+          } characters remaining`}</Typography>
         </InputLabel>
       </InputRow>
     </Card>
