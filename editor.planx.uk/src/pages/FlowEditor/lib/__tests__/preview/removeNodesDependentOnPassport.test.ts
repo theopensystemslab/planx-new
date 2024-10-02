@@ -1,3 +1,4 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import cloneDeep from "lodash/cloneDeep";
 
 import { Store, useStore } from "../../store";
@@ -47,7 +48,11 @@ describe("removeNodesDependentOnPassport", () => {
       text2: breadcrumbs["text2"],
     };
 
-    const expectRemovedNots = ["planningConstraints", "drawBoundary"];
+    const expectRemovedNots = [
+      "mapAndLabel",
+      "planningConstraints",
+      "drawBoundary",
+    ];
 
     expect(breadcrumbsWithoutPassportData).toEqual(expectedBreadcrumbs);
     expect(removedNodeIds.sort()).toEqual(expectRemovedNots.sort());
@@ -67,7 +72,7 @@ describe("removeNodesDependentOnPassport", () => {
 });
 
 describe("nodesDependentOnPassport with record", () => {
-  test("should remove Draw Boundary and Planning constraints from cachedBreadcrumbs", () => {
+  test("should remove DrawBoundary, PlanningConstraints, and MapAndLabel from cachedBreadcrumbs after FindProperty changes", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
     } as Store.CachedBreadcrumbs;
@@ -115,7 +120,7 @@ describe("nodesDependentOnPassport with record", () => {
     expect(getState().cachedBreadcrumbs).toEqual(expectedCachedBreadcrumbs);
   });
 
-  test("should remove Planning constraints from cachedBreadcrumbs", () => {
+  test("should remove PlanningConstraints and MapAndLabel from cachedBreadcrumbs after DrawBoundary changes and retain FindProperty breadcrumbs", () => {
     const cachedBreadcrumbs = {
       ...breadcrumbsDependentOnPassport,
     } as Store.CachedBreadcrumbs;
@@ -168,7 +173,11 @@ describe("nodesDependentOnPassport with record", () => {
       text: breadcrumbsDependentOnPassport.text,
     };
     const flow = { ...flowWithPassportComponents };
-    const _nodesPendingEdit = ["drawBoundary", "planningConstraints"];
+    const _nodesPendingEdit = [
+      "drawBoundary",
+      "planningConstraints",
+      "mapAndLabel",
+    ];
 
     setState({
       flow,
@@ -191,14 +200,18 @@ describe("nodesDependentOnPassport with record", () => {
     expect(getCurrentCard()?.id).toEqual("drawBoundary");
   });
 
-  test("should clear _nodesPendingEdit after edition", () => {
+  test("should clear _nodesPendingEdit after continuing through final dependent component type", () => {
     const breadcrumbs = {
       findProperty: breadcrumbsDependentOnPassport.findProperty,
       text: breadcrumbsDependentOnPassport.text,
       drawBoundary: breadcrumbsDependentOnPassport.drawBoundary,
     };
     const flow = { ...flowWithPassportComponents };
-    const _nodesPendingEdit = ["drawBoundary", "planningConstraints"];
+    const _nodesPendingEdit = [
+      "drawBoundary",
+      "planningConstraints",
+      "mapAndLabel",
+    ];
 
     setState({
       flow,
@@ -212,6 +225,32 @@ describe("nodesDependentOnPassport with record", () => {
       data: {
         _nots: {
           "property.constraints.planning": [],
+        },
+      },
+    });
+
+    record("mapAndLabel", {
+      answers: [],
+      auto: false,
+      data: {
+        trees: {
+          type: "Feature",
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [-0.07626448954420499, 51.48571252157308],
+                [-0.0762916416717913, 51.48561932090584],
+                [-0.07614058275089933, 51.485617225458554],
+                [-0.07611118911905082, 51.4857099488319],
+                [-0.07626448954420499, 51.48571252157308],
+              ],
+            ],
+          },
+          properties: {
+            label: 1,
+            species: "Elm",
+          },
         },
       },
     });
@@ -248,7 +287,11 @@ describe("nodesDependentOnPassport with previousCard", () => {
       findProperty: breadcrumbsDependentOnPassport.findProperty,
     };
     const flow = { ...flowWithPassportComponents };
-    const _nodesPendingEdit = ["drawBoundary", "planningConstraints"];
+    const _nodesPendingEdit = [
+      "drawBoundary",
+      "planningConstraints",
+      "mapAndLabel",
+    ];
 
     setState({
       breadcrumbs,
@@ -346,7 +389,7 @@ const mockFlowData = {
       data: {
         text: "Question",
       },
-      type: 100,
+      type: TYPES.Question,
       edges: ["Om0CWNHoDs", "GxcDrNTW26"],
     },
     "4FRZMfNlXf": {
@@ -354,33 +397,33 @@ const mockFlowData = {
         flag: "PP-NOT_DEVELOPMENT",
         text: "Not development",
       },
-      type: 200,
+      type: TYPES.Answer,
       edges: ["OjcsvOxVum"],
     },
     AHOdMRaRGK: {
       data: {
         title: "Question text",
       },
-      type: 110,
+      type: TYPES,
     },
     DTXNs02JmU: {
       data: {
         text: "A2",
       },
-      type: 200,
+      type: TYPES.Answer,
       edges: ["AHOdMRaRGK"],
     },
     GM8yVE4Fgm: {
       data: {
         title: "Prior approval ",
       },
-      type: 110,
+      type: TYPES.TextInput,
     },
     GxcDrNTW26: {
       data: {
         text: "path2",
       },
-      type: 200,
+      type: TYPES.Answer,
       edges: ["J5SvQgzuK0"],
     },
     IzT93uCmyF: {
@@ -388,41 +431,41 @@ const mockFlowData = {
         flag: "PRIOR_APPROVAL",
         text: "Prior",
       },
-      type: 200,
+      type: TYPES.Answer,
       edges: ["1eJjMmhGBU"],
     },
     J5SvQgzuK0: {
       data: {
         text: "Question 2",
       },
-      type: 100,
+      type: TYPES.Question,
       edges: ["fSN4QxmM2w", "DTXNs02JmU"],
     },
     OjcsvOxVum: {
       data: {
         title: "Non development text",
       },
-      type: 110,
+      type: TYPES.TextInput,
     },
     Om0CWNHoDs: {
       data: {
         text: "path1",
       },
-      type: 200,
+      type: TYPES.Answer,
       edges: ["GM8yVE4Fgm"],
     },
     fSN4QxmM2w: {
       data: {
         text: "A1",
       },
-      type: 200,
+      type: TYPES.Answer,
     },
     mBFPszBssY: {
       data: {
         text: "Checklist for review",
         allRequired: false,
       },
-      type: 105,
+      type: TYPES.Checklist,
       edges: ["IzT93uCmyF", "4FRZMfNlXf"],
     },
   },
