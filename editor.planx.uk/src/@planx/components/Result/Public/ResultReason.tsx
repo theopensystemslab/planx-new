@@ -149,9 +149,9 @@ const ResultReason: React.FC<IResultReason> = ({
     }
   }, [summaryRef]);
 
-  const hasMoreInfo = question.data.info ?? question.data.policyRef;
+  const hasMoreInfo = question.data?.info ?? question.data?.policyRef;
 
-  const ariaLabel = `${question.data.text}: Your answer was: ${response}. ${
+  const ariaLabel = `${question.data?.text}: Your answer was: ${response}. ${
     hasMoreInfo
       ? "Click to expand for more information about this question."
       : ""
@@ -194,22 +194,22 @@ const ResultReason: React.FC<IResultReason> = ({
                 color="textPrimary"
                 id={`questionText-${id}`}
               >
-                {question.data.text} <br />
+                {question.data?.text} <br />
                 <strong>{response}</strong>
               </Typography>
             </SummaryWrap>
           </StyledAccordionSummary>
           <AccordionDetails sx={{ py: 1, px: 0 }}>
             <MoreInfo>
-              {question.data.info && (
+              {question.data?.info && (
                 <ReactMarkdownOrHtml
-                  source={question.data.info}
+                  source={question.data?.info}
                   openLinksOnNewTab
                 />
               )}
-              {question.data.policyRef && (
+              {question.data?.policyRef && (
                 <ReactMarkdownOrHtml
-                  source={question.data.policyRef}
+                  source={question.data?.policyRef}
                   openLinksOnNewTab
                 />
               )}
@@ -223,7 +223,7 @@ const ResultReason: React.FC<IResultReason> = ({
             color="textPrimary"
             id={`questionText-${id}`}
           >
-            {question.data.text} <br />
+            {question.data?.text} <br />
             <strong>{response}</strong>
           </Typography>
         </NonExpandingSummary>
@@ -239,7 +239,7 @@ const ResultReason: React.FC<IResultReason> = ({
           >
             Change
             <span style={visuallyHidden}>
-              your response to {question.data.text || "this question"}
+              your response to {question.data?.text || "this question"}
             </span>
           </Link>
         )}

@@ -468,13 +468,15 @@ export const previewStore: StateCreator<
                 passportValues = [passportValues];
 
               passportValues = (passportValues || []).filter((pv: any) =>
-                sortedResponses.some((r) => pv.startsWith(r.data.val)),
+                sortedResponses.some((r) => pv.startsWith(r.data?.val)),
               );
 
               if (passportValues.length > 0) {
                 responsesThatCanBeAutoAnswered = (sortedResponses || []).filter(
                   (r) => {
-                    const responseValues = String(r.data.val).split(",").sort();
+                    const responseValues = String(r.data?.val)
+                      .split(",")
+                      .sort();
                     return String(responseValues) === String(passportValues);
                   },
                 );
@@ -483,7 +485,9 @@ export const previewStore: StateCreator<
                   responsesThatCanBeAutoAnswered = (
                     sortedResponses || []
                   ).filter((r) => {
-                    const responseValues = String(r.data.val).split(",").sort();
+                    const responseValues = String(r.data?.val)
+                      .split(",")
+                      .sort();
 
                     for (const responseValue of responseValues) {
                       return passportValues.some((passportValue: any) =>

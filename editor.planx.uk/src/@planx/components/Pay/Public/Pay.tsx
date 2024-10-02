@@ -3,12 +3,12 @@ import {
   GovUKPayment,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
+import { PublicProps } from "@planx/components/ui";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
-import { HandleSubmit } from "pages/Preview/Node";
 import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
 import type { Session } from "types";
@@ -18,9 +18,7 @@ import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
-interface Props extends Pay {
-  handleSubmit: HandleSubmit;
-}
+export type Props = PublicProps<Pay>;
 
 type ComponentState =
   | { status: "indeterminate"; displayText?: string }
@@ -119,7 +117,7 @@ function Component(props: Props) {
   useEffect(() => {
     // Auto-skip component when fee=0
     if (fee <= 0) {
-      return props.handleSubmit({ auto: true });
+      return props.handleSubmit && props.handleSubmit({ auto: true });
     }
 
     // If props.fn is undefined, display & log an error
@@ -144,7 +142,8 @@ function Component(props: Props) {
 
   const handleSuccess = () => {
     dispatch(Action.Success);
-    props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
+    props.handleSubmit &&
+      props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
   };
 
   const normalizePaymentResponse = (responseData: any): GovUKPayment => {
@@ -282,7 +281,7 @@ function Component(props: Props) {
           onConfirm={() => {
             if (props.hidePay || state.status === "unsupported_team") {
               // Show "Continue" button to proceed
-              props.handleSubmit({ auto: false });
+              props.handleSubmit && props.handleSubmit({ auto: false });
             } else if (state.status === "init") {
               startNewPayment();
             } else if (state.status === "retry") {

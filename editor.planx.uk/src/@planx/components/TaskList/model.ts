@@ -5,6 +5,12 @@ export interface TaskList extends MoreInformation {
   title: string;
   description?: string;
   tasks: Array<Task>;
+  /**
+   * @deprecated Remove once migrated
+   */
+  taskList?: {
+    tasks: Array<Task>;
+  };
 }
 
 export interface Task {
@@ -15,7 +21,7 @@ export interface Task {
 export const parseTaskList = (
   data: Record<string, any> | undefined,
 ): TaskList => ({
-  tasks: /* remove once migrated */ data?.taskList?.tasks || data?.tasks || [],
+  tasks: data?.taskList?.tasks || data?.tasks || [],
   title: data?.title || "",
   description: data?.description || "",
   ...parseMoreInformation(data),
