@@ -17,7 +17,8 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { format } from "date-fns";
+import { addDays, format, isBefore } from "date-fns";
+import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary";
@@ -99,12 +100,16 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
     state.teamSlug,
     state.canUserEditTeam,
-    state.teamSettings?.submissionEmail, // TODO teamSettings are undefined on submissions log route
+    state.teamSettings?.submissionEmail,
   ]);
 
-  // TODO and submission event created within last 30 days ??
+  // Only show an application download button if certain conditions are met
+  const submissionDataExpirationDate = addDays(new Date(), DAYS_UNTIL_EXPIRY);
   const showDownloadButton =
-    canUserEditTeam(teamSlug) && submission.status === "Success";
+    canUserEditTeam(teamSlug) &&
+    submission.status === "Success" &&
+    submissionEmail &&
+    isBefore(new Date(submission.createdAt), submissionDataExpirationDate);
 
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
@@ -139,14 +144,13 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
             <IconButton
               aria-label="download application"
               size="small"
-              onClick={async () => {
-                await fetch(
-                  `${
-                    import.meta.env.VITE_APP_API_URL
-                  }/download-application-files/${
-                    submission.sessionId
-                  }?localAuthority=${teamSlug}&email=${submissionEmail}`,
-                ).catch((error) => console.log(error));
+              onClick={() => {
+                const zipUrl = `${
+                  import.meta.env.VITE_APP_API_URL
+                }/download-application-files/${
+                  submission.sessionId
+                }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+                window.open(zipUrl, "_blank");
               }}
             >
               <CloudDownload />
