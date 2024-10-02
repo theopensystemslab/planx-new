@@ -1,5 +1,9 @@
 import ErrorIcon from "@mui/icons-material/Error";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import Box from "@mui/material/Box";
+import {
+  ComponentType as TYPES,
+  NodeTags,
+} from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
@@ -15,7 +19,23 @@ type Props = {
   type: TYPES | "Error";
   [key: string]: any;
   wasVisited?: boolean;
-};
+} & NodeTags;
+
+const PlaceholderTag = () => (
+  <Box
+    sx={(theme) => ({
+      bgcolor: theme.palette.success.main,
+      borderColor: theme.palette.common.black,
+      borderWidth: "0 1px 1px 1px",
+      borderStyle: "solid",
+      width: "100%",
+      p: 0.5,
+      textAlign: "center",
+    })}
+  >
+    Placeholder
+  </Box>
+);
 
 const Question: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode] = useStore((state) => [
@@ -79,6 +99,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           {Icon && <Icon titleAccess={iconTitleAccess} />}
           <span>{props.text}</span>
         </Link>
+        {props.tags?.length && <PlaceholderTag />}
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />
