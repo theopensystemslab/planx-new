@@ -46,10 +46,10 @@ export function Presentational(props: PresentationalProps) {
   if (showError) return <ConstraintsFetchError error={error} {...props} />;
 
   const positiveConstraints = Object.values(constraints).filter(
-    (v: Constraint, _i) => v.text && v.value,
+    (v: Constraint) => v.text && v.value,
   );
   const negativeConstraints = Object.values(constraints).filter(
-    (v: Constraint, _i) => v.text && !v.value,
+    (v: Constraint) => v.text && !v.value,
   );
 
   return (
