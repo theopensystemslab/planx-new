@@ -4,6 +4,7 @@ import type {
   GovUKPayment,
   Node,
   NodeId,
+  NodeTags,
 } from "@opensystemslab/planx-core/types";
 import {
   DEFAULT_FLAG_CATEGORY,
@@ -88,6 +89,7 @@ export interface PreviewStore extends Store.Store {
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
   requestedFiles: () => FileList;
+  getTagsForFlow: () => ({ nodeId: NodeId } & NodeTags)[];
 }
 
 export const previewStore: StateCreator<
@@ -667,6 +669,14 @@ export const previewStore: StateCreator<
   currentCard: null,
 
   getCurrentCard: () => get().currentCard,
+
+  getTagsForFlow: () => {
+    const flow = get().flow;
+    const flowTags = Object.entries(flow)
+      .map(([nodeId, node]) => ({ nodeId, tags: node.data?.tags }))
+      .filter(({ tags }) => tags);
+    return flowTags;
+  },
 });
 
 const knownNots = (
