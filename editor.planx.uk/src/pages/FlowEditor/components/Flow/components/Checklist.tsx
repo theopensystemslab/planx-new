@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
@@ -80,15 +81,17 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
-          {Icon && <Icon />}
-          <span>{props.text}</span>
-        </Link>
+        <Box className="tag-wrap">
+          <Link
+            href={href}
+            prefetch={false}
+            onContextMenu={handleContext}
+            ref={drag}
+          >
+            {Icon && <Icon />}
+            <span>{props.text}</span>
+          </Link>
+        </Box>
         {groupedOptions ? (
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (

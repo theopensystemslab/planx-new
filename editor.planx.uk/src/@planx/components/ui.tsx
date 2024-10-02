@@ -1,5 +1,6 @@
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Article from "@mui/icons-material/Article";
+import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
@@ -28,10 +29,15 @@ import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
+import { inputLabelClasses } from "@mui/material/InputLabel";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
+import { styled } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
+import { borderedFocusStyle } from "theme";
 import ImgInput from "ui/editor/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
@@ -40,6 +46,37 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  marginTop: theme.spacing(1),
+  "&:focus-within": {
+    ...borderedFocusStyle,
+    [`& .${outlinedInputClasses.notchedOutline}`]: {
+      border: "1px solid transparent !important",
+    },
+  },
+  [`& .${outlinedInputClasses.notchedOutline}`]: {
+    borderRadius: 0,
+    border: `1px solid${theme.palette.border.light} !important`,
+  },
+  "& fieldset": {
+    borderColor: theme.palette.border.light,
+  },
+  [`& .${outlinedInputClasses.root}, input`]: {
+    cursor: "pointer",
+  },
+  [`& .${inputLabelClasses.root}`]: {
+    textDecoration: "underline",
+    color: theme.palette.primary.main,
+    "&[data-shrink=true]": {
+      textDecoration: "none",
+      color: theme.palette.text.primary,
+      paddingY: 0,
+      transform: "translate(0px, -22px) scale(0.85)",
+    },
+  },
+}));
 
 export interface EditorProps<Type, Data> {
   id?: string;
@@ -168,21 +205,30 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
   onChange,
 }) => {
   return (
-    <ModalSection>
-      <ModalSectionContent title="Internal Notes" Icon={BorderColorIcon}>
-        <InputRow>
-          <Input
-            // required
-            name={name}
-            value={value}
-            onChange={onChange}
-            multiline
-            placeholder="Internal Notes"
-            rows={3}
-          />
-        </InputRow>
-      </ModalSectionContent>
-    </ModalSection>
+    <>
+      <ModalSection>
+        <ModalSectionContent title="Internal Notes" Icon={BorderColorIcon}>
+          <InputRow>
+            <Input
+              // required
+              name={name}
+              value={value}
+              onChange={onChange}
+              multiline
+              placeholder="Internal Notes"
+              rows={3}
+            />
+          </InputRow>
+        </ModalSectionContent>
+      </ModalSection>
+      <ModalSection>
+        <ModalSectionContent title="Tags" Icon={BookmarksIcon}>
+          <InputRow>
+            <StyledTextField label="Tag this component" />
+          </InputRow>
+        </ModalSectionContent>
+      </ModalSection>
+    </>
   );
 };
 

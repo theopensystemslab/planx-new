@@ -50,8 +50,8 @@ $fontMonospace: "Source Code Pro", monospace;
     margin: 0 auto;
     width: max-content;
 
-    > a:focus,
-    > a:active {
+    a:focus,
+    a:active {
       outline: 4px solid $focus;
       outline-offset: 0;
     }
@@ -137,7 +137,7 @@ $fontMonospace: "Source Code Pro", monospace;
     border: $nodeBorderWidth dashed red;
   }
 
-  & > a {
+  & a {
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -185,6 +185,42 @@ $fontMonospace: "Source Code Pro", monospace;
     [data-layout="left-right"] & {
       height: 100% !important;
     }
+  }
+
+  // Temp styles to demo tags
+  .tag-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &.type-AddressInput .tag-wrap,
+  &.type-Result .tag-wrap,
+  &.question .tag-wrap {
+    &::after {
+      content: "";
+      font-weight: 600;
+      background: white;
+      padding: 0.25em;
+      border: 1px solid $nodeBorder;
+      border-top: none;
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  &.type-AddressInput .tag-wrap::after {
+    content: "Placeholder";
+    background: #fae1b7;
+  }
+
+  &.question .tag-wrap::after {
+    content: "Another tag";
+    background: #e9edc9;
+  }
+
+  &.type-Result .tag-wrap::after {
+    content: "Warning tag";
+    background: #f4978e;
   }
 
   &.type-Section::after {

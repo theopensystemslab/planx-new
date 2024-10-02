@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
@@ -59,15 +60,17 @@ const Filter: React.FC<Props> = React.memo((props) => {
           isNote: childNodes.length === 0,
         })}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
-          {Icon && <Icon />}
-          <span>{props.text}</span>
-        </Link>
+        <Box className="tag-wrap">
+          <Link
+            href={href}
+            prefetch={false}
+            onContextMenu={handleContext}
+            ref={drag}
+          >
+            {Icon && <Icon />}
+            <span>{props.text}</span>
+          </Link>
+        </Box>
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />

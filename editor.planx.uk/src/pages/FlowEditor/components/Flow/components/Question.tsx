@@ -1,4 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
+import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
@@ -70,15 +71,17 @@ const Question: React.FC<Props> = React.memo((props) => {
           },
         )}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
-          {Icon && <Icon titleAccess={iconTitleAccess} />}
-          <span>{props.text}</span>
-        </Link>
+        <Box className="tag-wrap">
+          <Link
+            href={href}
+            prefetch={false}
+            onContextMenu={handleContext}
+            ref={drag}
+          >
+            {Icon && <Icon titleAccess={iconTitleAccess} />}
+            <span>{props.text}</span>
+          </Link>
+        </Box>
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />
