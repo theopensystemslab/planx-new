@@ -1,17 +1,17 @@
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LanguageIcon from "@mui/icons-material/Language";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ToggleButton from "@mui/material/ToggleButton";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
+import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
@@ -26,26 +26,28 @@ import StyledTab from "./StyledTab";
 
 type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 
-const SIDEBAR_WIDTH = 500;
-const SIDEBAR_WIDTH_MINIMISED = 20;
+const SIDEBAR_WIDTH = "500px";
+const SIDEBAR_WIDTH_MINIMISED = "20px";
 
-const Root = styled(Box)<{ isMinimised: boolean }>(({ theme, isMinimised }) => ({
-  position: "relative",
-  top: "0",
-  right: "0",
-  bottom: "0",
-  width: isMinimised ? `${SIDEBAR_WIDTH_MINIMISED}px` : `${SIDEBAR_WIDTH}px`,
-  display: "flex",
-  flexShrink: 0,
-  flexDirection: "column",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
-  background: theme.palette.background.paper,
-  zIndex: 1,
-  transition: "width 200ms ease-in-out",
-  "& iframe": {
-    flex: 1,
-  },
-}));
+const Root = styled(Box)<{ isMinimised: boolean }>(
+  ({ theme, isMinimised }) => ({
+    position: "relative",
+    top: "0",
+    right: "0",
+    bottom: "0",
+    width: isMinimised ? SIDEBAR_WIDTH_MINIMISED : SIDEBAR_WIDTH,
+    display: "flex",
+    flexShrink: 0,
+    flexDirection: "column",
+    borderLeft: `1px solid ${theme.palette.border.main}`,
+    background: theme.palette.background.paper,
+    zIndex: 1,
+    transition: "width 200ms ease-in-out",
+    "& iframe": {
+      flex: 1,
+    },
+  }),
+);
 
 const SidebarContainer = styled(Box)(() => ({
   overflow: "auto",
@@ -136,12 +138,10 @@ const Sidebar: React.FC = React.memo(() => {
   ]);
 
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
-  const [isSidebarMinimised, setIsSidebarMinimised] = useState<boolean>(
-    () => {
-      const savedState = localStorage.getItem("isSidebarMinimised");
-      return savedState === 'true';
-    }
-  );
+  const [isSidebarMinimised, setIsSidebarMinimised] = useState<boolean>(() => {
+    const savedState = localStorage.getItem("isSidebarMinimised");
+    return savedState === "true";
+  });
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -170,11 +170,7 @@ const Sidebar: React.FC = React.memo(() => {
     <Root isMinimised={isSidebarMinimised}>
       <SidebarWrapper>
         <StyledToggleButton onClick={togglePreview} value="toggleSidebar">
-          {isSidebarMinimised ? (
-            <ChevronLeftIcon />
-          ) : (
-            <ChevronRightIcon />
-          )}
+          {isSidebarMinimised ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </StyledToggleButton>
         <Header>
           <Box width="100%" display="flex">
