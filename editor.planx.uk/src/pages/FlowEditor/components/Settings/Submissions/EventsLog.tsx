@@ -14,6 +14,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
@@ -141,20 +142,22 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         <TableCell>{submission.sessionId}</TableCell>
         <TableCell>
           {showDownloadButton && (
-            <IconButton
-              aria-label="download application"
-              size="small"
-              onClick={() => {
-                const zipUrl = `${
-                  import.meta.env.VITE_APP_API_URL
-                }/download-application-files/${
-                  submission.sessionId
-                }?localAuthority=${teamSlug}&email=${submissionEmail}`;
-                window.open(zipUrl, "_blank");
-              }}
-            >
-              <CloudDownload />
-            </IconButton>
+            <Tooltip arrow title="Download application data">
+              <IconButton
+                aria-label="download application"
+                size="small"
+                onClick={() => {
+                  const zipUrl = `${
+                    import.meta.env.VITE_APP_API_URL
+                  }/download-application-files/${
+                    submission.sessionId
+                  }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+                  window.open(zipUrl, "_blank");
+                }}
+              >
+                <CloudDownload />
+              </IconButton>
+            </Tooltip>
           )}
         </TableCell>
         <TableCell>
