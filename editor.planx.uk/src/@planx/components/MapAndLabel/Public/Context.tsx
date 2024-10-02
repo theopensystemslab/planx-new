@@ -32,7 +32,7 @@ interface MapAndLabelContextValue {
   validateAndSubmitForm: () => void;
   isFeatureInvalid: (index: number) => boolean;
   addInitialFeaturesToMap: (features: Feature[]) => void;
-  editFeature: (index: number) => void;
+  editFeatureInForm: (index: number) => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
   removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
@@ -117,6 +117,11 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
     addFeatureToMap(event.detail);
     addFeatureToForm();
+
+    if (event.detail["EPSG:3857"].features) {
+      // handleGeoJSONChange is triggered repeatedly when editing a feature on the map (eg dragging it); ensure latest tab stays active/expanded
+      setActiveIndex(event.detail["EPSG:3857"].features.length - 1);
+    }
   };
 
   const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
@@ -145,7 +150,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.handleSubmit();
   };
 
-  const editFeature = (index: number) => {
+  const editFeatureInForm = (index: number) => {
     setActiveIndex(index);
   };
 
@@ -161,7 +166,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const addInitialFeaturesToMap = (features: Feature[]) => {
     setFeatures(features);
-    // setActiveIndex(features.length - 1);
   };
 
   const addFeatureToForm = () => {
@@ -231,7 +235,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         formik,
         validateAndSubmitForm,
         addInitialFeaturesToMap,
-        editFeature,
+        editFeatureInForm,
         copyFeature,
         removeFeature,
         isFeatureInvalid,
