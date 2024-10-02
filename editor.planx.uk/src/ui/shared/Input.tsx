@@ -15,6 +15,7 @@ import {
   inputFocusStyle,
 } from "theme";
 
+import { CharacterCounter } from "./CharacterCounter";
 import ErrorWrapper from "./ErrorWrapper";
 
 const PREFIX = "Input";
@@ -32,6 +33,8 @@ export interface Props extends InputBaseProps {
   large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
+  value: string;
+  characterLimit?: number;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -102,6 +105,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
     "aria-describedby": ariaDescribedBy,
     "aria-labelledby": ariaLabelledBy,
     id,
+    characterLimit,
     ...restProps
   } = props;
 
@@ -120,19 +124,28 @@ export default forwardRef((props: Props, ref): FCReturn => {
 
   return (
     <ErrorWrapper error={errorMessage} id={id}>
-      <StyledInputBase
-        format={format}
-        bordered={bordered}
-        classes={classes}
-        inputProps={{
-          "aria-label": ariaLabel,
-          "aria-describedby": ariaDescribedBy,
-          "aria-labelledby": ariaLabelledBy,
-        }}
-        id={id}
-        ref={container}
-        {...restProps}
-      />
+      <>
+        <StyledInputBase
+          format={format}
+          bordered={bordered}
+          classes={classes}
+          inputProps={{
+            "aria-label": ariaLabel,
+            "aria-describedby": ariaDescribedBy,
+            "aria-labelledby": ariaLabelledBy,
+          }}
+          id={id}
+          ref={container}
+          {...restProps}
+        />
+        {props.type === "text" && characterLimit && (
+          <CharacterCounter
+            characterCount={props.value ? props.value.length : 0}
+            characterLimit={props.characterLimit || 0}
+            error={errorMessage ? true : false}
+          />
+        )}
+      </>
     </ErrorWrapper>
   );
 });

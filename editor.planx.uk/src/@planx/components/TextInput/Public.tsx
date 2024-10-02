@@ -1,10 +1,10 @@
-import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
+import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
@@ -23,6 +23,20 @@ export type Props = PublicProps<TextInput>;
 
 // TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {
+  const [characterLimit, setCharacterLimit] = useState<number>(0);
+
+  // set which character limit from user defined type
+  if (characterLimit === 0) {
+    switch (props.type) {
+      case "long":
+        setCharacterLimit(longTextLimit);
+        break;
+      case "extraLong":
+        setCharacterLimit(extraLongTextLimit);
+        break;
+    }
+  }
+
   const formik = useFormik({
     initialValues: {
       text: getPreviouslySubmittedData(props) ?? "",
@@ -36,20 +50,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
       text: userDataSchema(props),
     }),
   });
-
-  let characterLimit = 0;
-
-  switch (props.type) {
-    case "short":
-      characterLimit = shortTextLimit;
-      break;
-    case "long":
-      characterLimit = longTextLimit;
-      break;
-    case "extraLong":
-      characterLimit = extraLongTextLimit;
-      break;
-  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -80,22 +80,23 @@ const TextInputComponent: React.FC<Props> = (props) => {
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
             id={props.id}
+            characterLimit={characterLimit > 0 ? characterLimit : undefined}
             inputProps={{
               "aria-describedby": [
-                props.description ? DESCRIPTION_TEXT : "",
+                props.description ? `${DESCRIPTION_TEXT} character-hint` : "",
                 formik.errors.text ? `${ERROR_MESSAGE}-${props.id}` : "",
               ]
                 .filter(Boolean)
                 .join(" "),
             }}
           />
-          <Typography
-            variant="body2"
-            color={"GrayText"}
-            aria-live="polite"
-          >{`You have ${
-            characterLimit - formik.values.text.length
-          } characters remaining`}</Typography>
+          {props.type && ["long", "extraLong"].includes(props.type) && (
+            <CharacterCounter
+              characterCount={formik.values.text.length}
+              characterLimit={characterLimit}
+              error={formik.errors.text ? true : false}
+            />
+          )}
         </InputLabel>
       </InputRow>
     </Card>
