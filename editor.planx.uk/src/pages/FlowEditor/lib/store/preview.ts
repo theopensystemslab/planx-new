@@ -284,7 +284,7 @@ export const previewStore: StateCreator<
   },
 
   // record() notably handles removing cachedBreadcrumbs for dependent component types
-  //   ie if you 'go back' to change your address, DrawBoundary and PlanningConstraints shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
+  //   ie if you 'go back' to change your address, `DEPENDENT_TYPES` shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
   record(id, userData) {
     const {
       breadcrumbs,
@@ -594,7 +594,6 @@ export const previewStore: StateCreator<
     // Temporarily always returns false until upcomingCardIds is optimised
     // OSL Slack explanation: https://bit.ly/3x38IRY
     return false;
-
   },
 
   restore: false,
@@ -862,6 +861,7 @@ function handleNodesWithPassport({
     POPULATE_PASSPORT.includes(flow[id].type!) &&
     newBreadcrumbs?.[id] &&
     !isEqual(userData, newBreadcrumbs[id]);
+
   // Check if component populates passport so that nodes dependent on passport values
   // do not have inconsistent data on them after changing answer in Review.
   if (breadcrumbPopulatesPassport) {
@@ -897,8 +897,9 @@ export const removeNodesDependentOnPassport = (
   removedNodeIds: string[];
 } => {
   const DEPENDENT_TYPES = [
-    TYPES.PlanningConstraints,
     TYPES.DrawBoundary,
+    TYPES.MapAndLabel,
+    TYPES.PlanningConstraints,
     TYPES.PropertyInformation,
   ];
   const newBreadcrumbs = { ...breadcrumbs };
