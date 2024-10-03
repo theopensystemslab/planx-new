@@ -4,7 +4,6 @@ export interface Notice extends BaseNodeData {
   title: string;
   description: string;
   color: string;
-  notes?: string;
   resetButton?: boolean;
 }
 

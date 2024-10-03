@@ -11,24 +11,19 @@ import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { Option, parseBaseNodeData } from "../shared";
+import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
   node: {
     data?: {
-      definitionImg?: string;
       description?: string;
       fn?: string;
-      howMeasured?: string;
       img?: string;
-      info?: string;
-      notes?: string;
-      policyRef?: string;
       text: string;
       type?: string;
-    };
+    } & BaseNodeData;
   };
   options?: Option[];
   handleSubmit?: Function;

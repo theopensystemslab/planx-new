@@ -1,7 +1,8 @@
-export interface Review {
+import { BaseNodeData } from "../shared";
+
+export interface Review extends BaseNodeData {
   title: string;
   description: string;
-  notes: string;
 }
 
 export const parseContent = (

@@ -15,10 +15,6 @@ export interface DrawBoundary extends BaseNodeData {
   hideFileUpload?: boolean;
   dataFieldBoundary: string;
   dataFieldArea: string;
-  info?: string;
-  policyRef?: string;
-  howMeasured?: string;
-  definitionImg?: string;
 }
 
 export const parseDrawBoundary = (

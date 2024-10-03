@@ -1,14 +1,12 @@
 import { Store } from "pages/FlowEditor/lib/store";
 import { HandleSubmit } from "pages/Preview/Node";
 
-export interface Question {
+import { BaseNodeData } from "../shared";
+
+export interface Question extends BaseNodeData {
   id?: string;
   text?: string;
   description?: string;
-  info?: string;
-  policyRef?: string;
-  howMeasured?: string;
-  definitionImg?: string;
   img?: string;
   responses: {
     id?: string;

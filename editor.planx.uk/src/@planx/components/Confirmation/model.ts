@@ -1,9 +1,11 @@
+import { BaseNodeData } from "../shared";
+
 export interface Step {
   title: string;
   description: string;
 }
 
-export interface Confirmation {
+export interface Confirmation extends BaseNodeData {
   heading?: string;
   description?: string;
   color?: { text: string; background: string };
