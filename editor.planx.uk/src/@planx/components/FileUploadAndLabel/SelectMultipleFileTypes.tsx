@@ -199,7 +199,7 @@ const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
   ),
 );
 
-export const SelectMultiple = (props: SelectMultipleProps) => {
+export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
   const { uploadedFile, fileList, setFileList } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);

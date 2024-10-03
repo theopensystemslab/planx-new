@@ -12,7 +12,7 @@ import { FileUploadSlot } from "../FileUpload/model";
 import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
 import { FileList } from "./model";
 import { fileLabelSchema, formatFileLabelSchemaErrors } from "./schema";
-import { SelectMultiple } from "./SelectMultiple";
+import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -83,7 +83,7 @@ export const FileTaggingModal = ({
                   key={slot.id}
                   removeFile={() => removeFile(slot)}
                 />
-                <SelectMultiple
+                <SelectMultipleFileTypes
                   uploadedFile={slot}
                   fileList={fileList}
                   setFileList={setFileList}
