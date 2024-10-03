@@ -26,7 +26,7 @@ export type Props = PublicProps<List>;
 const ListCard = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2.5),
   backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.border.main}`,
+  border: `2px solid ${theme.palette.border.main}`,
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(3),
@@ -39,6 +39,22 @@ const ListCard = styled(Box)(({ theme }) => ({
 const CardButton = styled(Button)(({ theme }) => ({
   gap: theme.spacing(1),
   background: theme.palette.common.white,
+}));
+
+const AddListItemButton = styled(Button)(({ theme }) => ({
+  minWidth: "100%",
+  boxShadow: "none",
+  padding: theme.spacing(5, 3),
+  background: theme.palette.background.paper,
+  color: theme.palette.prompt.main,
+  border: `2px dotted ${theme.palette.prompt.main}`,
+  textAlign: "left",
+  justifyContent: "flex-start",
+  "&:hover": {
+    boxShadow: "none",
+    borderStyle: "solid",
+    borderColor: theme.palette.border.input,
+  },
 }));
 
 const InactiveListCardLayout = styled(Box)(({ theme }) => ({
@@ -87,7 +103,7 @@ const ActiveListCard: React.FC<{
         <Box display="flex" gap={2}>
           <Button
             variant="contained"
-            color="primary"
+            color="prompt"
             data-testid="save-item-button"
             onClick={async () => await saveItem()}
           >
@@ -210,16 +226,13 @@ const Root = () => {
                 : ""
             }
           >
-            <Button
-              variant="contained"
-              color="secondary"
+            <AddListItemButton
               onClick={addNewItem}
-              sx={{ "@media (min-width: 768px)": { width: "100%" } }}
-              size="large"
               data-testid="list-add-button"
+              size="large"
             >
               + Add another {schema.type.toLowerCase()}
-            </Button>
+            </AddListItemButton>
           </ErrorWrapper>
         )}
       </>
