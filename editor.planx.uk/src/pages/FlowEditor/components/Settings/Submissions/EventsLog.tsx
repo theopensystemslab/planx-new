@@ -112,8 +112,9 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   const showDownloadButton =
     canUserEditTeam(teamSlug) &&
     submission.status === "Success" &&
-    submission.eventType !== "Pay";
-  submissionEmail && isBefore(new Date(), submissionDataExpirationDate);
+    submission.eventType !== "Pay" &&
+    submissionEmail &&
+    isBefore(new Date(), submissionDataExpirationDate);
 
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
