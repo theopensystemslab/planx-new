@@ -7,14 +7,6 @@ export const failedLogin: RequestHandler = (_req, _res, next) =>
     message: "User failed to authenticate",
   });
 
-export const logout: RequestHandler = (req, res) => {
-  // TODO: implement dual purpose as Microsoft frontend logout channel
-  req.logout(() => {
-    // do nothing
-  });
-  res.redirect(process.env.EDITOR_URL_EXT!);
-};
-
 export const handleSuccess = (req: Request, res: Response) => {
   if (!req.user) {
     return res.json({
