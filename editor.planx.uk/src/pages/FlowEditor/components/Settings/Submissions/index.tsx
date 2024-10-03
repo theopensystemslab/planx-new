@@ -78,7 +78,9 @@ const Submissions: React.FC = () => {
           Submissions
         </Typography>
         <Typography variant="body1">
-          Feed of payment and submission events for this service
+          Feed of payment and submission events for this service. Successful
+          submission events within the last 28 days are availabe to download to
+          team editors.
         </Typography>
       </SettingsSection>
       <SettingsSection>
