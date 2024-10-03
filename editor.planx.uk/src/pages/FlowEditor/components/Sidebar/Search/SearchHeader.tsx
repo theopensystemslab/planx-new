@@ -25,10 +25,11 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
   }, [formik.values.pattern, lastPattern, setIsSearching]);
 
   // Use "data.title" as proxy for all facets
-  const isDataOnly = () => !formik.values.facets.includes("data.title");
+  const isCurrentlyDataOnlySearch = () =>
+    !formik.values.facets.includes("data.title");
 
   const toggleDataOnly = () =>
-    isDataOnly()
+    isCurrentlyDataOnlySearch()
       ? formik.setFieldValue("facets", ALL_FACETS)
       : formik.setFieldValue("facets", DATA_FACETS);
 
@@ -69,7 +70,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
         <ChecklistItem
           label="Search only data fields"
           id={"search-data-field-facet"}
-          checked={isDataOnly()}
+          checked={isCurrentlyDataOnlySearch()}
           onChange={toggleDataOnly}
           variant="compact"
         />

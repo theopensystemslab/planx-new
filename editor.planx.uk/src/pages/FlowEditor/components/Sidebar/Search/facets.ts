@@ -69,7 +69,6 @@ const schemaComponents: SearchFacets = [
   "data.schema.fields.data.description",
   "data.schema.fields.data.options.description",
   "data.schema.fields.data.options.text",
-  "data.schema.fields.data.options.data.val",
 ];
 
 const taskList: SearchFacets = ["data.tasks.title", "data.tasks.description"];
