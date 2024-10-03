@@ -32,7 +32,7 @@ interface MapAndLabelContextValue {
   validateAndSubmitForm: () => void;
   isFeatureInvalid: (index: number) => boolean;
   addInitialFeaturesToMap: (features: Feature[]) => void;
-  editFeature: (index: number) => void;
+  editFeatureInForm: (index: number) => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
   removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
@@ -115,8 +115,26 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
       return;
     }
 
-    addFeatureToMap(event.detail);
-    addFeatureToForm();
+    if (event.detail) {
+      // If the user added a feature to the map, the dispatched event will contain more features than form state
+      const userAddedFeature =
+        event.detail["EPSG:3857"].features.length >
+        formik.values.schemaData.length;
+
+      if (userAddedFeature) {
+        addFeatureToMap(event.detail);
+        addFeatureToForm();
+      } else {
+        const modifiedFeatures = event.detail["EPSG:3857"].features;
+        setFeatures(modifiedFeatures);
+
+        // If the user is editing an existing feature on the map, the modified feature aka active tab should be last item in features
+        const lastModifiedFeature =
+          event.detail["EPSG:3857"].features.slice(-1)[0];
+        const lastModifiedLabel = lastModifiedFeature?.properties?.label;
+        setActiveIndex(parseInt(lastModifiedLabel) - 1);
+      }
+    }
   };
 
   const [features, setFeatures] = useGeoJSONChange(MAP_ID, handleGeoJSONChange);
@@ -145,7 +163,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.handleSubmit();
   };
 
-  const editFeature = (index: number) => {
+  const editFeatureInForm = (index: number) => {
     setActiveIndex(index);
   };
 
@@ -154,14 +172,15 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const addFeatureToMap = (geojson: GeoJSONChange) => {
     resetErrors();
+
     const newFeatures = geojson["EPSG:3857"].features;
     setFeatures(newFeatures);
+
     setActiveIndex(newFeatures.length - 1);
   };
 
   const addInitialFeaturesToMap = (features: Feature[]) => {
     setFeatures(features);
-    // setActiveIndex(features.length - 1);
   };
 
   const addFeatureToForm = () => {
@@ -175,8 +194,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     if (schema.max && updatedFeatures.length > schema.max) {
       setMaxError(true);
     }
-
-    setActiveIndex(activeIndex + 1);
   };
 
   const copyFeature = (sourceIndex: number, destinationIndex: number) => {
@@ -231,7 +248,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         formik,
         validateAndSubmitForm,
         addInitialFeaturesToMap,
-        editFeature,
+        editFeatureInForm,
         copyFeature,
         removeFeature,
         isFeatureInvalid,

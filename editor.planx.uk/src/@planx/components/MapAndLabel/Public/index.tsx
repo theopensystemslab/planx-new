@@ -61,7 +61,7 @@ const VerticalFeatureTabs: React.FC = () => {
     activeIndex,
     formik,
     features,
-    editFeature,
+    editFeatureInForm,
     isFeatureInvalid,
     removeFeature,
   } = useMapAndLabelContext();
@@ -92,7 +92,7 @@ const VerticalFeatureTabs: React.FC = () => {
           variant="scrollable"
           value={activeIndex.toString()}
           onChange={(_e, newValue) => {
-            editFeature(parseInt(newValue, 10));
+            editFeatureInForm(parseInt(newValue, 10));
           }}
           aria-label="Select a feature to enter data"
           TabIndicatorProps={{
