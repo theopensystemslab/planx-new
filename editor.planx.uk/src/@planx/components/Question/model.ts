@@ -11,7 +11,7 @@ export interface Question {
   definitionImg?: string;
   img?: string;
   responses: {
-    id: string;
+    id?: string;
     responseKey: string | number;
     title: string;
     description?: string;

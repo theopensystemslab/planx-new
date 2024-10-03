@@ -1,3 +1,5 @@
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LanguageIcon from "@mui/icons-material/Language";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
@@ -7,6 +9,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
+import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
@@ -23,21 +26,28 @@ import StyledTab from "./StyledTab";
 
 type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 
-const Root = styled(Box)(({ theme }) => ({
-  position: "relative",
-  top: "0",
-  right: "0",
-  bottom: "0",
-  width: "500px",
-  display: "flex",
-  flexShrink: 0,
-  flexDirection: "column",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
-  background: theme.palette.background.paper,
-  "& iframe": {
-    flex: "1",
-  },
-}));
+const SIDEBAR_WIDTH = "500px";
+const SIDEBAR_WIDTH_MINIMISED = "20px";
+
+const Root = styled(Box)<{ isMinimised: boolean }>(
+  ({ theme, isMinimised }) => ({
+    position: "relative",
+    top: "0",
+    right: "0",
+    bottom: "0",
+    width: isMinimised ? SIDEBAR_WIDTH_MINIMISED : SIDEBAR_WIDTH,
+    display: "flex",
+    flexShrink: 0,
+    flexDirection: "column",
+    borderLeft: `1px solid ${theme.palette.border.main}`,
+    background: theme.palette.background.paper,
+    zIndex: 1,
+    transition: "width 200ms ease-in-out",
+    "& iframe": {
+      flex: 1,
+    },
+  }),
+);
 
 const SidebarContainer = styled(Box)(() => ({
   overflow: "auto",
@@ -46,8 +56,37 @@ const SidebarContainer = styled(Box)(() => ({
   position: "relative",
 }));
 
+const SidebarWrapper = styled(Box)(() => ({
+  width: SIDEBAR_WIDTH,
+  display: "flex",
+  flexDirection: "column",
+  flexShrink: 0,
+  flexGrow: 1,
+  maxHeight: "100%",
+}));
+
+const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+  background: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderImage: `linear-gradient(to right, ${theme.palette.border.main} 50%, transparent 50%) 30% 1`,
+  position: "absolute",
+  width: "40px",
+  height: "40px",
+  left: "-20px",
+  top: theme.spacing(0.5),
+  boxShadow: "none",
+  color: theme.palette.text.primary,
+  "& > svg": {
+    fontSize: "1.875rem",
+  },
+  "&:hover": {
+    background: theme.palette.background.paper,
+    boxShadow: "none",
+  },
+}));
+
 const Header = styled("header")(({ theme }) => ({
-  padding: theme.spacing(1, 1.5),
+  padding: theme.spacing(1, 2),
   "& input": {
     flex: "1",
     padding: "5px",
@@ -74,7 +113,6 @@ const ResetToggle = styled(Button)(({ theme }) => ({
 
 const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
-  // Use a pseudo element as border to allow for tab border overlap without excessive MUI overrides
   "&::after": {
     content: "''",
     position: "absolute",
@@ -86,9 +124,8 @@ const TabList = styled(Box)(({ theme }) => ({
   },
   "& .MuiTabs-root": {
     minHeight: "0",
-    padding: theme.spacing(0, 1.5),
+    padding: theme.spacing(0, 1.75),
   },
-  // Hide default MUI indicator as we're using custom styling
   "& .MuiTabs-indicator": {
     display: "none",
   },
@@ -101,12 +138,24 @@ const Sidebar: React.FC = React.memo(() => {
   ]);
 
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
+  const [isSidebarMinimised, setIsSidebarMinimised] = useState<boolean>(() => {
+    const savedState = localStorage.getItem("isSidebarMinimised");
+    return savedState === "true";
+  });
 
   const handleChange = (
     _event: React.SyntheticEvent,
     newValue: SidebarTabs,
   ) => {
     setActiveTab(newValue);
+  };
+
+  const togglePreview = () => {
+    setIsSidebarMinimised((prev) => {
+      const newState = !prev;
+      localStorage.setItem("isSidebarMinimised", JSON.stringify(newState));
+      return newState;
+    });
   };
 
   const baseUrl = `${window.location.origin}${rootFlowPath(false)}`;
@@ -118,97 +167,102 @@ const Sidebar: React.FC = React.memo(() => {
   };
 
   return (
-    <Root>
-      <Header>
-        <Box width="100%" display="flex">
-          <input type="text" disabled value={urls.preview} />
+    <Root isMinimised={isSidebarMinimised}>
+      <SidebarWrapper>
+        <StyledToggleButton onClick={togglePreview} value="toggleSidebar">
+          {isSidebarMinimised ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+        </StyledToggleButton>
+        <Header>
+          <Box width="100%" display="flex">
+            <input type="text" disabled value={urls.preview} />
 
-          <Permission.IsPlatformAdmin>
-            <Tooltip arrow title="Open draft service">
+            <Permission.IsPlatformAdmin>
+              <Tooltip arrow title="Open draft service">
+                <Link
+                  href={urls.draft}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="inherit"
+                >
+                  <OpenInNewOffIcon />
+                </Link>
+              </Tooltip>
+            </Permission.IsPlatformAdmin>
+
+            <Tooltip arrow title="Open preview of changes to publish">
               <Link
-                href={urls.draft}
+                href={urls.preview}
                 target="_blank"
                 rel="noopener noreferrer"
                 color="inherit"
               >
-                <OpenInNewOffIcon />
+                <OpenInNewIcon />
               </Link>
             </Tooltip>
-          </Permission.IsPlatformAdmin>
 
-          <Tooltip arrow title="Open preview of changes to publish">
-            <Link
-              href={urls.preview}
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
-            >
-              <OpenInNewIcon />
-            </Link>
-          </Tooltip>
-
-          {isFlowPublished ? (
-            <Tooltip arrow title="Open published service">
-              <Link
-                href={urls.analytics}
-                target="_blank"
-                rel="noopener noreferrer"
-                color="inherit"
-              >
-                <LanguageIcon />
-              </Link>
-            </Tooltip>
-          ) : (
-            <Tooltip arrow title="Flow not yet published">
-              <Box>
-                <Link component={"button"} disabled aria-disabled={true}>
+            {isFlowPublished ? (
+              <Tooltip arrow title="Open published service">
+                <Link
+                  href={urls.analytics}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="inherit"
+                >
                   <LanguageIcon />
                 </Link>
-              </Box>
-            </Tooltip>
-          )}
-        </Box>
-        <PublishFlowButton previewURL={urls.preview} />
-      </Header>
-      <TabList>
-        <Tabs onChange={handleChange} value={activeTab} aria-label="">
-          <StyledTab value="PreviewBrowser" label="Preview" />
-          <StyledTab value="History" label="History" />
-          <StyledTab value="Search" label="Search" />
-          <StyledTab value="Console" label="Console" />
-        </Tabs>
-      </TabList>
-      {activeTab === "PreviewBrowser" && (
-        <SidebarContainer>
-          <ResetToggle
-            variant="link"
-            onClick={() => {
-              resetPreview();
-            }}
-          >
-            <Reset fontSize="small" />
-            Restart
-          </ResetToggle>
-          <Questions previewEnvironment="editor" />
-        </SidebarContainer>
-      )}
-      {activeTab === "History" && (
-        <SidebarContainer py={3}>
-          <Container>
-            <EditHistory />
-          </Container>
-        </SidebarContainer>
-      )}
-      {activeTab === "Search" && (
-        <SidebarContainer>
-          <Search />
-        </SidebarContainer>
-      )}
-      {activeTab === "Console" && (
-        <SidebarContainer>
-          <DebugConsole />
-        </SidebarContainer>
-      )}
+              </Tooltip>
+            ) : (
+              <Tooltip arrow title="Flow not yet published">
+                <Box>
+                  <Link component={"button"} disabled aria-disabled={true}>
+                    <LanguageIcon />
+                  </Link>
+                </Box>
+              </Tooltip>
+            )}
+          </Box>
+          <PublishFlowButton previewURL={urls.preview} />
+        </Header>
+        <TabList>
+          <Tabs onChange={handleChange} value={activeTab} aria-label="">
+            <StyledTab value="PreviewBrowser" label="Preview" />
+            <StyledTab value="History" label="History" />
+            <StyledTab value="Search" label="Search" />
+            <StyledTab value="Console" label="Console" />
+          </Tabs>
+        </TabList>
+        {activeTab === "PreviewBrowser" && (
+          <SidebarContainer>
+            <ResetToggle
+              variant="link"
+              onClick={() => {
+                resetPreview();
+              }}
+            >
+              <Reset fontSize="small" />
+              Restart
+            </ResetToggle>
+            <Questions previewEnvironment="editor" />
+          </SidebarContainer>
+        )}
+        {activeTab === "History" && (
+          <SidebarContainer py={3}>
+            <Container>
+              <EditHistory />
+            </Container>
+          </SidebarContainer>
+        )}
+        {activeTab === "Search" && (
+          <SidebarContainer>
+            <Search />
+          </SidebarContainer>
+        )}
+        {activeTab === "Console" && (
+          <SidebarContainer>
+            <DebugConsole />
+          </SidebarContainer>
+        )}
+      </SidebarWrapper>
     </Root>
   );
 });

@@ -5,9 +5,22 @@
       "text",
       "drawBoundary",
       "planningConstraints",
+      "mapAndLabel",
       "text2",
       "notice"
     ]
+  },
+  "mapAndLabel": {
+    "data": {
+      "fn": "trees",
+      "title": "Map and label",
+      "basemap": "OSM",
+      "drawColor": "#00ff00",
+      "drawType": "Polygon",
+      "schemaName": "MockTrees",
+      "schema": "MockTrees"
+    },
+    "type": 155
   },
   "planningConstraints": {
     "data": {

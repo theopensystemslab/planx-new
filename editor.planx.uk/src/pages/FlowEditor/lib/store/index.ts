@@ -1,6 +1,7 @@
 import {
   Node as PlanXCoreNode,
   NodeId,
+  NodeTags,
 } from "@opensystemslab/planx-core/types";
 import { isPreviewOnlyDomain } from "routes/utils";
 import { create, StoreApi, UseBoundStore } from "zustand";
@@ -36,7 +37,7 @@ export declare namespace Store {
    * @deprecated Should share type with PlanX core once `Value` is retired and Flow Graph is typed
    */
   export interface Node extends PlanXCoreNode {
-    data?: any;
+    data?: Record<string, any> & NodeTags;
   }
   export interface Passport {
     data?: Record<string, any>;

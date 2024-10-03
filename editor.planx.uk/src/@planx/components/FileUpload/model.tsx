@@ -4,7 +4,7 @@ import type { HandleSubmit } from "pages/Preview/Node";
 import { FileWithPath } from "react-dropzone";
 import { array } from "yup";
 
-export interface Props extends MoreInformation {
+export interface FileUpload extends MoreInformation {
   id?: string;
   title?: string;
   fn: string;

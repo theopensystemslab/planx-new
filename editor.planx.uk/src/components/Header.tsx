@@ -464,8 +464,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef, route }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [togglePreview, user] = useStore((state) => [
-    state.togglePreview,
+  const [user] = useStore((state) => [
     state.getUser(),
     state.getTeam(),
     state.canUserEditTeam,
@@ -490,16 +489,6 @@ const EditorToolbar: React.FC<{
             <RightBox>
               {user && (
                 <ProfileSection disableGutters>
-                  {route.data.flow && (
-                    <IconButton
-                      color="inherit"
-                      onClick={togglePreview}
-                      aria-label="Toggle Preview"
-                      size="large"
-                    >
-                      <MenuOpenIcon />
-                    </IconButton>
-                  )}
                   <Box mr={1}></Box>
                   <IconButton
                     edge="end"
