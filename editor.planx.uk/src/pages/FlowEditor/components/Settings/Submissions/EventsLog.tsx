@@ -1,3 +1,4 @@
+import CloudDownload from "@mui/icons-material/CloudDownload";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import Payment from "@mui/icons-material/Payment";
@@ -13,10 +14,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { format } from "date-fns";
+import { addDays, format, isBefore } from "date-fns";
+import { DAYS_UNTIL_EXPIRY } from "lib/pay";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary";
 
@@ -77,7 +81,8 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 350 }}>
               <strong>Session ID</strong>
             </TableCell>
-            <TableCell sx={{ width: 60 }}></TableCell>
+            <TableCell sx={{ width: 50 }}></TableCell>
+            <TableCell sx={{ width: 50 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -92,6 +97,20 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
 
 const CollapsibleRow: React.FC<Submission> = (submission) => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
+    state.teamSlug,
+    state.canUserEditTeam,
+    state.teamSettings?.submissionEmail,
+  ]);
+
+  // Only show an application download button if certain conditions are met
+  const submissionDataExpirationDate = addDays(new Date(), DAYS_UNTIL_EXPIRY);
+  const showDownloadButton =
+    canUserEditTeam(teamSlug) &&
+    submission.status === "Success" &&
+    submissionEmail &&
+    isBefore(new Date(submission.createdAt), submissionDataExpirationDate);
 
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
@@ -122,6 +141,26 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
         <TableCell>{submission.sessionId}</TableCell>
         <TableCell>
+          {showDownloadButton && (
+            <Tooltip arrow title="Download application data">
+              <IconButton
+                aria-label="download application"
+                size="small"
+                onClick={() => {
+                  const zipUrl = `${
+                    import.meta.env.VITE_APP_API_URL
+                  }/download-application-files/${
+                    submission.sessionId
+                  }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+                  window.open(zipUrl, "_blank");
+                }}
+              >
+                <CloudDownload />
+              </IconButton>
+            </Tooltip>
+          )}
+        </TableCell>
+        <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -132,7 +171,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ padding: 0, border: "none" }} colSpan={5}>
+        <TableCell sx={{ padding: 0, border: "none" }} colSpan={6}>
           <Collapse
             in={open}
             timeout="auto"
