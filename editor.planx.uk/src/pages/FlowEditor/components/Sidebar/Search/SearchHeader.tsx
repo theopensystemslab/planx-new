@@ -8,6 +8,7 @@ import ChecklistItem from "ui/shared/ChecklistItem";
 import Input from "ui/shared/Input";
 
 import { Context, Data } from ".";
+import { ALL_FACETS, DATA_FACETS } from "./facets";
 
 export const SearchHeader: Components<Data, Context>["Header"] = ({
   context,
@@ -22,6 +23,15 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
       setIsSearching(true);
     }
   }, [formik.values.pattern, lastPattern, setIsSearching]);
+
+  // Use "data.title" as proxy for all facets
+  const isCurrentlyDataOnlySearch = () =>
+    !formik.values.facets.includes("data.title");
+
+  const toggleDataOnly = () =>
+    isCurrentlyDataOnlySearch()
+      ? formik.setFieldValue("facets", ALL_FACETS)
+      : formik.setFieldValue("facets", DATA_FACETS);
 
   return (
     <Box mx={3} pt={3} component="form" onSubmit={formik.handleSubmit}>
@@ -56,14 +66,24 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
           />
         )}
       </Box>
-      <ChecklistItem
-        label="Search only data fields"
-        id={"search-data-field-facet"}
-        checked
-        inputProps={{ disabled: !hasFeatureFlag("DATA_ONLY_SEARCH") }}
-        onChange={() => {}}
-        variant="compact"
-      />
+      {hasFeatureFlag("DATA_ONLY_SEARCH") ? (
+        <ChecklistItem
+          label="Search only data fields"
+          id={"search-data-field-facet"}
+          checked={isCurrentlyDataOnlySearch()}
+          onChange={toggleDataOnly}
+          variant="compact"
+        />
+      ) : (
+        <ChecklistItem
+          label="Search only data fields"
+          id={"search-data-field-facet"}
+          inputProps={{ disabled: true }}
+          checked={true}
+          onChange={toggleDataOnly}
+          variant="compact"
+        />
+      )}
       {formik.values.pattern && (
         <Typography variant="h3" mt={2} mb={1}>
           {context?.results.length === 0 && "No matches found"}

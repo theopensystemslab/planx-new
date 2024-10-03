@@ -1,7 +1,7 @@
-import { IndexedNode } from "@opensystemslab/planx-core/types";
+import { flatFlags, IndexedNode } from "@opensystemslab/planx-core/types";
 import { FuseOptionKey } from "fuse.js";
 
-type SearchFacets = Array<FuseOptionKey<IndexedNode>>;
+export type SearchFacets = Array<FuseOptionKey<IndexedNode>>;
 
 const generalData: SearchFacets = ["data.fn", "data.val"];
 
@@ -26,10 +26,109 @@ const drawBoundaryData: SearchFacets = [
 ];
 
 /** Data fields used across PlanX components */
-export const DATA_FACETS = [
+export const DATA_FACETS: SearchFacets = [
   ...generalData,
   ...fileUploadAndLabelData,
   ...calculateData,
   ...listData,
   ...drawBoundaryData,
+];
+
+const basicFields: SearchFacets = [
+  "data.text",
+  "data.title",
+  "data.description",
+];
+
+const moreInformation: SearchFacets = [
+  "data.notes",
+  "data.howMeasured",
+  "data.policyRef",
+  "data.info",
+];
+
+const checklist: SearchFacets = ["data.categories.title"];
+
+const nextSteps: SearchFacets = [
+  "data.steps.title",
+  "data.steps.description",
+  "data.steps.url",
+];
+
+const fileUploadAndLabel: SearchFacets = [
+  "data.fileTypes.name",
+  "data.fileTypes.notes",
+  "data.fileTypes.howMeasured",
+  "data.fileTypes.policyRef",
+  "data.fileTypes.info",
+];
+
+/** List, Page, and MapAndLabel components share this structure */
+const schemaComponents: SearchFacets = [
+  "data.schema.fields.data.title",
+  "data.schema.fields.data.description",
+  "data.schema.fields.data.options.description",
+  "data.schema.fields.data.options.text",
+];
+
+const taskList: SearchFacets = ["data.tasks.title", "data.tasks.description"];
+
+const result: SearchFacets = [
+  ...flatFlags.flatMap(({ value }) => [
+    `data.overrides.${value}.heading`,
+    `data.overrides.${value}.description`,
+  ]),
+];
+
+const content: SearchFacets = ["data.content"];
+
+const confirmation: SearchFacets = [
+  "data.heading",
+  "data.moreInfo",
+  "data.contactInfo",
+  "data.nextSteps.title",
+  "data.nextSteps.description",
+];
+
+const findProperty: SearchFacets = [
+  "data.newAddressTitle",
+  "data.newAddressDescription",
+  "data.newAddressDescriptionLabel",
+];
+
+const drawBoundary: SearchFacets = [
+  "data.titleForUploading",
+  "data.descriptionForUploading",
+];
+
+const planningConstraints: SearchFacets = ["data.disclaimer"];
+
+const pay: SearchFacets = [
+  "data.bannerTitle",
+  "data.instructionsTitle",
+  "data.instructionsDescription",
+  "data.secondaryPageTitle",
+  "data.nomineeTitle",
+  "data.nomineeDescription",
+  "data.yourDetailsTitle",
+  "data.yourDetailsDescription",
+  "data.yourDetailsLabel",
+];
+
+export const ALL_FACETS: SearchFacets = [
+  ...basicFields,
+  ...moreInformation,
+  ...checklist,
+  ...nextSteps,
+  ...fileUploadAndLabel,
+  ...schemaComponents,
+  ...taskList,
+  ...result,
+  ...content,
+  ...confirmation,
+  ...findProperty,
+  ...drawBoundary,
+  ...planningConstraints,
+  ...pay,
+  ...DATA_FACETS,
 ];
