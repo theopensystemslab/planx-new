@@ -18,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { addDays, format, isAfter, isBefore } from "date-fns";
+import { addDays, format, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
