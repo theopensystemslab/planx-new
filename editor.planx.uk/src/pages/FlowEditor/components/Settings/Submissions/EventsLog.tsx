@@ -18,7 +18,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { addDays, format, isBefore } from "date-fns";
+import { addDays, format, isAfter, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
@@ -105,12 +105,15 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   ]);
 
   // Only show an application download button if certain conditions are met
-  const submissionDataExpirationDate = addDays(new Date(), DAYS_UNTIL_EXPIRY);
+  const submissionDataExpirationDate = addDays(
+    new Date(submission.createdAt),
+    DAYS_UNTIL_EXPIRY,
+  );
   const showDownloadButton =
     canUserEditTeam(teamSlug) &&
     submission.status === "Success" &&
     submissionEmail &&
-    isBefore(new Date(submission.createdAt), submissionDataExpirationDate);
+    isBefore(new Date(), submissionDataExpirationDate);
 
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
