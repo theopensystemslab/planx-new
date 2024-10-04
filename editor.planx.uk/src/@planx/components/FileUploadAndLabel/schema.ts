@@ -1,3 +1,4 @@
+import { NODE_TAGS } from "@opensystemslab/planx-core/types";
 import {
   array,
   boolean,
@@ -32,7 +33,7 @@ const moreInformationSchema: SchemaOf<MoreInformation> = object({
 });
 
 const baseNodeDataSchema: SchemaOf<BaseNodeData> = object({
-  tags: array(mixed().oneOf(["placeholder"])),
+  tags: array(mixed().oneOf(NODE_TAGS)),
 }).concat(moreInformationSchema);
 
 const valFnSchema = mixed().when("condition", {
