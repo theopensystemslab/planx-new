@@ -29,7 +29,6 @@ const FlowEditor = () => {
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
-  const showSidebar = useStore((state) => state.showSidebar);
 
   const isTestEnvBannerVisible = useStore(
     (state) => state.isTestEnvBannerVisible,
@@ -52,7 +51,7 @@ const FlowEditor = () => {
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
         </Box>
       </Box>
-      {showSidebar && <Sidebar />}
+      <Sidebar />
     </EditorContainer>
   );
 };

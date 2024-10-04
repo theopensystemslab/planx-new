@@ -26,6 +26,7 @@ import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
 import type { StateCreator } from "zustand";
+import { persist } from 'zustand/middleware'
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
@@ -45,7 +46,7 @@ const send = (ops: Array<any>) => {
 export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
-  togglePreview: () => void;
+  toggleSidebar: () => void;
   isTestEnvBannerVisible: boolean;
   hideTestEnvBanner: () => void;
 }
@@ -53,21 +54,27 @@ export interface EditorUIStore {
 export const editorUIStore: StateCreator<
   SharedStore & EditorUIStore,
   [],
-  [],
+  [["zustand/persist", unknown]],
   EditorUIStore
-> = (set, get) => ({
-  flowLayout: FlowLayout.TOP_DOWN,
+> = persist(
+  (set, get) => ({
+    flowLayout: FlowLayout.TOP_DOWN,
 
-  showSidebar: true,
+    showSidebar: true,
 
-  togglePreview: () => {
-    set({ showSidebar: !get().showSidebar });
-  },
+    toggleSidebar: () => {
+      set({ showSidebar: !get().showSidebar });
+    },
 
-  isTestEnvBannerVisible: !window.location.href.includes(".uk"),
+    isTestEnvBannerVisible: !window.location.href.includes(".uk"),
 
-  hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
-});
+    hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
+  }),
+  {
+    name: "editorUIStore",
+    partialize: (state) => ({ showSidebar: state.showSidebar }),
+  }
+);
 
 interface PublishFlowResponse {
   alteredNodes: Store.Node[];
