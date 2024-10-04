@@ -64,6 +64,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   [`& .${outlinedInputClasses.root}, input`]: {
     cursor: "pointer",
+    backgroundColor: theme.palette.background.default,
   },
   [`& .${inputLabelClasses.root}`]: {
     textDecoration: "underline",
