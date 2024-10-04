@@ -36,6 +36,10 @@ export const CharacterCounter: React.FC<Props> = (props) => {
     ? `You have ${currentCharacterCount} characters remaining`
     : `You have ${Math.abs(currentCharacterCount)} characters too many`;
 
+  const characterLimitAnnoucementTest = characterLimitBool
+    ? `You have ${characterLimitAnnoucement} characters remaining`
+    : `You have ${Math.abs(characterLimitAnnoucement)} characters too many`;
+
   return (
     <>
       <Typography
@@ -70,7 +74,9 @@ export const CharacterCounter: React.FC<Props> = (props) => {
           overflow: "hidden",
         }}
         aria-hidden={characterAnnouncementBool ? false : true}
-      >{`You have ${characterLimitAnnoucement} characters remaining`}</Typography>
+      >
+        {characterLimitAnnoucementTest}
+      </Typography>
     </>
   );
 };

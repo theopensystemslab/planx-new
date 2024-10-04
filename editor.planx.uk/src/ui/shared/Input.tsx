@@ -3,11 +3,16 @@ import InputBase, {
   InputBaseProps,
 } from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
+import {
+  extraLongTextLimit,
+  longTextLimit,
+} from "@planx/components/TextInput/model";
 import React, {
   ChangeEvent,
   forwardRef,
   useImperativeHandle,
   useRef,
+  useState,
 } from "react";
 import {
   borderedFocusStyle,
@@ -33,8 +38,7 @@ export interface Props extends InputBaseProps {
   large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
-  value?: string | any[] | string[];
-  characterLimit?: number;
+  textLength?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -96,6 +100,7 @@ const StyledInputBase = styled(InputBase, {
 
 export default forwardRef((props: Props, ref): FCReturn => {
   const container = useRef<HTMLDivElement | null>(null);
+  const [characterLimit, setCharacterLimit] = useState<number>(0);
 
   const {
     format,
@@ -105,9 +110,21 @@ export default forwardRef((props: Props, ref): FCReturn => {
     "aria-describedby": ariaDescribedBy,
     "aria-labelledby": ariaLabelledBy,
     id,
-    characterLimit,
+    textLength,
     ...restProps
   } = props;
+
+  // set which character limit from user defined type
+  if (characterLimit === 0) {
+    switch (textLength) {
+      case "long":
+        setCharacterLimit(longTextLimit);
+        break;
+      case "extraLong":
+        setCharacterLimit(extraLongTextLimit);
+        break;
+    }
+  }
 
   useImperativeHandle(
     ref,
@@ -138,10 +155,12 @@ export default forwardRef((props: Props, ref): FCReturn => {
           ref={container}
           {...restProps}
         />
-        {props.type === "text" && characterLimit && (
+        {props.type === "text" && textLength && (
           <CharacterCounter
-            characterCount={props.value ? props.value.length : 0}
-            characterLimit={props.characterLimit || 0}
+            characterCount={
+              typeof props.value === "string" ? props.value.length : 0
+            }
+            characterLimit={characterLimit}
             error={errorMessage ? true : false}
           />
         )}

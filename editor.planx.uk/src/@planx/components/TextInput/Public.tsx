@@ -74,7 +74,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
             id={props.id}
-            characterLimit={characterLimit > 0 ? characterLimit : undefined}
+            textLength={props.type}
             inputProps={{
               "aria-describedby": [
                 props.description ? `${DESCRIPTION_TEXT} character-hint` : "",

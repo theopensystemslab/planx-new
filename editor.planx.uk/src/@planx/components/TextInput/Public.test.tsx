@@ -8,6 +8,9 @@ import { axe } from "vitest-axe";
 import { ERROR_MESSAGE } from "../shared/constants";
 import { TextInputType } from "./model";
 import TextInput from "./Public";
+
+const twentyFiveCharacterTest = "25 characters for me.....";
+
 test("requires a value before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
@@ -163,4 +166,55 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
 
   expect(errorWrapper).not.toBeEmptyDOMElement();
   expect(errorWrapper).toHaveAttribute("role", "alert");
+});
+
+test("character limit counter should appear for long text inputs", async () => {
+  setup(<TextInput title="hello" type={TextInputType.Long} />);
+
+  const characterCounter = await screen.findByText(
+    "You have 250 characters remaining",
+  );
+
+  expect(characterCounter).toBeInTheDocument();
+});
+
+test("character limit counter should not appear for short text inputs", async () => {
+  setup(<TextInput title="hello" type={TextInputType.Short} />);
+
+  const characterCounter = screen.queryByText(
+    "You have 120 characters remaining",
+  );
+
+  expect(characterCounter).not.toBeInTheDocument();
+});
+
+test("character limit counter should change when typed", async () => {
+  const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
+
+  const textArea = screen.getByRole("textbox", {
+    name: /hello you can enter up to 250 characters/i,
+  });
+
+  await user.type(textArea, twentyFiveCharacterTest);
+
+  const newCharacterCounter = await screen.findByText(
+    "You have 225 characters remaining",
+  );
+
+  expect(newCharacterCounter).toBeInTheDocument();
+});
+
+test("character limit counter shows error state when over limit", async () => {
+  const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
+  const textArea = screen.getByRole("textbox", {
+    name: /hello you can enter up to 250 characters/i,
+  });
+
+  await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}.`);
+
+  const errorCharacterCounter = await screen.findByText(
+    "You have 1 characters too many",
+  );
+
+  expect(errorCharacterCounter).toHaveStyle({ color: "#D4351C" });
 });

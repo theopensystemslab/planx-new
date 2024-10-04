@@ -48,7 +48,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
         rows={
           data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
         }
-        characterLimit={characterLimit > 0 ? characterLimit : undefined}
+        textLength={data.type}
         required
         inputProps={{
           "aria-describedby": [
