@@ -9,7 +9,8 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio";
 import { useFormik } from "formik";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect } from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -24,6 +25,53 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
+  const [currentNode, passport] = useStore((state) => [
+    state.currentCard,
+    state.computePassport(),
+  ]);
+
+  const fn = currentNode?.data?.fn;
+  const existingPassportValues = passport?.data?.[fn];
+  const responseValues = props.responses.map((r: any) => r.val);
+  const responseIdsThatCanBeAutoAnswered: string[] = [];
+
+  // TODO this is VERY barebones proof-of-concept logic (exact match, non heirarchical automation only!)
+  //   Need to extract into a helper function based on original upcomingCardIds comparison checks
+  if (existingPassportValues?.length > 0 && responseValues?.length > 0) {
+    responseValues.forEach((response) => {
+      if (existingPassportValues.includes(response)) {
+        const id = props.responses.find((r: any) => response === r.val)?.id;
+        if (id) responseIdsThatCanBeAutoAnswered.push(id);
+      }
+    });
+  }
+
+  if (responseIdsThatCanBeAutoAnswered.length > 0) {
+    return (
+      <AutoAnsweredQuestion
+        {...props}
+        answerIds={responseIdsThatCanBeAutoAnswered}
+      />
+    );
+  } else {
+    return <VisibleQuestion {...props} />;
+  }
+};
+
+const AutoAnsweredQuestion: React.FC<Question & { answerIds: string[] }> = (
+  props,
+) => {
+  useEffect(() => {
+    props.handleSubmit?.({
+      answers: props.answerIds,
+      auto: true,
+    });
+  }, []);
+
+  return null;
+};
+
+const VisibleQuestion: React.FC<Question> = (props) => {
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
     (response) => response.id === previousResponseId,
