@@ -137,6 +137,7 @@ $fontMonospace: "Source Code Pro", monospace;
     border: $nodeBorderWidth dashed red;
   }
 
+  & > div > a,
   & > a {
     position: relative;
     display: flex;
