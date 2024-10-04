@@ -1,7 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
+import { ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -72,18 +73,7 @@ function Component(props: any) {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        onChange={formik.handleChange}
-        value={formik.values.notes}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 }

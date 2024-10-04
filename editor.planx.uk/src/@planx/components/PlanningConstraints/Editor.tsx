@@ -8,11 +8,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS, InternalNotes } from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import InputGroup from "ui/editor/InputGroup";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -166,11 +167,7 @@ function PlanningConstraintsComponent(props: Props) {
           </InputGroup>
         </ModalSectionContent>
       </ModalSection>
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} showMoreInformation={false}/>
     </form>
   );
 }

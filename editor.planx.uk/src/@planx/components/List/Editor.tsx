@@ -2,6 +2,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -12,7 +13,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
+import { EditorProps, ICONS } from "../ui";
 import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
@@ -153,18 +154,7 @@ function ListComponent(props: Props) {
           </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 }

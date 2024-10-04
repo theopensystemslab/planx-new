@@ -3,9 +3,10 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
-import { EditorProps, InternalNotes } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input";
@@ -138,11 +139,7 @@ function SetValueComponent(props: Props) {
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} showMoreInformation={false}/>
     </form>
   );
 }

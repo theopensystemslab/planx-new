@@ -1,6 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
+import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import ListManager from "ui/editor/ListManager";
@@ -238,6 +239,10 @@ export const Question: React.FC<Props> = (props) => {
         name="notes"
         onChange={formik.handleChange}
         value={formik.values.notes}
+      />
+      <ComponentTagSelect
+        value={formik.values.tags}
+        onChange={(value) => formik.setFieldValue("tags", value)}
       />
     </form>
   );

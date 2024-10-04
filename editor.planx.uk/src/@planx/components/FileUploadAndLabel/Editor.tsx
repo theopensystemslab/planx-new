@@ -10,8 +10,6 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import {
   EditorProps,
   ICONS,
-  InternalNotes,
-  MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import { lowerCase, merge, upperFirst } from "lodash";
@@ -20,6 +18,7 @@ import ImgInput from "ui/editor/ImgInput";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { ModalSubtitle } from "ui/editor/ModalSubtitle";
@@ -122,18 +121,7 @@ function FileUploadAndLabelComponent(props: Props) {
           />
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 }
