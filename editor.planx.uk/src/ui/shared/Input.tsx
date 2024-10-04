@@ -33,7 +33,7 @@ export interface Props extends InputBaseProps {
   large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
-  value: string;
+  value: string | any[] | string[];
   characterLimit?: number;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }

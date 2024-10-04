@@ -1,5 +1,9 @@
 import type { TextField } from "@planx/components/shared/Schema/model";
-import React from "react";
+import {
+  extraLongTextLimit,
+  longTextLimit,
+} from "@planx/components/TextInput/model";
+import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 
@@ -11,6 +15,20 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const fieldProps = getFieldProps(props);
   const { data, formik } = props;
   const { id, errorMessage } = fieldProps;
+
+  const [characterLimit, setCharacterLimit] = useState<number>(0);
+
+  // set which character limit from user defined type
+  if (characterLimit === 0) {
+    switch (data.type) {
+      case "long":
+        setCharacterLimit(longTextLimit);
+        break;
+      case "extraLong":
+        setCharacterLimit(extraLongTextLimit);
+        break;
+    }
+  }
 
   return (
     <InputLabel label={data.title} htmlFor={id}>
@@ -30,6 +48,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
         rows={
           data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
         }
+        characterLimit={characterLimit > 0 ? characterLimit : undefined}
         required
         inputProps={{
           "aria-describedby": [

@@ -1,6 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {
   characterLimit: number;
@@ -8,22 +9,25 @@ export type Props = {
   error: boolean;
 };
 
-// TODO: fix this data field bug for all components
 export const CharacterCounter: React.FC<Props> = (props) => {
   const [characterLimitAnnoucement, setCharacterLimitAnnoucement] =
     useState<number>(0);
+  const [characterAnnouncementBool, setCharacterLimitAnnoucementBool] =
+    useState<boolean>(false);
 
   const updateCharacterCount = useCallback(
-    debounce(
-      (count: number) =>
-        setCharacterLimitAnnoucement(props.characterLimit || 0 - count),
-      750,
-    ),
+    debounce((count: number) => {
+      setCharacterLimitAnnoucement(props.characterLimit - count);
+    }, 500),
     [],
   );
 
   useEffect(() => {
     updateCharacterCount(props.characterCount);
+    setTimeout(() => {
+      setCharacterLimitAnnoucementBool(true);
+    }, 500);
+    setCharacterLimitAnnoucementBool(false);
   }, [props.characterCount, updateCharacterCount]);
 
   const currentCharacterCount = props.characterLimit - props.characterCount;
@@ -42,14 +46,15 @@ export const CharacterCounter: React.FC<Props> = (props) => {
           width: "1px",
           overflow: "hidden",
         }}
+        aria-hidden={props.characterCount === 0 ? false : true}
       >
         {`You can enter up to ${props.characterLimit} characters`}
       </Typography>
       <Typography
         paddingTop={0.5}
-        paddingLeft={props.error ? 2 : 0}
         variant="body2"
         color={characterLimitBool ? "InfoText" : "error"}
+        fontWeight={characterLimitBool ? 400 : FONT_WEIGHT_SEMI_BOLD}
         id={"character-live-hint"}
         aria-hidden={"true"}
       >
@@ -64,6 +69,7 @@ export const CharacterCounter: React.FC<Props> = (props) => {
           width: "1px",
           overflow: "hidden",
         }}
+        aria-hidden={characterAnnouncementBool ? false : true}
       >{`You have ${characterLimitAnnoucement} characters remaining`}</Typography>
     </>
   );
