@@ -4,7 +4,6 @@ import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
-import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
@@ -12,12 +11,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import {
-  extraLongTextLimit,
-  longTextLimit,
-  shortTextLimit,
-  userDataSchema,
-} from "./model";
+import { extraLongTextLimit, longTextLimit, userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
@@ -90,13 +84,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 .join(" "),
             }}
           />
-          {props.type && ["long", "extraLong"].includes(props.type) && (
-            <CharacterCounter
-              characterCount={formik.values.text.length}
-              characterLimit={characterLimit}
-              error={formik.errors.text ? true : false}
-            />
-          )}
         </InputLabel>
       </InputRow>
     </Card>
