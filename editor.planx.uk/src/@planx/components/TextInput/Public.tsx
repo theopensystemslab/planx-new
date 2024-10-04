@@ -2,7 +2,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
@@ -11,26 +11,12 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { extraLongTextLimit, longTextLimit, userDataSchema } from "./model";
+import { userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
 // TODO: fix this data field bug for all components
 const TextInputComponent: React.FC<Props> = (props) => {
-  const [characterLimit, setCharacterLimit] = useState<number>(0);
-
-  // set which character limit from user defined type
-  if (characterLimit === 0) {
-    switch (props.type) {
-      case "long":
-        setCharacterLimit(longTextLimit);
-        break;
-      case "extraLong":
-        setCharacterLimit(extraLongTextLimit);
-        break;
-    }
-  }
-
   const formik = useFormik({
     initialValues: {
       text: getPreviouslySubmittedData(props) ?? "",

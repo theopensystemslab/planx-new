@@ -192,7 +192,7 @@ test("character limit counter should change when typed", async () => {
   const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
 
   const textArea = screen.getByRole("textbox", {
-    name: /hello you can enter up to 250 characters/i,
+    name: /hello You have 0 characters remaining/i,
   });
 
   await user.type(textArea, twentyFiveCharacterTest);
@@ -207,7 +207,7 @@ test("character limit counter should change when typed", async () => {
 test("character limit counter shows error state when over limit", async () => {
   const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
   const textArea = screen.getByRole("textbox", {
-    name: /hello you can enter up to 250 characters/i,
+    name: /hello You have 0 characters remaining/i,
   });
 
   await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}.`);
