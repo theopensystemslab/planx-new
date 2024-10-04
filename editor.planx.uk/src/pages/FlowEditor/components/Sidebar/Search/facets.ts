@@ -57,17 +57,17 @@ const nextSteps: SearchFacets = [
 
 const fileUploadAndLabel: SearchFacets = [
   "data.fileTypes.name",
-  "data.fileTypes.notes",
-  "data.fileTypes.howMeasured",
-  "data.fileTypes.policyRef",
-  "data.fileTypes.info",
+  "data.fileTypes.moreInformation.notes",
+  "data.fileTypes.moreInformation.howMeasured",
+  "data.fileTypes.moreInformation.policyRef",
+  "data.fileTypes.moreInformation.info",
 ];
 
 /** List, Page, and MapAndLabel components share this structure */
 const schemaComponents: SearchFacets = [
   "data.schema.fields.data.title",
   "data.schema.fields.data.description",
-  "data.schema.fields.data.options.description",
+  "data.schema.fields.data.options.data.description",
   "data.schema.fields.data.options.text",
 ];
 
