@@ -24,72 +24,68 @@ type DataKeyMap = Record<string, Partial<DataDisplayValues>>;
 /**
  * Map of ComponentTypes to their associated data keys
  */
-type ComponentMap = Record<ComponentType, DataKeyMap>;
+type ComponentMap = Record<ComponentType, Partial<DataDisplayValues>>;
 
 /**
  * Map of ComponentTypes which need specific overrides in order to display their data values
  */
-const DISPLAY_DATA: Partial<ComponentMap> = {
-  // Answers are mapped to their parent questions
-  [ComponentType.Answer]: {
-    default: {
-      getIconKey: () => ComponentType.Question,
-      displayKey: "Option (data)",
-      getTitle: ({ item }) => {
-        const parentNode = useStore.getState().flow[item.parentId];
-        return parentNode.data?.text;
-      },
-      getHeadline: ({ item, key }) => get(item, key)?.toString(),
-    },
-  },
-  // FileUploadAndLabel has data values nested in FileTypes
-  [ComponentType.FileUploadAndLabel]: {
-    default: {
-      displayKey: "File type (data)",
-      getHeadline: ({ item, refIndex }) =>
-        (item["data"] as unknown as FileUploadAndLabel)["fileTypes"][refIndex][
-          "fn"
-        ],
-    },
-  },
+const KEY_DATA: Partial<DataKeyMap> = {
   // Calculate contains both input and output data values
-  [ComponentType.Calculate]: {
-    formula: {
-      displayKey: "Formula",
-      getHeadline: ({ item }) => (item.data as unknown as Calculate).formula,
-    },
-    "data.output": {
-      displayKey: "Output (data)",
-      getHeadline: ({ item }) => (item.data as unknown as Calculate).output,
-    },
+  formula: {
+    displayKey: "Formula",
+    getHeadline: ({ item }) => (item.data as unknown as Calculate).formula,
+  },
+  "data.output": {
+    displayKey: "Output (data)",
+    getHeadline: ({ item }) => (item.data as unknown as Calculate).output,
   },
   // List contains data variables nested within its schema
-  [ComponentType.List]: {
-    "data.schema.fields.data.fn": {
-      getHeadline: ({ item, refIndex }) =>
-        (item.data as unknown as List).schema.fields[refIndex].data.fn,
-    },
-    "data.schema.fields.data.options.data.val": {
-      displayKey: "Option (data)",
-      getHeadline: ({ item, refIndex }) => {
-        // Fuse.js flattens deeply nested arrays when using refIndex
-        const options = (item.data as unknown as List).schema.fields
-          .filter((field) => field.type === "question")
-          .flatMap((field) => field.data.options);
-        return options[refIndex].data.val || "";
-      },
+  "data.schema.fields.data.fn": {
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as List).schema.fields[refIndex].data.fn,
+  },
+  "data.schema.fields.data.options.data.val": {
+    displayKey: "Option (data)",
+    getHeadline: ({ item, refIndex }) => {
+      // Fuse.js flattens deeply nested arrays when using refIndex
+      const options = (item.data as unknown as List).schema.fields
+        .filter((field) => field.type === "question")
+        .flatMap((field) => field.data.options);
+      return options[refIndex].data.val || "";
     },
   },
 };
 
+const COMPONENT_DATA: Partial<ComponentMap> = {
+  // Answers are mapped to their parent questions
+  [ComponentType.Answer]: {
+    getIconKey: () => ComponentType.Question,
+    displayKey: "Option (data)",
+    getTitle: ({ item }) => {
+      const parentNode = useStore.getState().flow[item.parentId];
+      return parentNode.data?.text;
+    },
+    getHeadline: ({ item, key }) => get(item, key)?.toString(),
+  },
+  // FileUploadAndLabel has data values nested in FileTypes
+  [ComponentType.FileUploadAndLabel]: {
+    displayKey: "File type (data)",
+    getHeadline: ({ item, refIndex }) =>
+      (item["data"] as unknown as FileUploadAndLabel)["fileTypes"][refIndex][
+      "fn"
+      ],
+  },
+}
+
 /**
  * Default values for all ComponentTypes not listed in DISPLAY_DATA
  */
-const DEFAULT_DISPLAY_DATA: DataDisplayValues = {
+const DEFAULT_DATA: DataDisplayValues = {
   displayKey: "Data",
   getIconKey: ({ item }) => item.type,
   getTitle: ({ item }) =>
     (item.data?.title as string) || (item.data?.text as string) || "",
+  // TODO: strip html?
   getHeadline: ({ item, key }) => get(item, key)?.toString() || "",
   getComponentType: ({ item }) =>
     capitalize(SLUGS[item.type].replaceAll("-", " ")),
@@ -98,12 +94,11 @@ const DEFAULT_DISPLAY_DATA: DataDisplayValues = {
 export const getDisplayDetailsForResult = (
   result: SearchResult<IndexedNode>,
 ) => {
-  const componentMap = DISPLAY_DATA[result.item.type];
-  const keyMap = componentMap?.[result.key] || componentMap?.default || {};
 
   const data: DataDisplayValues = {
-    ...DEFAULT_DISPLAY_DATA,
-    ...keyMap,
+    ...DEFAULT_DATA,
+    ...COMPONENT_DATA[result.item.type],
+    ...KEY_DATA[result.key],
   };
 
   return {
