@@ -126,6 +126,10 @@ export default forwardRef((props: Props, ref): FCReturn => {
     }
   }
 
+  const showCharacterCountBool =
+    props.type === "text" &&
+    (textLength === "long" || textLength === "extraLong");
+
   useImperativeHandle(
     ref,
     () => ({
@@ -155,7 +159,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
           ref={container}
           {...restProps}
         />
-        {props.type === "text" && textLength && (
+        {showCharacterCountBool && (
           <CharacterCounter
             characterCount={
               typeof props.value === "string" ? props.value.length : 0

@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import { debounce } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {
@@ -10,35 +10,31 @@ export type Props = {
 };
 
 export const CharacterCounter: React.FC<Props> = (props) => {
-  const [characterLimitAnnoucement, setCharacterLimitAnnoucement] =
+  const [characterLimitAnnouncement, setCharacterLimitAnnouncement] =
     useState<number>(0);
-  const [characterAnnouncementBool, setCharacterLimitAnnoucementBool] =
-    useState<boolean>(false);
 
+  const hintTextBool = useRef(true);
   const updateCharacterCount = useCallback(
     debounce((count: number) => {
-      setCharacterLimitAnnoucement(props.characterLimit - count);
-    }, 500),
+      setCharacterLimitAnnouncement(count);
+    }, 300),
     [],
   );
 
-  useEffect(() => {
-    updateCharacterCount(props.characterCount);
-    setTimeout(() => {
-      setCharacterLimitAnnoucementBool(true);
-    }, 500);
-    setCharacterLimitAnnoucementBool(false);
-  }, [props.characterCount, updateCharacterCount]);
-
   const currentCharacterCount = props.characterLimit - props.characterCount;
   const characterLimitBool = currentCharacterCount > 0;
+
+  useEffect(() => {
+    updateCharacterCount(currentCharacterCount);
+  }, [currentCharacterCount, updateCharacterCount]);
+
   const characterLimitText = characterLimitBool
     ? `You have ${currentCharacterCount} characters remaining`
     : `You have ${Math.abs(currentCharacterCount)} characters too many`;
 
-  const characterLimitAnnoucementTest = characterLimitBool
-    ? `You have ${characterLimitAnnoucement} characters remaining`
-    : `You have ${Math.abs(characterLimitAnnoucement)} characters too many`;
+  const characterLimitAnnouncementText = characterLimitBool
+    ? `You have ${characterLimitAnnouncement} characters remaining`
+    : `You have ${Math.abs(characterLimitAnnouncement)} characters too many`;
 
   return (
     <>
@@ -50,7 +46,7 @@ export const CharacterCounter: React.FC<Props> = (props) => {
           width: "1px",
           overflow: "hidden",
         }}
-        aria-hidden={props.characterCount === 0 ? false : true}
+        aria-hidden={hintTextBool ? true : false}
       >
         {`You can enter up to ${props.characterLimit} characters`}
       </Typography>
@@ -66,16 +62,14 @@ export const CharacterCounter: React.FC<Props> = (props) => {
       </Typography>
       <Typography
         aria-live="polite"
-        aria-atomic="true"
         sx={{
           position: "absolute",
           height: "1px",
           width: "1px",
           overflow: "hidden",
         }}
-        aria-hidden={characterAnnouncementBool ? false : true}
       >
-        {characterLimitAnnoucementTest}
+        {characterLimitAnnouncementText}
       </Typography>
     </>
   );
