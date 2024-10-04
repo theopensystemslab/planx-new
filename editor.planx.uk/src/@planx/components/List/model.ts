@@ -1,11 +1,11 @@
 import { cloneDeep } from "lodash";
 import { number, object } from "yup";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 import { Schema } from "../shared/Schema/model";
 import { SCHEMAS } from "./Editor";
 
-export interface List extends MoreInformation {
+export interface List extends BaseNodeData {
   fn: string;
   title: string;
   description?: string;
@@ -19,11 +19,16 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   description: data?.description,
   schemaName: data?.schemaName || SCHEMAS[0].name,
   schema: cloneDeep(data?.schema) || SCHEMAS[0].schema,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 export const validationSchema = object({
   schema: object({
-    max: number().optional().min(2, "The maximum must be greater than 1 - a Page component should be used when max is equal to 1"),
+    max: number()
+      .optional()
+      .min(
+        2,
+        "The maximum must be greater than 1 - a Page component should be used when max is equal to 1",
+      ),
   }),
 });

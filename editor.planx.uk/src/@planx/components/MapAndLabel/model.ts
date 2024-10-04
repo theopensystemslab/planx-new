@@ -1,10 +1,10 @@
 import cloneDeep from "lodash/cloneDeep";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 import { Schema } from "../shared/Schema/model";
 import { SCHEMAS } from "./Editor";
 
-export interface MapAndLabel extends MoreInformation {
+export interface MapAndLabel extends BaseNodeData {
   fn: string;
   title: string;
   description?: string;
@@ -26,5 +26,5 @@ export const parseContent = (
   drawType: data?.drawType || "Polygon",
   schemaName: data?.schemaName || SCHEMAS[0].name,
   schema: cloneDeep(data?.schema) || SCHEMAS[0].schema,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

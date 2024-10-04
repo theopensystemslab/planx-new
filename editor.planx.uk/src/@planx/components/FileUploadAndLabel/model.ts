@@ -5,7 +5,7 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import { FileWithPath } from "react-dropzone";
 
 import { FileUploadSlot } from "../FileUpload/model";
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, MoreInformation, parseBaseNodeData } from "../shared";
 
 export const PASSPORT_REQUESTED_FILES_KEY = "_requestedFiles" as const;
 
@@ -67,7 +67,7 @@ export interface FileType {
   moreInformation?: MoreInformation;
 }
 
-export interface FileUploadAndLabel extends MoreInformation {
+export interface FileUploadAndLabel extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
@@ -83,7 +83,7 @@ export const parseContent = (
   fn: data?.fn || "",
   fileTypes: cloneDeep(data?.fileTypes) || [newFileType()],
   hideDropZone: data?.hideDropZone || false,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 const DEFAULT_TITLE = "Upload and label";

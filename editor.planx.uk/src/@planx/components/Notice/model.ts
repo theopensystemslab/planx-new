@@ -1,10 +1,9 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface Notice extends MoreInformation {
+export interface Notice extends BaseNodeData {
   title: string;
   description: string;
   color: string;
-  notes?: string;
   resetButton?: boolean;
 }
 
@@ -13,5 +12,5 @@ export const parseNotice = (data: Record<string, any> | undefined) => ({
   description: data?.description || "",
   color: data?.color || "#EFEFEF",
   resetButton: data?.resetButton || false,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });

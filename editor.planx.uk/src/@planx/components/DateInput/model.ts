@@ -1,12 +1,12 @@
 import { isValid, parseISO } from "date-fns";
 import { object, SchemaOf, string } from "yup";
 
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 // Expected format: YYYY-MM-DD
 export type UserData = string;
 
-export interface DateInput extends MoreInformation {
+export interface DateInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
@@ -129,7 +129,7 @@ export const parseDateInput = (
   fn: data?.fn,
   min: data?.min,
   max: data?.max,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 export const editorValidationSchema = () =>

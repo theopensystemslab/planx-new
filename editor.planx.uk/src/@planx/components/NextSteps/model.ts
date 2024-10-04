@@ -1,6 +1,6 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export interface NextSteps extends MoreInformation {
+export interface NextSteps extends BaseNodeData {
   title: string;
   description: string;
   steps: Array<Step>;
@@ -18,7 +18,7 @@ export const parseNextSteps = (
   steps: data?.steps || [],
   title: data?.title || DEFAULT_TITLE,
   description: data?.description || "",
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 const DEFAULT_TITLE = "What would you like to do next?";

@@ -1,4 +1,4 @@
-import { MoreInformation, parseMoreInformation } from "../shared";
+import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export enum FindPropertyUserAction {
   Existing = "Selected an existing address",
@@ -7,7 +7,7 @@ export enum FindPropertyUserAction {
 
 export const PASSPORT_COMPONENT_ACTION_KEY = "findProperty.action";
 
-export interface FindProperty extends MoreInformation {
+export interface FindProperty extends BaseNodeData {
   title: string;
   description: string;
   allowNewAddresses?: boolean;
@@ -27,7 +27,7 @@ export const parseFindProperty = (
     data?.newAddressDescription || DEFAULT_NEW_ADDRESS_DESCRIPTION,
   newAddressDescriptionLabel:
     data?.newAddressDescriptionLabel || DEFAULT_NEW_ADDRESS_LABEL,
-  ...parseMoreInformation(data),
+  ...parseBaseNodeData(data),
 });
 
 // Addresses can come from two sources:

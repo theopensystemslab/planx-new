@@ -4,12 +4,14 @@ import { Response } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
 import type { TextContent } from "types";
 
+import { BaseNodeData } from "../shared";
+
 export interface FlagDisplayText {
   heading?: string;
   description?: string;
 }
 
-export interface Result {
+export interface Result extends BaseNodeData {
   flagSet: FlagSet;
   overrides?: { [flagId: string]: FlagDisplayText };
 }
