@@ -29,7 +29,9 @@ type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
 const SIDEBAR_WIDTH = "500px";
 const SIDEBAR_WIDTH_MINIMISED = "20px";
 
-const Root = styled(Box)<{ isMinimised: boolean }>(
+const Root = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isMinimised",
+})<{ isMinimised: boolean }>(
   ({ theme, isMinimised }) => ({
     position: "relative",
     top: "0",
