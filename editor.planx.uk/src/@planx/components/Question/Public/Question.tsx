@@ -25,39 +25,23 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
-  const [currentNode, passport] = useStore((state) => [
-    state.currentCard,
-    state.computePassport(),
-  ]);
+  const autoAnswerableOptions = useStore(
+    (state) => state.autoAnswerableOptions,
+  );
 
-  const fn = currentNode?.data?.fn;
-  const existingPassportValues = passport?.data?.[fn];
-  const responseValues = props.responses.map((r: any) => r.val);
-  const responseIdsThatCanBeAutoAnswered: string[] = [];
+  let idsThatCanBeAutoAnswered: string[] | undefined;
+  if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
 
-  // TODO this is VERY barebones proof-of-concept logic (exact match, non heirarchical automation only!)
-  //   Need to extract into a helper function based on original upcomingCardIds comparison checks
-  if (existingPassportValues?.length > 0 && responseValues?.length > 0) {
-    responseValues.forEach((response) => {
-      if (existingPassportValues.includes(response)) {
-        const id = props.responses.find((r: any) => response === r.val)?.id;
-        if (id) responseIdsThatCanBeAutoAnswered.push(id);
-      }
-    });
-  }
-
-  if (responseIdsThatCanBeAutoAnswered.length > 0) {
+  if (idsThatCanBeAutoAnswered && idsThatCanBeAutoAnswered.length > 0) {
     return (
-      <AutoAnsweredQuestion
-        {...props}
-        answerIds={responseIdsThatCanBeAutoAnswered}
-      />
+      <AutoAnsweredQuestion {...props} answerIds={idsThatCanBeAutoAnswered} />
     );
   } else {
     return <VisibleQuestion {...props} />;
   }
 };
 
+// An auto-answered Question won't be seen by the user, but still leaves a breadcrumb
 const AutoAnsweredQuestion: React.FC<Question & { answerIds: string[] }> = (
   props,
 ) => {

@@ -88,6 +88,7 @@ export interface PreviewStore extends Store.Store {
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
   requestedFiles: () => FileList;
+  autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
 }
 
 export const previewStore: StateCreator<
@@ -591,6 +592,62 @@ export const previewStore: StateCreator<
 
     // then return an array of the upcoming node ids, in depth-first order
     return sortIdsDepthFirst(flow)(ids);
+  },
+
+  autoAnswerableOptions: (id: NodeId) => {
+    const { flow, computePassport } = get();
+    const { type, data, edges } = flow[id];
+
+    // Only nodes that set data fn & have edges are eligible for auto-answering
+    if (!data?.fn || !edges) return;
+
+    let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
+    const options: Array<Store.Node> = edges.map((edgeId) => ({
+      id: edgeId,
+      ...flow[edgeId],
+    }));
+    const sortedOptions = options
+      .sort(
+        (a, b) =>
+          // Sort by the most to least number of comma-separated items in data.val (most granular to least)
+          String(b.data?.val).split(",").length -
+          String(a.data?.val).split(",").length,
+      )
+      .filter((option) => option.data?.val);
+
+    // Get existing passport values that match this node's fn
+    let passportValues = computePassport()?.data?.[data?.fn]?.sort();
+    if (!passportValues) return;
+    if (!Array.isArray(passportValues)) passportValues = [passportValues];
+
+    // Only proceed if at least one option's data val startsWith an existing passport value (eg passport retains most granular value only)
+    passportValues = passportValues.filter((passportValue: any) =>
+      sortedOptions.some((option) =>
+        passportValue.startsWith(option.data?.val),
+      ),
+    );
+    if (!passportValues.length) return;
+
+    // TODO Refactor / clarify logic in this block ??
+    passportValues.forEach((passportValue: any) => {
+      sortedOptions.forEach((option) => {
+        const optionValues = String(option.data?.val)
+          .split(",")
+          .sort();
+        if (String(optionValues) === String(passportValue) && option.id) {
+          optionsThatCanBeAutoAnswered.push(option.id);
+        }
+      });
+    });
+
+    // Questions & Filters 'select one' and therefore can only auto-answer the single left-most matching option
+    if (type && [TYPES.Question, TYPES.Filter].includes(type)) {
+      optionsThatCanBeAutoAnswered = optionsThatCanBeAutoAnswered.slice(0, 1);
+    }
+
+    // TODO - Are "blanks" working as expected? "_nots"?
+
+    return optionsThatCanBeAutoAnswered;
   },
 
   isFinalCard: () => {
