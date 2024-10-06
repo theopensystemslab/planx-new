@@ -19,6 +19,8 @@ import type { FileUpload } from "@planx/components/FileUpload/model";
 import FileUploadComponent from "@planx/components/FileUpload/Public";
 import type { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import FileUploadAndLabelComponent from "@planx/components/FileUploadAndLabel/Public";
+import type { Filter } from "@planx/components/Filter/model";
+import FilterComponent from "@planx/components/Filter/Public";
 import type { FindProperty } from "@planx/components/FindProperty/model";
 import FindPropertyComponent from "@planx/components/FindProperty/Public";
 import type { List } from "@planx/components/List/model";
@@ -239,8 +241,11 @@ const Node: React.FC<Props> = (props) => {
         />
       );
 
-    case TYPES.ExternalPortal:
     case TYPES.Filter:
+      return <FilterComponent {...getComponentProps<Filter>()} />;
+
+    // These types are never seen by users, nor do they leave their own breadcrumbs entry
+    case TYPES.ExternalPortal:
     case TYPES.Flow:
     case TYPES.InternalPortal:
     case TYPES.Answer:

@@ -3,6 +3,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
+import { Edges } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
@@ -25,9 +26,17 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
-  const autoAnswerableOptions = useStore(
-    (state) => state.autoAnswerableOptions,
-  );
+  const [flow, autoAnswerableOptions] = useStore((state) => [
+    state.flow,
+    state.autoAnswerableOptions,
+  ]);
+
+  // Questions without edges function like 'sticky notes' in the graph for editors only
+  let edges: Edges | undefined;
+  if (props.id) edges = flow[props.id]?.edges;
+  if (!edges || edges.length === 0) {
+    return <AutoAnsweredQuestion {...props} answerIds={undefined} />;
+  }
 
   let idsThatCanBeAutoAnswered: string[] | undefined;
   if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
@@ -42,9 +51,9 @@ const QuestionComponent: React.FC<Question> = (props) => {
 };
 
 // An auto-answered Question won't be seen by the user, but still leaves a breadcrumb
-const AutoAnsweredQuestion: React.FC<Question & { answerIds: string[] }> = (
-  props,
-) => {
+const AutoAnsweredQuestion: React.FC<
+  Question & { answerIds: string[] | undefined }
+> = (props) => {
   useEffect(() => {
     props.handleSubmit?.({
       answers: props.answerIds,

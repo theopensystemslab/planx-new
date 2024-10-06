@@ -396,7 +396,8 @@ export const previewStore: StateCreator<
   sessionId: uuidV4(),
 
   upcomingCardIds() {
-    const { flow, breadcrumbs, computePassport, collectedFlags } = get();
+    // const { flow, breadcrumbs, computePassport, collectedFlags } = get();
+    const { flow, breadcrumbs } = get();
 
     // const knownNotVals = knownNots(
     //   flow,
@@ -406,14 +407,14 @@ export const previewStore: StateCreator<
     // );
 
     const ids: Set<NodeId> = new Set();
-    const visited: Set<NodeId> = new Set();
+    // const visited: Set<NodeId> = new Set();
 
     const nodeIdsConnectedFrom = (source: NodeId): void => {
       return (flow[source]?.edges ?? [])
         .filter((id) => {
-          if (visited.has(id)) return false;
+          // if (visited.has(id)) return false;
 
-          visited.add(id);
+          // visited.add(id);
 
           const node = flow[id];
 
@@ -595,57 +596,94 @@ export const previewStore: StateCreator<
   },
 
   autoAnswerableOptions: (id: NodeId) => {
-    const { flow, computePassport } = get();
+    const { breadcrumbs, flow, computePassport } = get();
     const { type, data, edges } = flow[id];
 
     // Only nodes that set data fn & have edges are eligible for auto-answering
-    if (!data?.fn || !edges) return;
+    if (!type || !data?.fn || !edges) return;
 
-    let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
+    // Get all options (aka edges or Answer type nodes) for this node
     const options: Array<Store.Node> = edges.map((edgeId) => ({
       id: edgeId,
       ...flow[edgeId],
     }));
-    const sortedOptions = options
-      .sort(
-        (a, b) =>
-          // Sort by the most to least number of comma-separated items in data.val (most granular to least)
-          String(b.data?.val).split(",").length -
-          String(a.data?.val).split(",").length,
-      )
-      .filter((option) => option.data?.val);
+    let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
-    // Get existing passport values that match this node's fn
-    let passportValues = computePassport()?.data?.[data?.fn]?.sort();
-    if (!passportValues) return;
-    if (!Array.isArray(passportValues)) passportValues = [passportValues];
+    // Questions & Checklists auto-answer based on existing passport values matching node data vals
+    if ([TYPES.Question, TYPES.Checklist].includes(type)) {
+      const sortedOptions = options
+        .sort(
+          (a, b) =>
+            // Sort by the most to least number of comma-separated items in data.val (most granular to least)
+            String(b.data?.val).split(",").length -
+            String(a.data?.val).split(",").length,
+        )
+        .filter((option) => option.data?.val);
 
-    // Only proceed if at least one option's data val startsWith an existing passport value (eg passport retains most granular value only)
-    passportValues = passportValues.filter((passportValue: any) =>
-      sortedOptions.some((option) =>
-        passportValue.startsWith(option.data?.val),
-      ),
-    );
-    if (!passportValues.length) return;
+      // Get existing passport values that match this node's fn
+      let passportValues = computePassport()?.data?.[data?.fn]?.sort();
+      if (!passportValues) return;
+      if (!Array.isArray(passportValues)) passportValues = [passportValues];
 
-    // TODO Refactor / clarify logic in this block ??
-    passportValues.forEach((passportValue: any) => {
-      sortedOptions.forEach((option) => {
-        const optionValues = String(option.data?.val)
-          .split(",")
-          .sort();
-        if (String(optionValues) === String(passportValue) && option.id) {
-          optionsThatCanBeAutoAnswered.push(option.id);
+      // Only proceed if at least one option's data val startsWith an existing passport value (eg passport retains most granular value only)
+      passportValues = passportValues.filter((passportValue: any) =>
+        sortedOptions.some((option) =>
+          passportValue.startsWith(option.data?.val),
+        ),
+      );
+      if (!passportValues.length) return;
+
+      // TODO Clarify logic in this block ??
+      passportValues.forEach((passportValue: any) => {
+        sortedOptions.forEach((option) => {
+          const optionValues = String(option.data?.val)
+            .split(",")
+            .sort();
+          if (String(optionValues) === String(passportValue) && option.id) {
+            optionsThatCanBeAutoAnswered.push(option.id);
+          }
+        });
+      });
+    }
+
+    // Filters auto-answer based on a heirarchy of collected flags
+    if (type === TYPES.Filter) {
+      // TODO - It's still only possible to filter on the default flag category, in future category configured on node by editor?
+      const possibleFlags = flatFlags.filter(
+        (flag) => flag.category === DEFAULT_FLAG_CATEGORY,
+      );
+      const possibleFlagValues = possibleFlags.map((flag) => flag.value);
+      if (!possibleFlagValues) return;
+
+      // Get all flags collected so far based on selected answers, excluding flags not in the specified category
+      const collectedFlags: Flag[] = [];
+      Object.entries(breadcrumbs).forEach(([_nodeId, crumb]) => {
+        if (crumb.answers) {
+          crumb.answers.forEach((answerId) => {
+            const node = flow[answerId];
+            if (node.data?.flag && possibleFlagValues.includes(node.data.flag))
+              collectedFlags.push(node.data?.flag);
+          });
         }
       });
-    });
+      if (!collectedFlags) return;
 
-    // Questions & Filters 'select one' and therefore can only auto-answer the single left-most matching option
-    if (type && [TYPES.Question, TYPES.Filter].includes(type)) {
+      // Starting from the left of the Filter options, check for matches
+      options.forEach((option) => {
+        collectedFlags.forEach((flag) => {
+          if (option.data?.val === flag && option.id) {
+            optionsThatCanBeAutoAnswered.push(option.id);
+          }
+        });
+      });
+    }
+
+    // Questions & Filters 'select one' and therefore should only auto-answer the single left-most matching option
+    if ([TYPES.Question, TYPES.Filter].includes(type)) {
       optionsThatCanBeAutoAnswered = optionsThatCanBeAutoAnswered.slice(0, 1);
     }
 
-    // TODO - Are "blanks" working as expected? "_nots"?
+    // TODO - Are "blanks" working as expected? "_nots"? Passport value granularity?
 
     return optionsThatCanBeAutoAnswered;
   },
