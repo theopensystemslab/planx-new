@@ -456,11 +456,11 @@ export const previewStore: StateCreator<
       const sortedOptions = options
         .sort(
           (a, b) =>
-            // Sort by the most to least number of comma-separated items in data.val (most granular to least)
-            String(b.data?.val).split(",").length -
-            String(a.data?.val).split(",").length,
+            // Sort by the most to least number of dot-separated items in data.val (most granular to least)
+            String(b.data?.val).split(".").length -
+            String(a.data?.val).split(".").length,
         )
-        // Only keep options with a data value set (eg not blanks)
+        // Only keep options with a data value set (remove blanks)
         .filter((option) => option.data?.val);
 
       // Get existing passport values that match this node's fn
@@ -476,17 +476,29 @@ export const previewStore: StateCreator<
       );
       if (!passportValues.length) return;
 
-      // TODO Clarify logic in this block ??
-      passportValues.forEach((passportValue: any) => {
-        sortedOptions.forEach((option) => {
-          const optionValues = String(option.data?.val)
-            .split(",")
-            .sort();
-          if (String(optionValues) === String(passportValue) && option.id) {
-            optionsThatCanBeAutoAnswered.push(option.id);
+      // For each sorted option, check if it has a direct match in the passport
+      sortedOptions.forEach((option) => {
+        passportValues.forEach((passportValue: any) => {
+          if (option.data?.val === passportValue) {
+            if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
           }
         });
       });
+
+      // If we haven't found any exact matches, see if the passport has a more granular version of the option
+      if (optionsThatCanBeAutoAnswered.length === 0) {
+        sortedOptions.forEach((option) => {
+          passportValues.forEach((passportValue: any) => {
+            // TODO - respect dot-separated segments ??
+            if (passportValue.startsWith(option.data?.val)) {
+              if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
+            }
+          });
+        });
+      }
+
+      // TODO - Handle blanks & "_nots" for Questions & Checklists
+      //   Different than Filters, these types _can_ be put to user and we need to decide when
     }
 
     // Filters auto-answer based on a heirarchy of collected flags
@@ -532,8 +544,6 @@ export const previewStore: StateCreator<
     if ([TYPES.Question, TYPES.Filter].includes(type)) {
       optionsThatCanBeAutoAnswered = optionsThatCanBeAutoAnswered.slice(0, 1);
     }
-
-    // TODO - Are "blanks" working as expected for Questions & Checklists? "_nots"? Passport value granularity?
 
     return optionsThatCanBeAutoAnswered;
   },
