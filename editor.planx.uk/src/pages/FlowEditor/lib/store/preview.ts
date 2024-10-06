@@ -396,189 +396,31 @@ export const previewStore: StateCreator<
   sessionId: uuidV4(),
 
   upcomingCardIds() {
-    // const { flow, breadcrumbs, computePassport, collectedFlags } = get();
     const { flow, breadcrumbs } = get();
 
-    // const knownNotVals = knownNots(
-    //   flow,
-    //   breadcrumbs,
-    //   // _nots is created by PlanningConstraints/Public
-    //   computePassport().data?._nots,
-    // );
-
     const ids: Set<NodeId> = new Set();
-    // const visited: Set<NodeId> = new Set();
 
+    // Based on a given node, get the nodes we should navigate through next: the children of any selected options, as well as nodes on the _root graph that should be seen no matter which option is selected
     const nodeIdsConnectedFrom = (source: NodeId): void => {
       return (flow[source]?.edges ?? [])
         .filter((id) => {
-          // if (visited.has(id)) return false;
-
-          // visited.add(id);
-
+          // Filter out nodes we've already visited (aka have a breadcrumb for) (eg clones)
           const node = flow[id];
-
-          return (
-            node && !breadcrumbs[id]
-            // ((node.edges || []).length > 0 ||
-            //   (node.type && !SUPPORTED_DECISION_TYPES.includes(node.type)))
-          );
+          return node && !breadcrumbs[id];
         })
         .forEach((id) => {
           const node = flow[id];
 
-          // const passport = computePassport();
-
+          // Recursively get children in internal portals
           if (node.type === TYPES.InternalPortal) {
             return nodeIdsConnectedFrom(id);
           }
-
-          // const fn = node.type === TYPES.Filter ? "flag" : node.data?.fn;
-
-          // const [globalFlag] = collectedFlags(id, Array.from(visited));
-
-          // let passportValues = (() => {
-          //   try {
-          //     return fn === "flag" ? globalFlag : passport.data?.[fn]?.sort();
-          //   } catch (err) {
-          //     return [];
-          //   }
-          // })();
-
-          // if (fn && (fn === "flag" || passportValues !== undefined)) {
-          //   const responses = node.edges?.map((id) => ({
-          //     id,
-          //     ...flow[id],
-          //   }));
-
-          //   let responsesThatCanBeAutoAnswered = [] as any[];
-
-          //   const sortedResponses = responses
-          //     ? responses
-          //         // sort by the most to least number of comma-separated items in data.val
-          //         .sort(
-          //           (a: any, b: any) =>
-          //             String(b.data?.val).split(",").length -
-          //             String(a.data?.val).split(",").length,
-          //         )
-          //         .filter((response) => response.data?.val)
-          //     : [];
-
-          //   if (passportValues !== undefined) {
-          //     if (!Array.isArray(passportValues))
-          //       passportValues = [passportValues];
-
-          //     passportValues = (passportValues || []).filter((pv: any) =>
-          //       sortedResponses.some((r) => pv.startsWith(r.data?.val)),
-          //     );
-
-          //     if (passportValues.length > 0) {
-          //       responsesThatCanBeAutoAnswered = (sortedResponses || []).filter(
-          //         (r) => {
-          //           const responseValues = String(r.data?.val)
-          //             .split(",")
-          //             .sort();
-          //           return String(responseValues) === String(passportValues);
-          //         },
-          //       );
-
-          //       if (responsesThatCanBeAutoAnswered.length === 0) {
-          //         responsesThatCanBeAutoAnswered = (
-          //           sortedResponses || []
-          //         ).filter((r) => {
-          //           const responseValues = String(r.data?.val)
-          //             .split(",")
-          //             .sort();
-
-          //           for (const responseValue of responseValues) {
-          //             return passportValues.some((passportValue: any) =>
-          //               String(passportValue).startsWith(responseValue),
-          //             );
-          //           }
-          //         });
-          //       }
-          //     }
-          //   }
-
-          //   if (responsesThatCanBeAutoAnswered.length === 0) {
-          //     const _responses = (responses || []).filter(
-          //       (r) => !knownNotVals[fn]?.includes(r.data?.val),
-          //     );
-
-          //     if (_responses.length === 1 && isNil(_responses[0].data?.val)) {
-          //       responsesThatCanBeAutoAnswered = _responses;
-          //     } else if (
-          //       !passport.data?.[fn] ||
-          //       passport.data?.[fn].length > 0
-          //     ) {
-          //       responsesThatCanBeAutoAnswered = (responses || []).filter(
-          //         (r) => !r.data?.val,
-          //       );
-          //     }
-          //   }
-
-          //   if (responsesThatCanBeAutoAnswered.length > 0) {
-          //     if (node.type !== TYPES.Checklist) {
-          //       responsesThatCanBeAutoAnswered =
-          //         responsesThatCanBeAutoAnswered.slice(0, 1);
-          //     }
-
-          //     if (fn !== "flag") {
-          //       set({
-          //         breadcrumbs: {
-          //           ...breadcrumbs,
-          //           [id]: {
-          //             answers: responsesThatCanBeAutoAnswered.map((r) => r.id),
-          //             auto: true,
-          //           },
-          //         },
-          //       });
-          //     }
-
-          //     return responsesThatCanBeAutoAnswered.forEach((r) =>
-          //       nodeIdsConnectedFrom(r.id),
-          //     );
-          //   }
-          // } else if (
-          //   fn &&
-          //   knownNotVals[fn] &&
-          //   passportValues === undefined &&
-          //   Array.isArray(node.edges)
-          // ) {
-          //   const data = node.edges.reduce(
-          //     (acc, edgeId) => {
-          //       if (flow[edgeId].data?.val === undefined) {
-          //         acc.responseWithNoValueId = edgeId;
-          //       } else if (!knownNotVals[fn].includes(flow[edgeId].data?.val)) {
-          //         acc.edges.push(edgeId);
-          //       }
-          //       return acc;
-          //     },
-          //     { edges: [] } as {
-          //       responseWithNoValueId?: NodeId;
-          //       edges: Array<NodeId>;
-          //     },
-          //   );
-
-          //   if (data.responseWithNoValueId && data.edges.length === 0) {
-          //     set({
-          //       breadcrumbs: {
-          //         ...breadcrumbs,
-          //         [id]: {
-          //           answers: [data.responseWithNoValueId],
-          //           auto: true,
-          //         },
-          //       },
-          //     });
-          //     return nodeIdsConnectedFrom(data.responseWithNoValueId);
-          //   }
-          // }
 
           ids.add(id);
         });
     };
 
-    // with a guaranteed unique set
+    // With a guaranteed unique set
     new Set(
       // of all the answers collected so far
       Object.values(breadcrumbs)
@@ -591,7 +433,7 @@ export const previewStore: StateCreator<
       // run nodeIdsConnectedFrom(answerId)
     ).forEach(nodeIdsConnectedFrom);
 
-    // then return an array of the upcoming node ids, in depth-first order
+    // Then return an array of the upcoming node ids, in depth-first order
     return sortIdsDepthFirst(flow)(ids);
   },
 
@@ -618,6 +460,7 @@ export const previewStore: StateCreator<
             String(b.data?.val).split(",").length -
             String(a.data?.val).split(",").length,
         )
+        // Only keep options with a data value set (eg not blanks)
         .filter((option) => option.data?.val);
 
       // Get existing passport values that match this node's fn
@@ -648,7 +491,7 @@ export const previewStore: StateCreator<
 
     // Filters auto-answer based on a heirarchy of collected flags
     if (type === TYPES.Filter) {
-      // TODO - It's still only possible to filter on the default flag category, in future category configured on node by editor?
+      // TODO - It's still only possible to filter on the default flagset category, in future category configured on node by editor?
       const possibleFlags = flatFlags.filter(
         (flag) => flag.category === DEFAULT_FLAG_CATEGORY,
       );
@@ -676,6 +519,13 @@ export const previewStore: StateCreator<
           }
         });
       });
+
+      // If we didn't match a flag, travel through "No result" (aka blank) option
+      if (optionsThatCanBeAutoAnswered.length === 0) {
+        const noResultFlag = options.find((option) => !option.data?.val);
+        if (noResultFlag && noResultFlag?.id)
+          optionsThatCanBeAutoAnswered.push(noResultFlag.id);
+      }
     }
 
     // Questions & Filters 'select one' and therefore should only auto-answer the single left-most matching option
@@ -683,7 +533,7 @@ export const previewStore: StateCreator<
       optionsThatCanBeAutoAnswered = optionsThatCanBeAutoAnswered.slice(0, 1);
     }
 
-    // TODO - Are "blanks" working as expected? "_nots"? Passport value granularity?
+    // TODO - Are "blanks" working as expected for Questions & Checklists? "_nots"? Passport value granularity?
 
     return optionsThatCanBeAutoAnswered;
   },
