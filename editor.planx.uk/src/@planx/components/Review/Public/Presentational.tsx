@@ -2,6 +2,7 @@ import { NodeId } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
+import { PrintButton } from "components/PrintButton";
 import { Store } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
@@ -38,6 +39,7 @@ function Component(props: Props) {
         showChangeButton={props.showChangeButton}
         sectionComponent="h2"
       />
+      <PrintButton />
     </Card>
   );
 }

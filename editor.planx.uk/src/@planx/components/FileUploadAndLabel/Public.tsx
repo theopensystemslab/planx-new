@@ -1,5 +1,4 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import PrintIcon from "@mui/icons-material/Print";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
@@ -8,6 +7,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
+import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
@@ -272,17 +272,7 @@ function Component(props: Props) {
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>
-      {props.hideDropZone && (
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<PrintIcon />}
-          size="large"
-          onClick={() => window.print()}
-        >
-          Print this page
-        </Button>
-      )}
+      {props.hideDropZone && <PrintButton />}
     </Card>
   );
 }
