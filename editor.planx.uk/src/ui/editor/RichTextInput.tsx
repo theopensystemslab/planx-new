@@ -96,6 +96,16 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
         fontWeight: "inherit",
       },
     },
+    // Styles for placeholder text, to match ui/Input.tsx
+    // "& p.is-editor-empty:nth-child(1)::before": {
+    "& p.is-editor-empty:first-child::before": {
+      color: theme.palette.text.placeholder,
+      opacity: 1,
+      content: `attr(data-placeholder)`,
+      float: "left",
+      height: 0,
+      pointerEvents: "none",
+    },
     // Focus styles
     "&.ProseMirror-focused": {
       ...inputFocusStyle,
