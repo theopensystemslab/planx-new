@@ -83,7 +83,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           {Icon && <Icon titleAccess={iconTitleAccess} />}
           <span>{props.text}</span>
         </Link>
-        { props.tags?.map(( tag ) => <Tag tag={tag} /> ) }
+        {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />

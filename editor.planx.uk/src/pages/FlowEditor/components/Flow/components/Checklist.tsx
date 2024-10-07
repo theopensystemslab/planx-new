@@ -1,5 +1,8 @@
 import Box from "@mui/material/Box";
-import { ComponentType as TYPES,NodeTags } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeTags,
+} from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import mapAccum from "ramda/src/mapAccum";
@@ -92,7 +95,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             {Icon && <Icon />}
             <span>{props.text}</span>
           </Link>
-          { props.tags?.map((tag) => <Tag tag={tag} />)}
+          {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
         </Box>
         {groupedOptions ? (
           <ol className="categories">
