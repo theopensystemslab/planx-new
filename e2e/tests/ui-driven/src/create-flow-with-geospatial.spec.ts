@@ -57,7 +57,7 @@ test.describe("Flow creation, publish and preview", () => {
     // TODO: editor.createPropertyInfo()
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
-    // await editor.createFileUpload();
+    await editor.createFileUpload();
 
     await expect(editor.nodeList).toContainText([
       "Find property",
@@ -119,10 +119,10 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    await answerUploadAndLabel(page)
+    // await answerUploadAndLabel(page)
 
     // TODO: answer filter?
-    // TODO: answer uploadAndLabel
+    // TODO: answer file upload
     // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
   });
 });
