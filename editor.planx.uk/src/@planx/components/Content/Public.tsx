@@ -30,7 +30,7 @@ const Content = styled(Box, {
   "& a": {
     color: getContrastTextColor(color || "#fff", theme.palette.link.main),
   },
-  "& *:nth-child(1)": {
+  "& *:nth-of-type(1)": {
     marginTop: 0,
   },
 }));
