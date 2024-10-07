@@ -359,3 +359,29 @@ export async function answerListInput(
     await clickContinue({ page });
   }
 }
+
+
+export const answerUploadAndLabel = async (page: Page) => {
+  const fileUpload = await page
+    .locator("[data-testid=upload-input][type=file]")
+    await fileUpload.setInputFiles("./testUploadFile.txt");
+  // const fileChooserPromise = page.waitForEve  
+
+  await page.getByRole('heading', { name: 'Tell us what these files show' }).click();
+  await page
+  .getByRole("option", {name:  "Property title deeds" }).click();
+  await page.getByTestId('modal-done-button').click();
+
+
+
+// await page.getByTestId("file-tagging-dialog").getByLabel("Open").click();
+//   // await page.getByRole("option", { name: "a file that u need" }).click();
+//   await page
+//     .getByRole("option")
+//     .selectOption({ value: "Property title deeds" });
+//   await page.getByTestId("modal-done-button").click();
+
+
+
+
+}

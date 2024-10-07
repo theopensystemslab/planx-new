@@ -7,7 +7,7 @@ import {
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import { answerFindProperty, clickContinue } from "./helpers/userActions";
+import { answerFindProperty, answerUploadAndLabel, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 
 test.describe("Flow creation, publish and preview", () => {
@@ -118,6 +118,8 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h1", { hasText: "A notice inside a portal!" }),
     ).toBeVisible();
     await clickContinue({ page });
+
+    await answerUploadAndLabel(page)
 
     // TODO: answer filter?
     // TODO: answer uploadAndLabel
