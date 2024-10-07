@@ -1,4 +1,8 @@
-import { ComponentType, flatFlags, IndexedNode } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  flatFlags,
+  IndexedNode,
+} from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
 import { Confirmation } from "@planx/components/Confirmation/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
@@ -12,7 +16,7 @@ import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 interface DataDisplayValues {
-  displayKey: (result: SearchResult<IndexedNode>) => string;
+  getDisplayKey: (result: SearchResult<IndexedNode>) => string;
   getIconKey: (result: SearchResult<IndexedNode>) => ComponentType;
   getTitle: (result: SearchResult<IndexedNode>) => string;
   getHeadline: (result: SearchResult<IndexedNode>) => string;
@@ -35,184 +39,191 @@ type ComponentMap = Record<ComponentType, Partial<DataDisplayValues>>;
  */
 const KEY_DATA: Partial<DataKeyMap> = {
   "data.fn": {
-    displayKey: () => "Data",
+    getDisplayKey: () => "Data",
   },
   "data.val": {
-    displayKey: ({ item }) => item.type === ComponentType.Answer
-     ? "Option (data)"
-     : "Option"
+    getDisplayKey: ({ item }) =>
+      item.type === ComponentType.Answer ? "Option (data)" : "Option",
   },
   "data.fileTypes.fn": {
-    displayKey: () => "File type (data)",
+    getDisplayKey: () => "File type (data)",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].fn!
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].fn!,
   },
   "data.dataFieldBoundary": {
-    displayKey: () => "Field boundary",
+    getDisplayKey: () => "Field boundary",
   },
   "data.dataFieldArea": {
-    displayKey: () => "Field area",
+    getDisplayKey: () => "Field area",
   },
   "data.description": {
-    displayKey: ({ item }) => item.type === ComponentType.Answer
-      ? "Option (description)"
-      : "Description"
+    getDisplayKey: ({ item }) =>
+      item.type === ComponentType.Answer
+        ? "Option (description)"
+        : "Description",
   },
   "data.notes": {
-    displayKey: () => "Internal notes"
+    getDisplayKey: () => "Internal notes",
   },
   "data.howMeasured": {
-    displayKey: () => "How is it defined"
+    getDisplayKey: () => "How is it defined",
   },
   "data.policyRef": {
-    displayKey: () => "Policy reference"
+    getDisplayKey: () => "Policy reference",
   },
   "data.info": {
-    displayKey: () => "Why it matters"
+    getDisplayKey: () => "Why it matters",
   },
   "data.steps.title": {
-    displayKey: () => "Title (step)",
+    getDisplayKey: () => "Title (step)",
     getHeadline: ({ item, refIndex }) =>
-  (item.data as unknown as NextSteps).steps[refIndex].title
+      (item.data as unknown as NextSteps).steps[refIndex].title,
   },
   "data.steps.description": {
-    displayKey: () => "Description (step)",
+    getDisplayKey: () => "Description (step)",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].description
+      (item.data as unknown as NextSteps).steps[refIndex].description,
   },
   "data.steps.url": {
-    displayKey: () => "URL (step)",
+    getDisplayKey: () => "URL (step)",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].url!
+      (item.data as unknown as NextSteps).steps[refIndex].url!,
   },
   "data.fileTypes.name": {
-    displayKey: () => "Name",
+    getDisplayKey: () => "Name",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
   "data.fileTypes.moreInformation.notes": {
-    displayKey: () => "Internal notes",
+    getDisplayKey: () => "Internal notes",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].moreInformation!.notes!
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
+        .moreInformation!.notes!,
   },
   "data.fileTypes.moreInformation.howMeasured": {
-    displayKey: () => "How is it defined"
+    getDisplayKey: () => "How is it defined",
   },
   "data.fileTypes.moreInformation.policyRef": {
-    displayKey: () => "Policy reference"
+    getDisplayKey: () => "Policy reference",
   },
   "data.fileTypes.moreInformation.info": {
-    displayKey: () => "Why it matters"
+    getDisplayKey: () => "Why it matters",
   },
   "data.schema.fields.data.description": {
-    displayKey: () => "Description",
+    getDisplayKey: () => "Description",
   },
   "data.schema.fields.data.options.data.description": {
-    displayKey: () => "Description",
+    getDisplayKey: () => "Description",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as ChecklistField).data.options[refIndex].data.description!
+      (item.data as unknown as ChecklistField).data.options[refIndex].data
+        .description!,
   },
   "data.schema.fields.data.options.text": {
-    displayKey: () => "Option",
+    getDisplayKey: () => "Option",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
   "data.tasks.title": {
-    displayKey: () => "Title",
+    getDisplayKey: () => "Title",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as TaskList).tasks[refIndex].title
+      (item.data as unknown as TaskList).tasks[refIndex].title,
   },
   "data.tasks.description": {
-    displayKey: () => "Description",
+    getDisplayKey: () => "Description",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as TaskList).tasks[refIndex].description
+      (item.data as unknown as TaskList).tasks[refIndex].description,
   },
-  ...Object.fromEntries(flatFlags.flatMap(({ value }) => [
-    [`data.overrides.${value}.description`, {
-      displayKey: () => "Description",
-    }]
-  ])),
+  ...Object.fromEntries(
+    flatFlags.flatMap(({ value }) => [
+      [
+        `data.overrides.${value}.description`,
+        {
+          displayKey: () => "Description",
+        },
+      ],
+    ]),
+  ),
   "data.content": {
-    displayKey: () => "Content",
+    getDisplayKey: () => "Content",
   },
   "data.moreInfo": {
-    displayKey: () => "More information"
+    getDisplayKey: () => "More information",
   },
   "data.contactInfo": {
-    displayKey: () => "Contact information"
+    getDisplayKey: () => "Contact information",
   },
   "data.nextSteps.title": {
-    displayKey: () => "Title (next steps)",
+    getDisplayKey: () => "Title (next steps)",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Confirmation).nextSteps![refIndex].title
+      (item.data as unknown as Confirmation).nextSteps![refIndex].title,
   },
   "data.nextSteps.description": {
-    displayKey: () => "Description",
+    getDisplayKey: () => "Description",
     getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Confirmation).nextSteps![refIndex].description
+      (item.data as unknown as Confirmation).nextSteps![refIndex].description,
   },
   "data.newAddressTitle": {
-    displayKey: () => "Title (new address)",
+    getDisplayKey: () => "Title (new address)",
   },
   "data.newAddressDescription": {
-    displayKey: () => "Description (new address)",
+    getDisplayKey: () => "Description (new address)",
   },
   "data.newAddressDescriptionLabel": {
-    displayKey: () => "Description label (new address)",
+    getDisplayKey: () => "Description label (new address)",
   },
   "data.titleForUploading": {
-    displayKey: () => "Title for uploading",
+    getDisplayKey: () => "Title for uploading",
   },
   "data.descriptionForUploading": {
-    displayKey: () => "Description for uploading",
+    getDisplayKey: () => "Description for uploading",
   },
   "data.disclaimer": {
-    displayKey: () => "Disclaimer",
+    getDisplayKey: () => "Disclaimer",
   },
   "data.bannerTitle": {
-    displayKey: () => "Banner title"
+    getDisplayKey: () => "Banner title",
   },
   "data.instructionsTitle": {
-    displayKey: () => "Instructions title"
+    getDisplayKey: () => "Instructions title",
   },
   "data.instructionsDescription": {
-    displayKey: () => "Instructions description"
+    getDisplayKey: () => "Instructions description",
   },
   "data.secondaryPageTitle": {
-    displayKey: () => "Secondary page title"
+    getDisplayKey: () => "Secondary page title",
   },
   "data.nomineeTitle": {
-    displayKey: () => "Nominee title"
+    getDisplayKey: () => "Nominee title",
   },
   "data.nomineeDescription": {
-    displayKey: () => "Nominee description"
+    getDisplayKey: () => "Nominee description",
   },
   "data.yourDetailsTitle": {
-    displayKey: () => "Your details title"
+    getDisplayKey: () => "Your details title",
   },
   "data.yourDetailsDescription": {
-    displayKey: () => "Your details description"
+    getDisplayKey: () => "Your details description",
   },
   "data.yourDetailsLabel": {
-    displayKey: () => "Your details label"
+    getDisplayKey: () => "Your details label",
   },
   // Calculate contains both input and output data values
   formula: {
-    displayKey: () => "Formula",
+    getDisplayKey: () => "Formula",
     getHeadline: ({ item }) => (item.data as unknown as Calculate).formula,
   },
   "data.output": {
-    displayKey: () => "Output (data)",
+    getDisplayKey: () => "Output (data)",
     getHeadline: ({ item }) => (item.data as unknown as Calculate).output,
   },
   // List contains data variables nested within its schema
   "data.schema.fields.data.fn": {
-    displayKey: () => "Data",
+    getDisplayKey: () => "Data",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as List).schema.fields[refIndex].data.fn,
   },
   "data.schema.fields.data.options.data.val": {
-    displayKey: () => "Option (data)",
+    getDisplayKey: () => "Option (data)",
     getHeadline: ({ item, refIndex }) => {
       // Fuse.js flattens deeply nested arrays when using refIndex
       const options = (item.data as unknown as List).schema.fields
@@ -232,15 +243,14 @@ const COMPONENT_DATA: Partial<ComponentMap> = {
       return parentNode.data?.text;
     },
   },
-}
+};
 
 /**
  * Default values for all ComponentTypes not listed in DISPLAY_DATA
  */
 const DEFAULT_DATA: DataDisplayValues = {
-  displayKey: ({ item }) => item.type === ComponentType.Question
-    ? "Option (title)"
-    : "Title",
+  getDisplayKey: ({ item }) =>
+    item.type === ComponentType.Question ? "Option (title)" : "Title",
   getIconKey: ({ item }) => item.type,
   getTitle: ({ item }) =>
     (item.data?.title as string) || (item.data?.text as string) || "",
@@ -253,7 +263,6 @@ const DEFAULT_DATA: DataDisplayValues = {
 export const getDisplayDetailsForResult = (
   result: SearchResult<IndexedNode>,
 ) => {
-
   const data: DataDisplayValues = {
     ...DEFAULT_DATA,
     ...COMPONENT_DATA[result.item.type],
@@ -264,7 +273,7 @@ export const getDisplayDetailsForResult = (
     iconKey: data.getIconKey(result),
     componentType: data.getComponentType(result),
     title: data.getTitle(result),
-    key: data.displayKey(result),
+    key: data.getDisplayKey(result),
     headline: data.getHeadline(result),
   };
 };
