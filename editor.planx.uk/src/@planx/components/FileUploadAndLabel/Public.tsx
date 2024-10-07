@@ -1,4 +1,5 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PrintIcon from "@mui/icons-material/Print";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
@@ -271,6 +272,17 @@ function Component(props: Props) {
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>
+      {props.hideDropZone && (
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<PrintIcon />}
+          size="large"
+          onClick={() => window.print()}
+        >
+          Print this page
+        </Button>
+      )}
     </Card>
   );
 }

@@ -1,8 +1,7 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import axios from "axios";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { FullStore } from "pages/FlowEditor/lib/store";
+import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "testUtils";
 import { Breadcrumbs } from "types";
@@ -58,6 +57,18 @@ describe("Basic state and setup", () => {
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("does not show a print button if hideDropZone is false", async () => {
+    const { queryByText } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[mockFileTypes.AlwaysRequired, mockFileTypes.NotRequired]}
+        // hideDropZone is false by default
+      />,
+    );
+    const printButton = queryByText("Print this page");
+    expect(printButton).toBeNull();
   });
 
   test("shows help buttons for header and applicable file", async () => {
@@ -139,6 +150,17 @@ describe("Info-only mode with hidden drop zone", () => {
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("shows a print button", async () => {
+    const { getByText } = setup(
+      <FileUploadAndLabelComponent
+        title="Test title"
+        fileTypes={[mockFileTypes.AlwaysRequired, mockFileTypes.NotRequired]}
+        hideDropZone={true}
+      />,
+    );
+    expect(getByText("Print this page")).toBeVisible();
   });
 
   test("shows help buttons for header and applicable file", async () => {
