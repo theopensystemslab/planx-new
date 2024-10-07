@@ -5,7 +5,7 @@ import { FONT_WEIGHT_BOLD } from "theme";
 interface Props {
   text: string;
   matchIndices: [number, number][];
-  variant: "data";
+  variant?: "data";
 }
 
 export const Headline: React.FC<Props> = ({ text, matchIndices, variant }) => {
@@ -18,7 +18,7 @@ export const Headline: React.FC<Props> = ({ text, matchIndices, variant }) => {
         <>
           <Typography
             component="span"
-            variant={variant}
+            variant={variant || "body2"}
             key={`headline-character-${index}`}
             sx={(theme) => ({
               fontWeight: isHighlighted(index) ? FONT_WEIGHT_BOLD : "regular",

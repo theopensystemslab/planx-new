@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useEffect } from "react";
 import { Components } from "react-virtuoso";
 import ChecklistItem from "ui/shared/ChecklistItem";
