@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { PaletteOptions, useTheme } from "@mui/material/styles";
+import { Palette, useTheme } from "@mui/material/styles";
 import { NodeTag } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -8,7 +8,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
-  { color: keyof PaletteOptions["nodeTag"]; displayName: string }
+  { color: keyof Palette["nodeTag"]; displayName: string }
 > = {
   placeholder: {
     color: "blocking",
