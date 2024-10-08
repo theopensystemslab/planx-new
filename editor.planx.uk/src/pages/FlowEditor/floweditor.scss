@@ -169,7 +169,7 @@ $fontMonospace: "Source Code Pro", monospace;
       opacity: 0.6;
     }
 
-    > span:not(:nth-child(1)) {
+    > span:not(:first-child) {
       margin-left: 6px;
     }
   }
@@ -477,7 +477,7 @@ $fontMonospace: "Source Code Pro", monospace;
           $lineWidth;
         background-repeat: no-repeat, repeat-x, repeat-x;
 
-        &:nth-child(1) {
+        &:nth-of-type(1) {
           background-position:
             top center,
             top right,
@@ -517,7 +517,7 @@ $fontMonospace: "Source Code Pro", monospace;
           $lineWidth 100%,
           2px 100%;
 
-        &:nth-child(1) {
+        &:nth-of-type(1) {
           background-position:
             left center,
             left bottom,
