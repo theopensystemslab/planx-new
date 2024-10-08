@@ -57,38 +57,48 @@ const editorRoutes = mount({
   ),
 });
 
-const mountPayRoutes = () =>
-  map(async () => {
-    compose(withView(loadingView));
-    return lazy(() => import("./pay"));
-  });
+const loadPayRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./pay")),
+  );
+
+const loadPublishedRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./published")),
+  );
+
+const loadPreviewRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./preview")),
+  );
+
+const loadDraftRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./draft")),
+  );
 
 export default isPreviewOnlyDomain
-  ? compose(
-      withView(loadingView),
-
-      mount({
-        "/:team/:flow/published": lazy(() => import("./published")), // XXX: keeps old URL working, but only for the team listed in the domain.
-        "/:flow": lazy(() => import("./published")),
-        "/:flow/pay": mountPayRoutes(),
-        // XXX: We're not sure where to redirect `/` to so for now we'll just return the default 404
-        // "/": redirect("somewhere?"),
-      }),
-    )
-  : compose(
-      withView(loadingView),
-
-      mount({
-        "/:team/:flow/published": lazy(() => import("./published")), // loads current published flow if exists, or throws Not Found if unpublished
-        "/canterbury/find-out-if-you-need-planning-permission/preview": map(
-          async (req) =>
-            redirect(
-              `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`,
-            ),
-        ), // temporary redirect while Canterbury works with internal IT to update advertised service links
-        "/:team/:flow/preview": lazy(() => import("./preview")), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
-        "/:team/:flow/draft": lazy(() => import("./draft")), // loads current draft flow and draft external portals
-        "/:team/:flow/pay": mountPayRoutes(),
-        "*": editorRoutes,
-      }),
-    );
+  ? mount({
+      "/:team/:flow/published": loadPublishedRoutes(), // XXX: keeps old URL working, but only for the team listed in the domain.
+      "/:flow": loadPublishedRoutes(),
+      "/:flow/pay": loadPayRoutes(),
+      // XXX: We're not sure where to redirect `/` to so for now we'll just return the default 404
+      // "/": redirect("somewhere?"),
+    })
+  : mount({
+      "/:team/:flow/published": loadPublishedRoutes(), // loads current published flow if exists, or throws Not Found if unpublished
+      "/canterbury/find-out-if-you-need-planning-permission/preview": map(
+        async (req) =>
+          redirect(
+            `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`,
+          ),
+      ), // temporary redirect while Canterbury works with internal IT to update advertised service links
+      "/:team/:flow/preview": loadPreviewRoutes(), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
+      "/:team/:flow/draft": loadDraftRoutes(), // loads current draft flow and draft external portals
+      "/:team/:flow/pay": loadPayRoutes(),
+      "*": editorRoutes,
+    });
