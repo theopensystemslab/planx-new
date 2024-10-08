@@ -3,6 +3,7 @@ import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType,
   FlowGraph,
+  IndexedNode,
   NodeId,
   OrderedFlow,
 } from "@opensystemslab/planx-core/types";
@@ -521,8 +522,14 @@ export const editorStore: StateCreator<
     const [node, parent, grandparent] = path;
 
     // Construct the internal portal path if applicable
+    const mapPortalsToURLPath = (portals: ReturnType<typeof getPathForNode>) =>
+      portals
+        .reverse()
+        .map(({ id }) => id)
+        .join(",");
+
     const portalPath = internalPortals.length
-      ? "," + internalPortals.map(({ id }) => id).join(",")
+      ? "," + mapPortalsToURLPath(internalPortals)
       : "";
 
     // Determine node path based on the node type
