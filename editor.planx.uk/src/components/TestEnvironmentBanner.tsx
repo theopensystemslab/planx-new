@@ -13,6 +13,7 @@ import { HEADER_HEIGHT_EDITOR } from "./Header";
 const TestEnvironmentWarning = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   color: theme.palette.text.primary,
+  display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.2em 0",
