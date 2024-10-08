@@ -7,6 +7,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/ui";
+import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
@@ -271,6 +272,7 @@ function Component(props: Props) {
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>
+      {props.hideDropZone && <PrintButton />}
     </Card>
   );
 }
