@@ -3,16 +3,12 @@ import InputBase, {
   InputBaseProps,
 } from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
-import {
-  extraLongTextLimit,
-  longTextLimit,
-} from "@planx/components/TextInput/model";
+import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import React, {
   ChangeEvent,
   forwardRef,
   useImperativeHandle,
   useRef,
-  useState,
 } from "react";
 import {
   borderedFocusStyle,
@@ -38,7 +34,7 @@ export interface Props extends InputBaseProps {
   large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
-  textLength?: string;
+  textLength?: TextInputType;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -100,7 +96,6 @@ const StyledInputBase = styled(InputBase, {
 
 export default forwardRef((props: Props, ref): FCReturn => {
   const container = useRef<HTMLDivElement | null>(null);
-  const [characterLimit, setCharacterLimit] = useState<number>(0);
 
   const {
     format,
@@ -114,19 +109,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
     ...restProps
   } = props;
 
-  // set which character limit from user defined type
-  if (characterLimit === 0) {
-    switch (textLength) {
-      case "long":
-        setCharacterLimit(longTextLimit);
-        break;
-      case "extraLong":
-        setCharacterLimit(extraLongTextLimit);
-        break;
-    }
-  }
-
-  const showCharacterCountBool =
+  const showCharacterCount =
     props.type === "text" &&
     (textLength === "long" || textLength === "extraLong");
 
@@ -159,13 +142,10 @@ export default forwardRef((props: Props, ref): FCReturn => {
           ref={container}
           {...restProps}
         />
-        {showCharacterCountBool && (
+        {showCharacterCount && (
           <CharacterCounter
-            characterCount={
-              typeof props.value === "string" ? props.value.length : 0
-            }
-            characterLimit={characterLimit}
-            error={errorMessage ? true : false}
+            count={typeof props.value === "string" ? props.value.length : 0}
+            limit={TEXT_LIMITS[textLength]}
           />
         )}
       </>

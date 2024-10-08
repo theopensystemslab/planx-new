@@ -1,6 +1,7 @@
 import Typography from "@mui/material/Typography";
+import { visuallyHidden } from "@mui/utils";
 import { debounce } from "lodash";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {
@@ -9,42 +10,41 @@ export type Props = {
 };
 
 export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
-  const [characterLimitAnnouncement, setCharacterLimitAnnouncement] =
-    useState<number>(0);
+  const [screenReaderCount, setScreenReaderCount] = useState<number>(0);
+  const [showReaderCount, setShowReaderCount] = useState<boolean>(false);
 
   const updateCharacterCount = useCallback(
     debounce((count: number) => {
-      setCharacterLimitAnnouncement(count);
-    }, 300),
+      setScreenReaderCount(count);
+      setShowReaderCount(true);
+    }, 500),
     []
   );
 
   const currentCharacterCount = limit - count;
-  const showCharacterLimitError = currentCharacterCount > 0;
+  const showCharacterLimitError = currentCharacterCount < 0;
 
   useEffect(() => {
+    if (count !== screenReaderCount) {
+      setShowReaderCount(false);
+    }
     updateCharacterCount(currentCharacterCount);
-  }, [currentCharacterCount, updateCharacterCount]);
+  }, [currentCharacterCount, updateCharacterCount, count, screenReaderCount]);
 
   const characterLimitText = showCharacterLimitError
     ? `You have ${Math.abs(currentCharacterCount)} characters too many`
     : `You have ${currentCharacterCount} characters remaining`;
 
-  const characterLimitAnnouncementText = showCharacterLimitError
-    ? `You have ${Math.abs(characterLimitAnnouncement)} characters too many`
-    : `You have ${characterLimitAnnouncement} characters remaining`;
+  const screenReaderCountText = showCharacterLimitError
+    ? `You have ${Math.abs(screenReaderCount)} characters too many`
+    : `You have ${screenReaderCount} characters remaining`;
 
   return (
     <>
       <Typography
         id={"character-hint"}
-        sx={{
-          position: "absolute",
-          height: "1px",
-          width: "1px",
-          overflow: "hidden",
-        }}
-        aria-hidden={true}
+        sx={visuallyHidden}
+        aria-hidden={"true"}
       >
         {`You can enter up to ${limit} characters`}
       </Typography>
@@ -58,16 +58,8 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
       >
         {characterLimitText}
       </Typography>
-      <Typography
-        aria-live="polite"
-        sx={{
-          position: "absolute",
-          height: "1px",
-          width: "1px",
-          overflow: "hidden",
-        }}
-      >
-        {characterLimitAnnouncementText}
+      <Typography aria-live="polite" aria-atomic="true" sx={visuallyHidden}>
+        {showReaderCount && screenReaderCountText}
       </Typography>
     </>
   );
