@@ -13,7 +13,7 @@ import { Pay } from "@planx/components/Pay/model";
 import { Schema } from "@planx/components/shared/Schema/model";
 import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
-import { capitalize, get } from "lodash";
+import { capitalize } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -307,7 +307,7 @@ const defaultFormatter: SearchResultFormatter = {
   getIconKey: ({ item }) => item.type,
   getTitle: ({ item }) =>
     (item.data?.title as string) || (item.data?.text as string) || "",
-  getHeadline: ({ item, key }) => get(item, key)?.toString() || "",
+  getHeadline: ({ matchValue }) => matchValue,
   getComponentType: ({ item }) =>
     capitalize(SLUGS[item.type].replaceAll("-", " ")),
 };
