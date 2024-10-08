@@ -26,7 +26,7 @@ import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
 import type { StateCreator } from "zustand";
-import { persist } from 'zustand/middleware'
+import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
@@ -49,6 +49,8 @@ export interface EditorUIStore {
   toggleSidebar: () => void;
   isTestEnvBannerVisible: boolean;
   hideTestEnvBanner: () => void;
+  showTags: boolean;
+  toggleShowTags: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -69,11 +71,18 @@ export const editorUIStore: StateCreator<
     isTestEnvBannerVisible: !window.location.href.includes(".uk"),
 
     hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
+
+    showTags: false,
+
+    toggleShowTags: () => set({ showTags: !get().showTags }),
   }),
   {
     name: "editorUIStore",
-    partialize: (state) => ({ showSidebar: state.showSidebar }),
-  }
+    partialize: (state) => ({
+      showSidebar: state.showSidebar,
+      showTags: state.showTags,
+    }),
+  },
 );
 
 interface PublishFlowResponse {
