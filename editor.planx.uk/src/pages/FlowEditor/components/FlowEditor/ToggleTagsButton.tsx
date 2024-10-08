@@ -33,9 +33,12 @@ export const ToggleTagsButton: React.FC = () => {
     <Box
       sx={(theme) => ({
         position: "fixed",
-        bottom: theme.spacing(1),
+        bottom: theme.spacing(2),
         left: theme.spacing(7),
         zIndex: theme.zIndex.appBar,
+        border: `1px solid ${theme.palette.border.main}`,
+        borderRadius: "3px",
+        background: theme.palette.background.paper,
       })}
     >
       <TooltipWrap title="Toggle tags">
@@ -44,6 +47,7 @@ export const ToggleTagsButton: React.FC = () => {
           onClick={toggleShowTags}
           size="large"
           sx={(theme) => ({
+            padding: theme.spacing(1),
             color: showTags
               ? theme.palette.text.primary
               : theme.palette.text.disabled,
