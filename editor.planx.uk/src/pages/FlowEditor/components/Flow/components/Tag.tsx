@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import { PaletteOptions, useTheme } from "@mui/material/styles";
 import { NodeTag } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -7,38 +8,42 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
-  { color: string; displayName: string }
+  { color: keyof PaletteOptions["nodeTag"]; displayName: string }
 > = {
   placeholder: {
-    color: "#FAE1B7",
+    color: "blocking",
     displayName: "Placeholder",
   },
-  "to review": {
-    color: "#E9EDC9",
+  toReview: {
+    color: "nonBlocking",
     displayName: "To review",
   },
-  "sensitive data": {
-    color: "#F4978E",
+  sensitiveData: {
+    color: "information",
     displayName: "Sensitive data",
   },
   analytics: {
-    color: "#E9EDC9",
+    color: "information",
     displayName: "Analytics",
   },
   automation: {
-    color: "#E9EDC9",
+    color: "information",
     displayName: "Automation",
   },
 } as const;
 
 export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
+  const theme = useTheme();
+
   const showTags = useStore((state) => state.showTags);
   if (!showTags) return null;
+
+  const tagBgColor = theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color];
 
   return (
     <Box
       sx={(theme) => ({
-        bgcolor: TAG_DISPLAY_VALUES[tag].color,
+        bgcolor: tagBgColor,
         borderColor: theme.palette.common.black,
         borderWidth: "0 1px 1px 1px",
         borderStyle: "solid",
@@ -46,7 +51,7 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
         p: 0.5,
         textAlign: "center",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
-        color: getContrastTextColor(TAG_DISPLAY_VALUES[tag].color, "#FFF"),
+        color: getContrastTextColor(tagBgColor, "#FFF"),
       })}
     >
       {TAG_DISPLAY_VALUES[tag].displayName}

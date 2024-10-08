@@ -41,10 +41,13 @@ const renderTags: AutocompleteProps<
       {...getTagProps({ index })}
       key={tag}
       label={TAG_DISPLAY_VALUES[tag].displayName}
-      sx={{
-        backgroundColor: TAG_DISPLAY_VALUES[tag].color,
-        color: getContrastTextColor(TAG_DISPLAY_VALUES[tag].color, "#FFF"),
-      }}
+      sx={(theme) => ({
+        backgroundColor: theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
+        color: getContrastTextColor(
+          theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
+          "#FFF",
+        ),
+      })}
     />
   ));
 

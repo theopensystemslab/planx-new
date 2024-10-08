@@ -32,6 +32,7 @@ declare module "@mui/material/styles/createPalette" {
     border: { main: string; input: string; light: string };
     link: { main: string };
     prompt: { main: string; contrastText: string; light: string; dark: string };
+    nodeTag: { nonBlocking: string; blocking: string; information: string };
   }
 
   interface PaletteOptions {
@@ -43,6 +44,7 @@ declare module "@mui/material/styles/createPalette" {
       light: string;
       dark: string;
     };
+    nodeTag?: { nonBlocking: string; blocking: string; information: string };
   }
 
   interface TypeText {
