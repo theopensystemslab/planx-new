@@ -15,7 +15,10 @@ import { capitalize, get } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-interface DataDisplayValues {
+/**
+ * Functions to map a search result to the fields required by SearchResultCard
+ */
+interface SearchResultFormatter {
   getDisplayKey: (result: SearchResult<IndexedNode>) => string;
   getIconKey: (result: SearchResult<IndexedNode>) => ComponentType;
   getTitle: (result: SearchResult<IndexedNode>) => string;
@@ -23,21 +26,13 @@ interface DataDisplayValues {
   getComponentType: (result: SearchResult<IndexedNode>) => string;
 }
 
-/**
- * Map of data keys to their associated display values
- * Uses Partial<DataDisplayValues> as not all values are unique, we later apply defaults
- */
-type DataKeyMap = Record<string, Partial<DataDisplayValues>>;
+type KeyMap = Record<string, Partial<SearchResultFormatter>>;
 
-/**
- * Map of ComponentTypes to their associated data keys
- */
-type ComponentMap = Record<ComponentType, Partial<DataDisplayValues>>;
+type ComponentMap = Partial<
+  Record<ComponentType, Partial<SearchResultFormatter>>
+>;
 
-/**
- * Map of ComponentTypes which need specific overrides in order to display their data values
- */
-const KEY_DATA: Partial<DataKeyMap> = {
+const keyFormatters: KeyMap = {
   "data.fn": {
     getDisplayKey: () => "Data",
   },
@@ -234,9 +229,10 @@ const KEY_DATA: Partial<DataKeyMap> = {
   },
 };
 
-const COMPONENT_DATA: Partial<ComponentMap> = {
+const componentFormatters: ComponentMap = {
   // Answers are mapped to their parent questions
   [ComponentType.Answer]: {
+    getDisplayKey: () => "Option (title)",
     getIconKey: () => ComponentType.Question,
     getTitle: ({ item }) => {
       const parentNode = useStore.getState().flow[item.parentId];
@@ -246,34 +242,36 @@ const COMPONENT_DATA: Partial<ComponentMap> = {
 };
 
 /**
- * Default values for all ComponentTypes not listed in DISPLAY_DATA
+ * Default formatters for any fields not already covered by key or component-specific formatters
  */
-const DEFAULT_DATA: DataDisplayValues = {
-  getDisplayKey: ({ item }) =>
-    item.type === ComponentType.Question ? "Option (title)" : "Title",
+const defaultFormatter: SearchResultFormatter = {
+  getDisplayKey: () => "Title",
   getIconKey: ({ item }) => item.type,
   getTitle: ({ item }) =>
     (item.data?.title as string) || (item.data?.text as string) || "",
-  // TODO: strip html?
   getHeadline: ({ item, key }) => get(item, key)?.toString() || "",
   getComponentType: ({ item }) =>
     capitalize(SLUGS[item.type].replaceAll("-", " ")),
 };
 
+/**
+ * Formats a search result for display in the SearchResultCard
+ * The values are combined in order of precedence: key-specific, component-specific, then defaults
+ */
 export const getDisplayDetailsForResult = (
   result: SearchResult<IndexedNode>,
 ) => {
-  const data: DataDisplayValues = {
-    ...DEFAULT_DATA,
-    ...COMPONENT_DATA[result.item.type],
-    ...KEY_DATA[result.key],
+  const formatter: SearchResultFormatter = {
+    ...defaultFormatter,
+    ...componentFormatters[result.item.type],
+    ...keyFormatters[result.key],
   };
 
   return {
-    iconKey: data.getIconKey(result),
-    componentType: data.getComponentType(result),
-    title: data.getTitle(result),
-    key: data.getDisplayKey(result),
-    headline: data.getHeadline(result),
+    iconKey: formatter.getIconKey(result),
+    componentType: formatter.getComponentType(result),
+    title: formatter.getTitle(result),
+    key: formatter.getDisplayKey(result),
+    headline: formatter.getHeadline(result),
   };
 };

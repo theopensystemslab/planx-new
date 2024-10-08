@@ -1,18 +1,7 @@
-import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import {
-  mockAnswerResult,
-  mockCalculateFormulaResult,
-  mockCalculateRootResult,
-  mockFileUploadAndLabelResult,
-  mockFlow,
-  mockListAnswerResult,
-  mockListDataResult,
-  mockListRootResult,
-  mockQuestionResult,
-} from "../mocks/DataDisplayMap";
-import { getDisplayDetailsForResult } from "./DataDisplayMap";
+import { mockFlow } from "../mocks/getDisplayDetailsForResult";
+import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
 

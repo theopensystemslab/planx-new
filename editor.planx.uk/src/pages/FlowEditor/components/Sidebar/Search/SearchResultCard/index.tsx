@@ -12,7 +12,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { DATA_FACETS } from "../facets";
 import { Headline } from "../Headline";
-import { getDisplayDetailsForResult } from "./DataDisplayMap";
+import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 const SearchResultCardRoot = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
