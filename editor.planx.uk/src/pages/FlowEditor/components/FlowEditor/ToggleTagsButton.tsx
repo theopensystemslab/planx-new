@@ -40,7 +40,6 @@ export const ToggleTagsButton: React.FC = () => {
     >
       <TooltipWrap title="Toggle tags">
         <IconButton
-          title="Toggle tags"
           aria-label="Toggle tags"
           onClick={toggleShowTags}
           size="large"
