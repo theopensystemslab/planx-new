@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.3
     version: 1.0.0-alpha.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#5781880
-    version: github.com/theopensystemslab/planx-core/5781880(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#0ade7fa
+    version: github.com/theopensystemslab/planx-core/0ade7fa(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -8423,6 +8423,7 @@ packages:
   /eslint@8.57.1:
     resolution: {integrity: sha512-ypowyDxpVSYpkXr9WPv2PAZCtNip1Mv5KTW0SCurXv/9iOpcrH9PaqUElksqEB6pChqHGDRCFTyrZlGhnLNGiA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.1)
@@ -15352,9 +15353,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/5781880(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5781880}
-    id: github.com/theopensystemslab/planx-core/5781880
+  github.com/theopensystemslab/planx-core/0ade7fa(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ade7fa}
+    id: github.com/theopensystemslab/planx-core/0ade7fa
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

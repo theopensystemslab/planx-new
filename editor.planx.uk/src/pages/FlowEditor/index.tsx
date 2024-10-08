@@ -7,6 +7,7 @@ import React, { useRef } from "react";
 import { useCurrentRoute } from "react-navi";
 
 import Flow from "./components/Flow";
+import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
@@ -49,6 +50,7 @@ const FlowEditor = () => {
       >
         <Box id="editor" ref={scrollContainerRef} sx={{ position: "relative" }}>
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
+          <ToggleTagsButton />
         </Box>
       </Box>
       <Sidebar />

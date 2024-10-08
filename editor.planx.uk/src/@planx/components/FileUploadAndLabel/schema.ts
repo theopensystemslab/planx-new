@@ -33,7 +33,7 @@ const moreInformationSchema: SchemaOf<MoreInformation> = object({
 });
 
 const baseNodeDataSchema: SchemaOf<BaseNodeData> = object({
-  tags: array(mixed().oneOf(NODE_TAGS)),
+  tags: array(mixed().oneOf([...NODE_TAGS])),
 }).concat(moreInformationSchema);
 
 const valFnSchema = mixed().when("condition", {
