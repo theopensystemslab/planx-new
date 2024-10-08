@@ -24,5 +24,10 @@
     "@playwright/test": "^1.40.1",
     "@types/node": "18.16.1",
     "eslint-plugin-playwright": "^0.20.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "path-to-regexp@>=2.0.0 <3.3.0": "3.3.0"
+    }
   }
 }
