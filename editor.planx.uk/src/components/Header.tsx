@@ -141,16 +141,15 @@ const Logo = styled("img")(() => ({
   maxWidth: 140,
   maxHeight: HEADER_HEIGHT_PUBLIC - 20,
   objectFit: "contain",
+  "@media print": {
+    filter: "invert(1)",
+  },
 }));
 
-const LogoLink = styled(Link)(({ theme }) => ({
+const LogoLink = styled(Link)(() => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
-  "@media print": {
-    backgroundColor: theme.palette.common.black,
-    padding: "0.25em",
-  },
 }));
 
 const SkipLink = styled("a")(({ theme }) => ({

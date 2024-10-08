@@ -29,6 +29,13 @@ const MainContainer = styled(Box)(({ theme }) => ({
   position: "relative",
 }));
 
+const OglLogo = styled("img")(({ theme }) => ({
+  paddingRight: theme.spacing(2),
+  "@media print": {
+    filter: "invert(1)",
+  },
+}));
+
 const PublicFooter: React.FC = () => {
   const { data } = useCurrentRoute();
   const [flowSettings, globalSettings] = useStore((state) => [
@@ -68,19 +75,7 @@ const PublicFooter: React.FC = () => {
       <Feedback />
       <Footer items={[...footerItems]}>
         <Box display="flex" alignItems="center">
-          <Box
-            pr={2}
-            display="flex"
-            sx={{
-              "@media print": {
-                backgroundColor: "black",
-                padding: "0.5em",
-                margin: "0.5em",
-              },
-            }}
-          >
-            <img src={Logo} alt="Open Government License Logo" />
-          </Box>
+          <OglLogo src={Logo} alt="Open Government License Logo" />
           <Typography variant="body2">
             All content is available under the{" "}
             <Link
