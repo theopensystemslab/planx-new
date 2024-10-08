@@ -1,15 +1,15 @@
 import { BaseNodeData } from "@planx/components/shared";
-import { InternalNotes, MoreInformation } from "@planx/components/ui"
+import { InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 
-import { ComponentTagSelect } from "./ComponentTagSelect"
+import { ComponentTagSelect } from "./ComponentTagSelect";
 
 interface Props<T extends BaseNodeData> {
-  formik: ReturnType<typeof useFormik<T>>
-  showMoreInformation?: boolean
-  showInternalNotes?: boolean
-  showTags?: boolean
+  formik: ReturnType<typeof useFormik<T>>;
+  showMoreInformation?: boolean;
+  showInternalNotes?: boolean;
+  showTags?: boolean;
 }
 
 export const ModalFooter = <T extends BaseNodeData>({
@@ -19,7 +19,7 @@ export const ModalFooter = <T extends BaseNodeData>({
   showTags = true,
 }: Props<T>) => (
   <>
-    {showMoreInformation &&
+    {showMoreInformation && (
       <MoreInformation
         changeField={formik.handleChange}
         definitionImg={formik.values.definitionImg}
@@ -27,19 +27,19 @@ export const ModalFooter = <T extends BaseNodeData>({
         policyRef={formik.values.policyRef}
         info={formik.values.info}
       />
-    }
-    {showInternalNotes &&
+    )}
+    {showInternalNotes && (
       <InternalNotes
-      name="notes"
-      onChange={formik.handleChange}
-      value={formik.values.notes}
+        name="notes"
+        onChange={formik.handleChange}
+        value={formik.values.notes}
       />
-    }
-    { showTags &&
+    )}
+    {showTags && (
       <ComponentTagSelect
         value={formik.values.tags}
         onChange={(value) => formik.setFieldValue("tags", value)}
       />
-    }
+    )}
   </>
-)
+);
