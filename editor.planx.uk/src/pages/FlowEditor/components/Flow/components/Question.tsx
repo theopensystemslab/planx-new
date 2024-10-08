@@ -1,5 +1,8 @@
 import ErrorIcon from "@mui/icons-material/Error";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeTags,
+} from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import React from "react";
@@ -10,12 +13,13 @@ import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
+import { Tag } from "./Tag";
 
 type Props = {
   type: TYPES | "Error";
   [key: string]: any;
   wasVisited?: boolean;
-};
+} & NodeTags;
 
 const Question: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode] = useStore((state) => [
@@ -79,6 +83,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           {Icon && <Icon titleAccess={iconTitleAccess} />}
           <span>{props.text}</span>
         </Link>
+        {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />

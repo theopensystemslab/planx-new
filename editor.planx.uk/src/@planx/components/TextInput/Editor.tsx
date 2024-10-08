@@ -5,11 +5,10 @@ import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import {
   EditorProps,
   ICONS,
-  InternalNotes,
-  MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -21,7 +20,7 @@ import { parseTextInput, TextInput } from "./model";
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
 const TextInputComponent: React.FC<Props> = (props) => {
-  const formik = useFormik({
+  const formik = useFormik<TextInput>({
     initialValues: parseTextInput(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
@@ -95,18 +94,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 };

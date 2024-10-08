@@ -1,13 +1,14 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { EditorProps, ICONS, InternalNotes } from "../ui";
+import { EditorProps, ICONS } from "../ui";
 import { parseContent, Review } from "./model";
 
 type Props = EditorProps<TYPES.Review, Review>;
@@ -46,11 +47,7 @@ function Component(props: Props) {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <InternalNotes
-        name="notes"
-        onChange={formik.handleChange}
-        value={formik.values.notes}
-      />
+      <ModalFooter formik={formik} showMoreInformation={false} />
     </form>
   );
 }

@@ -23,6 +23,7 @@ import {
 import { Form, Formik, useFormikContext } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager";
@@ -448,6 +449,10 @@ const Component: React.FC<Props> = (props: Props) => {
             name="notes"
             onChange={handleChange}
             value={values.notes}
+          />
+          <ComponentTagSelect
+            onChange={(value) => setFieldValue("tags", value)}
+            value={values.tags}
           />
         </Form>
       )}

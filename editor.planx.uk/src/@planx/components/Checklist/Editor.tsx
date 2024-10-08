@@ -14,6 +14,7 @@ import { FormikHookReturn } from "types";
 import ImgInput from "ui/editor/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import ListManager from "ui/editor/ListManager";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -24,7 +25,7 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
-import { ICONS, InternalNotes, MoreInformation } from "../ui";
+import { ICONS } from "../ui";
 import type { Category, Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
 
@@ -427,18 +428,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         <Options formik={formik} />
       </ModalSection>
 
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        onChange={formik.handleChange}
-        value={formik.values.notes}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 };

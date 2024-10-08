@@ -163,7 +163,7 @@ export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
   };
 
   return (
-    <SelectMultiple<Option>
+    <SelectMultiple
       getOptionLabel={(option) => option.name}
       groupBy={(option) => option.category}
       id={`select-multiple-file-tags-${uploadedFile.id}`}
