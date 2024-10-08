@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import { NodeTag } from "@opensystemslab/planx-core/types";
 import React from "react";
+import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const TAG_DISPLAY_VALUES: Record<
@@ -11,6 +12,22 @@ export const TAG_DISPLAY_VALUES: Record<
   placeholder: {
     color: "#FAE1B7",
     displayName: "Placeholder",
+  },
+  "to review": {
+    color: "#E9EDC9",
+    displayName: "To review",
+  },
+  "sensitive data": {
+    color: "#F4978E",
+    displayName: "Sensitive data",
+  },
+  analytics: {
+    color: "#D7C6E6",
+    displayName: "Analytics",
+  },
+  automation: {
+    color: "#B7D1DE",
+    displayName: "Automation",
   },
 } as const;
 
@@ -28,6 +45,7 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => (
       p: 0.5,
       textAlign: "center",
       fontWeight: FONT_WEIGHT_SEMI_BOLD,
+      color: getContrastTextColor(TAG_DISPLAY_VALUES[tag].color, "#FFF"),
     })}
   >
     {TAG_DISPLAY_VALUES[tag].displayName}
