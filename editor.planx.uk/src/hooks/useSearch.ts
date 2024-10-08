@@ -33,6 +33,7 @@ export const useSearch = <T extends object>({
       useExtendedSearch: true,
       includeMatches: true,
       minMatchCharLength: 3,
+      ignoreLocation: true,
       keys,
     }),
     [keys],
