@@ -13,7 +13,7 @@ const Root = styled(Box, {
   "& > *": {
     flexGrow: 1,
     marginRight: 5,
-    "&:first:child": {
+    "&:nth-child(1)": {
       marginLeft: 0,
     },
     "&:last-child": {

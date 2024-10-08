@@ -7,6 +7,9 @@ const Label = styled(Typography)(({ theme }) => ({
   flexGrow: 0,
   paddingRight: theme.spacing(2),
   alignSelf: "center",
+  "&:not(:nth-child(1))": {
+    paddingLeft: theme.spacing(2),
+  },
 })) as typeof Typography;
 
 export default function InputRowLabel({ children }: { children: ReactNode }) {
