@@ -140,7 +140,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
         container.current?.querySelector("input")?.select();
       },
     }),
-    [],
+    []
   );
 
   return (
