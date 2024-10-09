@@ -6,6 +6,7 @@ import { Link } from "react-navi";
 import { useStore } from "../../../lib/store";
 import Hanger from "./Hanger";
 import Node from "./Node";
+import { Thumbnail } from "./Thumbnail";
 
 const Option: React.FC<any> = (props) => {
   const childNodes = useStore((state) => state.childNodesOf(props.id));
@@ -34,6 +35,12 @@ const Option: React.FC<any> = (props) => {
         {childNodes.map((child: any) => (
           <Node key={child.id} parent={props.id} {...child} />
         ))}
+        {props.data?.img && (
+          <Thumbnail
+            imageSource={props.data?.img}
+            imageAltText={props.data.text}
+          />
+        )}
         <Hanger parent={props.id} />
       </ol>
     </li>

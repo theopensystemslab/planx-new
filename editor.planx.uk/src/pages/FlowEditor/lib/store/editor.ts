@@ -3,7 +3,6 @@ import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType,
   FlowGraph,
-  IndexedNode,
   NodeId,
   OrderedFlow,
 } from "@opensystemslab/planx-core/types";
@@ -52,6 +51,8 @@ export interface EditorUIStore {
   hideTestEnvBanner: () => void;
   showTags: boolean;
   toggleShowTags: () => void;
+  showImages: boolean;
+  toggleShowImages: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -76,12 +77,17 @@ export const editorUIStore: StateCreator<
     showTags: false,
 
     toggleShowTags: () => set({ showTags: !get().showTags }),
+
+    showImages: false,
+
+    toggleShowImages: () => set({ showImages: !get().showImages }),
   }),
   {
     name: "editorUIStore",
     partialize: (state) => ({
       showSidebar: state.showSidebar,
       showTags: state.showTags,
+      showImages: state.showImages,
     }),
   },
 );

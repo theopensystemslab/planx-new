@@ -15,6 +15,7 @@ import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
 import { Tag } from "./Tag";
+import { Thumbnail } from "./Thumbnail";
 
 type Props = {
   type: TYPES;
@@ -96,6 +97,12 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             <span>{props.text}</span>
           </Link>
           {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
+          {props.data?.img && (
+            <Thumbnail
+              imageSource={props.data?.img}
+              imageAltText={props.data?.text}
+            />
+          )}
         </Box>
         {groupedOptions ? (
           <ol className="categories">
