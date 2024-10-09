@@ -54,14 +54,14 @@ describe("constructing URLs for nodes", () => {
   test("a question node, deeply within internal portals", () => {
     const url = getURLForNode("tarantinoMovieQuestion");
     expect(url).toEqual(
-      "/testTeam/testFlow,tarantinoPortal,moviesPortal/nodes/tarantinoPortal/nodes/tarantinoMovieQuestion/edit",
+      "/testTeam/testFlow,moviesPortal,tarantinoPortal/nodes/tarantinoPortal/nodes/tarantinoMovieQuestion/edit",
     );
   });
 
   test("an answer node, deeply within internal portals", () => {
     const url = getURLForNode("reservoirDogsAnswer");
     expect(url).toEqual(
-      "/testTeam/testFlow,tarantinoPortal,moviesPortal/nodes/tarantinoPortal/nodes/tarantinoMovieQuestion/edit",
+      "/testTeam/testFlow,moviesPortal,tarantinoPortal/nodes/tarantinoPortal/nodes/tarantinoMovieQuestion/edit",
     );
   });
 

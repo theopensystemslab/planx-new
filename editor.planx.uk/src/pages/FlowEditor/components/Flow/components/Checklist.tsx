@@ -1,4 +1,8 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import Box from "@mui/material/Box";
+import {
+  ComponentType as TYPES,
+  NodeTags,
+} from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/ui";
 import classNames from "classnames";
 import mapAccum from "ramda/src/mapAccum";
@@ -10,12 +14,13 @@ import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Node from "./Node";
+import { Tag } from "./Tag";
 
 type Props = {
   type: TYPES;
   [key: string]: any;
   wasVisited?: boolean;
-};
+} & NodeTags;
 
 const Checklist: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode] = useStore((state) => [
@@ -80,15 +85,18 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
-          {Icon && <Icon />}
-          <span>{props.text}</span>
-        </Link>
+        <Box>
+          <Link
+            href={href}
+            prefetch={false}
+            onContextMenu={handleContext}
+            ref={drag}
+          >
+            {Icon && <Icon />}
+            <span>{props.text}</span>
+          </Link>
+          {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
+        </Box>
         {groupedOptions ? (
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (

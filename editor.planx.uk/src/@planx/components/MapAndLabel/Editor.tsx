@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker";
 import InputGroup from "ui/editor/InputGroup";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -17,7 +18,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import BasicRadio from "../shared/Radio/BasicRadio";
-import { EditorProps, ICONS, InternalNotes, MoreInformation } from "../ui";
+import { EditorProps, ICONS } from "../ui";
 import { MapAndLabel, parseContent } from "./model";
 import { Trees } from "./schemas/Trees";
 
@@ -177,18 +178,7 @@ function MapAndLabelComponent(props: Props) {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 }

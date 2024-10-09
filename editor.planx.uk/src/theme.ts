@@ -76,6 +76,12 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     input: "#0B0C0C",
     light: "#E0E0E0",
   },
+  nodeTag: {
+    error: "#FFA8A1",
+    blocking: "#FAE1B7",
+    nonBlocking: "#FFFDB0",
+    information: "#B7FAD7",
+  },
   tonalOffset: DEFAULT_TONAL_OFFSET,
 };
 

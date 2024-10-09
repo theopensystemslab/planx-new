@@ -5,14 +5,13 @@ import { parseTaskList } from "@planx/components/TaskList/model";
 import {
   EditorProps,
   ICONS,
-  InternalNotes,
-  MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -104,18 +103,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
           />
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        onChange={formik.handleChange}
-        value={formik.values.notes}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 };

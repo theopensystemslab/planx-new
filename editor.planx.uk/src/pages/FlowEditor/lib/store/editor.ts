@@ -3,6 +3,7 @@ import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType,
   FlowGraph,
+  IndexedNode,
   NodeId,
   OrderedFlow,
 } from "@opensystemslab/planx-core/types";
@@ -26,6 +27,7 @@ import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
 import type { StateCreator } from "zustand";
+import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
@@ -45,29 +47,44 @@ const send = (ops: Array<any>) => {
 export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
-  togglePreview: () => void;
+  toggleSidebar: () => void;
   isTestEnvBannerVisible: boolean;
   hideTestEnvBanner: () => void;
+  showTags: boolean;
+  toggleShowTags: () => void;
 }
 
 export const editorUIStore: StateCreator<
   SharedStore & EditorUIStore,
   [],
-  [],
+  [["zustand/persist", unknown]],
   EditorUIStore
-> = (set, get) => ({
-  flowLayout: FlowLayout.TOP_DOWN,
+> = persist(
+  (set, get) => ({
+    flowLayout: FlowLayout.TOP_DOWN,
 
-  showSidebar: true,
+    showSidebar: true,
 
-  togglePreview: () => {
-    set({ showSidebar: !get().showSidebar });
+    toggleSidebar: () => {
+      set({ showSidebar: !get().showSidebar });
+    },
+
+    isTestEnvBannerVisible: !window.location.href.includes(".uk"),
+
+    hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
+
+    showTags: false,
+
+    toggleShowTags: () => set({ showTags: !get().showTags }),
+  }),
+  {
+    name: "editorUIStore",
+    partialize: (state) => ({
+      showSidebar: state.showSidebar,
+      showTags: state.showTags,
+    }),
   },
-
-  isTestEnvBannerVisible: !window.location.href.includes(".uk"),
-
-  hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
-});
+);
 
 interface PublishFlowResponse {
   alteredNodes: Store.Node[];
@@ -505,8 +522,14 @@ export const editorStore: StateCreator<
     const [node, parent, grandparent] = path;
 
     // Construct the internal portal path if applicable
+    const mapPortalsToURLPath = (portals: ReturnType<typeof getPathForNode>) =>
+      portals
+        .reverse()
+        .map(({ id }) => id)
+        .join(",");
+
     const portalPath = internalPortals.length
-      ? "," + internalPortals.map(({ id }) => id).join(",")
+      ? "," + mapPortalsToURLPath(internalPortals)
       : "";
 
     // Determine node path based on the node type

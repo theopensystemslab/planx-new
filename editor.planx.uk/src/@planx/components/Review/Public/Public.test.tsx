@@ -38,7 +38,7 @@ describe("Simple flow", () => {
     const handleSubmit = vi.fn();
     const changeAnswer = vi.fn();
 
-    const { user } = setup(
+    const { user, getByText } = setup(
       <Review
         title="Review"
         description="Check your answers before submitting"
@@ -52,6 +52,7 @@ describe("Simple flow", () => {
     );
 
     expect(screen.getByRole("heading")).toHaveTextContent("Review");
+    expect(getByText("Print this page")).toBeVisible();
 
     await user.click(screen.getByTestId("continue-button"));
 

@@ -9,11 +9,10 @@ import { parseDateInput } from "@planx/components/DateInput/model";
 import {
   EditorProps,
   ICONS,
-  InternalNotes,
-  MoreInformation,
 } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput";
@@ -97,18 +96,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
           </Box>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-      />
-      <InternalNotes
-        name="notes"
-        value={formik.values.notes}
-        onChange={formik.handleChange}
-      />
+      <ModalFooter formik={formik} />
     </form>
   );
 };

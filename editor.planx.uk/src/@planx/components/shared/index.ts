@@ -21,7 +21,7 @@ export const parseBaseNodeData = (
   howMeasured: data?.howMeasured,
   policyRef: data?.policyRef,
   info: data?.info,
-  tags: data?.tags,
+  tags: data?.tags || [],
 });
 
 export interface Option {
