@@ -137,6 +137,8 @@ export interface AgentAndPayeeSubmissionNotifyPersonalisation
   payeeName: string;
   address: string;
   projectType: string;
+  serviceName: string;
+  sessionId: string;
 }
 
 export interface AgentAndPayeeSubmissionNotifyConfig {
