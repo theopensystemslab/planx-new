@@ -8,6 +8,7 @@ export interface NumberInput extends BaseNodeData {
   fn?: string;
   units?: string;
   allowNegatives?: boolean;
+  onlyWholeNumbers?: boolean;
 }
 
 export type UserData = number;
@@ -21,13 +22,14 @@ export const parseNumber = (raw: string): number | null => {
 };
 
 export const parseNumberInput = (
-  data: Record<string, any> | undefined,
+  data: Record<string, any> | undefined
 ): NumberInput => ({
   title: data?.title || "",
   description: data?.description,
   fn: data?.fn || "",
   units: data?.units,
   allowNegatives: data?.allowNegatives || false,
+  onlyWholeNumbers: data?.onlyWholeNumbers || false,
   ...parseBaseNodeData(data),
 });
 
@@ -51,6 +53,19 @@ export const numberInputValidationSchema = (input: NumberInput) =>
           return false;
         }
         return value === "0" ? true : Boolean(parseNumber(value));
+      },
+    })
+    .test({
+      name: "check for a whole number",
+      message: "Enter a whole number",
+      test: (value: string | undefined) => {
+        if (!value) {
+          return false;
+        }
+        if (!Number.isInteger(Number(value))) {
+          return false;
+        }
+        return true;
       },
     });
 
