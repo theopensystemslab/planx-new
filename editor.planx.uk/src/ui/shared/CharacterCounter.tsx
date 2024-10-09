@@ -58,7 +58,12 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
       >
         {characterLimitText}
       </Typography>
-      <Typography aria-live="polite" aria-atomic="true" sx={visuallyHidden}>
+      <Typography
+        aria-live="polite"
+        aria-atomic="true"
+        sx={visuallyHidden}
+        data-testid="screen-reader-count"
+      >
         {showReaderCount && screenReaderCountText}
       </Typography>
     </>
