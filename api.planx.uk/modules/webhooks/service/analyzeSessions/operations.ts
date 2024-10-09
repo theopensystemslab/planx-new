@@ -6,13 +6,18 @@ import type { Operation } from "../sanitiseApplicationData/types.js";
 
 /**
  * ALLOW_LIST should stay in sync with
- * editor.planx.uk/src/pages/FlowEditor/lib/analyticsProvider
- * If appending to ALLOW_LIST please also update the
- * `submission_services_summary` view to extract it into it's own column.
+ *   editor.planx.uk/src/pages/FlowEditor/lib/analyticsProvider
+ *
+ * If appending values to ALLOW_LIST please also update the
+ *  `analytics_summary` & `submission_services_summary` views to extract the value into its own column
+ *
+ * Please also ensure your migration ends with `GRANT SELECT ON public.{VIEW_NAME} TO metabase_read_only`
+ *  so that Metabase picks up the new columns
  */
-
 const ALLOW_LIST = [
   "application.declaration.connection",
+  "application.information.harmful",
+  "application.information.sensitive",
   "drawBoundary.action",
   "findProperty.action",
   "_overrides",
@@ -22,6 +27,7 @@ const ALLOW_LIST = [
   "propertyInformation.action",
   "proposal.projectType",
   "rab.exitReason",
+  "service.type",
   "usedFOIYNPP",
   "user.role",
 ];
