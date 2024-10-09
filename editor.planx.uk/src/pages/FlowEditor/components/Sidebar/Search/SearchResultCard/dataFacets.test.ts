@@ -11,8 +11,8 @@ import {
   mockListDataResult,
   mockListRootResult,
   mockQuestionResult,
-} from "../mocks/DataDisplayMap";
-import { getDisplayDetailsForResult } from "./DataDisplayMap";
+} from "../mocks/getDisplayDetailsForResult";
+import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
 

@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useEffect } from "react";
 import { Components } from "react-virtuoso";
 import ChecklistItem from "ui/shared/ChecklistItem";
@@ -66,24 +65,13 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
           />
         )}
       </Box>
-      {hasFeatureFlag("DATA_ONLY_SEARCH") ? (
-        <ChecklistItem
-          label="Search only data fields"
-          id={"search-data-field-facet"}
-          checked={isCurrentlyDataOnlySearch()}
-          onChange={toggleDataOnly}
-          variant="compact"
-        />
-      ) : (
-        <ChecklistItem
-          label="Search only data fields"
-          id={"search-data-field-facet"}
-          inputProps={{ disabled: true }}
-          checked={true}
-          onChange={toggleDataOnly}
-          variant="compact"
-        />
-      )}
+      <ChecklistItem
+        label="Search only data fields"
+        id={"search-data-field-facet"}
+        checked={isCurrentlyDataOnlySearch()}
+        onChange={toggleDataOnly}
+        variant="compact"
+      />
       {formik.values.pattern && (
         <Typography variant="h3" mt={2} mb={1}>
           {context?.results.length === 0 && "No matches found"}

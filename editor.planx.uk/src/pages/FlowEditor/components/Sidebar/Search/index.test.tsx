@@ -35,7 +35,7 @@ vi.mock("@opensystemslab/planx-core", async (originalModule) => {
   };
 });
 
-test("data field checkbox is checked and disabled", () => {
+test("data field checkbox is unchecked and enabled by default", () => {
   const { getByLabelText } = setup(
     <VirtuosoWrapper>
       <Search />
@@ -44,8 +44,8 @@ test("data field checkbox is checked and disabled", () => {
   const checkbox = getByLabelText("Search only data fields");
 
   expect(checkbox).toBeInTheDocument();
-  expect(checkbox).toBeChecked();
-  expect(checkbox).toBeDisabled();
+  expect(checkbox).not.toBeChecked();
+  expect(checkbox).not.toBeDisabled();
 });
 
 test("entering a search term displays a series of cards", async () => {

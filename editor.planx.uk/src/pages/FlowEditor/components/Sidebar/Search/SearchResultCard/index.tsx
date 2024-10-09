@@ -10,8 +10,9 @@ import React from "react";
 import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
+import { DATA_FACETS } from "../facets";
 import { Headline } from "../Headline";
-import { getDisplayDetailsForResult } from "./DataDisplayMap";
+import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 const SearchResultCardRoot = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
@@ -69,6 +70,9 @@ export const SearchResultCard: React.FC<{
     navigate(url);
   };
 
+  const isDataKey = DATA_FACETS.includes(result.key);
+  const headlineVariant = isDataKey ? "data" : undefined;
+
   return (
     <SearchResultCardRoot onClick={handleClick} portalId={portalId}>
       {portalId && <InternalPortalHeader portalId={portalId} />}
@@ -108,7 +112,7 @@ export const SearchResultCard: React.FC<{
         <Headline
           text={headline}
           matchIndices={result.matchIndices!}
-          variant="data"
+          variant={headlineVariant}
         />
       </Box>
     </SearchResultCardRoot>
