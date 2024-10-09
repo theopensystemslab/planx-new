@@ -228,9 +228,13 @@ test("character limit counter accessibility testing", async () => {
   expect(results).toHaveNoViolations();
 
   await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}`);
-  expect(results).toHaveNoViolations();
+
+  const resultsAfterTyping = await axe(container);
+  expect(resultsAfterTyping).toHaveNoViolations();
+
   await user.type(textArea, `extra`);
-  expect(results).toHaveNoViolations();
+  const resultsWithError = await axe(container);
+  expect(resultsWithError).toHaveNoViolations();
 
   const errorCharacterCounter = await screen.findByText(
     "You have 5 characters too many"
