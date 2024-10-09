@@ -37,8 +37,7 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Data",
   },
   "data.val": {
-    getDisplayKey: ({ item }) =>
-      item.type === ComponentType.Answer ? "Option (data)" : "Option",
+    getDisplayKey: () => "Option (data)",
   },
   "data.fileTypes.fn": {
     getDisplayKey: () => "File type (data)",
@@ -46,10 +45,10 @@ const keyFormatters: KeyMap = {
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].fn!,
   },
   "data.dataFieldBoundary": {
-    getDisplayKey: () => "Field boundary",
+    getDisplayKey: () => "Boundary",
   },
   "data.dataFieldArea": {
-    getDisplayKey: () => "Field area",
+    getDisplayKey: () => "Area",
   },
   "data.description": {
     getDisplayKey: ({ item }) =>
@@ -85,24 +84,24 @@ const keyFormatters: KeyMap = {
       (item.data as unknown as NextSteps).steps[refIndex].url!,
   },
   "data.fileTypes.name": {
-    getDisplayKey: () => "Name",
+    getDisplayKey: () => "Name (file type)",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
   "data.fileTypes.moreInformation.notes": {
-    getDisplayKey: () => "Internal notes",
+    getDisplayKey: () => "Internal notes (file type)",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
         .moreInformation!.notes!,
   },
   "data.fileTypes.moreInformation.howMeasured": {
-    getDisplayKey: () => "How is it defined",
+    getDisplayKey: () => "How is it defined (file type)",
   },
   "data.fileTypes.moreInformation.policyRef": {
-    getDisplayKey: () => "Policy reference",
+    getDisplayKey: () => "Policy reference (file type)",
   },
   "data.fileTypes.moreInformation.info": {
-    getDisplayKey: () => "Why it matters",
+    getDisplayKey: () => "Why it matters (file type)",
   },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
