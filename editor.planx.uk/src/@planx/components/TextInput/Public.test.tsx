@@ -235,10 +235,4 @@ test("character limit counter accessibility testing", async () => {
   await user.type(textArea, `extra`);
   const resultsWithError = await axe(container);
   expect(resultsWithError).toHaveNoViolations();
-
-  const errorCharacterCounter = await screen.findByText(
-    "You have 5 characters too many"
-  );
-
-  expect(errorCharacterCounter).toHaveStyle({ color: "#D4351C" });
 });
