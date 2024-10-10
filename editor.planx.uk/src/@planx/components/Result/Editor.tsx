@@ -7,6 +7,7 @@ import groupBy from "lodash/groupBy";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -30,33 +31,35 @@ const FlagEditor: React.FC<{
   const showEditedIndicator = Boolean(existingOverrides);
 
   return (
-    <Box padding={1} bgcolor={flag.bgColor} color={flag.color} mt={1}>
+    <Box px={1.5} py={2} bgcolor={flag.bgColor} color={flag.color} mt={1}>
       <Box>
-        <Typography variant="body2">
+        <Typography variant="h4">
           {flag.text}
           {showEditedIndicator && "*"}
         </Typography>
       </Box>
 
-      <Box display="flex" flexDirection="column" gap={0.5} mt={1.5}>
-        <Input
-          value={existingOverrides?.heading ?? ""}
-          placeholder="Heading"
-          onChange={(ev) =>
-            props.onChange({ ...existingOverrides, heading: ev.target.value })
-          }
-        />
-        <Input
-          multiline
-          value={existingOverrides?.description ?? ""}
-          placeholder={"Description"}
-          onChange={(ev) =>
-            props.onChange({
-              ...existingOverrides,
-              description: ev.target.value,
-            })
-          }
-        />
+      <Box display="flex" flexDirection="column" gap={2} mt={2}>
+        <InputLabel label="Heading">
+          <Input
+            value={existingOverrides?.heading ?? ""}
+            onChange={(ev) =>
+              props.onChange({ ...existingOverrides, heading: ev.target.value })
+            }
+          />
+        </InputLabel>
+        <InputLabel label="Description">
+          <Input
+            multiline
+            value={existingOverrides?.description ?? ""}
+            onChange={(ev) =>
+              props.onChange({
+                ...existingOverrides,
+                description: ev.target.value,
+              })
+            }
+          />
+        </InputLabel>
       </Box>
     </Box>
   );
