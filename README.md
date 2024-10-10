@@ -79,14 +79,14 @@ We'd love to hear what you're building on Planx, don't hesitate to get in touch 
 
 The root of the project has several scripts set up to help you manage your docker containers:
 
-- `pnpm run up` alias for `pnpm recreate && pnpm add-data`
+- `pnpm run up` alias for `pnpm recreate && pnpm sync-data`
 - `pnpm run down` alias for `pnpm destroy`
 - `pnpm run restart` alias for `pnpm stop && pnpm start`
 - `pnpm start` will (re)create docker containers without rebuilding them
 - `pnpm stop` will stop your docker containers without destroying them
 - `pnpm recreate` will build and (re)start your docker containers from scratch.
 - `pnpm destroy` will remove volumes (i.e. database data) and can be a useful hard reset when necessary.
-- `pnpm add-data` will sync production records with modified data in your database
+- `pnpm sync-data` will sync production records with modified data in your database
 - `pnpm clean-data` will sync production records and reset any modified data
 - `pnpm tests` will recreate your docker containers and include test services
 - `pnpm analytics` will recreate your docker containers and include [Metabase](https://www.metabase.com/)
