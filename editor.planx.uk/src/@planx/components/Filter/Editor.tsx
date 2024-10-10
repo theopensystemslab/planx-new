@@ -21,12 +21,12 @@ export interface Props {
 const Filter: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      fn: "flag",
-      category: DEFAULT_FLAG_CATEGORY,
+      category: props?.category || DEFAULT_FLAG_CATEGORY,
+      fn: props?.fn || "flag",
     },
     onSubmit: (newValues) => {
-      if (props.handleSubmit) {
-        const children = props.id
+      if (props?.handleSubmit) {
+        const children = props?.id
           ? undefined
           : [
               ...flatFlags,
@@ -61,8 +61,9 @@ const Filter: React.FC<Props> = (props) => {
       <ModalSection>
         <ModalSectionContent title="Filter" Icon={ICONS[TYPES.Filter]}>
           <Typography variant="body2">
-            Filters sort based on collected flags. Flags are heirarchical and
-            the filter will route through the left-most matching option only.
+            Filters automatically sort based on collected flags. Flags within a
+            category are ordered heirarchically and the filter will route
+            through the left-most matching flag option only.
           </Typography>
         </ModalSectionContent>
         <ModalSectionContent title="Pick a flagset category">
