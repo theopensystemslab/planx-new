@@ -172,13 +172,11 @@ test("character limit counter should appear for long text inputs", async () => {
   setup(<TextInput title="hello" type={TextInputType.Long} />);
 
   const characterCounter = await screen.findByTestId("screen-reader-count");
-  screen.logTestingPlaygroundURL();
   expect(characterCounter).toBeInTheDocument();
 });
 
 test("character limit counter should not appear for short text inputs", async () => {
   setup(<TextInput title="hello" type={TextInputType.Short} />);
-  screen.logTestingPlaygroundURL();
   const characterCounter = screen.queryByTestId("screen-reader-count");
 
   expect(characterCounter).not.toBeInTheDocument();
@@ -216,7 +214,7 @@ test("character limit counter shows error state when over limit", async () => {
   expect(errorCharacterCounter).toHaveStyle({ color: "#D4351C" });
 });
 
-test("character limit counter accessibility testing", async () => {
+test("character limit counter should meet accessibility requirements", async () => {
   const { user, container } = setup(
     <TextInput title="hello" type={TextInputType.Long} />
   );
