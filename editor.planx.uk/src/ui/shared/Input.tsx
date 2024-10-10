@@ -3,6 +3,7 @@ import InputBase, {
   InputBaseProps,
 } from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
+import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import React, {
   ChangeEvent,
   forwardRef,
@@ -15,6 +16,7 @@ import {
   inputFocusStyle,
 } from "theme";
 
+import { CharacterCounter } from "./CharacterCounter";
 import ErrorWrapper from "./ErrorWrapper";
 
 const PREFIX = "Input";
@@ -32,6 +34,7 @@ export interface Props extends InputBaseProps {
   large?: boolean;
   bordered?: boolean;
   errorMessage?: string;
+  textLength?: TextInputType;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -102,8 +105,13 @@ export default forwardRef((props: Props, ref): FCReturn => {
     "aria-describedby": ariaDescribedBy,
     "aria-labelledby": ariaLabelledBy,
     id,
+    textLength,
     ...restProps
   } = props;
+
+  const showCharacterCount =
+    props.type === "text" &&
+    (textLength === "long" || textLength === "extraLong");
 
   useImperativeHandle(
     ref,
@@ -115,24 +123,32 @@ export default forwardRef((props: Props, ref): FCReturn => {
         container.current?.querySelector("input")?.select();
       },
     }),
-    [],
+    []
   );
 
   return (
     <ErrorWrapper error={errorMessage} id={id}>
-      <StyledInputBase
-        format={format}
-        bordered={bordered}
-        classes={classes}
-        inputProps={{
-          "aria-label": ariaLabel,
-          "aria-describedby": ariaDescribedBy,
-          "aria-labelledby": ariaLabelledBy,
-        }}
-        id={id}
-        ref={container}
-        {...restProps}
-      />
+      <>
+        <StyledInputBase
+          format={format}
+          bordered={bordered}
+          classes={classes}
+          inputProps={{
+            "aria-label": ariaLabel,
+            "aria-describedby": ariaDescribedBy,
+            "aria-labelledby": ariaLabelledBy,
+          }}
+          id={id}
+          ref={container}
+          {...restProps}
+        />
+        {showCharacterCount && (
+          <CharacterCounter
+            count={typeof props.value === "string" ? props.value.length : 0}
+            limit={TEXT_LIMITS[textLength]}
+          />
+        )}
+      </>
     </ErrorWrapper>
   );
 });

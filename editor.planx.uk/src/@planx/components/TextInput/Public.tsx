@@ -60,9 +60,12 @@ const TextInputComponent: React.FC<Props> = (props) => {
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
             id={props.id}
+            textLength={props.type}
             inputProps={{
               "aria-describedby": [
-                props.description ? DESCRIPTION_TEXT : "",
+                props.description
+                  ? `${DESCRIPTION_TEXT} character-hint`
+                  : "character-hint",
                 formik.errors.text ? `${ERROR_MESSAGE}-${props.id}` : "",
               ]
                 .filter(Boolean)

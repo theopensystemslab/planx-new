@@ -8,11 +8,14 @@ import { axe } from "vitest-axe";
 import { ERROR_MESSAGE } from "../shared/constants";
 import { TextInputType } from "./model";
 import TextInput from "./Public";
+
+const twentyFiveCharacterTest = "25 characters for me.....";
+
 test("requires a value before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <TextInput title="hello" handleSubmit={handleSubmit} />,
+    <TextInput title="hello" handleSubmit={handleSubmit} />
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
@@ -31,7 +34,7 @@ test("requires a valid email before being able to continue", async () => {
       title="hello"
       type={TextInputType.Email}
       handleSubmit={handleSubmit}
-    />,
+    />
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("hello");
@@ -56,7 +59,7 @@ test("recovers previously submitted text when clicking the back button", async (
           [nodeId]: "Previously submitted text",
         },
       }}
-    />,
+    />
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -83,7 +86,7 @@ test("recovers previously submitted text when clicking the back button even if a
           "text-input-key": "Previously submitted text",
         },
       }}
-    />,
+    />
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -113,7 +116,7 @@ examplePhoneNumbers.forEach((number) => {
         title="phone"
         type={TextInputType.Phone}
         handleSubmit={handleSubmit}
-      />,
+      />
     );
 
     fireEvent.change(screen.getByLabelText("phone"), {
@@ -128,7 +131,7 @@ examplePhoneNumbers.forEach((number) => {
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
-    <TextInput title="phone" type={TextInputType.Phone} />,
+    <TextInput title="phone" type={TextInputType.Phone} />
   );
   const results = await axe(container);
   expect(results).toHaveNoViolations();
@@ -140,7 +143,7 @@ it("should always an empty error message element in the DOM", () => {
       title="Short Text"
       type={TextInputType.Short}
       id="testId"
-    ></TextInput>,
+    ></TextInput>
   );
   const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   expect(errorMessage).toBeEmptyDOMElement();
@@ -155,7 +158,7 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
       type={TextInputType.Short}
       handleSubmit={handleSubmit}
       id="testId"
-    ></TextInput>,
+    ></TextInput>
   );
 
   const [errorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
@@ -163,4 +166,71 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
 
   expect(errorWrapper).not.toBeEmptyDOMElement();
   expect(errorWrapper).toHaveAttribute("role", "alert");
+});
+
+test("character limit counter should appear for long text inputs", async () => {
+  setup(<TextInput title="hello" type={TextInputType.Long} />);
+
+  const characterCounter = await screen.findByTestId("screen-reader-count");
+  expect(characterCounter).toBeInTheDocument();
+});
+
+test("character limit counter should not appear for short text inputs", async () => {
+  setup(<TextInput title="hello" type={TextInputType.Short} />);
+  const characterCounter = screen.queryByTestId("screen-reader-count");
+
+  expect(characterCounter).not.toBeInTheDocument();
+});
+
+test("character limit counter should change when typed", async () => {
+  const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
+
+  const textArea = screen.getByRole("textbox", {
+    name: /hello/i,
+  });
+
+  await user.type(textArea, twentyFiveCharacterTest);
+
+  const newCharacterCounter = await screen.findByText(
+    "You have 225 characters remaining"
+  );
+
+  expect(newCharacterCounter).toBeInTheDocument();
+});
+
+test("character limit counter shows error state when over limit", async () => {
+  const { user } = setup(<TextInput title="hello" type={TextInputType.Long} />);
+  const textArea = screen.getByRole("textbox", {
+    name: /hello/i,
+  });
+
+  await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}`);
+  await user.type(textArea, `extra`);
+
+  const errorCharacterCounter = await screen.findByText(
+    "You have 5 characters too many"
+  );
+
+  expect(errorCharacterCounter).toHaveStyle({ color: "#D4351C" });
+});
+
+test("character limit counter should meet accessibility requirements", async () => {
+  const { user, container } = setup(
+    <TextInput title="hello" type={TextInputType.Long} />
+  );
+  const textArea = screen.getByRole("textbox", {
+    name: /hello/i,
+  });
+
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+
+  await user.type(textArea, `${twentyFiveCharacterTest.repeat(10)}`);
+
+  const resultsAfterTyping = await axe(container);
+  expect(resultsAfterTyping).toHaveNoViolations();
+
+  await user.type(textArea, `extra`);
+  const resultsWithError = await axe(container);
+  expect(resultsWithError).toHaveNoViolations();
 });
