@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.3
     version: 1.0.0-alpha.3
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#0ade7fa
-    version: github.com/theopensystemslab/planx-core/0ade7fa(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#6a83682
+    version: github.com/theopensystemslab/planx-core/6a83682(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -4336,7 +4336,7 @@ packages:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/icons': 1.2.12(react-dom@18.2.0)(react@18.2.0)
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.10
       color-convert: 2.0.1
       dequal: 2.0.3
       lodash: 4.17.21
@@ -4396,7 +4396,7 @@ packages:
   /@storybook/client-logger@6.5.16:
     resolution: {integrity: sha512-pxcNaCj3ItDdicPTXTtmYJE3YC1SjxFrBmHcyrN+nffeNyiMuViJdOOZzzzucTUG0wcOOX8jaSyak+nnHg5H1Q==}
     dependencies:
-      core-js: 3.31.0
+      core-js: 3.38.1
       global: 4.4.0
     dev: true
 
@@ -5537,7 +5537,6 @@ packages:
 
   /@types/lodash@4.17.10:
     resolution: {integrity: sha512-YpS0zzoduEhuOWjAotS6A5AVCva7X4lVlYLF0FYHAY9sdraBfnatttHItlWeZdGhuEkf+OzMNg2ZYAx8t+52uQ==}
-    dev: false
 
   /@types/markdown-it@14.1.2:
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
@@ -6998,7 +6997,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.25.7
       '@types/raf': 3.4.3
-      core-js: 3.31.0
+      core-js: 3.38.1
       raf: 3.4.1
       regenerator-runtime: 0.13.11
       rgbcolor: 1.0.1
@@ -7433,7 +7432,6 @@ packages:
   /core-js@3.38.1:
     resolution: {integrity: sha512-OP35aUorbU3Zvlx7pjsFdu1rGNnD4pgw/CWoYzRY3t2EzoVT7shKHY1dlAy3f41cGIO7ZDPQimhGFTlEYkG/Hw==}
     requiresBuild: true
-    dev: true
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -10627,7 +10625,7 @@ packages:
       fflate: 0.8.2
     optionalDependencies:
       canvg: 3.0.10
-      core-js: 3.31.0
+      core-js: 3.38.1
       dompurify: 2.5.7
       html2canvas: 1.4.1
     dev: false
@@ -15349,9 +15347,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/0ade7fa(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ade7fa}
-    id: github.com/theopensystemslab/planx-core/0ade7fa
+  github.com/theopensystemslab/planx-core/6a83682(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6a83682}
+    id: github.com/theopensystemslab/planx-core/6a83682
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
