@@ -63,7 +63,14 @@ const Node: React.FC<any> = (props) => {
         />
       );
     case TYPES.Filter:
-      return <Filter {...allProps} text="(Flags Filter)" />;
+      return (
+        <Filter
+          {...allProps}
+          text={
+            node?.data?.category ? `Filter - ${node.data.category}` : "Filter"
+          }
+        />
+      );
     case TYPES.FindProperty:
       return <Question {...allProps} text="Find property" />;
     case TYPES.List:
