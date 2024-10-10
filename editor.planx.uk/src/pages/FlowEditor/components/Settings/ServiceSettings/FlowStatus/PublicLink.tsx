@@ -11,7 +11,7 @@ import SettingsDescription from "ui/editor/SettingsDescription";
 const CopyButton = (props: { link: string; isActive: boolean }) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
   return (
-    <Tooltip title={copyMessage}>
+    <Tooltip title={copyMessage} placement="right">
       <Button
         disabled={!props.isActive}
         variant="help"

@@ -146,7 +146,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         <TableCell>{submission.sessionId}</TableCell>
         <TableCell>
           {showDownloadButton && (
-            <Tooltip arrow title="Download application data">
+            <Tooltip title="Download application data">
               <IconButton
                 aria-label="download application"
                 size="small"

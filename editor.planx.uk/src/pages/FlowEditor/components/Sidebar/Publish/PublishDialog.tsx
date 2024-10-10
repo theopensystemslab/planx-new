@@ -244,7 +244,9 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     backgroundColor: theme.palette.background.default,
     color: theme.palette.text.primary,
     boxShadow: theme.shadows[1],
-    fontSize: theme.typography.body2,
+    fontSize: 11,
+    fontWeight: theme.typography.fontWeightRegular,
+    borderRadius: 4,
   },
 }));
 
@@ -278,6 +280,7 @@ export const ValidationChecks = (props: {
         <LightTooltip
           title="Validation checks are automatic tests that scan your service and highlight when content changes introduce an error, like incorrectly using a component type or breaking an integration."
           placement="right"
+          arrow={false}
         >
           <IconButton>
             <Help color="primary" />

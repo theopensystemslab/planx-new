@@ -10,7 +10,7 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
@@ -22,17 +22,6 @@ import { Operation } from "types";
 
 import { useStore } from "../../lib/store";
 import { formatLastEditDate } from "../../utils";
-
-const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} placement="left-start" classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.background.dark,
-    fontSize: "0.8em",
-    borderRadius: 0,
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-}));
 
 const HistoryListItem = styled("li")(() => ({
   listStyleType: "square",
@@ -184,7 +173,7 @@ const EditHistory = () => {
                       </Typography>
                     </Box>
                     {i > 0 && op.actor && canUserEditTeam(teamSlug) && (
-                      <TooltipWrap title="Restore to this point">
+                      <Tooltip title="Restore to this point" placement="left">
                         <IconButton
                           aria-label="Restore to this point"
                           onClick={() => handleUndo(i)}
@@ -196,7 +185,7 @@ const EditHistory = () => {
                             color={inUndoScope(i) ? "inherit" : "primary"}
                           />
                         </IconButton>
-                      </TooltipWrap>
+                      </Tooltip>
                     )}
                   </Box>
                   {op.data && (
