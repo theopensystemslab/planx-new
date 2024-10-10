@@ -53,6 +53,8 @@ export interface EditorUIStore {
   toggleShowTags: () => void;
   showImages: boolean;
   toggleShowImages: () => void;
+  showDataFields: boolean;
+  toggleShowDataFields: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -81,6 +83,10 @@ export const editorUIStore: StateCreator<
     showImages: false,
 
     toggleShowImages: () => set({ showImages: !get().showImages }),
+
+    showDataFields: false,
+
+    toggleShowDataFields: () => set({ showDataFields: !get().showDataFields }),
   }),
   {
     name: "editorUIStore",
@@ -88,6 +94,7 @@ export const editorUIStore: StateCreator<
       showSidebar: state.showSidebar,
       showTags: state.showTags,
       showImages: state.showImages,
+      showDataFields: state.showDataFields,
     }),
   },
 );

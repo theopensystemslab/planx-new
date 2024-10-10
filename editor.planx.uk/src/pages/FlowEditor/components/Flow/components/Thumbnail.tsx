@@ -12,8 +12,8 @@ export const Thumbnail: React.FC<{
   return (
     <Box
       sx={{
-        maxWidth: "180px",
-        maxHeight: "180px",
+        maxWidth: "220px",
+        maxHeight: "220px",
       }}
       component="img"
       src={imageSource}

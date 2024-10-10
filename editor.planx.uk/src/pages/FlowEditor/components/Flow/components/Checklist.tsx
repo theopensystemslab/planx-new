@@ -12,6 +12,7 @@ import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
 import { Tag } from "./Tag";
@@ -93,16 +94,19 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             onContextMenu={handleContext}
             ref={drag}
           >
+            {props.data?.img && (
+              <Thumbnail
+                imageSource={props.data?.img}
+                imageAltText={props.data?.text}
+              />
+            )}
             {Icon && <Icon />}
             <span>{props.text}</span>
           </Link>
-          {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
-          {props.data?.img && (
-            <Thumbnail
-              imageSource={props.data?.img}
-              imageAltText={props.data?.text}
-            />
+          {props.data?.fn && (
+            <DataField value={props.data.fn} variant="parent" />
           )}
+          {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
         </Box>
         {groupedOptions ? (
           <ol className="categories">

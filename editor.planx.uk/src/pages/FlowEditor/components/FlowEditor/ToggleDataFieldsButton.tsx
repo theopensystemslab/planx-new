@@ -1,5 +1,5 @@
-import ImageOffIcon from "@mui/icons-material/HideImage";
-import ImageIcon from "@mui/icons-material/Image";
+import DataFieldIcon from "@mui/icons-material/AutoFixNormal";
+import DataFieldOffIcon from "@mui/icons-material/AutoFixOff";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -7,17 +7,17 @@ import React from "react";
 
 import { TooltipWrap } from "./ToggleTagsButton";
 
-export const ToggleImagesButton: React.FC = () => {
-  const [showImages, toggleShowImages] = useStore((state) => [
-    state.showImages,
-    state.toggleShowImages,
+export const ToggleDataFieldsButton: React.FC = () => {
+  const [showDataFields, toggleShowDataFields] = useStore((state) => [
+    state.showDataFields,
+    state.toggleShowDataFields,
   ]);
 
   return (
     <Box
       sx={(theme) => ({
         position: "fixed",
-        bottom: theme.spacing(10),
+        bottom: theme.spacing(6),
         left: theme.spacing(7),
         zIndex: theme.zIndex.appBar,
         border: `1px solid ${theme.palette.border.main}`,
@@ -25,19 +25,19 @@ export const ToggleImagesButton: React.FC = () => {
         background: theme.palette.background.paper,
       })}
     >
-      <TooltipWrap title="Toggle images">
+      <TooltipWrap title="Toggle data fields">
         <IconButton
-          aria-label="Toggle images"
-          onClick={toggleShowImages}
+          aria-label="Toggle data fields"
+          onClick={toggleShowDataFields}
           size="large"
           sx={(theme) => ({
             padding: theme.spacing(1),
-            color: showImages
+            color: showDataFields
               ? theme.palette.text.primary
               : theme.palette.text.disabled,
           })}
         >
-          {showImages ? <ImageIcon /> : <ImageOffIcon />}
+          {showDataFields ? <DataFieldIcon /> : <DataFieldOffIcon />}
         </IconButton>
       </TooltipWrap>
     </Box>
