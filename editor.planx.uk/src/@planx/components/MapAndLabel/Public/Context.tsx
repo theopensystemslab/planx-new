@@ -34,6 +34,7 @@ interface MapAndLabelContextValue {
   addInitialFeaturesToMap: (features: Feature[]) => void;
   editFeatureInForm: (index: number) => void;
   copyFeature: (sourceIndex: number, destinationIndex: number) => void;
+  saveFeature: (index: number) => void;
   removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
@@ -237,6 +238,11 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     setActiveIndex((features && features.length - 2) || 0);
   };
 
+  const saveFeature = (index: number) => {
+    // TODO separate schema field validation from "Continue"
+    formik.handleSubmit();
+  };
+
   return (
     <MapAndLabelContext.Provider
       value={{
@@ -250,6 +256,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         addInitialFeaturesToMap,
         editFeatureInForm,
         copyFeature,
+        saveFeature,
         removeFeature,
         isFeatureInvalid,
         errors: {
