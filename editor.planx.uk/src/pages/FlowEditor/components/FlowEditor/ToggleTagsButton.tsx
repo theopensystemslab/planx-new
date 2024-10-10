@@ -8,7 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
+export const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow placement="right" classes={{ popper: className }} />
 ))(() => ({
   [`& .${tooltipClasses.arrow}`]: {
