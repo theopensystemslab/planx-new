@@ -1,6 +1,7 @@
+import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockFlow } from "../mocks/getDisplayDetailsForResult";
+import { mockChecklistResult, mockFlow, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -9,16 +10,106 @@ type Output = ReturnType<typeof getDisplayDetailsForResult>;
 beforeAll(() => useStore.setState({ flow: mockFlow }));
 
 describe("Basic fields", () => {
-  it.todo("renders data.text");
-  it.todo("renders data.title");
-  it.todo("renders data.description");
+  it("renders data.text", () => {
+    const output = getDisplayDetailsForResult(mockQuestionResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title",
+      iconKey: ComponentType.Question,
+      componentType: "Question",
+      title: "Seahorse",
+      headline: "Seahorse",
+    });
+  });
+
+  it("renders data.description", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockQuestionResult,
+      key: "data.description",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description",
+      iconKey: ComponentType.Question,
+      componentType: "Question",
+      title: "Seahorse",
+      headline: "<p>Peacock</p>",
+    });
+  });
+
+  it("renders data.title", () => {
+    const output = getDisplayDetailsForResult(mockPayResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Jaguar",
+    });
+  });
 });
 
 describe("More information fields", () => {
-  it.todo("renders data.notes");
-  it.todo("renders data.howMeasured");
-  it.todo("renders data.policyRef");
-  it.todo("renders data.info");
+  it("renders data.notes", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockQuestionResult,
+      key: "data.notes",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Internal notes",
+      iconKey: ComponentType.Question,
+      componentType: "Question",
+      title: "Seahorse",
+      headline: "Echidna",
+    });
+  });
+
+  it("renders data.howMeasured", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockQuestionResult,
+      key: "data.howMeasured",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "How is it defined",
+      iconKey: ComponentType.Question,
+      componentType: "Question",
+      title: "Seahorse",
+      headline: "<p>Gazelle</p>",
+    });
+  });
+
+  it("renders data.policyRef", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockQuestionResult,
+      key: "data.policyRef",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Policy reference",
+      iconKey: ComponentType.Question,
+      componentType: "Question",
+      title: "Seahorse",
+      headline: "<p>Rat</p>",
+    });
+  });
+
+  it("renders data.info", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockQuestionResult,
+      key: "data.info",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Why it matters",
+      iconKey: ComponentType.Question,
+      componentType: "Question",
+      title: "Seahorse",
+      headline: "<p>Octopus</p>",
+    });
+  });
 });
 
 describe("checklist fields", () => {
@@ -40,6 +131,7 @@ describe("fileUploadAndLabel fields", () => {
 });
 
 describe("schemaComponents fields", () => {
+  it.todo("renders data.schemaName");
   it.todo("renders data.schema.fields.data.title");
   it.todo("renders data.schema.fields.data.description");
   it.todo("renders data.schema.fields.data.options.data.description");
