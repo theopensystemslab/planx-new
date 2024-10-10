@@ -1,11 +1,10 @@
 import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
-import React, { useState } from "react";
+import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input";
@@ -28,46 +27,37 @@ const FlagEditor: React.FC<{
 }> = (props) => {
   const { flag, existingOverrides } = props;
 
-  const [expanded, setExpanded] = useState(false);
-
   const showEditedIndicator = Boolean(existingOverrides);
 
   return (
-    <Box
-      sx={{ cursor: "pointer" }}
-      padding={1}
-      bgcolor={flag.bgColor}
-      color={flag.color}
-      mt={1}
-    >
-      <Box onClick={() => setExpanded((x) => !x)}>
+    <Box padding={1} bgcolor={flag.bgColor} color={flag.color} mt={1}>
+      <Box>
         <Typography variant="body2">
           {flag.text}
           {showEditedIndicator && "*"}
         </Typography>
       </Box>
-      <Collapse in={expanded}>
-        <Box display="flex" mt={1}>
-          <Input
-            value={existingOverrides?.heading ?? ""}
-            placeholder={"Heading"}
-            onChange={(ev) =>
-              props.onChange({ ...existingOverrides, heading: ev.target.value })
-            }
-          />
-          <Box width={10} />
-          <Input
-            value={existingOverrides?.description ?? ""}
-            placeholder={"Description"}
-            onChange={(ev) =>
-              props.onChange({
-                ...existingOverrides,
-                description: ev.target.value,
-              })
-            }
-          />
-        </Box>
-      </Collapse>
+
+      <Box display="flex" flexDirection="column" gap={0.5} mt={1.5}>
+        <Input
+          value={existingOverrides?.heading ?? ""}
+          placeholder="Heading"
+          onChange={(ev) =>
+            props.onChange({ ...existingOverrides, heading: ev.target.value })
+          }
+        />
+        <Input
+          multiline
+          value={existingOverrides?.description ?? ""}
+          placeholder={"Description"}
+          onChange={(ev) =>
+            props.onChange({
+              ...existingOverrides,
+              description: ev.target.value,
+            })
+          }
+        />
+      </Box>
     </Box>
   );
 };
@@ -85,7 +75,7 @@ const ResultComponent: React.FC<Props> = (props) => {
         props.handleSubmit({ type: TYPES.Result, data: newValues });
       }
     },
-    validate: () => { },
+    validate: () => {},
   });
 
   const allFlagsForSet = flags[formik.values.flagSet];
