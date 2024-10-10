@@ -12,7 +12,8 @@ import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { getIn, useFormik } from "formik";
-import React, { useState } from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect, useState } from "react";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -38,6 +39,37 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
 }
 
 const ChecklistComponent: React.FC<Props> = (props) => {
+  const autoAnswerableOptions = useStore(
+    (state) => state.autoAnswerableOptions,
+  );
+
+  let idsThatCanBeAutoAnswered: string[] | undefined;
+  if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
+
+  if (idsThatCanBeAutoAnswered && idsThatCanBeAutoAnswered.length > 0) {
+    return (
+      <AutoAnsweredChecklist {...props} answerIds={idsThatCanBeAutoAnswered} />
+    );
+  } else {
+    return <VisibleChecklist {...props} />;
+  }
+};
+
+// An auto-answered Checklist won't be seen by the user, but still leaves a breadcrumb
+const AutoAnsweredChecklist: React.FC<Props & { answerIds: string[] }> = (
+  props,
+) => {
+  useEffect(() => {
+    props.handleSubmit?.({
+      answers: props.answerIds,
+      auto: true,
+    });
+  }, []);
+
+  return null;
+};
+
+const VisibleChecklist: React.FC<Props> = (props) => {
   const {
     description = "",
     groupedOptions,
