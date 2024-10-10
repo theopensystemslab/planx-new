@@ -2,7 +2,6 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import React, { useState } from "react";
@@ -11,27 +10,25 @@ import SettingsDescription from "ui/editor/SettingsDescription";
 const CopyButton = (props: { link: string; isActive: boolean }) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
   return (
-    <Tooltip title={copyMessage} placement="right">
-      <Button
-        disabled={!props.isActive}
-        variant="help"
-        onMouseLeave={() => {
-          setTimeout(() => {
-            setCopyMessage("copy");
-          }, 500);
-        }}
-        onClick={() => {
-          setCopyMessage("copied");
-          navigator.clipboard.writeText(props.link);
-        }}
-        sx={{ marginLeft: 0.5 }}
-      >
-        <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
-        <Typography ml={0.5} variant="body3">
-          {copyMessage}
-        </Typography>
-      </Button>
-    </Tooltip>
+    <Button
+      disabled={!props.isActive}
+      variant="help"
+      onMouseLeave={() => {
+        setTimeout(() => {
+          setCopyMessage("copy");
+        }, 500);
+      }}
+      onClick={() => {
+        setCopyMessage("copied");
+        navigator.clipboard.writeText(props.link);
+      }}
+      sx={{ marginLeft: 0.5 }}
+    >
+      <ContentCopyIcon style={{ width: "18px", height: "18px" }} />
+      <Typography ml={0.5} variant="body3">
+        {copyMessage}
+      </Typography>
+    </Button>
   );
 };
 
