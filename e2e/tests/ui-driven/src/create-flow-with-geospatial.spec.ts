@@ -62,7 +62,7 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "(Flags Filter)ImmuneMissing informationPermission neededPrior approvalNoticePermitted developmentNot development(No Result)",
+      "Filter - Planning permissionImmuneMissing informationPermission neededPrior approvalNoticePermitted developmentNot developmentNo flag result",
       "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
