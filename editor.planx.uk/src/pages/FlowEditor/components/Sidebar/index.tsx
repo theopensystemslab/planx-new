@@ -126,12 +126,14 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [resetPreview, isFlowPublished, toggleSidebar, showSidebar] = useStore((state) => [
-    state.resetPreview,
-    state.isFlowPublished,
-    state.toggleSidebar,
-    state.showSidebar,
-  ]);
+  const [resetPreview, isFlowPublished, toggleSidebar, showSidebar] = useStore(
+    (state) => [
+      state.resetPreview,
+      state.isFlowPublished,
+      state.toggleSidebar,
+      state.showSidebar,
+    ],
+  );
 
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
 
@@ -152,27 +154,24 @@ const Sidebar: React.FC = React.memo(() => {
 
   return (
     <Root>
-      <Collapse 
-        in={showSidebar} 
-        orientation="horizontal" 
-        collapsedSize={SIDEBAR_WIDTH_MINIMISED} 
+      <Collapse
+        in={showSidebar}
+        orientation="horizontal"
+        collapsedSize={SIDEBAR_WIDTH_MINIMISED}
         sx={{ height: "100%" }}
         easing={"ease-in-out"}
         timeout={200}
       >
         <SidebarWrapper>
           <StyledToggleButton onClick={toggleSidebar} value="toggleSidebar">
-            {showSidebar
-              ? <ChevronRightIcon />
-              : <ChevronLeftIcon />
-            }
+            {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
             <Box width="100%" display="flex">
               <input type="text" disabled value={urls.preview} />
 
               <Permission.IsPlatformAdmin>
-                <Tooltip arrow title="Open draft service">
+                <Tooltip title="Open draft service">
                   <Link
                     href={urls.draft}
                     target="_blank"
@@ -184,7 +183,7 @@ const Sidebar: React.FC = React.memo(() => {
                 </Tooltip>
               </Permission.IsPlatformAdmin>
 
-              <Tooltip arrow title="Open preview of changes to publish">
+              <Tooltip title="Open preview of changes to publish">
                 <Link
                   href={urls.preview}
                   target="_blank"
@@ -196,7 +195,7 @@ const Sidebar: React.FC = React.memo(() => {
               </Tooltip>
 
               {isFlowPublished ? (
-                <Tooltip arrow title="Open published service">
+                <Tooltip title="Open published service">
                   <Link
                     href={urls.analytics}
                     target="_blank"
@@ -207,7 +206,7 @@ const Sidebar: React.FC = React.memo(() => {
                   </Link>
                 </Tooltip>
               ) : (
-                <Tooltip arrow title="Flow not yet published">
+                <Tooltip title="Flow not yet published">
                   <Box>
                     <Link component={"button"} disabled aria-disabled={true}>
                       <LanguageIcon />
