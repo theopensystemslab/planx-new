@@ -53,7 +53,11 @@ const Filter: React.FC<Props> = (props) => {
   const categories = new Set(flatFlags.map((flag) => flag.category));
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form
+      onSubmit={formik.handleSubmit}
+      id="modal"
+      data-testid="filter-component-form"
+    >
       <ModalSection>
         <ModalSectionContent title="Filter" Icon={ICONS[TYPES.Filter]}>
           <Typography variant="body2">
