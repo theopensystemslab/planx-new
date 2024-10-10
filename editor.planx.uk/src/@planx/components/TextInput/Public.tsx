@@ -9,9 +9,14 @@ import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
-import { getPreviouslySubmittedData, makeData } from "../shared/utils";
+import {
+  characterCounterSwitch,
+  getPreviouslySubmittedData,
+  makeData,
+} from "../shared/utils";
 import type { TextInput } from "./model";
 import { userDataSchema } from "./model";
+import { CharacterCounter } from "ui/shared/CharacterCounter";
 
 export type Props = PublicProps<TextInput>;
 
@@ -31,6 +36,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
     }),
   });
 
+  const characterCountLimit = characterCounterSwitch(props.type);
+
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <CardHeader
@@ -41,7 +48,12 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <InputLabel label={props.title} hidden htmlFor={props.id}>
+        <InputLabel
+          id={"input-label"}
+          label={props.title}
+          hidden
+          htmlFor={props.id}
+        >
           <Input
             type={((type) => {
               if (type === "email") return "email";
@@ -60,7 +72,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
             onChange={formik.handleChange}
             errorMessage={formik.errors.text as string}
             id={props.id}
-            textLength={props.type}
             inputProps={{
               "aria-describedby": [
                 props.description
@@ -70,8 +81,16 @@ const TextInputComponent: React.FC<Props> = (props) => {
               ]
                 .filter(Boolean)
                 .join(" "),
+              "aria-labelledby": `input-label`,
             }}
           />
+          {characterCountLimit && (
+            <CharacterCounter
+              count={formik.values.text.length}
+              limit={characterCountLimit}
+              error={formik.errors.text ? true : false}
+            />
+          )}
         </InputLabel>
       </InputRow>
     </Card>

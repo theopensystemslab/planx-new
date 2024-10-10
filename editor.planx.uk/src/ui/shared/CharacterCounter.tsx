@@ -1,15 +1,17 @@
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
+import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {
-  limit: number;
+  limit: TextInputType.Long | TextInputType.ExtraLong;
   count: number;
+  error: boolean;
 };
 
-export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
+export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
   const [screenReaderCount, setScreenReaderCount] = useState<number>(0);
   const [showReaderCount, setShowReaderCount] = useState<boolean>(false);
 
@@ -21,14 +23,16 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
     []
   );
 
-  const currentCharacterCount = limit - count;
+  const currentCharacterCount = TEXT_LIMITS[limit] - count;
   const showCharacterLimitError = currentCharacterCount < 0;
 
   useEffect(() => {
     if (count !== screenReaderCount) {
       setShowReaderCount(false);
     }
-    updateCharacterCount(currentCharacterCount);
+    if (count > 0) {
+      updateCharacterCount(currentCharacterCount);
+    }
   }, [currentCharacterCount, updateCharacterCount, count, screenReaderCount]);
 
   const characterLimitText = showCharacterLimitError
@@ -41,12 +45,8 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
 
   return (
     <>
-      <Typography
-        id={"character-hint"}
-        sx={visuallyHidden}
-        aria-hidden={"true"}
-      >
-        {`You can enter up to ${limit} characters`}
+      <Typography id={"character-hint"} sx={visuallyHidden} aria-hidden={true}>
+        {`You can enter up to ${TEXT_LIMITS[limit]} characters`}
       </Typography>
       <Typography
         paddingTop={0.5}
@@ -55,6 +55,7 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
         fontWeight={showCharacterLimitError ? FONT_WEIGHT_SEMI_BOLD : 400}
         id={"character-live-hint"}
         aria-hidden={"true"}
+        paddingLeft={error ? 2 : 0}
       >
         {characterLimitText}
       </Typography>
@@ -63,6 +64,7 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count }) => {
         aria-atomic="true"
         sx={visuallyHidden}
         data-testid="screen-reader-count"
+        aria-hidden={count === 0 ? true : false}
       >
         {showReaderCount && screenReaderCountText}
       </Typography>
