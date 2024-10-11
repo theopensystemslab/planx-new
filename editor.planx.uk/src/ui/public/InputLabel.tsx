@@ -21,7 +21,6 @@ export default function InputLabel(props: {
         sx={{ pb: 1 }}
         variant="body1"
         style={props.hidden ? visuallyHidden : undefined}
-        aria-hidden={true}
       >
         {props.label}
       </Typography>

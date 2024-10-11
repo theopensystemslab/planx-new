@@ -48,12 +48,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <InputLabel
-          id={"input-label"}
-          label={props.title}
-          hidden
-          htmlFor={props.id}
-        >
+        <InputLabel label={props.title} hidden htmlFor={props.id}>
           <Input
             type={((type) => {
               if (type === "email") return "email";
@@ -81,7 +76,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
               ]
                 .filter(Boolean)
                 .join(" "),
-              "aria-labelledby": `input-label`,
             }}
           />
           {characterCountLimit && (

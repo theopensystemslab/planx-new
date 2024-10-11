@@ -16,7 +16,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
 
   const characterCountLimit = characterCounterSwitch(data.type);
   return (
-    <InputLabel id={`input-label`} label={data.title} htmlFor={id}>
+    <InputLabel label={data.title} htmlFor={id}>
       {data.description && (
         <FieldInputDescription description={data.description} />
       )}
@@ -43,7 +43,6 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
           ]
             .filter(Boolean)
             .join(" "),
-          "aria-labelledby": `input-label`,
         }}
       />
       {characterCountLimit && (
