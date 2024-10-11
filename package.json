@@ -1,13 +1,13 @@
 {
   "scripts": {
-    "up": "pnpm recreate && pnpm add-data",
+    "up": "pnpm recreate && pnpm sync-data",
     "down": "pnpm destroy",
     "restart": "pnpm stop && pnpm start",
     "start": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull",
     "stop": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services down",
     "recreate": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services up -d --quiet-pull --build --renew-anon-volumes --force-recreate",
     "destroy": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml --profile mock-services down --remove-orphans -v",
-    "add-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database",
+    "sync-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database",
     "test-sync": "docker compose -f ./docker-compose.yml -f ./docker-compose.local.yml -f ./docker-compose.seed.yml run seed-database reset_flows",
     "clean-data": "docker compose -f ./docker-compose.yml -f ./docker-compose.seed.yml run seed-database reset_all",
     "tests": "./scripts/start-containers-for-tests.sh",

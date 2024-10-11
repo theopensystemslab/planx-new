@@ -639,6 +639,23 @@ const getThemeOptions = ({
           },
         ],
       },
+      MuiTooltip: {
+        defaultProps: {
+          arrow: true,
+        },
+        styleOverrides: {
+          arrow: {
+            color: "#2c2c2c",
+          },
+          tooltip: {
+            backgroundColor: "#2c2c2c",
+            left: "-5px",
+            fontSize: "0.8em",
+            borderRadius: 0,
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
+        },
+      },
     },
   };
 

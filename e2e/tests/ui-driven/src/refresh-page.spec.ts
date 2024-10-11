@@ -73,6 +73,7 @@ test.describe("Refresh page", () => {
 
     const teamSlugInHeader = page.getByRole("link", {
       name: context.team.slug,
+      exact: true,
     });
     await expect(teamSlugInHeader).toBeVisible();
 

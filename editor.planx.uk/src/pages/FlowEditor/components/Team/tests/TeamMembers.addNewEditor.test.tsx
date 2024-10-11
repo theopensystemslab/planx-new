@@ -129,7 +129,7 @@ describe("when a user is not a platform admin", () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
-      teamSlug: "templates",
+      teamSlug: "trumptonshire",
     });
   });
 

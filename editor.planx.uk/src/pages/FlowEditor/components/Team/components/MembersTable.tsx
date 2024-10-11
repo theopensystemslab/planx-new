@@ -194,17 +194,19 @@ export const MembersTable = ({
               </StyledTableRow>
             ))}
             {showAddMemberButton && (
-              <TableRow>
-                <TableCell colSpan={5}>
-                  <AddButton
-                    onClick={() => {
-                      addUser();
-                    }}
-                  >
-                    Add a new editor
-                  </AddButton>
-                </TableCell>
-              </TableRow>
+              <Permission.IsPlatformAdmin>
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <AddButton
+                      onClick={() => {
+                        addUser();
+                      }}
+                    >
+                      Add a new editor
+                    </AddButton>
+                  </TableCell>
+                </TableRow>
+              </Permission.IsPlatformAdmin>
             )}
           </TableBody>
         </Table>
