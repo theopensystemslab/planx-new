@@ -84,7 +84,7 @@ test("allows negative numbers to be input when toggled on by editor", async () =
   expect(handleSubmit).toHaveBeenCalledWith({ data: { fahrenheit: -10 } });
 });
 
-test("requires only whole numbers to be input when toggled on by editor", async () => {
+test("a clear error is shown if decimal value added when onlyWholeNumbers is toggled on", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
@@ -111,7 +111,7 @@ test("requires only whole numbers to be input when toggled on by editor", async 
   });
 });
 
-test("allows only whole numbers to be input when toggled on by editor", async () => {
+test("allows only whole numbers to be submitted when toggled on by editor", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
