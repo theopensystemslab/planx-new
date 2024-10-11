@@ -28,15 +28,10 @@ const FlagEditor: React.FC<{
 }> = (props) => {
   const { flag, existingOverrides } = props;
 
-  const showEditedIndicator = Boolean(existingOverrides);
-
   return (
     <Box px={1.5} py={2} bgcolor={flag.bgColor} color={flag.color} mt={1}>
       <Box>
-        <Typography variant="h4">
-          {flag.text}
-          {showEditedIndicator && "*"}
-        </Typography>
+        <Typography variant="h4">{flag.text}</Typography>
       </Box>
 
       <Box display="flex" flexDirection="column" gap={2} mt={2}>
