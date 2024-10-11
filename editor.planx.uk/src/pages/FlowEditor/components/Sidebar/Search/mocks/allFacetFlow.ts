@@ -374,30 +374,45 @@ export const mockNextStepsOptionResult: SearchResult<IndexedNode> = {
 };
 
 export const mockFileUploadAndLabelResult: SearchResult<IndexedNode> = {
-    item: {
-      id: "7aapI6waUw",
-      parentId: "_root",
-      type: 145,
-      data: {
-        title: ".",
-        fileTypes: [
-          {
-            fn: "Platypus",
-            name: "Penguin",
-            rule: {
-              condition: "AlwaysRequired",
-            },
-            moreInformation: {
-              info: "<p>Kangaroo</p>",
-              policyRef: "<p>Tiger</p>",
-              howMeasured: "<p>Salamander</p>",
-            },
+  item: {
+    id: "7aapI6waUw",
+    parentId: "_root",
+    type: 145,
+    data: {
+      title: ".",
+      fileTypes: [
+        {
+          fn: "Platypus",
+          name: "Penguin",
+          rule: {
+            condition: "AlwaysRequired",
           },
-        ],
-        hideDropZone: false,
-      },
+          moreInformation: {
+            info: "<p>Kangaroo</p>",
+            policyRef: "<p>Tiger</p>",
+            howMeasured: "<p>Salamander</p>",
+          },
+        },
+      ],
+      hideDropZone: false,
     },
-    key: "data.fileTypes.name",
-    matchIndices: [[0, 6]],
-    refIndex: 0,
+  },
+  key: "data.fileTypes.name",
+  matchIndices: [[0, 6]],
+  refIndex: 0,
+};
+
+export const mockNumberInputResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "6rgnMh94zu",
+    parentId: "_root",
+    type: 150,
+    data: {
+      units: "Wolverine",
+      allowNegatives: false,
+    },
+  },
+  key: "data.units",
+  matchIndices: [[0, 8]],
+  refIndex: 0,
 };

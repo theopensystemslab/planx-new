@@ -111,6 +111,9 @@ const keyFormatters: KeyMap = {
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
         .moreInformation!.info!,
   },
+  "data.units": {
+    getDisplayKey: () => "Unit type",
+  },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
   },

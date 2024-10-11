@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -240,6 +240,20 @@ describe("fileUploadAndLabel fields", () => {
   });
 
 
+});
+
+describe("numberInput fields", () => {
+  it("renders data.units", () => {
+    const output = getDisplayDetailsForResult(mockNumberInputResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Unit type",
+      iconKey: ComponentType.NumberInput,
+      componentType: "Number input",
+      title: "",
+      headline: "Wolverine",
+    });
+  });
 });
 
 describe("schemaComponents fields", () => {
