@@ -50,8 +50,8 @@ $fontMonospace: "Source Code Pro", monospace;
     margin: 0 auto;
     width: max-content;
 
-    a:focus,
-    a:active {
+    > a:focus,
+    > a:active {
       outline: 4px solid $focus;
       outline-offset: 0;
     }
@@ -110,7 +110,7 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
-  &.wasVisited a {
+  &.wasVisited > a {
     span {
       opacity: 1;
     }
@@ -118,7 +118,7 @@ $fontMonospace: "Source Code Pro", monospace;
     outline-offset: 0;
   }
 
-  &.isClone a {
+  &.isClone > a {
     margin-top: 3px;
     ::before {
       content: "";
@@ -137,7 +137,8 @@ $fontMonospace: "Source Code Pro", monospace;
     border: $nodeBorderWidth dashed red;
   }
 
-  & a {
+  & > div > a,
+  & > a {
     position: relative;
     display: flex;
     align-items: flex-start;
@@ -403,13 +404,13 @@ $fontMonospace: "Source Code Pro", monospace;
   align-items: center;
 
   &.question.isNote {
-    a {
+    > a {
       background: #fffdb0 !important;
       position: relative;
       padding-right: 20px;
     }
     // Triangle shapes to simulate paper fold on sticky note
-    &:not(.isClone) a {
+    &:not(.isClone) > a {
       &::before {
         content: "";
         position: absolute;
