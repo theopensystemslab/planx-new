@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistResult, mockFlow, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
+import { mockChecklistOption, mockChecklistResult, mockFlow, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -113,7 +113,29 @@ describe("More information fields", () => {
 });
 
 describe("checklist fields", () => {
-  it.todo("renders data.categories.title");
+  it("renders data.categories.title", () => {
+    const output = getDisplayDetailsForResult(mockChecklistResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title",
+      iconKey: ComponentType.Checklist,
+      componentType: "Checklist",
+      title: ".",
+      headline: "Koala",
+    });
+  });
+
+  it("renders data.text", () => {
+    const output = getDisplayDetailsForResult(mockChecklistOption);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Option (title)",
+      iconKey: ComponentType.Checklist,
+      componentType: "Checklist",
+      title: ".",
+      headline: "Duck",
+    });
+  });
 });
 
 describe("nextSteps fields", () => {

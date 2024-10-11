@@ -4,6 +4,7 @@ import {
   IndexedNode,
 } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
+import { Checklist } from "@planx/components/Checklist/model";
 import { Confirmation } from "@planx/components/Confirmation/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
@@ -67,6 +68,10 @@ const keyFormatters: KeyMap = {
   },
   "data.info": {
     getDisplayKey: () => "Why it matters",
+  },
+  "data.categories.title": {
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as Checklist).categories![refIndex].title,
   },
   "data.steps.title": {
     getDisplayKey: () => "Title (step)",
@@ -229,14 +234,24 @@ const keyFormatters: KeyMap = {
 };
 
 const componentFormatters: ComponentMap = {
-  // Answers are mapped to their parent questions
+  // Answers are mapped to their parent questions / checklists
   [ComponentType.Answer]: {
     getDisplayKey: () => "Option (title)",
-    getIconKey: () => ComponentType.Question,
+    getIconKey: ({ item }) => {
+      const parentNode = useStore.getState().flow[item.parentId];
+      return parentNode.type!;
+    },
     getTitle: ({ item }) => {
       const parentNode = useStore.getState().flow[item.parentId];
       return parentNode.data?.text;
     },
+    getComponentType: ({ item }) => {
+      const parentNode = useStore.getState().flow[item.parentId];
+      const parentType = parentNode.type!;
+      const formatted = capitalize(SLUGS[parentType].replaceAll("-", " "));
+      
+      return formatted;
+    }
   },
 };
 

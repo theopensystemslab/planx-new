@@ -312,3 +312,41 @@ export const mockPayResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 5]],
   refIndex: 0,
 };
+
+export const mockChecklistResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "elSf1BQXnb",
+    parentId: "_root",
+    type: 105,
+    data: {
+      text: ".",
+      categories: [
+        {
+          count: 1,
+          title: "Koala",
+        },
+      ],
+      allRequired: false,
+      description: "<p>.</p>",
+    },
+    edges: ["OiFdZxSWl1"],
+  },
+  key: "data.categories.title",
+  matchIndices: [[0, 4]],
+  refIndex: 0,
+};
+
+export const mockChecklistOption: SearchResult<IndexedNode> = {
+  item: {
+    id: "OiFdZxSWl1",
+    parentId: "elSf1BQXnb",
+    type: 200,
+    data: {
+      text: "Duck",
+    },
+    edges: ["ZbQLVR2SzL"],
+  },
+  key: "data.text",
+  matchIndices: [[0, 3]],
+  refIndex: 0,
+};
