@@ -3,7 +3,6 @@ import InputBase, {
   InputBaseProps,
 } from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
-import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import React, {
   ChangeEvent,
   forwardRef,
