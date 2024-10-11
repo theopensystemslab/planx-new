@@ -11,7 +11,7 @@ test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
@@ -26,7 +26,7 @@ test("allows 0 to be input as a valid number", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
@@ -45,16 +45,16 @@ test("requires a positive number to be input by default", async () => {
       fn="doors"
       title="How many doors are you adding?"
       handleSubmit={handleSubmit}
-    />
+    />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent(
-    "How many doors are you adding?"
+    "How many doors are you adding?",
   );
 
   await user.type(
     screen.getByLabelText("How many doors are you adding?"),
-    "-1"
+    "-1",
   );
   await user.click(screen.getByTestId("continue-button"));
 
@@ -71,11 +71,11 @@ test("allows negative numbers to be input when toggled on by editor", async () =
       title="What's the temperature?"
       handleSubmit={handleSubmit}
       allowNegatives={true}
-    />
+    />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent(
-    "What's the temperature?"
+    "What's the temperature?",
   );
 
   await user.type(screen.getByLabelText("What's the temperature?"), "-10");
@@ -84,7 +84,7 @@ test("allows negative numbers to be input when toggled on by editor", async () =
   expect(handleSubmit).toHaveBeenCalledWith({ data: { fahrenheit: -10 } });
 });
 
-test.only("requires only whole numbers to be input when toggled on by editor", async () => {
+test("requires only whole numbers to be input when toggled on by editor", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
@@ -93,11 +93,11 @@ test.only("requires only whole numbers to be input when toggled on by editor", a
       title="What's the temperature?"
       handleSubmit={handleSubmit}
       onlyWholeNumbers={true}
-    />
+    />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent(
-    "What's the temperature?"
+    "What's the temperature?",
   );
 
   const textArea = screen.getByLabelText("What's the temperature?");
@@ -120,11 +120,11 @@ test("allows only whole numbers to be input when toggled on by editor", async ()
       title="What's the temperature?"
       handleSubmit={handleSubmit}
       onlyWholeNumbers={true}
-    />
+    />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent(
-    "What's the temperature?"
+    "What's the temperature?",
   );
 
   const textArea = screen.getByLabelText("What's the temperature?");
@@ -138,7 +138,7 @@ test("requires a value before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -160,7 +160,7 @@ test("recovers previously submitted number when clicking the back button", async
           [componentId]: 43,
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -184,7 +184,7 @@ test("recovers previously submitted number when clicking the back button even if
           [dataField]: 43,
         },
       }}
-    />
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));

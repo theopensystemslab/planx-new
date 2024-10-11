@@ -22,7 +22,7 @@ export const parseNumber = (raw: string): number | null => {
 };
 
 export const parseNumberInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): NumberInput => ({
   title: data?.title || "",
   description: data?.description,
@@ -62,7 +62,7 @@ export const numberInputValidationSchema = (input: NumberInput) =>
         if (!value) {
           return false;
         }
-        if (!Number.isInteger(Number(value))) {
+        if (input.onlyWholeNumbers && !Number.isInteger(Number(value))) {
           return false;
         }
         return true;

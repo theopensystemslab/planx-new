@@ -80,7 +80,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
                   onChange={() =>
                     formik.setFieldValue(
                       "allowNegatives",
-                      !formik.values.allowNegatives
+                      !formik.values.allowNegatives,
                     )
                   }
                 />
@@ -96,7 +96,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
                   onChange={() =>
                     formik.setFieldValue(
                       "onlyWholeNumbers",
-                      !formik.values.onlyWholeNumbers
+                      !formik.values.onlyWholeNumbers,
                     )
                   }
                 />
