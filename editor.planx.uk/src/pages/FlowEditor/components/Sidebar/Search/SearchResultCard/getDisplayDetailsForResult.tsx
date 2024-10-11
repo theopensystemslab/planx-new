@@ -93,20 +93,23 @@ const keyFormatters: KeyMap = {
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
-  "data.fileTypes.moreInformation.notes": {
-    getDisplayKey: () => "Internal notes (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.notes!,
-  },
   "data.fileTypes.moreInformation.howMeasured": {
     getDisplayKey: () => "How is it defined (file type)",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
+        .moreInformation!.howMeasured!,
   },
   "data.fileTypes.moreInformation.policyRef": {
     getDisplayKey: () => "Policy reference (file type)",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
+        .moreInformation!.policyRef!,
   },
   "data.fileTypes.moreInformation.info": {
     getDisplayKey: () => "Why it matters (file type)",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
+        .moreInformation!.info!,
   },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",

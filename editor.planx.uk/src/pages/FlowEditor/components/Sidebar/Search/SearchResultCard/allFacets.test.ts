@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockFlow, mockNextStepsOptionResult, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -137,7 +137,6 @@ describe("checklist fields", () => {
     });
   });
 });
-
 describe("nextSteps fields", () => {
   it("renders data.steps.title", () => {
     const output = getDisplayDetailsForResult(mockNextStepsOptionResult);
@@ -183,11 +182,64 @@ describe("nextSteps fields", () => {
 });
 
 describe("fileUploadAndLabel fields", () => {
-  it.todo("renders data.fileTypes.name");
-  it.todo("renders data.fileTypes.moreInformation.notes");
-  it.todo("renders data.fileTypes.moreInformation.howMeasured");
-  it.todo("renders data.fileTypes.moreInformation.policyRef");
-  it.todo("renders data.fileTypes.moreInformation.info");
+  it("renders data.fileTypes.name", () => {
+    const output = getDisplayDetailsForResult(mockFileUploadAndLabelResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Name (file type)",
+      iconKey: ComponentType.FileUploadAndLabel,
+      componentType: "File upload and label",
+      title: ".",
+      headline: "Penguin",
+    });
+  });
+
+  it("renders data.fileTypes.moreInformation.info", () => {
+     const output = getDisplayDetailsForResult({
+       ...mockFileUploadAndLabelResult,
+       key: "data.fileTypes.moreInformation.info",
+     });
+
+     expect(output).toStrictEqual<Output>({
+       key: "Why it matters (file type)",
+       iconKey: ComponentType.FileUploadAndLabel,
+       componentType: "File upload and label",
+       title: ".",
+       headline: "<p>Kangaroo</p>",
+     });
+  });
+  
+  it("renders data.fileTypes.moreInformation.policyRef", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockFileUploadAndLabelResult,
+      key: "data.fileTypes.moreInformation.policyRef",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Policy reference (file type)",
+      iconKey: ComponentType.FileUploadAndLabel,
+      componentType: "File upload and label",
+      title: ".",
+      headline: "<p>Tiger</p>",
+    });
+  });
+
+  it("renders data.fileTypes.moreInformation.howMeasured", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockFileUploadAndLabelResult,
+      key: "data.fileTypes.moreInformation.howMeasured",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "How is it defined (file type)",
+      iconKey: ComponentType.FileUploadAndLabel,
+      componentType: "File upload and label",
+      title: ".",
+      headline: "<p>Salamander</p>",
+    });
+  });
+
+
 });
 
 describe("schemaComponents fields", () => {

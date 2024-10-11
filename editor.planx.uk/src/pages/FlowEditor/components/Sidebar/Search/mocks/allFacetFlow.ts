@@ -372,3 +372,32 @@ export const mockNextStepsOptionResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 6]],
   refIndex: 0,
 };
+
+export const mockFileUploadAndLabelResult: SearchResult<IndexedNode> = {
+    item: {
+      id: "7aapI6waUw",
+      parentId: "_root",
+      type: 145,
+      data: {
+        title: ".",
+        fileTypes: [
+          {
+            fn: "Platypus",
+            name: "Penguin",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+            moreInformation: {
+              info: "<p>Kangaroo</p>",
+              policyRef: "<p>Tiger</p>",
+              howMeasured: "<p>Salamander</p>",
+            },
+          },
+        ],
+        hideDropZone: false,
+      },
+    },
+    key: "data.fileTypes.name",
+    matchIndices: [[0, 6]],
+    refIndex: 0,
+};
