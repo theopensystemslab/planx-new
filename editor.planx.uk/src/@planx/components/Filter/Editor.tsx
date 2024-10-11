@@ -13,37 +13,34 @@ import { ICONS } from "../ui";
 
 export interface Props {
   id?: string;
-  fn?: "flag";
-  category?: string;
   handleSubmit?: (data: any, children?: any) => void;
+  node?: any;
 }
 
 const Filter: React.FC<Props> = (props) => {
   const formik = useFormik({
     initialValues: {
-      category: props?.category || DEFAULT_FLAG_CATEGORY,
-      fn: props?.fn || "flag",
+      fn: "flag",
+      category: props?.node?.data?.category || DEFAULT_FLAG_CATEGORY,
     },
     onSubmit: (newValues) => {
       if (props?.handleSubmit) {
-        const children = props?.id
-          ? undefined
-          : [
-              ...flatFlags,
-              {
-                category: formik.values.category,
-                text: "No flag result",
-                value: "",
-              },
-            ]
-              .filter((f) => f.category === formik.values.category)
-              .map((f) => ({
-                type: TYPES.Answer,
-                data: {
-                  text: f.text,
-                  val: f.value,
-                },
-              }));
+        const children = [
+          ...flatFlags,
+          {
+            category: formik.values.category,
+            text: "No flag result",
+            value: "",
+          },
+        ]
+          .filter((f) => f.category === formik.values.category)
+          .map((f) => ({
+            type: TYPES.Answer,
+            data: {
+              text: f.text,
+              val: f.value,
+            },
+          }));
 
         props.handleSubmit({ type: TYPES.Filter, data: newValues }, children);
       }

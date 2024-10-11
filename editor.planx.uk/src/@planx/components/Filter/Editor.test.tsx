@@ -64,14 +64,13 @@ test("Adding a filter and selecting a flagset category", async () => {
   );
 });
 
-test.todo("Updating an existing filter to another category", async () => {
+test("Updating an existing filter to another category", async () => {
   const handleSubmit = vi.fn();
 
   setup(
     <Filter
       id="filterNodeId"
-      category="Listed building consent"
-      fn="flag"
+      node={mockExistingFilterNode}
       handleSubmit={handleSubmit}
     />,
   );
@@ -99,6 +98,15 @@ test.todo("Updating an existing filter to another category", async () => {
     ),
   );
 });
+
+const mockExistingFilterNode = {
+  data: {
+    fn: "flag",
+    category: "Listed building consent",
+  },
+  type: 500,
+  edges: ["flag1", "flag2", "flag3", "flag4", "blankFlag"],
+};
 
 const mockDefaultFlagOptions = [
   ...flatFlags.filter((flag) => flag.category === DEFAULT_FLAG_CATEGORY),
