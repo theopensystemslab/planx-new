@@ -336,7 +336,7 @@ export const mockChecklistResult: SearchResult<IndexedNode> = {
   refIndex: 0,
 };
 
-export const mockChecklistOption: SearchResult<IndexedNode> = {
+export const mockChecklistOptionResult: SearchResult<IndexedNode> = {
   item: {
     id: "OiFdZxSWl1",
     parentId: "elSf1BQXnb",
@@ -348,5 +348,27 @@ export const mockChecklistOption: SearchResult<IndexedNode> = {
   },
   key: "data.text",
   matchIndices: [[0, 3]],
+  refIndex: 0,
+};
+
+export const mockNextStepsOptionResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "ZbQLVR2SzL",
+    parentId: "OiFdZxSWl1",
+    type: 730,
+    data: {
+      steps: [
+        {
+          url: "https://www.starfish.gov.uk",
+          title: "Hamster",
+          description: "Vulture",
+        },
+      ],
+      title: ".",
+      description: "<p>.</p>",
+    },
+  },
+  key: "data.steps.title",
+  matchIndices: [[0, 6]],
   refIndex: 0,
 };

@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOption, mockChecklistResult, mockFlow, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockFlow, mockNextStepsOptionResult, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -126,7 +126,7 @@ describe("checklist fields", () => {
   });
 
   it("renders data.text", () => {
-    const output = getDisplayDetailsForResult(mockChecklistOption);
+    const output = getDisplayDetailsForResult(mockChecklistOptionResult);
 
     expect(output).toStrictEqual<Output>({
       key: "Option (title)",
@@ -139,9 +139,47 @@ describe("checklist fields", () => {
 });
 
 describe("nextSteps fields", () => {
-  it.todo("renders data.steps.title");
-  it.todo("renders data.steps.description");
-  it.todo("renders data.steps.url");
+  it("renders data.steps.title", () => {
+    const output = getDisplayDetailsForResult(mockNextStepsOptionResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title (step)",
+      iconKey: ComponentType.NextSteps,
+      componentType: "Next steps",
+      title: ".",
+      headline: "Hamster",
+    });
+  });
+
+  it("renders data.steps.description", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockNextStepsOptionResult,
+      key: "data.steps.description",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description (step)",
+      iconKey: ComponentType.NextSteps,
+      componentType: "Next steps",
+      title: ".",
+      headline: "Vulture",
+    });
+  });
+
+  it("renders data.steps.url", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockNextStepsOptionResult,
+      key: "data.steps.url",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "URL (step)",
+      iconKey: ComponentType.NextSteps,
+      componentType: "Next steps",
+      title: ".",
+      headline: "https://www.starfish.gov.uk",
+    });
+  });
 });
 
 describe("fileUploadAndLabel fields", () => {
