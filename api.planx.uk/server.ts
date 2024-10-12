@@ -112,9 +112,13 @@ assert(process.env.UNIFORM_SUBMISSION_URL);
 // needed for storing original URL to redirect to in login flow
 app.use(
   cookieSession({
-    maxAge: 24 * 60 * 60 * 100,
+    // TODO: does maxAge even apply here? or does it need to be applied via cookies.set()?
+    maxAge: 24 * 60 * 60 * 100, // 2.4hrs (I think this is intended to be 24??)
     name: "session",
     secret: process.env.SESSION_SECRET,
+    secure: true,
+    // TODO: does implementing sameSite: "lax" break anything?
+    sameSite: "lax",
   }),
 );
 

@@ -136,7 +136,7 @@ export const getMicrosoftAuthHandler = (
   return (req, res, next) => {
     req.session!.returnTo = req.get("Referrer");
 
-    // generate a nonce to enable us to validate the response from OP
+    // generate a nonce to enable us to validate the response from OP (mitigates against CSRF attacks)
     const nonce = generators.nonce();
     console.debug(`Generated a nonce: %s`, nonce);
     req.session!.nonce = nonce;
