@@ -116,9 +116,10 @@ app.use(
     maxAge: 24 * 60 * 60 * 100, // 2.4hrs (I think this is intended to be 24??)
     name: "session",
     secret: process.env.SESSION_SECRET,
+    httpOnly: true,
     secure: true,
     // TODO: does implementing sameSite: "lax" break anything?
-    sameSite: "lax",
+    // sameSite: "lax",
   }),
 );
 
