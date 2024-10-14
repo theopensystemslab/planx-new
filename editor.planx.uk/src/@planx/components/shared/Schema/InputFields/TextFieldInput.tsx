@@ -49,7 +49,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
         <CharacterCounter
           textInputType={data.type || TextInputType.Long}
           count={fieldProps.value.length}
-          error={fieldProps.errorMessage ? true : false}
+          error={Boolean(fieldProps.errorMessage)}
         />
       )}
     </InputLabel>

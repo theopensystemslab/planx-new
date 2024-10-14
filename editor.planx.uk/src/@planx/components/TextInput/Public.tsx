@@ -78,7 +78,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
             <CharacterCounter
               count={formik.values.text.length}
               textInputType={props.type || TextInputType.Long}
-              error={formik.errors.text ? true : false}
+              error={Boolean(formik.errors.text)}
             />
           )}
         </InputLabel>
