@@ -1,20 +1,20 @@
 import type { TextField } from "@planx/components/shared/Schema/model";
+import { TextInputType } from "@planx/components/TextInput/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
+import { CharacterCounter, isLongTextType } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
 import { getFieldProps, Props } from ".";
 import { FieldInputDescription } from "./shared";
-import { CharacterCounter } from "ui/shared/CharacterCounter";
-import { characterCounterSwitch } from "../../utils";
 
 export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const fieldProps = getFieldProps(props);
   const { data, formik } = props;
   const { id, errorMessage } = fieldProps;
 
-  const characterCountLimit = characterCounterSwitch(data.type);
+  const characterCountLimit = data.type && isLongTextType(data.type);
   return (
     <InputLabel label={data.title} htmlFor={id}>
       {data.description && (
@@ -47,7 +47,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
       />
       {characterCountLimit && (
         <CharacterCounter
-          limit={characterCountLimit}
+          textInputType={data.type || TextInputType.Long}
           count={fieldProps.value.length}
           error={fieldProps.errorMessage ? true : false}
         />

@@ -3,15 +3,26 @@ import { visuallyHidden } from "@mui/utils";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
+import { text } from "stream/consumers";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {
-  limit: TextInputType.Long | TextInputType.ExtraLong;
+  textInputType: TextInputType;
   count: number;
   error: boolean;
 };
 
-export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
+export function isLongTextType(
+  type: TextInputType,
+): type is TextInputType.Long | TextInputType.ExtraLong {
+  return type === TextInputType.Long || type === TextInputType.ExtraLong;
+}
+
+export const CharacterCounter: React.FC<Props> = ({
+  textInputType,
+  count,
+  error,
+}) => {
   const [screenReaderCount, setScreenReaderCount] = useState<number>(0);
   const [showReaderCount, setShowReaderCount] = useState<boolean>(false);
 
@@ -20,10 +31,19 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
       setScreenReaderCount(count);
       setShowReaderCount(true);
     }, 500),
-    []
+    [],
   );
 
-  const currentCharacterCount = TEXT_LIMITS[limit] - count;
+  function getLongTextLimit(type: TextInputType): number {
+    if (isLongTextType(type)) {
+      return TEXT_LIMITS[type].limit;
+    } else {
+      return 0;
+    }
+  }
+
+  const currentCharacterCount = getLongTextLimit(textInputType) - count;
+
   const showCharacterLimitError = currentCharacterCount < 0;
 
   useEffect(() => {
@@ -46,7 +66,7 @@ export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
   return (
     <>
       <Typography id={"character-hint"} sx={visuallyHidden} aria-hidden={true}>
-        {`You can enter up to ${TEXT_LIMITS[limit]} characters`}
+        {`You can enter up to ${getLongTextLimit(textInputType)} characters`}
       </Typography>
       <Typography
         paddingTop={0.5}

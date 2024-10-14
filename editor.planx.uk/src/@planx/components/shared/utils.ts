@@ -1,4 +1,5 @@
 import isNil from "lodash/isNil";
+
 import { TextInputType } from "../TextInput/model";
 
 export const validateEmail = (email: string) => {
@@ -63,19 +64,4 @@ export const getPreviouslySubmittedData = ({
   const data = key && previouslySubmittedData?.data?.[key];
 
   return data;
-};
-
-export const characterCounterSwitch = (type: TextInputType | undefined) => {
-  let showCharacterCounter: TextInputType | boolean = false;
-  switch (type) {
-    case TextInputType.Long:
-      showCharacterCounter = TextInputType.Long;
-      break;
-    case TextInputType.ExtraLong:
-      showCharacterCounter = TextInputType.ExtraLong;
-      break;
-    default:
-      showCharacterCounter = false;
-  }
-  return showCharacterCounter;
 };

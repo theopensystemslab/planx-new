@@ -13,9 +13,9 @@ export enum TextInputType {
 }
 
 export const TEXT_LIMITS = {
-  [TextInputType.Short]: 120,
-  [TextInputType.Long]: 250,
-  [TextInputType.ExtraLong]: 750,
+  [TextInputType.Short]: { limit: 120, showCharacterCount: false },
+  [TextInputType.Long]: { limit: 250, showCharacterCount: true },
+  [TextInputType.ExtraLong]: { limit: 750, showCharacterCount: true },
 } as const;
 
 export const emailRegex =
@@ -37,7 +37,7 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
         if (type === TextInputType.Email) {
           return "Enter an email address in the correct format, like name@example.com";
         }
-        return `Your answer must be ${TEXT_LIMITS[type]} characters or fewer.`;
+        return `Your answer must be ${TEXT_LIMITS[type].limit} characters or fewer.`;
       })(),
       test: (value: string | undefined) => {
         if (!type) {
@@ -49,7 +49,7 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
         if (type === TextInputType.Phone) {
           return Boolean(value);
         }
-        return Boolean(value && value.length <= TEXT_LIMITS[type]);
+        return Boolean(value && value.length <= TEXT_LIMITS[type].limit);
       },
     });
 
