@@ -92,12 +92,9 @@ export default function NumberInputComponent(props: Props): FCReturn {
             <FormControlLabel
               control={
                 <Switch
-                  checked={formik.values.onlyWholeNumbers}
+                  checked={formik.values.isInteger}
                   onChange={() =>
-                    formik.setFieldValue(
-                      "onlyWholeNumbers",
-                      !formik.values.onlyWholeNumbers,
-                    )
+                    formik.setFieldValue("isInteger", !formik.values.isInteger)
                   }
                 />
               }

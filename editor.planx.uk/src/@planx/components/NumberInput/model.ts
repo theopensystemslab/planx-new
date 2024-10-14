@@ -8,7 +8,7 @@ export interface NumberInput extends BaseNodeData {
   fn?: string;
   units?: string;
   allowNegatives?: boolean;
-  onlyWholeNumbers?: boolean;
+  isInteger?: boolean;
 }
 
 export type UserData = number;
@@ -29,7 +29,7 @@ export const parseNumberInput = (
   fn: data?.fn || "",
   units: data?.units,
   allowNegatives: data?.allowNegatives || false,
-  onlyWholeNumbers: data?.onlyWholeNumbers || false,
+  isInteger: data?.isInteger || false,
   ...parseBaseNodeData(data),
 });
 
@@ -62,7 +62,7 @@ export const numberInputValidationSchema = (input: NumberInput) =>
         if (!value) {
           return false;
         }
-        if (input.onlyWholeNumbers && !Number.isInteger(Number(value))) {
+        if (input.isInteger && !Number.isInteger(Number(value))) {
           return false;
         }
         return true;

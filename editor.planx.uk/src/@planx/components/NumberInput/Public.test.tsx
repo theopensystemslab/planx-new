@@ -92,7 +92,7 @@ test("a clear error is shown if decimal value added when onlyWholeNumbers is tog
       fn="fahrenheit"
       title="What's the temperature?"
       handleSubmit={handleSubmit}
-      onlyWholeNumbers={true}
+      isInteger={true}
     />,
   );
 
@@ -117,7 +117,7 @@ test("allows only whole numbers to be submitted when toggled on by editor", asyn
       fn="fahrenheit"
       title="What's the temperature?"
       handleSubmit={handleSubmit}
-      onlyWholeNumbers={true}
+      isInteger={true}
     />,
   );
 
