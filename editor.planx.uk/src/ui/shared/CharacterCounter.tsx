@@ -35,7 +35,7 @@ export const CharacterCounter: React.FC<Props> = ({
 
   function getLongTextLimit(type: TextInputType): number {
     if (isLongTextType(type)) {
-      return TEXT_LIMITS[type].limit;
+      return TEXT_LIMITS[type];
     } else {
       return 0;
     }
