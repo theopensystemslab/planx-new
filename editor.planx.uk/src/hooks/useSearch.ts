@@ -7,9 +7,15 @@ interface UseSearchProps<T extends object> {
 }
 
 export interface SearchResult<T extends object> {
+  /** Original indexed item */
   item: T;
+  /** Key used to locate value to search against */
   key: string;
+  /** Indices within searched string that match search term */
   matchIndices: [number, number][];
+  /** String matched against - does not necessarily equate to item[key] */
+  matchValue: string;
+  /** Index within flattened array of item[key] */
   refIndex: number;
 }
 
@@ -27,6 +33,7 @@ export const useSearch = <T extends object>({
       useExtendedSearch: true,
       includeMatches: true,
       minMatchCharLength: 3,
+      ignoreLocation: true,
       keys,
     }),
     [keys],
@@ -49,6 +56,7 @@ export const useSearch = <T extends object>({
           key: result.matches?.[0].key || "",
           // We only display the first match
           matchIndices: result.matches[0].indices as [number, number][],
+          matchValue: result.matches[0].value!,
           refIndex: result.matches[0]?.refIndex || 0,
         };
       }),
