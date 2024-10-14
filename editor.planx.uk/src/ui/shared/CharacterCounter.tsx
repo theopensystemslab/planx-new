@@ -3,7 +3,6 @@ import { visuallyHidden } from "@mui/utils";
 import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { text } from "stream/consumers";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {

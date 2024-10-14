@@ -10,13 +10,9 @@ import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
-import {
-  characterCounterSwitch,
-  getPreviouslySubmittedData,
-  makeData,
-} from "../shared/utils";
+import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { TEXT_LIMITS, TextInputType, userDataSchema } from "./model";
+import { TextInputType, userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
