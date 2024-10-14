@@ -106,9 +106,7 @@ test("a clear error is shown if decimal value added when onlyWholeNumbers is tog
   await user.click(screen.getByTestId("continue-button"));
 
   expect(screen.getByText("Enter a whole number")).toBeInTheDocument();
-  expect(handleSubmit).not.toHaveBeenCalledWith({
-    data: { fahrenheit: 10.06 },
-  });
+  expect(handleSubmit).not.toHaveBeenCalled();
 });
 
 test("allows only whole numbers to be submitted when toggled on by editor", async () => {
