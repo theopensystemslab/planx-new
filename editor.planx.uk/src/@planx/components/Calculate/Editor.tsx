@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps, ICONS } from "@planx/components/ui";
 import { FormikErrors, useFormik } from "formik";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -24,8 +24,8 @@ const ConditionLabel = styled("span")(() => ({
   textAlign: "center",
 }));
 
+const UNKNOWN = "unknown";
 export default function Component(props: Props) {
-  const [sampleResult, setSampleResult] = useState<number>(0);
   const formik = useFormik({
     initialValues: parseCalculate(props.node?.data),
     onSubmit: (newValues) => {
@@ -46,11 +46,11 @@ export default function Component(props: Props) {
           values.defaults,
         );
 
-        if (typeof result !== "number") {
+        if (Number.isNaN(Number(result))) {
           errors.formula = "Enter a formula which outputs a number";
         }
       } catch (error: any) {
-        errors.formula = "Invalid formula: " + error.message;
+        errors.formula = error.message;
       }
       return errors;
     },
@@ -58,18 +58,22 @@ export default function Component(props: Props) {
     validateOnChange: false,
   });
 
-  useEffect(() => {
+  const sampleResult = React.useMemo(() => {
     try {
-      const sampleResult = evaluate(
+      const result = evaluate(
         formik.values.formula,
         formik.values.samples,
         formik.values.defaults,
       );
-
-      if (typeof sampleResult === "number") {
-        setSampleResult(sampleResult);
+      // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
+      if (!Number.isNaN(Number(result))) {
+        return result;
+      } else {
+        return UNKNOWN;
       }
-    } catch (error) {}
+    } catch (e) {
+      return UNKNOWN;
+    }
   }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
 
   /**
@@ -94,8 +98,6 @@ export default function Component(props: Props) {
       return [];
     }
   }, [formik.values.formula]);
-
-  console.log(sampleResult);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -200,7 +202,7 @@ export default function Component(props: Props) {
           )}
           <p>
             <strong>{formik.values.output || "<output>"}</strong> would be set
-            to <strong>{sampleResult || 0}</strong>.
+            to <strong>{sampleResult}</strong>.
           </p>
         </ModalSectionContent>
       </ModalSection>
