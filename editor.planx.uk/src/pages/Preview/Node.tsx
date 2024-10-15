@@ -19,7 +19,7 @@ import type { FileUpload } from "@planx/components/FileUpload/model";
 import FileUploadComponent from "@planx/components/FileUpload/Public";
 import type { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import FileUploadAndLabelComponent from "@planx/components/FileUploadAndLabel/Public";
-import type { Filter } from "@planx/components/Filter/model";
+import type { Props as Filter } from "@planx/components/Filter/Editor";
 import FilterComponent from "@planx/components/Filter/Public";
 import type { FindProperty } from "@planx/components/FindProperty/model";
 import FindPropertyComponent from "@planx/components/FindProperty/Public";

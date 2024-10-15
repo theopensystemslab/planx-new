@@ -6,10 +6,10 @@ import type {
   NodeId,
 } from "@opensystemslab/planx-core/types";
 import {
+  ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { SetValue } from "@planx/components/SetValue/model";
 import { handleSetValue } from "@planx/components/SetValue/utils";
@@ -19,7 +19,6 @@ import { objectWithoutNullishValues } from "lib/objectHelpers";
 import difference from "lodash/difference";
 import flatten from "lodash/flatten";
 import isEqual from "lodash/isEqual";
-import isNil from "lodash/isNil";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
 import uniq from "lodash/uniq";
