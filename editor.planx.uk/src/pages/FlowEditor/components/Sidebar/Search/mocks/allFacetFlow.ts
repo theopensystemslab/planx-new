@@ -464,3 +464,24 @@ export const mockSchemaResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 7]],
   refIndex: 0,
 };
+
+export const mockTaskListResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "S6K3DUZWmj",
+    parentId: "_root",
+    type: 7,
+    data: {
+      tasks: [
+        {
+          title: "Ostrich",
+          description: "<p>Beaver</p>",
+        },
+      ],
+      title: ".",
+      description: "<p>.</p>",
+    },
+  },
+  key: "data.tasks.title",
+  matchIndices: [[0, 6]],
+  refIndex: 0,
+};

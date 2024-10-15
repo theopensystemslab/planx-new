@@ -145,12 +145,12 @@ const keyFormatters: KeyMap = {
     },
   },
   "data.tasks.title": {
-    getDisplayKey: () => "Title",
+    getDisplayKey: () => "Title (task)",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as TaskList).tasks[refIndex].title,
   },
   "data.tasks.description": {
-    getDisplayKey: () => "Description",
+    getDisplayKey: () => "Description (task)",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as TaskList).tasks[refIndex].description,
   },

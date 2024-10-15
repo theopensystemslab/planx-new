@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -329,8 +329,32 @@ describe("schemaComponents fields", () => {
 });
 
 describe("taskList fields", () => {
-  it.todo("renders data.tasks.title");
-  it.todo("renders data.tasks.description");
+  it("renders data.tasks.title", () => {
+    const output = getDisplayDetailsForResult(mockTaskListResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title (task)",
+      iconKey: ComponentType.TaskList,
+      componentType: "Task list",
+      title: ".",
+      headline: "Ostrich",
+    });
+  });
+
+  it("renders data.tasks.description", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockTaskListResult,
+      key: "data.tasks.description",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description (task)",
+      iconKey: ComponentType.TaskList,
+      componentType: "Task list",
+      title: ".",
+      headline: "<p>Beaver</p>",
+    });
+  });
 });
 
 // TODO: Flag tests
