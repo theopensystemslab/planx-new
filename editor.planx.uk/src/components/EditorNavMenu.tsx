@@ -62,21 +62,6 @@ const MenuTitle = styled(Typography)(({ theme }) => ({
   textAlign: "left",
 })) as typeof Typography;
 
-const TooltipWrap = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow placement="right" classes={{ popper: className }} />
-))(() => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: "#2c2c2c",
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#2c2c2c",
-    left: "-5px",
-    fontSize: "0.8em",
-    borderRadius: 0,
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-}));
-
 const MenuButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== "isActive",
 })<{ isActive: boolean }>(({ theme, isActive, disabled }) => ({
@@ -273,7 +258,7 @@ function EditorNavMenu() {
         {visibleRoutes.map(({ title, Icon, route, disabled }) => (
           <MenuItem key={title}>
             {compact ? (
-              <TooltipWrap title={title}>
+              <Tooltip title={title} placement="right">
                 <Box component="span">
                   <MenuButton
                     isActive={isActive(route)}
@@ -284,7 +269,7 @@ function EditorNavMenu() {
                     <Icon />
                   </MenuButton>
                 </Box>
-              </TooltipWrap>
+              </Tooltip>
             ) : (
               <MenuButton
                 isActive={isActive(route)}

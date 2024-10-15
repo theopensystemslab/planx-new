@@ -70,6 +70,7 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
         helpOpeningHours: "9-5",
         helpPhone: "123",
         serviceName: "Some Flow",
+        sessionId: "mockSessionId",
       },
     };
     await sendAgentAndPayeeConfirmationEmail("mockSessionId");

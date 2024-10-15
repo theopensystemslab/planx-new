@@ -33,6 +33,13 @@ if (!window.customElements.get("my-map")) {
   window.customElements.define("my-map", MyMap);
 }
 
+// Refresh window if user hits "Failed to fetch dynamically imported module" due to renamed assets following re-build after deploy
+// Docs: https://vite.dev/guide/build#load-error-handling
+window.addEventListener("vite:preloadError", (event) => {
+  event.preventDefault();
+  window.location.reload();
+});
+
 const hasJWT = (): boolean | void => {
   // This cookie indicates the presence of the secure httpOnly "jwt" cookie
   const authCookie = getCookie("auth");

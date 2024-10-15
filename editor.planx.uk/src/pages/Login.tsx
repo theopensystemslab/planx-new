@@ -83,7 +83,6 @@ const Login: React.FC = () => {
             <MicrosoftIcon />
             Continue with Microsoft
           </Box>
-          (in development)
         </LoginButton>
       </LoginContainer>
     </Wrapper>

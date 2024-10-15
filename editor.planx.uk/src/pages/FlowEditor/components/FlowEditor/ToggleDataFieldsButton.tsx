@@ -2,10 +2,9 @@ import DataFieldIcon from "@mui/icons-material/AutoFixNormal";
 import DataFieldOffIcon from "@mui/icons-material/AutoFixOff";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-
-import { TooltipWrap } from "./ToggleTagsButton";
 
 export const ToggleDataFieldsButton: React.FC = () => {
   const [showDataFields, toggleShowDataFields] = useStore((state) => [
@@ -25,7 +24,7 @@ export const ToggleDataFieldsButton: React.FC = () => {
         background: theme.palette.background.paper,
       })}
     >
-      <TooltipWrap title="Toggle data fields">
+      <Tooltip title="Toggle data fields" placement="right">
         <IconButton
           aria-label="Toggle data fields"
           onClick={toggleShowDataFields}
@@ -39,7 +38,7 @@ export const ToggleDataFieldsButton: React.FC = () => {
         >
           {showDataFields ? <DataFieldIcon /> : <DataFieldOffIcon />}
         </IconButton>
-      </TooltipWrap>
+      </Tooltip>
     </Box>
   );
 };

@@ -1,4 +1,7 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  DEFAULT_FLAG_CATEGORY,
+} from "@opensystemslab/planx-core/types";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { exhaustiveCheck } from "utils";
@@ -63,7 +66,12 @@ const Node: React.FC<any> = (props) => {
         />
       );
     case TYPES.Filter:
-      return <Filter {...allProps} text="(Flags Filter)" />;
+      return (
+        <Filter
+          {...allProps}
+          text={`Filter - ${node?.data?.category || DEFAULT_FLAG_CATEGORY}`}
+        />
+      );
     case TYPES.FindProperty:
       return <Question {...allProps} text="Find property" />;
     case TYPES.List:

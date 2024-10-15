@@ -9,13 +9,13 @@ This guide will demonstrate how to -
 
 ## Process
 
-**Setup**
+### Setup
 1. Generate a secret [using the existing process](how-to-generate-a-secret.md), or obtain one from a third-party integration
 2. Add to your local `.env` file for local development
    - Note: This file is never checked into our public repository and is listed in our `.gitignore` config
 3. Document the secret in `.env.example`
 
-**Docker Environments (Local development + Pizza environments)**
+### Docker Environments (Local development + Pizza environments)
 To pass a secret into our Docker Compose setup you will need to map it into the relevant container in `docker-compose.yml`. For example - 
 
 ```yml
@@ -35,7 +35,7 @@ When building Pizza environments for testing, GitHub actions access secrets via 
 > Please be aware that if you are rotating secrets this may affect existing Pizzas which will need to be rebuilt. This can be done manually in GitHub by re-running the latest action associated with affected PRs.
 
 
-**AWS / Pulumi Environments (Staging + Production environments)**
+### AWS / Pulumi Environments (Staging + Production environments)
 Secrets for Staging and Production environment are not handled in `.env` files, and are set directly in Pulumi, our Infrastruture as Code (IaC) platform.
 
 These values are set using the [Pulumi CLI](https://www.pulumi.com/docs/reference/cli/)

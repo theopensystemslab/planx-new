@@ -60,6 +60,9 @@ const FlowStatus = () => {
 
   const subdomainLink = teamDomain && `https://${teamDomain}/${flowSlug}`;
 
+  // Currently Silvia
+  const slackMemberID = "U05KXM9DQ4B";
+
   const sendFlowStatusSlackNotification = async (status: FlowStatus) => {
     const skipTeamSlugs = [
       "open-digital-planning",
@@ -75,7 +78,7 @@ const FlowStatus = () => {
       online: ":large_green_circle:",
       offline: ":no_entry:",
     };
-    const message = `${emoji[status]} *${teamSlug}/${flowSlug}* is now ${status} (@Silvia)`;
+    const message = `${emoji[status]} *${teamSlug}/${flowSlug}* is now ${status} (<@${slackMemberID}>)`;
 
     return axios.post(
       `${import.meta.env.VITE_APP_API_URL}/send-slack-notification`,

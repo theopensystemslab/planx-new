@@ -4,6 +4,7 @@ import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
+import { CharacterCounter, isLongTextType } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
@@ -11,7 +12,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { userDataSchema } from "./model";
+import { TextInputType, userDataSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
@@ -30,6 +31,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
       text: userDataSchema(props),
     }),
   });
+
+  const characterCountLimit = props.type && isLongTextType(props.type);
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -62,13 +65,22 @@ const TextInputComponent: React.FC<Props> = (props) => {
             id={props.id}
             inputProps={{
               "aria-describedby": [
-                props.description ? DESCRIPTION_TEXT : "",
+                props.description
+                  ? `${DESCRIPTION_TEXT} character-hint`
+                  : "character-hint",
                 formik.errors.text ? `${ERROR_MESSAGE}-${props.id}` : "",
               ]
                 .filter(Boolean)
                 .join(" "),
             }}
           />
+          {characterCountLimit && (
+            <CharacterCounter
+              count={formik.values.text.length}
+              textInputType={props.type || TextInputType.Long}
+              error={Boolean(formik.errors.text)}
+            />
+          )}
         </InputLabel>
       </InputRow>
     </Card>

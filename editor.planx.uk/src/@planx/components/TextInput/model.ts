@@ -12,6 +12,12 @@ export enum TextInputType {
   Phone = "phone",
 }
 
+export const TEXT_LIMITS = {
+  [TextInputType.Short]: 120,
+  [TextInputType.Long]: 250,
+  [TextInputType.ExtraLong]: 750,
+} as const;
+
 export const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -25,34 +31,17 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
         if (!type) {
           return "Enter your answer before continuing";
         }
-        if (type === TextInputType.Short) {
-          return "Your answer must be 120 characters or fewer.";
-        }
-        if (type === TextInputType.Long) {
-          return "Your answer must be 250 characters or fewer.";
-        }
-        if (type === TextInputType.ExtraLong) {
-          return "Your answer must be 750 characters or fewer.";
+        if (type === TextInputType.Phone) {
+          return "Enter a valid phone number.";
         }
         if (type === TextInputType.Email) {
           return "Enter an email address in the correct format, like name@example.com";
         }
-        if (type === TextInputType.Phone) {
-          return "Enter a valid phone number.";
-        }
+        return `Your answer must be ${TEXT_LIMITS[type]} characters or fewer.`;
       })(),
       test: (value: string | undefined) => {
         if (!type) {
           return true;
-        }
-        if (type === TextInputType.Short) {
-          return Boolean(value && value.length <= 120);
-        }
-        if (type === TextInputType.Long) {
-          return Boolean(value && value.length <= 250);
-        }
-        if (type === TextInputType.ExtraLong) {
-          return Boolean(value && value.length <= 750);
         }
         if (type === TextInputType.Email) {
           return Boolean(value && emailRegex.test(value));
@@ -60,7 +49,7 @@ export const userDataSchema = ({ type }: TextInput): SchemaOf<UserData> =>
         if (type === TextInputType.Phone) {
           return Boolean(value);
         }
-        return false;
+        return Boolean(value && value.length <= TEXT_LIMITS[type]);
       },
     });
 

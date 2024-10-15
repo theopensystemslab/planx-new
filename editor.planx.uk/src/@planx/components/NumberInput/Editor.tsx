@@ -3,10 +3,7 @@ import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import { parseNumberInput } from "@planx/components/NumberInput/model";
-import {
-  EditorProps,
-  ICONS,
-} from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -89,6 +86,19 @@ export default function NumberInputComponent(props: Props): FCReturn {
                 />
               }
               label="Allow negative numbers to be input"
+            />
+          </InputRow>
+          <InputRow>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={formik.values.isInteger}
+                  onChange={() =>
+                    formik.setFieldValue("isInteger", !formik.values.isInteger)
+                  }
+                />
+              }
+              label="Only allow whole numbers"
             />
           </InputRow>
         </ModalSectionContent>

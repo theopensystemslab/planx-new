@@ -110,7 +110,8 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
-  &.wasVisited a {
+  &.wasVisited > div,
+  &.wasVisited > a {
     span {
       opacity: 1;
     }

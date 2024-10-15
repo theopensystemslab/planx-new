@@ -2,7 +2,10 @@ import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
 import { $api } from "../../../../client/index.js";
 import { sendEmail } from "../../../../lib/notify/index.js";
-import type { AgentAndPayeeSubmissionNotifyConfig } from "../../../../types.js";
+import type {
+  AgentAndPayeeSubmissionNotifyConfig,
+  AgentAndPayeeSubmissionNotifyPersonalisation,
+} from "../../../../types.js";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
   const { personalisation, applicantEmail, payeeEmail, projectTypes } =
@@ -22,16 +25,10 @@ export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
 }
 
 type PayeeAndAgentEmailData = {
-  personalisation: {
-    emailReplyToId: string;
-    helpEmail: string;
-    helpOpeningHours: string;
-    helpPhone: string;
-    serviceName: string;
-    payeeName: string;
-    address: string;
-    applicantName: string;
-  };
+  personalisation: Omit<
+    AgentAndPayeeSubmissionNotifyPersonalisation,
+    "projectType"
+  >;
   applicantEmail: string;
   payeeEmail: string;
   projectTypes: string[];
@@ -45,6 +42,7 @@ async function getDataForPayeeAndAgentEmails(
       lowcal_sessions(where: { id: { _eq: $sessionId } }, limit: 1) {
         email
         flow {
+          name
           slug
           team {
             notifyPersonalisation: team_settings {
@@ -109,6 +107,7 @@ async function getDataForPayeeAndAgentEmails(
       payeeName,
       address,
       applicantName,
+      sessionId,
     },
     applicantEmail,
     payeeEmail,

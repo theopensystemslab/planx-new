@@ -2,10 +2,9 @@ import ImageOffIcon from "@mui/icons-material/HideImage";
 import ImageIcon from "@mui/icons-material/Image";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-
-import { TooltipWrap } from "./ToggleTagsButton";
 
 export const ToggleImagesButton: React.FC = () => {
   const [showImages, toggleShowImages] = useStore((state) => [
@@ -25,7 +24,7 @@ export const ToggleImagesButton: React.FC = () => {
         background: theme.palette.background.paper,
       })}
     >
-      <TooltipWrap title="Toggle images">
+      <Tooltip title="Toggle images" placement="right">
         <IconButton
           aria-label="Toggle images"
           onClick={toggleShowImages}
@@ -39,7 +38,7 @@ export const ToggleImagesButton: React.FC = () => {
         >
           {showImages ? <ImageIcon /> : <ImageOffIcon />}
         </IconButton>
-      </TooltipWrap>
+      </Tooltip>
     </Box>
   );
 };
