@@ -2,7 +2,7 @@ import type { PublicProps } from "@planx/components/ui";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 
-import type { Filter } from "./model";
+import type { Props as Filter } from "./Editor";
 
 export type Props = PublicProps<Filter>;
 

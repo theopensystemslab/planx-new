@@ -503,9 +503,10 @@ export const previewStore: StateCreator<
 
     // Filters auto-answer based on a heirarchy of collected flags
     if (type === TYPES.Filter) {
-      // TODO - It's still only possible to filter on the default flagset category, in future category configured on node by editor?
+      // "New" filters will have a category prop, but existing ones may still be relying on DEFAULT category
+      const filterCategory = data?.category || DEFAULT_FLAG_CATEGORY;
       const possibleFlags = flatFlags.filter(
-        (flag) => flag.category === DEFAULT_FLAG_CATEGORY,
+        (flag) => flag.category === filterCategory,
       );
       const possibleFlagValues = possibleFlags.map((flag) => flag.value);
       if (!possibleFlagValues) return;
