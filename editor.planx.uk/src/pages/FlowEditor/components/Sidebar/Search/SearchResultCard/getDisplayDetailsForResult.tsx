@@ -9,7 +9,7 @@ import { Confirmation } from "@planx/components/Confirmation/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
 import { NextSteps } from "@planx/components/NextSteps/model";
-import { ChecklistField } from "@planx/components/shared/Schema/model";
+import { Schema } from "@planx/components/shared/Schema/model";
 import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
 import { capitalize, get } from "lodash";
@@ -114,19 +114,35 @@ const keyFormatters: KeyMap = {
   "data.units": {
     getDisplayKey: () => "Unit type",
   },
+  "data.schemaName": {
+    getDisplayKey: () => "Schema name"
+  },
+  "data.schema.fields.data.title": {
+    getHeadline: ({ item, refIndex }) =>
+      (item.data?.schema as unknown as Schema).fields[refIndex].data.title,
+  },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data?.schema as unknown as Schema).fields[refIndex].data.description!,
   },
   "data.schema.fields.data.options.data.description": {
-    getDisplayKey: () => "Description",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as ChecklistField).data.options[refIndex].data
-        .description!,
+    getDisplayKey: () => "Option (description)",
+    getHeadline: ({ item, refIndex }) => {
+      const options = (item.data?.schema as unknown as Schema).fields
+        .filter((field) => field.type === "question" || field.type === "checklist")
+        .flatMap((field) => field.data.options);
+      return options[refIndex].data.description || "";
+    }
   },
   "data.schema.fields.data.options.text": {
     getDisplayKey: () => "Option",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
+    getHeadline: ({ item, refIndex }) => {
+      const options = (item.data?.schema as unknown as Schema).fields
+        .filter((field) => field.type === "question" || field.type === "checklist")
+        .flatMap((field) => field.data.options);
+      return options[refIndex].data.text || "";
+    },
   },
   "data.tasks.title": {
     getDisplayKey: () => "Title",

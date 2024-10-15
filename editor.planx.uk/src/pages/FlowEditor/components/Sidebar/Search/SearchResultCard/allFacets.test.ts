@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -238,8 +238,6 @@ describe("fileUploadAndLabel fields", () => {
       headline: "<p>Salamander</p>",
     });
   });
-
-
 });
 
 describe("numberInput fields", () => {
@@ -257,11 +255,77 @@ describe("numberInput fields", () => {
 });
 
 describe("schemaComponents fields", () => {
-  it.todo("renders data.schemaName");
-  it.todo("renders data.schema.fields.data.title");
-  it.todo("renders data.schema.fields.data.description");
-  it.todo("renders data.schema.fields.data.options.data.description");
-  it.todo("renders data.schema.fields.data.options.text");
+  it("renders data.schemaName", () => {
+    const output = getDisplayDetailsForResult(mockSchemaResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Schema name",
+      iconKey: ComponentType.List,
+      componentType: "List",
+      title: ".",
+      headline: "Hedgehog",
+    });
+  });
+
+  it("renders data.schema.fields.data.title", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockSchemaResult,
+      key: "data.schema.fields.data.title"
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title",
+      iconKey: ComponentType.List,
+      componentType: "List",
+      title: ".",
+      headline: "Donkey",
+    });
+  });
+
+  it("renders data.schema.fields.data.description", () => {
+      const output = getDisplayDetailsForResult({
+        ...mockSchemaResult,
+        key: "data.schema.fields.data.description",
+      });
+
+      expect(output).toStrictEqual<Output>({
+        key: "Description",
+        iconKey: ComponentType.List,
+        componentType: "List",
+        title: ".",
+        headline: "Alpaca",
+      });
+  });
+
+  it("renders data.schema.fields.data.options.data.text", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockSchemaResult,
+      key: "data.schema.fields.data.options.text",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Option",
+      iconKey: ComponentType.List,
+      componentType: "List",
+      title: ".",
+      headline: "Iguana",
+    });
+  });
+
+  it("renders data.schema.fields.data.options.data.description", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockSchemaResult,
+      key: "data.schema.fields.data.options.data.description",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Option (description)",
+      iconKey: ComponentType.List,
+      componentType: "List",
+      title: ".",
+      headline: "Parrot",
+    });
+  });
 });
 
 describe("taskList fields", () => {

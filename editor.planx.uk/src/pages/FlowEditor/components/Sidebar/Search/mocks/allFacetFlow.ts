@@ -115,19 +115,17 @@ export const mockFlow: FlowGraph = {
         type: "Impala",
         fields: [
           {
-            type: "question",
+            type: "map",
             data: {
               title: "Donkey",
+              description: "Alpaca",
               fn: ".",
-              options: [
-                {
-                  id: "Alpaca",
-                  data: {
-                    text: "Alpaca",
-                    val: "Alpaca",
-                  },
-                },
-              ],
+              mapOptions: {
+                basemap: "MapboxSatellite",
+                drawType: "Point",
+                drawColor: "#66ff00",
+                drawMany: true,
+              },
             },
           },
           {
@@ -137,9 +135,6 @@ export const mockFlow: FlowGraph = {
               fn: ".",
               options: [
                 { id: ".", data: { text: "Iguana", description: "Parrot" } },
-                { id: "leaves", data: { text: "Leaves" } },
-                { id: "bamboo", data: { text: "Bamboo" } },
-                { id: "fruit", data: { text: "Fruit" } },
               ],
             },
           },
@@ -414,5 +409,58 @@ export const mockNumberInputResult: SearchResult<IndexedNode> = {
   },
   key: "data.units",
   matchIndices: [[0, 8]],
+  refIndex: 0,
+};
+
+export const mockSchemaResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "7C4auH5XWg",
+    parentId: "_root",
+    type: 800,
+    data: {
+      fn: ".",
+      title: ".",
+      schema: {
+        min: 1,
+        type: "Impala",
+        fields: [
+          {
+            type: "map",
+            data: {
+              title: "Donkey",
+              description: "Alpaca",
+              fn: ".",
+              mapOptions: {
+                basemap: "MapboxSatellite",
+                drawType: "Point",
+                drawColor: "#66ff00",
+                drawMany: true,
+              },
+            },
+          },
+          {
+            data: {
+              fn: ".",
+              title: "Otter",
+              options: [
+                {
+                  id: ".",
+                  data: {
+                    text: "Iguana",
+                    description: "Parrot",
+                  },
+                },
+              ],
+            },
+            type: "checklist",
+          },
+        ],
+      },
+      schemaName: "Hedgehog",
+      description: "<p>.</p>",
+    },
+  },
+  key: "data.schemaName",
+  matchIndices: [[0, 7]],
   refIndex: 0,
 };

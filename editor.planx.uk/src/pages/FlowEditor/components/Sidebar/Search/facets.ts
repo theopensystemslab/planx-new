@@ -68,12 +68,15 @@ const numberInput: SearchFacets = [
 
 /** List, Page, and MapAndLabel components share this structure */
 const schemaComponents: SearchFacets = [
-  // "data.schemaName",
+  "data.schemaName",
+  // Question title
   "data.schema.fields.data.title",
+  // Question description
   "data.schema.fields.data.description",
-  "data.schema.fields.data.options.data.description",
-  // "data.schema.fields.data.options.text",
+  // Option title
   "data.schema.fields.data.options.data.text",
+  // Option description
+  "data.schema.fields.data.options.data.description",
 ];
 
 const taskList: SearchFacets = ["data.tasks.title", "data.tasks.description"];
