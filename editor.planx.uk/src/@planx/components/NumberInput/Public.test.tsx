@@ -84,6 +84,54 @@ test("allows negative numbers to be input when toggled on by editor", async () =
   expect(handleSubmit).toHaveBeenCalledWith({ data: { fahrenheit: -10 } });
 });
 
+test("a clear error is shown if decimal value added when onlyWholeNumbers is toggled on", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = setup(
+    <NumberInput
+      fn="fahrenheit"
+      title="What's the temperature?"
+      handleSubmit={handleSubmit}
+      isInteger={true}
+    />,
+  );
+
+  expect(screen.getByRole("heading")).toHaveTextContent(
+    "What's the temperature?",
+  );
+
+  const textArea = screen.getByLabelText("What's the temperature?");
+
+  await user.type(textArea, "10.06");
+  await user.click(screen.getByTestId("continue-button"));
+
+  expect(screen.getByText("Enter a whole number")).toBeInTheDocument();
+  expect(handleSubmit).not.toHaveBeenCalled();
+});
+
+test("allows only whole numbers to be submitted when toggled on by editor", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = setup(
+    <NumberInput
+      fn="fahrenheit"
+      title="What's the temperature?"
+      handleSubmit={handleSubmit}
+      isInteger={true}
+    />,
+  );
+
+  expect(screen.getByRole("heading")).toHaveTextContent(
+    "What's the temperature?",
+  );
+
+  const textArea = screen.getByLabelText("What's the temperature?");
+
+  await user.type(textArea, "10");
+  await user.click(screen.getByTestId("continue-button"));
+  expect(handleSubmit).toHaveBeenCalledWith({ data: { fahrenheit: 10 } });
+});
+
 test("requires a value before being able to continue", async () => {
   const handleSubmit = vi.fn();
 
