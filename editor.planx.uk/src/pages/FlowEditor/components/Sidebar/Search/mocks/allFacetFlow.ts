@@ -485,3 +485,23 @@ export const mockTaskListResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 6]],
   refIndex: 0,
 };
+
+
+export const mockContentResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "StMBQK1WZo",
+    parentId: "_root",
+    type: 250,
+    data: {
+      content: "<p>Sheep</p>"
+    }
+  },
+  key: "data.content",
+  matchIndices: [
+    [
+      3,
+      7
+    ]
+  ],
+  refIndex: 0
+};

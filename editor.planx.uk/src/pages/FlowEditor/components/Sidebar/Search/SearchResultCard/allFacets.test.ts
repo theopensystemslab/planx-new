@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockContentResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -366,7 +366,17 @@ describe("taskList fields", () => {
 // ];
 
 describe("content fields", () => {
-  it.todo("renders data.content");
+  it("renders data.content", () => {
+    const output = getDisplayDetailsForResult(mockContentResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Content",
+      iconKey: ComponentType.Content,
+      componentType: "Content",
+      title: "",
+      headline: "<p>Sheep</p>",
+    });
+  });
 });
 
 describe("confirmation fields", () => {
