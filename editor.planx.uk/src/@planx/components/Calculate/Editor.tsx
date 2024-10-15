@@ -66,7 +66,9 @@ export default function Component(props: Props) {
         formik.values.defaults,
       );
 
-      setSampleResult(sampleResult);
+      if (typeof sampleResult === "number") {
+        setSampleResult(sampleResult);
+      }
     } catch (error) {}
   }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
 
@@ -92,6 +94,8 @@ export default function Component(props: Props) {
       return [];
     }
   }, [formik.values.formula]);
+
+  console.log(sampleResult);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -196,7 +200,7 @@ export default function Component(props: Props) {
           )}
           <p>
             <strong>{formik.values.output || "<output>"}</strong> would be set
-            to <strong>{sampleResult}</strong>.
+            to <strong>{sampleResult || 0}</strong>.
           </p>
         </ModalSectionContent>
       </ModalSection>
