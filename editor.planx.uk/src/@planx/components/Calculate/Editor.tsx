@@ -3,12 +3,11 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  EditorProps,
-  ICONS,
-} from "@planx/components/ui";
-import { useFormik } from "formik";
-import React from "react";
+import { EditorProps, ICONS } from "@planx/components/ui";
+import { useEditor } from "@tiptap/react";
+import { FormikErrors, useFormik } from "formik";
+import { sample } from "lodash";
+import React, { useEffect, useState } from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -27,8 +26,8 @@ const ConditionLabel = styled("span")(() => ({
   textAlign: "center",
 }));
 
-const UNKNOWN = "unknown";
 export default function Component(props: Props) {
+  const [sampleResult, setSampleResult] = useState<number>(0);
   const formik = useFormik({
     initialValues: parseCalculate(props.node?.data),
     onSubmit: (newValues) => {
@@ -36,11 +35,42 @@ export default function Component(props: Props) {
         props.handleSubmit({ type: TYPES.Calculate, data: newValues });
       }
     },
-    validate: () => {
-      // can parse formula
-      getVariables(formik.values.formula);
+    validate: (values) => {
+      const errors: FormikErrors<Calculate> = {};
+      try {
+        // can parse formula
+        getVariables(formik.values.formula);
+
+        // Validate formula
+        const result = evaluate(
+          values.formula,
+          values.samples,
+          values.defaults,
+        );
+
+        if (typeof result !== "number") {
+          errors.formula = "Enter a formula which outputs a number";
+        }
+      } catch (error: any) {
+        errors.formula = "Invalid formula: " + error.message;
+      }
+      return errors;
     },
+
+    validateOnChange: false,
   });
+
+  useEffect(() => {
+    try {
+      const sampleResult = evaluate(
+        formik.values.formula,
+        formik.values.samples,
+        formik.values.defaults,
+      );
+
+      setSampleResult(sampleResult);
+    } catch (error) {}
+  }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
 
   /**
    * When the formula is updated, remove any defaults which are no longer used
@@ -64,24 +94,6 @@ export default function Component(props: Props) {
       return [];
     }
   }, [formik.values.formula]);
-
-  const sampleResult = React.useMemo(() => {
-    try {
-      const result = evaluate(
-        formik.values.formula,
-        formik.values.samples,
-        formik.values.defaults,
-      );
-      // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
-      if (typeof result === "number") {
-        return result;
-      } else {
-        return UNKNOWN;
-      }
-    } catch (e) {
-      return UNKNOWN;
-    }
-  }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -140,11 +152,7 @@ export default function Component(props: Props) {
               name="formula"
               value={formik.values.formula}
               onChange={formik.handleChange}
-              errorMessage={
-                sampleResult === UNKNOWN
-                  ? "Invalid formula or missing default values."
-                  : ""
-              }
+              errorMessage={formik.errors.formula}
             />
           </InputRow>
         </ModalSectionContent>
