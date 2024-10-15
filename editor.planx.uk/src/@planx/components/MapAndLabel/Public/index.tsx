@@ -278,7 +278,6 @@ const Root = () => {
               osProxyEndpoint={`${
                 import.meta.env.VITE_APP_API_URL
               }/proxy/ordnance-survey`}
-              resetControlImage="trash"
               osCopyright={
                 basemap === "OSVectorTile"
                   ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
