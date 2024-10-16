@@ -104,20 +104,20 @@ const OptionEditor: React.FC<{
       </InputRow>
     )}
     <InputRow>
-          <FlagsSelect
-            value={props.value.data.flag || ""}
-            onChange={(ev) => {
-              props.onChange({
-                ...props.value,
-                data: {
-                  ...props.value.data,
-                  flag: ev.target.value as string,
-                },
-              });
-            }}
-            sx={{ margin: 0 }}
-          />
-        </InputRow>
+      <FlagsSelect
+        value={props.value.data.flag || ""}
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              flag: ev.target.value as string,
+            },
+          });
+        }}
+        sx={{ margin: 0 }}
+      />
+    </InputRow>
   </div>
 );
 
@@ -148,7 +148,7 @@ export const Question: React.FC<Props> = (props) => {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
