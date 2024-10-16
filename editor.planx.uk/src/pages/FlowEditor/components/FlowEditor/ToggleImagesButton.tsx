@@ -13,32 +13,24 @@ export const ToggleImagesButton: React.FC = () => {
   ]);
 
   return (
-    <Box
-      sx={(theme) => ({
-        position: "fixed",
-        bottom: theme.spacing(10),
-        left: theme.spacing(7),
-        zIndex: theme.zIndex.appBar,
-        border: `1px solid ${theme.palette.border.main}`,
-        borderRadius: "3px",
-        background: theme.palette.background.paper,
-      })}
-    >
-      <Tooltip title="Toggle images" placement="right">
-        <IconButton
-          aria-label="Toggle images"
-          onClick={toggleShowImages}
-          size="large"
-          sx={(theme) => ({
-            padding: theme.spacing(1),
-            color: showImages
-              ? theme.palette.text.primary
-              : theme.palette.text.disabled,
-          })}
-        >
-          {showImages ? <ImageIcon /> : <ImageOffIcon />}
-        </IconButton>
-      </Tooltip>
-    </Box>
+    <Tooltip title="Toggle images" placement="right">
+      <IconButton
+        aria-label="Toggle images"
+        onClick={toggleShowImages}
+        size="large"
+        sx={(theme) => ({
+          background: theme.palette.background.paper,
+          padding: theme.spacing(1),
+          color: showImages
+            ? theme.palette.text.primary
+            : theme.palette.text.disabled,
+          "&:hover": {
+            background: theme.palette.common.white,
+          },
+        })}
+      >
+        {showImages ? <ImageIcon /> : <ImageOffIcon />}
+      </IconButton>
+    </Tooltip>
   );
 };

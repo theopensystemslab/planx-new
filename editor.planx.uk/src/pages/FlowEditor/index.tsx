@@ -27,6 +27,17 @@ const EditorContainer = styled(Box, {
     : `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
 }));
 
+const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
+  position: "fixed",
+  bottom: theme.spacing(2.5),
+  left: theme.spacing(7.5),
+  zIndex: theme.zIndex.appBar,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderRadius: "3px",
+  background: theme.palette.border.main,
+  gap: "1px",
+}));
+
 const FlowEditor = () => {
   const [flow, ...breadcrumbs] =
     useCurrentRoute().url.pathname.split("/").at(-1)?.split(",") || [];
@@ -53,14 +64,14 @@ const FlowEditor = () => {
       >
         <Box id="editor" ref={scrollContainerRef} sx={{ position: "relative" }}>
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
-          <ButtonGroup
+          <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"
           >
             <ToggleImagesButton />
             <ToggleDataFieldsButton />
             <ToggleTagsButton />
-          </ButtonGroup>
+          </EditorVisualControls>
         </Box>
       </Box>
       <Sidebar />
