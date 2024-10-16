@@ -94,14 +94,22 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             onContextMenu={handleContext}
             ref={drag}
           >
-            {props.data?.img && (
-              <Thumbnail
-                imageSource={props.data?.img}
-                imageAltText={props.data?.text}
-              />
-            )}
-            {Icon && <Icon />}
-            <span>{props.text}</span>
+            <Box sx={{ 
+              display: "flex", 
+              flexDirection: "column",
+              maxWidth: "220px"
+            }}>
+              {props.data?.img && (
+                <Thumbnail
+                  imageSource={props.data?.img}
+                  imageAltText={props.data?.text}
+                />
+              )}
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                {Icon && <Icon />}
+                <span>{props.text}</span>
+              </Box>
+            </Box>
           </Link>
           {props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
