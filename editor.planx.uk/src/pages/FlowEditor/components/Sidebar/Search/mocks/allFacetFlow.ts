@@ -2,7 +2,11 @@ import { FlowGraph, IndexedNode } from "@opensystemslab/planx-core/types";
 
 import { SearchResult } from "../../../../../../hooks/useSearch";
 
-// TODO: Docs!
+/**
+ * Flow which contains an example of each component which searchable text fields
+ * Unique fields are given a distinct value (an animal name)
+ * Duplicate required fields have a placeholder value (".") to reduce noise
+ */
 export const mockFlow: FlowGraph = {
   _root: {
     edges: [
