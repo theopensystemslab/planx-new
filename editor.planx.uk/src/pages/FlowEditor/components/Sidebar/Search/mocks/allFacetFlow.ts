@@ -525,3 +525,26 @@ export const mockConfirmationResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 4]],
   refIndex: 0,
 };
+
+export const mockFindPropertyResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "uUQq7w7zDy",
+    parentId: "_root",
+    type: 9,
+    data: {
+      title: ".",
+      newAddressTitle: "Mouse",
+      allowNewAddresses: true,
+      newAddressDescription: "<p>Stingray</p>",
+      newAddressDescriptionLabel: "Scorpion"
+    }
+  },
+  key: "data.newAddressTitle",
+  matchIndices: [
+    [
+      0,
+      4
+    ]
+  ],
+  refIndex: 0
+};

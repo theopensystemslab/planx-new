@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockConfirmationResult, mockContentResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockConfirmationResult, mockContentResult, mockFileUploadAndLabelResult, mockFindPropertyResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -453,9 +453,47 @@ describe("confirmation fields", () => {
 });
 
 describe("findProperty fields", () => {
-  it.todo("renders data.newAddressTitle");
-  it.todo("renders data.newAddressDescription");
-  it.todo("renders data.newAddressDescriptionLabel");
+  it("renders data.newAddressTitle", () => {
+    const output = getDisplayDetailsForResult(mockFindPropertyResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title (new address)",
+      iconKey: ComponentType.FindProperty,
+      componentType: "Find property",
+      title: ".",
+      headline: "Mouse",
+    });
+  });
+  
+  it("renders data.newAddressDescription", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockFindPropertyResult,
+      key: "data.newAddressDescription",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description (new address)",
+      iconKey: ComponentType.FindProperty,
+      componentType: "Find property",
+      title: ".",
+      headline: "<p>Stingray</p>",
+    });
+  });
+  
+  it("renders data.newAddressDescriptionLabel", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockFindPropertyResult,
+      key: "data.newAddressDescriptionLabel",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description label (new address)",
+      iconKey: ComponentType.FindProperty,
+      componentType: "Find property",
+      title: ".",
+      headline: "Scorpion",
+    });
+  });
 });
 
 describe("drawBoundary fields", () => {
