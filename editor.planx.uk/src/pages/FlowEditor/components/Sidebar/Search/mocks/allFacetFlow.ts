@@ -9,8 +9,8 @@ export const mockFlow: FlowGraph = {
       "X75drmntDB",
       "elSf1BQXnb",
       "7aapI6waUw",
-      "6rgnMh94zu",
       "7C4auH5XWg",
+      "6rgnMh94zu",
       "S6K3DUZWmj",
       "StMBQK1WZo",
       "7eG9iF86xd",
@@ -18,72 +18,71 @@ export const mockFlow: FlowGraph = {
       "LXRopYavCQ",
       "9jiJvRYka6",
       "G6L9c8Sllg",
+      "gyyVEMm9Yb",
     ],
   },
-  X75drmntDB: {
-    type: 100,
+  "6rgnMh94zu": {
     data: {
-      description: "<p>Peacock</p>",
-      fn: "Yak",
-      text: "Seahorse",
-      notes: "Echidna",
-      howMeasured: "<p>Gazelle</p>",
-      policyRef: "<p>Rat</p>",
-      info: "<p>Octopus</p>",
+      units: "Wolverine",
+      allowNegatives: false,
     },
-    edges: ["hg8O46gdWd"],
+    type: 150,
   },
-  hg8O46gdWd: {
-    type: 200,
+  "7C4auH5XWg": {
     data: {
-      text: "Gorilla",
-      description: "Monkey",
-    },
-  },
-  elSf1BQXnb: {
-    type: 105,
-    data: {
-      allRequired: false,
-      description: "<p>.</p>",
-      text: ".",
-      categories: [
-        {
-          title: "Koala",
-          count: 1,
-        },
-      ],
-    },
-    edges: ["OiFdZxSWl1"],
-  },
-  OiFdZxSWl1: {
-    data: {
-      text: "Duck",
-    },
-    type: 200,
-    edges: ["ZbQLVR2SzL"],
-  },
-  ZbQLVR2SzL: {
-    type: 730,
-    data: {
-      steps: [
-        {
-          title: "Hamster",
-          description: "Vulture",
-          url: "https://www.starfish.gov.uk",
-        },
-      ],
+      fn: ".",
+      tags: [],
       title: ".",
+      schema: {
+        min: 1,
+        type: "Impala",
+        fields: [
+          {
+            data: {
+              fn: ".",
+              title: "Donkey",
+              options: [
+                {
+                  id: "Alpaca",
+                  data: {
+                    val: "Alpaca",
+                    text: "Alpaca",
+                  },
+                },
+              ],
+            },
+            type: "question",
+          },
+          {
+            data: {
+              fn: ".",
+              title: "Otter",
+              options: [
+                {
+                  id: ".",
+                  data: {
+                    text: "Iguana",
+                    description: "Parrot",
+                  },
+                },
+              ],
+            },
+            type: "checklist",
+          },
+        ],
+      },
+      schemaName: "Hedgehog",
       description: "<p>.</p>",
     },
+    type: 800,
   },
   "7aapI6waUw": {
-    type: 145,
     data: {
       title: ".",
       fileTypes: [
         {
-          name: "Penguin",
           fn: "Platypus",
+          name: "Penguin",
           rule: {
             condition: "AlwaysRequired",
           },
@@ -96,74 +95,9 @@ export const mockFlow: FlowGraph = {
       ],
       hideDropZone: false,
     },
-  },
-  "6rgnMh94zu": {
-    type: 150,
-    data: {
-      units: "Wolverine",
-      allowNegatives: false,
-    },
-  },
-  "7C4auH5XWg": {
-    type: 800,
-    data: {
-      fn: ".",
-      title: ".",
-      description: "<p>.</p>",
-      schemaName: "Hedgehog",
-      schema: {
-        type: "Impala",
-        fields: [
-          {
-            type: "map",
-            data: {
-              title: "Donkey",
-              description: "Alpaca",
-              fn: ".",
-              mapOptions: {
-                basemap: "MapboxSatellite",
-                drawType: "Point",
-                drawColor: "#66ff00",
-                drawMany: true,
-              },
-            },
-          },
-          {
-            type: "checklist",
-            data: {
-              title: "Otter",
-              fn: ".",
-              options: [
-                { id: ".", data: { text: "Iguana", description: "Parrot" } },
-              ],
-            },
-          },
-        ],
-        min: 1,
-      },
-    },
-  },
-  S6K3DUZWmj: {
-    type: 7,
-    data: {
-      tasks: [
-        {
-          title: "Ostrich",
-          description: "<p>Beaver</p>",
-        },
-      ],
-      title: ".",
-      description: "<p>.</p>",
-    },
-  },
-  StMBQK1WZo: {
-    type: 250,
-    data: {
-      content: "<p>Sheep</p>",
-    },
+    type: 145,
   },
   "7eG9iF86xd": {
-    type: 725,
     data: {
       color: {
         text: "#000",
@@ -171,63 +105,33 @@ export const mockFlow: FlowGraph = {
       },
       heading: "Snake",
       moreInfo: "<p>Tarantula</p>",
-      contactInfo: "<p>Weasel</p>",
       nextSteps: [
         {
           title: "Llama",
           description: "Toucan",
         },
       ],
+      contactInfo: "<p>Weasel</p>",
     },
-  },
-  uUQq7w7zDy: {
-    type: 9,
-    data: {
-      title: ".",
-      allowNewAddresses: true,
-      newAddressTitle: "Mouse",
-      newAddressDescription: "<p>Stingray</p>",
-      newAddressDescriptionLabel: "Scorpion",
-    },
-  },
-  LXRopYavCQ: {
-    type: 10,
-    data: {
-      title: ".",
-      description: "<p>.</p>",
-      titleForUploading: "Elephant",
-      descriptionForUploading: "<p>Panda</p>",
-      hideFileUpload: false,
-      dataFieldBoundary: "property.boundary.site",
-      dataFieldArea: "property.boundary.area",
-    },
+    type: 725,
   },
   "9jiJvRYka6": {
-    type: 11,
     data: {
-      title: ".",
-      description: "<p>.</p>",
       fn: "property.constraints.planning",
+      title: ".",
       disclaimer: "<p>Barracuda</p>",
+      description: "<p>.</p>",
     },
+    type: 11,
   },
   G6L9c8Sllg: {
-    type: 400,
     data: {
+      fn: ".",
       title: "Jaguar",
+      hidePay: false,
       bannerTitle: "Moose",
       description: "<p>.</p>",
-      fn: ".",
-      instructionsTitle: "Pelican",
-      instructionsDescription: "<p>Cockatoo</p>",
-      hidePay: false,
-      allowInviteToPay: true,
-      secondaryPageTitle: "Chicken",
       nomineeTitle: "Aardvark",
-      nomineeDescription: "<p>Cheetah</p>",
-      yourDetailsTitle: "Camel",
-      yourDetailsDescription: "<p>Macaw</p>",
-      yourDetailsLabel: "Skunk",
       govPayMetadata: [
         {
           key: "flow",
@@ -242,7 +146,125 @@ export const mockFlow: FlowGraph = {
           value: "@paidViaInviteToPay",
         },
       ],
+      allowInviteToPay: true,
+      yourDetailsLabel: "Skunk",
+      yourDetailsTitle: "Camel",
+      instructionsTitle: "Pelican",
+      nomineeDescription: "<p>Cheetah</p>",
+      secondaryPageTitle: "Chicken",
+      yourDetailsDescription: "<p>Macaw</p>",
+      instructionsDescription: "<p>Cockatoo</p>",
     },
+    type: 400,
+  },
+  LXRopYavCQ: {
+    data: {
+      title: ".",
+      description: "<p>.</p>",
+      dataFieldArea: "property.boundary.area",
+      hideFileUpload: false,
+      dataFieldBoundary: "property.boundary.site",
+      titleForUploading: "Elephant",
+      descriptionForUploading: "<p>Panda</p>",
+    },
+    type: 10,
+  },
+  OiFdZxSWl1: {
+    data: {
+      text: "Duck",
+    },
+    type: 200,
+    edges: ["ZbQLVR2SzL"],
+  },
+  S6K3DUZWmj: {
+    data: {
+      tasks: [
+        {
+          title: "Ostrich",
+          description: "<p>Beaver</p>",
+        },
+      ],
+      title: ".",
+      description: "<p>.</p>",
+    },
+    type: 7,
+  },
+  StMBQK1WZo: {
+    data: {
+      content: "<p>Sheep</p>",
+    },
+    type: 250,
+  },
+  X75drmntDB: {
+    data: {
+      fn: "Yak",
+      info: "<p>Octopus</p>",
+      text: "Seahorse",
+      notes: "Echidna",
+      policyRef: "<p>Rat</p>",
+      description: "<p>Peacock</p>",
+      howMeasured: "<p>Gazelle</p>",
+    },
+    type: 100,
+    edges: ["hg8O46gdWd"],
+  },
+  ZbQLVR2SzL: {
+    data: {
+      steps: [
+        {
+          url: "https://www.starfish.gov.uk",
+          title: "Hamster",
+          description: "Vulture",
+        },
+      ],
+      title: ".",
+      description: "<p>.</p>",
+    },
+    type: 730,
+  },
+  elSf1BQXnb: {
+    data: {
+      text: ".",
+      categories: [
+        {
+          count: 1,
+          title: "Koala",
+        },
+      ],
+      allRequired: false,
+      description: "<p>.</p>",
+    },
+    type: 105,
+    edges: ["OiFdZxSWl1"],
+  },
+  gyyVEMm9Yb: {
+    data: {
+      flagSet: "Planning permission",
+      overrides: {
+        IMMUNE: {
+          heading: "Squid",
+          description: "Eagle",
+        },
+      },
+    },
+    type: 3,
+  },
+  hg8O46gdWd: {
+    data: {
+      text: "Gorilla",
+      description: "Monkey",
+    },
+    type: 200,
+  },
+  uUQq7w7zDy: {
+    data: {
+      title: ".",
+      newAddressTitle: "Mouse",
+      allowNewAddresses: true,
+      newAddressDescription: "<p>Stingray</p>",
+      newAddressDescriptionLabel: "Scorpion",
+    },
+    type: 9,
   },
 };
 
@@ -578,5 +600,25 @@ export const mockPlanningConstraintsResult: SearchResult<IndexedNode> = {
   },
   key: "data.disclaimer",
   matchIndices: [[3, 11]],
+  refIndex: 0,
+};
+
+export const mockResultResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "gyyVEMm9Yb",
+    parentId: "_root",
+    type: 3,
+    data: {
+      flagSet: "Planning permission",
+      overrides: {
+        IMMUNE: {
+          heading: "Squid",
+          description: "Eagle",
+        },
+      },
+    },
+  },
+  key: "data.overrides.IMMUNE.heading",
+  matchIndices: [[0, 4]],
   refIndex: 0,
 };

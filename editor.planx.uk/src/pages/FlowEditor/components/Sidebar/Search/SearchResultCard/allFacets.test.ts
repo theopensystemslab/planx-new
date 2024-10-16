@@ -15,6 +15,7 @@ import {
   mockPayResult,
   mockPlanningConstraintsResult,
   mockQuestionResult,
+  mockResultResult,
   mockSchemaResult,
   mockTaskListResult,
 } from "../mocks/allFacetFlow";
@@ -372,14 +373,6 @@ describe("taskList fields", () => {
   });
 });
 
-// TODO: Flag tests
-// const result: SearchFacets = [
-//   ...flatFlags.flatMap(({ value }) => [
-//     `data.overrides.${value}.heading`,
-//     `data.overrides.${value}.description`,
-//   ]),
-// ];
-
 describe("content fields", () => {
   it("renders data.content", () => {
     const output = getDisplayDetailsForResult(mockContentResult);
@@ -688,6 +681,39 @@ describe("pay fields", () => {
       componentType: "Pay",
       title: "Jaguar",
       headline: "Skunk",
+    });
+  });
+});
+
+// Use the IMMUNE flag as a proxy for all flags values, within all flag sets
+describe("result fields", () => {
+  it("renders the heading", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockResultResult,
+      key: "data.overrides.IMMUNE.heading",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Heading (IMMUNE flag)",
+      iconKey: ComponentType.Result,
+      componentType: "Result",
+      title: "",
+      headline: "Squid",
+    });
+  });
+
+  it("renders the description", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockResultResult,
+      key: "data.overrides.IMMUNE.description",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description (IMMUNE flag)",
+      iconKey: ComponentType.Result,
+      componentType: "Result",
+      title: "",
+      headline: "Eagle",
     });
   });
 });

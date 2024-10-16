@@ -162,9 +162,15 @@ const keyFormatters: KeyMap = {
   ...Object.fromEntries(
     flatFlags.flatMap(({ value }) => [
       [
+        `data.overrides.${value}.heading`,
+        {
+          getDisplayKey: () => `Heading (${value} flag)`,
+        },
+      ],
+      [
         `data.overrides.${value}.description`,
         {
-          displayKey: () => "Description",
+          getDisplayKey: () => `Description (${value} flag)`,
         },
       ],
     ]),
