@@ -1,7 +1,22 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockConfirmationResult, mockContentResult, mockFileUploadAndLabelResult, mockFindPropertyResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
+import {
+  mockChecklistOptionResult,
+  mockChecklistResult,
+  mockConfirmationResult,
+  mockContentResult,
+  mockFileUploadAndLabelResult,
+  mockFindPropertyResult,
+  mockFlow,
+  mockNextStepsOptionResult,
+  mockNumberInputResult,
+  mockPayResult,
+  mockQuestionResult,
+  mockSchemaResult,
+  mockTaskListResult,
+  mockDrawBoundaryResult,
+} from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -497,8 +512,33 @@ describe("findProperty fields", () => {
 });
 
 describe("drawBoundary fields", () => {
-  it.todo("renders data.titleForUploading");
-  it.todo("renders data.descriptionForUploading");
+  it("renders data.titleForUploading", () => {    
+    const output = getDisplayDetailsForResult(mockDrawBoundaryResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title for uploading",
+      iconKey: ComponentType.DrawBoundary,
+      componentType: "Draw boundary",
+      title: ".",
+      headline: "Elephant",
+    });
+  });
+
+  it("renders data.descriptionForUploading", () => {    
+    const output = getDisplayDetailsForResult({
+      ...mockDrawBoundaryResult,
+      key: "data.descriptionForUploading",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description for uploading",
+      iconKey: ComponentType.DrawBoundary,
+      componentType: "Draw boundary",
+      title: ".",
+      headline: "<p>Panda</p>",
+    });
+  });
+
 });
 
 describe("planningConstraints fields", () => {

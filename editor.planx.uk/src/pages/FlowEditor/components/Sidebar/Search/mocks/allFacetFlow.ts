@@ -548,3 +548,23 @@ export const mockFindPropertyResult: SearchResult<IndexedNode> = {
   ],
   refIndex: 0
 };
+
+export const mockDrawBoundaryResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "LXRopYavCQ",
+    parentId: "_root",
+    type: 10,
+    data: {
+      title: ".",
+      description: "<p>.</p>",
+      dataFieldArea: "property.boundary.area",
+      hideFileUpload: false,
+      dataFieldBoundary: "property.boundary.site",
+      titleForUploading: "Elephant",
+      descriptionForUploading: "<p>Panda</p>",
+    },
+  },
+  key: "data.titleForUploading",
+  matchIndices: [[0, 7]],
+  refIndex: 0,
+};
