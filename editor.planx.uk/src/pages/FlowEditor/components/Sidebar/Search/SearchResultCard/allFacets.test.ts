@@ -65,6 +65,7 @@ describe("Basic fields", () => {
     });
   });
 });
+
 describe("More information fields", () => {
   it("renders data.notes", () => {
     const output = getDisplayDetailsForResult({
@@ -555,13 +556,138 @@ describe("planningConstraints fields", () => {
 });
 
 describe("pay fields", () => {
-  it.todo("renders data.bannerTitle");
-  it.todo("renders data.instructionsTitle");
-  it.todo("renders data.instructionsDescription");
-  it.todo("renders data.secondaryPageTitle");
-  it.todo("renders data.nomineeTitle");
-  it.todo("renders data.nomineeDescription");
-  it.todo("renders data.yourDetailsTitle");
-  it.todo("renders data.yourDetailsDescription");
-  it.todo("renders data.yourDetailsLabel");
+  it("renders data.bannerTitle", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.bannerTitle",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Banner title",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Moose",
+    });
+  });
+
+  it("renders data.instructionsTitle", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.instructionsTitle",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Instructions title",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Pelican",
+    });
+  });
+
+  it("renders data.instructionsDescription", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.instructionsDescription",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Instructions description",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "<p>Cockatoo</p>",
+    });
+  });
+
+  it("renders data.secondaryPageTitle", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.secondaryPageTitle",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Secondary page title",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Chicken",
+    });
+  });
+
+  it("renders data.nomineeTitle", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.nomineeTitle",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Nominee title",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Aardvark",
+    });
+  });
+
+  it("renders data.nomineeDescription", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.nomineeDescription",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Nominee description",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "<p>Cheetah</p>",
+    });
+  });
+
+  it("renders data.yourDetailsTitle", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.yourDetailsTitle",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title (your details)",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Camel",
+    });
+  });
+
+  it("renders data.yourDetailsDescription", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.yourDetailsDescription",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description (your details)",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "<p>Macaw</p>",
+    });
+  });
+
+  it("renders data.yourDetailsLabel", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.yourDetailsLabel",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Label (your details)",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Skunk",
+    });
+  });
 });

@@ -115,7 +115,7 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Unit type",
   },
   "data.schemaName": {
-    getDisplayKey: () => "Schema name"
+    getDisplayKey: () => "Schema name",
   },
   "data.schema.fields.data.title": {
     getHeadline: ({ item, refIndex }) =>
@@ -124,22 +124,27 @@ const keyFormatters: KeyMap = {
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
     getHeadline: ({ item, refIndex }) =>
-      (item.data?.schema as unknown as Schema).fields[refIndex].data.description!,
+      (item.data?.schema as unknown as Schema).fields[refIndex].data
+        .description!,
   },
   "data.schema.fields.data.options.data.description": {
     getDisplayKey: () => "Option (description)",
     getHeadline: ({ item, refIndex }) => {
       const options = (item.data?.schema as unknown as Schema).fields
-        .filter((field) => field.type === "question" || field.type === "checklist")
+        .filter(
+          (field) => field.type === "question" || field.type === "checklist",
+        )
         .flatMap((field) => field.data.options);
       return options[refIndex].data.description || "";
-    }
+    },
   },
   "data.schema.fields.data.options.text": {
     getDisplayKey: () => "Option",
     getHeadline: ({ item, refIndex }) => {
       const options = (item.data?.schema as unknown as Schema).fields
-        .filter((field) => field.type === "question" || field.type === "checklist")
+        .filter(
+          (field) => field.type === "question" || field.type === "checklist",
+        )
         .flatMap((field) => field.data.options);
       return options[refIndex].data.text || "";
     },
@@ -220,13 +225,13 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Nominee description",
   },
   "data.yourDetailsTitle": {
-    getDisplayKey: () => "Your details title",
+    getDisplayKey: () => "Title (your details)",
   },
   "data.yourDetailsDescription": {
-    getDisplayKey: () => "Your details description",
+    getDisplayKey: () => "Description (your details)",
   },
   "data.yourDetailsLabel": {
-    getDisplayKey: () => "Your details label",
+    getDisplayKey: () => "Label (your details)",
   },
   // Calculate contains both input and output data values
   formula: {
@@ -271,9 +276,9 @@ const componentFormatters: ComponentMap = {
       const parentNode = useStore.getState().flow[item.parentId];
       const parentType = parentNode.type!;
       const formatted = capitalize(SLUGS[parentType].replaceAll("-", " "));
-      
+
       return formatted;
-    }
+    },
   },
 };
 
