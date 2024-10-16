@@ -209,34 +209,43 @@ const Root = () => {
   const hasMapField = schema.fields.some((field) => field.type === "map");
 
   const listContent = (
-    <ErrorWrapper error={rootError}>
-      <>
-        {formik.values.schemaData.map((_, i) =>
-          i === activeIndex ? (
-            <ActiveListCard key={`card-${i}`} index={i} />
-          ) : (
-            <InactiveListCard key={`card-${i}`} index={i} />
-          ),
-        )}
-        {shouldShowAddAnotherButton && (
-          <ErrorWrapper
-            error={
-              errors.addItem
-                ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
-                : ""
-            }
-          >
-            <AddListItemButton
-              onClick={addNewItem}
-              data-testid="list-add-button"
-              size="large"
+    <>
+      <ErrorWrapper error={rootError}>
+        <>
+          {formik.values.schemaData.map((_, i) =>
+            i === activeIndex ? (
+              <ActiveListCard key={`card-${i}`} index={i} />
+            ) : (
+              <InactiveListCard key={`card-${i}`} index={i} />
+            ),
+          )}
+          {shouldShowAddAnotherButton && (
+            <ErrorWrapper
+              error={
+                errors.addItem
+                  ? `Please save all responses before adding another ${schema.type.toLowerCase()}`
+                  : ""
+              }
             >
-              + Add another {schema.type.toLowerCase()}
-            </AddListItemButton>
-          </ErrorWrapper>
-        )}
-      </>
-    </ErrorWrapper>
+              <AddListItemButton
+                onClick={addNewItem}
+                data-testid="list-add-button"
+                size="large"
+              >
+                + Add another {schema.type.toLowerCase()}
+              </AddListItemButton>
+            </ErrorWrapper>
+          )}
+        </>
+      </ErrorWrapper>
+      <Box sx={{ mt: 1, padding: 0 }}>
+        <ErrorWrapper
+          error={
+            errors.unsavedItem ? "Save your answers in order to continue" : ""
+          }
+        />
+      </Box>
+    </>
   );
 
   return (
