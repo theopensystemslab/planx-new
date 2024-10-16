@@ -69,7 +69,7 @@ export default function Component(props: Props) {
       if (!Number.isNaN(Number(result))) {
         return result;
       } else {
-        return UNKNOWN;
+        return `the ${typeof result}: '${result}'`;
       }
     } catch (e) {
       return UNKNOWN;
