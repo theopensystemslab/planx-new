@@ -1,12 +1,15 @@
 import "./floweditor.scss";
 
 import Box from "@mui/material/Box";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header";
 import React, { useRef } from "react";
 import { useCurrentRoute } from "react-navi";
 
 import Flow from "./components/Flow";
+import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
+import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
@@ -50,7 +53,14 @@ const FlowEditor = () => {
       >
         <Box id="editor" ref={scrollContainerRef} sx={{ position: "relative" }}>
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
-          <ToggleTagsButton />
+          <ButtonGroup
+            orientation="vertical"
+            aria-label="Toggle node attributes"
+          >
+            <ToggleImagesButton />
+            <ToggleDataFieldsButton />
+            <ToggleTagsButton />
+          </ButtonGroup>
         </Box>
       </Box>
       <Sidebar />
