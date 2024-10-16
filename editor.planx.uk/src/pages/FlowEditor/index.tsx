@@ -36,6 +36,7 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
   borderRadius: "3px",
   background: theme.palette.border.main,
   gap: "1px",
+  overflow: "hidden",
 }));
 
 const FlowEditor = () => {

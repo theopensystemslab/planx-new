@@ -20,7 +20,6 @@ export const ToggleTagsButton: React.FC = () => {
         sx={(theme) => ({
           background: theme.palette.background.paper,
           padding: theme.spacing(1),
-          borderRadius: "3px",
           color: showTags
             ? theme.palette.text.primary
             : theme.palette.text.disabled,
