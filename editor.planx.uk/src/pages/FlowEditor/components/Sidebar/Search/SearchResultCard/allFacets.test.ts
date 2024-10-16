@@ -683,6 +683,36 @@ describe("pay fields", () => {
       headline: "Skunk",
     });
   });
+
+  it("renders data.govPayMetadata.key", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.govPayMetadata.key",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "GOV.UK Pay metadata (key)",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Tapir",
+    });
+  });
+
+  it("renders data.govPayMetadata.value", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockPayResult,
+      key: "data.govPayMetadata.value",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "GOV.UK Pay metadata (value)",
+      iconKey: ComponentType.Pay,
+      componentType: "Pay",
+      title: "Jaguar",
+      headline: "Okapi",
+    });
+  });
 });
 
 // Use the IMMUNE flag as a proxy for all flags values, within all flag sets

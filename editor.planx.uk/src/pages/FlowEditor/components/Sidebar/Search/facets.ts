@@ -62,9 +62,7 @@ const fileUploadAndLabel: SearchFacets = [
   "data.fileTypes.moreInformation.info",
 ];
 
-const numberInput: SearchFacets = [
-  "data.units",
-];
+const numberInput: SearchFacets = ["data.units"];
 
 /** List, Page, and MapAndLabel components share this structure */
 const schemaComponents: SearchFacets = [
@@ -121,7 +119,8 @@ const pay: SearchFacets = [
   "data.yourDetailsTitle",
   "data.yourDetailsDescription",
   "data.yourDetailsLabel",
-  // TODO: GovPay metadata?
+  "data.govPayMetadata.key",
+  "data.govPayMetadata.value",
 ];
 
 export const ALL_FACETS: SearchFacets = [

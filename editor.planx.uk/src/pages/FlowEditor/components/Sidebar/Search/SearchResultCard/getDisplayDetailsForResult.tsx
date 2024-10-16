@@ -9,6 +9,7 @@ import { Confirmation } from "@planx/components/Confirmation/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
 import { NextSteps } from "@planx/components/NextSteps/model";
+import { Pay } from "@planx/components/Pay/model";
 import { Schema } from "@planx/components/shared/Schema/model";
 import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
@@ -238,6 +239,16 @@ const keyFormatters: KeyMap = {
   },
   "data.yourDetailsLabel": {
     getDisplayKey: () => "Label (your details)",
+  },
+  "data.govPayMetadata.key": {
+    getDisplayKey: () => "GOV.UK Pay metadata (key)",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as Pay).govPayMetadata[refIndex].key,
+  },
+  "data.govPayMetadata.value": {
+    getDisplayKey: () => "GOV.UK Pay metadata (value)",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as Pay).govPayMetadata[refIndex].value.toString(),
   },
   // Calculate contains both input and output data values
   formula: {

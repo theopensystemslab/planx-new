@@ -149,6 +149,10 @@ export const mockFlow: FlowGraph = {
           key: "paidViaInviteToPay",
           value: "@paidViaInviteToPay",
         },
+        {
+          key: "Tapir",
+          value: "Okapi",
+        },
       ],
       allowInviteToPay: true,
       yourDetailsLabel: "Skunk",
@@ -318,6 +322,10 @@ export const mockPayResult: SearchResult<IndexedNode> = {
           key: "paidViaInviteToPay",
           value: "@paidViaInviteToPay",
         },
+        {
+          key: "Tapir",
+          value: "Okapi",
+        },
       ],
       allowInviteToPay: true,
       yourDetailsLabel: "Skunk",
@@ -331,7 +339,7 @@ export const mockPayResult: SearchResult<IndexedNode> = {
   },
   key: "data.title",
   matchIndices: [[0, 5]],
-  refIndex: 0,
+  refIndex: 3,
 };
 
 export const mockChecklistResult: SearchResult<IndexedNode> = {
