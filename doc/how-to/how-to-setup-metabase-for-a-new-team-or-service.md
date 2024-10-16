@@ -58,4 +58,16 @@ _This happens after a team lets us know that a service is going live._
 
 5. Add the dashboard, private and public links to the OSL internal 'Analytics overview' Notion page (PlanX > Analytics overview).
 
-6. To add the link to the editor, update the `flows.analytics_link` column in Hasura with the public URL (generated in step 4), for each flow a dashboard has been generated for.
+### Adding a public link to the editor
+
+1. Log into Hasura `hasura.editor.planx.uk/console` with Cloudflare WARP on. 
+
+2. Get the flow ID from the editor (with the service open in the editor, view the console: the ID is the code that follows `connecting to...`)
+
+3. In Hasura, go to `public` → `flows` -> `Add` a filter -> `id equals flow ID` -> `Run query` (double check it's the correct flow you've selected). With the selected flow, click on the 'edit' icon. 
+![Screenshot - Edit the selected flow in Hasura](./images/setup-metabase/edit_flow_in_hasura.png)
+
+4. Add the public Metabase link generated above to the `analytics_link` field and click save. 
+![Screenshot - Add the public Metabase dashboard link](./images.setup-metabase/update_analytics_link.png)
+
+The dashboard should now be linked from the editor and the analytics icon should no longer be greyed out. 
