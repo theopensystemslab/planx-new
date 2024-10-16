@@ -1,26 +1,26 @@
-import LabelIcon from "@mui/icons-material/Label";
-import LabelOffIcon from "@mui/icons-material/LabelOff";
+import ImageOffIcon from "@mui/icons-material/HideImage";
+import ImageIcon from "@mui/icons-material/Image";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-export const ToggleTagsButton: React.FC = () => {
-  const [showTags, toggleShowTags] = useStore((state) => [
-    state.showTags,
-    state.toggleShowTags,
+export const ToggleImagesButton: React.FC = () => {
+  const [showImages, toggleShowImages] = useStore((state) => [
+    state.showImages,
+    state.toggleShowImages,
   ]);
 
   return (
-    <Tooltip title="Toggle tags" placement="right">
+    <Tooltip title="Toggle images" placement="right">
       <IconButton
-        aria-label="Toggle tags"
-        onClick={toggleShowTags}
+        aria-label="Toggle images"
+        onClick={toggleShowImages}
         size="large"
         sx={(theme) => ({
           background: theme.palette.background.paper,
           padding: theme.spacing(1),
-          color: showTags
+          color: showImages
             ? theme.palette.text.primary
             : theme.palette.text.disabled,
           "&:hover": {
@@ -28,7 +28,7 @@ export const ToggleTagsButton: React.FC = () => {
           },
         })}
       >
-        {showTags ? <LabelIcon /> : <LabelOffIcon />}
+        {showImages ? <ImageIcon /> : <ImageOffIcon />}
       </IconButton>
     </Tooltip>
   );

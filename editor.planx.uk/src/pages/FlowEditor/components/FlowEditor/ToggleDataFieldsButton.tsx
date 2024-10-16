@@ -1,26 +1,26 @@
-import LabelIcon from "@mui/icons-material/Label";
-import LabelOffIcon from "@mui/icons-material/LabelOff";
+import DataFieldIcon from "@mui/icons-material/Code";
+import DataFieldOffIcon from "@mui/icons-material/CodeOff";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-export const ToggleTagsButton: React.FC = () => {
-  const [showTags, toggleShowTags] = useStore((state) => [
-    state.showTags,
-    state.toggleShowTags,
+export const ToggleDataFieldsButton: React.FC = () => {
+  const [showDataFields, toggleShowDataFields] = useStore((state) => [
+    state.showDataFields,
+    state.toggleShowDataFields,
   ]);
 
   return (
-    <Tooltip title="Toggle tags" placement="right">
+    <Tooltip title="Toggle data fields" placement="right">
       <IconButton
-        aria-label="Toggle tags"
-        onClick={toggleShowTags}
+        aria-label="Toggle data fields"
+        onClick={toggleShowDataFields}
         size="large"
         sx={(theme) => ({
           background: theme.palette.background.paper,
           padding: theme.spacing(1),
-          color: showTags
+          color: showDataFields
             ? theme.palette.text.primary
             : theme.palette.text.disabled,
           "&:hover": {
@@ -28,7 +28,7 @@ export const ToggleTagsButton: React.FC = () => {
           },
         })}
       >
-        {showTags ? <LabelIcon /> : <LabelOffIcon />}
+        {showDataFields ? <DataFieldIcon /> : <DataFieldOffIcon />}
       </IconButton>
     </Tooltip>
   );
