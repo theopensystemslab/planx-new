@@ -87,6 +87,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               maxZoom={23}
               latitude={Number(passport?.data?._address?.latitude)}
               longitude={Number(passport?.data?._address?.longitude)}
+              resetControlImage="trash"
               osProxyEndpoint={`${
                 import.meta.env.VITE_APP_API_URL
               }/proxy/ordnance-survey`}
