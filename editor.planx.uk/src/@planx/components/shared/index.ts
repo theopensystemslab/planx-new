@@ -28,7 +28,7 @@ export interface Option {
   id: string;
   data: {
     description?: string;
-    flag?: string;
+    flag?: string[];
     img?: string;
     text: string;
     val?: string;

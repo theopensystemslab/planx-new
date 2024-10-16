@@ -18,8 +18,13 @@ const Option: React.FC<any> = (props) => {
   let color = "#000";
 
   try {
+    // If there are many flags, only show the color band for the first flag
     const flag = flatFlags.find(({ value }) =>
-      [props.data?.flag, props.data?.val].filter(Boolean).includes(value),
+      [
+        // Support both new "Options" that have array of flags and old ones with single flag
+        Array.isArray(props.data?.flag) ? props.data?.flag?.[0].value : props.data?.flag, 
+        props.data?.val,
+      ].filter(Boolean).includes(value),
     );
     background = flag?.bgColor || background;
     color = flag?.color || color;

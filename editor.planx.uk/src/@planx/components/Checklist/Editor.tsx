@@ -24,7 +24,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
-import FlagsSelect from "../shared/FlagsSelect";
+import { FlagsSelect } from "../shared/FlagsSelect";
 import { ICONS } from "../ui";
 import type { Category, Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
@@ -91,17 +91,16 @@ const OptionEditor: React.FC<{
         />
 
         <FlagsSelect
-          value={props.value.data.flag || ""}
+          value={props.value.data.flag && Array.from(props.value.data.flag)}
           onChange={(ev) => {
             props.onChange({
               ...props.value,
               data: {
                 ...props.value.data,
-                flag: ev.target.value as string,
+                flag: ev,
               },
             });
           }}
-          sx={{ width: { md: "160px" }, maxWidth: "160px" }}
         />
 
         {typeof props.index !== "undefined" &&
@@ -193,7 +192,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                           text: "",
                           description: "",
                           val: "",
-                          flag: "",
                         },
                       }) as Option
                     }
@@ -267,7 +265,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 text: "",
                 description: "",
                 val: "",
-                flag: "",
               },
             }) as Option
           }

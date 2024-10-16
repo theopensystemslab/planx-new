@@ -1,70 +1,58 @@
-import { fallbackHttpConfig } from "@apollo/client";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import ListSubheader from "@mui/material/ListSubheader";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { AutocompleteProps } from "@mui/material/Autocomplete";
+import Chip from "@mui/material/Chip";
+import ListItem from "@mui/material/ListItem";
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
-import groupBy from "lodash/groupBy";
 import React from "react";
-import type { Props as SelectInputProps } from "ui/editor/SelectInput";
-import SelectInput from "ui/editor/SelectInput";
-import { SelectMultiple } from "ui/shared/SelectMultiple";
+import InputRow from "ui/shared/InputRow";
+import { CustomCheckbox, SelectMultiple } from "ui/shared/SelectMultiple";
 
-const flags = groupBy(flatFlags, (f) => f.category);
+interface Props {
+  value?: string[];
+  onChange: (values: string[]) => void;
+}
 
-const FlagsSelect: React.FC<SelectInputProps> = (props) => {
-  const initialFlagValues = props?.value ? [props.value as string] : [];
-  const [flagValue, setFlagValue] = React.useState<string[]>(initialFlagValues);
+const renderOptions: AutocompleteProps<
+  Flag,
+  true,
+  true,
+  false,
+  "div"
+>["renderOption"] = (props, flag, { selected }) => (
+  <ListItem {...props}>
+    <CustomCheckbox aria-hidden="true" className={selected ? "selected" : ""} sx={{ backgroundColor: `${flag.bgColor}` }} />
+    {flag.text}
+  </ListItem>
+);
 
-  const handleChange = (event: SelectChangeEvent<typeof flagValue>) => {
-    const {
-      target: { value },
-    } = event;
-    setFlagValue(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
-    );
-  };
+const renderTags: AutocompleteProps<
+  Flag,
+  true,
+  true,
+  false,
+  "div"
+>["renderTags"] = (value, getFlagProps) =>
+  value.map((flag, index) => (
+    <Chip
+      {...getFlagProps({ index })}
+      key={flag.value}
+      label={flag.text}
+      sx={{ backgroundColor: flag.bgColor, color: flag.color }}
+    />
+  ));
 
-  const flagMenuItems = Object.entries(flags).flatMap(
-    ([category, categoryFlags]) => [
-      <ListSubheader key={category}>
-        {category}
-      </ListSubheader>,
-      categoryFlags.map((flag) => (
-        <MenuItem
-          key={flag.value}
-          value={flag.value}
-          style={{
-            borderLeft: `1em solid ${flag.bgColor || "transparent"}`,
-            fontSize: "1rem",
-          }}
-        >
-          {flag.text}
-        </MenuItem>
-      )),
-    ],
-  );
-
+export const FlagsSelect: React.FC<Props> = ({ value, onChange }) => {
   return (
-    <FormControl>
-        <InputLabel htmlFor="grouped-select">Flags</InputLabel>
-        <Select 
-          id="grouped-select" 
-          label="Flags"
-          multiple
-          value={flagValue}
-          onChange={handleChange}
-          // defaultValue=""
-        >
-          <MenuItem value="">
-            {"None"}
-          </MenuItem>
-          {flagMenuItems}
-        </Select>
-      </FormControl>
+    <InputRow>
+      <SelectMultiple 
+        label="Flags"
+        options={flatFlags}
+        getOptionLabel={(flag) => flag.text}
+        groupBy={(flag) => flag.category}
+        onChange={(_e, value) => onChange(value)}
+        value={value}
+        renderOption={renderOptions}
+        renderTags={renderTags}
+      />
+    </InputRow>
   );
 };
-
-export default FlagsSelect;

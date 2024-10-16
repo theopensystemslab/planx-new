@@ -13,7 +13,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
-import FlagsSelect from "../shared/FlagsSelect";
+import { FlagsSelect } from "../shared/FlagsSelect";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
@@ -103,21 +103,18 @@ const OptionEditor: React.FC<{
         />
       </InputRow>
     )}
-    <InputRow>
       <FlagsSelect
-        value={props.value.data.flag || ""}
+        value={props.value.data.flag && Array.from(props.value.data.flag)}
         onChange={(ev) => {
           props.onChange({
             ...props.value,
             data: {
               ...props.value.data,
-              flag: ev.target.value as string,
+              flag: ev,
             },
           });
         }}
-        sx={{ margin: 0 }}
       />
-    </InputRow>
   </div>
 );
 
@@ -218,7 +215,6 @@ export const Question: React.FC<Props> = (props) => {
                   text: "",
                   description: "",
                   val: "",
-                  flag: "",
                 },
               }) as Option
             }
