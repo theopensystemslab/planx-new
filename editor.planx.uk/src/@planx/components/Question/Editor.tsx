@@ -13,7 +13,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
-import PermissionSelect from "../shared/PermissionSelect";
+import FlagsSelect from "../shared/FlagsSelect";
 import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
@@ -57,7 +57,6 @@ const OptionEditor: React.FC<{
           placeholder="Option"
         />
       </InputRowItem>
-
       <ImgInput
         img={props.value.data.img}
         onChange={(img) => {
@@ -69,20 +68,6 @@ const OptionEditor: React.FC<{
             },
           });
         }}
-      />
-
-      <PermissionSelect
-        value={props.value.data.flag || ""}
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            data: {
-              ...props.value.data,
-              flag: ev.target.value as string,
-            },
-          });
-        }}
-        sx={{ width: { md: "160px" }, maxWidth: "160px" }}
       />
     </InputRow>
     <InputRow>
@@ -118,6 +103,21 @@ const OptionEditor: React.FC<{
         />
       </InputRow>
     )}
+    <InputRow>
+          <FlagsSelect
+            value={props.value.data.flag || ""}
+            onChange={(ev) => {
+              props.onChange({
+                ...props.value,
+                data: {
+                  ...props.value.data,
+                  flag: ev.target.value as string,
+                },
+              });
+            }}
+            sx={{ margin: 0 }}
+          />
+        </InputRow>
   </div>
 );
 

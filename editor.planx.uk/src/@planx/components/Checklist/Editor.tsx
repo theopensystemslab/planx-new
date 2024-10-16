@@ -24,7 +24,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
-import PermissionSelect from "../shared/PermissionSelect";
+import FlagsSelect from "../shared/FlagsSelect";
 import { ICONS } from "../ui";
 import type { Category, Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
@@ -90,7 +90,7 @@ const OptionEditor: React.FC<{
           }}
         />
 
-        <PermissionSelect
+        <FlagsSelect
           value={props.value.data.flag || ""}
           onChange={(ev) => {
             props.onChange({
