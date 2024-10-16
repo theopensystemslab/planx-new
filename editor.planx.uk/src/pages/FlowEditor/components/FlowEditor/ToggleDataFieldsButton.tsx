@@ -1,5 +1,5 @@
-import DataFieldIcon from "@mui/icons-material/AutoFixNormal";
-import DataFieldOffIcon from "@mui/icons-material/AutoFixOff";
+import DataFieldIcon from "@mui/icons-material/Code";
+import DataFieldOffIcon from "@mui/icons-material/CodeOff";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
