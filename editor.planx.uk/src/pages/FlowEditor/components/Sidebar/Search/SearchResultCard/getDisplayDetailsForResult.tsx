@@ -179,7 +179,7 @@ const keyFormatters: KeyMap = {
       (item.data as unknown as Confirmation).nextSteps![refIndex].title,
   },
   "data.nextSteps.description": {
-    getDisplayKey: () => "Description",
+    getDisplayKey: () => "Description (next steps)",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as Confirmation).nextSteps![refIndex].description,
   },

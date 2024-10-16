@@ -486,22 +486,42 @@ export const mockTaskListResult: SearchResult<IndexedNode> = {
   refIndex: 0,
 };
 
-
 export const mockContentResult: SearchResult<IndexedNode> = {
   item: {
     id: "StMBQK1WZo",
     parentId: "_root",
     type: 250,
     data: {
-      content: "<p>Sheep</p>"
-    }
+      content: "<p>Sheep</p>",
+    },
   },
   key: "data.content",
-  matchIndices: [
-    [
-      3,
-      7
-    ]
-  ],
-  refIndex: 0
+  matchIndices: [[3, 7]],
+  refIndex: 0,
+};
+
+export const mockConfirmationResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "7eG9iF86xd",
+    parentId: "_root",
+    type: 725,
+    data: {
+      color: {
+        text: "#000",
+        background: "rgba(1, 99, 96, 0.1)",
+      },
+      heading: "Snake",
+      moreInfo: "<p>Tarantula</p>",
+      nextSteps: [
+        {
+          title: "Llama",
+          description: "Toucan",
+        },
+      ],
+      contactInfo: "<p>Weasel</p>",
+    },
+  },
+  key: "data.heading",
+  matchIndices: [[0, 4]],
+  refIndex: 0,
 };

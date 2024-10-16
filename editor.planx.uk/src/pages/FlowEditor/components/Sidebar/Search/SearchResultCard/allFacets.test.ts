@@ -1,7 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
-import { mockChecklistOptionResult, mockChecklistResult, mockContentResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
+import { mockChecklistOptionResult, mockChecklistResult, mockConfirmationResult, mockContentResult, mockFileUploadAndLabelResult, mockFlow, mockNextStepsOptionResult, mockNumberInputResult, mockPayResult, mockQuestionResult, mockSchemaResult, mockTaskListResult } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;
@@ -49,7 +49,6 @@ describe("Basic fields", () => {
     });
   });
 });
-
 describe("More information fields", () => {
   it("renders data.notes", () => {
     const output = getDisplayDetailsForResult({
@@ -111,7 +110,6 @@ describe("More information fields", () => {
     });
   });
 });
-
 describe("checklist fields", () => {
   it("renders data.categories.title", () => {
     const output = getDisplayDetailsForResult(mockChecklistResult);
@@ -137,6 +135,7 @@ describe("checklist fields", () => {
     });
   });
 });
+
 describe("nextSteps fields", () => {
   it("renders data.steps.title", () => {
     const output = getDisplayDetailsForResult(mockNextStepsOptionResult);
@@ -253,7 +252,6 @@ describe("numberInput fields", () => {
     });
   });
 });
-
 describe("schemaComponents fields", () => {
   it("renders data.schemaName", () => {
     const output = getDisplayDetailsForResult(mockSchemaResult);
@@ -380,11 +378,78 @@ describe("content fields", () => {
 });
 
 describe("confirmation fields", () => {
-  it.todo("renders data.heading");
-  it.todo("renders data.moreInfo");
-  it.todo("renders data.contactInfo");
-  it.todo("renders data.nextSteps.title");
-  it.todo("renders data.nextSteps.description");
+  it("renders data.heading", () => {
+    const output = getDisplayDetailsForResult(mockConfirmationResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title",
+      iconKey: ComponentType.Confirmation,
+      componentType: "Confirmation",
+      title: "",
+      headline: "Snake",
+    });
+  });
+
+  it("renders data.moreInfo", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockConfirmationResult,
+      key: "data.moreInfo",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "More information",
+      iconKey: ComponentType.Confirmation,
+      componentType: "Confirmation",
+      title: "",
+      headline: "<p>Tarantula</p>",
+    });
+  });
+
+  it("renders data.contactInfo", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockConfirmationResult,
+      key: "data.contactInfo",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Contact information",
+      iconKey: ComponentType.Confirmation,
+      componentType: "Confirmation",
+      title: "",
+      headline: "<p>Weasel</p>",
+    });
+  });
+
+  it("renders data.nextSteps.title", () => {
+        const output = getDisplayDetailsForResult({
+      ...mockConfirmationResult,
+      key: "data.nextSteps.title"
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Title (next steps)",
+      iconKey: ComponentType.Confirmation,
+      componentType: "Confirmation",
+      title: "",
+      headline: "Llama",
+    });
+  });
+
+  it("renders data.nextSteps.description", () => {
+        const output = getDisplayDetailsForResult({
+      ...mockConfirmationResult,
+      key: "data.nextSteps.description"
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Description (next steps)",
+      iconKey: ComponentType.Confirmation,
+      componentType: "Confirmation",
+      title: "",
+      headline: "Toucan",
+    });
+  });
+
 });
 
 describe("findProperty fields", () => {
