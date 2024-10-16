@@ -1,6 +1,5 @@
 import ImageOffIcon from "@mui/icons-material/HideImage";
 import ImageIcon from "@mui/icons-material/Image";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -21,6 +20,7 @@ export const ToggleImagesButton: React.FC = () => {
         sx={(theme) => ({
           background: theme.palette.background.paper,
           padding: theme.spacing(1),
+          borderRadius: "3px",
           color: showImages
             ? theme.palette.text.primary
             : theme.palette.text.disabled,

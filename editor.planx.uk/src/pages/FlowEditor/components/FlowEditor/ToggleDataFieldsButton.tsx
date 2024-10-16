@@ -18,8 +18,9 @@ export const ToggleDataFieldsButton: React.FC = () => {
         onClick={toggleShowDataFields}
         size="large"
         sx={(theme) => ({
-          padding: theme.spacing(1),
           background: theme.palette.background.paper,
+          padding: theme.spacing(1),
+          borderRadius: "3px",
           color: showDataFields
             ? theme.palette.text.primary
             : theme.palette.text.disabled,
