@@ -536,17 +536,12 @@ export const mockFindPropertyResult: SearchResult<IndexedNode> = {
       newAddressTitle: "Mouse",
       allowNewAddresses: true,
       newAddressDescription: "<p>Stingray</p>",
-      newAddressDescriptionLabel: "Scorpion"
-    }
+      newAddressDescriptionLabel: "Scorpion",
+    },
   },
   key: "data.newAddressTitle",
-  matchIndices: [
-    [
-      0,
-      4
-    ]
-  ],
-  refIndex: 0
+  matchIndices: [[0, 4]],
+  refIndex: 0,
 };
 
 export const mockDrawBoundaryResult: SearchResult<IndexedNode> = {
@@ -566,5 +561,22 @@ export const mockDrawBoundaryResult: SearchResult<IndexedNode> = {
   },
   key: "data.titleForUploading",
   matchIndices: [[0, 7]],
+  refIndex: 0,
+};
+
+export const mockPlanningConstraintsResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "9jiJvRYka6",
+    parentId: "_root",
+    type: 11,
+    data: {
+      fn: "property.constraints.planning",
+      title: ".",
+      disclaimer: "<p>Barracuda</p>",
+      description: "<p>.</p>",
+    },
+  },
+  key: "data.disclaimer",
+  matchIndices: [[3, 11]],
   refIndex: 0,
 };

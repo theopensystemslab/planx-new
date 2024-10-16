@@ -6,16 +6,17 @@ import {
   mockChecklistResult,
   mockConfirmationResult,
   mockContentResult,
+  mockDrawBoundaryResult,
   mockFileUploadAndLabelResult,
   mockFindPropertyResult,
   mockFlow,
   mockNextStepsOptionResult,
   mockNumberInputResult,
   mockPayResult,
+  mockPlanningConstraintsResult,
   mockQuestionResult,
   mockSchemaResult,
   mockTaskListResult,
-  mockDrawBoundaryResult,
 } from "../mocks/allFacetFlow";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
@@ -209,20 +210,20 @@ describe("fileUploadAndLabel fields", () => {
   });
 
   it("renders data.fileTypes.moreInformation.info", () => {
-     const output = getDisplayDetailsForResult({
-       ...mockFileUploadAndLabelResult,
-       key: "data.fileTypes.moreInformation.info",
-     });
+    const output = getDisplayDetailsForResult({
+      ...mockFileUploadAndLabelResult,
+      key: "data.fileTypes.moreInformation.info",
+    });
 
-     expect(output).toStrictEqual<Output>({
-       key: "Why it matters (file type)",
-       iconKey: ComponentType.FileUploadAndLabel,
-       componentType: "File upload and label",
-       title: ".",
-       headline: "<p>Kangaroo</p>",
-     });
+    expect(output).toStrictEqual<Output>({
+      key: "Why it matters (file type)",
+      iconKey: ComponentType.FileUploadAndLabel,
+      componentType: "File upload and label",
+      title: ".",
+      headline: "<p>Kangaroo</p>",
+    });
   });
-  
+
   it("renders data.fileTypes.moreInformation.policyRef", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
@@ -283,7 +284,7 @@ describe("schemaComponents fields", () => {
   it("renders data.schema.fields.data.title", () => {
     const output = getDisplayDetailsForResult({
       ...mockSchemaResult,
-      key: "data.schema.fields.data.title"
+      key: "data.schema.fields.data.title",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -296,18 +297,18 @@ describe("schemaComponents fields", () => {
   });
 
   it("renders data.schema.fields.data.description", () => {
-      const output = getDisplayDetailsForResult({
-        ...mockSchemaResult,
-        key: "data.schema.fields.data.description",
-      });
+    const output = getDisplayDetailsForResult({
+      ...mockSchemaResult,
+      key: "data.schema.fields.data.description",
+    });
 
-      expect(output).toStrictEqual<Output>({
-        key: "Description",
-        iconKey: ComponentType.List,
-        componentType: "List",
-        title: ".",
-        headline: "Alpaca",
-      });
+    expect(output).toStrictEqual<Output>({
+      key: "Description",
+      iconKey: ComponentType.List,
+      componentType: "List",
+      title: ".",
+      headline: "Alpaca",
+    });
   });
 
   it("renders data.schema.fields.data.options.data.text", () => {
@@ -436,9 +437,9 @@ describe("confirmation fields", () => {
   });
 
   it("renders data.nextSteps.title", () => {
-        const output = getDisplayDetailsForResult({
+    const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
-      key: "data.nextSteps.title"
+      key: "data.nextSteps.title",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -451,9 +452,9 @@ describe("confirmation fields", () => {
   });
 
   it("renders data.nextSteps.description", () => {
-        const output = getDisplayDetailsForResult({
+    const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
-      key: "data.nextSteps.description"
+      key: "data.nextSteps.description",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -464,7 +465,6 @@ describe("confirmation fields", () => {
       headline: "Toucan",
     });
   });
-
 });
 
 describe("findProperty fields", () => {
@@ -479,7 +479,7 @@ describe("findProperty fields", () => {
       headline: "Mouse",
     });
   });
-  
+
   it("renders data.newAddressDescription", () => {
     const output = getDisplayDetailsForResult({
       ...mockFindPropertyResult,
@@ -494,7 +494,7 @@ describe("findProperty fields", () => {
       headline: "<p>Stingray</p>",
     });
   });
-  
+
   it("renders data.newAddressDescriptionLabel", () => {
     const output = getDisplayDetailsForResult({
       ...mockFindPropertyResult,
@@ -512,7 +512,7 @@ describe("findProperty fields", () => {
 });
 
 describe("drawBoundary fields", () => {
-  it("renders data.titleForUploading", () => {    
+  it("renders data.titleForUploading", () => {
     const output = getDisplayDetailsForResult(mockDrawBoundaryResult);
 
     expect(output).toStrictEqual<Output>({
@@ -524,7 +524,7 @@ describe("drawBoundary fields", () => {
     });
   });
 
-  it("renders data.descriptionForUploading", () => {    
+  it("renders data.descriptionForUploading", () => {
     const output = getDisplayDetailsForResult({
       ...mockDrawBoundaryResult,
       key: "data.descriptionForUploading",
@@ -538,11 +538,20 @@ describe("drawBoundary fields", () => {
       headline: "<p>Panda</p>",
     });
   });
-
 });
 
 describe("planningConstraints fields", () => {
-  it.todo("renders data.disclaimer");
+  it("renders data.disclaimer", () => {
+    const output = getDisplayDetailsForResult(mockPlanningConstraintsResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Disclaimer",
+      iconKey: ComponentType.PlanningConstraints,
+      componentType: "Planning constraints",
+      title: ".",
+      headline: "<p>Barracuda</p>",
+    });
+  });
 });
 
 describe("pay fields", () => {
