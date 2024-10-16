@@ -38,8 +38,8 @@ const Option: React.FC<any> = (props) => {
         )}
         <div className="band" style={{ background, color }}></div>
         <div className="text">{props.data.text}</div>
+        {props.data?.val && <DataField value={props.data.val} variant="child" />}
       </Link>
-      {props.data?.val && <DataField value={props.data.val} variant="child" />}
       <ol className="decisions">
         {childNodes.map((child: any) => (
           <Node key={child.id} parent={props.id} {...child} />

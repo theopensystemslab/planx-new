@@ -14,6 +14,7 @@ export const Thumbnail: React.FC<{
       sx={{
         maxWidth: "220px",
         maxHeight: "220px",
+        margin: "auto",
       }}
       component="img"
       src={imageSource}
