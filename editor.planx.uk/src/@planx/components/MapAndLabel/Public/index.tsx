@@ -242,8 +242,6 @@ const Root = () => {
 
   const [passport] = useStore((state) => [state.computePassport()]);
 
-  console.log(passport);
-
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
@@ -263,7 +261,7 @@ const Root = () => {
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               geojsonData={JSON.stringify(
-                passport.data?.["property.boundary.site"],
+                passport.data?.["property.boundary.title"],
               )}
               geojsonColor="#0010A4"
               geojsonBuffer={30}
