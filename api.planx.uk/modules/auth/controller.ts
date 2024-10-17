@@ -39,7 +39,8 @@ function setJWTCookie(returnTo: string, res: Response, req: Request) {
     maxAge: new Date(
       new Date().setFullYear(new Date().getFullYear() + 1),
     ).getTime(),
-    sameSite: "none",
+    // TODO: should sameSite == "lax"? would this break anything? (basically, if not, we should do it!)
+    sameSite: "lax",
     secure: true,
   };
 
