@@ -227,6 +227,8 @@ const Root = () => {
     previouslySubmittedData,
   } = mapAndLabelProps;
 
+  const passport = useStore((state) => state.computePassport().data);
+
   // If coming "back" or "changing", load initial features & tabs onto the map
   //   Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
   if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
@@ -258,6 +260,10 @@ const Root = () => {
               data-testid={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+              geojsonData={
+                passport && JSON.stringify(passport["property.boundary.site"])
+              }
+              geojsonBuffer={30}
               drawMode
               drawGeojsonData={
                 features &&
