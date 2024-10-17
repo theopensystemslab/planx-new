@@ -68,7 +68,7 @@ export const ResidentialUnitsExistingLDCE: Schema = {
     {
       type: "number",
       data: {
-        title: "How many bedrooms will this unit have?",
+        title: "How many bedrooms does this unit have?",
         fn: "bedrooms",
         allowNegatives: false,
       },
