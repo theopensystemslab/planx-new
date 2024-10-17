@@ -66,8 +66,10 @@ export default function Component(props: Props) {
         formik.values.defaults,
       );
       // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
-      if (!Number.isNaN(Number(result)) || result === undefined) {
+      if (!Number.isNaN(Number(result))) {
         return result;
+      } else if (result === undefined) {
+        return "a number returned from the formula above";
       } else {
         return `'${result}' which is of the type: ${typeof result}`;
       }
