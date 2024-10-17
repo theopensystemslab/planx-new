@@ -26,7 +26,7 @@ export const ResidentialUnitsExistingLDCE: Schema = {
           },
           {
             id: "liveWorkUnit",
-            data: { text: "Live-work unit", val: "liveWorkUnit" },
+            data: { text: "Live/work unit", val: "LW" },
           },
           {
             id: "sheltered",
