@@ -14,7 +14,7 @@ export const SLUGS: {
   [TYPES.ExternalPortal]: "external-portal",
   [TYPES.FileUpload]: "file-upload",
   [TYPES.Filter]: "filter",
-  [TYPES.FindProperty]: "find-property-merged",
+  [TYPES.FindProperty]: "find-property",
   [TYPES.Flow]: "flow",
   [TYPES.InternalPortal]: "internal-portal",
   [TYPES.FileUploadAndLabel]: "file-upload-and-label",
