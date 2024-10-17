@@ -90,19 +90,6 @@ const OptionEditor: React.FC<{
           }}
         />
 
-        <FlagsSelect
-          value={props.value.data.flag && Array.from(props.value.data.flag)}
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                flag: ev,
-              },
-            });
-          }}
-        />
-
         {typeof props.index !== "undefined" &&
           props.groups &&
           props.onMoveToGroup && (
@@ -138,6 +125,19 @@ const OptionEditor: React.FC<{
           />
         </InputRow>
       )}
+
+      <FlagsSelect
+        value={Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]}
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              flag: ev,
+            },
+          });
+        }}
+      />
     </div>
   );
 };
@@ -313,14 +313,14 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                    categories: groupedOptions.map((gr) => ({
-                      title: gr.title,
-                      count: gr.children.length,
-                    })),
-                  }
+                  categories: groupedOptions.map((gr) => ({
+                    title: gr.title,
+                    count: gr.children.length,
+                  })),
+                }
                 : {
-                    categories: undefined,
-                  }),
+                  categories: undefined,
+                }),
             },
           },
           processedOptions,
@@ -329,7 +329,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);

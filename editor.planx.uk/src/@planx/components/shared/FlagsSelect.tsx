@@ -1,14 +1,14 @@
-import { AutocompleteProps } from "@mui/material/Autocomplete";
+import { AutocompleteChangeReason, AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
-import React from "react";
+import React, { useMemo } from "react";
 import InputRow from "ui/shared/InputRow";
 import { CustomCheckbox, SelectMultiple } from "ui/shared/SelectMultiple";
 
 interface Props {
-  value?: string[];
-  onChange: (values: string[]) => void;
+  value?: Array<Flag["value"]>;
+  onChange: (values: Array<Flag["value"]>) => void;
 }
 
 const renderOptions: AutocompleteProps<
@@ -31,28 +31,48 @@ const renderTags: AutocompleteProps<
   false,
   "div"
 >["renderTags"] = (value, getFlagProps) =>
-  value.map((flag, index) => (
-    <Chip
-      {...getFlagProps({ index })}
-      key={flag.value}
-      label={flag.text}
-      sx={{ backgroundColor: flag.bgColor, color: flag.color }}
-    />
-  ));
+    value.map((flag, index) => (
+      <Chip
+        {...getFlagProps({ index })}
+        key={flag.value}
+        label={flag.text}
+        sx={{ backgroundColor: flag.bgColor, color: flag.color }}
+      />
+    ));
 
-export const FlagsSelect: React.FC<Props> = ({ value, onChange }) => {
+export const FlagsSelect: React.FC<Props> = (props) => {
+  const { value: initialFlagValues } = props;
+
+  const value: Flag[] | undefined = useMemo(
+    () =>
+      initialFlagValues?.flatMap((initialFlagValue) => flatFlags.filter((flag) => flag.value === initialFlagValue)),
+    [initialFlagValues, flatFlags],
+  );
+
+  const handleChange = (
+    _event: React.SyntheticEvent,
+    value: Flag[],
+    _reason: AutocompleteChangeReason,
+  ) => {
+    const selectedFlags = value.map((flag) => flag.value);
+    props.onChange(selectedFlags);
+  };
+
   return (
     <InputRow>
-      <SelectMultiple 
-        label="Flags"
+      <SelectMultiple
+        id="select-multiple-flags"
+        key="select-multiple-flags"
+        label="Flags (up to one per category)"
         options={flatFlags}
         getOptionLabel={(flag) => flag.text}
         groupBy={(flag) => flag.category}
-        onChange={(_e, value) => onChange(value)}
+        onChange={handleChange}
+        isOptionEqualToValue={(flag, value) => flag.value === value.value}
         value={value}
         renderOption={renderOptions}
         renderTags={renderTags}
       />
     </InputRow>
   );
-};
+}

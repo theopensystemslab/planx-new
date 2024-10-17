@@ -1,4 +1,4 @@
-import { NodeTags } from "@opensystemslab/planx-core/types";
+import { Flag, NodeTags } from "@opensystemslab/planx-core/types";
 import trim from "lodash/trim";
 import { Store } from "pages/FlowEditor/lib/store";
 
@@ -28,7 +28,7 @@ export interface Option {
   id: string;
   data: {
     description?: string;
-    flag?: string[];
+    flag?: Array<Flag["value"]>;
     img?: string;
     text: string;
     val?: string;
