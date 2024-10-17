@@ -119,8 +119,10 @@ $fontMonospace: "Source Code Pro", monospace;
     outline-offset: 0;
   }
 
-  &.isClone a {
+  &.isClone > div,
+  &.isClone > a {
     margin-top: 3px;
+    position: relative;
     ::before {
       content: "";
       position: absolute;
@@ -139,7 +141,7 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   // Allow nodes to expand to width of data when toggled
-  &:not(.type-Section):not(.portal) > a {
+  &:not(.type-Section):not(.portal):not(.type-Filter) > a {
     width: 100%;
   }
 
