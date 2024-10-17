@@ -1,19 +1,8 @@
-import {
-  ComponentType as TYPES,
-  NodeId,
-} from "@opensystemslab/planx-core/types";
-
 import { Store, useStore } from "../../store";
+import { clickContinue, visitedNodes } from "../utils";
 
 const { getState, setState } = useStore;
-const { upcomingCardIds, resetPreview, record } = getState();
-
-const visitedNodes = () => Object.keys(getState().breadcrumbs);
-
-const clickContinue = (nodeId: NodeId, userData: Store.UserData) => {
-  record(nodeId, userData);
-  upcomingCardIds();
-};
+const { upcomingCardIds, resetPreview } = getState();
 
 beforeEach(() => {
   resetPreview();

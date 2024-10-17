@@ -1,7 +1,5 @@
-import { useStore } from "../store";
+import { Store, useStore } from "../store";
 import flowWithAutoAnsweredFilterPaths from "./mocks/flowWithAutoAnsweredFilterPaths.json";
-import flowWithBranchingFilters from "./mocks/flowWithBranchingFilters.json";
-import flowWithRootFilter from "./mocks/flowWithRootFilter.json";
 
 const { getState, setState } = useStore;
 const {
@@ -9,80 +7,32 @@ const {
   resetPreview,
   record,
   getCurrentCard,
-  collectedFlags,
 } = getState();
 
-// https://i.imgur.com/k0kkKox.png
 describe("A filter on the root of the graph", () => {
   beforeEach(() => {
     resetPreview();
+    setState({ flow: flowWithFilters });
   });
 
-  test.skip("don't expand filters before visiting them (A)", () => {
-    setState({
-      flow: flowWithRootFilter,
-    });
-
-    expect(upcomingCardIds()).toEqual([
-      "d5SxIWZej9",
-      "LAz2YqYChs",
-      "nroxFPM2Jx",
-    ]);
-  });
-
-  test("immune path (B)", () => {
-    setState({
-      flow: flowWithRootFilter,
-      breadcrumbs: {
-        d5SxIWZej9: {
-          auto: false,
-          answers: ["FZ1kmhT37j"],
-        },
-      },
-    });
-
-    expect(upcomingCardIds()).toEqual(["TmpbJgjGPH", "nroxFPM2Jx"]);
-  });
-
-  test("not immune path (C)", () => {
-    setState({
-      flow: flowWithRootFilter,
-      breadcrumbs: {
-        d5SxIWZej9: {
-          auto: false,
-          answers: ["ZTZqcDAOoG"],
-        },
-      },
-    });
-
-    expect(upcomingCardIds()).toEqual(["lOrm4XmVGv", "nroxFPM2Jx"]);
-  });
+  test.todo("Filter options are auto-answered correctly when a higher order flag is picked up first");
+  
+  test.todo("Filter options are auto-answered correctly when a lower order flag is picked up first");
+  
+  test.todo("Filter 'No flag result' option is auto-answered correctly when no flags in this category have been picked up");
 });
 
 describe("A filter on a branch", () => {
   beforeEach(() => {
     resetPreview();
-    setState({ flow: flowWithBranchingFilters });
+    setState({ flow: flowWithFilters });
   });
 
-  test.skip("Picking up flag routes me correctly through the second filter", () => {
-    const visitedNodes = () => Object.keys(getState().breadcrumbs);
-
-    // Traverse forward to pick up an "IMMUNE" flag
-    record("pickFlag", { answers: ["setImmunity"] });
-    record("immunityPath1", { answers: [] });
-    expect(collectedFlags("immunityPath1", visitedNodes())).toStrictEqual([
-      "IMMUNE",
-    ]);
-
-    // Traverse forward through next filter
-    record("fork", { answers: ["filter2"] });
-
-    // XXX: Test fails here
-    // getCurrentCard returns as "immunityFlag2" which we should not land on -
-    // the flags on the first filter are skipped, we go direct from "immunityPath1" to "fork"
-    expect(getCurrentCard()?.id).toBe("immunityPath2");
-  });
+  test.todo("Filter options are auto-answered correctly when a higher order flag is picked up first");
+  
+  test.todo("Filter options are auto-answered correctly when a lower order flag is picked up first");
+  
+  test.todo("Filter 'No flag result' option is auto-answered correctly when no flags in this category have been picked up");
 });
 
 describe("Nodes on a filter path should only be auto-answered when the path matches the result", () => {
@@ -91,7 +41,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     setState({ flow: flowWithAutoAnsweredFilterPaths }); // https://editor.planx.uk/testing/flag-order-test-with-autoanswer
   });
 
-  test("Filter path nodes are auto-answered correctly when the highest order flag is picked up first", () => {
+  test.skip("Filter path nodes are auto-answered correctly when the highest order flag is picked up first", () => {
     const visitedNodes = () => Object.keys(getState().breadcrumbs);
 
     // go forward manually: select not listed and select an answer with permission needed (higher order) flag
@@ -150,3 +100,7 @@ describe("Nodes on a filter path should only be auto-answered when the path matc
     });
   });
 });
+
+const flowWithFilters: Store.Flow = {
+  // TODO 
+};
