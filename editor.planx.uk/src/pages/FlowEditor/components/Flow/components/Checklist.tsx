@@ -12,9 +12,11 @@ import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { DataField } from "./DataField";
 import Hanger from "./Hanger";
 import Node from "./Node";
 import { Tag } from "./Tag";
+import { Thumbnail } from "./Thumbnail";
 
 type Props = {
   type: TYPES;
@@ -92,9 +94,26 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             onContextMenu={handleContext}
             ref={drag}
           >
-            {Icon && <Icon />}
-            <span>{props.text}</span>
+            <Box sx={{ 
+              display: "flex", 
+              flexDirection: "column",
+              maxWidth: "220px"
+            }}>
+              {props.data?.img && (
+                <Thumbnail
+                  imageSource={props.data?.img}
+                  imageAltText={props.data?.text}
+                />
+              )}
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                {Icon && <Icon />}
+                <span>{props.text}</span>
+              </Box>
+            </Box>
           </Link>
+          {props.data?.fn && (
+            <DataField value={props.data.fn} variant="parent" />
+          )}
           {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
         </Box>
         {groupedOptions ? (

@@ -14,8 +14,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#6a83682
-    version: github.com/theopensystemslab/planx-core/6a83682
+    specifier: git+https://github.com/theopensystemslab/planx-core#e73d702
+    version: github.com/theopensystemslab/planx-core/e73d702
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -1064,23 +1064,30 @@ packages:
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
     dev: false
 
-  /@formatjs/ecma402-abstract@2.0.0:
-    resolution: {integrity: sha512-rRqXOqdFmk7RYvj4khklyqzcfQl9vEL/usogncBHRZfZBDOwMGuSRNFl02fu5KGHXdbinju+YXyuR+Nk8xlr/g==}
+  /@formatjs/ecma402-abstract@2.2.0:
+    resolution: {integrity: sha512-IpM+ev1E4QLtstniOE29W1rqH9eTdx5hQdNL8pzrflMj/gogfaoONZqL83LUeQScHAvyMbpqP5C9MzNf+fFwhQ==}
     dependencies:
-      '@formatjs/intl-localematcher': 0.5.4
+      '@formatjs/fast-memoize': 2.2.1
+      '@formatjs/intl-localematcher': 0.5.5
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/intl-listformat@7.5.7:
-    resolution: {integrity: sha512-MG2TSChQJQT9f7Rlv+eXwUFiG24mKSzmF144PLb8m8OixyXqn4+YWU+5wZracZGCgVTVmx8viCf7IH3QXoiB2g==}
+  /@formatjs/fast-memoize@2.2.1:
+    resolution: {integrity: sha512-XS2RcOSyWxmUB7BUjj3mlPH0exsUzlf6QfhhijgI941WaJhVxXQ6mEWkdUFIdnKi3TuTYxRdelsgv3mjieIGIA==}
     dependencies:
-      '@formatjs/ecma402-abstract': 2.0.0
-      '@formatjs/intl-localematcher': 0.5.4
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/intl-localematcher@0.5.4:
-    resolution: {integrity: sha512-zTwEpWOzZ2CiKcB93BLngUX59hQkuZjT2+SAQEscSm52peDW/getsawMcWF1rGRpMCX6D7nSJA3CzJ8gn13N/g==}
+  /@formatjs/intl-listformat@7.5.9:
+    resolution: {integrity: sha512-HqtGkxUh2Uz0oGVTxHAvPZ3EGxc8+ol5+Bx7S9xB97d4PEJJd9oOgHrerIghHA0gtIjsNKBFUae3P0My+F6YUA==}
+    dependencies:
+      '@formatjs/ecma402-abstract': 2.2.0
+      '@formatjs/intl-localematcher': 0.5.5
+      tslib: 2.7.0
+    dev: false
+
+  /@formatjs/intl-localematcher@0.5.5:
+    resolution: {integrity: sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==}
     dependencies:
       tslib: 2.7.0
     dev: false
@@ -1642,8 +1649,8 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/node@20.16.11:
-    resolution: {integrity: sha512-y+cTCACu92FyA5fgQSAI8A1H429g7aSK2HsO7K4XYUWc4dY5IUz55JSDIYT6/VsOLfGy8vmvQYC2hfb0iF16Uw==}
+  /@types/node@22.7.5:
+    resolution: {integrity: sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==}
     dependencies:
       undici-types: 6.19.8
     dev: false
@@ -2814,11 +2821,12 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@8.5.0:
-    resolution: {integrity: sha512-4SbcbedPXTciySXiSnNNLuJXpvxFe5nqivbiEHXyL8P/w0wx2uW7YXNjnYgjW0e2e6vy+L/tMISU/oAiXCl57Q==}
+  /docx@9.0.2:
+    resolution: {integrity: sha512-Uyq4JUqF4mR55t6laO6mst9W9loV9l6tyAopqKvuxqFgmgZ8PHiXQV8RwpcrHE6SHVPQDHWK4lFjRzxXylI3vg==}
     engines: {node: '>=10'}
     dependencies:
-      '@types/node': 20.16.11
+      '@types/node': 22.7.5
+      hash.js: 1.1.7
       jszip: 3.10.1
       nanoid: 5.0.7
       xml: 1.0.1
@@ -3670,6 +3678,13 @@ packages:
     dependencies:
       has-symbols: 1.0.3
 
+  /hash.js@1.1.7:
+    resolution: {integrity: sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==}
+    dependencies:
+      inherits: 2.0.4
+      minimalistic-assert: 1.0.1
+    dev: false
+
   /hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
@@ -4444,6 +4459,10 @@ packages:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
     dev: true
+
+  /minimalistic-assert@1.0.1:
+    resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
+    dev: false
 
   /minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
@@ -6246,8 +6265,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/6a83682:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6a83682}
+  github.com/theopensystemslab/planx-core/e73d702:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e73d702}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -6255,14 +6274,14 @@ packages:
     dependencies:
       '@emotion/react': 11.13.3(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(react@18.3.1)
-      '@formatjs/intl-listformat': 7.5.7
+      '@formatjs/intl-listformat': 7.5.9
       '@mui/base': 5.0.0-beta.40(react-dom@18.3.1)(react@18.3.1)
       '@mui/material': 5.16.7(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(react-dom@18.3.1)(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 8.5.0
+      docx: 9.0.2
       eslint: 8.57.1
       fast-xml-parser: 4.5.0
       graphql: 16.9.0
