@@ -227,6 +227,8 @@ const Root = () => {
     previouslySubmittedData,
   } = mapAndLabelProps;
 
+  const [passport] = useStore((state) => [state.computePassport()]);
+
   // If coming "back" or "changing", load initial features & tabs onto the map
   //   Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
   if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
@@ -239,8 +241,6 @@ const Root = () => {
     (errors.max &&
       `You must plot at most ${schema.max} ${schema.type}(s) on the map`) ||
     "";
-
-  const [passport] = useStore((state) => [state.computePassport()]);
 
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
