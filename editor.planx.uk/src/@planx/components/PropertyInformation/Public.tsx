@@ -31,6 +31,8 @@ function Component(props: PublicProps<PropertyInformation>) {
     client: publicClient,
   });
 
+  console.log(passport);
+
   if (!passport.data?._address)
     throw new GraphError("nodeMustFollowFindProperty");
 

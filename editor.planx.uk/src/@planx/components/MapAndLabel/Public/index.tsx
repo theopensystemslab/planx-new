@@ -240,6 +240,10 @@ const Root = () => {
       `You must plot at most ${schema.max} ${schema.type}(s) on the map`) ||
     "";
 
+  const [passport] = useStore((state) => [state.computePassport()]);
+
+  console.log(passport);
+
   return (
     <Card handleSubmit={validateAndSubmitForm} isValid>
       <CardHeader
@@ -258,6 +262,11 @@ const Root = () => {
               data-testid={MAP_ID}
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
+              geojsonData={JSON.stringify(
+                passport.data?.["property.boundary.site"],
+              )}
+              geojsonColor="#0010A4"
+              geojsonBuffer={30}
               drawMode
               drawGeojsonData={
                 features &&
