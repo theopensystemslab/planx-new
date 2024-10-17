@@ -3,11 +3,8 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  EditorProps,
-  ICONS,
-} from "@planx/components/ui";
-import { useFormik } from "formik";
+import { EditorProps, ICONS } from "@planx/components/ui";
+import { FormikErrors, useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -36,11 +33,50 @@ export default function Component(props: Props) {
         props.handleSubmit({ type: TYPES.Calculate, data: newValues });
       }
     },
-    validate: () => {
-      // can parse formula
-      getVariables(formik.values.formula);
+    validate: (values) => {
+      const errors: FormikErrors<Calculate> = {};
+      try {
+        // can parse formula
+        getVariables(formik.values.formula);
+
+        // Validate formula
+        const result = evaluate(
+          values.formula,
+          values.samples,
+          values.defaults,
+        );
+
+        if (Number.isNaN(Number(result))) {
+          errors.formula = "Enter a formula which outputs a number";
+        }
+      } catch (error: any) {
+        errors.formula = error.message;
+      }
+      return errors;
     },
+
+    validateOnChange: false,
   });
+
+  const sampleResult = React.useMemo(() => {
+    try {
+      const result = evaluate(
+        formik.values.formula,
+        formik.values.samples,
+        formik.values.defaults,
+      );
+      // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
+      if (!Number.isNaN(Number(result))) {
+        return result;
+      } else if (result === undefined) {
+        return "a number returned from the formula above";
+      } else {
+        return `'${result}' which is of the type: ${typeof result}`;
+      }
+    } catch (e) {
+      return UNKNOWN;
+    }
+  }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
 
   /**
    * When the formula is updated, remove any defaults which are no longer used
@@ -64,24 +100,6 @@ export default function Component(props: Props) {
       return [];
     }
   }, [formik.values.formula]);
-
-  const sampleResult = React.useMemo(() => {
-    try {
-      const result = evaluate(
-        formik.values.formula,
-        formik.values.samples,
-        formik.values.defaults,
-      );
-      // Type guard as mathjs evaluates `m` to a "Unit" object for "meter"
-      if (typeof result === "number") {
-        return result;
-      } else {
-        return UNKNOWN;
-      }
-    } catch (e) {
-      return UNKNOWN;
-    }
-  }, [formik.values.formula, formik.values.defaults, formik.values.samples]);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -140,11 +158,7 @@ export default function Component(props: Props) {
               name="formula"
               value={formik.values.formula}
               onChange={formik.handleChange}
-              errorMessage={
-                sampleResult === UNKNOWN
-                  ? "Invalid formula or missing default values."
-                  : ""
-              }
+              errorMessage={formik.errors.formula}
             />
           </InputRow>
         </ModalSectionContent>
@@ -190,7 +204,7 @@ export default function Component(props: Props) {
           )}
           <p>
             <strong>{formik.values.output || "<output>"}</strong> would be set
-            to <strong>{sampleResult}</strong>.
+            to <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>
       </ModalSection>
