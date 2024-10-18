@@ -99,7 +99,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   });
 
   const [activeIndex, setActiveIndex] = useState<number>(
-    previousFormData?.length - 1 || -1,
+    previousFormData?.length > 1 ? previousFormData?.length - 1 : 0,
   );
 
   const [minError, setMinError] = useState<boolean>(false);
@@ -179,8 +179,10 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     setActiveIndex(newFeatures.length - 1);
   };
 
-  const addInitialFeaturesToMap = (features: Feature[]) => {
-    setFeatures(features);
+  const addInitialFeaturesToMap = (initialFeatures: Feature[]) => {
+    if (!features?.length) {
+      setFeatures(initialFeatures);
+    }
   };
 
   const addFeatureToForm = () => {
