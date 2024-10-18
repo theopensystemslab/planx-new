@@ -57,18 +57,24 @@ const nextSteps: SearchFacets = [
 
 const fileUploadAndLabel: SearchFacets = [
   "data.fileTypes.name",
-  "data.fileTypes.moreInformation.notes",
   "data.fileTypes.moreInformation.howMeasured",
   "data.fileTypes.moreInformation.policyRef",
   "data.fileTypes.moreInformation.info",
 ];
 
+const numberInput: SearchFacets = ["data.units"];
+
 /** List, Page, and MapAndLabel components share this structure */
 const schemaComponents: SearchFacets = [
+  "data.schemaName",
+  // Question title
   "data.schema.fields.data.title",
+  // Question description
   "data.schema.fields.data.description",
+  // Option title
+  "data.schema.fields.data.options.data.text",
+  // Option description
   "data.schema.fields.data.options.data.description",
-  "data.schema.fields.data.options.text",
 ];
 
 const taskList: SearchFacets = ["data.tasks.title", "data.tasks.description"];
@@ -113,6 +119,8 @@ const pay: SearchFacets = [
   "data.yourDetailsTitle",
   "data.yourDetailsDescription",
   "data.yourDetailsLabel",
+  "data.govPayMetadata.key",
+  "data.govPayMetadata.value",
 ];
 
 export const ALL_FACETS: SearchFacets = [
@@ -121,6 +129,7 @@ export const ALL_FACETS: SearchFacets = [
   ...checklist,
   ...nextSteps,
   ...fileUploadAndLabel,
+  ...numberInput,
   ...schemaComponents,
   ...taskList,
   ...result,
