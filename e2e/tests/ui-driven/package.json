@@ -16,7 +16,7 @@
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
-    "serve": "^14.2.1",
+    "serve": "^14.2.4",
     "uuid": "^9.0.1"
   },
   "packageManager": "pnpm@8.6.6",
