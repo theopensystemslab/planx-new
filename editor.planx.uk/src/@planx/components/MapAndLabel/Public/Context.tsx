@@ -99,11 +99,14 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   });
 
   const [activeIndex, setActiveIndex] = useState<number>(
-    previousFormData?.length > 1 ? previousFormData?.length - 1 : 0,
+    previousFormData ? previousFormData?.length - 1 : 0,
   );
 
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
+  const [loadPreviousValues, setLoadPreviousValues] = useState<boolean>(
+    Boolean(previouslySubmittedData),
+  );
 
   const handleGeoJSONChange = (event: GeoJSONChangeEvent) => {
     // If the user clicks 'reset' on the map, geojson will be empty object
@@ -147,7 +150,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.setErrors({});
   };
 
-  const removeAllFeaturesFromMap = () => setFeatures(undefined);
+  const removeAllFeaturesFromMap = () => {
+    setFeatures(undefined);
+  };
 
   const removeAllFeaturesFromForm = () => {
     formik.setFieldValue("schemaData", []);
@@ -180,8 +185,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   };
 
   const addInitialFeaturesToMap = (initialFeatures: Feature[]) => {
-    if (!features?.length) {
+    if (loadPreviousValues) {
       setFeatures(initialFeatures);
+      setLoadPreviousValues(false);
     }
   };
 
@@ -200,7 +206,10 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const copyFeature = (sourceIndex: number, destinationIndex: number) => {
     const sourceFeature = formik.values.schemaData[sourceIndex];
-    formik.setFieldValue(`schemaData[${destinationIndex}]`, sourceFeature);
+    formik.setFieldValue(`schemaData[${destinationIndex}]`, {
+      ...sourceFeature,
+      label: `${destinationIndex + 1}`,
+    });
   };
 
   const removeFeatureFromForm = (index: number) => {
@@ -238,7 +247,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     // Set active index as highest tab after removal, so that when you "add" a new feature the tabs increment correctly
     setActiveIndex((features && features.length - 2) || 0);
   };
-
   return (
     <MapAndLabelContext.Provider
       value={{
