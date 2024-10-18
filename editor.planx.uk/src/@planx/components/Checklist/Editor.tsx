@@ -24,7 +24,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
-import PermissionSelect from "../shared/PermissionSelect";
+import { FlagsSelect } from "../shared/FlagsSelect";
 import { ICONS } from "../ui";
 import type { Category, Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
@@ -90,20 +90,6 @@ const OptionEditor: React.FC<{
           }}
         />
 
-        <PermissionSelect
-          value={props.value.data.flag || ""}
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                flag: ev.target.value as string,
-              },
-            });
-          }}
-          sx={{ width: { md: "160px" }, maxWidth: "160px" }}
-        />
-
         {typeof props.index !== "undefined" &&
           props.groups &&
           props.onMoveToGroup && (
@@ -139,6 +125,19 @@ const OptionEditor: React.FC<{
           />
         </InputRow>
       )}
+
+      <FlagsSelect
+        value={Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]}
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              flag: ev,
+            },
+          });
+        }}
+      />
     </div>
   );
 };
@@ -193,7 +192,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                           text: "",
                           description: "",
                           val: "",
-                          flag: "",
                         },
                       }) as Option
                     }
@@ -267,7 +265,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 text: "",
                 description: "",
                 val: "",
-                flag: "",
               },
             }) as Option
           }
@@ -316,14 +313,14 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                    categories: groupedOptions.map((gr) => ({
-                      title: gr.title,
-                      count: gr.children.length,
-                    })),
-                  }
+                  categories: groupedOptions.map((gr) => ({
+                    title: gr.title,
+                    count: gr.children.length,
+                  })),
+                }
                 : {
-                    categories: undefined,
-                  }),
+                  categories: undefined,
+                }),
             },
           },
           processedOptions,
@@ -332,7 +329,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
