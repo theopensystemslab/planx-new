@@ -11,10 +11,9 @@ import { SiteAddress } from "@planx/components/FindProperty/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { GraphError } from "components/Error/GraphError";
 import { GeoJsonObject } from "geojson";
-import { Feature } from "geojson";
 import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -231,7 +230,7 @@ const Root = () => {
   const passport = useStore((state) => state.computePassport().data);
 
   // If coming "back" or "changing", load initial features & tabs onto the map
-  //   Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
+  // Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
   if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
     addInitialFeaturesToMap(previouslySubmittedData?.data?.[fn]?.features);
   }
