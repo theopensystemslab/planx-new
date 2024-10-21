@@ -334,10 +334,6 @@ export async function answerListInput(
     page.locator("h2", { hasText: "Existing residential unit type 1" }),
   ).toBeVisible(); // assume the default list for now
   await page
-    .getByLabel("Number of units of this type")
-    .fill(numUnits.toString());
-    
-  await page
     .getByRole("combobox", { name: "What best describes this unit?" })
     .click();
   await page.getByRole("option", { name: unitType }).click();
@@ -352,6 +348,9 @@ export async function answerListInput(
   await page
     .getByLabel("How many bedrooms does this unit have?")
     .fill(numBedrooms.toString());
+  await page
+    .getByLabel("Number of units of this type")
+    .fill(numUnits.toString());   
 
   const saveButton = page.getByTestId("save-item-button");
   await saveButton.click();
