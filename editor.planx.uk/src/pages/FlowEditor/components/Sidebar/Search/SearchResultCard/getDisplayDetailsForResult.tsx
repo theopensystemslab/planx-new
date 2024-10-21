@@ -4,13 +4,11 @@ import {
   IndexedNode,
 } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
-import { Checklist } from "@planx/components/Checklist/model";
 import { Confirmation } from "@planx/components/Confirmation/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
 import { NextSteps } from "@planx/components/NextSteps/model";
-import { Pay } from "@planx/components/Pay/model";
-import { Schema } from "@planx/components/shared/Schema/model";
+import { ChecklistField } from "@planx/components/shared/Schema/model";
 import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
 import { capitalize, get } from "lodash";
@@ -70,10 +68,6 @@ const keyFormatters: KeyMap = {
   "data.info": {
     getDisplayKey: () => "Why it matters",
   },
-  "data.categories.title": {
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Checklist).categories![refIndex].title,
-  },
   "data.steps.title": {
     getDisplayKey: () => "Title (step)",
     getHeadline: ({ item, refIndex }) =>
@@ -94,84 +88,51 @@ const keyFormatters: KeyMap = {
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
-  "data.fileTypes.moreInformation.howMeasured": {
-    getDisplayKey: () => "How is it defined (file type)",
+  "data.fileTypes.moreInformation.notes": {
+    getDisplayKey: () => "Internal notes (file type)",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.howMeasured!,
+        .moreInformation!.notes!,
+  },
+  "data.fileTypes.moreInformation.howMeasured": {
+    getDisplayKey: () => "How is it defined (file type)",
   },
   "data.fileTypes.moreInformation.policyRef": {
     getDisplayKey: () => "Policy reference (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.policyRef!,
   },
   "data.fileTypes.moreInformation.info": {
     getDisplayKey: () => "Why it matters (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.info!,
-  },
-  "data.units": {
-    getDisplayKey: () => "Unit type",
-  },
-  "data.schemaName": {
-    getDisplayKey: () => "Schema name",
-  },
-  "data.schema.fields.data.title": {
-    getHeadline: ({ item, refIndex }) =>
-      (item.data?.schema as unknown as Schema).fields[refIndex].data.title,
   },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data?.schema as unknown as Schema).fields[refIndex].data
-        .description!,
   },
   "data.schema.fields.data.options.data.description": {
-    getDisplayKey: () => "Option (description)",
-    getHeadline: ({ item, refIndex }) => {
-      const options = (item.data?.schema as unknown as Schema).fields
-        .filter(
-          (field) => field.type === "question" || field.type === "checklist",
-        )
-        .flatMap((field) => field.data.options);
-      return options[refIndex].data.description || "";
-    },
+    getDisplayKey: () => "Description",
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as ChecklistField).data.options[refIndex].data
+        .description!,
   },
   "data.schema.fields.data.options.text": {
     getDisplayKey: () => "Option",
-    getHeadline: ({ item, refIndex }) => {
-      const options = (item.data?.schema as unknown as Schema).fields
-        .filter(
-          (field) => field.type === "question" || field.type === "checklist",
-        )
-        .flatMap((field) => field.data.options);
-      return options[refIndex].data.text || "";
-    },
+    getHeadline: ({ item, refIndex }) =>
+      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
   "data.tasks.title": {
-    getDisplayKey: () => "Title (task)",
+    getDisplayKey: () => "Title",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as TaskList).tasks[refIndex].title,
   },
   "data.tasks.description": {
-    getDisplayKey: () => "Description (task)",
+    getDisplayKey: () => "Description",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as TaskList).tasks[refIndex].description,
   },
   ...Object.fromEntries(
     flatFlags.flatMap(({ value }) => [
       [
-        `data.overrides.${value}.heading`,
-        {
-          getDisplayKey: () => `Heading (${value} flag)`,
-        },
-      ],
-      [
         `data.overrides.${value}.description`,
         {
-          getDisplayKey: () => `Description (${value} flag)`,
+          displayKey: () => "Description",
         },
       ],
     ]),
@@ -191,7 +152,7 @@ const keyFormatters: KeyMap = {
       (item.data as unknown as Confirmation).nextSteps![refIndex].title,
   },
   "data.nextSteps.description": {
-    getDisplayKey: () => "Description (next steps)",
+    getDisplayKey: () => "Description",
     getHeadline: ({ item, refIndex }) =>
       (item.data as unknown as Confirmation).nextSteps![refIndex].description,
   },
@@ -232,23 +193,13 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Nominee description",
   },
   "data.yourDetailsTitle": {
-    getDisplayKey: () => "Title (your details)",
+    getDisplayKey: () => "Your details title",
   },
   "data.yourDetailsDescription": {
-    getDisplayKey: () => "Description (your details)",
+    getDisplayKey: () => "Your details description",
   },
   "data.yourDetailsLabel": {
-    getDisplayKey: () => "Label (your details)",
-  },
-  "data.govPayMetadata.key": {
-    getDisplayKey: () => "GOV.UK Pay metadata (key)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Pay).govPayMetadata[refIndex].key,
-  },
-  "data.govPayMetadata.value": {
-    getDisplayKey: () => "GOV.UK Pay metadata (value)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Pay).govPayMetadata[refIndex].value.toString(),
+    getDisplayKey: () => "Your details label",
   },
   // Calculate contains both input and output data values
   formula: {
@@ -278,23 +229,13 @@ const keyFormatters: KeyMap = {
 };
 
 const componentFormatters: ComponentMap = {
-  // Answers are mapped to their parent questions / checklists
+  // Answers are mapped to their parent questions
   [ComponentType.Answer]: {
     getDisplayKey: () => "Option (title)",
-    getIconKey: ({ item }) => {
-      const parentNode = useStore.getState().flow[item.parentId];
-      return parentNode.type!;
-    },
+    getIconKey: () => ComponentType.Question,
     getTitle: ({ item }) => {
       const parentNode = useStore.getState().flow[item.parentId];
       return parentNode.data?.text;
-    },
-    getComponentType: ({ item }) => {
-      const parentNode = useStore.getState().flow[item.parentId];
-      const parentType = parentNode.type!;
-      const formatted = capitalize(SLUGS[parentType].replaceAll("-", " "));
-
-      return formatted;
     },
   },
 };

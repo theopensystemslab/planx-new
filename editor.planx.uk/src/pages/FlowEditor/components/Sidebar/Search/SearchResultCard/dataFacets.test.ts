@@ -11,7 +11,7 @@ import {
   mockListDataResult,
   mockListRootResult,
   mockQuestionResult,
-} from "../mocks/dataFacetFlow";
+} from "../mocks/getDisplayDetailsForResult";
 import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 
 type Output = ReturnType<typeof getDisplayDetailsForResult>;

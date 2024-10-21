@@ -50,7 +50,7 @@ const components: {
   "external-portal": ExternalPortal,
   "file-upload": FileUpload,
   filter: Filter,
-  "find-property": FindProperty,
+  "find-property-merged": FindProperty,
   flow: EmptyComponent,
   "internal-portal": InternalPortal,
   "file-upload-and-label": FileUploadAndLabel,

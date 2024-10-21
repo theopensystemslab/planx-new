@@ -197,12 +197,7 @@ export async function findSession({
     gql`
       query FindSession($sessionId: uuid!, $email: String!) {
         sessions: lowcal_sessions(
-          where: {
-            id: { _eq: $sessionId }
-            email: { _eq: $email }
-            submitted_at: { _is_null: true }
-            deleted_at: { _is_null: true }
-          }
+          where: { id: { _eq: $sessionId }, email: { _eq: $email } }
           limit: 1
         ) {
           flow_id

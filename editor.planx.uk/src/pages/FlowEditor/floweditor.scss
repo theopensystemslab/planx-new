@@ -119,10 +119,8 @@ $fontMonospace: "Source Code Pro", monospace;
     outline-offset: 0;
   }
 
-  &.isClone > div,
-  &.isClone > a {
+  &.isClone a {
     margin-top: 3px;
-    position: relative;
     ::before {
       content: "";
       position: absolute;
@@ -140,11 +138,6 @@ $fontMonospace: "Source Code Pro", monospace;
     border: $nodeBorderWidth dashed red;
   }
 
-  // Allow nodes to expand to width of data when toggled
-  &:not(.type-Section):not(.portal):not(.type-Filter) > a {
-    width: 100%;
-  }
-
   & a {
     position: relative;
     display: flex;
@@ -157,8 +150,6 @@ $fontMonospace: "Source Code Pro", monospace;
     background: white;
     user-select: none;
     padding: 6px 12px;
-    overflow-wrap: break-word;
-    word-break: break-word;
 
     * {
       pointer-events: none;
@@ -170,14 +161,16 @@ $fontMonospace: "Source Code Pro", monospace;
       overflow-wrap: break-word;
     }
 
-    // Component icon
-    & svg {
+    > svg {
       margin-left: -6px;
-      margin-top: -1px;
-      margin-right: 6px;
-      width: 19px;
-      height: 19px;
-      opacity: 0.75;
+      margin-top: 0.5px;
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+    }
+
+    > span:not(:first-child) {
+      margin-left: 6px;
     }
   }
 
