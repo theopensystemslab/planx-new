@@ -344,7 +344,7 @@ export async function answerListInput(
   
   await page
     .getByRole("combobox", {
-      name: "What best describes the tenure of this unit? ",
+      name: "What best describes the tenure of this unit?",
     })
     .click();
   await page.getByRole("option", { name: tenure }).click();
