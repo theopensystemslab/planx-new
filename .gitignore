@@ -34,3 +34,4 @@ api.planx.uk/tmp/
 **/*.p12
 **/*.p7b
 **/*.pem
+**/*.zip

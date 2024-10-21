@@ -123,7 +123,7 @@ const EditHistory = () => {
                     sx={{
                       bgcolor: (theme) =>
                         inUndoScope(i)
-                          ? theme.palette.grey[400]
+                          ? theme.palette.grey[300]
                           : theme.palette.grey[900],
                     }}
                   />
@@ -132,8 +132,8 @@ const EditHistory = () => {
                       sx={{
                         bgcolor: (theme) =>
                           inUndoScope(i)
-                            ? theme.palette.grey[400]
-                            : theme.palette.grey[900],
+                            ? theme.palette.grey[200]
+                            : theme.palette.grey[300],
                       }}
                     />
                   )}
@@ -141,6 +141,8 @@ const EditHistory = () => {
                 <TimelineContent
                   sx={{
                     paddingRight: 0,
+                    paddingTop: 0.1,
+                    paddingBottom: 2,
                     minWidth: "100%",
                     maxWidth: "100%",
                   }}
@@ -158,16 +160,19 @@ const EditHistory = () => {
                         variant="body1"
                         sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
                         color={inUndoScope(i) ? "GrayText" : "inherit"}
+                        py={0.33}
                       >
                         {`${
                           op.actor
-                            ? `Edited by ${op.actor?.firstName} ${op.actor?.lastName}`
+                            ? `${op.actor?.firstName} ${op.actor?.lastName}`
                             : `Created flow`
                         }`}
                       </Typography>
                       <Typography
                         variant="body2"
-                        color={inUndoScope(i) ? "GrayText" : "inherit"}
+                        fontSize="small"
+                        pb={0.75}
+                        color={inUndoScope(i) ? "GrayText" : "text.secondary"}
                       >
                         {formatLastEditDate(op.createdAt)}
                       </Typography>
@@ -189,13 +194,13 @@ const EditHistory = () => {
                     )}
                   </Box>
                   {op.data && (
-                    <>
+                    <Box sx={{ bgcolor: "#F0F3F6", borderRadius: "8px" }}>
                       <Typography
                         variant="body2"
                         component="ul"
                         padding={2}
+                        paddingLeft={3.5}
                         color={inUndoScope(i) ? "GrayText" : "inherit"}
-                        style={{ paddingRight: "50px" }}
                       >
                         {[...new Set(formatOps(flow, op.data))]
                           .slice(0, OPS_TO_DISPLAY)
@@ -222,6 +227,7 @@ const EditHistory = () => {
                             variant="body2"
                             component="ul"
                             padding={2}
+                            paddingLeft={3.5}
                             color={inUndoScope(i) ? "GrayText" : "inherit"}
                             style={{ paddingRight: "50px" }}
                           >
@@ -235,7 +241,7 @@ const EditHistory = () => {
                           </Typography>
                         </SimpleExpand>
                       )}
-                    </>
+                    </Box>
                   )}
                 </TimelineContent>
               </TimelineItem>
