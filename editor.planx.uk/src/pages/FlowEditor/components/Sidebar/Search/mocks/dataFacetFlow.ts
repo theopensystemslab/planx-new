@@ -612,7 +612,7 @@ export const mockListAnswerResult: SearchResult<IndexedNode> = {
   key: "data.schema.fields.data.options.data.val",
   matchIndices: [[0, 14]],
   refIndex: 10,
-  matchValue: "tenure",
+  matchValue: "selfCustomBuild",
 };
 
 export const mockCalculateRootResult: SearchResult<IndexedNode> = {
