@@ -334,10 +334,14 @@ export async function answerListInput(
     page.locator("h2", { hasText: "Existing residential unit type 1" }),
   ).toBeVisible(); // assume the default list for now
   await page
-    .getByRole("combobox", { name: "What best describes the type" })
+    .getByLabel("Number of units of this type")
+    .fill(numUnits.toString());
+    
+  await page
+    .getByRole("combobox", { name: "What best describes this unit?" })
     .click();
   await page.getByRole("option", { name: unitType }).click();
-
+  
   await page
     .getByRole("combobox", {
       name: "What best describes the tenure of this unit? ",
@@ -348,9 +352,6 @@ export async function answerListInput(
   await page
     .getByLabel("How many bedrooms does this unit have?")
     .fill(numBedrooms.toString());
-  await page
-    .getByLabel("How many units of the type described above exist on the site?")
-    .fill(numUnits.toString());
 
   const saveButton = page.getByTestId("save-item-button");
   await saveButton.click();
