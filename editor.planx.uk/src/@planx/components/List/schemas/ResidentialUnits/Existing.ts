@@ -4,9 +4,19 @@ export const ResidentialUnitsExisting: Schema = {
   type: "Existing residential unit type",
   fields: [
     {
+      type: "number",
+      data: {
+        title: "Number of units of this type",
+        description:
+          "This is the number of units of this type that currently exist on the site.",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
       type: "question",
       data: {
-        title: "What best describes the type of this unit?",
+        title: "What best describes this unit?",
         fn: "type",
         options: [
           { id: "house", data: { text: "House", val: "house" } },
@@ -56,14 +66,6 @@ export const ResidentialUnitsExisting: Schema = {
       data: {
         title: "How many bedrooms does this unit have?",
         fn: "bedrooms",
-        allowNegatives: false,
-      },
-    },
-    {
-      type: "number",
-      data: {
-        title: "How many units of the type described above exist on the site?",
-        fn: "identicalUnits",
         allowNegatives: false,
       },
     },
