@@ -14,8 +14,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#e73d702
-    version: github.com/theopensystemslab/planx-core/e73d702
+    specifier: git+https://github.com/theopensystemslab/planx-core#4cc216f
+    version: github.com/theopensystemslab/planx-core/4cc216f
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -4379,8 +4379,8 @@ packages:
       semver: 7.6.3
     dev: true
 
-  /marked@14.1.2:
-    resolution: {integrity: sha512-f3r0yqpz31VXiDB/wj9GaOB0a2PRLQl6vJmXiFrniNwjkKdvakqJRULhjFKJpxOchlCRiG5fcacoUZY5Xa6PEQ==}
+  /marked@14.1.3:
+    resolution: {integrity: sha512-ZibJqTULGlt9g5k4VMARAktMAjXoVnnr+Y3aCqW1oDftcV4BA3UmrBifzXoZyenHRk75csiPu9iwsTj4VNBT0g==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -6265,8 +6265,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/e73d702:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e73d702}
+  github.com/theopensystemslab/planx-core/4cc216f:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4cc216f}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -6288,7 +6288,7 @@ packages:
       graphql-request: 6.1.0(graphql@16.9.0)
       json-schema-to-typescript: 15.0.2
       lodash: 4.17.21
-      marked: 14.1.2
+      marked: 14.1.3
       prettier: 3.3.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
