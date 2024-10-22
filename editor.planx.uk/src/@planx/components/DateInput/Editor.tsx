@@ -4,18 +4,15 @@ import {
   DateInput,
   editorValidationSchema,
   paddedDate,
+  parseDateInput,
 } from "@planx/components/DateInput/model";
-import { parseDateInput } from "@planx/components/DateInput/model";
-import {
-  EditorProps,
-  ICONS,
-} from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import DateInputUi from "ui/shared/DateInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";

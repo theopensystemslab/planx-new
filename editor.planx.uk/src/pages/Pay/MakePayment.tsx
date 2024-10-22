@@ -23,7 +23,7 @@ import {
 } from "../../@planx/components/Pay/model";
 import Confirm from "../../@planx/components/Pay/Public/Confirm";
 import { logger } from "../../airbrake";
-import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "../../components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 
 const States = {
   Init: {

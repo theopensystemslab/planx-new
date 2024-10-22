@@ -16,7 +16,7 @@ import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -167,7 +167,7 @@ function PlanningConstraintsComponent(props: Props) {
           </InputGroup>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false}/>
+      <ModalFooter formik={formik} showMoreInformation={false} />
     </form>
   );
 }

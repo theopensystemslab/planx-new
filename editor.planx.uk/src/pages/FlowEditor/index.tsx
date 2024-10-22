@@ -3,7 +3,7 @@ import "./floweditor.scss";
 import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
-import { HEADER_HEIGHT_EDITOR } from "components/Header";
+import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import React, { useRef } from "react";
 import { useCurrentRoute } from "react-navi";
 

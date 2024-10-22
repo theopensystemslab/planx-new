@@ -8,7 +8,7 @@ import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { Feature } from "geojson";
 import { Store } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";

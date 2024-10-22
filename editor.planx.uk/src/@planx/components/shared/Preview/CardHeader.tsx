@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
-import { emptyContent } from "ui/editor/RichTextInput";
+import { emptyContent } from "ui/editor/RichTextInput/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import { DESCRIPTION_TEXT } from "../constants";
