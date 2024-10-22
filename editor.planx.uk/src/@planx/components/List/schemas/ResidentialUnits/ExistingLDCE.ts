@@ -1,14 +1,14 @@
 import { Schema } from "@planx/components/shared/Schema/model";
 
-export const ResidentialUnitsProposed: Schema = {
-  type: "Proposed residential unit type",
+export const ResidentialUnitsExistingLDCE: Schema = {
+  type: "Existing residential unit type",
   fields: [
     {
       type: "number",
       data: {
         title: "Number of units of this type",
         description:
-          "This is the total number of units of this type that will be on the site after the changes.",
+          "This is the number of units of this type that currently exist on the site.",
         fn: "identicalUnits",
         allowNegatives: false,
       },
@@ -22,7 +22,11 @@ export const ResidentialUnitsProposed: Schema = {
           { id: "house", data: { text: "House", val: "house" } },
           {
             id: "flat",
-            data: { text: "Flat, apartment or maisonette", val: "flat" },
+            data: { text: "Flat or maisonette", val: "flat" },
+          },
+          {
+            id: "liveWorkUnit",
+            data: { text: "Live/work unit", val: "LW" },
           },
           {
             id: "sheltered",
@@ -64,7 +68,7 @@ export const ResidentialUnitsProposed: Schema = {
     {
       type: "number",
       data: {
-        title: "How many bedrooms will this unit have?",
+        title: "How many bedrooms does this unit have?",
         fn: "bedrooms",
         allowNegatives: false,
       },
