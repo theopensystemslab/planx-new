@@ -17,7 +17,7 @@ import { usePrevious } from "react-use";
 import { emptyContent } from "ui/editor/RichTextInput/RichTextInput";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { FileUploadSlot } from "../FileUpload/model";
 import { MoreInformation } from "../shared";

@@ -13,7 +13,7 @@ import { Link as ReactNaviLink, useCurrentRoute } from "react-navi";
 import type { ReconciliationResponse, Session } from "types";
 import { ApplicationPath, SendEmailPayload } from "types";
 import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
 

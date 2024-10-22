@@ -15,7 +15,7 @@ import {
   inputFocusStyle,
 } from "theme";
 
-import ErrorWrapper from "./ErrorWrapper";
+import ErrorWrapper from "../ErrorWrapper";
 
 const PREFIX = "Input";
 
@@ -115,7 +115,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
         container.current?.querySelector("input")?.select();
       },
     }),
-    []
+    [],
   );
 
   return (

@@ -19,8 +19,8 @@ import { isPreviewOnlyDomain } from "routes/utils";
 import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import Input from "ui/shared/Input/Input";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 import { object, string } from "yup";
 
 // Passport keys which will be used to display a preview of the session to the payee as part of their journey

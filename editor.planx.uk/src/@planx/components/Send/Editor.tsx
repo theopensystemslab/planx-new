@@ -7,15 +7,14 @@ import { getIn, useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ChecklistItem from "ui/shared/ChecklistItem";
+import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { array, object } from "yup";
 
 import { EditorProps, ICONS } from "../ui";
-import { Destination, Send } from "./model";
-import { parseContent } from "./model";
+import { Destination, parseContent, Send } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 

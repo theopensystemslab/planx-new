@@ -22,7 +22,7 @@ import { addDays, format, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
-import ErrorSummary from "ui/shared/ErrorSummary";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { GetSubmissionsResponse, Submission } from ".";
 

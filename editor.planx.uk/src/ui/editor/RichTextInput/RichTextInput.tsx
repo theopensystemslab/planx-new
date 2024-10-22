@@ -51,7 +51,7 @@ import { inputFocusStyle } from "theme";
 import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
-import Input from "../../shared/Input";
+import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import CustomImage from "../RichTextImage";
 

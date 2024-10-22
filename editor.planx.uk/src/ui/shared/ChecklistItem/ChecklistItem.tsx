@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 
-import Checkbox from "./Checkbox";
+import Checkbox from "../Checkbox/Checkbox";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
