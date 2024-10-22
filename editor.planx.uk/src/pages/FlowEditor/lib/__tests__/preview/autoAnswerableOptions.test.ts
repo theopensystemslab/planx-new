@@ -18,9 +18,9 @@ describe("Questions", () => {
 });
 
 describe("Checklists", () => {
-  test.todo("Correctly auto-answers the options that exactly match passport values");
+  test.todo("Correctly auto-answers all options that exactly match passport values");
 
-  test.todo("Correctly auto-answers the less granular options when there are more granular passport values");
+  test.todo("Correctly auto-answers all less granular options when there are more granular passport values");
 
   test.todo("Correctly auto-answers through the blank path when there are no matching passport values but we've seen this passport fn before");
 });

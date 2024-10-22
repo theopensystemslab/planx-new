@@ -4,6 +4,7 @@ import type {
   GovUKPayment,
   Node,
   NodeId,
+  Value,
 } from "@opensystemslab/planx-core/types";
 import {
   ComponentType as TYPES,
@@ -440,7 +441,7 @@ export const previewStore: StateCreator<
     const { breadcrumbs, flow, computePassport } = get();
     const { type, data, edges } = flow[id];
 
-    // Only nodes that set data fn & have edges are eligible for auto-answering
+    // Only nodes that have an fn & edges are eligible for auto-answering
     if (!type || !data?.fn || !edges) return;
 
     // Get all options (aka edges or Answer type nodes) for this node
@@ -461,43 +462,48 @@ export const previewStore: StateCreator<
         )
         // Only keep options with a data value set (remove blanks)
         .filter((option) => option.data?.val);
+      const blankOption = options.find((option) => !option.data?.val);
 
       // Get existing passport values that match this node's fn
       let passportValues = computePassport()?.data?.[data?.fn]?.sort();
-      if (!passportValues) return;
+      if (!passportValues && !blankOption) return;
+
       if (!Array.isArray(passportValues)) passportValues = [passportValues];
 
-      // Only proceed if at least one option's data val startsWith an existing passport value (eg passport retains most granular value only)
-      passportValues = passportValues.filter((passportValue: any) =>
+      // Proceed if at least one option's val startsWith an existing passport value or vice versa (eg passport retains most granular value only)
+      const matchingPassportValues = passportValues.filter((passportValue: any) =>
         sortedOptions.some((option) =>
-          passportValue.startsWith(option.data?.val),
+          option.data?.val?.startsWith(passportValue) || passportValue?.startsWith(option.data?.val),
         ),
       );
-      if (!passportValues.length) return;
 
-      // For each sorted option, check if it has a direct match in the passport
-      sortedOptions.forEach((option) => {
-        passportValues.forEach((passportValue: any) => {
-          if (option.data?.val === passportValue) {
-            if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
-          }
-        });
-      });
-
-      // If we haven't found any exact matches, see if the passport has a more granular version of the option
-      if (optionsThatCanBeAutoAnswered.length === 0) {
+      if (matchingPassportValues.length > 0) {
+        // For each sorted option, check if it has a direct match in the passport
         sortedOptions.forEach((option) => {
           passportValues.forEach((passportValue: any) => {
-            // TODO - respect dot-separated segments ??
-            if (passportValue.startsWith(option.data?.val)) {
+            if (option.data?.val === passportValue) {
               if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
             }
           });
         });
-      }
 
-      // TODO - Handle blanks & "_nots" for Questions & Checklists
-      //   Different than Filters, these types _can_ be put to user and we need to decide when
+        // If we haven't found any exact matches, see if the passport has a more granular version of the option (eg option is `fruit`, passport has `fruit.apple`)
+        if (optionsThatCanBeAutoAnswered.length === 0) {
+          sortedOptions.forEach((option) => {
+            passportValues.forEach((passportValue: any) => {
+              // Future TODO - respect dot-separated segments ??
+              if (passportValue?.startsWith(option.data?.val)) {
+                if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
+              }
+            });
+          });
+        }
+      } else {
+         // If we don't have any relevant passport values but we do have a blank option,
+        //  check if we've seen at least one node with the same fn before (independent of option vals) and proceed through the blank if so
+        const visitedFn = Object.entries(breadcrumbs).find(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);
+        if (visitedFn && blankOption?.id) optionsThatCanBeAutoAnswered.push(blankOption.id);
+      }
     }
 
     // Filters auto-answer based on a heirarchy of collected flags
@@ -508,9 +514,8 @@ export const previewStore: StateCreator<
         (flag) => flag.category === filterCategory,
       );
       const possibleFlagValues = possibleFlags.map((flag) => flag.value);
-      if (!possibleFlagValues) return;
 
-      // Get all flags collected so far based on selected answers, excluding flags not in the specified category
+      // Get all flags collected so far based on selected answers, excluding flags not in this category
       const collectedFlags: Flag[] = [];
       Object.entries(breadcrumbs).forEach(([_nodeId, crumb]) => {
         if (crumb.answers) {
@@ -521,7 +526,6 @@ export const previewStore: StateCreator<
           });
         }
       });
-      if (!collectedFlags) return;
 
       // Starting from the left of the Filter options, check for matches
       options.forEach((option) => {
@@ -535,12 +539,11 @@ export const previewStore: StateCreator<
       // If we didn't match a flag, travel through "No result" (aka blank) option
       if (optionsThatCanBeAutoAnswered.length === 0) {
         const noResultFlag = options.find((option) => !option.data?.val);
-        if (noResultFlag && noResultFlag?.id)
-          optionsThatCanBeAutoAnswered.push(noResultFlag.id);
+        if (noResultFlag?.id) optionsThatCanBeAutoAnswered.push(noResultFlag.id);
       }
     }
 
-    // Questions & Filters 'select one' and therefore should only auto-answer the single left-most matching option
+    // Questions & Filters 'select one' and therefore can only auto-answer the single left-most matching option
     if ([TYPES.Question, TYPES.Filter].includes(type)) {
       optionsThatCanBeAutoAnswered = optionsThatCanBeAutoAnswered.slice(0, 1);
     }
@@ -790,9 +793,9 @@ export const sortBreadcrumbs = (
   return editingNodes?.length
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
-        (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-        {} as Store.Breadcrumbs,
-      );
+      (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
+      {} as Store.Breadcrumbs,
+    );
 };
 
 function handleNodesWithPassport({
