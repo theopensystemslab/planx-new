@@ -83,6 +83,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         const mergedProperties = {
           ...feature.properties,
           ...values.schemaData[i],
+          label: `${i + 1}`,
         };
         feature["properties"] = mergedProperties;
         geojson.features.push(feature);

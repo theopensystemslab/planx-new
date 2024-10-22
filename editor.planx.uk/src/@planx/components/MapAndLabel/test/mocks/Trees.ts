@@ -3,8 +3,8 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { PresentationalProps } from "../../Public";
 import { Trees } from "../../schemas/Trees";
 import {
-  previouslySubmittedDoubleData,
-  previouslySubmittedSingleData,
+  previouslySubmittedDoubleFeature,
+  previouslySubmittedSingleFeature,
 } from "./mockPayload";
 
 const mockTreeSchema: Schema = {
@@ -25,12 +25,12 @@ export const props: PresentationalProps = {
   latitude: 51.5230919,
 };
 
-export const previousSingleDataProps: PresentationalProps = {
+export const previouslySubmittedSingleFeatureProps: PresentationalProps = {
   ...props,
-  previouslySubmittedData: previouslySubmittedSingleData,
+  previouslySubmittedData: previouslySubmittedSingleFeature,
 };
 
-export const previousDoubleDataProps: PresentationalProps = {
+export const previouslySubmittedDoubleFeatureProps: PresentationalProps = {
   ...props,
-  previouslySubmittedData: previouslySubmittedDoubleData,
+  previouslySubmittedData: previouslySubmittedDoubleFeature,
 };

@@ -27,7 +27,7 @@ export const mockSingleFeaturePayload: MockPayload = {
   },
 };
 
-export const previousMockDoubleFeatureData: MockPayload = {
+export const mockDoubleFeaturePayload: MockPayload = {
   data: {
     MockFn: {
       features: [
@@ -53,12 +53,12 @@ export const previousMockDoubleFeatureData: MockPayload = {
   },
 };
 
-export const previouslySubmittedSingleData: PreviousData = {
+export const previouslySubmittedSingleFeature: PreviousData = {
   auto: false,
   ...mockSingleFeaturePayload,
 };
 
-export const previouslySubmittedDoubleData: PreviousData = {
+export const previouslySubmittedDoubleFeature: PreviousData = {
   auto: false,
-  ...previousMockDoubleFeatureData,
+  ...mockDoubleFeaturePayload,
 };
