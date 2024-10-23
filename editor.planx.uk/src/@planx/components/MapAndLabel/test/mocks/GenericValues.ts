@@ -2,7 +2,7 @@ export type TreeData = {
   species: string;
   work: string;
   justification: string;
-  urgency: "low" | "moderate" | "high" | "urgenct";
+  urgency: "low" | "moderate" | "high" | "urgent";
   label: string;
 };
 

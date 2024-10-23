@@ -230,7 +230,7 @@ const Root = () => {
   const passport = useStore((state) => state.computePassport().data);
 
   // If coming "back" or "changing", load initial features & tabs onto the map
-  //   Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
+  // Pre-populating form fields within tabs is handled via formik.initialValues in Context.tsx
   if (previouslySubmittedData?.data?.[fn]?.features?.length > 0) {
     addInitialFeaturesToMap(previouslySubmittedData?.data?.[fn]?.features);
   }
