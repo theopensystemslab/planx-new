@@ -5,7 +5,6 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
-import { Destination } from "./model";
 import SendComponent from "./Public";
 
 vi.mock("axios");
@@ -30,7 +29,7 @@ it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <SendComponent
       title="Send"
-      destinations={[Destination.BOPS, Destination.Uniform]}
+      destinations={["bops", "uniform"]}
     />,
   );
   const results = await axe(container);
