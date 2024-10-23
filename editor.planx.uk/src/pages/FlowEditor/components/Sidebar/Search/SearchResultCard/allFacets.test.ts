@@ -105,7 +105,7 @@ describe("More information fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.policyRef",
-      matchValue: "Rat"
+      matchValue: "Rat",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -121,7 +121,7 @@ describe("More information fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.info",
-      matchValue: "Octopus"
+      matchValue: "Octopus",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -133,6 +133,7 @@ describe("More information fields", () => {
     });
   });
 });
+
 describe("checklist fields", () => {
   it("renders data.categories.title", () => {
     const output = getDisplayDetailsForResult(mockChecklistResult);
@@ -176,7 +177,7 @@ describe("nextSteps fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockNextStepsOptionResult,
       key: "data.steps.description",
-      matchValue: "Vulture"
+      matchValue: "Vulture",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -222,7 +223,7 @@ describe("fileUploadAndLabel fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
       key: "data.fileTypes.moreInformation.info",
-      matchValue: "Kangaroo"
+      matchValue: "Kangaroo",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -238,7 +239,7 @@ describe("fileUploadAndLabel fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
       key: "data.fileTypes.moreInformation.policyRef",
-      matchValue: "Tiger"
+      matchValue: "Tiger",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -254,7 +255,7 @@ describe("fileUploadAndLabel fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
       key: "data.fileTypes.moreInformation.howMeasured",
-      matchValue: "Salamander"
+      matchValue: "Salamander",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -280,6 +281,7 @@ describe("numberInput fields", () => {
     });
   });
 });
+
 describe("schemaComponents fields", () => {
   it("renders data.schemaName", () => {
     const output = getDisplayDetailsForResult(mockSchemaResult);
@@ -345,7 +347,7 @@ describe("schemaComponents fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockSchemaResult,
       key: "data.schema.fields.data.options.data.description",
-      matchValue: "Parrot"
+      matchValue: "Parrot",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -435,7 +437,7 @@ describe("confirmation fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
       key: "data.contactInfo",
-      matchValue: "Weasel"
+      matchValue: "Weasel",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -451,7 +453,7 @@ describe("confirmation fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
       key: "data.nextSteps.title",
-      matchValue: "Llama"
+      matchValue: "Llama",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -543,7 +545,7 @@ describe("drawBoundary fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockDrawBoundaryResult,
       key: "data.descriptionForUploading",
-      matchValue: "Panda"
+      matchValue: "Panda",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -687,7 +689,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.yourDetailsDescription",
-      matchValue: "Macaw"
+      matchValue: "Macaw",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -754,7 +756,7 @@ describe("result fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockResultResult,
       key: "data.overrides.IMMUNE.heading",
-      matchValue: "Squid"
+      matchValue: "Squid",
     });
 
     expect(output).toStrictEqual<Output>({

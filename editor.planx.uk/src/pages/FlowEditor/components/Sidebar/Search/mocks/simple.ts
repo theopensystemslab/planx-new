@@ -10,6 +10,8 @@ export const flow: FlowGraph = {
     data: {
       fn: "country",
       text: "Pick a country",
+      description:
+        "<h1>This is rich text</h1><ol><li>With many nested html tags</li><li>Like <b>this</b>one<li><ol>",
     },
     edges: ["VhSydY2fTe", "tR9tdaWOvF", "tvUxd2IoPo"],
   },

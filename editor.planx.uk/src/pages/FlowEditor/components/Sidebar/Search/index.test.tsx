@@ -122,3 +122,38 @@ it("should not have any accessibility violations on initial load", async () => {
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+describe("rich text fields", () => {
+  test("HTML tags are stripped out", async () => {
+    const {
+      user,
+      getByRole,
+      getAllByRole,
+      getByText,
+      queryByText,
+      getByLabelText,
+    } = setup(
+      <VirtuosoWrapper>
+        <Search />
+      </VirtuosoWrapper>,
+    );
+
+    const searchInput = getByLabelText("Search this flow and internal portals");
+    user.type(searchInput, "rich text");
+
+    // Search has completed
+    await waitFor(() => expect(getByRole("list")).toBeInTheDocument());
+    await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(1));
+
+    // Single, correct, search result returned which has rich text as a description
+    expect(getByText(/1 result:/)).toBeVisible();
+    expect(getByText(/Pick a country/)).toBeVisible();
+    expect(getByText(/Description/)).toBeVisible();
+
+    // No HTML tags in text
+    // We must search by characters and not strings (e.g </h1>) as the string is split for the headline
+    expect(queryByText(/</)).not.toBeInTheDocument();
+    expect(queryByText(/>/)).not.toBeInTheDocument();
+    expect(queryByText(/\//)).not.toBeInTheDocument();
+  });
+});
