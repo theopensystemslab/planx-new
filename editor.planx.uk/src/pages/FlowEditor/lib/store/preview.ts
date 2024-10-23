@@ -465,7 +465,7 @@ export const previewStore: StateCreator<
       const blankOption = options.find((option) => !option.data?.val);
 
       // Get existing passport values that match this node's fn
-      let passportValues = computePassport()?.data?.[data?.fn]?.sort();
+      let passportValues = computePassport()?.data?.[data.fn]?.sort();
       if (!passportValues && !blankOption) return;
 
       if (!Array.isArray(passportValues)) passportValues = [passportValues];
@@ -480,9 +480,9 @@ export const previewStore: StateCreator<
       if (matchingPassportValues.length > 0) {
         sortedOptions.forEach((option) => {
           passportValues.forEach((passportValue: any) => {
-            // Queue up the option to be auto-answered if it has direct match in the passport
+            // An option can be auto-answered if it has direct match in the passport
             //   or if the passport has a more granular version of the option (eg option is `fruit`, passport has `fruit.apple`)
-            if (option.data?.val === passportValue) {
+            if (passportValue === option.data?.val) {
               if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
             } else if (passportValue.startsWith(option.data?.val)) {
               if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
@@ -490,13 +490,13 @@ export const previewStore: StateCreator<
           });
         });
       } else {
-        // If we don't have any relevant passport values but we do have a blank option,
+        // If we don't have any relevant matching passport values but we do have a blank option,
         //  check if we've seen nodes with the same fn before and proceed through the blank only if every option's val has been visited before
         const visitedFns = Object.entries(breadcrumbs).filter(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);
         if (!visitedFns) return;
 
         const sortedOptionVals: string[] = sortedOptions.map((option) => option.data?.val);
-        const visitedOptionVals: string[] = [];
+        let visitedOptionVals: string[] = [];
         visitedFns.forEach(([nodeId, _breadcrumb]) => {
           flow[nodeId].edges?.map((edgeId) => {
             if (flow[edgeId].type === TYPES.Answer && flow[edgeId].data?.val) {
@@ -504,6 +504,13 @@ export const previewStore: StateCreator<
             }
           })
         });
+
+        // Planning Constraints use a bespoke "_nots" data structure to describe all option vals returned via GIS API
+        //   Concat these onto other visitedOptionVals so that so that questions about constraints we haven't fetched are put to user exactly once
+        if (visitedFns.some(([nodeId, _breadcrumb]) => flow[nodeId].type === TYPES.PlanningConstraints)) {
+          const nots: string[] | undefined = computePassport()?.data?.["_nots"]?.[data.fn];
+          if (nots) visitedOptionVals = visitedOptionVals.concat(nots);
+        }
 
         const hasVisitedEveryOption = sortedOptionVals.every(value => visitedOptionVals.includes(value));
         if (blankOption?.id && hasVisitedEveryOption) optionsThatCanBeAutoAnswered.push(blankOption.id);
