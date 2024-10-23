@@ -1,5 +1,5 @@
 import * as planxCore from "@opensystemslab/planx-core";
-import { waitFor } from "@testing-library/react";
+import { waitFor, within } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -7,9 +7,11 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
+const mockNavigate = vi.fn();
+
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
-    navigate: vi.fn(),
+    navigate: mockNavigate,
   }),
 }));
 
@@ -64,7 +66,7 @@ test("entering a search term displays a series of cards", async () => {
   await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(2));
 });
 
-test.todo("cards link to their associated nodes", async () => {
+test("cards link to their associated nodes", async () => {
   const { user, getAllByRole, getByLabelText } = setup(
     <VirtuosoWrapper>
       <Search />
@@ -77,9 +79,19 @@ test.todo("cards link to their associated nodes", async () => {
   await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(2));
 
   const [first, second] = getAllByRole("listitem");
-  // TODO!
-  expect(first).toHaveAttribute("href", "link to tR9tdaWOvF (India)");
-  expect(second).toHaveAttribute("href", "link to tvUxd2IoPo (Indonesia)");
+  const urlToParentQuestion = "nodes/_root/nodes/Ej0xpn4l8u/edit";
+
+  const firstItemButton = within(first).getByRole("button");
+  await user.click(firstItemButton);
+  expect(mockNavigate).toHaveBeenCalledWith(
+    expect.stringContaining(urlToParentQuestion),
+  );
+
+  const secondItemButton = within(second).getByRole("button");
+  await user.click(secondItemButton);
+  expect(mockNavigate).toHaveBeenCalledWith(
+    expect.stringContaining(urlToParentQuestion),
+  );
 });
 
 it("orderedFlow is set in the store on render of Search", async () => {
