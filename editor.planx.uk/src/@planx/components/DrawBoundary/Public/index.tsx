@@ -5,7 +5,7 @@ import { visuallyHidden } from "@mui/utils";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import {
   MapContainer,
   MapFooter,

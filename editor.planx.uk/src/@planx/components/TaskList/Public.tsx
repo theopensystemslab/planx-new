@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { TaskList } from "@planx/components/TaskList/model";
 import { PublicProps } from "@planx/components/ui";
 import React from "react";

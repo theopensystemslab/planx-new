@@ -1,6 +1,6 @@
 import { NodeId } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
 import { PrintButton } from "components/PrintButton";
 import { Store } from "pages/FlowEditor/lib/store";

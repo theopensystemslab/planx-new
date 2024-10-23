@@ -4,7 +4,7 @@ import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
 import { PublicProps } from "@planx/components/ui";
 import area from "@turf/area";

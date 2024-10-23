@@ -5,9 +5,10 @@ import Button from "@mui/material/Button";
 import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Notice } from "@planx/components/Notice/model";
-import Card from "@planx/components/shared/Preview/Card";
-import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import Card, {
+  contentFlowSpacing,
+} from "@planx/components/shared/Preview/Card";
+import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";

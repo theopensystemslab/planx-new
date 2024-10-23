@@ -22,7 +22,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 import { FileUploadSlot } from "../FileUpload/model";
 import { MoreInformation } from "../shared";
 import Card from "../shared/Preview/Card";
-import CardHeader, { Image } from "../shared/Preview/CardHeader";
+import CardHeader, { Image } from "../shared/Preview/CardHeader/CardHeader";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
 import { Dropzone } from "../shared/PrivateFileUpload/Dropzone";
