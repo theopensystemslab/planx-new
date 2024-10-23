@@ -470,39 +470,43 @@ export const previewStore: StateCreator<
 
       if (!Array.isArray(passportValues)) passportValues = [passportValues];
 
-      // Proceed if at least one option's val startsWith an existing passport value or vice versa (eg passport retains most granular value only)
+      // Proceed if an existing passport value startsWith at least one option's val (eg passport retains most granular value only)
       const matchingPassportValues = passportValues.filter((passportValue: any) =>
         sortedOptions.some((option) =>
-          option.data?.val?.startsWith(passportValue) || passportValue?.startsWith(option.data?.val),
+          passportValue?.startsWith(option.data?.val),
         ),
       );
 
       if (matchingPassportValues.length > 0) {
-        // For each sorted option, check if it has a direct match in the passport
         sortedOptions.forEach((option) => {
           passportValues.forEach((passportValue: any) => {
+            // Queue up the option to be auto-answered if it has direct match in the passport
+            //   or if the passport has a more granular version of the option (eg option is `fruit`, passport has `fruit.apple`)
             if (option.data?.val === passportValue) {
+              if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
+            } else if (passportValue.startsWith(option.data?.val)) {
               if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
             }
           });
         });
-
-        // If we haven't found any exact matches, see if the passport has a more granular version of the option (eg option is `fruit`, passport has `fruit.apple`)
-        if (optionsThatCanBeAutoAnswered.length === 0) {
-          sortedOptions.forEach((option) => {
-            passportValues.forEach((passportValue: any) => {
-              // Future TODO - respect dot-separated segments ??
-              if (passportValue?.startsWith(option.data?.val)) {
-                if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
-              }
-            });
-          });
-        }
       } else {
-         // If we don't have any relevant passport values but we do have a blank option,
-        //  check if we've seen at least one node with the same fn before (independent of option vals) and proceed through the blank if so
-        const visitedFn = Object.entries(breadcrumbs).find(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);
-        if (visitedFn && blankOption?.id) optionsThatCanBeAutoAnswered.push(blankOption.id);
+        // If we don't have any relevant passport values but we do have a blank option,
+        //  check if we've seen nodes with the same fn before and proceed through the blank only if every option's val has been visited before
+        const visitedFns = Object.entries(breadcrumbs).filter(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);
+        if (!visitedFns) return;
+
+        const sortedOptionVals: string[] = sortedOptions.map((option) => option.data?.val);
+        const visitedOptionVals: string[] = [];
+        visitedFns.forEach(([nodeId, _breadcrumb]) => {
+          flow[nodeId].edges?.map((edgeId) => {
+            if (flow[edgeId].type === TYPES.Answer && flow[edgeId].data?.val) {
+              visitedOptionVals.push(flow[edgeId].data.val);
+            }
+          })
+        });
+
+        const hasVisitedEveryOption = sortedOptionVals.every(value => visitedOptionVals.includes(value));
+        if (blankOption?.id && hasVisitedEveryOption) optionsThatCanBeAutoAnswered.push(blankOption.id);
       }
     }
 
