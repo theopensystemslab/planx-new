@@ -64,7 +64,7 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         session: { data: {} },
       },
-      variables: { id: "123" },
+      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
       matchOnVariables: true,
     });
 
@@ -77,16 +77,16 @@ describe(`sending an application by email to a planning office`, () => {
           flow: { slug: "test-flow", name: "Test Flow" },
         },
       },
-      variables: { id: "123" },
+      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
 
     queryMock.mockQuery({
       name: "MarkSessionAsSubmitted",
       matchOnVariables: false,
       data: {
-        session: { id: "123" },
+        session: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
       },
-      variables: { sessionId: "123" },
+      variables: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
 
     queryMock.mockQuery({
@@ -96,7 +96,7 @@ describe(`sending an application by email to a planning office`, () => {
         application: { id: 1 },
       },
       variables: {
-        sessionId: "123",
+        sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
         teamSlug: "southwark",
         recipient: "planning.office.example@council.gov.uk",
         request: {
@@ -116,7 +116,7 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -130,7 +130,7 @@ describe(`sending an application by email to a planning office`, () => {
   it("fails without authorization header", async () => {
     await supertest(app)
       .post("/email-submission/southwark")
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
       .expect(401);
   });
 
@@ -138,12 +138,13 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { somethingElse: "123" } })
+      .send({
+        payload: { somethingElse: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
+      })
       .expect(400)
       .then((res) => {
-        expect(res.body).toEqual({
-          error: "Missing application payload data to send to email",
-        });
+        expect(res.body).toHaveProperty("issues");
+        expect(res.body).toHaveProperty("name", "ZodError");
       });
   });
 
@@ -167,7 +168,7 @@ describe(`sending an application by email to a planning office`, () => {
     await supertest(app)
       .post("/email-submission/other-council")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
       .expect(400)
       .then((res) => {
         expect(res.body).toEqual({
@@ -184,13 +185,13 @@ describe(`sending an application by email to a planning office`, () => {
       data: {
         session: null,
       },
-      variables: { id: "123" },
+      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
 
     await supertest(app)
       .post("/email-submission/other-council")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
       .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(/Cannot find session/);
@@ -221,7 +222,7 @@ describe(`downloading application data received by email`, () => {
       data: {
         session: { data: { passport: { test: "dummy data" } } },
       },
-      variables: { id: "123" },
+      variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },
     });
   });
 
@@ -274,12 +275,12 @@ describe(`downloading application data received by email`, () => {
   it("calls addTemplateFilesToZip()", async () => {
     await supertest(app)
       .get(
-        "/download-application-files/123?email=planning.office.example@council.gov.uk&localAuthority=southwark",
+        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
       )
       .expect(200)
       .then((_res) => {
         expect(mockBuildSubmissionExportZip).toHaveBeenCalledWith({
-          sessionId: "123",
+          sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
           includeDigitalPlanningJSON: true,
         });
       });

@@ -1,30 +1,24 @@
-import type { NextFunction, Request, Response } from "express";
 import { sendEmail } from "../../../lib/notify/index.js";
 import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
+import type { SendIntegrationController } from "../types.js";
 import {
   getSessionEmailDetailsById,
   getTeamEmailSettings,
   insertAuditEntry,
 } from "./service.js";
 
-export async function sendToEmail(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export const sendToEmail: SendIntegrationController = async (
+  req,
+  res,
+  next,
+) => {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
-  // `/email-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
-  const { payload } = req.body;
-  const localAuthority = req.params.localAuthority;
-
-  if (!payload?.sessionId) {
-    return next({
-      status: 400,
-      message: `Missing application payload data to send to email`,
-    });
-  }
+  const {
+    payload: { sessionId },
+  } = res.locals.parsedReq.body;
+  const localAuthority = res.locals.parsedReq.params.localAuthority;
 
   try {
     // Confirm this local authority (aka team) has an email configured in teams.submission_email
@@ -37,16 +31,16 @@ export async function sendToEmail(
     }
 
     // Get the applicant email and flow slug associated with the session
-    const { email, flow } = await getSessionEmailDetailsById(payload.sessionId);
+    const { email, flow } = await getSessionEmailDetailsById(sessionId);
     const flowName = flow.name;
 
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
       personalisation: {
         serviceName: flowName,
-        sessionId: payload.sessionId,
+        sessionId,
         applicantEmail: email,
-        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${payload.sessionId}?email=${teamSettings.submissionEmail}&localAuthority=${localAuthority}`,
+        downloadLink: `${process.env.API_URL_EXT}/download-application-files/${sessionId}?email=${teamSettings.submissionEmail}&localAuthority=${localAuthority}`,
         ...teamSettings,
       },
     };
@@ -59,11 +53,11 @@ export async function sendToEmail(
     );
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
-    markSessionAsSubmitted(payload.sessionId);
+    markSessionAsSubmitted(sessionId);
 
     // Create audit table entry, which triggers a Slack notification on `insert` if production
     insertAuditEntry(
-      payload.sessionId,
+      sessionId,
       localAuthority,
       teamSettings.submissionEmail,
       config,
@@ -83,4 +77,4 @@ export async function sendToEmail(
       }`,
     });
   }
-}
+};

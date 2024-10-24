@@ -1,6 +1,5 @@
 import type { AxiosRequestConfig } from "axios";
 import axios, { isAxiosError } from "axios";
-import type { NextFunction, Request, Response } from "express";
 import FormData from "form-data";
 import fs from "fs";
 import { gql } from "graphql-request";
@@ -9,6 +8,10 @@ import { Buffer } from "node:buffer";
 import { $api } from "../../../client/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
+import type {
+  SendIntegrationController,
+  SendIntegrationPayload,
+} from "../types.js";
 
 interface UniformClient {
   clientId: string;
@@ -40,15 +43,11 @@ interface UniformApplication {
   created_at: string;
 }
 
-interface SendToUniformPayload {
-  sessionId: string;
-}
-
-export async function sendToUniform(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export const sendToUniform: SendIntegrationController = async (
+  req,
+  res,
+  next,
+) => {
   /**
    * Submits application data to Uniform
    *
@@ -58,16 +57,9 @@ export async function sendToUniform(
    */
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
-  // `/uniform/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-  const payload: SendToUniformPayload = req.body.payload;
-  if (!payload?.sessionId) {
-    return next({
-      status: 400,
-      message: "Missing application data to send to Uniform",
-    });
-  }
+  const { payload } = res.locals.parsedReq.body;
 
-  const localAuthority = req.params.localAuthority;
+  const localAuthority = res.locals.parsedReq.params.localAuthority;
   const uniformClient = getUniformClient(localAuthority);
 
   if (!uniformClient) {
@@ -78,7 +70,7 @@ export async function sendToUniform(
   }
 
   // confirm that this session has not already been successfully submitted before proceeding
-  const submittedApp = await checkUniformAuditTable(payload?.sessionId);
+  const submittedApp = await checkUniformAuditTable(payload.sessionId);
   const isAlreadySubmitted =
     submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload;
   if (isAlreadySubmitted) {
@@ -128,7 +120,7 @@ export async function sendToUniform(
     });
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
-    markSessionAsSubmitted(payload?.sessionId);
+    markSessionAsSubmitted(payload.sessionId);
 
     return res.status(200).send({
       message: `Successfully created a Uniform submission`,
@@ -144,7 +136,7 @@ export async function sendToUniform(
       message: `Failed to send to Uniform (${localAuthority}): ${errorMessage}`,
     });
   }
-}
+};
 
 /**
  * Query the Uniform audit table to see if we already have an application for this session
@@ -369,7 +361,7 @@ const createUniformApplicationAuditRecord = async ({
   submissionDetails,
 }: {
   idoxSubmissionId: string;
-  payload: SendToUniformPayload;
+  payload: SendIntegrationPayload;
   localAuthority: string;
   submissionDetails: UniformSubmissionResponse;
 }): Promise<UniformApplication> => {

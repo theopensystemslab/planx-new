@@ -1,6 +1,5 @@
 import type { AxiosRequestConfig } from "axios";
 import axios from "axios";
-import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
@@ -8,6 +7,7 @@ import type { Passport } from "../../../types.js";
 import { uploadPrivateFile } from "../../file/service/uploadFile.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { isApplicationTypeSupported } from "../utils/helpers.js";
+import type { SendIntegrationController } from "../types.js";
 
 interface CreateS3Application {
   insertS3Application: {
@@ -15,23 +15,15 @@ interface CreateS3Application {
   };
 }
 
-const sendToS3 = async (req: Request, res: Response, next: NextFunction) => {
-  // `/upload-submission/:localAuthority` is only called via Hasura's scheduled event webhook, so body is wrapped in a "payload" key
-  const { payload } = req.body;
-  const localAuthority = req.params.localAuthority;
+const sendToS3: SendIntegrationController = async (_req, res, next) => {
+  const {
+    payload: { sessionId },
+  } = res.locals.parsedReq.body;
+  const localAuthority = res.locals.parsedReq.params.localAuthority;
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
-  if (!payload?.sessionId) {
-    return next({
-      status: 400,
-      message: `Missing application payload data to send to email`,
-    });
-  }
-
   try {
-    const { sessionId } = payload;
-
     // Fetch integration credentials for this team
     const { powerAutomateWebhookURL, powerAutomateAPIKey } =
       await $api.team.getIntegrations({

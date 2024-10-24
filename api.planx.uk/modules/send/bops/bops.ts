@@ -1,16 +1,10 @@
 import type { AxiosResponse } from "axios";
 import axios from "axios";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
-import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
 import { ServerError } from "../../../errors/index.js";
-
-interface SendToBOPSRequest {
-  payload: {
-    sessionId: string;
-  };
-}
+import type { SendIntegrationController } from "../types.js";
 
 interface CreateBopsApplication {
   insertBopsApplication: {
@@ -19,23 +13,16 @@ interface CreateBopsApplication {
   };
 }
 
-const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
-  // `/bops/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-  const { payload }: SendToBOPSRequest = req.body;
-  if (!payload) {
-    return next(
-      new ServerError({
-        status: 400,
-        message: `Missing application payload data to send to BOPS`,
-      }),
-    );
-  }
+const sendToBOPS: SendIntegrationController = async (_req, res, next) => {
+  const {
+    payload: { sessionId },
+  } = res.locals.parsedReq.body;
 
   // confirm that this session has not already been successfully submitted before proceeding
-  const submittedApp = await checkBOPSAuditTable(payload?.sessionId, "v2");
+  const submittedApp = await checkBOPSAuditTable(sessionId, "v2");
   if (submittedApp?.message === "Application created") {
     return res.status(200).send({
-      sessionId: payload?.sessionId,
+      sessionId,
       bopsId: submittedApp?.id,
       message: `Skipping send, already successfully submitted`,
     });
@@ -44,7 +31,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
   // confirm this local authority (aka team) is supported by BOPS before creating the proxy
   // a local or staging API instance should send to the BOPS staging endpoint
   // production should send to the BOPS production endpoint
-  const localAuthority = req.params.localAuthority;
+  const localAuthority = res.locals.parsedReq.params.localAuthority;
   const env =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
@@ -54,9 +41,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       encryptionKey: process.env.ENCRYPTION_KEY!,
       env,
     });
-    const exportData = await $api.export.digitalPlanningDataPayload(
-      payload?.sessionId,
-    );
+    const exportData = await $api.export.digitalPlanningDataPayload(sessionId);
 
     const bopsResponse = await axios({
       method: "POST",
@@ -70,7 +55,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     })
       .then(async (res: AxiosResponse<{ id: string }>) => {
         // Mark session as submitted so that reminder and expiry emails are not triggered
-        markSessionAsSubmitted(payload?.sessionId);
+        markSessionAsSubmitted(sessionId);
 
         const applicationId = await $api.client.request<CreateBopsApplication>(
           gql`
@@ -105,7 +90,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
             request: exportData,
             response: res.data,
             response_headers: res.headers,
-            session_id: payload?.sessionId,
+            session_id: sessionId,
           },
         );
 
@@ -119,14 +104,14 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
       .catch((error) => {
         if (error.response) {
           throw new Error(
-            `Sending to BOPS v2 failed (${[localAuthority, payload?.sessionId]
+            `Sending to BOPS v2 failed (${[localAuthority, sessionId]
               .filter(Boolean)
               .join(" - ")}):\n${JSON.stringify(error.response.data, null, 2)}`,
           );
         } else {
           // re-throw other errors
           throw new Error(
-            `Sending to BOPS v2 failed (${[localAuthority, payload?.sessionId]
+            `Sending to BOPS v2 failed (${[localAuthority, sessionId]
               .filter(Boolean)
               .join(" - ")}):\n${error}`,
           );
@@ -137,10 +122,7 @@ const sendToBOPS = async (req: Request, res: Response, next: NextFunction) => {
     next(
       new ServerError({
         status: 500,
-        message: `Sending to BOPS v2 failed (${[
-          localAuthority,
-          payload?.sessionId,
-        ]
+        message: `Sending to BOPS v2 failed (${[localAuthority, sessionId]
           .filter(Boolean)
           .join(" - ")}):\n${err}`,
         cause: err,
