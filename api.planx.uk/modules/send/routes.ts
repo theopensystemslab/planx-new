@@ -9,6 +9,7 @@ import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
 import { downloadApplicationFiles } from "./downloadApplicationFiles/index.js";
 import { sendToS3 } from "./s3/index.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
+import { sendIntegrationSchema } from "./types.js";
 
 const router = Router();
 
@@ -17,7 +18,12 @@ router.post(
   validate(combinedEventsPayloadSchema),
   createSendEvents,
 );
-router.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
+router.post(
+  "/bops/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToBOPS,
+);
 router.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
 router.post("/idox/:localAuthority", useHasuraAuth, sendToIdoxNexus);
 router.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
