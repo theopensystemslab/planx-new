@@ -6,7 +6,7 @@ import type { Feature, MultiPolygon, Polygon } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import InputLabel from "ui/editor/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";

@@ -3,8 +3,8 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { ChangeEvent, FocusEvent } from "react";
 
-import ErrorWrapper from "./ErrorWrapper";
-import Input from "./Input";
+import ErrorWrapper from "../ErrorWrapper";
+import Input from "../Input/Input";
 
 export interface Props {
   label?: string;

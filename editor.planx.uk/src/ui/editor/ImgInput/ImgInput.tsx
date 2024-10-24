@@ -10,7 +10,7 @@ import React, { useMemo, useState } from "react";
 
 import PublicFileUploadButton, {
   AcceptedFileTypes,
-} from "../shared/PublicFileUploadButton";
+} from "../../shared/PublicFileUploadButton";
 
 const ImageUploadContainer = styled(Box)(() => ({
   height: 50,

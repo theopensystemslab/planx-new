@@ -3,7 +3,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { visuallyHidden } from "@mui/utils";
 import { Feature } from "geojson";
 import React from "react";
-import SelectInput from "ui/editor/SelectInput";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 
 import { useMapAndLabelContext } from "./Context";

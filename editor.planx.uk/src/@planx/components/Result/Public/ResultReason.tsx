@@ -12,7 +12,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import Caret from "ui/icons/Caret";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 interface IResultReason {
   id: string;

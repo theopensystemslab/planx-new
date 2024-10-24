@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import Banner from "ui/public/Banner";
 import FileDownload from "ui/public/FileDownload";
 import NumberedList from "ui/public/NumberedList";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import type { Confirmation } from "./model";
 

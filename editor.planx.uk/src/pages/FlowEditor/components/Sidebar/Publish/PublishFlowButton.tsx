@@ -12,7 +12,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import {
   AlteredNode,

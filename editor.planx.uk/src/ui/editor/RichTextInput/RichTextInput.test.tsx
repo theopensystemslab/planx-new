@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 
 import { modifyDeep } from "./RichTextInput";
 

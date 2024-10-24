@@ -3,7 +3,7 @@ import { visuallyHidden } from "@mui/utils";
 import type { ChecklistField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
-import ChecklistItem from "ui/shared/ChecklistItem";
+import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { getFieldProps, Props } from ".";

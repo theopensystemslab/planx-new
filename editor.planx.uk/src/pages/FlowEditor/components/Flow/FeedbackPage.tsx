@@ -25,8 +25,8 @@ import { client } from "lib/graphql";
 import React, { useState } from "react";
 import { Feedback } from "routes/feedback";
 import SettingsSection from "ui/editor/SettingsSection";
-import ErrorSummary from "ui/shared/ErrorSummary";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 interface Props {
   feedback: Feedback[];

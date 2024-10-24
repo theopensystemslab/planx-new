@@ -10,7 +10,7 @@ import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import type { Calculate } from "./model";

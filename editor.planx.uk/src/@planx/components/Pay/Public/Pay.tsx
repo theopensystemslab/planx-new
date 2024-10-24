@@ -6,7 +6,7 @@ import {
 import { PublicProps } from "@planx/components/ui";
 import { logger } from "airbrake";
 import axios from "axios";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useReducer } from "react";

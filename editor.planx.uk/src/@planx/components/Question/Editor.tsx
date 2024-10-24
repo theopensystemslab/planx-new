@@ -2,13 +2,13 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
-import ImgInput from "ui/editor/ImgInput";
+import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
-import ListManager from "ui/editor/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
-import Input from "ui/shared/Input";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 

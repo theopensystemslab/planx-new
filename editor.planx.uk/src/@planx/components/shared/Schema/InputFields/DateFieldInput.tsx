@@ -4,7 +4,7 @@ import { paddedDate } from "@planx/components/DateInput/model";
 import type { DateField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
-import DateInput from "ui/shared/DateInput";
+import DateInput from "ui/shared/DateInput/DateInput";
 
 import { getFieldProps, Props } from ".";
 import { FieldInputDescription } from "./shared";

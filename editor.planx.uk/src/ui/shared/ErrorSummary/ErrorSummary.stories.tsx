@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import ErrorSummary from "../shared/ErrorSummary";
+import ErrorSummary from "./ErrorSummary";
 
 const meta = {
   title: "Design System/Molecules/ErrorSummary",

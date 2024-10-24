@@ -5,11 +5,11 @@ import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager";
+} from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
-import Input from "ui/shared/Input";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { Confirmation, parseNextSteps, Step } from "./model";

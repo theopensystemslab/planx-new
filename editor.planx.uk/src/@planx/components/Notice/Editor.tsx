@@ -6,12 +6,12 @@ import { parseNotice } from "@planx/components/Notice/model";
 import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import ColorPicker from "ui/editor/ColorPicker";
+import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
-import Input from "ui/shared/Input";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 export interface Props {
@@ -107,10 +107,12 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
         value={props.value.notes}
       />
       <ComponentTagSelect
-        onChange={(value) => props.onChange({
-          ...props.value,
-          tags: value,
-        })}
+        onChange={(value) =>
+          props.onChange({
+            ...props.value,
+            tags: value,
+          })
+        }
         value={props.value.tags}
       />
     </>

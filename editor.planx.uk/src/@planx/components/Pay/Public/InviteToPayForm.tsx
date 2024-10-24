@@ -10,7 +10,7 @@ import type {
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -19,8 +19,8 @@ import { isPreviewOnlyDomain } from "routes/utils";
 import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import Input from "ui/shared/Input/Input";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 import { object, string } from "yup";
 
 // Passport keys which will be used to display a preview of the session to the payee as part of their journey

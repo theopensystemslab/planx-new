@@ -1,7 +1,7 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { useAsync } from "react-use";
