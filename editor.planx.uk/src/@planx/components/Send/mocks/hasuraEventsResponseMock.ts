@@ -1,8 +1,8 @@
 export default {
   bops: {
-    event_id: 1,
+    event_id: "1",
   },
   uniform: {
-    event_id: 2,
+    event_id: "2",
   },
 };

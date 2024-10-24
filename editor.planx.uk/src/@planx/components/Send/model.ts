@@ -1,13 +1,9 @@
+import { SendIntegration } from "@opensystemslab/planx-core/types";
+
 import type { Store } from "../../../pages/FlowEditor/lib/store";
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 
-export enum Destination {
-  BOPS = "bops",
-  Uniform = "uniform",
-  Idox = "idox",
-  Email = "email",
-  S3 = "s3",
-}
+type CombinedEventsPayload = Partial<Record<SendIntegration, EventPayload>>;
 
 interface EventPayload {
   localAuthority: string;
@@ -18,11 +14,11 @@ interface EventPayload {
 
 export interface Send extends BaseNodeData {
   title: string;
-  destinations: Destination[];
+  destinations: SendIntegration[];
 }
 
 export const DEFAULT_TITLE = "Send";
-export const DEFAULT_DESTINATION = Destination.Email;
+export const DEFAULT_DESTINATION = "email";
 
 export const parseContent = (data: Record<string, any> | undefined): Send => ({
   ...parseBaseNodeData(data),
@@ -30,69 +26,52 @@ export const parseContent = (data: Record<string, any> | undefined): Send => ({
   destinations: data?.destinations || [DEFAULT_DESTINATION],
 });
 
+const isSendingToUniform = (
+  payload: CombinedEventsPayload
+): payload is CombinedEventsPayload & { uniform: EventPayload } =>
+  "uniform" in payload;
+
 export function getCombinedEventsPayload({
   destinations,
   teamSlug,
   passport,
   sessionId,
 }: {
-  destinations: Destination[];
+  destinations: SendIntegration[];
   teamSlug: string;
   passport: Store.Passport;
   sessionId: string;
 }) {
-  const combinedEventsPayload: Record<string, EventPayload> = {};
+  const payload: CombinedEventsPayload = {};
 
-  // Format application user data as required by BOPS
-  if (destinations.includes(Destination.BOPS)) {
-    combinedEventsPayload[Destination.BOPS] = {
+  // Construct payload containing details for each send destination
+  destinations.forEach((destination) => {
+    payload[destination] = {
       localAuthority: teamSlug,
       body: { sessionId },
     };
-  }
+  });
 
-  if (destinations.includes(Destination.Email)) {
-    combinedEventsPayload[Destination.Email] = {
-      localAuthority: teamSlug,
-      body: { sessionId },
-    };
-  }
+  // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
+  const isUniformOverrideRequired =
+    isSendingToUniform(payload) && teamSlug === "buckinghamshire";
 
-  // Format application user data as required by Idox/Uniform
-  if (destinations.includes(Destination.Uniform)) {
+  if (isUniformOverrideRequired) {
     let uniformTeamSlug = teamSlug;
-    // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
-    if (uniformTeamSlug === "buckinghamshire") {
-      uniformTeamSlug = passport.data?.["property.localAuthorityDistrict"]
-        ?.filter((name: string) => name !== "Buckinghamshire")[0]
-        ?.toLowerCase()
-        ?.replace(/\W+/g, "-");
 
-      // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
-      if (uniformTeamSlug === "south-bucks") {
-        uniformTeamSlug = "chiltern";
-      }
+    uniformTeamSlug = passport.data?.["property.localAuthorityDistrict"]
+      ?.filter((name: string) => name !== "Buckinghamshire")[0]
+      ?.toLowerCase()
+      ?.replace(/\W+/g, "-");
+
+    // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
+    if (uniformTeamSlug === "south-bucks") {
+      uniformTeamSlug = "chiltern";
     }
 
-    combinedEventsPayload[Destination.Uniform] = {
-      localAuthority: uniformTeamSlug,
-      body: { sessionId },
-    };
+    // Apply override
+    payload["uniform"].localAuthority = uniformTeamSlug;
   }
 
-  if (destinations.includes(Destination.Idox)) {
-    combinedEventsPayload[Destination.Idox] = {
-      localAuthority: teamSlug,
-      body: { sessionId },
-    };
-  }
-
-  if (destinations.includes(Destination.S3)) {
-    combinedEventsPayload[Destination.S3] = {
-      localAuthority: teamSlug,
-      body: { sessionId },
-    };
-  }
-
-  return combinedEventsPayload;
+  return payload;
 }
