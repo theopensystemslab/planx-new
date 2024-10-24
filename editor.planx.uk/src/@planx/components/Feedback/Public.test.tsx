@@ -11,7 +11,7 @@ const handleSubmit = vi.fn();
 describe("when the Feedback component is rendered", async () => {
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
-      <FeedbackComponent title="hello" description="world" />,
+      <FeedbackComponent title="Tell us what you think" />,
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -20,7 +20,6 @@ describe("when the Feedback component is rendered", async () => {
     const { user } = setup(
       <FeedbackComponent
         title="Tell us what you think"
-        description="Any feedback you share about your experience will help us to improve it."
         handleSubmit={handleSubmit}
       />,
     );

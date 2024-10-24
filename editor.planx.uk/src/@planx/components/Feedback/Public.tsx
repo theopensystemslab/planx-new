@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -42,8 +44,18 @@ const FeedbackComponent = (
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <CardHeader title={props.title} description={props.description} />
-      <Box pt={2}>
+      <CardHeader title={props.title} />
+      <Typography pt={4}>
+        This service is a work in progress, any feedback you share about your
+        experience will help us to improve it.
+      </Typography>
+      <Typography pt={2}>
+        Don't share any personal or financial information in your feedback. If
+        you do we will act according to our{" "}
+        <Link href={props.privacyPolicyLink ?? ""}>privacy policy</Link>.
+      </Typography>
+
+      <Box pt={2} mb={3}>
         <InputLabel label="How would you rate your experience with this service?">
           <StyledToggleButtonGroup
             value={formik.values.feedbackScore}
@@ -95,6 +107,11 @@ const FeedbackComponent = (
           />
         </InputLabel>
       </Box>
+      <Typography variant="caption">
+        The information collected here isn't monitored by planning officers.
+        Don't use it to give extra information about your project or submission.
+        If you do, it cannot be used to assess your project.
+      </Typography>
     </Card>
   );
 };
