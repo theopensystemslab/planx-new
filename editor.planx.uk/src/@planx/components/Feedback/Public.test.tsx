@@ -7,6 +7,7 @@ import { axe } from "vitest-axe";
 import FeedbackComponent from "./Public";
 
 const handleSubmit = vi.fn();
+
 describe("when the Feedback component is rendered", async () => {
   it("should not have any accessibility violations", async () => {
     const { container } = setup(

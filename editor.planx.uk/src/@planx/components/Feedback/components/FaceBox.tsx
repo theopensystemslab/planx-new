@@ -21,7 +21,7 @@ export const FaceBox = ({
 }: FaceBoxProps): ReactElement => {
   return (
     <Grid item xs={2} key={label}>
-      <ToggleButton value={value} data-testid={testId}>
+      <ToggleButton value={value} data-testid={testId} sx={{ px: 0 }}>
         <Box
           sx={{
             p: 2,
