@@ -12,7 +12,7 @@ import { SectionNode, SectionStatus } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
 import Card from "../shared/Preview/Card";
-import CardHeader from "../shared/Preview/CardHeader";
+import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import type { Section } from "./model";
 import { computeSectionStatuses } from "./model";
 

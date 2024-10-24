@@ -1,55 +1,31 @@
-import { mostReadable } from "@ctrl/tinycolor";
 import HelpIcon from "@mui/icons-material/Help";
-import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import type { Content } from "@planx/components/Content/model";
-import Card from "@planx/components/shared/Preview/Card";
-import { PublicProps } from "@planx/components/ui";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
-import { getContrastTextColor } from "styleUtils";
 import { emptyContent } from "ui/editor/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
 
-import { HelpButton, Image } from "../shared/Preview/CardHeader/styled";
-import MoreInfo from "../shared/Preview/MoreInfo";
-import MoreInfoSection from "../shared/Preview/MoreInfoSection";
+import { DESCRIPTION_TEXT } from "../../constants";
+import MoreInfo from "../MoreInfo";
+import MoreInfoSection from "../MoreInfoSection";
+import {
+  CardHeaderWrapper,
+  Description,
+  HelpButton,
+  Image,
+  TitleWrapper,
+} from "./styled";
+import { ICardHeader } from "./types";
 
-export type Props = PublicProps<Content>;
-
-const Content = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "color",
-})<{ color?: string }>(({ theme, color }) => ({
-  backgroundColor: color,
-  color:
-    mostReadable(color || "#fff", [
-      "#fff",
-      theme.palette.text.primary,
-    ])?.toHexString() || theme.palette.text.primary,
-  "& a": {
-    color: getContrastTextColor(color || "#fff", theme.palette.link.main),
-  },
-  "& *:nth-of-type(1)": {
-    marginTop: 0,
-  },
-}));
-
-Content.defaultProps = {
-  color: "#ffffff",
-};
-
-const ContentComponent: React.FC<Props> = (props) => {
-  const {
-    handleSubmit,
-    color,
-    content,
-    info,
-    policyRef,
-    howMeasured,
-    definitionImg,
-  } = props;
-
+export const CardHeader: React.FC<ICardHeader> = ({
+  title,
+  description,
+  info,
+  policyRef,
+  howMeasured,
+  definitionImg,
+  img,
+}) => {
   const [open, setOpen] = React.useState(false);
   const { trackEvent } = useAnalyticsTracking();
 
@@ -59,24 +35,37 @@ const ContentComponent: React.FC<Props> = (props) => {
   };
 
   return (
-    <Card handleSubmit={handleSubmit} isValid>
-      <Content
-        color={color}
-        data-testid="content"
-        p={color === "#ffffff" || !color ? 0 : 2}
-      >
-        <ReactMarkdownOrHtml
-          source={content}
-          openLinksOnNewTab
-          manuallyIncrementHeaders
-        />
-      </Content>
+    <CardHeaderWrapper>
+      {title && (
+        <TitleWrapper mr={1} pt={0.5}>
+          <Typography
+            variant="h2"
+            role="heading"
+            aria-level={1}
+            component="h1"
+            sx={{ textWrap: "balance" }}
+          >
+            {title}
+          </Typography>
+        </TitleWrapper>
+      )}
+      {description && (
+        <Description>
+          <Typography variant="subtitle1" component="div">
+            <ReactMarkdownOrHtml
+              source={description}
+              id={DESCRIPTION_TEXT}
+              openLinksOnNewTab
+            />
+          </Typography>
+        </Description>
+      )}
       {!!(info || policyRef || howMeasured) && (
         <Typography variant="subtitle1" component="div">
           <HelpButton
             variant="help"
             title={`More information`}
-            aria-label={`See more information about this content`}
+            aria-label={`See more information about "${title}"`}
             onClick={handleHelpClick}
             aria-haspopup="dialog"
             data-testid="more-info-button"
@@ -115,8 +104,7 @@ const ContentComponent: React.FC<Props> = (props) => {
           </MoreInfoSection>
         ) : undefined}
       </MoreInfo>
-    </Card>
+      {img && <Image src={img} alt="question" />}
+    </CardHeaderWrapper>
   );
 };
-
-export default ContentComponent;
