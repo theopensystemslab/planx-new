@@ -1,9 +1,5 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
-import ToggleButtonGroup, {
-  toggleButtonGroupClasses,
-} from "@mui/material/ToggleButtonGroup";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
@@ -17,28 +13,10 @@ import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
 
-// import * as Yup from "yup";
-import { BaseNodeData } from "../shared";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { FaceBox } from "./components/FaceBox";
-
-export interface FeedbackComponentProps extends BaseNodeData {
-  title: string;
-  description?: string;
-  fn?: string;
-}
-
-interface FormProps {
-  feedbackScore: string;
-  feedback: string;
-}
-
-const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
-  [`& .${toggleButtonGroupClasses.grouped}`]: {
-    border: 0,
-  },
-  paddingBottom: 32,
-}));
+import { StyledToggleButtonGroup } from "./styled";
+import { FeedbackComponentProps, FormProps } from "./types";
 
 const FeedbackComponent = (
   props: PublicProps<FeedbackComponentProps>,
