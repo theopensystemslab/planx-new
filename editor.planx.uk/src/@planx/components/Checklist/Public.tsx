@@ -39,6 +39,10 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
 }
 
 const ChecklistComponent: React.FC<Props> = (props) => {
+  if (props.forceSelection) {
+    return <VisibleChecklist {...props} />;
+  }
+  
   const autoAnswerableOptions = useStore(
     (state) => state.autoAnswerableOptions,
   );
