@@ -1,3 +1,4 @@
+import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
@@ -73,39 +74,41 @@ const FeedbackComponent = (
           exclusive
           id="feedbackButtonGroup"
           onChange={handleFeedbackChange}
-          aria-label="text alignment"
+          aria-label="feedback score"
         >
-          <FaceBox
-            value="1"
-            testId="feedback-button-terrible"
-            icon={TerribleFace}
-            label="Terrible"
-            altText="very unhappy face"
-          />
-          <FaceBox
-            value="2"
-            icon={PoorFace}
-            label="Poor"
-            altText="slightly unhappy face"
-          />
-          <FaceBox
-            value="3"
-            icon={NeutralFace}
-            label="Neutral"
-            altText="neutral face"
-          />
-          <FaceBox
-            value="4"
-            icon={GoodFace}
-            label="Good"
-            altText="smiling face"
-          />
-          <FaceBox
-            value="5"
-            icon={ExcellentFace}
-            label="Excellent"
-            altText="very happy face"
-          />
+          <Grid container columnSpacing={15} component="fieldset">
+            <FaceBox
+              value="1"
+              testId="feedback-button-terrible"
+              icon={TerribleFace}
+              label="Terrible"
+              altText="very unhappy face"
+            />
+            <FaceBox
+              value="2"
+              icon={PoorFace}
+              label="Poor"
+              altText="slightly unhappy face"
+            />
+            <FaceBox
+              value="3"
+              icon={NeutralFace}
+              label="Neutral"
+              altText="neutral face"
+            />
+            <FaceBox
+              value="4"
+              icon={GoodFace}
+              label="Good"
+              altText="smiling face"
+            />
+            <FaceBox
+              value="5"
+              icon={ExcellentFace}
+              label="Excellent"
+              altText="very happy face"
+            />
+          </Grid>
         </StyledToggleButtonGroup>
       </InputLabel>
     </Card>

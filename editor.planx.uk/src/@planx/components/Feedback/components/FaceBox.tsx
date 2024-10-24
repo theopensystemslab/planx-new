@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import ToggleButton from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
 import React, { ReactElement } from "react";
@@ -19,21 +20,22 @@ export const FaceBox = ({
   value,
 }: FaceBoxProps): ReactElement => {
   return (
-    <ToggleButton value={value} data-testid={testId}>
-      <Box
-        sx={{
-          p: 2,
-          border: "2px solid grey", // TODO get correct grey
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src={icon} width={50} alt={altText} />
-        <Typography variant="body2" pt={0.5}>
-          {label}
-        </Typography>
-      </Box>
-    </ToggleButton>
+    <Grid item xs={2} key={label}>
+      <ToggleButton value={value} data-testid={testId}>
+        <Box
+          sx={{
+            p: 2,
+            border: "2px solid grey", // TODO get correct grey
+            width: "120px",
+            maxHeight: "120px",
+          }}
+        >
+          <img src={icon} width={50} alt={altText} />
+          <Typography variant="body2" pt={0.5}>
+            {label}
+          </Typography>
+        </Box>
+      </ToggleButton>
+    </Grid>
   );
 };
