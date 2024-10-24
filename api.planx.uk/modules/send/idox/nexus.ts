@@ -1,6 +1,5 @@
 import type { AxiosRequestConfig } from "axios";
 import axios, { isAxiosError } from "axios";
-import type { NextFunction, Request, Response } from "express";
 import FormData from "form-data";
 import fs from "fs";
 import { gql } from "graphql-request";
@@ -9,6 +8,7 @@ import { Buffer } from "node:buffer";
 import { $api } from "../../../client/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
+import type { SendIntegrationController } from "../types.js";
 
 interface IdoxNexusClient {
   clientId: string;
@@ -40,15 +40,11 @@ interface UniformApplication {
   created_at: string;
 }
 
-interface SendToIdoxNexusPayload {
-  sessionId: string;
-}
-
-export async function sendToIdoxNexus(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export const sendToIdoxNexus: SendIntegrationController = async (
+  req,
+  res,
+  next,
+) => {
   /**
    * Submits application data to Idox's Submission API (aka Nexus)
    *
@@ -58,21 +54,14 @@ export async function sendToIdoxNexus(
    */
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
-  // `/idox/:localAuthority` is only called via Hasura's scheduled event webhook now, so body is wrapped in a "payload" key
-  const payload: SendToIdoxNexusPayload = req.body.payload;
-  if (!payload?.sessionId) {
-    return next({
-      status: 400,
-      message: "Missing application data to send to Idox Nexus",
-    });
-  }
-
+  const { payload } = res.locals.parsedReq.body;
   // localAuthority is only parsed for audit record, not client-specific
-  const localAuthority = req.params.localAuthority;
+  const localAuthority = res.locals.parsedReq.params.localAuthority;
+
   const idoxNexusClient = getIdoxNexusClient();
 
   // confirm that this session has not already been successfully submitted before proceeding
-  const submittedApp = await checkUniformAuditTable(payload?.sessionId);
+  const submittedApp = await checkUniformAuditTable(payload.sessionId);
   const _isAlreadySubmitted =
     submittedApp?.submissionStatus === "PENDING" && submittedApp?.canDownload;
   // if (isAlreadySubmitted) {
@@ -135,7 +124,7 @@ export async function sendToIdoxNexus(
     });
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
-    markSessionAsSubmitted(payload?.sessionId);
+    markSessionAsSubmitted(payload.sessionId);
 
     return res.status(200).send({
       message: `Successfully created an Idox Nexus submission (${randomOrgId} - ${randomOrg})`,
@@ -151,7 +140,7 @@ export async function sendToIdoxNexus(
       message: `Failed to send to Idox Nexus (${payload.sessionId}): ${errorMessage}`,
     });
   }
-}
+};
 
 /**
  * Query the Uniform audit table to see if we already have an application for this session
