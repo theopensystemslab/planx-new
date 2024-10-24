@@ -84,7 +84,7 @@ const CreateSendEvents: React.FC<Props> = ({
     const isReady = !loading && !error && value;
     if (!isReady) return;
 
-    // Construct breadcrumb containing event IDs of each send event generated
+    // Construct breadcrumb containing IDs of each send event generated
     const data = Object.fromEntries(
       destinations.map(destination => [
         `${destination}SendEventId`,
