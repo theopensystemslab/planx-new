@@ -63,13 +63,12 @@ const Filter: React.FC<Props> = (props) => {
             through the left-most matching flag option only.
           </Typography>
         </ModalSectionContent>
-        <ModalSectionContent title="Pick a flagset category (coming soon)">
+        <ModalSectionContent title="Pick a flagset category">
           <select
             data-testid="flagset-category-select"
             name="category"
             value={formik.values.category}
             onChange={formik.handleChange}
-            disabled
           >
             {Array.from(categories).map((category) => (
               <option key={category} value={category}>

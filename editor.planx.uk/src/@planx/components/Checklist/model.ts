@@ -22,6 +22,7 @@ export interface Checklist extends BaseNodeData {
   img?: string;
   allRequired?: boolean;
   categories?: Array<Category>;
+  forceSelection?: boolean;
 }
 
 interface ChecklistExpandableProps {
