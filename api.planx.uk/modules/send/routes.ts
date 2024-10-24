@@ -42,7 +42,13 @@ router.post(
   validate(sendIntegrationSchema),
   sendToEmail,
 );
+router.post(
+  "/upload-submission/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToS3,
+);
+
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);
-router.post("/upload-submission/:localAuthority", useHasuraAuth, sendToS3);
 
 export default router;
