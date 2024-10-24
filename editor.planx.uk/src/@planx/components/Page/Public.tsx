@@ -4,7 +4,7 @@ import React from "react";
 
 import { flatten } from "../List/utils";
 import Card from "../shared/Preview/Card";
-import CardHeader from "../shared/Preview/CardHeader/CardHeader";
+import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import { useSchema } from "../shared/Schema/hook";
 import { SchemaUserData } from "../shared/Schema/model";
 import { SchemaFields } from "../shared/Schema/SchemaFields";

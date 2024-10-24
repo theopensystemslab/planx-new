@@ -19,7 +19,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
-import CardHeader from "../../shared/Preview/CardHeader/CardHeader";
+import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
 import { PublicProps } from "../../ui";
 import type { MapAndLabel } from "./../model";

@@ -16,7 +16,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Card from "../../shared/Preview/Card";
-import CardHeader from "../../shared/Preview/CardHeader/CardHeader";
+import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
 import type { List } from "../model";
 import { formatSchemaDisplayValue } from "../utils";
 import { ListProvider, useListContext } from "./Context";

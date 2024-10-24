@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
 import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio";

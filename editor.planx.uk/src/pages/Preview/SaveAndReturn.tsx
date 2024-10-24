@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

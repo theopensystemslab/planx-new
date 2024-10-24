@@ -17,7 +17,7 @@ import {
 } from "./styled";
 import { ICardHeader } from "./types";
 
-const CardHeader: React.FC<ICardHeader> = ({
+export const CardHeader: React.FC<ICardHeader> = ({
   title,
   description,
   info,
@@ -108,4 +108,3 @@ const CardHeader: React.FC<ICardHeader> = ({
     </CardHeaderWrapper>
   );
 };
-export default CardHeader;

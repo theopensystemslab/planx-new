@@ -1,5 +1,5 @@
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef, useState } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
