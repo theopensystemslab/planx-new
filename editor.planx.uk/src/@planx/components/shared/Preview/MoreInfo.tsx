@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback";
+import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import React from "react";
 
 const PREFIX = "MoreInfo";

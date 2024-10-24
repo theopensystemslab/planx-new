@@ -1,6 +1,6 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { FeedbackCategory } from "components/Feedback";
-import { Sentiment } from "components/Feedback/MoreInfoFeedback";
+import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
+import { FeedbackCategory } from "components/Feedback/types";
 import gql from "graphql-tag";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import { FeedbackPage } from "pages/FlowEditor/components/Flow/FeedbackPage";

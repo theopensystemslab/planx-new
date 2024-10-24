@@ -7,8 +7,6 @@ import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
-import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import {
   getInternalFeedbackMetadata,
@@ -20,73 +18,25 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
 
-import FeedbackForm from "./FeedbackForm";
+import FeedbackForm from "./FeedbackForm/FeedbackForm";
 import FeedbackPhaseBanner from "./FeedbackPhaseBanner";
-
-const FeedbackWrapper = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  borderTop: `1px solid ${theme.palette.border.main}`,
-}));
-
-const FeedbackRow = styled(Box)(({ theme }) => ({
-  maxWidth: theme.breakpoints.values.formWrap,
-  padding: theme.spacing(2, 0, 4),
-}));
-
-const FeedbackHeader = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  position: "relative",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-}));
-
-const FeedbackTitle = styled(Box)(({ theme }) => ({
-  position: "relative",
-  display: "flex",
-  alignItems: "center",
-  "& svg": {
-    width: "28px",
-    height: "auto",
-    color: theme.palette.primary.dark,
-    marginRight: theme.spacing(1),
-  },
-}));
-
-const CloseButton = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  color: theme.palette.text.primary,
-}));
-
-const FeedbackBody = styled(Box)(({ theme }) => ({
-  maxWidth: theme.breakpoints.values.formWrap,
-}));
-
-export type UserFeedback = {
-  userContext?: string;
-  userComment: string;
-};
-
-export interface FormProps {
-  inputs: FeedbackFormInput[];
-  handleSubmit: (values: UserFeedback) => void;
-}
-
-export type FeedbackFormInput = {
-  name: keyof UserFeedback;
-  label: string;
-  id: string;
-};
-
-export type FeedbackCategory = "issue" | "idea" | "comment" | "inaccuracy";
+import {
+  CloseButton,
+  FeedbackBody,
+  FeedbackHeader,
+  FeedbackRow,
+  FeedbackTitle,
+  FeedbackWrapper,
+} from "./styled";
+import {
+  ClickEvents,
+  FeedbackFormInput,
+  TitleAndCloseProps,
+  UserFeedback,
+  View,
+} from "./types";
 
 const Feedback: React.FC = () => {
-  type View = "banner" | "triage" | FeedbackCategory | "thanks";
-
-  type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;
-
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<View>("banner");
   const previousFeedbackView = usePrevious(currentFeedbackView);
@@ -161,11 +111,6 @@ const Feedback: React.FC = () => {
         </CloseButton>
       </FeedbackHeader>
     );
-  }
-
-  interface TitleAndCloseProps {
-    title: string;
-    Icon?: typeof SvgIcon;
   }
 
   function TitleAndCloseFeedbackHeader(props: TitleAndCloseProps): FCReturn {
