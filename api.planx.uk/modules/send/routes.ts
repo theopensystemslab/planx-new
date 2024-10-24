@@ -36,7 +36,12 @@ router.post(
   validate(sendIntegrationSchema),
   sendToIdoxNexus,
 );
-router.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
+router.post(
+  "/email-submission/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToEmail,
+);
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);
 router.post("/upload-submission/:localAuthority", useHasuraAuth, sendToS3);
 
