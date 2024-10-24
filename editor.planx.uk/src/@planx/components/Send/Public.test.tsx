@@ -144,7 +144,7 @@ describe("Uniform overrides for Buckinghamshire", () => {
       breadcrumbs: {
         findProperty: {
           data: {
-            "property.localAuthorityDistrict": ["Some local authority district"]
+            "property.localAuthorityDistrict": ["Buckinghamshire", "Historic district name"]
           }
         }
       }
@@ -165,7 +165,7 @@ describe("Uniform overrides for Buckinghamshire", () => {
     expect(apiPayload?.bops?.localAuthority).toEqual("buckinghamshire");
 
     // Uniform event has read property.localAuthorityDistrict from the passport
-    expect(apiPayload?.uniform?.localAuthority).toEqual("some-local-authority-district");
+    expect(apiPayload?.uniform?.localAuthority).toEqual("historic-district-name");
   });
   
   it("maps requests for South Bucks to Chiltern", async () => {
