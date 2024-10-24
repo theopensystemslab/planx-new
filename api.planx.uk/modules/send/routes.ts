@@ -24,7 +24,12 @@ router.post(
   validate(sendIntegrationSchema),
   sendToBOPS,
 );
-router.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
+router.post(
+  "/uniform/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToUniform,
+);
 router.post("/idox/:localAuthority", useHasuraAuth, sendToIdoxNexus);
 router.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);
