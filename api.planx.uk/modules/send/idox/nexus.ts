@@ -8,7 +8,10 @@ import { Buffer } from "node:buffer";
 import { $api } from "../../../client/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { buildSubmissionExportZip } from "../utils/exportZip.js";
-import type { SendIntegrationController } from "../types.js";
+import type {
+  SendIntegrationController,
+  SendIntegrationPayload,
+} from "../types.js";
 
 interface IdoxNexusClient {
   clientId: string;
@@ -366,7 +369,7 @@ const createUniformApplicationAuditRecord = async ({
   submissionDetails,
 }: {
   idoxSubmissionId: string;
-  payload: SendToIdoxNexusPayload;
+  payload: SendIntegrationPayload;
   localAuthority: string;
   submissionDetails: UniformSubmissionResponse;
 }): Promise<UniformApplication> => {
