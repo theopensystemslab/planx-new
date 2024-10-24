@@ -10,7 +10,6 @@ import { AsyncState } from "react-use/lib/useAsyncFn";
 
 import Card from "../shared/Preview/Card";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
-import { makeData } from "../shared/utils";
 import { PublicProps } from "../ui";
 import {
   DEFAULT_DESTINATION,
@@ -70,7 +69,7 @@ const CreateSendEvents: React.FC<Props> = ({
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
   const url = `${import.meta.env.VITE_APP_API_URL
     }/create-send-events/${sessionId}`;
-  const request: SendRequestState = useAsync(async () => {
+  const { loading, error, value }: SendRequestState = useAsync(async () => {
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,
       teamSlug,
@@ -82,32 +81,36 @@ const CreateSendEvents: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    const isReady = !request.loading && !request.error && request.value;
+    const isReady = !loading && !error && value;
     if (!isReady) return;
 
-    destinations.forEach((destination) => {
-      props.handleSubmit && props.handleSubmit(
-        makeData(props, request.value.data[destination]?.event_id, `${destination}SendEventId`),
-      );
-    })
-  }, [request.loading, request.error, request.value, destinations, props]);
+    // Construct breadcrumb containing event IDs of each send event generated
+    const data = Object.fromEntries(
+      destinations.map(destination => [
+        `${destination}SendEventId`,
+        value.data[destination]?.event_id
+      ])
+    );
 
-  if (request.loading) {
+    props.handleSubmit && props?.handleSubmit({ data });
+  }, [loading, error, value, destinations, props]);
+
+  // Throw errors so that they're caught by our error boundaries and Airbrake
+  if (error) throw error;
+
+  if (loading) {
     return (
       <Card>
-        <DelayedLoadingIndicator text={`Submitting your application...`} />
+        <DelayedLoadingIndicator text={"Submitting your application..."} />
       </Card>
     );
-  } else if (request.error) {
-    // Throw errors so that they're caught by our error boundaries and Airbrake
-    throw request.error;
-  } else {
-    return (
-      <Card>
-        <DelayedLoadingIndicator text="Finalising your submission..." />
-      </Card>
-    );
-  }
+  };
+
+  return (
+    <Card>
+      <DelayedLoadingIndicator text="Finalising your submission..." />
+    </Card>
+  );
 };
 
 export default SendComponent;
