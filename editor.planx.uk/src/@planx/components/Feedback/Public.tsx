@@ -1,22 +1,23 @@
-// @ts-ignore
-import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
-import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import CardHeader from "@planx/components/shared/Preview/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import Face from "ui/images/feedback_filled-01.svg";
+import TerribleFace from "ui/images/feedback_filled-01.svg";
+import PoorFace from "ui/images/feedback_filled-02.svg";
+import NeutralFace from "ui/images/feedback_filled-03.svg";
+import GoodFace from "ui/images/feedback_filled-04.svg";
+import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
 
 // import * as Yup from "yup";
 import { BaseNodeData } from "../shared";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
+import { FaceBox } from "./components/FaceBox";
 
 export interface FeedbackComponentProps extends BaseNodeData {
   title: string;
@@ -74,90 +75,37 @@ const FeedbackComponent = (
           onChange={handleFeedbackChange}
           aria-label="text alignment"
         >
-          <ToggleButton
+          <FaceBox
             value="1"
-            aria-label="left aligned"
-            data-testid="feedback-button-terrible"
-          >
-            <Box
-              sx={{
-                p: 2,
-                border: "2px solid grey", // TODO get correct grey
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <img src={Face} width={50} alt="smiley face" />
-              <Typography variant="body2" pt={0.5}>
-                Terrible
-              </Typography>
-            </Box>
-          </ToggleButton>
-          <ToggleButton value="2" aria-label="centered">
-            <Box
-              sx={{
-                p: 2,
-                border: "2px solid grey", // TODO get correct grey
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <img src={Face} width={50} alt="smiley face" />
-              <Typography variant="body2" pt={0.5}>
-                Poor
-              </Typography>
-            </Box>
-          </ToggleButton>
-          <ToggleButton value="3" aria-label="right aligned">
-            <Box
-              sx={{
-                p: 2,
-                border: "2px solid grey", // TODO get correct grey
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <img src={Face} width={50} alt="smiley face" />
-              <Typography variant="body2" pt={0.5}>
-                Neutral
-              </Typography>
-            </Box>
-          </ToggleButton>
-          <ToggleButton value="4" aria-label="justified">
-            <Box
-              sx={{
-                p: 2,
-                border: "2px solid grey", // TODO get correct grey
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <img src={Face} width={50} alt="smiley face" />
-              <Typography variant="body2" pt={0.5}>
-                Good
-              </Typography>
-            </Box>
-          </ToggleButton>
-          <ToggleButton value="5" aria-label="justified">
-            <Box
-              sx={{
-                p: 2,
-                border: "2px solid grey", // TODO get correct grey
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <img src={Face} width={50} alt="smiley face" />
-              <Typography variant="body2" pt={0.5}>
-                Excellent
-              </Typography>
-            </Box>
-          </ToggleButton>
+            testId="feedback-button-terrible"
+            icon={TerribleFace}
+            label="Terrible"
+            altText="very unhappy face"
+          />
+          <FaceBox
+            value="2"
+            icon={PoorFace}
+            label="Poor"
+            altText="slightly unhappy face"
+          />
+          <FaceBox
+            value="3"
+            icon={NeutralFace}
+            label="Neutral"
+            altText="neutral face"
+          />
+          <FaceBox
+            value="4"
+            icon={GoodFace}
+            label="Good"
+            altText="smiling face"
+          />
+          <FaceBox
+            value="5"
+            icon={ExcellentFace}
+            label="Excellent"
+            altText="very happy face"
+          />
         </StyledToggleButtonGroup>
       </InputLabel>
     </Card>

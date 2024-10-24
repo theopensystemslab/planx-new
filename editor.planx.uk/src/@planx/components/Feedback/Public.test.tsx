@@ -8,9 +8,6 @@ import FeedbackComponent from "./Public";
 
 const handleSubmit = vi.fn();
 describe("when the Feedback component is rendered", async () => {
-  beforeEach(() => {
-    // TODO
-  });
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
       <FeedbackComponent title="hello" description="world" />,
@@ -21,8 +18,8 @@ describe("when the Feedback component is rendered", async () => {
   it("should call handleSubmit when the continue button is pressed", async () => {
     const { user } = setup(
       <FeedbackComponent
-        title="hello"
-        description="world"
+        title="Tell us what you think"
+        description="Any feedback you share about your experience will help us to improve it."
         handleSubmit={handleSubmit}
       />,
     );
