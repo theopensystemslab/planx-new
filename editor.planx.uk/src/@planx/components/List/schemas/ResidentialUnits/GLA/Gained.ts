@@ -4,9 +4,19 @@ export const ResidentialUnitsGLAGained: Schema = {
   type: "Gained residential unit type",
   fields: [
     {
+      type: "number",
+      data: {
+        title: "Number of units of this type",
+        description:
+          "This is the number of units of this type that are gained.",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
       type: "question",
       data: {
-        title: "What best describes the type of this unit?",
+        title: "What best describes this unit?",
         fn: "type",
         options: [
           { id: "terraced", data: { text: "Terraced home", val: "terraced" } },
@@ -61,7 +71,7 @@ export const ResidentialUnitsGLAGained: Schema = {
     {
       type: "question",
       data: {
-        title: "Which best describes the tenure of this unit?",
+        title: "What best describes the tenure of this unit?",
         fn: "tenure",
         options: [
           { id: "LAR", data: { text: "London Affordable Rent", val: "LAR" } },
@@ -200,14 +210,6 @@ export const ResidentialUnitsGLAGained: Schema = {
           { id: "true", data: { text: "Yes", val: "true" } },
           { id: "false", data: { text: "No", val: "false" } },
         ],
-      },
-    },
-    {
-      type: "number",
-      data: {
-        title: "How many units of the type described above are gained?",
-        fn: "identicalUnits",
-        allowNegatives: false,
       },
     },
   ],

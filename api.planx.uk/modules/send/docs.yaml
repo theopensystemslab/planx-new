@@ -71,6 +71,47 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SessionPayload"
+  /idox/{localAuthority}:
+    post:
+      summary: Submits an application to Idox Nexus (TEST)
+      description: |
+        <b>Test only endpoint - not live</b>
+        <br/><br/>
+        Submits an application to Idox Nexus
+      tags:
+        - send
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      security:
+        - hasuraAuth: []
+      requestBody:
+        description: |
+
+          This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPayload"
+  /upload-submission/{localAuthority}:
+    post:
+      summary: Submits an application to AWS S3 bucket
+      description: Submits the application payload (JSON) to a AWS S3 bucket. From there it can be processed by other integrations, such as PowerAutomate, as long as the integration has an API key
+      tags:
+        - send
+      parameters:
+        - $ref: "#/components/parameters/localAuthority"
+      security:
+        - hasuraAuth: []
+      requestBody:
+        description: |
+
+          This endpoint is only called via Hasura's scheduled event webhook, so body is wrapped in a `payload` key
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPayload"
   /create-send-events/{sessionId}:
     post:
       summary: Create send events
@@ -89,6 +130,10 @@ paths:
                 bops:
                   $ref: "#/components/schemas/EventSchema"
                 uniform:
+                  $ref: "#/components/schemas/EventSchema"
+                s3:
+                  $ref: "#/components/schemas/EventSchema"
+                idox:
                   $ref: "#/components/schemas/EventSchema"
               required:
                 - email

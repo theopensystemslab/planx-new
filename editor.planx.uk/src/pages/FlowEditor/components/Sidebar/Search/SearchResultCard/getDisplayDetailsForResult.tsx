@@ -13,7 +13,7 @@ import { Pay } from "@planx/components/Pay/model";
 import { Schema } from "@planx/components/shared/Schema/model";
 import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
-import { capitalize, get } from "lodash";
+import { capitalize } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -43,8 +43,6 @@ const keyFormatters: KeyMap = {
   },
   "data.fileTypes.fn": {
     getDisplayKey: () => "File type (data)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].fn!,
   },
   "data.dataFieldBoundary": {
     getDisplayKey: () => "Boundary",
@@ -71,46 +69,27 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Why it matters",
   },
   "data.categories.title": {
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Checklist).categories![refIndex].title,
   },
   "data.steps.title": {
     getDisplayKey: () => "Title (step)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].title,
   },
   "data.steps.description": {
     getDisplayKey: () => "Description (step)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].description,
   },
   "data.steps.url": {
     getDisplayKey: () => "URL (step)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].url!,
   },
   "data.fileTypes.name": {
     getDisplayKey: () => "Name (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
   "data.fileTypes.moreInformation.howMeasured": {
     getDisplayKey: () => "How is it defined (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.howMeasured!,
   },
   "data.fileTypes.moreInformation.policyRef": {
     getDisplayKey: () => "Policy reference (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.policyRef!,
   },
   "data.fileTypes.moreInformation.info": {
     getDisplayKey: () => "Why it matters (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.info!,
   },
   "data.units": {
     getDisplayKey: () => "Unit type",
@@ -118,47 +97,20 @@ const keyFormatters: KeyMap = {
   "data.schemaName": {
     getDisplayKey: () => "Schema name",
   },
-  "data.schema.fields.data.title": {
-    getHeadline: ({ item, refIndex }) =>
-      (item.data?.schema as unknown as Schema).fields[refIndex].data.title,
-  },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data?.schema as unknown as Schema).fields[refIndex].data
-        .description!,
   },
   "data.schema.fields.data.options.data.description": {
     getDisplayKey: () => "Option (description)",
-    getHeadline: ({ item, refIndex }) => {
-      const options = (item.data?.schema as unknown as Schema).fields
-        .filter(
-          (field) => field.type === "question" || field.type === "checklist",
-        )
-        .flatMap((field) => field.data.options);
-      return options[refIndex].data.description || "";
-    },
   },
   "data.schema.fields.data.options.text": {
     getDisplayKey: () => "Option",
-    getHeadline: ({ item, refIndex }) => {
-      const options = (item.data?.schema as unknown as Schema).fields
-        .filter(
-          (field) => field.type === "question" || field.type === "checklist",
-        )
-        .flatMap((field) => field.data.options);
-      return options[refIndex].data.text || "";
-    },
   },
   "data.tasks.title": {
     getDisplayKey: () => "Title (task)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as TaskList).tasks[refIndex].title,
   },
   "data.tasks.description": {
     getDisplayKey: () => "Description (task)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as TaskList).tasks[refIndex].description,
   },
   ...Object.fromEntries(
     flatFlags.flatMap(({ value }) => [
@@ -187,13 +139,9 @@ const keyFormatters: KeyMap = {
   },
   "data.nextSteps.title": {
     getDisplayKey: () => "Title (next steps)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Confirmation).nextSteps![refIndex].title,
   },
   "data.nextSteps.description": {
     getDisplayKey: () => "Description (next steps)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Confirmation).nextSteps![refIndex].description,
   },
   "data.newAddressTitle": {
     getDisplayKey: () => "Title (new address)",
@@ -242,13 +190,9 @@ const keyFormatters: KeyMap = {
   },
   "data.govPayMetadata.key": {
     getDisplayKey: () => "GOV.UK Pay metadata (key)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Pay).govPayMetadata[refIndex].key,
   },
   "data.govPayMetadata.value": {
     getDisplayKey: () => "GOV.UK Pay metadata (value)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Pay).govPayMetadata[refIndex].value.toString(),
   },
   // Calculate contains both input and output data values
   formula: {
@@ -257,23 +201,13 @@ const keyFormatters: KeyMap = {
   },
   "data.output": {
     getDisplayKey: () => "Output (data)",
-    getHeadline: ({ item }) => (item.data as unknown as Calculate).output,
   },
   // List contains data variables nested within its schema
   "data.schema.fields.data.fn": {
     getDisplayKey: () => "Data",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as List).schema.fields[refIndex].data.fn,
   },
   "data.schema.fields.data.options.data.val": {
     getDisplayKey: () => "Option (data)",
-    getHeadline: ({ item, refIndex }) => {
-      // Fuse.js flattens deeply nested arrays when using refIndex
-      const options = (item.data as unknown as List).schema.fields
-        .filter((field) => field.type === "question")
-        .flatMap((field) => field.data.options);
-      return options[refIndex].data.val || "";
-    },
   },
 };
 
@@ -307,7 +241,7 @@ const defaultFormatter: SearchResultFormatter = {
   getIconKey: ({ item }) => item.type,
   getTitle: ({ item }) =>
     (item.data?.title as string) || (item.data?.text as string) || "",
-  getHeadline: ({ item, key }) => get(item, key)?.toString() || "",
+  getHeadline: ({ matchValue }) => matchValue,
   getComponentType: ({ item }) =>
     capitalize(SLUGS[item.type].replaceAll("-", " ")),
 };
