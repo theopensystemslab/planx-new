@@ -25,6 +25,8 @@ This guide will demonstrate how to -
 2. In the `team_integrations` table, find the row for the relevant team and paste the encrypted secret into the correct field (e.g. `production_govpay_secret`). 
 3. Press save!
 
+Note: If updating a `staging` secret, you can manually kick off the `sync-staging-db` [GitHub action](https://github.com/theopensystemslab/planx-new/actions/workflows/sync-staging-db.yml) outside of its nightly run, to ensure the secret is available on the staging environment sooner.
+
 ### Test
 
 You should now prompt the team representative (e.g. council officer) to test that the secret has been successfully updated, e.g. test a flow with GovPay.
