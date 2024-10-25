@@ -546,22 +546,6 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
-    - role: public
-      permission:
-        check: {}
-        columns:
-          - copied_from
-          - created_at
-          - creator_id
-          - data
-          - id
-          - name
-          - settings
-          - slug
-          - team_id
-          - updated_at
-          - version
-      comment: ""
     - role: teamEditor
       permission:
         check:
@@ -766,23 +750,6 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
-    - role: public
-      permission:
-        columns:
-          - copied_from
-          - created_at
-          - creator_id
-          - data
-          - id
-          - name
-          - settings
-          - slug
-          - team_id
-          - updated_at
-          - version
-        filter: {}
-        check: null
-      comment: ""
     - role: teamEditor
       permission:
         columns:
@@ -818,10 +785,6 @@
     - role: platformAdmin
       permission:
         filter: {}
-    - role: public
-      permission:
-        filter: {}
-      comment: ""
     - role: teamEditor
       permission:
         filter:
