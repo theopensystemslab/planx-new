@@ -45,11 +45,11 @@ interface MapAndLabelContextValue {
 type MapAndLabelProviderProps = PropsWithChildren<PresentationalProps>;
 
 const MapAndLabelContext = createContext<MapAndLabelContextValue | undefined>(
-  undefined,
+  undefined
 );
 
 export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
-  props,
+  props
 ) => {
   const { schema, children, handleSubmit, previouslySubmittedData, fn } = props;
   const { formikConfig, initialValues } = useSchema({
@@ -62,7 +62,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     fn
   ] as FeatureCollection;
   const previousFormData = previousGeojson?.features.map(
-    (feature) => feature.properties,
+    (feature) => feature.properties
   ) as SchemaUserResponse[];
   const _previousMapData = previousGeojson?.features;
 
@@ -83,6 +83,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
         const mergedProperties = {
           ...feature.properties,
           ...values.schemaData[i],
+          label: `${i + 1}`,
         };
         feature["properties"] = mergedProperties;
         geojson.features.push(feature);
@@ -99,11 +100,13 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   });
 
   const [activeIndex, setActiveIndex] = useState<number>(
-    previousFormData?.length - 1 || -1,
+    previousFormData ? previousFormData?.length - 1 : 0
   );
 
   const [minError, setMinError] = useState<boolean>(false);
   const [maxError, setMaxError] = useState<boolean>(false);
+  const [loadPreviousValuesOnMap, setLoadPreviousValuesOnMap] =
+    useState<boolean>(Boolean(previouslySubmittedData));
 
   const handleGeoJSONChange = (event: GeoJSONChangeEvent) => {
     // If the user clicks 'reset' on the map, geojson will be empty object
@@ -147,7 +150,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     formik.setErrors({});
   };
 
-  const removeAllFeaturesFromMap = () => setFeatures(undefined);
+  const removeAllFeaturesFromMap = () => {
+    setFeatures(undefined);
+  };
 
   const removeAllFeaturesFromForm = () => {
     formik.setFieldValue("schemaData", []);
@@ -179,8 +184,11 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     setActiveIndex(newFeatures.length - 1);
   };
 
-  const addInitialFeaturesToMap = (features: Feature[]) => {
-    setFeatures(features);
+  const addInitialFeaturesToMap = (initialFeatures: Feature[]) => {
+    if (loadPreviousValuesOnMap) {
+      setFeatures(initialFeatures);
+      setLoadPreviousValuesOnMap(false);
+    }
   };
 
   const addFeatureToForm = () => {
@@ -198,13 +206,16 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
   const copyFeature = (sourceIndex: number, destinationIndex: number) => {
     const sourceFeature = formik.values.schemaData[sourceIndex];
-    formik.setFieldValue(`schemaData[${destinationIndex}]`, sourceFeature);
+    formik.setFieldValue(`schemaData[${destinationIndex}]`, {
+      ...sourceFeature,
+      label: `${destinationIndex + 1}`,
+    });
   };
 
   const removeFeatureFromForm = (index: number) => {
     formik.setFieldValue(
       "schemaData",
-      formik.values.schemaData.filter((_, i) => i !== index),
+      formik.values.schemaData.filter((_, i) => i !== index)
     );
   };
 
@@ -212,7 +223,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     // Order of features can vary by change/modification, filter on label not array position
     const label = `${index + 1}`;
     const filteredFeatures = features?.filter(
-      (f) => f.properties?.label !== label,
+      (f) => f.properties?.label !== label
     );
 
     // Shift any feature labels that are larger than the removed feature label so they remain incremental
@@ -236,7 +247,6 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     // Set active index as highest tab after removal, so that when you "add" a new feature the tabs increment correctly
     setActiveIndex((features && features.length - 2) || 0);
   };
-
   return (
     <MapAndLabelContext.Provider
       value={{
@@ -267,7 +277,7 @@ export const useMapAndLabelContext = (): MapAndLabelContextValue => {
   const context = useContext(MapAndLabelContext);
   if (!context) {
     throw new Error(
-      "useMapAndLabelContext must be used within a MapAndLabelProvider",
+      "useMapAndLabelContext must be used within a MapAndLabelProvider"
     );
   }
   return context;

@@ -16,9 +16,8 @@ describe(`sending an application to uniform`, () => {
       .send({ payload: { somethingElse: "123" } })
       .expect(400)
       .then((res) => {
-        expect(res.body).toEqual({
-          error: "Missing application data to send to Uniform",
-        });
+        expect(res.body).toHaveProperty("issues");
+        expect(res.body).toHaveProperty("name", "ZodError");
       });
   });
 });
