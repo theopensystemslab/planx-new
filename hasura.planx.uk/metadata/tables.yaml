@@ -346,11 +346,8 @@
         filter:
           team:
             members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
+              user_id:
+                _eq: x-hasura-user-id
       comment: ""
     - role: platformAdmin
       permission:
@@ -508,7 +505,9 @@
           type: http
     - role: demoUser
       permission:
-        check: {}
+        check:
+          team_id:
+            _eq: 32
         columns:
           - copied_from
           - created_at
@@ -727,7 +726,12 @@
           - team_id
           - updated_at
           - version
-        filter: {}
+        filter:
+          _and:
+            - team_id:
+                _eq: 32
+            - creator_id:
+                _eq: x-hasura-user-id
         check: null
       comment: ""
     - role: platformAdmin
@@ -2297,7 +2301,16 @@
           - name
           - slug
           - updated_at
-        filter: {}
+        filter:
+          _or:
+            - id:
+                _eq: 1
+            - id:
+                _eq: 29
+            - id:
+                _eq: 30
+            - id:
+                _eq: 32
     - role: platformAdmin
       permission:
         columns:
