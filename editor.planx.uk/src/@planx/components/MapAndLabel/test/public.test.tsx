@@ -6,14 +6,9 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { mockTreeData } from "../test/mocks/GenericValues";
-import {
-  mockFeaturePointObj,
-  point1,
-  point2,
-  point3,
-} from "../test/mocks/geojson";
-import { props } from "../test/mocks/Trees";
+import { mockTreeData } from "./mocks/GenericValues";
+import { mockFeaturePointObj, point1, point2, point3 } from "./mocks/geojson";
+import { props } from "./mocks/Trees";
 import {
   addFeaturesToMap,
   addMultipleFeatures,
@@ -23,7 +18,7 @@ import {
   fillOutFirstHalfOfForm,
   fillOutForm,
   fillOutSecondHalfOfForm,
-} from "../test/utils";
+} from "./utils";
 
 beforeAll(() => {
   if (!window.customElements.get("my-map")) {
