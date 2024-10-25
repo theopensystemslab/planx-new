@@ -6,18 +6,18 @@ import type { Props as Filter } from "./Editor";
 
 export type Props = PublicProps<Filter>;
 
-// A Filter is always auto-answered and never seen by a user, but should still leave a breadcrumb
+// Filters are always auto-answered and never seen by a user, but should still leave a breadcrumb
 export default function Component(props: Props) {
-  const autoAnswerableOptions = useStore(
-    (state) => state.autoAnswerableOptions,
+  const autoAnswerableFlag = useStore(
+    (state) => state.autoAnswerableFlag,
   );
 
-  let idsThatCanBeAutoAnswered: string[] | undefined;
-  if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
+  let idThatCanBeAutoAnswered: string | undefined;
+  if (props.id) idThatCanBeAutoAnswered = autoAnswerableFlag(props.id);
 
   useEffect(() => {
     props.handleSubmit?.({
-      answers: idsThatCanBeAutoAnswered,
+      answers: [idThatCanBeAutoAnswered],
       auto: true,
     });
   }, []);
