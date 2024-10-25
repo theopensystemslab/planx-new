@@ -252,6 +252,24 @@
       using:
         foreign_key_constraint_on: team_id
   insert_permissions:
+    - role: demoUser
+      permission:
+        check: {}
+        columns:
+          - created_at
+          - device
+          - feedback_type
+          - flow_id
+          - id
+          - node_data
+          - node_id
+          - node_type
+          - status
+          - team_id
+          - user_comment
+          - user_context
+          - user_data
+      comment: Allow users who want to leave feedback on their experience to write to the table
     - role: public
       permission:
         check: {}
@@ -301,6 +319,39 @@
             name: teams
             schema: public
   select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - feedback_id
+          - device
+          - node_data
+          - address
+          - feedback_type
+          - help_definition
+          - help_sources
+          - help_text
+          - intersecting_constraints
+          - node_id
+          - node_text
+          - node_title
+          - node_type
+          - project_type
+          - service_slug
+          - status
+          - team_slug
+          - uprn
+          - user_comment
+          - user_context
+          - created_at
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -455,6 +506,22 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+    - role: demoUser
+      permission:
+        check: {}
+        columns:
+          - copied_from
+          - created_at
+          - creator_id
+          - data
+          - id
+          - name
+          - settings
+          - slug
+          - team_id
+          - updated_at
+          - version
+      comment: ""
     - role: platformAdmin
       permission:
         check: {}
@@ -479,6 +546,22 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+    - role: public
+      permission:
+        check: {}
+        columns:
+          - copied_from
+          - created_at
+          - creator_id
+          - data
+          - id
+          - name
+          - settings
+          - slug
+          - team_id
+          - updated_at
+          - version
+      comment: ""
     - role: teamEditor
       permission:
         check:
@@ -530,6 +613,39 @@
           - data_merged
         filter: {}
         allow_aggregations: true
+    - role: demoUser
+      permission:
+        columns:
+          - created_at
+          - creator_id
+          - data
+          - id
+          - name
+          - settings
+          - slug
+          - status
+          - team_id
+          - updated_at
+          - version
+        computed_fields:
+          - data_merged
+        filter:
+          _or:
+            - _and:
+                - creator_id:
+                    _eq: x-hasura-user-id
+                - team:
+                    id:
+                      _eq: 32
+            - team:
+                _or:
+                  - id:
+                      _eq: 1
+                  - id:
+                      _eq: 29
+                  - id:
+                      _eq: 30
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -566,7 +682,7 @@
         computed_fields:
           - data_merged
         filter: {}
-        allow_aggregations: true
+      comment: ""
     - role: teamEditor
       permission:
         columns:
@@ -613,6 +729,23 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+    - role: demoUser
+      permission:
+        columns:
+          - copied_from
+          - created_at
+          - creator_id
+          - data
+          - id
+          - name
+          - settings
+          - slug
+          - team_id
+          - updated_at
+          - version
+        filter: {}
+        check: null
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -633,6 +766,23 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+    - role: public
+      permission:
+        columns:
+          - copied_from
+          - created_at
+          - creator_id
+          - data
+          - id
+          - name
+          - settings
+          - slug
+          - team_id
+          - updated_at
+          - version
+        filter: {}
+        check: null
+      comment: ""
     - role: teamEditor
       permission:
         columns:
@@ -661,9 +811,17 @@
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
   delete_permissions:
+    - role: demoUser
+      permission:
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         filter: {}
+    - role: public
+      permission:
+        filter: {}
+      comment: ""
     - role: teamEditor
       permission:
         filter:
@@ -694,6 +852,11 @@
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
   select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - footer_content
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
@@ -946,6 +1109,14 @@
       using:
         foreign_key_constraint_on: flow_id
   insert_permissions:
+    - role: demoUser
+      permission:
+        check:
+          flow:
+            creator_id:
+              _eq: x-hausra-user-id
+        columns: []
+      comment: ""
     - role: platformAdmin
       permission:
         check: {}
@@ -977,6 +1148,18 @@
           - updated_at
           - flow_id
   select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -1000,6 +1183,15 @@
           - updated_at
         filter: {}
   update_permissions:
+    - role: demoUser
+      permission:
+        columns: []
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hausra-user-id
+        check: null
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -1344,6 +1536,17 @@
           - data
         filter: {}
         allow_aggregations: true
+    - role: demoUser
+      permission:
+        columns:
+          - created_at
+          - data
+          - flow_id
+          - id
+          - publisher_id
+          - summary
+        filter: {}
+        allow_aggregations: true
     - role: platformAdmin
       permission:
         columns:
@@ -1532,6 +1735,19 @@
     name: submission_services_log
     schema: public
   select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -1562,6 +1778,38 @@
     name: submission_services_summary
     schema: public
   select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - number_times_resumed
+          - sent_to_bops
+          - sent_to_email
+          - sent_to_s3_power_automate
+          - sent_to_uniform
+          - user_clicked_save
+          - user_invited_to_pay
+          - session_length_days
+          - bops_applications
+          - email_applications
+          - payment_requests
+          - payment_status
+          - s3_applications
+          - uniform_applications
+          - allow_list_answers
+          - application_declaration_connection
+          - draw_boundary_action
+          - find_property_action
+          - property_constraints_planning
+          - property_type
+          - proposal_project_type
+          - user_role
+          - service_slug
+          - session_id
+          - team_slug
+          - created_at
+          - submitted_at
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -1672,6 +1920,14 @@
           - staging_govpay_secret
           - power_automate_webhook_url
         filter: {}
+    - role: demoUser
+      permission:
+        columns:
+          - has_planning_data
+          - id
+          - team_id
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -1929,6 +2185,18 @@
           - team_id
         filter: {}
       comment: ""
+    - role: demoUser
+      permission:
+        columns:
+          - action_colour
+          - favicon
+          - id
+          - link_colour
+          - logo
+          - primary_colour
+          - team_id
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -2048,6 +2316,16 @@
           - updated_at
   select_permissions:
     - role: api
+      permission:
+        columns:
+          - created_at
+          - domain
+          - id
+          - name
+          - slug
+          - updated_at
+        filter: {}
+    - role: demoUser
       permission:
         columns:
           - created_at
@@ -2240,6 +2518,17 @@
           - id
           - is_platform_admin
           - is_staging_only
+          - last_name
+          - updated_at
+        filter: {}
+    - role: demoUser
+      permission:
+        columns:
+          - created_at
+          - email
+          - first_name
+          - id
+          - is_platform_admin
           - last_name
           - updated_at
         filter: {}
