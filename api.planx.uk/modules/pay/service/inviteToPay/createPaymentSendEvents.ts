@@ -1,4 +1,4 @@
-import type { Team } from "@opensystemslab/planx-core/types";
+import type { SendIntegration, Team } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, Response } from "express";
 import { gql } from "graphql-request";
@@ -7,12 +7,6 @@ import { createScheduledEvent } from "../../../../lib/hasura/metadata/index.js";
 import { $api, $public } from "../../../../client/index.js";
 import { getMostRecentPublishedFlow } from "../../../../helpers.js";
 import type { Flow, Node } from "../../../../types.js";
-
-enum Destination {
-  BOPS = "bops",
-  Uniform = "uniform",
-  Email = "email",
-}
 
 // Create "One-off Scheduled Events" in Hasura when a payment request is paid
 const createPaymentSendEvents = async (
@@ -52,32 +46,32 @@ const createPaymentSendEvents = async (
     const sendNode: [string, Node] | undefined = Object.entries(
       publishedFlowData,
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
-    const destinations: Destination[] = sendNode?.[1]?.data?.destinations;
+    const destinations: SendIntegration[] = sendNode?.[1]?.data?.destinations;
 
     let teamSlug = await getTeamSlugByFlowId(session.flow.id);
     const eventPayload = { sessionId: payload.sessionId };
 
-    if (destinations.includes(Destination.BOPS)) {
+    if (destinations.includes("bops")) {
       const bopsEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/bops/${teamSlug}`,
         schedule_at: now,
         payload: eventPayload,
         comment: `bops_submission_${payload.sessionId}`,
       });
-      combinedResponse[Destination.BOPS] = bopsEvent;
+      combinedResponse["bops"] = bopsEvent;
     }
 
-    if (destinations.includes(Destination.Email)) {
+    if (destinations.includes("email")) {
       const emailSubmissionEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/email-submission/${teamSlug}`,
         schedule_at: now,
         payload: eventPayload,
         comment: `email_submission_${payload.sessionId}`,
       });
-      combinedResponse[Destination.Email] = emailSubmissionEvent;
+      combinedResponse["email"] = emailSubmissionEvent;
     }
 
-    if (destinations.includes(Destination.Uniform)) {
+    if (destinations.includes("uniform")) {
       // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
       if (teamSlug === "buckinghamshire") {
         const localAuthorities: string[] = session.data?.passport?.data?.[
@@ -101,7 +95,7 @@ const createPaymentSendEvents = async (
         payload: eventPayload,
         comment: `uniform_submission_${payload.sessionId}`,
       });
-      combinedResponse[Destination.Uniform] = uniformEvent;
+      combinedResponse["uniform"] = uniformEvent;
     }
 
     return res.json(combinedResponse);
