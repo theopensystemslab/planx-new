@@ -142,7 +142,7 @@ export const AlteredNodesSummaryContent = (props: {
     } else if (node.id && Object.keys(node).length === 1) {
       changeSummary["deleted"] += 1;
     } else if (node.type === TYPES.InternalPortal) {
-      if (node.data?.text?.includes("/")) {
+      if (node.data?.text?.includes("/") && !node.data?.text?.includes(" ")) {
         changeSummary["portals"].push({ ...node.data, flowId: node.id });
       }
     } else if (node.type) {
