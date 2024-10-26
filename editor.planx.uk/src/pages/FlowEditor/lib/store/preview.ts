@@ -475,6 +475,8 @@ export const previewStore: StateCreator<
     let passportValues = computePassport()?.data?.[data.fn]?.sort();
     if (!Array.isArray(passportValues)) passportValues = [passportValues].filter(Boolean);
 
+    // If we have an existing passport value for this fn, 
+    //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
     if (passportValues.length > 0) {
       // Check if the existing passport value(s) startsWith at least one option's val (eg passport retains most granular values only)
       const matchingPassportValues = passportValues.filter((passportValue: any) =>
@@ -484,13 +486,16 @@ export const previewStore: StateCreator<
       );
 
       if (matchingPassportValues.length > 0) {
+        let foundExactMatch = false;
         sortedOptions.forEach((option) => {
           passportValues.forEach((passportValue: any) => {
             // An option can be auto-answered if it has direct match in the passport
-            //   or if the passport has a more granular version of the option (eg option is `fruit`, passport has `fruit.apple`)
+            //   or if the passport has a more granular version of the option (eg option is `fruit`, passport has `fruit.apple`) 
+            //     but only in cases where we don't also have the exact match
             if (passportValue === option.data?.val) {
               if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
-            } else if (passportValue.startsWith(option.data?.val)) {
+              foundExactMatch = true;
+            } else if (passportValue.startsWith(option.data?.val) && !foundExactMatch) {
               if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
             }
           });
