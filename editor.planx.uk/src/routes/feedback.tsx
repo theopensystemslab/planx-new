@@ -26,6 +26,7 @@ export interface Feedback {
 const feedbackRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
+    flow: req.params.flow.split(",")[0],
   })),
 
   mount({
