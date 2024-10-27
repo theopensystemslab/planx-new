@@ -10,6 +10,7 @@ import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { NotFoundBoundary, Router, View } from "react-navi";
@@ -93,22 +94,28 @@ const Layout: React.FC<{
   );
 };
 
-root.render(
-  <ToastContextProvider>
-    <ApolloProvider client={client}>
-      <AnalyticsProvider>
-        <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-          <HelmetProvider>
-            <Layout>
-              <CssBaseline />
-              <Suspense fallback={null}>
-                <View />
-              </Suspense>
-            </Layout>
-          </HelmetProvider>
-        </Router>
-      </AnalyticsProvider>
-    </ApolloProvider>
-    <ToastContainer icon={false} theme="colored" />
-  </ToastContextProvider>,
-);
+const App = () => {
+  const user = useStore(state => state.user);
+  
+  return (
+    <ToastContextProvider>
+      <ApolloProvider client={client}>
+        <AnalyticsProvider>
+          <Router context={{ currentUser: hasJWT(), user }} navigation={navigation}>
+            <HelmetProvider>
+              <Layout>
+                <CssBaseline />
+                <Suspense fallback={null}>
+                  <View />
+                </Suspense>
+              </Layout>
+            </HelmetProvider>
+          </Router>
+        </AnalyticsProvider>
+      </ApolloProvider>
+      <ToastContainer icon={false} theme="colored" />
+    </ToastContextProvider>
+  )
+}
+
+root.render(<App/>)
