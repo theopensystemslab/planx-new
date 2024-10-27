@@ -94,28 +94,28 @@ const Layout: React.FC<{
   );
 };
 
-const App = () => {
-  const user = useStore(state => state.user);
-  
-  return (
-    <ToastContextProvider>
-      <ApolloProvider client={client}>
-        <AnalyticsProvider>
-          <Router context={{ currentUser: hasJWT(), user }} navigation={navigation}>
-            <HelmetProvider>
-              <Layout>
-                <CssBaseline />
-                <Suspense fallback={null}>
-                  <View />
-                </Suspense>
-              </Layout>
-            </HelmetProvider>
-          </Router>
-        </AnalyticsProvider>
-      </ApolloProvider>
-      <ToastContainer icon={false} theme="colored" />
-    </ToastContextProvider>
-  )
-}
-
-root.render(<App/>)
+root.render(
+  <ToastContextProvider>
+    <ApolloProvider client={client}>
+      <AnalyticsProvider>
+        <Router
+          context={{
+            currentUser: hasJWT(),
+            user: useStore.getState().user
+          }}
+          navigation={navigation}
+        >
+          <HelmetProvider>
+            <Layout>
+              <CssBaseline />
+              <Suspense fallback={null}>
+                <View />
+              </Suspense>
+            </Layout>
+          </HelmetProvider>
+        </Router>
+      </AnalyticsProvider>
+    </ApolloProvider>
+    <ToastContainer icon={false} theme="colored" />
+  </ToastContextProvider>,
+);
