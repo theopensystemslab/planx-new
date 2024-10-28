@@ -5,7 +5,7 @@ import { visuallyHidden } from "@mui/utils";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
-import type { PublicProps } from "@planx/components/ui";
+import type { PublicProps } from "@planx/components/sharedTypes";
 import { GraphError } from "components/Error/GraphError";
 import { Feature } from "geojson";
 import { publicClient } from "lib/graphql";

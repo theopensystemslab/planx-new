@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/sharedTypes";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -9,6 +9,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { ICONS } from "../shared/icons";
 import { ContactInput, parseContactInput } from "./model";
 
 export type Props = EditorProps<TYPES.ContactInput, ContactInput>;

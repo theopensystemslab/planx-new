@@ -14,7 +14,7 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
 import PermissionSelect from "../shared/PermissionSelect";
-import { ICONS, InternalNotes, MoreInformation } from "../ui";
+import { ICONS, InternalNotes, MoreInformation } from "../sharedTypes";
 
 interface Props {
   node: {

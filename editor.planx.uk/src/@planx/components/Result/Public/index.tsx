@@ -6,7 +6,7 @@ import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Response } from "pages/FlowEditor/lib/store/preview";
 import React from "react";

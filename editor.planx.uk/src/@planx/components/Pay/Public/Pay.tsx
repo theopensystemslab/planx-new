@@ -3,7 +3,7 @@ import {
   GovUKPayment,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";

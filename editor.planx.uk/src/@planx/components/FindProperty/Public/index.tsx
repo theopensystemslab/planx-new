@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import area from "@turf/area";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { Feature } from "geojson";

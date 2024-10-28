@@ -10,7 +10,7 @@ import { AsyncState } from "react-use/lib/useAsyncFn";
 
 import Card from "../shared/Preview/Card";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
-import { PublicProps } from "../ui";
+import { PublicProps } from "../sharedTypes";
 import { DEFAULT_DESTINATION, getCombinedEventsPayload, Send } from "./model";
 
 /** Response returned by /create-send-events endpoint */

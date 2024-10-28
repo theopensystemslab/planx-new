@@ -3,7 +3,11 @@ import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
 import { parseNotice } from "@planx/components/Notice/model";
-import { ICONS, InternalNotes, MoreInformation } from "@planx/components/ui";
+import {
+  ICONS,
+  InternalNotes,
+  MoreInformation,
+} from "@planx/components/sharedTypes";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";

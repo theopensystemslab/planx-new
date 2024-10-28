@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { EditorProps } from "@planx/components/sharedTypes";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import { parseTaskList } from "@planx/components/TaskList/model";
-import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import ListManager, {
