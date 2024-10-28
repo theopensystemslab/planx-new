@@ -12,8 +12,8 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useEffect, useRef, useState } from "react";
 import FeedbackOption from "ui/public/FeedbackOption";
 
-import { FeedbackFormInput, UserFeedback } from ".";
-import FeedbackForm from "./FeedbackForm";
+import FeedbackForm from "../FeedbackForm/FeedbackForm";
+import { FeedbackFormInput, UserFeedback } from "../types";
 
 const MoreInfoFeedback = styled(Box)(({ theme }) => ({
   borderTop: `2px solid ${theme.palette.border.main}`,
