@@ -6,6 +6,7 @@ import { makeTitle } from "./utils";
 const submissionsLogRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
+    flow: req.params.flow.split(",")[0],
   })),
 
   mount({

@@ -12,7 +12,7 @@ import { getContrastTextColor } from "styleUtils";
 import { emptyContent } from "ui/editor/RichTextInput/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { HelpButton, Image } from "../shared/Preview/CardHeader";
+import { HelpButton, Image } from "../shared/Preview/CardHeader/styled";
 import MoreInfo from "../shared/Preview/MoreInfo";
 import MoreInfoSection from "../shared/Preview/MoreInfoSection";
 

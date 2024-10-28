@@ -2,7 +2,10 @@ import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  SendIntegration,
+} from "@opensystemslab/planx-core/types";
 import { getIn, useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
@@ -14,7 +17,8 @@ import InputRow from "ui/shared/InputRow";
 import { array, object } from "yup";
 
 import { EditorProps, ICONS } from "../ui";
-import { Destination, parseContent, Send } from "./model";
+import { Send } from "./model";
+import { parseContent } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
@@ -34,40 +38,40 @@ const SendComponent: React.FC<Props> = (props) => {
         .test({
           name: "atLeastOneChecked",
           message: "Select at least one destination",
-          test: (destinations?: Array<Destination>) => {
+          test: (destinations?: Array<SendIntegration>) => {
             return Boolean(destinations && destinations.length > 0);
           },
         }),
     }),
   });
 
-  const options: { value: Destination; label: string }[] = [
+  const options: { value: SendIntegration; label: string }[] = [
     {
-      value: Destination.BOPS,
+      value: "bops",
       label: "BOPS",
     },
     {
-      value: Destination.Uniform,
+      value: "uniform",
       label: "Uniform",
     },
     {
-      value: Destination.Idox,
+      value: "idox",
       label: "Idox Nexus (TESTING ONLY)",
     },
     {
-      value: Destination.Email,
+      value: "email",
       label: "Email to planning office",
     },
     {
-      value: Destination.S3,
+      value: "s3",
       label: "Upload to AWS S3 bucket",
     },
   ];
 
   const changeCheckbox =
-    (value: Destination) =>
+    (value: SendIntegration) =>
     (_checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
-      let newCheckedValues: Destination[];
+      let newCheckedValues: SendIntegration[];
 
       if (formik.values.destinations.includes(value)) {
         newCheckedValues = formik.values.destinations.filter(
@@ -89,14 +93,14 @@ const SendComponent: React.FC<Props> = (props) => {
       //   Don't actually restrict selection because flowSlug matching is imperfect for some valid test cases
       const teamSlug = window.location.pathname?.split("/")?.[1];
       const flowSlug = window.location.pathname?.split("/")?.[2];
-      if (value === Destination.BOPS && newCheckedValues.includes(value)) {
+      if (value === "bops" && newCheckedValues.includes(value)) {
         alert(
           "BOPS only accepts Lawful Development Certificate, Prior Approval, and Planning Permission submissions. Please do not select if you're building another type of submission service!",
         );
       }
 
       if (
-        value === Destination.Uniform &&
+        value === "uniform" &&
         newCheckedValues.includes(value) &&
         flowSlug !== "apply-for-a-lawful-development-certificate" &&
         !["buckinghamshire", "lambeth", "southwark"].includes(teamSlug)
@@ -107,7 +111,7 @@ const SendComponent: React.FC<Props> = (props) => {
       }
 
       if (
-        value === Destination.S3 &&
+        value === "s3" &&
         newCheckedValues.includes(value) &&
         !["barnet", "lambeth"].includes(teamSlug)
       ) {

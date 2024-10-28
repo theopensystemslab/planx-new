@@ -9,7 +9,7 @@ import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { FeedbackFormInput, FormProps, UserFeedback } from ".";
+import { FeedbackFormInput, FormProps, UserFeedback } from "../types";
 
 const StyledForm = styled(Form)(({ theme }) => ({
   "& > *": contentFlowSpacing(theme),

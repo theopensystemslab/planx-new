@@ -14,8 +14,8 @@ dependencies:
     specifier: ^2.1.8
     version: 2.1.8
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#4cc216f
-    version: github.com/theopensystemslab/planx-core/4cc216f
+    specifier: git+https://github.com/theopensystemslab/planx-core#54be9e0
+    version: github.com/theopensystemslab/planx-core/54be9e0
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -83,8 +83,8 @@ dependencies:
     specifier: ^7.1.0
     version: 7.1.0
   http-proxy-middleware:
-    specifier: ^2.0.6
-    version: 2.0.6(@types/express@4.17.21)
+    specifier: ^2.0.7
+    version: 2.0.7(@types/express@4.17.21)
   husky:
     specifier: ^8.0.3
     version: 8.0.3
@@ -3755,8 +3755,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /http-proxy-middleware@2.0.6(@types/express@4.17.21):
-    resolution: {integrity: sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==}
+  /http-proxy-middleware@2.0.7(@types/express@4.17.21):
+    resolution: {integrity: sha512-fgVY8AV7qU7z/MmXJ/rxwbrtQH4jBQ9m7kp3llF0liB7glmFeVZFBepQb32T3y8n8k2+AEYuMPCpinYW+/CuRA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/express': ^4.17.13
@@ -6265,8 +6265,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/4cc216f:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4cc216f}
+  github.com/theopensystemslab/planx-core/54be9e0:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/54be9e0}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

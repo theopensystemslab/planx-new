@@ -43,6 +43,7 @@ describe("Basic fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.description",
+      matchValue: "Peacock",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -50,7 +51,7 @@ describe("Basic fields", () => {
       iconKey: ComponentType.Question,
       componentType: "Question",
       title: "Seahorse",
-      headline: "<p>Peacock</p>",
+      headline: "Peacock",
     });
   });
 
@@ -72,6 +73,7 @@ describe("More information fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.notes",
+      matchValue: "Echidna",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -87,6 +89,7 @@ describe("More information fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.howMeasured",
+      matchValue: "Gazelle",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -94,7 +97,7 @@ describe("More information fields", () => {
       iconKey: ComponentType.Question,
       componentType: "Question",
       title: "Seahorse",
-      headline: "<p>Gazelle</p>",
+      headline: "Gazelle",
     });
   });
 
@@ -102,6 +105,7 @@ describe("More information fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.policyRef",
+      matchValue: "Rat",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -109,7 +113,7 @@ describe("More information fields", () => {
       iconKey: ComponentType.Question,
       componentType: "Question",
       title: "Seahorse",
-      headline: "<p>Rat</p>",
+      headline: "Rat",
     });
   });
 
@@ -117,6 +121,7 @@ describe("More information fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockQuestionResult,
       key: "data.info",
+      matchValue: "Octopus",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -124,10 +129,11 @@ describe("More information fields", () => {
       iconKey: ComponentType.Question,
       componentType: "Question",
       title: "Seahorse",
-      headline: "<p>Octopus</p>",
+      headline: "Octopus",
     });
   });
 });
+
 describe("checklist fields", () => {
   it("renders data.categories.title", () => {
     const output = getDisplayDetailsForResult(mockChecklistResult);
@@ -171,6 +177,7 @@ describe("nextSteps fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockNextStepsOptionResult,
       key: "data.steps.description",
+      matchValue: "Vulture",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -186,6 +193,7 @@ describe("nextSteps fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockNextStepsOptionResult,
       key: "data.steps.url",
+      matchValue: "https://www.starfish.gov.uk",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -215,6 +223,7 @@ describe("fileUploadAndLabel fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
       key: "data.fileTypes.moreInformation.info",
+      matchValue: "Kangaroo",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -222,7 +231,7 @@ describe("fileUploadAndLabel fields", () => {
       iconKey: ComponentType.FileUploadAndLabel,
       componentType: "File upload and label",
       title: ".",
-      headline: "<p>Kangaroo</p>",
+      headline: "Kangaroo",
     });
   });
 
@@ -230,6 +239,7 @@ describe("fileUploadAndLabel fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
       key: "data.fileTypes.moreInformation.policyRef",
+      matchValue: "Tiger",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -237,7 +247,7 @@ describe("fileUploadAndLabel fields", () => {
       iconKey: ComponentType.FileUploadAndLabel,
       componentType: "File upload and label",
       title: ".",
-      headline: "<p>Tiger</p>",
+      headline: "Tiger",
     });
   });
 
@@ -245,6 +255,7 @@ describe("fileUploadAndLabel fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFileUploadAndLabelResult,
       key: "data.fileTypes.moreInformation.howMeasured",
+      matchValue: "Salamander",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -252,7 +263,7 @@ describe("fileUploadAndLabel fields", () => {
       iconKey: ComponentType.FileUploadAndLabel,
       componentType: "File upload and label",
       title: ".",
-      headline: "<p>Salamander</p>",
+      headline: "Salamander",
     });
   });
 });
@@ -270,6 +281,7 @@ describe("numberInput fields", () => {
     });
   });
 });
+
 describe("schemaComponents fields", () => {
   it("renders data.schemaName", () => {
     const output = getDisplayDetailsForResult(mockSchemaResult);
@@ -287,6 +299,7 @@ describe("schemaComponents fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockSchemaResult,
       key: "data.schema.fields.data.title",
+      matchValue: "Donkey",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -302,6 +315,7 @@ describe("schemaComponents fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockSchemaResult,
       key: "data.schema.fields.data.description",
+      matchValue: "Alpaca",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -317,6 +331,7 @@ describe("schemaComponents fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockSchemaResult,
       key: "data.schema.fields.data.options.text",
+      matchValue: "Iguana",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -332,6 +347,7 @@ describe("schemaComponents fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockSchemaResult,
       key: "data.schema.fields.data.options.data.description",
+      matchValue: "Parrot",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -361,6 +377,7 @@ describe("taskList fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockTaskListResult,
       key: "data.tasks.description",
+      matchValue: "Beaver",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -368,7 +385,7 @@ describe("taskList fields", () => {
       iconKey: ComponentType.TaskList,
       componentType: "Task list",
       title: ".",
-      headline: "<p>Beaver</p>",
+      headline: "Beaver",
     });
   });
 });
@@ -382,7 +399,7 @@ describe("content fields", () => {
       iconKey: ComponentType.Content,
       componentType: "Content",
       title: "",
-      headline: "<p>Sheep</p>",
+      headline: "Sheep",
     });
   });
 });
@@ -404,6 +421,7 @@ describe("confirmation fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
       key: "data.moreInfo",
+      matchValue: "Tarantula",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -411,7 +429,7 @@ describe("confirmation fields", () => {
       iconKey: ComponentType.Confirmation,
       componentType: "Confirmation",
       title: "",
-      headline: "<p>Tarantula</p>",
+      headline: "Tarantula",
     });
   });
 
@@ -419,6 +437,7 @@ describe("confirmation fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
       key: "data.contactInfo",
+      matchValue: "Weasel",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -426,7 +445,7 @@ describe("confirmation fields", () => {
       iconKey: ComponentType.Confirmation,
       componentType: "Confirmation",
       title: "",
-      headline: "<p>Weasel</p>",
+      headline: "Weasel",
     });
   });
 
@@ -434,6 +453,7 @@ describe("confirmation fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
       key: "data.nextSteps.title",
+      matchValue: "Llama",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -449,6 +469,7 @@ describe("confirmation fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockConfirmationResult,
       key: "data.nextSteps.description",
+      matchValue: "Toucan",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -478,6 +499,7 @@ describe("findProperty fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFindPropertyResult,
       key: "data.newAddressDescription",
+      matchValue: "Stingray",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -485,7 +507,7 @@ describe("findProperty fields", () => {
       iconKey: ComponentType.FindProperty,
       componentType: "Find property",
       title: ".",
-      headline: "<p>Stingray</p>",
+      headline: "Stingray",
     });
   });
 
@@ -493,6 +515,7 @@ describe("findProperty fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockFindPropertyResult,
       key: "data.newAddressDescriptionLabel",
+      matchValue: "Scorpion",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -522,6 +545,7 @@ describe("drawBoundary fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockDrawBoundaryResult,
       key: "data.descriptionForUploading",
+      matchValue: "Panda",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -529,7 +553,7 @@ describe("drawBoundary fields", () => {
       iconKey: ComponentType.DrawBoundary,
       componentType: "Draw boundary",
       title: ".",
-      headline: "<p>Panda</p>",
+      headline: "Panda",
     });
   });
 });
@@ -543,7 +567,7 @@ describe("planningConstraints fields", () => {
       iconKey: ComponentType.PlanningConstraints,
       componentType: "Planning constraints",
       title: ".",
-      headline: "<p>Barracuda</p>",
+      headline: "Barracuda",
     });
   });
 });
@@ -553,6 +577,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.bannerTitle",
+      matchValue: "Moose",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -568,6 +593,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.instructionsTitle",
+      matchValue: "Pelican",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -583,6 +609,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.instructionsDescription",
+      matchValue: "Cockatoo",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -590,7 +617,7 @@ describe("pay fields", () => {
       iconKey: ComponentType.Pay,
       componentType: "Pay",
       title: "Jaguar",
-      headline: "<p>Cockatoo</p>",
+      headline: "Cockatoo",
     });
   });
 
@@ -598,6 +625,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.secondaryPageTitle",
+      matchValue: "Chicken",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -613,6 +641,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.nomineeTitle",
+      matchValue: "Aardvark",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -628,6 +657,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.nomineeDescription",
+      matchValue: "Cheetah",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -635,7 +665,7 @@ describe("pay fields", () => {
       iconKey: ComponentType.Pay,
       componentType: "Pay",
       title: "Jaguar",
-      headline: "<p>Cheetah</p>",
+      headline: "Cheetah",
     });
   });
 
@@ -643,6 +673,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.yourDetailsTitle",
+      matchValue: "Camel",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -658,6 +689,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.yourDetailsDescription",
+      matchValue: "Macaw",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -665,7 +697,7 @@ describe("pay fields", () => {
       iconKey: ComponentType.Pay,
       componentType: "Pay",
       title: "Jaguar",
-      headline: "<p>Macaw</p>",
+      headline: "Macaw",
     });
   });
 
@@ -673,6 +705,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.yourDetailsLabel",
+      matchValue: "Skunk",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -688,6 +721,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.govPayMetadata.key",
+      matchValue: "Tapir",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -703,6 +737,7 @@ describe("pay fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockPayResult,
       key: "data.govPayMetadata.value",
+      matchValue: "Okapi",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -721,6 +756,7 @@ describe("result fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockResultResult,
       key: "data.overrides.IMMUNE.heading",
+      matchValue: "Squid",
     });
 
     expect(output).toStrictEqual<Output>({
@@ -736,6 +772,7 @@ describe("result fields", () => {
     const output = getDisplayDetailsForResult({
       ...mockResultResult,
       key: "data.overrides.IMMUNE.description",
+      matchValue: "Eagle",
     });
 
     expect(output).toStrictEqual<Output>({
