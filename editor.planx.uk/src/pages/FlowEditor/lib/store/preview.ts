@@ -468,14 +468,12 @@ export const previewStore: StateCreator<
     const blankOption = options.find((option) => !option.data?.val);
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
-    // Get existing passport value(s) for this node's fn & proceed if eligible format (eg not numbers via Calculate nodes)
+    // Get existing passport value(s) for this node's fn
     let passportValues = computePassport().data?.[data.fn];
-    if (typeof passportValues === "number") return;
-    if (!Array.isArray(passportValues)) passportValues = [passportValues].filter(Boolean).sort();
 
-    // If we have an existing passport value for this fn, 
+    // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings), 
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
-    if (passportValues.length > 0) {
+    if (Array.isArray(passportValues) && passportValues.length > 0) {
       // Check if the existing passport value(s) startsWith at least one option's val (eg passport retains most granular values only)
       const matchingPassportValues = passportValues.filter((passportValue: any) =>
         sortedOptions.some((option) =>
@@ -530,7 +528,7 @@ export const previewStore: StateCreator<
       optionsThatCanBeAutoAnswered = optionsThatCanBeAutoAnswered.slice(0, 1);
     }
 
-    return optionsThatCanBeAutoAnswered;
+    return optionsThatCanBeAutoAnswered.length > 0 ? optionsThatCanBeAutoAnswered : undefined;
   },
 
   /**
