@@ -35,6 +35,10 @@ export const FaceBox = ({
             border: `2px solid ${theme.palette.border.main} `,
             width: "120px",
             maxHeight: "120px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           })}
         >
           <img src={icon} width={50} alt={altText} />
