@@ -37,7 +37,7 @@ describe(`sending an application to BOPS (v2)`, () => {
         bopsApplications: [],
       },
       variables: {
-        session_id: "123",
+        session_id: "37e3649b-4854-4249-a5c3-7937c1b952b9",
         search_string: "%/api/v2/planning_applications",
       },
     });
@@ -93,7 +93,7 @@ describe(`sending an application to BOPS (v2)`, () => {
     await supertest(app)
       .post("/bops/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "37e3649b-4854-4249-a5c3-7937c1b952b9" } })
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
@@ -108,7 +108,7 @@ describe(`sending an application to BOPS (v2)`, () => {
   it("requires auth", async () => {
     await supertest(app)
       .post("/bops/southwark")
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "37e3649b-4854-4249-a5c3-7937c1b952b9" } })
       .expect(401);
   });
 
@@ -119,7 +119,8 @@ describe(`sending an application to BOPS (v2)`, () => {
       .send({ payload: null })
       .expect(400)
       .then((res) => {
-        expect(res.body.error).toMatch(/Missing application/);
+        expect(res.body).toHaveProperty("issues");
+        expect(res.body).toHaveProperty("name", "ZodError");
       });
   });
 
@@ -127,7 +128,7 @@ describe(`sending an application to BOPS (v2)`, () => {
     await supertest(app)
       .post("/bops/unsupported-team")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "123" } })
+      .send({ payload: { sessionId: "37e3649b-4854-4249-a5c3-7937c1b952b9" } })
       .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(
@@ -137,6 +138,9 @@ describe(`sending an application to BOPS (v2)`, () => {
   });
 
   it("does not re-send an application which has already been submitted", async () => {
+    const previouslySubmittedApplicationID =
+      "07e4dd0d-ec3c-48f5-adc7-aee90116f6c7";
+
     queryMock.mockQuery({
       name: "FindApplication",
       data: {
@@ -145,7 +149,7 @@ describe(`sending an application to BOPS (v2)`, () => {
         ],
       },
       variables: {
-        session_id: "previously_submitted_app",
+        session_id: previouslySubmittedApplicationID,
         search_string: "%/api/v2/planning_applications",
       },
     });
@@ -153,11 +157,11 @@ describe(`sending an application to BOPS (v2)`, () => {
     await supertest(app)
       .post("/bops/southwark")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "previously_submitted_app" } })
+      .send({ payload: { sessionId: previouslySubmittedApplicationID } })
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          sessionId: "previously_submitted_app",
+          sessionId: previouslySubmittedApplicationID,
           bopsId: "bops_app_id",
           message: "Skipping send, already successfully submitted",
         });

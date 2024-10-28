@@ -97,6 +97,12 @@
       "extends": [
         "plugin:testing-library/react"
       ]
+    },
+    {
+      "files": [ "*.stories.tsx" ],
+      "rules": {
+        "@typescript-eslint/no-empty-function": "off"
+      }
     }
   ]
 }

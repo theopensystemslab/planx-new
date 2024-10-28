@@ -1,10 +1,10 @@
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { ERROR_MESSAGE } from "../shared/constants";

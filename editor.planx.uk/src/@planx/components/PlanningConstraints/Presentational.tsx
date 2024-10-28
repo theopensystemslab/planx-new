@@ -2,11 +2,11 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import capitalize from "lodash/capitalize";
 import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";

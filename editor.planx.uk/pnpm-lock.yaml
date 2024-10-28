@@ -44,11 +44,11 @@ dependencies:
     specifier: ^5.15.11
     version: 5.15.11(@types/react@18.2.45)(react@18.2.0)
   '@opensystemslab/map':
-    specifier: 1.0.0-alpha.3
-    version: 1.0.0-alpha.3
+    specifier: 1.0.0-alpha.4
+    version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#4cc216f
-    version: github.com/theopensystemslab/planx-core/4cc216f(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#54be9e0
+    version: github.com/theopensystemslab/planx-core/54be9e0(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -3842,8 +3842,8 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@opensystemslab/map@1.0.0-alpha.3:
-    resolution: {integrity: sha512-mwOBKiq0DWNOvYv7XiSkTYbBFdoRZD6jXnk1Kh9FPSFeP2FftDDusJzSK25k0rSMd7bqnnQ0O0l7X9hBucBzIg==}
+  /@opensystemslab/map@1.0.0-alpha.4:
+    resolution: {integrity: sha512-HNvJkw43hmVqCeXIhZhkuT2YWQEWE/yXKmohATv9TNMRf1e9rOi4JtNg094vrtiZ9L5Od+OfM+8tahlCkV9RNw==}
     dependencies:
       '@turf/union': 7.1.0
       accessible-autocomplete: 2.0.4
@@ -15359,9 +15359,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/4cc216f(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4cc216f}
-    id: github.com/theopensystemslab/planx-core/4cc216f
+  github.com/theopensystemslab/planx-core/54be9e0(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/54be9e0}
+    id: github.com/theopensystemslab/planx-core/54be9e0
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

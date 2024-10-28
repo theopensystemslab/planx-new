@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import InputLabel from "ui/editor/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import * as Yup from "yup";
 
 import { SettingsForm } from "../shared/SettingsForm";

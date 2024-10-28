@@ -1,3 +1,4 @@
+import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import type { AxiosResponse } from "axios";
 import axios, { isAxiosError } from "axios";
 
@@ -10,13 +11,9 @@ interface ScheduledEvent {
   args: ScheduledEventArgs;
 }
 
-export interface CombinedResponse {
-  bops?: ScheduledEventResponse;
-  uniform?: ScheduledEventResponse;
-  idox?: ScheduledEventResponse;
-  email?: ScheduledEventResponse;
-  s3?: ScheduledEventResponse;
-}
+export type CombinedResponse = Partial<
+  Record<SendIntegration, ScheduledEventResponse>
+>;
 
 interface ScheduledEventArgs {
   headers: Record<string, string>[];

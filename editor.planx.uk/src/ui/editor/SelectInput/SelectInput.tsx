@@ -3,7 +3,7 @@ import Select, { selectClasses, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import React, { ReactNode } from "react";
 
-import Input from "../shared/Input";
+import Input from "../../shared/Input/Input";
 
 export interface Props extends SelectProps {
   name?: string;

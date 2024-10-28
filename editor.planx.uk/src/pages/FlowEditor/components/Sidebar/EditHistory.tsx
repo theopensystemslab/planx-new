@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { Operation } from "types";

@@ -2,6 +2,10 @@ import { Schema } from "@planx/components/shared/Schema/model";
 
 import { PresentationalProps } from "../../Public";
 import { Trees } from "../../schemas/Trees";
+import {
+  previouslySubmittedDoubleFeature,
+  previouslySubmittedSingleFeature,
+} from "./mockPayload";
 
 const mockTreeSchema: Schema = {
   ...Trees,
@@ -19,4 +23,14 @@ export const props: PresentationalProps = {
   drawType: "Point",
   longitude: -0.1629784,
   latitude: 51.5230919,
+};
+
+export const previouslySubmittedSingleFeatureProps: PresentationalProps = {
+  ...props,
+  previouslySubmittedData: previouslySubmittedSingleFeature,
+};
+
+export const previouslySubmittedDoubleFeatureProps: PresentationalProps = {
+  ...props,
+  previouslySubmittedData: previouslySubmittedDoubleFeature,
 };
