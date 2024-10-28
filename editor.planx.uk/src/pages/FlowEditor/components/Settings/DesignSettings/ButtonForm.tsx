@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
-import ColorPicker from "ui/editor/ColorPicker";
+import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 

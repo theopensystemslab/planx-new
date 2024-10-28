@@ -27,7 +27,7 @@ export const parseContent = (data: Record<string, any> | undefined): Send => ({
 });
 
 const isSendingToUniform = (
-  payload: CombinedEventsPayload
+  payload: CombinedEventsPayload,
 ): payload is CombinedEventsPayload & { uniform: EventPayload } =>
   "uniform" in payload;
 

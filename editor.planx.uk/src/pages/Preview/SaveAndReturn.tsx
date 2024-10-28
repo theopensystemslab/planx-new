@@ -6,7 +6,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, ref, string } from "yup";
 

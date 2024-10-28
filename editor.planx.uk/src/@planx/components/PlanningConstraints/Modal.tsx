@@ -11,9 +11,9 @@ import { Constraint, Metadata } from "@opensystemslab/planx-core/types";
 import omit from "lodash/omit";
 import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
-import ChecklistItem from "ui/shared/ChecklistItem";
+import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import { formatEntityName } from "./List";
 import { InaccurateConstraints } from "./Public";

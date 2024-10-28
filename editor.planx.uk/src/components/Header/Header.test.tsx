@@ -8,8 +8,8 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import flowWithoutSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithClones.json";
-import flowWithThreeSections from "../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
+import flowWithoutSections from "../../pages/FlowEditor/lib/__tests__/mocks/flowWithClones.json";
+import flowWithThreeSections from "../../pages/FlowEditor/lib/__tests__/mocks/flowWithThreeSections.json";
 import Header from "./Header";
 
 const { setState, getState } = useStore;

@@ -7,7 +7,7 @@ import React from "react";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import { FeedbackFormInput, FormProps, UserFeedback } from "../types";
 

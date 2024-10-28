@@ -28,7 +28,7 @@ beforeAll(() => {
 describe("navigating back after adding single feature", () => {
   it("shows previously submitted features", async () => {
     const { getByTestId, queryByRole } = setup(
-      <MapAndLabel {...previouslySubmittedSingleFeatureProps} />
+      <MapAndLabel {...previouslySubmittedSingleFeatureProps} />,
     );
     const map = getByTestId("map-and-label-map");
 
@@ -54,7 +54,7 @@ describe("navigating back after adding single feature", () => {
 describe("navigating back after adding two features", () => {
   it("shows previously submitted features", async () => {
     const { getByTestId, queryByRole } = setup(
-      <MapAndLabel {...previouslySubmittedDoubleFeatureProps} />
+      <MapAndLabel {...previouslySubmittedDoubleFeatureProps} />,
     );
     const map = getByTestId("map-and-label-map");
 
@@ -83,7 +83,7 @@ describe("navigating back after adding two features", () => {
       <MapAndLabel
         {...previouslySubmittedDoubleFeatureProps}
         handleSubmit={handleSubmit}
-      />
+      />,
     );
 
     const firstTab = getByRole("tab", { name: /Tree 1/ });

@@ -41,11 +41,11 @@ import {
 import { ApplicationPath } from "types";
 import Reset from "ui/icons/Reset";
 
-import { useStore } from "../pages/FlowEditor/lib/store";
-import { rootFlowPath } from "../routes/utils";
-import AnalyticsDisabledBanner from "./AnalyticsDisabledBanner";
-import { ConfirmationDialog } from "./ConfirmationDialog";
-import TestEnvironmentBanner from "./TestEnvironmentBanner";
+import { useStore } from "../../pages/FlowEditor/lib/store";
+import { rootFlowPath } from "../../routes/utils";
+import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
+import { ConfirmationDialog } from "../ConfirmationDialog";
+import TestEnvironmentBanner from "../TestEnvironmentBanner/TestEnvironmentBanner";
 
 const HEADER_HEIGHT_PUBLIC = 74;
 export const HEADER_HEIGHT_EDITOR = 56;
