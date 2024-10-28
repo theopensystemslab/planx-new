@@ -667,36 +667,6 @@ export const previewStore: StateCreator<
   getCurrentCard: () => get().currentCard,
 });
 
-const knownNots = (
-  flow: Store.Flow,
-  breadcrumbs: Store.Breadcrumbs,
-  nots = {},
-) =>
-  Object.entries(breadcrumbs).reduce(
-    (acc, [id, { answers = [] }]) => {
-      if (!flow[id]) return acc;
-
-      const _knownNotVals = difference(
-        flow[id].edges,
-        answers as Array<NodeId>,
-      );
-
-      if (flow[id].data?.fn) {
-        acc[flow[id].data.fn] = uniq(
-          flatten([
-            ...(acc[flow[id].data?.fn] || []),
-            _knownNotVals.flatMap((n) => flow[n].data?.val),
-          ]),
-        ).filter(Boolean) as Array<string>;
-      }
-
-      return acc;
-    },
-    {
-      ...nots,
-    } as Record<string, Array<string>>,
-  );
-
 interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
   flow: Store.Flow;

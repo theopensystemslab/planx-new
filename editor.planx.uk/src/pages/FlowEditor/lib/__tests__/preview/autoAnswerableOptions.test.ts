@@ -1,32 +1,53 @@
 import { useStore } from "../../store";
 
-const { getState } = useStore;
-const { resetPreview } = getState();
+const { getState, setState } = useStore;
+const { resetPreview, autoAnswerableOptions } = getState();
 
 beforeEach(() => {
   resetPreview();
 });
 
+describe("Returns undefined and does not auto-answer any options", () => {
+  test("If the node is not a Question or Checklist type", () => {
+    setState({
+      flow: {
+        "_root": { "edges": ["SetValue"] },
+        "SetValue": { "type": 380, "data": { "fn": "projectType", "val": "alter", "operation": "replace" } },
+      },
+    });
+
+    expect(autoAnswerableOptions("SetValue")).not.toBeDefined();
+  });
+
+  test.todo("If the node is a 'sticky note' Question without edges");
+
+  test.todo("If the node does not set a `fn`");
+
+  test.todo("If we've never seen another node with this `fn` before");
+});
+
 describe("Questions", () => {
-  test.todo("Correctly auto-answers the option that exactly matches a passport value");
+  test.todo("Auto-answer the option that exactly matches a passport value");
 
-  test.todo("Correctly auto-answers the less granular option when there's a single more granular passport value");
+  test.todo("Auto-answer the less granular option when there's a single more granular passport value");
 
-  test.todo("Correctly auto-answers the single left-most option when there are many matching passport values");
+  test.todo("Auto-answer the single most granular, left-most option when there are many matching passport values");
 
-  test.todo("Correctly auto-answers through the blank path when there are no matching passport values but we've seen this passport fn before");
+  test.todo("Auto-answer through the blank path when we have seen this node `fn` but there are no matching passport values");
+
+  test.todo("Auto-answer through the blank path when we have not seen this node `fn` but we have seen all possible option `val`");
 });
 
 describe("Checklists", () => {
-  test.todo("Correctly auto-answers all options that exactly match passport values");
+  test.todo("Auto-answer all options that exactly match passport values");
 
-  test.todo("Correctly auto-answers all less granular options when there are more granular passport values");
+  test.todo("Auto-answer all less granular options when there are more granular passport values");
 
-  test.todo("Correctly auto-answers through the blank path when there are no matching passport values but we've seen this passport fn before");
+  test.todo("Auto-answer through the blank path when we have seen thsi node `fn` but there are no matching passport values");
+
+  test.todo("Auto-answer through the blank path when we have not seen this node `fn` but we have seen all possible option `val`");
 });
 
-describe("Filters", () => {
-  test.todo("Correctly auto-answers the single highest order flag path when many flags are collected");
-
-  test.todo("Correctly auto-answers the through the blank path (no flag result) when no matching flags have been collected");
+describe("Blanks and `_nots`", () => {
+  test.todo("TODO");
 });
