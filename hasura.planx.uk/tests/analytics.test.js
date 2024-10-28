@@ -76,6 +76,21 @@ describe("analytics and analytics_logs", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query analytics_logs", () => {
+      expect(i.queries).not.toContain("analytics_logs");
+    });
+
+    test("cannot create, update, or delete analytics_logs", () => {
+      expect(i).toHaveNoMutationsFor("analytics_logs");
+    });
+  });
+
   describe("api", () => {
     beforeAll(async () => {
       i = await introspectAs("api");

@@ -564,7 +564,7 @@ describe("sessions", () => {
           headers
         );
         expect(res.data.sessions).toHaveLength(1);
-        const session = res.data.sessions[0]
+        const session = res.data.sessions[0];
         expect(session.id).toEqual(alice1);
         expect(session).toHaveProperty(["created_at"]);
         expect(session).toHaveProperty(["breadcrumbs"]);
@@ -629,6 +629,21 @@ describe("sessions", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query sessions", () => {
+      expect(i.queries).not.toContain("sessions");
+    });
+
+    test("cannot create, update, or delete sessions", () => {
+      expect(i).toHaveNoMutationsFor("sessions");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
@@ -645,5 +660,4 @@ describe("sessions", () => {
       expect(i.mutations).not.toContain("delete_sessions");
     });
   });
-  
 });

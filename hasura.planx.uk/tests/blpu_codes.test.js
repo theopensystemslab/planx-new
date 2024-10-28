@@ -59,6 +59,21 @@ describe("blpu_codes", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("can query blpu_codes", () => {
+      expect(i.queries).not.toContain("blpu_codes");
+    });
+
+    test("cannot create, update, or delete blpu_codes", () => {
+      expect(i).toHaveNoMutationsFor("blpu_codes");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

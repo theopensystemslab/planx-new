@@ -2,13 +2,16 @@ const fetch = require("isomorphic-fetch");
 const jsonwebtoken = require("jsonwebtoken");
 
 async function gqlAdmin(query, variables = {}) {
-  const res = await fetch(`http://${process.env.HASURA_HOST}:${process.env.HASURA_PORT}/v1/graphql`, {
-    method: "POST",
-    headers: {
-      "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+  const res = await fetch(
+    `http://${process.env.HASURA_HOST}:${process.env.HASURA_PORT}/v1/graphql`,
+    {
+      method: "POST",
+      headers: {
+        "X-Hasura-Admin-Secret": process.env.HASURA_ADMIN_SECRET,
+      },
+      body: JSON.stringify({ query, variables }),
+    }
+  );
   const json = await res.json();
   if (json.errors && json.errors[0].message.includes("x-hasura-admin-secret")) {
     throw Error("Invalid HASURA_SECRET");
@@ -17,41 +20,47 @@ async function gqlAdmin(query, variables = {}) {
 }
 
 async function gqlPublic(query, variables = {}, headers = {}) {
-  const res = await fetch(`http://${process.env.HASURA_HOST}:${process.env.HASURA_PORT}/v1/graphql`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({ query: query, variables }),
-  });
+  const res = await fetch(
+    `http://${process.env.HASURA_HOST}:${process.env.HASURA_PORT}/v1/graphql`,
+    {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({ query: query, variables }),
+    }
+  );
   return await res.json();
 }
 
 /**
  * Get a role-based connection to Hasura
- * @param {string} role 
- * @param {number} userId 
+ * @param {string} role
+ * @param {number} userId
  * @returns A GQL client which authenticates to Hasura with the given role and userId
  */
 function gqlWithRole(role, userId) {
-  const jwt = buildJWTForRole(role, userId)
+  const jwt = buildJWTForRole(role, userId);
 
   const gql = async (query, variables = {}, headers = {}) => {
-    const res = await fetch(`http://${process.env.HASURA_HOST}:${process.env.HASURA_PORT}/v1/graphql`, {
-      method: "POST",
-      headers: {
-        ...headers,
-        Authorization: `Bearer ${jwt}`,
-      },
-      body: JSON.stringify({ query: query, variables }),
-    });
+    const res = await fetch(
+      `http://${process.env.HASURA_HOST}:${process.env.HASURA_PORT}/v1/graphql`,
+      {
+        method: "POST",
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ query: query, variables }),
+      }
+    );
     return await res.json();
-  }
+  };
 
   return gql;
 }
 
 /**
- * @param {string} role 
- * @param {number} userId 
+ * @param {string} role
+ * @param {number} userId
  * @returns {string}
  */
 function buildJWTForRole(role, userId = 1) {
@@ -81,10 +90,11 @@ const introspectAs = async (role, userId = undefined) => {
   const gql = {
     admin: gqlAdmin,
     public: gqlPublic,
+    demoUser: gqlWithRole("demoUser", userId),
     platformAdmin: gqlWithRole("platformAdmin", userId),
     teamEditor: gqlWithRole("teamEditor", userId),
     api: gqlWithRole("api"),
-  }[role]
+  }[role];
   const INTROSPECTION_QUERY = `
     query IntrospectionQuery {
       __schema {

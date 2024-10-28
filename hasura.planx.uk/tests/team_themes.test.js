@@ -82,6 +82,21 @@ describe("team_themes", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("can query team_themes", () => {
+      expect(i.queries).toContain("team_themes");
+    });
+
+    test("cannot create, update, or delete team_themes", () => {
+      expect(i).toHaveNoMutationsFor("team_themes");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
