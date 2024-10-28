@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import React from "react";
 import InputField from "ui/editor/InputField/InputField";
 
-import { FormError } from "../ui";
+import { FormError } from "../sharedTypes";
 
 interface Flow {
   id: string;

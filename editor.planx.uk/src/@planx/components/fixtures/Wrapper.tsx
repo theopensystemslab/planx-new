@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { EditorProps, PublicProps } from "@planx/components/ui";
+import { EditorProps, PublicProps } from "@planx/components/sharedTypes";
 import React, { useState } from "react";
 
 export default Wrapper;

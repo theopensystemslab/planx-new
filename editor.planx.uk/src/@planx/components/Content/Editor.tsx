@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Content } from "@planx/components/Content/model";
 import { parseContent } from "@planx/components/Content/model";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/sharedTypes";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
@@ -10,6 +10,8 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import InputRow from "ui/shared/InputRow";
+
+import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.Content, Content>;
 

@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/sharedTypes";
 import { useFormik } from "formik";
 import React from "react";
 import { FONT_WEIGHT_BOLD } from "theme";

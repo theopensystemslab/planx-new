@@ -1,4 +1,4 @@
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 

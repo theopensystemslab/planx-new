@@ -12,7 +12,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { EditorProps, ICONS } from "../ui";
+import { ICONS } from "../shared/icons";
+import { EditorProps } from "../sharedTypes";
 import { Page, parsePage } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 

@@ -19,7 +19,7 @@ import {
   ICONS,
   InternalNotes,
   MoreInformation,
-} from "@planx/components/ui";
+} from "@planx/components/sharedTypes";
 import { Form, Formik, useFormikContext } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

@@ -3,7 +3,7 @@ import {
   ComponentType as TYPES,
   NodeTags,
 } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/ui";
+import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
@@ -94,11 +94,13 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             onContextMenu={handleContext}
             ref={drag}
           >
-            <Box sx={{ 
-              display: "flex", 
-              flexDirection: "column",
-              maxWidth: "220px"
-            }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "220px",
+              }}
+            >
               {props.data?.img && (
                 <Thumbnail
                   imageSource={props.data?.img}

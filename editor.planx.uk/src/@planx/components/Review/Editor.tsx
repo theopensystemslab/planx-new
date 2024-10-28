@@ -8,7 +8,8 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { EditorProps, ICONS } from "../ui";
+import { ICONS } from "../shared/icons";
+import { EditorProps } from "../sharedTypes";
 import { parseContent, Review } from "./model";
 
 type Props = EditorProps<TYPES.Review, Review>;

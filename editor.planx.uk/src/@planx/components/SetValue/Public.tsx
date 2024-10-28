@@ -1,5 +1,5 @@
 import { makeData } from "@planx/components/shared/utils";
-import type { PublicProps } from "@planx/components/ui";
+import type { PublicProps } from "@planx/components/sharedTypes";
 import { useEffect } from "react";
 
 import type { SetValue } from "./model";

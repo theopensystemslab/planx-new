@@ -21,7 +21,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Card from "../../shared/Preview/Card";
 import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
 import { MapContainer } from "../../shared/Preview/MapContainer";
-import { PublicProps } from "../../ui";
+import { PublicProps } from "../../sharedTypes";
 import type { MapAndLabel } from "./../model";
 import { MAP_ID, MapAndLabelProvider, useMapAndLabelContext } from "./Context";
 import { CopyFeature } from "./CopyFeature";

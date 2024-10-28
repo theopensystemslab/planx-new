@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { Content } from "@planx/components/Content/model";
 import Card from "@planx/components/shared/Preview/Card";
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";

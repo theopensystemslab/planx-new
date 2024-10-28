@@ -1,4 +1,4 @@
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import { FormikConfig, useFormik } from "formik";
 import React from "react";
 

@@ -8,7 +8,7 @@ import {
   getPreviouslySubmittedData,
   makeData,
 } from "@planx/components/shared/utils";
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/sharedTypes";
 import { FormikProps, useFormik } from "formik";
 import React, {
   createContext,
