@@ -4,12 +4,11 @@ import type {
   GovUKPayment,
   Node,
   NodeId,
-  Value,
 } from "@opensystemslab/planx-core/types";
 import {
-  ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
+  ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { SetValue } from "@planx/components/SetValue/model";
@@ -17,8 +16,6 @@ import { handleSetValue } from "@planx/components/SetValue/utils";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { logger } from "airbrake";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
-import difference from "lodash/difference";
-import flatten from "lodash/flatten";
 import isEqual from "lodash/isEqual";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
@@ -26,9 +23,9 @@ import uniq from "lodash/uniq";
 import { v4 as uuidV4 } from "uuid";
 import type { StateCreator } from "zustand";
 
+import type { Store } from ".";
 import type { Session } from "./../../../../types";
 import { ApplicationPath } from "./../../../../types";
-import type { Store } from ".";
 import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 
@@ -448,7 +445,7 @@ export const previewStore: StateCreator<
     const { type, data, edges } = flow[id];
 
     // Only Question & Checklist nodes that have an fn & edges are eligible for auto-answering
-    if (!type || ![TYPES.Question, TYPES.Checklist].includes(type) || !data?.fn || !edges) return;
+    if (!type || !SUPPORTED_DECISION_TYPES.includes(type) || !data?.fn || !edges) return;
 
     // Only proceed if the user has seen at least one node with this fn before
     const visitedFns = Object.entries(breadcrumbs).filter(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);

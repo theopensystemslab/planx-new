@@ -7,6 +7,10 @@ beforeEach(() => {
   resetPreview();
 });
 
+// Find additional auto-answering tests at:
+//   - src/pages/FlowEditor/lib/automations.blanks.test.ts
+//   - src/pages/FlowEditor/lib/automations.parentChild.test.ts
+
 describe("Returns undefined and does not auto-answer any options", () => {
   test("If the node is not a Question or Checklist type", () => {
     setState({
@@ -29,7 +33,7 @@ describe("Returns undefined and does not auto-answer any options", () => {
 describe("Questions", () => {
   test.todo("Auto-answer the option that exactly matches a passport value");
 
-  test.todo("Auto-answer the less granular option when there's a single more granular passport value");
+  test.todo("Auto-answer the less granular option when there's a single more granular passport value and no more granular options available");
 
   test.todo("Auto-answer the single most granular, left-most option when there are many matching passport values");
 
@@ -41,13 +45,9 @@ describe("Questions", () => {
 describe("Checklists", () => {
   test.todo("Auto-answer all options that exactly match passport values");
 
-  test.todo("Auto-answer all less granular options when there are more granular passport values");
+  test.todo("Auto-answer all less granular options when there are more granular passport values and not more granular options available");
 
-  test.todo("Auto-answer through the blank path when we have seen thsi node `fn` but there are no matching passport values");
+  test.todo("Auto-answer through the blank path when we have seen this node `fn` but there are no matching passport values");
 
   test.todo("Auto-answer through the blank path when we have not seen this node `fn` but we have seen all possible option `val`");
-});
-
-describe("Blanks and `_nots`", () => {
-  test.todo("TODO");
 });

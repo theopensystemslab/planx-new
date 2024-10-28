@@ -7,6 +7,8 @@ beforeEach(() => {
   resetPreview();
 });
 
+// Additionally see src/pages/FlowEditor/lib/filters.test.ts for positive autoAnswerableFlag test cases !!
+
 describe("Returns undefined and does not auto-answer any flag paths", () => {
   test("If the node is not a Filter type", () => {
     setState({ flow: {
@@ -31,12 +33,6 @@ describe("Returns undefined and does not auto-answer any flag paths", () => {
     setState({ flow: alteredFlow });
 
     expect(autoAnswerableFlag("Filter")).not.toBeDefined();
-});
-
-describe("Filters", () => {
-  test.todo("Auto-answer the single highest order flag path when many flags are collected");
-
-  test.todo("Auto-answer the blank path (no flag result) when no matching flags have been collected");
 });
 
 const flowWithFilter: Store.Flow = {
