@@ -110,7 +110,12 @@ export interface EditorStore extends Store.Store {
   connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: NodeId) => void;
-  createFlow: (teamId: any, newSlug: any, newName: string) => Promise<string>;
+  createFlow: (
+    teamId: any,
+    newSlug: any,
+    newName: string,
+    userId: number,
+  ) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<any>;
@@ -237,17 +242,24 @@ export const editorStore: StateCreator<
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async (teamId, newSlug, newName) => {
+  createFlow: async (teamId, newSlug, newName, userId) => {
     let response = (await client.mutate({
       mutation: gql`
         mutation CreateFlow(
           $data: jsonb
           $slug: String
           $teamId: Int
+          $userId: Int
           $name: String
         ) {
           insert_flows_one(
-            object: { slug: $slug, team_id: $teamId, version: 1, name: $name }
+            object: {
+              slug: $slug
+              team_id: $teamId
+              version: 1
+              name: $name
+              creator_id: $userId
+            }
           ) {
             id
             data
@@ -258,6 +270,7 @@ export const editorStore: StateCreator<
         name: newName,
         slug: newSlug,
         teamId,
+        userId,
       },
     })) as any;
 

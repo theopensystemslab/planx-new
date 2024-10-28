@@ -280,7 +280,11 @@ const FlowItem: React.FC<FlowItemProps> = ({
 };
 
 const Team: React.FC = () => {
-  const { id: teamId, slug } = useStore((state) => state.getTeam());
+  const [{ id: teamId, slug }, user] = useStore((state) => [
+    state.getTeam(),
+    state.getUser(),
+  ]);
+
   const [flows, setFlows] = useState<any[] | null>(null);
   const navigation = useNavigation();
 
@@ -303,6 +307,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
+  console.log(user);
   return (
     <Container maxWidth="formWrap">
       <Box
@@ -343,7 +348,7 @@ const Team: React.FC = () => {
                 !duplicateFlowName
                   ? useStore
                       .getState()
-                      .createFlow(teamId, newFlowSlug, newFlowName)
+                      .createFlow(teamId, newFlowSlug, newFlowName, user.id)
                       .then((newId: string) => {
                         navigation.navigate(`/${slug}/${newId}`);
                       })

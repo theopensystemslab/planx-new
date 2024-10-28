@@ -36,6 +36,7 @@ export const setup = async () => {
     teamId: teamId1,
     slug: "team-1-flow",
     name: "Team 1 Flow",
+    userId: user1Id,
   });
 
   const user2Id = await createUser({
@@ -46,6 +47,7 @@ export const setup = async () => {
     teamId: teamId2,
     slug: "team-2-flow",
     name: "Team 2 Flow",
+    userId: user2Id,
   });
 
   const world = {
@@ -72,7 +74,7 @@ export const performGQLQuery = async ({
   const client = (await getClient(world.activeUserEmail)).client;
   const { result } = await client.request<Record<"result", GQLQueryResult>>(
     query,
-    variables,
+    variables
   );
   return result;
 };
@@ -90,7 +92,7 @@ const buildVariables = (query: DocumentNode, world: CustomWorld) => {
 
   Object.keys(world).forEach((key) => {
     const isVariableUsedInQuery = definitionNode.variableDefinitions!.find(
-      (varDef) => varDef.variable.name.value === key,
+      (varDef) => varDef.variable.name.value === key
     );
     if (isVariableUsedInQuery) {
       variables[key] = world[key];

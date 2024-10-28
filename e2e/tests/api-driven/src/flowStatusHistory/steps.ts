@@ -6,6 +6,7 @@ import { $admin } from "../client";
 
 export class CustomWorld extends World {
   teamId!: number;
+  userId!: number;
   flowId!: string;
 }
 
@@ -14,8 +15,9 @@ After("@flow-status-history", async function () {
 });
 
 Before<CustomWorld>("@flow-status-history", async function () {
-  const { teamId } = await setup();
+  const { teamId, userId } = await setup();
   this.teamId = teamId;
+  this.userId = userId;
 });
 
 Given<CustomWorld>("a flow exists", async function () {
@@ -23,6 +25,7 @@ Given<CustomWorld>("a flow exists", async function () {
     teamId: this.teamId,
     slug: "test-flow",
     name: "Test Flow",
+    userId: this.userId,
   });
 
   assert.ok(flowId, "flowId is not defined");
@@ -36,7 +39,7 @@ Then("the status of the flow is offline by default", async function () {
   assert.equal(
     status,
     "offline",
-    `Flow status is ${status} - it should be "offline"`,
+    `Flow status is ${status} - it should be "offline"`
   );
 });
 
@@ -46,28 +49,28 @@ Then("a flow_status_history record is created", async function () {
   assert.notEqual(
     flowStatusHistory.length,
     0,
-    "No records found for flow_status_history",
+    "No records found for flow_status_history"
   );
   assert.equal(
     flowStatusHistory.length,
     1,
-    "Multiple records found for flow_status_history",
+    "Multiple records found for flow_status_history"
   );
   assert.ok(flowStatusHistory[0], "flow_status_history record not created");
   assert.equal(
     flowStatusHistory[0].status,
     "offline",
-    `Flow status is ${flowStatusHistory[0].status} - it should be "offline"`,
+    `Flow status is ${flowStatusHistory[0].status} - it should be "offline"`
   );
   assert.notEqual(
     flowStatusHistory[0].eventStart,
     null,
-    "Event start should be set on INSERT",
+    "Event start should be set on INSERT"
   );
   assert.equal(
     flowStatusHistory[0].eventEnd,
     null,
-    "Event end should not be set on INSERT",
+    "Event end should not be set on INSERT"
   );
 });
 
@@ -80,7 +83,7 @@ When("the flow status is changed to online", async function () {
   assert.equal(
     flow.status,
     "online",
-    `Flow status is ${flow.status} - it should be "online`,
+    `Flow status is ${flow.status} - it should be "online`
   );
 });
 
@@ -88,7 +91,7 @@ Then("the open flow_status_history record is updated", async function () {
   const flowStatusHistory = await getFlowStatusHistory(this.flowId);
   assert.ok(
     flowStatusHistory[0].eventEnd,
-    "Event end should be set on update to status column",
+    "Event end should be set on update to status column"
   );
 });
 
@@ -99,16 +102,16 @@ Then("a new flow_status_history record is created", async function () {
   assert.equal(
     flowStatusHistory[1].status,
     "online",
-    `Flow status is ${flowStatusHistory[1].status} - it should be "online"`,
+    `Flow status is ${flowStatusHistory[1].status} - it should be "online"`
   );
   assert.notEqual(
     flowStatusHistory[1].eventStart,
     null,
-    "Event start should be set on INSERT",
+    "Event start should be set on INSERT"
   );
   assert.equal(
     flowStatusHistory[1].eventEnd,
     null,
-    "Event end should not be set on INSERT",
+    "Event end should not be set on INSERT"
   );
 });

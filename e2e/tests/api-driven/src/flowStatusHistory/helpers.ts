@@ -1,12 +1,13 @@
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { $admin } from "../client";
-import { createTeam } from "../globalHelpers";
+import { createTeam, createUser } from "../globalHelpers";
 import gql from "graphql-tag";
 
 export const setup = async () => {
   const teamId = await createTeam();
+  const userId = await createUser();
 
-  const world = { teamId };
+  const world = { teamId, userId };
 
   return world;
 };
@@ -34,7 +35,7 @@ export const getFlowStatus = async (flowId: string) => {
         }
       }
     `,
-    { flowId },
+    { flowId }
   );
 
   return status;
@@ -65,7 +66,7 @@ export const getFlowStatusHistory = async (flowId: string) => {
           }
         }
       `,
-      { flowId },
+      { flowId }
     );
 
   return flowStatusHistory;
