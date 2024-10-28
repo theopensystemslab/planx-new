@@ -603,13 +603,11 @@
                     id:
                       _eq: 32
             - team:
-                _or:
-                  - id:
-                      _eq: 1
-                  - id:
-                      _eq: 29
-                  - id:
-                      _eq: 30
+                id:
+                  _in:
+                    - 1
+                    - 29
+                    - 30
       comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
     - role: platformAdmin
       permission:
@@ -2308,15 +2306,12 @@
           - slug
           - updated_at
         filter:
-          _or:
-            - id:
-                _eq: 1
-            - id:
-                _eq: 29
-            - id:
-                _eq: 30
-            - id:
-                _eq: 32
+          id:
+            _in:
+              - 1
+              - 29
+              - 30
+              - 32
       comment: 'For the demo user, we want to ensure they can only see their own team [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
     - role: platformAdmin
       permission:

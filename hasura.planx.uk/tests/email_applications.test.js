@@ -60,6 +60,7 @@ describe("email_applications", () => {
       expect(i).toHaveNoMutationsFor("email_applications");
     });
   });
+  
   describe("demoUser", () => {
     let i;
     beforeAll(async () => {

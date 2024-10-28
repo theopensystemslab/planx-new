@@ -64,6 +64,7 @@ describe("flow_document_templates", () => {
       expect(i).toHaveNoMutationsFor("flow_document_templates");
     });
   });
+  
   describe("demoUser", () => {
     let i;
     beforeAll(async () => {
