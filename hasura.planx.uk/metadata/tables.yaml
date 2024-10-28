@@ -327,8 +327,8 @@
           - created_at
         filter:
           team:
-            members:
-              user_id:
+            flows:
+              creator_id:
                 _eq: x-hasura-user-id
       comment: ""
     - role: platformAdmin
@@ -502,7 +502,7 @@
           - team_id
           - updated_at
           - version
-      comment: ""
+      comment: They can only insert into Demo team [id = 32]
     - role: platformAdmin
       permission:
         check: {}
@@ -610,7 +610,7 @@
                       _eq: 29
                   - id:
                       _eq: 30
-      comment: ""
+      comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
     - role: platformAdmin
       permission:
         columns:
@@ -1450,6 +1450,25 @@
           - created_at
           - flow_id
           - data
+    - role: demoUser
+      permission:
+        check:
+          _and:
+            - flow:
+                creator_id:
+                  _eq: x-hasura-user-id
+            - flow:
+                team:
+                  id:
+                    _eq: 32
+        columns:
+          - id
+          - publisher_id
+          - summary
+          - created_at
+          - flow_id
+          - data
+      comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
     - role: platformAdmin
       permission:
         check: {}
@@ -1763,7 +1782,7 @@
           - created_at
           - submitted_at
         filter: {}
-      comment: ""
+      comment: 'For future, if this moves outside of the Flow to somewhere like Team, we should update "demoUser" to only see submission data related to only their flows. '
     - role: platformAdmin
       permission:
         columns:
@@ -2298,6 +2317,7 @@
                 _eq: 30
             - id:
                 _eq: 32
+      comment: 'For the demo user, we want to ensure they can only see their own team [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
     - role: platformAdmin
       permission:
         columns:
