@@ -24,7 +24,9 @@ export const FaceBox = ({
       <ToggleButton
         value={value}
         data-testid={testId}
-        sx={{ px: 0 }}
+        sx={{
+          px: 0,
+        }}
         disableRipple
       >
         <Box

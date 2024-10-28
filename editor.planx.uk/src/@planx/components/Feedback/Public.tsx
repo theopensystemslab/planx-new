@@ -56,49 +56,49 @@ const FeedbackComponent = (
       </Typography>
 
       <Box pt={2} mb={3}>
-        <InputLabel label="How would you rate your experience with this service?">
-          <StyledToggleButtonGroup
-            value={formik.values.feedbackScore}
-            exclusive
-            id="feedbackButtonGroup"
-            onChange={handleFeedbackChange}
-            aria-label="feedback score"
-          >
-            <Grid container columnSpacing={15} component="fieldset">
-              <FaceBox
-                value="1"
-                testId="feedback-button-terrible"
-                icon={TerribleFace}
-                label="Terrible"
-                altText="very unhappy face"
-              />
-              <FaceBox
-                value="2"
-                icon={PoorFace}
-                label="Poor"
-                altText="slightly unhappy face"
-              />
-              <FaceBox
-                value="3"
-                icon={NeutralFace}
-                label="Neutral"
-                altText="neutral face"
-              />
-              <FaceBox
-                value="4"
-                icon={GoodFace}
-                label="Good"
-                altText="smiling face"
-              />
-              <FaceBox
-                value="5"
-                icon={ExcellentFace}
-                label="Excellent"
-                altText="very happy face"
-              />
-            </Grid>
-          </StyledToggleButtonGroup>
-        </InputLabel>
+        <InputLabel label="How would you rate your experience with this service?" />
+        <StyledToggleButtonGroup
+          value={formik.values.feedbackScore}
+          exclusive
+          id="feedbackButtonGroup"
+          onChange={handleFeedbackChange}
+          aria-label="feedback score"
+        >
+          <Grid container columnSpacing={15} component="fieldset">
+            <FaceBox
+              value="1"
+              testId="feedback-button-terrible"
+              icon={TerribleFace}
+              label="Terrible"
+              altText="very unhappy face"
+            />
+            <FaceBox
+              value="2"
+              icon={PoorFace}
+              label="Poor"
+              altText="slightly unhappy face"
+            />
+            <FaceBox
+              value="3"
+              icon={NeutralFace}
+              label="Neutral"
+              altText="neutral face"
+            />
+            <FaceBox
+              value="4"
+              icon={GoodFace}
+              label="Good"
+              altText="smiling face"
+            />
+            <FaceBox
+              value="5"
+              icon={ExcellentFace}
+              label="Excellent"
+              altText="very happy face"
+            />
+          </Grid>
+        </StyledToggleButtonGroup>
+        {/* </InputLabel> */}
         <InputLabel label="Please tell us more about your experience">
           <RichTextInput
             name="feedback"
