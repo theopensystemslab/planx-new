@@ -60,6 +60,21 @@ describe("bops_applications", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query bops applications", () => {
+      expect(i.queries).not.toContain("bops_applications");
+    });
+
+    test("cannot create, update, or delete bops applications", () => {
+      expect(i).toHaveNoMutationsFor("bops_applications");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

@@ -64,6 +64,21 @@ describe("reconciliation_requests", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query reconciliation_requests", () => {
+      expect(i.queries).not.toContain("reconciliation_requests");
+    });
+
+    test("cannot create, update, or delete reconciliation_requests", () => {
+      expect(i).toHaveNoMutationsFor("reconciliation_requests");
+    });
+  });
+
   describe("api", () => {
     beforeAll(async () => {
       i = await introspectAs("api");

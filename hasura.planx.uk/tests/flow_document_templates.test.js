@@ -64,6 +64,20 @@ describe("flow_document_templates", () => {
       expect(i).toHaveNoMutationsFor("flow_document_templates");
     });
   });
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query flow_document_templates", () => {
+      expect(i.queries).not.toContain("flow_document_templates");
+    });
+
+    test("cannot create, update, or delete flow_document_templates", () => {
+      expect(i).toHaveNoMutationsFor("flow_document_templates");
+    });
+  });
 
   describe("api", () => {
     beforeAll(async () => {

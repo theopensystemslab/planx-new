@@ -61,6 +61,21 @@ describe("team_integrations", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("can query team_integrations", () => {
+      expect(i.queries).toContain("team_integrations");
+    });
+
+    test("cannot create, update, or delete team_integrations", () => {
+      expect(i).toHaveNoMutationsFor("team_integrations");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
