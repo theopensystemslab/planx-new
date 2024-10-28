@@ -21,14 +21,19 @@ export const FaceBox = ({
 }: FaceBoxProps): ReactElement => {
   return (
     <Grid item xs={2} key={label}>
-      <ToggleButton value={value} data-testid={testId} sx={{ px: 0 }}>
+      <ToggleButton
+        value={value}
+        data-testid={testId}
+        sx={{ px: 0 }}
+        disableRipple
+      >
         <Box
-          sx={{
-            p: 2,
-            border: "2px solid grey", // TODO get correct grey
+          sx={(theme) => ({
+            p: theme.spacing(2),
+            border: `2px solid ${theme.palette.border.main} `,
             width: "120px",
             maxHeight: "120px",
-          }}
+          })}
         >
           <img src={icon} width={50} alt={altText} />
           <Typography variant="body2" pt={0.5}>

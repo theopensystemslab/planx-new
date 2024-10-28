@@ -14,7 +14,6 @@ export default meta;
 export const Basic = {
   args: {
     title: "Tell us what you think",
-    description:
-      "This service is a work in progress, any feedback you share about your experience will help us to improve it.",
+    privacyPolicyLink: "https://www.planx.uk/",
   },
 } satisfies Story;

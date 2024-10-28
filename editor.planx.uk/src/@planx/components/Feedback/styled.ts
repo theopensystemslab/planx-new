@@ -3,9 +3,11 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
 
-export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(() => ({
-  [`& .${toggleButtonGroupClasses.grouped}`]: {
-    border: 0,
-  },
-  paddingBottom: 32,
-}));
+export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(
+  ({ theme }) => ({
+    [`& .${toggleButtonGroupClasses.grouped}`]: {
+      border: 0,
+    },
+    paddingBottom: theme.spacing(3.2),
+  }),
+);
