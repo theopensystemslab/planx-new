@@ -447,7 +447,7 @@ export const previewStore: StateCreator<
     const { breadcrumbs, flow, computePassport } = get();
     const { type, data, edges } = flow[id];
 
-    // Only Queston & Checklist nodes that have an fn & edges are eligible for auto-answering
+    // Only Question & Checklist nodes that have an fn & edges are eligible for auto-answering
     if (!type || ![TYPES.Question, TYPES.Checklist].includes(type) || !data?.fn || !edges) return;
 
     // Only proceed if the user has seen at least one node with this fn before
@@ -471,9 +471,10 @@ export const previewStore: StateCreator<
     const blankOption = options.find((option) => !option.data?.val);
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
-    // Get existing passport value(s) for this node's fn
-    let passportValues = computePassport()?.data?.[data.fn]?.sort();
-    if (!Array.isArray(passportValues)) passportValues = [passportValues].filter(Boolean);
+    // Get existing passport value(s) for this node's fn & proceed if eligible format (eg not numbers via Calculate nodes)
+    let passportValues = computePassport().data?.[data.fn];
+    if (typeof passportValues === "number") return;
+    if (!Array.isArray(passportValues)) passportValues = [passportValues].filter(Boolean).sort();
 
     // If we have an existing passport value for this fn, 
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before

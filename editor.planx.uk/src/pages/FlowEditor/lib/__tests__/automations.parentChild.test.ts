@@ -66,6 +66,7 @@ describe("Parent-child automations and granularity", () => {
   });
 });
 
+// editor.planx.dev/testing/behaviour-check
 const flow: Store.Flow = {
   "_root": {
     "edges": [
