@@ -2,7 +2,7 @@
 
 Let's add a `SetValue` component
 
-## Core directory & files
+## Core directory typing
 
 1. `planx-core/src/types/component.ts`
 
@@ -12,9 +12,11 @@ Add type to enum in `planx-core` repository
 SetValue = 380,
 ```
 
-2. `mkdir src/@planx/components/SetValue`
+## `planx-new` component files
 
-3. `model.ts`
+1. `mkdir src/@planx/components/SetValue`
+
+2. `model.ts`
 
 ```typescript
 import { BaseNodeData, parseBaseNodeData } from "../shared";
@@ -31,7 +33,7 @@ export const parseContent = (
 });
 ```
 
-4. `Editor.tsx`
+3. `Editor.tsx`
 
 ```typescript
 type Props = EditorProps<TYPES.SetValue, SetValue>;
