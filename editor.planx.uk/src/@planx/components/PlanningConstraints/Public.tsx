@@ -3,7 +3,7 @@ import type {
   GISResponse,
 } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
 import { GraphError } from "components/Error/GraphError";
