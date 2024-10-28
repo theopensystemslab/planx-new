@@ -252,24 +252,6 @@
       using:
         foreign_key_constraint_on: team_id
   insert_permissions:
-    - role: demoUser
-      permission:
-        check: {}
-        columns:
-          - created_at
-          - device
-          - feedback_type
-          - flow_id
-          - id
-          - node_data
-          - node_id
-          - node_type
-          - status
-          - team_id
-          - user_comment
-          - user_context
-          - user_data
-      comment: Allow users who want to leave feedback on their experience to write to the table
     - role: public
       permission:
         check: {}
@@ -784,7 +766,12 @@
   delete_permissions:
     - role: demoUser
       permission:
-        filter: {}
+        filter:
+          _and:
+            - team_id:
+                _eq: 32
+            - creator_id:
+                _eq: x-hasura-user-id
       comment: ""
     - role: platformAdmin
       permission:
