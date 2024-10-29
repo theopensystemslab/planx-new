@@ -154,4 +154,4 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
 
 
 GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
-GRANT SELECT ON "public"."submissions_services_summary" TO metabase_read_only;
+GRANT SELECT ON "public"."submission_services_summary" TO metabase_read_only;
