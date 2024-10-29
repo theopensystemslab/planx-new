@@ -13,7 +13,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { InternalNotes } from "../InternalNotes";
+import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../MoreInformation/MoreInformation";
 import { ICONS } from "../shared/icons";
 

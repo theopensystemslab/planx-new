@@ -13,12 +13,11 @@ import {
   REQUIRED_GOVPAY_METADATA,
   validationSchema,
 } from "@planx/components/Pay/model";
-import { parseBaseNodeData } from "@planx/components/shared";
-import { EditorProps } from "@planx/components/sharedTypes";
 import { Form, Formik, useFormikContext } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
+import { InternalNotes } from "ui/editor/InternalNotes";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager/ListManager";
@@ -29,9 +28,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { InternalNotes } from "../InternalNotes";
-import { MoreInformation } from "../MoreInformation/MoreInformation";
+import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
+import { parseBaseNodeData } from "../shared";
 import { ICONS } from "../shared/icons";
+import { EditorProps } from "../shared/types";
 
 type FormikGovPayMetadata =
   | Record<keyof GovPayMetadata, string>[]
