@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/shared/icons";
+import { ICONS } from "@planx/components/ui";
 import { EditorProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
