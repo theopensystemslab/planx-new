@@ -9,7 +9,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { EditorProps } from "../sharedTypes";
+import { EditorProps } from "../shared/types";
 import { parseContent, Review } from "./model";
 
 type Props = EditorProps<TYPES.Review, Review>;

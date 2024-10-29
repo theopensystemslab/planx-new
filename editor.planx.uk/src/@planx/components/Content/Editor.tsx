@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Content } from "@planx/components/Content/model";
 import { parseContent } from "@planx/components/Content/model";
-import { EditorProps } from "@planx/components/sharedTypes";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";

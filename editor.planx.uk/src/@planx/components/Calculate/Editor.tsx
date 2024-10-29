@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/sharedTypes";
+import { EditorProps } from "@planx/components/shared/types";
 import { FormikErrors, useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";

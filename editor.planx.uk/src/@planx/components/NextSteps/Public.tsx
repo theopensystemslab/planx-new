@@ -1,4 +1,4 @@
-import { PublicProps } from "@planx/components/sharedTypes";
+import { PublicProps } from "@planx/components/shared/types";
 import React from "react";
 import NextStepsList from "ui/public/NextStepsList";
 

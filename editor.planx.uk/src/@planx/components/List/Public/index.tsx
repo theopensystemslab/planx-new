@@ -9,7 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
-import { PublicProps } from "@planx/components/sharedTypes";
+import { PublicProps } from "@planx/components/shared/types";
 import React, { useEffect, useRef } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";

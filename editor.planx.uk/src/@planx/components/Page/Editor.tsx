@@ -13,7 +13,7 @@ import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { ICONS } from "../shared/icons";
-import { EditorProps } from "../sharedTypes";
+import { EditorProps } from "../shared/types";
 import { Page, parsePage } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 

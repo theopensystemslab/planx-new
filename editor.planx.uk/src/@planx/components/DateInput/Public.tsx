@@ -7,7 +7,7 @@ import {
 } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { PublicProps } from "@planx/components/sharedTypes";
+import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import DateInputComponent from "ui/shared/DateInput/DateInput";

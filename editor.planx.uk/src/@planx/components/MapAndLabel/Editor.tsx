@@ -19,7 +19,7 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio";
-import { EditorProps } from "../sharedTypes";
+import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent } from "./model";
 import { Trees } from "./schemas/Trees";
 

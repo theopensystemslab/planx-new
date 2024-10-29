@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps } from "@planx/components/sharedTypes";
+import { EditorProps } from "@planx/components/shared/types";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
 import { parseTaskList } from "@planx/components/TaskList/model";
 import { useFormik } from "formik";

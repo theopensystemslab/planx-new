@@ -15,7 +15,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { EditorProps } from "../sharedTypes";
+import { EditorProps } from "../shared/types";
 import { FlagDisplayText, Result } from "./model";
 
 type FlagWithValue = Flag & { value: NonNullable<Flag["value"]> };

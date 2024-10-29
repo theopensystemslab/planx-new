@@ -1,5 +1,5 @@
+import type { PublicProps } from "@planx/components/shared/types";
 import { makeData } from "@planx/components/shared/utils";
-import type { PublicProps } from "@planx/components/sharedTypes";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 

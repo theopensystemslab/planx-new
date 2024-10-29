@@ -6,7 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { PublicProps } from "@planx/components/sharedTypes";
+import { PublicProps } from "@planx/components/shared/types";
 import { PrintButton } from "components/PrintButton";
 import capitalize from "lodash/capitalize";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";

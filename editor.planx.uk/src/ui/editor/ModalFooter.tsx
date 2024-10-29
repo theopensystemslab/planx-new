@@ -1,8 +1,8 @@
-import { InternalNotes } from "@planx/components/InternalNotes";
-import { MoreInformation } from "@planx/components/MoreInformation/MoreInformation";
 import { BaseNodeData } from "@planx/components/shared";
 import { useFormik } from "formik";
 import React from "react";
+import { InternalNotes } from "ui/editor/InternalNotes";
+import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 
 import { ComponentTagSelect } from "./ComponentTagSelect";
 

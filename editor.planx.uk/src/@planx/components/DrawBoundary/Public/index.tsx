@@ -11,8 +11,8 @@ import {
   MapFooter,
 } from "@planx/components/shared/Preview/MapContainer";
 import { PrivateFileUpload } from "@planx/components/shared/PrivateFileUpload/PrivateFileUpload";
+import type { PublicProps } from "@planx/components/shared/types";
 import { squareMetresToHectares } from "@planx/components/shared/utils";
-import type { PublicProps } from "@planx/components/sharedTypes";
 import buffer from "@turf/buffer";
 import { point } from "@turf/helpers";
 import { Feature } from "geojson";
