@@ -17,6 +17,8 @@ import DateInputUi from "ui/shared/DateInput/DateInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { ICONS } from "../shared/icons";
+
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
 
 const DateInputComponent: React.FC<Props> = (props) => {

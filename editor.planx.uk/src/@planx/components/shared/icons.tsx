@@ -68,5 +68,5 @@ export const ICONS: {
   [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
-  //   [TYPES.Feedback]: RateReviewIcon,
+  [TYPES.Feedback]: RateReviewIcon,
 } as const;

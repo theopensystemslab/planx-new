@@ -3,11 +3,6 @@ import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
 import { parseNotice } from "@planx/components/Notice/model";
-import {
-  ICONS,
-  InternalNotes,
-  MoreInformation,
-} from "@planx/components/sharedTypes";
 import { useFormik } from "formik";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
@@ -17,6 +12,10 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+
+import { InternalNotes } from "../InternalNotes";
+import { MoreInformation } from "../MoreInformation/MoreInformation";
+import { ICONS } from "../shared/icons";
 
 export interface Props {
   id?: string;

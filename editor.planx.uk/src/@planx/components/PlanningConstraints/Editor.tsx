@@ -20,6 +20,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { ICONS } from "../shared/icons";
 import { availableDatasets, parseContent, PlanningConstraints } from "./model";
 
 type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
