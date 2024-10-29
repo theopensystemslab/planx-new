@@ -79,7 +79,7 @@ const flow: Store.Flow = {
     "data": {
       "fn": "property.constraints.planning",
       "text": "Are you in a conservation area?",
-      "forceSelection": false,
+      "neverAutoAnswer": false,
       "tags": []
     },
     "edges": [
@@ -105,7 +105,7 @@ const flow: Store.Flow = {
     "data": {
       "fn": "property.constraints.planning",
       "text": "Do any Article 4 directions apply?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "edges": [
       "Article4Yes",
@@ -131,7 +131,7 @@ const flow: Store.Flow = {
       "description": "<p>(This dataset is not fetched or set via Planning Data)</p>",
       "fn": "property.constraints.planning",
       "text": "Are you in flood zone 1?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "edges": [
       "FloodZone1Yes",

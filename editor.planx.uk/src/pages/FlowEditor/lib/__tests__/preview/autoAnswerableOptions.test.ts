@@ -139,7 +139,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Which bread?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -231,7 +231,7 @@ const flow: Store.Flow = {
       "tags": [],
       "text": "Which foods do you want?",
       "allRequired": false,
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 105,
     "edges": [
@@ -280,7 +280,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Do you have chocolate?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -323,7 +323,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Which kind of fruit do you have?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -342,7 +342,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Which fruit?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -364,7 +364,7 @@ const singleNodeFlow: Store.Flow = {
     "data": {
       "fn": "direction",
       "text": "Which direction?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "edges": [
       "Option1",

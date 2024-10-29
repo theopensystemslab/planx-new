@@ -102,7 +102,7 @@ const flow: Store.Flow = {
       "tags": [],
       "text": "Pick many",
       "allRequired": false,
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 105,
     "edges": [
@@ -117,7 +117,7 @@ const flow: Store.Flow = {
       "tags": [],
       "text": "Pick many",
       "allRequired": false,
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 105,
     "edges": [
@@ -173,7 +173,7 @@ const flow: Store.Flow = {
       "fn": "values",
       "tags": [],
       "text": "Pick one",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [

@@ -39,24 +39,23 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
 }
 
 const ChecklistComponent: React.FC<Props> = (props) => {
-  if (props.forceSelection) {
+  if (props.neverAutoAnswer) {
     return <VisibleChecklist {...props} />;
   }
-  
+
   const autoAnswerableOptions = useStore(
     (state) => state.autoAnswerableOptions,
   );
-
+  
   let idsThatCanBeAutoAnswered: string[] | undefined;
   if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
-
-  if (idsThatCanBeAutoAnswered && idsThatCanBeAutoAnswered.length > 0) {
+  if (idsThatCanBeAutoAnswered) {
     return (
       <AutoAnsweredChecklist {...props} answerIds={idsThatCanBeAutoAnswered} />
     );
-  } else {
-    return <VisibleChecklist {...props} />;
   }
+
+  return <VisibleChecklist {...props} />;
 };
 
 // An auto-answered Checklist won't be seen by the user, but still leaves a breadcrumb
@@ -204,9 +203,8 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                             pb={2}
                             aria-labelledby={`group-${index}-heading`}
                             id={`group-${index}-content`}
-                            data-testid={`group-${index}${
-                              isExpanded ? "-expanded" : ""
-                            }`}
+                            data-testid={`group-${index}${isExpanded ? "-expanded" : ""
+                              }`}
                           >
                             {group.children.map((option) => (
                               <ChecklistItem

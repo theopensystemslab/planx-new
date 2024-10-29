@@ -25,7 +25,7 @@ describe("Auto-answering based on a SetValue", () => {
     expect(autoAnswerableOptions("LastChecklistFood")).toEqual(["LastChecklistOptionChocolate"]);
   });
 
-  test("A node using the `forceSelection` prop is not auto-answered and put to the user", () => {
+  test("A node using the `neverAutoAnswer` prop is not auto-answered and put to the user", () => {
     const alteredFlow = structuredClone(flow);
     Object.assign(alteredFlow, {
       "InitialChecklistFood": {
@@ -34,7 +34,7 @@ describe("Auto-answering based on a SetValue", () => {
           "tags": [],
           "text": "Which foods do you want?",
           "allRequired": false,
-          "forceSelection": true // toggled to `true`
+          "neverAutoAnswer": true // toggled to `true`
         },
         "type": 105,
         "edges": [
@@ -51,7 +51,7 @@ describe("Auto-answering based on a SetValue", () => {
     clickContinue("SetValueChocolate", { data: { "foods": ["chocolate"] }, auto: true });
     expect(computePassport()?.data).toHaveProperty("foods");
 
-    // Confirm that the `forceSelection` Checklist is not auto-answerable and manually proceed through
+    // Confirm that the `neverAutoAnswer` Checklist is not auto-answerable and manually proceed through
     expect(autoAnswerableOptions("InitialChecklistFood")).toBeUndefined();
     clickContinue("InitialChecklistFood", { answers: ["InitialChecklistOptionBread"], auto: false });
     expect(computePassport()?.data).toEqual({ "foods": ["bread", "chocolate" ] });
@@ -116,7 +116,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Which bread?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -216,7 +216,7 @@ const flow: Store.Flow = {
       "tags": [],
       "text": "Which foods do you want?",
       "allRequired": false,
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 105,
     "edges": [
@@ -265,7 +265,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Do you have chocolate?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -308,7 +308,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Which kind of fruit do you have?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [
@@ -327,7 +327,7 @@ const flow: Store.Flow = {
       "fn": "foods",
       "tags": [],
       "text": "Which fruit?",
-      "forceSelection": false
+      "neverAutoAnswer": false
     },
     "type": 100,
     "edges": [

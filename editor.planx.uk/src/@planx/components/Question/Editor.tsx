@@ -26,7 +26,7 @@ interface Props {
       img?: string;
       text: string;
       type?: string;
-      forceSelection?: boolean;
+      neverAutoAnswer?: boolean;
     } & BaseNodeData;
   };
   options?: Option[];
@@ -134,7 +134,7 @@ export const Question: React.FC<Props> = (props) => {
       img: props.node?.data?.img || "",
       options: props.options || [],
       text: props.node?.data?.text || "",
-      forceSelection: props.node?.data?.forceSelection || false,
+      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
       ...parseBaseNodeData(props.node?.data),
     },
     onSubmit: ({ options, ...values }) => {
@@ -208,11 +208,11 @@ export const Question: React.FC<Props> = (props) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={formik.values.forceSelection}
+                    checked={formik.values.neverAutoAnswer}
                     onChange={() =>
                       formik.setFieldValue(
-                        "forceSelection",
-                        !formik.values.forceSelection,
+                        "neverAutoAnswer",
+                        !formik.values.neverAutoAnswer,
                       )
                     }
                   />

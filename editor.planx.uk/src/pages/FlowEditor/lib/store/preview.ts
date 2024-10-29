@@ -443,9 +443,10 @@ export const previewStore: StateCreator<
   autoAnswerableOptions: (id: NodeId) => {
     const { breadcrumbs, flow, computePassport } = get();
     const { type, data, edges } = flow[id];
+    const { data: passportData } = computePassport();
 
     // Only Question & Checklist nodes that have an fn & edges are eligible for auto-answering
-    if (!type || !SUPPORTED_DECISION_TYPES.includes(type) || !data?.fn || !edges || data?.forceSelection) return;
+    if (!type || !SUPPORTED_DECISION_TYPES.includes(type) || !data?.fn || !edges || data?.neverAutoAnswer) return;
 
     // Only proceed if the user has seen at least one node with this fn before
     const visitedFns = Object.entries(breadcrumbs).filter(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);
@@ -469,7 +470,7 @@ export const previewStore: StateCreator<
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
     // Get existing passport value(s) for this node's fn
-    let passportValues = computePassport().data?.[data.fn];
+    let passportValues = passportData?.[data.fn];
 
     // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings), 
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
@@ -515,7 +516,7 @@ export const previewStore: StateCreator<
       // Planning Constraints use a bespoke "_nots" data structure to describe all option vals returned via GIS API
       //   Concat these onto other visitedOptionVals so that questions about constraints we haven't fetched are put to user exactly once
       if (visitedFns.some(([nodeId, _breadcrumb]) => flow[nodeId].type === TYPES.PlanningConstraints)) {
-        const nots: string[] | undefined = computePassport()?.data?.["_nots"]?.[data.fn];
+        const nots: string[] | undefined = passportData?.["_nots"]?.[data.fn];
         if (nots) visitedOptionVals = visitedOptionVals.concat(nots);
       }
 
@@ -532,7 +533,7 @@ export const previewStore: StateCreator<
   },
 
   /**
-   * Filters auto-answer based on a heirarchy of collected flags
+   * Filters auto-answer based on a hierarchy of collected flags
    * @param filterId - id of the Filter node
    * @returns - id of the Answer node of the highest order matching flag
    */

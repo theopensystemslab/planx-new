@@ -35,7 +35,7 @@ export interface ChecklistProps extends Checklist {
   node?: {
     data?: {
       allRequired?: boolean;
-      forceSelection?: boolean;
+      neverAutoAnswer?: boolean;
       categories?: Array<Category>;
       description?: string;
       fn?: string;
@@ -286,7 +286,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   const formik = useFormik<Checklist>({
     initialValues: {
       allRequired: props.node?.data?.allRequired || false,
-      forceSelection: props.node?.data?.forceSelection || false,
+      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
       groupedOptions: props.groupedOptions,
@@ -428,11 +428,11 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={formik.values.forceSelection}
+                    checked={formik.values.neverAutoAnswer}
                     onChange={() =>
                       formik.setFieldValue(
-                        "forceSelection",
-                        !formik.values.forceSelection,
+                        "neverAutoAnswer",
+                        !formik.values.neverAutoAnswer,
                       )
                     }
                   />

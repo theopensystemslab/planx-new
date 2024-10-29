@@ -26,7 +26,7 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
-  if (props.forceSelection) {
+  if (props.neverAutoAnswer) {
     return <VisibleQuestion {...props} />;
   }
 
@@ -44,14 +44,13 @@ const QuestionComponent: React.FC<Question> = (props) => {
 
   let idsThatCanBeAutoAnswered: string[] | undefined;
   if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
-
-  if (idsThatCanBeAutoAnswered && idsThatCanBeAutoAnswered.length > 0) {
+  if (idsThatCanBeAutoAnswered) {
     return (
       <AutoAnsweredQuestion {...props} answerIds={idsThatCanBeAutoAnswered} />
     );
-  } else {
-    return <VisibleQuestion {...props} />;
   }
+
+  return <VisibleQuestion {...props} />;
 };
 
 // An auto-answered Question won't be seen by the user, but still leaves a breadcrumb
