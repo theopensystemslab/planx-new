@@ -57,6 +57,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
           isDragging,
           isClone: isClone(props.id),
           isNote: childNodes.length === 0,
+          wasVisited: props.wasVisited,
         })}
       >
         <Link

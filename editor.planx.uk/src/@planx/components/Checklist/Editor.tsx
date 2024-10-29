@@ -263,6 +263,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   const formik = useFormik<Checklist>({
     initialValues: {
       allRequired: props.node?.data?.allRequired || false,
+      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
       groupedOptions: props.groupedOptions,
@@ -398,6 +399,22 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                   />
                 }
                 label="All required"
+              />
+            </InputRow>
+            <InputRow>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formik.values.neverAutoAnswer}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "neverAutoAnswer",
+                        !formik.values.neverAutoAnswer,
+                      )
+                    }
+                  />
+                }
+                label="Always put to user (forgo automation)"
               />
             </InputRow>
           </InputGroup>
