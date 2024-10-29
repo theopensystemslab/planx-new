@@ -35,6 +35,7 @@ describe("when a user presses 'add a new editor'", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
 
@@ -59,6 +60,7 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
     await userTriesToAddNewEditor(user);
@@ -88,6 +90,13 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
 });
 
 describe("when the addNewEditor modal is rendered", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamSlug: "planx",
+      teamId: 1,
+    });
+  });
+
   it("should not have any accessibility issues", async () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
@@ -112,6 +121,7 @@ describe("'add a new editor' button is hidden from Templates team", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
+      teamId: 2,
     });
   });
 
@@ -130,6 +140,7 @@ describe("when a user is not a platform admin", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
       teamSlug: "trumptonshire",
+      teamId: 3,
     });
   });
 
