@@ -4,7 +4,7 @@ import {
   logAnalyticsSchema,
   logUserExitController,
   logUserResumeController,
-} from "./controller.js";
+} from "./analyticsLog/controller.js";
 
 const router = Router();
 
