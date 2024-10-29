@@ -137,23 +137,9 @@ case TYPES.SetValue:
 
 2. `src/@planx/components/shared/Preview/SummaryList`
 
-If/how should this component appear on the Review page?
+If/how should this component appear in a Review component:
 
 ```typescript
 [TYPES.SetValue]: undefined,
 ```
 
-3. `src/@planx/components/Send/bops/index`
-
-If/how should this component be formatted in Send data formats such as BOPS?
-
-```typescript
-function isTypeForBopsPayload(type?: TYPES) {
-  switch (type) {
-    // ...
-    case TYPES.SetValue:
-      return false;
-    // ...
-  }
-}
-```
