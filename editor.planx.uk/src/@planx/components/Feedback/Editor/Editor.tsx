@@ -9,13 +9,13 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { Feedback, parseFeedback } from "../model";
-type Props = EditorProps<TYPES.SetValue, Feedback>; // TODO: use Feedback type
+type Props = EditorProps<TYPES.Feedback, Feedback>;
 export const FeedbackEditor = (props: Props) => {
   const formik = useFormik({
     initialValues: parseFeedback(props.node?.data),
     onSubmit: (newValues) => {
       props.handleSubmit?.({
-        type: TYPES.SetValue, // TODO: use Feedback
+        type: TYPES.Feedback,
         data: newValues,
       });
     },
@@ -23,7 +23,7 @@ export const FeedbackEditor = (props: Props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Feedback" Icon={ICONS[TYPES.Notice]}>
+        <ModalSectionContent title="Feedback" Icon={ICONS[TYPES.Feedback]}>
           <InputRow>
             <Input
               format="large"
