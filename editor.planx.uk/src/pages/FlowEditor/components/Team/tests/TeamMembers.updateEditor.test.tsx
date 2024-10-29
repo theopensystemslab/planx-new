@@ -18,6 +18,7 @@ describe("when a user presses 'edit button'", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
 
     const { user } = await setupTeamMembersScreen();
@@ -171,6 +172,7 @@ describe("'edit' button is hidden from Templates team", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
+      teamId: 3,
     });
   });
 
@@ -188,6 +190,7 @@ describe("when a user is not a platform admin", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
       team: "planx",
+      teamId: 1,
     });
 
     await setupTeamMembersScreen();

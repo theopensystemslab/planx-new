@@ -13,7 +13,6 @@ export const optimisticallyAddNewMember = async (
   const existingMembers = useStore.getState().teamMembers;
   const newMember: TeamMember = {
     ...values,
-    role: "teamEditor",
     id: userId,
   };
 

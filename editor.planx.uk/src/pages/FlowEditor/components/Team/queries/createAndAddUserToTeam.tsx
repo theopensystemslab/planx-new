@@ -2,19 +2,18 @@ import { FetchResult, gql } from "@apollo/client";
 import { GET_USERS_FOR_TEAM_QUERY } from "routes/teamMembers";
 
 import { client } from "../../../../../lib/graphql";
+import { AddNewEditorFormValues } from "../types";
 
 type CreateAndAddUserResponse = FetchResult<{
-  insert_users_one: { id: number; __typename: "users" };
+  insertUsersOne: { id: number; __typename: "users" };
 }>;
 
-export const createAndAddUserToTeam = async (
-  email: string,
-  firstName: string,
-  lastName: string,
-  teamId: number,
-  teamSlug: string
+export const createAndAddUserToTeam = async ({
+  newUser,
+  teamId,
+  teamSlug,
+}: { newUser: AddNewEditorFormValues, teamId: number, teamSlug: string }
 ) => {
-  // NB: the user is hard-coded with the 'teamEditor' role for now
   const response: CreateAndAddUserResponse = await client.mutate({
     mutation: gql`
       mutation CreateAndAddUserToTeam(
@@ -22,13 +21,14 @@ export const createAndAddUserToTeam = async (
         $firstName: String!
         $lastName: String!
         $teamId: Int!
+        $role: user_roles_enum!
       ) {
-        insert_users_one(
+        insertUsersOne: insert_users_one(
           object: {
             email: $email
             first_name: $firstName
             last_name: $lastName
-            teams: { data: { role: teamEditor, team_id: $teamId } }
+            teams: { data: { role: $role, team_id: $teamId } }
           }
         ) {
           id
@@ -36,9 +36,7 @@ export const createAndAddUserToTeam = async (
       }
     `,
     variables: {
-      email,
-      firstName,
-      lastName,
+      ...newUser,
       teamId,
     },
     refetchQueries: [
@@ -47,7 +45,7 @@ export const createAndAddUserToTeam = async (
   });
 
   if (response.data) {
-    return response.data.insert_users_one;
+    return response.data.insertUsersOne;
   }
   throw new Error("Unable to create user");
 };
