@@ -52,6 +52,6 @@ describe("adding a new user to the Demo team", () => {
     expect(newUser.role).toBe("demoUser");
 
     // Use role tag displayed in table
-    expect(within(membersTable).getByText("demoUser")).toBeVisible();
+    expect(within(membersTable).getByText("Demo User")).toBeVisible();
   });
 });
