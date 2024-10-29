@@ -35,7 +35,7 @@ describe("Auto-answering blanks", () => {
 
     // The second blank is put to the user because we do not have a passport value and we have NOT seen all options before
     expect(computePassport()?.data).not.toHaveProperty("option");
-    expect(autoAnswerableOptions("Path2Checklist2")).toBeUndefined;
+    expect(autoAnswerableOptions("Path2Checklist2")).toBeUndefined();
   });
 
   test("Questions with the same options auto-answer the blank", () => {
@@ -63,7 +63,7 @@ describe("Auto-answering blanks", () => {
 
     // The second blank is put to the user because we do not have a passport value and we have NOT seen all options before
     expect(computePassport()?.data).not.toHaveProperty("option");
-    expect(autoAnswerableOptions("Path4Question2")).toBeUndefined;
+    expect(autoAnswerableOptions("Path4Question2")).toBeUndefined();
 
     // Manually proceed through the second blank
     clickContinue("Path4Question2", { answers: ["Path4Question2Blank"], auto: false });

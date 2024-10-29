@@ -470,7 +470,7 @@ export const previewStore: StateCreator<
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
     // Get existing passport value(s) for this node's fn
-    let passportValues = passportData?.[data.fn];
+    const passportValues = passportData?.[data.fn];
 
     // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings), 
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
@@ -549,7 +549,7 @@ export const previewStore: StateCreator<
       id: edgeId,
       ...flow[edgeId],
     }));
-    let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
+    const optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
     // "New" Filters will have a category prop, but existing ones may still be relying on DEFAULT category
     const filterCategory = data?.category || DEFAULT_FLAG_CATEGORY;
