@@ -55,10 +55,12 @@ interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
   retryCount?: number;
 }
 
+// Create config and export URL for public URL generation
+const config = validateConfig();
+export const METABASE_BASE_URL = config.baseURL;
+
 // Create and configure Axios instance
 export const createMetabaseClient = (): AxiosInstance => {
-  const config = validateConfig();
-
   const client = axios.create({
     baseURL: config.baseURL,
     headers: {
