@@ -9,12 +9,12 @@ import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
-import { MoreInformation } from "../MoreInformation/MoreInformation";
 import { ICONS } from "../shared/icons";
 
 export interface Props {

@@ -1,12 +1,12 @@
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export interface Feedback extends BaseNodeData {
-  fn: string;
+  title: string;
 }
 
 export const parseFeedback = (
   data: Record<string, any> | undefined,
 ): Feedback => ({
-  fn: data?.fn || "",
+  title: data?.title || "",
   ...parseBaseNodeData(data),
 });
