@@ -63,6 +63,8 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.List}>List</option>
         <option value={TYPES.Page}>Page</option>
         <option value={TYPES.MapAndLabel}>Map and Label (Testing only)</option>
+        // TODO: feature flag this?
+        <option value={TYPES.Feedback}>Feedback (Testing only)</option>
       </optgroup>
       <optgroup label="Information">
         <option value={TYPES.TaskList}>Task List</option>

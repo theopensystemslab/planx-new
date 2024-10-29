@@ -54,6 +54,8 @@ const Node: React.FC<any> = (props) => {
       ) : (
         <Portal {...allProps} />
       );
+    case TYPES.Feedback:
+      return <Question {...allProps} text={node?.data?.title ?? "Feedback"} />;
     case TYPES.FileUpload:
       return (
         <Question {...allProps} text={node?.data?.title ?? "File upload"} />
