@@ -43,6 +43,9 @@ import {
  *  so that Metabase picks up the new columns
  */
 export const ALLOW_LIST = [
+  "pp.full.householder",
+  "pp.full.minor",
+  "pp.full.major",
   "application.declaration.connection",
   "application.information.harmful",
   "application.information.sensitive",

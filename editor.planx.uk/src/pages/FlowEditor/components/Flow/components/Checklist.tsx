@@ -94,11 +94,13 @@ const Checklist: React.FC<Props> = React.memo((props) => {
             onContextMenu={handleContext}
             ref={drag}
           >
-            <Box sx={{ 
-              display: "flex", 
-              flexDirection: "column",
-              maxWidth: "220px"
-            }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "220px",
+              }}
+            >
               {props.data?.img && (
                 <Thumbnail
                   imageSource={props.data?.img}

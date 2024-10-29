@@ -33,7 +33,9 @@ describe("breadcrumbs where multiple nodes set the same passport value", () => {
 
     const output = computePassport();
     expect(output.data).toHaveProperty(duplicateKey);
-    expect(output.data?.[duplicateKey]).toEqual(expect.arrayContaining(["test", "true"]));
+    expect(output.data?.[duplicateKey]).toEqual(
+      expect.arrayContaining(["test", "true"]),
+    );
   });
 
   it.skip("returns an array of both values, irrespective of the order of the breadcrumbs", () => {
@@ -57,11 +59,11 @@ describe("breadcrumbs where multiple nodes set the same passport value", () => {
     expect(output.data).toHaveProperty(duplicateKey);
 
     // Currently returning this value
-    expect(output.data?.[duplicateKey]).toEqual("test")
+    expect(output.data?.[duplicateKey]).toEqual("test");
 
     // But I think we should expect this?
     expect(output.data?.[duplicateKey]).toEqual(
-      expect.arrayContaining(["test", "true"])
+      expect.arrayContaining(["test", "true"]),
     );
   });
 });

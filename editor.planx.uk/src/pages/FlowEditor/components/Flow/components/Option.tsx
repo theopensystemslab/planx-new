@@ -38,7 +38,9 @@ const Option: React.FC<any> = (props) => {
         )}
         <div className="band" style={{ background, color }}></div>
         <div className="text">{props.data.text}</div>
-        {props.data?.val && <DataField value={props.data.val} variant="child" />}
+        {props.data?.val && (
+          <DataField value={props.data.val} variant="child" />
+        )}
       </Link>
       <ol className="decisions">
         {childNodes.map((child: any) => (

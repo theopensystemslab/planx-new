@@ -8,14 +8,14 @@ import { client } from "../../lib/graphql";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
-  id: string,
+  id: string;
   flowAnalyticsLink: string;
   isFlowPublished: boolean;
 }
 
 interface GetFlowEditorData {
   flows: {
-    id: string,
+    id: string;
     flowAnalyticsLink: string;
     publishedFlowsAggregate: {
       aggregate: {

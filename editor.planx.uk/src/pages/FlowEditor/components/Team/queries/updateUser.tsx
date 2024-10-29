@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
+
 import { client } from "../../../../../lib/graphql";
 import { AddNewEditorFormValues } from "../types";
 
 export const updateTeamMember = async (
   userId: number,
-  userValues: AddNewEditorFormValues
+  userValues: AddNewEditorFormValues,
 ) => {
   const response = await client.mutate({
     mutation: gql`

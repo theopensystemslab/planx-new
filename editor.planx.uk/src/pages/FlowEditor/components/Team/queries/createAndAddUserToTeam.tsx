@@ -12,7 +12,7 @@ export const createAndAddUserToTeam = async (
   firstName: string,
   lastName: string,
   teamId: number,
-  teamSlug: string
+  teamSlug: string,
 ) => {
   // NB: the user is hard-coded with the 'teamEditor' role for now
   const response: CreateAndAddUserResponse = await client.mutate({
