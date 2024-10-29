@@ -15,10 +15,10 @@ import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
 
-import { getPreviouslySubmittedData, makeData } from "../shared/utils";
-import { FaceBox } from "./components/FaceBox";
-import { StyledToggleButtonGroup } from "./styled";
-import { FeedbackComponentProps, FormProps } from "./types";
+import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
+import { FaceBox } from "../components/FaceBox";
+import { StyledToggleButtonGroup } from "../styled";
+import { FeedbackComponentProps, FormProps } from "../types";
 
 const FeedbackComponent = (
   props: PublicProps<FeedbackComponentProps>,

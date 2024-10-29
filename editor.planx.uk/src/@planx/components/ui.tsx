@@ -21,6 +21,7 @@ import PaymentOutlined from "@mui/icons-material/PaymentOutlined";
 import Pin from "@mui/icons-material/Pin";
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 import PlaylistAddCheck from "@mui/icons-material/PlaylistAddCheck";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import RateReviewOutlined from "@mui/icons-material/RateReviewOutlined";
 import ReportProblemOutlined from "@mui/icons-material/ReportProblemOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
@@ -95,6 +96,7 @@ export const ICONS: {
   [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
   [TYPES.TextInput]: Create,
+  //   [TYPES.Feedback]: RateReviewIcon,
 } as const;
 
 interface MoreInformationProps {
