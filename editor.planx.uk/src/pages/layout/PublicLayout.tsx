@@ -15,8 +15,8 @@ import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
 
-import Footer from "../../components/Footer";
-import Header from "../../components/Header";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
 import { FOOTER_ITEMS } from "../../types";
 
 const MainContainer = styled(Box)(({ theme }) => ({

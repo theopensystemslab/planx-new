@@ -21,7 +21,7 @@ import React, { ReactNode, useState } from "react";
 import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { SiteAddress } from "../FindProperty/model";
 import { OverrideEntitiesModal } from "./Modal";

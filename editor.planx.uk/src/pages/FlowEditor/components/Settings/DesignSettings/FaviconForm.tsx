@@ -4,7 +4,7 @@ import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import ImgInput from "ui/editor/ImgInput";
+import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";

@@ -45,11 +45,11 @@ interface MapAndLabelContextValue {
 type MapAndLabelProviderProps = PropsWithChildren<PresentationalProps>;
 
 const MapAndLabelContext = createContext<MapAndLabelContextValue | undefined>(
-  undefined
+  undefined,
 );
 
 export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
-  props
+  props,
 ) => {
   const { schema, children, handleSubmit, previouslySubmittedData, fn } = props;
   const { formikConfig, initialValues } = useSchema({
@@ -62,7 +62,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     fn
   ] as FeatureCollection;
   const previousFormData = previousGeojson?.features.map(
-    (feature) => feature.properties
+    (feature) => feature.properties,
   ) as SchemaUserResponse[];
   const _previousMapData = previousGeojson?.features;
 
@@ -100,7 +100,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   });
 
   const [activeIndex, setActiveIndex] = useState<number>(
-    previousFormData ? previousFormData?.length - 1 : 0
+    previousFormData ? previousFormData?.length - 1 : 0,
   );
 
   const [minError, setMinError] = useState<boolean>(false);
@@ -215,7 +215,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
   const removeFeatureFromForm = (index: number) => {
     formik.setFieldValue(
       "schemaData",
-      formik.values.schemaData.filter((_, i) => i !== index)
+      formik.values.schemaData.filter((_, i) => i !== index),
     );
   };
 
@@ -223,7 +223,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     // Order of features can vary by change/modification, filter on label not array position
     const label = `${index + 1}`;
     const filteredFeatures = features?.filter(
-      (f) => f.properties?.label !== label
+      (f) => f.properties?.label !== label,
     );
 
     // Shift any feature labels that are larger than the removed feature label so they remain incremental
@@ -277,7 +277,7 @@ export const useMapAndLabelContext = (): MapAndLabelContextValue => {
   const context = useContext(MapAndLabelContext);
   if (!context) {
     throw new Error(
-      "useMapAndLabelContext must be used within a MapAndLabelProvider"
+      "useMapAndLabelContext must be used within a MapAndLabelProvider",
     );
   }
   return context;

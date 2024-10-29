@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
-import InputField from "ui/editor/InputField";
+import InputField from "ui/editor/InputField/InputField";
 
 import { FormError } from "../ui";
 

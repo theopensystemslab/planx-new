@@ -3,7 +3,7 @@ import { TextInputType } from "@planx/components/TextInput/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter, isLongTextType } from "ui/shared/CharacterCounter";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
 import { getFieldProps, Props } from ".";

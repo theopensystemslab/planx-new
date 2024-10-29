@@ -68,8 +68,7 @@ const keyFormatters: KeyMap = {
   "data.info": {
     getDisplayKey: () => "Why it matters",
   },
-  "data.categories.title": {
-  },
+  "data.categories.title": {},
   "data.steps.title": {
     getDisplayKey: () => "Title (step)",
   },

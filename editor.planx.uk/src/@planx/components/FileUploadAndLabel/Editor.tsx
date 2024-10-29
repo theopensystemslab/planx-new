@@ -7,24 +7,21 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import {
-  EditorProps,
-  ICONS,
-} from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import { lowerCase, merge, upperFirst } from "lodash";
 import React from "react";
-import ImgInput from "ui/editor/ImgInput";
+import ImgInput from "ui/editor/ImgInput/ImgInput";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager";
+} from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { ModalSubtitle } from "ui/editor/ModalSubtitle";
-import RichTextInput from "ui/editor/RichTextInput";
-import SelectInput from "ui/editor/SelectInput";
-import Input from "ui/shared/Input";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 

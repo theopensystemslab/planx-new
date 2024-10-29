@@ -72,6 +72,21 @@ describe("teams", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("can query teams", () => {
+      expect(i.queries).toContain("teams");
+    });
+
+    test("cannot create, update, or delete teams", () => {
+      expect(i).toHaveNoMutationsFor("teams");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {

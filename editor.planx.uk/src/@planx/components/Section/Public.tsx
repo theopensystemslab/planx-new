@@ -9,10 +9,10 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { SectionNode, SectionStatus } from "types";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import Card from "../shared/Preview/Card";
-import CardHeader from "../shared/Preview/CardHeader";
+import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import type { Section } from "./model";
 import { computeSectionStatuses } from "./model";
 

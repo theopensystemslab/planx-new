@@ -9,7 +9,7 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { parseSetValue, SetValue } from "./model";
@@ -139,7 +139,7 @@ function SetValueComponent(props: Props) {
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false}/>
+      <ModalFooter formik={formik} showMoreInformation={false} />
     </form>
   );
 }

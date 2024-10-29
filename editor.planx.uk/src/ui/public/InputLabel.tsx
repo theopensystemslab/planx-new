@@ -10,7 +10,7 @@ const Root = styled("label")(() => ({
 
 export default function InputLabel(props: {
   label: string;
-  children: ReactNode;
+  children?: ReactNode;
   hidden?: boolean;
   htmlFor?: string;
   id?: string;

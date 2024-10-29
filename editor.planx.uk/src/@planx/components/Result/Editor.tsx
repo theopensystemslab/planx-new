@@ -1,14 +1,17 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  Flag,
+  flatFlags,
+} from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { EditorProps, ICONS } from "../ui";

@@ -7,10 +7,10 @@ import { useToast } from "hooks/useToast";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
-import Input, { Props as InputProps } from "ui/shared/Input";
+import Input, { Props as InputProps } from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 

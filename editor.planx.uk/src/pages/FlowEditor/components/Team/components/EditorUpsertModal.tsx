@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import {
   AddNewEditorErrors,

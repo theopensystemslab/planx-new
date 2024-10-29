@@ -16,7 +16,7 @@ import React, { useEffect, useRef, useState } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import { DEFAULT_NEW_ADDRESS_LABEL, SiteAddress } from "../model";
 

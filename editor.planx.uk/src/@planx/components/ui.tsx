@@ -32,13 +32,13 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React, { ChangeEvent } from "react";
-import ImgInput from "ui/editor/ImgInput";
+import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
-import Input from "ui/shared/Input";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 export interface EditorProps<Type, Data> {

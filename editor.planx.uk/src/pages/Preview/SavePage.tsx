@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { add } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";

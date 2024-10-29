@@ -11,8 +11,8 @@ import React, { useState } from "react";
 import { ApplicationPath } from "types";
 import Banner from "ui/public/Banner";
 import FormWrapper from "ui/public/FormWrapper";
-import ErrorSummary from "ui/shared/ErrorSummary";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml";
+import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";

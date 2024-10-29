@@ -2,14 +2,17 @@ import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { ComponentType as TYPES, SendIntegration } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  SendIntegration,
+} from "@opensystemslab/planx-core/types";
 import { getIn, useFormik } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ChecklistItem from "ui/shared/ChecklistItem";
+import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { array, object } from "yup";
 

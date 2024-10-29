@@ -568,7 +568,7 @@ export const mockConfirmationResult: SearchResult<IndexedNode> = {
   key: "data.heading",
   matchIndices: [[0, 4]],
   refIndex: 0,
-  matchValue: "Snake", 
+  matchValue: "Snake",
 };
 
 export const mockFindPropertyResult: SearchResult<IndexedNode> = {

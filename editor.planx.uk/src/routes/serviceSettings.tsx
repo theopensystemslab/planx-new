@@ -47,6 +47,7 @@ export const getFlowSettings = async (req: NaviRequest) => {
 const serviceSettingsRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
+    flow: req.params.flow.split(",")[0],
   })),
 
   mount({
