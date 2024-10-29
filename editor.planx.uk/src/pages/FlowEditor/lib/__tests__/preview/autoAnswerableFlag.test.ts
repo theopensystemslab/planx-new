@@ -18,7 +18,7 @@ describe("Returns undefined and does not auto-answer any flag paths", () => {
       }
     });
 
-    expect(autoAnswerableFlag("SetValue")).not.toBeDefined();
+    expect(autoAnswerableFlag("SetValue")).toBeUndefined();
   });
 
   test("If the node does not set a `fn`", () => {
@@ -26,15 +26,16 @@ describe("Returns undefined and does not auto-answer any flag paths", () => {
     delete alteredFlow["Filter"].data?.fn;
     setState({ flow: alteredFlow });
 
-    expect(autoAnswerableFlag("Filter")).not.toBeDefined();
+    expect(autoAnswerableFlag("Filter")).toBeUndefined();
   });
 
-  test("If the node does not have any flag paths (aka options)");
-  const alteredFlow = structuredClone(flowWithFilter);
-  delete alteredFlow["Filter"].edges;
-  setState({ flow: alteredFlow });
-
-  expect(autoAnswerableFlag("Filter")).not.toBeDefined();
+  test("If the node does not have any flag paths (aka options)", () => {
+    const alteredFlow = structuredClone(flowWithFilter);
+    delete alteredFlow["Filter"].edges;
+    setState({ flow: alteredFlow });
+  
+    expect(autoAnswerableFlag("Filter")).toBeUndefined();
+  });
 });
 
 const flowWithFilter: Store.Flow = {

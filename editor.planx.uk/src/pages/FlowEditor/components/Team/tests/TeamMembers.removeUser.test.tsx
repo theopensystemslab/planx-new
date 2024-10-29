@@ -25,6 +25,7 @@ describe("when a user presses 'remove' button", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user, container } = await setupTeamMembersScreen();
 
@@ -74,6 +75,7 @@ describe("when a user clicks 'Remove user' button", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
 
@@ -119,6 +121,7 @@ describe("'remove' button is hidden from Templates team", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
+      teamId: 2,
     });
   });
 
@@ -137,6 +140,7 @@ describe("when a user is not a platform admin", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
       team: "planx",
+      teamId: 1,
     });
 
     await setupTeamMembersScreen();

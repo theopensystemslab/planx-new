@@ -9,6 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { Role, UserRole } from "@opensystemslab/planx-core/types";
 import { AddButton } from "pages/Team";
 import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
@@ -50,10 +51,12 @@ export const MembersTable = ({
   const [actionType, setActionType] = useState<ActionType>("add");
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
-  const roleLabels: Record<string, string> = {
+  const roleLabels: Record<Role, string> = {
     platformAdmin: "Admin",
     teamEditor: "Editor",
     teamViewer: "Viewer",
+    demoUser: "Demo User",
+    public: "Public",
   };
 
   const editUser = (member: TeamMember) => {
@@ -72,7 +75,7 @@ export const MembersTable = ({
     setInitialValues(undefined);
   };
 
-  const getRoleLabel = (role: string) => {
+  const getRoleLabel = (role: Role) => {
     return roleLabels[role] || role;
   };
 
@@ -88,17 +91,19 @@ export const MembersTable = ({
             </TableRow>
           </TableHead>
           {showAddMemberButton && (
-            <TableRow>
-              <TableCell colSpan={3}>
-                <AddButton
-                  onClick={() => {
-                    addUser();
-                  }}
-                >
-                  Add a new editor
-                </AddButton>
-              </TableCell>
-            </TableRow>
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <AddButton
+                    onClick={() => {
+                      addUser();
+                    }}
+                  >
+                    Add a new editor
+                  </AddButton>
+                </TableCell>
+              </TableRow>
+            </TableBody>
           )}
         </Table>
         {showModal && (
@@ -127,7 +132,7 @@ export const MembersTable = ({
               </TableCell>
               <TableCell>
                 <strong>Email</strong>
-              </TableCell>{" "}
+              </TableCell>
               {
                 // empty table cells for styling across buttons
               }
@@ -138,7 +143,7 @@ export const MembersTable = ({
           <TableBody
             data-testid={`members-table${showAddMemberButton && "-add-editor"}`}
           >
-            {members.map((member, i) => (
+            {members.map((member) => (
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{

@@ -26,14 +26,14 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
-  if (props.neverAutoAnswer) {
-    return <VisibleQuestion {...props} />;
-  }
-
   const [flow, autoAnswerableOptions] = useStore((state) => [
     state.flow,
     state.autoAnswerableOptions,
   ]);
+  
+  if (props.neverAutoAnswer) {
+    return <VisibleQuestion {...props} />;
+  }
 
   // Questions without edges act like "sticky notes" in the graph for editors only & can be immediately auto-answered
   let edges: Edges | undefined;

@@ -39,13 +39,13 @@ function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
 }
 
 const ChecklistComponent: React.FC<Props> = (props) => {
-  if (props.neverAutoAnswer) {
-    return <VisibleChecklist {...props} />;
-  }
-
   const autoAnswerableOptions = useStore(
     (state) => state.autoAnswerableOptions,
   );
+  
+  if (props.neverAutoAnswer) {
+    return <VisibleChecklist {...props} />;
+  }
   
   let idsThatCanBeAutoAnswered: string[] | undefined;
   if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
