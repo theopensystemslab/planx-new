@@ -445,7 +445,7 @@ export const previewStore: StateCreator<
     const { type, data, edges } = flow[id];
 
     // Only Question & Checklist nodes that have an fn & edges are eligible for auto-answering
-    if (!type || !SUPPORTED_DECISION_TYPES.includes(type) || !data?.fn || !edges) return;
+    if (!type || !SUPPORTED_DECISION_TYPES.includes(type) || !data?.fn || !edges || data?.forceSelection) return;
 
     // Only proceed if the user has seen at least one node with this fn before
     const visitedFns = Object.entries(breadcrumbs).filter(([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn);
