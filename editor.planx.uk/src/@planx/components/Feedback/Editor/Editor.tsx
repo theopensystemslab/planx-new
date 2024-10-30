@@ -10,6 +10,7 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import {
@@ -44,10 +45,11 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
           <InputGroup flowSpacing>
             <InputRow>
               <InputLabel label="Title">
-                <RichTextInput
+                <Input
+                  format="large"
+                  placeholder={titlePlaceholder}
                   name="title"
                   value={formik.values.title || titlePlaceholder}
-                  placeholder="Tell us what you think"
                   onChange={formik.handleChange}
                 />
               </InputLabel>

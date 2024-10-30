@@ -2,10 +2,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import {
-  CardHeaderWrapper,
-  TitleWrapper,
-} from "@planx/components/shared/Preview/CardHeader/styled";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -45,25 +42,12 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <CardHeaderWrapper>
-        <TitleWrapper mr={1} pt={0.5}>
-          <Typography
-            variant="h2"
-            role="heading"
-            aria-level={1}
-            component="h1"
-            sx={{ textWrap: "balance" }}
-          >
-            <ReactMarkdownOrHtml source={props.title} id={"TITLE"} />
-          </Typography>
-        </TitleWrapper>
-        <ReactMarkdownOrHtml
-          source={props.description}
-          id={"DESCRIPTION_TEXT"}
-          openLinksOnNewTab
-        />
-      </CardHeaderWrapper>
-
+      <CardHeader title={props.title} />
+      <ReactMarkdownOrHtml
+        source={props.description}
+        id={"DESCRIPTION_TEXT"}
+        openLinksOnNewTab
+      />
       <Box pt={2} mb={3}>
         {props.ratingQuestion && (
           <InputLabel
