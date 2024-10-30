@@ -102,7 +102,7 @@ export const MembersTable = ({
                       addUser();
                     }}
                   >
-                    Add a new editor
+                    Add a new member
                   </AddButton>
                 </TableCell>
               </TableRow>

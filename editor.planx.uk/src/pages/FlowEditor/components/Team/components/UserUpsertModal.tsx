@@ -136,7 +136,7 @@ export const UserUpsertModal = ({
         >
           <Box sx={{ mt: 1, mb: 4 }}>
             <Typography variant="h3" component="h2" id="dialog-heading">
-              Add a new { isDemoTeam ? "demo user" : "editor" }
+              Add a new member
             </Typography>
           </Box>
           <InputGroup flowSpacing>
