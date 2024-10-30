@@ -3,11 +3,72 @@ info:
   title: Plan✕ API
   version: 0.1.0
 tags:
-  - name: analytics
+  - name: analyticsLogs
+    description: Analytics logging endpoints
+  - name: metabaseCollections
+    description: Metabase collection management endpoints
+  - name: metabaseDashboards
+    description: Metabase dashboard management endpoints
 components:
   responses:
     AnalyticsResponse:
       description: Successful response with no content. Not awaited from server as endpoint is called via the Beacon API
+schemas:
+    NewCollectionParams:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The name of the new collection
+        description:
+          type: string
+        parent_id:
+          type: string
+          description: Optional ID of parent collection
+        namespace:
+          type: string
+        authority_level:
+          type: string
+          nullable: true
+    
+    CopyDashboardParams:
+      type: object
+      required:
+        - dashboardId
+        - name
+      properties:
+        dashboardId:
+          type: number
+          description: Metabase Dashboard ID from the URL
+        name:
+          type: string
+          description: Name for the copied dashboard
+        description:
+          type: string
+        collectionId:
+          type: number
+        collectionPosition:
+          type: number
+          nullable: true
+        isDeepCopy:
+          type: boolean
+          description: Toggle whether questions are copied as well
+    
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+
+    ApiResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        error:
+          type: string
 paths:
   /analytics/log-user-exit:
     post:
@@ -27,3 +88,86 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
+/collections/check:
+    get:
+      summary: Check collection existence
+      description: Check if a collection exists with a council name
+      tags:
+        - collections
+      responses:
+        "200":
+          description: Collection ID if found, false if not found
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /collections/new:
+    post:
+      summary: Create new collection
+      description: Create a new Metabase collection
+      tags:
+        - collections
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCollectionParams"
+      responses:
+        "201":
+          description: Collection created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /dashboard/copy:
+    post:
+      summary: Copy dashboard
+      description: Duplicate an existing dashboard (template) from its ID
+      tags:
+        - dashboards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyDashboardParams"
+      responses:
+        "201":
+          description: Dashboard copied successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    description: ID of the newly created dashboard
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
