@@ -43,10 +43,10 @@ import {
  *  so that Metabase picks up the new columns
  */
 export const ALLOW_LIST = [
-  "application.type",
   "application.declaration.connection",
   "application.information.harmful",
   "application.information.sensitive",
+  "application.type",
   "drawBoundary.action",
   "findProperty.action",
   "_overrides",
