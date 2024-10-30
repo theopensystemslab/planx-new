@@ -14,6 +14,6 @@ export default meta;
 export const Basic = {
   args: {
     title: "Tell us what you think",
-    privacyPolicyLink: "https://www.planx.uk/",
+    feedbackRequired: false,
   },
 } satisfies Story;

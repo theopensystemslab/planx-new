@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -19,19 +20,23 @@ import {
   ratingQuestionPlaceholder,
 } from "../components/placeholders";
 import { Feedback, parseFeedback } from "../model";
-type Props = EditorProps<TYPES.Feedback, Feedback>;
-export const FeedbackEditor = (props: Props) => {
-  const formik = useFormik({
+
+type FeedbackEditorProps = EditorProps<TYPES.Feedback, Feedback>;
+
+export const FeedbackEditor = (props: FeedbackEditorProps) => {
+  const formik = useFormik<Feedback>({
     initialValues: parseFeedback(props.node?.data),
     onSubmit: (newValues) => {
-      props.handleSubmit?.({
-        type: TYPES.Feedback,
-        data: newValues,
-      });
+      if (props.handleSubmit) {
+        props.handleSubmit({
+          type: TYPES.Feedback,
+          data: newValues,
+        });
+      }
     },
   });
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="feedback-modal">
       <ModalSection>
         <ModalSectionContent title="Feedback" Icon={ICONS[TYPES.Feedback]}>
           <InputGroup flowSpacing>
@@ -40,13 +45,13 @@ export const FeedbackEditor = (props: Props) => {
                 <Input
                   format="large"
                   placeholder="Tell us what you think"
-                  value={undefined}
+                  value={formik.values.title}
                   onChange={formik.handleChange}
                 />
               </InputLabel>
             </InputRow>
             <InputRow>
-              <InputLabel label="Description">
+              <InputLabel label="Description" htmlFor="description">
                 <RichTextInput
                   name="description"
                   value={formik.values.description || descriptionPlaceholder}
@@ -57,7 +62,7 @@ export const FeedbackEditor = (props: Props) => {
             </InputRow>
 
             <InputRow>
-              <InputLabel label="Rating question">
+              <InputLabel label="Rating question" htmlFor="rating-question">
                 <RichTextInput
                   placeholder={ratingQuestionPlaceholder}
                   name="rating-question"
@@ -67,7 +72,7 @@ export const FeedbackEditor = (props: Props) => {
               </InputLabel>
             </InputRow>
             <InputRow>
-              <InputLabel label="Freeform question">
+              <InputLabel label="Freeform question" htmlFor="freeform-question">
                 <RichTextInput
                   placeholder={freeformQuestionPlaceholder}
                   name="freeform-question"
@@ -77,7 +82,7 @@ export const FeedbackEditor = (props: Props) => {
               </InputLabel>
             </InputRow>
             <InputRow>
-              <InputLabel label="Disclaimer text">
+              <InputLabel label="Disclaimer text" htmlFor="disclaimer">
                 <RichTextInput
                   name="disclaimer"
                   value={formik.values.disclaimer || disclaimerPlaceholder}
@@ -105,6 +110,7 @@ export const FeedbackEditor = (props: Props) => {
           </InputGroup>
         </ModalSectionContent>
       </ModalSection>
+      <ModalFooter formik={formik} />
     </form>
   );
 };

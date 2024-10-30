@@ -5,9 +5,13 @@ export interface Feedback extends BaseNodeData {
   ratingQuestion?: string;
   freeformQuestion?: string;
   disclaimer?: string;
-
   feedbackRequired: boolean;
 }
+export interface FormProps {
+  feedbackScore: string;
+  feedback: string;
+}
+
 export const parseFeedback = (
   data: Record<string, any> | undefined,
 ): Feedback => ({
@@ -16,8 +20,6 @@ export const parseFeedback = (
   ratingQuestion: data?.ratingQuestion || "", // TODO: add fallback strings
   freeformQuestion: data?.freeformQuestion || "", // TODO: add fallback strings
   disclaimer: data?.disclaimer || "", // TODO: add fallback strings
-
   feedbackRequired: data?.feedbackRequired || false,
-
   ...parseBaseNodeData(data),
 });

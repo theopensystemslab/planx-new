@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -17,12 +16,10 @@ import InputLabel from "ui/public/InputLabel";
 
 import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
 import { FaceBox } from "../components/FaceBox";
+import { Feedback, FormProps } from "../model";
 import { StyledToggleButtonGroup } from "../styled";
-import { FeedbackComponentProps, FormProps } from "../types";
 
-const FeedbackComponent = (
-  props: PublicProps<FeedbackComponentProps>,
-): FCReturn => {
+const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   const formik = useFormik<FormProps>({
     initialValues: getPreviouslySubmittedData(props) ?? {
       feedbackScore: "",
@@ -46,13 +43,14 @@ const FeedbackComponent = (
     <Card handleSubmit={formik.handleSubmit}>
       <CardHeader title={props.title} />
       <Typography pt={4}>
-        This service is a work in progress, any feedback you share about your
+        {props.description}
+        {/* This service is a work in progress, any feedback you share about your
         experience will help us to improve it.
       </Typography>
       <Typography pt={2}>
         Don't share any personal or financial information in your feedback. If
         you do we will act according to our{" "}
-        <Link href={props.privacyPolicyLink ?? ""}>privacy policy</Link>.
+        <Link href={props.privacyPolicyLink ?? ""}>privacy policy</Link>. */}
       </Typography>
 
       <Box pt={2} mb={3}>
@@ -98,7 +96,6 @@ const FeedbackComponent = (
             />
           </Grid>
         </StyledToggleButtonGroup>
-        {/* </InputLabel> */}
         <InputLabel label="Please tell us more about your experience">
           <RichTextInput
             name="feedback"
