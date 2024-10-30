@@ -41,12 +41,12 @@ export const TeamMembers = () => {
 
   return (
     <Container maxWidth="contentWrap">
-      <SettingsSection data-testid="team-editors">
+      <SettingsSection data-testid="team-members">
         <Typography variant="h2" component="h3" gutterBottom>
-          Team editors
+          Team members
         </Typography>
         <Typography variant="body1">
-          Editors have access to edit your services.
+          Editors have access to edit your services, whilst viewers can only browse your services.
         </Typography>
         <MembersTable
           members={activeMembers}
