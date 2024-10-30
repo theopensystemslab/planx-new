@@ -553,31 +553,9 @@ export const previewStore: StateCreator<
 
     // "New" Filters will have a category prop, but existing ones may still be relying on DEFAULT category
     const filterCategory = data?.category || DEFAULT_FLAG_CATEGORY;
-    const possibleFlags = flatFlags.filter(
-      (flag) => flag.category === filterCategory,
-    );
-    const possibleFlagValues = possibleFlags.map((flag) => flag.value);
+    const collectedFlags = collectedFlagValuesByCategory(filterCategory, breadcrumbs, flow);
 
-    // Get all flags collected so far based on selected answers, excluding flags not in this category
-    const collectedFlags: Flag[] = [];
-    Object.entries(breadcrumbs).forEach(([_nodeId, breadcrumb]) => {
-      if (breadcrumb.answers) {
-        breadcrumb.answers.forEach((answerId) => {
-          const node = flow[answerId];
-          // Account for both new flag values (array) and legacy flag value (string)
-          if (node.data?.flag && Array.isArray(node.data.flag)) {
-            node.data.flag.forEach((flag: any) => {
-              if (possibleFlagValues.includes(flag)) 
-                collectedFlags.push(flag);
-            });
-          } else if (node.data?.flag && possibleFlagValues.includes(node.data.flag)) {
-            collectedFlags.push(node.data.flag);
-          }
-        });
-      }
-    });
-
-    // Starting from the left of the Filter options, check for matches
+    // Starting from the left of the Filter options, check for matches against collectedFlags
     options.forEach((option) => {
       collectedFlags.forEach((flag) => {
         if (option.data?.val === flag && option.id) {
@@ -732,23 +710,13 @@ export const getResultData = (
       },
       category: string,
     ) => {
-      // might DRY this up with preceding collectedFlags function
-      const possibleFlags: Flag[] = flatFlags.filter(
-        (f) => f.category === category,
-      );
-      const keys = possibleFlags.map((f) => f.value);
-      const collectedFlags = Object.values(breadcrumbs).flatMap(
-        ({ answers = [] }) => answers.map((id) => flow[id]?.data?.flag),
-      );
+      const possibleFlags: Flag[] = flatFlags.filter((flag) => flag.category === category);
+      const collectedFlags = collectedFlagValuesByCategory(category, breadcrumbs, flow);
 
-      const filteredCollectedFlags = collectedFlags
-        .filter((flag) => flag && keys.includes(flag))
-        .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
-
+      // The highest order flag collected is our result, else "No result"
       const flag: Flag = possibleFlags.find(
-        (f) => f.value === filteredCollectedFlags[0],
+        (f) => f.value === collectedFlags[0],
       ) || {
-        // value: "PP-NO_RESULT",
         value: undefined,
         text: "No result",
         category: category as FlagSet,
@@ -757,18 +725,17 @@ export const getResultData = (
         description: "",
       };
 
+      // Get breadcrumb nodes that set the result flag value (limited to Question & Checklist types)
       const responses = Object.entries(breadcrumbs)
-        .map(([k, { answers = [] }]) => {
-          const question = { id: k, ...flow[k] };
-
+        .map(([nodeId, { answers = [] }]) => {
+          const question = { id: nodeId, ...flow[nodeId] };
           const questionType = question?.type;
-
           if (!questionType || !SUPPORTED_DECISION_TYPES.includes(questionType))
             return null;
 
-          const selections = answers.map((id) => ({ id, ...flow[id] }));
+          const selections = answers.map((answerId) => ({ id: answerId, ...flow[answerId] }));
           const hidden = !selections.some(
-            (r) => r.data?.flag && r.data.flag === flag?.value,
+            (option) => option.data?.flag && option.data.flag === flag?.value,
           );
 
           return {
@@ -779,18 +746,15 @@ export const getResultData = (
         })
         .filter(Boolean);
 
-      const heading =
-        (flag.value && overrides && overrides[flag.value]?.heading) ||
-        flag.text;
-      const description =
-        (flag.value && overrides && overrides[flag.value]?.description) ||
-        flagSet;
+      // Get the heading & description for this result flag
+      const heading = (flag.value && overrides && overrides[flag.value]?.heading) || flag.text;
+      const description = (flag.value && overrides && overrides[flag.value]?.description) || flagSet;
 
       acc[category] = {
         flag,
         displayText: { heading, description },
-        responses: responses.every((r: any) => r.hidden)
-          ? responses.map((r: any) => ({ ...r, hidden: false }))
+        responses: responses.every((response) => response?.hidden && response.hidden)
+          ? responses.map((response) => ({ ...response, hidden: false }))
           : responses,
       };
 
@@ -891,4 +855,38 @@ export const removeNodesDependentOnPassport = (
     return acc;
   }, [] as string[]);
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
+};
+
+export const collectedFlagValuesByCategory = (
+  category: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
+  breadcrumbs: Store.Breadcrumbs,
+  flow: Store.Flow,
+): Array<Flag["value"]> => {
+  // Get all possible flag values for this flagset category
+  const possibleFlags = flatFlags.filter(
+    (flag) => flag.category === category,
+  );
+  const possibleFlagValues = possibleFlags.map((flag) => flag.value);
+
+  // Get all flags collected so far based on selected answers, excluding flags not in this category
+  const collectedFlags: Array<Flag["value"]> = [];
+  Object.entries(breadcrumbs).forEach(([_nodeId, breadcrumb]) => {
+    if (breadcrumb.answers) {
+      breadcrumb.answers.forEach((answerId) => {
+        const node = flow[answerId];
+        // Account for both new flag values (array) and legacy flag value (string)
+        if (node.data?.flag && Array.isArray(node.data.flag)) {
+          node.data.flag.forEach((flag) => {
+            if (possibleFlagValues.includes(flag)) 
+              collectedFlags.push(flag);
+          });
+        } else if (node.data?.flag && possibleFlagValues.includes(node.data.flag)) {
+          collectedFlags.push(node.data.flag);
+        }
+      });
+    }
+  });
+
+  // Return de-duplicated collected flags in hierarchical order
+  return [...new Set(collectedFlags.sort((a, b) => possibleFlagValues.indexOf(a) - possibleFlagValues.indexOf(b)))];
 };
