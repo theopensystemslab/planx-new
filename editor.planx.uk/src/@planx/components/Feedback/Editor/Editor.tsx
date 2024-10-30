@@ -35,7 +35,6 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
         });
       }
     },
-    validate: () => {},
   });
 
   return (
