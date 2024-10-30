@@ -3,13 +3,15 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
+import { Edges } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
-import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio";
+import DescriptionRadio from "@planx/components/shared/Radio/DescriptionRadio/DescriptionRadio";
 import ImageRadio from "@planx/components/shared/Radio/ImageRadio";
 import { useFormik } from "formik";
-import React from "react";
+import { useStore } from "pages/FlowEditor/lib/store";
+import React, { useEffect } from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -24,6 +26,48 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
+  const [flow, autoAnswerableOptions] = useStore((state) => [
+    state.flow,
+    state.autoAnswerableOptions,
+  ]);
+  
+  if (props.neverAutoAnswer) {
+    return <VisibleQuestion {...props} />;
+  }
+
+  // Questions without edges act like "sticky notes" in the graph for editors only & can be immediately auto-answered
+  let edges: Edges | undefined;
+  if (props.id) edges = flow[props.id]?.edges
+  if (!edges || edges.length === 0) {
+    return <AutoAnsweredQuestion {...props} answerIds={undefined} />;
+  }
+
+  let idsThatCanBeAutoAnswered: string[] | undefined;
+  if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
+  if (idsThatCanBeAutoAnswered) {
+    return (
+      <AutoAnsweredQuestion {...props} answerIds={idsThatCanBeAutoAnswered} />
+    );
+  }
+
+  return <VisibleQuestion {...props} />;
+};
+
+// An auto-answered Question won't be seen by the user, but still leaves a breadcrumb
+const AutoAnsweredQuestion: React.FC<
+  Question & { answerIds: string[] | undefined }
+> = (props) => {
+  useEffect(() => {
+    props.handleSubmit?.({
+      answers: props.answerIds,
+      auto: true,
+    });
+  }, []);
+
+  return null;
+};
+
+const VisibleQuestion: React.FC<Question> = (props) => {
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
     (response) => response.id === previousResponseId,

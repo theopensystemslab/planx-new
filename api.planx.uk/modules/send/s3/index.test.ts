@@ -77,7 +77,8 @@ describe(`uploading an application to S3`, () => {
       .send({ payload: null })
       .expect(400)
       .then((res) => {
-        expect(res.body.error).toMatch(/Missing application payload/);
+        expect(res.body).toHaveProperty("issues");
+        expect(res.body).toHaveProperty("name", "ZodError");
       });
   });
 
@@ -85,7 +86,9 @@ describe(`uploading an application to S3`, () => {
     await supertest(app)
       .post("/upload-submission/unsupported-team")
       .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
-      .send({ payload: { sessionId: "123" } })
+      .send({
+        payload: { sessionId: "3188f052-a032-4755-be63-72b0ba497eb6" },
+      })
       .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(

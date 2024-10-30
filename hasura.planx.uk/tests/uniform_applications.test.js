@@ -60,6 +60,21 @@ describe("uniform_applications", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query uniform applications", () => {
+      expect(i.queries).not.toContain("uniform_applications");
+    });
+
+    test("cannot create, update, or delete uniform applications", () => {
+      expect(i).toHaveNoMutationsFor("uniform_applications");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
@@ -74,6 +89,6 @@ describe("uniform_applications", () => {
 
     test("cannot delete uniform applications", () => {
       expect(i.mutations).not.toContain("delete_uniform_applications");
-    })
+    });
   });
 });

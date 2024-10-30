@@ -26,12 +26,12 @@ import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
-} from "ui/editor/ListManager";
+} from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 type FormikGovPayMetadata =

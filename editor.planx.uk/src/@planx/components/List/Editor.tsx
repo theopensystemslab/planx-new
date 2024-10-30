@@ -5,10 +5,10 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
-import SelectInput from "ui/editor/SelectInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
@@ -26,12 +26,10 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { MaterialDetails } from "./schemas/Materials";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
+import { ResidentialUnitsExistingLDCE } from "./schemas/ResidentialUnits/ExistingLDCE";
 import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained";
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
-import { ResidentialUnitsGLANew } from "./schemas/ResidentialUnits/GLA/New";
-import { ResidentialUnitsGLARebuilt } from "./schemas/ResidentialUnits/GLA/Rebuilt";
-import { ResidentialUnitsGLARemoved } from "./schemas/ResidentialUnits/GLA/Removed";
-import { ResidentialUnitsGLARetained } from "./schemas/ResidentialUnits/GLA/Retained";
+import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/PreviousLDCE";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
 import { Trees } from "./schemas/Trees";
 import { TreesMapFirst } from "./schemas/TreesMapFirst";
@@ -40,22 +38,14 @@ type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
   { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
+  {
+    name: "Residential units (LDCE) - Existing",
+    schema: ResidentialUnitsExistingLDCE,
+  },
   { name: "Residential units - Proposed", schema: ResidentialUnitsProposed },
   {
-    name: "Residential units (GLA) - New",
-    schema: ResidentialUnitsGLANew,
-  },
-  {
-    name: "Residential units (GLA) - Rebuilt",
-    schema: ResidentialUnitsGLARebuilt,
-  },
-  {
-    name: "Residential units (GLA) - Removed",
-    schema: ResidentialUnitsGLARemoved,
-  },
-  {
-    name: "Residential units (GLA) - Retained",
-    schema: ResidentialUnitsGLARetained,
+    name: "Residential units (LDCE) - Previous",
+    schema: ResidentialUnitsPreviousLDCE,
   },
   {
     name: "Residential units (GLA) - Lost",

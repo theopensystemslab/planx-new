@@ -8,6 +8,7 @@ export interface Question extends BaseNodeData {
   text?: string;
   description?: string;
   img?: string;
+  neverAutoAnswer?: boolean;
   responses: {
     id?: string;
     responseKey: string | number;

@@ -11,15 +11,15 @@ import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
 import React, { useEffect, useRef } from "react";
 import { FormikHookReturn } from "types";
-import ImgInput from "ui/editor/ImgInput";
+import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
-import ListManager from "ui/editor/ListManager";
+import ListManager from "ui/editor/ListManager/ListManager";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SimpleMenu from "ui/editor/SimpleMenu";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
@@ -35,6 +35,7 @@ export interface ChecklistProps extends Checklist {
   node?: {
     data?: {
       allRequired?: boolean;
+      neverAutoAnswer?: boolean;
       categories?: Array<Category>;
       description?: string;
       fn?: string;
@@ -282,6 +283,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   const formik = useFormik<Checklist>({
     initialValues: {
       allRequired: props.node?.data?.allRequired || false,
+      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
       groupedOptions: props.groupedOptions,
@@ -417,6 +419,22 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                   />
                 }
                 label="All required"
+              />
+            </InputRow>
+            <InputRow>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formik.values.neverAutoAnswer}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "neverAutoAnswer",
+                        !formik.values.neverAutoAnswer,
+                      )
+                    }
+                  />
+                }
+                label="Always put to user (forgo automation)"
               />
             </InputRow>
           </InputGroup>

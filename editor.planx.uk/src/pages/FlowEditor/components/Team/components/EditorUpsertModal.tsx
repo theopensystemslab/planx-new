@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLabel from "ui/editor/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import {
   AddNewEditorErrors,
@@ -26,6 +26,8 @@ import {
   optimisticallyUpdateExistingMember,
 } from "./lib/optimisticallyUpdateMembersTable";
 
+export const DEMO_TEAM_ID = 32;
+
 export const EditorUpsertModal = ({
   setShowModal,
   showModal,
@@ -34,6 +36,8 @@ export const EditorUpsertModal = ({
 }: EditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
+  const [ teamId, teamSlug ] = useStore(state => [state.teamId, state.teamSlug])
+  const isDemoTeam = teamId === DEMO_TEAM_ID;
 
   const toast = useToast();
 
@@ -56,15 +60,11 @@ export const EditorUpsertModal = ({
   };
 
   const handleSubmitToAddNewUser = async () => {
-    const { teamId, teamSlug } = useStore.getState();
-
-    const createUserResult = await createAndAddUserToTeam(
-      formik.values.email,
-      formik.values.firstName,
-      formik.values.lastName,
+    const createUserResult = await createAndAddUserToTeam({
+      newUser: formik.values,
       teamId,
       teamSlug,
-    ).catch((err) => {
+    }).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
       }
@@ -114,6 +114,8 @@ export const EditorUpsertModal = ({
       firstName: initialValues?.firstName || "",
       lastName: initialValues?.lastName || "",
       email: initialValues?.email || "",
+      // Users within the Demo team are granted a role with a restricted permission set
+      role: isDemoTeam ? "demoUser" : "teamEditor",
     },
     validationSchema: upsertEditorSchema,
     onSubmit: handleSubmit,

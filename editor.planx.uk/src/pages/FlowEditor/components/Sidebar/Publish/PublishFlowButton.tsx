@@ -12,7 +12,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 
 import {
   AlteredNode,
@@ -96,14 +96,14 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
     const user = await lastPublisher(flowId);
 
     setLastPublishedTitle(formatLastPublishMessage(date, user));
-  });
+  }, [flowId]);
 
   const _validateAndDiffRequest = useAsync(async () => {
     const newChanges = await validateAndDiffFlow(flowId);
     setAlteredNodes(
       newChanges?.data.alteredNodes ? newChanges.data.alteredNodes : [],
     );
-  });
+  }, [flowId]);
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];

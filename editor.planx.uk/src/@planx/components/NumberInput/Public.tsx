@@ -1,11 +1,11 @@
 import Card from "@planx/components/shared/Preview/Card";
-import CardHeader from "@planx/components/shared/Preview/CardHeader";
+import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import isNil from "lodash/isNil";
 import React, { useEffect, useRef } from "react";
 import InputLabel from "ui/public/InputLabel";
-import Input from "ui/shared/Input";
+import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 

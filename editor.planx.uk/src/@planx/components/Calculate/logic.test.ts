@@ -1,11 +1,9 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { clickContinue, visitedNodes } from "pages/FlowEditor/lib/__tests__/utils";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 
 const { getState, setState } = useStore;
-const { upcomingCardIds, resetPreview, record } = getState();
-
-// Helper method
-const visitedNodes = () => Object.keys(getState().breadcrumbs);
+const { upcomingCardIds, resetPreview, autoAnswerableOptions } = getState();
 
 beforeEach(() => {
   resetPreview();
@@ -17,13 +15,12 @@ test("When formatOutputForAutomations is true, Calculate writes an array and fut
   expect(upcomingCardIds()).toEqual(["Calculate", "Question"]);
 
   // Step forwards through the Calculate
-  record("Calculate", { data: { testGroup: ["2"] }, auto: true });
-  upcomingCardIds();
+  clickContinue("Calculate", { data: { testGroup: ["2"] }, auto: true });
 
-  // The Question has been auto-answered
-  expect(visitedNodes()).toEqual(["Calculate", "Question"]);
-
-  expect(upcomingCardIds()).toEqual(["Group2Notice"]);
+  // The Question can be auto-answered
+  expect(visitedNodes()).toEqual(["Calculate"]);
+  expect(upcomingCardIds()).toEqual(["Question"])
+  expect(autoAnswerableOptions("Question")).toEqual(["Group2Response"]);
 });
 
 test("When formatOutputForAutomations is false, Calculate writes a number and future questions are not auto-answered", () => {
@@ -32,13 +29,12 @@ test("When formatOutputForAutomations is false, Calculate writes a number and fu
   expect(upcomingCardIds()).toEqual(["Calculate", "Question"]);
 
   // Step forwards through the Calculate
-  record("Calculate", { data: { testGroup: 2 }, auto: true });
-  upcomingCardIds();
+  clickContinue("Calculate", { data: { testGroup: 2 }, auto: true });
 
-  // The Question has NOT been auto-answered
+  // The Question cannot be auto-answered
   expect(visitedNodes()).toEqual(["Calculate"]);
-
   expect(upcomingCardIds()).toEqual(["Question"]);
+  expect(autoAnswerableOptions("Question")).toBeUndefined();
 });
 
 const flowWithAutomation: Store.Flow = {

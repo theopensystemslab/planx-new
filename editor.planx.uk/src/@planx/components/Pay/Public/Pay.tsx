@@ -6,7 +6,7 @@ import {
 import { PublicProps } from "@planx/components/ui";
 import { logger } from "airbrake";
 import axios from "axios";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { setLocalFlow } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useReducer } from "react";
@@ -67,14 +67,14 @@ function Component(props: Props) {
     state.flowSlug,
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
+
   const defaultMetadata = [
     { key: "source", value: "PlanX" },
     { key: "flow", value: flowSlug },
     { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
   ];
-  const metadata = props.govPayMetadata?.length
-    ? props.govPayMetadata
-    : defaultMetadata;
+
+  const metadata = [...(props.govPayMetadata || []), ...defaultMetadata];
 
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {

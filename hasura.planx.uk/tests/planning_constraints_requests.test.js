@@ -25,7 +25,9 @@ describe("planning_constraints_requests", () => {
     test("has full access to query and mutate planning constraints requests", () => {
       expect(i.queries).toContain("planning_constraints_requests");
       expect(i.mutations).toContain("insert_planning_constraints_requests");
-      expect(i.mutations).toContain("update_planning_constraints_requests_by_pk");
+      expect(i.mutations).toContain(
+        "update_planning_constraints_requests_by_pk"
+      );
       expect(i.mutations).toContain("delete_planning_constraints_requests");
     });
   });
@@ -60,6 +62,21 @@ describe("planning_constraints_requests", () => {
     });
   });
 
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
+    });
+
+    test("cannot query planning_constraints_requests", () => {
+      expect(i.queries).not.toContain("planning_constraints_requests");
+    });
+
+    test("cannot create, update, or delete planning_constraints_requests", () => {
+      expect(i).toHaveNoMutationsFor("planning_constraints_requests");
+    });
+  });
+
   describe("api", () => {
     let i;
     beforeAll(async () => {
@@ -68,15 +85,17 @@ describe("planning_constraints_requests", () => {
 
     test("can query planning_constraints_requests", () => {
       expect(i.queries).toContain("planning_constraints_requests");
-    })
+    });
 
     test("can insert planning_constraints_requests", () => {
       expect(i.mutations).toContain("insert_planning_constraints_requests");
     });
 
     test("cannot update or delete planning_constriants_requests", () => {
-      expect(i.mutations).not.toContain("update_planning_constraints_requests_by_pk");
+      expect(i.mutations).not.toContain(
+        "update_planning_constraints_requests_by_pk"
+      );
       expect(i.mutations).not.toContain("delete_planning_constraints_requests");
-    })
+    });
   });
 });

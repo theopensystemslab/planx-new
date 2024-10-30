@@ -84,6 +84,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
                 })
               }
               drawMany={mapOptions?.drawMany}
+              hideDrawLabels={mapOptions?.drawMany}
               drawColor={mapOptions?.drawColor}
               drawType={mapOptions?.drawType}
               drawPointer="crosshair"

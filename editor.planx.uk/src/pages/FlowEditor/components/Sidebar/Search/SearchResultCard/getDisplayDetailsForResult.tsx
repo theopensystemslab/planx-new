@@ -4,14 +4,16 @@ import {
   IndexedNode,
 } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
+import { Checklist } from "@planx/components/Checklist/model";
 import { Confirmation } from "@planx/components/Confirmation/model";
 import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
 import { List } from "@planx/components/List/model";
 import { NextSteps } from "@planx/components/NextSteps/model";
-import { ChecklistField } from "@planx/components/shared/Schema/model";
+import { Pay } from "@planx/components/Pay/model";
+import { Schema } from "@planx/components/shared/Schema/model";
 import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
-import { capitalize, get } from "lodash";
+import { capitalize } from "lodash";
 import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
@@ -41,8 +43,6 @@ const keyFormatters: KeyMap = {
   },
   "data.fileTypes.fn": {
     getDisplayKey: () => "File type (data)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].fn!,
   },
   "data.dataFieldBoundary": {
     getDisplayKey: () => "Boundary",
@@ -68,31 +68,18 @@ const keyFormatters: KeyMap = {
   "data.info": {
     getDisplayKey: () => "Why it matters",
   },
+  "data.categories.title": {},
   "data.steps.title": {
     getDisplayKey: () => "Title (step)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].title,
   },
   "data.steps.description": {
     getDisplayKey: () => "Description (step)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].description,
   },
   "data.steps.url": {
     getDisplayKey: () => "URL (step)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as NextSteps).steps[refIndex].url!,
   },
   "data.fileTypes.name": {
     getDisplayKey: () => "Name (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
-  },
-  "data.fileTypes.moreInformation.notes": {
-    getDisplayKey: () => "Internal notes (file type)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex]
-        .moreInformation!.notes!,
   },
   "data.fileTypes.moreInformation.howMeasured": {
     getDisplayKey: () => "How is it defined (file type)",
@@ -103,36 +90,39 @@ const keyFormatters: KeyMap = {
   "data.fileTypes.moreInformation.info": {
     getDisplayKey: () => "Why it matters (file type)",
   },
+  "data.units": {
+    getDisplayKey: () => "Unit type",
+  },
+  "data.schemaName": {
+    getDisplayKey: () => "Schema name",
+  },
   "data.schema.fields.data.description": {
     getDisplayKey: () => "Description",
   },
   "data.schema.fields.data.options.data.description": {
-    getDisplayKey: () => "Description",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as ChecklistField).data.options[refIndex].data
-        .description!,
+    getDisplayKey: () => "Option (description)",
   },
   "data.schema.fields.data.options.text": {
     getDisplayKey: () => "Option",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as FileUploadAndLabel).fileTypes[refIndex].name,
   },
   "data.tasks.title": {
-    getDisplayKey: () => "Title",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as TaskList).tasks[refIndex].title,
+    getDisplayKey: () => "Title (task)",
   },
   "data.tasks.description": {
-    getDisplayKey: () => "Description",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as TaskList).tasks[refIndex].description,
+    getDisplayKey: () => "Description (task)",
   },
   ...Object.fromEntries(
     flatFlags.flatMap(({ value }) => [
       [
+        `data.overrides.${value}.heading`,
+        {
+          getDisplayKey: () => `Heading (${value} flag)`,
+        },
+      ],
+      [
         `data.overrides.${value}.description`,
         {
-          displayKey: () => "Description",
+          getDisplayKey: () => `Description (${value} flag)`,
         },
       ],
     ]),
@@ -148,13 +138,9 @@ const keyFormatters: KeyMap = {
   },
   "data.nextSteps.title": {
     getDisplayKey: () => "Title (next steps)",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Confirmation).nextSteps![refIndex].title,
   },
   "data.nextSteps.description": {
-    getDisplayKey: () => "Description",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as Confirmation).nextSteps![refIndex].description,
+    getDisplayKey: () => "Description (next steps)",
   },
   "data.newAddressTitle": {
     getDisplayKey: () => "Title (new address)",
@@ -193,13 +179,19 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Nominee description",
   },
   "data.yourDetailsTitle": {
-    getDisplayKey: () => "Your details title",
+    getDisplayKey: () => "Title (your details)",
   },
   "data.yourDetailsDescription": {
-    getDisplayKey: () => "Your details description",
+    getDisplayKey: () => "Description (your details)",
   },
   "data.yourDetailsLabel": {
-    getDisplayKey: () => "Your details label",
+    getDisplayKey: () => "Label (your details)",
+  },
+  "data.govPayMetadata.key": {
+    getDisplayKey: () => "GOV.UK Pay metadata (key)",
+  },
+  "data.govPayMetadata.value": {
+    getDisplayKey: () => "GOV.UK Pay metadata (value)",
   },
   // Calculate contains both input and output data values
   formula: {
@@ -208,34 +200,34 @@ const keyFormatters: KeyMap = {
   },
   "data.output": {
     getDisplayKey: () => "Output (data)",
-    getHeadline: ({ item }) => (item.data as unknown as Calculate).output,
   },
   // List contains data variables nested within its schema
   "data.schema.fields.data.fn": {
     getDisplayKey: () => "Data",
-    getHeadline: ({ item, refIndex }) =>
-      (item.data as unknown as List).schema.fields[refIndex].data.fn,
   },
   "data.schema.fields.data.options.data.val": {
     getDisplayKey: () => "Option (data)",
-    getHeadline: ({ item, refIndex }) => {
-      // Fuse.js flattens deeply nested arrays when using refIndex
-      const options = (item.data as unknown as List).schema.fields
-        .filter((field) => field.type === "question")
-        .flatMap((field) => field.data.options);
-      return options[refIndex].data.val || "";
-    },
   },
 };
 
 const componentFormatters: ComponentMap = {
-  // Answers are mapped to their parent questions
+  // Answers are mapped to their parent questions / checklists
   [ComponentType.Answer]: {
     getDisplayKey: () => "Option (title)",
-    getIconKey: () => ComponentType.Question,
+    getIconKey: ({ item }) => {
+      const parentNode = useStore.getState().flow[item.parentId];
+      return parentNode.type!;
+    },
     getTitle: ({ item }) => {
       const parentNode = useStore.getState().flow[item.parentId];
       return parentNode.data?.text;
+    },
+    getComponentType: ({ item }) => {
+      const parentNode = useStore.getState().flow[item.parentId];
+      const parentType = parentNode.type!;
+      const formatted = capitalize(SLUGS[parentType].replaceAll("-", " "));
+
+      return formatted;
     },
   },
 };
@@ -248,7 +240,7 @@ const defaultFormatter: SearchResultFormatter = {
   getIconKey: ({ item }) => item.type,
   getTitle: ({ item }) =>
     (item.data?.title as string) || (item.data?.text as string) || "",
-  getHeadline: ({ item, key }) => get(item, key)?.toString() || "",
+  getHeadline: ({ matchValue }) => matchValue,
   getComponentType: ({ item }) =>
     capitalize(SLUGS[item.type].replaceAll("-", " ")),
 };

@@ -1,4 +1,4 @@
-import { Role, User } from "@opensystemslab/planx-core/types";
+import { Role, TeamRole, User } from "@opensystemslab/planx-core/types";
 import React, { SetStateAction } from "react";
 
 export type TeamMember = ActiveTeamMember | ArchivedTeamMember;
@@ -25,6 +25,7 @@ export interface AddNewEditorFormValues {
   email: string;
   firstName: string;
   lastName: string;
+  role: TeamRole;
 }
 
 export interface UpdateEditorFormValues {

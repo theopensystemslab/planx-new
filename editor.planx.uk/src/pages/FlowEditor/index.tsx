@@ -3,9 +3,9 @@ import "./floweditor.scss";
 import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
-import { HEADER_HEIGHT_EDITOR } from "components/Header";
+import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import React, { useRef } from "react";
-import { useCurrentRoute } from "react-navi";
+import { rootFlowPath } from "routes/utils";
 
 import Flow from "./components/Flow";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
@@ -40,8 +40,8 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const FlowEditor = () => {
-  const [flow, ...breadcrumbs] =
-    useCurrentRoute().url.pathname.split("/").at(-1)?.split(",") || [];
+  const flowPath = rootFlowPath(true).split("/")[2];
+  const [flow, ...breadcrumbs] = flowPath.split(",");
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);

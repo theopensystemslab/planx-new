@@ -9,6 +9,7 @@ import { combinedEventsPayloadSchema } from "./createSendEvents/types.js";
 import { downloadApplicationFiles } from "./downloadApplicationFiles/index.js";
 import { sendToS3 } from "./s3/index.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
+import { sendIntegrationSchema } from "./types.js";
 
 const router = Router();
 
@@ -17,11 +18,37 @@ router.post(
   validate(combinedEventsPayloadSchema),
   createSendEvents,
 );
-router.post("/bops/:localAuthority", useHasuraAuth, sendToBOPS);
-router.post("/uniform/:localAuthority", useHasuraAuth, sendToUniform);
-router.post("/idox/:localAuthority", useHasuraAuth, sendToIdoxNexus);
-router.post("/email-submission/:localAuthority", useHasuraAuth, sendToEmail);
+router.post(
+  "/bops/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToBOPS,
+);
+router.post(
+  "/uniform/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToUniform,
+);
+router.post(
+  "/idox/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToIdoxNexus,
+);
+router.post(
+  "/email-submission/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToEmail,
+);
+router.post(
+  "/upload-submission/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToS3,
+);
+
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);
-router.post("/upload-submission/:localAuthority", useHasuraAuth, sendToS3);
 
 export default router;

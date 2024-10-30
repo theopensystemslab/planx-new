@@ -1,5 +1,5 @@
 const { introspectAs, gqlAdmin, gqlPublic } = require("./utils");
-const { v4: uuidV4 } = require('uuid');
+const { v4: uuidV4 } = require("uuid");
 const assert = require("assert");
 
 describe("payment_requests", () => {
@@ -22,8 +22,8 @@ describe("payment_requests", () => {
     });
 
     describe("public query", () => {
-      const sessionIds = [uuidV4(), uuidV4()]
-      const paymentRequestIds = [uuidV4(), uuidV4()]
+      const sessionIds = [uuidV4(), uuidV4()];
+      const paymentRequestIds = [uuidV4(), uuidV4()];
 
       beforeAll(async () => {
         await insertSessions(sessionIds);
@@ -32,23 +32,25 @@ describe("payment_requests", () => {
 
       afterAll(async () => {
         await deleteSessions(sessionIds);
-      })
+      });
 
       test("can QUERY records", () => {
         expect(i.queries).toContain("payment_requests");
         expect(i.queries).toContain("payment_requests_by_pk");
       });
 
-      test("requires x-hasura-payment-request-id to query", async() => {
+      test("requires x-hasura-payment-request-id to query", async () => {
         const query = `
           query GetAllPaymentRequests {
             payment_requests {
               id
             }
           }
-        `
+        `;
         const publicRes = await gqlPublic(query);
-        expect(publicRes.errors[0].message).toMatch(/missing session variable: "x-hasura-payment-request-id"/)
+        expect(publicRes.errors[0].message).toMatch(
+          /missing session variable: "x-hasura-payment-request-id"/
+        );
       });
 
       test("can only access records with a known id", async () => {
@@ -58,7 +60,7 @@ describe("payment_requests", () => {
               id
             }
           }
-        `
+        `;
         const headers = {
           "x-hasura-payment-request-id": paymentRequestIds[0],
         };
@@ -75,7 +77,7 @@ describe("payment_requests", () => {
               paid_at
             }
           }
-        `
+        `;
         const publicRes = await gqlPublic(query);
         expect(publicRes).toHaveProperty("errors");
 
@@ -117,6 +119,21 @@ describe("payment_requests", () => {
     let i;
     beforeAll(async () => {
       i = await introspectAs("teamEditor");
+    });
+
+    test("cannot query payment_requests", () => {
+      expect(i.queries).not.toContain("payment_requests");
+    });
+
+    test("cannot create, update, or delete payment_requests", () => {
+      expect(i).toHaveNoMutationsFor("payment_requests");
+    });
+  });
+
+  describe("demoUser", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("demoUser");
     });
 
     test("cannot query payment_requests", () => {
@@ -205,7 +222,7 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
         }
       }
     }
-  `
+  `;
   const res = await gqlAdmin(query);
   ids = res.data.insert_payment_requests.returning.map((row) => row.id);
   assert.strictEqual(ids.length, 2);
@@ -214,10 +231,15 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
 const deleteSessions = async (sessionIds) => {
   const res = await gqlAdmin(`
     mutation {
-      delete_lowcal_sessions(where: {id: {_in: ${JSON.stringify(sessionIds)}}}) {
+      delete_lowcal_sessions(where: {id: {_in: ${JSON.stringify(
+        sessionIds
+      )}}}) {
         affected_rows
       }
     }
   `);
-  assert.strictEqual(res.data.delete_lowcal_sessions.affected_rows, sessionIds.length);
+  assert.strictEqual(
+    res.data.delete_lowcal_sessions.affected_rows,
+    sessionIds.length
+  );
 };

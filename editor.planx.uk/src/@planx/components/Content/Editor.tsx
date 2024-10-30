@@ -1,17 +1,14 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Content } from "@planx/components/Content/model";
 import { parseContent } from "@planx/components/Content/model";
-import {
-  EditorProps,
-  ICONS,
-} from "@planx/components/ui";
+import { EditorProps, ICONS } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
-import ColorPicker from "ui/editor/ColorPicker";
+import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import RichTextInput from "ui/editor/RichTextInput";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import InputRow from "ui/shared/InputRow";
 
 export type Props = EditorProps<TYPES.Content, Content>;
