@@ -589,6 +589,7 @@
     - role: demoUser
       permission:
         columns:
+          - analytics_link
           - created_at
           - creator_id
           - data
