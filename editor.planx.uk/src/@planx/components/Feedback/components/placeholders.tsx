@@ -11,3 +11,5 @@ Don't share any personal or financial information in your feedback. If you do we
 
 export const disclaimerPlaceholder =
   "The information collected here isn't monitored by planning officers. Don't use it to give extra information about your project or submission. If you do, it cannot be used to assess your project.";
+
+export const titlePlaceholder = "Tell us what you think";

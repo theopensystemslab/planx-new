@@ -2,7 +2,10 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
-import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import {
+  CardHeaderWrapper,
+  TitleWrapper,
+} from "@planx/components/shared/Preview/CardHeader/styled";
 import type { PublicProps } from "@planx/components/ui";
 import { useFormik } from "formik";
 import React from "react";
@@ -13,6 +16,7 @@ import NeutralFace from "ui/images/feedback_filled-03.svg";
 import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
 import { FaceBox } from "../components/FaceBox";
@@ -41,20 +45,37 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <CardHeader title={props.title} />
-      <Typography pt={4}>
-        {props.description}
-        {/* This service is a work in progress, any feedback you share about your
-        experience will help us to improve it.
-      </Typography>
-      <Typography pt={2}>
-        Don't share any personal or financial information in your feedback. If
-        you do we will act according to our{" "}
-        <Link href={props.privacyPolicyLink ?? ""}>privacy policy</Link>. */}
-      </Typography>
+      <CardHeaderWrapper>
+        <TitleWrapper mr={1} pt={0.5}>
+          <Typography
+            variant="h2"
+            role="heading"
+            aria-level={1}
+            component="h1"
+            sx={{ textWrap: "balance" }}
+          >
+            <ReactMarkdownOrHtml source={props.title} id={"TITLE"} />
+          </Typography>
+        </TitleWrapper>
+        <ReactMarkdownOrHtml
+          source={props.description}
+          id={"DESCRIPTION_TEXT"}
+          openLinksOnNewTab
+        />
+      </CardHeaderWrapper>
 
       <Box pt={2} mb={3}>
-        <InputLabel label="How would you rate your experience with this service?" />
+        {props.ratingQuestion && (
+          <InputLabel
+            label={
+              <ReactMarkdownOrHtml
+                source={props.ratingQuestion}
+                id={"RATING_QUESTION"}
+                openLinksOnNewTab
+              />
+            }
+          />
+        )}
         <StyledToggleButtonGroup
           value={formik.values.feedbackScore}
           exclusive
@@ -96,18 +117,26 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
             />
           </Grid>
         </StyledToggleButtonGroup>
-        <InputLabel label="Please tell us more about your experience">
-          <RichTextInput
-            name="feedback"
-            value={formik.values.feedback}
-            onChange={formik.handleChange}
+        {props.freeformQuestion && (
+          <InputLabel
+            label={
+              <ReactMarkdownOrHtml
+                source={props.freeformQuestion}
+                id={"RATING_QUESTION"}
+                openLinksOnNewTab
+              />
+            }
           />
-        </InputLabel>
+        )}
+        <RichTextInput
+          name="feedback"
+          value={formik.values.feedback}
+          placeholder="What did you think?"
+          onChange={formik.handleChange}
+        />
       </Box>
       <Typography variant="caption">
-        The information collected here isn't monitored by planning officers.
-        Don't use it to give extra information about your project or submission.
-        If you do, it cannot be used to assess your project.
+        <ReactMarkdownOrHtml source={props?.disclaimer} id={"DISCLAIMER"} />
       </Typography>
     </Card>
   );

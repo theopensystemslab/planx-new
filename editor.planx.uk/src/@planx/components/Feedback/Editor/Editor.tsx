@@ -10,7 +10,6 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
-import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import {
@@ -18,6 +17,7 @@ import {
   disclaimerPlaceholder,
   freeformQuestionPlaceholder,
   ratingQuestionPlaceholder,
+  titlePlaceholder,
 } from "../components/placeholders";
 import { Feedback, parseFeedback } from "../model";
 
@@ -34,18 +34,20 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
         });
       }
     },
+    validate: () => {},
   });
+
   return (
-    <form onSubmit={formik.handleSubmit} id="feedback-modal">
+    <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Feedback" Icon={ICONS[TYPES.Feedback]}>
           <InputGroup flowSpacing>
             <InputRow>
               <InputLabel label="Title">
-                <Input
-                  format="large"
+                <RichTextInput
+                  name="title"
+                  value={formik.values.title || titlePlaceholder}
                   placeholder="Tell us what you think"
-                  value={formik.values.title}
                   onChange={formik.handleChange}
                 />
               </InputLabel>
@@ -62,20 +64,20 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
             </InputRow>
 
             <InputRow>
-              <InputLabel label="Rating question" htmlFor="rating-question">
+              <InputLabel label="Rating question" htmlFor="ratingQuestion">
                 <RichTextInput
                   placeholder={ratingQuestionPlaceholder}
-                  name="rating-question"
+                  name="ratingQuestion"
                   value={formik.values.ratingQuestion}
                   onChange={formik.handleChange}
                 />
               </InputLabel>
             </InputRow>
             <InputRow>
-              <InputLabel label="Freeform question" htmlFor="freeform-question">
+              <InputLabel label="Freeform question" htmlFor="freeformQuestion">
                 <RichTextInput
                   placeholder={freeformQuestionPlaceholder}
-                  name="freeform-question"
+                  name="freeformQuestion"
                   value={formik.values.freeformQuestion}
                   onChange={formik.handleChange}
                 />
