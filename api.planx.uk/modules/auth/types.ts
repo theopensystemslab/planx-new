@@ -4,7 +4,7 @@ export type HasuraNamespace = "https://hasura.io/jwt/claims";
 export type HasuraClaims = {
   "x-hasura-allowed-roles": Role[];
   "x-hasura-default-role": Role;
-  "x-hasura-user-id": string;
+  "x-hasura-user-id": number;
 };
 export type HasuraJWT = Record<HasuraNamespace, HasuraClaims>;
 

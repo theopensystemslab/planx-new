@@ -33,7 +33,7 @@ export const buildJWTForAPIRole = () =>
 const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({
   "x-hasura-allowed-roles": getAllowedRolesForUser(user),
   "x-hasura-default-role": getDefaultRoleForUser(user),
-  "x-hasura-user-id": user.id.toString(),
+  "x-hasura-user-id": user.id,
 });
 
 /**

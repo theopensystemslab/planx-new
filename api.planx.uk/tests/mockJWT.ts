@@ -8,7 +8,7 @@ function getJWT({ role }: { role: Role }) {
     "https://hasura.io/jwt/claims": {
       "x-hasura-allowed-roles": [role],
       "x-hasura-default-role": role,
-      "x-hasura-user-id": "123",
+      "x-hasura-user-id": 123,
     },
   };
 

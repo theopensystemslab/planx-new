@@ -51,7 +51,7 @@ export async function createAuthenticatedSession({
 }): Promise<Page> {
   const browserContext = await browser.newContext();
   const page = await browserContext.newPage();
-  const token = generateAuthenticationToken(`${userId}`);
+  const token = generateAuthenticationToken(userId);
   await browserContext.addCookies([
     {
       name: "jwt",

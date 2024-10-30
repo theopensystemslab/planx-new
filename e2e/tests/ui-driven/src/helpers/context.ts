@@ -106,15 +106,15 @@ export async function tearDownTestContext(context: Context) {
   }
 }
 
-export function generateAuthenticationToken(userId: string) {
+export function generateAuthenticationToken(userId: number) {
   assert(process.env.JWT_SECRET);
   return sign(
     {
-      sub: `${userId}`,
+      sub: userId.toString(),
       "https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": ["platformAdmin", "public"],
         "x-hasura-default-role": "platformAdmin",
-        "x-hasura-user-id": `${userId}`,
+        "x-hasura-user-id": userId,
       },
     },
     process.env.JWT_SECRET,

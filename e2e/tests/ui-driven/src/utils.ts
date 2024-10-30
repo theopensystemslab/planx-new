@@ -25,13 +25,13 @@ export const gqlAdmin = async (query, variables = {}) => {
   return json;
 };
 
-export const getJWT = (userId) => {
+export const getJWT = (userId: number) => {
   const data = {
     sub: String(userId),
     "https://hasura.io/jwt/claims": {
       "x-hasura-allowed-roles": ["platformAdmin", "public"],
       "x-hasura-default-role": "platformAdmin",
-      "x-hasura-user-id": String(userId),
+      "x-hasura-user-id": userId,
     },
   };
 
