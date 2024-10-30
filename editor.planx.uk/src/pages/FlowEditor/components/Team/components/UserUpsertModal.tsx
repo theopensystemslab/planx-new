@@ -13,10 +13,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 import {
-  AddNewEditorErrors,
+  AddNewMemberErrors,
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
-import { upsertEditorSchema } from "../formSchema";
+import { upsertMemberSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { updateTeamMember } from "../queries/updateUser";
 import { SettingsDialog } from "../styles";
@@ -28,7 +28,7 @@ import {
 
 export const DEMO_TEAM_ID = 32;
 
-export const EditorUpsertModal = ({
+export const UserUpsertModal = ({
   setShowModal,
   showModal,
   initialValues,
@@ -117,7 +117,7 @@ export const EditorUpsertModal = ({
       // Users within the Demo team are granted a role with a restricted permission set
       role: isDemoTeam ? "demoUser" : "teamEditor",
     },
-    validationSchema: upsertEditorSchema,
+    validationSchema: upsertMemberSchema,
     onSubmit: handleSubmit,
   });
 
@@ -136,7 +136,7 @@ export const EditorUpsertModal = ({
         >
           <Box sx={{ mt: 1, mb: 4 }}>
             <Typography variant="h3" component="h2" id="dialog-heading">
-              Add a new editor
+              Add a new { isDemoTeam ? "demo user" : "editor" }
             </Typography>
           </Box>
           <InputGroup flowSpacing>
@@ -191,7 +191,7 @@ export const EditorUpsertModal = ({
           <ErrorWrapper
             error={
               showUserAlreadyExistsError
-                ? AddNewEditorErrors.USER_ALREADY_EXISTS.errorMessage
+                ? AddNewMemberErrors.USER_ALREADY_EXISTS.errorMessage
                 : undefined
             }
           >
