@@ -22,7 +22,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
 import { Option } from "../shared";
-import type { PublicProps } from "../ui";
+import type { PublicProps } from "../shared/types";
 
 export type Props = PublicProps<Checklist>;
 

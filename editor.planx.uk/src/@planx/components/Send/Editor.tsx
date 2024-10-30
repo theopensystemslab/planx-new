@@ -16,9 +16,9 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { array, object } from "yup";
 
-import { EditorProps, ICONS } from "../ui";
-import { Send } from "./model";
-import { parseContent } from "./model";
+import { ICONS } from "../shared/icons";
+import { EditorProps } from "../shared/types";
+import { parseContent, Send } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 

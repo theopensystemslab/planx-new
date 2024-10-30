@@ -14,25 +14,24 @@ import {
   validationSchema,
 } from "@planx/components/Pay/model";
 import { parseBaseNodeData } from "@planx/components/shared";
-import {
-  EditorProps,
-  ICONS,
-  InternalNotes,
-  MoreInformation,
-} from "@planx/components/ui";
 import { Form, Formik, useFormikContext } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
+import { InternalNotes } from "ui/editor/InternalNotes";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+
+import { ICONS } from "../shared/icons";
+import { EditorProps } from "../shared/types";
 
 type FormikGovPayMetadata =
   | Record<keyof GovPayMetadata, string>[]

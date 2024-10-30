@@ -14,9 +14,11 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
+import { InternalNotes } from "../../../ui/editor/InternalNotes";
+import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
+import { ICONS } from "../shared/icons";
 import PermissionSelect from "../shared/PermissionSelect";
-import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
   node: {

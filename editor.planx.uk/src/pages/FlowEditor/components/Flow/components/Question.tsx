@@ -3,7 +3,7 @@ import {
   ComponentType as TYPES,
   NodeTags,
 } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/ui";
+import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import React from "react";
 import { useDrag } from "react-dnd";

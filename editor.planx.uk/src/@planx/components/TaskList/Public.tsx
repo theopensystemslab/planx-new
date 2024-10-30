@@ -1,7 +1,7 @@
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { PublicProps } from "@planx/components/shared/types";
 import type { TaskList } from "@planx/components/TaskList/model";
-import { PublicProps } from "@planx/components/ui";
 import React from "react";
 import NumberedList from "ui/public/NumberedList";
 

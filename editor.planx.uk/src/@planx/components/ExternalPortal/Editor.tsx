@@ -4,7 +4,7 @@ import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { ICONS } from "../ui";
+import { ICONS } from "../shared/icons";
 
 interface Flow {
   id: string;

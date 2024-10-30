@@ -1,7 +1,7 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
@@ -13,6 +13,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
+import { ICONS } from "../shared/icons";
 import type { FindProperty } from "./model";
 import { parseFindProperty } from "./model";
 
