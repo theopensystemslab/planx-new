@@ -15,6 +15,6 @@ export const setupTeamMembersScreen = async () => {
       </ToastContextProvider>
     </DndProvider>,
   );
-  await screen.findByTestId("team-editors");
+  await screen.findByTestId("team-members");
   return setupResult;
 };

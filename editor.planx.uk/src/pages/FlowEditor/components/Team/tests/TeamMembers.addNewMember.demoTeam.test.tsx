@@ -2,9 +2,9 @@ import { waitFor, within } from "@testing-library/react";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { vi } from "vitest";
 
-import { DEMO_TEAM_ID } from "../components/EditorUpsertModal";
+import { DEMO_TEAM_ID } from "../components/UserUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
+import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import { mockPlatformAdminUser } from "./mocks/mockUsers";
 
@@ -34,9 +34,9 @@ describe("adding a new user to the Demo team", () => {
     expect(currentUsers).toHaveLength(3);
 
     const { user, getByTestId } = await setupTeamMembersScreen();
-    await userTriesToAddNewEditor(user);
+    await userTriesToAddNewMember(user);
 
-    const membersTable = getByTestId("members-table-add-editor");
+    const membersTable = getByTestId("members-table-add-member");
 
     await waitFor(() => {
       expect(
