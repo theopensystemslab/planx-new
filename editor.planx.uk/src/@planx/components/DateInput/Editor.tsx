@@ -6,7 +6,7 @@ import {
   paddedDate,
   parseDateInput,
 } from "@planx/components/DateInput/model";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -16,6 +16,8 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import DateInputUi from "ui/shared/DateInput/DateInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+
+import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
 

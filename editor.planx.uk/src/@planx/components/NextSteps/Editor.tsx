@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
 import { parseNextSteps } from "@planx/components/NextSteps/model";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import ListManager, {
@@ -14,6 +14,8 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+
+import { ICONS } from "../shared/icons";
 
 type Props = EditorProps<TYPES.NextSteps, NextSteps>;
 

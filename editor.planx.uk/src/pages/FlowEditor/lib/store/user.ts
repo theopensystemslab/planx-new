@@ -36,10 +36,10 @@ export const userStore: StateCreator<
     const user = get().getUser();
     if (!user) return false;
 
-    const hasTeamEditorRole = (team: UserTeams) =>
-      team.role === "teamEditor" && team.team.slug === teamSlug;
+    const canEditTeam = (team: UserTeams) =>
+      team.role !== "teamViewer" && team.team.slug === teamSlug;
 
-    return user.isPlatformAdmin || user.teams.some(hasTeamEditorRole);
+    return user.isPlatformAdmin || user.teams.some(canEditTeam);
   },
 
   async initUserStore() {

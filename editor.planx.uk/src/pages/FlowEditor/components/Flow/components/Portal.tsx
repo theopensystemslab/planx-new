@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { ICONS } from "@planx/components/ui";
+import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";

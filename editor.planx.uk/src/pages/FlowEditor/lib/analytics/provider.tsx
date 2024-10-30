@@ -46,6 +46,7 @@ export const ALLOW_LIST = [
   "application.declaration.connection",
   "application.information.harmful",
   "application.information.sensitive",
+  "application.type",
   "drawBoundary.action",
   "findProperty.action",
   "_overrides",

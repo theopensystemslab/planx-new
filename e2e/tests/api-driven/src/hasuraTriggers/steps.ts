@@ -1,5 +1,5 @@
 import { After, Given, Then, When, World } from "@cucumber/cucumber";
-import { cleanup } from "./helpers";
+import { cleanup, createDemoUser } from "./helpers";
 import { User } from "@opensystemslab/planx-core/types";
 import { $admin } from "../client";
 import assert from "assert";
@@ -8,18 +8,20 @@ import { createTeam, createUser } from "../globalHelpers";
 export class CustomWorld extends World {
   user!: User;
   templatesTeamId!: number;
+  demoTeamId!: number;
 }
 
 After("@add-user-trigger", async function () {
   await cleanup();
 });
 
-Given("the Templates team exists", async function (this) {
-  const templatesTeamId = await createTeam({ slug: "templates" });
+Given("the {string} team exists", async function (this, input) {
+  const teamSlug = input.toLowerCase();
+  const teamId = await createTeam({ slug: teamSlug });
 
-  assert.ok(templatesTeamId, "Templates team is not defined");
+  assert.ok(teamId, `${teamSlug} team is not defined`);
 
-  this.templatesTeamId = templatesTeamId;
+  this[`${teamSlug}TeamId`] = teamId;
 });
 
 Given("the Templates team does not exist", async function (this) {
@@ -41,6 +43,15 @@ When<CustomWorld>("a new user is added", async function (this) {
   this.user = user;
 });
 
+When<CustomWorld>("a new demoUser is added", async function (this) {
+  const userId = await createDemoUser(this.demoTeamId);
+  const demoUser = await $admin.user.getById(userId);
+
+  assert.ok(demoUser, "Demo user is not defined");
+
+  this.user = demoUser;
+});
+
 Then<CustomWorld>(
   "they are granted access to the Templates team",
   async function (this) {
@@ -57,6 +68,9 @@ Then<CustomWorld>("have the teamEditor role", async function (this) {
 Then<CustomWorld>(
   "they are not granted access to the Templates team",
   async function (this) {
-    assert.strictEqual(this.user.teams.length, 0);
+    const userTeamSlugs = this.user.teams.map((userTeam) => userTeam.team.slug);
+    const isTemplateTeamMember = userTeamSlugs.includes("templates");
+
+    assert.strictEqual(isTemplateTeamMember, false);
   },
 );

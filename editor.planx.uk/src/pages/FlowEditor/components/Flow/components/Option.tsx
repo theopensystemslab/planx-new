@@ -22,12 +22,16 @@ const Option: React.FC<any> = (props) => {
       if (Array.isArray(props.data?.flag)) {
         flags = flatFlags.filter(({ value }) => props.data?.flag?.includes(value));
       } else {
-        flags = flatFlags.filter(({ value }) => [props.data?.flag].includes(value));
+        flags = flatFlags.filter(({ value }) => props.data?.flag === value);
       }
     }
-    // Filter Options set single flag value under "data.val"
+
+    // Filter Options set single flag value under "data.val" (Questions & Checklists use this same field for passport values)
     if (props.data?.val) {
-      flags = flatFlags.filter(({ value }) => [props.data?.val].includes(value));
+      const flagValues = flatFlags.map((flag) => flag.value).filter(Boolean);
+      if (flagValues.includes(props.data.val)) {
+        flags = flatFlags.filter(({ value }) => props.data.val === value);
+      }
     }
   } catch (e) {}
 

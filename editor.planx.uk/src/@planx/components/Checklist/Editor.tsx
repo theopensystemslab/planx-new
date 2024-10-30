@@ -23,37 +23,14 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
+import { Option, parseBaseNodeData } from "../shared";
 import { FlagsSelect } from "../shared/FlagsSelect";
-import { ICONS } from "../ui";
-import type { Category, Checklist, Group } from "./model";
+import { ICONS } from "../shared/icons";
+import type { Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
+import { ChecklistProps, OptionEditorProps } from "./types";
 
-export interface ChecklistProps extends Checklist {
-  text: string;
-  handleSubmit?: Function;
-  node?: {
-    data?: {
-      allRequired?: boolean;
-      neverAutoAnswer?: boolean;
-      categories?: Array<Category>;
-      description?: string;
-      fn?: string;
-      img?: string;
-      text: string;
-    } & BaseNodeData;
-  };
-}
-
-const OptionEditor: React.FC<{
-  index: number;
-  value: Option;
-  onChange: (newVal: Option) => void;
-  groupIndex?: number;
-  groups?: Array<string>;
-  onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
-  showValueField?: boolean;
-}> = (props) => {
+const OptionEditor: React.FC<OptionEditorProps> = (props) => {
   return (
     <div style={{ width: "100%" }}>
       <InputRow>

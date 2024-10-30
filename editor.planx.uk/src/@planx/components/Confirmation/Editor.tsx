@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import ListManager, {
@@ -12,6 +12,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { ICONS } from "../shared/icons";
 import { Confirmation, parseNextSteps, Step } from "./model";
 
 export type Props = EditorProps<TYPES.Confirmation, Confirmation>;

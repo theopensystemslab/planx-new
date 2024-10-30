@@ -1960,6 +1960,17 @@
           - role
           - id
         filter: {}
+    - role: demoUser
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter:
+          user_id:
+            _eq: x-hasura-user-id
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -2035,6 +2046,24 @@
           - reference_code
           - submission_email
           - team_id
+        filter: {}
+      comment: ""
+    - role: demoUser
+      permission:
+        columns:
+          - id
+          - external_planning_site_name
+          - external_planning_site_url
+          - homepage
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - email_reply_to_id
+          - team_id
+          - boundary_bbox
+          - submission_email
+          - reference_code
+          - boundary_url
         filter: {}
       comment: ""
     - role: platformAdmin
