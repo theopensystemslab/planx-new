@@ -564,8 +564,15 @@ export const previewStore: StateCreator<
       if (breadcrumb.answers) {
         breadcrumb.answers.forEach((answerId) => {
           const node = flow[answerId];
-          if (node.data?.flag && possibleFlagValues.includes(node.data.flag))
-            collectedFlags.push(node.data?.flag);
+          // Account for both new flag values (array) and legacy flag value (string)
+          if (node.data?.flag && Array.isArray(node.data.flag)) {
+            node.data.flag.forEach((flag: any) => {
+              if (possibleFlagValues.includes(flag)) 
+                collectedFlags.push(flag);
+            });
+          } else if (node.data?.flag && possibleFlagValues.includes(node.data.flag)) {
+            collectedFlags.push(node.data.flag);
+          }
         });
       }
     });
