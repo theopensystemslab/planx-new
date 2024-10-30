@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/shared/types";
 import { objectWithoutNullishValues } from "lib/objectHelpers";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";

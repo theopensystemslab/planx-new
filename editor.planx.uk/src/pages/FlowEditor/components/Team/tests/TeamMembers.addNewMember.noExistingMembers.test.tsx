@@ -15,7 +15,7 @@ const mockTeamMembersDataWithNoTeamEditors: TeamMember[] = [
   },
 ];
 
-describe("when a user views the 'Team members' screen but there are no existing team editors listed", () => {
+describe("when a user views the 'Team members' screen but there are no existing team members listed", () => {
   beforeEach(async () => {
     useStore.setState({
       teamMembers: mockTeamMembersDataWithNoTeamEditors,
@@ -25,10 +25,10 @@ describe("when a user views the 'Team members' screen but there are no existing 
     getByText("No members found");
   });
 
-  it("shows the 'add a new editor' button", async () => {
-    const teamEditorsTable = screen.getByTestId("team-editors");
+  it("shows the 'add a new member' button", async () => {
+    const teamMembersTable = screen.getByTestId("team-members");
     expect(
-      await within(teamEditorsTable).findByText("Add a new editor"),
+      await within(teamMembersTable).findByText("Add a new member"),
     ).toBeVisible();
   });
 });

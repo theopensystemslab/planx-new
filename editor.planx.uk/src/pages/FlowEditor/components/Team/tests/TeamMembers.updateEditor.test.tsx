@@ -18,16 +18,17 @@ describe("when a user presses 'edit button'", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
 
     const { user } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = await within(teamEditorsTable).findByTestId(
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton = await within(teamMembersTable).findByTestId(
       "edit-button-3",
     );
 
-    user.click(addEditorButton);
+    user.click(addMemberButton);
     // Start each test with an open modal
   });
 
@@ -59,14 +60,15 @@ describe("when a user deletes an input value", () => {
   beforeEach(async () => {
     useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
   });
+
   it("displays an error message when clicking away", async () => {
     const { user } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = await within(teamEditorsTable).findByTestId(
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton = await within(teamMembersTable).findByTestId(
       "edit-button-3",
     );
-    await user.click(addEditorButton);
+    await user.click(addMemberButton);
 
     const modal = await screen.findByRole("dialog");
     const firstNameInput = await screen.findByLabelText("First name");
@@ -96,11 +98,11 @@ describe("when a user updates a field correctly", () => {
     useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
     const { user } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = await within(teamEditorsTable).findByTestId(
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton = await within(teamMembersTable).findByTestId(
       "edit-button-3",
     );
-    await user.click(addEditorButton);
+    await user.click(addMemberButton);
 
     const modal = await screen.findByRole("dialog");
     const firstNameInput = await screen.findByLabelText("First name");
@@ -109,12 +111,14 @@ describe("when a user updates a field correctly", () => {
 
     await user.click(modal);
   });
+
   it("updates the field", async () => {
     const firstNameInput = await screen.findByLabelText("First name");
     expect(firstNameInput).toHaveDisplayValue(
       mockTeamMembersData[2].firstName + "bo",
     );
   });
+
   it("enables the update user button", async () => {
     const updateUserButton = await screen.findByRole("button", {
       name: "Update user",
@@ -128,11 +132,11 @@ describe("when a user correctly updates an Editor", () => {
     useStore.setState({ teamMembers: mockTeamMembersData, teamSlug: "planx" });
     const { user } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = await within(teamEditorsTable).findByTestId(
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton = await within(teamMembersTable).findByTestId(
       "edit-button-3",
     );
-    await user.click(addEditorButton);
+    await user.click(addMemberButton);
 
     const firstNameInput = await screen.findByLabelText("First name");
 
@@ -144,8 +148,9 @@ describe("when a user correctly updates an Editor", () => {
 
     await user.click(updateUserButton);
   });
+
   it("updates the member table with new details", async () => {
-    const membersTable = await screen.findByTestId("members-table-add-editor");
+    const membersTable = await screen.findByTestId("members-table-add-member");
     await waitFor(() => {
       expect(within(membersTable).getByText(/Bilbobo/)).toBeInTheDocument();
     });
@@ -153,11 +158,13 @@ describe("when a user correctly updates an Editor", () => {
       await screen.findByText(/Successfully updated a user/),
     ).toBeInTheDocument();
   });
+
   it("closes the modal", async () => {
     await waitFor(() => {
       expect(screen.queryByTestId("modal-edit-user")).not.toBeInTheDocument();
     });
   });
+
   it("shows a success message", async () => {
     expect(
       await screen.findByText(/Successfully updated a user/),
@@ -171,13 +178,14 @@ describe("'edit' button is hidden from Templates team", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
+      teamId: 3,
     });
   });
 
   it("hides the button on the Templates team", async () => {
     const { user: _user } = await setupTeamMembersScreen();
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const editButton = within(teamEditorsTable).queryByTestId("edit-button-0");
+    const teamMembersTable = screen.getByTestId("team-members");
+    const editButton = within(teamMembersTable).queryByTestId("edit-button-0");
     expect(editButton).not.toBeInTheDocument();
   });
 });
@@ -188,16 +196,17 @@ describe("when a user is not a platform admin", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
       team: "planx",
+      teamId: 1,
     });
 
     await setupTeamMembersScreen();
   });
 
   it("does not show an edit button", async () => {
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton =
-      within(teamEditorsTable).queryByTestId("edit-button-3");
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton =
+      within(teamMembersTable).queryByTestId("edit-button-3");
 
-    expect(addEditorButton).not.toBeInTheDocument();
+    expect(addMemberButton).not.toBeInTheDocument();
   });
 });

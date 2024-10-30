@@ -1,13 +1,16 @@
 import jwt from "jsonwebtoken";
 import { $api } from "../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
+import type { HasuraClaims, JWTData } from "./types.js";
 
 export const buildJWT = async (email: string): Promise<string | undefined> => {
-  await checkUserCanAccessEnv(email, process.env.NODE_ENV);
   const user = await $api.user.getByEmail(email);
   if (!user) return;
 
-  const data = {
+  const hasAccess = await checkUserCanAccessEnv(user, process.env.NODE_ENV);
+  if (!hasAccess) return;
+
+  const data: JWTData = {
     sub: user.id.toString(),
     email,
     "https://hasura.io/jwt/claims": generateHasuraClaimsForUser(user),
@@ -27,7 +30,7 @@ export const buildJWTForAPIRole = () =>
     process.env.JWT_SECRET!,
   );
 
-const generateHasuraClaimsForUser = (user: User) => ({
+const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({
   "x-hasura-allowed-roles": getAllowedRolesForUser(user),
   "x-hasura-default-role": getDefaultRoleForUser(user),
   "x-hasura-user-id": user.id.toString(),
@@ -41,7 +44,6 @@ const getAllowedRolesForUser = (user: User): Role[] => {
   const teamRoles = user.teams.map((teamRole) => teamRole.role);
   const allowedRoles: Role[] = [
     "public", // Allow public access
-    "teamEditor", // Least privileged role for authenticated users - required for Editor access
     ...teamRoles, // User specific roles
   ];
   if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
@@ -57,18 +59,30 @@ const getAllowedRolesForUser = (user: User): Role[] => {
  * This is the role of least privilege for the user
  */
 const getDefaultRoleForUser = (user: User): Role => {
-  return user.isPlatformAdmin ? "platformAdmin" : "teamEditor";
+  if (user.isPlatformAdmin) return "platformAdmin";
+
+  const isTeamEditor = user.teams.find((team) => team.role === "teamEditor");
+  if (isTeamEditor) return "teamEditor";
+
+  const isTeamViewer = user.teams.find((team) => team.role === "teamViewer");
+  if (isTeamViewer) return "teamViewer";
+
+  return "demoUser";
 };
 
-/**
- * A staging-only user cannot access production, but can access all other envs
- */
 export const checkUserCanAccessEnv = async (
-  email: string,
+  user: User,
   env?: string,
 ): Promise<boolean> => {
-  const isStagingOnlyUser = await $api.user.isStagingOnly(email);
-  const isProductionEnv = env === "production";
-  const userCanAccessEnv = !(isProductionEnv && isStagingOnlyUser);
-  return userCanAccessEnv;
+  // All users can access non-production environments
+  const isProduction = env === "production";
+  if (!isProduction) return true;
+
+  const isDemoUser = getAllowedRolesForUser(user).includes("demoUser");
+  if (isDemoUser) return false;
+
+  const isStagingOnlyUser = await $api.user.isStagingOnly(user.email);
+  if (isStagingOnlyUser) return false;
+
+  return true;
 };

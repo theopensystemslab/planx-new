@@ -25,11 +25,12 @@ describe("when a user presses 'remove' button", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user, container } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const removeRowButton = await within(teamEditorsTable).findByTestId(
+    const teamMembersTable = screen.getByTestId("team-members");
+    const removeRowButton = await within(teamMembersTable).findByTestId(
       "remove-button-3",
     );
     axeContainer = container;
@@ -74,13 +75,14 @@ describe("when a user clicks 'Remove user' button", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
+    const teamMembersTable = screen.getByTestId("team-members");
 
     const removeRowButton =
-      within(teamEditorsTable).getByTestId("remove-button-3");
+      within(teamMembersTable).getByTestId("remove-button-3");
 
     await user.click(removeRowButton);
 
@@ -119,14 +121,15 @@ describe("'remove' button is hidden from Templates team", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
+      teamId: 2,
     });
   });
 
   it("hides the button on the Templates team", async () => {
     const { user: _user } = await setupTeamMembersScreen();
-    const teamEditorsTable = screen.getByTestId("team-editors");
+    const teamMembersTable = screen.getByTestId("team-members");
     const editButton =
-      within(teamEditorsTable).queryByTestId("remove-button-3");
+      within(teamMembersTable).queryByTestId("remove-button-3");
     expect(editButton).not.toBeInTheDocument();
   });
 });
@@ -137,14 +140,15 @@ describe("when a user is not a platform admin", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
       team: "planx",
+      teamId: 1,
     });
 
     await setupTeamMembersScreen();
   });
   it("does not show a remove button", async () => {
-    const teamEditorsTable = screen.getByTestId("team-editors");
+    const teamMembersTable = screen.getByTestId("team-members");
     const addEditorButton =
-      within(teamEditorsTable).queryByTestId("remove-button-0");
+      within(teamMembersTable).queryByTestId("remove-button-0");
 
     expect(addEditorButton).not.toBeInTheDocument();
   });

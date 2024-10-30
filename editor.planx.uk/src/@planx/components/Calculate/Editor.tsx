@@ -3,7 +3,7 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/shared/types";
 import { FormikErrors, useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
@@ -13,6 +13,7 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { ICONS } from "../shared/icons";
 import type { Calculate } from "./model";
 import { evaluate, getVariables, parseCalculate } from "./model";
 

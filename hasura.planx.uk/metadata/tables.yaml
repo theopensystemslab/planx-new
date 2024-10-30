@@ -464,6 +464,8 @@
     - role: api
       permission:
         check: {}
+        set:
+          creator_id: x-hasura-user-id
         columns:
           - copied_from
           - created_at
@@ -490,6 +492,8 @@
         check:
           team_id:
             _eq: 32
+        set:
+          creator_id: x-hasura-user-id
         columns:
           - copied_from
           - created_at
@@ -506,6 +510,8 @@
     - role: platformAdmin
       permission:
         check: {}
+        set:
+          creator_id: x-hasura-user-id
         columns:
           - copied_from
           - created_at
@@ -537,6 +543,8 @@
                     _eq: x-hasura-user-id
                 - role:
                     _eq: teamEditor
+        set:
+          creator_id: x-hasura-user-id
         columns:
           - copied_from
           - created_at
@@ -1781,7 +1789,7 @@
           - created_at
           - submitted_at
         filter: {}
-      comment: 'For future, if this moves outside of the Flow to somewhere like Team, we should update "demoUser" to only see submission data related to only their flows. '
+      comment: "For future, if this moves outside of the Flow to somewhere like Team, we should update 'demoUser' to only see submission data related to only their flows. "
     - role: platformAdmin
       permission:
         columns:

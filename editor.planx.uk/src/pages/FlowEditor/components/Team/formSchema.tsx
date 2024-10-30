@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-export const upsertEditorSchema = Yup.object({
+export const upsertMemberSchema = Yup.object({
   firstName: Yup.string().required("Enter a first name"),
   lastName: Yup.string().required("Enter a last name"),
   email: Yup.string()

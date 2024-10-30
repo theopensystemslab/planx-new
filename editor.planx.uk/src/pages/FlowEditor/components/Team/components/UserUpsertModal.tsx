@@ -13,10 +13,10 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 import {
-  AddNewEditorErrors,
+  AddNewMemberErrors,
   isUserAlreadyExistsError,
 } from "../errors/addNewEditorErrors";
-import { upsertEditorSchema } from "../formSchema";
+import { upsertMemberSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { updateTeamMember } from "../queries/updateUser";
 import { SettingsDialog } from "../styles";
@@ -26,7 +26,9 @@ import {
   optimisticallyUpdateExistingMember,
 } from "./lib/optimisticallyUpdateMembersTable";
 
-export const EditorUpsertModal = ({
+export const DEMO_TEAM_ID = 32;
+
+export const UserUpsertModal = ({
   setShowModal,
   showModal,
   initialValues,
@@ -34,6 +36,11 @@ export const EditorUpsertModal = ({
 }: EditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
+  const [teamId, teamSlug] = useStore((state) => [
+    state.teamId,
+    state.teamSlug,
+  ]);
+  const isDemoTeam = teamId === DEMO_TEAM_ID;
 
   const toast = useToast();
 
@@ -56,15 +63,11 @@ export const EditorUpsertModal = ({
   };
 
   const handleSubmitToAddNewUser = async () => {
-    const { teamId, teamSlug } = useStore.getState();
-
-    const createUserResult = await createAndAddUserToTeam(
-      formik.values.email,
-      formik.values.firstName,
-      formik.values.lastName,
+    const createUserResult = await createAndAddUserToTeam({
+      newUser: formik.values,
       teamId,
       teamSlug,
-    ).catch((err) => {
+    }).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
       }
@@ -114,8 +117,10 @@ export const EditorUpsertModal = ({
       firstName: initialValues?.firstName || "",
       lastName: initialValues?.lastName || "",
       email: initialValues?.email || "",
+      // Users within the Demo team are granted a role with a restricted permission set
+      role: isDemoTeam ? "demoUser" : "teamEditor",
     },
-    validationSchema: upsertEditorSchema,
+    validationSchema: upsertMemberSchema,
     onSubmit: handleSubmit,
   });
 
@@ -134,7 +139,7 @@ export const EditorUpsertModal = ({
         >
           <Box sx={{ mt: 1, mb: 4 }}>
             <Typography variant="h3" component="h2" id="dialog-heading">
-              Add a new editor
+              Add a new member
             </Typography>
           </Box>
           <InputGroup flowSpacing>
@@ -189,7 +194,7 @@ export const EditorUpsertModal = ({
           <ErrorWrapper
             error={
               showUserAlreadyExistsError
-                ? AddNewEditorErrors.USER_ALREADY_EXISTS.errorMessage
+                ? AddNewMemberErrors.USER_ALREADY_EXISTS.errorMessage
                 : undefined
             }
           >

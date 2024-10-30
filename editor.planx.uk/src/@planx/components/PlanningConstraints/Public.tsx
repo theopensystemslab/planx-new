@@ -4,7 +4,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import type { PublicProps } from "@planx/components/ui";
+import type { PublicProps } from "@planx/components/shared/types";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { GraphError } from "components/Error/GraphError";
 import { useStore } from "pages/FlowEditor/lib/store";

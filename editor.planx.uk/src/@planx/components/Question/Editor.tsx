@@ -1,3 +1,5 @@
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
@@ -12,9 +14,11 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
+import { InternalNotes } from "../../../ui/editor/InternalNotes";
+import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
+import { ICONS } from "../shared/icons";
 import PermissionSelect from "../shared/PermissionSelect";
-import { ICONS, InternalNotes, MoreInformation } from "../ui";
 
 interface Props {
   node: {
@@ -24,6 +28,7 @@ interface Props {
       img?: string;
       text: string;
       type?: string;
+      neverAutoAnswer?: boolean;
     } & BaseNodeData;
   };
   options?: Option[];
@@ -131,6 +136,7 @@ export const Question: React.FC<Props> = (props) => {
       img: props.node?.data?.img || "",
       options: props.options || [],
       text: props.node?.data?.text || "",
+      neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
       ...parseBaseNodeData(props.node?.data),
     },
     onSubmit: ({ options, ...values }) => {
@@ -175,7 +181,6 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
                 inputRef={focusRef}
               />
-
               <ImgInput
                 img={formik.values.img}
                 onChange={(newUrl) => {
@@ -183,7 +188,6 @@ export const Question: React.FC<Props> = (props) => {
                 }}
               />
             </InputRow>
-
             <InputRow>
               <RichTextInput
                 name="description"
@@ -192,7 +196,6 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-
             <InputRow>
               <Input
                 // required
@@ -201,6 +204,22 @@ export const Question: React.FC<Props> = (props) => {
                 value={formik.values.fn}
                 placeholder="Data Field"
                 onChange={formik.handleChange}
+              />
+            </InputRow>
+            <InputRow>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formik.values.neverAutoAnswer}
+                    onChange={() =>
+                      formik.setFieldValue(
+                        "neverAutoAnswer",
+                        !formik.values.neverAutoAnswer,
+                      )
+                    }
+                  />
+                }
+                label="Always put to user (forgo automation)"
               />
             </InputRow>
           </InputGroup>
@@ -227,7 +246,6 @@ export const Question: React.FC<Props> = (props) => {
           />
         </ModalSectionContent>
       </ModalSection>
-
       <MoreInformation
         changeField={formik.handleChange}
         definitionImg={formik.values.definitionImg}

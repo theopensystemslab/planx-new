@@ -2,7 +2,7 @@ import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -12,6 +12,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { ICONS } from "../shared/icons";
 import { parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;

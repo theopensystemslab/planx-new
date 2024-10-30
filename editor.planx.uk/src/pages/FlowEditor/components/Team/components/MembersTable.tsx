@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import Dialog from "@mui/material/Dialog";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,14 +8,15 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { Role } from "@opensystemslab/planx-core/types";
 import { AddButton } from "pages/Team";
 import React, { useState } from "react";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
 import { ActionType, MembersTableProps, TeamMember } from "./../types";
-import { EditorUpsertModal } from "./EditorUpsertModal";
 import { RemoveUserModal } from "./RemoveUserModal";
+import { UserUpsertModal } from "./UserUpsertModal";
 
 const TableRowButton = styled(Button)(({ theme }) => ({
   textDecoration: "underline",
@@ -27,12 +27,14 @@ const TableRowButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
 }));
+
 const EditUserButton = styled(TableRowButton)(({ theme }) => ({
   color: theme.palette.primary.light,
   "&:hover": {
     color: theme.palette.primary.dark,
   },
 }));
+
 const RemoveUserButton = styled(TableRowButton)(({ theme }) => ({
   color: theme.palette.text.secondary,
   "&:hover": {
@@ -50,10 +52,12 @@ export const MembersTable = ({
   const [actionType, setActionType] = useState<ActionType>("add");
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
-  const roleLabels: Record<string, string> = {
+  const roleLabels: Record<Role, string> = {
     platformAdmin: "Admin",
     teamEditor: "Editor",
     teamViewer: "Viewer",
+    demoUser: "Demo User",
+    public: "Public",
   };
 
   const editUser = (member: TeamMember) => {
@@ -61,18 +65,20 @@ export const MembersTable = ({
     setShowModal(true);
     setInitialValues(member);
   };
+
   const removeUser = (member: TeamMember) => {
     setActionType("remove");
     setShowModal(true);
     setInitialValues(member);
   };
+
   const addUser = () => {
     setActionType("add");
     setShowModal(true);
     setInitialValues(undefined);
   };
 
-  const getRoleLabel = (role: string) => {
+  const getRoleLabel = (role: Role) => {
     return roleLabels[role] || role;
   };
 
@@ -88,21 +94,23 @@ export const MembersTable = ({
             </TableRow>
           </TableHead>
           {showAddMemberButton && (
-            <TableRow>
-              <TableCell colSpan={3}>
-                <AddButton
-                  onClick={() => {
-                    addUser();
-                  }}
-                >
-                  Add a new editor
-                </AddButton>
-              </TableCell>
-            </TableRow>
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <AddButton
+                    onClick={() => {
+                      addUser();
+                    }}
+                  >
+                    Add a new member
+                  </AddButton>
+                </TableCell>
+              </TableRow>
+            </TableBody>
           )}
         </Table>
         {showModal && (
-          <EditorUpsertModal
+          <UserUpsertModal
             showModal={showModal}
             setShowModal={setShowModal}
             initialValues={initialValues}
@@ -127,7 +135,7 @@ export const MembersTable = ({
               </TableCell>
               <TableCell>
                 <strong>Email</strong>
-              </TableCell>{" "}
+              </TableCell>
               {
                 // empty table cells for styling across buttons
               }
@@ -136,9 +144,9 @@ export const MembersTable = ({
             </StyledTableRow>
           </TableHead>
           <TableBody
-            data-testid={`members-table${showAddMemberButton && "-add-editor"}`}
+            data-testid={`members-table${showAddMemberButton && "-add-member"}`}
           >
-            {members.map((member, i) => (
+            {members.map((member) => (
               <StyledTableRow key={member.id}>
                 <TableCell
                   sx={{
@@ -202,7 +210,7 @@ export const MembersTable = ({
                         addUser();
                       }}
                     >
-                      Add a new editor
+                      Add a new member
                     </AddButton>
                   </TableCell>
                 </TableRow>
@@ -220,7 +228,7 @@ export const MembersTable = ({
             actionType={actionType}
           />
         ) : (
-          <EditorUpsertModal
+          <UserUpsertModal
             setShowModal={setShowModal}
             showModal={showModal}
             initialValues={initialValues}

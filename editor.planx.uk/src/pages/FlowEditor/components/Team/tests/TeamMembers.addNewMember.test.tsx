@@ -7,9 +7,9 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import { setup } from "../../../../../testUtils";
-import { EditorUpsertModal } from "../components/EditorUpsertModal";
+import { UserUpsertModal } from "../components/UserUpsertModal";
 import { setupTeamMembersScreen } from "./helpers/setupTeamMembersScreen";
-import { userTriesToAddNewEditor } from "./helpers/userTriesToAddNewEditor";
+import { userTriesToAddNewMember } from "./helpers/userTriesToAddNewMember";
 import { mockTeamMembersData } from "./mocks/mockTeamMembersData";
 import {
   emptyTeamMemberObj,
@@ -29,20 +29,21 @@ vi.mock(
 
 let initialState: FullStore;
 
-describe("when a user presses 'add a new editor'", () => {
+describe("when a user presses 'add a new member'", () => {
   beforeEach(async () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
 
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton = await within(teamEditorsTable).findByText(
-      "Add a new editor",
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton = await within(teamMembersTable).findByText(
+      "Add a new member",
     );
-    user.click(addEditorButton);
+    user.click(addMemberButton);
   });
 
   it("opens the modal and displays the input fields", async () => {
@@ -51,7 +52,7 @@ describe("when a user presses 'add a new editor'", () => {
   });
 });
 
-describe("when a user fills in the 'add a new editor' form correctly", () => {
+describe("when a user fills in the 'add a new member' form correctly", () => {
   afterAll(() => useStore.setState(initialState));
 
   beforeEach(async () => {
@@ -59,13 +60,14 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "planx",
+      teamId: 1,
     });
     const { user } = await setupTeamMembersScreen();
-    await userTriesToAddNewEditor(user);
+    await userTriesToAddNewMember(user);
   });
 
-  it("adds the new user row to the Team Editors table", async () => {
-    const membersTable = screen.getByTestId("members-table-add-editor");
+  it("adds the new user row to the Team Members table", async () => {
+    const membersTable = screen.getByTestId("members-table-add-member");
 
     await waitFor(() => {
       expect(
@@ -87,11 +89,18 @@ describe("when a user fills in the 'add a new editor' form correctly", () => {
   });
 });
 
-describe("when the addNewEditor modal is rendered", () => {
+describe("when the addNewMember modal is rendered", () => {
+  beforeEach(async () => {
+    useStore.setState({
+      teamSlug: "planx",
+      teamId: 1,
+    });
+  });
+
   it("should not have any accessibility issues", async () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
-        <EditorUpsertModal
+        <UserUpsertModal
           showModal={true}
           setShowModal={() => {}}
           initialValues={emptyTeamMemberObj}
@@ -106,21 +115,21 @@ describe("when the addNewEditor modal is rendered", () => {
   });
 });
 
-describe("'add a new editor' button is hidden from Templates team", () => {
+describe("'add a new member' button is hidden from Templates team", () => {
   beforeEach(async () => {
     useStore.setState({
       teamMembers: mockTeamMembersData,
       user: mockPlatformAdminUser,
       teamSlug: "templates",
+      teamId: 2,
     });
   });
 
   it("hides the button on the Templates team", async () => {
-    const { user: _user } = await setupTeamMembersScreen();
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton =
-      within(teamEditorsTable).queryByText("Add a new editor");
-    expect(addEditorButton).not.toBeInTheDocument();
+    await setupTeamMembersScreen();
+    const teamMembers = screen.getByTestId("team-members");
+    const addMemberButton = within(teamMembers).queryByText("Add a new member");
+    expect(addMemberButton).not.toBeInTheDocument();
   });
 });
 
@@ -130,14 +139,15 @@ describe("when a user is not a platform admin", () => {
       teamMembers: mockTeamMembersData,
       user: mockPlainUser,
       teamSlug: "trumptonshire",
+      teamId: 3,
     });
   });
 
   it("hides the button from non-admin users", async () => {
-    const { user: _user } = await setupTeamMembersScreen();
-    const teamEditorsTable = screen.getByTestId("team-editors");
-    const addEditorButton =
-      within(teamEditorsTable).queryByText("Add a new editor");
-    expect(addEditorButton).not.toBeInTheDocument();
+    await setupTeamMembersScreen();
+    const teamMembersTable = screen.getByTestId("team-members");
+    const addMemberButton =
+      within(teamMembersTable).queryByText("Add a new member");
+    expect(addMemberButton).not.toBeInTheDocument();
   });
 });
