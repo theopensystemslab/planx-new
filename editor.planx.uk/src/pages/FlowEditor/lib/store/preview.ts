@@ -714,9 +714,7 @@ export const getResultData = (
       const collectedFlags = collectedFlagValuesByCategory(category, breadcrumbs, flow);
 
       // The highest order flag collected is our result, else "No result"
-      const flag: Flag = possibleFlags.find(
-        (f) => f.value === collectedFlags[0],
-      ) || {
+      const flag: Flag = possibleFlags.find((f) => f.value === collectedFlags[0]) || {
         value: undefined,
         text: "No result",
         category: category as FlagSet,
@@ -734,8 +732,12 @@ export const getResultData = (
             return null;
 
           const selections = answers.map((answerId) => ({ id: answerId, ...flow[answerId] }));
-          const hidden = !selections.some(
-            (option) => option.data?.flag && option.data.flag === flag?.value,
+          const hidden = !selections.some((selection) => 
+            selection.data?.flag && (
+              // Account for both new flag values (array) and legacy flag value (string)
+              (Array.isArray(selection.data.flag) && selection.data.flag.includes(flag?.value)) || 
+              selection.data.flag === flag?.value
+            )
           );
 
           return {
@@ -753,7 +755,7 @@ export const getResultData = (
       acc[category] = {
         flag,
         displayText: { heading, description },
-        responses: responses.every((response) => response?.hidden && response.hidden)
+        responses: responses.every((response) => Boolean(response?.hidden))
           ? responses.map((response) => ({ ...response, hidden: false }))
           : responses,
       };
