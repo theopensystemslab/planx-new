@@ -62,7 +62,7 @@ function SetValueComponent(props: Props) {
 5. `Public.tsx`
 
 ```typescript
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/shared/types";
 
 type Props = PublicProps<SetValue>;
 
@@ -88,7 +88,7 @@ function SetValueComponent(props: Props) {
 
 ## Editor configurations
 
-1. `src/@planx/components/ui.tsx`
+1. `src/@planx/components/shared/icons.tsx`
 
 ```typescript
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";

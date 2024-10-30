@@ -1,7 +1,8 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { EditorProps, ICONS } from "@planx/components/ui";
+import { ICONS } from "@planx/components/shared/icons";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
