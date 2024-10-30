@@ -4,21 +4,21 @@ import type { CopyDashboardParams } from "./types.js";
 
 /** Returns the ID of the copied dashboard. */
 export async function copyDashboard({
-  id,
+  dashboardId,
   name,
   description,
-  collection_id,
-  collection_position,
-  is_deep_copy,
+  collectionId,
+  collectionPosition,
+  isDeepCopy,
 }: CopyDashboardParams): Promise<any> {
   try {
-    console.log(`Attempting to copy original dashboard: ${id}`);
+    console.log(`Attempting to copy original dashboard: ${dashboardId}`);
     const requestBody: any = {
       name,
       description,
-      collection_id,
-      collection_position,
-      is_deep_copy: is_deep_copy ?? false,
+      collectionId,
+      collectionPosition,
+      isDeepCopy: isDeepCopy ?? false,
     };
 
     // Remove undefined properties
@@ -28,16 +28,19 @@ export async function copyDashboard({
 
     // console.log('Request body:', JSON.stringify(requestBody, null, 2));
 
-    const response = await metabaseClient.post(`/api/dashboard/${id}/copy`, {
-      name,
-      description,
-      collection_id,
-      collection_position,
-    });
-    console.log(
-      `New dashboard: ${response.data.id}, new name: ${response.data.name}`,
+    const response = await metabaseClient.post(
+      `/api/dashboard/${dashboardId}/copy`,
+      {
+        name,
+        description,
+        collectionId,
+        collectionPosition,
+      },
     );
-    return response.data.id;
+    console.log(
+      `New dashboard: ${response.data.dashboardId}, new name: ${response.data.name}`,
+    );
+    return response.data.dashboardId;
   } catch (error) {
     console.error("Error in copyDashboard:");
     if (axios.isAxiosError(error)) {
@@ -59,9 +62,9 @@ export async function copyDashboard({
 }
 
 /** Takes dashboard ID and returns dashboard name. */
-export async function getDashboard(id: number): Promise<any> {
+export async function getDashboard(dashboardId: number): Promise<any> {
   try {
-    const response = await metabaseClient.get(`/api/dashboard/${id}`);
+    const response = await metabaseClient.get(`/api/dashboard/${dashboardId}`);
     console.log("Original dashboard name: ", response.data.name);
     return response.data.name;
   } catch (error) {
