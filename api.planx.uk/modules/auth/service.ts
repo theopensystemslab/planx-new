@@ -44,7 +44,6 @@ const getAllowedRolesForUser = (user: User): Role[] => {
   const teamRoles = user.teams.map((teamRole) => teamRole.role);
   const allowedRoles: Role[] = [
     "public", // Allow public access
-    "teamEditor", // Least privileged role for authenticated users - required for Editor access
     ...teamRoles, // User specific roles
   ];
   if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
@@ -60,7 +59,15 @@ const getAllowedRolesForUser = (user: User): Role[] => {
  * This is the role of least privilege for the user
  */
 const getDefaultRoleForUser = (user: User): Role => {
-  return user.isPlatformAdmin ? "platformAdmin" : "teamEditor";
+  if (user.isPlatformAdmin) return "platformAdmin";
+
+  const isTeamEditor = user.teams.find((team) => team.role === "teamEditor");
+  if (isTeamEditor) return "teamEditor";
+
+  const isTeamViewer = user.teams.find((team) => team.role === "teamViewer");
+  if (isTeamViewer) return "teamViewer";
+
+  return "demoUser";
 };
 
 export const checkUserCanAccessEnv = async (
