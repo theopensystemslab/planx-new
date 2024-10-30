@@ -57,6 +57,7 @@ export const Trees: Schema = {
       type: "date",
       data: {
         title: "Expected completion date",
+        description: "For example, 16 04 2027",
         fn: "completionDate",
       },
     },

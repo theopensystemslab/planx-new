@@ -304,6 +304,7 @@ export const mockListRootResult: SearchResult<IndexedNode> = {
             data: {
               fn: "completionDate",
               title: "Expected completion date",
+              description: "For example, 16 04 2027",
             },
             type: "date",
           },
