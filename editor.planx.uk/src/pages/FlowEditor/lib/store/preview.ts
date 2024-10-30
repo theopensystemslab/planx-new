@@ -431,7 +431,7 @@ export const previewStore: StateCreator<
       (flag.value && overrides && overrides[flag.value]?.heading) || flag.text;
     const description =
       (flag.value && overrides && overrides[flag.value]?.description) ||
-      flagSet;
+      category;
 
     return {
       [category]: {

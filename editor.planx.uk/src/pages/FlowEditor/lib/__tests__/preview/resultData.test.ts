@@ -1,9 +1,14 @@
-import { getResultData } from "../../store/preview";
+import { useStore } from "../../store";
+
+const { getState } = useStore;
+const { resultData, resetPreview } = getState();
+
+beforeEach(() => {
+  resetPreview();
+});
 
 test("Default result data", () => {
-  const result = getResultData({}, {});
-
-  expect(result).toEqual({
+  expect(resultData()).toEqual({
     "Planning permission": {
       displayText: { description: "Planning permission", heading: "No result" },
       flag: {
