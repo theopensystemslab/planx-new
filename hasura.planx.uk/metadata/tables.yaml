@@ -1076,7 +1076,7 @@
         check:
           flow:
             creator_id:
-              _eq: x-hausra-user-id
+              _eq: x-hasura-user-id
         columns:
           - id
           - actor_id
@@ -1165,7 +1165,7 @@
         filter:
           flow:
             creator_id:
-              _eq: x-hausra-user-id
+              _eq: x-hasura-user-id
         check: null
       comment: ""
     - role: platformAdmin
