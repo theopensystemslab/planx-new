@@ -9,8 +9,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { Role } from "@opensystemslab/planx-core/types";
-import { AddButton } from "pages/Team";
 import React, { useState } from "react";
+import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
 
 import { StyledAvatar, StyledTableRow } from "./../styles";
