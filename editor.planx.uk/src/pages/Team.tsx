@@ -21,6 +21,7 @@ import { slugify } from "utils";
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
+import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
@@ -103,8 +104,8 @@ const Confirm = ({
 );
 
 interface FlowItemProps {
-  flow: any;
-  flows: any;
+  flow: FlowSummary;
+  flows: FlowSummary[];
   teamId: number;
   teamSlug: string;
   refreshFlows: () => void;
@@ -255,7 +256,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
   );
 };
 
-const GetStarted: React.FC<{ flows: any[] }> = ({ flows }) => (
+const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
   <Box sx={(theme) => ({ 
       mt: 4, 
       backgroundColor: theme.palette.background.paper, 
@@ -272,7 +273,7 @@ const GetStarted: React.FC<{ flows: any[] }> = ({ flows }) => (
   </Box>
 )
 
-const AddFlowButton: React.FC<{ flows: any[] }> = ({ flows }) => {
+const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore()
 
@@ -304,13 +305,13 @@ const AddFlowButton: React.FC<{ flows: any[] }> = ({ flows }) => {
 
 const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore((state) => [state.getTeam(), state.canUserEditTeam, state.getFlows ]);
-  const [flows, setFlows] = useState<any[]>([]);
+  const [flows, setFlows] = useState<FlowSummary[]>([]);
 
   const fetchFlows = useCallback(() => {
     getFlows(teamId)
-    .then((res: { flows: any[] }) => {
+    .then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      const sortedFlows = res.flows.toSorted((a, b) =>
+      const sortedFlows = flows.toSorted((a, b) =>
         b.operations[0]["createdAt"].localeCompare(
           a.operations[0]["createdAt"],
         ),
@@ -359,7 +360,7 @@ const Team: React.FC = () => {
       { flows.length
       ?  (
         <DashboardList>
-          {flows.map((flow: any) => (
+          {flows.map((flow) => (
             <FlowItem
               flow={flow}
               flows={flows}
