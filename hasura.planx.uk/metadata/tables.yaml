@@ -729,6 +729,49 @@
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
 - table:
+    name: goss_applications
+    schema: public
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - payload
+          - destination_url
+          - goss_id
+          - sanitised_at
+          - created_at
+          - id
+          - session_id
+      comment: ""
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - payload
+          - destination_url
+          - goss_id
+          - sanitised_at
+          - created_at
+          - id
+          - session_id
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - payload
+          - destination_url
+          - goss_id
+          - sanitised_at
+          - created_at
+          - id
+          - session_id
+        filter: {}
+        check: {}
+      comment: ""
+- table:
     name: lowcal_sessions
     schema: public
   object_relationships:
