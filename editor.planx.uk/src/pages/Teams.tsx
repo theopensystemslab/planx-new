@@ -8,11 +8,12 @@ import navigation from "lib/navigation";
 import React from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
+import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
 import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
-import { AddButton } from "./Team";
+
 
 interface TeamTheme {
   slug: string;
