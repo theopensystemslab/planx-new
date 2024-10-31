@@ -2,7 +2,7 @@ import { FlowGraph } from "@opensystemslab/planx-core/types";
 import type { Browser, Page, Request } from "@playwright/test";
 import { gql } from "graphql-request";
 import type { Context } from "./context";
-import { generateAuthenticationToken, getGraphQLClient } from "./context";
+import { generateAuthenticationDemoToken, generateAuthenticationToken, getGraphQLClient } from "./context";
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
@@ -52,6 +52,33 @@ export async function createAuthenticatedSession({
   const browserContext = await browser.newContext();
   const page = await browserContext.newPage();
   const token = generateAuthenticationToken(`${userId}`);
+  await browserContext.addCookies([
+    {
+      name: "jwt",
+      domain: "localhost",
+      path: "/",
+      value: token,
+    },
+    {
+      name: "auth",
+      domain: "localhost",
+      path: "/",
+      value: JSON.stringify({ loggedIn: true }),
+    },
+  ]);
+  return page;
+}
+
+export async function createAuthenticatedDemoSession({
+  browser,
+  userId,
+}: {
+  browser: Browser;
+  userId: number;
+}): Promise<Page> {
+  const browserContext = await browser.newContext();
+  const page = await browserContext.newPage();
+  const token = generateAuthenticationDemoToken(`${userId}`);
   await browserContext.addCookies([
     {
       name: "jwt",

@@ -46,6 +46,28 @@ export const contextDefaults: Context = {
   },
 };
 
+export const demoContext: Context = {
+  user: {
+    firstName: "Demo",
+    lastName: "demo",
+    email: "simulate-delivered@notifications.service.gov.uk",
+    isPlatformAdmin: false,
+  },
+  team: {
+    name: "E2E Test Team",
+    slug: "E2E",
+    theme: {
+      logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
+      primaryColour: "#444444",
+    },
+    settings: {
+      homepage: "planx.uk",
+      submissionEmail: "simulate-delivered@notifications.service.gov.uk",
+    },
+  },
+};
+
+
 export async function setUpTestContext(
   initialContext: Context,
 ): Promise<Context> {
@@ -114,6 +136,21 @@ export function generateAuthenticationToken(userId: string) {
       "https://hasura.io/jwt/claims": {
         "x-hasura-allowed-roles": ["platformAdmin", "public"],
         "x-hasura-default-role": "platformAdmin",
+        "x-hasura-user-id": `${userId}`,
+      },
+    },
+    process.env.JWT_SECRET,
+  );
+}
+
+export function generateAuthenticationDemoToken(userId: string) {
+  assert(process.env.JWT_SECRET);
+  return sign(
+    {
+      sub: `${userId}`,
+      "https://hasura.io/jwt/claims": {
+        "x-hasura-allowed-roles": ["public","demoUser"],
+        "x-hasura-default-role": "demoUser",
         "x-hasura-user-id": `${userId}`,
       },
     },
