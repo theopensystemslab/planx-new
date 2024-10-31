@@ -213,8 +213,9 @@ jobs:
           VITE_APP_HASURA_WEBSOCKET: wss://hasura.${{ env.FULL_DOMAIN }}/v1/graphql
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
-          # needed because there's no API to change google's allowed OAuth URLs
+          # needed because there's no API to change google/microsoft's allowed redirect URIs
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+          VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build-storybook
@@ -230,6 +231,7 @@ jobs:
           VITE_APP_MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
           VITE_APP_SHAREDB_URL: wss://sharedb.${{ env.FULL_DOMAIN }}
           VITE_APP_GOOGLE_OAUTH_OVERRIDE: https://api.editor.planx.dev
+          VITE_APP_MICROSOFT_OAUTH_OVERRIDE: https://api.editor.planx.dev
           VITE_APP_ENV: pizza
 
   pulumi_preview:
