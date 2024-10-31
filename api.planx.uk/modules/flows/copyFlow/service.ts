@@ -1,5 +1,4 @@
 import { makeUniqueFlow, getFlowData, insertFlow } from "../../../helpers.js";
-import { userContext } from "../../auth/middleware.js";
 
 const copyFlow = async (
   flowId: string,
@@ -16,18 +15,9 @@ const copyFlow = async (
   if (insert) {
     const newSlug = flow.slug + "-copy";
     const newName = flow.name + " (copy)";
-    const creatorId = userContext.getStore()?.user?.sub;
-    if (!creatorId) throw Error("User details missing from request");
 
     // Insert the flow and an associated operation
-    await insertFlow(
-      flow.team_id,
-      newSlug,
-      newName,
-      uniqueFlowData,
-      parseInt(creatorId),
-      flowId,
-    );
+    await insertFlow(flow.team_id, newSlug, newName, uniqueFlowData, flowId);
   }
 
   return { flow, uniqueFlowData };

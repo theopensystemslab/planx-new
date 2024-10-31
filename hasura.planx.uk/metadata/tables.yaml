@@ -589,6 +589,7 @@
     - role: demoUser
       permission:
         columns:
+          - analytics_link
           - created_at
           - creator_id
           - data
@@ -1075,8 +1076,15 @@
         check:
           flow:
             creator_id:
-              _eq: x-hausra-user-id
-        columns: []
+              _eq: x-hasura-user-id
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
       comment: ""
     - role: platformAdmin
       permission:
@@ -1146,11 +1154,18 @@
   update_permissions:
     - role: demoUser
       permission:
-        columns: []
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
         filter:
           flow:
             creator_id:
-              _eq: x-hausra-user-id
+              _eq: x-hasura-user-id
         check: null
       comment: ""
     - role: platformAdmin
