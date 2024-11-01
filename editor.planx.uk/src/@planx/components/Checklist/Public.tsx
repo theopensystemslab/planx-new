@@ -42,11 +42,11 @@ const ChecklistComponent: React.FC<Props> = (props) => {
   const autoAnswerableOptions = useStore(
     (state) => state.autoAnswerableOptions,
   );
-  
+
   if (props.neverAutoAnswer) {
     return <VisibleChecklist {...props} />;
   }
-  
+
   let idsThatCanBeAutoAnswered: string[] | undefined;
   if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
   if (idsThatCanBeAutoAnswered) {
@@ -203,8 +203,9 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                             pb={2}
                             aria-labelledby={`group-${index}-heading`}
                             id={`group-${index}-content`}
-                            data-testid={`group-${index}${isExpanded ? "-expanded" : ""
-                              }`}
+                            data-testid={`group-${index}${
+                              isExpanded ? "-expanded" : ""
+                            }`}
                           >
                             {group.children.map((option) => (
                               <ChecklistItem

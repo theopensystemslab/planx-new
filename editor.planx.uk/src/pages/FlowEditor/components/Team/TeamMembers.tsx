@@ -46,7 +46,8 @@ export const TeamMembers = () => {
           Team members
         </Typography>
         <Typography variant="body1">
-          Editors have access to edit your services, whilst viewers can only browse your services.
+          Editors have access to edit your services, whilst viewers can only
+          browse your services.
         </Typography>
         <MembersTable
           members={activeMembers}

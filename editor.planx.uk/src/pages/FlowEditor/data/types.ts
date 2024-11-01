@@ -12,6 +12,7 @@ export const SLUGS: {
   [TYPES.DateInput]: "date-input",
   [TYPES.DrawBoundary]: "draw-boundary",
   [TYPES.ExternalPortal]: "external-portal",
+  [TYPES.Feedback]: "feedback",
   [TYPES.FileUpload]: "file-upload",
   [TYPES.Filter]: "filter",
   [TYPES.FindProperty]: "find-property",

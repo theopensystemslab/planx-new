@@ -1,10 +1,10 @@
 import { act, waitFor } from "@testing-library/react";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { Store, useStore } from "pages/FlowEditor/lib/store";
 import type { Question } from "./model";
 import QuestionComponent, { QuestionLayout } from "./Public";
 
@@ -12,32 +12,27 @@ const { setState } = useStore;
 
 // Setup a basic single component flow so that we're testing the "VisibleQuestion" throughout (eg wrapper checks `flow[props.id].edges`)
 const flow: Store.Flow = {
-  "_root": {
-    "edges": [
-      "qustion_id"
-    ]
+  _root: {
+    edges: ["qustion_id"],
   },
-  "celery_id": {
-    "data": {
-      "text": "celery"
+  celery_id: {
+    data: {
+      text: "celery",
     },
-    "type": 200
+    type: 200,
   },
-  "pizza_id": {
-    "data": {
-      "text": "pizza"
+  pizza_id: {
+    data: {
+      text: "pizza",
     },
-    "type": 200
+    type: 200,
   },
-  "question_id": {
-    "data": {
-      "text": "Best food",
+  question_id: {
+    data: {
+      text: "Best food",
     },
-    "type": 100,
-    "edges": [
-      "pizza_id",
-      "celery_id",
-    ]
+    type: 100,
+    edges: ["pizza_id", "celery_id"],
   },
 };
 
@@ -96,7 +91,7 @@ describe("Question component", () => {
     describe(`${QuestionLayout[type]} layout`, () => {
       it(`renders the layout correctly`, async () => {
         const handleSubmit = vi.fn();
-        
+
         const { user, getByTestId, getByRole, getByText } = setup(
           <QuestionComponent
             id="question_id"

@@ -9,13 +9,16 @@ describe("Returns undefined and does not auto-answer any flag paths", () => {
   beforeEach(() => {
     resetPreview();
   });
-  
+
   test("If the node is not a Filter type", () => {
     setState({
       flow: {
-        "_root": { "edges": ["SetValue"] },
-        "SetValue": { "type": 380, "data": { "fn": "projectType", "val": "alter", "operation": "replace" } },
-      }
+        _root: { edges: ["SetValue"] },
+        SetValue: {
+          type: 380,
+          data: { fn: "projectType", val: "alter", operation: "replace" },
+        },
+      },
     });
 
     expect(autoAnswerableFlag("SetValue")).toBeUndefined();
@@ -33,47 +36,41 @@ describe("Returns undefined and does not auto-answer any flag paths", () => {
     const alteredFlow = structuredClone(flowWithFilter);
     delete alteredFlow["Filter"].edges;
     setState({ flow: alteredFlow });
-  
+
     expect(autoAnswerableFlag("Filter")).toBeUndefined();
   });
 });
 
 const flowWithFilter: Store.Flow = {
-  "_root": {
-    "edges": [
-      "Filter"
-    ]
+  _root: {
+    edges: ["Filter"],
   },
-  "Filter": {
-    "type": 500,
-    "data": {
-      "fn": "flag",
-      "category": "Material change of use"
+  Filter: {
+    type: 500,
+    data: {
+      fn: "flag",
+      category: "Material change of use",
     },
-    "edges": [
-      "Flag1",
-      "Flag2",
-      "Flag3"
-    ]
+    edges: ["Flag1", "Flag2", "Flag3"],
   },
-  "Flag1": {
-    "type": 200,
-    "data": {
-      "text": "Material change of use",
-      "val": "MCOU_TRUE"
-    }
+  Flag1: {
+    type: 200,
+    data: {
+      text: "Material change of use",
+      val: "MCOU_TRUE",
+    },
   },
-  "Flag2": {
-    "type": 200,
-    "data": {
-      "text": "Not material change of use",
-      "val": "MCOU_FALSE"
-    }
+  Flag2: {
+    type: 200,
+    data: {
+      text: "Not material change of use",
+      val: "MCOU_FALSE",
+    },
   },
-  "Flag3": {
-    "type": 200,
-    "data": {
-      "text": "No flag result"
-    }
-  }
+  Flag3: {
+    type: 200,
+    data: {
+      text: "No flag result",
+    },
+  },
 };

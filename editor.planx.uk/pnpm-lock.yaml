@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#54be9e0
-    version: github.com/theopensystemslab/planx-core/54be9e0(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#b4ca5a9
+    version: github.com/theopensystemslab/planx-core/b4ca5a9(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -2789,30 +2789,30 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@formatjs/ecma402-abstract@2.2.0:
-    resolution: {integrity: sha512-IpM+ev1E4QLtstniOE29W1rqH9eTdx5hQdNL8pzrflMj/gogfaoONZqL83LUeQScHAvyMbpqP5C9MzNf+fFwhQ==}
+  /@formatjs/ecma402-abstract@2.2.1:
+    resolution: {integrity: sha512-O4ywpkdJybrjFc9zyL8qK5aklleIAi5O4nYhBVJaOFtCkNrnU+lKFeJOFC48zpsZQmR8Aok2V79hGpHnzbmFpg==}
     dependencies:
-      '@formatjs/fast-memoize': 2.2.1
-      '@formatjs/intl-localematcher': 0.5.5
+      '@formatjs/fast-memoize': 2.2.2
+      '@formatjs/intl-localematcher': 0.5.6
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/fast-memoize@2.2.1:
-    resolution: {integrity: sha512-XS2RcOSyWxmUB7BUjj3mlPH0exsUzlf6QfhhijgI941WaJhVxXQ6mEWkdUFIdnKi3TuTYxRdelsgv3mjieIGIA==}
+  /@formatjs/fast-memoize@2.2.2:
+    resolution: {integrity: sha512-mzxZcS0g1pOzwZTslJOBTmLzDXseMLLvnh25ymRilCm8QLMObsQ7x/rj9GNrH0iUhZMlFisVOD6J1n6WQqpKPQ==}
     dependencies:
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/intl-listformat@7.5.9:
-    resolution: {integrity: sha512-HqtGkxUh2Uz0oGVTxHAvPZ3EGxc8+ol5+Bx7S9xB97d4PEJJd9oOgHrerIghHA0gtIjsNKBFUae3P0My+F6YUA==}
+  /@formatjs/intl-listformat@7.7.1:
+    resolution: {integrity: sha512-bjBxWaUhYAbJFUlFSMWZGn3r2mglXwk+BLyGRu8dY8Q83ZPsqmmVQzjQKENHE3lV6eoQGHT2oZHxUaVndJlk6Q==}
     dependencies:
-      '@formatjs/ecma402-abstract': 2.2.0
-      '@formatjs/intl-localematcher': 0.5.5
+      '@formatjs/ecma402-abstract': 2.2.1
+      '@formatjs/intl-localematcher': 0.5.6
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/intl-localematcher@0.5.5:
-    resolution: {integrity: sha512-t5tOGMgZ/i5+ALl2/offNqAQq/lfUnKLEw0mXQI4N4bqpedhrSE+fyKLpwnd22sK0dif6AV+ufQcTsKShB9J1g==}
+  /@formatjs/intl-localematcher@0.5.6:
+    resolution: {integrity: sha512-roz1+Ba5e23AHX6KUAWmLEyTRZegM5YDuxuvkHCyK3RJddf/UXB2f+s7pOMm9ktfPGla0g+mQXOn5vsuYirnaA==}
     dependencies:
       tslib: 2.7.0
     dev: false
@@ -3441,9 +3441,9 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@mui/base@5.0.0-beta.40(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-I/lGHztkCzvwlXpjD2+SNmvNQvB4227xBXhISPjEaJUXGImOQ9f3D2Yj/T3KasSI/h0MLWy74X0J6clhPmsRbQ==}
-    engines: {node: '>=12.0.0'}
+  /@mui/base@5.0.0-beta.60(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-w8twR3qCUI+uJHO5xDOuc1yB5l46KFbvNsTwIvEW9tQkKxVaiEFf2GAXHuvFJiHfZLqjzett6drZjghy8D1Z1A==}
+    engines: {node: '>=14.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
@@ -3454,8 +3454,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.25.7
       '@floating-ui/react-dom': 2.1.2(react-dom@18.3.1)(react@18.3.1)
-      '@mui/types': 7.2.17(@types/react@18.2.45)
-      '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.3.1)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
+      '@mui/utils': 6.1.5(@types/react@18.2.45)(react@18.3.1)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3739,6 +3739,17 @@ packages:
       '@types/react': 18.2.45
     dev: false
 
+  /@mui/types@7.2.18(@types/react@18.2.45):
+    resolution: {integrity: sha512-uvK9dWeyCJl/3ocVnTOS6nlji/Knj8/tVqVX03UVTpdmTJYu/s4jtDd9Kvv0nRGE0CUSNW1UYAci7PYypjealg==}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 18.2.45
+    dev: false
+
   /@mui/utils@5.15.11(@types/react@18.2.45)(react@18.2.0):
     resolution: {integrity: sha512-D6bwqprUa9Stf8ft0dcMqWyWDKEo7D+6pB1k8WajbqlYIRA8J8Kw9Ra7PSZKKePGBGWO+/xxrX1U8HpG/aXQCw==}
     engines: {node: '>=12.0.0'}
@@ -3807,6 +3818,26 @@ packages:
     dependencies:
       '@babel/runtime': 7.25.7
       '@mui/types': 7.2.17(@types/react@18.2.45)
+      '@types/prop-types': 15.7.13
+      '@types/react': 18.2.45
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-is: 18.3.1
+    dev: false
+
+  /@mui/utils@6.1.5(@types/react@18.2.45)(react@18.3.1):
+    resolution: {integrity: sha512-vp2WfNDY+IbKUIGg+eqX1Ry4t/BilMjzp6p9xO1rfqpYjH1mj8coQxxDfKxcQLzBQkmBJjymjoGOak5VUYwXug==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.25.7
+      '@mui/types': 7.2.18(@types/react@18.2.45)
       '@types/prop-types': 15.7.13
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -14723,8 +14754,8 @@ packages:
     dev: false
     optional: true
 
-  /uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+  /uuid@11.0.2:
+    resolution: {integrity: sha512-14FfcOJmqdjbBPdDjFQyk/SdT4NySW4eM0zcG+HqbHP5jzuH56xO3J1DGhgs/cEMCfwYi3HQI1gnTO62iaG+tQ==}
     hasBin: true
     dev: false
 
@@ -15359,9 +15390,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/54be9e0(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/54be9e0}
-    id: github.com/theopensystemslab/planx-core/54be9e0
+  github.com/theopensystemslab/planx-core/b4ca5a9(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b4ca5a9}
+    id: github.com/theopensystemslab/planx-core/b4ca5a9
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -15369,8 +15400,8 @@ packages:
     dependencies:
       '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.3.1)
-      '@formatjs/intl-listformat': 7.5.9
-      '@mui/base': 5.0.0-beta.40(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
+      '@formatjs/intl-listformat': 7.7.1
+      '@mui/base': 5.0.0-beta.60(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
       '@mui/material': 5.15.10(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
@@ -15388,7 +15419,7 @@ packages:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.26.1
-      uuid: 10.0.0
+      uuid: 11.0.2
       zod: 3.23.8
     transitivePeerDependencies:
       - '@types/react'

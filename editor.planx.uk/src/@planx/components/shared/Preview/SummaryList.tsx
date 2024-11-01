@@ -100,6 +100,7 @@ const presentationalComponents: {
   [TYPES.DateInput]: DateInput,
   [TYPES.DrawBoundary]: DrawBoundary,
   [TYPES.ExternalPortal]: undefined,
+  [TYPES.Feedback]: undefined,
   [TYPES.FileUpload]: FileUpload,
   [TYPES.Filter]: undefined,
   [TYPES.FindProperty]: FindProperty,

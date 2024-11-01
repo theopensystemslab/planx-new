@@ -15,6 +15,8 @@ import type { DateInput } from "@planx/components/DateInput/model";
 import DateInputComponent from "@planx/components/DateInput/Public";
 import type { DrawBoundary } from "@planx/components/DrawBoundary/model";
 import DrawBoundaryComponent from "@planx/components/DrawBoundary/Public";
+import type { Feedback } from "@planx/components/Feedback/model";
+import FeedbackComponent from "@planx/components/Feedback/Public/Public";
 import type { FileUpload } from "@planx/components/FileUpload/model";
 import FileUploadComponent from "@planx/components/FileUpload/Public";
 import type { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
@@ -144,7 +146,8 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.DrawBoundary:
       return <DrawBoundaryComponent {...getComponentProps<DrawBoundary>()} />;
-
+    case TYPES.Feedback:
+      return <FeedbackComponent {...getComponentProps<Feedback>()} />;
     case TYPES.FileUpload:
       return <FileUploadComponent {...getComponentProps<FileUpload>()} />;
 

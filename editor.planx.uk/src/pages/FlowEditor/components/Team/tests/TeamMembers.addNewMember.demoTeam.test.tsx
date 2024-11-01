@@ -17,7 +17,7 @@ vi.mock(
       id: 1,
       __typename: "users",
     }),
-  })
+  }),
 );
 
 describe("adding a new user to the Demo team", () => {
@@ -28,9 +28,9 @@ describe("adding a new user to the Demo team", () => {
       teamId: DEMO_TEAM_ID,
     });
   });
-  
+
   it("assigns the `demoUser` role automatically", async () => {
-    let currentUsers = getState().teamMembers
+    let currentUsers = getState().teamMembers;
     expect(currentUsers).toHaveLength(3);
 
     const { user, getByTestId } = await setupTeamMembersScreen();
@@ -44,7 +44,7 @@ describe("adding a new user to the Demo team", () => {
       ).toBeInTheDocument();
     });
 
-    currentUsers = getState().teamMembers
+    currentUsers = getState().teamMembers;
     expect(currentUsers).toHaveLength(4);
 
     // Role correctly assigned to user

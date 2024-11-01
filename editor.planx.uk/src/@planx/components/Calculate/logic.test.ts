@@ -1,5 +1,8 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { clickContinue, visitedNodes } from "pages/FlowEditor/lib/__tests__/utils";
+import {
+  clickContinue,
+  visitedNodes,
+} from "pages/FlowEditor/lib/__tests__/utils";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 
 const { getState, setState } = useStore;
@@ -19,7 +22,7 @@ test("When formatOutputForAutomations is true, Calculate writes an array and fut
 
   // The Question can be auto-answered
   expect(visitedNodes()).toEqual(["Calculate"]);
-  expect(upcomingCardIds()).toEqual(["Question"])
+  expect(upcomingCardIds()).toEqual(["Question"]);
   expect(autoAnswerableOptions("Question")).toEqual(["Group2Response"]);
 });
 

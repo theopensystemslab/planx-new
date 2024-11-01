@@ -128,8 +128,7 @@ describe("'add a new member' button is hidden from Templates team", () => {
   it("hides the button on the Templates team", async () => {
     await setupTeamMembersScreen();
     const teamMembers = screen.getByTestId("team-members");
-    const addMemberButton =
-      within(teamMembers).queryByText("Add a new member");
+    const addMemberButton = within(teamMembers).queryByText("Add a new member");
     expect(addMemberButton).not.toBeInTheDocument();
   });
 });

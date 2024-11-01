@@ -12,8 +12,11 @@ export const createAndAddUserToTeam = async ({
   newUser,
   teamId,
   teamSlug,
-}: { newUser: AddNewEditorFormValues, teamId: number, teamSlug: string }
-) => {
+}: {
+  newUser: AddNewEditorFormValues;
+  teamId: number;
+  teamSlug: string;
+}) => {
   const response: CreateAndAddUserResponse = await client.mutate({
     mutation: gql`
       mutation CreateAndAddUserToTeam(

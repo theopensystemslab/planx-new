@@ -2,7 +2,7 @@
 
 Let's add a `SetValue` component
 
-## Core directory & files
+## Core directory typing
 
 1. `planx-core/src/types/component.ts`
 
@@ -12,9 +12,11 @@ Add type to enum in `planx-core` repository
 SetValue = 380,
 ```
 
-2. `mkdir src/@planx/components/SetValue`
+## `planx-new` component files
 
-3. `model.ts`
+1. `mkdir src/@planx/components/SetValue`
+
+2. `model.ts`
 
 ```typescript
 import { BaseNodeData, parseBaseNodeData } from "../shared";
@@ -31,7 +33,7 @@ export const parseContent = (
 });
 ```
 
-4. `Editor.tsx`
+3. `Editor.tsx`
 
 ```typescript
 type Props = EditorProps<TYPES.SetValue, SetValue>;
@@ -60,7 +62,7 @@ function SetValueComponent(props: Props) {
 5. `Public.tsx`
 
 ```typescript
-import { PublicProps } from "@planx/components/ui";
+import { PublicProps } from "@planx/components/shared/types";
 
 type Props = PublicProps<SetValue>;
 
@@ -86,7 +88,7 @@ function SetValueComponent(props: Props) {
 
 ## Editor configurations
 
-1. `src/@planx/components/ui.tsx`
+1. `src/@planx/components/shared/icons.tsx`
 
 ```typescript
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
@@ -135,13 +137,13 @@ case TYPES.SetValue:
 
 2. `src/@planx/components/shared/Preview/SummaryList`
 
-If/how should this component appear on the Review page?
+If/how should this component appear in a Review component:
 
 ```typescript
 [TYPES.SetValue]: undefined,
 ```
 
-3. `src/@planx/components/Send/bops/index`
+3. In `planx-core` - `src/export/bops/index`
 
 If/how should this component be formatted in Send data formats such as BOPS?
 

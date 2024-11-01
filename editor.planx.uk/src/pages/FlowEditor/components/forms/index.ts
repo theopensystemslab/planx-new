@@ -8,6 +8,7 @@ import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
 import ExternalPortal from "@planx/components/ExternalPortal/Editor";
+import { FeedbackEditor } from "@planx/components/Feedback/Editor/Editor";
 import FileUpload from "@planx/components/FileUpload/Editor";
 import FileUploadAndLabel from "@planx/components/FileUploadAndLabel/Editor";
 import Filter from "@planx/components/Filter/Editor";
@@ -48,6 +49,7 @@ const components: {
   "date-input": DateInput,
   "draw-boundary": DrawBoundary,
   "external-portal": ExternalPortal,
+  feedback: FeedbackEditor,
   "file-upload": FileUpload,
   filter: Filter,
   "find-property": FindProperty,

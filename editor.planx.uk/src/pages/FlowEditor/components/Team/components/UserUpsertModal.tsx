@@ -36,7 +36,10 @@ export const UserUpsertModal = ({
 }: EditorModalProps) => {
   const [showUserAlreadyExistsError, setShowUserAlreadyExistsError] =
     useState<boolean>(false);
-  const [ teamId, teamSlug ] = useStore(state => [state.teamId, state.teamSlug])
+  const [teamId, teamSlug] = useStore((state) => [
+    state.teamId,
+    state.teamSlug,
+  ]);
   const isDemoTeam = teamId === DEMO_TEAM_ID;
 
   const toast = useToast();
