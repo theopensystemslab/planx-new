@@ -6,13 +6,13 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import type { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
-import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
 import NeutralFace from "ui/images/feedback_filled-03.svg";
 import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
@@ -117,10 +117,13 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
             }
           />
         )}
-        <RichTextInput
+
+        <Input
+          multiline={true}
+          rows={5}
           name="feedback"
           value={formik.values.feedback}
-          placeholder="What did you think?"
+          bordered
           onChange={formik.handleChange}
         />
       </Box>
