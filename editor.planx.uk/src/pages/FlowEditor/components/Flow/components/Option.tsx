@@ -5,10 +5,10 @@ import { Link } from "react-navi";
 
 import { useStore } from "../../../lib/store";
 import { DataField } from "./DataField";
-import { FlagBand, NoFlagBand } from "./FlagBand";
 import Hanger from "./Hanger";
 import Node from "./Node";
 import { Thumbnail } from "./Thumbnail";
+import { FlagBand, NoFlagBand } from "./FlagBand";
 
 const Option: React.FC<any> = (props) => {
   const childNodes = useStore((state) => state.childNodesOf(props.id));
@@ -20,9 +20,7 @@ const Option: React.FC<any> = (props) => {
     // Question & Checklist Options set zero or many flag values under "data.flag"
     if (props.data?.flag) {
       if (Array.isArray(props.data?.flag)) {
-        flags = flatFlags.filter(
-          ({ value }) => props.data?.flag?.includes(value),
-        );
+        flags = flatFlags.filter(({ value }) => props.data?.flag?.includes(value));
       } else {
         flags = flatFlags.filter(({ value }) => props.data?.flag === value);
       }
@@ -49,21 +47,13 @@ const Option: React.FC<any> = (props) => {
           />
         )}
         {flags ? (
-          flags.map((flag) => (
-            <FlagBand key={`${props.id}-${flag.value}`} flag={flag} />
-          ))
-        ) : (
-          <NoFlagBand />
-        )}
+          flags.map((flag) => (<FlagBand key={`${props.id}-${flag.value}`} flag={flag} />))
+        ) : (<NoFlagBand />)}
         <div className="text">{props.data.text}</div>
-        {props.data?.val && (
-          <DataField value={props.data.val} variant="child" />
-        )}
+        {props.data?.val && (<DataField value={props.data.val} variant="child" />)}
       </Link>
       <ol className="decisions">
-        {childNodes.map((child: any) => (
-          <Node key={child.id} parent={props.id} {...child} />
-        ))}
+        {childNodes.map((child: any) => (<Node key={child.id} parent={props.id} {...child} />))}
         <Hanger parent={props.id} />
       </ol>
     </li>

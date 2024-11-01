@@ -110,9 +110,7 @@ const OptionEditor: React.FC<{
     )}
     <FlagsSelect
       value={
-        Array.isArray(props.value.data.flag)
-          ? props.value.data.flag
-          : [props.value.data.flag]
+        Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]
       }
       onChange={(ev) => {
         props.onChange({
@@ -155,7 +153,7 @@ export const Question: React.FC<Props> = (props) => {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
