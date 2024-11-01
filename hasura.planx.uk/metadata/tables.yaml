@@ -589,6 +589,7 @@
     - role: demoUser
       permission:
         columns:
+          - analytics_link
           - created_at
           - creator_id
           - data
@@ -1075,8 +1076,15 @@
         check:
           flow:
             creator_id:
-              _eq: x-hausra-user-id
-        columns: []
+              _eq: x-hasura-user-id
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
       comment: ""
     - role: platformAdmin
       permission:
@@ -1146,11 +1154,18 @@
   update_permissions:
     - role: demoUser
       permission:
-        columns: []
+        columns:
+          - id
+          - actor_id
+          - version
+          - data
+          - created_at
+          - updated_at
+          - flow_id
         filter:
           flow:
             creator_id:
-              _eq: x-hausra-user-id
+              _eq: x-hasura-user-id
         check: null
       comment: ""
     - role: platformAdmin
@@ -1960,6 +1975,17 @@
           - role
           - id
         filter: {}
+    - role: demoUser
+      permission:
+        columns:
+          - team_id
+          - user_id
+          - role
+          - id
+        filter:
+          user_id:
+            _eq: x-hasura-user-id
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -2035,6 +2061,24 @@
           - reference_code
           - submission_email
           - team_id
+        filter: {}
+      comment: ""
+    - role: demoUser
+      permission:
+        columns:
+          - id
+          - external_planning_site_name
+          - external_planning_site_url
+          - homepage
+          - help_email
+          - help_opening_hours
+          - help_phone
+          - email_reply_to_id
+          - team_id
+          - boundary_bbox
+          - submission_email
+          - reference_code
+          - boundary_url
         filter: {}
       comment: ""
     - role: platformAdmin

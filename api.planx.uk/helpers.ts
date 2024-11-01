@@ -4,6 +4,7 @@ import type { Flow, Node } from "./types.js";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { $public, getClient } from "./client/index.js";
+import { userContext } from "./modules/auth/middleware.js";
 
 export interface FlowData {
   slug: string;
@@ -67,10 +68,11 @@ const insertFlow = async (
   slug: string,
   name: string,
   flowData: Flow["data"],
-  creatorId?: number,
   copiedFrom?: Flow["id"],
 ) => {
   const { client: $client } = getClient();
+  const userId = userContext.getStore()?.user?.sub;
+
   try {
     const {
       flow: { id },
@@ -81,7 +83,6 @@ const insertFlow = async (
           $slug: String!
           $name: String!
           $data: jsonb = {}
-          $creator_id: Int
           $copied_from: uuid
         ) {
           flow: insert_flows_one(
@@ -91,7 +92,6 @@ const insertFlow = async (
               name: $name
               data: $data
               version: 1
-              creator_id: $creator_id
               copied_from: $copied_from
             }
           ) {
@@ -104,7 +104,6 @@ const insertFlow = async (
         slug: slug,
         name: name,
         data: flowData,
-        creator_id: creatorId,
         copied_from: copiedFrom,
       },
     );
@@ -113,7 +112,7 @@ const insertFlow = async (
     return { id };
   } catch (error) {
     throw Error(
-      `User ${creatorId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
+      `User ${userId} failed to insert flow to teamId ${teamId}. Please check permissions. Error: ${error}`,
     );
   }
 };
