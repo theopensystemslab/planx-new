@@ -1,11 +1,7 @@
+// import { object, string } from "yup";
+
 import { BaseNodeData, parseBaseNodeData } from "../shared";
-import {
-  descriptionPlaceholder,
-  disclaimerPlaceholder,
-  freeformQuestionPlaceholder,
-  ratingQuestionPlaceholder,
-  titlePlaceholder,
-} from "./components/placeholders";
+import { defaultContent } from "./components/defaultContent";
 export interface Feedback extends BaseNodeData {
   title?: string;
   description?: string;
@@ -22,11 +18,11 @@ export interface FormProps {
 export const parseFeedback = (
   data: Record<string, any> | undefined,
 ): Feedback => ({
-  title: data?.title || titlePlaceholder,
-  description: data?.description || descriptionPlaceholder,
-  ratingQuestion: data?.ratingQuestion || ratingQuestionPlaceholder,
-  freeformQuestion: data?.freeformQuestion || freeformQuestionPlaceholder,
-  disclaimer: data?.disclaimer || disclaimerPlaceholder,
+  title: data?.title || defaultContent.title,
+  description: data?.description || defaultContent.description,
+  ratingQuestion: data?.ratingQuestion || defaultContent.ratingQuestion,
+  freeformQuestion: data?.freeformQuestion || defaultContent.freeformQuestion,
+  disclaimer: data?.disclaimer || defaultContent.disclaimer,
   feedbackRequired: data?.feedbackRequired || false,
   ...parseBaseNodeData(data),
 });

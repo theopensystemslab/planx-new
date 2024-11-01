@@ -1,12 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import {
-  descriptionPlaceholder,
-  disclaimerPlaceholder,
-  freeformQuestionPlaceholder,
-  ratingQuestionPlaceholder,
-  titlePlaceholder,
-} from "../components/placeholders";
+import { defaultContent } from "../components/defaultContent";
 import Public from "./Public";
 
 const meta = {
@@ -20,11 +14,11 @@ export default meta;
 
 export const Basic = {
   args: {
-    title: titlePlaceholder,
+    title: defaultContent.title,
     feedbackRequired: false,
-    description: descriptionPlaceholder,
-    freeformQuestion: freeformQuestionPlaceholder,
-    ratingQuestion: ratingQuestionPlaceholder,
-    disclaimer: disclaimerPlaceholder,
+    description: defaultContent.description,
+    freeformQuestion: defaultContent.freeformQuestion,
+    ratingQuestion: defaultContent.ratingQuestion,
+    disclaimer: defaultContent.disclaimer,
   },
 } satisfies Story;
