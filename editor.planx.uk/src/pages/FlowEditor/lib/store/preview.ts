@@ -39,11 +39,20 @@ export interface Response {
   hidden: boolean;
 }
 
+interface ResultData {
+  [category: string]: {
+    flag: Flag;
+    responses: Array<Response>;
+    displayText: { heading: string; description: string };
+  };
+}
+
+interface CollectedFlags {
+  [category: string]: Array<Flag["text"] | undefined>;
+}
+
 export interface PreviewStore extends Store.Store {
-  collectedFlags: (
-    upToNodeId: NodeId,
-    visited?: Array<string>,
-  ) => Array<string>;
+  collectedFlags: () => CollectedFlags;
   currentCard: ({ id: NodeId } & Store.Node) | null;
   setCurrentCard: () => void;
   getCurrentCard: () => ({ id: NodeId } & Store.Node) | null;
@@ -61,13 +70,7 @@ export interface PreviewStore extends Store.Store {
     overrides?: {
       [flagId: string]: { heading?: string; description?: string };
     },
-  ) => {
-    [category: string]: {
-      flag: Flag;
-      responses: Array<Response>;
-      displayText: { heading: string; description: string };
-    };
-  };
+  ) => ResultData;
   resumeSession: (session: Session) => void;
   sessionId: string;
   upcomingCardIds: () => NodeId[];
@@ -110,39 +113,28 @@ export const previewStore: StateCreator<
     record(id, undefined);
   },
 
-  collectedFlags(upToNodeId, visited = []) {
+  collectedFlags() {
     const { breadcrumbs, flow } = get();
+    const collectedFlags: CollectedFlags = {};
 
-    const possibleFlags = flatFlags.filter(
-      (f) => f.category === DEFAULT_FLAG_CATEGORY,
-    );
-    const flagKeys: string[] = possibleFlags
-      .map((flag) => flag.value)
-      .filter((value): value is string => Boolean(value));
+    const categories = [...new Set(flatFlags.map((flag) => flag.category))];
+    categories.forEach((category) => {
+      const flagValues = collectedFlagValuesByCategory(
+        category,
+        breadcrumbs,
+        flow,
+      );
+      let flagText: (string | undefined)[] = [];
+      if (flagValues.length > 0) {
+        flagText = flagValues.map(
+          (flagValue) =>
+            flatFlags.find((flag) => flag.value === flagValue)?.text,
+        );
+      }
+      collectedFlags[category] = flagText;
+    });
 
-    const breadcrumbIds = Object.keys(breadcrumbs);
-
-    const idx = breadcrumbIds.indexOf(upToNodeId);
-
-    let ids: Array<string> = [];
-
-    if (idx >= 0) {
-      ids = breadcrumbIds.slice(0, idx + 1);
-    } else if (visited.length > 1 && visited.includes(upToNodeId)) {
-      ids = breadcrumbIds.filter((id) => visited.includes(id));
-    }
-
-    const res = ids
-      .reduce((acc, k) => {
-        breadcrumbs[k].answers?.forEach((id: string) => {
-          acc.push(flow[id]?.data?.flag);
-        });
-        return acc;
-      }, [] as Array<string>)
-      .filter((flag) => flag && flagKeys.includes(flag))
-      .sort((a, b) => flagKeys.indexOf(a) - flagKeys.indexOf(b));
-
-    return res;
+    return collectedFlags;
   },
 
   setCurrentCard() {
@@ -382,7 +374,74 @@ export const previewStore: StateCreator<
 
   resultData(flagSet, overrides) {
     const { breadcrumbs, flow } = get();
-    return getResultData(breadcrumbs, flow, flagSet, overrides);
+    const category = flagSet || DEFAULT_FLAG_CATEGORY;
+
+    const possibleFlags: Flag[] = flatFlags.filter(
+      (flag) => flag.category === category,
+    );
+    const collectedFlags = collectedFlagValuesByCategory(
+      category,
+      breadcrumbs,
+      flow,
+    );
+
+    // The highest order flag collected in this category is our result, else "No result"
+    const flag: Flag = possibleFlags.find(
+      (f) => f.value === collectedFlags[0],
+    ) || {
+      value: undefined,
+      text: "No result",
+      category: category as FlagSet,
+      bgColor: "#EEEEEE",
+      color: "#000000",
+      description: "",
+    };
+
+    // Get breadcrumb nodes that set the result flag value (limited to Question & Checklist types)
+    const responses = Object.entries(breadcrumbs)
+      .map(([nodeId, { answers = [] }]) => {
+        const question = { id: nodeId, ...flow[nodeId] };
+        const questionType = question?.type;
+        if (!questionType || !SUPPORTED_DECISION_TYPES.includes(questionType))
+          return null;
+
+        const selections = answers.map((answerId) => ({
+          id: answerId,
+          ...flow[answerId],
+        }));
+        const hidden = !selections.some(
+          (selection) =>
+            selection.data?.flag &&
+            // Account for both new flag values (array) and legacy flag value (string)
+            ((Array.isArray(selection.data.flag) &&
+              selection.data.flag.includes(flag?.value)) ||
+              selection.data.flag === flag?.value),
+        );
+
+        return {
+          question,
+          selections,
+          hidden,
+        };
+      })
+      .filter(Boolean);
+
+    // Get the heading & description for this result flag
+    const heading =
+      (flag.value && overrides && overrides[flag.value]?.heading) || flag.text;
+    const description =
+      (flag.value && overrides && overrides[flag.value]?.description) ||
+      category;
+
+    return {
+      [category]: {
+        flag,
+        displayText: { heading, description },
+        responses: responses.every((response) => Boolean(response?.hidden))
+          ? responses.map((response) => ({ ...response, hidden: false }))
+          : responses,
+      },
+    } as ResultData;
   },
 
   resumeSession(session: Session) {
@@ -578,24 +637,13 @@ export const previewStore: StateCreator<
 
     // "New" Filters will have a category prop, but existing ones may still be relying on DEFAULT category
     const filterCategory = data?.category || DEFAULT_FLAG_CATEGORY;
-    const possibleFlags = flatFlags.filter(
-      (flag) => flag.category === filterCategory,
+    const collectedFlags = collectedFlagValuesByCategory(
+      filterCategory,
+      breadcrumbs,
+      flow,
     );
-    const possibleFlagValues = possibleFlags.map((flag) => flag.value);
 
-    // Get all flags collected so far based on selected answers, excluding flags not in this category
-    const collectedFlags: Flag[] = [];
-    Object.entries(breadcrumbs).forEach(([_nodeId, breadcrumb]) => {
-      if (breadcrumb.answers) {
-        breadcrumb.answers.forEach((answerId) => {
-          const node = flow[answerId];
-          if (node.data?.flag && possibleFlagValues.includes(node.data.flag))
-            collectedFlags.push(node.data?.flag);
-        });
-      }
-    });
-
-    // Starting from the left of the Filter options, check for matches
+    // Starting from the left of the Filter options, check for matches against collectedFlags
     options.forEach((option) => {
       collectedFlags.forEach((flag) => {
         if (option.data?.val === flag && option.id) {
@@ -731,93 +779,6 @@ export const removeOrphansFromBreadcrumbs = ({
   );
 };
 
-export const getResultData = (
-  breadcrumbs: Store.Breadcrumbs,
-  flow: Store.Flow,
-  flagSet: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
-  overrides?: Parameters<PreviewStore["resultData"]>[1],
-) => {
-  const categories = [flagSet];
-
-  return categories.reduce(
-    (
-      acc: {
-        [category: string]: {
-          flag: Flag;
-          responses: any[];
-          displayText: { heading: string; description: string };
-        };
-      },
-      category: string,
-    ) => {
-      // might DRY this up with preceding collectedFlags function
-      const possibleFlags: Flag[] = flatFlags.filter(
-        (f) => f.category === category,
-      );
-      const keys = possibleFlags.map((f) => f.value);
-      const collectedFlags = Object.values(breadcrumbs).flatMap(
-        ({ answers = [] }) => answers.map((id) => flow[id]?.data?.flag),
-      );
-
-      const filteredCollectedFlags = collectedFlags
-        .filter((flag) => flag && keys.includes(flag))
-        .sort((a, b) => keys.indexOf(a) - keys.indexOf(b));
-
-      const flag: Flag = possibleFlags.find(
-        (f) => f.value === filteredCollectedFlags[0],
-      ) || {
-        // value: "PP-NO_RESULT",
-        value: undefined,
-        text: "No result",
-        category: category as FlagSet,
-        bgColor: "#EEEEEE",
-        color: "#000000",
-        description: "",
-      };
-
-      const responses = Object.entries(breadcrumbs)
-        .map(([k, { answers = [] }]) => {
-          const question = { id: k, ...flow[k] };
-
-          const questionType = question?.type;
-
-          if (!questionType || !SUPPORTED_DECISION_TYPES.includes(questionType))
-            return null;
-
-          const selections = answers.map((id) => ({ id, ...flow[id] }));
-          const hidden = !selections.some(
-            (r) => r.data?.flag && r.data.flag === flag?.value,
-          );
-
-          return {
-            question,
-            selections,
-            hidden,
-          };
-        })
-        .filter(Boolean);
-
-      const heading =
-        (flag.value && overrides && overrides[flag.value]?.heading) ||
-        flag.text;
-      const description =
-        (flag.value && overrides && overrides[flag.value]?.description) ||
-        flagSet;
-
-      acc[category] = {
-        flag,
-        displayText: { heading, description },
-        responses: responses.every((r: any) => r.hidden)
-          ? responses.map((r: any) => ({ ...r, hidden: false }))
-          : responses,
-      };
-
-      return acc;
-    },
-    {},
-  );
-};
-
 export const sortBreadcrumbs = (
   nextBreadcrumbs: Store.Breadcrumbs,
   flow: Store.Flow,
@@ -909,4 +870,44 @@ export const removeNodesDependentOnPassport = (
     return acc;
   }, [] as string[]);
   return { removedNodeIds, breadcrumbsWithoutPassportData: newBreadcrumbs };
+};
+
+const collectedFlagValuesByCategory = (
+  category: Parameters<PreviewStore["resultData"]>[0] = DEFAULT_FLAG_CATEGORY,
+  breadcrumbs: Store.Breadcrumbs,
+  flow: Store.Flow,
+): Array<Flag["value"]> => {
+  // Get all possible flag values for this flagset category
+  const possibleFlags = flatFlags.filter((flag) => flag.category === category);
+  const possibleFlagValues = possibleFlags.map((flag) => flag.value);
+
+  // Get all flags collected so far based on selected answers, excluding flags not in this category
+  const collectedFlags: Array<Flag["value"]> = [];
+  Object.entries(breadcrumbs).forEach(([_nodeId, breadcrumb]) => {
+    if (breadcrumb.answers) {
+      breadcrumb.answers.forEach((answerId) => {
+        const node = flow[answerId];
+        // Account for both new flag values (array) and legacy flag value (string)
+        if (node.data?.flag && Array.isArray(node.data.flag)) {
+          node.data.flag.forEach((flag) => {
+            if (possibleFlagValues.includes(flag)) collectedFlags.push(flag);
+          });
+        } else if (
+          node.data?.flag &&
+          possibleFlagValues.includes(node.data.flag)
+        ) {
+          collectedFlags.push(node.data.flag);
+        }
+      });
+    }
+  });
+
+  // Return de-duplicated collected flags in hierarchical order
+  return [
+    ...new Set(
+      collectedFlags.sort(
+        (a, b) => possibleFlagValues.indexOf(a) - possibleFlagValues.indexOf(b),
+      ),
+    ),
+  ];
 };

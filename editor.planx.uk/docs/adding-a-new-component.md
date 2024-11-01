@@ -143,3 +143,17 @@ If/how should this component appear in a Review component:
 [TYPES.SetValue]: undefined,
 ```
 
+3. In `planx-core` - `src/export/bops/index`
+
+If/how should this component be formatted in Send data formats such as BOPS?
+
+```typescript
+function isTypeForBopsPayload(type?: TYPES) {
+  switch (type) {
+    // ...
+    case TYPES.SetValue:
+      return false;
+    // ...
+  }
+}
+```
