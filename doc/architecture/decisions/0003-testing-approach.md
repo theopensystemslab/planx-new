@@ -1,4 +1,4 @@
-# 1. Testing Principles
+# 3. Testing Principles
 
 ## Status
 
