@@ -24,8 +24,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option, parseBaseNodeData } from "../shared";
+import { FlagsSelect } from "../shared/FlagsSelect";
 import { ICONS } from "../shared/icons";
-import PermissionSelect from "../shared/PermissionSelect";
 import type { Checklist, Group } from "./model";
 import { toggleExpandableChecklist } from "./model";
 import { ChecklistProps, OptionEditorProps } from "./types";
@@ -68,20 +68,6 @@ const OptionEditor: React.FC<OptionEditorProps> = (props) => {
           }}
         />
 
-        <PermissionSelect
-          value={props.value.data.flag || ""}
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                flag: ev.target.value as string,
-              },
-            });
-          }}
-          sx={{ width: { md: "160px" }, maxWidth: "160px" }}
-        />
-
         {typeof props.index !== "undefined" &&
           props.groups &&
           props.onMoveToGroup && (
@@ -117,6 +103,23 @@ const OptionEditor: React.FC<OptionEditorProps> = (props) => {
           />
         </InputRow>
       )}
+
+      <FlagsSelect
+        value={
+          Array.isArray(props.value.data.flag)
+            ? props.value.data.flag
+            : [props.value.data.flag]
+        }
+        onChange={(ev) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              flag: ev,
+            },
+          });
+        }}
+      />
     </div>
   );
 };
@@ -171,7 +174,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                           text: "",
                           description: "",
                           val: "",
-                          flag: "",
                         },
                       }) as Option
                     }
@@ -245,7 +247,6 @@ const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 text: "",
                 description: "",
                 val: "",
-                flag: "",
               },
             }) as Option
           }
@@ -295,9 +296,9 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                    categories: groupedOptions.map((gr) => ({
-                      title: gr.title,
-                      count: gr.children.length,
+                    categories: groupedOptions.map((group) => ({
+                      title: group.title,
+                      count: group.children.length,
                     })),
                   }
                 : {

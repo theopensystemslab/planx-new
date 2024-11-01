@@ -17,8 +17,8 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
+import { FlagsSelect } from "../shared/FlagsSelect";
 import { ICONS } from "../shared/icons";
-import PermissionSelect from "../shared/PermissionSelect";
 
 interface Props {
   node: {
@@ -62,7 +62,6 @@ const OptionEditor: React.FC<{
           placeholder="Option"
         />
       </InputRowItem>
-
       <ImgInput
         img={props.value.data.img}
         onChange={(img) => {
@@ -74,20 +73,6 @@ const OptionEditor: React.FC<{
             },
           });
         }}
-      />
-
-      <PermissionSelect
-        value={props.value.data.flag || ""}
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            data: {
-              ...props.value.data,
-              flag: ev.target.value as string,
-            },
-          });
-        }}
-        sx={{ width: { md: "160px" }, maxWidth: "160px" }}
       />
     </InputRow>
     <InputRow>
@@ -123,6 +108,18 @@ const OptionEditor: React.FC<{
         />
       </InputRow>
     )}
+    <FlagsSelect
+      value={Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]}
+      onChange={(ev) => {
+        props.onChange({
+          ...props.value,
+          data: {
+            ...props.value.data,
+            flag: ev,
+          },
+        });
+      }}
+    />
   </div>
 );
 
@@ -154,7 +151,7 @@ export const Question: React.FC<Props> = (props) => {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
@@ -237,7 +234,6 @@ export const Question: React.FC<Props> = (props) => {
                   text: "",
                   description: "",
                   val: "",
-                  flag: "",
                 },
               }) as Option
             }
