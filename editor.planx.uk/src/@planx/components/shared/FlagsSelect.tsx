@@ -1,4 +1,7 @@
-import { AutocompleteChangeReason, AutocompleteProps } from "@mui/material/Autocomplete";
+import {
+  AutocompleteChangeReason,
+  AutocompleteProps,
+} from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
@@ -19,7 +22,11 @@ const renderOptions: AutocompleteProps<
   "div"
 >["renderOption"] = (props, flag, { selected }) => (
   <ListItem {...props}>
-    <CustomCheckbox aria-hidden="true" className={selected ? "selected" : ""} sx={{ backgroundColor: `${flag.bgColor}` }} />
+    <CustomCheckbox
+      aria-hidden="true"
+      className={selected ? "selected" : ""}
+      sx={{ backgroundColor: `${flag.bgColor}` }}
+    />
     {flag.text}
   </ListItem>
 );
@@ -31,22 +38,24 @@ const renderTags: AutocompleteProps<
   false,
   "div"
 >["renderTags"] = (value, getFlagProps) =>
-    value.map((flag, index) => (
-      <Chip
-        {...getFlagProps({ index })}
-        key={flag.value}
-        label={flag.text}
-        sx={{ backgroundColor: flag.bgColor, color: flag.color }}
-      />
-    ));
+  value.map((flag, index) => (
+    <Chip
+      {...getFlagProps({ index })}
+      key={flag.value}
+      label={flag.text}
+      sx={{ backgroundColor: flag.bgColor, color: flag.color }}
+    />
+  ));
 
 export const FlagsSelect: React.FC<Props> = (props) => {
   const { value: initialFlagValues } = props;
 
   const value: Flag[] | undefined = useMemo(
     () =>
-      initialFlagValues?.flatMap((initialFlagValue) => flatFlags.filter((flag) => flag.value === initialFlagValue)),
-    [initialFlagValues, flatFlags],
+      initialFlagValues?.flatMap((initialFlagValue) =>
+        flatFlags.filter((flag) => flag.value === initialFlagValue),
+      ),
+    [initialFlagValues],
   );
 
   const handleChange = (
@@ -75,4 +84,4 @@ export const FlagsSelect: React.FC<Props> = (props) => {
       />
     </InputRow>
   );
-}
+};
