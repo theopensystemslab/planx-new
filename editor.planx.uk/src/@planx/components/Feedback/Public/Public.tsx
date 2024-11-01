@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import { Disclaimer } from "@planx/components/shared/Disclaimer";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
@@ -124,9 +124,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           onChange={formik.handleChange}
         />
       </Box>
-      <Typography variant="caption">
-        <ReactMarkdownOrHtml source={props?.disclaimer} id={"DISCLAIMER"} />
-      </Typography>
+      {props.disclaimer && <Disclaimer text={props.disclaimer} />}
     </Card>
   );
 };
