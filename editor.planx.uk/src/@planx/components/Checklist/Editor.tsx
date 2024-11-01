@@ -105,7 +105,11 @@ const OptionEditor: React.FC<OptionEditorProps> = (props) => {
       )}
 
       <FlagsSelect
-        value={Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]}
+        value={
+          Array.isArray(props.value.data.flag)
+            ? props.value.data.flag
+            : [props.value.data.flag]
+        }
         onChange={(ev) => {
           props.onChange({
             ...props.value,
@@ -292,14 +296,14 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                  categories: groupedOptions.map((gr) => ({
-                    title: gr.title,
-                    count: gr.children.length,
-                  })),
-                }
+                    categories: groupedOptions.map((group) => ({
+                      title: group.title,
+                      count: group.children.length,
+                    })),
+                  }
                 : {
-                  categories: undefined,
-                }),
+                    categories: undefined,
+                  }),
             },
           },
           processedOptions,
@@ -308,7 +312,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: () => { },
+    validate: () => {},
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
