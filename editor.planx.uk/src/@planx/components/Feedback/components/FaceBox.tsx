@@ -42,7 +42,17 @@ export const FaceBox = ({
           })}
         >
           <img src={icon} width={50} alt={altText} />
-          <Typography variant="body2" pt={0.5}>
+          <Typography
+            variant="body2"
+            pt={1}
+            sx={(theme) => ({
+              textTransform: "lowercase",
+              "&::first-letter": {
+                textTransform: "uppercase",
+              },
+              color: theme.palette.text.primary,
+            })}
+          >
             {label}
           </Typography>
         </Box>
