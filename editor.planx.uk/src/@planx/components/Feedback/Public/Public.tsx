@@ -42,7 +42,12 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
-      <CardHeader title={props.title} />
+      <CardHeader
+        title={props.title}
+        info={props.info}
+        policyRef={props.policyRef}
+        howMeasured={props.howMeasured}
+      />
       <ReactMarkdownOrHtml
         source={props.description}
         id={"DESCRIPTION_TEXT"}
