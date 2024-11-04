@@ -46,28 +46,6 @@ export const contextDefaults: Context = {
   },
 };
 
-export const demoContext: Context = {
-  user: {
-    firstName: "Demo",
-    lastName: "demo",
-    email: "simulate-delivered@notifications.service.gov.uk",
-    isPlatformAdmin: false,
-  },
-  team: {
-    name: "E2E Test Team",
-    slug: "E2E",
-    theme: {
-      logo: "https://raw.githubusercontent.com/theopensystemslab/planx-team-logos/main/planx-testing.svg",
-      primaryColour: "#444444",
-    },
-    settings: {
-      homepage: "planx.uk",
-      submissionEmail: "simulate-delivered@notifications.service.gov.uk",
-    },
-  },
-};
-
-
 export async function setUpTestContext(
   initialContext: Context,
 ): Promise<Context> {

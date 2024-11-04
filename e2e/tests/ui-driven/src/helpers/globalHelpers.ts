@@ -69,33 +69,6 @@ export async function createAuthenticatedSession({
   return page;
 }
 
-export async function createAuthenticatedDemoSession({
-  browser,
-  userId,
-}: {
-  browser: Browser;
-  userId: number;
-}): Promise<Page> {
-  const browserContext = await browser.newContext();
-  const page = await browserContext.newPage();
-  const token = generateAuthenticationDemoToken(`${userId}`);
-  await browserContext.addCookies([
-    {
-      name: "jwt",
-      domain: "localhost",
-      path: "/",
-      value: token,
-    },
-    {
-      name: "auth",
-      domain: "localhost",
-      path: "/",
-      value: JSON.stringify({ loggedIn: true }),
-    },
-  ]);
-  return page;
-}
-
 export async function setFeatureFlag(page: Page, featureFlag: string) {
   await page.addInitScript(
     (featureFlag: string) =>
