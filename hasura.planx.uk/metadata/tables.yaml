@@ -90,6 +90,9 @@
                 _eq: online
         check: null
 - table:
+    name: analytics_summary
+    schema: public
+- table:
     name: blpu_codes
     schema: public
   select_permissions:
@@ -1767,7 +1770,7 @@
         filter: {}
       comment: ""
 - table:
-    name: submission_services_summary_test
+    name: submission_services_summary
     schema: public
 - table:
     name: team_integrations
