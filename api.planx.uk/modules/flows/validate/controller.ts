@@ -22,7 +22,9 @@ export type ValidateAndDiffFlowController = ValidatedRequestHandler<
 >;
 
 export const validateAndDiffFlowController: ValidateAndDiffFlowController =
-  async (_req, res, next) => {
+  async (req, res, next) => {
+    req.setTimeout(120 * 1000); // Temporary bump to address large diff timeouts
+
     try {
       const { flowId } = res.locals.parsedReq.params;
       const result = await validateAndDiffFlow(flowId);

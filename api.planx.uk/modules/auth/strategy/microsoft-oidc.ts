@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import type {
   Client,
   ClientMetadata,
@@ -41,18 +42,30 @@ export const getMicrosoftOidcStrategy = (client: Client): Strategy<Client> => {
 };
 
 const verifyCallback: StrategyVerifyCallbackReq<Express.User> = async (
-  req: Http.IncomingMessageWithSession,
+  req: Http.IncomingMessageWithCookies,
   tokenSet,
   done,
 ): Promise<void> => {
   // TODO: use tokenSet.state to pass the redirectTo query param through the auth flow
+  // TODO: validate id_token sig with the public key from the jwks_uri (...v2.0/keys)
   const claims: IdTokenClaims = tokenSet.claims();
-  const email = claims.email;
-  const returned_nonce = claims.nonce;
 
-  if (returned_nonce != req.session?.nonce) {
-    return done(new Error("Returned nonce does not match session nonce"));
+  // ensure the response is authentic by comparing nonce
+  const returned_nonce = claims.nonce;
+  if (!req.cookies || !req.cookies["ms-oidc-nonce"]) {
+    return done(new Error("No nonce found in appropriate cookie"));
   }
+  const original_nonce = req.cookies["ms-oidc-nonce"];
+  const hash = crypto.createHash("sha256").update(original_nonce).digest("hex");
+  if (returned_nonce != hash) {
+    return done(
+      new Error(
+        "Returned nonce does not match nonce sent with original request",
+      ),
+    );
+  }
+
+  const email = claims.email;
   if (!email) {
     return done(new Error("Unable to authenticate without email"));
   }
