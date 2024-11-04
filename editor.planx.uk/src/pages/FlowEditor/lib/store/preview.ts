@@ -518,7 +518,7 @@ export const previewStore: StateCreator<
     const visitedFns = Object.entries(breadcrumbs).filter(
       ([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn,
     );
-    if (!visitedFns) return;
+    if (!visitedFns.length) return;
 
     // Get all options (aka edges or Answer nodes) for this node
     const options: Array<Store.Node> = edges.map((edgeId) => ({

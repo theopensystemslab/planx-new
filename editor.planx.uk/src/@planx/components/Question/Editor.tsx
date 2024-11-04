@@ -1,3 +1,4 @@
+import { errors } from "@airbrake/browser/dist/http_req/api";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -109,7 +110,11 @@ const OptionEditor: React.FC<{
       </InputRow>
     )}
     <FlagsSelect
-      value={Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]}
+      value={
+        Array.isArray(props.value.data.flag)
+          ? props.value.data.flag
+          : [props.value.data.flag]
+      }
       onChange={(ev) => {
         props.onChange({
           ...props.value,
@@ -151,7 +156,15 @@ export const Question: React.FC<Props> = (props) => {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
     },
-    validate: () => { },
+    validate: ({ options, ...values }) => {
+      const errors: Record<string, string> = {};
+      if (values.fn && !options.some((option) => option.data.val)) {
+        errors.fn =
+          "At least one option must set a data value when the question has a data field";
+      }
+
+      return errors;
+    },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
@@ -201,6 +214,8 @@ export const Question: React.FC<Props> = (props) => {
                 value={formik.values.fn}
                 placeholder="Data Field"
                 onChange={formik.handleChange}
+                error={Boolean(formik.errors?.fn)}
+                errorMessage={formik.errors?.fn}
               />
             </InputRow>
             <InputRow>
@@ -221,7 +236,6 @@ export const Question: React.FC<Props> = (props) => {
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
-
         <ModalSectionContent subtitle="Options">
           <ListManager
             values={formik.values.options}
