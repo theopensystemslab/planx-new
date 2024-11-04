@@ -6,10 +6,10 @@ import type {
 import * as jsondiffpatch from "jsondiffpatch";
 
 import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers.js";
-// import { validateFileTypes } from "./fileTypes.js";
-// import { validateInviteToPay } from "./inviteToPay.js";
-// import { validateSections } from "./sections.js";
-// import { validateProjectTypes } from "./projectTypes.js";
+import { validateFileTypes } from "./fileTypes.js";
+import { validateInviteToPay } from "./inviteToPay.js";
+import { validateSections } from "./sections.js";
+import { validateProjectTypes } from "./projectTypes.js";
 
 type AlteredNode = {
   id: string;
@@ -49,30 +49,29 @@ const validateAndDiffFlow = async (
     ...flattenedFlow[key],
   }));
 
-  // const validationChecks = [];
-  // const sections = validateSections(flattenedFlow);
-  // const inviteToPay = validateInviteToPay(flattenedFlow);
-  // const fileTypes = validateFileTypes(flattenedFlow);
-  // const projectTypes = validateProjectTypes(flattenedFlow);
-  // validationChecks.push(sections, inviteToPay, fileTypes, projectTypes);
+  const validationChecks = [];
+  const sections = validateSections(flattenedFlow);
+  const inviteToPay = validateInviteToPay(flattenedFlow);
+  const fileTypes = validateFileTypes(flattenedFlow);
+  const projectTypes = validateProjectTypes(flattenedFlow);
+  validationChecks.push(sections, inviteToPay, fileTypes, projectTypes);
 
-  // // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
-  // const failingChecks = validationChecks.filter((v) => v.status == "Fail");
-  // const warningChecks = validationChecks.filter((v) => v.status === "Warn");
-  // const passingChecks = validationChecks.filter((v) => v.status === "Pass");
-  // const notApplicableChecks = validationChecks.filter(
-  //   (v) => v.status === "Not applicable",
-  // );
-  // const sortedValidationChecks = failingChecks
-  //   .concat(warningChecks)
-  //   .concat(passingChecks)
-  //   .concat(notApplicableChecks);
+  // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
+  const failingChecks = validationChecks.filter((v) => v.status == "Fail");
+  const warningChecks = validationChecks.filter((v) => v.status === "Warn");
+  const passingChecks = validationChecks.filter((v) => v.status === "Pass");
+  const notApplicableChecks = validationChecks.filter(
+    (v) => v.status === "Not applicable",
+  );
+  const sortedValidationChecks = failingChecks
+    .concat(warningChecks)
+    .concat(passingChecks)
+    .concat(notApplicableChecks);
 
   return {
     alteredNodes,
     message: "Changes queued to publish",
-    // validationChecks: sortedValidationChecks,
-    validationChecks: undefined,
+    validationChecks: sortedValidationChecks,
   };
 };
 
