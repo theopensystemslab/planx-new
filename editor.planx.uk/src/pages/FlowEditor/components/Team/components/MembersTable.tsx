@@ -94,19 +94,21 @@ export const MembersTable = ({
             </TableRow>
           </TableHead>
           {showAddMemberButton && (
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={3}>
-                  <AddButton
-                    onClick={() => {
-                      addUser();
-                    }}
-                  >
-                    Add a new member
-                  </AddButton>
-                </TableCell>
-              </TableRow>
-            </TableBody>
+            <Permission.IsPlatformAdmin>
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <AddButton
+                      onClick={() => {
+                        addUser();
+                      }}
+                    >
+                      Add a new member
+                    </AddButton>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Permission.IsPlatformAdmin>
           )}
         </Table>
         {showModal && (
