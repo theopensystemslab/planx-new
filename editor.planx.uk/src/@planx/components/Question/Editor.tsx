@@ -1,8 +1,7 @@
-import { errors } from "@airbrake/browser/dist/http_req/api";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { FormikErrors, FormikValues, useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -157,12 +156,11 @@ export const Question: React.FC<Props> = (props) => {
       }
     },
     validate: ({ options, ...values }) => {
-      const errors: Record<string, string> = {};
+      const errors: FormikErrors<FormikValues> = {};
       if (values.fn && !options.some((option) => option.data.val)) {
         errors.fn =
           "At least one option must set a data value when the question has a data field";
       }
-
       return errors;
     },
   });

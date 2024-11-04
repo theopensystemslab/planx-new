@@ -5,7 +5,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
 import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { FormikErrors, FormikValues, useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -313,7 +313,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
       }
     },
     validate: ({ options, ...values }) => {
-      const errors: Record<string, string> = {};
+      const errors: FormikErrors<FormikValues> = {};
       if (values.fn && !options?.some((option) => option.data.val)) {
         errors.fn =
           "At least one option must set a data value when the checklist has a data field";
