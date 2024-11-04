@@ -312,7 +312,14 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: () => {},
+    validate: ({ options, ...values }) => {
+      const errors: Record<string, string> = {};
+      if (values.fn && !options?.some((option) => option.data.val)) {
+        errors.fn =
+          "At least one option must set a data value when the checklist has a data field";
+      }
+      return errors;
+    },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
@@ -365,6 +372,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 value={formik.values.fn}
                 placeholder="Data Field"
                 onChange={formik.handleChange}
+                error={Boolean(formik.errors?.fn)}
+                errorMessage={formik.errors?.fn}
               />
             </InputRow>
             <InputRow>

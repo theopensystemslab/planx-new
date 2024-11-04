@@ -514,9 +514,10 @@ export const previewStore: StateCreator<
     )
       return;
 
-    // Only proceed if the user has seen at least one node with this fn before
+    // Only proceed if the user has seen at least one node with this fn (or `output` in case of Calculate nodes) before
     const visitedFns = Object.entries(breadcrumbs).filter(
-      ([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn,
+      ([nodeId, _breadcrumb]) =>
+        [flow[nodeId].data?.fn, flow[nodeId].data?.output].includes(data.fn),
     );
     if (!visitedFns.length) return;
 
