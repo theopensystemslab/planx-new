@@ -112,8 +112,7 @@ assert(process.env.UNIFORM_SUBMISSION_URL);
 // needed for storing original URL to redirect to in login flow
 app.use(
   cookieSession({
-    // we don't need session to persist for long - it's only required for auth flow
-    maxAge: 2 * 60 * 60 * 1000, // 2hrs
+    maxAge: 24 * 60 * 60 * 100,
     name: "session",
     secret: process.env.SESSION_SECRET,
   }),
@@ -199,9 +198,9 @@ declare global {
   }
 
   namespace Http {
-    interface IncomingMessageWithCookies extends IncomingMessage {
-      cookies?: {
-        "ms-oidc-nonce": string;
+    interface IncomingMessageWithSession extends IncomingMessage {
+      session?: {
+        nonce: string;
       };
     }
   }

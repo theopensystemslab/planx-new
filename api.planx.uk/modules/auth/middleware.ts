@@ -8,7 +8,7 @@ import type { Authenticator } from "passport";
 import type { RequestHandler } from "http-proxy-middleware";
 import type { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
-import type { CookieOptions, Request } from "express";
+import type { Request } from "express";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -136,27 +136,15 @@ export const getMicrosoftAuthHandler = (
   return (req, res, next) => {
     req.session!.returnTo = req.get("Referrer");
 
-    // generate a nonce to enable us to validate the response from OP (mitigates against CSRF attacks)
+    // generate a nonce to enable us to validate the response from OP
     const nonce = generators.nonce();
     console.debug(`Generated a nonce: %s`, nonce);
+    req.session!.nonce = nonce;
 
-    // we hash the nonce to avoid sending it plaintext over the wire in our auth request
-    const hash = crypto.createHash("sha256").update(nonce).digest("hex");
-    console.debug(`Hashed nonce: %s`, hash);
-
-    // we store the original nonce in a short-lived, httpOnly but cross-site cookie
-    const httpOnlyCookieOptions: CookieOptions = {
-      maxAge: 15 * 60 * 1000, // 15 mins
-      sameSite: "none",
-      httpOnly: true,
-      secure: true,
-    };
-    res.cookie("ms-oidc-nonce", nonce, httpOnlyCookieOptions);
-
-    // @ts-expect-error (method not typed to accept nonce, but it does include it in the request)
+    // @ts-expect-error (method not typed to accept nonce, but it does pass it to the strategy)
     return passport.authenticate("microsoft-oidc", {
       prompt: "select_account",
-      nonce: hash,
+      nonce,
     })(req, res, next);
   };
 };

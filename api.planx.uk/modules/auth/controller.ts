@@ -39,7 +39,6 @@ function setJWTCookie(returnTo: string, res: Response, req: Request) {
     maxAge: new Date(
       new Date().setFullYear(new Date().getFullYear() + 1),
     ).getTime(),
-    // pizzas rely on staging API for auth (due to static redirect URIs), so we have to allow cross-site
     sameSite: "none",
     secure: true,
   };
