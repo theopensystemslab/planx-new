@@ -33,10 +33,23 @@ interface FlowValidateAndDiffResponse {
 const validateAndDiffFlow = async (
   flowId: string,
 ): Promise<FlowValidateAndDiffResponse> => {
+  const flattenedFlowStart = performance.now();
   const flattenedFlow = await dataMerged(flowId);
+  const flattenedFlowEnd = performance.now();
+  console.log(
+    `flattenedFlow() took ${(flattenedFlowEnd - flattenedFlowStart).toFixed(2)} ms`,
+  );
+
   const mostRecent = await getMostRecentPublishedFlow(flowId);
 
+  const diffStart = performance.now();
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
+  const diffEnd = performance.now();
+
+  console.log(
+    `jsondiffpatch.diff() took ${(diffEnd - diffStart).toFixed(2)} ms`,
+  );
+
   if (!delta)
     return {
       alteredNodes: null,
