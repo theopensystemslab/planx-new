@@ -2,18 +2,11 @@ openapi: 3.1.0
 info:
   title: Plan✕ API
   version: 0.1.0
-tags:
-  - name: analyticsLogs
-    description: Analytics logging endpoints
-  - name: metabaseCollections
-    description: Metabase collection management endpoints
-  - name: metabaseDashboards
-    description: Metabase dashboard management endpoints
 components:
   responses:
     AnalyticsResponse:
       description: Successful response with no content. Not awaited from server as endpoint is called via the Beacon API
-schemas:
+  schemas:
     NewCollectionParams:
       type: object
       required:
@@ -61,7 +54,7 @@ schemas:
       properties:
         error:
           type: string
-
+    
     ApiResponse:
       type: object
       properties:
@@ -88,7 +81,7 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
-/collections/check:
+  /collections/check:
     get:
       summary: Check collection existence
       description: Check if a collection exists with a council name
