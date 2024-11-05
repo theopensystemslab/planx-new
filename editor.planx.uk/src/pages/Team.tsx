@@ -11,6 +11,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { flow } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -305,7 +306,7 @@ const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
 
 const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore((state) => [state.getTeam(), state.canUserEditTeam, state.getFlows ]);
-  const [flows, setFlows] = useState<FlowSummary[]>([]);
+  const [flows, setFlows] = useState<FlowSummary[] | null>(null);
 
   const fetchFlows = useCallback(() => {
     getFlows(teamId)
@@ -324,7 +325,8 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const showAddFlowButton = Boolean(flows.length) && canUserEditTeam(slug);
+  const teamHasFlows = flows && Boolean(flows.length)
+  const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
     <Container maxWidth="formWrap">
@@ -357,8 +359,7 @@ const Team: React.FC = () => {
           <AddFlowButton flows={flows}/>
         )}
       </Box>
-      { flows.length
-      ?  (
+      {teamHasFlows && (
         <DashboardList>
           {flows.map((flow) => (
             <FlowItem
@@ -373,8 +374,8 @@ const Team: React.FC = () => {
             />
           ))}
         </DashboardList>)
-      : <GetStarted flows={flows}/>
       }
+      { flows && !flows.length && <GetStarted flows={flows}/> }
     </Container>
   );
 };
