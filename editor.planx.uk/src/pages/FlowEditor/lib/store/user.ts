@@ -1,9 +1,10 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { Team, User, UserTeams } from "@opensystemslab/planx-core/types";
+import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import type { StateCreator } from "zustand";
 
 import { EditorStore } from "./editor";
+import { TeamStore } from "./team";
 
 export interface UserStore {
   user?: User;
@@ -13,10 +14,11 @@ export interface UserStore {
   getUser: () => User | undefined;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
   initUserStore: () => Promise<void>;
+  getUserRoleForCurrentTeam: () => Role | undefined;
 }
 
 export const userStore: StateCreator<
-  UserStore & EditorStore,
+  UserStore & EditorStore & TeamStore,
   [],
   [],
   UserStore
@@ -50,6 +52,18 @@ export const userStore: StateCreator<
     const user = await getLoggedInUser();
     setUser(user);
   },
+
+  getUserRoleForCurrentTeam: () => {
+    const { user, teamSlug } = get();
+    if (!user || !teamSlug) return;
+
+    if (user.isPlatformAdmin) return "platformAdmin";
+
+    const currentUserTeam = user.teams.find(({ team: { slug } }) => slug === teamSlug );
+    if (!currentUserTeam) return;
+
+    return currentUserTeam.role;
+  }
 });
 
 const getLoggedInUser = async () => {
