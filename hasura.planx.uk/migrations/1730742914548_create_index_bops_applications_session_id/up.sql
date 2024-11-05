@@ -11,4 +11,4 @@ CREATE  INDEX "feedback_flow_id_team_id_idx" on
 CREATE  INDEX "reconciliation_requests_session_id_idx" on
   "public"."reconciliation_requests" using hash ("session_id");
 CREATE  INDEX "published_flows_created_at_idx" on
-  "public"."published_flows" using btree ("created_at");
+  "public"."published_flows" using btree ("created_at" DESC NULLS LAST);
