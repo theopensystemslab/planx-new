@@ -1,10 +1,8 @@
 import { gql } from "@apollo/client";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import ButtonBase from "@mui/material/ButtonBase";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,15 +11,18 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { flow } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
+import { AddButton } from "ui/editor/AddButton";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
+import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
@@ -103,32 +104,9 @@ const Confirm = ({
   </Dialog>
 );
 
-const AddButtonRoot = styled(ButtonBase)(({ theme }) => ({
-  fontSize: 20,
-  display: "flex",
-  alignItems: "center",
-  textAlign: "left",
-  color: theme.palette.primary.main,
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-}));
-
-export function AddButton({
-  children,
-  onClick,
-}: {
-  children: string;
-  onClick: () => void;
-}): FCReturn {
-  return (
-    <AddButtonRoot onClick={onClick}>
-      <AddCircleOutlineIcon sx={{ mr: 1 }} /> {children}
-    </AddButtonRoot>
-  );
-}
-
 interface FlowItemProps {
-  flow: any;
-  flows: any;
+  flow: FlowSummary;
+  flows: FlowSummary[];
   teamId: number;
   teamSlug: string;
   refreshFlows: () => void;
@@ -279,29 +257,76 @@ const FlowItem: React.FC<FlowItemProps> = ({
   );
 };
 
+const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
+  <Box sx={(theme) => ({ 
+      mt: 4, 
+      backgroundColor: theme.palette.background.paper, 
+      borderRadius: "8px", 
+      display: "flex", 
+      flexDirection: "column", 
+      alignItems: "center",
+      gap: 2, 
+      padding: 2 
+    })}>
+    <Typography variant="h3">No services found</Typography>  
+    <Typography>Get started by creating your first service</Typography>  
+    <AddFlowButton flows={flows}/>
+  </Box>
+)
+
+const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
+  const { navigate } = useNavigation();
+  const { teamId, createFlow, teamSlug } = useStore()
+
+  const addFlow = async () => {
+    const newFlowName = prompt("Service name");
+    if (!newFlowName) return;
+
+    const newFlowSlug = slugify(newFlowName);
+    const duplicateFlowName = flows?.find(
+      (flow) => flow.slug === newFlowSlug,
+    );
+
+    if (duplicateFlowName) {
+      alert(
+        `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
+      );
+    }
+
+    const newId = await createFlow(teamId, newFlowSlug, newFlowName);
+    navigate(`/${teamSlug}/${newId}`);
+  }
+
+  return(
+    <AddButton onClick={addFlow}>
+      Add a new service
+    </AddButton>
+  )
+}
+
 const Team: React.FC = () => {
-  const { id: teamId, slug } = useStore((state) => state.getTeam());
-  const [flows, setFlows] = useState<any[] | null>(null);
-  const navigation = useNavigation();
+  const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore((state) => [state.getTeam(), state.canUserEditTeam, state.getFlows ]);
+  const [flows, setFlows] = useState<FlowSummary[] | null>(null);
 
   const fetchFlows = useCallback(() => {
-    useStore
-      .getState()
-      .getFlows(teamId)
-      .then((res: { flows: any[] }) => {
-        // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-        const sortedFlows = res.flows.toSorted((a, b) =>
-          b.operations[0]["createdAt"].localeCompare(
-            a.operations[0]["createdAt"],
-          ),
-        );
-        setFlows(sortedFlows);
-      });
-  }, [teamId, setFlows]);
+    getFlows(teamId)
+    .then((flows) => {
+      // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
+      const sortedFlows = flows.toSorted((a, b) =>
+        b.operations[0]["createdAt"].localeCompare(
+          a.operations[0]["createdAt"],
+        ),
+      );
+      setFlows(sortedFlows);
+    });
+  }, [teamId, setFlows, getFlows]);
 
   useEffect(() => {
     fetchFlows();
   }, [fetchFlows]);
+
+  const teamHasFlows = flows && Boolean(flows.length)
+  const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
     <Container maxWidth="formWrap">
@@ -324,42 +349,19 @@ const Team: React.FC = () => {
           <Typography variant="h2" component="h1" pr={1}>
             Services
           </Typography>
-          {useStore.getState().canUserEditTeam(slug) ? (
+          {canUserEditTeam(slug) ? (
             <Edit />
           ) : (
             <Visibility />
           )}
         </Box>
-        {useStore.getState().canUserEditTeam(slug) && (
-          <AddButton
-            onClick={() => {
-              const newFlowName = prompt("Service name");
-              if (newFlowName) {
-                const newFlowSlug = slugify(newFlowName);
-                const duplicateFlowName = flows?.find(
-                  (flow) => flow.slug === newFlowSlug,
-                );
-
-                !duplicateFlowName
-                  ? useStore
-                      .getState()
-                      .createFlow(teamId, newFlowSlug, newFlowName)
-                      .then((newId: string) => {
-                        navigation.navigate(`/${slug}/${newId}`);
-                      })
-                  : alert(
-                      `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
-                    );
-              }
-            }}
-          >
-            Add a new service
-          </AddButton>
+        {showAddFlowButton && (
+          <AddFlowButton flows={flows}/>
         )}
       </Box>
-      {flows && (
+      {teamHasFlows && (
         <DashboardList>
-          {flows.map((flow: any) => (
+          {flows.map((flow) => (
             <FlowItem
               flow={flow}
               flows={flows}
@@ -371,8 +373,9 @@ const Team: React.FC = () => {
               }}
             />
           ))}
-        </DashboardList>
-      )}
+        </DashboardList>)
+      }
+      { flows && !flows.length && <GetStarted flows={flows}/> }
     </Container>
   );
 };
