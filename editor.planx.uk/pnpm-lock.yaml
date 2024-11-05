@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#b4ca5a9
-    version: github.com/theopensystemslab/planx-core/b4ca5a9(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#d3d933c
+    version: github.com/theopensystemslab/planx-core/d3d933c(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -2789,30 +2789,30 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@formatjs/ecma402-abstract@2.2.1:
-    resolution: {integrity: sha512-O4ywpkdJybrjFc9zyL8qK5aklleIAi5O4nYhBVJaOFtCkNrnU+lKFeJOFC48zpsZQmR8Aok2V79hGpHnzbmFpg==}
+  /@formatjs/ecma402-abstract@2.2.3:
+    resolution: {integrity: sha512-aElGmleuReGnk2wtYOzYFmNWYoiWWmf1pPPCYg0oiIQSJj0mjc4eUfzUXaSOJ4S8WzI/cLqnCTWjqz904FT2OQ==}
     dependencies:
-      '@formatjs/fast-memoize': 2.2.2
-      '@formatjs/intl-localematcher': 0.5.6
+      '@formatjs/fast-memoize': 2.2.3
+      '@formatjs/intl-localematcher': 0.5.7
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/fast-memoize@2.2.2:
-    resolution: {integrity: sha512-mzxZcS0g1pOzwZTslJOBTmLzDXseMLLvnh25ymRilCm8QLMObsQ7x/rj9GNrH0iUhZMlFisVOD6J1n6WQqpKPQ==}
+  /@formatjs/fast-memoize@2.2.3:
+    resolution: {integrity: sha512-3jeJ+HyOfu8osl3GNSL4vVHUuWFXR03Iz9jjgI7RwjG6ysu/Ymdr0JRCPHfF5yGbTE6JCrd63EpvX1/WybYRbA==}
     dependencies:
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/intl-listformat@7.7.1:
-    resolution: {integrity: sha512-bjBxWaUhYAbJFUlFSMWZGn3r2mglXwk+BLyGRu8dY8Q83ZPsqmmVQzjQKENHE3lV6eoQGHT2oZHxUaVndJlk6Q==}
+  /@formatjs/intl-listformat@7.7.4:
+    resolution: {integrity: sha512-lipFspH2MZcoeXxR6WSR/Jy9unzJ/iT0w+gbL8vgv25Ap0S9cUtcDVAce4ECEKI1bDtAvEU3b6+9Dha27gAikA==}
     dependencies:
-      '@formatjs/ecma402-abstract': 2.2.1
-      '@formatjs/intl-localematcher': 0.5.6
+      '@formatjs/ecma402-abstract': 2.2.3
+      '@formatjs/intl-localematcher': 0.5.7
       tslib: 2.7.0
     dev: false
 
-  /@formatjs/intl-localematcher@0.5.6:
-    resolution: {integrity: sha512-roz1+Ba5e23AHX6KUAWmLEyTRZegM5YDuxuvkHCyK3RJddf/UXB2f+s7pOMm9ktfPGla0g+mQXOn5vsuYirnaA==}
+  /@formatjs/intl-localematcher@0.5.7:
+    resolution: {integrity: sha512-GGFtfHGQVFe/niOZp24Kal5b2i36eE2bNL0xi9Sg/yd0TR8aLjcteApZdHmismP5QQax1cMnZM9yWySUUjJteA==}
     dependencies:
       tslib: 2.7.0
     dev: false
@@ -15390,9 +15390,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/b4ca5a9(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b4ca5a9}
-    id: github.com/theopensystemslab/planx-core/b4ca5a9
+  github.com/theopensystemslab/planx-core/d3d933c(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d3d933c}
+    id: github.com/theopensystemslab/planx-core/d3d933c
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -15400,7 +15400,7 @@ packages:
     dependencies:
       '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.3.1)
-      '@formatjs/intl-listformat': 7.7.1
+      '@formatjs/intl-listformat': 7.7.4
       '@mui/base': 5.0.0-beta.60(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
       '@mui/material': 5.15.10(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
       ajv: 8.17.1
