@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
+import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import { FeedbackView } from "components/Feedback/types";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 
@@ -57,7 +58,7 @@ export async function insertFeedbackMutation(data: {
   userContext?: string;
   userComment: string;
   feedbackScore?: string;
-  feedbackType: FeedbackView;
+  feedbackType: FeedbackView | Sentiment;
   nodeData?: Store.Node["data"];
 }) {
   const result = await publicClient.mutate({
