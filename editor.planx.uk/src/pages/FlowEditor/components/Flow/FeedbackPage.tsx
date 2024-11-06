@@ -4,6 +4,7 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
@@ -119,7 +120,8 @@ type FeedbackType =
   | "comment"
   | "inaccuracy"
   | "helpful"
-  | "unhelpful";
+  | "unhelpful"
+  | "component";
 
 const feedbackTypeIcon = (type: FeedbackType) => {
   switch (type) {
@@ -139,6 +141,8 @@ const feedbackTypeIcon = (type: FeedbackType) => {
         icon: <CancelIcon color="error" />,
         title: "Unhelpful (help text)",
       };
+    case "component":
+      return { icon: <RateReviewIcon />, title: "From feedback component" };
     default:
       return { icon: <RuleIcon />, title: "inaccuracy" };
   }
