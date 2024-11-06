@@ -1,7 +1,7 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { FormikErrors, FormikValues, useFormik } from "formik";
+import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -109,11 +109,7 @@ const OptionEditor: React.FC<{
       </InputRow>
     )}
     <FlagsSelect
-      value={
-        Array.isArray(props.value.data.flag)
-          ? props.value.data.flag
-          : [props.value.data.flag]
-      }
+      value={Array.isArray(props.value.data.flag) ? props.value.data.flag : [props.value.data.flag]}
       onChange={(ev) => {
         props.onChange({
           ...props.value,
@@ -155,14 +151,7 @@ export const Question: React.FC<Props> = (props) => {
         alert(JSON.stringify({ type, ...values, children }, null, 2));
       }
     },
-    validate: ({ options, ...values }) => {
-      const errors: FormikErrors<FormikValues> = {};
-      if (values.fn && !options.some((option) => option.data.val)) {
-        errors.fn =
-          "At least one option must set a data value when the question has a data field";
-      }
-      return errors;
-    },
+    validate: () => { },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
@@ -212,8 +201,6 @@ export const Question: React.FC<Props> = (props) => {
                 value={formik.values.fn}
                 placeholder="Data Field"
                 onChange={formik.handleChange}
-                error={Boolean(formik.errors?.fn)}
-                errorMessage={formik.errors?.fn}
               />
             </InputRow>
             <InputRow>
@@ -234,6 +221,7 @@ export const Question: React.FC<Props> = (props) => {
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
+
         <ModalSectionContent subtitle="Options">
           <ListManager
             values={formik.values.options}
