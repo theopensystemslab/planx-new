@@ -9,7 +9,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -95,13 +95,12 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, user, canUserEditTeam, flowAnalyticsLink] =
+  const [teamSlug, flowSlug, flowAnalyticsLink, role] =
     useStore((state) => [
       state.teamSlug,
       state.flowSlug,
-      state.user,
-      state.canUserEditTeam,
       state.flowAnalyticsLink,
+      state.getUserRoleForCurrentTeam()
     ]);
 
   const isActive = (route: string) => url.href.endsWith(route);
@@ -122,7 +121,7 @@ function EditorNavMenu() {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
     {
       title: "Global settings",
@@ -143,7 +142,7 @@ function EditorNavMenu() {
       title: "Services",
       Icon: FormatListBulletedIcon,
       route: `/${teamSlug}`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
     {
       title: "Settings",
@@ -170,25 +169,25 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: ["platformAdmin", "teamEditor", "teamViewer"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
     {
       title: "Service settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/${flowSlug}/service`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/${flowSlug}/feedback`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
 
@@ -198,7 +197,7 @@ function EditorNavMenu() {
           title: "Analytics (external link)",
           Icon: LeaderboardIcon,
           route: flowAnalyticsLink,
-          accessibleBy: ["platformAdmin", "teamEditor"],
+          accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
         },
       ]
     : [
@@ -206,7 +205,7 @@ function EditorNavMenu() {
           title: "Analytics page unavailable",
           Icon: LeaderboardIcon,
           route: "#",
-          accessibleBy: ["platformAdmin", "teamEditor"],
+          accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
           disabled: true,
         },
       ];
@@ -243,11 +242,7 @@ function EditorNavMenu() {
 
   const { routes, compact } = getRoutesForUrl(url.href);
 
-  const visibleRoutes = routes.filter(({ accessibleBy }) => {
-    if (user?.isPlatformAdmin) return accessibleBy.includes("platformAdmin");
-    if (canUserEditTeam(teamSlug)) return accessibleBy.includes("teamEditor");
-    return accessibleBy.includes("teamViewer");
-  });
+  const visibleRoutes = routes.filter(({ accessibleBy }) => role && accessibleBy.includes(role));
 
   // Hide menu if the user does not have a selection of items
   if (visibleRoutes.length < 2) return null;

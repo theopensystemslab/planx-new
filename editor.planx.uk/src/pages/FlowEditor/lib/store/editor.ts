@@ -104,16 +104,34 @@ interface PublishFlowResponse {
   message: string;
 }
 
+export interface FlowSummary {
+  id: string;
+  name: string;
+  slug: string;
+  updatedAt: string;
+  operations: {
+    createdAt: string;
+    actor: {
+      firstName: string;
+      lastName: string;
+    }
+  }[]
+}
+
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: NodeId) => void;
-  createFlow: (teamId: any, newSlug: any, newName: string) => Promise<string>;
+  createFlow: (
+    teamId: number,
+    newSlug: string,
+    newName: string
+  ) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
-  getFlows: (teamId: number) => Promise<any>;
+  getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
@@ -124,12 +142,12 @@ export interface EditorStore extends Store.Store {
     id: NodeId,
     parent?: NodeId,
     toBefore?: NodeId,
-    toParent?: NodeId,
+    toParent?: NodeId
   ) => void;
   pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
   publishFlow: (
     flowId: string,
-    summary?: string,
+    summary?: string
   ) => Promise<PublishFlowResponse>;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
@@ -326,7 +344,7 @@ export const editorStore: StateCreator<
 
   getFlows: async (teamId) => {
     client.cache.reset();
-    const { data } = await client.query({
+    const { data: { flows } } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
           flows(where: { team: { id: { _eq: $teamId } } }) {
@@ -349,7 +367,7 @@ export const editorStore: StateCreator<
       },
     });
 
-    return data;
+    return flows;
   },
 
   isClone: (id) => {
