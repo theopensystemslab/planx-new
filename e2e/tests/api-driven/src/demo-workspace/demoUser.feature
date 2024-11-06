@@ -1,13 +1,8 @@
   Feature: Demo user access
 
     Background:
-        Given I am a user with a demoUser role
-        And I have two users in the database: 
-            | id        | first_name    | last_name | email                 |
-            | 1         | Demo          | User      | demo.user@email.com   |
-            | 2         | Nota          | Demo      | nota.demo@email.com   |
 
-        And I have the following teams in the database:
+        Given I have the following teams in the database:
             | id        | name                      | slug                      |
             | 1         | Open Systems Lab          | open-systems-lab          |
             | 29        | Templates                 | templates                 |
@@ -15,39 +10,48 @@
             | 32        | Demo                      | demo                      |
             | 45        | Other Team                | other-team                |
 
-        And I have the following flows in the database:
-            | id      | creator_id | name             | team_id   |
-            | 1       | 1          | Test Flow 1      | 32        |
-            | 2       | 1          | Test Flow 2      | 32        |
-            | 3       | 2          | Other Flow       | 45        |
+        And I have two users in the database: 
+            | id        | first_name    | last_name | email                 |
+            | 1         | Demo          | User      | demo.user@email.com   |
+            | 2         | Nota          | Demo      | nota.demo@email.com   |
 
-@demo-user-permissions
-Scenario: I can only view my own flows
-    When I am in the Demo team
-    Then I should only see flows with ids "1, 2"
-    And I should not see flow with id "3"
+        And I have the following flows in the database:
+            | creator_id | name             | slug              | team_id |
+            | 1          | Demo Flow        | demo-flow         | 32      |
+            | 2          | Test OSL         | test-osl          | 1       |
+            | 2          | Test Templates   | test-templates    | 29      |
+            | 2          | Test ODP         | test-odp          | 30      |
+            | 2          | Other Flow       | other-flow        | 45      |
+        And I am a demoUser
+
+    @demo-user-permissions
+    Scenario: I can only view my own flows
+        When I am in the "<TEAM>" team
+        Then I should only see my own flows
+        But I should not see flows that I have not created
+        Examples:
+            | TEAM  |
+            | demo  |
+
 
     @demo-user-permissions
     Scenario Outline: I can only view specific teams
-        When I am on the Teams page
-        Then I can only see team with id: "<ID>"
+        When I query the teams table
+        Then I can access the teams with slug: "<SLUG>"
+        But I should not access the Other Team
 
         Examples:
-            | ID    |
-            | 1     |
-            | 29    |
-            | 30    |
-            | 32    |
-
-    @demo-user-permissions
-    Scenario: Creating a new flow in the Demo team
-        When I am in the Demo team
-        Then I should be able to create a flow
+            | SLUG                      |
+            | open-systems-lab          |
+            | templates                 |
+            | open-digital-planning     |
+            | demo                      |
 
     @demo-user-permissions 
-    Scenario Outline: Creating a new flow in other teams
-        When I am in the "<TEAM>" team
-        Then I should not be able to create a flow
+    Scenario Outline: Creating a new flow
+        When I insert a flow into the team: "<TEAM>"
+        Then I should not succeed
+        But I should succeed in the Demo team
 
         Examples: 
             | TEAM                  | 
@@ -57,8 +61,7 @@ Scenario: I can only view my own flows
 
     @demo-user-permissions 
     Scenario Outline: Actioning my own flows
-        When I am in the Demo team
-        And I am on my own flow
+        When I am on my own flow
         Then I should be able to "<ACTION>" the flow
 
         Examples:
@@ -77,11 +80,6 @@ Scenario: I can only view my own flows
             | templates             |
             | open-systems-lab      |
             | open-digital-planning |
-
-    @demo-user-permissions
-    Scenario: Accessing flow settings
-        When I am on my own flow
-        Then I should have access to flow settings
 
     @demo-user-permissions
     Scenario Outline: Editing team settings

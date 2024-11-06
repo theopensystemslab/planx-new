@@ -127,7 +127,7 @@ export function generateAuthenticationDemoToken(userId: string) {
     {
       sub: `${userId}`,
       "https://hasura.io/jwt/claims": {
-        "x-hasura-allowed-roles": ["public","demoUser"],
+        "x-hasura-allowed-roles": ["public", "demoUser"],
         "x-hasura-default-role": "demoUser",
         "x-hasura-user-id": `${userId}`,
       },
