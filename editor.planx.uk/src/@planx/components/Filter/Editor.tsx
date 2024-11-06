@@ -15,6 +15,7 @@ export interface Props {
   id?: string;
   handleSubmit?: (data: any, children?: any) => void;
   node?: any;
+  autoAnswers?: (string | undefined)[];
 }
 
 const Filter: React.FC<Props> = (props) => {
