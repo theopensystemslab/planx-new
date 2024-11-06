@@ -1,6 +1,7 @@
 import { gql } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import Bowser from "bowser";
+import { FeedbackView } from "components/Feedback/types";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 
 import { publicClient } from "./graphql";
@@ -55,7 +56,8 @@ export async function insertFeedbackMutation(data: {
   userData?: UserData;
   userContext?: string;
   userComment: string;
-  feedbackType: string;
+  feedbackScore?: string;
+  feedbackType: FeedbackView;
   nodeData?: Store.Node["data"];
 }) {
   const result = await publicClient.mutate({
@@ -68,6 +70,7 @@ export async function insertFeedbackMutation(data: {
         $device: jsonb
         $userData: jsonb
         $userContext: String
+        $feedbackScore: String
         $userComment: String!
         $feedbackType: feedback_type_enum_enum!
         $nodeData: jsonb
@@ -81,6 +84,7 @@ export async function insertFeedbackMutation(data: {
             device: $device
             user_data: $userData
             user_context: $userContext
+            feedback_score: $feedbackScore
             user_comment: $userComment
             feedback_type: $feedbackType
             node_data: $nodeData

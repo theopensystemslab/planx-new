@@ -31,14 +31,14 @@ import {
 import {
   ClickEvents,
   FeedbackFormInput,
+  FeedbackView,
   TitleAndCloseProps,
   UserFeedback,
-  View,
 } from "./types";
 
 const Feedback: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
-    useState<View>("banner");
+    useState<FeedbackView>("banner");
   const previousFeedbackView = usePrevious(currentFeedbackView);
   const breadcrumbs = useStore((state) => state.breadcrumbs);
 

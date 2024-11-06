@@ -4,7 +4,12 @@ import { Disclaimer } from "@planx/components/shared/Disclaimer";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { FeedbackView } from "components/Feedback/types";
+import { FormikHelpers, useFormik } from "formik";
+import {
+  getInternalFeedbackMetadata,
+  insertFeedbackMutation,
+} from "lib/feedback";
 import React from "react";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
@@ -21,14 +26,39 @@ import { Feedback, FormProps } from "../model";
 import { StyledToggleButtonGroup } from "../styled";
 
 const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
+  const handleSubmitFeedback = async (
+    values: FormProps,
+    { resetForm }: FormikHelpers<FormProps>,
+  ) => {
+    const metadata = await getInternalFeedbackMetadata();
+    const feedback = {
+      userComment: values.feedback,
+      feedbackScore: values.feedbackScore,
+    };
+    const data = {
+      ...metadata,
+      ...feedback,
+      feedbackType: "component" as FeedbackView,
+    };
+    const submitFeedbackResult = await insertFeedbackMutation(data).catch(
+      (err) => {
+        console.error(err);
+      },
+    );
+    props.handleSubmit?.(makeData(props, values, "_feedback"));
+    if (!submitFeedbackResult) {
+      return;
+    }
+
+    resetForm({ values });
+  };
+
   const formik = useFormik<FormProps>({
     initialValues: getPreviouslySubmittedData(props) ?? {
       feedbackScore: "",
       feedback: "",
     },
-    onSubmit: (values) => {
-      props.handleSubmit?.(makeData(props, values));
-    },
+    onSubmit: handleSubmitFeedback,
   });
 
   const handleFeedbackChange = (
