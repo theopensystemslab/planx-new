@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { Disclaimer } from "@planx/components/shared/Disclaimer";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -83,15 +84,17 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         id={"DESCRIPTION_TEXT"}
         openLinksOnNewTab
       />
-      <Box pt={2} mb={3}>
+      <Box my={4}>
         {props.ratingQuestion && (
           <InputLabel
             label={
-              <ReactMarkdownOrHtml
-                source={props.ratingQuestion}
-                id={"RATING_QUESTION"}
-                openLinksOnNewTab
-              />
+              <Typography component="span" fontWeight="700">
+                <ReactMarkdownOrHtml
+                  source={props.ratingQuestion}
+                  id={"RATING_QUESTION"}
+                  openLinksOnNewTab
+                />
+              </Typography>
             }
           />
         )}
@@ -102,7 +105,12 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           onChange={handleFeedbackChange}
           aria-label="feedback score"
         >
-          <Grid container columnSpacing={15} component="fieldset">
+          <Grid 
+            container 
+            columnSpacing={2} 
+            component="fieldset" 
+            direction={{ xs: "column", formWrap: "row" }}
+          >
             <FaceBox
               value="1"
               testId="feedback-button-terrible"
@@ -139,18 +147,19 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         {props.freeformQuestion && (
           <InputLabel
             label={
-              <ReactMarkdownOrHtml
-                source={props.freeformQuestion}
-                id={"RATING_QUESTION"}
-                openLinksOnNewTab
-              />
+              <Typography component="span" fontWeight="700">
+                <ReactMarkdownOrHtml
+                  source={props.freeformQuestion}
+                  id={"RATING_QUESTION"}
+                  openLinksOnNewTab
+                />
+              </Typography>
             }
           />
         )}
-
         <Input
           multiline={true}
-          rows={5}
+          rows={3}
           name="feedback"
           value={formik.values.feedback}
           bordered

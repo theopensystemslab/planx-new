@@ -20,36 +20,37 @@ export const FaceBox = ({
   value,
 }: FaceBoxProps): ReactElement => {
   return (
-    <Grid item xs={2} key={label}>
+    <Grid item xs={2.4} key={label}>
       <ToggleButton
         value={value}
         data-testid={testId}
         sx={{
           px: 0,
+          width: "100%",
+          textTransform: "none",
+          "&[aria-pressed='true'] > div": {
+            borderColor: (theme) => theme.palette.primary.dark,
+            background: (theme) => theme.palette.background.paper,
+          },
         }}
         disableRipple
       >
         <Box
           sx={(theme) => ({
-            p: theme.spacing(2),
+            p: theme.spacing(2, 1),
+            width: "100%",
             border: `2px solid ${theme.palette.border.main} `,
-            width: "120px",
-            maxHeight: "120px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            gap: theme.spacing(0.5),
           })}
         >
-          <img src={icon} width={50} alt={altText} />
+          <img src={icon} width={32} alt={altText} />
           <Typography
             variant="body2"
-            pt={1}
             sx={(theme) => ({
-              textTransform: "lowercase",
-              "&::first-letter": {
-                textTransform: "uppercase",
-              },
               color: theme.palette.text.primary,
             })}
           >
