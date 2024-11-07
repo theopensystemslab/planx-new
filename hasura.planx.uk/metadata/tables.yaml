@@ -304,15 +304,17 @@
     - role: demoUser
       permission:
         columns:
-          - feedback_id
-          - device
-          - node_data
           - address
+          - created_at
+          - device
+          - feedback_id
+          - feedback_score
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
+          - node_data
           - node_id
           - node_text
           - node_title
@@ -324,7 +326,6 @@
           - uprn
           - user_comment
           - user_context
-          - created_at
         filter:
           team:
             flows:
@@ -334,15 +335,17 @@
     - role: platformAdmin
       permission:
         columns:
-          - feedback_id
-          - device
-          - node_data
           - address
+          - created_at
+          - device
+          - feedback_id
+          - feedback_score
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
+          - node_data
           - node_id
           - node_text
           - node_title
@@ -354,21 +357,22 @@
           - uprn
           - user_comment
           - user_context
-          - created_at
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - feedback_id
-          - device
-          - node_data
           - address
+          - created_at
+          - device
+          - feedback_id
+          - feedback_score
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
+          - node_data
           - node_id
           - node_text
           - node_title
@@ -380,7 +384,6 @@
           - uprn
           - user_comment
           - user_context
-          - created_at
         filter:
           team:
             members:

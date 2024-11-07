@@ -13,11 +13,11 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import { CollapsibleRow } from "./components/CollapsibleRow";
 import { Feed } from "./styled";
 
-interface Props {
+interface FeedbackLogProps {
   feedback: Feedback[];
 }
 
-export const FeedbackLog: React.FC<Props> = ({ feedback }) => {
+export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const displayFeedbackItems = [
     "userComment",
     "address",
@@ -55,6 +55,9 @@ export const FeedbackLog: React.FC<Props> = ({ feedback }) => {
                   </TableCell>
                   <TableCell sx={{ width: 100 }}>
                     <strong>Date</strong>
+                  </TableCell>
+                  <TableCell sx={{ width: 140 }}>
+                    <strong>Feedback score</strong>
                   </TableCell>
                   <TableCell sx={{ width: 340 }}>
                     <strong>Comment</strong>
