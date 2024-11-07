@@ -15,7 +15,12 @@ export type FeedbackFormInput = {
   label: string;
   id: string;
 };
-export type FeedbackCategory = "issue" | "idea" | "comment" | "inaccuracy";
+export type FeedbackCategory =
+  | "issue"
+  | "idea"
+  | "comment"
+  | "inaccuracy"
+  | "component";
 export type View = "banner" | "triage" | FeedbackCategory | "thanks";
 export type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;
 
