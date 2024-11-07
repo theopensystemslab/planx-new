@@ -8,79 +8,21 @@ import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import { format } from "date-fns";
-import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import React, { useState } from "react";
 import { Feedback } from "routes/feedback";
-import SettingsSection from "ui/editor/SettingsSection";
-import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-interface Props {
-  feedback: Feedback[];
+import { GET_FEEDBACK_BY_ID_QUERY } from "../queries/getFeedbackById";
+import { DetailedFeedback, StyledSummaryListTable } from "../styled";
+
+interface CollapsibleRowProps extends Feedback {
+  displayFeedbackItems: string[];
 }
-
-const Feed = styled(TableContainer)(() => ({
-  maxHeight: "60vh",
-  overflow: "auto",
-  display: "flex",
-  flexDirection: "column-reverse",
-  readingOrder: "flex-visual",
-}));
-
-const DetailedFeedback = styled(Box)(({ theme }) => ({
-  fontSize: "1em",
-  margin: 1,
-  maxWidth: "100%",
-  padding: theme.spacing(2, 1),
-}));
-
-const StyledSummaryListTable = styled(SummaryListTable)(() => ({
-  "& p": {
-    margin: 0,
-  },
-}));
-
-const GET_FEEDBACK_BY_ID_QUERY = gql`
-  query GetFeedbackById($feedbackId: Int!) {
-    feedback: feedback_summary(where: { feedback_id: { _eq: $feedbackId } }) {
-      address
-      createdAt: created_at
-      platform: device(path: "platform.type")
-      browser: device(path: "browser.name")
-      feedbackId: feedback_id
-      type: feedback_type
-      helpDefinition: help_definition
-      helpSources: help_sources
-      helpText: help_text
-      intersectingConstraints: intersecting_constraints
-      nodeData: node_data
-      nodeId: node_id
-      nodeText: node_text
-      nodeTitle: node_title
-      nodeType: node_type
-      projectType: project_type
-      serviceSlug: service_slug
-      teamSlug: team_slug
-      status
-      uprn
-      userComment: user_comment
-      userContext: user_context
-    }
-  }
-`;
 
 const getDetailedFeedback = async (feedbackId: number) => {
   const {
@@ -144,73 +86,7 @@ const feedbackTypeIcon = (type: FeedbackType) => {
   }
 };
 
-export const FeedbackPage: React.FC<Props> = ({ feedback }) => {
-  const displayFeedbackItems = [
-    "userComment",
-    "address",
-    "projectType",
-    "where",
-    "browserPlatform",
-  ];
-
-  return (
-    <Container maxWidth="contentWrap">
-      <SettingsSection>
-        <Typography variant="h2" component="h3" gutterBottom>
-          Feedback log
-        </Typography>
-        <Typography variant="body1">
-          Feedback from users about this service.
-        </Typography>
-      </SettingsSection>
-      <SettingsSection>
-        {feedback.length === 0 ? (
-          <ErrorSummary
-            format="info"
-            heading="No feedback found for this service"
-            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-          />
-        ) : (
-          <Feed>
-            <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                <TableRow
-                  sx={{ "& > *": { borderBottomColor: "black !important" } }}
-                >
-                  <TableCell sx={{ width: 160 }}>
-                    <strong>Type</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <strong>Date</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 340 }}>
-                    <strong>Comment</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 60 }}></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {feedback.map((item) => (
-                  <CollapsibleRow
-                    key={item.id}
-                    {...item}
-                    displayFeedbackItems={displayFeedbackItems}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </Feed>
-        )}
-      </SettingsSection>
-    </Container>
-  );
-};
-
-interface CollapsibleRowProps extends Feedback {
-  displayFeedbackItems: string[];
-}
-
-const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
+export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
   const [open, setOpen] = useState<boolean>(false);
   const [detailedFeedback, setDetailedFeedback] = useState<
     Record<string, any> | undefined
