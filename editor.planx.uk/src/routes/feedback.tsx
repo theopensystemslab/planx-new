@@ -3,7 +3,7 @@ import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback
 import { FeedbackCategory } from "components/Feedback/types";
 import gql from "graphql-tag";
 import { compose, mount, NotFoundError, route, withData } from "navi";
-import { FeedbackPage } from "pages/FlowEditor/components/Flow/FeedbackPage";
+import { FeedbackLog } from "pages/FlowEditor/components/Flow/FeedbackLog/FeedbackLog";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -67,7 +67,7 @@ const feedbackRoutes = compose(
 
       return {
         title: makeTitle("Flow Feedback"),
-        view: <FeedbackPage feedback={feedback} />,
+        view: <FeedbackLog feedback={feedback} />,
       };
     }),
   }),

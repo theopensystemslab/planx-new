@@ -47,8 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#dee2279
-    version: github.com/theopensystemslab/planx-core/dee2279(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#134b20d
+    version: github.com/theopensystemslab/planx-core/134b20d(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -3385,8 +3385,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.25.7
       '@floating-ui/react-dom': 2.1.2(react-dom@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.17(@types/react@18.2.45)
-      '@mui/utils': 5.15.11(@types/react@18.2.45)(react@18.2.0)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
+      '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.2.0)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3408,8 +3408,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.25.7
       '@floating-ui/react-dom': 2.1.2(react-dom@18.3.1)(react@18.3.1)
-      '@mui/types': 7.2.17(@types/react@18.2.45)
-      '@mui/utils': 5.15.11(@types/react@18.2.45)(react@18.3.1)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
+      '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.3.1)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3689,7 +3689,7 @@ packages:
       '@emotion/styled': 11.11.0(@emotion/react@11.11.1)(@types/react@18.2.45)(react@18.2.0)
       '@mui/private-theming': 5.16.6(@types/react@18.2.45)(react@18.2.0)
       '@mui/styled-engine': 5.16.6(@emotion/react@11.11.1)(@emotion/styled@11.11.0)(react@18.2.0)
-      '@mui/types': 7.2.17(@types/react@18.2.45)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
       '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.2.0)
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3719,7 +3719,7 @@ packages:
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.3.1)
       '@mui/private-theming': 5.16.6(@types/react@18.2.45)(react@18.3.1)
       '@mui/styled-engine': 5.16.6(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(react@18.3.1)
-      '@mui/types': 7.2.17(@types/react@18.2.45)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
       '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.3.1)
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3797,7 +3797,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.25.7
-      '@mui/types': 7.2.17(@types/react@18.2.45)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
       '@types/prop-types': 15.7.13
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3817,7 +3817,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.25.7
-      '@mui/types': 7.2.17(@types/react@18.2.45)
+      '@mui/types': 7.2.18(@types/react@18.2.45)
       '@types/prop-types': 15.7.13
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -15390,9 +15390,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/dee2279(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dee2279}
-    id: github.com/theopensystemslab/planx-core/dee2279
+  github.com/theopensystemslab/planx-core/134b20d(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/134b20d}
+    id: github.com/theopensystemslab/planx-core/134b20d
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
