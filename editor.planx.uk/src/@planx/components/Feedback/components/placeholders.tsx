@@ -1,5 +1,5 @@
 export const freeformQuestionPlaceholder =
-  "Please tell us more about your experience.";
+  "Please tell us more about your experience";
 
 export const ratingQuestionPlaceholder =
   "How would you rate your experience with this service?";

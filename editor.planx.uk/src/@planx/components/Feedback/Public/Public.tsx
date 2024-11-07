@@ -6,13 +6,13 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import type { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
-import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
 import NeutralFace from "ui/images/feedback_filled-03.svg";
 import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
+import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
@@ -48,15 +48,17 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         id={"DESCRIPTION_TEXT"}
         openLinksOnNewTab
       />
-      <Box pt={2} mb={3}>
+      <Box pt={1} mb={2}>
         {props.ratingQuestion && (
           <InputLabel
             label={
-              <ReactMarkdownOrHtml
-                source={props.ratingQuestion}
-                id={"RATING_QUESTION"}
-                openLinksOnNewTab
-              />
+              <Typography component="span" fontWeight="700">
+                <ReactMarkdownOrHtml
+                  source={props.ratingQuestion}
+                  id={"RATING_QUESTION"}
+                  openLinksOnNewTab
+                />
+              </Typography>
             }
           />
         )}
@@ -67,7 +69,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           onChange={handleFeedbackChange}
           aria-label="feedback score"
         >
-          <Grid container columnSpacing={15} component="fieldset">
+          <Grid container columnSpacing={2} sx={{ width: "100%" }} component="fieldset" direction={{ xs: "column", formWrap: "row" }}>
             <FaceBox
               value="1"
               testId="feedback-button-terrible"
@@ -104,22 +106,27 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         {props.freeformQuestion && (
           <InputLabel
             label={
-              <ReactMarkdownOrHtml
-                source={props.freeformQuestion}
-                id={"RATING_QUESTION"}
-                openLinksOnNewTab
-              />
+              <Typography component="span" fontWeight="700">
+                <ReactMarkdownOrHtml
+                  source={props.freeformQuestion}
+                  id={"RATING_QUESTION"}
+                  openLinksOnNewTab
+                />
+              </Typography>
             }
           />
         )}
-        <RichTextInput
+        <Input
+          type="text"
+          multiline
+          bordered
           name="feedback"
           value={formik.values.feedback}
           placeholder="What did you think?"
           onChange={formik.handleChange}
         />
       </Box>
-      <Typography variant="caption">
+      <Typography variant="body2">
         <ReactMarkdownOrHtml source={props?.disclaimer} id={"DISCLAIMER"} />
       </Typography>
     </Card>

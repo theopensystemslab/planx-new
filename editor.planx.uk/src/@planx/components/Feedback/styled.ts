@@ -5,6 +5,7 @@ import ToggleButtonGroup, {
 
 export const StyledToggleButtonGroup = styled(ToggleButtonGroup)(
   ({ theme }) => ({
+    width: "100%",
     [`& .${toggleButtonGroupClasses.grouped}`]: {
       border: 0,
       padding: 0,
