@@ -85,26 +85,26 @@ export default function PickOSAddress(props: PickOSAddressProps): FCReturn {
             selectedAddress.SAO_TEXT, // populated in cases of building name only, no street number
           ]
             .filter(Boolean)
-            .join(""),
+            .join("") || undefined,
           saoEnd: [
             selectedAddress.SAO_END_NUMBER,
             selectedAddress.SAO_END_SUFFIX,
           ]
             .filter(Boolean)
-            .join(""),
+            .join("") || undefined,
           pao: [
             selectedAddress.PAO_START_NUMBER,
             selectedAddress.PAO_START_SUFFIX,
             selectedAddress.PAO_TEXT, // populated in cases of building name only, no street number
           ]
             .filter(Boolean)
-            .join(""),
+            .join("") || undefined,
           paoEnd: [
             selectedAddress.PAO_END_NUMBER,
             selectedAddress.PAO_END_SUFFIX,
           ]
             .filter(Boolean)
-            .join(""),
+            .join("") || undefined,
           street: selectedAddress.STREET_DESCRIPTION,
           town: selectedAddress.TOWN_NAME,
           postcode: selectedAddress.POSTCODE_LOCATOR,
