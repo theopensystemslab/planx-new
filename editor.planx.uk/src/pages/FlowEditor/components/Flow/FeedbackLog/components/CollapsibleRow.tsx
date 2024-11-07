@@ -82,7 +82,7 @@ const feedbackTypeIcon = (type: FeedbackType) => {
         title: "Unhelpful (help text)",
       };
     default:
-      return { icon: <RuleIcon />, title: "inaccuracy" };
+      return { icon: <RuleIcon />, title: "Inaccuracy" };
   }
 };
 
