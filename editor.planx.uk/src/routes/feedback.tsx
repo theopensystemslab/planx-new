@@ -18,6 +18,7 @@ export interface Feedback {
   nodeTitle: string | null;
   nodeType: keyof typeof ComponentType | null;
   userComment: string | null;
+  feedbackScore: string | null;
   userContext: string | null;
   createdAt: string;
   address: string | null;
@@ -43,7 +44,7 @@ const feedbackRoutes = compose(
         data: { feedback },
       } = await client.query<{ feedback: Feedback[] }>({
         query: gql`
-          query GetFeebackForFlow($teamSlug: String!, $flowSlug: String!) {
+          query GetFeedbackForFlow($teamSlug: String!, $flowSlug: String!) {
             feedback: feedback_summary(
               order_by: { created_at: asc }
               where: {
@@ -57,6 +58,7 @@ const feedbackRoutes = compose(
               nodeType: node_type
               userComment: user_comment
               userContext: user_context
+              feedbackScore: feedback_score
               createdAt: created_at
               address
             }
