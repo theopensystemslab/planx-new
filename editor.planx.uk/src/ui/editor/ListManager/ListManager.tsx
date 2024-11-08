@@ -38,7 +38,7 @@ export interface Props<T, EditorExtraProps = {}> {
 
 const Item = styled(Box)(({ theme }) => ({
   display: "flex",
-  marginBottom: theme.spacing(1),
+  marginBottom: theme.spacing(2),
 }));
 
 export default function ListManager<T, EditorExtraProps>(

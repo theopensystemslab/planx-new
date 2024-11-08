@@ -8,6 +8,7 @@ import { inputLabelClasses } from "@mui/material/InputLabel";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { visuallyHidden } from "@mui/utils";
 import React from "react";
 import { borderedFocusStyle } from "theme";
 
@@ -29,23 +30,32 @@ type OptionalAutocompleteProps<T> = Partial<
 
 type Props<T> = {
   label: string;
+  hideLabel?: boolean;
+  placeholder?: string;
 } & RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T>;
 
-const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
-  marginTop: theme.spacing(2),
-  "& > div > label": {
-    paddingRight: theme.spacing(3),
-  },
-  [`& .${autocompleteClasses.endAdornment}`]: {
-    top: "unset",
-  },
-  "&:focus-within": {
-    "& svg": {
-      color: "black",
+interface CustomAutocompleteProps<T>
+  extends AutocompleteProps<T, true, true, false, "div"> {
+  hideLabel?: boolean;
+}
+
+const StyledAutocomplete = styled(Autocomplete)<CustomAutocompleteProps<any>>(
+  ({ theme, hideLabel }) => ({
+    ...(hideLabel ? {} : { marginTop: theme.spacing(2) }),
+    "& > div > label": {
+      paddingRight: theme.spacing(3),
     },
-  },
-})) as typeof Autocomplete;
+    [`& .${autocompleteClasses.endAdornment}`]: {
+      top: "unset",
+    },
+    "&:focus-within": {
+      "& svg": {
+        color: "black",
+      },
+    },
+  }),
+) as typeof Autocomplete;
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   "&:focus-within": {
@@ -103,7 +113,13 @@ export const CustomCheckbox = styled("span")(({ theme }) => ({
   },
 }));
 
-export function SelectMultiple<T>(props: Props<T>) {
+export function SelectMultiple<T>({
+  label,
+  hideLabel = false,
+  placeholder,
+  value = [],
+  ...props
+}: Props<T> & { value?: T[] }) {
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, true, true, false, "div">
@@ -114,14 +130,21 @@ export function SelectMultiple<T>(props: Props<T>) {
         disableCloseOnSelect
         multiple
         popupIcon={PopupIcon}
+        value={value}
+        hideLabel={hideLabel}
         renderInput={(params) => (
           <StyledTextField
             {...params}
             InputProps={{
               ...params.InputProps,
               notched: false,
+              placeholder: value.length === 0 ? placeholder : "",
             }}
-            label={props.label}
+            label={hideLabel ? "" : label}
+            InputLabelProps={{
+              ...params.InputLabelProps,
+              sx: hideLabel ? visuallyHidden : {},
+            }}
           />
         )}
         ChipProps={{
