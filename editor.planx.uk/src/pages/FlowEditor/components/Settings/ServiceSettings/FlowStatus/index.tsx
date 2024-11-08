@@ -1,9 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import FormControlLabel, {
-  formControlLabelClasses,
-} from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
@@ -14,6 +11,7 @@ import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
+import { Switch } from "ui/shared/Switch";
 
 import { useStore } from "../../../../lib/store";
 import { PublicLink } from "./PublicLink";
@@ -104,28 +102,25 @@ const FlowStatus = () => {
         </Typography>
       </SettingsSection>
       <SettingsSection background>
-        <FormControlLabel
-          label={statusForm.values.status}
-          sx={{
-            marginBottom: 0.5,
-            [`& .${formControlLabelClasses.label}`]: {
-              fontWeight: FONT_WEIGHT_BOLD,
-              textTransform: "capitalize",
-              fontSize: 19,
+        <Switch
+          label={statusForm.values.status as Capitalize<string>}
+          formControlLabelProps={{
+            sx: {
+              marginBottom: 0.5,
+              [`& .${formControlLabelClasses.label}`]: {
+                fontWeight: FONT_WEIGHT_BOLD,
+                textTransform: "capitalize",
+                fontSize: 19,
+              },
             },
+            name: "service.status",
           }}
-          control={
-            <Switch
-              name="service.status"
-              color="primary"
-              checked={statusForm.values.status === "online"}
-              onChange={() =>
-                statusForm.setFieldValue(
-                  "status",
-                  statusForm.values.status === "online" ? "offline" : "online",
-                )
-              }
-            />
+          checked={statusForm.values.status === "online"}
+          onChange={() =>
+            statusForm.setFieldValue(
+              "status",
+              statusForm.values.status === "online" ? "offline" : "online",
+            )
           }
         />
         <SettingsDescription>

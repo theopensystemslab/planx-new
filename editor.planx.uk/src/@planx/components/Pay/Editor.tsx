@@ -2,7 +2,6 @@ import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
-import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -29,6 +28,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
@@ -263,13 +263,9 @@ const Component: React.FC<Props> = (props: Props) => {
                 />
               </InputRow>
               <InputRow>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={values.hidePay}
-                      onChange={() => setFieldValue("hidePay", !values.hidePay)}
-                    />
-                  }
+                <Switch
+                  checked={values.hidePay}
+                  onChange={() => setFieldValue("hidePay", !values.hidePay)}
                   label="Hide the pay buttons and show fee for information only"
                 />
               </InputRow>
@@ -353,17 +349,13 @@ const Component: React.FC<Props> = (props: Props) => {
           <ModalSection>
             <ModalSectionContent title="Invite to Pay" Icon={ICONS[TYPES.Pay]}>
               <InputRow>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={values.allowInviteToPay}
-                      onChange={() =>
-                        setFieldValue(
-                          "allowInviteToPay",
-                          !values.allowInviteToPay,
-                        )
-                      }
-                    />
+                <Switch
+                  checked={values.allowInviteToPay}
+                  onChange={() =>
+                    setFieldValue(
+                      "allowInviteToPay",
+                      !values.allowInviteToPay,
+                    )
                   }
                   label="Allow applicants to invite someone else to pay"
                 />

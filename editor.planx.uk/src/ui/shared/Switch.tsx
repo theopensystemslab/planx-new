@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControlLabel, { FormControlLabelProps } from "@mui/material/FormControlLabel";
 import MuiSwitch, { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
 import React from "react";
 
@@ -7,9 +7,10 @@ interface Props {
   checked?: boolean;
   onChange: MuiSwitchProps["onChange"];
   label: Capitalize<string>
+  formControlLabelProps?: Partial<FormControlLabelProps>;
 }
 
-export const Switch: React.FC<Props> = ({ checked, onChange, label }) => (
+export const Switch: React.FC<Props> = ({ checked, onChange, label, formControlLabelProps }) => (
   <Box>
     <FormControlLabel
       control={
@@ -19,6 +20,7 @@ export const Switch: React.FC<Props> = ({ checked, onChange, label }) => (
         />
       }
       label={label}
+      {...formControlLabelProps}
     />
   </Box>
 )

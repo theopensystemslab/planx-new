@@ -1,5 +1,3 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
 import { parseNotice } from "@planx/components/Notice/model";
@@ -12,6 +10,7 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
@@ -70,17 +69,13 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
             }}
           />
           <InputRow>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={Boolean(props.value.resetButton)}
-                  onChange={() =>
-                    props.onChange({
-                      ...props.value,
-                      resetButton: !props.value.resetButton,
-                    })
-                  }
-                />
+            <Switch
+              checked={Boolean(props.value.resetButton)}
+              onChange={() =>
+                props.onChange({
+                  ...props.value,
+                  resetButton: !props.value.resetButton,
+                })
               }
               label="Reset to start of service"
             />
