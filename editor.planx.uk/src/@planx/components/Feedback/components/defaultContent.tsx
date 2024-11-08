@@ -2,9 +2,11 @@ import { Feedback } from "../model";
 
 export const defaultContent: Feedback = {
   title: "Tell us what you think",
-  freeformQuestion: "Please tell us more about your experience.",
+  freeformQuestion:
+    "<strong>Please tell us more about your experience.</strong>",
 
-  ratingQuestion: "How would you rate your experience with this service?",
+  ratingQuestion:
+    "<strong>How would you rate your experience with this service?</strong>",
 
   description: `This service is a work in progress, any feedback you share about your experience will help us to improve it.
 <br>

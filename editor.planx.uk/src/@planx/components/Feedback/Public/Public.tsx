@@ -88,13 +88,11 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         {props.ratingQuestion && (
           <InputLabel
             label={
-              <Typography component="span" fontWeight="700">
-                <ReactMarkdownOrHtml
-                  source={props.ratingQuestion}
-                  id={"RATING_QUESTION"}
-                  openLinksOnNewTab
-                />
-              </Typography>
+              <ReactMarkdownOrHtml
+                source={props.ratingQuestion}
+                id={"RATING_QUESTION"}
+                openLinksOnNewTab
+              />
             }
           />
         )}
@@ -105,10 +103,10 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           onChange={handleFeedbackChange}
           aria-label="feedback score"
         >
-          <Grid 
-            container 
-            columnSpacing={2} 
-            component="fieldset" 
+          <Grid
+            container
+            columnSpacing={2}
+            component="fieldset"
             direction={{ xs: "column", formWrap: "row" }}
           >
             <FaceBox
@@ -147,13 +145,11 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         {props.freeformQuestion && (
           <InputLabel
             label={
-              <Typography component="span" fontWeight="700">
-                <ReactMarkdownOrHtml
-                  source={props.freeformQuestion}
-                  id={"RATING_QUESTION"}
-                  openLinksOnNewTab
-                />
-              </Typography>
+              <ReactMarkdownOrHtml
+                source={props.freeformQuestion}
+                id={"RATING_QUESTION"}
+                openLinksOnNewTab
+              />
             }
           />
         )}

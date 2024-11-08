@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
 import React, { ReactElement } from "react";
 
@@ -28,7 +28,7 @@ export const FaceBox = ({
           px: 0,
           width: "100%",
           textTransform: "none",
-          "&[aria-pressed='true'] > div": {
+          [`&.${toggleButtonClasses.selected}`]: {
             borderColor: (theme) => theme.palette.primary.dark,
             background: (theme) => theme.palette.background.paper,
           },
