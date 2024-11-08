@@ -120,7 +120,7 @@ export const FooterLinksAndLegalDisclaimer = () => {
       <SettingsSection background>
         <TextInput
           title="Legal Disclaimer"
-          description="Displayed before a user submits their application"
+          description="Displayed on the 'Result' pages of the service (if it contains any)"
           switchProps={{
             name: "elements.legalDisclaimer.show",
             checked: elementsForm.values.elements?.legalDisclaimer?.show,
