@@ -102,32 +102,32 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
             direction={{ xs: "column", formWrap: "row" }}
           >
             <FaceBox
-              value="1"
+              value={1}
               testId="feedback-button-terrible"
               icon={TerribleFace}
               label="Terrible"
               altText="very unhappy face"
             />
             <FaceBox
-              value="2"
+              value={2}
               icon={PoorFace}
               label="Poor"
               altText="slightly unhappy face"
             />
             <FaceBox
-              value="3"
+              value={3}
               icon={NeutralFace}
               label="Neutral"
               altText="neutral face"
             />
             <FaceBox
-              value="4"
+              value={4}
               icon={GoodFace}
               label="Good"
               altText="smiling face"
             />
             <FaceBox
-              value="5"
+              value={5}
               icon={ExcellentFace}
               label="Excellent"
               altText="very happy face"

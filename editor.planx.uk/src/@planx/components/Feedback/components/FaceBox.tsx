@@ -9,7 +9,7 @@ interface FaceBoxProps {
   label: Capitalize<string>;
   altText: string;
   testId?: string;
-  value: string;
+  value: number;
 }
 
 export const FaceBox = ({

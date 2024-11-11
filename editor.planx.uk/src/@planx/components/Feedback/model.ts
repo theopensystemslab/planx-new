@@ -9,7 +9,7 @@ export interface Feedback extends BaseNodeData {
   feedbackRequired: boolean;
 }
 export interface FormProps {
-  feedbackScore: string;
+  feedbackScore: 1 | 2 | 3 | 4 | 5;
   userComment: string;
 }
 

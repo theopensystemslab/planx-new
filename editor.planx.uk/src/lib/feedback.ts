@@ -57,7 +57,7 @@ export async function insertFeedbackMutation(data: {
   userData?: UserData;
   userContext?: string;
   userComment: string;
-  feedbackScore?: string;
+  feedbackScore?: number;
   feedbackType: FeedbackView | Sentiment;
   nodeData?: Store.Node["data"];
 }) {
@@ -71,7 +71,7 @@ export async function insertFeedbackMutation(data: {
         $device: jsonb
         $userData: jsonb
         $userContext: String
-        $feedbackScore: String
+        $feedbackScore: Int
         $userComment: String!
         $feedbackType: feedback_type_enum_enum!
         $nodeData: jsonb
