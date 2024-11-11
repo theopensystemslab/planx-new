@@ -46,6 +46,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
         <Input
           name="description"
           value={props.value.description}
+          multiline
           onChange={(ev: ChangeEvent<HTMLInputElement>) => {
             props.onChange({
               ...props.value,
