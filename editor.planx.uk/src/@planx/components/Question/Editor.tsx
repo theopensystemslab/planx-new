@@ -49,6 +49,7 @@ const OptionEditor: React.FC<{
         <Input
           required
           format="bold"
+          multiline
           value={props.value.data.text || ""}
           onChange={(ev) => {
             props.onChange({
