@@ -7,7 +7,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 export const Disclaimer = ({ text }: { text: string }) => (
   <WarningContainer>
     <ErrorOutline />
-    <Typography variant="body1" component="div" ml={2} mb={1}>
+    <Typography variant="body2" component="div" ml={2} sx={{ "& p:first-of-type": { marginTop: 0, } }}>
       <ReactMarkdownOrHtml source={text} openLinksOnNewTab />
     </Typography>
   </WarningContainer>
