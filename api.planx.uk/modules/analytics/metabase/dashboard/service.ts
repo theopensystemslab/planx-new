@@ -123,7 +123,7 @@ export async function updateFilter(
 }
 
 /** Takes a dashboard ID and returns a public link for it */
-export async function generatePublicLink(dashboardId: number): Promise<any> {
+export async function generatePublicLink(dashboardId: number): Promise<string> {
   try {
     const response = await metabaseClient.post(
       `/api/dashboard/${dashboardId}/public_link`,
