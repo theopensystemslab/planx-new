@@ -1,4 +1,1 @@
--- Could not auto-generate a down migration.
--- Please write an appropriate down migration for the SQL below:
--- alter table "public"."feedback" add column "feedback_score" integer
---  null;
+ALTER TABLE "public"."feedback" DROP COLUMN "feedback_score";
