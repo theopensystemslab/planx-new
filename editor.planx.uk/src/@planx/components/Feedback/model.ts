@@ -1,5 +1,3 @@
-// import { object, string } from "yup";
-
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 import { defaultContent } from "./components/defaultContent";
 export interface Feedback extends BaseNodeData {

@@ -1,12 +1,11 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { Disclaimer } from "@planx/components/shared/Disclaimer";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
 import { FeedbackView } from "components/Feedback/types";
-import { FormikHelpers, useFormik } from "formik";
+import { useFormik } from "formik";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -26,11 +25,10 @@ import { FaceBox } from "../components/FaceBox";
 import { Feedback, FormProps } from "../model";
 import { StyledToggleButtonGroup } from "../styled";
 
+export const PASSPORT_FEEDBACK_KEY = "_feedback";
+
 const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
-  const handleSubmitFeedback = async (
-    values: FormProps,
-    { resetForm }: FormikHelpers<FormProps>,
-  ) => {
+  const handleSubmitFeedback = async (values: FormProps) => {
     const metadata = await getInternalFeedbackMetadata();
     const feedback = {
       userComment: values.feedback,
@@ -46,12 +44,10 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         console.error(err);
       },
     );
-    props.handleSubmit?.(makeData(props, values, "_feedback"));
+    props.handleSubmit?.(makeData(props, values, PASSPORT_FEEDBACK_KEY));
     if (!submitFeedbackResult) {
       return;
     }
-
-    resetForm({ values });
   };
 
   const formik = useFormik<FormProps>({
