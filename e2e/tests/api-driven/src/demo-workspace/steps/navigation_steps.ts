@@ -5,10 +5,14 @@ import { getFlowBySlug, getTeamAndFlowsBySlug, getTeams } from "../helper";
 import { CustomWorld } from "./background_steps";
 
 When<CustomWorld>("I am in the {string} team", async function (this, string) {
-  // Write code here that turns the phrase above into concrete actions
   const team = await getTeamAndFlowsBySlug(this.demoClient, string);
   this.currentTeamId = team.id;
   this.teamFlows = team.flows;
+  if (string !== "demo") {
+    this.adminFlowSlug = team.flows[0].slug;
+  } else {
+    this.demoFlowSlug = team.flows[0].slug;
+  }
   assert.equal(string, team.slug, "Error retrieving the correct team");
 });
 
@@ -28,7 +32,6 @@ When<CustomWorld>(
 
 When<CustomWorld>("I am on my own flow", async function (this) {
   const flow = await getFlowBySlug(this.demoClient, this.demoFlowSlug);
-
   assert.equal(flow.slug, this.demoFlowSlug, "Incorrect flow has been fetched");
 });
 

@@ -2,11 +2,7 @@ import { FlowGraph } from "@opensystemslab/planx-core/types";
 import type { Browser, Page, Request } from "@playwright/test";
 import { gql } from "graphql-request";
 import type { Context } from "./context";
-import {
-  generateAuthenticationDemoToken,
-  generateAuthenticationToken,
-  getGraphQLClient,
-} from "./context";
+import { generateAuthenticationToken, getGraphQLClient } from "./context";
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account

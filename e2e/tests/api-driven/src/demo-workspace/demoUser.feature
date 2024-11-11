@@ -1,5 +1,6 @@
   Feature: Demo user access
-
+# We create the steps data from these Given statements below
+# altering these will alter what data is created for testing
     Background:
 
         Given I have the following teams in the database:
@@ -72,8 +73,8 @@
     @demo-user-permissions 
     Scenario Outline: Actioning flows in other teams
         When I am in the "<TEAM>" team
-        And I want to edit a flow that I did not create
-        Then I should not have access to modify the flow
+        Then I should be able to see a flow
+        But I should not have access to modify the flow
 
         Examples: 
             | TEAM                  | 

@@ -121,21 +121,6 @@ export function generateAuthenticationToken(userId: string) {
   );
 }
 
-export function generateAuthenticationDemoToken(userId: string) {
-  assert(process.env.JWT_SECRET);
-  return sign(
-    {
-      sub: `${userId}`,
-      "https://hasura.io/jwt/claims": {
-        "x-hasura-allowed-roles": ["public", "demoUser"],
-        "x-hasura-default-role": "demoUser",
-        "x-hasura-user-id": `${userId}`,
-      },
-    },
-    process.env.JWT_SECRET,
-  );
-}
-
 export function getCoreDomainClient(): CoreDomainClient {
   assert(process.env.HASURA_GRAPHQL_URL);
   assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);

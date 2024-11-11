@@ -4,6 +4,7 @@ import { strict as assert } from "node:assert";
 import {
   createFlow,
   deleteFlow,
+  Flow,
   getFlowBySlug,
   updateFlow,
   updateTeamSettings,
@@ -41,15 +42,20 @@ Then<CustomWorld>("I should not access the Other Team", async function (this) {
   const cannotAccessOtherTeam = this.demoTeamsArray.find(
     (team) => team.slug !== this.otherTeam?.slug,
   );
-  assert.ok(cannotAccessOtherTeam, "Team is not in the array");
+  assert.ok(cannotAccessOtherTeam, "Other Team is in the array");
 });
 
 Then<CustomWorld>("I should not succeed", async function (this) {
-  const hasSucceeded = await createFlow(this.demoClient, {
-    name: "Bad flow",
-    slug: "bad-flow",
-    teamId: this.insertFlowTeamId,
-  });
+  let hasSucceeded: Flow | false;
+  try {
+    hasSucceeded = await createFlow(this.demoClient, {
+      name: "Bad flow",
+      slug: "bad-flow",
+      teamId: this.insertFlowTeamId,
+    });
+  } catch (error) {
+    hasSucceeded = false;
+  }
   assert.ok(!hasSucceeded, "Flow was able to be created on this team");
 });
 
@@ -60,6 +66,15 @@ Then("I should succeed in the Demo team", async function () {
     teamId: 32,
   });
   assert.ok(hasSucceeded, "Flow not added correctly");
+});
+
+Then<CustomWorld>("I should be able to see a flow", async function (this) {
+  const flow = await getFlowBySlug(this.demoClient, this.adminFlowSlug);
+  assert.equal(
+    flow.slug,
+    this.adminFlowSlug,
+    "Incorrect flow has been fetched",
+  );
 });
 
 Then<CustomWorld>(
