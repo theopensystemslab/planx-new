@@ -53,6 +53,10 @@
               "styled"
             ],
             "message": "Please import styled from '@mui/material/styles'. Reason: https://mui.com/system/styled/#what-problems-does-it-solve"
+          },
+          {
+            "name": "@mui/material/Switch",
+            "message": "Please import shared Switch component from 'ui/shared/Switch' instead of the MUI Switch component directly"
           }
         ],
         "patterns": [

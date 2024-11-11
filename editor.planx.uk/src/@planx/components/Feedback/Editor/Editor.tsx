@@ -1,5 +1,3 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { EditorProps } from "@planx/components/shared/types";
@@ -13,6 +11,7 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import {
   descriptionPlaceholder,
@@ -96,17 +95,13 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
               </InputLabel>
             </InputRow>
             <InputRow>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formik.values.feedbackRequired}
-                    onChange={() =>
-                      formik.setFieldValue(
-                        "feedbackRequired",
-                        !formik.values.feedbackRequired,
-                      )
-                    }
-                  />
+              <Switch
+                checked={formik.values.feedbackRequired}
+                onChange={() =>
+                  formik.setFieldValue(
+                    "feedbackRequired",
+                    !formik.values.feedbackRequired,
+                  )
                 }
                 label="Feedback required"
               />

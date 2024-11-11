@@ -1,5 +1,3 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
@@ -10,6 +8,7 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import { parseContent, PropertyInformation } from "./model";
@@ -54,17 +53,13 @@ function PropertyInformationComponent(props: Props) {
             />
           </InputRow>
           <InputRow>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formik.values.showPropertyTypeOverride}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "showPropertyTypeOverride",
-                      !formik.values.showPropertyTypeOverride,
-                    )
-                  }
-                />
+            <Switch
+              checked={formik.values.showPropertyTypeOverride}
+              onChange={() =>
+                formik.setFieldValue(
+                  "showPropertyTypeOverride",
+                  !formik.values.showPropertyTypeOverride,
+                )
               }
               label="Show users a 'change' link to override the property type"
             />
