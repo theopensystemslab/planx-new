@@ -113,10 +113,10 @@ const SendComponent: React.FC<Props> = (props) => {
       if (
         value === "s3" &&
         newCheckedValues.includes(value) &&
-        !["barnet", "lambeth"].includes(teamSlug)
+        !["barnet", "southwark"].includes(teamSlug)
       ) {
         alert(
-          "AWS S3 uploads are currently being prototyped with Barnet and Lambeth only. Please do not select this option for other councils yet.",
+          "AWS S3 uploads require API tokens and are currently being prototyped with select councils. Reach out on Slack #planx-alternatives-to-integrations before selecting this option please.",
         );
       }
     };
