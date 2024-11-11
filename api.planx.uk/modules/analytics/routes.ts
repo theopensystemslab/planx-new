@@ -13,6 +13,8 @@ import {
 import {
   copyDashboardController,
   copyDashboardSchema,
+  generatePublicLinkController,
+  generatePublicLinkSchema,
 } from "./metabase/dashboard/controller.js";
 
 const router = Router();
@@ -30,7 +32,11 @@ router.post(
 );
 
 // Collection routes
-router.get("/collections/check", checkCollectionsController);
+router.get(
+  "/collections/check",
+  checkCollectionsController, // TODO add validation
+);
+
 router.post(
   "/collections/new",
   validate(newCollectionSchema),
@@ -42,6 +48,12 @@ router.post(
   "/dashboard/copy",
   validate(copyDashboardSchema),
   copyDashboardController,
+);
+
+router.post(
+  "/dashboard/:dashboardId/public_link",
+  validate(generatePublicLinkSchema),
+  generatePublicLinkController,
 );
 
 export default router;
