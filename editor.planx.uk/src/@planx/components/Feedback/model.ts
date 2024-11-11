@@ -10,7 +10,7 @@ export interface Feedback extends BaseNodeData {
 }
 export interface FormProps {
   feedbackScore: string;
-  feedback: string;
+  userComment: string;
 }
 
 export const parseFeedback = (

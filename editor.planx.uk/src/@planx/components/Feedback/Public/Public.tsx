@@ -30,13 +30,9 @@ export const PASSPORT_FEEDBACK_KEY = "_feedback";
 const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   const handleSubmitFeedback = async (values: FormProps) => {
     const metadata = await getInternalFeedbackMetadata();
-    const feedback = {
-      userComment: values.feedback,
-      feedbackScore: values.feedbackScore,
-    };
     const data = {
       ...metadata,
-      ...feedback,
+      ...values,
       feedbackType: "component" as FeedbackView,
     };
     const submitFeedbackResult = await insertFeedbackMutation(data).catch(
@@ -53,7 +49,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   const formik = useFormik<FormProps>({
     initialValues: getPreviouslySubmittedData(props) ?? {
       feedbackScore: "",
-      feedback: "",
+      userComment: "",
     },
     onSubmit: handleSubmitFeedback,
   });
@@ -152,11 +148,11 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         <Input
           multiline={true}
           rows={3}
-          name="feedback"
-          value={formik.values.feedback}
+          name="userComment"
+          value={formik.values.userComment}
           bordered
           onChange={formik.handleChange}
-          aria-label="feedback"
+          aria-label="user comment"
         />
       </Box>
       {props.disclaimer && <Disclaimer text={props.disclaimer} />}
