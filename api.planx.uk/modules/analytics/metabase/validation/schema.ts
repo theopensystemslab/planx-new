@@ -46,7 +46,10 @@ export const dashboardSchemas = {
 
   description: collectionSchemas.description,
 
-  collectionId: baseNumberSchema.optional(),
+  collectionId: baseNumberSchema
+    .min(0, "Position must be 0 or greater")
+    .nullable()
+    .optional(),
 
   collectionPosition: baseNumberSchema
     .min(0, "Position must be 0 or greater")
