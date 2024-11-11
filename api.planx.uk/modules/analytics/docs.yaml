@@ -179,3 +179,42 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+
+  /dashboard/{dashboardId}/public_link:
+    post:
+      summary: Generate public link
+      description: Generate a public sharing link for a specific dashboard
+      tags:
+        - dashboards
+      parameters:
+        - in: path
+          name: dashboardId
+          required: true
+          schema:
+            type: number
+          description: The ID of the dashboard to generate a public link for
+      responses:
+        "201":
+          description: Public link generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicLinkResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Dashboard not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
