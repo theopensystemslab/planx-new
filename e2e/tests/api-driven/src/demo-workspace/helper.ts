@@ -87,8 +87,8 @@ export const createFlowFromArray = async (
       slug: flow.slug,
     });
     return flowId;
-  } catch (error: any) {
-    console.error(`Error adding flow ${flow.slug}`, error.message);
+  } catch (error) {
+    console.error(`Error adding flow ${flow.slug}`, error);
     return false;
   }
 };
@@ -279,7 +279,7 @@ export async function updateFlow(client, flowId: UUID): Promise<UUID> {
 export async function deleteFlow(client, flowId: UUID): Promise<UUID> {
   const { delete_flows_by_pk: response } = await client.request(
     gql`
-      mutation MyMutation($flowId: uuid!) {
+      mutation deleteFlow($flowId: uuid!) {
         delete_flows_by_pk(id: $flowId) {
           id
         }
