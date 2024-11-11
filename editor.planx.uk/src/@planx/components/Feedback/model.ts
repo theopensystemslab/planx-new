@@ -21,6 +21,6 @@ export const parseFeedback = (
   ratingQuestion: data?.ratingQuestion || defaultContent.ratingQuestion,
   freeformQuestion: data?.freeformQuestion || defaultContent.freeformQuestion,
   disclaimer: data?.disclaimer || defaultContent.disclaimer,
-  feedbackRequired: data?.feedbackRequired || false,
+  feedbackRequired: data?.feedbackRequired || defaultContent.feedbackRequired,
   ...parseBaseNodeData(data),
 });

@@ -42,11 +42,11 @@ export const makeData = <T>(
   value: T,
   overwriteKey?: string,
 ): Record<string, never> | { data: Record<string, T> } => {
-  return isEmpty(value)
-    ? {}
-    : {
-        data: { [overwriteKey ?? fnOrDefaultPassportKey(props)]: value },
-      };
+  if (isEmpty(value)) return {};
+
+  return {
+    data: { [overwriteKey ?? fnOrDefaultPassportKey(props)]: value },
+  };
 };
 
 export const getPreviouslySubmittedData = ({

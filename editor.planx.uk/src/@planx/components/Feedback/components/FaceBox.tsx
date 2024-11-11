@@ -6,7 +6,7 @@ import React, { ReactElement } from "react";
 
 interface FaceBoxProps {
   icon: string;
-  label: string;
+  label: Capitalize<string>;
   altText: string;
   testId?: string;
   value: string;

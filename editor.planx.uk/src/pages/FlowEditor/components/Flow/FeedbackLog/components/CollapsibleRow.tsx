@@ -15,15 +15,11 @@ import TableRow from "@mui/material/TableRow";
 import { format } from "date-fns";
 import { client } from "lib/graphql";
 import React, { useState } from "react";
-import { Feedback } from "routes/feedback";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { GET_FEEDBACK_BY_ID_QUERY } from "../queries/getFeedbackById";
 import { DetailedFeedback, StyledSummaryListTable } from "../styled";
-
-interface CollapsibleRowProps extends Feedback {
-  displayFeedbackItems: string[];
-}
+import { CollapsibleRowProps, FeedbackType, FeedbackTypeIcon } from "../types";
 
 const getDetailedFeedback = async (feedbackId: number) => {
   const {
@@ -56,16 +52,7 @@ const getDetailedFeedback = async (feedbackId: number) => {
   };
 };
 
-type FeedbackType =
-  | "issue"
-  | "idea"
-  | "comment"
-  | "inaccuracy"
-  | "helpful"
-  | "unhelpful"
-  | "component";
-
-const feedbackTypeIcon = (type: FeedbackType) => {
+const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
   switch (type) {
     case "issue":
       return { icon: <WarningIcon />, title: "Issue" };
@@ -86,7 +73,7 @@ const feedbackTypeIcon = (type: FeedbackType) => {
     case "component":
       return { icon: <RateReviewIcon />, title: "From feedback component" };
     default:
-      return { icon: <RuleIcon />, title: "inaccuracy" };
+      return { icon: <RuleIcon />, title: "Inaccuracy" };
   }
 };
 
