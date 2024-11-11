@@ -87,9 +87,24 @@ paths:
       description: Check if a collection exists with a council name
       tags:
         - collections
+      parameters:
+        - in: query
+          name: name
+          required: true
+          schema:
+            type: string
+          description: The name of the collection to check
       responses:
         "200":
           description: Collection ID if found, false if not found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: number
+                    description: Collection ID when found
+                  - type: boolean
+                    description: False when not found
         "500":
           description: Server error
           content:
@@ -111,7 +126,7 @@ paths:
               $ref: "#/components/schemas/NewCollectionParams"
       responses:
         "201":
-          description: Collection created successfully
+          description: Collection found / created successfully
           content:
             application/json:
               schema:
