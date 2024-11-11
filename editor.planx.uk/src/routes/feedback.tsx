@@ -18,7 +18,7 @@ export interface Feedback {
   nodeTitle: string | null;
   nodeType: keyof typeof ComponentType | null;
   userComment: string | null;
-  feedbackScore: string | null;
+  feedbackScore: number;
   userContext: string | null;
   createdAt: string;
   address: string | null;
