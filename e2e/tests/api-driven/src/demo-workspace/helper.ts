@@ -28,12 +28,11 @@ export const cleanup = async () => {
 export const checkTeamsExist = async (
   teamArray: DataTableArray,
 ): Promise<Team[]> => {
-  const existenceArray = await Promise.all(
-    teamArray.map(async (team: DataTableRecord) => {
-      const teamObj = await $admin.team.getBySlug(team.slug);
-      return teamObj;
-    }),
-  );
+  const existenceArray: Team[] = [];
+  for (const team of teamArray) {
+    const teamObj = await $admin.team.getBySlug(team.slug);
+    existenceArray.push(teamObj);
+  }
   return existenceArray;
 };
 

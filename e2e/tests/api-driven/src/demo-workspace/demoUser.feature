@@ -26,7 +26,7 @@
         And I am a demoUser
 
     @demo-user-permissions
-    Scenario: I can only view my own flows
+    Scenario Outline: I can only view my own flows
         When I am in the "<TEAM>" team
         Then I should only see my own flows
         But I should not see flows that I have not created
@@ -39,7 +39,7 @@
     Scenario Outline: I can only view specific teams
         When I query the teams table
         Then I can access the teams with slug: "<SLUG>"
-        But I should not access the Other Team
+        But I should not be able to access the Other Team
 
         Examples:
             | SLUG                      |
@@ -51,8 +51,8 @@
     @demo-user-permissions 
     Scenario Outline: Creating a new flow
         When I insert a flow into the team: "<TEAM>"
-        Then I should not succeed
-        But I should succeed in the Demo team
+        Then I should not be able to create a flow
+        But I should be able to create a flow in the Demo team
 
         Examples: 
             | TEAM                  | 

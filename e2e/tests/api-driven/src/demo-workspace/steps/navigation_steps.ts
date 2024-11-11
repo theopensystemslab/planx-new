@@ -4,16 +4,16 @@ import { strict as assert } from "node:assert";
 import { getFlowBySlug, getTeamAndFlowsBySlug, getTeams } from "../helper";
 import { CustomWorld } from "./background_steps";
 
-When<CustomWorld>("I am in the {string} team", async function (this, string) {
-  const team = await getTeamAndFlowsBySlug(this.demoClient, string);
+When<CustomWorld>("I am in the {string} team", async function (this, teamSlug) {
+  const team = await getTeamAndFlowsBySlug(this.demoClient, teamSlug);
   this.currentTeamId = team.id;
   this.teamFlows = team.flows;
-  if (string !== "demo") {
+  if (teamSlug !== "demo") {
     this.adminFlowSlug = team.flows[0].slug;
   } else {
     this.demoFlowSlug = team.flows[0].slug;
   }
-  assert.equal(string, team.slug, "Error retrieving the correct team");
+  assert.equal(teamSlug, team.slug, "Error retrieving the correct team");
 });
 
 When<CustomWorld>("I query the teams table", async function (this) {
@@ -24,8 +24,8 @@ When<CustomWorld>("I query the teams table", async function (this) {
 
 When<CustomWorld>(
   "I insert a flow into the team: {string}",
-  async function (this, string) {
-    const team = await $admin.team.getBySlug(string);
+  async function (this, teamSlug) {
+    const team = await $admin.team.getBySlug(teamSlug);
     this.insertFlowTeamId = team.id;
   },
 );

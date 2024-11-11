@@ -31,7 +31,7 @@ const getAllowedRolesForUser = (user: User): Role[] => {
   const teamRoles = user.teams.map((teamRole) => teamRole.role);
   const allowedRoles: Role[] = [
     "public", // Allow public access
-    ...teamRoles, // User specif ic roles
+    ...teamRoles, // User specific roles
   ];
   if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
 
