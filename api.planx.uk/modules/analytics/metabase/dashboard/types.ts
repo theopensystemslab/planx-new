@@ -8,7 +8,7 @@ export interface CopyDashboardParams {
   /** Optional text to be displayed as the dashboard description */
   description?: string;
   /** Optional number for the copied dashboard's parent collection */
-  collectionId?: number;
+  collectionId?: number | null;
   /** Optional number for the copied dashboard's placement within the collection */
   collectionPosition?: number | null;
   /** Toggle whether or not the questions are copied as well;
