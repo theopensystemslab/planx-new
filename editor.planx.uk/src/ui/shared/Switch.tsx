@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import FormControlLabel, { FormControlLabelProps } from "@mui/material/FormControlLabel";
+// eslint-disable-next-line no-restricted-imports
 import MuiSwitch, { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
 import React from "react";
 
