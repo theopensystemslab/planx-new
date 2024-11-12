@@ -33,7 +33,7 @@ const SendComponent: React.FC<Props> = ({
   ) {
     return <SkipSendWarning {...fullProps} />;
   } else if (window.location.pathname.split("/")[1] === "demo") {
-    return <DemoTeamWarning />;
+    return <DemoTeamWarning {...fullProps} />;
   } else {
     return <CreateSendEvents {...fullProps} />;
   }
@@ -55,15 +55,15 @@ const SkipSendWarning: React.FC<Props> = (props) => (
   </Card>
 );
 
-const DemoTeamWarning: React.FC = () => (
-  <Card>
+const DemoTeamWarning: React.FC<Props> = (props) => (
+  <Card handleSubmit={props.handleSubmit}>
     <ErrorSummaryContainer role="status">
       <Typography variant="h4" ml={2} mb={1}>
-        The send component is not configured for the Demo team
+        Send is disabled for the Demo team
       </Typography>
       <Typography variant="body2" ml={2}>
-        Integrations need to be configured to allow submissions to be sent from
-        PlanX
+        Team integrations need to be configured to allow submissions to be sent
+        from PlanX
       </Typography>
     </ErrorSummaryContainer>
   </Card>
