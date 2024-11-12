@@ -8,6 +8,7 @@ import type {
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
+import { ErrorSummaryContainer } from "@planx/components/shared/Preview/ErrorSummaryContainer";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -86,7 +87,11 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   yourDetailsLabel,
   paymentStatus,
 }) => {
-  const [sessionId, path] = useStore((state) => [state.sessionId, state.path]);
+  const [sessionId, path, teamSlug] = useStore((state) => [
+    state.sessionId,
+    state.path,
+    state.teamSlug,
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
@@ -252,15 +257,16 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             no longer be able to make changes.
           </Typography>
         </WarningContainer>
-        {error ? (
-          <ErrorWrapper
-            error={"Error generating payment request, please try again"}
-          >
+        {teamSlug !== "demo" &&
+          (error ? (
+            <ErrorWrapper
+              error={"Error generating payment request, please try again"}
+            >
+              <SubmitButton />
+            </ErrorWrapper>
+          ) : (
             <SubmitButton />
-          </ErrorWrapper>
-        ) : (
-          <SubmitButton />
-        )}
+          ))}
       </StyledForm>
       <Button
         variant="contained"
@@ -272,6 +278,18 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       >
         {"I want to pay for this application myself"}
       </Button>
+
+      {teamSlug === "demo" && (
+        <ErrorSummaryContainer mt={2}>
+          <Typography variant="h4" ml={2} mb={1}>
+            GOV.UK Pay is not configured for the Demo team
+          </Typography>
+          <Typography variant="body2" ml={2}>
+            You can click "I want to pay for this application myself" to
+            continue your application
+          </Typography>
+        </ErrorSummaryContainer>
+      )}
       {isSaveReturn && <SaveResumeButton />}
     </Card>
   );
