@@ -153,6 +153,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           bordered
           onChange={formik.handleChange}
           aria-label="user comment"
+          data-testid="user-comment"
         />
       </Box>
       {props.disclaimer && <Disclaimer text={props.disclaimer} />}
