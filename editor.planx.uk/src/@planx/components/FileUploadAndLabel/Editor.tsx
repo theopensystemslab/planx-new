@@ -1,10 +1,8 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
-import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
@@ -24,6 +22,7 @@ import SelectInput from "ui/editor/SelectInput/SelectInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
+import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import {
@@ -90,17 +89,13 @@ function FileUploadAndLabelComponent(props: Props) {
             />
           </InputRow>
           <InputRow>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formik.values.hideDropZone}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "hideDropZone",
-                      !formik.values.hideDropZone,
-                    )
-                  }
-                />
+            <Switch
+              checked={formik.values.hideDropZone}
+              onChange={() =>
+                formik.setFieldValue(
+                  "hideDropZone",
+                  !formik.values.hideDropZone,
+                )
               }
               label="Hide the drop zone and show files list for information only"
             />

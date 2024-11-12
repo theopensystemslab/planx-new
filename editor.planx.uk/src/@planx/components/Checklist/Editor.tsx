@@ -3,9 +3,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
-import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { useFormik } from "formik";
+import { FormikErrors, FormikValues, useFormik } from "formik";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -22,6 +21,7 @@ import SimpleMenu from "ui/editor/SimpleMenu";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
+import { Switch } from "ui/shared/Switch";
 
 import { Option, parseBaseNodeData } from "../shared";
 import { FlagsSelect } from "../shared/FlagsSelect";
@@ -312,7 +312,14 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: () => {},
+    validate: ({ options, ...values }) => {
+      const errors: FormikErrors<FormikValues> = {};
+      if (values.fn && !options?.some((option) => option.data.val)) {
+        errors.fn =
+          "At least one option must set a data value when the checklist has a data field";
+      }
+      return errors;
+    },
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
@@ -365,55 +372,45 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 value={formik.values.fn}
                 placeholder="Data Field"
                 onChange={formik.handleChange}
+                error={Boolean(formik.errors?.fn)}
+                errorMessage={formik.errors?.fn}
               />
             </InputRow>
             <InputRow>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={!!formik.values.groupedOptions}
-                    onChange={() =>
-                      formik.setValues({
-                        ...formik.values,
-                        ...toggleExpandableChecklist({
-                          options: formik.values.options,
-                          groupedOptions: formik.values.groupedOptions,
-                        }),
-                      })
-                    }
-                  />
+            <Switch
+              checked={!!formik.values.groupedOptions}
+              onChange={() =>
+                formik.setValues({
+                  ...formik.values,
+                  ...toggleExpandableChecklist({
+                    options: formik.values.options,
+                    groupedOptions: formik.values.groupedOptions,
+                  }),
+                })
+              }
+              label="Expandable"
+            />
+            </InputRow>
+            <InputRow>
+              <Switch
+                checked={formik.values.allRequired}
+                onChange={() =>
+                  formik.setFieldValue(
+                    "allRequired",
+                    !formik.values.allRequired,
+                  )
                 }
-                label="Expandable"
-              />
+              label="All required"
+            />
             </InputRow>
             <InputRow>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formik.values.allRequired}
-                    onChange={() =>
-                      formik.setFieldValue(
-                        "allRequired",
-                        !formik.values.allRequired,
-                      )
-                    }
-                  />
-                }
-                label="All required"
-              />
-            </InputRow>
-            <InputRow>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={formik.values.neverAutoAnswer}
-                    onChange={() =>
-                      formik.setFieldValue(
-                        "neverAutoAnswer",
-                        !formik.values.neverAutoAnswer,
-                      )
-                    }
-                  />
+              <Switch
+                checked={formik.values.neverAutoAnswer}
+                onChange={() => 
+                  formik.setFieldValue(
+                    "neverAutoAnswer",
+                    !formik.values.neverAutoAnswer
+                  )
                 }
                 label="Always put to user (forgo automation)"
               />

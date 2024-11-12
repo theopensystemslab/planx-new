@@ -1,5 +1,3 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
 import { parseNumberInput } from "@planx/components/NumberInput/model";
@@ -14,6 +12,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
+import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 
@@ -75,30 +74,22 @@ export default function NumberInputComponent(props: Props): FCReturn {
             </InputRowItem>
           </InputRow>
           <InputRow>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formik.values.allowNegatives}
-                  onChange={() =>
-                    formik.setFieldValue(
-                      "allowNegatives",
-                      !formik.values.allowNegatives,
-                    )
-                  }
-                />
+            <Switch
+              checked={formik.values.allowNegatives}
+              onChange={() =>
+                formik.setFieldValue(
+                  "allowNegatives",
+                  !formik.values.allowNegatives,
+                )
               }
               label="Allow negative numbers to be input"
             />
           </InputRow>
           <InputRow>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formik.values.isInteger}
-                  onChange={() =>
-                    formik.setFieldValue("isInteger", !formik.values.isInteger)
-                  }
-                />
+            <Switch
+              checked={formik.values.isInteger}
+              onChange={() =>
+                formik.setFieldValue("isInteger", !formik.values.isInteger)
               }
               label="Only allow whole numbers"
             />
