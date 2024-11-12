@@ -499,6 +499,13 @@ const getThemeOptions = ({
           },
         },
       },
+      MuiFormControlLabel: {
+        styleOverrides: {
+          root: {
+            margin: 0,
+          },
+        },
+      },
       MuiSwitch: {
         styleOverrides: {
           root: {

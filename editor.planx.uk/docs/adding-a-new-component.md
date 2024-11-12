@@ -59,7 +59,7 @@ function SetValueComponent(props: Props) {
 }
 ```
 
-5. `Public.tsx`
+5. `Public.tsx` - note the props below are needed to display the 'More Information' sidebar correctly.
 
 ```typescript
 import { PublicProps } from "@planx/components/shared/types";

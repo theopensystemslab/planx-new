@@ -52,8 +52,8 @@ export interface SiteAddress extends MinimumSiteAddress {
   usrn?: string;
   blpu_code?: string;
   organisation?: string | null;
-  sao?: string | null;
-  saoEnd?: string | null;
+  sao?: string;
+  saoEnd?: string;
   pao?: string;
   paoEnd?: string;
   street?: string;

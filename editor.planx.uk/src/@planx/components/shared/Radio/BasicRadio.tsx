@@ -25,6 +25,7 @@ const BasicRadio: React.FC<Props> = ({
     control={<Radio variant={variant} />}
     label={title}
     sx={(theme) => ({
+      ml: theme.spacing(-1),
       mb: variant === "default" ? 1 : 0,
       alignItems: "flex-start",
       [`& .${formControlLabelClasses.label}`]: {

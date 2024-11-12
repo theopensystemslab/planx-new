@@ -258,6 +258,7 @@
         columns:
           - created_at
           - device
+          - feedback_score
           - feedback_type
           - flow_id
           - id

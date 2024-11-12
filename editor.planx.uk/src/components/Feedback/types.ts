@@ -21,7 +21,9 @@ export type FeedbackCategory =
   | "comment"
   | "inaccuracy"
   | "component";
-export type View = "banner" | "triage" | FeedbackCategory | "thanks";
+
+export type FeedbackView = "banner" | "triage" | FeedbackCategory | "thanks";
+
 export type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;
 
 export interface TitleAndCloseProps {

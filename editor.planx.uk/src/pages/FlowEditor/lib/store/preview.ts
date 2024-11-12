@@ -501,9 +501,11 @@ export const previewStore: StateCreator<
    */
   autoAnswerableOptions: (id: NodeId) => {
     const { breadcrumbs, flow, computePassport } = get();
-    const { type, data, edges } = flow[id];
-    const { data: passportData } = computePassport();
 
+    const node = flow[id];
+    if (!node) return;
+
+    const { type, data, edges } = node;
     // Only Question & Checklist nodes that have an fn & edges are eligible for auto-answering
     if (
       !type ||
@@ -514,11 +516,16 @@ export const previewStore: StateCreator<
     )
       return;
 
+    const passport = computePassport();
+
     // Only proceed if the user has seen at least one node with this fn before
     const visitedFns = Object.entries(breadcrumbs).filter(
-      ([nodeId, _breadcrumb]) => flow[nodeId].data?.fn === data.fn,
+      ([nodeId, _breadcrumb]) =>
+        flow[nodeId].data?.fn === data.fn ||
+        // Account for nodes like FindProperty that don't have `data.fn` prop but still set passport vars like `property.region` etc
+        Object.keys(passport?.data || {}).includes(data.fn),
     );
-    if (!visitedFns) return;
+    if (!visitedFns.length) return;
 
     // Get all options (aka edges or Answer nodes) for this node
     const options: Array<Store.Node> = edges.map((edgeId) => ({
@@ -538,7 +545,7 @@ export const previewStore: StateCreator<
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
     // Get existing passport value(s) for this node's fn
-    const passportValues = passportData?.[data.fn];
+    const passportValues = passport.data?.[data.fn];
 
     // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings),
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
@@ -595,7 +602,7 @@ export const previewStore: StateCreator<
             flow[nodeId].type === TYPES.PlanningConstraints,
         )
       ) {
-        const nots: string[] | undefined = passportData?.["_nots"]?.[data.fn];
+        const nots: string[] | undefined = passport.data?.["_nots"]?.[data.fn];
         if (nots) visitedOptionVals = visitedOptionVals.concat(nots);
       }
 

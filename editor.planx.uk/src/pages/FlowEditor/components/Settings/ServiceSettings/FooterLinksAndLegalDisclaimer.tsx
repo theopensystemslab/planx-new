@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Switch, { SwitchProps } from "@mui/material/Switch";
+import { formControlLabelClasses } from "@mui/material/FormControlLabel";
+import { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
+import { FONT_WEIGHT_BOLD } from "theme";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -13,12 +15,13 @@ import SettingsSection from "ui/editor/SettingsSection";
 import Input, { Props as InputProps } from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
+import { Switch } from "ui/shared/Switch";
 
 import type { FlowSettings } from "../../../../../types";
 import { useStore } from "../../../lib/store";
 
 const TextInput: React.FC<{
-  title: string;
+  title: Capitalize<string>;
   richText?: boolean;
   description?: string;
   switchProps?: SwitchProps;
@@ -35,10 +38,13 @@ const TextInput: React.FC<{
   return (
     <Box width="100%">
       <Box mb={0.5} display="flex" alignItems="center">
-        <Switch {...switchProps} color="primary" />
-        <Typography variant="h4" component="h5">
-          {title}
-        </Typography>
+        <Switch
+          label={title}
+          name={switchProps?.name}
+          variant="editorPage"
+          onChange={switchProps?.onChange}
+          checked={switchProps?.checked}
+        />
       </Box>
       <Box mb={1}>
         {description && (
@@ -120,7 +126,7 @@ export const FooterLinksAndLegalDisclaimer = () => {
       <SettingsSection background>
         <TextInput
           title="Legal Disclaimer"
-          description="Displayed before a user submits their application"
+          description="Displayed on the 'Result' pages of the service (if it contains any)"
           switchProps={{
             name: "elements.legalDisclaimer.show",
             checked: elementsForm.values.elements?.legalDisclaimer?.show,

@@ -1,4 +1,3 @@
-import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
@@ -6,13 +5,11 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import capitalize from "lodash/capitalize";
 import { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
-import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
+import { Disclaimer } from "../shared/Disclaimer";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
-import { WarningContainer } from "../shared/Preview/WarningContainer";
 import ConstraintsList from "./List";
-import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "./model";
 import { InaccurateConstraints } from "./Public";
 
 export type PresentationalProps = {
@@ -119,18 +116,6 @@ export function Presentational(props: PresentationalProps) {
     </Card>
   );
 }
-
-const Disclaimer = (props: { text: string }) => (
-  <WarningContainer>
-    <ErrorOutline />
-    <Typography variant="body1" component="div" ml={2} mb={1}>
-      <ReactMarkdownOrHtml
-        source={props.text || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
-        openLinksOnNewTab
-      />
-    </Typography>
-  </WarningContainer>
-);
 
 interface ConstraintsFetchErrorProps {
   error: any;

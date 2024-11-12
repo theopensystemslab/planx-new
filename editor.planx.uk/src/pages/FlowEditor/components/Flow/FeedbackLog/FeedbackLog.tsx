@@ -6,16 +6,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { Feedback } from "routes/feedback";
 import SettingsSection from "ui/editor/SettingsSection";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { CollapsibleRow } from "./components/CollapsibleRow";
 import { Feed } from "./styled";
-
-interface FeedbackLogProps {
-  feedback: Feedback[];
-}
+import { FeedbackLogProps } from "./types";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const displayFeedbackItems = [
