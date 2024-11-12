@@ -9,6 +9,7 @@ import { useAsync } from "react-use";
 import { AsyncState } from "react-use/lib/useAsyncFn";
 
 import Card from "../shared/Preview/Card";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { PublicProps } from "../shared/types";
 import { DEFAULT_DESTINATION, getCombinedEventsPayload, Send } from "./model";
@@ -31,6 +32,8 @@ const SendComponent: React.FC<Props> = ({
     window.location.pathname.endsWith("/preview")
   ) {
     return <SkipSendWarning {...fullProps} />;
+  } else if (window.location.pathname.split("/")[1] === "demo") {
+    return <DemoTeamWarning />;
   } else {
     return <CreateSendEvents {...fullProps} />;
   }
@@ -49,6 +52,20 @@ const SkipSendWarning: React.FC<Props> = (props) => (
         and skip submission.
       </Typography>
     </WarningContainer>
+  </Card>
+);
+
+const DemoTeamWarning: React.FC = () => (
+  <Card>
+    <ErrorSummaryContainer role="status">
+      <Typography variant="h4" ml={2} mb={1}>
+        The send component is not configured for the Demo team
+      </Typography>
+      <Typography variant="body2" ml={2}>
+        Integrations need to be configured to allow submissions to be sent from
+        PlanX
+      </Typography>
+    </ErrorSummaryContainer>
   </Card>
 );
 
