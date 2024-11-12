@@ -34,14 +34,7 @@ export const createFeedbackSchema = (feedbackRequired: boolean) => {
       ? string().required("Enter your feedback")
       : string(),
     feedbackScore: feedbackRequired
-      ? number()
-          .integer()
-          .min(1, "Feedback score must be at least 1")
-          .max(5, "Feedback score cannot exceed 5")
-          .required("Please provide a feedback score")
-      : number()
-          .integer()
-          .min(1, "Feedback score must be at least 1")
-          .max(5, "Feedback score cannot exceed 5"),
+      ? number().integer().required("Please rate your experience")
+      : number().integer(),
   });
 };
