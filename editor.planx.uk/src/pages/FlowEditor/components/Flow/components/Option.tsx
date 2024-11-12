@@ -61,9 +61,7 @@ const Option: React.FC<any> = (props) => {
         )}
       </Link>
       <ol className="decisions">
-        {childNodes.map((child: any) => (
-          <Node key={child.id} parent={props.id} {...child} />
-        ))}
+        {childNodes.map((child: any) => (<Node key={child.id} parent={props.id} {...child} />))}
         <Hanger parent={props.id} />
       </ol>
     </li>

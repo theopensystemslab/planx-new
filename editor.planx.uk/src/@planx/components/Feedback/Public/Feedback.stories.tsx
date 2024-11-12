@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
+import { defaultContent } from "../components/defaultContent";
 import Public from "./Public";
 
 const meta = {
@@ -12,8 +13,5 @@ type Story = StoryObj<typeof meta>;
 export default meta;
 
 export const Basic = {
-  args: {
-    title: "Tell us what you think",
-    feedbackRequired: false,
-  },
+  args: defaultContent,
 } satisfies Story;

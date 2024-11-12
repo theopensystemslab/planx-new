@@ -4,6 +4,7 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
@@ -14,15 +15,11 @@ import TableRow from "@mui/material/TableRow";
 import { format } from "date-fns";
 import { client } from "lib/graphql";
 import React, { useState } from "react";
-import { Feedback } from "routes/feedback";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { GET_FEEDBACK_BY_ID_QUERY } from "../queries/getFeedbackById";
 import { DetailedFeedback, StyledSummaryListTable } from "../styled";
-
-interface CollapsibleRowProps extends Feedback {
-  displayFeedbackItems: string[];
-}
+import { CollapsibleRowProps, FeedbackType, FeedbackTypeIcon } from "../types";
 
 const getDetailedFeedback = async (feedbackId: number) => {
   const {
@@ -55,15 +52,7 @@ const getDetailedFeedback = async (feedbackId: number) => {
   };
 };
 
-type FeedbackType =
-  | "issue"
-  | "idea"
-  | "comment"
-  | "inaccuracy"
-  | "helpful"
-  | "unhelpful";
-
-const feedbackTypeIcon = (type: FeedbackType) => {
+const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
   switch (type) {
     case "issue":
       return { icon: <WarningIcon />, title: "Issue" };
@@ -81,6 +70,8 @@ const feedbackTypeIcon = (type: FeedbackType) => {
         icon: <CancelIcon color="error" />,
         title: "Unhelpful (help text)",
       };
+    case "component":
+      return { icon: <RateReviewIcon />, title: "From feedback component" };
     default:
       return { icon: <RuleIcon />, title: "Inaccuracy" };
   }

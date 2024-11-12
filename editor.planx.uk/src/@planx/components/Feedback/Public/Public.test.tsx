@@ -1,4 +1,8 @@
 import { screen } from "@testing-library/react";
+import {
+  getInternalFeedbackMetadata,
+  insertFeedbackMutation,
+} from "lib/feedback";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -7,6 +11,10 @@ import { axe } from "vitest-axe";
 import FeedbackComponent from "./Public";
 
 const handleSubmit = vi.fn();
+vi.mock("lib/feedback", () => ({
+  getInternalFeedbackMetadata: vi.fn(),
+  insertFeedbackMutation: vi.fn(),
+}));
 
 describe("when the Feedback component is rendered", async () => {
   it("should not have any accessibility violations", async () => {
@@ -31,6 +39,7 @@ describe("when the Feedback component is rendered", async () => {
     await user.click(screen.getByTestId("feedback-button-terrible"));
     await user.click(screen.getByTestId("continue-button"));
 
-    expect(handleSubmit).toHaveBeenCalled();
+    expect(getInternalFeedbackMetadata).toBeCalled();
+    expect(insertFeedbackMutation).toBeCalled();
   });
 });

@@ -13,16 +13,12 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import {
-  descriptionPlaceholder,
-  disclaimerPlaceholder,
-  freeformQuestionPlaceholder,
-  ratingQuestionPlaceholder,
-  titlePlaceholder,
-} from "../components/placeholders";
+import { defaultContent } from "../components/defaultContent";
 import { Feedback, parseFeedback } from "../model";
 
 type FeedbackEditorProps = EditorProps<TYPES.Feedback, Feedback>;
+
+const HTML_TAG_REGEX = /<[^>]*>/g;
 
 export const FeedbackEditor = (props: FeedbackEditorProps) => {
   const formik = useFormik<Feedback>({
@@ -46,9 +42,9 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
               <InputLabel label="Title">
                 <Input
                   format="large"
-                  placeholder={titlePlaceholder}
+                  placeholder={defaultContent.title}
                   name="title"
-                  value={formik.values.title || titlePlaceholder}
+                  value={formik.values.title}
                   onChange={formik.handleChange}
                 />
               </InputLabel>
@@ -57,7 +53,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
               <InputLabel label="Description" htmlFor="description">
                 <RichTextInput
                   name="description"
-                  value={formik.values.description || descriptionPlaceholder}
+                  value={formik.values.description}
                   placeholder="Description"
                   onChange={formik.handleChange}
                 />
@@ -67,7 +63,10 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
             <InputRow>
               <InputLabel label="Rating question" htmlFor="ratingQuestion">
                 <RichTextInput
-                  placeholder={ratingQuestionPlaceholder}
+                  placeholder={defaultContent.ratingQuestion?.replaceAll(
+                    HTML_TAG_REGEX,
+                    "",
+                  )}
                   name="ratingQuestion"
                   value={formik.values.ratingQuestion}
                   onChange={formik.handleChange}
@@ -77,7 +76,10 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
             <InputRow>
               <InputLabel label="Freeform question" htmlFor="freeformQuestion">
                 <RichTextInput
-                  placeholder={freeformQuestionPlaceholder}
+                  placeholder={defaultContent.freeformQuestion?.replaceAll(
+                    HTML_TAG_REGEX,
+                    "",
+                  )}
                   name="freeformQuestion"
                   value={formik.values.freeformQuestion}
                   onChange={formik.handleChange}
@@ -88,8 +90,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
               <InputLabel label="Disclaimer text" htmlFor="disclaimer">
                 <RichTextInput
                   name="disclaimer"
-                  value={formik.values.disclaimer || disclaimerPlaceholder}
-                  placeholder={disclaimerPlaceholder}
+                  value={formik.values.disclaimer}
                   onChange={formik.handleChange}
                 />
               </InputLabel>
