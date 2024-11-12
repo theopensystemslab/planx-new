@@ -7,16 +7,19 @@ import { setup } from "testUtils";
 import { FeedbackEditor } from "./Editor";
 
 describe("When the Feedback editor modal is rendered", () => {
-  it("does not throw an error", () => {
+  beforeEach(() => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <FeedbackEditor id="test-feedback-editor" />
       </DndProvider>,
     );
+  });
+  it("does not throw an error", () => {
     expect(screen.getByText("Feedback")).toBeInTheDocument();
   });
+  it("displays the default title if no edits are made", () => {
+    expect(
+      screen.getByPlaceholderText("Tell us what you think"),
+    ).toBeInTheDocument();
+  });
 });
-
-// if none of the fields are edited, it should have all the defaults
-
-// if one of the fields is edited, it should show the edited version

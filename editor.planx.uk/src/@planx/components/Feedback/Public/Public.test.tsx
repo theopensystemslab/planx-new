@@ -98,9 +98,14 @@ describe("when feedback is required but the user does not submit any data", asyn
     await user.click(screen.getByTestId("continue-button"));
   });
 
-  it("displays an appropriate error message", async () => {
-    const errorMessage = "required";
-    expect(errorMessage).toBeVisible();
+  it("displays an appropriate error message for each missing field", async () => {
+    const errorMessages = [
+      "Please provide a feedback score",
+      "Enter your feedback",
+    ];
+    errorMessages.map((error) => {
+      expect(screen.getByText(error)).toBeVisible();
+    });
   });
 });
 
