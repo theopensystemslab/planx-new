@@ -15,3 +15,7 @@ export default meta;
 export const Basic = {
   args: defaultContent,
 } satisfies Story;
+
+export const WithFeedbackRequired = {
+  args: { ...defaultContent, feedbackRequired: true },
+} satisfies Story;

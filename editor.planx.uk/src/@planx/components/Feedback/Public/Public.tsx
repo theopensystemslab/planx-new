@@ -17,17 +17,20 @@ import NeutralFace from "ui/images/feedback_filled-03.svg";
 import GoodFace from "ui/images/feedback_filled-04.svg";
 import ExcellentFace from "ui/images/feedback_filled-05.svg";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
 import { FaceBox } from "../components/FaceBox";
-import { Feedback, FormProps } from "../model";
+import { createFeedbackSchema, Feedback, FormProps } from "../model";
 import { StyledToggleButtonGroup } from "../styled";
 
 export const PASSPORT_FEEDBACK_KEY = "_feedback";
 
 const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
+  const feedbackDataSchema = createFeedbackSchema(props.feedbackRequired);
+
   const handleSubmitFeedback = async (values: FormProps) => {
     const metadata = await getInternalFeedbackMetadata();
     const data = {
@@ -52,6 +55,9 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
       userComment: "",
     },
     onSubmit: handleSubmitFeedback,
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema: feedbackDataSchema,
   });
 
   const handleFeedbackChange = (
@@ -88,52 +94,54 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
             }
           />
         )}
-        <StyledToggleButtonGroup
-          value={formik.values.feedbackScore}
-          exclusive
-          id="feedbackButtonGroup"
-          onChange={handleFeedbackChange}
-          aria-label="feedback score"
-        >
-          <Grid
-            container
-            columnSpacing={2}
-            component="fieldset"
-            direction={{ xs: "column", formWrap: "row" }}
+        <ErrorWrapper error={formik.errors.feedbackScore}>
+          <StyledToggleButtonGroup
+            value={formik.values.feedbackScore}
+            exclusive
+            id="feedbackButtonGroup"
+            onChange={handleFeedbackChange}
+            aria-label="feedback score"
           >
-            <FaceBox
-              value={1}
-              testId="feedback-button-terrible"
-              icon={TerribleFace}
-              label="Terrible"
-              altText="very unhappy face"
-            />
-            <FaceBox
-              value={2}
-              icon={PoorFace}
-              label="Poor"
-              altText="slightly unhappy face"
-            />
-            <FaceBox
-              value={3}
-              icon={NeutralFace}
-              label="Neutral"
-              altText="neutral face"
-            />
-            <FaceBox
-              value={4}
-              icon={GoodFace}
-              label="Good"
-              altText="smiling face"
-            />
-            <FaceBox
-              value={5}
-              icon={ExcellentFace}
-              label="Excellent"
-              altText="very happy face"
-            />
-          </Grid>
-        </StyledToggleButtonGroup>
+            <Grid
+              container
+              columnSpacing={2}
+              component="fieldset"
+              direction={{ xs: "column", formWrap: "row" }}
+            >
+              <FaceBox
+                value={1}
+                testId="feedback-button-terrible"
+                icon={TerribleFace}
+                label="Terrible"
+                altText="very unhappy face"
+              />
+              <FaceBox
+                value={2}
+                icon={PoorFace}
+                label="Poor"
+                altText="slightly unhappy face"
+              />
+              <FaceBox
+                value={3}
+                icon={NeutralFace}
+                label="Neutral"
+                altText="neutral face"
+              />
+              <FaceBox
+                value={4}
+                icon={GoodFace}
+                label="Good"
+                altText="smiling face"
+              />
+              <FaceBox
+                value={5}
+                icon={ExcellentFace}
+                label="Excellent"
+                altText="very happy face"
+              />
+            </Grid>
+          </StyledToggleButtonGroup>
+        </ErrorWrapper>
         {props.freeformQuestion && (
           <InputLabel
             label={
@@ -153,6 +161,8 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           bordered
           onChange={formik.handleChange}
           aria-label="user comment"
+          data-testid="user-comment"
+          errorMessage={formik.errors.userComment}
         />
       </Box>
       {props.disclaimer && <Disclaimer text={props.disclaimer} />}
