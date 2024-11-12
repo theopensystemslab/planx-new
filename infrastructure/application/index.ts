@@ -349,6 +349,10 @@ export = async () => {
             value: config.requireSecret("file-api-key-barnet"),
           },
           {
+            name: "FILE_API_KEY_SOUTHWARK",
+            value: config.requireSecret("file-api-key-southwark"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },

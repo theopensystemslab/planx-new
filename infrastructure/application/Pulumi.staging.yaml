@@ -13,6 +13,8 @@ config:
     secure: AAABAFpZq81zy3CKFXUgi9oEGIGp7LDVD3TNlYkZD4liX0bxOrmMJYdDpMmyGt4aGARF63nEUmo=
   application:file-api-key-nexus:
     secure: AAABAJFgaBoTWNmZyXDkGRngwU8KpOt6CeBLxGBgBG0JFMsKK7rWT39TsjJ9pL1wZaBoT0YZhCg=
+  application:file-api-key-southwark:
+    secure: AAABAK8LsYKKNgIS4fepW5Sh6+WKxNopxsos51eBttT7O8E8K0HYOswgrIWuYJ0R1eJHDLKRHqQ=
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAGQuqQDU4S+vR+cQaFoa6xAeWU9clVaNonQ/dq0R8Dke+o0y7ALOmYMy4fOX4Pa6HiZl85npU/cbwy8HdMYaiA==

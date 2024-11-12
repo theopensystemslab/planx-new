@@ -12,6 +12,8 @@ config:
     secure: AAABANMl+fVFsRVGXvJV/aLManXO+TldXVDhp5QH6KGWJoG7O9Ket63zIW1iOiinINWJ2I5OizI=
   application:file-api-key-nexus:
     secure: AAABAB2cv4GAf8RqN1hHbRbO68p8o4kLJYWsip9BoPdobrNtQB787M3s+gJnKKl9DfyXRHOXHGc=
+  application:file-api-key-southwark:
+    secure: AAABAL5G2cNl6XIQA0vcP6El4Us7Vk8Cz9JViRon25crc8MC0ix4ox2mE+XawsxYbLRwGfaRIJo=
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==
