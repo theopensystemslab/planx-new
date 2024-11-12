@@ -79,9 +79,9 @@ const StyledInputBase = styled(InputBase, {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   }),
   [`&.${classes.multiline}`]: {
-    height: "auto",
+    height: "100%",
     "& textarea": {
-      padding: theme.spacing(1.5, 0),
+      padding: theme.spacing(1, 0),
       lineHeight: 1.6,
     },
   },

@@ -41,6 +41,7 @@ const FlagEditor: React.FC<{
       <Box display="flex" flexDirection="column" gap={2} mt={2}>
         <InputLabel label="Heading">
           <Input
+            multiline
             value={existingOverrides?.heading ?? ""}
             onChange={(ev) =>
               props.onChange({ ...existingOverrides, heading: ev.target.value })
