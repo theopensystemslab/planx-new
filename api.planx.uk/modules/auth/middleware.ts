@@ -87,8 +87,14 @@ export const useFilePermission: RequestHandler = (req, _res, next): void => {
       req.headers["api-key"] as string,
       process.env.FILE_API_KEY_NEXUS!,
     ) ||
-    isEqual(req.headers["api-key"] as string, process.env.FILE_API_KEY_BARNET!) ||
-    isEqual(req.headers["api-key"] as string, process.env.FILE_API_KEY_SOUTHWARK!);
+    isEqual(
+      req.headers["api-key"] as string,
+      process.env.FILE_API_KEY_BARNET!,
+    ) ||
+    isEqual(
+      req.headers["api-key"] as string,
+      process.env.FILE_API_KEY_SOUTHWARK!,
+    );
   if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
   return next();
 };
