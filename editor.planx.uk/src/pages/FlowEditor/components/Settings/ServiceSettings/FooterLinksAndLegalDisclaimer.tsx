@@ -40,17 +40,8 @@ const TextInput: React.FC<{
       <Box mb={0.5} display="flex" alignItems="center">
         <Switch
           label={title}
-          formControlLabelProps={{
-            sx: {
-            marginBottom: 0.5,
-            [`& .${formControlLabelClasses.label}`]: {
-                fontWeight: FONT_WEIGHT_BOLD,
-                textTransform: "capitalize",
-                fontSize: 19,
-              },
-            },
-            name: switchProps?.name,
-          }}
+          name={switchProps?.name}
+          variant="editorPage"
           onChange={switchProps?.onChange}
           checked={switchProps?.checked}
         />

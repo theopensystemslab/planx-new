@@ -104,17 +104,8 @@ const FlowStatus = () => {
       <SettingsSection background>
         <Switch
           label={statusForm.values.status as Capitalize<string>}
-          formControlLabelProps={{
-            sx: {
-              marginBottom: 0.5,
-              [`& .${formControlLabelClasses.label}`]: {
-                fontWeight: FONT_WEIGHT_BOLD,
-                textTransform: "capitalize",
-                fontSize: 19,
-              },
-            },
-            name: "service.status",
-          }}
+          name={"service.status"}
+          variant="editorPage"
           checked={statusForm.values.status === "online"}
           onChange={() =>
             statusForm.setFieldValue(
