@@ -41,12 +41,7 @@ const Option: React.FC<any> = (props) => {
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
     >
-      <Link
-        style={{ width: "200px" }}
-        href={href}
-        prefetch={false}
-        onClick={(e) => e.preventDefault()}
-      >
+      <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
         {props.data?.img && (
           <Thumbnail
             imageSource={props.data?.img}
