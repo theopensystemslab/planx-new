@@ -8,7 +8,7 @@ There's full documentation on how this method works in the PlanX Service Specifi
 
 Once a council has confirmed they're cleared from their IT dept to use this method (eg allowed to receive external webhook requests) & shared a Power Automate Webhook URL, there's a few steps we need to take:
 
-1. Add the council-provied URL to `team_integrations.power_automate_webhook_url` as plain text via the production Hasura console
+1. Add the council-provided URL to `team_integrations.power_automate_webhook_url` as plain text via the production Hasura console
 
 1. Create 2x tokens for sending secure requests to the Power Automate webhook and add both encrypted values to:
   - `team_integrations.production_power_automate_api_key` & `team_integrations.staging_power_automate_api_key` via the production Hasura console
