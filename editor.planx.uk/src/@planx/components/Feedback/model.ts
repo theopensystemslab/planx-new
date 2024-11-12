@@ -1,5 +1,8 @@
+import { number, object, string } from "yup";
+
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 import { defaultContent } from "./components/defaultContent";
+
 export interface Feedback extends BaseNodeData {
   title?: string;
   description?: string;
@@ -24,3 +27,21 @@ export const parseFeedback = (
   feedbackRequired: data?.feedbackRequired || defaultContent.feedbackRequired,
   ...parseBaseNodeData(data),
 });
+
+export const createFeedbackSchema = (feedbackRequired: boolean) => {
+  return object().shape({
+    userComment: feedbackRequired
+      ? string().required("Enter your feedback")
+      : string(),
+    feedbackScore: feedbackRequired
+      ? number()
+          .integer()
+          .min(1, "Feedback score must be at least 1")
+          .max(5, "Feedback score cannot exceed 5")
+          .required("Please provide a feedback score")
+      : number()
+          .integer()
+          .min(1, "Feedback score must be at least 1")
+          .max(5, "Feedback score cannot exceed 5"),
+  });
+};
