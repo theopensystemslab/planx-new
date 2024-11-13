@@ -21,6 +21,7 @@ const ALLOW_LIST = [
   "application.information.sensitive",
   "application.type",
   "drawBoundary.action",
+  "_feedback",
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",
@@ -32,7 +33,6 @@ const ALLOW_LIST = [
   "service.type",
   "usedFOIYNPP",
   "user.role",
-  "_feedback",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [

@@ -49,6 +49,7 @@ export const ALLOW_LIST = [
   "application.information.sensitive",
   "application.type",
   "drawBoundary.action",
+  PASSPORT_FEEDBACK_KEY,
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",
@@ -60,7 +61,6 @@ export const ALLOW_LIST = [
   "service.type",
   "usedFOIYNPP",
   "user.role",
-  PASSPORT_FEEDBACK_KEY,
 ] as const;
 
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;
