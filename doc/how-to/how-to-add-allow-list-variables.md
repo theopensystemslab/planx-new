@@ -87,18 +87,18 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   The values here are being pulled from the table `lowcal_sessions.allow_list_answers` or `analytics_logs.allow_list_answers`
 
-  At the end of your SQL script after the view creation/replacement, it is important to add another line after each one.
+  **At the end of your SQL script after the view creation/replacement, it is important to add another line after each one.**
 
   `GRANT SELECT ON public.{VIEW_NAME} TO metabase_read_only`
 
   So, your migration may end with something like this:
 
-  ```sql
+```sql
 GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
 GRANT SELECT ON "public"."submission_services_summary" TO metabase_read_only;
-  ```
+```
 
-  **This ensures it is picked up by metabase and is a critical step in enabling your new `ALLOW_LIST` variables**
+  This ensures it is picked up by metabase and is a critical step in enabling your new `ALLOW_LIST` variables
 
   🎊🎉🎈 Now your new variable is ready for testing 🎈🎉🎊
 
@@ -106,7 +106,6 @@ GRANT SELECT ON "public"."submission_services_summary" TO metabase_read_only;
 
   Now you can begin testing your a service where your new passport variable is set, and as it is populated in the passport, it should come through to your new view.column. 
 
-  Key to ensure that it is coming through in the right format, and with the expected value. A typical issue may be that it comes through as something like `['your value']` which will be read as `jsonb` by metabase and only allow boolean based filtering when creating dashboards, _does it exist or not_
+  Key to ensure that it is coming through in the right format, and with the expected value. A typical issue may be that it comes through as something like `['your value']` which will be read as `jsonb` by metabase and only allow boolean based filtering when creating dashboards, *does it exist or not*
 
   You will need to alter your SQL script for creating the new view to fix this
-
