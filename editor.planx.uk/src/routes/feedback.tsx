@@ -21,6 +21,7 @@ export interface Feedback {
   userContext: string | null;
   createdAt: string;
   address: string | null;
+  feedbackScore: number;
 }
 
 const feedbackRoutes = compose(
@@ -36,14 +37,14 @@ const feedbackRoutes = compose(
       const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
       if (!isAuthorised)
         throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`,
+          `User does not have access to ${req.originalUrl}`
         );
 
       const {
         data: { feedback },
       } = await client.query<{ feedback: Feedback[] }>({
         query: gql`
-          query GetFeebackForFlow($teamSlug: String!, $flowSlug: String!) {
+          query GetFeedbackForFlow($teamSlug: String!, $flowSlug: String!) {
             feedback: feedback_summary(
               order_by: { created_at: asc }
               where: {
@@ -57,6 +58,7 @@ const feedbackRoutes = compose(
               nodeType: node_type
               userComment: user_comment
               userContext: user_context
+              feedbackScore: feedback_score
               createdAt: created_at
               address
             }
@@ -70,7 +72,7 @@ const feedbackRoutes = compose(
         view: <FeedbackLog feedback={feedback} />,
       };
     }),
-  }),
+  })
 );
 
 export default feedbackRoutes;

@@ -126,6 +126,17 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     userContext: "What were you doing?",
   };
 
+  enum EmojiRating {
+    Terrible,
+    Poor,
+    Average,
+    Good,
+    Excellent,
+  }
+
+  const feedbackScore =
+    item.feedbackScore && EmojiRating[item.feedbackScore + 1]; // enums are 0-indexed
+
   const renderContent = (key: string, value: any) => {
     if (key === "combinedHelp" && value) {
       return <ReactMarkdownOrHtml source={value} openLinksOnNewTab />;
@@ -144,6 +155,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         <TableCell>
           {format(new Date(item.createdAt), "dd/MM/yy hh:mm:ss")}
         </TableCell>
+        <TableCell sx={{ textAlign: "center" }}>{feedbackScore}</TableCell>
         <TableCell>{commentSummary}</TableCell>
         <TableCell sx={{ textAlign: "right" }}>
           <IconButton
