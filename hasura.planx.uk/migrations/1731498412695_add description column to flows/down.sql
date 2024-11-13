@@ -1,1 +1,0 @@
-alter table "public"."flows" drop column "description";
