@@ -23,7 +23,40 @@ export const sendSlackNotification = async (
   if (disability) message += " [Exempt]";
   if (resubmission) message += " [Resubmission]";
 
-  await slack.send(":incoming_envelope: " + message);
+  // Prefix message with a custom emoji if this submission fits November 2024 ODP Pilot testing criteria
+  const pilotCouncils = [
+    "barnet",
+    "buckinghamshire",
+    "camden",
+    "lambeth",
+    "medway",
+  ];
+  // Message app types are a bit messy - Uniform won't have app type at all so we id by system because only accepts LDCs,
+  //   BOPS will have internal ID with app type prefix, Email & S3 will have full PlanX service name
+  const pilotServices = [
+    "uniform",
+    "happ",
+    "ldc",
+    "apply for planning permission",
+    "apply for a lawful development certificate",
+  ];
+
+  let isPilotEvent = false;
+  pilotCouncils.forEach((council) => {
+    pilotServices.forEach((service) => {
+      if (
+        message?.toLowerCase()?.includes(council) &&
+        message?.toLowerCase()?.includes(service)
+      ) {
+        isPilotEvent = true;
+      }
+    });
+  });
+
+  const baseMessage = ":incoming_envelope: " + message;
+  message = isPilotEvent ? ":large_orange_square: " + baseMessage : baseMessage;
+
+  await slack.send(message);
   return message;
 };
 
