@@ -157,7 +157,7 @@
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 30
         num_retries: 1
@@ -171,7 +171,7 @@
         query_params:
           type: bops-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
+        url: "{{$base_url}}/webhooks/hasura/send-slack-notification"
         version: 2
 - table:
     name: document_template
@@ -225,7 +225,7 @@
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 30
         num_retries: 1
@@ -239,7 +239,7 @@
         query_params:
           type: email-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
+        url: "{{$base_url}}/webhooks/hasura/send-slack-notification"
         version: 2
 - table:
     name: feedback
@@ -305,15 +305,17 @@
     - role: demoUser
       permission:
         columns:
-          - feedback_id
-          - device
-          - node_data
           - address
+          - created_at
+          - device
+          - feedback_id
+          - feedback_score
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
+          - node_data
           - node_id
           - node_text
           - node_title
@@ -325,7 +327,6 @@
           - uprn
           - user_comment
           - user_context
-          - created_at
         filter:
           team:
             flows:
@@ -335,15 +336,17 @@
     - role: platformAdmin
       permission:
         columns:
-          - feedback_id
-          - device
-          - node_data
           - address
+          - created_at
+          - device
+          - feedback_id
+          - feedback_score
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
+          - node_data
           - node_id
           - node_text
           - node_title
@@ -355,21 +358,22 @@
           - uprn
           - user_comment
           - user_context
-          - created_at
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - feedback_id
-          - device
-          - node_data
           - address
+          - created_at
+          - device
+          - feedback_id
+          - feedback_score
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
+          - node_data
           - node_id
           - node_text
           - node_title
@@ -381,7 +385,6 @@
           - uprn
           - user_comment
           - user_context
-          - created_at
         filter:
           team:
             members:
@@ -484,9 +487,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
     - role: demoUser
       permission:
@@ -530,9 +533,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
     - role: teamEditor
       permission:
@@ -563,9 +566,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
   select_permissions:
     - role: api
@@ -618,7 +621,7 @@
                     - 1
                     - 29
                     - 30
-      comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
+      comment: "For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team "
     - role: platformAdmin
       permission:
         columns:
@@ -699,9 +702,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
     - role: demoUser
       permission:
@@ -741,9 +744,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
     - role: teamEditor
       permission:
@@ -768,9 +771,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
   delete_permissions:
     - role: demoUser
@@ -810,9 +813,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
   select_permissions:
     - role: demoUser
@@ -850,9 +853,9 @@
             forward_client_headers: false
             headers:
               - name: authorization
-                value: '{{HASURA_PLANX_API_KEY}}'
+                value: "{{HASURA_PLANX_API_KEY}}"
             timeout: 10
-            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+            url: "{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html"
           type: http
 - table:
     name: lowcal_sessions
@@ -999,7 +1002,7 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/send-email/confirmation'
+        url: "{{$base_url}}/send-email/confirmation"
         version: 2
     - name: setup_lowcal_expiry_events
       definition:
@@ -1029,7 +1032,7 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
+        url: "{{$base_url}}/webhooks/hasura/create-expiry-event"
         version: 2
     - name: setup_lowcal_reminder_events
       definition:
@@ -1059,7 +1062,7 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
+        url: "{{$base_url}}/webhooks/hasura/create-reminder-event"
         version: 2
 - table:
     name: operations
@@ -1279,7 +1282,7 @@
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 10
         num_retries: 3
@@ -1301,13 +1304,13 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-expiry-events'
+        url: "{{$base_url}}/webhooks/hasura/create-payment-expiry-events"
         version: 2
     - name: setup_payment_invitation_events
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 10
         num_retries: 3
@@ -1329,13 +1332,13 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-invitation-events'
+        url: "{{$base_url}}/webhooks/hasura/create-payment-invitation-events"
         version: 2
     - name: setup_payment_reminder_events
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 10
         num_retries: 3
@@ -1357,7 +1360,7 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-reminder-events'
+        url: "{{$base_url}}/webhooks/hasura/create-payment-reminder-events"
         version: 2
     - name: setup_payment_send_events
       definition:
@@ -1386,7 +1389,7 @@
         method: POST
         query_params: {}
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
+        url: "{{$base_url}}/webhooks/hasura/create-payment-send-events"
         version: 2
 - table:
     name: payment_status
@@ -1648,12 +1651,12 @@
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 30
         num_retries: 1
         timeout_sec: 60
-      webhook: '{{HASURA_PLANX_API_URL}}'
+      webhook: "{{HASURA_PLANX_API_URL}}"
       headers:
         - name: authorization
           value_from_env: HASURA_PLANX_API_KEY
@@ -1662,7 +1665,7 @@
         query_params:
           type: s3-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
+        url: "{{$base_url}}/webhooks/hasura/send-slack-notification"
         version: 2
 - table:
     name: sessions
@@ -1805,7 +1808,7 @@
           - created_at
           - submitted_at
         filter: {}
-      comment: 'For future, if this moves outside of the Flow to somewhere like Team, we should update ''demoUser'' to only see submission data related to only their flows. '
+      comment: "For future, if this moves outside of the Flow to somewhere like Team, we should update 'demoUser' to only see submission data related to only their flows. "
     - role: platformAdmin
       permission:
         columns:
@@ -2366,7 +2369,7 @@
               - 29
               - 30
               - 32
-      comment: 'For the demo user, we want to ensure they can only see their own team [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
+      comment: "For the demo user, we want to ensure they can only see their own team [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team "
     - role: platformAdmin
       permission:
         columns:
@@ -2483,7 +2486,7 @@
       definition:
         enable_manual: false
         insert:
-          columns: '*'
+          columns: "*"
       retry_conf:
         interval_sec: 30
         num_retries: 1
@@ -2497,7 +2500,7 @@
         query_params:
           type: uniform-submission
         template_engine: Kriti
-        url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
+        url: "{{$base_url}}/webhooks/hasura/send-slack-notification"
         version: 2
 - table:
     name: user_roles
