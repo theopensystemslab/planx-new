@@ -475,6 +475,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -503,6 +504,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -521,6 +523,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -554,6 +557,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -578,6 +582,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -597,6 +602,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -629,6 +635,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -667,6 +674,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -687,6 +695,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -713,6 +722,7 @@
           - created_at
           - creator_id
           - data
+          - description
           - id
           - name
           - settings
@@ -732,6 +742,7 @@
       permission:
         columns:
           - data
+          - description
           - name
           - settings
           - slug
@@ -752,6 +763,7 @@
       permission:
         columns:
           - data
+          - description
           - name
           - settings
           - slug
