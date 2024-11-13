@@ -10,6 +10,8 @@ config:
     secure: AAABAGyTfLujGho+V0tEhFXQRET5FjYK6txyaFTB3gY/VaKzq8yNlocJTAM5nt8mBhF6T+AeQD2GxW63
   application:file-api-key-barnet:
     secure: AAABANMl+fVFsRVGXvJV/aLManXO+TldXVDhp5QH6KGWJoG7O9Ket63zIW1iOiinINWJ2I5OizI=
+  application:file-api-key-lambeth:
+    secure: AAABAMNhdCTlFx3fZH/nO71ildypZB2JR5NixlQCENsS1VqwdiOX17q/Gi1UFrCQi2qaY2sZFG4=
   application:file-api-key-nexus:
     secure: AAABAB2cv4GAf8RqN1hHbRbO68p8o4kLJYWsip9BoPdobrNtQB787M3s+gJnKKl9DfyXRHOXHGc=
   application:file-api-key-southwark:
