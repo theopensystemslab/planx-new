@@ -35,7 +35,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
   Add your variable to this array.
 
   > [!IMPORTANT] 
-  > *Only passport variables that store non-personally-identifiable values should be added to the allow list. Sensitive or personally-identifiable data should **never** be tracked or exposed via analytics.*
+  > Only passport variables that store non-personally-identifiable values should be added to the allow list. Sensitive or personally-identifiable data should **never** be tracked or exposed via analytics.
 
   With both arrays now populated with the new variable we can now add them to our database views in Hasura
 ### Step 2 - Adding variables to Hasura Views
@@ -46,10 +46,10 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
 ```sql
   /* Example from submission_services_summary */
-  (((ls.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type
+  (((ls.allow_list_answers -> 'your.variable'::text) -> 0))::text AS your_variable_column_name
 
   /*Example from analytics_summary */
-  (((al.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type
+  (((al.allow_list_answers -> 'your.variable'::text) -> 0))::text AS your_variable_column_name
 ```
 
   Example of how a view may look:
@@ -95,7 +95,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   `GRANT SELECT ON public.{VIEW_NAME} TO metabase_read_only`
 
-  So, your migration may end with something like this:
+  We currently have two views, so you should add these two lines to the end of the migration file:
 
 ```sql
 GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
