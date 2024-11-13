@@ -15,6 +15,9 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   Each file should have an array looking like the below:
 
+  >[!NOTE]
+  > It is worth noting here that variables should be added in alphabetical order and relate to a respective passport variable
+
     ```ts
     export const ALLOW_LIST = [
       "application.declaration.connection",
@@ -31,7 +34,8 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   Add your variable to this array.
 
-  *It is worth noting here that variables should be added in alphabetical order and relate to a respective passport variable*
+  > [!IMPORTANT] 
+  > *Only passport variables that store non-personally-identifiable values should be added to the allow list. Sensitive or personally-identifiable data should **never** be tracked or exposed via analytics.*
 
   With both arrays now populated with the new variable we can now add them to our database views in Hasura
 ### Step 2 - Adding variables to Hasura Views
