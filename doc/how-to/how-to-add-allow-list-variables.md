@@ -91,6 +91,13 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   `GRANT SELECT ON public.{VIEW_NAME} TO metabase_read_only`
 
+  So, your migration may end with something like this:
+
+  ```sql
+GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
+GRANT SELECT ON "public"."submission_services_summary" TO metabase_read_only;
+  ```
+
   **This ensures it is picked up by metabase and is a critical step in enabling your new `ALLOW_LIST` variables**
 
   🎊🎉🎈 Now your new variable is ready for testing 🎈🎉🎊
