@@ -53,7 +53,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
                     <strong>Date</strong>
                   </TableCell>
                   <TableCell sx={{ width: 140 }}>
-                    <strong>Feedback score</strong>
+                    <strong>Rating</strong>
                   </TableCell>
                   <TableCell sx={{ width: 340 }}>
                     <strong>Comment</strong>
