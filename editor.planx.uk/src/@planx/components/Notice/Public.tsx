@@ -1,5 +1,6 @@
 import { mostReadable } from "@ctrl/tinycolor";
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import HelpIcon from "@mui/icons-material/Help";
 import Box, { BoxProps } from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled, useTheme } from "@mui/material/styles";
@@ -8,13 +9,17 @@ import type { Notice } from "@planx/components/Notice/model";
 import Card, {
   contentFlowSpacing,
 } from "@planx/components/shared/Preview/Card";
-import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { emptyContent } from "ui/editor/RichTextInput/RichTextInput";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
+
+import { HelpButton, Image } from "../shared/Preview/CardHeader/styled";
+import MoreInfo from "../shared/Preview/MoreInfo";
+import MoreInfoSection from "../shared/Preview/MoreInfoSection";
 
 export type Props = PublicProps<Notice>;
 
@@ -77,11 +82,20 @@ const NoticeComponent: React.FC<Props> = (props) => {
     props.color,
     theme.palette.text.primary,
   );
+
+  const { info, policyRef, howMeasured, definitionImg } = props;
+
+  const [open, setOpen] = React.useState(false);
+  const { trackEvent } = useAnalyticsTracking();
+
+  const handleHelpClick = () => {
+    setOpen(true);
+    trackEvent({ event: "helpClick", metadata: {} }); // This returns a promise but we don't need to await for it
+  };
+
   const handleSubmit = !props.resetButton
     ? () => props.handleSubmit?.()
     : undefined;
-
-  const { trackEvent } = useAnalyticsTracking();
 
   const handleNoticeResetClick = () => {
     trackEvent({
@@ -95,11 +109,6 @@ const NoticeComponent: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>
-        <CardHeader
-          info={props.info}
-          policyRef={props.policyRef}
-          howMeasured={props.howMeasured}
-        />
         <Container customColor={props.color}>
           <Content>
             <TitleWrap>
@@ -117,6 +126,50 @@ const NoticeComponent: React.FC<Props> = (props) => {
             </Box>
           </Content>
         </Container>
+        {!!(info || policyRef || howMeasured) && (
+          <Typography variant="subtitle1" component="div">
+            <HelpButton
+              variant="help"
+              title={`More information`}
+              aria-label={`See more information about this notice`}
+              onClick={handleHelpClick}
+              aria-haspopup="dialog"
+              data-testid="more-info-button"
+            >
+              <HelpIcon /> More information
+            </HelpButton>
+          </Typography>
+        )}
+        <MoreInfo open={open} handleClose={() => setOpen(false)}>
+          {info && info !== emptyContent ? (
+            <MoreInfoSection title="Why does it matter?">
+              <ReactMarkdownOrHtml source={info} openLinksOnNewTab />
+            </MoreInfoSection>
+          ) : undefined}
+          {policyRef && policyRef !== emptyContent ? (
+            <MoreInfoSection title="Source">
+              <ReactMarkdownOrHtml source={policyRef} openLinksOnNewTab />
+            </MoreInfoSection>
+          ) : undefined}
+          {howMeasured && howMeasured !== emptyContent ? (
+            <MoreInfoSection title="How is it defined?">
+              <>
+                {definitionImg && (
+                  <Image
+                    src={definitionImg}
+                    alt=""
+                    aria-describedby="howMeasured"
+                  />
+                )}
+                <ReactMarkdownOrHtml
+                  source={howMeasured}
+                  openLinksOnNewTab
+                  id="howMeasured"
+                />
+              </>
+            </MoreInfoSection>
+          ) : undefined}
+        </MoreInfo>
         {props.resetButton && (
           <Button
             variant="contained"
