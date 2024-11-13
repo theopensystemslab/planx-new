@@ -1,6 +1,7 @@
 import { gql } from "graphql-request";
 
 import { Passport } from "@opensystemslab/planx-core";
+
 import { $api } from "../../../../client/index.js";
 import type { Operation } from "../sanitiseApplicationData/types.js";
 
@@ -20,6 +21,7 @@ const ALLOW_LIST = [
   "application.information.sensitive",
   "application.type",
   "drawBoundary.action",
+  "_feedback",
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",
