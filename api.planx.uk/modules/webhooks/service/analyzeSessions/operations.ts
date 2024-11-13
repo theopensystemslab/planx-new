@@ -63,7 +63,7 @@ export const trackAllowListAnswers: Operation = async () => {
 
     const id = await updateLowcalSessionAllowListAnswers(
       sessionId,
-      allowListAnswers
+      allowListAnswers,
     );
     if (id) updatedSessionIds.push(id);
   }
@@ -103,7 +103,7 @@ export const getSubmittedUnAnalyzedSessionIds = async (): Promise<string[]> => {
  */
 export const updateLowcalSessionAllowListAnswers = async (
   sessionId: string,
-  allowListAnswers: Passport["data"]
+  allowListAnswers: Passport["data"],
 ): Promise<string> => {
   try {
     const mutation = gql`
@@ -126,7 +126,7 @@ export const updateLowcalSessionAllowListAnswers = async (
     return id;
   } catch (error) {
     throw new Error(
-      `Error updating allow_list_answers for lowcal_session ${sessionId}`
+      `Error updating allow_list_answers for lowcal_session ${sessionId}`,
     );
   }
 };
