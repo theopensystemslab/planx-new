@@ -9,6 +9,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 ## Process
 
 ### Step 1 - Add variables to `ALLOW_LIST` array
+
  You will need to add the desired variables to two places in the codebase
   `api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`. 
 
@@ -30,7 +31,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   Add your variable to this array.
 
-  _It is worth noting here that variables should be added in alphabetical order and relate to a respective passport variable_
+  *It is worth noting here that variables should be added in alphabetical order and relate to a respective passport variable*
 
   With both arrays now populated with the new variable we can now add them to our database views in Hasura
 ### Step 2 - Adding variables to Hasura Views
@@ -52,7 +53,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 ```sql
   CREATE OR REPLACE VIEW "public"."submission_services_summary" AS 
   WITH resumes_per_session AS
-          /* deleted the code here for readability */
+  /* deleted the code here for readability */
   SELECT (ls.id)::text AS session_id,
       t.slug AS team_slug,
       f.slug AS service_slug,
@@ -68,7 +69,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
       ((ls.allow_list_answers -> 'drawBoundary.action'::text))::text AS draw_boundary_action,
       ((ls.allow_list_answers -> 'user.role'::text))::text AS user_role,
       ((ls.allow_list_answers -> 'property.constraints.planning'::text))::text AS property_constraints_planning,
-        /* deleted the code here for readability */
+      /* deleted the code here for readability */
       sa.s3_applications,
       ((ls.allow_list_answers -> 'usedFOIYNPP'::text))::text AS used_foiynpp,
       ((ls.allow_list_answers -> 'propertyInformation.action'::text))::text AS property_information_action,
@@ -80,7 +81,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
       ((ls.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
       (((ls.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type
     FROM lowcal_sessions ls
-        /* deleted the code here for readability */
+    /* deleted the code here for readability */
     WHERE ((f.slug IS NOT NULL) AND (t.slug IS NOT NULL));
 ```
 
@@ -92,7 +93,7 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   **This ensures it is picked up by metabase and is a critical step in enabling your new `ALLOW_LIST` variables**
 
-  Now your new variable is ready for testing
+  🎊🎉🎈 Now your new variable is ready for testing 🎈🎉🎊
 
 ### Step 3 - Testing your new `ALLOW_LIST` variable
 
