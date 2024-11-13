@@ -59,7 +59,7 @@ const DemoTeamWarning: React.FC<Props> = (props) => (
   <Card handleSubmit={props.handleSubmit}>
     <ErrorSummaryContainer role="status">
       <Typography variant="h4" ml={2} mb={1}>
-        Send is disabled for the Demo team
+        Send is not enabled for services created in the Demo team
       </Typography>
       <Typography variant="body2" ml={2}>
         Team integrations need to be configured to allow submissions to be sent

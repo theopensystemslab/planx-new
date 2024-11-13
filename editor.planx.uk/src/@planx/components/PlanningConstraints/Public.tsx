@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import type {
   EnhancedGISResponse,
   GISResponse,
@@ -13,6 +14,7 @@ import useSWR, { Fetcher } from "swr";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import {
   type IntersectingConstraints,
   type PlanningConstraints,
@@ -208,6 +210,23 @@ function Component(props: Props) {
       data: passportData,
     });
   };
+
+  if (teamSlug === "demo") {
+    return (
+      <Card handleSubmit={props.handleSubmit}>
+        <ErrorSummaryContainer role="status">
+          <Typography variant="h4" ml={2} mb={1}>
+            Planning Constraints are not enabled for services created in the
+            Demo team
+          </Typography>
+          <Typography variant="body2" ml={2}>
+            Click continue to skip planning constraints and proceed with your
+            application for testing
+          </Typography>
+        </ErrorSummaryContainer>
+      </Card>
+    );
+  }
 
   const isLoading = isValidating || isValidatingRoads;
   if (isLoading)

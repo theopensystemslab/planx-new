@@ -78,7 +78,7 @@ function Component(props: Props) {
   const errorMessage =
     teamSlug !== "demo"
       ? "GOV.UK Pay is not enabled for this local authority"
-      : "GOV.UK Pay is not enabled for the Demo team";
+      : "GOV.UK Pay is not enabled for services created in the Demo team";
 
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
