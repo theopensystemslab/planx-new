@@ -6308,8 +6308,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/706410d:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/706410d}
+  github.com/theopensystemslab/planx-core/ccf9ac3:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ccf9ac3}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

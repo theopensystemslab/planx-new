@@ -15433,9 +15433,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/706410d(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/706410d}
-    id: github.com/theopensystemslab/planx-core/706410d
+  github.com/theopensystemslab/planx-core/ccf9ac3(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ccf9ac3}
+    id: github.com/theopensystemslab/planx-core/ccf9ac3
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
