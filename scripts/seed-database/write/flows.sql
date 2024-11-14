@@ -60,8 +60,8 @@ SET
   copied_from = EXCLUDED.copied_from,
   analytics_link = NULL,
   status = EXCLUDED.status,
-  name = EXCLUDED.name
-  templated_from = EXCLUDED.templated_from
+  name = EXCLUDED.name,
+  templated_from = EXCLUDED.templated_from,
   description = EXCLUDED.description;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
