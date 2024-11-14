@@ -26,6 +26,7 @@ api.planx.uk/tmp/
 **/*.chain
 **/*.cert
 **/*.cer
+**/*.csr
 **/*.crt
 **/*.key
 **/*.pfx

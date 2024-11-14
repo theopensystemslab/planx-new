@@ -84,6 +84,10 @@ const CUSTOM_DOMAINS: CustomDomains =
           domain: "planningservices.newcastle.gov.uk",
           name: "newcastle",
         },
+        {
+          domain: "planningservices.lbbd.gov.uk",
+          name: "barking-and-dagenham",
+        },
       ]
     : [];
 
