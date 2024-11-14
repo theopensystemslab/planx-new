@@ -50,6 +50,7 @@ export const ALLOW_LIST = [
   "application.type",
   "drawBoundary.action",
   PASSPORT_FEEDBACK_KEY,
+  "_feedback.feedbackScore",
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",

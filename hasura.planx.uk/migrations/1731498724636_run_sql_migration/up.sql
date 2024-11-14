@@ -49,7 +49,8 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
     ((al.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((al.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
     (((al.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type,
-    ((al.allow_list_answers -> '_feedback'::text))::text AS feedback
+    ((al.allow_list_answers -> '_feedback'::text))::text AS feedback,
+    ((al.allow_list_answers -> '_feedback' ->> 'feedbackScore')::text) AS feedback_score
    FROM (((analytics a
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
      LEFT JOIN flows f ON ((a.flow_id = f.id)))
@@ -143,7 +144,8 @@ CREATE OR REPLACE VIEW "public"."submission_services_summary" AS
     ((ls.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((ls.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
     (((ls.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type,
-    ((ls.allow_list_answers -> '_feedback'::text))::text AS feedback
+    ((ls.allow_list_answers -> '_feedback'::text))::text AS feedback,
+    ((ls.allow_list_answers -> '_feedback' ->> 'feedbackScore')::text) AS feedback_score
    FROM (((((((((lowcal_sessions ls
      LEFT JOIN flows f ON ((f.id = ls.flow_id)))
      LEFT JOIN teams t ON ((t.id = f.team_id)))
