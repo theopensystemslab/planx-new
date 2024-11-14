@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#706410d
-    version: github.com/theopensystemslab/planx-core/706410d
+    specifier: git+https://github.com/theopensystemslab/planx-core#ccf9ac3
+    version: github.com/theopensystemslab/planx-core/ccf9ac3
   axios:
     specifier: ^1.7.4
     version: 1.7.4

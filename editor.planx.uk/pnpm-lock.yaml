@@ -47,10 +47,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#706410d
-    version: github.com/theopensystemslab/planx-core/706410d(@types/react@18.2.45)
-    specifier: git+https://github.com/theopensystemslab/planx-core#d9fc4a0
-    version: github.com/theopensystemslab/planx-core/d9fc4a0(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#ccf9ac3
+    version: github.com/theopensystemslab/planx-core/ccf9ac3(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
