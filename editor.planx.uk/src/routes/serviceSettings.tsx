@@ -13,13 +13,14 @@ interface GetFlowSettings {
     id: string;
     settings: FlowSettings;
     status: FlowStatus;
+    description: string;
   }[];
 }
 
 export const getFlowSettings = async (req: NaviRequest) => {
   const {
     data: {
-      flows: [{ settings, status }],
+      flows: [{ settings, status, description }],
     },
   } = await client.query<GetFlowSettings>({
     query: gql`
@@ -30,6 +31,7 @@ export const getFlowSettings = async (req: NaviRequest) => {
         ) {
           id
           settings
+          description
           status
         }
       }
@@ -42,6 +44,7 @@ export const getFlowSettings = async (req: NaviRequest) => {
 
   useStore.getState().setFlowSettings(settings);
   useStore.getState().setFlowStatus(status);
+  useStore.getState().setFlowDescription(description);
 };
 
 const serviceSettingsRoutes = compose(

@@ -19,6 +19,9 @@ export interface SettingsStore {
   flowStatus?: FlowStatus;
   setFlowStatus: (flowStatus: FlowStatus) => void;
   updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
+  flowDescription?: string;
+  setFlowDescription: (flowDescription: string) => void;
+  updateFlowDescription: (newDescription: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
@@ -48,6 +51,20 @@ export const settingsStore: StateCreator<
       status: newStatus,
     });
     set({ flowStatus: newStatus });
+    return Boolean(result?.id);
+  },
+
+  flowDescription: "",
+
+  setFlowDescription: (flowDescription: string) => set({ flowDescription }),
+
+  updateFlowDescription: async (newDescription: string) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setDescription({
+      flow: { id },
+      description: newDescription,
+    });
+    set({ flowDescription: newDescription });
     return Boolean(result?.id);
   },
 
