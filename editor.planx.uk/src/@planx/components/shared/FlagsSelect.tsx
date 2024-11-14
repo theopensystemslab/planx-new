@@ -72,7 +72,7 @@ export const FlagsSelect: React.FC<Props> = (props) => {
       <SelectMultiple
         id="select-multiple-flags"
         key="select-multiple-flags"
-        label="Flags (up to one per category)"
+        placeholder="Flags (up to one per category)"
         options={flatFlags}
         getOptionLabel={(flag) => flag.text}
         groupBy={(flag) => flag.category}

@@ -27,13 +27,21 @@ type OptionalAutocompleteProps<T> = Partial<
   Omit<AutocompleteProps<T, true, true, false, "div">, "multiple">
 >;
 
-type Props<T> = {
+type WithLabel<T> = {
   label: string;
+  placeholder?: never;
 } & RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T>;
 
+type WithPlaceholder<T> = {
+  label?: never;
+  placeholder: string;
+} & RequiredAutocompleteProps<T> &
+  OptionalAutocompleteProps<T>;
+
+type Props<T> = WithLabel<T> | WithPlaceholder<T>;
+
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
-  marginTop: theme.spacing(2),
   "& > div > label": {
     paddingRight: theme.spacing(3),
   },
@@ -104,9 +112,14 @@ export const CustomCheckbox = styled("span")(({ theme }) => ({
 }));
 
 export function SelectMultiple<T>(props: Props<T>) {
+  // MUI doesn't pass the Autocomplete value along to the TextField automatically
+  const isSelectEmpty = !props.value?.length;
+  const placeholder = isSelectEmpty ? props.placeholder : undefined
+
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, true, true, false, "div">
+        sx={{ mt: props.label ? 2 : 0 }}
         role="status"
         aria-atomic={true}
         aria-live="polite"
@@ -122,6 +135,7 @@ export function SelectMultiple<T>(props: Props<T>) {
               notched: false,
             }}
             label={props.label}
+            placeholder={placeholder}
           />
         )}
         ChipProps={{
