@@ -75,11 +75,6 @@ function Component(props: Props) {
 
   const metadata = [...(props.govPayMetadata || []), ...defaultMetadata];
 
-  const errorMessage =
-    teamSlug !== "demo"
-      ? "GOV.UK Pay is not enabled for this local authority"
-      : "GOV.UK Pay is not enabled demo users";
-
   // Handles UI states
   const reducer = (_state: ComponentState, action: Action): ComponentState => {
     switch (action) {
@@ -302,7 +297,10 @@ function Component(props: Props) {
               : "Retry payment"
           }
           error={
-            (state.status === "unsupported_team" && errorMessage) ||
+            (teamSlug === "demo" &&
+              "GOV.UK Pay is not enabled for demo users") ||
+            (state.status === "unsupported_team" &&
+              "GOV.UK Pay is not enabled for this local authority") ||
             (state.status === "undefined_fee" &&
               "We are unable to calculate your fee right now") ||
             undefined

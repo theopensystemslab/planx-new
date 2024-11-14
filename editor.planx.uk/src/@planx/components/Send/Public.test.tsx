@@ -210,3 +210,45 @@ it("should not have any accessibility violations", async () => {
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });
+
+describe("demo state", () => {
+  beforeEach(() => {
+    act(() =>
+      setState({
+        teamSlug: "demo",
+      }),
+    );
+  });
+  it("should render an error when teamSlug is demo", async () => {
+    const { queryByText } = setup(
+      <SendComponent title="Send" destinations={["bops", "uniform"]} />,
+    );
+
+    const errorHeader = queryByText(
+      "Send is not enabled for services created in the Demo team",
+    );
+    const errorGuidance = queryByText(
+      "Click continue to skip send and proceed with your application for testing.",
+    );
+
+    expect(errorHeader).toBeInTheDocument();
+    expect(errorGuidance).toBeInTheDocument();
+  });
+  it("should allow the user to continue with their application", async () => {
+    const handleSubmit = vi.fn();
+
+    const { findByRole, user } = setup(
+      <SendComponent
+        title="Send"
+        destinations={["bops", "uniform"]}
+        handleSubmit={handleSubmit}
+      />,
+    );
+
+    const continueButton = await findByRole("button", { name: "Continue" });
+    expect(continueButton).toBeInTheDocument();
+
+    await user.click(continueButton);
+    expect(handleSubmit).toHaveBeenCalled();
+  });
+});

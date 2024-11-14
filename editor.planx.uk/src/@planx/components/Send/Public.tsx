@@ -26,13 +26,14 @@ const SendComponent: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
+  const teamSlug = useStore().teamSlug;
   const fullProps = { destinations: destinations, ...props };
   if (
     window.location.pathname.endsWith("/draft") ||
     window.location.pathname.endsWith("/preview")
   ) {
     return <SkipSendWarning {...fullProps} />;
-  } else if (window.location.pathname.split("/")[1] === "demo") {
+  } else if (teamSlug === "demo") {
     return <DemoTeamWarning {...fullProps} />;
   } else {
     return <CreateSendEvents {...fullProps} />;

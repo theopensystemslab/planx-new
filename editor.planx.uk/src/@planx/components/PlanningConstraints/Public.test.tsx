@@ -40,7 +40,7 @@ vi.mock("swr", () => ({
 }));
 
 describe("error state", () => {
-  it("renders an error if no addres is present in the passport", async () => {
+  it("renders an error if no address is present in the passport", async () => {
     const { getByRole, getByTestId } = setup(
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <PlanningConstraints
@@ -238,5 +238,49 @@ describe("following a FindProperty component", () => {
 
     expect(negativeConstraintsContainer).toBeVisible();
     expect(getByRole("heading", { name: /Ecology/ })).toBeVisible();
+  });
+});
+
+describe("demo state", () => {
+  beforeEach(() => {
+    act(() =>
+      setState({
+        breadcrumbs: simpleBreadcrumbs,
+        flow: simpleFlow,
+        teamIntegrations: {
+          hasPlanningData: false,
+        },
+        teamSlug: "demo",
+      }),
+    );
+  });
+  it("should render an error when teamSlug is demo", async () => {
+    const handleSubmit = vi.fn();
+    const { queryByText, queryByRole, user, getByTestId } = setup(
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <PlanningConstraints
+          title="Planning constraints"
+          description="Things that might affect your project"
+          fn="property.constraints.planning"
+          disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+          handleSubmit={handleSubmit}
+        />
+      </ErrorBoundary>,
+    );
+
+    const errorMessage = queryByText(
+      "Planning Constraints are not enabled for demo users.",
+    );
+    expect(errorMessage).toBeVisible();
+
+    // Check planning constraints has not rendered
+    expect(
+      queryByRole("heading", { name: "Planning constraints" }),
+    ).not.toBeInTheDocument();
+
+    // Ensure a demo user can continue on in the application
+    await user.click(getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalled();
   });
 });
