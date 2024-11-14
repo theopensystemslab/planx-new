@@ -349,6 +349,10 @@ export = async () => {
             value: config.requireSecret("file-api-key-barnet"),
           },
           {
+            name: "FILE_API_KEY_LAMBETH",
+            value: config.requireSecret("file-api-key-lambeth"),
+          },
+          {
             name: "FILE_API_KEY_SOUTHWARK",
             value: config.requireSecret("file-api-key-southwark"),
           },
