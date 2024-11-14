@@ -18,7 +18,7 @@ import Question from "./Question";
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
 
-  const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
+  const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
   const addExternalPortal = useStore.getState().addExternalPortal;
 

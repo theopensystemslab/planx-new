@@ -2,7 +2,9 @@ import { useTheme } from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect, useRef } from "react";
 
-const useScrollOnPreviousURLMatch = <T extends HTMLElement>(id: string) => {
+const useScrollOnPreviousURLMatch = <T extends HTMLElement>(
+  urlMatcher: string,
+) => {
   const previousURL = useStore((state) => state.previousURL);
   const ref = useRef<T | null>(null);
   const theme = useTheme();
@@ -10,7 +12,7 @@ const useScrollOnPreviousURLMatch = <T extends HTMLElement>(id: string) => {
   useEffect(() => {
     if (!ref.current) return;
 
-    const isReturningFromPortal = previousURL?.endsWith(id);
+    const isReturningFromPortal = previousURL?.endsWith(urlMatcher);
     if (!isReturningFromPortal) return;
 
     // Center node
@@ -31,7 +33,7 @@ const useScrollOnPreviousURLMatch = <T extends HTMLElement>(id: string) => {
     };
 
     ref.current.animate(keyframes, animationOptions);
-  }, [previousURL, id, theme]);
+  }, [previousURL, urlMatcher, theme]);
 
   return ref;
 };
