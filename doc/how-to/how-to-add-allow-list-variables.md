@@ -2,21 +2,21 @@
 
 ## Context
 
-For PlanX, we are using a platform called Metabase to handle analytics for how people use the services from different local authorities. In order to tell Metabase what to pick up, we allow a number of variables to be exposed, these are contained in an array called `ALLOW_LIST`. You can see these as database columns in Hasura, in the views `analytics_summary` and `submission_services_summary`.
+For PlanX, we are using a platform called Metabase to handle analytics for how people use the services from different local authorities. In order to tell Metabase what to pick up, we allow a number of variables to be exposed, these are contained in an array called `ALLOW_LIST`. You can see these in the database as columns in the views `analytics_summary` and `submission_services_summary`.
 
-In these docs I will run through the steps for adding a new value to `ALLOW_LIST` both in the codebase and in Hasura. 
+In these docs I will run through the steps for adding a new variable to `ALLOW_LIST` both in the codebase and in Hasura.
+
+> [!WARNING] 
+> Only passport variables that store non-personally-identifiable values should be added to the allow list. Sensitive or personally-identifiable data should **never** be tracked or exposed via analytics.
 
 ## Process
 
 ### Step 1 - Add variables to `ALLOW_LIST` array
 
  You will need to add the desired variables to two places in the codebase
-  `api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`. 
+  `api.planx.uk/modules/webhooks/service/analyzeSessions/operations.ts` and `editor.planx.uk/src/pages/FlowEditor/lib/analytics/provider.tsx`.
 
   Each file should have an array looking like the below:
-
-  >[!NOTE]
-  > It is worth noting here that variables should be added in alphabetical order and relate to a respective passport variable
 
     ```ts
     export const ALLOW_LIST = [
@@ -34,10 +34,11 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   Add your variable to this array.
 
-  > [!IMPORTANT] 
-  > Only passport variables that store non-personally-identifiable values should be added to the allow list. Sensitive or personally-identifiable data should **never** be tracked or exposed via analytics.
-
   With both arrays now populated with the new variable we can now add them to our database views in Hasura
+
+  >[!NOTE]
+  > Variables should be added in alphabetical order and relate to a passport variable
+
 ### Step 2 - Adding variables to Hasura Views
 
   For this part, you will need to pull the variable out of the passport jsonb in the SQL script and put them into two database views,`analytics_summary` and `submission_services_summary`. Examples can be found already in the current view script for how to do this.
@@ -91,18 +92,16 @@ In these docs I will run through the steps for adding a new value to `ALLOW_LIST
 
   The values here are being pulled from the table `lowcal_sessions.allow_list_answers` or `analytics_logs.allow_list_answers`
 
-  **At the end of your SQL script after the view creation/replacement, it is important to add another line after each one.**
+  > [!IMPORTANT] At the end of your SQL script after the view creation/replacement, it is important to add another line which ensures the new variable is read by Metabase
 
-  `GRANT SELECT ON public.{VIEW_NAME} TO metabase_read_only`
 
-  We currently have two views, so you should add these two lines to the end of the migration file:
+  We currently have two views, so you should add these two lines to the end of the migration file, one for each view:
 
 ```sql
 GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
 GRANT SELECT ON "public"."submission_services_summary" TO metabase_read_only;
 ```
 
-  This ensures it is picked up by metabase and is a critical step in enabling your new `ALLOW_LIST` variables
 
   🎊🎉🎈 Now your new variable is ready for testing 🎈🎉🎊
 
