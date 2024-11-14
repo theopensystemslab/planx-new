@@ -27,10 +27,19 @@ type OptionalAutocompleteProps<T> = Partial<
   Omit<AutocompleteProps<T, true, true, false, "div">, "multiple">
 >;
 
-type Props<T> = {
+type WithLabel<T> = {
   label: string;
+  placeholder?: never;
 } & RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T>;
+
+type WithPlaceholder<T> = {
+  label?: never;
+  placeholder: string;
+} & RequiredAutocompleteProps<T> &
+  OptionalAutocompleteProps<T>;
+
+type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -120,6 +129,7 @@ export function SelectMultiple<T>(props: Props<T>) {
             InputProps={{
               ...params.InputProps,
               notched: false,
+              placeholder: props?.placeholder
             }}
             label={props.label}
           />
