@@ -328,20 +328,6 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
-@keyframes flash-outline {
-  0% {
-    outline: 4px solid $focus;
-    outline-offset: 0;
-  }
-  100% {
-    outline: 0px solid $focus;
-  }
-}
-
-.highlight-active {
-  animation: flash-outline 2s ease-out;
-}
-
 .portal {
   justify-content: center !important;
   > a {
