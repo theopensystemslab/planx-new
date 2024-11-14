@@ -62,8 +62,8 @@ const DemoTeamWarning: React.FC<Props> = (props) => (
         Send is not enabled for services created in the Demo team
       </Typography>
       <Typography variant="body2" ml={2}>
-        Team integrations need to be configured to allow submissions to be sent
-        from PlanX
+        Click continue to skip send and proceed with your application for
+        testing.
       </Typography>
     </ErrorSummaryContainer>
   </Card>

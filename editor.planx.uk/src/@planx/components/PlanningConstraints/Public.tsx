@@ -216,12 +216,11 @@ function Component(props: Props) {
       <Card handleSubmit={props.handleSubmit}>
         <ErrorSummaryContainer role="status">
           <Typography variant="h4" ml={2} mb={1}>
-            Planning Constraints are not enabled for services created in the
-            Demo team
+            Planning Constraints are not enabled for demo users.
           </Typography>
           <Typography variant="body2" ml={2}>
             Click continue to skip planning constraints and proceed with your
-            application for testing
+            application for testing.
           </Typography>
         </ErrorSummaryContainer>
       </Card>
