@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link } from "react-navi";
+import { Link, useLoadingRoute } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
 
 import { rootFlowPath } from "../../../../../routes/utils";
@@ -14,24 +14,29 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
 
   const href = rootFlowPath(false);
 
+  const currentPath = rootFlowPath(true);
+  const isLoading = useLoadingRoute();
+
   useEffect(() => {
     if (isStart && el.current) {
+      if (isLoading) return;
+
       scrollIntoView(
         el.current,
         flowLayout === FlowLayout.TOP_DOWN
           ? {
-              scrollMode: "if-needed",
+              scrollMode: "always",
               block: "nearest",
               inline: "center",
             }
           : {
-              scrollMode: "if-needed",
+              scrollMode: "always",
               block: "center",
               inline: "nearest",
             },
       );
     }
-  }, [flowLayout, isStart]);
+  }, [flowLayout, isStart, currentPath, isLoading]);
 
   return (
     <li
