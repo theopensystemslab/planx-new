@@ -27,6 +27,8 @@ This guide will walk through the process of setting a custom domain for a new te
 
     The `<TEAM_NAME>.key` file should be kept, we require this for step 5 onwards.
 
+    Please save these files to the PlanX vault on 1Password - this ensures that there's a backup than can be accessed by anybody on the dev team.
+
 
 3. **IT Team** - Provide PlanX with certificates (details in documentation above)
     - Certificates can be provided as individual files, or in an archive format (`.pfx`, `.pkcs12`, `.p12`)
