@@ -8,11 +8,12 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
-  { color: keyof Palette["nodeTag"]; displayName: string }
+  { color: keyof Palette["nodeTag"]; displayName: string; isEditable?: boolean }
 > = {
   placeholder: {
     color: "blocking",
     displayName: "Placeholder",
+    isEditable: useStore.getState().user?.isPlatformAdmin,
   },
   toReview: {
     color: "nonBlocking",

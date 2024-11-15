@@ -4,7 +4,6 @@ import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
 import { NODE_TAGS, NodeTag } from "@opensystemslab/planx-core/types";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ModalSection from "ui/editor/ModalSection";
@@ -17,65 +16,55 @@ interface Props {
   onChange: (values: NodeTag[]) => void;
 }
 
-export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
-  const isPlatformAdmin = useStore().user?.isPlatformAdmin;
+const renderOption: AutocompleteProps<
+  NodeTag,
+  true,
+  true,
+  false,
+  "div"
+>["renderOption"] = (props, tag, { selected }) => {
+  if (TAG_DISPLAY_VALUES[tag].isEditable) return null;
+  return (
+    <ListItem {...props}>
+      <CustomCheckbox
+        aria-hidden="true"
+        className={selected ? "selected" : ""}
+      />
+      {!TAG_DISPLAY_VALUES[tag].displayName}
+    </ListItem>
+  );
+};
 
-  const showPlaceholderTag = (tagName: string) =>
-    tagName.toLowerCase() === "placeholder" && !isPlatformAdmin ? true : false;
-
-  const renderOption: AutocompleteProps<
-    NodeTag,
-    true,
-    true,
-    false,
-    "div"
-  >["renderOption"] = (props, tag, { selected }) => {
-    const tagName = TAG_DISPLAY_VALUES[tag].displayName;
-
-    if (showPlaceholderTag(tagName)) return;
-
+const renderTags: AutocompleteProps<
+  NodeTag,
+  true,
+  true,
+  false,
+  "div"
+>["renderTags"] = (value, getTagProps) =>
+  value.map((tag, index) => {
     return (
-      <ListItem {...props}>
-        <CustomCheckbox
-          aria-hidden="true"
-          className={selected ? "selected" : ""}
-        />
-        {tagName}
-      </ListItem>
+      <Chip
+        {...getTagProps({ index })}
+        key={tag}
+        label={TAG_DISPLAY_VALUES[tag].displayName}
+        sx={(theme) => ({
+          backgroundColor: theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
+          color: getContrastTextColor(
+            theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
+            "#FFF",
+          ),
+        })}
+        onDelete={
+          TAG_DISPLAY_VALUES[tag].isEditable
+            ? undefined
+            : getTagProps({ index }).onDelete
+        }
+      />
     );
-  };
+  });
 
-  const renderTags: AutocompleteProps<
-    NodeTag,
-    true,
-    true,
-    false,
-    "div"
-  >["renderTags"] = (value, getTagProps) =>
-    value.map((tag, index) => {
-      const tagName = TAG_DISPLAY_VALUES[tag].displayName;
-      const isChipDisabled = showPlaceholderTag(tagName);
-
-      return (
-        <Chip
-          {...getTagProps({ index })}
-          key={tag}
-          label={tagName}
-          sx={(theme) => ({
-            backgroundColor:
-              theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
-            color: getContrastTextColor(
-              theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
-              "#FFF",
-            ),
-          })}
-          onDelete={
-            isChipDisabled ? undefined : getTagProps({ index }).onDelete
-          }
-        />
-      );
-    });
-
+export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
   return (
     <ModalSection>
       <ModalSectionContent title="Tags" Icon={BookmarksIcon}>
