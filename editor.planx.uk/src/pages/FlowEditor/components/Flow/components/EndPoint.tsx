@@ -1,10 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import {
-  Link,
-  useCurrentRoute,
-  useLoadingRoute,
-  useNavigation,
-} from "react-navi";
+import { Link, useLoadingRoute } from "react-navi";
 import scrollIntoView from "scroll-into-view-if-needed";
 
 import { rootFlowPath } from "../../../../../routes/utils";
