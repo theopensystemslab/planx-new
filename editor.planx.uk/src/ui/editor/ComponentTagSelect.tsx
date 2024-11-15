@@ -20,6 +20,9 @@ interface Props {
 export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
   const isPlatformAdmin = useStore().user?.isPlatformAdmin;
 
+  const showPlaceholderTag = (tagName: string) =>
+    tagName.toLowerCase() === "placeholder" && !isPlatformAdmin ? true : false;
+
   const renderOption: AutocompleteProps<
     NodeTag,
     true,
@@ -29,9 +32,7 @@ export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
   >["renderOption"] = (props, tag, { selected }) => {
     const tagName = TAG_DISPLAY_VALUES[tag].displayName;
 
-    if (tagName === "Placeholder" && !isPlatformAdmin) {
-      return null;
-    }
+    if (showPlaceholderTag(tagName)) return;
 
     return (
       <ListItem {...props}>
@@ -39,7 +40,7 @@ export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
           aria-hidden="true"
           className={selected ? "selected" : ""}
         />
-        {TAG_DISPLAY_VALUES[tag].displayName}
+        {tagName}
       </ListItem>
     );
   };
@@ -53,13 +54,13 @@ export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
   >["renderTags"] = (value, getTagProps) =>
     value.map((tag, index) => {
       const tagName = TAG_DISPLAY_VALUES[tag].displayName;
-      const isChipDisabled = tagName === "Placeholder" && !isPlatformAdmin;
+      const isChipDisabled = showPlaceholderTag(tagName);
 
       return (
         <Chip
           {...getTagProps({ index })}
           key={tag}
-          label={TAG_DISPLAY_VALUES[tag].displayName}
+          label={tagName}
           sx={(theme) => ({
             backgroundColor:
               theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
