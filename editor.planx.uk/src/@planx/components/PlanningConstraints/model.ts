@@ -5,6 +5,7 @@ export interface PlanningConstraints extends BaseNodeData {
   description: string;
   fn: string;
   disclaimer: string;
+  dataValues?: string[] | undefined;
 }
 
 export const parseContent = (
@@ -16,6 +17,7 @@ export const parseContent = (
     "Planning constraints might limit how you can develop or use the property",
   fn: data?.fn || DEFAULT_FN,
   disclaimer: data?.disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER,
+  dataValues: data?.dataValues || availableDatasets.map((d) => d.val),
   ...parseBaseNodeData(data),
 });
 

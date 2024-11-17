@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -36,7 +36,37 @@ function PlanningConstraintsComponent(props: Props) {
         data: newValues,
       });
     },
+    validate: () => {
+      // TODO must select at least one formik.values.dataValues
+    },
   });
+
+  const changeSelectAll =
+    (vals: string[] | undefined) =>
+    (_event: ChangeEvent<HTMLInputElement>, _checked: boolean) => {
+      let newCheckedVals: string[];
+      if (vals?.length !== availableDatasets.length) {
+        newCheckedVals = availableDatasets.map((d) => d.val);
+      } else {
+        newCheckedVals = [];
+      }
+
+      formik.setFieldValue("dataValues", newCheckedVals);
+    };
+
+  const changeDataset =
+    (val: string) =>
+    (_event: ChangeEvent<HTMLInputElement>, _checked: boolean) => {
+      let newCheckedVals;
+      if (formik.values.dataValues?.includes(val)) {
+        newCheckedVals = formik.values.dataValues.filter((dv) => dv !== val);
+      } else {
+        newCheckedVals = formik.values.dataValues
+          ? [...formik.values.dataValues, val]
+          : [val];
+      }
+      formik.setFieldValue("dataValues", newCheckedVals);
+    };
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -91,8 +121,11 @@ function PlanningConstraintsComponent(props: Props) {
                     <TableCell>
                       <Checkbox
                         color="primary"
-                        checked={true}
-                        disabled={true}
+                        checked={
+                          availableDatasets.length ===
+                          formik.values.dataValues?.length
+                        }
+                        onChange={changeSelectAll(formik.values.dataValues)}
                         inputProps={{
                           "aria-label": "select all constraints",
                         }}
@@ -111,8 +144,10 @@ function PlanningConstraintsComponent(props: Props) {
                         <TableCell sx={{ verticalAlign: "top" }}>
                           <Checkbox
                             color="primary"
-                            checked={true}
-                            disabled={true}
+                            checked={formik.values.dataValues?.includes(
+                              dataset.val,
+                            )}
+                            onChange={changeDataset(dataset.val)}
                           />
                         </TableCell>
                         <TableCell>
