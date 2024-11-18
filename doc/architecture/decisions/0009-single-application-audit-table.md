@@ -19,7 +19,7 @@ These tables:
 
 ## Decision
 
-We propose to consolidate all integration application audit tables into a single `applications` table with the following key changes:
+We propose to consolidate all integration application audit tables into a single `submissions` table with the following key changes:
 
 1. Replace integration-specific ID columns with a standardised `external_reference_id` column (TEXT)
    - This will store the identifier returned by the integration partner
@@ -35,7 +35,7 @@ We propose to consolidate all integration application audit tables into a single
      - Update `submissions_services_log` and `submissions_services_summary` view
      - Delete or archive old table
 
-4. Update data retention operations to sanitise new `applications` table
+4. Update data retention operations to sanitise new `submissions` table
 
 ## Consequences
 
@@ -63,7 +63,7 @@ We propose to consolidate all integration application audit tables into a single
 2. Current use of existing `submission_` views
    - Frontend code and models may need to be updated
    - Metabase queries may need to be updated
-   - We can mitigate this by planning to keep the existing structure of the views, but simplify their sources to read from a single `applications` table instead of multiple `x_applications` tables
+   - We can mitigate this by planning to keep the existing structure of the views, but simplify their sources to read from a single `submissions` table instead of multiple `x_applications` tables
 
 ### Questions
 
