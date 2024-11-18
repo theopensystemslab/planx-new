@@ -50,9 +50,10 @@ We propose to consolidate all integration application audit tables into a single
    - Cross-integration reporting becomes simpler
    - Simplified analytics queries in Metabase
 
-3. Future workflow improvements
+3. Potential future workflow improvements
    - This would enable event-driven architecture via status transitions - the front end could insert a new record with `status = "new"`, which would trigger the `/send` API  endpoint
    - This would eliminate the need for manual Hasura event generation, and simplify our submission process
+   - Any changes here are outside the scope of this ADR and will changes will constitute a new propsal, in their own time
 
 ### Negative
 
