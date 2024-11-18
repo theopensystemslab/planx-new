@@ -5,7 +5,7 @@ export interface NewCollectionParams {
   /** Optional; if the collection is a child of a parent, specify parent ID here
    * For council teams, parent collection should be 58
    */
-  parent_id?: string;
+  parent_id?: number;
   namespace?: string;
   authority_level?: null;
 }
