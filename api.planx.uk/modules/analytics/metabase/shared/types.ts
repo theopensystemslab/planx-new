@@ -1,5 +1,5 @@
 export interface Input {
-  councilName: string;
+  teamName: string;
   originalDashboardId: number;
   /** The name of the filter to be updated */
   filter: string;
@@ -14,11 +14,10 @@ export function validateInput(input: unknown): input is Input {
   }
 
   // check that input object is same shape as Input type with same properties
-  const { councilName, originalDashboardId, filter, filterValue } =
-    input as Input;
+  const { teamName, originalDashboardId, filter, filterValue } = input as Input;
 
-  if (typeof councilName !== "string" || councilName.trim() === "") {
-    console.error("Invalid councilName: must be a non-empty string");
+  if (typeof teamName !== "string" || teamName.trim() === "") {
+    console.error("Invalid teamName: must be a non-empty string");
     return false;
   }
 
