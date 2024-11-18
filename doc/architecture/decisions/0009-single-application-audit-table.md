@@ -27,7 +27,10 @@ We propose to consolidate all integration application audit tables into a single
 
 2. Add an `integration_name` column (ENUM) to identify the destination
 
-3. Implement the migration in phases:
+3. Use a foreign key relationship between `lowcal_session.id` and `submissions.session_id`
+  - As `submission` need to be retained, and `lowcal_session` deleted a constraint such as `ON DELETE SET NULL` for the foreign key would allow for the relationship to be maintained whilst the session record exists.
+
+4. Implement the migration in phases:
    - Create new consolidated table
    - For each integration:
      - Update application code to write to both old and new tables
@@ -35,7 +38,7 @@ We propose to consolidate all integration application audit tables into a single
      - Update `submissions_services_log` and `submissions_services_summary` view
      - Delete or archive old table
 
-4. Update data retention operations to sanitise new `submissions` table
+5. Update data retention operations to sanitise new `submissions` table
 
 ## Consequences
 
