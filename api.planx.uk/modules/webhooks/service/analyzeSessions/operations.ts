@@ -22,7 +22,6 @@ const ALLOW_LIST = [
   "application.type",
   "drawBoundary.action",
   "_feedback",
-  "_feedback.feedbackScore",
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",
