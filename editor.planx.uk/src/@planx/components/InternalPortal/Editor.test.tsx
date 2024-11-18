@@ -38,6 +38,7 @@ describe("adding an internal portal", () => {
         data: {
           flowId: "", // will be removed when saving the data
           text: "new internal portal",
+          tags: [],
         },
       });
     });
@@ -117,6 +118,7 @@ test("updating an internal portal", async () => {
       data: {
         flowId: "", // will be removed when saving the data
         text: "new val",
+        tags: [],
       },
     });
   });
