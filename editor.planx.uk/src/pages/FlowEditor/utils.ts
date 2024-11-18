@@ -3,13 +3,13 @@ import { formatDistanceToNow } from "date-fns";
 import { FlowSettings } from "types";
 
 export interface FlowInformation {
-  id?: string;
   settings: FlowSettings;
   status: FlowStatus;
   description: string;
 }
 
-export interface GetFlowSettings {
+export interface GetFlowInformation {
+  id: string;
   flows: FlowInformation[];
 }
 

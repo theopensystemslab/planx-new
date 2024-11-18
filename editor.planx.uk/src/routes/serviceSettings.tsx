@@ -4,7 +4,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 
 import { makeTitle } from "./utils";
 
-const { flowSlug, teamSlug, getFlowSettings } = useStore.getState();
+const getFlowInformation = useStore.getState().getFlowInformation;
 
 const serviceSettingsRoutes = compose(
   withData((req) => ({
@@ -15,7 +15,7 @@ const serviceSettingsRoutes = compose(
   mount({
     "/": compose(
       route(async (req) => ({
-        getData: await getFlowSettings(flowSlug, teamSlug),
+        getData: await getFlowInformation(req.params.flow, req.params.team),
         title: makeTitle(
           [req.params.team, req.params.flow, "service"].join("/"),
         ),
