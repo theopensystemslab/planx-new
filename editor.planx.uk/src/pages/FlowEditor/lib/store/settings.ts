@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
+import { FlowInformation, GetFlowSettings } from "pages/FlowEditor/utils";
 import {
   AdminPanelData,
   FlowSettings,
@@ -14,6 +15,10 @@ import { SharedStore } from "./shared";
 import { TeamStore } from "./team";
 
 export interface SettingsStore {
+  getFlowSettings: (
+    flowSlug: string,
+    teamSlug: string,
+  ) => Promise<FlowInformation>;
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
@@ -66,6 +71,41 @@ export const settingsStore: StateCreator<
     });
     set({ flowDescription: newDescription });
     return Boolean(result?.id);
+  },
+
+  getFlowSettings: async (flowSlug, teamSlug) => {
+    const {
+      data: {
+        flows: [{ settings, status, description }],
+      },
+    } = await client.query<GetFlowSettings>({
+      query: gql`
+        query GetFlow($slug: String!, $team_slug: String!) {
+          flows(
+            limit: 1
+            where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
+          ) {
+            id
+            settings
+            description
+            status
+          }
+        }
+      `,
+      variables: {
+        slug: flowSlug,
+        team_slug: teamSlug,
+      },
+      fetchPolicy: "network-only",
+    });
+
+    set({
+      flowSettings: settings,
+      flowStatus: status,
+      flowDescription: description,
+    });
+
+    return { settings, status, description };
   },
 
   globalSettings: undefined,

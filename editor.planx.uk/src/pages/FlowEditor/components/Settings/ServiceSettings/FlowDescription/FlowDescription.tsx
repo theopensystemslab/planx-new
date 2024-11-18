@@ -15,6 +15,7 @@ const FlowDescription = () => {
     state.flowDescription,
     state.updateFlowDescription,
   ]);
+
   const toast = useToast();
 
   const formik = useFormik<{ description: string }>({
@@ -34,6 +35,9 @@ const FlowDescription = () => {
         );
       }
     },
+    validateOnBlur: false,
+    validateOnChange: false,
+    enableReinitialize: true,
   });
 
   return (
@@ -59,6 +63,7 @@ const FlowDescription = () => {
           <>
             <InputLabel label="Description" htmlFor="description">
               <Input
+                multiline
                 name="description"
                 onChange={(event) => {
                   formik.setFieldValue("description", event.target.value);
