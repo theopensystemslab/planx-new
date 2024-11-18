@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { trackAnalyticsLogExit } from "../service.js";
+import { trackAnalyticsLogExit } from "./service.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 export const logAnalyticsSchema = z.object({
