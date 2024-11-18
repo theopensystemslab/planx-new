@@ -30,7 +30,12 @@ We propose to consolidate all integration application audit tables into a single
 3. Use a foreign key relationship between `lowcal_session.id` and `submissions.session_id`
   - As `submission` need to be retained, and `lowcal_session` deleted a constraint such as `ON DELETE SET NULL` for the foreign key would allow for the relationship to be maintained whilst the session record exists.
 
-4. Implement the migration in phases:
+4. When submitting, the current `check<SEND_DESTINATION>AuditTable()` function will validate the following - 
+  - Is there a record for this combination of session ID and send destination, where the `submission_reference` is set to `NULL`
+  - If yes, this has not yet been successfully submitted, proceed
+  - If no, return early - this session has been submitted already
+
+1. Implement the migration in phases:
    - Create new consolidated table
    - For each integration:
      - Update application code to write to both old and new tables
@@ -38,7 +43,7 @@ We propose to consolidate all integration application audit tables into a single
      - Update `submissions_services_log` and `submissions_services_summary` view
      - Delete or archive old table
 
-5. Update data retention operations to sanitise new `submissions` table
+2. Update data retention operations to sanitise new `submissions` table
 
 ## Consequences
 
