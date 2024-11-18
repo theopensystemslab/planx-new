@@ -85,8 +85,6 @@ export const FooterLinksAndLegalDisclaimer = () => {
   ]);
   const toast = useToast();
 
-  console.log(flowSettings);
-
   const elementsForm = useFormik<FlowSettings>({
     initialValues: {
       elements: {
@@ -113,7 +111,6 @@ export const FooterLinksAndLegalDisclaimer = () => {
     },
     validate: () => {},
   });
-  console.log(elementsForm.values.elements);
   return (
     <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
       <SettingsSection>
