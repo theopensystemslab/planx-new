@@ -30,6 +30,7 @@ describe("Checklist Component for a Platform Admin", () => {
       }),
     ),
   );
+
   it("renders all tags with none selected", async () => {
     const { getByRole, user } = setup(
       <DndProvider backend={HTML5Backend}>
@@ -50,6 +51,7 @@ describe("Checklist Component for a Platform Admin", () => {
 
     expect(optionTexts).toEqual(expect.arrayContaining(tagDisplayNames));
   });
+
   it("renders all tags with Placeholder selected as a button", async () => {
     const { queryByTestId, queryByRole } = setup(
       <DndProvider backend={HTML5Backend}>
@@ -79,6 +81,7 @@ describe("Checklist Component for a non Platform Admin", () => {
       }),
     ),
   );
+
   it("renders all tags except Placeholder with none selected", async () => {
     const { getByRole, user } = setup(
       <DndProvider backend={HTML5Backend}>
@@ -95,6 +98,7 @@ describe("Checklist Component for a non Platform Admin", () => {
 
     expect(optionTexts).not.toContain(/placeholder/i);
   });
+
   it("renders all tags with static Placeholder selected", async () => {
     const { getByTestId, queryByRole } = setup(
       <DndProvider backend={HTML5Backend}>
