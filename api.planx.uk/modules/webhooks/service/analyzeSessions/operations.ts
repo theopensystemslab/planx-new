@@ -16,6 +16,7 @@ import type { Operation } from "../sanitiseApplicationData/types.js";
  *  so that Metabase picks up the new columns
  */
 const ALLOW_LIST = [
+  "applicant.researchOptIn",
   "application.declaration.connection",
   "application.information.harmful",
   "application.information.sensitive",
