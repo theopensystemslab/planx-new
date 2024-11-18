@@ -20,7 +20,7 @@ const ExternalPortalForm: React.FC<{
   flowId?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
-  tags: NodeTag[];
+  tags?: NodeTag[];
 }> = ({ id, handleSubmit, flowId = "", flows = [], tags = [] }) => {
   const formik = useFormik({
     initialValues: {
