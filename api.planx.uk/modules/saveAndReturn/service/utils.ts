@@ -217,17 +217,26 @@ const softDeleteSession = async (sessionId: string) => {
 
 /**
  * Mark a lowcal_session record as submitted
+ * Sends confirmation emails via Hasura event trigger "email_user_submission_confirmation"
  * Sessions older than 6 months cleaned up nightly by cron job sanitise_application_data on Hasura
  */
 const markSessionAsSubmitted = async (sessionId: string) => {
   try {
     const mutation = gql`
       mutation MarkSessionAsSubmitted($sessionId: uuid!) {
-        update_lowcal_sessions_by_pk(
-          pk_columns: { id: $sessionId }
+        update_lowcal_sessions(
+          where: {
+            _and: {
+              id: { _eq: $sessionId }
+              # Only trigger email on first submission
+              submitted_at: { _is_null: true }
+            }
+          }
           _set: { submitted_at: "now()" }
         ) {
-          id
+          returning {
+            id
+          }
         }
       }
     `;
