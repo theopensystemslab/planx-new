@@ -36,11 +36,17 @@ export const checkCollectionsController = async (
   res: Response,
 ) => {
   try {
-    const name = res.locals.parsedReq.body.name;
+    const name = _req.query.name as string;
+
+    if (!name) {
+      return res.status(400).json({ error: "Name parameter is required" });
+    }
+
     const collections = await checkCollections(name);
 
     res.status(200).json(collections);
   } catch (error) {
+    console.error("Controller error:", error);
     res.status(500).json({ error: "Failed to fetch collections" });
   }
 };
