@@ -50,7 +50,7 @@ describe("Checklist Component for a Platform Admin", () => {
 
     expect(optionTexts).toEqual(expect.arrayContaining(tagDisplayNames));
   });
-  it.only("renders all tags with Placeholder selected as a button", async () => {
+  it("renders all tags with Placeholder selected as a button", async () => {
     const { queryByTestId, queryByRole } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent
