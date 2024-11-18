@@ -1,6 +1,10 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeTag,
+} from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
+import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import InputField from "ui/editor/InputField/InputField";
 
 import { FormError } from "../shared/types";
@@ -16,11 +20,13 @@ const InternalPortalForm: React.FC<{
   flowId?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
-}> = ({ id, handleSubmit, text = "", flowId = "", flows = [] }) => {
+  tags: NodeTag[];
+}> = ({ id, handleSubmit, text = "", flowId = "", flows = [], tags = [] }) => {
   const formik = useFormik({
     initialValues: {
       text,
       flowId,
+      tags,
     },
     validate: (values) => {
       const errors: Record<string, string> = {};
@@ -86,6 +92,10 @@ const InternalPortalForm: React.FC<{
           </select>
         </>
       )}
+      <ComponentTagSelect
+        value={formik.values.tags}
+        onChange={(value) => formik.setFieldValue("tags", value)}
+      />
     </form>
   );
 };
