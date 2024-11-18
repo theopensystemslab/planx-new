@@ -1,3 +1,26 @@
+import { z } from "zod";
+import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
+
+type ApiResponse<T> = {
+  data?: T;
+  error?: string;
+};
+
+export const checkCollectionsSchema = z.object({
+  query: z.object({
+    name: z.string().min(1, "Name parameter is required"),
+  }),
+});
+
+export type CheckCollectionsRequest = ValidatedRequestHandler<
+  typeof checkCollectionsSchema,
+  ApiResponse<CheckCollectionResponse>
+>;
+
+export interface CheckCollectionResponse {
+  collectionId: number | false;
+}
+
 export interface NewCollectionParams {
   /** The name of the new collection */
   name: string;
@@ -8,4 +31,24 @@ export interface NewCollectionParams {
   parent_id?: number;
   namespace?: string;
   authority_level?: null;
+}
+
+export const newCollectionSchema = z.object({
+  body: z.object({
+    name: z.string(),
+    description: z.string().optional(),
+    parent_id: z.number().optional(),
+    namespace: z.string().optional(),
+    authority_level: z.null().optional(),
+  }),
+});
+
+export type NewCollectionRequest = ValidatedRequestHandler<
+  typeof newCollectionSchema,
+  ApiResponse<NewCollectionResponse>
+>;
+
+export interface NewCollectionResponse {
+  id: number;
+  name: string;
 }

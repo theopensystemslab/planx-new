@@ -1,34 +1,8 @@
 import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import { checkCollections, newCollection } from "./service.js";
-import type { NewCollectionParams } from "./types.js";
+import type { NewCollectionRequest } from "./types.js";
 import type { Request, Response } from "express";
-
-// Error response type
-interface ErrorResponse {
-  error: string;
-}
-
-// Response types
-type ApiResponse<T> = {
-  data?: T;
-  error?: string;
-};
-
-// Define validation schemas
-export const newCollectionSchema = z.object({
-  body: z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    parentId: z.number().optional(),
-  }),
-});
-
-// Define types for validated requests
-export type NewCollectionRequest = ValidatedRequestHandler<
-  typeof newCollectionSchema,
-  ApiResponse<NewCollectionParams>
->;
 
 // Controller functions
 export const checkCollectionsController = async (
