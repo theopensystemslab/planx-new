@@ -2,8 +2,9 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import { AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
-import { NODE_TAGS, NodeTag } from "@opensystemslab/planx-core/types";
+import { NODE_TAGS, NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ModalSection from "ui/editor/ModalSection";
@@ -16,6 +17,17 @@ interface Props {
   onChange: (values: NodeTag[]) => void;
 }
 
+const canEdit = (role?: Role) => {
+  switch (role) {
+    case "platformAdmin":
+      return useStore.getState().user?.isPlatformAdmin;
+    case undefined:
+      return true;
+    default:
+      return true;
+  }
+};
+
 const renderOption: AutocompleteProps<
   NodeTag,
   true,
@@ -23,14 +35,14 @@ const renderOption: AutocompleteProps<
   false,
   "div"
 >["renderOption"] = (props, tag, { selected }) => {
-  if (TAG_DISPLAY_VALUES[tag].isEditable) return null;
+  if (!canEdit(TAG_DISPLAY_VALUES[tag].isEditable)) return null;
   return (
     <ListItem {...props}>
       <CustomCheckbox
         aria-hidden="true"
         className={selected ? "selected" : ""}
       />
-      {!TAG_DISPLAY_VALUES[tag].displayName}
+      {TAG_DISPLAY_VALUES[tag].displayName}
     </ListItem>
   );
 };
@@ -46,6 +58,9 @@ const renderTags: AutocompleteProps<
     return (
       <Chip
         {...getTagProps({ index })}
+        data-testid={
+          TAG_DISPLAY_VALUES[tag].displayName.toLowerCase() + "-chip"
+        }
         key={tag}
         label={TAG_DISPLAY_VALUES[tag].displayName}
         sx={(theme) => ({
@@ -56,9 +71,9 @@ const renderTags: AutocompleteProps<
           ),
         })}
         onDelete={
-          TAG_DISPLAY_VALUES[tag].isEditable
-            ? undefined
-            : getTagProps({ index }).onDelete
+          canEdit(TAG_DISPLAY_VALUES[tag].isEditable)
+            ? getTagProps({ index }).onDelete
+            : undefined
         }
       />
     );

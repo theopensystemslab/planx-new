@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { Palette, useTheme } from "@mui/material/styles";
-import { NodeTag } from "@opensystemslab/planx-core/types";
+import { NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
@@ -8,12 +8,12 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
-  { color: keyof Palette["nodeTag"]; displayName: string; isEditable?: boolean }
+  { color: keyof Palette["nodeTag"]; displayName: string; isEditable?: Role }
 > = {
   placeholder: {
     color: "blocking",
     displayName: "Placeholder",
-    isEditable: useStore.getState().user?.isPlatformAdmin,
+    isEditable: "platformAdmin", // if new roles are added, we should update the canEdit() in ComponentTagSelect.tsx
   },
   toReview: {
     color: "nonBlocking",
