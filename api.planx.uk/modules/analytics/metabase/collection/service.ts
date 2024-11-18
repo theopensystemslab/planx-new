@@ -1,4 +1,4 @@
-import metabaseClient from "../shared/client.js";
+import { MetabaseError, metabaseClient } from "../shared/client.js";
 import type { NewCollectionParams } from "./types.js";
 import axios from "axios";
 
@@ -71,6 +71,7 @@ export async function newCollection({
 export async function checkCollections(teamName: string): Promise<any> {
   try {
     console.log("Checking for collection: ", teamName);
+
     // Get collections from Metabase
     const response = await metabaseClient.get(`/api/collection/`);
 
@@ -87,5 +88,20 @@ export async function checkCollections(teamName: string): Promise<any> {
     }
   } catch (error) {
     console.error("Error: ", error);
+    if (error instanceof MetabaseError) {
+      console.error("MetabaseError:", {
+        message: error.message,
+        statusCode: error.statusCode,
+        response: error.response,
+      });
+    } else if (error instanceof Error) {
+      console.error("Unexpected error:", {
+        message: error.message,
+        stack: error.stack,
+      });
+    } else {
+      console.error("Unknown error:", error);
+    }
+    throw error;
   }
 }
