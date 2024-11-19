@@ -9,6 +9,7 @@ import {
   createContent,
   createDateInput,
   createDrawBoundary,
+  createFeedback,
   createFileUpload,
   createFilter,
   createFindProperty,
@@ -65,10 +66,10 @@ export class PlaywrightEditor {
       this.page,
       this.firstNode,
       this.answers.questionText,
-      ["Yes", "No"],
+      ["Yes", "No"]
     );
     await expect(
-      this.page.locator("a").filter({ hasText: this.answers.questionText }),
+      this.page.locator("a").filter({ hasText: this.answers.questionText })
     ).toBeVisible();
   }
 
@@ -77,17 +78,17 @@ export class PlaywrightEditor {
     await createNotice(
       this.page,
       this.yesBranch.locator(".hanger > a"),
-      this.answers.yesBranchNoticeText,
+      this.answers.yesBranchNoticeText
     );
     // Add a notice to the "No" path
     await createNotice(
       this.page,
       this.noBranch.locator(".hanger > a"),
-      this.answers.noBranchNoticeText,
+      this.answers.noBranchNoticeText
     );
 
     await expect(
-      this.page.locator("a").filter({ hasText: this.answers.questionText }),
+      this.page.locator("a").filter({ hasText: this.answers.questionText })
     ).toBeVisible();
   }
 
@@ -107,7 +108,7 @@ export class PlaywrightEditor {
     await createTextInput(
       this.page,
       this.getNextNode(),
-      "Tell us about your trees.",
+      "Tell us about your trees."
     );
   }
 
@@ -116,7 +117,7 @@ export class PlaywrightEditor {
       this.page,
       this.getNextNode(),
       "How old are you?",
-      "years",
+      "years"
     );
   }
 
@@ -124,7 +125,7 @@ export class PlaywrightEditor {
     await createDateInput(
       this.page,
       this.getNextNode(),
-      "When is your birthday?",
+      "When is your birthday?"
     );
   }
 
@@ -133,7 +134,7 @@ export class PlaywrightEditor {
       this.page,
       this.getNextNode(),
       "What is your address?",
-      "some data field",
+      "some data field"
     );
   }
 
@@ -142,7 +143,7 @@ export class PlaywrightEditor {
       this.page,
       this.getNextNode(),
       "What is your contact info?",
-      "some data field",
+      "some data field"
     );
   }
 
@@ -151,7 +152,7 @@ export class PlaywrightEditor {
       this.page,
       this.getNextNode(),
       "What you should do next",
-      ["Have a cup of tea", "Continue through this flow"],
+      ["Have a cup of tea", "Continue through this flow"]
     );
   }
 
@@ -176,7 +177,7 @@ export class PlaywrightEditor {
       this.page,
       this.getNextNode(),
       "Property title deeds",
-      "some data field",
+      "some data field"
     );
   }
 
@@ -196,7 +197,7 @@ export class PlaywrightEditor {
       this.page,
       this.getNextNode(),
       "A list title",
-      "some data field",
+      "some data field"
     );
   }
   async createResult() {
@@ -219,7 +220,7 @@ export class PlaywrightEditor {
     await createInternalPortal(
       this.page,
       this.getNextNode(),
-      "an internal portal",
+      "an internal portal"
     );
   }
 
@@ -239,5 +240,9 @@ export class PlaywrightEditor {
       .getByPlaceholder("Notice")
       .fill("A notice inside a portal!");
     await this.page.locator('button[form="modal"][type="submit"]').click();
+  }
+
+  async createFeedback() {
+    await createFeedback(this.page, this.getNextNode());
   }
 }

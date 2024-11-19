@@ -6,7 +6,7 @@ const createBaseComponent = async (
   locatingNode: Locator,
   type: ComponentType,
   title?: string,
-  options?: string[],
+  options?: string[]
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
@@ -114,6 +114,7 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+    case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Portal name").fill(title || "");
@@ -129,27 +130,27 @@ export const createQuestionWithOptions = async (
   page: Page,
   locatingNode: Locator,
   questionText: string,
-  options: string[],
+  options: string[]
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.Question,
     questionText,
-    options,
+    options
   );
 };
 
 export const createNotice = async (
   page: Page,
   locatingNode: Locator,
-  noticeText: string,
+  noticeText: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.Notice,
-    noticeText,
+    noticeText
   );
 };
 
@@ -157,27 +158,27 @@ export const createChecklist = async (
   page: Page,
   locatingNode: Locator,
   checklistTitle: string,
-  checklistOptions: string[],
+  checklistOptions: string[]
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.Checklist,
     checklistTitle,
-    checklistOptions,
+    checklistOptions
   );
 };
 
 export const createTextInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string,
+  inputTitle: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.TextInput,
-    inputTitle,
+    inputTitle
   );
 };
 
@@ -185,27 +186,27 @@ export const createNumberInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputUnits: string,
+  inputUnits: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.NumberInput,
     inputTitle,
-    [inputUnits],
+    [inputUnits]
   );
 };
 
 export const createDateInput = async (
   page: Page,
   locatingNode: Locator,
-  inputTitle: string,
+  inputTitle: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.DateInput,
-    inputTitle,
+    inputTitle
   );
 };
 
@@ -213,14 +214,14 @@ export const createAddressInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string,
+  inputDataField: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.AddressInput,
     inputTitle,
-    [inputDataField],
+    [inputDataField]
   );
 };
 
@@ -228,14 +229,14 @@ export const createContactInput = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string,
+  inputDataField: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.ContactInput,
     inputTitle,
-    [inputDataField],
+    [inputDataField]
   );
 };
 
@@ -243,14 +244,14 @@ export const createTaskList = async (
   page: Page,
   locatingNode: Locator,
   title: string,
-  taskListOptions: string[],
+  taskListOptions: string[]
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.TaskList,
     title,
-    taskListOptions,
+    taskListOptions
   );
 };
 
@@ -264,12 +265,12 @@ export const createFindProperty = async (page: Page, locatingNode: Locator) => {
 
 export const createPlanningConstraints = async (
   page: Page,
-  locatingNode: Locator,
+  locatingNode: Locator
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
-    ComponentType.PlanningConstraints,
+    ComponentType.PlanningConstraints
   );
 };
 
@@ -280,35 +281,35 @@ export const createDrawBoundary = async (page: Page, locatingNode: Locator) => {
 export const createNextSteps = async (
   page: Page,
   locatingNode: Locator,
-  nextSteps: string[],
+  nextSteps: string[]
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.NextSteps,
     undefined,
-    nextSteps,
+    nextSteps
   );
 };
 
 export const createFileUpload = async (
   page: Page,
   locatingNode: Locator,
-  dataField: string,
+  dataField: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.FileUpload,
     undefined,
-    [dataField],
+    [dataField]
   );
 };
 
 async function createComponentOptions(
   options: string[],
   buttonText: string,
-  page: Page,
+  page: Page
 ) {
   let index = 0;
   for (const option of options) {
@@ -322,14 +323,14 @@ export const createList = async (
   page: Page,
   locatingNode: Locator,
   inputTitle: string,
-  inputDataField: string,
+  inputDataField: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.List,
     inputTitle,
-    [inputDataField],
+    [inputDataField]
   );
 };
 
@@ -345,28 +346,28 @@ export const createUploadAndLabel = async (
   page: Page,
   locatingNode: Locator,
   fileType: string,
-  dataField: string,
+  dataField: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.FileUploadAndLabel,
     undefined,
-    [fileType, dataField],
+    [fileType, dataField]
   );
 };
 
 export const createContent = async (
   page: Page,
   locatingNode: Locator,
-  content: string,
+  content: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.Content,
     undefined,
-    [content],
+    [content]
   );
 };
 
@@ -377,12 +378,16 @@ export const createFilter = async (page: Page, locatingNode: Locator) => {
 export const createInternalPortal = async (
   page: Page,
   locatingNode: Locator,
-  portalName: string,
+  portalName: string
 ) => {
   await createBaseComponent(
     page,
     locatingNode,
     ComponentType.InternalPortal,
-    portalName,
+    portalName
   );
+};
+
+export const createFeedback = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Feedback);
 };

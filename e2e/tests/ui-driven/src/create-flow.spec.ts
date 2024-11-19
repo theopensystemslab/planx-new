@@ -74,6 +74,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createNextSteps();
     await editor.createReview();
     await editor.createConfirmation();
+    await editor.createFeedback();
 
     await expect(editor.nodeList).toContainText([
       "Is this a test?",
@@ -92,6 +93,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Next steps",
       "Check your answers before sending your application",
       "Confirmation",
+      "Tell us what you think"
     ]);
   });
 
@@ -293,5 +295,10 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.locator("h1", { hasText: "Application sent" }),
     ).toBeVisible();
+    await clickContinue({ page });
+    await expect(
+      page.locator("h1", { hasText: "Tell us what you think" }),
+    ).toBeVisible();
+
   });
 });
