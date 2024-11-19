@@ -126,16 +126,15 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     userContext: "What were you doing?",
   };
 
-  enum EmojiRating {
-    Terrible,
-    Poor,
-    Average,
-    Good,
-    Excellent,
-  }
+  const EmojiRating: Record<number, string> = {
+    1: "Terrible",
+    2: "Poor",
+    3: "Neutral",
+    4: "Good",
+    5: "Excellent",
+  };
 
-  const feedbackScore =
-    item.feedbackScore && EmojiRating[item.feedbackScore + 1]; // enums are 0-indexed
+  const feedbackScore = EmojiRating[item.feedbackScore];
 
   const renderContent = (key: string, value: any) => {
     if (key === "combinedHelp" && value) {
