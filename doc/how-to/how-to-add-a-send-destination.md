@@ -6,15 +6,6 @@ This guide outlines the steps required to add a new integration destination to P
 1. **Configure send destination**
    - Add new destination to `SEND_DESTINATIONS` const in `planx-core`
 
-## Database (Hasura)
-1. **Create audit table**
-   - Name format: `new_destination_applications`
-   - Grant necessary Hasura permissions (copy for `bops_applications`)
-
-1. **Update views**
-   - Update `submission_services_log` view
-   - Update `submission_services_summary` view
-
 ## Frontend
 1. **Update Editor component**
    - Add new destination label and checkbox in Editor component
@@ -26,18 +17,6 @@ This guide outlines the steps required to add a new integration destination to P
    - Consider:
      - Which team is sending this?
      - Which services are able to submit to this destination?
-
-## Metabase
-1. **Check Metabase**
-   - Check any queries which rely on `submission_services_summary`
-   - You may need to rescan the table for new columns to be picked up
-
-## Data sanitation
-1. **Update sanitation job**
-   - Add table to sanitation cron job
-   - Location: `api.planx.uk/modules/webhooks/service/sanitiseApplicationData/operations.ts`
-   - Implement specific sanitation rules if needed
-   - Test sanitation works as expected
 
 ## Secret management
 1. **Configure integration secrets**
@@ -73,3 +52,28 @@ Submission can also be driven by an invite to pay event (not triggered by an app
      - Audit record creation (write to `new_destination_applications` table)
    - Add `service.ts` layer for business logic
    - Update `docs.yaml` Swagger file
+
+> [!NOTE]
+> At this point the new send destination integration can be tested, developed, and iterated on. The steps below should be completed before considering the integration complete and ready for production.
+
+
+## Metabase
+1. **Check Metabase**
+   - Check any queries which rely on `submission_services_summary`
+   - You may need to rescan the table for new columns to be picked up
+
+## Data sanitation
+1. **Update sanitation job**
+   - Add table to sanitation cron job
+   - Location: `api.planx.uk/modules/webhooks/service/sanitiseApplicationData/operations.ts`
+   - Implement specific sanitation rules if needed
+   - Test sanitation works as expected
+
+## Database (Hasura)
+1. **Create audit table**
+   - Name format: `new_destination_applications`
+   - Grant necessary Hasura permissions (copy for `bops_applications`)
+
+1. **Update views**
+   - Update `submission_services_log` view
+   - Update `submission_services_summary` view
