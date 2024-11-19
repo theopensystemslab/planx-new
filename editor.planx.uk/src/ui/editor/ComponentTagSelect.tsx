@@ -18,11 +18,10 @@ interface Props {
 }
 
 const canEdit = (role?: Role) => {
+  // depending on the role, a different form of validation will happen
   switch (role) {
     case "platformAdmin":
-      return useStore.getState().user?.isPlatformAdmin;
-    case undefined:
-      return true;
+      return !useStore.getState().user?.isPlatformAdmin;
     default:
       return true;
   }
@@ -35,7 +34,7 @@ const renderOption: AutocompleteProps<
   false,
   "div"
 >["renderOption"] = (props, tag, { selected }) => {
-  if (!canEdit(TAG_DISPLAY_VALUES[tag].isEditable)) return null;
+  if (TAG_DISPLAY_VALUES[tag].isEditable?.some(canEdit)) return null;
   return (
     <ListItem {...props}>
       <CustomCheckbox
@@ -71,9 +70,9 @@ const renderTags: AutocompleteProps<
           ),
         })}
         onDelete={
-          canEdit(TAG_DISPLAY_VALUES[tag].isEditable)
-            ? getTagProps({ index }).onDelete
-            : undefined
+          TAG_DISPLAY_VALUES[tag].isEditable?.some(canEdit)
+            ? undefined
+            : getTagProps({ index }).onDelete
         }
       />
     );

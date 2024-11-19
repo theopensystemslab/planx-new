@@ -8,12 +8,12 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
-  { color: keyof Palette["nodeTag"]; displayName: string; isEditable?: Role }
+  { color: keyof Palette["nodeTag"]; displayName: string; isEditable?: Role[] }
 > = {
   placeholder: {
     color: "blocking",
     displayName: "Placeholder",
-    isEditable: "platformAdmin", // if new roles are added, we should update the canEdit() in ComponentTagSelect.tsx
+    isEditable: ["platformAdmin"], // if new roles are added, we should update the canEdit() in ComponentTagSelect.tsx
   },
   toReview: {
     color: "nonBlocking",
