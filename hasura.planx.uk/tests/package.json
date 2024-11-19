@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "test": "echo 'Running hasura tests…' && vitest && echo 'Hasura tests passed.'",
-    "test:watch": "vitest --watch",
+    "test": "echo 'Running hasura tests…' && vitest run && echo 'Hasura tests passed.'",
+    "test:watch": "vitest watch",
     "build-jwt": "DOTENV_CONFIG_PATH=../.env.test node -r dotenv/config scripts/buildJWT.js"
   },
   "dependencies": {
