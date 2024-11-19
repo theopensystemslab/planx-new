@@ -49,6 +49,7 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
     ((al.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((al.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
     al.allow_list_answers -> 'application.type' ->> 0 AS application_type,
+    ((al.allow_list_answers -> '_feedback') ->> 'feedbackScore'::text)::int AS feedback_score,
     al.allow_list_answers -> 'applicant.researchOptIn' ->> 0 AS applicant_research_opt_in
    FROM (((analytics a
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
@@ -143,6 +144,7 @@ CREATE OR REPLACE VIEW "public"."submission_services_summary" AS
     ((ls.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((ls.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
     ls.allow_list_answers -> 'application.type' ->> 0 AS application_type,
+    ((ls.allow_list_answers -> '_feedback') ->> 'feedbackScore'::text)::int AS feedback_score,
     ls.allow_list_answers -> 'applicant.researchOptIn' ->> 0 AS applicant_research_opt_in
    FROM (((((((((lowcal_sessions ls
      LEFT JOIN flows f ON ((f.id = ls.flow_id)))
