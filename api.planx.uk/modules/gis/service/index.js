@@ -23,7 +23,7 @@ export async function locationSearch(req, res, next) {
   // 'geom' param signals this localAuthority has data available via Planning Data
   if (req.query.geom) {
     try {
-      const resp = await locationSearchWithoutTimeout(
+      const resp = await locationSearchViaPlanningData(
         req.params.localAuthority,
         req.query,
       );
@@ -43,7 +43,7 @@ export async function locationSearch(req, res, next) {
 }
 
 // Planning Data is a single request with standardized geometry, so timeout is not necessary
-export function locationSearchWithoutTimeout(localAuthority, queryParams) {
+export function locationSearchViaPlanningData(localAuthority, queryParams) {
   return localAuthorities["digitalLand"].locationSearch(
     localAuthority,
     queryParams.geom,
