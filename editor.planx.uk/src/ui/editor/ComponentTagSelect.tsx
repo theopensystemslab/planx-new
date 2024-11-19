@@ -34,7 +34,7 @@ const renderOption: AutocompleteProps<
   false,
   "div"
 >["renderOption"] = (props, tag, { selected }) => {
-  if (TAG_DISPLAY_VALUES[tag].isEditable?.some(canEdit)) return null;
+  if (TAG_DISPLAY_VALUES[tag].editableBy?.some(canEdit)) return null;
   return (
     <ListItem {...props}>
       <CustomCheckbox
@@ -70,7 +70,7 @@ const renderTags: AutocompleteProps<
           ),
         })}
         onDelete={
-          TAG_DISPLAY_VALUES[tag].isEditable?.some(canEdit)
+          TAG_DISPLAY_VALUES[tag].editableBy?.some(canEdit)
             ? undefined
             : getTagProps({ index }).onDelete
         }
