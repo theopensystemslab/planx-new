@@ -450,3 +450,31 @@ describe("Confirm component in information-only mode", () => {
     expect(results).toHaveNoViolations();
   });
 });
+
+describe("the demo user view", () => {
+  beforeEach(() => {
+    act(() =>
+      setState({
+        teamSlug: "demo",
+      }),
+    );
+  });
+  it("should render an error when teamSlug is demo", async () => {
+    const handleSubmit = vi.fn();
+    const { queryByText } = setup(
+      <Pay
+        title="Pay for your application"
+        fn="application.fee.typo"
+        handleSubmit={handleSubmit}
+        govPayMetadata={[]}
+      />,
+    );
+    const errorHeader = queryByText("GOV.UK Pay is not enabled for demo users");
+    const errorGuidance = queryByText(
+      "Click continue to skip payment and proceed with your application for testing.",
+    );
+
+    expect(errorGuidance).toBeInTheDocument();
+    expect(errorHeader).toBeInTheDocument();
+  });
+});

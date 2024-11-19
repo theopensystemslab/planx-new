@@ -1,6 +1,5 @@
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import Box from "@mui/material/Box";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import {
@@ -352,10 +351,7 @@ const Component: React.FC<Props> = (props: Props) => {
                 <Switch
                   checked={values.allowInviteToPay}
                   onChange={() =>
-                    setFieldValue(
-                      "allowInviteToPay",
-                      !values.allowInviteToPay,
-                    )
+                    setFieldValue("allowInviteToPay", !values.allowInviteToPay)
                   }
                   label="Allow applicants to invite someone else to pay"
                 />
