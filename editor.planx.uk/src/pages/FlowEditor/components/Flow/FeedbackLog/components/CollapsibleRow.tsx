@@ -71,7 +71,7 @@ const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
         title: "Unhelpful (help text)",
       };
     case "component":
-      return { icon: <RateReviewIcon />, title: "From feedback component" };
+      return { icon: <RateReviewIcon />, title: "User satisfaction" };
     default:
       return { icon: <RuleIcon />, title: "Inaccuracy" };
   }
@@ -155,7 +155,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         <TableCell>
           {format(new Date(item.createdAt), "dd/MM/yy hh:mm:ss")}
         </TableCell>
-        <TableCell sx={{ textAlign: "center" }}>{feedbackScore}</TableCell>
+        <TableCell>{feedbackScore}</TableCell>
         <TableCell>{commentSummary}</TableCell>
         <TableCell sx={{ textAlign: "right" }}>
           <IconButton
