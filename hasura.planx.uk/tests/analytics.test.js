@@ -92,6 +92,7 @@ describe("analytics and analytics_logs", () => {
   });
 
   describe("api", () => {
+    let i;
     beforeAll(async () => {
       i = await introspectAs("api");
     });

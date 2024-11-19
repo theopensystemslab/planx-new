@@ -45,6 +45,7 @@ describe("team_members", () => {
   });
 
   describe("teamEditor", () => {
+    let i;
     beforeAll(async () => {
       i = await introspectAs("teamEditor");
     });
