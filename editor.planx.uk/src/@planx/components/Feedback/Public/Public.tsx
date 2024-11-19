@@ -21,7 +21,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { getPreviouslySubmittedData, makeData } from "../../shared/utils";
+import { makeData } from "../../shared/utils";
 import { FaceBox } from "../components/FaceBox";
 import { createFeedbackSchema, Feedback, FormProps } from "../model";
 import { StyledToggleButtonGroup } from "../styled";
@@ -50,7 +50,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   };
 
   const formik = useFormik<FormProps>({
-    initialValues: getPreviouslySubmittedData(props) ?? {
+    initialValues: props.previouslySubmittedData?.data?._feedback ?? {
       feedbackScore: "",
       userComment: "",
     },
