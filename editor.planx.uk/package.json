@@ -140,8 +140,7 @@
     "autoprefixer": "^10.4.16",
     "css-loader": "^6.10.0",
     "esbuild": "^0.21.3",
-    "esbuild-jest": "^0.5.0",
-    "eslint": "^8.44.0",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -196,9 +195,6 @@
     "modulePaths": [
       "<rootDir>/src"
     ],
-    "transform": {
-      "^.+\\.([jt]sx?)$": "esbuild-jest"
-    },
     "transformIgnorePatterns": [
       "node_modules/(?!react-markdown)/"
     ],
@@ -231,7 +227,8 @@
     "overrides": {
       "postcss@<8.4.31": ">=8.4.31",
       "nth-check@<2.0.1": ">=2.0.1",
-      "braces@<3.0.3": ">=3.0.3"
+      "braces@<3.0.3": ">=3.0.3",
+      "micromatch@<4.0.8": ">=4.0.8"
     }
   }
 }
