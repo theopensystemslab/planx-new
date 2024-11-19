@@ -239,4 +239,21 @@ describe("following a FindProperty component", () => {
     expect(negativeConstraintsContainer).toBeVisible();
     expect(getByRole("heading", { name: /Ecology/ })).toBeVisible();
   });
+
+  test("default disclaimer text should render if none provided", async () => {
+    const { queryByText } = setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer=""
+        handleSubmit={vi.fn()}
+      />,
+    );
+    expect(
+      queryByText(
+        "This page does not include information about historic planning conditions that may apply to this property.",
+      ),
+    ).toBeVisible();
+  });
 });
