@@ -269,13 +269,17 @@ describe("demo state", () => {
     );
 
     const errorMessage = queryByText(
-      "Planning Constraints are not enabled for demo users.",
+      "Planning Constraints are not enabled for demo users",
     );
     expect(errorMessage).toBeVisible();
 
     // Check planning constraints has not rendered
+    // reused positive constraints from basic layout test
     expect(
-      queryByRole("heading", { name: "Planning constraints" }),
+      queryByRole("heading", { name: /These are the planning constraints/ }),
+    ).not.toBeInTheDocument();
+    expect(
+      queryByRole("button", { name: /Parks and gardens/ }),
     ).not.toBeInTheDocument();
 
     // Ensure a demo user can continue on in the application
