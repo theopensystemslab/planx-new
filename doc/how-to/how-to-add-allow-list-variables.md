@@ -92,7 +92,8 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
 
   The values here are being pulled from the table `lowcal_sessions.allow_list_answers` or `analytics_logs.allow_list_answers`
 
-  > [!IMPORTANT] At the end of your SQL script after the view creation/replacement, it is important to add another line which ensures the new variable is read by Metabase
+  > [!IMPORTANT] 
+  > At the end of your SQL script after the view creation/replacement, it is important to add another line which ensures the new variable is read by Metabase
 
 
   We currently have two views, so you should add these two lines to the end of the migration file, one for each view:
