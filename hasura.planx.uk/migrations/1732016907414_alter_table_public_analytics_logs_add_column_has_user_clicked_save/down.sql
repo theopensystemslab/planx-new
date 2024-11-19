@@ -1,4 +1,4 @@
-alter table "public"."analytics_logs" drop column "has_user_clicked_save";
+alter table "public"."analytics_logs" drop column "has_clicked_save";
 
 
 CREATE OR REPLACE VIEW "public"."analytics_summary" AS 
