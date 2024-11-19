@@ -50,8 +50,9 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
     ((al.allow_list_answers -> 'service.type'::text))::text AS pre_app_service_type,
     ((al.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((al.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
-    (((al.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type,
-    ((al.allow_list_answers -> '_feedback') ->> 'feedbackScore'::text)::int AS feedback_score
+    al.allow_list_answers -> 'application.type' ->> 0 AS application_type,
+    ((al.allow_list_answers -> '_feedback') ->> 'feedbackScore'::text)::int AS feedback_score,
+    al.allow_list_answers -> 'applicant.researchOptIn' ->> 0 AS applicant_research_opt_in
    FROM (((analytics a
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
      LEFT JOIN flows f ON ((a.flow_id = f.id)))
