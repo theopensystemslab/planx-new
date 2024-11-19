@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
+import { FlowInformation, GetFlowInformation } from "pages/FlowEditor/utils";
 import {
   AdminPanelData,
   FlowSettings,
@@ -14,11 +15,18 @@ import { SharedStore } from "./shared";
 import { TeamStore } from "./team";
 
 export interface SettingsStore {
+  getFlowInformation: (
+    flowSlug: string,
+    teamSlug: string,
+  ) => Promise<FlowInformation>;
   flowSettings?: FlowSettings;
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
   setFlowStatus: (flowStatus: FlowStatus) => void;
   updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
+  flowDescription?: string;
+  setFlowDescription: (flowDescription: string) => void;
+  updateFlowDescription: (newDescription: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
@@ -49,6 +57,55 @@ export const settingsStore: StateCreator<
     });
     set({ flowStatus: newStatus });
     return Boolean(result?.id);
+  },
+
+  flowDescription: "",
+
+  setFlowDescription: (flowDescription: string) => set({ flowDescription }),
+
+  updateFlowDescription: async (newDescription: string) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setDescription({
+      flow: { id },
+      description: newDescription,
+    });
+    set({ flowDescription: newDescription });
+    return Boolean(result?.id);
+  },
+
+  getFlowInformation: async (flowSlug, teamSlug) => {
+    const {
+      data: {
+        flows: [{ settings, status, description }],
+      },
+    } = await client.query<GetFlowInformation>({
+      query: gql`
+        query GetFlow($slug: String!, $team_slug: String!) {
+          flows(
+            limit: 1
+            where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
+          ) {
+            id
+            settings
+            description
+            status
+          }
+        }
+      `,
+      variables: {
+        slug: flowSlug,
+        team_slug: teamSlug,
+      },
+      fetchPolicy: "no-cache",
+    });
+
+    set({
+      flowSettings: settings,
+      flowStatus: status,
+      flowDescription: description,
+    });
+
+    return { settings, status, description };
   },
 
   globalSettings: undefined,

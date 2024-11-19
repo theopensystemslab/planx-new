@@ -1,48 +1,10 @@
-import { gql } from "@apollo/client";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
-import { compose, mount, NaviRequest, route, withData } from "navi";
+import { compose, mount, route, withData } from "navi";
 import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
+import { useStore } from "pages/FlowEditor/lib/store";
 
-import { client } from "../lib/graphql";
-import { useStore } from "../pages/FlowEditor/lib/store";
-import type { FlowSettings } from "../types";
 import { makeTitle } from "./utils";
 
-interface GetFlowSettings {
-  flows: {
-    id: string;
-    settings: FlowSettings;
-    status: FlowStatus;
-  }[];
-}
-
-export const getFlowSettings = async (req: NaviRequest) => {
-  const {
-    data: {
-      flows: [{ settings, status }],
-    },
-  } = await client.query<GetFlowSettings>({
-    query: gql`
-      query GetFlow($slug: String!, $team_slug: String!) {
-        flows(
-          limit: 1
-          where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
-        ) {
-          id
-          settings
-          status
-        }
-      }
-    `,
-    variables: {
-      slug: req.params.flow,
-      team_slug: req.params.team,
-    },
-  });
-
-  useStore.getState().setFlowSettings(settings);
-  useStore.getState().setFlowStatus(status);
-};
+const getFlowInformation = useStore.getState().getFlowInformation;
 
 const serviceSettingsRoutes = compose(
   withData((req) => ({
@@ -53,7 +15,7 @@ const serviceSettingsRoutes = compose(
   mount({
     "/": compose(
       route(async (req) => ({
-        getData: await getFlowSettings(req),
+        getData: await getFlowInformation(req.params.flow, req.params.team),
         title: makeTitle(
           [req.params.team, req.params.flow, "service"].join("/"),
         ),

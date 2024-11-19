@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
@@ -8,7 +7,6 @@ import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
 import { rootFlowPath } from "routes/utils";
-import { FONT_WEIGHT_BOLD } from "theme";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
 import { Switch } from "ui/shared/Switch";
@@ -92,7 +90,7 @@ const FlowStatus = () => {
   };
 
   return (
-    <Box component="form" onSubmit={statusForm.handleSubmit}>
+    <Box component="form" onSubmit={statusForm.handleSubmit} mb={2}>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Status
