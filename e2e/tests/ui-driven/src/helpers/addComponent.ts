@@ -117,6 +117,7 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+    case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Portal name").fill(title || "");
@@ -388,4 +389,8 @@ export const createInternalPortal = async (
     ComponentType.InternalPortal,
     portalName
   );
+};
+
+export const createFeedback = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Feedback);
 };
