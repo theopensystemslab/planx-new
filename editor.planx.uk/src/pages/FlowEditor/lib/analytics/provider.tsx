@@ -15,7 +15,7 @@ import {
   UPDATE_ANALYTICS_LOG_METADATA,
   UPDATE_FLOW_DIRECTION,
   UPDATE_HAS_CLICKED_HELP,
-  UPDATE_HAS_USER_CLICKED_SAVE,
+  UPDATE_HAS_CLICKED_SAVE,
   UPDATE_NEXT_LOG_CREATED_AT,
 } from "./mutations";
 import {
@@ -257,7 +257,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     return !shouldTrackAnalytics || !lastVisibleNodeAnalyticsLogId;
   }
 
-  async function updateMetadata(mutation: DocumentNode, metadata: Metadata) {
+  async function updateMetadata(mutation: DocumentNode, metadata?: Metadata) {
     await publicClient.mutate({
       mutation: mutation,
       variables: {
@@ -269,17 +269,17 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   async function trackEvent(eventData: EventData) {
     if (shouldSkipTracking()) return;
-    const { event, metadata } = eventData;
+    const { event } = eventData;
     switch (event) {
       case "helpClick":
-        updateMetadata(UPDATE_HAS_CLICKED_HELP, metadata);
+        updateMetadata(UPDATE_HAS_CLICKED_HELP, eventData.metadata);
         return;
       case "saveClick":
-        updateMetadata(UPDATE_HAS_USER_CLICKED_SAVE, metadata);
+        updateMetadata(UPDATE_HAS_CLICKED_SAVE);
         return;
       case "nextStepsClick":
       case "helpTextFeedback":
-        updateMetadata(UPDATE_ANALYTICS_LOG_METADATA, metadata);
+        updateMetadata(UPDATE_ANALYTICS_LOG_METADATA, eventData.metadata);
         return;
       case "backwardsNavigation": {
         const { initiator, nodeId } = eventData;

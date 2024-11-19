@@ -32,8 +32,6 @@ export type AllowListKey = (typeof ALLOW_LIST)[number];
  */
 export type HelpClickMetadata = Record<string, string>;
 
-export type SaveClickMetadata = Record<string, string>;
-
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 
 export type BackwardsNavigationInitiatorType = "change" | "back";
@@ -111,9 +109,14 @@ type HelpClick = {
   metadata: HelpClickMetadata;
 };
 
+/**
+ * Captured when a user clicks Save and Return.
+ * The mutation sets the "has_clicked_help: true" when Save and
+ * Return button is clicked
+ */
+
 type SaveClick = {
   event: "saveClick";
-  metadata: SaveClickMetadata;
 };
 
 /**

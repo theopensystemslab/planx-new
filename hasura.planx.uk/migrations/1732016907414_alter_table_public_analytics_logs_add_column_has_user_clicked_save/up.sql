@@ -1,4 +1,4 @@
-alter table "public"."analytics_logs" add column "has_user_clicked_save" boolean
+alter table "public"."analytics_logs" add column "has_clicked_save" boolean
  null default 'false';
 
 CREATE OR REPLACE VIEW "public"."analytics_summary" AS 
@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
     ((al.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((al.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
     (((al.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type,
-    al.has_user_clicked_save
+    al.has_clicked_save
    FROM (((analytics a
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
      LEFT JOIN flows f ON ((a.flow_id = f.id)))

@@ -52,11 +52,11 @@ export const UPDATE_HAS_CLICKED_HELP = gql`
   }
 `;
 
-export const UPDATE_HAS_USER_CLICKED_SAVE = gql`
+export const UPDATE_HAS_CLICKED_SAVE = gql`
   mutation UpdateHasClickedSave($id: bigint!, $metadata: jsonb = {}) {
     update_analytics_logs_by_pk(
       pk_columns: { id: $id }
-      _set: { has_user_clicked_save: true }
+      _set: { has_clicked_save: true }
       _append: { metadata: $metadata }
     ) {
       id
