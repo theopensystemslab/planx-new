@@ -81,6 +81,7 @@ describe("flow_document_templates", () => {
   });
 
   describe("api", () => {
+    let i;
     beforeAll(async () => {
       i = await introspectAs("api");
     });

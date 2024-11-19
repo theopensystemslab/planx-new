@@ -60,6 +60,7 @@ describe("team_settings", () => {
   });
 
   describe("teamEditor", () => {
+    let i;
     beforeAll(async () => {
       i = await introspectAs("teamEditor");
     });

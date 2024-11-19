@@ -187,7 +187,7 @@ const insertSessions = async (sessionIds) => {
     }
   `;
   const res = await gqlAdmin(query);
-  ids = res.data.insert_lowcal_sessions.returning.map((row) => row.id);
+  const ids = res.data.insert_lowcal_sessions.returning.map((row) => row.id);
   assert.strictEqual(ids.length, 2);
 };
 
@@ -224,7 +224,7 @@ const insertPaymentRequests = async (sessionIds, paymentRequestIds) => {
     }
   `;
   const res = await gqlAdmin(query);
-  ids = res.data.insert_payment_requests.returning.map((row) => row.id);
+  const ids = res.data.insert_payment_requests.returning.map((row) => row.id);
   assert.strictEqual(ids.length, 2);
 };
 

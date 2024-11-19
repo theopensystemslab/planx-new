@@ -80,6 +80,7 @@ describe("reconciliation_requests", () => {
   });
 
   describe("api", () => {
+    let i;
     beforeAll(async () => {
       i = await introspectAs("api");
     });
