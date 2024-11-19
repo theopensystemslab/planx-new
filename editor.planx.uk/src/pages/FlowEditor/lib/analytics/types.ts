@@ -32,6 +32,8 @@ export type AllowListKey = (typeof ALLOW_LIST)[number];
  */
 export type HelpClickMetadata = Record<string, string>;
 
+export type SaveClickMetadata = Record<string, string>;
+
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 
 export type BackwardsNavigationInitiatorType = "change" | "back";
@@ -95,7 +97,8 @@ export type EventData =
   | BackwardsNavigation
   | FlowDirectionChange
   | InputErrors
-  | HelpTextFeedback;
+  | HelpTextFeedback
+  | SaveClick;
 
 /**
  * Capture when a user clicks on the `More Information` i.e. the help on a
@@ -106,6 +109,11 @@ export type EventData =
 type HelpClick = {
   event: "helpClick";
   metadata: HelpClickMetadata;
+};
+
+type SaveClick = {
+  event: "saveClick";
+  metadata: SaveClickMetadata;
 };
 
 /**

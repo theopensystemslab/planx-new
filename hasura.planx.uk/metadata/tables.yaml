@@ -55,6 +55,7 @@
           - created_at
           - flow_direction
           - has_clicked_help
+          - has_user_clicked_save
           - id
           - input_errors
           - metadata
@@ -79,6 +80,7 @@
           - allow_list_answers
           - flow_direction
           - has_clicked_help
+          - has_user_clicked_save
           - input_errors
           - metadata
           - next_log_created_at
