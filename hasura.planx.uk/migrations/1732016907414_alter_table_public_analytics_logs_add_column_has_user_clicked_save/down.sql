@@ -1,6 +1,5 @@
 alter table "public"."analytics_logs" drop column "has_clicked_save";
 
-
 CREATE OR REPLACE VIEW "public"."analytics_summary" AS 
  SELECT a.id AS analytics_id,
     al.id AS analytics_log_id,
@@ -52,9 +51,10 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
     ((al.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((al.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
     (((al.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type,
+    ((al.allow_list_answers -> '_feedback') ->> 'feedbackScore'::text)::int AS feedback_score
    FROM (((analytics a
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
      LEFT JOIN flows f ON ((a.flow_id = f.id)))
      LEFT JOIN teams t ON ((t.id = f.team_id)));
 
-     GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
+GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
