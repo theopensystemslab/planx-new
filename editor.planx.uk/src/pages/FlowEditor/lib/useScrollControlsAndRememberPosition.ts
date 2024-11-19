@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useLoadingRoute } from "react-navi";
 import { fromEvent, merge } from "rxjs";
 import {
   distinctUntilChanged,
@@ -17,11 +16,8 @@ const useScrollControlsAndRememberPosition = (
   scrollContainerRef: React.RefObject<HTMLDivElement>,
 ) => {
   const currentPath = rootFlowPath(true);
-  const isLoading = useLoadingRoute();
 
   useEffect(() => {
-    if (isLoading) return;
-
     const storageKey = ["scrollPos", currentPath].join(":");
 
     const container = scrollContainerRef.current;
@@ -105,7 +101,7 @@ const useScrollControlsAndRememberPosition = (
       scrollListener?.unsubscribe();
       dragListener?.unsubscribe();
     };
-  }, [scrollContainerRef, currentPath, isLoading]);
+  }, [scrollContainerRef, currentPath]);
 };
 
 export default useScrollControlsAndRememberPosition;
