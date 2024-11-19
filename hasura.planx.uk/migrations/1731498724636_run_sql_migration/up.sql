@@ -142,6 +142,7 @@ CREATE OR REPLACE VIEW "public"."submission_services_summary" AS
     ((ls.allow_list_answers -> 'service.type'::text))::text AS pre_app_service_type,
     ((ls.allow_list_answers -> 'application.information.harmful'::text))::text AS pre_app_harmful_info,
     ((ls.allow_list_answers -> 'application.information.sensitive'::text))::text AS pre_app_sensitive_info,
+    (((ls.allow_list_answers -> 'application.type'::text) -> 0))::text AS application_type,
     ((ls.allow_list_answers -> '_feedback') ->> 'feedbackScore'::text)::int AS feedback_score
    FROM (((((((((lowcal_sessions ls
      LEFT JOIN flows f ON ((f.id = ls.flow_id)))
