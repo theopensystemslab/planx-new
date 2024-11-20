@@ -17,14 +17,9 @@ interface Props {
   onChange: (values: NodeTag[]) => void;
 }
 
-const canEdit = (role?: Role) => {
-  // depending on the role, a different form of validation will happen
-  switch (role) {
-    case "platformAdmin":
-      return !useStore.getState().user?.isPlatformAdmin;
-    default:
-      return true;
-  }
+const skipTag = (role?: Role) => {
+  const userRole = useStore.getState().getUserRoleForCurrentTeam();
+  return role === userRole ? false : true;
 };
 
 const renderOption: AutocompleteProps<
@@ -34,7 +29,7 @@ const renderOption: AutocompleteProps<
   false,
   "div"
 >["renderOption"] = (props, tag, { selected }) => {
-  if (TAG_DISPLAY_VALUES[tag].editableBy?.some(canEdit)) return null;
+  if (TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)) return null;
   return (
     <ListItem {...props}>
       <CustomCheckbox
@@ -70,7 +65,7 @@ const renderTags: AutocompleteProps<
           ),
         })}
         onDelete={
-          TAG_DISPLAY_VALUES[tag].editableBy?.some(canEdit)
+          TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)
             ? undefined
             : getTagProps({ index }).onDelete
         }
