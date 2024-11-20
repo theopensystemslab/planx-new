@@ -26,10 +26,10 @@ const swrMock = (swr as jest.Mock).mock;
 vi.mock("swr", () => ({
   default: vi.fn((url: () => string) => {
     const isGISRequest = url()?.startsWith(
-      `${import.meta.env.VITE_APP_API_URL}/gis`,
+      `${import.meta.env.VITE_APP_API_URL}/gis`
     );
     const isRoadsRequest = url()?.startsWith(
-      `${import.meta.env.VITE_APP_API_URL}/roads`,
+      `${import.meta.env.VITE_APP_API_URL}/roads`
     );
 
     if (isGISRequest) return { data: digitalLandResponseMock };
@@ -50,7 +50,7 @@ describe("error state", () => {
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={vi.fn()}
         />
-      </ErrorBoundary>,
+      </ErrorBoundary>
     );
 
     expect(getByTestId("error-summary-invalid-graph")).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe("error state", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         />
-      </ErrorBoundary>,
+      </ErrorBoundary>
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -82,7 +82,7 @@ describe("following a FindProperty component", () => {
         teamIntegrations: {
           hasPlanningData: true,
         },
-      }),
+      })
     );
   });
 
@@ -96,11 +96,11 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={handleSubmit}
-      />,
+      />
     );
 
     expect(
-      getByRole("heading", { name: "Planning constraints" }),
+      getByRole("heading", { name: "Planning constraints" })
     ).toBeInTheDocument();
 
     await user.click(getByTestId("continue-button"));
@@ -115,7 +115,7 @@ describe("following a FindProperty component", () => {
         description="Things that might affect your project"
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
-      />,
+      />
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -129,7 +129,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-      />,
+      />
     );
 
     expect(swr).toHaveBeenCalled();
@@ -150,7 +150,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-      />,
+      />
     );
 
     expect(swr).toHaveBeenCalled();
@@ -171,7 +171,7 @@ describe("following a FindProperty component", () => {
         teamIntegrations: {
           hasPlanningData: true,
         },
-      }),
+      })
     );
 
     setup(
@@ -181,7 +181,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-      />,
+      />
     );
 
     expect(swr).toHaveBeenCalled();
@@ -211,12 +211,12 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
-      />,
+      />
     );
 
     // Positive constraints visible by default
     expect(
-      getByRole("heading", { name: /These are the planning constraints/ }),
+      getByRole("heading", { name: /These are the planning constraints/ })
     ).toBeVisible();
     expect(getByRole("button", { name: /Parks and gardens/ })).toBeVisible();
 
@@ -227,7 +227,7 @@ describe("following a FindProperty component", () => {
     expect(showNegativeConstraintsButton).toBeVisible();
 
     const negativeConstraintsContainer = getByTestId(
-      "negative-constraints-list",
+      "negative-constraints-list"
     );
     expect(negativeConstraintsContainer).not.toBeVisible();
 
@@ -241,19 +241,19 @@ describe("following a FindProperty component", () => {
   });
 
   test("default disclaimer text should render if none provided", async () => {
+    // @ts-ignore - we deliberately want to test the case where PlanningConstraints is missing the disclaimer prop
     const { queryByText } = setup(
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
         fn="property.constraints.planning"
-        disclaimer=""
         handleSubmit={vi.fn()}
-      />,
+      />
     );
     expect(
       queryByText(
-        "This page does not include information about historic planning conditions that may apply to this property.",
-      ),
+        "This page does not include information about historic planning conditions that may apply to this property."
+      )
     ).toBeVisible();
   });
 });
@@ -268,7 +268,7 @@ describe("demo state", () => {
           hasPlanningData: false,
         },
         teamSlug: "demo",
-      }),
+      })
     );
   });
   it("should render an error when teamSlug is demo", async () => {
@@ -282,21 +282,21 @@ describe("demo state", () => {
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={handleSubmit}
         />
-      </ErrorBoundary>,
+      </ErrorBoundary>
     );
 
     const errorMessage = queryByText(
-      "Planning Constraints are not enabled for demo users",
+      "Planning Constraints are not enabled for demo users"
     );
     expect(errorMessage).toBeVisible();
 
     // Check planning constraints has not rendered
     // reused positive constraints from basic layout test
     expect(
-      queryByRole("heading", { name: /These are the planning constraints/ }),
+      queryByRole("heading", { name: /These are the planning constraints/ })
     ).not.toBeInTheDocument();
     expect(
-      queryByRole("button", { name: /Parks and gardens/ }),
+      queryByRole("button", { name: /Parks and gardens/ })
     ).not.toBeInTheDocument();
 
     // Ensure a demo user can continue on in the application
