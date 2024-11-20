@@ -1,4 +1,4 @@
-import type S3 from "aws-sdk/clients/s3.js";
+import type { PutObjectCommandInput } from "@aws-sdk/client-s3";
 import { s3Factory } from "./utils.js";
 
 export const getFileFromS3 = async (fileId: string) => {
@@ -6,9 +6,9 @@ export const getFileFromS3 = async (fileId: string) => {
 
   const params = {
     Key: fileId,
-  } as S3.PutObjectRequest;
+  } as PutObjectCommandInput;
 
-  const file = await s3.getObject(params).promise();
+  const file = await s3.getObject(params);
 
   return {
     body: file.Body as Buffer,

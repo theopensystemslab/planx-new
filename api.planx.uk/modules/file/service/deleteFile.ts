@@ -5,15 +5,14 @@ export const deleteFilesByURL = async (
   fileURLs: string[],
 ): Promise<string[]> => {
   const keys = fileURLs.map(getS3KeyFromURL);
-  const result = await deleteFilesByKey(keys);
-  return result;
+  return await deleteFilesByKey(keys);
 };
 
 export const deleteFilesByKey = async (keys: string[]): Promise<string[]> => {
   const s3 = s3Factory();
   const params = getDeleteFilesParams(keys);
   try {
-    await s3.deleteObjects(params).promise();
+    s3.deleteObjects(params);
     return keys;
   } catch (error) {
     throw Error(`Failed to delete S3 files: ${error}`);

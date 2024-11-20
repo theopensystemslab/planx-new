@@ -1,12 +1,19 @@
-import S3 from "aws-sdk/clients/s3.js";
+import { S3 } from "@aws-sdk/client-s3";
 import { isLiveEnv } from "../../../helpers.js";
 
 export function s3Factory() {
   return new S3({
+    // The key params is no longer supported in v3, and can be removed.
+    // @deprecated The object needs to be passed to individual operations where it's intended.
     params: { Bucket: process.env.AWS_S3_BUCKET },
+
     region: process.env.AWS_S3_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_KEY,
+
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_KEY,
+    },
+
     ...useMinio(),
   });
 }

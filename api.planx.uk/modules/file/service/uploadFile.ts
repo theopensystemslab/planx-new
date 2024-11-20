@@ -1,4 +1,4 @@
-import type S3 from "aws-sdk/clients/s3.js";
+import type { PutObjectCommandInput } from "@aws-sdk/client-s3";
 import { customAlphabet } from "nanoid";
 import mime from "mime";
 import { s3Factory } from "./utils.js";
@@ -14,7 +14,7 @@ export const uploadPublicFile = async (
 
   const { params, key, fileType } = generateFileParams(file, filename, filekey);
 
-  await s3.putObject(params).promise();
+  await s3.putObject(params);
   const fileUrl = buildFileUrl(key, "public");
 
   return {
@@ -36,7 +36,7 @@ export const uploadPrivateFile = async (
     is_private: "true",
   };
 
-  await s3.putObject(params).promise();
+  await s3.putObject(params);
   const fileUrl = buildFileUrl(key, "private");
 
   return {
@@ -63,7 +63,7 @@ export function generateFileParams(
   filename: string,
   filekey?: string,
 ): {
-  params: S3.PutObjectRequest;
+  params: PutObjectCommandInput;
   fileType: string | null;
   key: string;
 } {
@@ -76,7 +76,7 @@ export function generateFileParams(
     Body: file?.buffer || JSON.stringify(file),
     ContentDisposition: `inline;filename="${filename}"`,
     ContentType: file?.mimetype || "application/json",
-  } as S3.PutObjectRequest;
+  } as PutObjectCommandInput;
 
   return {
     fileType,
