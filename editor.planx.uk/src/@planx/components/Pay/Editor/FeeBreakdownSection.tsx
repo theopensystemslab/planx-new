@@ -1,5 +1,5 @@
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import { hasFeatureFlag } from "lib/featureFlags";
+import { hasFeatureFlag } from 'lib/featureFlags';
 import React from "react";
 import { FeaturePlaceholder } from "ui/editor/FeaturePlaceholder";
 import ModalSection from "ui/editor/ModalSection";
