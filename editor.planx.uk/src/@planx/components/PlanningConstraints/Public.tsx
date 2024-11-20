@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import type {
   EnhancedGISResponse,
   GISResponse,
@@ -13,6 +14,7 @@ import useSWR, { Fetcher } from "swr";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import {
   type IntersectingConstraints,
   type PlanningConstraints,
@@ -38,22 +40,22 @@ function Component(props: Props) {
     currentCardId,
     cachedBreadcrumbs,
     teamSlug,
-    siteBoundary,
-    { x, y, longitude, latitude, usrn },
     hasPlanningData,
+    siteBoundary,
     priorOverrides,
+    { longitude, latitude, usrn },
   ] = useStore((state) => [
     state.currentCard?.id,
     state.cachedBreadcrumbs,
     state.teamSlug,
-    state.computePassport().data?.["property.boundary.site"],
-    (state.computePassport().data?.["_address"] as SiteAddress) || {},
     state.teamIntegrations?.hasPlanningData,
+    state.computePassport().data?.["property.boundary.site"],
     state.computePassport().data?.["_overrides"],
+    (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);
 
   // PlanningConstraints must come after at least a FindProperty in the graph
-  const showGraphError = !x || !y || !longitude || !latitude;
+  const showGraphError = !longitude || !latitude;
   if (showGraphError)
     throw new GraphError("mapInputFieldMustFollowFindProperty");
 
@@ -69,24 +71,14 @@ function Component(props: Props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
 
-  // Get the coordinates of the site boundary drawing if they exist, fallback on x & y if file was uploaded
-  // Coords should match Esri's "rings" type https://developers.arcgis.com/javascript/3/jsapi/polygon-amd.html#rings
-  const coordinates: number[][][] = siteBoundary?.geometry?.coordinates || [];
-
-  // Get the WKT representation of the site boundary drawing or address point to pass to Digital Land, when applicable
+  // Get the WKT representation of the site boundary drawing or address point to pass to Planning Data
   const wktPoint = `POINT(${longitude} ${latitude})`;
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
 
-  const digitalLandParams: Record<string, string> = {
+  const planningDataParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
     ...params,
-  };
-  const customGisParams: Record<string, string> = {
-    x: x?.toString(),
-    y: y?.toString(),
-    siteBoundary: JSON.stringify(coordinates),
-    version: "1",
   };
 
   // Fetch planning constraints data for a given local authority
@@ -94,7 +86,7 @@ function Component(props: Props) {
   const teamGisEndpoint: string =
     root +
     new URLSearchParams(
-      hasPlanningData ? digitalLandParams : customGisParams,
+      hasPlanningData ? planningDataParams : undefined,
     ).toString();
 
   const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
@@ -105,11 +97,9 @@ function Component(props: Props) {
     mutate,
     error: dataError,
     isValidating,
-  } = useSWR(
-    () => (x && y && latitude && longitude ? teamGisEndpoint : null),
-    fetcher,
-    { revalidateOnFocus: false },
-  );
+  } = useSWR(() => (latitude && longitude ? teamGisEndpoint : null), fetcher, {
+    revalidateOnFocus: false,
+  });
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
@@ -127,9 +117,9 @@ function Component(props: Props) {
     { revalidateOnFocus: false },
   );
 
-  // XXX handle both/either Digital Land response and custom GIS hookup responses; merge roads for a unified list of constraints
+  // Merge Planning Data and Roads responses for a unified list of constraints
   const constraints: GISResponse["constraints"] | Record<string, any> = {
-    ...(data?.constraints || data),
+    ...data?.constraints,
     ...roads?.constraints,
   };
 
@@ -154,8 +144,6 @@ function Component(props: Props) {
           ...roads,
           planxRequest: classifiedRoadsEndpoint,
         } as EnhancedGISResponse);
-    } else {
-      if (data) _constraints.push(data as GISResponse["constraints"]);
     }
 
     const hasInaccurateConstraints =
@@ -208,6 +196,26 @@ function Component(props: Props) {
       data: passportData,
     });
   };
+
+  if (teamSlug === "demo") {
+    return (
+      <Card handleSubmit={props.handleSubmit}>
+        <CardHeader title={props.title} />
+        <ErrorSummaryContainer role="status">
+          <Typography variant="h4" ml={2} mb={1}>
+            Planning Constraints are not enabled for demo users
+          </Typography>
+          <Typography variant="body2" ml={2}>
+            Since we cannot automatically check constraints, you might be asked
+            additional questions about your project.
+          </Typography>
+          <Typography variant="body2" ml={2} mt={0.5}>
+            Click continue to proceed with your application.
+          </Typography>
+        </ErrorSummaryContainer>
+      </Card>
+    );
+  }
 
   const isLoading = isValidating || isValidatingRoads;
   if (isLoading)

@@ -1,12 +1,11 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { formControlLabelClasses } from "@mui/material/FormControlLabel";
+// eslint-disable-next-line no-restricted-imports
 import { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
-import { FONT_WEIGHT_BOLD } from "theme";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -112,7 +111,6 @@ export const FooterLinksAndLegalDisclaimer = () => {
     },
     validate: () => {},
   });
-
   return (
     <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
       <SettingsSection>

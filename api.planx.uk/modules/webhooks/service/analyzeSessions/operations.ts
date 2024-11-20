@@ -1,6 +1,7 @@
 import { gql } from "graphql-request";
 
 import { Passport } from "@opensystemslab/planx-core";
+
 import { $api } from "../../../../client/index.js";
 import type { Operation } from "../sanitiseApplicationData/types.js";
 
@@ -15,11 +16,13 @@ import type { Operation } from "../sanitiseApplicationData/types.js";
  *  so that Metabase picks up the new columns
  */
 const ALLOW_LIST = [
+  "applicant.researchOptIn",
   "application.declaration.connection",
   "application.information.harmful",
   "application.information.sensitive",
   "application.type",
   "drawBoundary.action",
+  "_feedback",
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",

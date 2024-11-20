@@ -1,4 +1,17 @@
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { formatDistanceToNow } from "date-fns";
+import { FlowSettings } from "types";
+
+export interface FlowInformation {
+  settings: FlowSettings;
+  status: FlowStatus;
+  description: string;
+}
+
+export interface GetFlowInformation {
+  id: string;
+  flows: FlowInformation[];
+}
 
 export const formatLastEditDate = (date: string): string => {
   return formatDistanceToNow(new Date(date), {

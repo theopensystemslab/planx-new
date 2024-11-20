@@ -48,6 +48,7 @@ describe("team_integrations", () => {
   });
 
   describe("teamEditor", () => {
+    let i;
     beforeAll(async () => {
       i = await introspectAs("teamEditor");
     });

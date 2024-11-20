@@ -1,7 +1,6 @@
-require("dotenv").config({ path: "./../.env.test" });
+import { expect } from 'vitest';
 
-expect.extend({
-  // expects not to find any mutations containing the table name
+const customMatchers = {
   toHaveNoMutationsFor({ mutations }, tableName) {
     const matches = mutations.filter((mutationName) =>
       mutationName.includes(`_${tableName}`)
@@ -11,4 +10,6 @@ expect.extend({
       `'${tableName}' unexpectedly found in mutation(s) [${matches}]`;
     return { pass, message };
   },
-});
+};
+
+expect.extend(customMatchers);

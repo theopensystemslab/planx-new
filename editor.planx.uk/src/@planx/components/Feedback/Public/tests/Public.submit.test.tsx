@@ -95,3 +95,34 @@ describe("when feedback is required but the user does not submit any data", asyn
     });
   });
 });
+
+describe("When the user presses to go back to the feedback component", () => {
+  it("recovers the previously submitted answers", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <FeedbackComponent
+        handleSubmit={handleSubmit}
+        feedbackRequired={false}
+        previouslySubmittedData={{
+          data: {
+            _feedback: {
+              userComment: "I wrote this previously",
+              feedbackScore: 2,
+            },
+          },
+        }}
+      />,
+    );
+
+    expect(screen.getByText("I wrote this previously")).toBeVisible();
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(insertFeedbackMutation).toHaveBeenCalledWith({
+      feedbackScore: 2,
+      feedbackType: "component",
+      userComment: "I wrote this previously",
+    });
+  });
+});

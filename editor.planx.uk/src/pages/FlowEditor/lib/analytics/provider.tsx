@@ -1,5 +1,6 @@
 import { DocumentNode } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { PASSPORT_FEEDBACK_KEY } from "@planx/components/Feedback/Public/Public";
 import Bowser from "bowser";
 import { publicClient } from "lib/graphql";
 import React, { createContext, useContext, useEffect } from "react";
@@ -43,11 +44,13 @@ import {
  *  so that Metabase picks up the new columns
  */
 export const ALLOW_LIST = [
+  "applicant.researchOptIn",
   "application.declaration.connection",
   "application.information.harmful",
   "application.information.sensitive",
   "application.type",
   "drawBoundary.action",
+  PASSPORT_FEEDBACK_KEY,
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",
