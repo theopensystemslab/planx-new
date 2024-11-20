@@ -19,6 +19,11 @@ const EndPoint: React.FC<{ text: string }> = ({ text }) => {
 
   useEffect(() => {
     if (isStart && el.current) {
+      // Only scroll to center on initial visit
+      const storageKey = ["scrollPos", currentPath].join(":");
+      const hasVisited = sessionStorage.getItem(storageKey);
+      if (hasVisited) return;
+
       if (isLoading) return;
 
       scrollIntoView(
