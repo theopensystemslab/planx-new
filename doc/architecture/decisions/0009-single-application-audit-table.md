@@ -1,10 +1,10 @@
 # 9. Single application audit table
 
-Date: 2024-11-15
+Date: 2024-11-20
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
