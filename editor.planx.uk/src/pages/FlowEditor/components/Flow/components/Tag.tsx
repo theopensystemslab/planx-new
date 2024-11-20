@@ -13,7 +13,7 @@ export const TAG_DISPLAY_VALUES: Record<
   placeholder: {
     color: "blocking",
     displayName: "Placeholder",
-    editableBy: ["platformAdmin"], // if new roles are added, we should update the canEdit() in ComponentTagSelect.tsx
+    editableBy: ["platformAdmin"],
   },
   toReview: {
     color: "nonBlocking",
