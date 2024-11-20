@@ -117,6 +117,7 @@ type HelpClick = {
 
 type SaveClick = {
   event: "saveClick";
+  metadata: null;
 };
 
 /**

@@ -21,7 +21,7 @@ const SaveResumeButton: React.FC = () => {
 
   const handleClick = () => {
     if (saveToEmail) {
-      trackEvent({ event: "saveClick" });
+      trackEvent({ event: "saveClick", metadata: null });
       trackEvent({
         event: "flowDirectionChange",
         metadata: null,
