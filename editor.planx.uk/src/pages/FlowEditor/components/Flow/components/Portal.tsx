@@ -4,6 +4,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import gql from "graphql-tag";
+import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
@@ -16,6 +17,8 @@ import Question from "./Question";
 
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
+
+  const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
   const addExternalPortal = useStore.getState().addExternalPortal;
 
@@ -84,7 +87,7 @@ const ExternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })}>
+      <li className={classNames("card", "portal", { isDragging })} ref={ref}>
         <Link href={`/${href}`} prefetch={false} ref={drag}>
           <span>{href}</span>
         </Link>
@@ -128,10 +131,12 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const Icon = ICONS[ComponentType.InternalPortal];
 
+  const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })}>
+      <li className={classNames("card", "portal", { isDragging })} ref={ref}>
         <Link
           href={href}
           prefetch={false}
