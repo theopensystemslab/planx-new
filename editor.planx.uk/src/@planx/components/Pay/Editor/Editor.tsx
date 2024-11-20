@@ -22,6 +22,7 @@ import { ICONS } from "../../shared/icons";
 import { EditorProps } from "../../shared/types";
 import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
+import { FeeBreakdownSection } from "./FeeBreakdownSection";
 
 export type Props = EditorProps<TYPES.Pay, Pay>;
 
@@ -114,6 +115,7 @@ const Component: React.FC<Props> = (props: Props) => {
           </ModalSection>
           <GovPayMetadataSection/>
           <InviteToPaySection/>
+          <FeeBreakdownSection/>
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}

@@ -27,6 +27,7 @@ export interface Pay extends BaseNodeData {
   yourDetailsDescription?: string;
   yourDetailsLabel?: string;
   govPayMetadata: GovPayMetadata[];
+  showFeeBreakdown?: boolean;
 }
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
