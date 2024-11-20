@@ -2,12 +2,8 @@ import axios from "axios";
 import type {
   AxiosInstance,
   AxiosError,
-  AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from "axios";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 // Custom error class for Metabase-specific errors
 export class MetabaseError extends Error {
@@ -33,20 +29,17 @@ const validateConfig = (): MetabaseConfig => {
   const baseURL = process.env.METABASE_BASE_URL;
   const apiKey = process.env.METABASE_API_KEY;
 
-  if (!baseURL) {
-    throw new Error(
-      "METABASE_BASE_URL is not defined in environment variables",
-    );
-  }
-  if (!apiKey) {
-    throw new Error("METABASE_API_KEY is not defined in environment variables");
-  }
+  const METABASE_TIMEOUT = 30_000;
+  const METABASE_MAX_RETRIES = 3;
+
+  assert(baseURL, "Missing environment variable 'METABASE_BASE_URL'");
+  assert(apiKey, "Missing environment variable 'METABASE_API_KEY'");
 
   return {
     baseURL,
     apiKey,
-    timeout: parseInt(process.env.METABASE_TIMEOUT ?? "30000"), // 30 second default timeout
-    retries: parseInt(process.env.METABASE_MAX_RETRIES ?? "3"), // 3 default retries
+    timeout: METABASE_TIMEOUT,
+    retries: METABASE_MAX_RETRIES,
   };
 };
 
@@ -67,17 +60,6 @@ export const createMetabaseClient = (): AxiosInstance => {
     },
     timeout: config.timeout,
   });
-
-  // Request interceptor
-  client.interceptors.request.use(
-    (config) => {
-      // Could add request logging here
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    },
-  );
 
   client.interceptors.response.use(
     (response) => {
@@ -140,16 +122,5 @@ export const createMetabaseClient = (): AxiosInstance => {
 
 // Export singleton instance
 export const metabaseClient = createMetabaseClient();
-
-// Health check function
-export const checkMetabaseConnection = async (): Promise<boolean> => {
-  try {
-    const response = await metabaseClient.get("/api/user/current");
-    return response.status === 200;
-  } catch (error) {
-    console.error("Metabase health check failed:", error);
-    return false;
-  }
-};
 
 export default metabaseClient;
