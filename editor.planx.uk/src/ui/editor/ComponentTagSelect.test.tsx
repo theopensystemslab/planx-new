@@ -27,6 +27,7 @@ describe("Checklist Component for a Platform Admin", () => {
           ...mockUser,
           isPlatformAdmin: true,
         },
+        teamSlug: "team",
       }),
     ),
   );
