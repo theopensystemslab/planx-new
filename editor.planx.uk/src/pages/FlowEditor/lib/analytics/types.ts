@@ -95,7 +95,8 @@ export type EventData =
   | BackwardsNavigation
   | FlowDirectionChange
   | InputErrors
-  | HelpTextFeedback;
+  | HelpTextFeedback
+  | SaveClick;
 
 /**
  * Capture when a user clicks on the `More Information` i.e. the help on a
@@ -106,6 +107,17 @@ export type EventData =
 type HelpClick = {
   event: "helpClick";
   metadata: HelpClickMetadata;
+};
+
+/**
+ * Captured when a user clicks Save and Return.
+ * The mutation sets the "has_clicked_help: true" when Save and
+ * Return button is clicked
+ */
+
+type SaveClick = {
+  event: "saveClick";
+  metadata: null;
 };
 
 /**
