@@ -241,8 +241,8 @@ describe("following a FindProperty component", () => {
   });
 
   test("default disclaimer text should render if none provided", async () => {
-    // @ts-ignore - we deliberately want to test the case where PlanningConstraints is missing the disclaimer prop
     const { queryByText } = setup(
+      // @ts-ignore - we deliberately want to test the case where PlanningConstraints is missing the disclaimer prop
       <PlanningConstraints
         title="Planning constraints"
         description="Things that might affect your project"
