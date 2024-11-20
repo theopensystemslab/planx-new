@@ -4,13 +4,7 @@ import { WarningContainer } from "@planx/components/shared/Preview/WarningContai
 import React from "react";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-export const Disclaimer = ({
-  text,
-  defaultText,
-}: {
-  text: string;
-  defaultText?: string;
-}) => {
+export const Disclaimer = ({ text }: { text: string }) => {
   return (
     <WarningContainer>
       <ErrorOutline />
@@ -20,7 +14,7 @@ export const Disclaimer = ({
         ml={2}
         sx={{ "& p:first-of-type": { marginTop: 0 } }}
       >
-        <ReactMarkdownOrHtml source={text || defaultText} openLinksOnNewTab />
+        <ReactMarkdownOrHtml source={text} openLinksOnNewTab />
       </Typography>
     </WarningContainer>
   );
