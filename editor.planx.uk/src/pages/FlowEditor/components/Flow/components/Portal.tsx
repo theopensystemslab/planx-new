@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
-import { ComponentType } from "@opensystemslab/planx-core/types";
+import Box from "@mui/material/Box";
+import { ComponentType, NodeTag } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import gql from "graphql-tag";
@@ -14,6 +15,7 @@ import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";
+import { Tag } from "./Tag";
 
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
@@ -87,14 +89,17 @@ const ExternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })} ref={ref}>
-        <Link href={`/${href}`} prefetch={false} ref={drag}>
-          <span>{href}</span>
-        </Link>
-        <Link href={editHref} prefetch={false} className="portalMenu">
-          <MoreVert titleAccess="Edit Portal" />
-        </Link>
-      </li>
+      <Box sx={{ width: "max-content" }}>
+        <li className={classNames("card", "portal", { isDragging })}>
+          <Link href={`/${href}`} prefetch={false} ref={drag}>
+            <span>{href}</span>
+          </Link>
+          <Link href={editHref} prefetch={false} className="portalMenu">
+            <MoreVert titleAccess="Edit Portal" />
+          </Link>
+        </li>
+        {props.tags?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+      </Box>
     </>
   );
 };
@@ -136,7 +141,7 @@ const InternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })} ref={ref}>
+      <li className={classNames("card", "portal", { isDragging })}>
         <Link
           href={href}
           prefetch={false}
