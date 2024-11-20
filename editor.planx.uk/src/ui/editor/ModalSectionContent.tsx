@@ -74,7 +74,7 @@ export default function ModalSectionContent({
           </Title>
         )}
         {subtitle && (
-          <Subtitle variant="subtitle1">
+          <Subtitle variant="subtitle1" component={"h4"}>
             {subtitle}
             {author && <Author>by {author}</Author>}
           </Subtitle>

@@ -9,9 +9,9 @@ import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
+import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
 
@@ -27,7 +27,7 @@ const InternalPortalForm: React.FC<{
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ id, handleSubmit, text = "", flowId = "", flows = [], tags = [] }) => {
+}> = ({ handleSubmit, text = "", flowId = "", flows = [], tags = [] }) => {
   const formik = useFormik({
     initialValues: {
       text,
@@ -36,11 +36,12 @@ const InternalPortalForm: React.FC<{
     },
     validate: (values) => {
       const errors: Record<string, string> = {};
-
       if (!values.flowId && !values.text) {
-        errors.text = flows.length > 0 ? "Enter a portal name" : "Required.";
+        errors.text =
+          flows.length > 0
+            ? "Enter a portal name or select an existing portal"
+            : "Enter a portal name";
       }
-
       return errors;
     },
     onSubmit: (values) => {
@@ -75,15 +76,22 @@ const InternalPortalForm: React.FC<{
           </ErrorWrapper>
         </ModalSectionContent>
         {flows?.length > 0 && (
-          <ModalSectionContent subtitle="Use existing portal">
+          <ModalSectionContent subtitle="Use an existing portal">
+            <InputLabel
+              label="Use an existing portal"
+              id="flowId-label"
+              hidden
+              htmlFor="flowId"
+            />
             <SelectInput
+              aria-describedby="flowId"
+              labelId="flowId-label"
               id="flowId"
               data-testid="flowId"
               name="flowId"
               value={formik.values.flowId}
               onChange={formik.handleChange}
               disabled={!!formik.values.text}
-              placeholder="Select an existing portal"
             >
               {flows.map((flow) => (
                 <MenuItem key={flow.id} value={flow.id}>
