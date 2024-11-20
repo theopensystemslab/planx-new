@@ -71,7 +71,7 @@ const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
         title: "Unhelpful (help text)",
       };
     case "component":
-      return { icon: <RateReviewIcon />, title: "From feedback component" };
+      return { icon: <RateReviewIcon />, title: "User satisfaction" };
     default:
       return { icon: <RuleIcon />, title: "Inaccuracy" };
   }
@@ -126,16 +126,15 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     userContext: "What were you doing?",
   };
 
-  enum EmojiRating {
-    Terrible,
-    Poor,
-    Average,
-    Good,
-    Excellent,
-  }
+  const EmojiRating: Record<number, string> = {
+    1: "Terrible",
+    2: "Poor",
+    3: "Neutral",
+    4: "Good",
+    5: "Excellent",
+  };
 
-  const feedbackScore =
-    item.feedbackScore && EmojiRating[item.feedbackScore + 1]; // enums are 0-indexed
+  const feedbackScore = EmojiRating[item.feedbackScore];
 
   const renderContent = (key: string, value: any) => {
     if (key === "combinedHelp" && value) {
@@ -155,7 +154,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         <TableCell>
           {format(new Date(item.createdAt), "dd/MM/yy hh:mm:ss")}
         </TableCell>
-        <TableCell sx={{ textAlign: "center" }}>{feedbackScore}</TableCell>
+        <TableCell>{feedbackScore}</TableCell>
         <TableCell>{commentSummary}</TableCell>
         <TableCell sx={{ textAlign: "right" }}>
           <IconButton
