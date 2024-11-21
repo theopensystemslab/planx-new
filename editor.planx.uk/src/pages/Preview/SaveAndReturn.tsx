@@ -38,7 +38,7 @@ export const ConfirmEmail: React.FC<{
         <CardHeader
           title="Enter your email address"
           description="We will use this to save your application so you can come back to it later. We will also email you updates about your application."
-        ></CardHeader>
+        />
         <InputRow>
           <InputLabel label={"Email address"} htmlFor={"email"}>
             <Input
@@ -54,7 +54,7 @@ export const ConfirmEmail: React.FC<{
               onChange={formik.handleChange}
               type="email"
               value={formik.values.email}
-            ></Input>
+            />
           </InputLabel>
         </InputRow>
         <InputRow>
@@ -72,7 +72,7 @@ export const ConfirmEmail: React.FC<{
               onChange={formik.handleChange}
               type="email"
               value={formik.values.confirmEmail}
-            ></Input>
+            />
           </InputLabel>
         </InputRow>
       </Card>
@@ -105,7 +105,7 @@ const SaveAndReturn: React.FC<{ children: React.ReactNode }> = ({
       {isEmailCaptured || isContentPage ? (
         children
       ) : (
-        <ConfirmEmail handleSubmit={handleSubmit}></ConfirmEmail>
+        <ConfirmEmail handleSubmit={handleSubmit} />
       )}
     </>
   );
