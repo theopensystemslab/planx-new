@@ -10,6 +10,7 @@ import { downloadApplicationFiles } from "./downloadApplicationFiles/index.js";
 import { sendToS3 } from "./s3/index.js";
 import { sendToIdoxNexus } from "./idox/nexus.js";
 import { sendIntegrationSchema } from "./types.js";
+import { sendToGOSSController } from "./goss/controller.js";
 
 const router = Router();
 
@@ -47,6 +48,12 @@ router.post(
   useHasuraAuth,
   validate(sendIntegrationSchema),
   sendToS3,
+);
+router.post(
+  "/goss/:localAuthority",
+  useHasuraAuth,
+  validate(sendIntegrationSchema),
+  sendToGOSSController,
 );
 
 router.get("/download-application-files/:sessionId", downloadApplicationFiles);

@@ -1,4 +1,4 @@
-import { compose, map, mount, route, withData, withView } from "navi";
+import { compose, map, mount, route, withData, withHead, withView } from "navi";
 import ContentPage from "pages/Preview/ContentPage";
 import Questions from "pages/Preview/Questions";
 import React from "react";
@@ -9,6 +9,11 @@ const routes = compose(
   withData(async (req) => ({
     mountpath: req.mountpath,
   })),
+
+  withHead([
+    <meta name="robots" content="noindex, nofollow" key="meta-robots" />,
+    <meta name="googlebot" content="noindex, nofollow" key="meta-googlebot" />
+  ]),
 
   withView(async (req) => await draftView(req)),
 

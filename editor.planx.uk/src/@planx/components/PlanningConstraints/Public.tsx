@@ -1,3 +1,4 @@
+import Typography from "@mui/material/Typography";
 import type {
   EnhancedGISResponse,
   GISResponse,
@@ -13,6 +14,7 @@ import useSWR, { Fetcher } from "swr";
 import { stringify } from "wkt";
 
 import { SiteAddress } from "../FindProperty/model";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import {
   type IntersectingConstraints,
   type PlanningConstraints,
@@ -194,6 +196,26 @@ function Component(props: Props) {
       data: passportData,
     });
   };
+
+  if (teamSlug === "demo") {
+    return (
+      <Card handleSubmit={props.handleSubmit}>
+        <CardHeader title={props.title} />
+        <ErrorSummaryContainer role="status">
+          <Typography variant="h4" ml={2} mb={1}>
+            Planning Constraints are not enabled for demo users
+          </Typography>
+          <Typography variant="body2" ml={2}>
+            Since we cannot automatically check constraints, you might be asked
+            additional questions about your project.
+          </Typography>
+          <Typography variant="body2" ml={2} mt={0.5}>
+            Click continue to proceed with your application.
+          </Typography>
+        </ErrorSummaryContainer>
+      </Card>
+    );
+  }
 
   const isLoading = isValidating || isValidatingRoads;
   if (isLoading)

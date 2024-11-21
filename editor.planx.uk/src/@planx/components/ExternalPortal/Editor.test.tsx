@@ -31,6 +31,7 @@ test("adding an external portal", async () => {
       type: TYPES.ExternalPortal,
       data: {
         flowId: "b",
+        tags: [],
       },
     }),
   );
@@ -63,6 +64,7 @@ test("changing an external portal", async () => {
       type: TYPES.ExternalPortal,
       data: {
         flowId: "a",
+        tags: [],
       },
     }),
   );

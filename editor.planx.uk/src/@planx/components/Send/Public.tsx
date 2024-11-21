@@ -9,6 +9,7 @@ import { useAsync } from "react-use";
 import { AsyncState } from "react-use/lib/useAsyncFn";
 
 import Card from "../shared/Preview/Card";
+import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { PublicProps } from "../shared/types";
 import { DEFAULT_DESTINATION, getCombinedEventsPayload, Send } from "./model";
@@ -25,12 +26,15 @@ const SendComponent: React.FC<Props> = ({
   destinations = [DEFAULT_DESTINATION],
   ...props
 }) => {
+  const teamSlug = useStore().teamSlug;
   const fullProps = { destinations: destinations, ...props };
   if (
     window.location.pathname.endsWith("/draft") ||
     window.location.pathname.endsWith("/preview")
   ) {
     return <SkipSendWarning {...fullProps} />;
+  } else if (teamSlug === "demo") {
+    return <DemoTeamWarning {...fullProps} />;
   } else {
     return <CreateSendEvents {...fullProps} />;
   }
@@ -49,6 +53,20 @@ const SkipSendWarning: React.FC<Props> = (props) => (
         and skip submission.
       </Typography>
     </WarningContainer>
+  </Card>
+);
+
+const DemoTeamWarning: React.FC<Props> = (props) => (
+  <Card handleSubmit={props.handleSubmit}>
+    <ErrorSummaryContainer role="status">
+      <Typography variant="h4" ml={2} mb={1}>
+        Send is not enabled for services created in the Demo team
+      </Typography>
+      <Typography variant="body2" ml={2}>
+        Click continue to skip send and proceed with your application for
+        testing.
+      </Typography>
+    </ErrorSummaryContainer>
   </Card>
 );
 

@@ -1,7 +1,6 @@
 import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import IconButton from "@mui/material/IconButton";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FormikErrors, FormikValues, useFormik } from "formik";
@@ -378,19 +377,19 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
               />
             </InputRow>
             <InputRow>
-            <Switch
-              checked={!!formik.values.groupedOptions}
-              onChange={() =>
-                formik.setValues({
-                  ...formik.values,
-                  ...toggleExpandableChecklist({
-                    options: formik.values.options,
-                    groupedOptions: formik.values.groupedOptions,
-                  }),
-                })
-              }
-              label="Expandable"
-            />
+              <Switch
+                checked={!!formik.values.groupedOptions}
+                onChange={() =>
+                  formik.setValues({
+                    ...formik.values,
+                    ...toggleExpandableChecklist({
+                      options: formik.values.options,
+                      groupedOptions: formik.values.groupedOptions,
+                    }),
+                  })
+                }
+                label="Expandable"
+              />
             </InputRow>
             <InputRow>
               <Switch
@@ -401,16 +400,16 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                     !formik.values.allRequired,
                   )
                 }
-              label="All required"
-            />
+                label="All required"
+              />
             </InputRow>
             <InputRow>
               <Switch
                 checked={formik.values.neverAutoAnswer}
-                onChange={() => 
+                onChange={() =>
                   formik.setFieldValue(
                     "neverAutoAnswer",
-                    !formik.values.neverAutoAnswer
+                    !formik.values.neverAutoAnswer,
                   )
                 }
                 label="Always put to user (forgo automation)"

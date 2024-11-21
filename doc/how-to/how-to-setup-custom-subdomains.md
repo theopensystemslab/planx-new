@@ -108,4 +108,9 @@ This guide will walk through the process of setting a custom domain for a new te
   
 11. **PlanX** - Add custom domain to UptimeRobot (create monitor & also select SSL reminders)
 
+> [!NOTE]
+> We do not have individual named logins for our UptimeRobot account. Instead we have one single shared one in the 1Password "root/admin" vault, which not everyone will have access to. 
+>
+> Therefore you might need to ask someone to do this step for you if you do not have access.
+
 12. **PlanX** - Add certificate expiry date to [PlanX CMS on Notion](https://www.notion.so/opensystemslab/Plan-Customers-dee2cdfb40c04b5fa88edc5a86989211)

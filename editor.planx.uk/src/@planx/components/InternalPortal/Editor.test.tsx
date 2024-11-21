@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -11,26 +11,26 @@ describe("adding an internal portal", () => {
   test("creating a new internal portal", async () => {
     const handleSubmit = vi.fn();
 
-    const { user } = setup(
+    const { user, getByTestId } = setup(
       <InternalPortalForm
         flows={[{ id: "ignore", text: "ignore" }]}
         handleSubmit={handleSubmit}
       />,
     );
 
-    const flowSelect = screen.getByTestId("flowId");
+    const existingFlowInput = getByTestId("flowId");
+    const flowSelect = within(existingFlowInput).getByRole("combobox");
 
-    expect(flowSelect).toHaveValue("");
     expect(flowSelect).toBeEnabled();
 
     await user.type(
-      screen.getByPlaceholderText("Portal name"),
+      screen.getByPlaceholderText("Enter a portal name"),
       "new internal portal",
     );
 
-    expect(flowSelect).toBeDisabled();
+    expect(flowSelect).toHaveAttribute("aria-disabled", "true");
 
-    await fireEvent.submit(screen.getByTestId("form"));
+    fireEvent.submit(screen.getByTestId("form"));
 
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
@@ -38,6 +38,7 @@ describe("adding an internal portal", () => {
         data: {
           flowId: "", // will be removed when saving the data
           text: "new internal portal",
+          tags: [],
         },
       });
     });
@@ -53,15 +54,20 @@ describe("adding an internal portal", () => {
       />,
     );
 
-    const dropdown = screen.queryByTestId("flowId");
+    const dropdown = await screen.findByRole("combobox", {
+      name: "Use an existing portal",
+    });
+    expect(dropdown).toBeInTheDocument();
 
-    expect(dropdown).toHaveValue("");
+    await user.click(dropdown);
 
-    if (dropdown) {
-      await user.selectOptions(dropdown, "portal");
-    }
+    const option = await screen.findByRole("option", { name: "portal" });
+    expect(option).toBeInTheDocument();
 
-    await fireEvent.submit(screen.getByTestId("form"));
+    await user.click(option);
+
+    fireEvent.submit(screen.getByTestId("form"));
+
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith("portal");
     });
@@ -72,17 +78,24 @@ describe("adding an internal portal", () => {
 
     const { user } = setup(
       <InternalPortalForm
-        flows={[{ id: "portal", text: "portal" }]}
+        flows={[{ id: "portal", text: "portal text" }]}
         handleSubmit={handleSubmit}
       />,
     );
 
-    const dropdown = screen.queryByTestId("flowId");
-    if (dropdown) {
-      await user.selectOptions(dropdown, "portal");
-    }
+    const dropdown = await screen.findByRole("combobox", {
+      name: "Use an existing portal",
+    });
+    expect(dropdown).toBeInTheDocument();
 
-    await fireEvent.submit(screen.getByTestId("form"));
+    await user.click(dropdown);
+
+    const option = await screen.findByRole("option", { name: "portal text" });
+    expect(option).toBeInTheDocument();
+
+    await user.click(option);
+    fireEvent.submit(screen.getByTestId("form"));
+
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith("portal");
     });
@@ -103,13 +116,13 @@ test("updating an internal portal", async () => {
 
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 
-  const textInput = screen.getByPlaceholderText("Portal name");
+  const textInput = screen.getByPlaceholderText("Enter a portal name");
 
   expect(textInput).toHaveValue("val");
 
   await user.clear(textInput);
   await user.type(textInput, "new val");
-  await fireEvent.submit(screen.getByTestId("form"));
+  fireEvent.submit(screen.getByTestId("form"));
 
   await waitFor(() => {
     expect(handleSubmit).toHaveBeenCalledWith({
@@ -117,6 +130,7 @@ test("updating an internal portal", async () => {
       data: {
         flowId: "", // will be removed when saving the data
         text: "new val",
+        tags: [],
       },
     });
   });
@@ -125,18 +139,22 @@ test("updating an internal portal", async () => {
 describe("validations", () => {
   describe("if no flowId is chosen", () => {
     const scenarios = [
-      { action: "adding without flows", error: "Required." },
-      { action: "updating without flows", id: "test", error: "Required." },
+      { action: "adding without flows", error: "Enter a portal name" },
+      {
+        action: "updating without flows",
+        id: "test",
+        error: "Enter a portal name",
+      },
       {
         action: "adding with flows",
         flows: [{ id: "portal", text: "portal" }],
-        error: "Required if no flow is selected",
+        error: "Enter a portal name or select an existing portal",
       },
       {
         action: "updating with flows",
         flows: [{ id: "portal", text: "portal" }],
         id: "test",
-        error: "Required if no flow is selected",
+        error: "Enter a portal name or select an existing portal",
       },
     ];
     for (const scenario of scenarios) {

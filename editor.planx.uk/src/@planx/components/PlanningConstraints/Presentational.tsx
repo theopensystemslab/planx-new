@@ -10,6 +10,7 @@ import { Disclaimer } from "../shared/Disclaimer";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import SimpleExpand from "../shared/Preview/SimpleExpand";
 import ConstraintsList from "./List";
+import { DEFAULT_PLANNING_CONDITIONS_DISCLAIMER } from "./model";
 import { InaccurateConstraints } from "./Public";
 
 export type PresentationalProps = {
@@ -23,7 +24,7 @@ export type PresentationalProps = {
   refreshConstraints: () => void;
   inaccurateConstraints: InaccurateConstraints;
   setInaccurateConstraints: (
-    value: React.SetStateAction<InaccurateConstraints>,
+    value: React.SetStateAction<InaccurateConstraints>
   ) => void;
 };
 
@@ -43,10 +44,10 @@ export function Presentational(props: PresentationalProps) {
   if (showError) return <ConstraintsFetchError error={error} {...props} />;
 
   const positiveConstraints = Object.values(constraints).filter(
-    (v: Constraint) => v.text && v.value,
+    (v: Constraint) => v.text && v.value
   );
   const negativeConstraints = Object.values(constraints).filter(
-    (v: Constraint) => v.text && !v.value,
+    (v: Constraint) => v.text && !v.value
   );
 
   return (
@@ -80,7 +81,9 @@ export function Presentational(props: PresentationalProps) {
               />
             </SimpleExpand>
           )}
-          <Disclaimer text={disclaimer} />
+          <Disclaimer
+            text={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+          />
         </>
       )}
       {positiveConstraints.length === 0 && negativeConstraints.length > 0 && (
@@ -110,7 +113,9 @@ export function Presentational(props: PresentationalProps) {
               setInaccurateConstraints={setInaccurateConstraints}
             />
           </SimpleExpand>
-          <Disclaimer text={disclaimer} />
+          <Disclaimer
+            text={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+          />
         </>
       )}
     </Card>

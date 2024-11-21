@@ -14,7 +14,7 @@ import { useErrorHandler } from "react-error-boundary";
 import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
+import { createPayload, getDefaultContent, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -41,8 +41,7 @@ enum Action {
   Success,
 }
 
-export const PAY_API_ERROR_UNSUPPORTED_TEAM =
-  "GOV.UK Pay is not enabled for this local authority";
+export const PAY_API_ERROR_UNSUPPORTED_TEAM = "GOV.UK Pay is not enabled for";
 
 function Component(props: Props) {
   const [
@@ -68,11 +67,7 @@ function Component(props: Props) {
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
-  const defaultMetadata = [
-    { key: "source", value: "PlanX" },
-    { key: "flow", value: flowSlug },
-    { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
-  ];
+  const defaultMetadata = getDefaultContent().govPayMetadata;
 
   const metadata = [...(props.govPayMetadata || []), ...defaultMetadata];
 
@@ -113,6 +108,10 @@ function Component(props: Props) {
   });
 
   const handleError = useErrorHandler();
+
+  const isTeamSupported =
+    state.status !== "unsupported_team" && teamSlug !== "demo";
+  const showPayOptions = props.allowInviteToPay && !props.hidePay;
 
   useEffect(() => {
     // Auto-skip component when fee=0
@@ -294,17 +293,15 @@ function Component(props: Props) {
               : "Retry payment"
           }
           error={
+            (teamSlug === "demo" &&
+              "GOV.UK Pay is not enabled for demo users") ||
             (state.status === "unsupported_team" &&
               "GOV.UK Pay is not enabled for this local authority") ||
             (state.status === "undefined_fee" &&
               "We are unable to calculate your fee right now") ||
             undefined
           }
-          showInviteToPay={
-            props.allowInviteToPay &&
-            !props.hidePay &&
-            state.status !== "unsupported_team"
-          }
+          showInviteToPay={showPayOptions && isTeamSupported}
           paymentStatus={govUkPayment?.state?.status}
           hidePay={props.hidePay}
         />

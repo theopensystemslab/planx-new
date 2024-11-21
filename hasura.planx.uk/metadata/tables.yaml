@@ -55,6 +55,7 @@
           - created_at
           - flow_direction
           - has_clicked_help
+          - has_clicked_save
           - id
           - input_errors
           - metadata
@@ -79,6 +80,7 @@
           - allow_list_answers
           - flow_direction
           - has_clicked_help
+          - has_clicked_save
           - input_errors
           - metadata
           - next_log_created_at
@@ -91,6 +93,9 @@
         check: null
 - table:
     name: analytics_summary
+    schema: public
+- table:
+    name: applicant_research_opt_in_view
     schema: public
 - table:
     name: blpu_codes

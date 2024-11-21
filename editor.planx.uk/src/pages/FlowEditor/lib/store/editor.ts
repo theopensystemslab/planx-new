@@ -19,6 +19,7 @@ import {
 import { OT } from "@planx/graph/types";
 import axios from "axios";
 import { client } from "lib/graphql";
+import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
@@ -55,6 +56,9 @@ export interface EditorUIStore {
   toggleShowImages: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
+  previousURL?: string;
+  currentURL: string;
+  initURLTracking: () => void;
 }
 
 export const editorUIStore: StateCreator<
@@ -87,6 +91,22 @@ export const editorUIStore: StateCreator<
     showDataFields: false,
 
     toggleShowDataFields: () => set({ showDataFields: !get().showDataFields }),
+
+    previousURL: undefined,
+
+    currentURL: window.location.pathname,
+
+    initURLTracking: () => {
+      navigation.subscribe((route) => {
+        const { currentURL } = get();
+        if (route.url.pathname === currentURL) return;
+
+        set((state) => ({
+          previousURL: state.currentURL,
+          currentURL: route.url.pathname,
+        }));
+      });
+    },
   }),
   {
     name: "editorUIStore",
@@ -114,8 +134,8 @@ export interface FlowSummary {
     actor: {
       firstName: string;
       lastName: string;
-    }
-  }[]
+    };
+  }[];
 }
 
 export interface EditorStore extends Store.Store {
@@ -127,7 +147,7 @@ export interface EditorStore extends Store.Store {
   createFlow: (
     teamId: number,
     newSlug: string,
-    newName: string
+    newName: string,
   ) => Promise<string>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
@@ -142,12 +162,12 @@ export interface EditorStore extends Store.Store {
     id: NodeId,
     parent?: NodeId,
     toBefore?: NodeId,
-    toParent?: NodeId
+    toParent?: NodeId,
   ) => void;
   pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
   publishFlow: (
     flowId: string,
-    summary?: string
+    summary?: string,
   ) => Promise<PublishFlowResponse>;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
@@ -344,7 +364,9 @@ export const editorStore: StateCreator<
 
   getFlows: async (teamId) => {
     client.cache.reset();
-    const { data: { flows } } = await client.query<{ flows: FlowSummary[] }>({
+    const {
+      data: { flows },
+    } = await client.query<{ flows: FlowSummary[] }>({
       query: gql`
         query GetFlows($teamId: Int!) {
           flows(where: { team: { id: { _eq: $teamId } } }) {

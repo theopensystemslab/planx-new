@@ -8,7 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath, Passport } from "types";
 import { array, boolean, object, string } from "yup";
 
-import type { BaseNodeData } from "../shared";
+import { parseBaseNodeData, type BaseNodeData } from "../shared";
 
 export interface Pay extends BaseNodeData {
   title: string;
@@ -163,4 +163,42 @@ export const validationSchema = object({
     then: string().required(),
   }),
   govPayMetadata: govPayMetadataSchema,
+});
+
+export const getDefaultContent = (): Pay => ({
+  title: "Pay for your application",
+  bannerTitle: "The planning fee for this application is",
+  fn: "application.fee.payable",
+  description: `<p>The planning fee covers the cost of processing your application.\
+    <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">Find out more about how planning fees are calculated</a> (opens in new tab).</p>`,
+  instructionsTitle: "How to pay",
+  instructionsDescription: `<p>You can pay for your application by using GOV.UK Pay.</p>\
+    <p>Your application will be sent after you have paid the fee. \
+    Wait until you see an application sent message before closing your browser.</p>`,
+  hidePay: false,
+  allowInviteToPay: true,
+  secondaryPageTitle: "Invite someone else to pay for this application",
+  nomineeTitle: "Details of the person paying",
+  yourDetailsTitle: "Your details",
+  yourDetailsLabel: "Your name or organisation name",
+  govPayMetadata: [
+    {
+      key: "flow",
+      value: useStore.getState().flowName,
+    },
+    {
+      key: "source",
+      value: "PlanX",
+    },
+    {
+      key: "paidViaInviteToPay",
+      value: "@paidViaInviteToPay",
+    },
+  ],
+});
+
+export const parsePay = (data?: Record<string, any>): Pay => ({
+  ...parseBaseNodeData(data),
+  ...getDefaultContent(),
+  ...data,
 });
