@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -9,22 +9,31 @@ import ExternalPortalForm from "./Editor";
 test("adding an external portal", async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  const { user } = setup(
     <ExternalPortalForm
       flows={[
-        { id: "a", text: "flow a" },
-        { id: "b", text: "flow b" },
+        { id: "a", name: "flow a", slug: "flow-a", team: "team" },
+        { id: "b", name: "flow b", slug: "flow-b", team: "team" },
       ]}
       handleSubmit={handleSubmit}
     />,
   );
+  const autocompleteComp = screen.getByTestId("flowId");
+  const autocompleteInput = within(autocompleteComp).getByRole("combobox");
 
-  expect(screen.getByTestId("flowId")).toHaveValue("");
+  screen.debug(autocompleteInput);
 
-  await fireEvent.change(screen.getByTestId("flowId"), {
-    target: { value: "b" },
-  });
-  await fireEvent.submit(screen.getByTestId("form"));
+  expect(autocompleteInput).toHaveValue("flow a");
+
+  await user.click(autocompleteInput);
+
+  await user.click(screen.getByTestId("flow-b"));
+
+  expect(autocompleteInput).toHaveValue("flow b");
+
+  const extPortalForm = screen.getByTestId("form");
+
+  fireEvent.submit(extPortalForm);
 
   await waitFor(() =>
     expect(handleSubmit).toHaveBeenCalledWith({
@@ -41,24 +50,31 @@ test("adding an external portal", async () => {
 test("changing an external portal", async () => {
   const handleSubmit = vi.fn();
 
-  setup(
+  const { user } = setup(
     <ExternalPortalForm
-      id="test"
       flowId="b"
       flows={[
-        { id: "a", text: "flow a" },
-        { id: "b", text: "flow b" },
+        { id: "a", name: "flow a", slug: "flow-a", team: "team" },
+        { id: "b", name: "flow b", slug: "flow-b", team: "team" },
       ]}
       handleSubmit={handleSubmit}
     />,
   );
 
-  expect(screen.getByTestId("flowId")).toHaveValue("b");
+  const autocompleteComp = screen.getByTestId("flowId");
+  const autocompleteInput = within(autocompleteComp).getByRole("combobox");
 
-  await fireEvent.change(screen.getByTestId("flowId"), {
-    target: { value: "a" },
-  });
-  await fireEvent.submit(screen.getByTestId("form"));
+  expect(autocompleteInput).toHaveValue("flow b");
+
+  await user.click(autocompleteInput);
+
+  await user.click(screen.getByTestId("flow-a"));
+
+  expect(autocompleteInput).toHaveValue("flow a");
+
+  const extPortalForm = screen.getByTestId("form");
+
+  fireEvent.submit(extPortalForm);
 
   await waitFor(() =>
     expect(handleSubmit).toHaveBeenCalledWith({

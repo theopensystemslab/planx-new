@@ -55,7 +55,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 })) as typeof Autocomplete;
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledTextField = styled(TextField)(({ theme }) => ({
   "&:focus-within": {
     ...borderedFocusStyle,
     [`& .${outlinedInputClasses.notchedOutline}`]: {
@@ -114,7 +114,7 @@ export const CustomCheckbox = styled("span")(({ theme }) => ({
 export function SelectMultiple<T>(props: Props<T>) {
   // MUI doesn't pass the Autocomplete value along to the TextField automatically
   const isSelectEmpty = !props.value?.length;
-  const placeholder = isSelectEmpty ? props.placeholder : undefined
+  const placeholder = isSelectEmpty ? props.placeholder : undefined;
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
