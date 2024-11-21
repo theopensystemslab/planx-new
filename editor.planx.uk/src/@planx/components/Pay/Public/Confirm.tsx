@@ -14,7 +14,7 @@ import FormWrapper from "ui/public/FormWrapper";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { formattedPriceWithCurrencySymbol } from "../model";
+import { formattedPriceWithCurrencySymbol, getDefaultContent } from "../model";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
@@ -56,6 +56,7 @@ const PayText = styled(Box)(({ theme }) => ({
 const PayBody: React.FC<PayBodyProps> = (props) => {
   const path = useStore((state) => state.path);
   const isSaveReturn = path === ApplicationPath.SaveAndReturn;
+  const defaults = getDefaultContent();
 
   if (props.error) {
     if (props.error.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
@@ -85,14 +86,11 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
     <Card>
       <PayText>
         <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
-          {props.instructionsTitle || "How to pay"}
+          {props.instructionsTitle || defaults.instructionsTitle }
         </Typography>
         <ReactMarkdownOrHtml
           source={
-            props.instructionsDescription ||
-            `<p>You can pay for your application by using GOV.UK Pay.</p>\
-                  <p>Your application will be sent after you have paid the fee. \
-                  Wait until you see an application sent message before closing your browser.</p>`
+            props.instructionsDescription || defaults.instructionsDescription
           }
           openLinksOnNewTab
         />
@@ -127,6 +125,8 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
 export default function Confirm(props: Props) {
   const theme = useTheme();
   const [page, setPage] = useState<"Pay" | "InviteToPay">("Pay");
+
+  const defaults = getDefaultContent();
 
   const changePage = () => {
     if (page === "Pay" && !props.paymentStatus) {
@@ -168,8 +168,7 @@ export default function Confirm(props: Props) {
                 className="marginBottom"
                 component="h2"
               >
-                {props.bannerTitle ||
-                  "The planning fee for this application is"}
+                {props.bannerTitle || defaults.bannerTitle}
               </Typography>
               <Typography
                 variant="h1"

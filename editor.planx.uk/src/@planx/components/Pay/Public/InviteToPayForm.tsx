@@ -22,6 +22,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 import { object, string } from "yup";
+import { getDefaultContent } from "../model";
 
 // Passport keys which will be used to display a preview of the session to the payee as part of their journey
 const SESSION_PREVIEW_KEYS = [["_address", "title"], ["proposal.projectType"]];
@@ -94,6 +95,8 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   const {
     data: { mountpath },
   } = useCurrentRoute();
+
+  const defaults = getDefaultContent();
 
   // Scroll to top when loading component
   useEffect(() => {
@@ -226,7 +229,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
             />
           </Typography>
         )}
-        <InputLabel label={yourDetailsLabel || ""} htmlFor="applicantName">
+        <InputLabel label={yourDetailsLabel || defaults.yourDetailsLabel } htmlFor="applicantName">
           <Input
             bordered
             name="applicantName"

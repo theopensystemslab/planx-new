@@ -2,12 +2,11 @@ import {
   ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import {
+  parsePay,
   Pay,
   validationSchema,
 } from "@planx/components/Pay/model";
-import { parseBaseNodeData } from "@planx/components/shared";
 import { Form, Formik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import { InternalNotes } from "ui/editor/InternalNotes";
@@ -27,51 +26,6 @@ import { InviteToPaySection } from "./InviteToPaySection";
 export type Props = EditorProps<TYPES.Pay, Pay>;
 
 const Component: React.FC<Props> = (props: Props) => {
-  const [flowName] = useStore((store) => [store.flowName]);
-  const initialValues: Pay = {
-    title: props.node?.data?.title || "Pay for your application",
-    bannerTitle:
-      props.node?.data?.bannerTitle ||
-      "The planning fee for this application is",
-    description:
-      props.node?.data?.description ||
-      `<p>The planning fee covers the cost of processing your application.\
-         <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">Find out more about how planning fees are calculated</a> (opens in new tab).</p>`,
-    fn: props.node?.data?.fn,
-    instructionsTitle: props.node?.data?.instructionsTitle || "How to pay",
-    instructionsDescription:
-      props.node?.data?.instructionsDescription ||
-      `<p>You can pay for your application by using GOV.UK Pay.</p>\
-         <p>Your application will be sent after you have paid the fee. \
-         Wait until you see an application sent message before closing your browser.</p>`,
-    hidePay: props.node?.data?.hidePay || false,
-    allowInviteToPay: props.node?.data?.allowInviteToPay ?? true,
-    secondaryPageTitle:
-      props.node?.data?.secondaryPageTitle ||
-      "Invite someone else to pay for this application",
-    nomineeTitle:
-      props.node?.data?.nomineeTitle || "Details of the person paying",
-    nomineeDescription: props.node?.data?.nomineeDescription,
-    yourDetailsTitle: props.node?.data?.yourDetailsTitle || "Your details",
-    yourDetailsDescription: props.node?.data?.yourDetailsDescription,
-    yourDetailsLabel:
-      props.node?.data?.yourDetailsLabel || "Your name or organisation name",
-    govPayMetadata: props.node?.data?.govPayMetadata || [
-      {
-        key: "flow",
-        value: flowName,
-      },
-      {
-        key: "source",
-        value: "PlanX",
-      },
-      {
-        key: "paidViaInviteToPay",
-        value: "@paidViaInviteToPay",
-      },
-    ],
-    ...parseBaseNodeData(props.node?.data),
-  };
 
   const onSubmit = (newValues: Pay) => {
     if (props.handleSubmit) {
@@ -81,7 +35,7 @@ const Component: React.FC<Props> = (props: Props) => {
 
   return (
     <Formik<Pay>
-      initialValues={initialValues}
+      initialValues={parsePay(props.node?.data)}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
       validateOnChange={true}
