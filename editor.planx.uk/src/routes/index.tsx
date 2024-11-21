@@ -6,6 +6,7 @@ import { client } from "../lib/graphql";
 import ErrorPage from "../pages/ErrorPage";
 import Login from "../pages/Login";
 import { isPreviewOnlyDomain, makeTitle } from "./utils";
+import { VerifyEmail } from "pages/VerifyEmail/VerifyEmail";
 
 type RoutingContext = {
   currentUser?: any;
@@ -29,6 +30,11 @@ const editorRoutes = mount({
           view: <Login />,
         }),
   ),
+
+  ":team/:flow/verify-email": route({
+    title: makeTitle("Verify your email"),
+    view: <VerifyEmail />,
+  }),
 
   "/logout": map((): any => {
     try {
