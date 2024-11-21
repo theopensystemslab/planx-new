@@ -24,7 +24,7 @@ export type PresentationalProps = {
   refreshConstraints: () => void;
   inaccurateConstraints: InaccurateConstraints;
   setInaccurateConstraints: (
-    value: React.SetStateAction<InaccurateConstraints>,
+    value: React.SetStateAction<InaccurateConstraints>
   ) => void;
 };
 
@@ -44,10 +44,10 @@ export function Presentational(props: PresentationalProps) {
   if (showError) return <ConstraintsFetchError error={error} {...props} />;
 
   const positiveConstraints = Object.values(constraints).filter(
-    (v: Constraint) => v.text && v.value,
+    (v: Constraint) => v.text && v.value
   );
   const negativeConstraints = Object.values(constraints).filter(
-    (v: Constraint) => v.text && !v.value,
+    (v: Constraint) => v.text && !v.value
   );
 
   return (
@@ -82,8 +82,7 @@ export function Presentational(props: PresentationalProps) {
             </SimpleExpand>
           )}
           <Disclaimer
-            text={disclaimer}
-            defaultText={DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+            text={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
           />
         </>
       )}
@@ -115,8 +114,7 @@ export function Presentational(props: PresentationalProps) {
             />
           </SimpleExpand>
           <Disclaimer
-            text={disclaimer}
-            defaultText={DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
+            text={disclaimer || DEFAULT_PLANNING_CONDITIONS_DISCLAIMER}
           />
         </>
       )}

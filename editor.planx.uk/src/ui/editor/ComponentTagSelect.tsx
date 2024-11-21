@@ -2,8 +2,9 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import { AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import ListItem from "@mui/material/ListItem";
-import { NODE_TAGS, NodeTag } from "@opensystemslab/planx-core/types";
+import { NODE_TAGS, NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ModalSection from "ui/editor/ModalSection";
@@ -16,18 +17,29 @@ interface Props {
   onChange: (values: NodeTag[]) => void;
 }
 
+const skipTag = (role?: Role) => {
+  const userRole = useStore.getState().getUserRoleForCurrentTeam();
+  return role === userRole ? false : true;
+};
+
 const renderOption: AutocompleteProps<
   NodeTag,
   true,
   true,
   false,
   "div"
->["renderOption"] = (props, tag, { selected }) => (
-  <ListItem {...props}>
-    <CustomCheckbox aria-hidden="true" className={selected ? "selected" : ""} />
-    {TAG_DISPLAY_VALUES[tag].displayName}
-  </ListItem>
-);
+>["renderOption"] = (props, tag, { selected }) => {
+  if (TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)) return null;
+  return (
+    <ListItem {...props}>
+      <CustomCheckbox
+        aria-hidden="true"
+        className={selected ? "selected" : ""}
+      />
+      {TAG_DISPLAY_VALUES[tag].displayName}
+    </ListItem>
+  );
+};
 
 const renderTags: AutocompleteProps<
   NodeTag,
@@ -36,20 +48,30 @@ const renderTags: AutocompleteProps<
   false,
   "div"
 >["renderTags"] = (value, getTagProps) =>
-  value.map((tag, index) => (
-    <Chip
-      {...getTagProps({ index })}
-      key={tag}
-      label={TAG_DISPLAY_VALUES[tag].displayName}
-      sx={(theme) => ({
-        backgroundColor: theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
-        color: getContrastTextColor(
-          theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
-          "#FFF",
-        ),
-      })}
-    />
-  ));
+  value.map((tag, index) => {
+    return (
+      <Chip
+        {...getTagProps({ index })}
+        data-testid={
+          TAG_DISPLAY_VALUES[tag].displayName.toLowerCase() + "-chip"
+        }
+        key={tag}
+        label={TAG_DISPLAY_VALUES[tag].displayName}
+        sx={(theme) => ({
+          backgroundColor: theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
+          color: getContrastTextColor(
+            theme.palette.nodeTag[TAG_DISPLAY_VALUES[tag].color],
+            "#FFF",
+          ),
+        })}
+        onDelete={
+          TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)
+            ? undefined
+            : getTagProps({ index }).onDelete
+        }
+      />
+    );
+  });
 
 export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
   return (

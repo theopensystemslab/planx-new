@@ -1,9 +1,11 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
-import { ComponentType } from "@opensystemslab/planx-core/types";
+import Box from "@mui/material/Box";
+import { ComponentType, NodeTag } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
 import gql from "graphql-tag";
+import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
@@ -13,9 +15,12 @@ import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";
+import { Tag } from "./Tag";
 
 const ExternalPortal: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
+
+  const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
   const addExternalPortal = useStore.getState().addExternalPortal;
 
@@ -84,14 +89,17 @@ const ExternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })}>
-        <Link href={`/${href}`} prefetch={false} ref={drag}>
-          <span>{href}</span>
-        </Link>
-        <Link href={editHref} prefetch={false} className="portalMenu">
-          <MoreVert titleAccess="Edit Portal" />
-        </Link>
-      </li>
+      <Box sx={{ width: "max-content" }}>
+        <li className={classNames("card", "portal", { isDragging })}>
+          <Link href={`/${href}`} prefetch={false} ref={drag}>
+            <span>{href}</span>
+          </Link>
+          <Link href={editHref} prefetch={false} className="portalMenu">
+            <MoreVert titleAccess="Edit Portal" />
+          </Link>
+        </li>
+        {props.tags?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+      </Box>
     </>
   );
 };
@@ -127,6 +135,8 @@ const InternalPortal: React.FC<any> = (props) => {
   };
 
   const Icon = ICONS[ComponentType.InternalPortal];
+
+  const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
   return (
     <>

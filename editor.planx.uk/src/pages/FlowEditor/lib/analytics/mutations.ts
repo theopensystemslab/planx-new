@@ -52,6 +52,18 @@ export const UPDATE_HAS_CLICKED_HELP = gql`
   }
 `;
 
+export const UPDATE_HAS_CLICKED_SAVE = gql`
+  mutation UpdateHasClickedSave($id: bigint!, $metadata: jsonb = {}) {
+    update_analytics_logs_by_pk(
+      pk_columns: { id: $id }
+      _set: { has_clicked_save: true }
+      _append: { metadata: $metadata }
+    ) {
+      id
+    }
+  }
+`;
+
 export const UPDATE_ANALYTICS_LOG_METADATA = gql`
   mutation UpdateAnalyticsLogMetadata($id: bigint!, $metadata: jsonb = {}) {
     update_analytics_logs_by_pk(

@@ -20,7 +20,7 @@ import NextSteps from "@planx/components/NextSteps/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
 import Page from "@planx/components/Page/Editor";
-import Pay from "@planx/components/Pay/Editor";
+import Pay from "@planx/components/Pay/Editor/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Question from "@planx/components/Question/Editor";

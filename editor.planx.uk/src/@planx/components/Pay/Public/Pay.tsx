@@ -14,7 +14,7 @@ import { useErrorHandler } from "react-error-boundary";
 import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import { createPayload, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
+import { createPayload, getDefaultContent, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -67,11 +67,7 @@ function Component(props: Props) {
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
-  const defaultMetadata = [
-    { key: "source", value: "PlanX" },
-    { key: "flow", value: flowSlug },
-    { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },
-  ];
+  const defaultMetadata = getDefaultContent().govPayMetadata;
 
   const metadata = [...(props.govPayMetadata || []), ...defaultMetadata];
 
