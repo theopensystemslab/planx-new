@@ -66,3 +66,5 @@ config:
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr
+  application:metabase-api-key:
+    secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==

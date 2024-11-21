@@ -451,6 +451,14 @@ export = async () => {
             name: "MAPBOX_ACCESS_TOKEN",
             value: config.requireSecret("mapbox-access-token"),
           },
+          {
+            name: "METABASE_API_KEY",
+            value: config.requireSecret("metabase-api-key"),
+          },
+          {
+            name: "METABASE_URL_EXT",
+            value: `https://metabase.${DOMAIN}`,
+          },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],
