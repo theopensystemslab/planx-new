@@ -95,6 +95,9 @@
     name: analytics_summary
     schema: public
 - table:
+    name: applicant_research_opt_in_view
+    schema: public
+- table:
     name: blpu_codes
     schema: public
   select_permissions:

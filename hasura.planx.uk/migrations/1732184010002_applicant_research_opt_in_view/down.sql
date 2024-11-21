@@ -1,0 +1,1 @@
+DROP VIEW applicant_research_opt_in_view;
