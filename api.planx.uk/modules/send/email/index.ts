@@ -12,7 +12,7 @@ import {
 export const sendToEmail: SendIntegrationController = async (
   req,
   res,
-  next,
+  next
 ) => {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -34,7 +34,7 @@ export const sendToEmail: SendIntegrationController = async (
     // Get the applicant email and flow slug associated with the session
     const { email, flow } = await getSessionEmailDetailsById(sessionId);
     const flowName = flow.name;
-    const serviceURL = `${process.env.EDITOR_URL_EXT}/${localAuthority}/${flow.slug}`;
+    const serviceURL = `${process.env.EDITOR_URL_EXT}/${localAuthority}/${flow.slug}/${sessionId}`;
 
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
@@ -51,7 +51,7 @@ export const sendToEmail: SendIntegrationController = async (
     const response = await sendEmail(
       "submit",
       teamSettings.submissionEmail,
-      config,
+      config
     );
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
@@ -63,7 +63,7 @@ export const sendToEmail: SendIntegrationController = async (
       localAuthority,
       teamSettings.submissionEmail,
       config,
-      response,
+      response
     );
 
     return res.status(200).send({

@@ -1,30 +1,46 @@
+import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useMemo } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
+import { TEAM_EMAIL_SETTINGS_QUERY } from "./../../../../api.planx.uk/modules/send/email/service";
 
 const verifyEmailSchema = object({
   email: string().email("Invalid email").required("Email address required"),
 });
 
-// interface VerifyEmailProps {
-//   handleSubmit: (email: string) => void;
-// }
+interface VerifyEmailProps {
+  params: Record<string, string>;
+}
 
-// export const VerifyEmail = ({
-//   handleSubmit,
-// }: VerifyEmailProps): JSX.Element => {
+export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
+  const { sessionId, team } = params;
 
-export const VerifyEmail = (): JSX.Element => {
+  const { data, loading, error } = useQuery(
+    gql`
+      ${TEAM_EMAIL_SETTINGS_QUERY}
+    `,
+    {
+      variables: { slug: team },
+    }
+  );
+
+  const teamEmail = useMemo(
+    () => data?.teamSettings.submissionEmail || null,
+    [data]
+  );
+
   const handleSubmit = (email: string) => {
-    console.log("submitting!", email);
+    console.log("need to validate this email!", email);
+    const url = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?email=${teamEmail}&localAuthority=${team}`;
+    window.open(url, "_blank");
   };
 
   const formik = useFormik({
