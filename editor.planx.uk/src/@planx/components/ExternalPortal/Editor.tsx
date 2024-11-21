@@ -1,3 +1,4 @@
+import MenuItem from "@mui/material/MenuItem";
 import {
   ComponentType as TYPES,
   NodeTag,
@@ -7,6 +8,7 @@ import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 
 import { ICONS } from "../shared/icons";
 
@@ -50,19 +52,25 @@ const ExternalPortalForm: React.FC<{
           </span>
         </ModalSectionContent>
         <ModalSectionContent title="Pick a flow">
-          <select
+          <SelectInput
             data-testid="flowId"
             name="flowId"
             value={formik.values.flowId}
             onChange={formik.handleChange}
           >
             {!id && <option value="" />}
-            {flows.map((flow) => (
-              <option key={flow.id} value={flow.id}>
-                {flow.text}
-              </option>
-            ))}
-          </select>
+            {flows.map((flow) => {
+              return (
+                <MenuItem
+                  sx={(theme) => ({ fontSize: theme.typography.body3 })}
+                  key={flow.id}
+                  value={flow.id}
+                >
+                  {flow.text}
+                </MenuItem>
+              );
+            })}
+          </SelectInput>
         </ModalSectionContent>
         <ComponentTagSelect
           value={formik.values.tags}
