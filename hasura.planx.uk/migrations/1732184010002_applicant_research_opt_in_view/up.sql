@@ -25,3 +25,5 @@ FROM
 WHERE 
     last_name IS NOT NULL 
     AND first_name IS NOT NULL;
+
+comment on view "public"."applicant_research_opt_in_view" is E'Temporary view to expose a list of applicants to opt in to user research during the 2024/25 pilot. Used to generate a CSV report bi-weekly.';
