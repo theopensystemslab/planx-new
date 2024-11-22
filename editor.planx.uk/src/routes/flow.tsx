@@ -56,7 +56,7 @@ const getExternalPortals = async () => {
       slug,
       team: team.name,
     }))
-    .sort((a, b) => {
+    .sort((a: Flow, b: Flow) => {
       if (a.team > b.team) {
         return 1;
       } else if (b.team > a.team) {
