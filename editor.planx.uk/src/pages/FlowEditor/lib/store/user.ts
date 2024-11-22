@@ -55,15 +55,17 @@ export const userStore: StateCreator<
 
   getUserRoleForCurrentTeam: () => {
     const { user, teamSlug } = get();
-    if (!user || !teamSlug) return;
+    if (!user) return;
 
     if (user.isPlatformAdmin) return "platformAdmin";
 
-    const currentUserTeam = user.teams.find(({ team: { slug } }) => slug === teamSlug );
+    const currentUserTeam = user.teams.find(
+      ({ team: { slug } }) => slug === teamSlug,
+    );
     if (!currentUserTeam) return;
 
     return currentUserTeam.role;
-  }
+  },
 });
 
 const getLoggedInUser = async () => {
