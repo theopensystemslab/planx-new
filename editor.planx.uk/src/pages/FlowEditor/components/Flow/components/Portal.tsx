@@ -141,7 +141,6 @@ const InternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
           <Link
