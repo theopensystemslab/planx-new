@@ -141,19 +141,22 @@ const InternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })} ref={ref}>
-        <Link
-          href={href}
-          prefetch={false}
-          ref={drag}
-          onContextMenu={handleContext}
-        >
-          {Icon && <Icon />}
-          <span>{props.data.text}</span>
-        </Link>
-        <Link href={editHref} prefetch={false} className="portalMenu">
-          <MoreVert titleAccess="Edit Portal" />
-        </Link>
+      <li ref={ref}>
+        <Box className={classNames("card", "portal", { isDragging })}>
+          <Link
+            href={href}
+            prefetch={false}
+            ref={drag}
+            onContextMenu={handleContext}
+          >
+            {Icon && <Icon />}
+            <span>{props.data.text}</span>
+          </Link>
+          <Link href={editHref} prefetch={false} className="portalMenu">
+            <MoreVert titleAccess="Edit Portal" />
+          </Link>
+        </Box>
+        {props.tags?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
       </li>
     </>
   );
