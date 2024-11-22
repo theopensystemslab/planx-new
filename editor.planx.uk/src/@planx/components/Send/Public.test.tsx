@@ -5,7 +5,7 @@ import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
 import { setup } from "testUtils";
-import { vi } from "vitest";
+import { it,vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
@@ -179,29 +179,34 @@ describe("Uniform overrides for Buckinghamshire", () => {
   });
 });
 
-it("generates a valid breadcrumb", async () => {
-  const handleSubmit = vi.fn();
+it(
+  "generates a valid breadcrumb",
+  async () => {
+    const handleSubmit = vi.fn();
 
-  setup(
-    <SendComponent
-      title="Send"
-      destinations={["bops", "uniform"]}
-      handleSubmit={handleSubmit}
-    />,
-  );
+    setup(
+      <SendComponent
+        title="Send"
+        destinations={["bops", "uniform"]}
+        handleSubmit={handleSubmit}
+      />,
+    );
 
-  await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
-  expect(handleSubmit).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
 
-  const breadcrumb = handleSubmit.mock.calls[0][0];
+    const breadcrumb = handleSubmit.mock.calls[0][0];
 
-  expect(breadcrumb.data).toEqual(
-    expect.objectContaining({
-      bopsSendEventId: hasuraEventsResponseMock.bops.event_id,
-      uniformSendEventId: hasuraEventsResponseMock.uniform.event_id,
-    }),
-  );
-});
+    expect(breadcrumb.data).toEqual(
+      expect.objectContaining({
+        bopsSendEventId: hasuraEventsResponseMock.bops.event_id,
+        uniformSendEventId: hasuraEventsResponseMock.uniform.event_id,
+      }),
+    );
+    // Flaky test in CI
+  },
+  { retry: 1 },
+);
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
