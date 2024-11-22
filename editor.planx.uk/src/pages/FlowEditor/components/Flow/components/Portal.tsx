@@ -89,17 +89,17 @@ const ExternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <Box sx={{ width: "max-content" }}>
-        <li className={classNames("card", "portal", { isDragging })}>
+      <li ref={ref}>
+        <Box className={classNames("card", "portal", { isDragging })}>
           <Link href={`/${href}`} prefetch={false} ref={drag}>
             <span>{href}</span>
           </Link>
           <Link href={editHref} prefetch={false} className="portalMenu">
             <MoreVert titleAccess="Edit Portal" />
           </Link>
-        </li>
+        </Box>
         {props.tags?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
-      </Box>
+      </li>
     </>
   );
 };
@@ -141,7 +141,7 @@ const InternalPortal: React.FC<any> = (props) => {
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li className={classNames("card", "portal", { isDragging })}>
+      <li className={classNames("card", "portal", { isDragging })} ref={ref}>
         <Link
           href={href}
           prefetch={false}
