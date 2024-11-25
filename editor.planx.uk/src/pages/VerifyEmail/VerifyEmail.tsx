@@ -5,12 +5,11 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import axios from "axios";
 import { useFormik } from "formik";
-import isEmpty from "lodash/isEmpty";
-import omitBy from "lodash/omitBy";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { urlWithParams } from "utils";
 import { object, string } from "yup";
 
 const verifyEmailSchema = object({
@@ -22,11 +21,6 @@ const downloadApplication = async (
   email: string,
   team: string
 ) => {
-  const urlWithParams = (url: string, params: any) =>
-    [url, new URLSearchParams(omitBy(params, isEmpty))]
-      .filter(Boolean)
-      .join("?");
-
   const url = urlWithParams(
     `${
       import.meta.env.VITE_APP_API_URL
