@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -12,6 +13,19 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 
+const StyledTable = styled(Table)(() => ({
+  [`& .${tableCellClasses.root}`]: {
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+}));
+
+const BoldTableRow = styled(TableRow)(() => ({
+  [`& .${tableCellClasses.root}`]: {
+    fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  },
+}));
+
 const VAT_RATE = 20;
 
 const DESCRIPTION =
@@ -19,14 +33,10 @@ const DESCRIPTION =
 
 const Header = () => (
   <TableHead>
-    <TableRow>
-      <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-        Description
-      </TableCell>
-      <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }} align="right">
-        Amount
-      </TableCell>
-    </TableRow>
+    <BoldTableRow>
+      <TableCell>Description</TableCell>
+      <TableCell align="right">Amount</TableCell>
+    </BoldTableRow>
   </TableHead>
 );
 
@@ -66,12 +76,10 @@ const VAT = () => (
 );
 
 const Total = () => (
-  <TableRow>
-    <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>Total</TableCell>
-    <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }} align="right">
-      {formattedPriceWithCurrencySymbol(80)}
-    </TableCell>
-  </TableRow>
+  <BoldTableRow>
+    <TableCell>Total</TableCell>
+    <TableCell align="right">{formattedPriceWithCurrencySymbol(80)}</TableCell>
+  </BoldTableRow>
 );
 
 export const FeeBreakdown: React.FC = () => {
@@ -86,7 +94,7 @@ export const FeeBreakdown: React.FC = () => {
         {DESCRIPTION}
       </Typography>
       <TableContainer>
-        <Table data-testid="fee-breakdown-table">
+        <StyledTable data-testid="fee-breakdown-table">
           <Header />
           <TableBody>
             <ApplicationFee />
@@ -96,7 +104,7 @@ export const FeeBreakdown: React.FC = () => {
             <VAT />
             <Total />
           </TableBody>
-        </Table>
+        </StyledTable>
       </TableContainer>
     </Box>
   );
