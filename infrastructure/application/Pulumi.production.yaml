@@ -148,3 +148,5 @@ config:
   aws:region: eu-west-2
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl
+  application:metabase-api-key:
+    secure: AAABAAdkLyFGZJ50HENSAkvYZ9Y3Qj2oKysmBKNWbqgcCLYz+dDvgEBPTbzG6lNgOqUyySJDmquMilyiUtTLau7rpF4txEM/O4DHmAinVg==

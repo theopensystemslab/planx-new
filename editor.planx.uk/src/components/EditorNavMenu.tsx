@@ -95,13 +95,12 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role] =
-    useStore((state) => [
-      state.teamSlug,
-      state.flowSlug,
-      state.flowAnalyticsLink,
-      state.getUserRoleForCurrentTeam()
-    ]);
+  const [teamSlug, flowSlug, flowAnalyticsLink, role] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+    state.flowAnalyticsLink,
+    state.getUserRoleForCurrentTeam(),
+  ]);
 
   const isActive = (route: string) => url.href.endsWith(route);
 
@@ -242,7 +241,9 @@ function EditorNavMenu() {
 
   const { routes, compact } = getRoutesForUrl(url.href);
 
-  const visibleRoutes = routes.filter(({ accessibleBy }) => role && accessibleBy.includes(role));
+  const visibleRoutes = routes.filter(
+    ({ accessibleBy }) => role && accessibleBy.includes(role),
+  );
 
   // Hide menu if the user does not have a selection of items
   if (visibleRoutes.length < 2) return null;
@@ -256,6 +257,7 @@ function EditorNavMenu() {
               <Tooltip title={title} placement="right">
                 <Box component="span">
                   <MenuButton
+                    title={title}
                     isActive={isActive(route)}
                     disabled={disabled}
                     disableRipple

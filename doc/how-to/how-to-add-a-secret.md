@@ -14,6 +14,7 @@ This guide will demonstrate how to -
 2. Add to your local `.env` file for local development
    - Note: This file is never checked into our public repository and is listed in our `.gitignore` config
 3. Document the secret in `.env.example`
+4. If a secret is required for a unit test, add dummy values to corresponding `.env.test` files e.g `YOUR_NEW_SECRET=test`
 
 ### Docker Environments (Local development + Pizza environments)
 To pass a secret into our Docker Compose setup you will need to map it into the relevant container in `docker-compose.yml`. For example - 
@@ -33,6 +34,39 @@ You will then be able to refer to it in code via `process.env.YOUR_NEW_SECRET` a
 When building Pizza environments for testing, GitHub actions access secrets via S3 using the `pull-secrets.sh` script. In order to push changes to your local `.env`, you will need to run the `push-secrets.sh` script which will push your local changes to S3.
 
 > Please be aware that if you are rotating secrets this may affect existing Pizzas which will need to be rebuilt. This can be done manually in GitHub by re-running the latest action associated with affected PRs.
+
+
+## Diagram - Docker environments
+```mermaid
+flowchart LR
+    subgraph "Local Environment"
+        localEnv[".env file(s)"] --> Docker["Docker Compose"]
+        Docker --> API
+        Docker --> Hasura
+        Docker --> Frontend
+    end
+
+    subgraph Staging AWS S3 bucket
+        S3
+    end
+
+    subgraph GitHub actions
+        pizzaEnv[".env file"]
+    end
+
+    subgraph "Pizza Environment"
+        pizzaEnv[".env file"] --> PizzaDocker["Docker Compose"]
+        PizzaDocker --> PizzaAPI["API"]
+        PizzaDocker --> PizzaHasura["Hasura"]
+        PizzaDocker --> PizzaFrontend["Frontend"]
+    end
+
+    %% Scripts reading and writing
+    S3 --"Pull/Push scripts"--> localEnv
+
+    %% CI
+    S3 --> pizzaEnv
+```
 
 
 ### AWS / Pulumi Environments (Staging + Production environments)
@@ -69,3 +103,18 @@ const apiService = new awsx.ecs.FargateService("api", {
 ```
 
 > Pulumi uses our Docker images to construct Fargate services. This means that the "name" value above must match that used in Docker.
+
+## Diagram - AWS / Pulumi Environments
+```mermaid
+flowchart LR
+    subgraph "Staging & Production"
+        direction LR
+
+        PulumiService["Pulumi Service"] --"Private key"--> Pulumi
+        PulumiFile["pulumi.staging.yaml"] --"Public key"--> Pulumi
+        Pulumi["Pulumi IaC code"] --Decrypted--> Fargate
+        Fargate --> FargateAPI["API"]
+        Fargate --> FargateHasura["Hasura"]
+        Fargate --> FargateFrontend["Frontend"]
+    end
+```
