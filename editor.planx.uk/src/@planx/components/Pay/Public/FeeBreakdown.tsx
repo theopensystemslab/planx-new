@@ -30,9 +30,9 @@ const Header = () => (
   </TableHead>
 );
 
-const PlanningFee = () => (
+const ApplicationFee = () => (
   <TableRow>
-    <TableCell>Planning fee</TableCell>
+    <TableCell>Application fee</TableCell>
     <TableCell align="right">{formattedPriceWithCurrencySymbol(100)}</TableCell>
   </TableRow>
 );
@@ -69,7 +69,7 @@ const Total = () => (
   <TableRow>
     <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>Total</TableCell>
     <TableCell sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }} align="right">
-      {formattedPriceWithCurrencySymbol(50)}
+      {formattedPriceWithCurrencySymbol(80)}
     </TableCell>
   </TableRow>
 );
@@ -89,7 +89,7 @@ export const FeeBreakdown: React.FC = () => {
         <Table data-testid="fee-breakdown-table">
           <Header />
           <TableBody>
-            <PlanningFee />
+            <ApplicationFee />
             <ServiceCharge />
             <Exemptions />
             <Reductions />
