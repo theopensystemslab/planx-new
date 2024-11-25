@@ -11,7 +11,7 @@ import {
 export const sendToEmail: SendIntegrationController = async (
   req,
   res,
-  next
+  next,
 ) => {
   req.setTimeout(120 * 1000); // Temporary bump to address submission timeouts
 
@@ -51,7 +51,7 @@ export const sendToEmail: SendIntegrationController = async (
     const response = await sendEmail(
       "submit",
       teamSettings.submissionEmail,
-      config
+      config,
     );
 
     // Mark session as submitted so that reminder and expiry emails are not triggered
@@ -63,7 +63,7 @@ export const sendToEmail: SendIntegrationController = async (
       localAuthority,
       teamSettings.submissionEmail,
       config,
-      response
+      response,
     );
 
     return res.status(200).send({
