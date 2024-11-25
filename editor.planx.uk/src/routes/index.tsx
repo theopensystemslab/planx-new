@@ -1,8 +1,8 @@
 import { compose, lazy, map, mount, redirect, route, withView } from "navi";
 import { loadingView } from "pages/layout/LoadingLayout";
+import { VerifyEmail } from "pages/VerifyEmail/VerifyEmail";
 import * as React from "react";
 
-import { VerifyEmail } from "pages/VerifyEmail/VerifyEmail";
 import { client } from "../lib/graphql";
 import ErrorPage from "../pages/ErrorPage";
 import Login from "../pages/Login";
@@ -23,12 +23,12 @@ const editorRoutes = mount({
       ? redirect(
           req.params.redirectTo
             ? decodeURIComponent(req.params.redirectTo)
-            : "/"
+            : "/",
         )
       : route({
           title: makeTitle("Login"),
           view: <Login />,
-        })
+        }),
   ),
 
   ":team/:flow/:sessionId/verify-email": map((req) => {
@@ -49,7 +49,7 @@ const editorRoutes = mount({
       document.cookie = cookieString;
       // remove jwt cookie for planx domains (staging and production)
       document.cookie = cookieString.concat(
-        ` domain=.${window.location.host};`
+        ` domain=.${window.location.host};`,
       );
       // redirect to editor landing page with no jwt cookie set
       window.location.href = "/";
@@ -61,32 +61,32 @@ const editorRoutes = mount({
       ? lazy(() => import("./authenticated"))
       : redirect(`/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`, {
           exact: false,
-        })
+        }),
   ),
 });
 
 const loadPayRoutes = () =>
   compose(
     withView(loadingView),
-    lazy(() => import("./pay"))
+    lazy(() => import("./pay")),
   );
 
 const loadPublishedRoutes = () =>
   compose(
     withView(loadingView),
-    lazy(() => import("./published"))
+    lazy(() => import("./published")),
   );
 
 const loadPreviewRoutes = () =>
   compose(
     withView(loadingView),
-    lazy(() => import("./preview"))
+    lazy(() => import("./preview")),
   );
 
 const loadDraftRoutes = () =>
   compose(
     withView(loadingView),
-    lazy(() => import("./draft"))
+    lazy(() => import("./draft")),
   );
 
 export default isPreviewOnlyDomain
@@ -102,8 +102,8 @@ export default isPreviewOnlyDomain
       "/canterbury/find-out-if-you-need-planning-permission/preview": map(
         async (req) =>
           redirect(
-            `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`
-          )
+            `/canterbury/find-out-if-you-need-planning-permission/published${req?.search}`,
+          ),
       ), // temporary redirect while Canterbury works with internal IT to update advertised service links
       "/:team/:flow/preview": loadPreviewRoutes(), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": loadDraftRoutes(), // loads current draft flow and draft external portals
