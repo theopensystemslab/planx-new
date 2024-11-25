@@ -85,7 +85,7 @@ export const createMetabaseClient = (): AxiosInstance => {
           originalRequest.retryCount < (config.retries ?? 3)
         ) {
           originalRequest.retryCount++;
-          return client(originalRequest);
+          return client.request(originalRequest);
         }
 
         // Transform error response
