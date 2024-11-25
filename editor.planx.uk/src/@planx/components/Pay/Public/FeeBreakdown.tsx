@@ -86,7 +86,7 @@ export const FeeBreakdown: React.FC = () => {
         {DESCRIPTION}
       </Typography>
       <TableContainer>
-        <Table>
+        <Table data-testid="fee-breakdown-table">
           <Header />
           <TableBody>
             <PlanningFee />
