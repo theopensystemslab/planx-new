@@ -6,6 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -74,6 +75,8 @@ const Total = () => (
 );
 
 export const FeeBreakdown: React.FC = () => {
+  if (!hasFeatureFlag("FEE_BREAKDOWN")) return null;
+
   return (
     <Box mt={3}>
       <Typography variant="h3" mb={1}>

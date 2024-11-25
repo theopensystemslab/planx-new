@@ -1,5 +1,6 @@
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { useFormikContext } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -10,6 +11,8 @@ import { Pay } from "../model";
 
 export const FeeBreakdownSection: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<Pay>();
+
+  if (!hasFeatureFlag("FEE_BREAKDOWN")) return null;
 
   return (
     <ModalSection>
