@@ -15,7 +15,6 @@ import { Switch } from "ui/shared/Switch";
 import { ICONS } from "../../shared/icons";
 import { EditorProps } from "../../shared/types";
 import { FeeBreakdownSection } from "./FeeBreakdownSection";
-import { FeeBreakdownSection } from "./FeeBreakdownSection";
 import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
 
@@ -103,9 +102,9 @@ const Component: React.FC<Props> = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <GovPayMetadataSection/>
-          <InviteToPaySection/>
-          <FeeBreakdownSection/>
+          <GovPayMetadataSection />
+          <InviteToPaySection />
+          <FeeBreakdownSection />
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}
