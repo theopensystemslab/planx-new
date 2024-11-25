@@ -19,6 +19,7 @@ import {
   getDefaultContent,
   Pay,
 } from "../model";
+import { FeeBreakdown } from "./FeeBreakdown";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
@@ -180,6 +181,7 @@ export default function Confirm(props: Props) {
                 />
               </Typography>
             </FormWrapper>
+            {props.showFeeBreakdown && <FeeBreakdown />}
           </Banner>
         )}
         {page === "Pay" ? (

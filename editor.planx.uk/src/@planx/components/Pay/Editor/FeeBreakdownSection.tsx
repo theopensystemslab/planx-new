@@ -1,11 +1,11 @@
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import { useFormikContext } from "formik";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 
-import { useFormikContext } from "formik";
 import { Pay } from "../model";
 
 export const FeeBreakdownSection: React.FC = () => {
@@ -24,9 +24,9 @@ export const FeeBreakdownSection: React.FC = () => {
           />
         </InputRow>
         <>
-        { Boolean(values.showFeeBreakdown) && <p>Fee breakdown fields here</p> }
+          {Boolean(values.showFeeBreakdown) && <p>Fee breakdown fields here</p>}
         </>
       </ModalSectionContent>
     </ModalSection>
-  )
-}
+  );
+};
