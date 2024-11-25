@@ -20,6 +20,7 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
+import exp from "node:constants";
 
 let context: Context = {
   ...contextDefaults,
@@ -118,12 +119,12 @@ test.describe("Agent journey @regression", async () => {
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
 
-    await expect(
-      secondPage.getByRole("heading", {
-        name: "Sorry, you can't make changes to this application",
-      }),
-    ).toBeVisible();
-    await expect(secondPage.getByTestId("continue-button")).toBeHidden();
+    const errorHeader = secondPage.getByRole("heading", {
+      name: "Sorry, you can't make changes to this application",
+    })
+
+    await expect(errorHeader).toBeVisible()
+    await expect(secondPage.getByTestId("continue-button")).toBeHidden()
   });
 
   test("reconciliation does not apply to sessions with open payment requests", async ({
