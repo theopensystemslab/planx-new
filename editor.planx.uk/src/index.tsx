@@ -6,6 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import ErrorPage from "pages/ErrorPage";
@@ -17,10 +18,11 @@ import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
 
 // init airbrake before everything else
-import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";
+
+const queryClient = new QueryClient();
 
 if (import.meta.env.VITE_APP_ENV !== "production") {
   console.log(`ENV: ${import.meta.env.VITE_APP_ENV}`);
@@ -47,7 +49,7 @@ const hasJWT = (): boolean | void => {
 
   // If JWT not set via cookie, check search params
   const jwtSearchParams = new URLSearchParams(window.location.search).get(
-    "jwt",
+    "jwt"
   );
   if (!jwtSearchParams) return false;
 
@@ -95,20 +97,22 @@ const Layout: React.FC<{
 
 root.render(
   <ToastContextProvider>
-    <ApolloProvider client={client}>
-      <AnalyticsProvider>
-        <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-          <HelmetProvider>
-            <Layout>
-              <CssBaseline />
-              <Suspense fallback={null}>
-                <View />
-              </Suspense>
-            </Layout>
-          </HelmetProvider>
-        </Router>
-      </AnalyticsProvider>
-    </ApolloProvider>
-    <ToastContainer icon={false} theme="colored" />
-  </ToastContextProvider>,
+    <QueryClientProvider client={queryClient}>
+      <ApolloProvider client={client}>
+        <AnalyticsProvider>
+          <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
+            <HelmetProvider>
+              <Layout>
+                <CssBaseline />
+                <Suspense fallback={null}>
+                  <View />
+                </Suspense>
+              </Layout>
+            </HelmetProvider>
+          </Router>
+        </AnalyticsProvider>
+      </ApolloProvider>
+      <ToastContainer icon={false} theme="colored" />
+    </QueryClientProvider>
+  </ToastContextProvider>
 );
