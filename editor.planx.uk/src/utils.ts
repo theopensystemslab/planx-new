@@ -1,3 +1,6 @@
+import isEmpty from "lodash/isEmpty";
+import omitBy from "lodash/omitBy";
+
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
   return arr.filter((_item, i) => {
     return i !== index;
@@ -37,7 +40,7 @@ export const levenshteinDistance = (a: string, b: string): number => {
       distanceMatrix[j][i] = Math.min(
         distanceMatrix[j][i - 1] + 1, // deletion
         distanceMatrix[j - 1][i] + 1, // insertion
-        distanceMatrix[j - 1][i - 1] + indicator, // substitution
+        distanceMatrix[j - 1][i - 1] + indicator // substitution
       );
     }
   }
@@ -55,7 +58,7 @@ export function slugify(name: string): string {
 
 export const isLiveEnv = () =>
   ["production", "staging", "pizza"].includes(
-    import.meta.env.VITE_APP_ENV || "",
+    import.meta.env.VITE_APP_ENV || ""
   );
 
 export const removeSessionIdSearchParam = () => {
@@ -68,3 +71,19 @@ export const removeSessionIdSearchParam = () => {
 export const exhaustiveCheck = (type: never): never => {
   throw new Error(`Missing type ${type}`);
 };
+
+/**
+ * Creates a URL with query parameters added to it.
+ *
+ * @param {string} url - The base URL string.
+ * @param {object} params - An object containing key-value pairs for query parameters.
+ * @returns {string} A new URL string with query parameters appended.
+ *
+ * @example
+ * const url = "https://example.com";
+ * const params = { name: "Fluffy", species: "cat" };
+ * const result = urlWithParams(url, params);
+ * console.log(result); // Output: https://example.com?name=Fluffy&species=cat
+ */
+export const urlWithParams = (url: string, params: any): string =>
+  [url, new URLSearchParams(omitBy(params, isEmpty))].filter(Boolean).join("?");

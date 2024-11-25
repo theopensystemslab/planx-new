@@ -21,11 +21,10 @@ import axios from "axios";
 import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
-import isEmpty from "lodash/isEmpty";
-import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
+import { urlWithParams } from "utils";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -506,11 +505,6 @@ export const editorStore: StateCreator<
 
   async publishFlow(flowId: string, summary?: string) {
     const token = get().jwt;
-
-    const urlWithParams = (url: string, params: any) =>
-      [url, new URLSearchParams(omitBy(params, isEmpty))]
-        .filter(Boolean)
-        .join("?");
 
     const { data } = await axios.post<PublishFlowResponse>(
       urlWithParams(
