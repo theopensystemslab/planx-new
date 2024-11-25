@@ -14,7 +14,13 @@ import { useErrorHandler } from "react-error-boundary";
 import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import { createPayload, getDefaultContent, GOV_UK_PAY_URL, Pay, toDecimal } from "../model";
+import {
+  createPayload,
+  getDefaultContent,
+  GOV_UK_PAY_URL,
+  Pay,
+  toDecimal,
+} from "../model";
 import Confirm from "./Confirm";
 
 export default Component;
@@ -53,7 +59,6 @@ function Component(props: Props) {
     passport,
     environment,
     teamSlug,
-    flowSlug,
   ] = useStore((state) => [
     state.id,
     state.sessionId,
@@ -63,7 +68,6 @@ function Component(props: Props) {
     state.computePassport(),
     state.previewEnvironment,
     state.teamSlug,
-    state.flowSlug,
   ]);
   const fee = props.fn ? Number(passport.data?.[props.fn]) : 0;
 
@@ -303,7 +307,6 @@ function Component(props: Props) {
           }
           showInviteToPay={showPayOptions && isTeamSupported}
           paymentStatus={govUkPayment?.state?.status}
-          hidePay={props.hidePay}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
