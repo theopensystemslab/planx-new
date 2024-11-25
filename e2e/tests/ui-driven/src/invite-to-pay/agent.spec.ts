@@ -20,7 +20,6 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
-import exp from "node:constants";
 
 let context: Context = {
   ...contextDefaults,
