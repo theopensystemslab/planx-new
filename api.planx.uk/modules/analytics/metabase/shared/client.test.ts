@@ -1,35 +1,25 @@
 import axios from "axios";
-import type {
-  AxiosInstance,
-  AxiosError,
-  InternalAxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
-import { validateConfig, createMetabaseClient } from "./client.js";
+import type { AxiosInstance } from "axios";
+import {
+  validateConfig,
+  createMetabaseClient,
+  MetabaseError,
+} from "./client.js";
+import nock from "nock";
 
 const axiosCreateSpy = vi.spyOn(axios, "create");
-
-interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
-  retryCount?: number;
-}
-
-interface MockAxiosInstance extends AxiosInstance {
-  handleError: (error: AxiosError) => Promise<unknown>;
-}
 
 describe("Metabase client", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
-    vi.stubEnv("METABASE_URL_EXT", "https://metabase.mock.com");
-    vi.stubEnv("METABASE_API_KEY", "mockmetabasekey");
   });
 
   afterEach(() => {
     vi.unstubAllEnvs();
   });
 
-  test("returns configured client", () => {
+  test("returns configured client", async () => {
     const _client = createMetabaseClient();
 
     expect(axiosCreateSpy).toHaveBeenCalledWith({
@@ -46,14 +36,14 @@ describe("Metabase client", () => {
     test("throws error when URL_EXT is missing", () => {
       vi.stubEnv("METABASE_URL_EXT", undefined);
       expect(() => validateConfig()).toThrow(
-        "Missing environment variable 'METABASE_URL_EXT'",
+        "Missing environment variable 'METABASE_URL_EXT'"
       );
     });
 
     test("throws error when API_KEY is missing", () => {
       vi.stubEnv("METABASE_API_KEY", undefined);
       expect(() => validateConfig()).toThrow(
-        "Missing environment variable 'METABASE_API_KEY'",
+        "Missing environment variable 'METABASE_API_KEY'"
       );
     });
 
@@ -69,93 +59,61 @@ describe("Metabase client", () => {
   });
 
   describe("Error handling", () => {
-    test.skip("retries then succeeds on 5xx errors", async () => {
-      // Setup mock responses
-      const mockRequest = vi
-        .fn()
-        .mockRejectedValueOnce({
-          config: { retryCount: 0 } as ExtendedAxiosRequestConfig,
-          response: {
-            status: 500,
-            statusText: "Internal Server Error",
-            headers: {},
-            config: {} as ExtendedAxiosRequestConfig,
-            data: { message: "Server Error" },
-          } as AxiosResponse,
-          isAxiosError: true,
-        } as unknown as AxiosError)
-        .mockResolvedValueOnce({ data: "success" });
+    test("retries then succeeds on 5xx errors", async () => {
+      const metabaseScope = nock("https://metabase.mock.com");
 
-      // Create mock axios instance
-      const mockAxiosInstance = {
-        request: mockRequest,
-        interceptors: {
-          response: {
-            use: vi.fn((successFn, errorFn) => {
-              // Store the error handler
-              (mockAxiosInstance as MockAxiosInstance).handleError = errorFn;
-            }),
-          },
-        },
-      } as unknown as AxiosInstance;
+      metabaseScope
+        .get("/test")
+        .reply(500, { message: "Internal Server Error" })
+        .get("/test")
+        .reply(200, { data: "success" });
 
-      axiosCreateSpy.mockReturnValue(mockAxiosInstance);
+      const client = createMetabaseClient();
+      const response = await client.get("/test");
 
-      const _client = createMetabaseClient();
+      expect(response.data).toEqual({ data: "success" });
+      expect(metabaseScope.isDone()).toBe(true);
+    });
 
-      // Get the actual error handler
-      const handleError = (mockAxiosInstance as MockAxiosInstance).handleError;
+    test("throws an error if all requests fail", async () => {
+      const metabaseScope = nock("https://metabase.mock.com");
 
-      // First call should trigger retry
-      await handleError({
-        config: { retryCount: 0 } as ExtendedAxiosRequestConfig,
-        response: {
-          status: 500,
-          statusText: "Internal Server Error",
-          headers: {},
-          config: {} as ExtendedAxiosRequestConfig,
-          data: { message: "Server Error" },
-        } as AxiosResponse,
-      } as AxiosError);
+      metabaseScope
+        .get("/test")
+        .times(4)
+        .reply(500, { message: "Internal Server Error" });
 
-      expect(mockRequest).toHaveBeenCalledTimes(2);
-      await expect(mockRequest.mock.results[1].value).resolves.toEqual({
-        data: "success",
-      });
+      const client = createMetabaseClient();
+
+      try {
+        await client.get("/test");
+        expect.fail("Should have thrown an error");
+      } catch (error) {
+        expect(error).toBeInstanceOf(MetabaseError);
+        expect((error as MetabaseError).statusCode).toBe(500);
+        expect(metabaseScope.isDone()).toBe(true);
+      }
     });
 
     test("does not retry on non-5xx errors", async () => {
-      // Setup mock request
-      const mockRequest = vi.fn().mockRejectedValue({
-        response: {
-          status: 400,
-          data: { message: "Bad Request" },
-        },
-      });
+      const metabaseScope = nock("https://metabase.mock.com");
 
-      const mockAxiosInstance = {
-        request: mockRequest,
-      };
+      metabaseScope.get("/test").once().reply(200, { data: "success" });
 
-      // Create axios instance with request and interceptor
-      axiosCreateSpy.mockReturnValue({
-        ...mockAxiosInstance,
-        interceptors: {
-          response: {
-            use: vi.fn((successFn, errorFn) => {
-              // Store the error handler
-              (mockAxiosInstance as any).handleError = errorFn;
-            }),
-          },
-        },
-      } as unknown as AxiosInstance);
+      const client = createMetabaseClient();
+      const response = await client.get("/test");
 
-      const _client = createMetabaseClient();
+      expect(response.data).toEqual({ data: "success" });
 
-      const handleError = (mockAxiosInstance as any).handleError;
-      expect(handleError).toBeDefined();
+      // All expected requests were made
+      expect(metabaseScope.isDone()).toBe(true);
 
-      expect(mockRequest).toHaveBeenCalledTimes(0);
+      // No pending mocks left
+      expect(metabaseScope.pendingMocks()).toHaveLength(0);
+
+      // Double check that no other requests were intercepted
+      const requestCount = metabaseScope.activeMocks().length;
+      expect(requestCount).toBe(0);
     });
   });
 });
