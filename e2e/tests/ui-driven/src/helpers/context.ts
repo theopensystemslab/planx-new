@@ -94,17 +94,28 @@ export async function setUpTestContext(
   return context;
 }
 
+export const externalPortalServiceProps = {
+  name: "An External Portal Service",
+  slug: "an-external-portal-service",
+};
+
+export const externalPortalFlowData = {
+  title: "Is this an External Portal?",
+answers:[   "It is an external portal",
+  "No it is not an External Portal",]
+};
+
 export async function tearDownTestContext(context: Context) {
   const adminGQLClient = getGraphQLClient();
   if (context.flows && context.flows[0]) {
     await deleteSession(adminGQLClient, context);
 
-   await Promise.all(context.flows.map(async (flow) => {
+    for (const flow of context.flows) {
       await deleteFlow(adminGQLClient, flow);
-      if(flow.publishedId){
+      if (flow.publishedId) {
         await deletePublishedFlow(adminGQLClient, flow);
       }
-    }))
+    }
   }
   if (context.user) {
     await deleteUser(adminGQLClient, context);
@@ -269,7 +280,6 @@ async function deleteFlow(adminGQLClient: GraphQLClient, flow: Flow ) {
 }
 
 async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
-  console.log(context);
   if (context.user?.id) {
     log(`deleting user ${context.user?.id}`);
     await adminGQLClient.request(
