@@ -83,6 +83,7 @@ function Component(props: Props) {
     siteBoundary && stringify(siteBoundary);
   const planningDataParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
+    vals: dataValues.join(","),
     ...params,
   };
 

@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import React, { ChangeEvent } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 import InputGroup from "ui/editor/InputGroup";
@@ -17,6 +17,7 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -36,8 +37,12 @@ function PlanningConstraintsComponent(props: Props) {
         data: newValues,
       });
     },
-    validate: () => {
-      // TODO must select at least one formik.values.dataValues
+    validate: (values) => {
+      const errors: FormikErrors<PlanningConstraints> = {};
+      if (!values.dataValues || values.dataValues?.length < 1) {
+        errors.dataValues = "Select at least one constraint";
+      }
+      return errors;
     },
   });
 
@@ -50,7 +55,6 @@ function PlanningConstraintsComponent(props: Props) {
       } else {
         newCheckedVals = [];
       }
-
       formik.setFieldValue("dataValues", newCheckedVals);
     };
 
@@ -114,82 +118,84 @@ function PlanningConstraintsComponent(props: Props) {
             </InputRow>
           </InputGroup>
           <InputGroup label="Which constraints do you want to check?">
-            <TableContainer>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <Checkbox
-                        color="primary"
-                        checked={
-                          availableDatasets.length ===
-                          formik.values.dataValues?.length
-                        }
-                        onChange={changeSelectAll(formik.values.dataValues)}
-                        inputProps={{
-                          "aria-label": "select all constraints",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
-                      Constraints
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {availableDatasets
-                    .sort((a, b) => a.val.localeCompare(b.val))
-                    .map((dataset, i: number) => (
-                      <TableRow key={i}>
-                        <TableCell sx={{ verticalAlign: "top" }}>
-                          <Checkbox
-                            color="primary"
-                            checked={formik.values.dataValues?.includes(
-                              dataset.val,
-                            )}
-                            onChange={changeDataset(dataset.val)}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <InputGroup>
-                            <InputRow>
-                              <Input
-                                format="large"
-                                name="text"
-                                value={dataset.text}
-                                disabled
-                              />
-                            </InputRow>
-                            <InputRow>
-                              <Input
-                                format="data"
-                                name="val"
-                                value={dataset.val}
-                                disabled
-                              />
-                            </InputRow>
-                          </InputGroup>
-                          <Box>
-                            <Typography
-                              variant="body2"
-                              color="GrayText"
-                              sx={{ fontSize: ".8em", pb: 1 }}
-                            >
-                              {`via ${dataset.source}: ${dataset.datasets
-                                .filter(Boolean)
-                                .join(", ")} ${
-                                dataset?.entity
-                                  ? `(entity ${dataset.entity})`
-                                  : ``
-                              }`}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <ErrorWrapper error={formik.errors.dataValues}>
+              <TableContainer>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
+                        <Checkbox
+                          color="primary"
+                          checked={
+                            availableDatasets.length ===
+                            formik.values.dataValues?.length
+                          }
+                          onChange={changeSelectAll(formik.values.dataValues)}
+                          inputProps={{
+                            "aria-label": "select all constraints",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
+                        Constraints
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {availableDatasets
+                      .sort((a, b) => a.val.localeCompare(b.val))
+                      .map((dataset, i: number) => (
+                        <TableRow key={i}>
+                          <TableCell sx={{ verticalAlign: "top" }}>
+                            <Checkbox
+                              color="primary"
+                              checked={formik.values.dataValues?.includes(
+                                dataset.val,
+                              )}
+                              onChange={changeDataset(dataset.val)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <InputGroup>
+                              <InputRow>
+                                <Input
+                                  format="large"
+                                  name="text"
+                                  value={dataset.text}
+                                  disabled
+                                />
+                              </InputRow>
+                              <InputRow>
+                                <Input
+                                  format="data"
+                                  name="val"
+                                  value={dataset.val}
+                                  disabled
+                                />
+                              </InputRow>
+                            </InputGroup>
+                            <Box>
+                              <Typography
+                                variant="body2"
+                                color="GrayText"
+                                sx={{ fontSize: ".8em", pb: 1 }}
+                              >
+                                {`via ${dataset.source}: ${dataset.datasets
+                                  .filter(Boolean)
+                                  .join(", ")} ${
+                                  dataset?.entity
+                                    ? `(entity ${dataset.entity})`
+                                    : ``
+                                }`}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </ErrorWrapper>
           </InputGroup>
           <InputGroup label="Planning conditions disclaimer">
             <InputRow>
