@@ -125,7 +125,6 @@ const FormModal: React.FC<{
     <StyledDialog
       open
       fullWidth
-      data-testId="header-select"
       maxWidth="md"
       disableScrollLock
       onClose={handleClose}
