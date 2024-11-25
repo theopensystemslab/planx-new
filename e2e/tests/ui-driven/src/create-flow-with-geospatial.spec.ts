@@ -45,7 +45,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.addNewService();
 
     // update context to allow flow to be torn down
-    context.flow = { ...serviceProps };
+    context.flows = [{ ...serviceProps }];
 
     await editor.createFindProperty();
     await expect(editor.nodeList).toContainText(["Find property"]);

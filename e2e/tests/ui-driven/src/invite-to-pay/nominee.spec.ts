@@ -17,11 +17,11 @@ import { mockPaymentRequestDetails, mockSessionData } from "./mocks";
 
 let context: Context = {
   ...contextDefaults,
-  flow: {
+  flows: [{
     slug: "invite-to-pay-test",
     name: "Invite to pay test",
     data: inviteToPayFlow,
-  },
+  }],
   sessionIds: [], // used to collect and clean up sessions
 };
 
@@ -82,7 +82,7 @@ test.describe("Nominee journey @regression", async () => {
   });
 
   test("navigating to a URL with an invalid ID", async ({ page }) => {
-    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow!
+    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flows![0]
       .slug!}/pay?analytics=false&paymentRequestId=INVALID-ID`;
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
@@ -91,7 +91,7 @@ test.describe("Nominee journey @regression", async () => {
   });
 
   test("navigating to a URL without a paymentRequestId", async ({ page }) => {
-    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow!
+    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flows![0]
       .slug!}/pay?analytics=false`;
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
@@ -126,7 +126,7 @@ async function navigateToPaymentRequestPage(
   paymentRequest: PaymentRequest,
   page: Page,
 ) {
-  const paymentRequestURL = `/${context.team!.slug!}/${context.flow!
+  const paymentRequestURL = `/${context.team!.slug!}/${context.flows![0]
     .slug!}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
   await page.goto(paymentRequestURL);
   await page.waitForLoadState("networkidle");
@@ -171,11 +171,11 @@ async function createSession({
   await client.request<Record<"session", Pick<Session, "id">[]>>(mutation, {
     id: sessionId,
     data: {
-      id: context.flow?.id,
+      id: context.flows![0].id,
       ...mockSessionData,
     },
     email: context.user.email,
-    flowId: context.flow?.id,
+    flowId: context.flows![0].id,
   });
 }
 

@@ -36,11 +36,11 @@ export enum SectionStatus {
 test.describe("Section statuses", () => {
   let context: Context = {
     ...contextDefaults,
-    flow: {
+    flows:[ {
       slug: "sections-test-flow",
       name: "Sections test flow",
       data: flow,
-    },
+    }],
   };
 
   test.beforeAll(async () => {
@@ -53,7 +53,7 @@ test.describe("Section statuses", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    const previewURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false`;
+    const previewURL = `/${context.team?.slug}/${context.flows![0].slug}/published?analytics=false`;
     await page.goto(previewURL);
   });
 
@@ -535,7 +535,7 @@ async function modifyFlow({
   flowData: FlowGraph;
 }) {
   const adminGQLClient = getGraphQLClient();
-  if (!context.flow?.id || !context.user?.id) {
+  if (!context.flows![0].id || !context.user?.id) {
     throw new Error("context must have a flow and user");
   }
   await adminGQLClient.request(
@@ -553,7 +553,7 @@ async function modifyFlow({
       }
     `,
     {
-      flowId: context.flow!.id,
+      flowId: context.flows![0].id,
       userId: context.user!.id,
       data: flowData,
     },

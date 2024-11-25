@@ -6,6 +6,14 @@ import { log } from "./globalHelpers";
 
 type NewTeam = Parameters<CoreDomainClient["team"]["create"]>[0];
 
+export interface Flow {
+  id?: string;
+  publishedId?: number;
+  slug: string;
+  name: string;
+  data?: object;
+}
+
 export interface Context {
   user: {
     id?: number;
@@ -15,13 +23,7 @@ export interface Context {
     isPlatformAdmin: boolean;
   };
   team: { id?: number } & NewTeam;
-  flow?: {
-    id?: string;
-    publishedId?: number;
-    slug: string;
-    name: string;
-    data?: object;
-  };
+  flows?: Flow[];
   sessionIds?: string[];
 }
 
@@ -65,23 +67,24 @@ export async function setUpTestContext(
     });
   }
   if (
-    context.flow?.slug &&
-    context.flow?.data &&
-    context.flow?.name &&
+    context.flows &&
+    context.flows![0].slug &&
+    context.flows![0].data &&
+    context.flows![0].name &&
     context.team?.id &&
     context.user?.id
   ) {
-    context.flow.id = await $admin.flow.create({
-      slug: context.flow.slug,
-      name: context.flow.name,
+    context.flows![0].id = await $admin.flow.create({
+      slug: context.flows![0].slug,
+      name: context.flows![0].name,
       teamId: context.team.id,
-      data: context.flow!.data!,
+      data: context.flows![0]!.data!,
       status: "online",
     });
-    context.flow.publishedId = await $admin.flow.publish({
+    context.flows![0].publishedId = await $admin.flow.publish({
       flow: {
-        id: context.flow.id,
-        data: context.flow!.data!,
+        id: context.flows![0].id,
+        data: context.flows![0]!.data!,
       },
       publisherId: context.user!.id!,
     });
@@ -93,10 +96,15 @@ export async function setUpTestContext(
 
 export async function tearDownTestContext(context: Context) {
   const adminGQLClient = getGraphQLClient();
-  if (context.flow) {
+  if (context.flows && context.flows[0]) {
     await deleteSession(adminGQLClient, context);
-    await deletePublishedFlow(adminGQLClient, context);
-    await deleteFlow(adminGQLClient, context);
+
+   await Promise.all(context.flows.map(async (flow) => {
+      await deleteFlow(adminGQLClient, flow);
+      if(flow.publishedId){
+        await deletePublishedFlow(adminGQLClient, flow);
+      }
+    }))
   }
   if (context.user) {
     await deleteUser(adminGQLClient, context);
@@ -152,7 +160,7 @@ export async function findSessionId(
           id
         }
       }`,
-      { slug: context.flow?.slug },
+      { slug: context.flows![0].slug },
     );
   if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
@@ -208,33 +216,33 @@ async function deleteSession(adminGQLClient: GraphQLClient, context) {
 
 async function deletePublishedFlow(
   adminGQLClient: GraphQLClient,
-  context: Context,
+  flow: Flow,
 ) {
-  if (context.flow?.publishedId) {
-    log(`deleting published flow ${context.flow?.publishedId}`);
+  if (flow?.publishedId) {
+    log(`deleting published flow ${flow?.publishedId}`);
     await adminGQLClient.request(
       `mutation DeleteTestPublishedFlow( $publishedFlowId: Int!) {
         delete_published_flows_by_pk(id: $publishedFlowId) {
           id
         }
       }`,
-      { publishedFlowId: context.flow?.publishedId },
+      { publishedFlowId: flow?.publishedId },
     );
   }
 }
 
-async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
-  if (context.flow?.id) {
-    log(`deleting flow ${context.flow?.id}`);
+async function deleteFlow(adminGQLClient: GraphQLClient, flow: Flow ) {
+  if (flow?.id) {
+    log(`deleting flow ${flow?.id}`);
     await adminGQLClient.request(
       `mutation DeleteTestFlow($flowId: uuid!) {
         delete_flows_by_pk(id: $flowId) {
           id
         }
       }`,
-      { flowId: context.flow?.id },
+      { flowId: flow?.id },
     );
-  } else if (context.flow?.slug) {
+  } else if (flow?.slug) {
     // try deleting via slug (when cleaning up from a previously failed test)
     const response: { flows: { id: string }[] } = await adminGQLClient.request(
       `query GetFlowBySlug($slug: String!) {
@@ -242,11 +250,11 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
             id
           }
         }`,
-      { slug: context.flow?.slug },
+      { slug: flow?.slug },
     );
     if (response.flows.length && response.flows[0].id) {
       log(
-        `deleting flow ${context.flow?.slug} flowId: ${response.flows[0].id}`,
+        `deleting flow ${flow?.slug} flowId: ${response.flows[0].id}`,
       );
       await adminGQLClient.request(
         `mutation DeleteTestFlow( $flowId: uuid!) {
@@ -261,6 +269,7 @@ async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
 }
 
 async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
+  console.log(context);
   if (context.user?.id) {
     log(`deleting user ${context.user?.id}`);
     await adminGQLClient.request(

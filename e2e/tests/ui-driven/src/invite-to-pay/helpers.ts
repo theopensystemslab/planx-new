@@ -14,7 +14,7 @@ import {
  * Navigates to pay component whilst completing the minimum requirements for an Invite to Pay flow
  */
 export async function navigateToPayComponent(page: Page, context: Context) {
-  const previewURL = `/${context.team!.slug!}/${context.flow!
+  const previewURL = `/${context.team!.slug!}/${context.flows![0]
     .slug!}/published?analytics=false`;
   await page.goto(previewURL);
 

@@ -29,6 +29,11 @@ test.describe("Flow creation, publish and preview", () => {
     slug: "a-test-service",
   };
 
+  const externalPortalServiceProps = {
+    name: "An External Portal Service",
+    slug: "an-external-portal-service",
+  };
+
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(context);
@@ -56,7 +61,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.addNewService();
 
     // update context to allow flow to be torn down
-    context.flow = { ...serviceProps };
+    context.flows = [{ ...serviceProps }];
 
     await editor.createQuestion();
     await editor.createNoticeOnEachBranch();
@@ -175,6 +180,34 @@ test.describe("Flow creation, publish and preview", () => {
       name: "Open published service",
     });
     await expect(previewLink).toBeVisible();
+  });
+
+  test("Can add an external portal", async ({browser}:{
+    browser: Browser;
+  }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(
+      `/${context.team.slug}`,
+    );
+
+    const editor = new PlaywrightEditor(page);
+
+    page.on("dialog", (dialog) => dialog.accept(externalPortalServiceProps.name));
+    await editor.addNewService();
+
+    // update context to allow flow to be torn down
+    context.flows?.push({...externalPortalServiceProps})
+
+    await editor.createQuestion();
+    await expect(editor.nodeList).toContainText([
+      "Is this a test?",
+      "Yes",
+      "No",
+    ]);
   });
 
   test("Can preview a published flow", async ({

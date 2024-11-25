@@ -20,14 +20,14 @@ import payFlow from "./mocks/flows/pay-flow.json";
 
 let context: Context = {
   ...contextDefaults,
-  flow: {
+  flows:[ {
     slug: "pay-test",
     name: "Pay test",
     data: payFlow,
-  },
+  }],
   sessionIds: [], // used to collect and clean up sessions
 };
-const previewURL = `/${context.team!.slug!}/${context.flow!
+const previewURL = `/${context.team!.slug!}/${context.flows![0]
   .slug!}/published?analytics=false`;
 
 const payButtonText = "Pay now using GOV.UK Pay";
