@@ -1,8 +1,7 @@
-import React from "react";
 import Box from "@mui/material/Box";
-import {
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { useFormikContext } from "formik";
+import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -11,7 +10,6 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../../shared/icons";
-import { useFormikContext } from "formik";
 import { Pay } from "../model";
 
 export const InviteToPaySection: React.FC = () => {
@@ -98,5 +96,5 @@ export const InviteToPaySection: React.FC = () => {
         )}
       </ModalSectionContent>
     </ModalSection>
-  )
-}
+  );
+};

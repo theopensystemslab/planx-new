@@ -1,11 +1,5 @@
-import {
-  ComponentType as TYPES,
-} from "@opensystemslab/planx-core/types";
-import {
-  parsePay,
-  Pay,
-  validationSchema,
-} from "@planx/components/Pay/model";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { parsePay, Pay, validationSchema } from "@planx/components/Pay/model";
 import { Form, Formik } from "formik";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
@@ -20,14 +14,13 @@ import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../../shared/icons";
 import { EditorProps } from "../../shared/types";
+import { FeeBreakdownSection } from "./FeeBreakdownSection";
 import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
-import { FeeBreakdownSection } from "./FeeBreakdownSection";
 
 export type Props = EditorProps<TYPES.Pay, Pay>;
 
 const Component: React.FC<Props> = (props: Props) => {
-
   const onSubmit = (newValues: Pay) => {
     if (props.handleSubmit) {
       props.handleSubmit({ type: TYPES.Pay, data: newValues });
@@ -42,11 +35,7 @@ const Component: React.FC<Props> = (props: Props) => {
       validateOnChange={true}
       validateOnBlur={true}
     >
-      {({
-        values,
-        handleChange,
-        setFieldValue,
-      }) => (
+      {({ values, handleChange, setFieldValue }) => (
         <Form id="modal" name="modal">
           <ModalSection>
             <ModalSectionContent title="Payment" Icon={ICONS[TYPES.Pay]}>
@@ -113,9 +102,9 @@ const Component: React.FC<Props> = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <GovPayMetadataSection/>
-          <InviteToPaySection/>
-          <FeeBreakdownSection/>
+          <GovPayMetadataSection />
+          <InviteToPaySection />
+          <FeeBreakdownSection />
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}
