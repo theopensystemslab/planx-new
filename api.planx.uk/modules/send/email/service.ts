@@ -12,7 +12,9 @@ interface GetTeamEmailSettings {
   }[];
 }
 
-export const TEAM_EMAIL_SETTINGS_QUERY = `
+export async function getTeamEmailSettings(localAuthority: string) {
+  const response = await $api.client.request<GetTeamEmailSettings>(
+    gql`
       query GetTeamEmailSettings($slug: String) {
         teams(where: { slug: { _eq: $slug } }) {
           teamSettings: team_settings {
@@ -24,12 +26,6 @@ export const TEAM_EMAIL_SETTINGS_QUERY = `
           }
         }
       }
-    `;
-
-export async function getTeamEmailSettings(localAuthority: string) {
-  const response = await $api.client.request<GetTeamEmailSettings>(
-    gql`
-      ${TEAM_EMAIL_SETTINGS_QUERY}
     `,
     {
       slug: localAuthority,
