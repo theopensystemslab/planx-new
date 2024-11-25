@@ -31,7 +31,7 @@ const editorRoutes = mount({
         }),
   ),
 
-  ":team/:flow/:sessionId/verify-email": map((req) => {
+  "/:team/:flow/:sessionId/verify-email": map((req) => {
     return route({
       title: makeTitle("Verify your email"),
       view: <VerifyEmail params={req.params} />,
