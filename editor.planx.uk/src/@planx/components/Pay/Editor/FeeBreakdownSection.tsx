@@ -26,9 +26,6 @@ export const FeeBreakdownSection: React.FC = () => {
             label="Display a breakdown of the fee to the applicant"
           />
         </InputRow>
-        <>
-          {Boolean(values.showFeeBreakdown) && <p>Fee breakdown fields here</p>}
-        </>
       </ModalSectionContent>
     </ModalSection>
   );
