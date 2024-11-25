@@ -10,7 +10,8 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
-import { TEAM_EMAIL_SETTINGS_QUERY } from "./../../../../api.planx.uk/modules/send/email/service";
+
+import { TEAM_EMAIL_SETTINGS_QUERY } from "./queries/TEAM_EMAIL_SETTINGS_QUERY";
 
 const verifyEmailSchema = object({
   email: string().email("Invalid email").required("Email address required"),
@@ -23,18 +24,19 @@ interface VerifyEmailProps {
 export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
   const { sessionId, team } = params;
 
-  const { data, loading, error } = useQuery(
+  // const { data, loading, error } = useQuery(
+  const { data } = useQuery(
     gql`
       ${TEAM_EMAIL_SETTINGS_QUERY}
     `,
     {
       variables: { slug: team },
-    }
+    },
   );
 
   const teamEmail = useMemo(
     () => data?.teamSettings.submissionEmail || null,
-    [data]
+    [data],
   );
 
   const handleSubmit = (email: string) => {
