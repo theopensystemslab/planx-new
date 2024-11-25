@@ -25,14 +25,14 @@ interface MetabaseConfig {
 }
 
 // Validate environment variables
-const validateConfig = (): MetabaseConfig => {
-  const baseURL = process.env.METABASE_BASE_URL;
+export const validateConfig = (): MetabaseConfig => {
+  const baseURL = process.env.METABASE_URL_EXT;
   const apiKey = process.env.METABASE_API_KEY;
 
   const METABASE_TIMEOUT = 30_000;
   const METABASE_MAX_RETRIES = 3;
 
-  assert(baseURL, "Missing environment variable 'METABASE_BASE_URL'");
+  assert(baseURL, "Missing environment variable 'METABASE_URL_EXT'");
   assert(apiKey, "Missing environment variable 'METABASE_API_KEY'");
 
   return {
