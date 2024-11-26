@@ -11,7 +11,7 @@ import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { formattedPriceWithCurrencySymbol } from "../model";
+import { formattedPriceWithCurrencySymbol } from "../../model";
 
 const StyledTable = styled(Table)(() => ({
   [`& .${tableCellClasses.root}`]: {

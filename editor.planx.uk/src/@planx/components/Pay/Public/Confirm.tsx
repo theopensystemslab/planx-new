@@ -19,7 +19,7 @@ import {
   getDefaultContent,
   Pay,
 } from "../model";
-import { FeeBreakdown } from "./FeeBreakdown";
+import { FeeBreakdown } from "./FeeBreakdown/FeeBreakdown";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
