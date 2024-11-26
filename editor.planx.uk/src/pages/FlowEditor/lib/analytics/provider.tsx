@@ -386,11 +386,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
       const breadcrumb = breadcrumbs[breadcrumbKey];
-      if (breadcrumb.auto) {
-        track(breadcrumbKey);
-      } else {
-        updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
-      }
+      updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
     });
   }
 };
