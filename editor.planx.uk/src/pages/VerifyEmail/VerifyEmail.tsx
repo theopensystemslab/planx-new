@@ -36,7 +36,7 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
 
   useEffect(() => {
     if (downloadData) {
-      downloadZipFile(downloadData.data); // TODO: fix the typing
+      downloadZipFile(downloadData.data);
     }
   }, [downloadData]);
 
