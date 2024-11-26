@@ -1,5 +1,4 @@
 import axios from "axios";
-import type { AxiosInstance } from "axios";
 import {
   validateConfig,
   createMetabaseClient,
@@ -36,14 +35,14 @@ describe("Metabase client", () => {
     test("throws error when URL_EXT is missing", () => {
       vi.stubEnv("METABASE_URL_EXT", undefined);
       expect(() => validateConfig()).toThrow(
-        "Missing environment variable 'METABASE_URL_EXT'"
+        "Missing environment variable 'METABASE_URL_EXT'",
       );
     });
 
     test("throws error when API_KEY is missing", () => {
       vi.stubEnv("METABASE_API_KEY", undefined);
       expect(() => validateConfig()).toThrow(
-        "Missing environment variable 'METABASE_API_KEY'"
+        "Missing environment variable 'METABASE_API_KEY'",
       );
     });
 
