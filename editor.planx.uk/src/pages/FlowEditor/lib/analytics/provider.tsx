@@ -198,9 +198,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     const { id, created_at: newLogCreatedAt } =
       result?.data.insert_analytics_logs_one || {};
 
-    if (!id || !newLogCreatedAt) {
-      return;
-    }
+    if (!id || !newLogCreatedAt) return;
 
     if (
       lastVisibleNodeAnalyticsLogId &&
@@ -213,9 +211,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
       );
     }
 
-    if (!metadata.isAutoAnswered) {
-      lastVisibleNodeAnalyticsLogId = id;
-    }
+    lastVisibleNodeAnalyticsLogId = id;
   }
 
   async function insertNewAnalyticsLog(
