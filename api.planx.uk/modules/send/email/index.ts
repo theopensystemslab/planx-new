@@ -41,7 +41,6 @@ export const sendToEmail: SendIntegrationController = async (
         serviceName: flowName,
         sessionId,
         applicantEmail: email,
-        // downloadLink: `${process.env.API_URL_EXT}/download-application-files/${sessionId}?email=${teamSettings.submissionEmail}&localAuthority=${localAuthority}`,
         downloadLink: `${serviceURL}/verify-email`, // redirect to verify email before download
         ...teamSettings,
       },

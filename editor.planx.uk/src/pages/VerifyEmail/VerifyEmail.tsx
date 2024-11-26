@@ -49,13 +49,13 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
     validateOnBlur: false,
     validationSchema: verifyEmailSchema,
   });
-
+  // ema
   return (
     <Container maxWidth="contentWrap">
       <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
         Download your application
       </Typography>
-      // TODO: make error and loading nicer
+      {/* // TODO: make error and loading nicer */}
       {isLoading && <Typography>Loading!</Typography>}
       {isError && (
         <Typography>{`${downloadError} ${downloadError.message}`}</Typography>
