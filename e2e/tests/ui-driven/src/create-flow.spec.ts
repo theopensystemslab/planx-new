@@ -93,7 +93,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Next steps",
       "Check your answers before sending your application",
       "Confirmation",
-      "Tell us what you think"
+      "Tell us what you think",
     ]);
   });
 
@@ -299,6 +299,5 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.locator("h1", { hasText: "Tell us what you think" }),
     ).toBeVisible();
-
   });
 });
