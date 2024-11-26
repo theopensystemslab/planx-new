@@ -21,7 +21,10 @@ import {
   clickContinue,
 } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
-import { createExternalPortal, createQuestionWithOptions } from "./helpers/addComponent";
+import {
+  createExternalPortal,
+  createQuestionWithOptions,
+} from "./helpers/addComponent";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: Context = {
@@ -180,7 +183,9 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(previewLink).toBeVisible();
   });
 
-  test("Can add an external portal", async ({browser}:{
+  test("Can add an external portal", async ({
+    browser,
+  }: {
     browser: Browser;
   }) => {
     const page = await createAuthenticatedSession({
@@ -188,27 +193,34 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(
-      `/${context.team.slug}`,
-    );
+    await page.goto(`/${context.team.slug}`);
 
     const editor = new PlaywrightEditor(page);
 
-    page.on("dialog", (dialog) => dialog.accept(externalPortalServiceProps.name));
+    page.on("dialog", (dialog) =>
+      dialog.accept(externalPortalServiceProps.name),
+    );
     await editor.addNewService();
 
     // update context to allow flow to be torn down
-    context.flows?.push({...externalPortalServiceProps})
+    context.flows?.push({ ...externalPortalServiceProps });
 
-    await createQuestionWithOptions(page, editor.firstNode, externalPortalFlowData.title, externalPortalFlowData.answers )
+    await createQuestionWithOptions(
+      page,
+      editor.firstNode,
+      externalPortalFlowData.title,
+      externalPortalFlowData.answers,
+    );
     await expect(editor.nodeList).toContainText([
       externalPortalFlowData.title,
-     externalPortalFlowData.answers[0],
+      externalPortalFlowData.answers[0],
       externalPortalFlowData.answers[1],
     ]);
 
     page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    await expect(page.getByRole('heading', { name: 'Check for changes to publish' })).toBeVisible()
+    await expect(
+      page.getByRole("heading", { name: "Check for changes to publish" }),
+    ).toBeVisible();
     page.getByRole("button", { name: "PUBLISH", exact: true }).click();
 
     // Open flow settings
@@ -221,20 +233,23 @@ test.describe("Flow creation, publish and preview", () => {
       page.getByText("Service settings updated successfully"),
     ).toBeVisible();
 
-    await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}`,
-    );
+    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-    await expect(page.getByRole('link', { name: serviceProps.slug })).toBeVisible()
+    await expect(
+      page.getByRole("link", { name: serviceProps.slug }),
+    ).toBeVisible();
 
-    await createExternalPortal(page, page.locator('li:nth-child(6)'))
+    await createExternalPortal(page, page.locator("li:nth-child(6)"));
 
-    await expect(page.getByRole('link', { name: 'E2E/an-external-portal-service' })).toBeVisible()
+    await expect(
+      page.getByRole("link", { name: "E2E/an-external-portal-service" }),
+    ).toBeVisible();
 
     page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    await expect(page.getByRole('heading', { name: 'Check for changes to publish' })).toBeVisible()
+    await expect(
+      page.getByRole("heading", { name: "Check for changes to publish" }),
+    ).toBeVisible();
     page.getByRole("button", { name: "PUBLISH", exact: true }).click();
-
   });
 
   test("Can preview a published flow", async ({
@@ -247,11 +262,11 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}`,
-    );
+    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-    await expect(page.getByRole('link', { name: 'E2E/an-external-portal-service' })).toBeVisible()
+    await expect(
+      page.getByRole("link", { name: "E2E/an-external-portal-service" }),
+    ).toBeVisible();
 
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
@@ -279,7 +294,11 @@ test.describe("Flow creation, publish and preview", () => {
     });
     await clickContinue({ page });
 
-    await answerQuestion({ page, title: externalPortalFlowData.title, answer: externalPortalFlowData.answers[0] });
+    await answerQuestion({
+      page,
+      title: externalPortalFlowData.title,
+      answer: externalPortalFlowData.answers[0],
+    });
     await clickContinue({ page });
 
     await answerTextInput(page, {

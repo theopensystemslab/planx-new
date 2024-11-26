@@ -101,8 +101,7 @@ export const externalPortalServiceProps = {
 
 export const externalPortalFlowData = {
   title: "Is this an External Portal?",
-answers:[   "It is an external portal",
-  "No it is not an External Portal",]
+  answers: ["It is an external portal", "No it is not an External Portal"],
 };
 
 export async function tearDownTestContext(context: Context) {
@@ -225,10 +224,7 @@ async function deleteSession(adminGQLClient: GraphQLClient, context) {
   }
 }
 
-async function deletePublishedFlow(
-  adminGQLClient: GraphQLClient,
-  flow: Flow,
-) {
+async function deletePublishedFlow(adminGQLClient: GraphQLClient, flow: Flow) {
   if (flow?.publishedId) {
     log(`deleting published flow ${flow?.publishedId}`);
     await adminGQLClient.request(
@@ -242,7 +238,7 @@ async function deletePublishedFlow(
   }
 }
 
-async function deleteFlow(adminGQLClient: GraphQLClient, flow: Flow ) {
+async function deleteFlow(adminGQLClient: GraphQLClient, flow: Flow) {
   if (flow?.id) {
     log(`deleting flow ${flow?.id}`);
     await adminGQLClient.request(
@@ -264,9 +260,7 @@ async function deleteFlow(adminGQLClient: GraphQLClient, flow: Flow ) {
       { slug: flow?.slug },
     );
     if (response.flows.length && response.flows[0].id) {
-      log(
-        `deleting flow ${flow?.slug} flowId: ${response.flows[0].id}`,
-      );
+      log(`deleting flow ${flow?.slug} flowId: ${response.flows[0].id}`);
       await adminGQLClient.request(
         `mutation DeleteTestFlow( $flowId: uuid!) {
           delete_flows_by_pk(id: $flowId) {

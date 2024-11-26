@@ -36,11 +36,13 @@ export enum SectionStatus {
 test.describe("Section statuses", () => {
   let context: Context = {
     ...contextDefaults,
-    flows:[ {
-      slug: "sections-test-flow",
-      name: "Sections test flow",
-      data: flow,
-    }],
+    flows: [
+      {
+        slug: "sections-test-flow",
+        name: "Sections test flow",
+        data: flow,
+      },
+    ],
   };
 
   test.beforeAll(async () => {

@@ -22,11 +22,13 @@ import {
 test.describe("Save and return", () => {
   let context: Context = {
     ...contextDefaults,
-    flows: [{
-      slug: "e2e-save-and-return-test-flow",
-      name: "E2E Save and Return test flow",
-      data: simpleSendFlow,
-    }],
+    flows: [
+      {
+        slug: "e2e-save-and-return-test-flow",
+        name: "E2E Save and Return test flow",
+        data: simpleSendFlow,
+      },
+    ],
   };
   const previewURL = `/${context.team?.slug}/${context.flows![0].slug}/published?analytics=false`;
 

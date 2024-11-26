@@ -123,9 +123,13 @@ const createBaseComponent = async (
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Portal name").fill(title || "");
       break;
-      case ComponentType.ExternalPortal:
-        await page.getByTestId('flowId').selectOption(`${contextDefaults.team.slug}/${externalPortalServiceProps.slug}`);
-        break;
+    case ComponentType.ExternalPortal:
+      await page
+        .getByTestId("flowId")
+        .selectOption(
+          `${contextDefaults.team.slug}/${externalPortalServiceProps.slug}`,
+        );
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -403,9 +407,5 @@ export const createExternalPortal = async (
   page: Page,
   locatingNode: Locator,
 ) => {
-  await createBaseComponent(
-    page,
-    locatingNode,
-    ComponentType.ExternalPortal,
-  );
+  await createBaseComponent(page, locatingNode, ComponentType.ExternalPortal);
 };

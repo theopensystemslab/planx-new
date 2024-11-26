@@ -242,12 +242,9 @@ export class PlaywrightEditor {
       .fill("A notice inside a portal!");
     await this.page.locator('button[form="modal"][type="submit"]').click();
   }
-  
+
   async createExternalPortal() {
-    await createExternalPortal(
-      this.page,
-      this.getNextNode(),
-    );
+    await createExternalPortal(this.page, this.getNextNode());
   }
 
   async createFeedback() {

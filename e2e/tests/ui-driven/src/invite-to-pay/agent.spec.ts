@@ -23,11 +23,13 @@ import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
 
 let context: Context = {
   ...contextDefaults,
-  flows:[ {
-    slug: "invite-to-pay-test",
-    name: "Invite to pay test",
-    data: inviteToPayFlow,
-  }],
+  flows: [
+    {
+      slug: "invite-to-pay-test",
+      name: "Invite to pay test",
+      data: inviteToPayFlow,
+    },
+  ],
   sessionIds: [], // used to collect and clean up sessions
 };
 
@@ -119,10 +121,10 @@ test.describe("Agent journey @regression", async () => {
 
     const errorHeader = secondPage.getByRole("heading", {
       name: "Sorry, you can't make changes to this application",
-    })
+    });
 
-    await expect(errorHeader).toBeVisible()
-    await expect(secondPage.getByTestId("continue-button")).toBeHidden()
+    await expect(errorHeader).toBeVisible();
+    await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
 
   test("reconciliation does not apply to sessions with open payment requests", async ({
