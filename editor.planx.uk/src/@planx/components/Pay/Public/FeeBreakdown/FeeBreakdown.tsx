@@ -12,6 +12,7 @@ import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { formattedPriceWithCurrencySymbol } from "../../model";
+import { useFeeBreakdown } from "./useFeeBreakdown";
 
 const StyledTable = styled(Table)(() => ({
   [`& .${tableCellClasses.root}`]: {
@@ -26,7 +27,7 @@ const BoldTableRow = styled(TableRow)(() => ({
   },
 }));
 
-const VAT_RATE = 20;
+const VAT_RATE = 0.2;
 
 const DESCRIPTION =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
@@ -40,49 +41,56 @@ const Header = () => (
   </TableHead>
 );
 
-const ApplicationFee = () => (
+const ApplicationFee: React.FC<{ amount: number }> = ({ amount }) => (
   <TableRow>
     <TableCell>Application fee</TableCell>
-    <TableCell align="right">{formattedPriceWithCurrencySymbol(100)}</TableCell>
+    <TableCell align="right">
+      {formattedPriceWithCurrencySymbol(amount)}
+    </TableCell>
   </TableRow>
 );
 
-const Exemptions = () => (
-  <TableRow>
-    <TableCell>Exemptions</TableCell>
-    <TableCell align="right">{formattedPriceWithCurrencySymbol(-20)}</TableCell>
-  </TableRow>
-);
+const Reductions: React.FC<{ amount?: number }> = ({ amount }) => {
+  if (!amount) return null;
 
-const Reductions = () => (
-  <TableRow>
-    <TableCell>Reductions</TableCell>
-    <TableCell align="right">{formattedPriceWithCurrencySymbol(-30)}</TableCell>
-  </TableRow>
-);
+  return (
+    <TableRow>
+      <TableCell>Reductions</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(-amount)}
+      </TableCell>
+    </TableRow>
+  );
+};
 
-const ServiceCharge = () => (
-  <TableRow>
-    <TableCell>Service charge</TableCell>
-    <TableCell align="right">{formattedPriceWithCurrencySymbol(30)}</TableCell>
-  </TableRow>
-);
+const VAT: React.FC<{ amount?: number }> = ({ amount }) => {
+  if (!amount) return null;
 
-const VAT = () => (
-  <TableRow>
-    <TableCell>{`VAT (${VAT_RATE}%)`}</TableCell>
-    <TableCell align="right">-</TableCell>
-  </TableRow>
-);
+  return (
+    <TableRow>
+      <TableCell variant="footer">{`Includes VAT (${
+        VAT_RATE * 100
+      }%)`}</TableCell>
+      <TableCell variant="footer" align="right">
+        {formattedPriceWithCurrencySymbol(amount)}
+      </TableCell>
+    </TableRow>
+  );
+};
 
-const Total = () => (
+const Total: React.FC<{ amount: number }> = ({ amount }) => (
   <BoldTableRow>
     <TableCell>Total</TableCell>
-    <TableCell align="right">{formattedPriceWithCurrencySymbol(80)}</TableCell>
+    <TableCell align="right">
+      {formattedPriceWithCurrencySymbol(amount)}
+    </TableCell>
   </BoldTableRow>
 );
 
 export const FeeBreakdown: React.FC = () => {
+  const breakdown = useFeeBreakdown();
+  if (!breakdown) return null;
+
   if (!hasFeatureFlag("FEE_BREAKDOWN")) return null;
 
   return (
@@ -97,12 +105,10 @@ export const FeeBreakdown: React.FC = () => {
         <StyledTable data-testid="fee-breakdown-table">
           <Header />
           <TableBody>
-            <ApplicationFee />
-            <ServiceCharge />
-            <Exemptions />
-            <Reductions />
-            <VAT />
-            <Total />
+            <ApplicationFee amount={breakdown.applicationFee} />
+            <Reductions amount={breakdown.reduction} />
+            <Total amount={breakdown.total} />
+            <VAT amount={breakdown.vat} />
           </TableBody>
         </StyledTable>
       </TableContainer>
