@@ -86,3 +86,5 @@ const handleClick = () => {
   console.log({ result });
 };
 ```
+
+For reference, [please see this PR](https://github.com/theopensystemslab/planx-new/pull/4015) which added the text fields for the `Feedback` component to the search index.
