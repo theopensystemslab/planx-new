@@ -73,6 +73,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
+    await editor.createFeedback();
     await editor.createConfirmation();
 
     await expect(editor.nodeList).toContainText([
@@ -91,6 +92,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
+      "Tell us what you think",
       "Confirmation",
     ]);
   });
@@ -290,6 +292,10 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    await expect(
+      page.locator("h1", { hasText: "Tell us what you think" }),
+    ).toBeVisible();
+    await clickContinue({ page });
     await expect(
       page.locator("h1", { hasText: "Application sent" }),
     ).toBeVisible();
