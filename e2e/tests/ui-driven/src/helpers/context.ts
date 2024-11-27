@@ -74,14 +74,14 @@ export async function setUpTestContext(
     context.team?.id &&
     context.user?.id
   ) {
-    context.flows![0].id = await $admin.flow.create({
+    context.flows[0].id = await $admin.flow.create({
       slug: context.flows[0].slug,
       name: context.flows[0].name,
       teamId: context.team.id,
       data: context.flows[0].data,
       status: "online",
     });
-    context.flows![0].publishedId = await $admin.flow.publish({
+    context.flows[0].publishedId = await $admin.flow.publish({
       flow: {
         id: context.flows[0].id,
         data: context.flows[0].data,
