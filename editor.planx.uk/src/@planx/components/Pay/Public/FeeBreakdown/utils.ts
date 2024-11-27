@@ -5,11 +5,18 @@ import { FeeBreakdown, PassportFeeFields } from "./types";
 export const toNumber = (input: number | [number]) =>
   Array.isArray(input) ? input[0] : input;
 
+/**
+ * A "reduction" is the sum of the difference between calculated and payable
+ * This is not currently broken down further into component parts, or as exemptions or reductions
+ */
 export const calculateReduction = (data: PassportFeeFields) =>
   data["application.fee.calculated"]
     ? data["application.fee.calculated"] - data["application.fee.payable"]
     : 0;
 
+/**
+ * Transform Passport data to a FeeBreakdown shape
+ */
 export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
   applicationFee:
     data["application.fee.calculated"] || data["application.fee.payable"],
