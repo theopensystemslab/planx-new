@@ -25,7 +25,11 @@ import {
   createExternalPortal,
   createQuestionWithOptions,
 } from "./helpers/addComponent";
-import { navigateToService, publishService, turnServiceOnline } from "./helpers/navigateAndPublish";
+import {
+  navigateToService,
+  publishService,
+  turnServiceOnline,
+} from "./helpers/navigateAndPublish";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: Context = {
@@ -129,7 +133,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-    await publishService(page)
+    await publishService(page);
 
     const previewLink = page.getByRole("link", {
       name: "Open published service",
@@ -164,7 +168,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-await turnServiceOnline(page)
+    await turnServiceOnline(page);
 
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();
@@ -209,10 +213,10 @@ await turnServiceOnline(page)
       externalPortalFlowData.answers[1],
     ]);
 
-    await publishService(page)
-    await turnServiceOnline(page)
+    await publishService(page);
+    await turnServiceOnline(page);
 
-    navigateToService(page, serviceProps.slug)
+    navigateToService(page, serviceProps.slug);
 
     await createExternalPortal(page, page.locator("li:nth-child(6)"));
 
@@ -220,7 +224,7 @@ await turnServiceOnline(page)
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
 
-   await publishService(page)
+    await publishService(page);
   });
 
   test("Can preview a published flow", async ({
