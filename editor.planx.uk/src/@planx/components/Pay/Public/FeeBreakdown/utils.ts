@@ -2,15 +2,15 @@ import { z } from "zod";
 
 import { FeeBreakdown, PassportFeeFields } from "./types";
 
-const toNumber = (input: number | number[]) =>
-  Array.isArray(input) ? Number(input[0]) : input;
+export const toNumber = (input: number | [number]) =>
+  Array.isArray(input) ? input[0] : input;
 
-const calculateReduction = (data: PassportFeeFields) =>
+export const calculateReduction = (data: PassportFeeFields) =>
   data["application.fee.calculated"]
     ? data["application.fee.calculated"] - data["application.fee.payable"]
     : 0;
 
-const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
+export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
   applicationFee:
     data["application.fee.calculated"] || data["application.fee.payable"],
   total: data["application.fee.payable"],
@@ -19,8 +19,8 @@ const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
 });
 
 export const createPassportSchema = () => {
-  const questionSchema = z.number();
-  const setValueSchema = z.array(z.coerce.number());
+  const questionSchema = z.number().positive();
+  const setValueSchema = z.tuple([z.coerce.number().positive()]);
   const feeSchema = z
     .union([questionSchema, setValueSchema])
     .transform(toNumber);
