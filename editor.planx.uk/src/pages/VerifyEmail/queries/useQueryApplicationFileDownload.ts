@@ -8,7 +8,8 @@ export const DOWNLOAD_APPLICATION_FILE_URL = `${
 export interface DownloadApplicationFileResponse {
   data: Blob;
 }
-const DOWNLOAD_APPLICATION_FILE_QUERY_KEY = "DOWNLOAD_APPLICATION_FILE/GET";
+export const DOWNLOAD_APPLICATION_FILE_QUERY_KEY =
+  "DOWNLOAD_APPLICATION_FILE/GET";
 
 const useQueryApplicationFileDownload = (
   sessionId: string,
