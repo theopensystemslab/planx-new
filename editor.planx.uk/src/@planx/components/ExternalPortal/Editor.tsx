@@ -85,11 +85,12 @@ const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => (
   </>
 );
 const ExternalPortalForm: React.FC<{
+  id?: string;
   flowId?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ handleSubmit, flowId = "", flows = [], tags = [] }) => {
+}> = ({ id, handleSubmit, flowId = "", flows = [], tags = [] }) => {
   const [teamArray, setTeamArray] = useState<string[]>([]);
 
   const uniqueTeamArray = [...new Set(flows.map((item) => item.team))];
