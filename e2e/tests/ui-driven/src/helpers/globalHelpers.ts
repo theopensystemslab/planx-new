@@ -114,7 +114,7 @@ export async function modifyFlow({
   modifiedFlow: FlowGraph;
 }) {
   const adminGQLClient = getGraphQLClient();
-  if (!context.flows![0].id || !context.user?.id) {
+  if (!context.flows?.[0]?.slug || !context.user?.id) {
     throw new Error("context must have a flow and user");
   }
   await adminGQLClient.request(
@@ -132,7 +132,7 @@ export async function modifyFlow({
       }
     `,
     {
-      flowId: context.flows![0].id,
+      flowId: context.flows?.[0].id,
       userId: context.user!.id,
       data: modifiedFlow,
     },

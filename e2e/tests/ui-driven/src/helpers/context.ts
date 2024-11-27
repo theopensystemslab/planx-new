@@ -106,7 +106,7 @@ export const externalPortalFlowData = {
 
 export async function tearDownTestContext(context: Context) {
   const adminGQLClient = getGraphQLClient();
-  if (context.flows && context.flows[0]) {
+  if (context.flows?.[0]) {
     await deleteSession(adminGQLClient, context);
 
     for (const flow of context.flows) {
@@ -170,7 +170,7 @@ export async function findSessionId(
           id
         }
       }`,
-      { slug: context.flows![0].slug },
+      { slug: context.flows?.[0].slug },
     );
   if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
