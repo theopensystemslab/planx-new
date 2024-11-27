@@ -489,7 +489,20 @@ describe("the demo user view", () => {
 });
 
 describe("Displaying the fee breakdown", () => {
-  beforeAll(() => (initialState = getState()));
+  beforeAll(() => {
+    initialState = getState();
+    // Valid passport data is required to display the breakdown
+    setState({
+      computePassport: vi.fn().mockReturnValue({
+        data: {
+          "application.fee.calculated": 1000,
+          "application.fee.payable": 800,
+          "application.fee.payable.vat": 160,
+        },
+      }),
+    });
+  });
+
   afterEach(() => act(() => setState(initialState)));
 
   test("if the showFeeBreakdown prop is set, the breakdown is displayed to the user", () => {
