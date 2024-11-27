@@ -8,7 +8,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath, Passport } from "types";
 import { array, boolean, object, string } from "yup";
 
-import { parseBaseNodeData, type BaseNodeData } from "../shared";
+import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
 export interface Pay extends BaseNodeData {
   title: string;
@@ -27,6 +27,7 @@ export interface Pay extends BaseNodeData {
   yourDetailsDescription?: string;
   yourDetailsLabel?: string;
   govPayMetadata: GovPayMetadata[];
+  showFeeBreakdown?: boolean;
 }
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
@@ -181,6 +182,7 @@ export const getDefaultContent = (): Pay => ({
   nomineeTitle: "Details of the person paying",
   yourDetailsTitle: "Your details",
   yourDetailsLabel: "Your name or organisation name",
+  showFeeBreakdown: false,
   govPayMetadata: [
     {
       key: "flow",
