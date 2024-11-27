@@ -26,8 +26,8 @@ export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
 });
 
 export const createPassportSchema = () => {
-  const questionSchema = z.number().positive();
-  const setValueSchema = z.tuple([z.coerce.number().positive()]);
+  const questionSchema = z.number().nonnegative();
+  const setValueSchema = z.tuple([z.coerce.number().nonnegative()]);
   const feeSchema = z
     .union([questionSchema, setValueSchema])
     .transform(toNumber);
