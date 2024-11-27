@@ -27,7 +27,7 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Notice").fill(title || "");
       break;
     case ComponentType.Checklist:
-      await page.getByPlaceholder("Text").fill(title || "text");
+      await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new option", page);
       }

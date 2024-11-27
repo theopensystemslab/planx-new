@@ -25,6 +25,7 @@ import {
   createExternalPortal,
   createQuestionWithOptions,
 } from "./helpers/addComponent";
+import { navigateToService, publishService, turnServiceOnline } from "./helpers/navigateAndPublish";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: Context = {
@@ -128,8 +129,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    page.getByRole("button", { name: "PUBLISH", exact: true }).click();
+    await publishService(page)
 
     const previewLink = page.getByRole("link", {
       name: "Open published service",
@@ -164,15 +164,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
 
-    // Open flow settings
-    page.locator('[aria-label="Service settings"]').click();
-
-    // Toggle flow online
-    page.getByLabel("Offline").click();
-    page.getByRole("button", { name: "Save", disabled: false }).click();
-    await expect(
-      page.getByText("Service settings updated successfully"),
-    ).toBeVisible();
+await turnServiceOnline(page)
 
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();
@@ -202,7 +194,7 @@ test.describe("Flow creation, publish and preview", () => {
     );
     await editor.addNewService();
 
-    // update context to allow flow to be torn down
+    // update context to allow new flow to be torn down
     context.flows?.push({ ...externalPortalServiceProps });
 
     await createQuestionWithOptions(
@@ -217,27 +209,10 @@ test.describe("Flow creation, publish and preview", () => {
       externalPortalFlowData.answers[1],
     ]);
 
-    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    await expect(
-      page.getByRole("heading", { name: "Check for changes to publish" }),
-    ).toBeVisible();
-    page.getByRole("button", { name: "PUBLISH", exact: true }).click();
+    await publishService(page)
+    await turnServiceOnline(page)
 
-    // Open flow settings
-    page.locator('[aria-label="Service settings"]').click();
-
-    // Toggle flow online
-    page.getByLabel("Offline").click();
-    page.getByRole("button", { name: "Save", disabled: false }).click();
-    await expect(
-      page.getByText("Service settings updated successfully"),
-    ).toBeVisible();
-
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
-    await expect(
-      page.getByRole("link", { name: serviceProps.slug }),
-    ).toBeVisible();
+    navigateToService(page, serviceProps.slug)
 
     await createExternalPortal(page, page.locator("li:nth-child(6)"));
 
@@ -245,11 +220,7 @@ test.describe("Flow creation, publish and preview", () => {
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
 
-    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    await expect(
-      page.getByRole("heading", { name: "Check for changes to publish" }),
-    ).toBeVisible();
-    page.getByRole("button", { name: "PUBLISH", exact: true }).click();
+   await publishService(page)
   });
 
   test("Can preview a published flow", async ({

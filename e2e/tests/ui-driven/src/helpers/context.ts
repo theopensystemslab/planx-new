@@ -68,23 +68,23 @@ export async function setUpTestContext(
   }
   if (
     context.flows &&
-    context.flows![0].slug &&
-    context.flows![0].data &&
-    context.flows![0].name &&
+    context.flows[0].slug &&
+    context.flows[0].data &&
+    context.flows[0].name &&
     context.team?.id &&
     context.user?.id
   ) {
     context.flows![0].id = await $admin.flow.create({
-      slug: context.flows![0].slug,
-      name: context.flows![0].name,
+      slug: context.flows[0].slug,
+      name: context.flows[0].name,
       teamId: context.team.id,
-      data: context.flows![0]!.data!,
+      data: context.flows[0].data,
       status: "online",
     });
     context.flows![0].publishedId = await $admin.flow.publish({
       flow: {
-        id: context.flows![0].id,
-        data: context.flows![0]!.data!,
+        id: context.flows[0].id,
+        data: context.flows[0].data,
       },
       publisherId: context.user!.id!,
     });
