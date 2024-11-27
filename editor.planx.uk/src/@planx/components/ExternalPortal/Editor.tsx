@@ -1,4 +1,5 @@
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
+import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
@@ -12,7 +13,11 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import { SelectMultiple, StyledTextField } from "ui/shared/SelectMultiple";
+import {
+  CustomCheckbox,
+  SelectMultiple,
+  StyledTextField,
+} from "ui/shared/SelectMultiple";
 
 import { ICONS } from "../shared/icons";
 
@@ -23,23 +28,70 @@ interface Flow {
   team: string;
 }
 
+type FlowAutocompleteListProps = AutocompleteProps<
+  Flow,
+  false,
+  true,
+  false,
+  "li"
+>;
+type FlowAutocompleteInputProps = AutocompleteProps<
+  Flow,
+  false,
+  true,
+  false,
+  "input"
+>;
+
 const AutocompleteSubHeader = styled(ListSubheader)(({ theme }) => ({
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
   fontSize: theme.typography.subtitle1.fontSize,
   backgroundColor: theme.palette.background.dark,
   color: theme.palette.getContrastText(theme.palette.background.dark),
   margin: 0,
+  height: "100%",
 }));
 
+const renderOption: FlowAutocompleteListProps["renderOption"] = (
+  props,
+  option,
+) => (
+  <MenuItem
+    {...props}
+    key={option.id}
+    sx={(theme) => ({ paddingY: `${theme.spacing(1.25)} !important` })}
+  >
+    {option.name}
+  </MenuItem>
+);
+
+const renderInput: FlowAutocompleteInputProps["renderInput"] = (params) => (
+  <StyledTextField
+    {...params}
+    key={params.id}
+    InputProps={{
+      ...params.InputProps,
+      notched: false,
+    }}
+  />
+);
+
+const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => (
+  <>
+    <AutocompleteSubHeader key={params.children?.toString()}>
+      {params.group}
+    </AutocompleteSubHeader>
+    {params.children}
+  </>
+);
 const ExternalPortalForm: React.FC<{
-  id?: string;
   flowId?: string;
   notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ id, handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
-  const [teamArray, setTeamArray] = useState<string[] | undefined>();
+}> = ({ handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
+  const [teamArray, setTeamArray] = useState<string[]>([]);
 
   const uniqueTeamArray = [...new Set(flows.map((item) => item.team))];
 
@@ -73,8 +125,22 @@ const ExternalPortalForm: React.FC<{
         </ModalSectionContent>
         <ModalSectionContent title="Select a team">
           <SelectMultiple
-            onChange={(_options, event) => setTeamArray([...event])}
+            onChange={(_options, event) => {
+              console.log(event);
+              setTeamArray([...event]);
+            }}
+            value={teamArray}
             options={uniqueTeamArray}
+            renderOption={(props, option, { selected }) => (
+              <ListItem key={`${option}-listitem`} {...props}>
+                <CustomCheckbox
+                  key={`${option}-checkbox`}
+                  aria-hidden="true"
+                  className={selected ? "selected" : ""}
+                />
+                {option}
+              </ListItem>
+            )}
             placeholder=""
           />
         </ModalSectionContent>
@@ -83,42 +149,19 @@ const ExternalPortalForm: React.FC<{
             role="status"
             aria-atomic={true}
             aria-live="polite"
-            value={
-              flows.find((flow) => flow.id === formik.values.flowId) || null
-            }
-            onChange={(_event, newValue: Flow | null) => {
-              formik.setFieldValue("flowId", newValue?.id || "");
+            ListboxProps={{ sx: { padding: 0 } }}
+            onChange={(_event, newValue: Flow) => {
+              formik.setFieldValue("flowId", newValue.id);
             }}
             options={flows.filter((flow) => {
-              if (teamArray) return teamArray?.includes(flow.team);
+              if (teamArray.length > 0) return teamArray.includes(flow.team);
               return true;
             })}
             groupBy={(option) => option.team}
             getOptionLabel={(option) => option.name}
-            renderOption={(props, option) => (
-              <MenuItem
-                {...props}
-                sx={(theme) => ({ paddingY: theme.spacing(1.25) })}
-              >
-                {option.name}
-              </MenuItem>
-            )}
-            renderInput={(params) => (
-              <StyledTextField
-                {...params}
-                InputProps={{
-                  ...params.InputProps,
-                  notched: false,
-                }}
-              />
-            )}
-            renderGroup={(params) => (
-              <>
-                <AutocompleteSubHeader>{params.group}</AutocompleteSubHeader>
-                {params.children}
-              </>
-            )}
-            slot="popper"
+            renderOption={renderOption}
+            renderInput={renderInput}
+            renderGroup={renderGroup}
             slotProps={{
               popper: {
                 placement: "bottom-start",
