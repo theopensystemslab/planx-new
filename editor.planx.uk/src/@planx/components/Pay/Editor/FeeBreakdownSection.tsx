@@ -1,6 +1,6 @@
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import { useFormikContext } from "formik";
-import { hasFeatureFlag } from 'lib/featureFlags';
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
