@@ -7,7 +7,7 @@ import React, { ReactElement, useEffect } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export interface Props {
-  error?: string;
+  error?: string | null;
   children?: ReactElement;
   id?: string;
   // "alert" - important and time-sensitive information (e.g. invalid input feedback)

@@ -3,15 +3,20 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { useQueryClient } from "@tanstack/react-query";
+import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
 import React, { useEffect, useMemo, useState } from "react";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
 
 import { downloadZipFile } from "./helpers/downloadZip";
-import useQueryApplicationFileDownload from "./queries/useQueryApplicationFileDownload";
+import useQueryApplicationFileDownload, {
+  DOWNLOAD_APPLICATION_FILE_QUERY_KEY,
+} from "./queries/useQueryApplicationFileDownload";
 
 const verifyEmailSchema = object({
   email: string().email("Invalid email").required("Email address required"),
@@ -24,14 +29,16 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
   const { sessionId, team } = params;
   const [email, setEmail] = useState("");
   const emailInputIsValid = useMemo(() => email !== "", [email]);
+  const queryClient = useQueryClient();
 
   const {
     data: downloadData,
     isLoading,
-    isError,
+    status: downloadStatus,
     error: downloadError,
   } = useQueryApplicationFileDownload(sessionId, email, team, {
     enabled: emailInputIsValid,
+    retry: false,
   });
 
   useEffect(() => {
@@ -40,54 +47,72 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
     }
   }, [downloadData]);
 
+  useEffect(() => {
+    // if the request has finished, invalidate query cache so other requests can be run
+    if (downloadStatus !== "pending") {
+      setEmail("");
+      queryClient.invalidateQueries({
+        queryKey: [`${DOWNLOAD_APPLICATION_FILE_QUERY_KEY}`, sessionId],
+      });
+    }
+  }, [downloadStatus]);
+
   const formik = useFormik({
     initialValues: {
       email: "",
     },
-    onSubmit: (values) => setEmail(values.email),
+    onSubmit: (values, { resetForm }) => {
+      setEmail(values.email);
+      resetForm();
+    },
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema: verifyEmailSchema,
   });
-  // ema
   return (
     <Container maxWidth="contentWrap">
       <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
         Download your application
       </Typography>
-      {/* // TODO: make error and loading nicer */}
-      {isLoading && <Typography>Loading!</Typography>}
-      {isError && (
-        <Typography>{`${downloadError} ${downloadError.message}`}</Typography>
-      )}
-      {
+      {isLoading ? (
+        <DelayedLoadingIndicator />
+      ) : (
         <Box width="100%">
           <Card handleSubmit={formik.handleSubmit}>
-            <CardHeader
-              title="Verify your email address"
-              description="We will use this to verify that you can download your application. Entering the correct email address will start the file download automatically."
-            />
-            <InputRow>
-              <InputLabel label={"Email address"} htmlFor={"email"}>
-                <Input
-                  bordered
-                  errorMessage={
-                    formik.touched.email && formik.errors.email
-                      ? formik.errors.email
-                      : undefined
-                  }
-                  id="email"
-                  name="email"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="email"
-                  value={formik.values.email}
+            <ErrorWrapper
+              error={
+                downloadError &&
+                `Sorry, something went wrong. Please try again.`
+              }
+            >
+              <>
+                <CardHeader
+                  title="Verify your email address"
+                  description="We will use this to verify that you can download your application. Entering the correct email address will start the file download automatically."
                 />
-              </InputLabel>
-            </InputRow>
+                <InputRow>
+                  <InputLabel label={"Email address"} htmlFor={"email"}>
+                    <Input
+                      bordered
+                      errorMessage={
+                        formik.touched.email && formik.errors.email
+                          ? formik.errors.email
+                          : undefined
+                      }
+                      id="email"
+                      name="email"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      type="email"
+                      value={formik.values.email}
+                    />
+                  </InputLabel>
+                </InputRow>
+              </>
+            </ErrorWrapper>
           </Card>
         </Box>
-      }
+      )}
     </Container>
   );
 };
