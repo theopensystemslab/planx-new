@@ -1,3 +1,4 @@
+import type { DeleteObjectsCommandInput } from "@aws-sdk/client-s3";
 import type { DeleteObjectsRequest } from "aws-sdk/clients/s3.js";
 import { getS3KeyFromURL, s3Factory } from "./utils.js";
 
@@ -10,7 +11,7 @@ export const deleteFilesByURL = async (
 
 export const deleteFilesByKey = async (keys: string[]): Promise<string[]> => {
   const s3 = s3Factory();
-  const params = getDeleteFilesParams(keys);
+  const params = getDeleteFilesParams(keys) as DeleteObjectsCommandInput;
   try {
     s3.deleteObjects(params);
     return keys;

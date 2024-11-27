@@ -11,7 +11,7 @@ export const getFileFromS3 = async (fileId: string) => {
   const file = await s3.getObject(params);
 
   return {
-    body: file.Body as Buffer,
+    body: file.Body,
     isPrivate: file.Metadata?.is_private === "true",
     headers: {
       "Content-Type": file.ContentType,
@@ -19,7 +19,7 @@ export const getFileFromS3 = async (fileId: string) => {
       "Content-Disposition": file.ContentDisposition,
       "Content-Encoding": file.ContentEncoding,
       "Cache-Control": file.CacheControl,
-      Expires: file.Expires,
+      Expires: file.ExpiresString,
       "Last-Modified": file.LastModified,
       ETag: file.ETag,
       "cross-origin-resource-policy": "cross-site",
