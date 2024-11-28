@@ -74,6 +74,9 @@ describe("File upload", () => {
     });
 
     it("should upload file", async () => {
+      vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
+      vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
+
       await supertest(app)
         .post(ENDPOINT)
         .field("filename", "some_file.txt")
@@ -81,9 +84,9 @@ describe("File upload", () => {
         .then((res) => {
           expect(res.body).toEqual({
             fileType: "text/plain",
-            fileUrl: expect.stringContaining(
-              "/file/private/nanoid/modified%20key",
-            ),
+            // Bucket name stripped from URL
+            fileUrl:
+              "https://api.editor.planx.dev/file/private/nanoid/modified%20key",
           });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
@@ -102,6 +105,26 @@ describe("File upload", () => {
           expect(res.body.error).toMatch(/S3 error!/);
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
+    });
+
+    it("should generate a correct URL on production", async () => {
+      vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
+      vi.stubEnv("NODE_ENV", "production");
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .field("filename", "some_file.txt")
+        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .then((res) => {
+          expect(res.body).toEqual({
+            fileType: "text/plain",
+            fileUrl: expect.stringContaining(
+              "/file/private/nanoid/modified%20key",
+            ),
+          });
+        });
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -237,11 +260,26 @@ describe("File download", () => {
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
         .expect(500)
         .then((res) => {
           expect(res.body.error).toMatch(/S3 error!/);
+        });
+      expect(mockGetObject).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle an empty file body", async () => {
+      mockGetObject = vi.fn(() =>
+        Promise.resolve({
+          ...getObjectResponse,
+          Body: undefined,
+        }),
+      );
+
+      await supertest(app)
+        .get("/file/public/someKey/someFile.txt")
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Missing body from S3 file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });

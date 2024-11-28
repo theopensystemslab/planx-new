@@ -11,7 +11,6 @@ export const getFileFromS3 = async (fileId: string) => {
 
   const file = await s3.getObject(params);
 
-  // TODO: test this
   if (!file.Body) throw Error(`Missing body from S3 file ${fileId}`);
 
   const body = Buffer.from(await file.Body.transformToByteArray());
