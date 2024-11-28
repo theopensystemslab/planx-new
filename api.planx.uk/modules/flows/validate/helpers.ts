@@ -22,14 +22,12 @@ export const hasComponentType = (
   const nodeIds = Object.entries(flowGraph).filter(
     (entry): entry is [string, Node] => isComponentType(entry, type),
   );
+
   if (fn) {
-    nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
-      ?.map(([nodeId, _nodeData]) => nodeId);
-  } else {
-    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
+    return nodeIds.some(([, nodeData]) => nodeData?.data?.fn === fn);
   }
-  return Boolean(nodeIds?.length);
+
+  return Boolean(nodeIds.length);
 };
 
 export const numberOfComponentType = (
