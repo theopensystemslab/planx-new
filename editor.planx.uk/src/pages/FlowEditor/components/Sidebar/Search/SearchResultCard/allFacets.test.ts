@@ -7,6 +7,7 @@ import {
   mockConfirmationResult,
   mockContentResult,
   mockDrawBoundaryResult,
+  mockFeedbackResult,
   mockFileUploadAndLabelResult,
   mockFindPropertyResult,
   mockFlow,
@@ -781,6 +782,52 @@ describe("result fields", () => {
       componentType: "Result",
       title: "",
       headline: "Eagle",
+    });
+  });
+});
+
+describe("feedback fields", () => {
+  it("renders data.ratingQuestion", () => {
+    const output = getDisplayDetailsForResult(mockFeedbackResult);
+
+    expect(output).toStrictEqual<Output>({
+      key: "Rating question",
+      iconKey: ComponentType.Feedback,
+      componentType: "Feedback",
+      title: "title text",
+      headline: "Bullfrog",
+    });
+  });
+
+  it("renders data.freeformQuestion", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockFeedbackResult,
+      key: "data.freeformQuestion",
+      matchValue: "Oarfish",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Freeform question",
+      iconKey: ComponentType.Feedback,
+      componentType: "Feedback",
+      title: "title text",
+      headline: "Oarfish",
+    });
+  });
+
+  it("renders data.disclaimer", () => {
+    const output = getDisplayDetailsForResult({
+      ...mockFeedbackResult,
+      key: "data.disclaimer",
+      matchValue: "Wagtail",
+    });
+
+    expect(output).toStrictEqual<Output>({
+      key: "Disclaimer",
+      iconKey: ComponentType.Feedback,
+      componentType: "Feedback",
+      title: "title text",
+      headline: "Wagtail",
     });
   });
 });

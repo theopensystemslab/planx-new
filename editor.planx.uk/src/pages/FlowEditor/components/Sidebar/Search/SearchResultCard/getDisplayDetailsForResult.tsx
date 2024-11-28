@@ -208,6 +208,12 @@ const keyFormatters: KeyMap = {
   "data.schema.fields.data.options.data.val": {
     getDisplayKey: () => "Option (data)",
   },
+  "data.ratingQuestion": {
+    getDisplayKey: () => "Rating question",
+  },
+  "data.freeformQuestion": {
+    getDisplayKey: () => "Freeform question",
+  },
 };
 
 const componentFormatters: ComponentMap = {
