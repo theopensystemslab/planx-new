@@ -34,18 +34,32 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
   const {
     data: downloadData,
     isLoading,
+    isError,
     status: downloadStatus,
-    error: downloadError,
   } = useQueryApplicationFileDownload(sessionId, email, team, {
     enabled: emailInputIsValid,
     retry: false,
   });
+
+  const [downloadApplicationError, setDownloadApplicationError] = useState<
+    string | undefined
+  >();
 
   useEffect(() => {
     if (downloadData) {
       downloadZipFile(downloadData.data);
     }
   }, [downloadData]);
+
+  useEffect(() => {
+    if (isError) {
+      setDownloadApplicationError(
+        "Sorry, something went wrong. Please try again.",
+      );
+    } else {
+      setDownloadApplicationError(undefined);
+    }
+  }, [isError]);
 
   useEffect(() => {
     // if the request has finished, invalidate query cache so other requests can be run
@@ -55,7 +69,7 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
         queryKey: [`${DOWNLOAD_APPLICATION_FILE_QUERY_KEY}`, sessionId],
       });
     }
-  }, [downloadStatus]);
+  }, [downloadStatus, queryClient, sessionId]);
 
   const formik = useFormik({
     initialValues: {
@@ -79,12 +93,7 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
       ) : (
         <Box width="100%">
           <Card handleSubmit={formik.handleSubmit}>
-            <ErrorWrapper
-              error={
-                downloadError &&
-                `Sorry, something went wrong. Please try again.`
-              }
-            >
+            <ErrorWrapper error={downloadApplicationError}>
               <>
                 <CardHeader
                   title="Verify your email address"
