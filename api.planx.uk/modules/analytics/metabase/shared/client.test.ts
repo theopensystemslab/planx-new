@@ -12,8 +12,6 @@ describe("Metabase client", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
-    process.env.METABASE_URL_EXT = "https://test-metabase-url.com";
-    process.env.METABASE_API_KEY = "test-api-key";
   });
 
   afterEach(() => {
