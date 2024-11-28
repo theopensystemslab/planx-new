@@ -119,8 +119,7 @@ $fontMonospace: "Source Code Pro", monospace;
     outline-offset: 0;
   }
 
-  &.isClone > div,
-  &.isClone > a {
+  &.isClone > div {
     margin-top: 3px;
     position: relative;
     ::before {

@@ -1,4 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
+import Box from "@mui/material/Box";
 import {
   ComponentType as TYPES,
   NodeTags,
@@ -76,25 +77,27 @@ const Question: React.FC<Props> = React.memo((props) => {
           },
         )}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
-          {props.data?.img && (
-            <Thumbnail
-              imageSource={props.data?.img}
-              imageAltText={props.data?.text}
-            />
+        <Box>
+          <Link
+            href={href}
+            prefetch={false}
+            onContextMenu={handleContext}
+            ref={drag}
+          >
+            {props.data?.img && (
+              <Thumbnail
+                imageSource={props.data?.img}
+                imageAltText={props.data?.text}
+              />
+            )}
+            {Icon && <Icon titleAccess={iconTitleAccess} />}
+            <span>{props.text}</span>
+          </Link>
+          {props.type !== TYPES.SetValue && props.data?.fn && (
+            <DataField value={props.data.fn} variant="parent" />
           )}
-          {Icon && <Icon titleAccess={iconTitleAccess} />}
-          <span>{props.text}</span>
-        </Link>
-        {props.type !== TYPES.SetValue && props.data?.fn && (
-          <DataField value={props.data.fn} variant="parent" />
-        )}
-        {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
+          {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
+        </Box>
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />
