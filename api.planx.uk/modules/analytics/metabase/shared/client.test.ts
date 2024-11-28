@@ -3,7 +3,6 @@ import {
   validateConfig,
   createMetabaseClient,
   MetabaseError,
-  initializeMetabaseClient,
 } from "./client.js";
 import nock from "nock";
 
@@ -15,7 +14,6 @@ describe("Metabase client", () => {
     vi.resetModules();
     process.env.METABASE_URL_EXT = "https://test-metabase-url.com";
     process.env.METABASE_API_KEY = "test-api-key";
-    initializeMetabaseClient();
   });
 
   afterEach(() => {
