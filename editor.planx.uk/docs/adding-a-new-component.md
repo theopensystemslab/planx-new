@@ -122,6 +122,10 @@ import SetValue from "@planx/components/SetValue/Editor";
 set: SetValueComponent,
 ```
 
+6. Add text fields to search index
+
+Please see detailed guide here - https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/how-to-add-fields-to-search.md
+
 ## Preview environment & integrations
 
 1. `src/pages/Preview/Node.tsx`
