@@ -13,7 +13,7 @@ assert(process.env.AWS_SECRET_KEY);
 
 interface UploadFileResponse {
   fileType: string | null;
-  fileUrl: string;
+  fileUrl: Promise<string>;
 }
 
 export const uploadFileSchema = z.object({
