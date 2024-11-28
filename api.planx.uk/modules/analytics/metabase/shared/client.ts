@@ -120,7 +120,10 @@ export const createMetabaseClient = (): AxiosInstance => {
   return client;
 };
 
-// Export singleton instance
-export const metabaseClient = createMetabaseClient();
+// Export both client and instance with delayed instantiation for test purposes
+export let metabaseClient: AxiosInstance;
 
-export default metabaseClient;
+export const initializeMetabaseClient = () => {
+  metabaseClient = createMetabaseClient();
+  return metabaseClient;
+};
