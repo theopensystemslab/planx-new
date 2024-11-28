@@ -32,6 +32,8 @@ In the near future, this process should be replaced by a re-submission API which
    * HTTP Method - POST
    * Headers - `{ "Authorization": ${HASURA_PLANX_API_KEY} }`
      * This secret can be found via Pulumi or your `.env` file
+
+This can also be done directly from the [Swagger docs](https://api.editor.planx.uk/docs/#/admin).
   
 > ⚠️ *Uniform instances do not neatly map to local authorities. Please take care to ensure that the value for `localAuthority` is taken from `uniform_applications.destination` when re-submitting to Uniform*
 
@@ -47,9 +49,9 @@ In the near future, this process should be replaced by a re-submission API which
 
 8. Send! ✉️
 
-9. Check response message from BoPS / Uniform to confirm success or failure. Rectify any issues if possible (e.g. malfored payload)
+9. Check response message from BoPS / Uniform to confirm success or failure (e.g. you can check the submissions log in the PlanX Editor). Rectify any issues if possible (e.g. malformed payload)
 
-10. Notify partners on `#planx-notifications` channel of the re-submissions
+10. Notify partners on `#planx-notifications` channel of the re-submissions. It is useful to link missing submissions to their counterpart payment logs, if applicable (reply in thread).
 
 ## Process if the application has been paid for, but there are no submission attempts recorded
 

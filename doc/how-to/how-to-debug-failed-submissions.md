@@ -76,6 +76,9 @@ If it is not obvious from the error notification, you can follow these steps to 
 > [!TIP]
 > It might be useful to toggle the data fields for the flow to help match the passport answers with the questions.
 
+> [!WARNING]
+> Note that the published flow that the applicant used might be different from the current version of the editor flow!
+
 ## Fixing the payload
 
 If the solution involves fixing the submission payload before resubmitting, you can do this as follows: 
@@ -87,6 +90,5 @@ If the solution involves fixing the submission payload before resubmitting, you 
 5. Save the data, then rerun the admin endpoints from earlier (without the `skipValidation` param) to check that there are no longer any errors.
 6. If all is good, resubmit the application - follow the instructions in [./how-to-resubmit-an-application.md](./how-to-resubmit-an-application.md).
 
-> [!IMPORTANT]
+> [!CAUTION]
 > Production data should only be edited when pairing with another OSL developer!
-
