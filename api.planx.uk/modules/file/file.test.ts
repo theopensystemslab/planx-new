@@ -5,41 +5,45 @@ import app from "../../server.js";
 import { deleteFilesByURL } from "./service/deleteFile.js";
 import { authHeader } from "../../tests/mockJWT.js";
 
+import type * as s3Client from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
 let mockPutObject: Mocked<() => void>;
 let mockGetObject: Mocked<() => void>;
 let mockDeleteObjects: Mocked<() => void>;
 let getObjectResponse = {};
 
-const mockGetSignedUrl = vi.fn(() => {
-  const randomFolderName = "nanoid";
-  const modifiedKey = "modified%20key";
-  return `
-    https://test-bucket.s3.eu-west-2.amazonaws.com/${randomFolderName}/${modifiedKey}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-SignedHeaders=host
-  `;
-});
+vi.mock("@aws-sdk/s3-request-presigner", () => ({
+  getSignedUrl: vi.fn(() => {
+    const randomFolderName = "nanoid";
+    const modifiedKey = "modified%20key";
+    return `https://test-bucket.s3.eu-west-2.amazonaws.com/${randomFolderName}/${modifiedKey}?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-SignedHeaders=host`;
+  }),
+}));
 
 const s3Mock = () => {
   return {
     putObject: mockPutObject,
     getObject: mockGetObject,
-    getSignedUrl: mockGetSignedUrl,
     deleteObjects: mockDeleteObjects,
   };
 };
 
-vi.mock("aws-sdk/clients/s3", () => ({
-  default: vi.fn().mockImplementation(() => {
-    return s3Mock();
-  }),
-}));
+vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
+  const actualS3Client = await importOriginal<typeof s3Client>();
+  return {
+    ...actualS3Client,
+    S3: vi.fn().mockImplementation(() => {
+      return s3Mock();
+    }),
+  };
+});
 
 describe("File upload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    mockPutObject = vi.fn(() => ({
-      promise: () => Promise.resolve(),
-    }));
+    mockPutObject = vi.fn(() => Promise.resolve());
   });
 
   describe("Private", () => {
@@ -83,13 +87,11 @@ describe("File upload", () => {
           });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
-      expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
     });
 
     it("should handle S3 error", async () => {
-      mockPutObject = vi.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!")),
-      }));
+      mockPutObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
 
       await supertest(app)
         .post("/file/private/upload")
@@ -160,13 +162,11 @@ describe("File upload", () => {
           });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
-      expect(mockGetSignedUrl).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
     });
 
     it("should handle S3 error", async () => {
-      mockPutObject = vi.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!")),
-      }));
+      mockPutObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
 
       await supertest(app)
         .post(ENDPOINT)
@@ -185,7 +185,7 @@ describe("File upload", () => {
 describe("File download", () => {
   beforeEach(() => {
     getObjectResponse = {
-      Body: Buffer.from("some data"),
+      Body: { transformToByteArray: () => new ArrayBuffer(24) },
       ContentLength: "633",
       ContentDisposition: "inline;filename='some_file.txt'",
       ContentEncoding: "undefined",
@@ -197,9 +197,7 @@ describe("File download", () => {
     };
     vi.clearAllMocks();
 
-    mockGetObject = vi.fn(() => ({
-      promise: () => Promise.resolve(getObjectResponse),
-    }));
+    mockGetObject = vi.fn(() => Promise.resolve(getObjectResponse));
   });
 
   describe("Public", () => {
@@ -235,9 +233,7 @@ describe("File download", () => {
     });
 
     it("should handle S3 error", async () => {
-      mockGetObject = vi.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!")),
-      }));
+      mockGetObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
@@ -313,9 +309,7 @@ describe("File download", () => {
     });
 
     it("should handle S3 error", async () => {
-      mockGetObject = vi.fn(() => ({
-        promise: () => Promise.reject(new Error("S3 error!")),
-      }));
+      mockGetObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
 
       await supertest(app)
         .get("/file/private/someKey/someFile.txt")
@@ -337,9 +331,8 @@ describe("File delete", () => {
   });
 
   it("deletes files by URL", async () => {
-    mockDeleteObjects = vi.fn(() => ({
-      promise: () => Promise.resolve(),
-    }));
+    mockDeleteObjects = vi.fn(() => Promise.resolve());
+
     const fileURLs = [
       "https://api.planx.dev/file/private/abc/123",
       "https://api.planx.dev/file/private/def/456",
@@ -361,11 +354,10 @@ describe("File delete", () => {
   });
 
   it("throw an error if S3 fails to delete the file", async () => {
-    mockDeleteObjects = vi.fn(() => ({
-      promise: () => {
-        throw Error();
-      },
-    }));
+    mockDeleteObjects = vi.fn(() => {
+      throw Error();
+    });
+
     const fileURLs = [
       "https://api.planx.dev/file/private/abc/123",
       "https://api.planx.dev/file/private/def/456",
