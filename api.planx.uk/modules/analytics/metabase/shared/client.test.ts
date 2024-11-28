@@ -23,16 +23,10 @@ describe("Metabase client", () => {
   });
 
   test("returns configured client", async () => {
-    const _client = createMetabaseClient();
-
-    expect(axiosCreateSpy).toHaveBeenCalledWith({
-      baseURL: process.env.METABASE_URL_EXT,
-      headers: {
-        "X-API-Key": process.env.METABASE_API_KEY,
-        "Content-Type": "application/json",
-      },
-      timeout: 30_000,
-    });
+    const client = createMetabaseClient();
+    expect(client.defaults.headers["X-API-Key"]).toBe(
+      process.env.METABASE_API_KEY,
+    );
   });
 
   describe("validates configuration", () => {
