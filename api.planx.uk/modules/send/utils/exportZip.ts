@@ -245,7 +245,7 @@ export class ExportZip {
     const { body } = await getFileFromS3(decodedS3Key);
     if (!body) throw new Error("file not found");
 
-    this.zip.addFile(name, body as Buffer);
+    this.zip.addFile(name, body);
   }
 
   toBuffer(): Buffer {

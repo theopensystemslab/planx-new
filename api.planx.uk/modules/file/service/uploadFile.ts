@@ -19,7 +19,7 @@ export const uploadPublicFile = async (
   const { params, key, fileType } = generateFileParams(file, filename, filekey);
 
   await s3.putObject(params);
-  const fileUrl = buildFileUrl(key, "public");
+  const fileUrl = await buildFileUrl(key, "public");
 
   return {
     fileType,
@@ -41,7 +41,7 @@ export const uploadPrivateFile = async (
   };
 
   await s3.putObject(params);
-  const fileUrl = buildFileUrl(key, "private");
+  const fileUrl = await buildFileUrl(key, "private");
 
   return {
     fileType,
@@ -75,13 +75,14 @@ export function generateFileParams(
   const fileType = mime.getType(filename);
   const key = `${filekey || nanoid()}/${filename}`;
 
-  const params = {
-    ACL: process.env.AWS_S3_ACL,
+  const params: PutObjectCommandInput = {
+    ACL: "public-read",
+    Bucket: process.env.AWS_S3_BUCKET,
     Key: key,
     Body: file?.buffer || JSON.stringify(file),
     ContentDisposition: `inline;filename="${filename}"`,
     ContentType: file?.mimetype || "application/json",
-  } as PutObjectCommandInput;
+  };
 
   return {
     fileType,

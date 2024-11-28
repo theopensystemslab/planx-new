@@ -4,14 +4,20 @@ import { s3Factory } from "./utils.js";
 export const getFileFromS3 = async (fileId: string) => {
   const s3 = s3Factory();
 
-  const params = {
+  const params: PutObjectCommandInput = {
     Key: fileId,
-  } as PutObjectCommandInput;
+    Bucket: process.env.AWS_S3_BUCKET,
+  };
 
   const file = await s3.getObject(params);
 
+  // TODO: test this
+  if (!file.Body) throw Error(`Missing body from S3 file ${fileId}`);
+
+  const body = Buffer.from(await file.Body.transformToByteArray());
+
   return {
-    body: file.Body,
+    body,
     isPrivate: file.Metadata?.is_private === "true",
     headers: {
       "Content-Type": file.ContentType,
