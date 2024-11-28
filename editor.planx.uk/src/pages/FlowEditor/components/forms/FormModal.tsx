@@ -43,6 +43,7 @@ const NodeTypeSelect: React.FC<{
   return (
     <TypeSelect
       value={fromSlug(props.value)}
+      data-testId="header-select"
       onChange={(ev) => {
         props.onChange(ev.target.value);
       }}

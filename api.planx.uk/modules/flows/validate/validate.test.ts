@@ -419,15 +419,9 @@ describe("invite to pay validation on diff", () => {
   });
 
   it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-    const {
-      Checklist: _Checklist,
-      ChecklistOptionOne: _ChecklistOptionOne,
-      ChecklistOptionTwo: _ChecklistOptionTwo,
-      ...invalidatedFlow
-    } = flowWithInviteToPay;
-    invalidatedFlow["_root"].edges?.splice(
-      invalidatedFlow["_root"].edges?.indexOf("Checklist"),
-    );
+    const invalidatedFlow = flowWithInviteToPay;
+    // Remove proposal.projectType, set incorrect variable
+    invalidatedFlow!.Checklist!.data!.fn = "some.other.variable";
 
     queryMock.mockQuery({
       name: "GetFlowData",

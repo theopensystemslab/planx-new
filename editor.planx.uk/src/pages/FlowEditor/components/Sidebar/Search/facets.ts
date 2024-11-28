@@ -150,6 +150,12 @@ const pay: SearchFacets = [
   "data.govPayMetadata.value",
 ];
 
+const feedback: SearchFacets = [
+  richTextField("data.ratingQuestion"),
+  richTextField("data.freeformQuestion"),
+  richTextField("data.disclaimer"),
+];
+
 export const ALL_FACETS: SearchFacets = [
   ...basicFields,
   ...moreInformation,
@@ -166,5 +172,6 @@ export const ALL_FACETS: SearchFacets = [
   ...drawBoundary,
   ...planningConstraints,
   ...pay,
+  ...feedback,
   ...DATA_FACETS,
 ];

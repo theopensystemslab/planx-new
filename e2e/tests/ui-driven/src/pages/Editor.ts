@@ -9,6 +9,7 @@ import {
   createContent,
   createDateInput,
   createDrawBoundary,
+  createFeedback,
   createFileUpload,
   createFilter,
   createFindProperty,
@@ -239,5 +240,9 @@ export class PlaywrightEditor {
       .getByPlaceholder("Notice")
       .fill("A notice inside a portal!");
     await this.page.locator('button[form="modal"][type="submit"]').click();
+  }
+
+  async createFeedback() {
+    await createFeedback(this.page, this.getNextNode());
   }
 }
