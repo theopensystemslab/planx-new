@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,17 +8,18 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { FormikErrors, useFormik } from "formik";
-import React, { ChangeEvent } from "react";
-import { FONT_WEIGHT_BOLD } from "theme";
+import { useFormik } from "formik";
+import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import Checkbox from "ui/shared/Checkbox/Checkbox";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { array, object, string } from "yup";
 
 import { ICONS } from "../shared/icons";
 import { availableDatasets, parseContent, PlanningConstraints } from "./model";
@@ -37,18 +37,14 @@ function PlanningConstraintsComponent(props: Props) {
         data: newValues,
       });
     },
-    validate: (values) => {
-      const errors: FormikErrors<PlanningConstraints> = {};
-      if (!values.dataValues || values.dataValues?.length < 1) {
-        errors.dataValues = "Select at least one constraint";
-      }
-      return errors;
-    },
+    validationSchema: object({
+      dataValues: array(string()).min(1, "Select at least one constraint"),
+    }),
   });
 
   const changeSelectAll =
     (vals: string[] | undefined) =>
-    (_event: ChangeEvent<HTMLInputElement>, _checked: boolean) => {
+    (_event?: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
       let newCheckedVals: string[];
       if (vals?.length !== availableDatasets.length) {
         newCheckedVals = availableDatasets.map((d) => d.val);
@@ -60,7 +56,7 @@ function PlanningConstraintsComponent(props: Props) {
 
   const changeDataset =
     (val: string) =>
-    (_event: ChangeEvent<HTMLInputElement>, _checked: boolean) => {
+    (_event?: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
       let newCheckedVals;
       if (formik.values.dataValues?.includes(val)) {
         newCheckedVals = formik.values.dataValues.filter((dv) => dv !== val);
@@ -125,19 +121,18 @@ function PlanningConstraintsComponent(props: Props) {
                     <TableRow>
                       <TableCell>
                         <Checkbox
-                          color="primary"
+                          id={"all-constraints-checkbox"}
                           checked={
                             availableDatasets.length ===
                             formik.values.dataValues?.length
                           }
                           onChange={changeSelectAll(formik.values.dataValues)}
-                          inputProps={{
-                            "aria-label": "select all constraints",
-                          }}
                         />
                       </TableCell>
-                      <TableCell sx={{ fontWeight: FONT_WEIGHT_BOLD }}>
-                        Constraints
+                      <TableCell
+                        sx={{ fontSize: (theme) => theme.typography.h4 }}
+                      >
+                        All constraints
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -148,10 +143,12 @@ function PlanningConstraintsComponent(props: Props) {
                         <TableRow key={i}>
                           <TableCell sx={{ verticalAlign: "top" }}>
                             <Checkbox
-                              color="primary"
-                              checked={formik.values.dataValues?.includes(
-                                dataset.val,
-                              )}
+                              id={`${dataset.val}-checkbox`}
+                              checked={
+                                formik.values.dataValues?.includes(
+                                  dataset.val,
+                                ) || false
+                              }
                               onChange={changeDataset(dataset.val)}
                             />
                           </TableCell>
