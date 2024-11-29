@@ -77,7 +77,7 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
     // publish flow
-    await navigateToService(page, serviceProps.slug)
+    await navigateToService(page, serviceProps.slug);
     await publishService(page);
 
     let previewLink = page.getByRole("link", {
@@ -85,7 +85,7 @@ test.describe("Flow creation, publish and preview", () => {
     });
     await expect(previewLink).toBeVisible();
 
-    await navigateToService(page, serviceProps.slug)
+    await navigateToService(page, serviceProps.slug);
     await turnServiceOnline(page);
 
     // Exit back to main Editor page

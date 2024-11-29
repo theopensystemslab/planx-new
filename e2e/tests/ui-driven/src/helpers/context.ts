@@ -7,7 +7,7 @@ import { Flow, TestContext } from "./types";
 
 export const contextDefaults: TestContext = {
   user: {
-    id:0,
+    id: 0,
     firstName: "Test",
     lastName: "Test",
     email: "simulate-delivered@notifications.service.gov.uk",
@@ -34,8 +34,13 @@ export async function setUpTestContext(
 ): Promise<TestContext> {
   const context: TestContext = { ...initialContext };
   if (context.user) {
-    const {firstName, lastName, email, isPlatformAdmin} = context.user
-    context.user.id = await $admin.user.create({firstName, lastName, email, isPlatformAdmin});
+    const { firstName, lastName, email, isPlatformAdmin } = context.user;
+    context.user.id = await $admin.user.create({
+      firstName,
+      lastName,
+      email,
+      isPlatformAdmin,
+    });
   }
   if (context.team) {
     context.team.id = await $admin.team.create({
@@ -76,9 +81,9 @@ export async function setUpTestContext(
 }
 
 export async function tearDownTestContext() {
-    await $admin.flow._destroyAll();
-    await $admin.user._destroyAll()
-    await $admin.team._destroyAll()
+  await $admin.flow._destroyAll();
+  await $admin.user._destroyAll();
+  await $admin.team._destroyAll();
 }
 
 export function generateAuthenticationToken(userId: string) {
