@@ -130,8 +130,8 @@ export interface Schema {
 
 export type SchemaUserResponse = Record<
   Field["data"]["fn"],
-  string | string[] | Record<string, string> | any[]
->; // string | string[] | Record<string, string> | Feature[]
+  string | string[] | any
+>; // string | string[] | Record<string, string> (address field) | Feature[] (map field)
 
 /**
  * Output data from a form using the useSchema hook

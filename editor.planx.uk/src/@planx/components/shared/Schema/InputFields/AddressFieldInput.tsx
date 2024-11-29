@@ -1,9 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {
-  AddressFields,
-  FormProps,
-} from "@planx/components/AddressInput/Public";
+import { AddressFields } from "@planx/components/AddressInput/Public";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 
@@ -27,7 +24,7 @@ export const AddressFieldInput: React.FC<Props<AddressField>> = (props) => {
       )}
       <AddressFields
         id={id}
-        values={value as unknown as FormProps}
+        values={value}
         errors={errorMessage}
         handleChange={formik.handleChange}
       />

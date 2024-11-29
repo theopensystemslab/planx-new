@@ -16,7 +16,7 @@ const List = styled("ul")(() => ({
  * @returns string | React.JSX.Element - the `text` for the given value `val`, or the original value
  */
 export function formatSchemaDisplayValue(
-  value: string | string[] | Record<string, string>,
+  value: string | string[],
   field: Field,
 ) {
   switch (field.type) {
