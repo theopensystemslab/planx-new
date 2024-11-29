@@ -20,9 +20,11 @@ describe("toNumber() helper function", () => {
 describe("calculateReduction() helper function", () => {
   it("correctly outputs the reduction when a calculated value is provided", () => {
     const input: PassportFeeFields = {
-      "application.fee.calculated": 100,
-      "application.fee.payable": 50,
-      "application.fee.payable.vat": 0,
+      amount: {
+        "application.fee.calculated": 100,
+        "application.fee.payable": 50,
+        "application.fee.payable.vat": 0,
+      }
     };
     const reduction = calculateReduction(input);
 
@@ -31,9 +33,11 @@ describe("calculateReduction() helper function", () => {
 
   it("defaults to 0 when calculated is 0", () => {
     const input: PassportFeeFields = {
-      "application.fee.calculated": 0,
-      "application.fee.payable": 100,
-      "application.fee.payable.vat": 0,
+      amount: {
+        "application.fee.calculated": 0,
+        "application.fee.payable": 100,
+        "application.fee.payable.vat": 0,
+      }
     };
     const reduction = calculateReduction(input);
 
@@ -44,28 +48,32 @@ describe("calculateReduction() helper function", () => {
 describe("toFeeBreakdown() helper function", () => {
   it("correctly maps fields", () => {
     const input: PassportFeeFields = {
-      "application.fee.calculated": 100,
-      "application.fee.payable": 50,
-      "application.fee.payable.vat": 10,
+      amount: {
+        "application.fee.calculated": 100,
+        "application.fee.payable": 50,
+        "application.fee.payable.vat": 10,
+      }
     };
 
-    const output = toFeeBreakdown(input);
+    const { amount } = toFeeBreakdown(input);
 
-    expect(output.applicationFee).toEqual(input["application.fee.calculated"]);
-    expect(output.total).toEqual(input["application.fee.payable"]);
-    expect(output.vat).toEqual(input["application.fee.payable.vat"]);
-    expect(output.reduction).toEqual(50);
+    expect(amount.applicationFee).toEqual(input.amount["application.fee.calculated"]);
+    expect(amount.total).toEqual(input.amount["application.fee.payable"]);
+    expect(amount.vat).toEqual(input.amount["application.fee.payable.vat"]);
+    expect(amount.reduction).toEqual(50);
   });
 
   it("sets applicationFee to payable amount if no calculated value is provided", () => {
     const input: PassportFeeFields = {
-      "application.fee.calculated": 0,
-      "application.fee.payable": 50,
-      "application.fee.payable.vat": 10,
+      amount : {
+        "application.fee.calculated": 0,
+        "application.fee.payable.vat": 10,
+        "application.fee.payable": 50,
+      }
     };
 
-    const output = toFeeBreakdown(input);
+    const { amount } = toFeeBreakdown(input);
 
-    expect(output.applicationFee).toEqual(input["application.fee.payable"]);
+    expect(amount.applicationFee).toEqual(input.amount["application.fee.payable"]);
   });
 });
