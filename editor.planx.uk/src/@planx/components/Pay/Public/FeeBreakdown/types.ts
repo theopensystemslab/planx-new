@@ -5,6 +5,8 @@ export interface FeeBreakdown {
     reduction: number;
     vat: number | undefined;
   };
+  reductions: string[];
+  exemptions: string[];
 }
 
 export interface PassportFeeFields {
@@ -13,4 +15,6 @@ export interface PassportFeeFields {
     "application.fee.payable": number;
     "application.fee.payable.vat": number;
   },
+  reductions?: Record<string, boolean>
+  exemptions?: Record<string, boolean>
 };
