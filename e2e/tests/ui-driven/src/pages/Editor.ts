@@ -74,6 +74,13 @@ export class PlaywrightEditor {
     ).toBeVisible();
   }
 
+  async createQuestionWithOptions(title: string, answers: string[]) {
+    await createQuestionWithOptions(this.page, this.firstNode, title, answers);
+    await expect(
+      this.page.locator("a").filter({ hasText: this.answers.questionText }),
+    ).toBeVisible();
+  }
+
   async createNoticeOnEachBranch() {
     // Add a notice to the "Yes" path
     await createNotice(

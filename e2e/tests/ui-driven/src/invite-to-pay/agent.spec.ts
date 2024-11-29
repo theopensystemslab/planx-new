@@ -1,6 +1,5 @@
 import { BrowserContext, Page, expect, test } from "@playwright/test";
 import {
-  Context,
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
@@ -20,16 +19,15 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
+import { TestContext } from "../helpers/types";
 
-let context: Context = {
+let context: TestContext = {
   ...contextDefaults,
-  flows: [
-    {
-      slug: "invite-to-pay-test",
-      name: "Invite to pay test",
-      data: inviteToPayFlow,
-    },
-  ],
+  flow: {
+    slug: "invite-to-pay-test",
+    name: "Invite to pay test",
+    data: inviteToPayFlow,
+  },
   sessionIds: [], // used to collect and clean up sessions
 };
 
@@ -108,7 +106,7 @@ test.describe("Agent journey @regression", async () => {
     const sessionId = await makePaymentRequest({ page: firstPage, context });
 
     // Resume session
-    const resumeLink = `/${context.team!.slug!}/${context.flows![0].slug}/published?analytics=false&sessionId=${sessionId}`;
+    const resumeLink = `/${context.team!.slug!}/${context.flow?.slug}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
@@ -137,7 +135,7 @@ test.describe("Agent journey @regression", async () => {
     await modifyFlow({ context, modifiedFlow: modifiedInviteToPayFlow });
 
     // Navigate to resume session link
-    const resumeLink = `/${context.team!.slug!}/${context.flows![0].slug}/published?analytics=false&sessionId=${sessionId}`;
+    const resumeLink = `/${context.team!.slug!}/${context.flow?.slug}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(

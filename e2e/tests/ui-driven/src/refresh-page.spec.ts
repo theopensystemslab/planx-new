@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
@@ -9,9 +8,10 @@ import {
   createAuthenticatedSession,
   isGetUserRequest,
 } from "./helpers/globalHelpers";
+import { TestContext } from "./helpers/types";
 
 test.describe("Refresh page", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
   };
 

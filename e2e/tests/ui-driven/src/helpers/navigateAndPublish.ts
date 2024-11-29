@@ -5,8 +5,6 @@ export const navigateToService = async (page: Page, slug: string) => {
   await page.goto(`/${contextDefaults.team.slug}/${slug}`);
 
   await expect(page.getByRole("link", { name: slug })).toBeVisible();
-
-  return true;
 };
 
 export const publishService = async (page: Page) => {

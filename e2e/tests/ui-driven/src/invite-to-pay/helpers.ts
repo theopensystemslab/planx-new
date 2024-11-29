@@ -1,7 +1,6 @@
 import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { GraphQLClient, gql } from "graphql-request";
-import { Context } from "../helpers/context";
 import { TEST_EMAIL, addSessionToContext, log } from "../helpers/globalHelpers";
 import {
   answerChecklist,
@@ -9,13 +8,14 @@ import {
   answerFindProperty,
   fillInEmail,
 } from "../helpers/userActions";
+import { TestContext } from "../helpers/types";
 
 /**
  * Navigates to pay component whilst completing the minimum requirements for an Invite to Pay flow
  */
-export async function navigateToPayComponent(page: Page, context: Context) {
+export async function navigateToPayComponent(page: Page, context: TestContext) {
   const previewURL = `/${context.team!.slug!}/${
-    context.flows?.[0].slug
+    context.flow?.slug
   }/published?analytics=false`;
   await page.goto(previewURL);
 
@@ -85,7 +85,7 @@ export async function makePaymentRequest({
   context,
 }: {
   page: Page;
-  context: Context;
+  context: TestContext;
 }) {
   await navigateToPayComponent(page, context);
   const sessionId = await addSessionToContext(page, context);
@@ -96,6 +96,6 @@ export async function makePaymentRequest({
   await answerInviteToPayForm(page);
   page.getByRole("button", { name: "Send invitation to pay" }).click();
   await page.waitForResponse((res) => res.url().includes("invite-to-pay"));
-
+  await expect(page.getByText("Error generating payment")).toBeHidden();
   return sessionId;
 }

@@ -2,7 +2,6 @@ import type { SessionData } from "@opensystemslab/planx-core/types";
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { GraphQLClient, gql } from "graphql-request";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   getGraphQLClient,
@@ -17,20 +16,19 @@ import {
 } from "./helpers/globalHelpers";
 import { fillGovUkCardDetails, submitCardDetails } from "./helpers/userActions";
 import payFlow from "./mocks/flows/pay-flow.json";
+import { TestContext } from "./helpers/types";
 
-let context: Context = {
+let context: TestContext = {
   ...contextDefaults,
-  flows: [
-    {
-      slug: "pay-test",
-      name: "Pay test",
-      data: payFlow,
-    },
-  ],
+  flow: {
+    slug: "pay-test",
+    name: "Pay test",
+    data: payFlow,
+  },
+
   sessionIds: [], // used to collect and clean up sessions
 };
-const previewURL = `/${context.team!.slug!}/${context.flows![0]
-  .slug!}/published?analytics=false`;
+const previewURL = `/${context.team!.slug!}/${context.flow?.slug}/published?analytics=false`;
 
 const payButtonText = "Pay now using GOV.UK Pay";
 

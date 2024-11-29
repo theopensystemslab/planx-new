@@ -3,32 +3,12 @@ import { GraphQLClient, gql } from "graphql-request";
 import { sign } from "jsonwebtoken";
 import assert from "node:assert";
 import { log } from "./globalHelpers";
+import { $admin } from "../../../api-driven/src/client";
+import { Flow, TestContext } from "./types";
 
-type NewTeam = Parameters<CoreDomainClient["team"]["create"]>[0];
-
-export interface Flow {
-  id?: string;
-  publishedId?: number;
-  slug: string;
-  name: string;
-  data?: object;
-}
-
-export interface Context {
+export const contextDefaults: TestContext = {
   user: {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    isPlatformAdmin: boolean;
-  };
-  team: { id?: number } & NewTeam;
-  flows?: Flow[];
-  sessionIds?: string[];
-}
-
-export const contextDefaults: Context = {
-  user: {
+    id: 0,
     firstName: "Test",
     lastName: "Test",
     email: "simulate-delivered@notifications.service.gov.uk",
@@ -49,10 +29,10 @@ export const contextDefaults: Context = {
 };
 
 export async function setUpTestContext(
-  initialContext: Context,
-): Promise<Context> {
+  initialContext: TestContext,
+): Promise<TestContext> {
   const $admin = getCoreDomainClient();
-  const context: Context = { ...initialContext };
+  const context: TestContext = { ...initialContext };
   if (context.user) {
     context.user.id = await $admin.user.create(context.user);
   }
@@ -67,24 +47,24 @@ export async function setUpTestContext(
     });
   }
   if (
-    context.flows &&
-    context.flows[0].slug &&
-    context.flows[0].data &&
-    context.flows[0].name &&
+    context.flow &&
+    context.flow.slug &&
+    context.flow.data &&
+    context.flow.name &&
     context.team?.id &&
     context.user?.id
   ) {
-    context.flows[0].id = await $admin.flow.create({
-      slug: context.flows[0].slug,
-      name: context.flows[0].name,
+    context.flow.id = await $admin.flow.create({
+      slug: context.flow.slug,
+      name: context.flow.name,
       teamId: context.team.id,
-      data: context.flows[0].data,
+      data: context.flow.data,
       status: "online",
     });
-    context.flows[0].publishedId = await $admin.flow.publish({
+    context.flow.publishedId = await $admin.flow.publish({
       flow: {
-        id: context.flows[0].id,
-        data: context.flows[0].data,
+        id: context.flow.id,
+        data: context.flow.data,
       },
       publisherId: context.user!.id!,
     });
@@ -94,27 +74,10 @@ export async function setUpTestContext(
   return context;
 }
 
-export const externalPortalServiceProps = {
-  name: "An External Portal Service",
-  slug: "an-external-portal-service",
-};
-
-export const externalPortalFlowData = {
-  title: "Is this an External Portal?",
-  answers: ["It is an external portal", "No it is not an External Portal"],
-};
-
-export async function tearDownTestContext(context: Context) {
+export async function tearDownTestContext(context: TestContext) {
   const adminGQLClient = getGraphQLClient();
-  if (context.flows?.[0]) {
-    await deleteSession(adminGQLClient, context);
-
-    for (const flow of context.flows) {
-      await deleteFlow(adminGQLClient, flow);
-      if (flow.publishedId) {
-        await deletePublishedFlow(adminGQLClient, flow);
-      }
-    }
+  if (context.flow || context.externalPortalFlow) {
+    await $admin.flow._destroyAll();
   }
   if (context.user) {
     await deleteUser(adminGQLClient, context);
@@ -170,7 +133,7 @@ export async function findSessionId(
           id
         }
       }`,
-      { slug: context.flows?.[0].slug },
+      { slug: context.flow.slug },
     );
   if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
@@ -273,7 +236,7 @@ async function deleteFlow(adminGQLClient: GraphQLClient, flow: Flow) {
   }
 }
 
-async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
+async function deleteUser(adminGQLClient: GraphQLClient, context: TestContext) {
   if (context.user?.id) {
     log(`deleting user ${context.user?.id}`);
     await adminGQLClient.request(
@@ -310,7 +273,7 @@ async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
   }
 }
 
-async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
+async function deleteTeam(adminGQLClient: GraphQLClient, context: TestContext) {
   if (context.team?.id) {
     log(`deleting team ${context.team?.id}`);
     await adminGQLClient.request(
@@ -347,7 +310,10 @@ async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
   }
 }
 
-async function setupGovPaySecret($admin: CoreDomainClient, context: Context) {
+async function setupGovPaySecret(
+  $admin: CoreDomainClient,
+  context: TestContext,
+) {
   try {
     await $admin.client.request(
       gql`

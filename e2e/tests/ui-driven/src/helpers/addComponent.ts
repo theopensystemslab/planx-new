@@ -1,6 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
-import { contextDefaults, externalPortalServiceProps } from "./context";
+import { contextDefaults } from "./context";
+import { externalPortalServiceProps } from "./serviceData";
 
 const createBaseComponent = async (
   page: Page,

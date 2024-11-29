@@ -1,9 +1,6 @@
 import { Browser, expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
-  externalPortalFlowData,
-  externalPortalServiceProps,
   setUpTestContext,
   tearDownTestContext,
 } from "./helpers/context";
@@ -21,18 +18,20 @@ import {
   clickContinue,
 } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
-import {
-  createExternalPortal,
-  createQuestionWithOptions,
-} from "./helpers/addComponent";
+import { createExternalPortal } from "./helpers/addComponent";
 import {
   navigateToService,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish";
+import { TestContext } from "./helpers/types";
+import {
+  externalPortalFlowData,
+  externalPortalServiceProps,
+} from "./helpers/serviceData";
 
 test.describe("Flow creation, publish and preview", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
   };
   const serviceProps = {
@@ -67,7 +66,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.addNewService();
 
     // update context to allow flow to be torn down
-    context.flows = [{ ...serviceProps }];
+    context.flow = { ...serviceProps };
 
     await editor.createQuestion();
     await editor.createNoticeOnEachBranch();
@@ -131,8 +130,7 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
+    await navigateToService(page, serviceProps.slug);
     await publishService(page);
 
     const previewLink = page.getByRole("link", {
@@ -166,8 +164,7 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
+    await navigateToService(page, serviceProps.slug);
     await turnServiceOnline(page);
 
     // Exit back to main Editor page
@@ -199,24 +196,22 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.addNewService();
 
     // update context to allow new flow to be torn down
-    context.flows?.push({ ...externalPortalServiceProps });
+    context.externalPortalFlow = { ...externalPortalServiceProps };
 
-    await createQuestionWithOptions(
-      page,
-      editor.firstNode,
-      externalPortalFlowData.title,
-      externalPortalFlowData.answers,
-    );
+    const { title, answers } = externalPortalFlowData;
+
+    await editor.createQuestionWithOptions(title, answers);
+
     await expect(editor.nodeList).toContainText([
-      externalPortalFlowData.title,
-      externalPortalFlowData.answers[0],
-      externalPortalFlowData.answers[1],
+      title,
+      answers[0],
+      answers[1],
     ]);
 
     await publishService(page);
     await turnServiceOnline(page);
 
-    navigateToService(page, serviceProps.slug);
+    await navigateToService(page, serviceProps.slug);
 
     await createExternalPortal(page, page.locator("li:nth-child(6)"));
 

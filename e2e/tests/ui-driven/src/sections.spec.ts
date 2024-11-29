@@ -1,7 +1,6 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
 import { gql } from "graphql-request";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   getGraphQLClient,
@@ -21,6 +20,7 @@ import {
   saveSession,
 } from "./helpers/userActions";
 import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow";
+import { TestContext } from "./helpers/types";
 
 // TODO: move this type to planx-core
 // also defined in editor.planx.uk/src/types.ts
@@ -34,15 +34,13 @@ export enum SectionStatus {
 }
 
 test.describe("Section statuses", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
-    flows: [
-      {
-        slug: "sections-test-flow",
-        name: "Sections test flow",
-        data: flow,
-      },
-    ],
+    flow: {
+      slug: "sections-test-flow",
+      name: "Sections test flow",
+      data: flow,
+    },
   };
 
   test.beforeAll(async () => {
@@ -55,7 +53,7 @@ test.describe("Section statuses", () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    const previewURL = `/${context.team?.slug}/${context.flows![0].slug}/published?analytics=false`;
+    const previewURL = `/${context.team?.slug}/${context.flow?.slug}/published?analytics=false`;
     await page.goto(previewURL);
   });
 
@@ -533,11 +531,11 @@ async function modifyFlow({
   context,
   flowData,
 }: {
-  context: Context;
+  context: TestContext;
   flowData: FlowGraph;
 }) {
   const adminGQLClient = getGraphQLClient();
-  if (!context.flows![0].id || !context.user?.id) {
+  if (!context.flow?.id || !context.user?.id) {
     throw new Error("context must have a flow and user");
   }
   await adminGQLClient.request(
@@ -555,7 +553,7 @@ async function modifyFlow({
       }
     `,
     {
-      flowId: context.flows![0].id,
+      flowId: context.flow?.id,
       userId: context.user!.id,
       data: flowData,
     },
