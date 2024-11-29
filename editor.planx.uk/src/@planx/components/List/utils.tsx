@@ -16,7 +16,7 @@ const List = styled("ul")(() => ({
  * @returns string | React.JSX.Element - the `text` for the given value `val`, or the original value
  */
 export function formatSchemaDisplayValue(
-  value: string | string[],
+  value: string | string[] | Record<string, string>,
   field: Field,
 ) {
   switch (field.type) {
@@ -24,6 +24,7 @@ export function formatSchemaDisplayValue(
       return field.data.units ? `${value} ${field.data.units}` : value;
     case "text":
     case "date":
+    case "address":
       return value;
     case "checklist": {
       const matchingOptions = field.data.options.filter((option) =>
