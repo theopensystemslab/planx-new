@@ -53,12 +53,7 @@ describe("Metabase client", () => {
 
   describe("Error handling", () => {
     test("retries then succeeds on 5xx errors", async () => {
-      const baseURL = process.env.METABASE_URL_EXT;
-      if (!baseURL) {
-        throw new Error("METABASE_URL_EXT must be defined for tests");
-      }
-
-      const metabaseScope = nock(baseURL);
+      const metabaseScope = nock(process.env.METABASE_URL_EXT!);
 
       metabaseScope
         .get("/test")
