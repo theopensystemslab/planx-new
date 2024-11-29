@@ -20,9 +20,12 @@ describe("Metabase client", () => {
 
   test("returns configured client", async () => {
     const client = createMetabaseClient();
+    expect(client.defaults.baseURL).toBe(process.env.METABASE_URL_EXT);
     expect(client.defaults.headers["X-API-Key"]).toBe(
       process.env.METABASE_API_KEY,
     );
+    expect(client.defaults.headers["Content-Type"]).toBe("application/json");
+    expect(client.defaults.timeout).toBe(30_000);
   });
 
   describe("validates configuration", () => {
