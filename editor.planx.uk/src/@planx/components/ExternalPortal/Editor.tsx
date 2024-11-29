@@ -148,7 +148,13 @@ const ExternalPortalForm: React.FC<{
             role="status"
             aria-atomic={true}
             aria-live="polite"
-            ListboxProps={{ sx: { padding: 0 } }}
+            fullWidth
+            ListboxProps={{
+              sx: (theme) => ({
+                paddingY: 0,
+                backgroundColor: theme.palette.background.default,
+              }),
+            }}
             onChange={(_event, newValue: Flow) => {
               formik.setFieldValue("flowId", newValue.id);
             }}
