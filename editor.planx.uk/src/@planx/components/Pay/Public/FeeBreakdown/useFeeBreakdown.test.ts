@@ -28,10 +28,12 @@ describe("useFeeBreakdown() hook", () => {
       const result = useFeeBreakdown();
 
       expect(result).toEqual({
-        applicationFee: 1000,
-        total: 800,
-        reduction: 200,
-        vat: 160,
+        amount: {
+          applicationFee: 1000,
+          total: 800,
+          reduction: 200,
+          vat: 160,
+        },
       });
     });
 
@@ -47,10 +49,12 @@ describe("useFeeBreakdown() hook", () => {
       const result = useFeeBreakdown();
 
       expect(result).toEqual({
-        applicationFee: 1000,
-        total: 800,
-        reduction: 200,
-        vat: 160,
+        amount: {
+          applicationFee: 1000,
+          total: 800,
+          reduction: 200,
+          vat: 160,
+        }
       });
     });
   });

@@ -90,6 +90,8 @@ export const FeeBreakdown: React.FC = () => {
   const breakdown = useFeeBreakdown();
   if (!breakdown) return null;
 
+  const { amount, exemptions: _exemptions, reductions: _reductions } = breakdown;
+
   return (
     <Box mt={3}>
       <Typography variant="h3" mb={1}>
@@ -102,10 +104,10 @@ export const FeeBreakdown: React.FC = () => {
         <StyledTable data-testid="fee-breakdown-table">
           <Header />
           <TableBody>
-            <ApplicationFee amount={breakdown.applicationFee} />
-            <Reductions amount={breakdown.reduction} />
-            <Total amount={breakdown.total} />
-            <VAT amount={breakdown.vat} />
+            <ApplicationFee amount={amount.applicationFee} />
+            <Reductions amount={amount.reduction} />
+            <Total amount={amount.total} />
+            <VAT amount={amount.vat} />
           </TableBody>
         </StyledTable>
       </TableContainer>
