@@ -34,6 +34,9 @@ export const formatSchemaDisplayValue = <T extends Field>(
 
       return field.data.units ? `${value} ${field.data.units}` : value;
     }
+    case "address":
+      // TODO!!
+      return;
     case "text":
     case "date": {
       if (!isTextResponse(value)) return;

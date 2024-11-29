@@ -1,3 +1,8 @@
+import { Address } from "@opensystemslab/planx-core/types";
+import {
+  AddressInput,
+  userDataSchema as addressValidationSchema,
+} from "@planx/components/AddressInput/model";
 import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
@@ -81,6 +86,11 @@ export type DateField = {
   data: DateInput & { fn: string };
 };
 
+export type AddressField = {
+  type: "address";
+  data: AddressInput & { fn: string };
+};
+
 export type MapField = {
   type: "map";
   data: {
@@ -106,6 +116,7 @@ export type Field =
   | QuestionField
   | ChecklistField
   | DateField
+  | AddressField
   | MapField;
 
 /**
@@ -127,6 +138,8 @@ export type ResponseValue<T extends Field> = T extends MapField
   ? string[]
   : T extends NumberField
   ? number
+  : T extends AddressField
+  ? Address
   : string;
 
 export type SchemaUserResponse = Record<
@@ -188,6 +201,9 @@ const generateValidationSchemaForFields = (
       case "date":
         fieldSchemas[data.fn] = dateValidationSchema(data);
         break;
+      case "address":
+        fieldSchemas[data.fn] = addressValidationSchema(data);
+        break;
       case "map":
         fieldSchemas[data.fn] = mapValidationSchema(data);
         break;
@@ -223,6 +239,16 @@ export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
       case "checklist":
       case "map":
         initialValues[field.data.fn] = [];
+        break;
+      case "address":
+        initialValues[field.data.fn] = {
+          line1: "",
+          line2: "",
+          town: "",
+          county: "",
+          postcode: "",
+          country: "",
+        };
         break;
       default:
         initialValues[field.data.fn] = "";

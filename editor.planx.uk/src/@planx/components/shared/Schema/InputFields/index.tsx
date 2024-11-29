@@ -8,6 +8,7 @@ import { get } from "lodash";
 import React from "react";
 import { exhaustiveCheck } from "utils";
 
+import { AddressFieldInput } from "./AddressFieldInput";
 import { ChecklistFieldInput } from "./ChecklistFieldInput";
 import { DateFieldInput } from "./DateFieldInput";
 import { MapFieldInput } from "./MapFieldInput";
@@ -60,6 +61,8 @@ export const InputFields: React.FC<Props<Field>> = (props) => {
       return <DateFieldInput {...props} />;
     case "map":
       return <MapFieldInput {...props} />;
+    case "address":
+      return <AddressFieldInput {...props} />;
     default:
       return exhaustiveCheck(type);
   }
