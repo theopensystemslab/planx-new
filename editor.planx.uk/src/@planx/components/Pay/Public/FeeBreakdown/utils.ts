@@ -2,15 +2,33 @@ import { z } from "zod";
 
 import { FeeBreakdown, PassportFeeFields } from "./types";
 
-const reductionKeys = /^application\.fee\.reduction\..+$/;
-const exemptionKeys = /^application\.fee\.exemption\..+$/;
-
 export const toNumber = (input: number | [number]) =>
   Array.isArray(input) ? input[0] : input;
 
 /**
+ * Convert a Passport value to an actual boolean
+ */
+const toBoolean = (val: ["true" | "false"]) => val[0] === "true";
+
+const filterByKeyPrefix = (data: Record<string, unknown>, prefix: string) =>
+  Object.fromEntries(
+    Object.entries(data).filter(([k, _v]) => k.startsWith(prefix))
+  );
+
+/**
+ * Iterate over exemptions or reductions to find matches, returning the granular keys
+ */
+  const getGranularKeys = (
+  data: Record<string, boolean> | undefined = {},
+  prefix: "application.fee.reduction" | "application.fee.exemption"
+) => {
+  const keys = Object.keys(data).filter((key) => data[key]);
+  const granularKeys = keys.map((key) => key.replace(prefix + ".", ""));
+  return granularKeys;
+};
+
+/**
  * A "reduction" is the sum of the difference between calculated and payable
- * This is not currently broken down further into component parts, or as exemptions or reductions
  */
 export const calculateReduction = ({ amount }: PassportFeeFields) =>
   amount["application.fee.calculated"]
@@ -18,7 +36,7 @@ export const calculateReduction = ({ amount }: PassportFeeFields) =>
     : 0;
 
 /**
- * Transform Passport data to a FeeBreakdown shape
+ * Transform Passport data to a FeeBreakdown
  */
 export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
   amount: {
@@ -29,21 +47,14 @@ export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
     vat: data.amount["application.fee.payable.vat"],
     reduction: calculateReduction(data),
   },
-  reductions: Object.entries(data.reductions || {})
-    .filter(([_key, value]) => value)
-    .map(([key, _value]) => key.replace("application.fee.reduction.", "")),
-  exemptions: Object.entries(data.exemptions || {})
-    .filter(([_key, value]) => value)
-    .map(([key, _value]) => key.replace("application.fee.exemption.", "")),
+  reductions: getGranularKeys(data.reductions, "application.fee.reduction"),
+  exemptions: getGranularKeys(data.exemptions, "application.fee.exemption"),
 });
 
-const filterByKey = (data: Record<string, unknown>, key: string) => 
-  Object.fromEntries(Object.entries(data).filter(([k, _v]) => k.startsWith(key)))
-
 export const preProcessPassport = (data: Record<string, unknown>) => ({
-  amount: filterByKey(data, "application.fee"),
-  reductions: filterByKey(data, "application.fee.reduction"),
-  exemptions: filterByKey(data, "application.fee.exemption"),
+  amount: filterByKeyPrefix(data, "application.fee"),
+  reductions: filterByKeyPrefix(data, "application.fee.reduction"),
+  exemptions: filterByKeyPrefix(data, "application.fee.exemption"),
 });
 
 export const createPassportSchema = () => {
@@ -53,26 +64,23 @@ export const createPassportSchema = () => {
     .union([questionSchema, setValueSchema])
     .transform(toNumber);
 
-  const amountsSchema = z
-    .object({
-      "application.fee.calculated": feeSchema.optional().default(0),
-      "application.fee.payable": feeSchema,
-      "application.fee.payable.vat": feeSchema.optional().default(0),
-    });
+  const amountsSchema = z.object({
+    "application.fee.calculated": feeSchema.optional().default(0),
+    "application.fee.payable": feeSchema,
+    "application.fee.payable.vat": feeSchema.optional().default(0),
+  });
 
-  const reductionsSchema = z.record(
-    z.string().regex(reductionKeys),
-    z.array(z.string())
-      .max(1)
-      .transform((val) => val[0].toLowerCase() === "true"),
-  ).optional();
+  const reductionsSchema = z
+    .record(
+      z.string(),
+      z.tuple([z.enum(["true", "false"])]).transform(toBoolean)
+    )
+    .optional();
 
   const exemptionsSchema = z
     .record(
-      z.string().regex(exemptionKeys),
-      z.array(z.string())
-        .max(1)
-        .transform((val) => val[0].toLowerCase() === "true")
+      z.string(),
+      z.tuple([z.enum(["true", "false"])]).transform(toBoolean)
     )
     .optional();
 
@@ -81,7 +89,8 @@ export const createPassportSchema = () => {
       amount: amountsSchema,
       reductions: reductionsSchema,
       exemptions: exemptionsSchema,
-    }).transform(toFeeBreakdown);
+    })
+    .transform(toFeeBreakdown);
 
   return schema;
 };
