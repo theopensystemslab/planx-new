@@ -77,7 +77,7 @@ export class PlaywrightEditor {
   async createQuestionWithOptions(title: string, answers: string[]) {
     await createQuestionWithOptions(this.page, this.firstNode, title, answers);
     await expect(
-      this.page.locator("a").filter({ hasText: this.answers.questionText }),
+      this.page.locator("a").filter({ hasText: title }),
     ).toBeVisible();
   }
 

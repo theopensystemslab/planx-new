@@ -3,12 +3,11 @@ import { GraphQLClient, gql } from "graphql-request";
 import { sign } from "jsonwebtoken";
 import assert from "node:assert";
 import { log } from "./globalHelpers";
-import { $admin } from "../../../api-driven/src/client";
 import { Flow, TestContext } from "./types";
 
 export const contextDefaults: TestContext = {
   user: {
-    id: 0,
+    id:0,
     firstName: "Test",
     lastName: "Test",
     email: "simulate-delivered@notifications.service.gov.uk",
@@ -28,13 +27,15 @@ export const contextDefaults: TestContext = {
   },
 };
 
+const $admin = getCoreDomainClient();
+
 export async function setUpTestContext(
   initialContext: TestContext,
 ): Promise<TestContext> {
-  const $admin = getCoreDomainClient();
   const context: TestContext = { ...initialContext };
   if (context.user) {
-    context.user.id = await $admin.user.create(context.user);
+    const {firstName, lastName, email, isPlatformAdmin} = context.user
+    context.user.id = await $admin.user.create({firstName, lastName, email, isPlatformAdmin});
   }
   if (context.team) {
     context.team.id = await $admin.team.create({
@@ -74,17 +75,10 @@ export async function setUpTestContext(
   return context;
 }
 
-export async function tearDownTestContext(context: TestContext) {
-  const adminGQLClient = getGraphQLClient();
-  if (context.flow || context.externalPortalFlow) {
+export async function tearDownTestContext() {
     await $admin.flow._destroyAll();
-  }
-  if (context.user) {
-    await deleteUser(adminGQLClient, context);
-  }
-  if (context.team) {
-    await deleteTeam(adminGQLClient, context);
-  }
+    await $admin.user._destroyAll()
+    await $admin.team._destroyAll()
 }
 
 export function generateAuthenticationToken(userId: string) {

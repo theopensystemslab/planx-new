@@ -44,13 +44,13 @@ test.describe("Flow creation, publish and preview", () => {
       context = await setUpTestContext(context);
     } catch (error) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("Create a flow", async ({ browser }) => {

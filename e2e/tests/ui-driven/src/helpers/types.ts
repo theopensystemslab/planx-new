@@ -12,7 +12,7 @@ export interface Flow {
 }
 
 export interface TestContext {
-  user: Omit<User, "teams">;
+  user: Pick<User, "firstName" | "lastName" | "email" | "isPlatformAdmin" | "id">
   team: { id?: number } & NewTeam;
   flow?: Flow;
   externalPortalFlow?: Flow;

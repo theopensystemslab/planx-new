@@ -34,13 +34,13 @@ test.describe("Save and return", () => {
     try {
       context = await setUpTestContext(context);
     } catch (e) {
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test.describe("email", () => {

@@ -39,12 +39,12 @@ test.describe("Agent journey @regression", async () => {
       context = await setUpTestContext(context);
     } catch (e) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
-  test.afterAll(async () => await tearDownTestContext(context));
+  test.afterAll(async () => await tearDownTestContext());
 
   test("agent can send a payment request", async ({ page }) => {
     await navigateToPayComponent(page, context);

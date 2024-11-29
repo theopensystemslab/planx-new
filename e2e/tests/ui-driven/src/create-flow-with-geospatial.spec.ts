@@ -9,6 +9,7 @@ import { createAuthenticatedSession } from "./helpers/globalHelpers";
 import { answerFindProperty, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 import {
+  navigateToService,
   publishService,
   turnServiceOnline,
 } from "./helpers/navigateAndPublish";
@@ -24,13 +25,13 @@ test.describe("Flow creation, publish and preview", () => {
     try {
       context = await setUpTestContext(context);
     } catch (error) {
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("Create a flow", async ({ browser }) => {
@@ -76,17 +77,16 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
     // publish flow
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-    publishService(page);
+    await navigateToService(page, serviceProps.slug)
+    await publishService(page);
 
     let previewLink = page.getByRole("link", {
       name: "Open published service",
     });
     await expect(previewLink).toBeVisible();
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
-    turnServiceOnline(page);
+    await navigateToService(page, serviceProps.slug)
+    await turnServiceOnline(page);
 
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();

@@ -40,13 +40,13 @@ test.describe("Gov Pay integration @regression", async () => {
       context = await setUpTestContext(context);
     } catch (e) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("a successful payment", async ({ page }) => {

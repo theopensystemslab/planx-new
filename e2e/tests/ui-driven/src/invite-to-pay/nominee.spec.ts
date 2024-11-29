@@ -35,13 +35,13 @@ test.describe("Nominee journey @regression", async () => {
       context = await setUpTestContext(context);
     } catch (e) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("responding to a valid payment request", async ({ page, request }) => {

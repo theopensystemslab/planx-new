@@ -20,13 +20,13 @@ test.describe("Refresh page", () => {
       context = await setUpTestContext(context);
     } catch (error) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("user data persists on page refresh @regression", async ({

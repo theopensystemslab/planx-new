@@ -47,7 +47,7 @@ test.describe("Section statuses", () => {
     try {
       context = await setUpTestContext(context);
     } catch (e) {
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
@@ -58,7 +58,7 @@ test.describe("Section statuses", () => {
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test.describe("a straight-through journey", () => {
