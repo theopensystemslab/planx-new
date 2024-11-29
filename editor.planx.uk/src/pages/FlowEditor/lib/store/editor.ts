@@ -56,6 +56,8 @@ export interface EditorUIStore {
   toggleShowImages: () => void;
   showDataFields: boolean;
   toggleShowDataFields: () => void;
+  showHelpText: boolean;
+  toggleShowHelpText: () => void;
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
@@ -91,6 +93,10 @@ export const editorUIStore: StateCreator<
     showDataFields: false,
 
     toggleShowDataFields: () => set({ showDataFields: !get().showDataFields }),
+
+    showHelpText: false,
+
+    toggleShowHelpText: () => set({ showHelpText: !get().showHelpText }),
 
     previousURL: undefined,
 

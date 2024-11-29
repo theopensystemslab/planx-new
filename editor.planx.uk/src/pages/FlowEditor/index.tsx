@@ -9,6 +9,7 @@ import { rootFlowPath } from "routes/utils";
 
 import Flow from "./components/Flow";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
+import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButton";
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
@@ -71,6 +72,7 @@ const FlowEditor = () => {
           >
             <ToggleImagesButton />
             <ToggleDataFieldsButton />
+            <ToggleHelpTextButton />
             <ToggleTagsButton />
           </EditorVisualControls>
         </Box>
