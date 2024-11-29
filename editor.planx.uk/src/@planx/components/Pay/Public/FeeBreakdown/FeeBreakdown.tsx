@@ -49,16 +49,52 @@ const ApplicationFee: React.FC<{ amount: number }> = ({ amount }) => (
   </TableRow>
 );
 
-const Reductions: React.FC<{ amount?: number }> = ({ amount }) => {
+const Reductions: React.FC<{ amount?: number, reductions: string[] }> = ({ amount, reductions }) => {
   if (!amount) return null;
 
   return (
+    <>
     <TableRow>
       <TableCell>Reductions</TableCell>
       <TableCell align="right">
         {formattedPriceWithCurrencySymbol(-amount)}
       </TableCell>
     </TableRow>
+    {
+      reductions.map((reduction) => (
+        <TableRow>
+          <TableCell colSpan={2}>
+            <Box sx={{ pl: 2, color: "grey" }}>{reduction}</Box>
+          </TableCell>
+        </TableRow>
+      ))
+    }
+    </>
+  );
+};
+
+// TODO: This won't show as if a fee is 0, we hide the whole Pay component from the user
+const Exemptions: React.FC<{ amount: number, exemptions: string[] }> = ({ amount, exemptions }) => {
+  if (!exemptions.length) return null;
+
+  return (
+    <>
+    <TableRow>
+      <TableCell>Exemptions</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(-amount)}
+      </TableCell>
+    </TableRow>
+    {
+        exemptions.map((exemption) => (
+        <TableRow>
+          <TableCell colSpan={2}>
+            <Box sx={{ pl: 2, color: "grey" }}>{exemption}</Box>
+          </TableCell>
+        </TableRow>
+      ))
+    }
+    </>
   );
 };
 
@@ -90,7 +126,7 @@ export const FeeBreakdown: React.FC = () => {
   const breakdown = useFeeBreakdown();
   if (!breakdown) return null;
 
-  const { amount, exemptions: _exemptions, reductions: _reductions } = breakdown;
+  const { amount, reductions, exemptions } = breakdown;
 
   return (
     <Box mt={3}>
@@ -105,7 +141,8 @@ export const FeeBreakdown: React.FC = () => {
           <Header />
           <TableBody>
             <ApplicationFee amount={amount.applicationFee} />
-            <Reductions amount={amount.reduction} />
+            <Reductions amount={amount.reduction} reductions={reductions}/>
+            <Exemptions amount={amount.applicationFee} exemptions={exemptions}/>
             <Total amount={amount.total} />
             <VAT amount={amount.vat} />
           </TableBody>
