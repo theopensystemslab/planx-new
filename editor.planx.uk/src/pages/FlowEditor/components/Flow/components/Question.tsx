@@ -1,4 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
+import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import {
   ComponentType as TYPES,
@@ -25,10 +26,11 @@ type Props = {
 } & NodeTags;
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode] = useStore((state) => [
+  const [isClone, childNodes, copyNode, showHelpText] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.copyNode,
+    state.showHelpText,
   ]);
 
   const parent = getParentId(props.parent);
@@ -59,6 +61,9 @@ const Question: React.FC<Props> = React.memo((props) => {
   const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
   // If there is an error, the icon has a semantic meaning and needs a title
   const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
+
+  const hasHelpText =
+    props.data.policyRef || props.data.info || props.data.howMeasured;
 
   return (
     <>
@@ -91,6 +96,9 @@ const Question: React.FC<Props> = React.memo((props) => {
               />
             )}
             {Icon && <Icon titleAccess={iconTitleAccess} />}
+            {showHelpText && hasHelpText && (
+              <Help fontSize="small" color="primary" />
+            )}
             <span>{props.text}</span>
           </Link>
           {props.type !== TYPES.SetValue && props.data?.fn && (

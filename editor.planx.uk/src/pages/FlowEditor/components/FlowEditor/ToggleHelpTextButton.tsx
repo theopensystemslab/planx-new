@@ -1,5 +1,5 @@
-import HelpTextIcon from "@mui/icons-material/SpeakerNotes";
-import HelpTextOffIcon from "@mui/icons-material/SpeakerNotesOff";
+import HelpTextOffIcon from "@mui/icons-material/DoNotDisturbOff";
+import HelpTextIcon from "@mui/icons-material/Help";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
