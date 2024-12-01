@@ -21,6 +21,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": 1000,
         "application.fee.payable": 800,
         "application.fee.payable.vat": 160,
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -44,6 +45,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": [1000],
         "application.fee.payable": [800],
         "application.fee.payable.vat": [160],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -69,6 +71,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.payable.vat": 160,
         "application.fee.reduction.reasonOne": ["true"],
         "application.fee.reduction.reasonTwo": ["true"],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -88,6 +91,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.payable.vat": 160,
         "application.fee.reduction.reasonOne": ["false"],
         "application.fee.reduction.reasonTwo": ["false"],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -104,6 +108,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.payable.vat": 160,
         "application.fee.exemption.reasonOne": ["true"],
         "application.fee.exemption.reasonTwo": ["true"],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -123,6 +128,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.payable.vat": 160,
         "application.fee.exemption.reasonOne": ["false"],
         "application.fee.exemption.reasonTwo": ["false"],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -135,7 +141,9 @@ describe("useFeeBreakdown() hook", () => {
 
   describe("invalid inputs", () => {
     it("returns undefined for missing data", () => {
-      const mockPassportData = {};
+      const mockPassportData = {
+        "some.other.fields": ["abc", "xyz"],
+      };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
 
@@ -148,6 +156,7 @@ describe("useFeeBreakdown() hook", () => {
       const mockPassportData = {
         "application.fee.calculated": [1000],
         "application.fee.payable.vat": [160],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -162,6 +171,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": "some string",
         "application.fee.payable": [800, 700],
         "application.fee.payable.vat": false,
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -172,7 +182,9 @@ describe("useFeeBreakdown() hook", () => {
     });
 
     it("calls Airbrake if invalid inputs are provided", () => {
-      const mockPassportData = {};
+      const mockPassportData = {
+        "some.other.fields": ["abc", "xyz"],
+      };
       const mockSessionId = "test-session";
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, mockSessionId]);
