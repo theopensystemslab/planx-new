@@ -1,10 +1,12 @@
-import { MetabaseError, metabaseClient } from "../shared/client.js";
+import { MetabaseError, createMetabaseClient } from "../shared/client.js";
 import type { NewCollectionParams } from "./types.js";
 import { toSnakeCase } from "../shared/utils.js";
 
+const client = createMetabaseClient();
+
 export async function authentication(): Promise<boolean> {
   try {
-    const response = await metabaseClient.get("/user/current");
+    const response = await client.get("/user/current");
     return response.status === 200;
   } catch (error) {
     console.error("Error testing Metabase connection:", error);
@@ -39,7 +41,7 @@ export async function newCollection({
       (key) => requestBody[key] === undefined && delete requestBody[key],
     );
 
-    const response = await metabaseClient.post(`/api/collection/`, {
+    const response = await client.post(`/api/collection/`, {
       name,
       description,
       parent_id,
@@ -62,7 +64,7 @@ export async function checkCollections(teamName: string): Promise<any> {
     console.log("Checking for collection: ", teamName);
 
     // Get collections from Metabase
-    const response = await metabaseClient.get(`/api/collection/`);
+    const response = await client.get(`/api/collection/`);
 
     const matchingCollection = response.data.find((collection: any) =>
       collection.name.toLowerCase().includes(teamName.toLowerCase()),
