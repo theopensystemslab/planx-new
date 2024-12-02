@@ -226,7 +226,7 @@ export const previewStore: StateCreator<
               .concat(existingValue)
               .reduce(
                 (acc: string[], curr: string, _i: number, arr: string[]) => {
-                  if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
+                  if (!arr.some((x) => x !== curr && x?.startsWith(curr))) {
                     acc.push(curr);
                   }
                   return acc;
