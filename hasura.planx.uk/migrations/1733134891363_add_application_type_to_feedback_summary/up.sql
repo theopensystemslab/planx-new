@@ -21,7 +21,7 @@ CREATE OR REPLACE VIEW "public"."feedback_summary" AS
     (((fb.user_data -> 'passport'::text) -> 'data'::text) ->> 'proposal.projectType'::text) AS project_type,
     (((fb.user_data -> 'passport'::text) -> 'data'::text) ->> 'property.constraints.planning'::text) AS intersecting_constraints,
     fb.feedback_score,
-    ((((fb.user_data -> 'passport'::text) -> 'data'::text) -> 'application.type'::text) ->> 0) AS application_type
+    fb.user_data -> 'passport' -> 'data' -> 'application.type' ->> 0 AS application_type
    FROM ((feedback fb
      LEFT JOIN flows f ON ((f.id = fb.flow_id)))
      LEFT JOIN teams t ON ((t.id = fb.team_id)));
