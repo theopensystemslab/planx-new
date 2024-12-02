@@ -1,3 +1,4 @@
+import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
 import {
   ComponentType as TYPES,
@@ -25,10 +26,11 @@ type Props = {
 } & NodeTags;
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode] = useStore((state) => [
+  const [isClone, childNodes, copyNode, showHelpText] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.copyNode,
+    state.showHelpText,
   ]);
 
   const parent = getParentId(props.parent);
@@ -76,6 +78,9 @@ const Checklist: React.FC<Props> = React.memo((props) => {
 
   const Icon = ICONS[props.type];
 
+  const hasHelpText =
+    props.data.policyRef || props.data.info || props.data.howMeasured;
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -109,6 +114,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               )}
               <Box sx={{ display: "flex", flexDirection: "row" }}>
                 {Icon && <Icon />}
+                {showHelpText && hasHelpText && <Help fontSize="small" />}
                 <span>{props.text}</span>
               </Box>
             </Box>
