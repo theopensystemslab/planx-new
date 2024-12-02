@@ -27,7 +27,7 @@ Error: Sending to BOPS v2 failed (southwark - a-5e5510n-1d-a-535510n1d): Error: 
 
 ### Via `#planx-notifications`
 
-There are normally three notifications per LDC submission in the `#planx-notifications` Slack channel, so a tell-tale sign of an error is if there are fewer messages. 
+There are normally three notifications per Lawful Development Certificate (LDC) submission in the `#planx-notifications` Slack channel, so a tell-tale sign of an error is if there are fewer messages. 
 
 For example, along with the production error above, for this submission there were only these two messages (the BOPS submission was missing):
 
@@ -44,7 +44,7 @@ When we successfully re-submitted the application, we got this third notificatio
 
 ### Feedback from users
 
-Ideally we never want to get in the situation where an end-user notices the error before we do. But we may be informed about a failed submission via Slack channels shared with LPAs, such as the ODP Slack workspace.
+Ideally we never want to get in the situation where an end-user notices the error before we do. But we may be informed about a failed submission via Slack channels shared with Local Planning Authorities (LPAs), such as the Open Digital Planning (ODP) Slack workspace.
 
 ## Investigating the error
 
@@ -63,6 +63,11 @@ If it is not obvious from the error notification, you can follow these steps to 
 #### Compare the payload with the schema
 1. There are useful online tools which can help find the validation issue, such as `json-schema.app`. 
 2. Load the current schema URL (e.g. `https://theopensystemslab.github.io/digital-planning-data-schemas/v0.7.1/schemas/application.json` ), and you can compare the erroring payload directly with the schema via the window on the right in the same tool. 
+
+> [!TIP]
+> The schema URL can be found at the bottom of the payload:
+>
+> `{ ..."schema":  "https://theopensystemslab.github.io/digital-planning-data-schemas/v0.7.1/schemas/application.json" }`
 
 #### Read the code
 1. The flow passport is mapped to the schema in this file: https://github.com/theopensystemslab/planx-core/blob/005ef823e68eaf9f7d7d5a2c793a6a729e0b6475/src/export/digitalPlanning/model.ts
