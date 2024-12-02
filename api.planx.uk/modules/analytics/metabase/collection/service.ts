@@ -16,8 +16,6 @@ export async function newCollection({
   name,
   description,
   parent_id,
-  namespace,
-  authority_level,
 }: NewCollectionParams): Promise<any> {
   try {
     // Check if collection exists
@@ -34,8 +32,6 @@ export async function newCollection({
       name,
       description,
       parent_id,
-      namespace,
-      authority_level,
     };
 
     // Remove undefined properties
@@ -47,8 +43,6 @@ export async function newCollection({
       name,
       description,
       parent_id,
-      namespace,
-      authority_level,
     });
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
@@ -79,7 +73,7 @@ export async function checkCollections(teamName: string): Promise<any> {
       return matchingCollection.id;
     } else {
       console.log("No matching collection found");
-      return false;
+      return undefined;
     }
   } catch (error) {
     console.error("Error: ", error);
