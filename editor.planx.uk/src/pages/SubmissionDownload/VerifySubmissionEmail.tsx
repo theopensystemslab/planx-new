@@ -18,14 +18,16 @@ import useQueryApplicationFileDownload, {
   DOWNLOAD_APPLICATION_FILE_QUERY_KEY,
 } from "./queries/useQueryApplicationFileDownload";
 
-const verifyEmailSchema = object({
+const verifySubmissionEmailSchema = object({
   email: string().email("Invalid email").required("Email address required"),
 });
-interface VerifyEmailProps {
+interface VerifySubmissionEmailProps {
   params: Record<string, string>;
 }
 
-export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
+export const VerifySubmissionEmail = ({
+  params,
+}: VerifySubmissionEmailProps): JSX.Element => {
   const { sessionId, team } = params;
   const [email, setEmail] = useState("");
   const emailInputIsValid = useMemo(() => email !== "", [email]);
@@ -81,12 +83,12 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
     },
     validateOnChange: false,
     validateOnBlur: false,
-    validationSchema: verifyEmailSchema,
+    validationSchema: verifySubmissionEmailSchema,
   });
   return (
     <Container maxWidth="contentWrap">
       <Typography maxWidth="formWrap" variant="h1" pt={5} gutterBottom>
-        Download your application
+        Download application
       </Typography>
       {isLoading ? (
         <DelayedLoadingIndicator />
@@ -96,8 +98,8 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
             <ErrorWrapper error={downloadApplicationError}>
               <>
                 <CardHeader
-                  title="Verify your email address"
-                  description="We will use this to verify that you can download your application. Entering the correct email address will start the file download automatically."
+                  title="Verify your submission email address"
+                  description="We will use this to confirm that you have access to the submission email inbox that is set up for your team. Entering the correct email address will start the file download automatically."
                 />
                 <InputRow>
                   <InputLabel label={"Email address"} htmlFor={"email"}>
