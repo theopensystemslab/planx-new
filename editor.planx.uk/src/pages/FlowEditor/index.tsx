@@ -71,8 +71,8 @@ const FlowEditor = () => {
             aria-label="Toggle node attributes"
           >
             <ToggleImagesButton />
-            <ToggleDataFieldsButton />
             <ToggleHelpTextButton />
+            <ToggleDataFieldsButton />
             <ToggleTagsButton />
           </EditorVisualControls>
         </Box>
