@@ -208,17 +208,21 @@ test.describe("Flow creation, publish and preview", () => {
       answers[1],
     ]);
 
+    // We are publishing the Ext Portal service and turning it online
     await publishService(page);
     await turnServiceOnline(page);
 
+    // We switch back to the original service
     await navigateToService(page, serviceProps.slug);
 
+    // Add our ext portal to the middle of the service
     await createExternalPortal(page, page.locator("li:nth-child(6)"));
 
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
 
+    // publish the changes we've made to the original service
     await publishService(page);
   });
 
