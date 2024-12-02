@@ -108,7 +108,7 @@ describe("File upload", () => {
     });
 
     it("should generate a correct URL on production", async () => {
-      vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
+      vi.stubEnv("API_URL_EXT", "https://api.editor.planx.uk");
       vi.stubEnv("NODE_ENV", "production");
 
       await supertest(app)
@@ -118,9 +118,8 @@ describe("File upload", () => {
         .then((res) => {
           expect(res.body).toEqual({
             fileType: "text/plain",
-            fileUrl: expect.stringContaining(
-              "/file/private/nanoid/modified%20key",
-            ),
+            fileUrl:
+              "https://api.editor.planx.uk/file/private/nanoid/modified%20key",
           });
         });
       expect(mockPutObject).toHaveBeenCalledTimes(1);
