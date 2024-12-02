@@ -14,10 +14,16 @@ export async function authentication(): Promise<boolean> {
   }
 }
 
+/**
+ * First checks if a collection with a specified name exists.
+ * If it exists, return an object that includes its id. If not, create the collection.
+ * @params `name` is required, but `description` and `parentId` are optional.
+ * @returns `response.data`, so use dot notation to access `id` or `parentId`.
+ */
 export async function newCollection({
   name,
   description,
-  parent_id,
+  parentId,
 }: NewCollectionParams): Promise<any> {
   try {
     // Check if collection exists
@@ -33,7 +39,7 @@ export async function newCollection({
     const requestBody = toSnakeCase({
       name,
       description,
-      parent_id,
+      parentId,
     });
 
     // Remove undefined properties
@@ -41,11 +47,8 @@ export async function newCollection({
       (key) => requestBody[key] === undefined && delete requestBody[key],
     );
 
-    const response = await client.post(`/api/collection/`, {
-      name,
-      description,
-      parent_id,
-    });
+    const response = await client.post(`/api/collection/`, requestBody);
+
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
     );
@@ -87,4 +90,14 @@ export async function checkCollections(teamName: string): Promise<any> {
     }
     throw error;
   }
+}
+
+/**
+ * Retrieves info on a collection from Metabase, use to check a parent
+ * @param id
+ * @returns
+ */
+export async function getCollection(id: number): Promise<any> {
+  const response = await client.get(`/api/collection/${id}`);
+  return response.data;
 }
