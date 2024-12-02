@@ -1,6 +1,6 @@
 import { MetabaseError, metabaseClient } from "../shared/client.js";
 import type { NewCollectionParams } from "./types.js";
-import axios from "axios";
+import { toSnakeCase } from "../shared/utils.js";
 
 export async function authentication(): Promise<boolean> {
   try {
@@ -28,11 +28,11 @@ export async function newCollection({
     }
 
     // If no existing collection, create new one
-    const requestBody: any = {
+    const requestBody = toSnakeCase({
       name,
       description,
       parent_id,
-    };
+    });
 
     // Remove undefined properties
     Object.keys(requestBody).forEach(
