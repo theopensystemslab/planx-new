@@ -118,6 +118,14 @@ test.describe("Flow creation, publish and preview", () => {
 
     // Check property info is being shown
     await expect(page.getByText("Test Street, Testville")).toBeVisible();
+    await expect(page.getByText("Residential - Semi Detached")).toBeVisible();
+    const changeButton = page.getByRole("button", {
+      name: "Change your Property type",
+    });
+
+    await changeButton.click();
+
+    await expect(page.getByText("Unknown")).toBeVisible();
     await clickContinue({ page });
 
     await expect(

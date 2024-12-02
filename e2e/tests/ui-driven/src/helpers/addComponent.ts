@@ -82,6 +82,7 @@ const createBaseComponent = async (
     case ComponentType.FindProperty:
       break;
     case ComponentType.PropertyInformation:
+      await page.getByLabel("Show users a 'change' link to").click();
       break;
     case ComponentType.PlanningConstraints:
       break;
