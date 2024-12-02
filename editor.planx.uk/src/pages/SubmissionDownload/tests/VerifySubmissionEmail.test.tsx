@@ -1,19 +1,36 @@
 import { screen } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
+import { axe } from "vitest-axe";
 
 import { VerifySubmissionEmail } from "../VerifySubmissionEmail";
 
 describe("when the VerifySubmissionEmail component renders", () => {
-  it("displays the email address input", () => {
+  beforeEach(() => {
     setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+  });
 
+  it("displays the email address input", () => {
     expect(
       screen.queryByText("Verify your submission email address"),
     ).toBeInTheDocument();
     expect(screen.queryByLabelText("Email address")).toBeInTheDocument();
   });
-  it.todo("should not display an error message");
+
+  it("should not display an error message", () => {
+    expect(
+      screen.queryByText("Sorry, something went wrong. Please try again."),
+    ).not.toBeInTheDocument();
+
+    it("should not have any accessibility violations", async () => {
+      const { container } = setup(
+        <VerifySubmissionEmail params={{ sessionId: "1" }} />,
+      );
+
+      const results = await axe(container);
+      expect(results).toHaveNoViolations();
+    });
+  });
 });
 
 describe("when the user submits a correct email address", () => {
