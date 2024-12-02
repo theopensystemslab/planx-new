@@ -56,20 +56,6 @@ export async function newCollection({
     return response.data.id;
   } catch (error) {
     console.error("Error in newCollection:");
-    if (axios.isAxiosError(error)) {
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("No response received. Request:", error.request);
-      } else {
-        console.error("Error message:", error.message);
-      }
-      console.error("Request config:", error.config);
-    } else {
-      console.error("Unexpected error:", error);
-    }
     throw error;
   }
 }
@@ -98,18 +84,10 @@ export async function checkCollections(teamName: string): Promise<any> {
   } catch (error) {
     console.error("Error: ", error);
     if (error instanceof MetabaseError) {
-      console.error("MetabaseError:", {
+      console.error("Metabase API error:", {
         message: error.message,
         statusCode: error.statusCode,
-        response: error.response,
       });
-    } else if (error instanceof Error) {
-      console.error("Unexpected error:", {
-        message: error.message,
-        stack: error.stack,
-      });
-    } else {
-      console.error("Unknown error:", error);
     }
     throw error;
   }
