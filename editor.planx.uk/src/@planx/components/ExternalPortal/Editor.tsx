@@ -3,6 +3,7 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   NodeTag,
@@ -44,12 +45,8 @@ type FlowAutocompleteInputProps = AutocompleteProps<
 >;
 
 const AutocompleteSubHeader = styled(ListSubheader)(({ theme }) => ({
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  fontSize: theme.typography.subtitle1.fontSize,
-  backgroundColor: theme.palette.background.dark,
-  color: theme.palette.getContrastText(theme.palette.background.dark),
-  margin: 0,
-  height: "100%",
+  borderTop: 1,
+  borderColor: theme.palette.border.main,
 }));
 
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
@@ -59,7 +56,7 @@ const renderOption: FlowAutocompleteListProps["renderOption"] = (
   <MenuItem
     {...props}
     key={option.id}
-    sx={(theme) => ({ paddingY: `${theme.spacing(1.25)} !important` })}
+    sx={(theme) => ({ paddingY: `${theme.spacing(1.25)}` })}
   >
     {option.name}
   </MenuItem>
@@ -79,7 +76,9 @@ const renderInput: FlowAutocompleteInputProps["renderInput"] = (params) => (
 const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => (
   <>
     <AutocompleteSubHeader key={params.children?.toString()}>
-      {params.group}
+      <Typography py={1} variant="subtitle2" component="h4">
+        {params.group}
+      </Typography>
     </AutocompleteSubHeader>
     {params.children}
   </>
