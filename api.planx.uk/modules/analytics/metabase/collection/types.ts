@@ -6,21 +6,6 @@ type ApiResponse<T> = {
   error?: string;
 };
 
-export const checkCollectionsSchema = z.object({
-  query: z.object({
-    name: z.string().min(1, "Name parameter is required"),
-  }),
-});
-
-export type CheckCollectionsRequest = ValidatedRequestHandler<
-  typeof checkCollectionsSchema,
-  ApiResponse<CheckCollectionResponse>
->;
-
-export interface CheckCollectionResponse {
-  collectionId: number | false;
-}
-
 export interface NewCollectionParams {
   /** The name of the new collection */
   name: string;

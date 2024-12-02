@@ -20,6 +20,16 @@ export async function newCollection({
   authority_level,
 }: NewCollectionParams): Promise<any> {
   try {
+    // Check if collection exists
+    const existingCollectionId = await checkCollections(name);
+    if (existingCollectionId) {
+      console.log(
+        `Collection "${name}" already exists with ID: ${existingCollectionId}`,
+      );
+      return existingCollectionId;
+    }
+
+    // If no existing collection, create new one
     const requestBody: any = {
       name,
       description,
@@ -32,8 +42,6 @@ export async function newCollection({
     Object.keys(requestBody).forEach(
       (key) => requestBody[key] === undefined && delete requestBody[key],
     );
-
-    // console.log('Request body: ', JSON.stringify(requestBody, null, 2));
 
     const response = await metabaseClient.post(`/api/collection/`, {
       name,
@@ -66,7 +74,8 @@ export async function newCollection({
   }
 }
 
-/** Checks if a collection exists with name matching `teamName` exists.
+/**
+ * Checks if a collection exists with name matching `teamName` exists.
  * Returns the matching collection ID if exists, otherwise false. */
 export async function checkCollections(teamName: string): Promise<any> {
   try {
