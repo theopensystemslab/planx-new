@@ -96,8 +96,8 @@ export const VerifyEmail = ({ params }: VerifyEmailProps): JSX.Element => {
             <ErrorWrapper error={downloadApplicationError}>
               <>
                 <CardHeader
-                  title="Verify your email address"
-                  description="We will use this to verify that you can download your application. Entering the correct email address will start the file download automatically."
+                  title="Enter your planning office's email address"
+                  description="We will use this to confirm that you have access to the submission email inbox that is set up for your team. Entering the correct email address will start the file download automatically."
                 />
                 <InputRow>
                   <InputLabel label={"Email address"} htmlFor={"email"}>

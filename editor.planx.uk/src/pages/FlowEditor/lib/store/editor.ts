@@ -507,7 +507,7 @@ export const editorStore: StateCreator<
   async publishFlow(flowId: string, summary?: string) {
     const token = get().jwt;
 
-    const urlWithParams = (url: string, params: any): string =>
+    const urlWithParams = (url: string, params: any) =>
       [url, new URLSearchParams(omitBy(params, isEmpty))]
         .filter(Boolean)
         .join("?");
