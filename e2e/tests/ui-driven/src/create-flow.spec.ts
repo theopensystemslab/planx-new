@@ -5,7 +5,7 @@ import {
   tearDownTestContext,
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
-import { createAuthenticatedSession } from "./helpers/globalHelpers";
+import { createAuthenticatedSession, planningPermissionFlags } from "./helpers/globalHelpers";
 import {
   answerAddressInput,
   answerChecklist,
@@ -79,7 +79,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createList();
     await editor.createTaskList();
     await editor.createContent();
-
+    await editor.createFilter();
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -99,6 +99,7 @@ test.describe("Flow creation, publish and preview", () => {
       "A list title",
       "What you should do next",
       "Some content",
+      ...planningPermissionFlags,
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
@@ -216,7 +217,7 @@ test.describe("Flow creation, publish and preview", () => {
     await navigateToService(page, serviceProps.slug);
 
     // Add our ext portal to the middle of the service
-    await createExternalPortal(page, page.locator("li:nth-child(6)"));
+    await createExternalPortal(page, page.locator("li:nth-child(6)").first());
 
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),

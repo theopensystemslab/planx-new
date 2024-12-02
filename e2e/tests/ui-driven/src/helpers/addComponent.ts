@@ -123,6 +123,7 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+      break;
     case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
