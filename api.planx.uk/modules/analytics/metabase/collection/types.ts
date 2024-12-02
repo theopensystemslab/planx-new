@@ -28,7 +28,7 @@ export const newCollectionSchema = z.object({
   }),
 });
 
-export type NewCollectionRequest = ValidatedRequestHandler<
+export type NewCollectionRequestHandler = ValidatedRequestHandler<
   typeof newCollectionSchema,
   ApiResponse<NewCollectionResponse>
 >;

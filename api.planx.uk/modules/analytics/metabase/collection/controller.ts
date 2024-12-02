@@ -1,7 +1,7 @@
 import { newCollection } from "./service.js";
-import type { NewCollectionRequest } from "./types.js";
+import type { NewCollectionRequestHandler } from "./types.js";
 
-export const newCollectionController: NewCollectionRequest = async (
+export const newCollectionController: NewCollectionRequestHandler = async (
   _req,
   res,
 ) => {
