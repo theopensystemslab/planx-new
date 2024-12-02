@@ -1,5 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
+import { contextDefaults } from "./context";
+import { externalPortalServiceProps } from "./serviceData";
 
 const createBaseComponent = async (
   page: Page,
@@ -26,7 +28,7 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Notice").fill(title || "");
       break;
     case ComponentType.Checklist:
-      await page.getByPlaceholder("Text").fill(title || "text");
+      await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new option", page);
       }
@@ -121,6 +123,13 @@ const createBaseComponent = async (
       break;
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Portal name").fill(title || "");
+      break;
+    case ComponentType.ExternalPortal:
+      await page
+        .getByTestId("flowId")
+        .selectOption(
+          `${contextDefaults.team.slug}/${externalPortalServiceProps.slug}`,
+        );
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
@@ -393,4 +402,11 @@ export const createInternalPortal = async (
 
 export const createFeedback = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, ComponentType.Feedback);
+};
+
+export const createExternalPortal = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(page, locatingNode, ComponentType.ExternalPortal);
 };

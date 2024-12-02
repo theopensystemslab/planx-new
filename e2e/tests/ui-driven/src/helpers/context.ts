@@ -2,31 +2,11 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";
 import { sign } from "jsonwebtoken";
 import assert from "node:assert";
-import { log } from "./globalHelpers";
+import { TestContext } from "./types";
 
-type NewTeam = Parameters<CoreDomainClient["team"]["create"]>[0];
-
-export interface Context {
+export const contextDefaults: TestContext = {
   user: {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    isPlatformAdmin: boolean;
-  };
-  team: { id?: number } & NewTeam;
-  flow?: {
-    id?: string;
-    publishedId?: number;
-    slug: string;
-    name: string;
-    data?: object;
-  };
-  sessionIds?: string[];
-}
-
-export const contextDefaults: Context = {
-  user: {
+    id: 0,
     firstName: "Test",
     lastName: "Test",
     email: "simulate-delivered@notifications.service.gov.uk",
@@ -46,13 +26,20 @@ export const contextDefaults: Context = {
   },
 };
 
+const $admin = getCoreDomainClient();
+
 export async function setUpTestContext(
-  initialContext: Context,
-): Promise<Context> {
-  const $admin = getCoreDomainClient();
-  const context: Context = { ...initialContext };
+  initialContext: TestContext,
+): Promise<TestContext> {
+  const context: TestContext = { ...initialContext };
   if (context.user) {
-    context.user.id = await $admin.user.create(context.user);
+    const { firstName, lastName, email, isPlatformAdmin } = context.user;
+    context.user.id = await $admin.user.create({
+      firstName,
+      lastName,
+      email,
+      isPlatformAdmin,
+    });
   }
   if (context.team) {
     context.team.id = await $admin.team.create({
@@ -65,9 +52,10 @@ export async function setUpTestContext(
     });
   }
   if (
-    context.flow?.slug &&
-    context.flow?.data &&
-    context.flow?.name &&
+    context.flow &&
+    context.flow.slug &&
+    context.flow.data &&
+    context.flow.name &&
     context.team?.id &&
     context.user?.id
   ) {
@@ -75,13 +63,13 @@ export async function setUpTestContext(
       slug: context.flow.slug,
       name: context.flow.name,
       teamId: context.team.id,
-      data: context.flow!.data!,
+      data: context.flow.data,
       status: "online",
     });
     context.flow.publishedId = await $admin.flow.publish({
       flow: {
         id: context.flow.id,
-        data: context.flow!.data!,
+        data: context.flow.data,
       },
       publisherId: context.user!.id!,
     });
@@ -91,19 +79,10 @@ export async function setUpTestContext(
   return context;
 }
 
-export async function tearDownTestContext(context: Context) {
-  const adminGQLClient = getGraphQLClient();
-  if (context.flow) {
-    await deleteSession(adminGQLClient, context);
-    await deletePublishedFlow(adminGQLClient, context);
-    await deleteFlow(adminGQLClient, context);
-  }
-  if (context.user) {
-    await deleteUser(adminGQLClient, context);
-  }
-  if (context.team) {
-    await deleteTeam(adminGQLClient, context);
-  }
+export async function tearDownTestContext() {
+  await $admin.flow._destroyAll();
+  await $admin.user._destroyAll();
+  await $admin.team._destroyAll();
 }
 
 export function generateAuthenticationToken(userId: string) {
@@ -152,7 +131,7 @@ export async function findSessionId(
           id
         }
       }`,
-      { slug: context.flow?.slug },
+      { slug: context.flow.slug },
     );
   if (!flowResponse.flows.length || !flowResponse.flows[0].id) {
     return;
@@ -179,162 +158,10 @@ export async function findSessionId(
   }
 }
 
-async function deleteSession(adminGQLClient: GraphQLClient, context) {
-  if (context.sessionIds) {
-    for (const sessionId of context.sessionIds) {
-      await adminGQLClient.request(
-        `mutation DeleteTestSession( $sessionId: uuid!) {
-          delete_lowcal_sessions_by_pk(id: $sessionId) {
-            id
-          }
-        }`,
-        { sessionId },
-      );
-    }
-  }
-  const sessionId = await findSessionId(adminGQLClient, context);
-  if (sessionId) {
-    log(`deleting session id: ${sessionId}`);
-    await adminGQLClient.request(
-      `mutation DeleteTestSession( $sessionId: uuid!) {
-        delete_lowcal_sessions_by_pk(id: $sessionId) {
-          id
-        }
-      }`,
-      { sessionId },
-    );
-  }
-}
-
-async function deletePublishedFlow(
-  adminGQLClient: GraphQLClient,
-  context: Context,
+async function setupGovPaySecret(
+  $admin: CoreDomainClient,
+  context: TestContext,
 ) {
-  if (context.flow?.publishedId) {
-    log(`deleting published flow ${context.flow?.publishedId}`);
-    await adminGQLClient.request(
-      `mutation DeleteTestPublishedFlow( $publishedFlowId: Int!) {
-        delete_published_flows_by_pk(id: $publishedFlowId) {
-          id
-        }
-      }`,
-      { publishedFlowId: context.flow?.publishedId },
-    );
-  }
-}
-
-async function deleteFlow(adminGQLClient: GraphQLClient, context: Context) {
-  if (context.flow?.id) {
-    log(`deleting flow ${context.flow?.id}`);
-    await adminGQLClient.request(
-      `mutation DeleteTestFlow($flowId: uuid!) {
-        delete_flows_by_pk(id: $flowId) {
-          id
-        }
-      }`,
-      { flowId: context.flow?.id },
-    );
-  } else if (context.flow?.slug) {
-    // try deleting via slug (when cleaning up from a previously failed test)
-    const response: { flows: { id: string }[] } = await adminGQLClient.request(
-      `query GetFlowBySlug($slug: String!) {
-        flows(where: {slug: {_eq: $slug}}) {
-            id
-          }
-        }`,
-      { slug: context.flow?.slug },
-    );
-    if (response.flows.length && response.flows[0].id) {
-      log(
-        `deleting flow ${context.flow?.slug} flowId: ${response.flows[0].id}`,
-      );
-      await adminGQLClient.request(
-        `mutation DeleteTestFlow( $flowId: uuid!) {
-          delete_flows_by_pk(id: $flowId) {
-            id
-          }
-        }`,
-        { flowId: response.flows[0].id },
-      );
-    }
-  }
-}
-
-async function deleteUser(adminGQLClient: GraphQLClient, context: Context) {
-  if (context.user?.id) {
-    log(`deleting user ${context.user?.id}`);
-    await adminGQLClient.request(
-      `mutation DeleteTestUser($userId: Int!) {
-        delete_users_by_pk(id: $userId) {
-          id
-        }
-      }`,
-      { userId: context.user?.id },
-    );
-  } else if (context.user?.email) {
-    // try deleting via email (when cleaning up from a previously failed test)
-    const response: { users: { id: number }[] } = await adminGQLClient.request(
-      `query GetUserByEmail($email: String!) {
-        users(where: {email: {_eq: $email}}) {
-          id
-        }
-      }`,
-      { email: context.user?.email },
-    );
-    if (response.users.length && response.users[0].id) {
-      log(
-        `deleting user ${context.user?.email} userId: ${response.users[0].id}`,
-      );
-      await adminGQLClient.request(
-        `mutation DeleteTestUser($userId: Int!) {
-          delete_users_by_pk(id: $userId) {
-            id
-          }
-        }`,
-        { userId: response.users[0].id },
-      );
-    }
-  }
-}
-
-async function deleteTeam(adminGQLClient: GraphQLClient, context: Context) {
-  if (context.team?.id) {
-    log(`deleting team ${context.team?.id}`);
-    await adminGQLClient.request(
-      `mutation DeleteTestTeam( $teamId: Int!) {
-        delete_teams_by_pk(id: $teamId) {
-          id
-        }
-      }`,
-      { teamId: context.team?.id },
-    );
-  } else if (context.team?.slug) {
-    // try deleting via slug (when cleaning up from a previously failed test)
-    const response: { teams: { id: number }[] } = await adminGQLClient.request(
-      `query GetTeamBySlug( $slug: String!) {
-           teams(where: {slug: {_eq: $slug}}) {
-               id
-             }
-           }`,
-      { slug: context.team?.slug },
-    );
-    if (response.teams.length && response.teams[0].id) {
-      log(
-        `deleting team ${context.team?.slug} teamId: ${response.teams[0].id}`,
-      );
-      await adminGQLClient.request(
-        `mutation DeleteTestTeam( $teamId: Int!) {
-        delete_teams_by_pk(id: $teamId) {
-          id
-        }
-      }`,
-        { teamId: response.teams[0].id },
-      );
-    }
-  }
-}
-
-async function setupGovPaySecret($admin: CoreDomainClient, context: Context) {
   try {
     await $admin.client.request(
       gql`

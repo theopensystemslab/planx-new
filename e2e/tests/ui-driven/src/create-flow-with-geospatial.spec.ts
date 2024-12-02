@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
@@ -9,27 +8,30 @@ import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
 import { answerFindProperty, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
+import {
+  navigateToService,
+  publishService,
+  turnServiceOnline,
+} from "./helpers/navigateAndPublish";
+import { TestContext } from "./helpers/types";
+import { serviceProps } from "./helpers/serviceData";
 
 test.describe("Flow creation, publish and preview", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
-  };
-  const serviceProps = {
-    name: "A Test Service",
-    slug: "a-test-service",
   };
 
   test.beforeAll(async () => {
     try {
       context = await setUpTestContext(context);
     } catch (error) {
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("Create a flow", async ({ browser }) => {
@@ -43,9 +45,6 @@ test.describe("Flow creation, publish and preview", () => {
 
     page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
     await editor.addNewService();
-
-    // update context to allow flow to be torn down
-    context.flow = { ...serviceProps };
 
     await editor.createFindProperty();
     await expect(editor.nodeList).toContainText(["Find property"]);
@@ -78,24 +77,16 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
     // publish flow
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    page.getByRole("button", { name: "PUBLISH", exact: true }).click();
+    await navigateToService(page, serviceProps.slug);
+    await publishService(page);
 
     let previewLink = page.getByRole("link", {
       name: "Open published service",
     });
     await expect(previewLink).toBeVisible();
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
-    // Toggle flow online
-    page.locator('[aria-label="Service settings"]').click();
-    page.getByLabel("Offline").click();
-    page.getByRole("button", { name: "Save", disabled: false }).click();
-    await expect(
-      page.getByText("Service settings updated successfully"),
-    ).toBeVisible();
+    await navigateToService(page, serviceProps.slug);
+    await turnServiceOnline(page);
 
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();

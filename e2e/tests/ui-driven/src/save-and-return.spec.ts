@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
@@ -18,9 +17,10 @@ import {
   modifiedSimpleSendFlow,
   simpleSendFlow,
 } from "./mocks/flows/save-and-return-flows";
+import { TestContext } from "./helpers/types";
 
 test.describe("Save and return", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
     flow: {
       slug: "e2e-save-and-return-test-flow",
@@ -34,13 +34,13 @@ test.describe("Save and return", () => {
     try {
       context = await setUpTestContext(context);
     } catch (e) {
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test.describe("email", () => {
