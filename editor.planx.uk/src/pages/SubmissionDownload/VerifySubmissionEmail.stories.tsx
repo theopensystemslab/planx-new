@@ -1,17 +1,17 @@
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import { VerifyEmail } from "./VerifyEmail";
+import { VerifySubmissionEmail } from "./VerifySubmissionEmail";
 
 const meta = {
   title: "Design System/Pages/VerifyEmail",
-  component: VerifyEmail,
-} satisfies Meta<typeof VerifyEmail>;
+  component: VerifySubmissionEmail,
+} satisfies Meta<typeof VerifySubmissionEmail>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
 export const Basic = {
-  render: () => <VerifyEmail params={{ sessionId: "1" }} />,
+  render: () => <VerifySubmissionEmail params={{ sessionId: "1" }} />,
 };
