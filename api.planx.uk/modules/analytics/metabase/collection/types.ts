@@ -12,7 +12,7 @@ export interface NewCollectionParams {
   /** Optional; if the collection is a child of a parent, specify parent ID here
    * For council teams, parent collection should be 58
    */
-  parent_id?: number;
+  parentId?: number;
 }
 
 /** Metbase collection ID for the the "Council" collection **/
@@ -22,7 +22,7 @@ export const newCollectionSchema = z.object({
   body: z.object({
     name: z.string(),
     description: z.string().optional(),
-    parent_id: z.number().default(COUNCIL_COLLECTION_ID),
+    parentId: z.number().default(COUNCIL_COLLECTION_ID),
   }),
 });
 
