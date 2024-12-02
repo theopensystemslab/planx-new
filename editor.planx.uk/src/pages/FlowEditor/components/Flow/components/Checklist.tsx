@@ -79,7 +79,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const Icon = ICONS[props.type];
 
   const hasHelpText =
-    props.data.policyRef || props.data.info || props.data.howMeasured;
+    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
   return (
     <>

@@ -63,7 +63,7 @@ const Question: React.FC<Props> = React.memo((props) => {
   const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
 
   const hasHelpText =
-    props.data.policyRef || props.data.info || props.data.howMeasured;
+    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
   return (
     <>
