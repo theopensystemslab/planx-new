@@ -96,9 +96,7 @@ const Question: React.FC<Props> = React.memo((props) => {
               />
             )}
             {Icon && <Icon titleAccess={iconTitleAccess} />}
-            {showHelpText && hasHelpText && (
-              <Help fontSize="small" color="primary" />
-            )}
+            {showHelpText && hasHelpText && <Help fontSize="small" />}
             <span>{props.text}</span>
           </Link>
           {props.type !== TYPES.SetValue && props.data?.fn && (

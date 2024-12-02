@@ -18,7 +18,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
 }) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="Internal Notes" Icon={BorderColorIcon}>
+      <ModalSectionContent title="Internal notes" Icon={BorderColorIcon}>
         <InputRow>
           <Input
             // required
@@ -26,7 +26,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             value={value}
             onChange={onChange}
             multiline
-            placeholder="Internal Notes"
+            placeholder="Internal notes"
             rows={3}
           />
         </InputRow>

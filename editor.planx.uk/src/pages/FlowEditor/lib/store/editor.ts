@@ -121,6 +121,7 @@ export const editorUIStore: StateCreator<
       showTags: state.showTags,
       showImages: state.showImages,
       showDataFields: state.showDataFields,
+      showHelpText: state.showHelpText,
     }),
   },
 );

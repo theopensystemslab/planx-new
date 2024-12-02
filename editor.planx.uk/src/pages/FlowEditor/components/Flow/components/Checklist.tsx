@@ -114,9 +114,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               )}
               <Box sx={{ display: "flex", flexDirection: "row" }}>
                 {Icon && <Icon />}
-                {showHelpText && hasHelpText && (
-                  <Help fontSize="small" color="primary" />
-                )}
+                {showHelpText && hasHelpText && <Help fontSize="small" />}
                 <span>{props.text}</span>
               </Box>
             </Box>
