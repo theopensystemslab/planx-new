@@ -20,6 +20,7 @@ import {
   createNotice,
   createNumberInput,
   createPlanningConstraints,
+  createPropertyInformation,
   createQuestionWithOptions,
   createResult,
   createReview,
@@ -166,6 +167,10 @@ export class PlaywrightEditor {
 
   async createFindProperty() {
     await createFindProperty(this.page, this.getNextNode());
+  }
+
+  async createPropertyInformation() {
+    await createPropertyInformation(this.page, this.getNextNode());
   }
 
   async createDrawBoundary() {

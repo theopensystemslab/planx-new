@@ -15,6 +15,8 @@ import {
 } from "./helpers/navigateAndPublish";
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
+import { mockMapGeoJson } from "./mocks/geoJsonMock";
+import { checkGeoJsonContent } from "./helpers/geospatialChecks";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -48,6 +50,8 @@ test.describe("Flow creation, publish and preview", () => {
 
     await editor.createFindProperty();
     await expect(editor.nodeList).toContainText(["Find property"]);
+    await editor.createPropertyInformation();
+    await expect(editor.nodeList).toContainText(["About the property"]);
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
@@ -103,6 +107,17 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
     await answerFindProperty(page);
+    await clickContinue({ page });
+
+    await expect(
+      page.getByRole("heading", { name: "About the property" }),
+    ).toBeVisible();
+
+    // Check map component has geoJson content
+    await checkGeoJsonContent(page, mockMapGeoJson);
+
+    // Check property info is being shown
+    await expect(page.getByText("Test Street, Testville")).toBeVisible();
     await clickContinue({ page });
 
     await expect(

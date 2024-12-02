@@ -81,6 +81,8 @@ const createBaseComponent = async (
       break;
     case ComponentType.FindProperty:
       break;
+    case ComponentType.PropertyInformation:
+      break;
     case ComponentType.PlanningConstraints:
       break;
     case ComponentType.DrawBoundary:
@@ -273,6 +275,17 @@ export const createReview = async (page: Page, locatingNode: Locator) => {
 
 export const createFindProperty = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, ComponentType.FindProperty);
+};
+
+export const createPropertyInformation = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.PropertyInformation,
+  );
 };
 
 export const createPlanningConstraints = async (
