@@ -1,6 +1,3 @@
-import isEmpty from "lodash/isEmpty";
-import omitBy from "lodash/omitBy";
-
 export function removeAt<T>(index: number, arr: Array<T>): Array<T> {
   return arr.filter((_item, i) => {
     return i !== index;
