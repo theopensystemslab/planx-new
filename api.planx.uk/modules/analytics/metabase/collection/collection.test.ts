@@ -1,187 +1,202 @@
-import supertest from "supertest";
-import express from "express";
-import { metabaseClient } from "../shared/client.js";
-import { checkCollections, newCollection } from "./service.js";
-import {
-  checkCollectionsController,
-  newCollectionController,
-} from "./controller.js";
-import { validate } from "../../../../shared/middleware/validate.js";
-import { newCollectionSchema } from "./types.js";
+import { newCollection, getCollection } from "./service.js";
+import nock from "nock";
+import { MetabaseError } from "../shared/client.js";
 
-// Mock metabaseClient & error
-vi.mock("../shared/client", () => ({
-  MetabaseError: class MetabaseError extends Error {
-    constructor(
-      message: string,
-      public statusCode?: number,
-      public response?: unknown,
-    ) {
-      super(message);
-      this.name = "MetabaseError";
-    }
-  },
-  metabaseClient: {
-    get: vi.fn(),
-    post: vi.fn(),
-  },
-}));
-
-describe("Metabase collection module", () => {
-  const app = express();
-  app.use(express.json());
-
-  // Set up test routes
-  app.get("/collections/check", checkCollectionsController);
-  app.post(
-    "/collections/new",
-    validate(newCollectionSchema),
-    newCollectionController,
-  );
-
+describe("newCollection", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    nock.cleanAll();
   });
 
-  afterEach(() => {
-    vi.resetAllMocks();
+  test("returns a collection ID if collection exists", async () => {
+    // Mock collection check endpoint
+    nock(process.env.METABASE_URL_EXT!)
+      .get("/api/collection/")
+      .reply(200, [
+        { id: 20, name: "Barnet" },
+        { id: 21, name: "Another collection" },
+      ]);
+
+    const collection = await newCollection({
+      name: "Barnet",
+    });
+    console.log("HERE IS THE COLLECTION: ", collection);
+    expect(collection).toBe(20);
   });
 
-  describe("Services", () => {
-    describe("checkCollections", () => {
-      it("should return collection ID when collection exists", async () => {
-        const mockCollections = [
-          { id: 1, name: "Test Council" },
-          { id: 2, name: "Another Council" },
-        ];
+  test("successfully places new collection in parent", async () => {
+    const testName = "Example council";
 
-        vi.mocked(metabaseClient.get).mockResolvedValueOnce({
-          data: mockCollections,
-        });
+    // Mock collection check endpoint
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
 
-        const result = await checkCollections("test council");
-        expect(result).toBe(1);
+    // Mock collection creation endpoint
+    nock(process.env.METABASE_URL_EXT!)
+      .post("/api/collection/", {
+        name: testName,
+        parent_id: 100,
+      })
+      .reply(200, {
+        id: 123,
+        name: testName,
+        parent_id: 100,
       });
 
-      it("should return false when collection doesn't exist", async () => {
-        vi.mocked(metabaseClient.get).mockResolvedValueOnce({
-          data: [],
-        });
-
-        const result = await checkCollections("nonexistent");
-        expect(result).toBe(false);
-      });
-
-      it("should handle API errors", async () => {
-        vi.mocked(metabaseClient.get).mockRejectedValueOnce(
-          new Error("API Error"),
-        );
-
-        await expect(checkCollections("test")).rejects.toThrow("API Error");
-      });
+    // Mock GET request for verifying the new collection
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/123").reply(200, {
+      id: 123,
+      name: testName,
+      parent_id: 100,
     });
 
-    describe("newCollection", () => {
-      const mockCollection = {
+    const collectionId = await newCollection({
+      name: testName,
+      parentId: 100,
+    });
+
+    // Check the ID is returned correctly
+    expect(collectionId).toBe(123);
+
+    // Verify the collection details using the service function
+    const collection = await getCollection(collectionId);
+    expect(collection.parent_id).toBe(100);
+  });
+
+  test("returns collection correctly no matter collection name case", async () => {
+    // Mock collection check endpoint
+    nock(process.env.METABASE_URL_EXT!)
+      .get("/api/collection/")
+      .reply(200, [
+        { id: 20, name: "Barnet" },
+        { id: 21, name: "Another collection" },
+      ]);
+
+    const collection = await newCollection({
+      name: "BARNET",
+    });
+    expect(collection).toBe(20);
+  });
+
+  test("successfully creates a new collection and returns its ID", async () => {
+    const testName = "Example council";
+
+    // Mock collection check endpoint
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
+
+    // Mock collection creation endpoint
+    nock(process.env.METABASE_URL_EXT!)
+      .post("/api/collection/", {
+        name: testName,
+      })
+      .reply(200, {
+        id: 123,
+        name: testName,
+      });
+
+    const collection = await newCollection({
+      name: testName,
+    });
+
+    expect(collection).toBe(123);
+  });
+
+  test("throws error if network failure", async () => {
+    nock(process.env.METABASE_URL_EXT!)
+      .get("/api/collection/")
+      .replyWithError("Network error occurred");
+
+    await expect(
+      newCollection({
         name: "Test Collection",
-        description: "Test Description",
-        parent_id: 1,
-      };
-
-      it("should create a new collection successfully", async () => {
-        vi.mocked(metabaseClient.post).mockResolvedValueOnce({
-          data: { id: 1, name: mockCollection.name },
-        });
-
-        const result = await newCollection(mockCollection);
-        expect(result).toBe(1);
-      });
-
-      it("should handle API errors", async () => {
-        vi.mocked(metabaseClient.post).mockRejectedValueOnce(
-          new Error("Creation failed"),
-        );
-
-        await expect(newCollection(mockCollection)).rejects.toThrow(
-          "Creation failed",
-        );
-      });
-    });
+      }),
+    ).rejects.toThrow("Network error occurred");
   });
 
-  describe("Controllers", () => {
-    describe("GET /collections/check", () => {
-      it("should return 400 if name parameter is missing", async () => {
-        const response = await supertest(app).get("/collections/check");
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe("Name parameter is required");
-      });
-
-      it("should return 200 and collection ID if found", async () => {
-        vi.mocked(metabaseClient.get).mockResolvedValueOnce({
-          data: [{ id: 1, name: "Test Council" }],
-        });
-
-        const response = await supertest(app)
-          .get("/collections/check")
-          .query({ name: "test council" });
-
-        expect(response.status).toBe(200);
-        expect(response.body).toBe(1);
-      });
-
-      it("should handle server errors", async () => {
-        vi.mocked(metabaseClient.get).mockRejectedValueOnce(
-          new Error("Server error"),
-        );
-
-        const response = await supertest(app)
-          .get("/collections/check")
-          .query({ name: "test" });
-
-        expect(response.status).toBe(500);
-        expect(response.body.error).toBe("Failed to fetch collections");
-      });
+  test("throws error if API error", async () => {
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(400, {
+      message: "Bad request",
     });
 
-    describe("POST /collections/new", () => {
-      const validRequest = {
+    await expect(
+      newCollection({
         name: "Test Collection",
-        description: "Test Description",
-        parentId: 1,
-      };
+      }),
+    ).rejects.toThrow(MetabaseError);
+  });
 
-      it("should create a new collection with valid data", async () => {
-        vi.mocked(metabaseClient.post).mockResolvedValueOnce({
-          data: { id: 1, name: validRequest.name },
-        });
+  test("correctly transforms request to snake case", async () => {
+    const testData = {
+      name: "Test Collection",
+      parentId: 123, // This should become parent_id
+    };
 
-        const response = await supertest(app)
-          .post("/collections/new")
-          .send(validRequest);
+    // Mock the check for existing collections
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
 
-        expect(response.status).toBe(201);
-        expect(response.body.data).toBeDefined();
+    // Create a variable to store the request body
+    let capturedBody: any;
+
+    // Mock and verify the POST request, capturing the body
+    nock(process.env.METABASE_URL_EXT!)
+      .post("/api/collection/", (body) => {
+        capturedBody = body;
+        return true; // Return true to indicate the request matches
+      })
+      .reply(200, { id: 456 });
+
+    await newCollection(testData);
+
+    // Verify the transformation
+    expect(capturedBody).toHaveProperty("parent_id", 123);
+    expect(capturedBody).not.toHaveProperty("parentId");
+  });
+});
+
+describe("edge cases", () => {
+  test("handles missing name", async () => {
+    await expect(
+      newCollection({
+        name: "",
+      }),
+    ).rejects.toThrow();
+  });
+
+  test("handles names with special characters", async () => {
+    const specialName = "@#$%^&*";
+
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
+
+    nock(process.env.METABASE_URL_EXT!)
+      .post("/api/collection/", {
+        name: specialName,
+      })
+      .reply(200, {
+        id: 789,
+        name: specialName,
       });
 
-      it("should handle validation errors", async () => {
-        const response = await supertest(app).post("/collections/new").send({});
-
-        expect(response.status).toBe(400);
-      });
-
-      it("should handle service errors", async () => {
-        vi.mocked(metabaseClient.post).mockRejectedValueOnce(
-          new Error("Service error"),
-        );
-
-        const response = await supertest(app)
-          .post("/collections/new")
-          .send(validRequest);
-
-        expect(response.status).toBe(400);
-        expect(response.body.error).toBe("Service error");
-      });
+    const collection = await newCollection({
+      name: specialName,
     });
+    expect(collection).toBe(789);
+  });
+
+  test("handles very long names", async () => {
+    const longName = "A".repeat(101);
+
+    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
+
+    nock(process.env.METABASE_URL_EXT!)
+      .post("/api/collection/", {
+        name: longName,
+      })
+      .reply(400, {
+        message: "Name too long",
+      });
+
+    await expect(
+      newCollection({
+        name: longName,
+      }),
+    ).rejects.toThrow();
   });
 });
