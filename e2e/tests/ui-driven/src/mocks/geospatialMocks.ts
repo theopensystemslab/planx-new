@@ -1,3 +1,10 @@
+import { OptionWithDataValues } from "../helpers/types";
+
+export const mockPropertyTypeOptions: OptionWithDataValues[] = [
+  { optionText: "Residential", dataValue: "residential" },
+  { optionText: "Commercial", dataValue: "commercial" },
+];
+
 import { Feature } from "geojson";
 
 export const mockMapGeoJson: Feature = {

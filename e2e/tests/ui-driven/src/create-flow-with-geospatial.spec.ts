@@ -19,9 +19,11 @@ import {
 } from "./helpers/navigateAndPublish";
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
-import { mockMapGeoJson } from "./mocks/geoJsonMock";
 import { checkGeoJsonContent } from "./helpers/geospatialChecks";
-import { mockPropertyTypeOptions } from "./mocks/serviceComponentMocks";
+import {
+  mockMapGeoJson,
+  mockPropertyTypeOptions,
+} from "./mocks/geospatialMocks";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
