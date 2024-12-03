@@ -341,7 +341,7 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(page.locator("p", { hasText: "Some content" })).toBeVisible();
     await clickContinue({ page });
 
-    // this is the content placed in the permission needed branch
+    // this is the content placed in the filtered branch
     await expect(
       page.locator("p", {
         hasText: `This is the ${selectedFlag.toLowerCase()} filter`,
