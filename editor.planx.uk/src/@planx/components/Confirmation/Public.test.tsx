@@ -75,6 +75,7 @@ describe("Confirmation component", () => {
         ]}
         moreInfo="more info"
         contactInfo="contact info"
+        handleSubmit={handleSubmit}
       />,
     );
 
