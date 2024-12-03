@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import axios, { isAxiosError } from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -96,6 +97,20 @@ export const VerifySubmissionEmail = ({
                     />
                   </InputLabel>
                 </InputRow>
+                <Typography
+                  maxWidth="formWrap"
+                  variant="h2"
+                  pt={5}
+                  gutterBottom
+                >
+                  Application details
+                </Typography>
+                <SummaryListTable>
+                  <Box component="dt">Session ID</Box>
+                  <Box component="dd">{sessionId}</Box>
+                  <Box component="dt">Local Authority</Box>
+                  <Box component="dd">{team}</Box>
+                </SummaryListTable>
               </>
             </ErrorWrapper>
           </Card>
