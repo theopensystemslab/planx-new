@@ -57,7 +57,7 @@ const Card: React.FC<Props> = ({
   ]);
 
   // Check if we have a Send node in our breadcrumbs
-  //   In the frontend this is a better/more immediate proxy for "Submitted" because actual send events that populate lowcal_sessions.submitted_at are async
+  //   This is a better/more immediate proxy for "Submitted" because actual send events that populate lowcal_sessions.submitted_at are queued via Hasura
   const hasSent = Object.keys(breadcrumbs)
     .reverse()
     .some(
