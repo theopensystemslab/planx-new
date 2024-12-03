@@ -1,51 +1,21 @@
 import { MetabaseError, createMetabaseClient } from "../shared/client.js";
 import type { NewCollectionParams } from "./types.js";
-import { toSnakeCase } from "../shared/utils.js";
 
 const client = createMetabaseClient();
 
-export async function authentication(): Promise<boolean> {
-  try {
-    const response = await client.get("/user/current");
-    return response.status === 200;
-  } catch (error) {
-    console.error("Error testing Metabase connection:", error);
-    return false;
-  }
-}
-
-export async function newCollection({
-  name,
-  description,
-  parent_id,
-}: NewCollectionParams): Promise<any> {
+export async function newCollection(params: NewCollectionParams): Promise<any> {
   try {
     // Check if collection exists
-    const existingCollectionId = await checkCollections(name);
+    const existingCollectionId = await checkCollections(params.name);
     if (existingCollectionId) {
       console.log(
-        `Collection "${name}" already exists with ID: ${existingCollectionId}`,
+        `Collection "${params.name}" already exists with ID: ${existingCollectionId}`,
       );
       return existingCollectionId;
     }
 
-    // If no existing collection, create new one
-    const requestBody = toSnakeCase({
-      name,
-      description,
-      parent_id,
-    });
+    const response = await client.post(`/api/collection/`, params);
 
-    // Remove undefined properties
-    Object.keys(requestBody).forEach(
-      (key) => requestBody[key] === undefined && delete requestBody[key],
-    );
-
-    const response = await client.post(`/api/collection/`, {
-      name,
-      description,
-      parent_id,
-    });
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
     );
