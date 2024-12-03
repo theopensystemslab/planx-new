@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { act, screen, waitFor } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -46,6 +47,29 @@ describe("Card component", () => {
     const children = <h1>Confirmation Page</h1>;
     setup(<Card children={children}></Card>);
 
+    expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
+    expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
+  });
+
+  it("hides the Save/Resume option if the user has already passed Send", () => {
+    act(() =>
+      setState({
+        path: ApplicationPath.SaveAndReturn,
+        flow: {
+          _root: { edges: ["Send", "Confirmation", "Feedback", "Notice"] },
+          Send: { type: TYPES.Send },
+          Confirmation: { type: TYPES.Confirmation },
+          Feedback: { type: TYPES.Feedback },
+          Notice: { type: TYPES.Notice },
+        },
+        breadcrumbs: { Send: { auto: false } },
+      }),
+    );
+    const children = <h1>Confirmation Page</h1>;
+    setup(<Card handleSubmit={handleSubmit} children={children}></Card>);
+
+    expect(screen.queryByText("Confirmation Page")).toBeInTheDocument();
+    expect(screen.queryByText("Continue")).toBeInTheDocument();
     expect(screen.queryByText(resumeButtonText)).not.toBeInTheDocument();
     expect(screen.queryByText(saveButtonText)).not.toBeInTheDocument();
   });

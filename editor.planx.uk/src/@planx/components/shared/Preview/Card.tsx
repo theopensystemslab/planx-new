@@ -57,12 +57,10 @@ const Card: React.FC<Props> = ({
   ]);
 
   // Check if we have a Send node in our breadcrumbs
-  //   This is a better/more immediate proxy for "Submitted" because actual send events that populate lowcal_sessions.submitted_at are queued via Hasura
-  const hasSent = Object.keys(breadcrumbs)
-    .reverse()
-    .some(
-      (breadcrumbNodeId: string) => flow[breadcrumbNodeId]?.type === TYPES.Send,
-    );
+  //   This is a better/more immediate proxy for "submitted" in the frontend because actual send events that populate lowcal_sessions.submitted_at are queued via Hasura
+  const hasSent = Object.keys(breadcrumbs).some(
+    (breadcrumbNodeId: string) => flow[breadcrumbNodeId]?.type === TYPES.Send,
+  );
 
   const showSaveResumeButton =
     path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
