@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
@@ -9,9 +8,10 @@ import {
   createAuthenticatedSession,
   isGetUserRequest,
 } from "./helpers/globalHelpers";
+import { TestContext } from "./helpers/types";
 
 test.describe("Refresh page", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
   };
 
@@ -20,13 +20,13 @@ test.describe("Refresh page", () => {
       context = await setUpTestContext(context);
     } catch (error) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("user data persists on page refresh @regression", async ({

@@ -1,27 +1,27 @@
 import { getS3KeyFromURL, s3Factory } from "./utils.js";
 
 describe("s3 Factory", () => {
-  const OLD_ENV = process.env;
+  afterEach(() => vi.unstubAllEnvs());
 
-  beforeEach(() => {
-    process.env = { ...OLD_ENV };
-  });
+  it("returns Minio config for local development", async () => {
+    const s3 = s3Factory();
 
-  afterAll(() => {
-    process.env = OLD_ENV;
-  });
+    // Minio should be set up as a custom endpoint
+    if (!s3.config.endpoint) expect.fail();
 
-  it("returns Minio config for local development", () => {
-    expect(s3Factory()).toHaveProperty("endpoint.host", "minio:1234");
+    const endpoint = await s3.config.endpoint();
+
+    expect(endpoint.hostname).toBe("minio");
   });
 
   ["pizza", "staging", "production"].forEach((env) => {
-    it(`does not use Minio config on ${env} environment`, () => {
-      process.env.NODE_ENV = env;
-      expect(s3Factory()).toHaveProperty(
-        "endpoint.host",
-        "s3.eu-west-2.amazonaws.com",
-      );
+    it(`does not use Minio config on ${env} environment`, async () => {
+      vi.stubEnv("NODE_ENV", env);
+
+      const s3 = s3Factory();
+
+      // No custom endpoint used
+      expect(s3.config.endpoint).toBeUndefined();
     });
   });
 });

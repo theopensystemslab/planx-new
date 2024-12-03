@@ -1,5 +1,4 @@
 import { Browser, expect, test } from "@playwright/test";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   setUpTestContext,
@@ -19,9 +18,20 @@ import {
   clickContinue,
 } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
+import { createExternalPortal } from "./helpers/addComponent";
+import {
+  navigateToService,
+  publishService,
+  turnServiceOnline,
+} from "./helpers/navigateAndPublish";
+import { TestContext } from "./helpers/types";
+import {
+  externalPortalFlowData,
+  externalPortalServiceProps,
+} from "./helpers/serviceData";
 
 test.describe("Flow creation, publish and preview", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
   };
   const serviceProps = {
@@ -34,13 +44,13 @@ test.describe("Flow creation, publish and preview", () => {
       context = await setUpTestContext(context);
     } catch (error) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw error;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("Create a flow", async ({ browser }) => {
@@ -73,6 +83,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
+    await editor.createFeedback();
     await editor.createConfirmation();
 
     await expect(editor.nodeList).toContainText([
@@ -91,6 +102,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
+      "Tell us what you think",
       "Confirmation",
     ]);
   });
@@ -118,10 +130,8 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
-    page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
-    page.getByRole("button", { name: "PUBLISH", exact: true }).click();
+    await navigateToService(page, serviceProps.slug);
+    await publishService(page);
 
     const previewLink = page.getByRole("link", {
       name: "Open published service",
@@ -154,17 +164,8 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
-
-    // Open flow settings
-    page.locator('[aria-label="Service settings"]').click();
-
-    // Toggle flow online
-    page.getByLabel("Offline").click();
-    page.getByRole("button", { name: "Save", disabled: false }).click();
-    await expect(
-      page.getByText("Service settings updated successfully"),
-    ).toBeVisible();
+    await navigateToService(page, serviceProps.slug);
+    await turnServiceOnline(page);
 
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();
@@ -173,6 +174,56 @@ test.describe("Flow creation, publish and preview", () => {
       name: "Open published service",
     });
     await expect(previewLink).toBeVisible();
+  });
+
+  test("Can add an external portal", async ({
+    browser,
+  }: {
+    browser: Browser;
+  }) => {
+    const page = await createAuthenticatedSession({
+      browser,
+      userId: context.user!.id!,
+    });
+
+    await page.goto(`/${context.team.slug}`);
+
+    const editor = new PlaywrightEditor(page);
+
+    page.on("dialog", (dialog) =>
+      dialog.accept(externalPortalServiceProps.name),
+    );
+    await editor.addNewService();
+
+    // update context to allow new flow to be torn down
+    context.externalPortalFlow = { ...externalPortalServiceProps };
+
+    const { title, answers } = externalPortalFlowData;
+
+    await editor.createQuestionWithOptions(title, answers);
+
+    await expect(editor.nodeList).toContainText([
+      title,
+      answers[0],
+      answers[1],
+    ]);
+
+    // We are publishing the Ext Portal service and turning it online
+    await publishService(page);
+    await turnServiceOnline(page);
+
+    // We switch back to the original service
+    await navigateToService(page, serviceProps.slug);
+
+    // Add our ext portal to the middle of the service
+    await createExternalPortal(page, page.locator("li:nth-child(6)"));
+
+    await expect(
+      page.getByRole("link", { name: "E2E/an-external-portal-service" }),
+    ).toBeVisible();
+
+    // publish the changes we've made to the original service
+    await publishService(page);
   });
 
   test("Can preview a published flow", async ({
@@ -184,6 +235,12 @@ test.describe("Flow creation, publish and preview", () => {
       browser,
       userId: context.user!.id!,
     });
+
+    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
+
+    await expect(
+      page.getByRole("link", { name: "E2E/an-external-portal-service" }),
+    ).toBeVisible();
 
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
@@ -208,6 +265,13 @@ test.describe("Flow creation, publish and preview", () => {
       page,
       title: "A checklist title",
       answers: ["Checklist item 1", "Second checklist item"],
+    });
+    await clickContinue({ page });
+
+    await answerQuestion({
+      page,
+      title: externalPortalFlowData.title,
+      answer: externalPortalFlowData.answers[0],
     });
     await clickContinue({ page });
 
@@ -290,6 +354,10 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    await expect(
+      page.locator("h1", { hasText: "Tell us what you think" }),
+    ).toBeVisible();
+    await clickContinue({ page });
     await expect(
       page.locator("h1", { hasText: "Application sent" }),
     ).toBeVisible();

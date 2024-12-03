@@ -3,7 +3,6 @@ import { APIRequestContext, Page, expect, test } from "@playwright/test";
 import { GraphQLClient, gql } from "graphql-request";
 import { v4 as uuidV4 } from "uuid";
 import {
-  Context,
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
@@ -14,8 +13,9 @@ import { fillGovUkCardDetails } from "../helpers/userActions";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import { getPaymentRequestBySessionId } from "./helpers";
 import { mockPaymentRequestDetails, mockSessionData } from "./mocks";
+import { TestContext } from "../helpers/types";
 
-let context: Context = {
+let context: TestContext = {
   ...contextDefaults,
   flow: {
     slug: "invite-to-pay-test",
@@ -35,13 +35,13 @@ test.describe("Nominee journey @regression", async () => {
       context = await setUpTestContext(context);
     } catch (e) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test("responding to a valid payment request", async ({ page, request }) => {
@@ -82,8 +82,9 @@ test.describe("Nominee journey @regression", async () => {
   });
 
   test("navigating to a URL with an invalid ID", async ({ page }) => {
-    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow!
-      .slug!}/pay?analytics=false&paymentRequestId=INVALID-ID`;
+    const invalidPaymentRequestURL = `/${context.team!.slug!}/${
+      context.flow?.slug
+    }/pay?analytics=false&paymentRequestId=INVALID-ID`;
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 
@@ -91,8 +92,7 @@ test.describe("Nominee journey @regression", async () => {
   });
 
   test("navigating to a URL without a paymentRequestId", async ({ page }) => {
-    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow!
-      .slug!}/pay?analytics=false`;
+    const invalidPaymentRequestURL = `/${context.team!.slug!}/${context.flow?.slug}/pay?analytics=false`;
     await page.goto(invalidPaymentRequestURL);
     await page.waitForLoadState("networkidle");
 
@@ -126,8 +126,7 @@ async function navigateToPaymentRequestPage(
   paymentRequest: PaymentRequest,
   page: Page,
 ) {
-  const paymentRequestURL = `/${context.team!.slug!}/${context.flow!
-    .slug!}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
+  const paymentRequestURL = `/${context.team!.slug!}/${context.flow?.slug}/pay?analytics=false&paymentRequestId=${paymentRequest.id}`;
   await page.goto(paymentRequestURL);
   await page.waitForLoadState("networkidle");
 }
@@ -149,7 +148,7 @@ async function createSession({
   client,
   sessionId,
 }: {
-  context: Context;
+  context: TestContext;
   client: GraphQLClient;
   sessionId: string;
 }) {

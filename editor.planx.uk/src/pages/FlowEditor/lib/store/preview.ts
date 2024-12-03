@@ -226,7 +226,7 @@ export const previewStore: StateCreator<
               .concat(existingValue)
               .reduce(
                 (acc: string[], curr: string, _i: number, arr: string[]) => {
-                  if (!arr.some((x) => x !== curr && x.startsWith(curr))) {
+                  if (!arr.some((x) => x !== curr && x?.startsWith(curr))) {
                     acc.push(curr);
                   }
                   return acc;
@@ -670,9 +670,8 @@ export const previewStore: StateCreator<
   },
 
   isFinalCard: () => {
-    // Temporarily always returns false until upcomingCardIds is optimised
-    // OSL Slack explanation: https://bit.ly/3x38IRY
-    return false;
+    const { upcomingCardIds } = get();
+    return upcomingCardIds().length === 1;
   },
 
   restore: false,

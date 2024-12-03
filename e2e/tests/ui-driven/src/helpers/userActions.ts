@@ -1,16 +1,16 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
 import { setupOSMockResponse } from "../mocks/osPlacesResponse";
-import type { Context } from "./context";
 import { findSessionId, getGraphQLClient } from "./context";
 import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers";
+import { TestContext } from "./types";
 
 export async function saveSession({
   page,
   context,
 }: {
   page: Page;
-  context: Context;
+  context: TestContext;
 }): Promise<string | undefined> {
   const pageResponsePromise = page.waitForResponse((response) => {
     return response.url().includes("/send-email/save");
@@ -31,7 +31,7 @@ export async function returnToSession({
   shouldContinue = true,
 }: {
   page: Page;
-  context: Context;
+  context: TestContext;
   sessionId: string;
   shouldContinue?: boolean;
 }) {
@@ -81,7 +81,7 @@ export async function fillInEmail({
   context,
 }: {
   page: Page;
-  context: Context;
+  context: TestContext;
 }) {
   await page.locator("#email").fill(context.user.email);
   await page.locator("#confirmEmail").fill(context.user.email);

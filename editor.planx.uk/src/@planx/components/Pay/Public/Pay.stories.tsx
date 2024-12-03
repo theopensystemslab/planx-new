@@ -17,6 +17,9 @@ const meta = {
       }),
     },
   },
+  loaders: [
+    () => window.localStorage.setItem("FEATURE_FLAGS", '["FEE_BREAKDOWN"]'),
+  ],
 } satisfies Meta<typeof Confirm>;
 
 type Story = StoryObj<typeof meta>;
@@ -69,5 +72,22 @@ export const ForInformationOnly = {
     fee: 103,
     hidePay: true,
     onConfirm: () => {},
+  },
+} satisfies Story;
+
+// TODO: Setup fee breakdown amounts
+export const WithFeeBreakdown = {
+  args: {
+    title: "Pay for your application",
+    bannerTitle: "The fee is",
+    description: "The fee covers the cost of processing your application",
+    fee: 103,
+    instructionsTitle: "How to pay",
+    instructionsDescription: "Pay via GOV.UK Pay",
+    buttonTitle: "Pay",
+    onConfirm: () => {},
+    error: undefined,
+    showInviteToPay: false,
+    showFeeBreakdown: true,
   },
 } satisfies Story;

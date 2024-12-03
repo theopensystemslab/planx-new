@@ -29,6 +29,8 @@ import {
 } from "./operations.js";
 import type { MockedFunction } from "vitest";
 
+import type * as s3Client from "@aws-sdk/client-s3";
+
 vi.mock("../../../../lib/hasura/schema");
 const mockRunSQL = runSQL as MockedFunction<typeof runSQL>;
 
@@ -52,17 +54,19 @@ vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
 
 const s3Mock = () => {
   return {
-    deleteObjects: vi.fn(() => ({
-      promise: () => Promise.resolve(),
-    })),
+    deleteObjects: vi.fn(() => Promise.resolve()),
   };
 };
 
-vi.mock("aws-sdk/clients/s3", () => ({
-  default: vi.fn().mockImplementation(() => {
-    return s3Mock();
-  }),
-}));
+vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
+  const actualS3Client = await importOriginal<typeof s3Client>();
+  return {
+    ...actualS3Client,
+    S3: vi.fn().mockImplementation(() => {
+      return s3Mock();
+    }),
+  };
+});
 
 describe("'operationHandler' helper function", () => {
   it("returns a success result when an operation succeeds", async () => {

@@ -23,6 +23,7 @@ export const mockFlow: FlowGraph = {
       "9jiJvRYka6",
       "G6L9c8Sllg",
       "gyyVEMm9Yb",
+      "ZVZx9UDPqb",
     ],
   },
   "6rgnMh94zu": {
@@ -273,6 +274,17 @@ export const mockFlow: FlowGraph = {
       newAddressDescriptionLabel: "Scorpion",
     },
     type: 9,
+  },
+  ZVZx9UDPqb: {
+    data: {
+      title: "title text",
+      disclaimer: "<p>Oarfish</p>",
+      description: "<p>description text</p>",
+      ratingQuestion: "<p><strong>Bullfrog</strong></p>",
+      feedbackRequired: false,
+      freeformQuestion: "<p><strong>Wagtail</strong></p>",
+    },
+    type: 900,
   },
 };
 
@@ -648,4 +660,24 @@ export const mockResultResult: SearchResult<IndexedNode> = {
   matchIndices: [[0, 4]],
   refIndex: 0,
   matchValue: "Squid",
+};
+
+export const mockFeedbackResult: SearchResult<IndexedNode> = {
+  item: {
+    id: "ZVZx9UDPqb",
+    parentId: "_root",
+    type: 900,
+    data: {
+      title: "title text",
+      disclaimer: "<p>Oarfish</p>",
+      description: "<p>description text</p>",
+      ratingQuestion: "<p><strong>Bullfrog</strong></p>",
+      feedbackRequired: false,
+      freeformQuestion: "<p><strong>Wagtail</strong></p>",
+    },
+  },
+  key: "data.ratingQuestion",
+  matchIndices: [[0, 7]],
+  matchValue: "Bullfrog",
+  refIndex: 0,
 };

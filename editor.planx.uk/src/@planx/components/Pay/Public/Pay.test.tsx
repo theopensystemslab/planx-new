@@ -1,6 +1,7 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -8,6 +9,7 @@ import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
 import { vi } from "vitest";
+import { Mock } from "vitest";
 import { axe } from "vitest-axe";
 
 import Confirm, { Props } from "./Confirm";
@@ -20,6 +22,12 @@ let initialState: FullStore;
 vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
   () => ({ data: { mountpath: "mountpath" } }) as any,
 );
+
+vi.mock("lib/featureFlags", () => ({
+  hasFeatureFlag: vi.fn(),
+}));
+
+const mockHasFeatureFlag = hasFeatureFlag as Mock;
 
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";
@@ -74,6 +82,19 @@ const breadcrumbs: Breadcrumbs = {
   },
 };
 
+const defaultProps = {
+  title: "Pay for your application",
+  bannerTitle: "The fee is",
+  description: "The fee covers the cost of processing your application",
+  fee: 103,
+  instructionsTitle: "How to pay",
+  instructionsDescription: "Pay via GOV.UK Pay",
+  buttonTitle: "Pay",
+  onConfirm: vi.fn(),
+  error: undefined,
+  showInviteToPay: false,
+};
+
 describe("Pay component when fee is undefined or £0", () => {
   beforeEach(() => {
     getState().resetPreview();
@@ -125,19 +146,6 @@ describe("Pay component when fee is undefined or £0", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 });
-
-const defaultProps = {
-  title: "Pay for your application",
-  bannerTitle: "The fee is",
-  description: "The fee covers the cost of processing your application",
-  fee: 103,
-  instructionsTitle: "How to pay",
-  instructionsDescription: "Pay via GOV.UK Pay",
-  buttonTitle: "Pay",
-  onConfirm: vi.fn(),
-  error: undefined,
-  showInviteToPay: false,
-};
 
 describe("Confirm component without inviteToPay", () => {
   beforeAll(() => (initialState = getState()));
@@ -459,6 +467,7 @@ describe("the demo user view", () => {
       }),
     );
   });
+
   it("should render an error when teamSlug is demo", async () => {
     const handleSubmit = vi.fn();
     const { queryByText } = setup(
@@ -476,5 +485,42 @@ describe("the demo user view", () => {
 
     expect(errorGuidance).toBeInTheDocument();
     expect(errorHeader).toBeInTheDocument();
+  });
+});
+
+describe("Displaying the fee breakdown", () => {
+  beforeAll(() => (initialState = getState()));
+  afterEach(() => act(() => setState(initialState)));
+
+  test("if the showFeeBreakdown prop is set, the breakdown is displayed to the user", () => {
+    mockHasFeatureFlag.mockReturnValue(true);
+
+    const { getByRole, getByTestId } = setup(
+      <Confirm {...defaultProps} showFeeBreakdown={true} />,
+    );
+
+    expect(mockHasFeatureFlag).toHaveBeenCalledWith("FEE_BREAKDOWN");
+    expect(mockHasFeatureFlag).toHaveBeenCalledTimes(1);
+
+    expect(
+      getByRole("heading", { level: 3, name: "Fee breakdown" }),
+    ).toBeVisible();
+    expect(getByTestId("fee-breakdown-table")).toBeVisible();
+  });
+
+  test("if the showFeeBreakdown prop is not set, the breakdown is not displayed to the user", () => {
+    mockHasFeatureFlag.mockReturnValue(true);
+
+    const { queryByRole, queryByTestId } = setup(
+      <Confirm {...defaultProps} showFeeBreakdown={false} />,
+    );
+
+    expect(mockHasFeatureFlag).toHaveBeenCalledWith("FEE_BREAKDOWN");
+    expect(mockHasFeatureFlag).toHaveBeenCalledTimes(1);
+
+    expect(
+      queryByRole("heading", { level: 3, name: "Fee breakdown" }),
+    ).not.toBeInTheDocument();
+    expect(queryByTestId("fee-breakdown-table")).not.toBeInTheDocument();
   });
 });
