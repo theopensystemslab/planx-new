@@ -145,7 +145,7 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.getByRole("radio", { name: "Residential", checked: true }),
     ).toBeVisible();
-    
+
     await answerQuestion({
       page: page,
       title: "What type of property is it?",
