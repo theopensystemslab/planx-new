@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
 import { styled, Theme, useTheme } from "@mui/material/styles";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
@@ -52,8 +53,11 @@ const Card: React.FC<Props> = ({
     state.path,
     state.currentCard,
   ]);
+
   const showSaveResumeButton =
-    path === ApplicationPath.SaveAndReturn && handleSubmit;
+    path === ApplicationPath.SaveAndReturn &&
+    handleSubmit &&
+    visibleNode?.type !== TYPES.Confirmation;
   const { track } = useAnalyticsTracking();
 
   useEffect(() => {
