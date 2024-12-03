@@ -1,9 +1,16 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { act, screen, waitFor } from "@testing-library/react";
+import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import ConfirmationComponent from "./Public";
+
+const { getState, setState } = useStore;
+
+let initialState: FullStore;
 
 vi.mock("@opensystemslab/planx-core", () => {
   return {
@@ -34,8 +41,83 @@ it("should not have any accessibility violations", async () => {
   expect(results).toHaveNoViolations();
 });
 
-it.todo("should hide the 'Continue' button if it's the final card in the flow");
+describe("Confirmation component", () => {
+  const handleSubmit = vi.fn();
 
-it.todo(
-  "should show the 'Continue' button if it is not the final card in the flow",
-);
+  beforeAll(() => (initialState = getState()));
+
+  afterEach(() => waitFor(() => setState(initialState)));
+
+  it("hides the 'Continue' button if it's the final card in the flow", () => {
+    act(() =>
+      setState({
+        flow: {
+          _root: { edges: ["Send", "Confirmation"] },
+          Send: { type: TYPES.Send },
+          Confirmation: { type: TYPES.Confirmation },
+        },
+        breadcrumbs: { Send: { auto: false } },
+      }),
+    );
+
+    expect(getState().upcomingCardIds()).toEqual(["Confirmation"]);
+    expect(getState().isFinalCard()).toEqual(true);
+
+    const { user } = setup(
+      <ConfirmationComponent
+        color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
+        heading="heading"
+        description="description"
+        nextSteps={[
+          { title: "title1", description: "description1" },
+          { title: "title2", description: "description2" },
+          { title: "title3", description: "description3" },
+        ]}
+        moreInfo="more info"
+        contactInfo="contact info"
+      />,
+    );
+
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
+  });
+
+  it("shows the 'Continue' button if there are nodes following it", () => {
+    act(() =>
+      setState({
+        flow: {
+          _root: { edges: ["Send", "Confirmation", "Feedback", "Notice"] },
+          Send: { type: TYPES.Send },
+          Confirmation: { type: TYPES.Confirmation },
+          Feedback: { type: TYPES.Feedback },
+          Notice: { type: TYPES.Notice },
+        },
+        breadcrumbs: { Send: { auto: false } },
+      }),
+    );
+
+    expect(getState().upcomingCardIds()).toEqual([
+      "Confirmation",
+      "Feedback",
+      "Notice",
+    ]);
+    expect(getState().isFinalCard()).toEqual(false);
+
+    const { user } = setup(
+      <ConfirmationComponent
+        color={{ text: "#000", background: "rgba(1, 99, 96, 0.1)" }}
+        heading="heading"
+        description="description"
+        nextSteps={[
+          { title: "title1", description: "description1" },
+          { title: "title2", description: "description2" },
+          { title: "title3", description: "description3" },
+        ]}
+        moreInfo="more info"
+        contactInfo="contact info"
+        handleSubmit={handleSubmit}
+      />,
+    );
+
+    expect(screen.queryByText("Continue")).toBeInTheDocument();
+  });
+});
