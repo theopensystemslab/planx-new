@@ -505,8 +505,8 @@ export const previewStore: StateCreator<
     const node = flow[id];
     if (!node) return;
 
-    const { type, data, edges } = node;
     // Only Question & Checklist nodes that have an fn & edges are eligible for auto-answering
+    const { type, data, edges } = node;
     if (
       !type ||
       !SUPPORTED_DECISION_TYPES.includes(type) ||
@@ -630,9 +630,12 @@ export const previewStore: StateCreator<
    */
   autoAnswerableFlag: (filterId: NodeId) => {
     const { breadcrumbs, flow } = get();
-    const { type, data, edges } = flow[filterId];
+
+    const node = flow[filterId];
+    if (!node) return; 
 
     // Only Filter nodes that have an fn & edges are eligible for auto-answering
+    const { type, data, edges } = node;
     if (!type || type !== TYPES.Filter || !data?.fn || !edges) return;
 
     // Get all options (aka flags or edges or Answer nodes) for this node
