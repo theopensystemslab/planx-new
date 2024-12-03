@@ -59,18 +59,19 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText(["Find property"]);
     // Find property will automate past this question at first
     await editor.createQuestionWithDataFieldOptions(
-      "Assign property type",
+      "What type of property is it?",
       mockPropertyTypeOptions,
       "property.type",
     );
-    await expect(editor.nodeList).toContainText(["Assign property type"]);
+    await expect(editor.nodeList).toContainText([
+      "What type of property is it?",
+    ]);
     // but property info "change" button will navigate back to it
     await editor.createPropertyInformation();
     await expect(editor.nodeList).toContainText(["About the property"]);
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createFilter();
     await editor.createUploadAndLabel();
     // TODO: editor.createPropertyInfo()
     await editor.createDrawBoundary();
@@ -80,7 +81,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Filter - Planning permissionImmuneMissing informationPermission neededPrior approvalNoticePermitted developmentNot developmentNo flag result",
       "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
@@ -141,14 +141,26 @@ test.describe("Flow creation, publish and preview", () => {
 
     await changeButton.click();
 
+    // ensure residential is selected on back nav to test previouslySubmittedData is working
+    await expect(
+      page.getByRole("radio", { name: "Residential", checked: true }),
+    ).toBeVisible();
+
     // change button navigates the user back thro the service so we need to continue twice
     await answerQuestion({
       page: page,
-      title: "Assign property type",
+      title: "What type of property is it?",
       answer: "Commercial",
     });
 
+    // navigate back to Property Info page
     await clickContinue({ page });
+    await expect(
+      page.getByRole("heading", { name: "About the property" }),
+    ).toBeVisible();
+
+    // Ensure we've successfully changed property type
+    await expect(page.getByText("Residential - Semi Detached")).toBeHidden();
     await expect(page.getByText("Commercial")).toBeVisible();
 
     await clickContinue({ page });
@@ -158,7 +170,6 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
-    // TODO: answer filter?
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
   });
