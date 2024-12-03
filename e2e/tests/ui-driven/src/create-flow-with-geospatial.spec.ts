@@ -145,8 +145,7 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.getByRole("radio", { name: "Residential", checked: true }),
     ).toBeVisible();
-
-    // change button navigates the user back thro the service so we need to continue twice
+    
     await answerQuestion({
       page: page,
       title: "What type of property is it?",
