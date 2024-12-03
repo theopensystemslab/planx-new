@@ -12,8 +12,8 @@ test("adding an external portal", async () => {
   setup(
     <ExternalPortalForm
       flows={[
-        { id: "a", text: "flow a" },
-        { id: "b", text: "flow b" },
+        { id: "a", name: "flow a", slug: "flow-a", team: "team" },
+        { id: "b", name: "flow b", slug: "flow-b", team: "team" },
       ]}
       handleSubmit={handleSubmit}
     />,
@@ -45,8 +45,8 @@ test("changing an external portal", async () => {
       id="test"
       flowId="b"
       flows={[
-        { id: "a", text: "flow a" },
-        { id: "b", text: "flow b" },
+        { id: "a", name: "flow a", slug: "flow-a", team: "team" },
+        { id: "b", name: "flow b", slug: "flow-b", team: "team" },
       ]}
       handleSubmit={handleSubmit}
     />,
