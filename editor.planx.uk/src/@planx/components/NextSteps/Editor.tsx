@@ -46,7 +46,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
       <InputRow>
         <Input
           name="description"
-          value={props.value.description}
+          value={props.value.description || ""}
           multiline
           onChange={(ev: ChangeEvent<HTMLInputElement>) => {
             props.onChange({
@@ -61,7 +61,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
         <Input
           name="url"
           type="url"
-          value={props.value.url}
+          value={props.value.url || ""}
           onChange={(ev: ChangeEvent<HTMLInputElement>) => {
             props.onChange({
               ...props.value,
