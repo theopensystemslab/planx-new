@@ -248,14 +248,15 @@ export class PlaywrightEditor {
   async createFilter() {
     await createFilter(this.page, this.getNextNode());
     // select the branch filter and add some content
-    const permissionNeededNode = this.page
+    const filteredBranch = this.page
       .locator("li")
       .filter({ hasText: /Material change of use$/ })
       .getByRole("listitem")
       .getByRole("link");
+
     await createContent(
       this.page,
-      permissionNeededNode,
+      filteredBranch,
       `This is the ${selectedFlag} filter`,
     );
   }
