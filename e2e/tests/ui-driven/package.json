@@ -22,6 +22,7 @@
   "packageManager": "pnpm@8.6.6",
   "devDependencies": {
     "@playwright/test": "^1.49.0",
+    "@types/geojson": "^7946.0.14",
     "@types/node": "18.16.1",
     "eslint-plugin-playwright": "^0.20.0"
   }

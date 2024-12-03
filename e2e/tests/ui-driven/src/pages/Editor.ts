@@ -20,6 +20,8 @@ import {
   createNotice,
   createNumberInput,
   createPlanningConstraints,
+  createPropertyInformation,
+  createQuestionWithDataFieldOptions,
   createQuestionWithOptions,
   createResult,
   createReview,
@@ -27,6 +29,7 @@ import {
   createTextInput,
   createUploadAndLabel,
 } from "../helpers/addComponent";
+import { OptionWithDataValues } from "../helpers/types";
 
 export class PlaywrightEditor {
   readonly page: Page;
@@ -76,6 +79,23 @@ export class PlaywrightEditor {
 
   async createQuestionWithOptions(title: string, answers: string[]) {
     await createQuestionWithOptions(this.page, this.firstNode, title, answers);
+    await expect(
+      this.page.locator("a").filter({ hasText: title }),
+    ).toBeVisible();
+  }
+
+  async createQuestionWithDataFieldOptions(
+    title: string,
+    answers: OptionWithDataValues[],
+    dataField: string,
+  ) {
+    await createQuestionWithDataFieldOptions(
+      this.page,
+      this.getNextNode(),
+      title,
+      answers,
+      dataField,
+    );
     await expect(
       this.page.locator("a").filter({ hasText: title }),
     ).toBeVisible();
@@ -166,6 +186,10 @@ export class PlaywrightEditor {
 
   async createFindProperty() {
     await createFindProperty(this.page, this.getNextNode());
+  }
+
+  async createPropertyInformation() {
+    await createPropertyInformation(this.page, this.getNextNode());
   }
 
   async createDrawBoundary() {
