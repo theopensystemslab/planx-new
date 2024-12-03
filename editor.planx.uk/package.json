@@ -17,7 +17,6 @@
     "@mui/x-data-grid": "^7.25.0",
     "@opensystemslab/map": "1.0.0-alpha.5",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#848c15c",
-    "@tanstack/react-query": "^5.61.3",
     "@tiptap/core": "^2.4.0",
     "@tiptap/extension-bold": "^2.0.3",
     "@tiptap/extension-bubble-menu": "^2.1.13",
