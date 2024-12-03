@@ -7,9 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { BoldTableRow } from "@planx/components/shared/Table/TableRow";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { formattedPriceWithCurrencySymbol } from "../model";
 
@@ -20,13 +20,7 @@ const StyledTable = styled(Table)(() => ({
   },
 }));
 
-const BoldTableRow = styled(TableRow)(() => ({
-  [`& .${tableCellClasses.root}`]: {
-    fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  },
-}));
-
-const VAT_RATE = 20;
+export const VAT_RATE = 0.2;
 
 const DESCRIPTION =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
@@ -70,7 +64,7 @@ const ServiceCharge = () => (
 
 const VAT = () => (
   <TableRow>
-    <TableCell>{`VAT (${VAT_RATE}%)`}</TableCell>
+    <TableCell>{`VAT (${VAT_RATE * 100}%)`}</TableCell>
     <TableCell align="right">-</TableCell>
   </TableRow>
 );
