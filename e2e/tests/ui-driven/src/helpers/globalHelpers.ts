@@ -81,7 +81,10 @@ export async function setFeatureFlag(page: Page, featureFlag: string) {
   );
 }
 
-export const planningPermissionFlags = flatFlags.filter((flag) => flag.category === "Planning permission").map((flag) => flag.text)
+export const selectedFlag = "Material change of use";
+export const filterFlags = flatFlags
+  .filter((flag) => flag.category === selectedFlag)
+  .map((flag) => flag.text);
 
 export async function getSessionId(page: Page): Promise<string> {
   // @ts-expect-error - Property api does not exist on type Window & typeof globalThis

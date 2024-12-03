@@ -5,7 +5,11 @@ import {
   tearDownTestContext,
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
-import { createAuthenticatedSession, planningPermissionFlags } from "./helpers/globalHelpers";
+import {
+  createAuthenticatedSession,
+  filterFlags,
+  selectedFlag,
+} from "./helpers/globalHelpers";
 import {
   answerAddressInput,
   answerChecklist,
@@ -99,7 +103,7 @@ test.describe("Flow creation, publish and preview", () => {
       "A list title",
       "What you should do next",
       "Some content",
-      ...planningPermissionFlags,
+      ...filterFlags,
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
@@ -335,6 +339,14 @@ test.describe("Flow creation, publish and preview", () => {
     await clickContinue({ page });
 
     await expect(page.locator("p", { hasText: "Some content" })).toBeVisible();
+    await clickContinue({ page });
+
+    // this is the content placed in the permission needed branch
+    await expect(
+      page.locator("p", {
+        hasText: `This is the ${selectedFlag.toLowerCase()} filter`,
+      }),
+    ).toBeVisible();
     await clickContinue({ page });
 
     await expect(page.locator("h1", { hasText: "No result" })).toBeVisible();

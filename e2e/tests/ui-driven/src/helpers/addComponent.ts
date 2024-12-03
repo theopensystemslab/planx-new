@@ -3,6 +3,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import { contextDefaults } from "./context";
 import { externalPortalServiceProps } from "./serviceData";
 import { OptionWithDataValues } from "./types";
+import { selectedFlag } from "./globalHelpers";
 
 const createBaseComponent = async (
   page: Page,
@@ -123,6 +124,9 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+      await page
+        .getByTestId("flagset-category-select")
+        .selectOption(selectedFlag);
       break;
     case ComponentType.Feedback:
       break;
@@ -358,6 +362,22 @@ async function createComponentOptions(
   for (const option of options) {
     await page.locator("button").filter({ hasText: buttonText }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option);
+    index++;
+  }
+  
+  await page.getByPlaceholder("Flags (up to one per category)").nth(1).click();
+  await page.getByRole("option", { name: selectedFlag, exact: true }).click();
+}
+
+async function createComponentOptionsWithDataValues(
+  page: Page,
+  options: OptionWithDataValues[],
+) {
+  let index = 0;
+  for (const option of options) {
+    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
+    await page.getByPlaceholder("Data Value").nth(index).fill(option.dataValue);
     index++;
   }
 }
