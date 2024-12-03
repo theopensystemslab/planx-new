@@ -6,7 +6,11 @@ import {
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import { answerFindProperty, clickContinue } from "./helpers/userActions";
+import {
+  answerFindProperty,
+  answerQuestion,
+  clickContinue,
+} from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 import {
   navigateToService,
@@ -17,6 +21,7 @@ import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
 import { mockMapGeoJson } from "./mocks/geoJsonMock";
 import { checkGeoJsonContent } from "./helpers/geospatialChecks";
+import { mockPropertyTypeOptions } from "./mocks/serviceComponentMocks";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -50,6 +55,14 @@ test.describe("Flow creation, publish and preview", () => {
 
     await editor.createFindProperty();
     await expect(editor.nodeList).toContainText(["Find property"]);
+    // Find property will automate past this question at first
+    await editor.createQuestionWithDataFieldOptions(
+      "Assign property type",
+      mockPropertyTypeOptions,
+      "property.type",
+    );
+    await expect(editor.nodeList).toContainText(["Assign property type"]);
+    // but property info "change" button will navigate back to it
     await editor.createPropertyInformation();
     await expect(editor.nodeList).toContainText(["About the property"]);
     await editor.createInternalPortal();
@@ -103,6 +116,7 @@ test.describe("Flow creation, publish and preview", () => {
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
+
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
@@ -125,7 +139,14 @@ test.describe("Flow creation, publish and preview", () => {
 
     await changeButton.click();
 
-    await expect(page.getByText("Unknown")).toBeVisible();
+    // change button navigates the user back thro the service so we need to continue twice
+    await answerQuestion({
+      page: page,
+      title: "Assign property type",
+      answer: "Commercial",
+    });
+
+    await clickContinue({ page });
     await clickContinue({ page });
 
     await expect(

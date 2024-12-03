@@ -2,6 +2,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
 import { contextDefaults } from "./context";
 import { externalPortalServiceProps } from "./serviceData";
+import { OptionWithDataValues } from "./types";
 
 const createBaseComponent = async (
   page: Page,
@@ -154,6 +155,21 @@ export const createQuestionWithOptions = async (
     questionText,
     options,
   );
+};
+
+export const createQuestionWithDataFieldOptions = async (
+  page: Page,
+  locatingNode: Locator,
+  questionText: string,
+  options: OptionWithDataValues[],
+  dataField: string,
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.getByPlaceholder("Text").fill(questionText);
+  await page.getByPlaceholder("Data Field").fill(dataField);
+  await createComponentOptionsWithDataValues(page, options);
+  await page.locator('button[form="modal"][type="submit"]').click();
 };
 
 export const createNotice = async (
@@ -341,6 +357,19 @@ async function createComponentOptions(
   for (const option of options) {
     await page.locator("button").filter({ hasText: buttonText }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option);
+    index++;
+  }
+}
+
+async function createComponentOptionsWithDataValues(
+  page: Page,
+  options: OptionWithDataValues[],
+) {
+  let index = 0;
+  for (const option of options) {
+    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
+    await page.getByPlaceholder("Data Value").nth(index).fill(option.dataValue);
     index++;
   }
 }

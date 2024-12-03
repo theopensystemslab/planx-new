@@ -21,3 +21,5 @@ export interface TestContext {
   externalPortalFlow?: Flow;
   sessionIds?: string[];
 }
+
+export type OptionWithDataValues = { optionText: string; dataValue: string };
