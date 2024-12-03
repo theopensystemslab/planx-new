@@ -14,6 +14,9 @@ describe("when the VerifySubmissionEmail component renders", () => {
     expect(screen.queryByLabelText("Email address")).toBeInTheDocument();
   });
   it.todo("should not display an error message");
+  it.todo(
+    "shows sessionId and local authority in the application details table",
+  );
 });
 
 describe("when the user submits a correct email address", () => {
