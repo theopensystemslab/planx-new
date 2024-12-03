@@ -344,7 +344,7 @@ test.describe("Flow creation, publish and preview", () => {
     // this is the content placed in the filtered branch
     await expect(
       page.locator("p", {
-        hasText: `This is the ${selectedFlag.toLowerCase()} filter`,
+        hasText: `This is the ${selectedFlag} filter`,
       }),
     ).toBeVisible();
     await clickContinue({ page });

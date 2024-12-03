@@ -256,7 +256,7 @@ export class PlaywrightEditor {
     await createContent(
       this.page,
       permissionNeededNode,
-      `This is the ${selectedFlag.toLowerCase()} filter`,
+      `This is the ${selectedFlag} filter`,
     );
   }
 
