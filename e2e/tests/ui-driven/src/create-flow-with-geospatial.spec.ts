@@ -72,8 +72,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createUploadAndLabel();
-    // TODO: editor.createPropertyInfo()
+    // await editor.createUploadAndLabel();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
@@ -81,7 +80,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
       // "File upload",
@@ -169,7 +167,12 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    await expect(page.getByRole('heading', { name: 'Confirm your location plan' })).toBeVisible()
+
+    await expect(page.getByTestId('upload-file-button')).toBeVisible()
+    await expect(page.getByText("490.37")).toBeVisible()
+
     // TODO: answer uploadAndLabel
-    // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
+    // TODO: answerPropertyInfo, answerPlanningConstraints
   });
 });
