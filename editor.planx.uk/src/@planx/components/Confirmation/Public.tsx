@@ -85,6 +85,7 @@ interface PresentationalProps extends Props {
 }
 
 export function Presentational(props: PresentationalProps) {
+  const isFinalCard = useStore().isFinalCard();
   return (
     <Box width="100%">
       <Banner
@@ -99,7 +100,7 @@ export function Presentational(props: PresentationalProps) {
           </Box>
         )}
       </Banner>
-      <Card>
+      <Card handleSubmit={isFinalCard ? undefined : props.handleSubmit}>
         <SummaryListTable>
           {Object.entries(props.applicableDetails).map(([k, v], i) => (
             <React.Fragment key={`detail-${i}`}>

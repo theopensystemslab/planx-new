@@ -75,16 +75,13 @@ interface Props {
 }
 
 const Node: React.FC<Props> = (props) => {
-  const [childNodesOf, isFinalCard, resetPreview, cachedBreadcrumbs] = useStore(
-    (state) => [
-      state.childNodesOf,
-      state.isFinalCard(),
-      state.resetPreview,
-      state.cachedBreadcrumbs,
-    ],
-  );
+  const [childNodesOf, resetPreview, cachedBreadcrumbs] = useStore((state) => [
+    state.childNodesOf,
+    state.resetPreview,
+    state.cachedBreadcrumbs,
+  ]);
 
-  const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
+  const handleSubmit = props.handleSubmit;
 
   const nodeId = props.node.id;
   const previouslySubmittedData =
