@@ -149,6 +149,8 @@ test.describe("Flow creation, publish and preview", () => {
     });
 
     await clickContinue({ page });
+    await expect(page.getByText("Commercial")).toBeVisible();
+
     await clickContinue({ page });
 
     await expect(
