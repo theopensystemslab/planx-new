@@ -49,15 +49,23 @@ const Card: React.FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme();
-  const [path, visibleNode] = useStore((state) => [
+  const [path, visibleNode, breadcrumbs, flow] = useStore((state) => [
     state.path,
     state.currentCard,
+    state.breadcrumbs,
+    state.flow,
   ]);
 
+  // Check if we have a Send node in our breadcrumbs
+  //   In the frontend this is a better/more immediate proxy for "Submitted" because actual send events that populate lowcal_sessions.submitted_at are async
+  const hasSent = Object.keys(breadcrumbs)
+    .reverse()
+    .some(
+      (breadcrumbNodeId: string) => flow[breadcrumbNodeId]?.type === TYPES.Send,
+    );
+
   const showSaveResumeButton =
-    path === ApplicationPath.SaveAndReturn &&
-    handleSubmit &&
-    visibleNode?.type !== TYPES.Confirmation;
+    path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
   const { track } = useAnalyticsTracking();
 
   useEffect(() => {
