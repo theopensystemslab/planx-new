@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { OptionEditor } from "@planx/components/shared/OptionsEditor";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -14,7 +15,6 @@ import InputRow from "ui/shared/InputRow";
 
 import { Option } from "../../shared";
 import type { Group } from "../model";
-import { OptionEditor } from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
