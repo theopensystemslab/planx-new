@@ -9,7 +9,7 @@ const {
   computePassport,
 } = getState();
 
-describe("Auto-answering using planning constraints `_nots`", () => {
+describe("Auto-answering based on planning constraints", () => {
   beforeEach(() => {
     resetPreview();
     setState({ flow });
@@ -51,9 +51,7 @@ describe("Auto-answering using planning constraints `_nots`", () => {
       "ConservationAreaNo",
     ]);
     expect(autoAnswerableOptions("Article4Question")).toEqual(["Article4Yes"]);
-    expect(autoAnswerableOptions("FloodZone1Question")).toEqual([
-      "FloodZone1No",
-    ]); // Because we have passport vals, follows blank independent of options
+    expect(autoAnswerableOptions("FloodZone1Question")).toBeUndefined(); // Puts to user because unseen option
   });
 
   test("When there are only negative `_nots` constraints", () => {
@@ -92,8 +90,49 @@ describe("Auto-answering using planning constraints `_nots`", () => {
       "ConservationAreaNo",
     ]);
     expect(autoAnswerableOptions("Article4Question")).toEqual(["Article4No"]);
-    expect(autoAnswerableOptions("FloodZone1Question")).toBeUndefined(); // Because we do not have positive passport vals, puts to user because unseen option
+    expect(autoAnswerableOptions("FloodZone1Question")).toBeUndefined(); // Puts to user because unseen option
   });
+
+  test("When there are only positive intersecting constraints", () => {
+    expect(upcomingCardIds()).toEqual([
+      "PlanningConstraints",
+      "ConservationAreaQuestion",
+      "Article4Question",
+      "FloodZone1Question",
+    ]);
+
+    // Manually proceed forward through PlanningConstraints as if we've checked 4x datasets: Article 4, Conservation Area, Flood Zone 2, Flood Zone 3
+    clickContinue("PlanningConstraints", {
+      data: {
+        "property.constraints.planning": [
+          "article4",
+          "designated.conservationArea",
+          // "flood.zone.2",
+          // "flood.zone.3",
+        ],
+      },
+      auto: false,
+    });
+
+    expect(computePassport()?.data).toHaveProperty(
+      "property.constraints.planning",
+    );
+    expect(computePassport()?.data).not.toHaveProperty([
+      "_nots",
+      "property.constraints.planning",
+    ]);
+
+    // Confirm auto-answer behavior
+    expect(autoAnswerableOptions("ConservationAreaQuestion")).toEqual([
+      "ConservationAreaYes",
+    ]);
+    expect(autoAnswerableOptions("Article4Question")).toEqual(["Article4Yes"]);
+    expect(autoAnswerableOptions("FloodZone1Question")).toBeUndefined(); // Puts to user because unseen option
+  });
+
+  test.todo(
+    "An unseen option is put to the user exactly once then auto-answered",
+  );
 });
 
 const flow: Store.Flow = {

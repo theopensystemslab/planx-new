@@ -11,6 +11,7 @@ import {
   flatFlags,
 } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
+import { DEFAULT_FN as planningConstraintsFn } from "@planx/components/PlanningConstraints/model";
 import { SetValue } from "@planx/components/SetValue/model";
 import { handleSetValue } from "@planx/components/SetValue/utils";
 import { sortIdsDepthFirst } from "@planx/graph";
@@ -527,7 +528,17 @@ export const previewStore: StateCreator<
     );
     if (!visitedFns.length) return;
 
-    // Get all options (aka edges or Answer nodes) for this node
+    // For each visited node, get the data values of its' options (aka edges or Answer nodes)
+    let visitedOptionVals: string[] = [];
+    visitedFns.forEach(([nodeId, _breadcrumb]) => {
+      flow[nodeId].edges?.map((edgeId) => {
+        if (flow[edgeId].type === TYPES.Answer && flow[edgeId].data?.val) {
+          visitedOptionVals.push(flow[edgeId].data.val);
+        }
+      });
+    });
+
+    // Get all options for the current node
     const options: Array<Store.Node> = edges.map((edgeId) => ({
       id: edgeId,
       ...flow[edgeId],
@@ -541,15 +552,24 @@ export const previewStore: StateCreator<
       )
       // Only keep options with a data value set (remove blanks)
       .filter((option) => option.data?.val);
+    const sortedOptionVals: string[] = sortedOptions.map(
+      (option) => option.data?.val,
+    );
     const blankOption = options.find((option) => !option.data?.val);
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
     // Get existing passport value(s) for this node's fn
     const passportValues = passport.data?.[data.fn];
 
+    // Planning constraints use a bespoke "_nots" structure to differentiate intersecting & not-intersecting passport values and therefore require special automation rules later
+    const nots: string[] | undefined =
+      passport.data?.["_nots"]?.[planningConstraintsFn];
+
     // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings),
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
-    if (Array.isArray(passportValues) && passportValues.length > 0) {
+    const foundPassportValues =
+      Array.isArray(passportValues) && passportValues.length > 0;
+    if (foundPassportValues) {
       // Check if the existing passport value(s) startsWith at least one option's val (eg passport retains most granular values only)
       const matchingPassportValues = passportValues.filter(
         (passportValue: any) =>
@@ -577,34 +597,27 @@ export const previewStore: StateCreator<
           });
         });
       } else {
-        if (blankOption?.id) optionsThatCanBeAutoAnswered.push(blankOption.id);
-      }
-    } else {
-      // If we don't have any existing passport values for this fn but we do have a blank option,
-      //  proceed through the blank if every option's val has been visited before
-      const sortedOptionVals: string[] = sortedOptions.map(
-        (option) => option.data?.val,
-      );
-      let visitedOptionVals: string[] = [];
-      visitedFns.forEach(([nodeId, _breadcrumb]) => {
-        flow[nodeId].edges?.map((edgeId) => {
-          if (flow[edgeId].type === TYPES.Answer && flow[edgeId].data?.val) {
-            visitedOptionVals.push(flow[edgeId].data.val);
+        // Planning constraints may have foundPassportValues (intersecting constraints only) in addition to nots
+        //   ensure the blank option is only only auto-answered if the not-blank option values are valid constraints that we checked (intersecting or not)
+        if (data.fn === planningConstraintsFn) {
+          if (blankOption?.id && nots) {
+            const seenPlanningConstraintVals =
+              sortedOptionVals.concat(visitedOptionVals);
+            if (seenPlanningConstraintVals.some((val) => nots.includes(val)))
+              optionsThatCanBeAutoAnswered.push(blankOption?.id);
           }
-        });
-      });
+        } else if (blankOption?.id) {
+          optionsThatCanBeAutoAnswered.push(blankOption.id);
+        }
+      }
+    }
 
+    // If we don't have any existing passport values for this fn but we do have a blank option,
+    //  proceed through the blank if every option's val has been visited before
+    if (!foundPassportValues) {
       // Planning Constraints use a bespoke "_nots" data structure to describe all option vals returned via GIS API
       //   Concat these onto other visitedOptionVals so that questions about constraints we haven't fetched are put to user exactly once
-      if (
-        visitedFns.some(
-          ([nodeId, _breadcrumb]) =>
-            flow[nodeId].type === TYPES.PlanningConstraints,
-        )
-      ) {
-        const nots: string[] | undefined = passport.data?.["_nots"]?.[data.fn];
-        if (nots) visitedOptionVals = visitedOptionVals.concat(nots);
-      }
+      if (nots) visitedOptionVals = visitedOptionVals.concat(nots);
 
       const hasVisitedEveryOption = sortedOptionVals.every((value) =>
         visitedOptionVals.includes(value),
@@ -632,7 +645,7 @@ export const previewStore: StateCreator<
     const { breadcrumbs, flow } = get();
 
     const node = flow[filterId];
-    if (!node) return; 
+    if (!node) return;
 
     // Only Filter nodes that have an fn & edges are eligible for auto-answering
     const { type, data, edges } = node;
