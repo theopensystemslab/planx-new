@@ -10,29 +10,31 @@ export const toNumber = (input: number | [number]) =>
  */
 const toBoolean = (val: ["true" | "false"]) => val[0] === "true";
 
-const filterByKeyPrefix = (data: Record<string, unknown>, prefix: string) =>
-  Object.fromEntries(
-    Object.entries(data).filter(([k, _v]) => k.startsWith(prefix))
-  );
 
 /**
  * Iterate over exemptions or reductions to find matches, returning the granular keys
  */
   const getGranularKeys = (
-  data: Record<string, boolean> | undefined = {},
-  prefix: "application.fee.reduction" | "application.fee.exemption"
-) => {
-  const keys = Object.keys(data).filter((key) => data[key]);
-  const granularKeys = keys.map((key) => key.replace(prefix + ".", ""));
-  return granularKeys;
-};
+    data: PassportFeeFields,
+    prefix: "application.fee.reduction" | "application.fee.exemption"
+  ) => {
+    const keys = Object.keys(data) as (keyof PassportFeeFields)[];
+    const intersectingKeys = keys.filter(
+      (key) => key.startsWith(prefix) && Boolean(data[key])
+    );
+    const granularKeys = intersectingKeys.map((key) =>
+      key.replace(prefix + ".", "")
+    );
+
+    return granularKeys;
+  };
 
 /**
  * A "reduction" is the sum of the difference between calculated and payable
  */
-export const calculateReduction = ({ amount }: PassportFeeFields) =>
-  amount["application.fee.calculated"]
-    ? amount["application.fee.calculated"] - amount["application.fee.payable"]
+export const calculateReduction = (data: PassportFeeFields) =>
+  data["application.fee.calculated"]
+    ? data["application.fee.calculated"] - data["application.fee.payable"]
     : 0;
 
 /**
@@ -41,20 +43,14 @@ export const calculateReduction = ({ amount }: PassportFeeFields) =>
 export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
   amount: {
     applicationFee:
-      data.amount["application.fee.calculated"] ||
-      data.amount["application.fee.payable"],
-    total: data.amount["application.fee.payable"],
-    vat: data.amount["application.fee.payable.vat"],
+      data["application.fee.calculated"] ||
+      data["application.fee.payable"],
+    total: data["application.fee.payable"],
+    vat: data["application.fee.payable.vat"],
     reduction: calculateReduction(data),
   },
-  reductions: getGranularKeys(data.reductions, "application.fee.reduction"),
-  exemptions: getGranularKeys(data.exemptions, "application.fee.exemption"),
-});
-
-export const preProcessPassport = (data: Record<string, unknown>) => ({
-  amount: filterByKeyPrefix(data, "application.fee"),
-  reductions: filterByKeyPrefix(data, "application.fee.reduction"),
-  exemptions: filterByKeyPrefix(data, "application.fee.exemption"),
+  reductions: getGranularKeys(data, "application.fee.reduction"),
+  exemptions: getGranularKeys(data, "application.fee.exemption"),
 });
 
 export const createPassportSchema = () => {
@@ -64,31 +60,22 @@ export const createPassportSchema = () => {
     .union([questionSchema, setValueSchema])
     .transform(toNumber);
 
-  const amountsSchema = z.object({
-    "application.fee.calculated": feeSchema.optional().default(0),
-    "application.fee.payable": feeSchema,
-    "application.fee.payable.vat": feeSchema.optional().default(0),
-  });
-
-  const reductionsSchema = z
-    .record(
-      z.string(),
-      z.tuple([z.enum(["true", "false"])]).transform(toBoolean)
-    )
-    .optional();
-
-  const exemptionsSchema = z
-    .record(
-      z.string(),
-      z.tuple([z.enum(["true", "false"])]).transform(toBoolean)
-    )
-    .optional();
+  /** Describes how boolean values are set via PlanX components */
+  const booleanSchema = z
+    .tuple([z.enum(["true", "false"])])
+    .default(["false"])
+    .transform(toBoolean)
 
   const schema = z
     .object({
-      amount: amountsSchema,
-      reductions: reductionsSchema,
-      exemptions: exemptionsSchema,
+      "application.fee.calculated": feeSchema.optional().default(0),
+      "application.fee.payable": feeSchema,
+      "application.fee.payable.vat": feeSchema.optional().default(0),
+      "application.fee.reduction.alternative": booleanSchema,
+      "application.fee.reduction.parishCouncil": booleanSchema,
+      "application.fee.reduction.sports": booleanSchema,
+      "application.fee.exemption.disability": booleanSchema,
+      "application.fee.exemption.resubmission": booleanSchema,
     })
     .transform(toFeeBreakdown);
 

@@ -69,8 +69,8 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": 1000,
         "application.fee.payable": 800,
         "application.fee.payable.vat": 160,
-        "application.fee.reduction.reasonOne": ["true"],
-        "application.fee.reduction.reasonTwo": ["true"],
+        "application.fee.reduction.alternative": ["true"],
+        "application.fee.reduction.parishCouncil": ["true"],
         "some.other.fields": ["abc", "xyz"],
       };
 
@@ -80,7 +80,7 @@ describe("useFeeBreakdown() hook", () => {
 
       expect(result?.reductions).toHaveLength(2);
       expect(result?.reductions).toEqual(
-        expect.arrayContaining(["reasonOne", "reasonTwo"])
+        expect.arrayContaining(["alternative", "parishCouncil"])
       );
     });
 
@@ -89,8 +89,8 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": 1000,
         "application.fee.payable": 800,
         "application.fee.payable.vat": 160,
-        "application.fee.reduction.reasonOne": ["false"],
-        "application.fee.reduction.reasonTwo": ["false"],
+        "application.fee.reduction.alternative": ["false"],
+        "application.fee.reduction.parishCouncil": ["false"],
         "some.other.fields": ["abc", "xyz"],
       };
 
@@ -101,13 +101,36 @@ describe("useFeeBreakdown() hook", () => {
       expect(result?.reductions).toHaveLength(0);
     });
 
+    it("does not parse non-schema reduction values", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.reduction.alternative": ["true"],
+        "application.fee.reduction.parishCouncil": ["false"],
+        "application.fee.reduction.someReason": ["true"],
+        "application.fee.reduction.someOtherReason": ["false"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([
+        mockPassportData,
+        "test-session",
+      ]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.reductions).toEqual(expect.not.arrayContaining(["someReason"]))
+      expect(result?.reductions).toEqual(expect.not.arrayContaining(["someOtherReason"]))
+    });
+
     it("parses 'true' exemption values to a list of keys", () => {
       const mockPassportData = {
         "application.fee.calculated": 1000,
         "application.fee.payable": 800,
         "application.fee.payable.vat": 160,
-        "application.fee.exemption.reasonOne": ["true"],
-        "application.fee.exemption.reasonTwo": ["true"],
+        "application.fee.exemption.disability": ["true"],
+        "application.fee.exemption.resubmission": ["true"],
         "some.other.fields": ["abc", "xyz"],
       };
 
@@ -117,7 +140,7 @@ describe("useFeeBreakdown() hook", () => {
 
       expect(result?.exemptions).toHaveLength(2);
       expect(result?.exemptions).toEqual(
-        expect.arrayContaining(["reasonOne", "reasonTwo"])
+        expect.arrayContaining(["disability", "resubmission"])
       );
     });
 
@@ -126,8 +149,8 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": 1000,
         "application.fee.payable": 800,
         "application.fee.payable.vat": 160,
-        "application.fee.exemption.reasonOne": ["false"],
-        "application.fee.exemption.reasonTwo": ["false"],
+        "application.fee.exemption.disability": ["false"],
+        "application.fee.exemption.resubmission": ["false"],
         "some.other.fields": ["abc", "xyz"],
       };
 
@@ -136,6 +159,33 @@ describe("useFeeBreakdown() hook", () => {
       const result = useFeeBreakdown();
 
       expect(result?.exemptions).toHaveLength(0);
+    });
+
+    it("does not parse non-schema exemption values", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.exemption.disability": ["false"],
+        "application.fee.exemption.resubmission": ["false"],
+        "application.fee.exemption.someReason": ["true"],
+        "application.fee.exemption.someOtherReason": ["false"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([
+        mockPassportData,
+        "test-session",
+      ]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.exemption).toEqual(
+        expect.not.arrayContaining(["someReason"])
+      );
+      expect(result?.exemption).toEqual(
+        expect.not.arrayContaining(["someOtherReason"])
+      );
     });
   });
 

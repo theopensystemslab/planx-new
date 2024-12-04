@@ -20,11 +20,14 @@ describe("toNumber() helper function", () => {
 describe("calculateReduction() helper function", () => {
   it("correctly outputs the reduction when a calculated value is provided", () => {
     const input: PassportFeeFields = {
-      amount: {
-        "application.fee.calculated": 100,
-        "application.fee.payable": 50,
-        "application.fee.payable.vat": 0,
-      }
+      "application.fee.calculated": 100,
+      "application.fee.payable": 50,
+      "application.fee.payable.vat": 0,
+      "application.fee.reduction.alternative": false,
+      "application.fee.reduction.parishCouncil": false,
+      "application.fee.reduction.sports": false,
+      "application.fee.exemption.disability": false,
+      "application.fee.exemption.resubmission": false,
     };
     const reduction = calculateReduction(input);
 
@@ -33,11 +36,14 @@ describe("calculateReduction() helper function", () => {
 
   it("defaults to 0 when calculated is 0", () => {
     const input: PassportFeeFields = {
-      amount: {
-        "application.fee.calculated": 0,
-        "application.fee.payable": 100,
-        "application.fee.payable.vat": 0,
-      }
+      "application.fee.calculated": 0,
+      "application.fee.payable": 100,
+      "application.fee.payable.vat": 0,
+      "application.fee.reduction.alternative": false,
+      "application.fee.reduction.parishCouncil": false,
+      "application.fee.reduction.sports": false,
+      "application.fee.exemption.disability": false,
+      "application.fee.exemption.resubmission": false,
     };
     const reduction = calculateReduction(input);
 
@@ -48,32 +54,38 @@ describe("calculateReduction() helper function", () => {
 describe("toFeeBreakdown() helper function", () => {
   it("correctly maps fields", () => {
     const input: PassportFeeFields = {
-      amount: {
-        "application.fee.calculated": 100,
-        "application.fee.payable": 50,
-        "application.fee.payable.vat": 10,
-      }
+      "application.fee.calculated": 100,
+      "application.fee.payable": 50,
+      "application.fee.payable.vat": 10,
+      "application.fee.reduction.alternative": false,
+      "application.fee.reduction.parishCouncil": false,
+      "application.fee.reduction.sports": false,
+      "application.fee.exemption.disability": false,
+      "application.fee.exemption.resubmission": false,
     };
 
     const { amount } = toFeeBreakdown(input);
 
-    expect(amount.applicationFee).toEqual(input.amount["application.fee.calculated"]);
-    expect(amount.total).toEqual(input.amount["application.fee.payable"]);
-    expect(amount.vat).toEqual(input.amount["application.fee.payable.vat"]);
+    expect(amount.applicationFee).toEqual(input["application.fee.calculated"]);
+    expect(amount.total).toEqual(input["application.fee.payable"]);
+    expect(amount.vat).toEqual(input["application.fee.payable.vat"]);
     expect(amount.reduction).toEqual(50);
   });
 
   it("sets applicationFee to payable amount if no calculated value is provided", () => {
     const input: PassportFeeFields = {
-      amount : {
-        "application.fee.calculated": 0,
-        "application.fee.payable.vat": 10,
-        "application.fee.payable": 50,
-      }
+      "application.fee.calculated": 0,
+      "application.fee.payable.vat": 10,
+      "application.fee.payable": 50,
+      "application.fee.reduction.alternative": false,
+      "application.fee.reduction.parishCouncil": false,
+      "application.fee.reduction.sports": false,
+      "application.fee.exemption.disability": false,
+      "application.fee.exemption.resubmission": false,
     };
 
     const { amount } = toFeeBreakdown(input);
 
-    expect(amount.applicationFee).toEqual(input.amount["application.fee.payable"]);
+    expect(amount.applicationFee).toEqual(input["application.fee.payable"]);
   });
 });

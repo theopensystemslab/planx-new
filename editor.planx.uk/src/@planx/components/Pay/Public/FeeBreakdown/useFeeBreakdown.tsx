@@ -2,7 +2,7 @@ import { logger } from "airbrake";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { FeeBreakdown } from "./types";
-import { createPassportSchema, preProcessPassport } from "./utils";
+import { createPassportSchema } from "./utils";
 
 /**
  * Parses the users's Passport for data variables associated with their fee
@@ -19,8 +19,7 @@ export const useFeeBreakdown = (): FeeBreakdown | undefined => {
   if (!passportData) return 
 
   const schema = createPassportSchema();
-  const processedPassport = preProcessPassport(passportData);
-  const result = schema.safeParse(processedPassport);
+  const result = schema.safeParse(passportData);
 
   if (!result.success) {
     logger.notify(

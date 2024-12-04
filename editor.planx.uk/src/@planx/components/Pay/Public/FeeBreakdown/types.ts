@@ -10,11 +10,12 @@ export interface FeeBreakdown {
 }
 
 export interface PassportFeeFields {
-  amount: {
-    "application.fee.calculated": number;
-    "application.fee.payable": number;
-    "application.fee.payable.vat": number;
-  },
-  reductions?: Record<string, boolean>
-  exemptions?: Record<string, boolean>
+  "application.fee.calculated": number;
+  "application.fee.payable": number;
+  "application.fee.payable.vat": number;
+  "application.fee.reduction.alternative": boolean;
+  "application.fee.reduction.parishCouncil": boolean;
+  "application.fee.reduction.sports": boolean;
+  "application.fee.exemption.disability": boolean;
+  "application.fee.exemption.resubmission": boolean;
 };
