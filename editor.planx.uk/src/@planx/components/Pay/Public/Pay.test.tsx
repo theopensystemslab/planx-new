@@ -60,6 +60,26 @@ const flowWithZeroFee: Store.Flow = {
   },
 };
 
+const flowWithNegativeFee: Store.Flow = {
+  _root: {
+    edges: ["setValue", "pay"],
+  },
+  setValue: {
+    type: TYPES.SetValue,
+    edges: ["pay"],
+    data: {
+      fn: "application.fee.payable",
+      val: "-12",
+    },
+  },
+  pay: {
+    type: TYPES.Pay,
+    data: {
+      fn: "application.fee.payable",
+    },
+  },
+};
+
 // Mimic having passed setValue to reach Pay
 const breadcrumbs: Breadcrumbs = {
   setValue: {
@@ -131,6 +151,39 @@ describe("Pay component when fee is undefined or £0", () => {
 
     // handleSubmit is called to auto-answer Pay (aka "skip" in card sequence)
     expect(handleSubmit).toHaveBeenCalled();
+  });
+
+  it("Skips pay if fee is negative", () => {
+    const handleSubmit = vi.fn();
+    const loggerSpy = vi.spyOn(logger, "notify");
+
+    const negativeFeeBreadcrumbs: Breadcrumbs = {
+      setValue: {
+        auto: true,
+        data: {
+          "application.fee.payable": ["-12"],
+        },
+      },
+    };
+
+    setState({ flow: flowWithNegativeFee, breadcrumbs: negativeFeeBreadcrumbs });
+
+    expect(getState().computePassport()).toEqual({
+      data: { "application.fee.payable": ["-12"] },
+    });
+
+    setup(
+      <Pay
+        title="Pay for your application"
+        fn="application.fee.payable"
+        handleSubmit={handleSubmit}
+        govPayMetadata={[]}
+      />,
+    );
+
+    // handleSubmit is called to auto-answer Pay (aka "skip" in card sequence)
+    expect(handleSubmit).toHaveBeenCalled();
+    expect(loggerSpy).toHaveBeenCalledWith(expect.stringMatching(/Negative fee calculated/));
   });
 });
 

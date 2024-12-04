@@ -118,8 +118,15 @@ function Component(props: Props) {
   const showPayOptions = props.allowInviteToPay && !props.hidePay;
 
   useEffect(() => {
+    // Skip component when fee is negative
+    // Log error silently - this was likely a content error that should be addressed
+    if (fee < 0) {
+      logger.notify(`Negative fee calculated for session ${sessionId}`);
+      return props.handleSubmit && props.handleSubmit({ auto: true });
+    }
+
     // Auto-skip component when fee=0
-    if (fee <= 0) {
+    if (fee === 0) {
       return props.handleSubmit && props.handleSubmit({ auto: true });
     }
 
