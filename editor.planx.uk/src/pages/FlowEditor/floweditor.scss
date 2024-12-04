@@ -180,7 +180,7 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
-  &.type-SetValue > a {
+  &.type-SetValue > div > a {
     background: #f0f0f0;
     font-family: $fontMonospace;
   }
