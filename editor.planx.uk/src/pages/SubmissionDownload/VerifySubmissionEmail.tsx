@@ -27,7 +27,7 @@ const verifySubmissionEmailSchema = object({
 export const VerifySubmissionEmail = ({
   params,
 }: VerifySubmissionEmailProps): JSX.Element => {
-  const { sessionId, team } = params;
+  const { sessionId, team, flow } = params;
   const [downloadApplicationError, setDownloadApplicationError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +45,7 @@ export const VerifySubmissionEmail = ({
         const { data } = await axios.get(url, {
           responseType: "arraybuffer",
         });
-        downloadZipFile(data);
+        downloadZipFile(data, { filename: `${flow}-${sessionId}.zip` });
         resetForm();
         setLoading(false);
       } catch (error) {
