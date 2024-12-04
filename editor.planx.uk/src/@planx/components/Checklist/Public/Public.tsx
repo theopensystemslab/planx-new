@@ -94,13 +94,9 @@ const VisibleChecklist: React.FC<Props> = (props) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   const changeCheckbox = (id: string) => (_checked: any) => {
-    let newCheckedIds;
-
-    if (formik.values.checked.includes(id)) {
-      newCheckedIds = formik.values.checked.filter((x) => x !== id);
-    } else {
-      newCheckedIds = [...formik.values.checked, id];
-    }
+    const newCheckedIds = formik.values.checked.includes(id)
+      ? formik.values.checked.filter((x) => x !== id)
+      : [...formik.values.checked, id];
 
     formik.setFieldValue(
       "checked",
@@ -129,38 +125,37 @@ const VisibleChecklist: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options &&
-              options.map((option) =>
-                layout === ChecklistLayout.Basic ? (
-                  <FormWrapper key={option.id}>
-                    <Grid item xs={12} key={option.data.text}>
-                      <ChecklistItem
-                        onChange={changeCheckbox(option.id)}
-                        label={option.data.text}
-                        id={option.id}
-                        checked={formik.values.checked.includes(option.id)}
-                      />
-                    </Grid>
-                  </FormWrapper>
-                ) : (
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    contentWrap={4}
-                    key={option.data.text}
-                  >
-                    <ImageButton
-                      title={option.data.text}
+            {options?.map((option) =>
+              layout === ChecklistLayout.Basic ? (
+                <FormWrapper key={option.id}>
+                  <Grid item xs={12} key={option.data.text}>
+                    <ChecklistItem
+                      onChange={changeCheckbox(option.id)}
+                      label={option.data.text}
                       id={option.id}
-                      img={option.data.img}
-                      selected={formik.values.checked.includes(option.id)}
-                      onClick={changeCheckbox(option.id)}
-                      checkbox
+                      checked={formik.values.checked.includes(option.id)}
                     />
                   </Grid>
-                ),
-              )}
+                </FormWrapper>
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  contentWrap={4}
+                  key={option.data.text}
+                >
+                  <ImageButton
+                    title={option.data.text}
+                    id={option.id}
+                    img={option.data.img}
+                    selected={formik.values.checked.includes(option.id)}
+                    onClick={changeCheckbox(option.id)}
+                    checkbox
+                  />
+                </Grid>
+              ),
+            )}
 
             {groupedOptions && (
               <FormWrapper>
