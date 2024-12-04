@@ -1,4 +1,5 @@
 import { BaseNodeData, Option } from "../shared";
+import { PublicProps } from "../shared/types";
 import type { Category, Checklist } from "./model";
 
 export interface ChecklistProps extends Checklist {
@@ -25,3 +26,5 @@ export interface OptionEditorProps {
   onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
   showValueField?: boolean;
 }
+
+export type Props = PublicProps<Checklist>;

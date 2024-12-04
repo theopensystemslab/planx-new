@@ -1,7 +1,7 @@
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public";
+import { ChecklistLayout } from "./Public/Public";
 
 export interface Group<T> {
   title: string;
