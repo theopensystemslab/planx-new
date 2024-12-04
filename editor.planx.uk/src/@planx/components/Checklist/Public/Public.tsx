@@ -20,7 +20,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
 import { Props } from "../types";
-import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
+import { AutoAnsweredChecklist } from "./AutoAnsweredChecklist";
 import { getInitialExpandedGroups, toggleInArray } from "./helpers";
 
 export enum ChecklistLayout {

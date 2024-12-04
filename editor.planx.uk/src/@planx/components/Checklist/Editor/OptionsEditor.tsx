@@ -5,8 +5,8 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { FlagsSelect } from "../../../shared/FlagsSelect";
-import { OptionEditorProps } from "../../types";
+import { FlagsSelect } from "../../shared/FlagsSelect";
+import { OptionEditorProps } from "../types";
 
 export const OptionEditor: React.FC<OptionEditorProps> = (props) => {
   return (

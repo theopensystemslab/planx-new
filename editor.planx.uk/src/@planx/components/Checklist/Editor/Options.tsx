@@ -12,8 +12,8 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { Option } from "../../../shared";
-import type { Group } from "../../model";
+import { Option } from "../../shared";
+import type { Group } from "../model";
 import { OptionEditor } from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {

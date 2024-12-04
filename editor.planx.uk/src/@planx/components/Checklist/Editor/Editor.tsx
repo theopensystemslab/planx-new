@@ -16,7 +16,7 @@ import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
 import { toggleExpandableChecklist } from "../model";
 import { ChecklistProps } from "../types";
-import { Options } from "./components/Options";
+import { Options } from "./Options";
 
 export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   const type = TYPES.Checklist;
