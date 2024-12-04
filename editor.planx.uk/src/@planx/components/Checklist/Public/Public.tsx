@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
-  type Checklist,
   checklistValidationSchema,
   getFlatOptions,
   getLayout,
@@ -20,11 +19,9 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import type { PublicProps } from "../../shared/types";
+import { Props } from "../types";
 import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
 import { getInitialExpandedGroups, toggleInArray } from "./helpers";
-
-export type Props = PublicProps<Checklist>;
 
 export enum ChecklistLayout {
   Basic,
