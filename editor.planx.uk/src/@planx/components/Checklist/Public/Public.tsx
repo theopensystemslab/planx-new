@@ -6,14 +6,13 @@ import {
   checklistValidationSchema,
   getFlatOptions,
   getLayout,
-  type Group,
 } from "@planx/components/Checklist/model";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -21,8 +20,9 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { Option } from "../shared";
-import type { PublicProps } from "../shared/types";
+import type { PublicProps } from "../../shared/types";
+import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
+import { getInitialExpandedGroups, toggleInArray } from "./helpers";
 
 export type Props = PublicProps<Checklist>;
 
@@ -30,12 +30,6 @@ export enum ChecklistLayout {
   Basic,
   Grouped,
   Images,
-}
-
-function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
-  return arr.includes(value)
-    ? arr.filter((val) => val !== value)
-    : [...arr, value];
 }
 
 const ChecklistComponent: React.FC<Props> = (props) => {
@@ -56,20 +50,6 @@ const ChecklistComponent: React.FC<Props> = (props) => {
   }
 
   return <VisibleChecklist {...props} />;
-};
-
-// An auto-answered Checklist won't be seen by the user, but still leaves a breadcrumb
-const AutoAnsweredChecklist: React.FC<Props & { answerIds: string[] }> = (
-  props,
-) => {
-  useEffect(() => {
-    props.handleSubmit?.({
-      answers: props.answerIds,
-      auto: true,
-    });
-  }, []);
-
-  return null;
 };
 
 const VisibleChecklist: React.FC<Props> = (props) => {
@@ -101,7 +81,10 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     }),
   });
 
-  const initialExpandedGroups = getInitialExpandedGroups();
+  const initialExpandedGroups = getInitialExpandedGroups(
+    groupedOptions,
+    previouslySubmittedData,
+  );
 
   const [expandedGroups, setExpandedGroups] = useState<Array<number>>(
     initialExpandedGroups,
@@ -231,21 +214,5 @@ const VisibleChecklist: React.FC<Props> = (props) => {
       </FullWidthWrapper>
     </Card>
   );
-
-  function getInitialExpandedGroups() {
-    return (groupedOptions ?? ([] as Group<Option>[])).reduce(
-      (acc, group, index) =>
-        groupHasOptionSelected(group, previouslySubmittedData?.answers ?? [])
-          ? [...acc, index]
-          : acc,
-      [] as number[],
-    );
-
-    function groupHasOptionSelected(group: Group<Option>, answers: string[]) {
-      return group.children.some((child) =>
-        answers.some((id) => child.id === id),
-      );
-    }
-  }
 };
 export default ChecklistComponent;

@@ -8,8 +8,8 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { Option } from "../shared";
-import { Group } from "./model";
+import { Option } from "../../shared";
+import { Group } from "../model";
 import Checklist, { ChecklistLayout } from "./Public";
 
 const options: {
