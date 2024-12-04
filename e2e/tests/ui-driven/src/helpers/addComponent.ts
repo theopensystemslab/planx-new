@@ -1,5 +1,8 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
+import { contextDefaults } from "./context";
+import { externalPortalServiceProps } from "./serviceData";
+import { OptionWithDataValues } from "./types";
 
 const createBaseComponent = async (
   page: Page,
@@ -26,7 +29,7 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Notice").fill(title || "");
       break;
     case ComponentType.Checklist:
-      await page.getByPlaceholder("Text").fill(title || "text");
+      await page.getByPlaceholder("Text").fill(title || "");
       if (options) {
         await createComponentOptions(options, "add new option", page);
       }
@@ -79,6 +82,9 @@ const createBaseComponent = async (
       break;
     case ComponentType.FindProperty:
       break;
+    case ComponentType.PropertyInformation:
+      await page.getByLabel("Show users a 'change' link to").click();
+      break;
     case ComponentType.PlanningConstraints:
       break;
     case ComponentType.DrawBoundary:
@@ -122,6 +128,13 @@ const createBaseComponent = async (
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Portal name").fill(title || "");
       break;
+    case ComponentType.ExternalPortal:
+      await page
+        .getByTestId("flowId")
+        .selectOption(
+          `${contextDefaults.team.slug}/${externalPortalServiceProps.slug}`,
+        );
+      break;
     default:
       throw new Error(`Unsupported type: ${type}`);
   }
@@ -142,6 +155,21 @@ export const createQuestionWithOptions = async (
     questionText,
     options,
   );
+};
+
+export const createQuestionWithDataFieldOptions = async (
+  page: Page,
+  locatingNode: Locator,
+  questionText: string,
+  options: OptionWithDataValues[],
+  dataField: string,
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.getByPlaceholder("Text").fill(questionText);
+  await page.getByPlaceholder("Data Field").fill(dataField);
+  await createComponentOptionsWithDataValues(page, options);
+  await page.locator('button[form="modal"][type="submit"]').click();
 };
 
 export const createNotice = async (
@@ -266,6 +294,17 @@ export const createFindProperty = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, ComponentType.FindProperty);
 };
 
+export const createPropertyInformation = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.PropertyInformation,
+  );
+};
+
 export const createPlanningConstraints = async (
   page: Page,
   locatingNode: Locator,
@@ -318,6 +357,19 @@ async function createComponentOptions(
   for (const option of options) {
     await page.locator("button").filter({ hasText: buttonText }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option);
+    index++;
+  }
+}
+
+async function createComponentOptionsWithDataValues(
+  page: Page,
+  options: OptionWithDataValues[],
+) {
+  let index = 0;
+  for (const option of options) {
+    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
+    await page.getByPlaceholder("Data Value").nth(index).fill(option.dataValue);
     index++;
   }
 }
@@ -393,4 +445,11 @@ export const createInternalPortal = async (
 
 export const createFeedback = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, ComponentType.Feedback);
+};
+
+export const createExternalPortal = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(page, locatingNode, ComponentType.ExternalPortal);
 };

@@ -4,7 +4,7 @@ import AddressInputComponent from "@planx/components/AddressInput/Public";
 import type { Calculate } from "@planx/components/Calculate/model";
 import CalculateComponent from "@planx/components/Calculate/Public";
 import type { Checklist } from "@planx/components/Checklist/model";
-import ChecklistComponent from "@planx/components/Checklist/Public";
+import ChecklistComponent from "@planx/components/Checklist/Public/Public";
 import type { Confirmation } from "@planx/components/Confirmation/model";
 import ConfirmationComponent from "@planx/components/Confirmation/Public";
 import type { ContactInput } from "@planx/components/ContactInput/model";
@@ -75,16 +75,13 @@ interface Props {
 }
 
 const Node: React.FC<Props> = (props) => {
-  const [childNodesOf, isFinalCard, resetPreview, cachedBreadcrumbs] = useStore(
-    (state) => [
-      state.childNodesOf,
-      state.isFinalCard(),
-      state.resetPreview,
-      state.cachedBreadcrumbs,
-    ],
-  );
+  const [childNodesOf, resetPreview, cachedBreadcrumbs] = useStore((state) => [
+    state.childNodesOf,
+    state.resetPreview,
+    state.cachedBreadcrumbs,
+  ]);
 
-  const handleSubmit = isFinalCard ? undefined : props.handleSubmit;
+  const handleSubmit = props.handleSubmit;
 
   const nodeId = props.node.id;
   const previouslySubmittedData =

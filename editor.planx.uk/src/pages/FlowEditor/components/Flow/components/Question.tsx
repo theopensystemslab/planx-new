@@ -1,4 +1,6 @@
 import ErrorIcon from "@mui/icons-material/Error";
+import Help from "@mui/icons-material/Help";
+import Box from "@mui/material/Box";
 import {
   ComponentType as TYPES,
   NodeTags,
@@ -24,10 +26,11 @@ type Props = {
 } & NodeTags;
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode] = useStore((state) => [
+  const [isClone, childNodes, copyNode, showHelpText] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.copyNode,
+    state.showHelpText,
   ]);
 
   const parent = getParentId(props.parent);
@@ -59,6 +62,9 @@ const Question: React.FC<Props> = React.memo((props) => {
   // If there is an error, the icon has a semantic meaning and needs a title
   const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
 
+  const hasHelpText =
+    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -76,25 +82,28 @@ const Question: React.FC<Props> = React.memo((props) => {
           },
         )}
       >
-        <Link
-          href={href}
-          prefetch={false}
-          onContextMenu={handleContext}
-          ref={drag}
-        >
-          {props.data?.img && (
-            <Thumbnail
-              imageSource={props.data?.img}
-              imageAltText={props.data?.text}
-            />
+        <Box>
+          <Link
+            href={href}
+            prefetch={false}
+            onContextMenu={handleContext}
+            ref={drag}
+          >
+            {props.data?.img && (
+              <Thumbnail
+                imageSource={props.data?.img}
+                imageAltText={props.data?.text}
+              />
+            )}
+            {Icon && <Icon titleAccess={iconTitleAccess} />}
+            {showHelpText && hasHelpText && <Help fontSize="small" />}
+            <span>{props.text}</span>
+          </Link>
+          {props.type !== TYPES.SetValue && props.data?.fn && (
+            <DataField value={props.data.fn} variant="parent" />
           )}
-          {Icon && <Icon titleAccess={iconTitleAccess} />}
-          <span>{props.text}</span>
-        </Link>
-        {props.type !== TYPES.SetValue && props.data?.fn && (
-          <DataField value={props.data.fn} variant="parent" />
-        )}
-        {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
+          {props.tags?.map((tag) => <Tag tag={tag} key={tag} />)}
+        </Box>
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />

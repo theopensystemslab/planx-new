@@ -339,7 +339,6 @@ export = async () => {
             name: "AWS_S3_BUCKET",
             value: pulumi.interpolate`${apiBucket.bucket}`,
           },
-          { name: "AWS_S3_ACL", value: "public-read" },
           {
             name: "FILE_API_KEY",
             value: config.requireSecret("file-api-key"),

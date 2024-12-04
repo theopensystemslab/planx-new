@@ -1,8 +1,8 @@
 import { FlowGraph } from "@opensystemslab/planx-core/types";
 import type { Browser, Page, Request } from "@playwright/test";
 import { gql } from "graphql-request";
-import type { Context } from "./context";
 import { generateAuthenticationToken, getGraphQLClient } from "./context";
+import { TestContext } from "./types";
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
@@ -87,7 +87,7 @@ export async function getSessionId(page: Page): Promise<string> {
   return sessionId;
 }
 
-export async function addSessionToContext(page: Page, context: Context) {
+export async function addSessionToContext(page: Page, context: TestContext) {
   const sessionId = await getSessionId(page);
   context.sessionIds!.push(sessionId);
   return sessionId;
@@ -95,7 +95,7 @@ export async function addSessionToContext(page: Page, context: Context) {
 
 export async function waitForPaymentResponse(
   page: Page,
-  context: Context,
+  context: TestContext,
 ): Promise<{ paymentId: string; state?: { status: string } }> {
   const { payment_id: paymentId, state } = await page
     .waitForResponse((response) => {
@@ -110,11 +110,11 @@ export async function modifyFlow({
   context,
   modifiedFlow,
 }: {
-  context: Context;
+  context: TestContext;
   modifiedFlow: FlowGraph;
 }) {
   const adminGQLClient = getGraphQLClient();
-  if (!context.flow?.id || !context.user?.id) {
+  if (!context.flow?.slug || !context.user?.id) {
     throw new Error("context must have a flow and user");
   }
   await adminGQLClient.request(
@@ -132,7 +132,7 @@ export async function modifyFlow({
       }
     `,
     {
-      flowId: context.flow!.id,
+      flowId: context.flow?.id,
       userId: context.user!.id,
       data: modifiedFlow,
     },

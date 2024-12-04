@@ -1,4 +1,4 @@
-import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import Help from "@mui/icons-material/Help";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -17,7 +17,7 @@ export const MoreInformation = ({
 }: MoreInformationProps) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="More Information" Icon={InfoOutlined}>
+      <ModalSectionContent title="More information" Icon={Help}>
         <InputGroup flowSpacing>
           <InputLabel label="Why it matters">
             <RichTextInput
