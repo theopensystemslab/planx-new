@@ -9,6 +9,8 @@ import {
   createContent,
   createDateInput,
   createDrawBoundary,
+  createExternalPortal,
+  createFeedback,
   createFileUpload,
   createFilter,
   createFindProperty,
@@ -69,6 +71,13 @@ export class PlaywrightEditor {
     );
     await expect(
       this.page.locator("a").filter({ hasText: this.answers.questionText }),
+    ).toBeVisible();
+  }
+
+  async createQuestionWithOptions(title: string, answers: string[]) {
+    await createQuestionWithOptions(this.page, this.firstNode, title, answers);
+    await expect(
+      this.page.locator("a").filter({ hasText: title }),
     ).toBeVisible();
   }
 
@@ -239,5 +248,13 @@ export class PlaywrightEditor {
       .getByPlaceholder("Notice")
       .fill("A notice inside a portal!");
     await this.page.locator('button[form="modal"][type="submit"]').click();
+  }
+
+  async createExternalPortal() {
+    await createExternalPortal(this.page, this.getNextNode());
+  }
+
+  async createFeedback() {
+    await createFeedback(this.page, this.getNextNode());
   }
 }

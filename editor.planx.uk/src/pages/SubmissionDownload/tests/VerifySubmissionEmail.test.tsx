@@ -21,16 +21,19 @@ describe("when the VerifySubmissionEmail component renders", () => {
     expect(
       screen.queryByText("Sorry, something went wrong. Please try again."),
     ).not.toBeInTheDocument();
-
-    it("should not have any accessibility violations", async () => {
-      const { container } = setup(
-        <VerifySubmissionEmail params={{ sessionId: "1" }} />,
-      );
-
-      const results = await axe(container);
-      expect(results).toHaveNoViolations();
-    });
   });
+
+  it("should not have any accessibility violations", async () => {
+    const { container } = setup(
+      <VerifySubmissionEmail params={{ sessionId: "1" }} />,
+    );
+
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+  it.todo(
+    "shows sessionId and local authority in the application details table",
+  );
 });
 
 describe("when the user submits a correct email address", () => {

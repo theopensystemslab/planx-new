@@ -1,6 +1,5 @@
 import { BrowserContext, Page, expect, test } from "@playwright/test";
 import {
-  Context,
   contextDefaults,
   getGraphQLClient,
   setUpTestContext,
@@ -20,8 +19,9 @@ import {
   navigateToPayComponent,
 } from "./helpers";
 import { mockPaymentRequest, modifiedInviteToPayFlow } from "./mocks";
+import { TestContext } from "../helpers/types";
 
-let context: Context = {
+let context: TestContext = {
   ...contextDefaults,
   flow: {
     slug: "invite-to-pay-test",
@@ -39,12 +39,12 @@ test.describe("Agent journey @regression", async () => {
       context = await setUpTestContext(context);
     } catch (e) {
       // ensure proper teardown if setup fails
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
 
-  test.afterAll(async () => await tearDownTestContext(context));
+  test.afterAll(async () => await tearDownTestContext());
 
   test("agent can send a payment request", async ({ page }) => {
     await navigateToPayComponent(page, context);
@@ -106,8 +106,7 @@ test.describe("Agent journey @regression", async () => {
     const sessionId = await makePaymentRequest({ page: firstPage, context });
 
     // Resume session
-    const resumeLink = `/${context.team!.slug!}/${context.flow!
-      .slug!}/published?analytics=false&sessionId=${sessionId}`;
+    const resumeLink = `/${context.team!.slug!}/${context.flow?.slug}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(
@@ -118,11 +117,11 @@ test.describe("Agent journey @regression", async () => {
     await secondPage.getByLabel("Email address").fill(context.user.email);
     await secondPage.getByTestId("continue-button").click();
 
-    await expect(
-      secondPage.getByRole("heading", {
-        name: "Sorry, you can't make changes to this application",
-      }),
-    ).toBeVisible();
+    const errorHeader = secondPage.getByRole("heading", {
+      name: "Sorry, you can't make changes to this application",
+    });
+
+    await expect(errorHeader).toBeVisible();
     await expect(secondPage.getByTestId("continue-button")).toBeHidden();
   });
 
@@ -136,8 +135,7 @@ test.describe("Agent journey @regression", async () => {
     await modifyFlow({ context, modifiedFlow: modifiedInviteToPayFlow });
 
     // Navigate to resume session link
-    const resumeLink = `/${context.team!.slug!}/${context.flow!
-      .slug!}/published?analytics=false&sessionId=${sessionId}`;
+    const resumeLink = `/${context.team!.slug!}/${context.flow?.slug}/published?analytics=false&sessionId=${sessionId}`;
     const secondPage = await browserContext.newPage();
     await secondPage.goto(resumeLink);
     await expect(

@@ -1,7 +1,6 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { expect, test } from "@playwright/test";
 import { gql } from "graphql-request";
-import type { Context } from "./helpers/context";
 import {
   contextDefaults,
   getGraphQLClient,
@@ -21,6 +20,7 @@ import {
   saveSession,
 } from "./helpers/userActions";
 import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow";
+import { TestContext } from "./helpers/types";
 
 // TODO: move this type to planx-core
 // also defined in editor.planx.uk/src/types.ts
@@ -34,7 +34,7 @@ export enum SectionStatus {
 }
 
 test.describe("Section statuses", () => {
-  let context: Context = {
+  let context: TestContext = {
     ...contextDefaults,
     flow: {
       slug: "sections-test-flow",
@@ -47,7 +47,7 @@ test.describe("Section statuses", () => {
     try {
       context = await setUpTestContext(context);
     } catch (e) {
-      await tearDownTestContext(context);
+      await tearDownTestContext();
       throw e;
     }
   });
@@ -58,7 +58,7 @@ test.describe("Section statuses", () => {
   });
 
   test.afterAll(async () => {
-    await tearDownTestContext(context);
+    await tearDownTestContext();
   });
 
   test.describe("a straight-through journey", () => {
@@ -531,7 +531,7 @@ async function modifyFlow({
   context,
   flowData,
 }: {
-  context: Context;
+  context: TestContext;
   flowData: FlowGraph;
 }) {
   const adminGQLClient = getGraphQLClient();
@@ -553,7 +553,7 @@ async function modifyFlow({
       }
     `,
     {
-      flowId: context.flow!.id,
+      flowId: context.flow?.id,
       userId: context.user!.id,
       data: flowData,
     },

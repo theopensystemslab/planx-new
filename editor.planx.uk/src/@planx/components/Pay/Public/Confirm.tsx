@@ -14,30 +14,24 @@ import FormWrapper from "ui/public/FormWrapper";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import { formattedPriceWithCurrencySymbol, getDefaultContent } from "../model";
+import {
+  formattedPriceWithCurrencySymbol,
+  getDefaultContent,
+  Pay,
+} from "../model";
+import { FeeBreakdown } from "./FeeBreakdown";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
-export interface Props {
+export interface Props extends Omit<Pay, "title" | "fn" | "govPayMetadata"> {
   title?: string;
-  bannerTitle?: string;
-  description?: string;
   fee: number;
-  instructionsTitle?: string;
-  instructionsDescription?: string;
   showInviteToPay?: boolean;
-  secondaryPageTitle?: string;
-  nomineeTitle?: string;
-  nomineeDescription?: string;
-  yourDetailsTitle?: string;
-  yourDetailsDescription?: string;
-  yourDetailsLabel?: string;
   paymentStatus?: PaymentStatus;
   buttonTitle?: string;
   onConfirm: () => void;
   error?: string;
   hideFeeBanner?: boolean;
-  hidePay?: boolean;
 }
 
 interface PayBodyProps extends Props {
@@ -86,7 +80,7 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
     <Card>
       <PayText>
         <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
-          {props.instructionsTitle || defaults.instructionsTitle }
+          {props.instructionsTitle || defaults.instructionsTitle}
         </Typography>
         <ReactMarkdownOrHtml
           source={
@@ -187,6 +181,7 @@ export default function Confirm(props: Props) {
                 />
               </Typography>
             </FormWrapper>
+            {props.showFeeBreakdown && <FeeBreakdown />}
           </Banner>
         )}
         {page === "Pay" ? (

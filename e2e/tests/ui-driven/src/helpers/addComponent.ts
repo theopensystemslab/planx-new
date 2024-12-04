@@ -1,5 +1,7 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
+import { contextDefaults } from "./context";
+import { externalPortalServiceProps } from "./serviceData";
 
 const createBaseComponent = async (
   page: Page,
@@ -10,7 +12,10 @@ const createBaseComponent = async (
 ) => {
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
-  await page.locator("select").selectOption({ value: type.toString() });
+  const headerSelect = page.getByRole("heading", { name: "Question close" });
+  await headerSelect.locator("select").selectOption({ value: type.toString() });
+
+  await expect(page.getByTestId("header-select")).toHaveValue(type.toString());
 
   switch (type) {
     case ComponentType.Question:
@@ -114,9 +119,17 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+    case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
       await page.getByPlaceholder("Portal name").fill(title || "");
+      break;
+    case ComponentType.ExternalPortal:
+      await page
+        .getByTestId("flowId")
+        .selectOption(
+          `${contextDefaults.team.slug}/${externalPortalServiceProps.slug}`,
+        );
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
@@ -385,4 +398,15 @@ export const createInternalPortal = async (
     ComponentType.InternalPortal,
     portalName,
   );
+};
+
+export const createFeedback = async (page: Page, locatingNode: Locator) => {
+  await createBaseComponent(page, locatingNode, ComponentType.Feedback);
+};
+
+export const createExternalPortal = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(page, locatingNode, ComponentType.ExternalPortal);
 };
