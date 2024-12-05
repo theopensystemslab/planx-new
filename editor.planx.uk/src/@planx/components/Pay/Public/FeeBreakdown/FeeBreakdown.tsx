@@ -140,10 +140,10 @@ export const FeeBreakdown: React.FC = () => {
         <StyledTable data-testid="fee-breakdown-table">
           <Header />
           <TableBody>
-            <ApplicationFee amount={amount.applicationFee} />
+            <ApplicationFee amount={amount.calculated} />
             <Reductions amount={amount.reduction} reductions={reductions}/>
-            <Exemptions amount={amount.total} exemptions={exemptions}/>
-            <Total amount={amount.total} />
+            <Exemptions amount={amount.payable} exemptions={exemptions}/>
+            <Total amount={amount.payable} />
             <VAT amount={amount.vat} />
           </TableBody>
         </StyledTable>
