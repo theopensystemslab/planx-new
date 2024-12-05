@@ -102,9 +102,9 @@ const Component: React.FC<Props> = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <GovPayMetadataSection />
-          <InviteToPaySection />
-          <FeeBreakdownSection />
+          <GovPayMetadataSection/>
+          <InviteToPaySection/>
+          <FeeBreakdownSection/>
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}
