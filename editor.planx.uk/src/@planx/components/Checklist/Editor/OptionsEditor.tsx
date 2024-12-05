@@ -1,11 +1,11 @@
 import {
-  BaseOptionEditor,
-  BaseOptionEditorProps,
+  BaseOptionsEditor,
+  BaseOptionsEditorProps,
 } from "@planx/components/shared/BaseOptionsEditor";
 import React from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
-export type ChecklistOptionEditorProps = BaseOptionEditorProps & {
+export type ChecklistOptionsEditorProps = BaseOptionsEditorProps & {
   index: number;
   groupIndex?: number;
   groups?: Array<string>;
@@ -13,7 +13,7 @@ export type ChecklistOptionEditorProps = BaseOptionEditorProps & {
   showValueField?: boolean;
 };
 
-const ChecklistOptionEditor: React.FC<ChecklistOptionEditorProps> = ({
+const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
   value,
   onChange,
   showValueField = false,
@@ -22,7 +22,7 @@ const ChecklistOptionEditor: React.FC<ChecklistOptionEditorProps> = ({
   index,
 }) => {
   return (
-    <BaseOptionEditor
+    <BaseOptionsEditor
       value={value}
       onChange={onChange}
       showValueField={showValueField}
@@ -39,8 +39,8 @@ const ChecklistOptionEditor: React.FC<ChecklistOptionEditorProps> = ({
           }))}
         />
       )}
-    </BaseOptionEditor>
+    </BaseOptionsEditor>
   );
 };
 
-export default ChecklistOptionEditor;
+export default ChecklistOptionsEditor;

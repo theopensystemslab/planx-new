@@ -7,14 +7,14 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { Option } from ".";
 import { FlagsSelect } from "./FlagsSelect";
 
-export interface BaseOptionEditorProps {
+export interface BaseOptionsEditorProps {
   value: Option;
   showValueField?: boolean;
   onChange: (newVal: Option) => void;
   children?: ReactNode;
 }
 
-export const BaseOptionEditor: React.FC<BaseOptionEditorProps> = (props) => (
+export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
   <div style={{ width: "100%" }}>
     <InputRow>
       {props.value.id && (

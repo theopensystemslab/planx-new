@@ -2,17 +2,17 @@ import React from "react";
 import Input from "ui/shared/Input/Input";
 
 import {
-  BaseOptionEditor,
-  BaseOptionEditorProps,
+  BaseOptionsEditor,
+  BaseOptionsEditorProps,
 } from "../shared/BaseOptionsEditor";
 
-const QuestionOptionEditor: React.FC<BaseOptionEditorProps> = ({
+const QuestionOptionsEditor: React.FC<BaseOptionsEditorProps> = ({
   value,
   onChange,
   showValueField = false,
 }) => {
   return (
-    <BaseOptionEditor
+    <BaseOptionsEditor
       value={value}
       onChange={onChange}
       showValueField={showValueField}
@@ -31,8 +31,8 @@ const QuestionOptionEditor: React.FC<BaseOptionEditorProps> = ({
           })
         }
       />
-    </BaseOptionEditor>
+    </BaseOptionsEditor>
   );
 };
 
-export default QuestionOptionEditor;
+export default QuestionOptionsEditor;
