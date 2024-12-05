@@ -1,8 +1,9 @@
 import { FlowGraph } from "@opensystemslab/planx-core/types";
-import type { Browser, Page, Request } from "@playwright/test";
+import { type Browser, type Page, type Request } from "@playwright/test";
 import { gql } from "graphql-request";
 import { generateAuthenticationToken, getGraphQLClient } from "./context";
 import { TestContext } from "./types";
+import { flatFlags } from "@opensystemslab/planx-core/types";
 
 // Test card numbers to be used in gov.uk sandbox environment
 // reference: https://docs.payments.service.gov.uk/testing_govuk_pay/#if-you-39-re-using-a-test-39-sandbox-39-account
@@ -79,6 +80,11 @@ export async function setFeatureFlag(page: Page, featureFlag: string) {
     featureFlag,
   );
 }
+
+export const selectedFlag = "Material change of use";
+export const filterFlags = flatFlags
+  .filter((flag) => flag.category === selectedFlag)
+  .map((flag) => flag.text);
 
 export async function getSessionId(page: Page): Promise<string> {
   // @ts-expect-error - Property api does not exist on type Window & typeof globalThis

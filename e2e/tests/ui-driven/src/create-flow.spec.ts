@@ -5,7 +5,11 @@ import {
   tearDownTestContext,
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
-import { createAuthenticatedSession } from "./helpers/globalHelpers";
+import {
+  createAuthenticatedSession,
+  filterFlags,
+  selectedFlag,
+} from "./helpers/globalHelpers";
 import {
   answerAddressInput,
   answerChecklist,
@@ -79,7 +83,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createList();
     await editor.createTaskList();
     await editor.createContent();
-
+    await editor.createFilter();
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -99,6 +103,7 @@ test.describe("Flow creation, publish and preview", () => {
       "A list title",
       "What you should do next",
       "Some content",
+      ...filterFlags,
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
@@ -334,6 +339,14 @@ test.describe("Flow creation, publish and preview", () => {
     await clickContinue({ page });
 
     await expect(page.locator("p", { hasText: "Some content" })).toBeVisible();
+    await clickContinue({ page });
+
+    // this is the content placed in the filtered branch
+    await expect(
+      page.locator("p", {
+        hasText: `This is the ${selectedFlag} filter`,
+      }),
+    ).toBeVisible();
     await clickContinue({ page });
 
     await expect(page.locator("h1", { hasText: "No result" })).toBeVisible();

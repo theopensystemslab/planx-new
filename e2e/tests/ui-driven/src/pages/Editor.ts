@@ -30,6 +30,7 @@ import {
   createUploadAndLabel,
 } from "../helpers/addComponent";
 import { OptionWithDataValues } from "../helpers/types";
+import { selectedFlag } from "../helpers/globalHelpers";
 
 export class PlaywrightEditor {
   readonly page: Page;
@@ -246,6 +247,18 @@ export class PlaywrightEditor {
 
   async createFilter() {
     await createFilter(this.page, this.getNextNode());
+    // select the branch filter and add some content
+    const filteredBranch = this.page
+      .locator("li")
+      .filter({ hasText: /Material change of use$/ })
+      .getByRole("listitem")
+      .getByRole("link");
+
+    await createContent(
+      this.page,
+      filteredBranch,
+      `This is the ${selectedFlag} filter`,
+    );
   }
 
   async createInternalPortal() {
