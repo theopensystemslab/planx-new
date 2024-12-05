@@ -72,8 +72,11 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: ({ options, ...values }) => {
+    validate: ({ options, groupedOptions, ...values }) => {
       const errors: FormikErrors<FormikValues> = {};
+      // Account for flat or expandable Checklist options
+      options =
+        options || groupedOptions?.map((group) => group.children)?.flat();
       if (values.fn && !options?.some((option) => option.data.val)) {
         errors.fn =
           "At least one option must set a data value when the checklist has a data field";

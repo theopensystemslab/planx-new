@@ -1,7 +1,6 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -9,7 +8,6 @@ import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
 import { ApplicationPath, Breadcrumbs } from "types";
 import { vi } from "vitest";
-import { Mock } from "vitest";
 import { axe } from "vitest-axe";
 
 import Confirm, { Props } from "./Confirm";
@@ -26,8 +24,6 @@ vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
 vi.mock("lib/featureFlags", () => ({
   hasFeatureFlag: vi.fn(),
 }));
-
-const mockHasFeatureFlag = hasFeatureFlag as Mock;
 
 const resumeButtonText = "Resume an application you have already started";
 const saveButtonText = "Save and return to this application later";

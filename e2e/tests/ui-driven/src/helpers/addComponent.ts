@@ -3,6 +3,7 @@ import { expect, Locator, Page } from "@playwright/test";
 import { contextDefaults } from "./context";
 import { externalPortalServiceProps } from "./serviceData";
 import { OptionWithDataValues } from "./types";
+import { selectedFlag } from "./globalHelpers";
 
 const createBaseComponent = async (
   page: Page,
@@ -123,6 +124,10 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+      await page
+        .getByTestId("flagset-category-select")
+        .selectOption(selectedFlag);
+      break;
     case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
@@ -359,6 +364,9 @@ async function createComponentOptions(
     await page.getByPlaceholder("Option").nth(index).fill(option);
     index++;
   }
+
+  await page.getByPlaceholder("Flags (up to one per category)").nth(1).click();
+  await page.getByRole("option", { name: selectedFlag, exact: true }).click();
 }
 
 async function createComponentOptionsWithDataValues(
