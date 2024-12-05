@@ -21,6 +21,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": 1000,
         "application.fee.payable": 800,
         "application.fee.payable.vat": 160,
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -28,10 +29,14 @@ describe("useFeeBreakdown() hook", () => {
       const result = useFeeBreakdown();
 
       expect(result).toEqual({
-        applicationFee: 1000,
-        total: 800,
-        reduction: 200,
-        vat: 160,
+        amount: {
+          applicationFee: 1000,
+          total: 800,
+          reduction: 200,
+          vat: 160,
+        },
+        exemptions: [],
+        reductions: [],
       });
     });
 
@@ -40,6 +45,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": [1000],
         "application.fee.payable": [800],
         "application.fee.payable.vat": [160],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -47,17 +53,147 @@ describe("useFeeBreakdown() hook", () => {
       const result = useFeeBreakdown();
 
       expect(result).toEqual({
-        applicationFee: 1000,
-        total: 800,
-        reduction: 200,
-        vat: 160,
+        amount: {
+          applicationFee: 1000,
+          total: 800,
+          reduction: 200,
+          vat: 160,
+        },
+        exemptions: [],
+        reductions: [],
       });
+    });
+
+    it("parses 'true' reduction values to a list of keys", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.reduction.alternative": ["true"],
+        "application.fee.reduction.parishCouncil": ["true"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.reductions).toHaveLength(2);
+      expect(result?.reductions).toEqual(
+        expect.arrayContaining(["alternative", "parishCouncil"])
+      );
+    });
+
+    it("does not parse 'false' reduction values to a list of keys", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.reduction.alternative": ["false"],
+        "application.fee.reduction.parishCouncil": ["false"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.reductions).toHaveLength(0);
+    });
+
+    it("does not parse non-schema reduction values", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.reduction.alternative": ["true"],
+        "application.fee.reduction.parishCouncil": ["false"],
+        "application.fee.reduction.someReason": ["true"],
+        "application.fee.reduction.someOtherReason": ["false"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([
+        mockPassportData,
+        "test-session",
+      ]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.reductions).toEqual(expect.not.arrayContaining(["someReason"]))
+      expect(result?.reductions).toEqual(expect.not.arrayContaining(["someOtherReason"]))
+    });
+
+    it("parses 'true' exemption values to a list of keys", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.exemption.disability": ["true"],
+        "application.fee.exemption.resubmission": ["true"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.exemptions).toHaveLength(2);
+      expect(result?.exemptions).toEqual(
+        expect.arrayContaining(["disability", "resubmission"])
+      );
+    });
+
+    it("does not parse 'false' exemption values to a list of keys", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.exemption.disability": ["false"],
+        "application.fee.exemption.resubmission": ["false"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.exemptions).toHaveLength(0);
+    });
+
+    it("does not parse non-schema exemption values", () => {
+      const mockPassportData = {
+        "application.fee.calculated": 1000,
+        "application.fee.payable": 800,
+        "application.fee.payable.vat": 160,
+        "application.fee.exemption.disability": ["false"],
+        "application.fee.exemption.resubmission": ["false"],
+        "application.fee.exemption.someReason": ["true"],
+        "application.fee.exemption.someOtherReason": ["false"],
+        "some.other.fields": ["abc", "xyz"],
+      };
+
+      vi.mocked(useStore).mockReturnValue([
+        mockPassportData,
+        "test-session",
+      ]);
+
+      const result = useFeeBreakdown();
+
+      expect(result?.exemptions).toEqual(
+        expect.not.arrayContaining(["someReason"])
+      );
+      expect(result?.exemptions).toEqual(
+        expect.not.arrayContaining(["someOtherReason"])
+      );
     });
   });
 
   describe("invalid inputs", () => {
     it("returns undefined for missing data", () => {
-      const mockPassportData = {};
+      const mockPassportData = {
+        "some.other.fields": ["abc", "xyz"],
+      };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
 
@@ -70,6 +206,7 @@ describe("useFeeBreakdown() hook", () => {
       const mockPassportData = {
         "application.fee.calculated": [1000],
         "application.fee.payable.vat": [160],
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -84,6 +221,7 @@ describe("useFeeBreakdown() hook", () => {
         "application.fee.calculated": "some string",
         "application.fee.payable": [800, 700],
         "application.fee.payable.vat": false,
+        "some.other.fields": ["abc", "xyz"],
       };
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, "test-session"]);
@@ -94,7 +232,9 @@ describe("useFeeBreakdown() hook", () => {
     });
 
     it("calls Airbrake if invalid inputs are provided", () => {
-      const mockPassportData = {};
+      const mockPassportData = {
+        "some.other.fields": ["abc", "xyz"],
+      };
       const mockSessionId = "test-session";
 
       vi.mocked(useStore).mockReturnValue([mockPassportData, mockSessionId]);

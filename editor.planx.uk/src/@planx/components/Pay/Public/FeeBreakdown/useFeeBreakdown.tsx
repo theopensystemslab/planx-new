@@ -16,6 +16,8 @@ export const useFeeBreakdown = (): FeeBreakdown | undefined => {
     state.computePassport().data,
     state.sessionId,
   ]);
+  if (!passportData) return 
+
   const schema = createPassportSchema();
   const result = schema.safeParse(passportData);
 
