@@ -152,10 +152,7 @@ export const Question: React.FC<Props> = (props) => {
               }) as Option
             }
             Editor={QuestionOptionsEditor}
-            editorExtraProps={{
-              showValueField: !!formik.values.fn,
-              showDescriptionField: true,
-            }}
+            editorExtraProps={{ showValueField: !!formik.values.fn }}
           />
         </ModalSectionContent>
       </ModalSection>

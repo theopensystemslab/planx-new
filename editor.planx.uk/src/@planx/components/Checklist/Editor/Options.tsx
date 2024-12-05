@@ -2,7 +2,6 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -71,7 +70,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       }) as Option
                     }
                     newValueLabel="add new option"
-                    Editor={BaseOptionsEditor}
+                    Editor={ChecklistOptionsEditor}
                     editorExtraProps={{
                       groupIndex,
                       showValueField: !!formik.values.fn,
