@@ -555,21 +555,23 @@ export const previewStore: StateCreator<
     const sortedOptionVals: string[] = sortedOptions.map(
       (option) => option.data?.val,
     );
+    const hasVisitedEveryOption = sortedOptionVals.every((value) =>
+      visitedOptionVals.includes(value),
+    );
     const blankOption = options.find((option) => !option.data?.val);
+
     let optionsThatCanBeAutoAnswered: Array<NodeId> = [];
 
-    // Get existing passport value(s) for this node's fn
+    // Get existing passport value(s) for this node's fn, accounting for Planning Constraints special `_nots`
     const passportValues = passport.data?.[data.fn];
+    const nots: string[] | undefined = passport.data?.["_nots"]?.[planningConstraintsFn];
 
-    // Planning constraints use a bespoke "_nots" structure to differentiate intersecting & not-intersecting passport values and therefore require special automation rules later
-    const nots: string[] | undefined =
-      passport.data?.["_nots"]?.[planningConstraintsFn];
-
-    // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings),
-    //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
     const foundPassportValues =
       Array.isArray(passportValues) && passportValues.length > 0;
-    if (foundPassportValues) {
+    
+    // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings),
+    //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
+    if (foundPassportValues && data.fn !== planningConstraintsFn) {
       // Check if the existing passport value(s) startsWith at least one option's val (eg passport retains most granular values only)
       const matchingPassportValues = passportValues.filter(
         (passportValue: any) =>
@@ -597,31 +599,52 @@ export const previewStore: StateCreator<
           });
         });
       } else {
-        // Planning constraints may have foundPassportValues (intersecting constraints only) in addition to nots
-        //   ensure the blank option is only only auto-answered if the not-blank option values are valid constraints that we checked (intersecting or not)
-        if (data.fn === planningConstraintsFn) {
-          if (blankOption?.id && nots) {
-            const seenPlanningConstraintVals =
-              sortedOptionVals.concat(visitedOptionVals);
-            if (seenPlanningConstraintVals.some((val) => nots.includes(val)))
-              optionsThatCanBeAutoAnswered.push(blankOption?.id);
-          }
-        } else if (blankOption?.id) {
-          optionsThatCanBeAutoAnswered.push(blankOption.id);
-        }
+        if (blankOption?.id) { optionsThatCanBeAutoAnswered.push(blankOption.id) };
       }
     }
 
-    // If we don't have any existing passport values for this fn but we do have a blank option,
-    //  proceed through the blank if every option's val has been visited before
-    if (!foundPassportValues) {
-      // Planning Constraints use a bespoke "_nots" data structure to describe all option vals returned via GIS API
-      //   Concat these onto other visitedOptionVals so that questions about constraints we haven't fetched are put to user exactly once
-      if (nots) visitedOptionVals = visitedOptionVals.concat(nots);
-
-      const hasVisitedEveryOption = sortedOptionVals.every((value) =>
-        visitedOptionVals.includes(value),
+    if (data.fn === planningConstraintsFn && (foundPassportValues || nots)) {
+      // Planning constraints queried from an external source are stored via two separate passport vars: 
+      //   - One for intersections aka `planningConstraintsFn`
+      //   - Another for not-intersections aka `_nots`
+      const matchingIntersectingConstraints = passportValues?.filter(
+        (passportValue: any) =>
+          sortedOptions.some((option) => passportValue === option.data?.val)
       );
+      const matchingNots = nots?.filter(
+        (not) => sortedOptions.some((option => not === option.data?.val))
+      );
+
+      if (matchingIntersectingConstraints?.length > 0) {
+        // Planning constraints uniquely store passport values for every level of granularity (eg `listed`, `listed.grade.I`)
+        //   So only auto-answer based on exact matches and do not apply `startsWith` logic
+        sortedOptions.forEach((option) => {
+          passportValues.forEach((passportValue: any) => {
+            if (passportValue === option.data?.val) {
+              if (option.id) optionsThatCanBeAutoAnswered.push(option.id);
+            }
+          });
+        });
+      } else if (matchingNots && matchingNots.length > 0) {
+        // Nots are planning constraints that were queried, but do not apply, therefore we automate through the blank
+        sortedOptions.forEach((option) => {
+          nots?.forEach((not) => {
+            if (not === option.data?.val) {
+              if (blankOption?.id) optionsThatCanBeAutoAnswered.push(blankOption.id);
+            }
+          });
+        });
+      } else {
+        // If this node is asking about a constraint that we have NOT queried from an external source, 
+        //   Then put it to the user exactly once and automate future instances of it
+        if (blankOption?.id && hasVisitedEveryOption)
+          optionsThatCanBeAutoAnswered.push(blankOption.id);
+      }
+    }
+
+    if (!foundPassportValues) {
+      // If we don't have any existing passport values for this fn but we do have a blank option,
+      //  proceed through the blank if every option's val has been visited before
       if (blankOption?.id && hasVisitedEveryOption)
         optionsThatCanBeAutoAnswered.push(blankOption.id);
     }
@@ -809,9 +832,9 @@ export const sortBreadcrumbs = (
   return editingNodes?.length
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
-        (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-        {} as Store.Breadcrumbs,
-      );
+      (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
+      {} as Store.Breadcrumbs,
+    );
 };
 
 function handleNodesWithPassport({

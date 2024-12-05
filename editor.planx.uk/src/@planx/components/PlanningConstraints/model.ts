@@ -118,7 +118,7 @@ export const availableDatasets: Dataset[] = [
   },
   {
     text: "Ramsar Sites",
-    val: "nature.ramsar",
+    val: "nature.ramsarSite",
     source: "Planning Data",
     datasets: ["ramsar"],
   },
