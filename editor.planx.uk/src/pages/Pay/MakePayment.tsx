@@ -232,8 +232,6 @@ export default function MakePayment({
             showInviteToPay={false}
             hideFeeBanner={true}
             paymentStatus={payment?.state.status}
-            // TODO: Handle fee breakdown for ITP scenarios
-            showFeeBreakdown={false}
           />
         )}
     </>
