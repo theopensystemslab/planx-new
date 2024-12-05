@@ -2,7 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { OptionEditor } from "@planx/components/shared/OptionsEditor";
+import { BaseOptionEditor } from "@planx/components/shared/BaseOptionsEditor";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -15,6 +15,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { Option } from "../../shared";
 import type { Group } from "../model";
+import ChecklistOptionEditor from "./OptionEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
@@ -70,7 +71,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       }) as Option
                     }
                     newValueLabel="add new option"
-                    Editor={OptionEditor}
+                    Editor={BaseOptionEditor}
                     editorExtraProps={{
                       groupIndex,
                       showValueField: !!formik.values.fn,
@@ -142,7 +143,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               },
             }) as Option
           }
-          Editor={OptionEditor}
+          Editor={ChecklistOptionEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}

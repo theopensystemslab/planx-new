@@ -16,7 +16,7 @@ import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
 import { ICONS } from "../shared/icons";
-import { OptionEditor } from "../shared/OptionsEditor";
+import QuestionOptionEditor from "./OptionEditor";
 
 interface Props {
   node: {
@@ -151,7 +151,7 @@ export const Question: React.FC<Props> = (props) => {
                 },
               }) as Option
             }
-            Editor={OptionEditor}
+            Editor={QuestionOptionEditor}
             editorExtraProps={{
               showValueField: !!formik.values.fn,
               showDescriptionField: true,

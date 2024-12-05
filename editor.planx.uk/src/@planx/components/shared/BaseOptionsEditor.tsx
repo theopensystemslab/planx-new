@@ -1,23 +1,20 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
-import SimpleMenu from "ui/editor/SimpleMenu";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { Option } from "../shared";
-import { FlagsSelect } from "../shared/FlagsSelect";
+import { Option } from ".";
+import { FlagsSelect } from "./FlagsSelect";
 
-export const OptionEditor: React.FC<{
+export interface BaseOptionEditorProps {
   value: Option;
-  onChange: (newVal: Option) => void;
   showValueField?: boolean;
-  showDescriptionField?: boolean;
-  index: number;
-  groupIndex?: number;
-  groups?: Array<string>;
-  onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
-}> = (props) => (
+  onChange: (newVal: Option) => void;
+  children?: ReactNode;
+}
+
+export const BaseOptionEditor: React.FC<BaseOptionEditorProps> = (props) => (
   <div style={{ width: "100%" }}>
     <InputRow>
       {props.value.id && (
@@ -54,39 +51,7 @@ export const OptionEditor: React.FC<{
         }}
       />
     </InputRow>
-    <InputRow>
-      {props.showDescriptionField && (
-        <Input
-          value={props.value.data.description || ""}
-          placeholder="Description"
-          multiline
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                description: ev.target.value,
-              },
-            });
-          }}
-        />
-      )}
-      {typeof props.index !== "undefined" &&
-        props.groups &&
-        props.onMoveToGroup && (
-          <SimpleMenu
-            items={props.groups.map((group, groupIndex) => ({
-              label: `Move to ${group || `group ${groupIndex}`}`,
-              onClick: () => {
-                props.onMoveToGroup &&
-                  typeof props.index === "number" &&
-                  props.onMoveToGroup(props.index, groupIndex);
-              },
-              disabled: groupIndex === props.groupIndex,
-            }))}
-          />
-        )}
-    </InputRow>
+    {props.children && <InputRow>{props.children}</InputRow>}
     {props.showValueField && (
       <InputRow>
         <Input
