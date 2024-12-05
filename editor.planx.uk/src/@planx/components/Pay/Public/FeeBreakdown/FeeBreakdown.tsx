@@ -142,7 +142,7 @@ export const FeeBreakdown: React.FC = () => {
           <TableBody>
             <ApplicationFee amount={amount.applicationFee} />
             <Reductions amount={amount.reduction} reductions={reductions}/>
-            <Exemptions amount={amount.applicationFee} exemptions={exemptions}/>
+            <Exemptions amount={amount.total} exemptions={exemptions}/>
             <Total amount={amount.total} />
             <VAT amount={amount.vat} />
           </TableBody>
