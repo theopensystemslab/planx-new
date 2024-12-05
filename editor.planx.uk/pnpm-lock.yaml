@@ -48,8 +48,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#ccf9ac3
-    version: github.com/theopensystemslab/planx-core/ccf9ac3(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#dfcd9bc
+    version: github.com/theopensystemslab/planx-core/dfcd9bc(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -3291,7 +3291,7 @@ packages:
       '@babel/runtime': 7.26.0
       '@floating-ui/react-dom': 2.1.2(react-dom@18.2.0)(react@18.2.0)
       '@mui/types': 7.2.19(@types/react@18.2.45)
-      '@mui/utils': 5.15.11(@types/react@18.2.45)(react@18.2.0)
+      '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.2.0)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -3314,7 +3314,7 @@ packages:
       '@babel/runtime': 7.26.0
       '@floating-ui/react-dom': 2.1.2(react-dom@18.3.1)(react@18.3.1)
       '@mui/types': 7.2.19(@types/react@18.2.45)
-      '@mui/utils': 5.15.11(@types/react@18.2.45)(react@18.3.1)
+      '@mui/utils': 5.16.6(@types/react@18.2.45)(react@18.3.1)
       '@popperjs/core': 2.11.8
       '@types/react': 18.2.45
       clsx: 2.1.1
@@ -4279,7 +4279,7 @@ packages:
       '@storybook/csf': 0.1.11
       '@storybook/global': 5.0.0
       '@storybook/icons': 1.2.12(react-dom@18.2.0)(react@18.2.0)
-      '@types/lodash': 4.14.202
+      '@types/lodash': 4.17.13
       color-convert: 2.0.1
       dequal: 2.0.3
       lodash: 4.17.21
@@ -5490,7 +5490,6 @@ packages:
 
   /@types/lodash@4.17.13:
     resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
-    dev: false
 
   /@types/markdown-it@14.1.2:
     resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
@@ -7634,8 +7633,8 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@9.0.3:
-    resolution: {integrity: sha512-Ao/8v1BIRL0+uhzoqk6uvAPIjxNR5+uqQMphVWe8egxGdohkd/PgDLn1/+/c/te1DlnX1Chz9lIxuNi0Hs+Dbg==}
+  /docx@9.1.0:
+    resolution: {integrity: sha512-XOtseSTRrkKN/sV5jNBqyLazyhNpWfaUhpuKc22cs+5DavNjRQvchnohb0g0S+x/96/D06U/i0/U/Gc4E5kwuQ==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 22.9.0
@@ -10023,7 +10022,7 @@ packages:
       js-yaml: 4.1.0
       lodash: 4.17.21
       minimist: 1.2.8
-      prettier: 3.3.3
+      prettier: 3.4.2
       tinyglobby: 0.2.10
     dev: false
 
@@ -10450,8 +10449,8 @@ packages:
       react: 18.2.0
     dev: true
 
-  /marked@14.1.4:
-    resolution: {integrity: sha512-vkVZ8ONmUdPnjCKc5uTRvmkRbx4EAi2OkTOXmfTDhZz3OFqMNBM1oTTWwTr4HY4uAEojhzPf+Fy8F1DWa3Sndg==}
+  /marked@15.0.3:
+    resolution: {integrity: sha512-Ai0cepvl2NHnTcO9jYDtcOEtVBNVYR31XnEA3BndO7f5As1wzpcOceSUM8FDkNLJNIODcLpDTWay/qQhqbuMvg==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -11438,8 +11437,8 @@ packages:
     hasBin: true
     dev: true
 
-  /prettier@3.3.3:
-    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+  /prettier@3.4.2:
+    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
     engines: {node: '>=14'}
     hasBin: true
     dev: false
@@ -13523,6 +13522,11 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
+  /type-fest@4.30.0:
+    resolution: {integrity: sha512-G6zXWS1dLj6eagy6sVhOMQiLtJdxQBHIA9Z6HFUNLOlr6MFOgzV8wvmidtPONfPtEUv0uZsy77XJNzTAfwPDaA==}
+    engines: {node: '>=16'}
+    dev: false
+
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -14462,9 +14466,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/ccf9ac3(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ccf9ac3}
-    id: github.com/theopensystemslab/planx-core/ccf9ac3
+  github.com/theopensystemslab/planx-core/dfcd9bc(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dfcd9bc}
+    id: github.com/theopensystemslab/planx-core/dfcd9bc
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14479,18 +14483,18 @@ packages:
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 9.0.3
+      docx: 9.1.0
       eslint: 8.57.1
       fast-xml-parser: 4.5.0
       graphql: 16.9.0
       graphql-request: 6.1.0(graphql@16.9.0)
       json-schema-to-typescript: 15.0.3
       lodash: 4.17.21
-      marked: 14.1.4
-      prettier: 3.3.3
+      marked: 15.0.3
+      prettier: 3.4.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.27.0
+      type-fest: 4.30.0
       uuid: 11.0.3
       zod: 3.23.8
     transitivePeerDependencies:

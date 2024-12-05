@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#ccf9ac3
-    version: github.com/theopensystemslab/planx-core/ccf9ac3
+    specifier: git+https://github.com/theopensystemslab/planx-core#dfcd9bc
+    version: github.com/theopensystemslab/planx-core/dfcd9bc
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -1090,8 +1090,8 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@9.0.3:
-    resolution: {integrity: sha512-Ao/8v1BIRL0+uhzoqk6uvAPIjxNR5+uqQMphVWe8egxGdohkd/PgDLn1/+/c/te1DlnX1Chz9lIxuNi0Hs+Dbg==}
+  /docx@9.1.0:
+    resolution: {integrity: sha512-XOtseSTRrkKN/sV5jNBqyLazyhNpWfaUhpuKc22cs+5DavNjRQvchnohb0g0S+x/96/D06U/i0/U/Gc4E5kwuQ==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 22.9.0
@@ -1690,7 +1690,7 @@ packages:
       js-yaml: 4.1.0
       lodash: 4.17.21
       minimist: 1.2.8
-      prettier: 3.3.3
+      prettier: 3.4.2
       tinyglobby: 0.2.10
     dev: false
 
@@ -1814,8 +1814,8 @@ packages:
       js-tokens: 4.0.0
     dev: false
 
-  /marked@14.1.4:
-    resolution: {integrity: sha512-vkVZ8ONmUdPnjCKc5uTRvmkRbx4EAi2OkTOXmfTDhZz3OFqMNBM1oTTWwTr4HY4uAEojhzPf+Fy8F1DWa3Sndg==}
+  /marked@15.0.3:
+    resolution: {integrity: sha512-Ai0cepvl2NHnTcO9jYDtcOEtVBNVYR31XnEA3BndO7f5As1wzpcOceSUM8FDkNLJNIODcLpDTWay/qQhqbuMvg==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -2072,8 +2072,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  /prettier@3.3.3:
-    resolution: {integrity: sha512-i2tDNA0O5IrMO757lfrdQZCc2jPNDVntV0m/+4whiDfWaTKfMNgR7Qz0NAeGz/nRqF4m5/6CLzbP4/liHt12Ew==}
+  /prettier@3.4.2:
+    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
     engines: {node: '>=14'}
     hasBin: true
     dev: false
@@ -2431,8 +2431,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: false
 
-  /type-fest@4.27.0:
-    resolution: {integrity: sha512-3IMSWgP7C5KSQqmo1wjhKrwsvXAtF33jO3QY+Uy++ia7hqvgSK6iXbbg5PbDBc1P2ZbNEDgejOrN4YooXvhwCw==}
+  /type-fest@4.30.0:
+    resolution: {integrity: sha512-G6zXWS1dLj6eagy6sVhOMQiLtJdxQBHIA9Z6HFUNLOlr6MFOgzV8wvmidtPONfPtEUv0uZsy77XJNzTAfwPDaA==}
     engines: {node: '>=16'}
     dev: false
 
@@ -2599,8 +2599,8 @@ packages:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/ccf9ac3:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ccf9ac3}
+  github.com/theopensystemslab/planx-core/dfcd9bc:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dfcd9bc}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2615,18 +2615,18 @@ packages:
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 9.0.3
+      docx: 9.1.0
       eslint: 8.57.1
       fast-xml-parser: 4.5.0
       graphql: 16.9.0
       graphql-request: 6.1.0(graphql@16.9.0)
       json-schema-to-typescript: 15.0.3
       lodash: 4.17.21
-      marked: 14.1.4
-      prettier: 3.3.3
+      marked: 15.0.3
+      prettier: 3.4.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.27.0
+      type-fest: 4.30.0
       uuid: 11.0.3
       zod: 3.23.8
     transitivePeerDependencies:
