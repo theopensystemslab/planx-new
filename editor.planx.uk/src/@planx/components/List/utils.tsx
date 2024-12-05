@@ -24,6 +24,7 @@ export function formatSchemaDisplayValue(
       return field.data.units ? `${value} ${field.data.units}` : value;
     case "text":
     case "date":
+    case "address":
       return value;
     case "checklist": {
       const matchingOptions = field.data.options.filter((option) =>

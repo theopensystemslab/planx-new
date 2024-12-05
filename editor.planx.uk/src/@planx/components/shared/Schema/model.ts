@@ -1,3 +1,7 @@
+import {
+  AddressInput,
+  userDataSchema as addressValidationSchema,
+} from "@planx/components/AddressInput/model";
 import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
@@ -81,6 +85,11 @@ export type DateField = {
   data: DateInput & { fn: string };
 };
 
+export type AddressField = {
+  type: "address";
+  data: AddressInput & { fn: string };
+};
+
 export type MapField = {
   type: "map";
   data: {
@@ -106,6 +115,7 @@ export type Field =
   | QuestionField
   | ChecklistField
   | DateField
+  | AddressField
   | MapField;
 
 /**
@@ -120,8 +130,8 @@ export interface Schema {
 
 export type SchemaUserResponse = Record<
   Field["data"]["fn"],
-  string | string[] | any[]
->; // string | string[] | Feature[]
+  string | string[] | any
+>; // string | string[] | Record<string, string> (address field) | Feature[] (map field)
 
 /**
  * Output data from a form using the useSchema hook
@@ -156,6 +166,9 @@ const generateValidationSchemaForFields = (
       case "date":
         fieldSchemas[data.fn] = dateValidationSchema(data);
         break;
+      case "address":
+        fieldSchemas[data.fn] = addressValidationSchema(data);
+        break;
       case "map":
         fieldSchemas[data.fn] = mapValidationSchema(data);
         break;
@@ -187,9 +200,13 @@ export const generateValidationSchema = (schema: Schema) => {
 export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
   const initialValues: SchemaUserResponse = {};
   schema.fields.forEach((field) => {
-    ["checklist", "map"].includes(field.type)
-      ? (initialValues[field.data.fn] = [])
-      : (initialValues[field.data.fn] = "");
+    if (["checklist", "map"].includes(field.type)) {
+      initialValues[field.data.fn] = [];
+    } else if (field.type === "address") {
+      initialValues[field.data.fn] = {};
+    } else {
+      initialValues[field.data.fn] = "";
+    }
   });
   return initialValues;
 };
