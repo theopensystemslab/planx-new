@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { VAT_RATE } from "./FeeBreakdown";
 import { FeeBreakdown, PassportFeeFields } from "./types";
 
 export const toNumber = (input: number | [number]) =>
@@ -29,6 +30,9 @@ const toBoolean = (val: ["true" | "false"]) => val[0] === "true";
     return granularKeys;
   };
 
+export const calculateApplicationFee = (data: PassportFeeFields) => 
+  data["application.fee.calculated"] || data["application.fee.payable"]
+
 /**
  * A "reduction" is the sum of the difference between calculated and payable
  */
@@ -37,16 +41,24 @@ export const calculateReduction = (data: PassportFeeFields) =>
     ? data["application.fee.calculated"] - data["application.fee.payable"]
     : 0;
 
+export const calculateVAT = (data: PassportFeeFields) => {
+  if (!data["application.fee.payable.includesVAT"]) return 0;
+
+  const fee = calculateApplicationFee(data);
+  const vat = (fee * VAT_RATE) / (1 + VAT_RATE);
+  const roundedVAT = Number(vat.toFixed(2));
+
+  return roundedVAT;
+};
+
 /**
  * Transform Passport data to a FeeBreakdown
  */
 export const toFeeBreakdown = (data: PassportFeeFields): FeeBreakdown => ({
   amount: {
-    applicationFee:
-      data["application.fee.calculated"] ||
-      data["application.fee.payable"],
+    applicationFee: calculateApplicationFee(data),
     total: data["application.fee.payable"],
-    vat: data["application.fee.payable.vat"],
+    vat: calculateVAT(data),
     reduction: calculateReduction(data),
   },
   reductions: getGranularKeys(data, "application.fee.reduction"),
@@ -70,7 +82,7 @@ export const createPassportSchema = () => {
     .object({
       "application.fee.calculated": feeSchema.optional().default(0),
       "application.fee.payable": feeSchema,
-      "application.fee.payable.vat": feeSchema.optional().default(0),
+      "application.fee.payable.includesVAT": booleanSchema,
       "application.fee.reduction.alternative": booleanSchema,
       "application.fee.reduction.parishCouncil": booleanSchema,
       "application.fee.reduction.sports": booleanSchema,

@@ -22,7 +22,7 @@ describe("calculateReduction() helper function", () => {
     const input: PassportFeeFields = {
       "application.fee.calculated": 100,
       "application.fee.payable": 50,
-      "application.fee.payable.vat": 0,
+      "application.fee.payable.includesVAT": false,
       "application.fee.reduction.alternative": false,
       "application.fee.reduction.parishCouncil": false,
       "application.fee.reduction.sports": false,
@@ -38,7 +38,7 @@ describe("calculateReduction() helper function", () => {
     const input: PassportFeeFields = {
       "application.fee.calculated": 0,
       "application.fee.payable": 100,
-      "application.fee.payable.vat": 0,
+      "application.fee.payable.includesVAT": false,
       "application.fee.reduction.alternative": false,
       "application.fee.reduction.parishCouncil": false,
       "application.fee.reduction.sports": false,
@@ -56,7 +56,7 @@ describe("toFeeBreakdown() helper function", () => {
     const input: PassportFeeFields = {
       "application.fee.calculated": 100,
       "application.fee.payable": 50,
-      "application.fee.payable.vat": 10,
+      "application.fee.payable.includesVAT": true,
       "application.fee.reduction.alternative": false,
       "application.fee.reduction.parishCouncil": false,
       "application.fee.reduction.sports": false,
@@ -68,14 +68,13 @@ describe("toFeeBreakdown() helper function", () => {
 
     expect(amount.applicationFee).toEqual(input["application.fee.calculated"]);
     expect(amount.total).toEqual(input["application.fee.payable"]);
-    expect(amount.vat).toEqual(input["application.fee.payable.vat"]);
     expect(amount.reduction).toEqual(50);
   });
 
   it("sets applicationFee to payable amount if no calculated value is provided", () => {
     const input: PassportFeeFields = {
       "application.fee.calculated": 0,
-      "application.fee.payable.vat": 10,
+      "application.fee.payable.includesVAT": true,
       "application.fee.payable": 50,
       "application.fee.reduction.alternative": false,
       "application.fee.reduction.parishCouncil": false,
@@ -87,5 +86,22 @@ describe("toFeeBreakdown() helper function", () => {
     const { amount } = toFeeBreakdown(input);
 
     expect(amount.applicationFee).toEqual(input["application.fee.payable"]);
+  });
+
+  it("correctly calculates the VAT", () => {
+    const input: PassportFeeFields = {
+      "application.fee.calculated": 100,
+      "application.fee.payable": 50,
+      "application.fee.payable.includesVAT": true,
+      "application.fee.reduction.alternative": false,
+      "application.fee.reduction.parishCouncil": false,
+      "application.fee.reduction.sports": false,
+      "application.fee.exemption.disability": false,
+      "application.fee.exemption.resubmission": false,
+    };
+
+    const { amount } = toFeeBreakdown(input);
+
+    expect(amount.vat).toEqual(16.67);
   });
 });

@@ -12,7 +12,7 @@ export interface FeeBreakdown {
 export interface PassportFeeFields {
   "application.fee.calculated": number;
   "application.fee.payable": number;
-  "application.fee.payable.vat": number;
+  "application.fee.payable.includesVAT": boolean;
   "application.fee.reduction.alternative": boolean;
   "application.fee.reduction.parishCouncil": boolean;
   "application.fee.reduction.sports": boolean;
