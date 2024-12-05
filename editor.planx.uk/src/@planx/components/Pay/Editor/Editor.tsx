@@ -15,7 +15,6 @@ import { Switch } from "ui/shared/Switch";
 import { ICONS } from "../../shared/icons";
 import { EditorProps } from "../../shared/types";
 import { FeeBreakdownSection } from "./FeeBreakdownSection";
-import { FeeBreakdownSection } from "./FeeBreakdownSection";
 import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
 

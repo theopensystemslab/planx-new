@@ -180,10 +180,10 @@ describe("useFeeBreakdown() hook", () => {
 
       const result = useFeeBreakdown();
 
-      expect(result?.exemption).toEqual(
+      expect(result?.exemptions).toEqual(
         expect.not.arrayContaining(["someReason"])
       );
-      expect(result?.exemption).toEqual(
+      expect(result?.exemptions).toEqual(
         expect.not.arrayContaining(["someOtherReason"])
       );
     });
