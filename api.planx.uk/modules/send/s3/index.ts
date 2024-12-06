@@ -1,3 +1,4 @@
+import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 import type { AxiosRequestConfig } from "axios";
 import axios from "axios";
 import { gql } from "graphql-request";
@@ -6,8 +7,8 @@ import { $api } from "../../../client/index.js";
 import type { Passport } from "../../../types.js";
 import { uploadPrivateFile } from "../../file/service/uploadFile.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
-import { isApplicationTypeSupported } from "../utils/helpers.js";
 import type { SendIntegrationController } from "../types.js";
+import { isApplicationTypeSupported } from "../utils/helpers.js";
 
 interface CreateS3Application {
   insertS3Application: {
@@ -51,7 +52,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
 
     // Create and upload the data as an S3 file
     const { fileUrl } = await uploadPrivateFile(
-      exportData,
+      fromUtf8(exportData), // Convert the JSON string to a Buffer using fromUtf8
       `${sessionId}.json`,
     );
 
