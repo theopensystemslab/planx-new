@@ -223,7 +223,9 @@ export const previewStore: StateCreator<
           if (passportValue.length > 0) {
             const existingValue = acc.data?.[key] ?? [];
 
-            const combined = passportValue
+            const combined = key === planningConstraintsFn 
+              ? passportValue.concat(existingValue) // Planning constraints uniquely store all-levels of granularity, rather than most granular only
+              : passportValue
               .concat(existingValue)
               .reduce(
                 (acc: string[], curr: string, _i: number, arr: string[]) => {
