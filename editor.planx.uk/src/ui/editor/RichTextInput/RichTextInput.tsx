@@ -200,8 +200,8 @@ export const emptyContent = "<p></p>";
 const linkSelectionError = (selectionHtml: string): string | null => {
   if (selectionHtml.startsWith("<p>") && selectionHtml.endsWith("</p>")) {
     const text = selectionHtml.slice(3, -4);
-    const lowercaseText = text.toLowerCase();
-    if (lowercaseText.includes("click") || lowercaseText.includes("here")) {
+    const lowercaseText = text.toLowerCase().trim().replace(/[.,]/g, "");
+    if (lowercaseText == "click here" || lowercaseText == "clicking here") {
       return "Links must be set over text that accurately describes what the link is for. Avoid generic language such as 'click here'.";
     }
     if (text[0] && text[0] !== text[0].toUpperCase() && text.length < 8) {
