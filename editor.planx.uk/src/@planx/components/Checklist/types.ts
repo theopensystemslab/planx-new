@@ -17,14 +17,5 @@ export interface ChecklistProps extends Checklist {
     } & BaseNodeData;
   };
 }
-export interface OptionEditorProps {
-  index: number;
-  value: Option;
-  onChange: (newVal: Option) => void;
-  groupIndex?: number;
-  groups?: Array<string>;
-  onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
-  showValueField?: boolean;
-}
 
 export type Props = PublicProps<Checklist>;

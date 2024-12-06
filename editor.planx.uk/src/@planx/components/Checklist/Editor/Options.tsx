@@ -14,7 +14,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { Option } from "../../shared";
 import type { Group } from "../model";
-import { OptionEditor } from "./OptionsEditor";
+import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
@@ -70,7 +70,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       }) as Option
                     }
                     newValueLabel="add new option"
-                    Editor={OptionEditor}
+                    Editor={ChecklistOptionsEditor}
                     editorExtraProps={{
                       groupIndex,
                       showValueField: !!formik.values.fn,
@@ -142,7 +142,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               },
             }) as Option
           }
-          Editor={OptionEditor}
+          Editor={ChecklistOptionsEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}
