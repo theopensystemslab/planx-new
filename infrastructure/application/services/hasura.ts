@@ -110,6 +110,8 @@ export const createHasuraService = async ({
       },
     },
     desiredCount: 1,
+    // experiment with non-zero grace period to see if it resolves scale up failure
+    healthCheckGracePeriodSeconds: 180,
   });
   
   new cloudflare.Record("hasura", {
