@@ -72,8 +72,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createUploadAndLabel();
-    // TODO: editor.createPropertyInfo()
+    // await editor.createUploadAndLabel();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
@@ -81,7 +80,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
       // "File upload",
@@ -130,7 +128,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     // Check map component has geoJson content
-    await checkGeoJsonContent(page, mockMapGeoJson);
+    await checkGeoJsonContent(page, "geojsondata", mockMapGeoJson);
 
     // Check property info is being shown
     await expect(page.getByText("Test Street, Testville")).toBeVisible();
@@ -169,7 +167,38 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    const drawBoundaryTitle = page.getByRole("heading", {
+      name: "Confirm your location plan",
+    });
+    await expect(drawBoundaryTitle).toBeVisible();
+
+    const uploadButton = page.getByTestId("upload-file-button");
+
+    await expect(uploadButton).toBeVisible();
+    await expect(
+      page.getByText("490.37"),
+      "Checking for area text",
+    ).toBeVisible();
+
+    await checkGeoJsonContent(page, "drawgeojsondata", mockMapGeoJson);
+
+    await uploadButton.click();
+    await expect(
+      page.getByRole("heading", { name: "Upload a location plan" }),
+      "Ensure we can navigate to upload location plan",
+    ).toBeVisible();
+
+    // const uploadFileButton = page.getByRole('button', { name: 'Drop file here or choose' })
+    const useMapButton = page.getByTestId("use-map-button");
+
+    await useMapButton.click();
+
+    await expect(
+      drawBoundaryTitle,
+      "Ensure we've navigated back to the map component",
+    ).toBeVisible();
+
     // TODO: answer uploadAndLabel
-    // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
+    // TODO: answerPropertyInfo, answerPlanningConstraints
   });
 });
