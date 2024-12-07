@@ -7,7 +7,6 @@ import mime from "mime";
 import { customAlphabet } from "nanoid";
 import { isLiveEnv } from "../../../helpers.js";
 import { s3Factory } from "./utils.js";
-import { Readable } from "stream";
 const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz", 8);
 
 export const uploadPublicFile = async (
@@ -29,14 +28,10 @@ export const uploadPublicFile = async (
 };
 
 export const uploadPrivateFile = async (
-  file: Express.Multer.File | Buffer,
+  file: Express.Multer.File,
   filename: string,
   filekey?: string,
 ) => {
-  if (file instanceof Buffer) {
-    file = convertToMulterFile(file);
-  }
-
   const s3 = s3Factory();
 
   const { params, key, fileType } = generateFileParams(file, filename, filekey);
@@ -67,19 +62,6 @@ const buildFileUrl = async (key: string, path: "public" | "private") => {
     s3Pathname = s3Pathname.replace(`/${process.env.AWS_S3_BUCKET}`, "");
   return `${process.env.API_URL_EXT}/file/${path}${s3Pathname}`;
 };
-
-const convertToMulterFile = (buffer: Buffer): Express.Multer.File => ({
-  buffer: buffer,
-  originalname: "${data.id}.json",
-  mimetype: "application/json",
-  size: buffer.length,
-  fieldname: "file",
-  encoding: "7bit",
-  stream: Readable.from(buffer),
-  destination: "",
-  filename: "",
-  path: "",
-});
 
 export function generateFileParams(
   file: Express.Multer.File,
