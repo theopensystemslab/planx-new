@@ -16,6 +16,7 @@ import {
   simpleBreadcrumbs,
   simpleFlow,
 } from "./mocks/simpleFlow";
+import { availableDatasets } from "./model";
 import PlanningConstraints from "./Public";
 
 const { setState } = useStore;
@@ -256,6 +257,86 @@ describe("following a FindProperty component", () => {
         "This page does not include information about historic planning conditions that may apply to this property.",
       ),
     ).toBeVisible();
+  });
+});
+
+describe("selectable datasets in editor", () => {
+  beforeEach(() => {
+    act(() =>
+      setState({
+        breadcrumbs: simpleBreadcrumbs,
+        flow: simpleFlow,
+        teamIntegrations: {
+          hasPlanningData: true,
+        },
+      }),
+    );
+  });
+
+  it("does not initiate `/roads` request when `road.classified` is not selected by an editor", async () => {
+    setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+        dataValues={availableDatasets
+          .filter((d) => d.val !== "road.classified")
+          .map((d) => d.val)}
+      />,
+    );
+
+    expect(swr).toHaveBeenCalled();
+
+    // Planning constraints API still called
+    const planingConstraintsURL = (
+      vi.mocked(useSWR).mock.calls[0][0] as () => {}
+    )();
+    const planingConstraintsResponse = vi.mocked(useSWR).mock.results[0].value;
+
+    expect(planingConstraintsURL).toContain("/gis");
+    expect(planingConstraintsResponse).toEqual({
+      data: digitalLandResponseMock,
+    });
+
+    // Roads API not called due to missing `road.classified` data value
+    const roadsURL = (vi.mocked(useSWR).mock.calls[1][0] as () => {})();
+    const roadsResponse = vi.mocked(useSWR).mock.results[1].value;
+
+    expect(roadsURL).toBeNull();
+    expect(roadsResponse).toEqual({ data: null });
+  });
+
+  it("does not initiate `/gis/:localAuthority` request when only `road.classified` is selected by an editor", async () => {
+    setup(
+      <PlanningConstraints
+        title="Planning constraints"
+        description="Things that might affect your project"
+        fn="property.constraints.planning"
+        disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        handleSubmit={vi.fn()}
+        dataValues={["road.classified"]}
+      />,
+    );
+
+    expect(swr).toHaveBeenCalled();
+
+    // Roads API is called
+    const roadsURL = (vi.mocked(useSWR).mock.calls[1][0] as () => {})();
+    const roadsResponse = vi.mocked(useSWR).mock.results[1].value;
+
+    expect(roadsURL).toContain("/roads");
+    expect(roadsResponse).toEqual({ data: classifiedRoadsResponseMock });
+
+    // Planning constraints API not called due to missing data values
+    const planingConstraintsURL = (
+      vi.mocked(useSWR).mock.calls[0][0] as () => {}
+    )();
+    const planningConstraintsResponse = vi.mocked(useSWR).mock.results[0].value;
+
+    expect(planingConstraintsURL).toBeNull();
+    expect(planningConstraintsResponse).toEqual({ data: null });
   });
 });
 
