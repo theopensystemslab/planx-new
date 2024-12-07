@@ -9,6 +9,10 @@ import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { isApplicationTypeSupported } from "../utils/helpers.js";
 import type { SendIntegrationController } from "../types.js";
 
+// TS fails to validate this complex type when awaited
+// Represent as a simple object to allow enough typechecking to kick in
+type DigitalPlanningPayload = Record<string, unknown>;
+
 interface CreateS3Application {
   insertS3Application: {
     id: string;
@@ -45,15 +49,13 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
 
     // Generate the ODP Schema JSON, skipping validation if not a supported application type
     const doValidation = isApplicationTypeSupported(passport);
-    const exportData = doValidation
-      ? await $api.export.digitalPlanningDataPayload(sessionId)
-      : await $api.export.digitalPlanningDataPayload(sessionId, true);
+    const exportData: DigitalPlanningPayload =
+      await $api.export.digitalPlanningDataPayload(sessionId, doValidation);
+
+    const buffer = Buffer.from(JSON.stringify(exportData));
 
     // Create and upload the data as an S3 file
-    const { fileUrl } = await uploadPrivateFile(
-      exportData,
-      `${sessionId}.json`,
-    );
+    const { fileUrl } = await uploadPrivateFile(buffer, `${sessionId}.json`);
 
     // Send a notification with the file URL to the Power Automate webhook
     const webhookRequest: AxiosRequestConfig = {
