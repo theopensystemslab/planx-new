@@ -10,6 +10,10 @@ import { isApplicationTypeSupported } from "../utils/helpers.js";
 import type { SendIntegrationController } from "../types.js";
 import { convertObjectToMulterJSONFile } from "../../file/service/utils.js";
 
+// TS fails to validate this complex type when awaited
+// Represent as a simple object to allow enough typechecking to kick in
+type DigitalPlanningPayload = Record<string, unknown>;
+
 interface CreateS3Application {
   insertS3Application: {
     id: string;
