@@ -45,10 +45,10 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     const flowName = session?.flow?.name;
 
     // Generate the ODP Schema JSON, skipping validation if not a supported application type
-    const doValidation = isApplicationTypeSupported(passport);
+    const skipValidation = !isApplicationTypeSupported(passport);
     const exportData = await $api.export.digitalPlanningDataPayload(
       sessionId,
-      doValidation,
+      skipValidation,
     );
 
     // Create and upload the data as an S3 file
@@ -70,7 +70,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
         service: flowName,
         environment: env,
         file: fileUrl,
-        payload: doValidation ? "Validated ODP Schema" : "Discretionary",
+        payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
       },
     };
     const webhookResponse = await axios(webhookRequest)
@@ -126,7 +126,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
 
     res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
-      payload: doValidation ? "Validated ODP Schema" : "Discretionary",
+      payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
       webhookResponse: webhookResponse.axiosResponse.status,
       auditEntryId: webhookResponse.id,
     });
