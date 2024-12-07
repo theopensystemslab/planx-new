@@ -1,5 +1,6 @@
 import { S3 } from "@aws-sdk/client-s3";
 import { isLiveEnv } from "../../../helpers.js";
+import { Readable } from "stream";
 
 export function s3Factory() {
   return new S3({
@@ -40,3 +41,23 @@ export function getS3KeyFromURL(fileURL: string): string {
   const key = [folder, file].map(decodeURIComponent).join("/");
   return key;
 }
+
+export const convertObjectToMulterJSONFile = (
+  data: Record<string, unknown>,
+  fileName: string,
+): Express.Multer.File => {
+  const buffer = Buffer.from(JSON.stringify(data));
+
+  return {
+    buffer: buffer,
+    originalname: fileName,
+    mimetype: "application/json",
+    size: buffer.length,
+    fieldname: "file",
+    encoding: "7bit",
+    stream: Readable.from(buffer),
+    destination: "",
+    filename: "",
+    path: "",
+  };
+};
