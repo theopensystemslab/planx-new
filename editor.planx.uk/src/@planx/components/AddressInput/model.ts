@@ -12,14 +12,15 @@ export type Address = {
   country?: string;
 };
 
-export const userDataSchema: SchemaOf<Address> = object({
-  line1: string().required("Enter the first line of an address"),
-  line2: string(),
-  town: string().required("Enter a town"),
-  county: string(),
-  postcode: string().required("Enter a postcode"),
-  country: string(),
-});
+export const userDataSchema = (_input: AddressInput): SchemaOf<Address> =>
+  object({
+    line1: string().required("Enter the first line of an address"),
+    line2: string(),
+    town: string().required("Enter a town"),
+    county: string(),
+    postcode: string().required("Enter a postcode"),
+    country: string(),
+  });
 
 export interface AddressInput extends BaseNodeData {
   title: string;
