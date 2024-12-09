@@ -11,6 +11,7 @@ import {
 import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreakdown";
 import axios from "axios";
 import { format } from "date-fns";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -172,14 +173,10 @@ export default function MakePayment({
       </Container>
     );
 
-  const PaymentDetails = () => {
+  const PaymentDetails: React.FC<{ hasFeeBreakdown: boolean}> = ({ hasFeeBreakdown }) => {
     const projectType = formatRawProjectTypes(rawProjectTypes);
     const data = [
       { term: "Application type", details: flowName },
-      {
-        term: "Fee",
-        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
-      },
       {
         term: "Property address",
         details: address,
@@ -189,6 +186,13 @@ export default function MakePayment({
         details: projectType || "Project type not submitted",
       },
     ];
+
+    if (!hasFeeBreakdown) {
+      data.splice(1, 0, {
+        term: "Fee",
+        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount))
+      });
+    };
 
     // Handle payments completed before page load
     if (paidAt) {
@@ -222,15 +226,17 @@ export default function MakePayment({
   ) : (
     <>
       <Header />
-      <PaymentDetails />
+        <PaymentDetails hasFeeBreakdown={Boolean(feeBreakdown)}/>
       {(currentState === States.Ready ||
         currentState === States.Reset ||
         currentState === States.ReadyToRetry) &&
         !isLoading && (
           <>
-            <Container maxWidth="contentWrap" sx={{ mt: 6, pb: 0 }}>
-              <FeeBreakdown inviteToPayFeeBreakdown={feeBreakdown} />
-            </Container>
+            {hasFeatureFlag("FEE_BREAKDOWN") && (
+              <Container maxWidth="contentWrap" sx={{ mt: 6, pb: 0 }}>
+                <FeeBreakdown inviteToPayFeeBreakdown={feeBreakdown} />
+              </Container>
+            )}
             <Confirm
               fee={toDecimal(paymentAmount)}
               onConfirm={readyAction}
@@ -254,9 +260,8 @@ async function fetchPayment({
   govPayPaymentId?: string;
 }): Promise<GovUKPayment | null> {
   if (!govPayPaymentId) return Promise.resolve(null);
-  const paymentURL = `${
-    import.meta.env.VITE_APP_API_URL
-  }/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
+  const paymentURL = `${import.meta.env.VITE_APP_API_URL
+    }/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
   const response = await axios.get<GovUKPayment>(paymentURL);
   return response.data;
 }
@@ -265,11 +270,10 @@ async function fetchPayment({
 async function startNewPayment(
   paymentRequestId: string,
 ): Promise<GovUKPayment> {
-  const paymentURL = `${
-    import.meta.env.VITE_APP_API_URL
-  }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
-    window.location.href,
-  )}`;
+  const paymentURL = `${import.meta.env.VITE_APP_API_URL
+    }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
+      window.location.href,
+    )}`;
   const response = await axios.post<GovUKPayment>(paymentURL);
   return response.data;
 }

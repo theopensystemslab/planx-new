@@ -133,7 +133,7 @@ export const FeeBreakdown: React.FC<{ inviteToPayFeeBreakdown?: IFeeBreakdown }>
   return (
     <Box mt={3}>
       <Typography variant="h3" mb={1}>
-        Fee breakdown
+        Fee
       </Typography>
       <Typography variant="body1" mb={2}>
         {DESCRIPTION}
