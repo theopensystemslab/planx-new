@@ -10,14 +10,14 @@ import { array, boolean, object, string } from "yup";
 
 import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
-export const PASSPORT_FN = "application.fee.payable" as const;
+export const PAY_FN = "application.fee.payable" as const;
 
 export interface Pay extends BaseNodeData {
   title: string;
   bannerTitle?: string;
   description?: string;
   color?: string;
-  fn: typeof PASSPORT_FN;
+  fn: typeof PAY_FN;
   instructionsTitle?: string;
   instructionsDescription?: string;
   hidePay?: boolean;
@@ -139,7 +139,7 @@ export const validationSchema = object({
   title: string().trim().required(),
   bannerTitle: string().trim().required(),
   description: string().trim().required(),
-  fn: string().oneOf([PASSPORT_FN]).default(PASSPORT_FN).required(),
+  fn: string().oneOf([PAY_FN]).default(PAY_FN).required(),
   instructionsTitle: string().trim().required(),
   instructionsDescription: string().trim().required(),
   hidePay: boolean(),
@@ -170,7 +170,7 @@ export const validationSchema = object({
 export const getDefaultContent = (): Pay => ({
   title: "Pay for your application",
   bannerTitle: "The planning fee for this application is",
-  fn: PASSPORT_FN,
+  fn: PAY_FN,
   description: `<p>The planning fee covers the cost of processing your application.\
     <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">Find out more about how planning fees are calculated</a> (opens in new tab).</p>`,
   instructionsTitle: "How to pay",
