@@ -62,6 +62,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     img,
     previouslySubmittedData,
     id,
+    exclusiveOrOption,
   } = props;
 
   const formik = useFormik<{ checked: Array<string> }>({

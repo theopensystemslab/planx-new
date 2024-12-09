@@ -23,6 +23,7 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
+  exclusiveOrOption?: string;
 }
 
 interface ChecklistExpandableProps {
@@ -102,8 +103,11 @@ export const checklistValidationSchema = ({
   allRequired,
   options,
   groupedOptions,
-}: Checklist) =>
-  array()
+  exclusiveOrOption,
+}: Checklist) => {
+  const flatOptions = getFlatOptions({ options, groupedOptions });
+
+  return array()
     .required()
     .test({
       name: "atLeastOneChecked",
@@ -119,8 +123,27 @@ export const checklistValidationSchema = ({
         if (!allRequired) {
           return true;
         }
-        const flatOptions = getFlatOptions({ options, groupedOptions });
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },
+    })
+    .test({
+      name: "notExclusiveOrSelection",
+      message: `Cannot select "${exclusiveOrOption}" alongside other options`,
+      // TODO: something more like 'Select countries you will be travelling to, or select ‘No, I will not be travelling to any of these countries’
+      test: (checked?: Array<string>) => {
+        const multipleSelectedOptionsIncludesExclusiveOr =
+          exclusiveOrOption &&
+          flatOptions.some((option) => {
+            const optionHasBeenPicked = checked?.includes(option.id);
+            return (
+              checked &&
+              optionHasBeenPicked &&
+              checked.length > 1 &&
+              option.data.text === exclusiveOrOption
+            );
+          });
+        return !multipleSelectedOptionsIncludesExclusiveOr;
+      },
     });
+};

@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import MenuItem from "@mui/material/MenuItem";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -9,8 +10,11 @@ import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { Option } from "../../shared";
 import type { Group } from "../model";
@@ -145,6 +149,33 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           Editor={ChecklistOptionsEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
+      )}
+      {/* TODO: only show if more than one option */}
+      {formik.values.options && (
+        <Box pt={2}>
+          <InputRow>
+            <InputRowLabel>Exclusive or option</InputRowLabel>
+            <InputRowItem>
+              <SelectInput
+                name="exclusiveOrOption"
+                onChange={(e) => {
+                  formik.setFieldValue("exclusiveOrOption", e.target.value);
+                  // TODO: make it take effect
+                }}
+                value={formik.values.exclusiveOrOption || ""}
+              >
+                {formik.values?.options?.map((option: Option) => {
+                  const optionTitle = option?.data?.text;
+                  return (
+                    <MenuItem key={optionTitle} value={optionTitle}>
+                      {optionTitle}
+                    </MenuItem>
+                  );
+                })}
+              </SelectInput>
+            </InputRowItem>
+          </InputRow>
+        </Box>
       )}
     </ModalSectionContent>
   );
