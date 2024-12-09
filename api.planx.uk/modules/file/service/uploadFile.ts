@@ -79,9 +79,9 @@ export function generateFileParams(
     ACL: "public-read",
     Bucket: process.env.AWS_S3_BUCKET,
     Key: key,
-    Body: file.buffer || JSON.stringify(file),
+    Body: file.buffer,
     ContentDisposition: `inline;filename="${filename}"`,
-    ContentType: file.mimetype || "application/json",
+    ContentType: file.mimetype,
   };
 
   return {

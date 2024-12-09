@@ -8,6 +8,7 @@ import { uploadPrivateFile } from "../../file/service/uploadFile.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { isApplicationTypeSupported } from "../utils/helpers.js";
 import type { SendIntegrationController } from "../types.js";
+import { convertObjectToMulterJSONFile } from "../../file/service/utils.js";
 
 interface CreateS3Application {
   insertS3Application: {
@@ -44,16 +45,16 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     const flowName = session?.flow?.name;
 
     // Generate the ODP Schema JSON, skipping validation if not a supported application type
-    const doValidation = isApplicationTypeSupported(passport);
-    const exportData = doValidation
-      ? await $api.export.digitalPlanningDataPayload(sessionId)
-      : await $api.export.digitalPlanningDataPayload(sessionId, true);
+    const skipValidation = !isApplicationTypeSupported(passport);
+    const exportData = await $api.export.digitalPlanningDataPayload(
+      sessionId,
+      skipValidation,
+    );
 
     // Create and upload the data as an S3 file
-    const { fileUrl } = await uploadPrivateFile(
-      exportData,
-      `${sessionId}.json`,
-    );
+    const filename = `${sessionId}.json`;
+    const file = convertObjectToMulterJSONFile(exportData, filename);
+    const { fileUrl } = await uploadPrivateFile(file, filename);
 
     // Send a notification with the file URL to the Power Automate webhook
     const webhookRequest: AxiosRequestConfig = {
@@ -69,7 +70,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
         service: flowName,
         environment: env,
         file: fileUrl,
-        payload: doValidation ? "Validated ODP Schema" : "Discretionary",
+        payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
       },
     };
     const webhookResponse = await axios(webhookRequest)
@@ -125,7 +126,7 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
 
     res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
-      payload: doValidation ? "Validated ODP Schema" : "Discretionary",
+      payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
       webhookResponse: webhookResponse.axiosResponse.status,
       auditEntryId: webhookResponse.id,
     });
