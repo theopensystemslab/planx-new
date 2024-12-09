@@ -7,7 +7,7 @@ import Checklist, { ChecklistLayout } from "../Public";
 import { pressContinue, pressOption } from "./helpers";
 import { options } from "./mockOptions";
 
-describe("when a user selects the exclusive 'or' option", () => {
+describe("when a user selects the exclusive 'or' option and nothing else", () => {
   it("does not throw an error", async () => {
     const handleSubmit = vi.fn();
 
@@ -69,5 +69,34 @@ describe("when a user selects the exclusive 'or' option alongside another option
 
     expect(errorMessage).toBeVisible();
     expect(handleSubmit).not.toHaveBeenCalled();
+  });
+});
+
+describe("when an exclusiveOr option is configured", () => {
+  it("does not affect the user's ability to select multiple other options", async () => {
+    const handleSubmit = vi.fn();
+
+    setup(
+      <Checklist
+        allRequired={false}
+        description=""
+        text="Which Earth-based houses have you lived in?"
+        handleSubmit={handleSubmit}
+        options={options[ChecklistLayout.Basic]}
+        exclusiveOrOption="Spaceship"
+      />,
+    );
+    expect(screen.getByRole("heading")).toHaveTextContent(
+      "Which Earth-based houses have you lived in?",
+    );
+
+    await pressOption("Caravan");
+    await pressOption("House");
+
+    await pressContinue();
+
+    expect(handleSubmit).toHaveBeenCalledWith({
+      answers: ["caravan_id", "house_id"],
+    });
   });
 });

@@ -18,7 +18,7 @@ import { toggleExpandableChecklist } from "../model";
 import { ChecklistProps } from "../types";
 import { Options } from "./Options";
 
-export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
+export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
   const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
@@ -187,4 +187,4 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   );
 };
 
-export default ChecklistComponent;
+export default ChecklistEditor;
