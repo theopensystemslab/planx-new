@@ -8,6 +8,7 @@ import {
   type PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
+import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreakdown";
 import axios from "axios";
 import { format } from "date-fns";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
@@ -63,6 +64,7 @@ export default function MakePayment({
   govPayPaymentId,
   paymentAmount,
   paidAt,
+  feeBreakdown,
 }: PaymentRequest) {
   const { address, rawProjectTypes } =
     parseSessionPreviewData(sessionPreviewData);
@@ -225,14 +227,19 @@ export default function MakePayment({
         currentState === States.Reset ||
         currentState === States.ReadyToRetry) &&
         !isLoading && (
-          <Confirm
-            fee={toDecimal(paymentAmount)}
-            onConfirm={readyAction}
-            buttonTitle={currentState.button!}
-            showInviteToPay={false}
-            hideFeeBanner={true}
-            paymentStatus={payment?.state.status}
-          />
+          <>
+            <Container maxWidth="contentWrap" sx={{ mt: 6, pb: 0 }}>
+              <FeeBreakdown inviteToPayFeeBreakdown={feeBreakdown} />
+            </Container>
+            <Confirm
+              fee={toDecimal(paymentAmount)}
+              onConfirm={readyAction}
+              buttonTitle={currentState.button!}
+              showInviteToPay={false}
+              hideFeeBanner={true}
+              paymentStatus={payment?.state.status}
+            />
+          </>
         )}
     </>
   );
