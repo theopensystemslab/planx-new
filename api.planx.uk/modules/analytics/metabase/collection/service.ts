@@ -1,4 +1,5 @@
 import { MetabaseError, createMetabaseClient } from "../shared/client.js";
+import { updateMetabaseId } from "./addMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
 
 const client = createMetabaseClient();
@@ -14,14 +15,16 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
       return existingCollectionId;
     }
 
+    console.log({ params });
     const response = await client.post(`/api/collection/`, params);
 
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
     );
+    await updateMetabaseId(3, response.data.id); // hard-coded team id
     return response.data.id;
   } catch (error) {
-    console.error("Error in newCollection:");
+    console.error("Error in newCollection:", error);
     throw error;
   }
 }
