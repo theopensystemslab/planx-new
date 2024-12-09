@@ -69,6 +69,7 @@ export async function getPaymentRequestBySessionId({
               paymentAmount: payment_amount
               applicantName: applicant_name
               paidAt: paid_at
+              feeBreakdown: fee_breakdown
             }
           }
         `,
