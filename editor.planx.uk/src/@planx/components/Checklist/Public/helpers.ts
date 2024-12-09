@@ -28,3 +28,45 @@ export function getInitialExpandedGroups(
     [] as number[],
   );
 }
+
+/**
+ * Reorders the options array by moving the exclusive option to the end.
+ *
+ * @param {Option[]} currentOptions - The array of options to reorder.
+ * @param {string} exclusiveOptionText - The text of the exclusive option to move to the end.
+ * @returns {Option[]} A new array with the exclusive option moved to the end.
+ *
+ * @description
+ * This function reorders the given array of options by identifying the option with the specified
+ * text and moving it to the end of the array. It maintains the relative order of all other options.
+ *
+ * @example
+ * const options = [
+ *   { id: "opt1", data: { text: "Option 1" }, type: 100 },
+ *   { id: "opt2", data: { text: "Exclusive Option" }, type: 200 },
+ *   { id: "opt3", data: { text: "Option 3" }, type: 300 }
+ * ];
+ *
+ * const reorderedOptions = reorderOptions(options, "Exclusive Option");
+ * console.log(reorderedOptions);
+ * Output:
+ * [
+ *   { id: "opt1", data: { text: "Option 1" }, type: 100 },
+ *   { id: "opt3", data: { text: "Option 3" }, type: 300 },
+ *   { id: "opt2", data: { text: "Exclusive Option" }, type: 200 }
+ * ]
+ */
+export const reorderOptions = (
+  currentOptions: Option[],
+  exclusiveOptionText: string,
+): Option[] => {
+  const reorderedOptions = [...currentOptions];
+  const indexOfExclusiveOption = reorderedOptions.findIndex(
+    (option: Option) => option.data.text === exclusiveOptionText,
+  );
+  if (indexOfExclusiveOption !== -1) {
+    const removedItem = reorderedOptions.splice(indexOfExclusiveOption, 1)[0];
+    reorderedOptions.push(removedItem);
+  }
+  return reorderedOptions;
+};
