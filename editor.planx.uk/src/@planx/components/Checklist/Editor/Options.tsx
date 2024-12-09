@@ -18,6 +18,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { Option } from "../../shared";
 import type { Group } from "../model";
+import { reorderOptions } from "../Public/helpers";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
@@ -160,6 +161,12 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 name="exclusiveOrOption"
                 onChange={(e) => {
                   formik.setFieldValue("exclusiveOrOption", e.target.value);
+
+                  const reorderedOptions = reorderOptions(
+                    formik.values.options,
+                    e.target.value as string,
+                  );
+                  formik.setFieldValue("options", reorderedOptions);
                 }}
                 value={formik.values.exclusiveOrOption || ""}
               >

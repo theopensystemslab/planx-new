@@ -5,8 +5,8 @@ import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import Checklist, { ChecklistLayout } from "../Public";
-import { pressContinue, pressOption } from "./helpers";
 import { groupedOptions, options } from "./mockOptions";
+import { pressContinue, pressOption } from "./testUtils";
 
 describe("Checklist Component - Grouped Layout", () => {
   it("answers are submitted in order they were supplied", async () => {

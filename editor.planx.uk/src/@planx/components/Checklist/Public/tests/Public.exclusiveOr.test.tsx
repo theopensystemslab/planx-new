@@ -4,8 +4,8 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 
 import Checklist, { ChecklistLayout } from "../Public";
-import { pressContinue, pressOption } from "./helpers";
 import { options } from "./mockOptions";
+import { pressContinue, pressOption } from "./testUtils";
 
 describe("when a user selects the exclusive 'or' option and nothing else", () => {
   it("does not throw an error", async () => {
