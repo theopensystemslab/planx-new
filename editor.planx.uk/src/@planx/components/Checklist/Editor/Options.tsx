@@ -160,7 +160,6 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 name="exclusiveOrOption"
                 onChange={(e) => {
                   formik.setFieldValue("exclusiveOrOption", e.target.value);
-                  // TODO: make it take effect
                 }}
                 value={formik.values.exclusiveOrOption || ""}
               >

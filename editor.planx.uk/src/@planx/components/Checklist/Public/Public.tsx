@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import { Typography } from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
   checklistValidationSchema,
@@ -127,6 +128,15 @@ const VisibleChecklist: React.FC<Props> = (props) => {
               layout === ChecklistLayout.Basic ? (
                 <FormWrapper key={option.id}>
                   <Grid item xs={12} key={option.data.text}>
+                    {option.data.text === exclusiveOrOption && (
+                      <Typography
+                        width={36}
+                        display="flex"
+                        justifyContent="center"
+                      >
+                        or
+                      </Typography>
+                    )}
                     <ChecklistItem
                       onChange={changeCheckbox(option.id)}
                       label={option.data.text}

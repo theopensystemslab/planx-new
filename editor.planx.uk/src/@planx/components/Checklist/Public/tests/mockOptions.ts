@@ -63,6 +63,7 @@ export const options: {
     },
   ],
 };
+
 export const groupedOptions: Array<Group<Option>> = [
   {
     title: "Section 1",
