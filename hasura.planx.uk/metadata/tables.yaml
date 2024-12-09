@@ -1235,6 +1235,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_metadata
           - govpay_payment_id
           - id
@@ -1250,6 +1251,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_metadata
           - govpay_payment_id
           - id
@@ -1265,6 +1267,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_payment_id
           - id
           - paid_at
@@ -1279,6 +1282,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_metadata
           - govpay_payment_id
           - id
