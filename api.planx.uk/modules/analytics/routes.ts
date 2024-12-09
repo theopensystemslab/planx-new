@@ -5,6 +5,8 @@ import {
   logUserExitController,
   logUserResumeController,
 } from "./analyticsLog/controller.js";
+import { newCollectionController } from "./metabase/collection/controller.js";
+import { newCollectionSchema } from "./metabase/collection/types.js";
 
 const router = Router();
 
@@ -17,6 +19,11 @@ router.post(
   "/analytics/log-user-resume",
   validate(logAnalyticsSchema),
   logUserResumeController,
+);
+router.post(
+  "/collection",
+  validate(newCollectionSchema),
+  newCollectionController,
 );
 
 export default router;
