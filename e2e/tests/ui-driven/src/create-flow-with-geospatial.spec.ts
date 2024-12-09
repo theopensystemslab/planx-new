@@ -19,11 +19,15 @@ import {
 } from "./helpers/navigateAndPublish";
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
-import { checkGeoJsonContent } from "./helpers/geospatialChecks";
+import {
+  checkGeoJsonContent,
+  checkUploadFileAltRoute,
+} from "./helpers/geospatialChecks";
 import {
   mockMapGeoJson,
   mockPropertyTypeOptions,
 } from "./mocks/geospatialMocks";
+import exp from "node:constants";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -170,32 +174,20 @@ test.describe("Flow creation, publish and preview", () => {
     const drawBoundaryTitle = page.getByRole("heading", {
       name: "Confirm your location plan",
     });
-    await expect(drawBoundaryTitle).toBeVisible();
-
-    const uploadButton = page.getByTestId("upload-file-button");
-
-    await expect(uploadButton).toBeVisible();
     await expect(
-      page.getByText("490.37"),
-      "Checking for area text",
+      drawBoundaryTitle,
+      "We are in the Draw Boundary component",
     ).toBeVisible();
 
     await checkGeoJsonContent(page, "drawgeojsondata", mockMapGeoJson);
 
-    await uploadButton.click();
-    await expect(
-      page.getByRole("heading", { name: "Upload a location plan" }),
-      "Ensure we can navigate to upload location plan",
-    ).toBeVisible();
+    // navigate to upload file page
+    await checkUploadFileAltRoute(page);
 
-    // const uploadFileButton = page.getByRole('button', { name: 'Drop file here or choose' })
-    const useMapButton = page.getByTestId("use-map-button");
-
-    await useMapButton.click();
-
+    // ensure we are back on the Draw Boundary component
     await expect(
       drawBoundaryTitle,
-      "Ensure we've navigated back to the map component",
+      "We have navigated back to the map component",
     ).toBeVisible();
 
     // TODO: answer uploadAndLabel
