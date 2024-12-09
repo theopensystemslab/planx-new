@@ -19,11 +19,15 @@ import {
 } from "./helpers/navigateAndPublish";
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
-import { checkGeoJsonContent } from "./helpers/geospatialChecks";
+import {
+  checkGeoJsonContent,
+  checkUploadFileAltRoute,
+} from "./helpers/geospatialChecks";
 import {
   mockMapGeoJson,
   mockPropertyTypeOptions,
 } from "./mocks/geospatialMocks";
+import exp from "node:constants";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -72,8 +76,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createUploadAndLabel();
-    // TODO: editor.createPropertyInfo()
+    // await editor.createUploadAndLabel();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
@@ -81,7 +84,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
       // "File upload",
@@ -130,7 +132,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     // Check map component has geoJson content
-    await checkGeoJsonContent(page, mockMapGeoJson);
+    await checkGeoJsonContent(page, "geojsondata", mockMapGeoJson);
 
     // Check property info is being shown
     await expect(page.getByText("Test Street, Testville")).toBeVisible();
@@ -169,7 +171,26 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    const drawBoundaryTitle = page.getByRole("heading", {
+      name: "Confirm your location plan",
+    });
+    await expect(
+      drawBoundaryTitle,
+      "We are in the Draw Boundary component",
+    ).toBeVisible();
+
+    await checkGeoJsonContent(page, "drawgeojsondata", mockMapGeoJson);
+
+    // navigate to upload file page
+    await checkUploadFileAltRoute(page);
+
+    // ensure we are back on the Draw Boundary component
+    await expect(
+      drawBoundaryTitle,
+      "We have navigated back to the map component",
+    ).toBeVisible();
+
     // TODO: answer uploadAndLabel
-    // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
+    // TODO: answerPropertyInfo, answerPlanningConstraints
   });
 });
