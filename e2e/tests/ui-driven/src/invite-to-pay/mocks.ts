@@ -18,6 +18,16 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
   },
   paymentAmount: 12345,
   applicantName: "Mr Agent (Agency Ltd)",
+  feeBreakdown: {
+    amount: {
+      calculated: 123.45,
+      payable: 123.45,
+      vat: 0,
+      reduction: 0,
+    },
+    reductions: [],
+    exemptions: [],
+  },
 };
 
 export const mockSessionData: Omit<SessionData, "id"> = {

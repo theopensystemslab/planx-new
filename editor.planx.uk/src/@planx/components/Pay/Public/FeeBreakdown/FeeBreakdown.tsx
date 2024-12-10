@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import type { FeeBreakdown as IFeeBreakdown } from "@opensystemslab/planx-core/types";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -122,8 +123,9 @@ const Total: React.FC<{ amount: number }> = ({ amount }) => (
   </BoldTableRow>
 );
 
-export const FeeBreakdown: React.FC = () => {
-  const breakdown = useFeeBreakdown();
+export const FeeBreakdown: React.FC<{ inviteToPayFeeBreakdown?: IFeeBreakdown }> = ({ inviteToPayFeeBreakdown }) => {
+  const passportFeeBreakdown = useFeeBreakdown();
+  const breakdown = passportFeeBreakdown || inviteToPayFeeBreakdown;
   if (!breakdown) return null;
 
   const { amount, reductions, exemptions } = breakdown;
@@ -131,7 +133,7 @@ export const FeeBreakdown: React.FC = () => {
   return (
     <Box mt={3}>
       <Typography variant="h3" mb={1}>
-        Fee breakdown
+        Fee
       </Typography>
       <Typography variant="body1" mb={2}>
         {DESCRIPTION}
