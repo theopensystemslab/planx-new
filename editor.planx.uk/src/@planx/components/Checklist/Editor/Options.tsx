@@ -147,24 +147,29 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}
-      <ListManager
-        values={formik.values.exclusiveOrOption || []}
-        onChange={(newOptions) => {
-          formik.setFieldValue("exclusiveOrOption", newOptions);
-        }}
-        newValueLabel="add exclusive or option"
-        newValue={() =>
-          ({
-            data: {
-              text: "",
-              description: "",
-              val: "",
-            },
-          }) as Option
-        }
-        Editor={BaseOptionsEditor}
-        editorExtraProps={{ showValueField: !!formik.values.fn }}
-      />
+      {formik.values.options && (
+        <Box mt={1}>
+          <ListManager
+            values={formik.values.exclusiveOrOption || []}
+            onChange={(newOptions) => {
+              formik.setFieldValue("exclusiveOrOption", newOptions);
+            }}
+            newValueLabel="add exclusive or option"
+            maxItems={1}
+            newValue={() =>
+              ({
+                data: {
+                  text: "",
+                  description: "",
+                  val: "",
+                },
+              }) as Option
+            }
+            Editor={BaseOptionsEditor}
+            editorExtraProps={{ showValueField: !!formik.values.fn }}
+          />
+        </Box>
+      )}
     </ModalSectionContent>
   );
 };
