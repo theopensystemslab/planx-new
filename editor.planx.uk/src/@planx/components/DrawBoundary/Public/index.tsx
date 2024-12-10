@@ -89,7 +89,7 @@ export default function Component(props: Props) {
     isMounted.current = true;
 
     const geojsonChangeHandler = ({ detail: geojson }: any) => {
-      if (geojson["EPSG:3857"]?.features) {    
+      if (geojson["EPSG:3857"]?.features) {
         // only a single polygon can be drawn, so get first feature in geojson "FeatureCollection"
         setBoundary(geojson["EPSG:3857"].features[0]);
         setArea(
