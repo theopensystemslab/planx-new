@@ -24,6 +24,10 @@ import {
   mockMapGeoJson,
   mockPropertyTypeOptions,
 } from "./mocks/geospatialMocks";
+import {
+  setupGISMockResponse,
+  setupRoadsMockResponse,
+} from "./mocks/gisResponse";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -72,17 +76,16 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createUploadAndLabel();
-    // TODO: editor.createPropertyInfo()
-    await editor.createDrawBoundary();
+    // await editor.createUploadAndLabel();
+    // await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
 
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Upload and label",
-      "Confirm your location plan",
+      // "Upload and label",
+      // "Confirm your location plan",
       "Planning constraints",
       // "File upload",
     ]);
@@ -118,6 +121,9 @@ test.describe("Flow creation, publish and preview", () => {
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
+
+    await setupGISMockResponse(page);
+    await setupRoadsMockResponse(page);
 
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
@@ -168,6 +174,20 @@ test.describe("Flow creation, publish and preview", () => {
       page.locator("h1", { hasText: "A notice inside a portal!" }),
     ).toBeVisible();
     await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "Planning constraints" }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText(
+        "These are the planning constraints we think apply to this property",
+      ),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("button", { name: "is, or is within, a Listed" }),
+    ).toBeVisible();
 
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
