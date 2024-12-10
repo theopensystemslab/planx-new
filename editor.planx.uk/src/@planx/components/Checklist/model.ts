@@ -130,7 +130,6 @@ export const checklistValidationSchema = ({
     .test({
       name: "notExclusiveOrSelection",
       message: `Cannot select "${exclusiveOrOption}" alongside other options`,
-      // TODO: something more like 'Select countries you will be travelling to, or select ‘No, I will not be travelling to any of these countries’
       test: (checked?: Array<string>) => {
         const multipleSelectedOptionsIncludesExclusiveOr =
           exclusiveOrOption &&

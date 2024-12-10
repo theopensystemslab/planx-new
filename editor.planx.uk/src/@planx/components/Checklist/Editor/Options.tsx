@@ -22,6 +22,8 @@ import { reorderOptions } from "../Public/helpers";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
+  const multipleOptionsConfigured = formik.values?.options?.length > 1;
+
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
@@ -151,8 +153,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}
-      {/* Having an exclusive Or option only makes sense when there are multiple options */}
-      {formik.values?.options?.length > 1 ? (
+      {multipleOptionsConfigured ? (
         <Box pt={2}>
           <InputRow>
             <InputRowLabel>Exclusive or option</InputRowLabel>
