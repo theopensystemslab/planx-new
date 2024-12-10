@@ -1,51 +1,78 @@
-import { newCollection, getCollection } from "./service.js";
+import { newCollection, getCollection, createCollection } from "./service.js";
 import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
+import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
 
 describe("newCollection", () => {
   beforeEach(() => {
     nock.cleanAll();
-
-    // Mock GraphQL
-    vi.spyOn($api.client, "request").mockResolvedValue({
-      update_teams: {
-        returning: [
-          {
-            id: 1,
-            name: "Test Team",
-            metabase_id: expect.any(Number),
-          },
-        ],
-      },
-    });
   });
 
-  test("returns a collection ID if collection exists", async () => {
-    // Mock collection check endpoint
-    const metabaseMock = nock(process.env.METABASE_URL_EXT!)
-      .get("/api/collection/")
-      .reply(200, [
-        { id: 20, name: "Barnet" },
-        { id: 21, name: "Another collection" },
-      ]);
+  test("returns an existing Metabase collection ID if collection exists", async () => {
+    // Mock getTeamAndMetabaseId response
+    vi.spyOn($api.client, "request").mockResolvedValueOnce({
+      teams: [
+        {
+          id: 26,
+          name: "Barnet",
+          metabaseId: 20,
+        },
+      ],
+    });
 
-    const collection = await newCollection({
+    const collectionId = await getTeamAndMetabaseId("Barnet");
+
+    expect(collectionId.metabaseId).toBe(20);
+  });
+
+  test("creates new collection when metabase ID doesn't exist", async () => {
+    // Mock getTeamAndMetabaseId response with null metabase_id
+    vi.spyOn($api.client, "request").mockResolvedValueOnce({
+      teams: [
+        {
+          id: 26,
+          name: "Barnet",
+          metabase_id: null,
+        },
+      ],
+    });
+
+    // Mock Metabase API calls
+    const metabaseMock = nock(process.env.METABASE_URL_EXT!)
+      .post("/api/collection/", {
+        name: "Barnet",
+      })
+      .reply(200, {
+        id: 123,
+        name: "Barnet",
+      });
+
+    const collectionId = await createCollection({
       name: "Barnet",
     });
-    expect(collection).toBe(20);
+
+    expect(collectionId).toBe(123);
     expect(metabaseMock.isDone()).toBe(true);
   });
 
   test("successfully places new collection in parent", async () => {
+    // Mock updateMetabaseId response
+    vi.spyOn($api.client, "request").mockResolvedValueOnce({
+      update_teams: {
+        returning: [
+          {
+            id: 26,
+            name: "Barnet",
+            metabase_id: 123,
+          },
+        ],
+      },
+    });
+
     const testName = "Example council";
     const metabaseMock = nock(process.env.METABASE_URL_EXT!);
-
-    console.log("Setting up mocks...");
-
-    // Mock collection check endpoint
-    metabaseMock.get("/api/collection/").reply(200, []);
 
     // Mock collection creation endpoint
     metabaseMock
@@ -66,7 +93,7 @@ describe("newCollection", () => {
       parent_id: 100,
     });
 
-    const collectionId = await newCollection({
+    const collectionId = await createCollection({
       name: testName,
       parentId: 100,
     });
@@ -81,41 +108,18 @@ describe("newCollection", () => {
   });
 
   test("returns collection correctly no matter collection name case", async () => {
-    // Mock collection check endpoint
-    nock(process.env.METABASE_URL_EXT!)
-      .get("/api/collection/")
-      .reply(200, [
-        { id: 20, name: "Barnet" },
-        { id: 21, name: "Another collection" },
-      ]);
-
-    const collection = await newCollection({
-      name: "BARNET",
-    });
-    expect(collection).toBe(20);
-  });
-
-  test("successfully creates a new collection and returns its ID", async () => {
-    const testName = "Example council";
-
-    // Mock collection check endpoint
-    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
-
-    // Mock collection creation endpoint
-    nock(process.env.METABASE_URL_EXT!)
-      .post("/api/collection/", {
-        name: testName,
-      })
-      .reply(200, {
-        id: 123,
-        name: testName,
-      });
-
-    const collection = await newCollection({
-      name: testName,
+    vi.spyOn($api.client, "request").mockResolvedValueOnce({
+      teams: [
+        {
+          id: 26,
+          name: "barnet",
+          metabaseId: 20,
+        },
+      ],
     });
 
-    expect(collection).toBe(123);
+    const collection = await getTeamAndMetabaseId("BARNET");
+    expect(collection.metabaseId).toBe(20);
   });
 
   test("throws error if network failure", async () => {
@@ -124,7 +128,7 @@ describe("newCollection", () => {
       .replyWithError("Network error occurred");
 
     await expect(
-      newCollection({
+      createCollection({
         name: "Test Collection",
       }),
     ).rejects.toThrow("Network error occurred");
@@ -136,37 +140,50 @@ describe("newCollection", () => {
     });
 
     await expect(
-      newCollection({
+      createCollection({
         name: "Test Collection",
       }),
     ).rejects.toThrow(MetabaseError);
   });
+});
 
-  test("correctly transforms request to snake case", async () => {
-    const testData = {
-      name: "Test Collection",
-      parentId: 123, // This should become parent_id
-    };
+describe("getTeamAndMetabaseId", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-    // Mock the check for existing collections
-    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
+  test("successfully gets team and existing metabase id", async () => {
+    vi.spyOn($api.client, "request").mockResolvedValue({
+      teams: [
+        {
+          id: 26,
+          name: "Barnet",
+          metabaseId: 20,
+        },
+      ],
+    });
 
-    // Create a variable to store the request body
-    let capturedBody: any;
+    const teamAndMetabaseId = await getTeamAndMetabaseId("Barnet");
 
-    // Mock and verify the POST request, capturing the body
-    nock(process.env.METABASE_URL_EXT!)
-      .post("/api/collection/", (body) => {
-        capturedBody = body;
-        return true; // Return true to indicate the request matches
-      })
-      .reply(200, { id: 456 });
+    expect(teamAndMetabaseId.id).toEqual(26);
+    expect(teamAndMetabaseId.metabaseId).toEqual(20);
+  });
 
-    await newCollection(testData);
+  test("handles team with null metabase id", async () => {
+    vi.spyOn($api.client, "request").mockResolvedValue({
+      teams: [
+        {
+          id: 26,
+          name: "Barnet",
+          metabaseId: null,
+        },
+      ],
+    });
 
-    // Verify the transformation
-    expect(capturedBody).toHaveProperty("parent_id", 123);
-    expect(capturedBody).not.toHaveProperty("parentId");
+    const teamAndMetabaseId = await getTeamAndMetabaseId("Barnet");
+
+    expect(teamAndMetabaseId.id).toEqual(26);
+    expect(teamAndMetabaseId.metabaseId).toBeNull();
   });
 });
 
@@ -222,19 +239,8 @@ describe("updateMetabaseId", () => {
 describe("edge cases", () => {
   beforeEach(() => {
     nock.cleanAll();
-
-    // Mock GraphQL
-    vi.spyOn($api.client, "request").mockResolvedValue({
-      update_teams: {
-        returning: [
-          {
-            id: 1,
-            name: "Test Team",
-            metabase_id: expect.any(Number),
-          },
-        ],
-      },
-    });
+    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   test("handles missing name", async () => {
@@ -246,6 +252,7 @@ describe("edge cases", () => {
   });
 
   test("handles names with special characters", async () => {
+    // TODO
     const specialName = "@#$%^&*";
 
     nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
@@ -259,7 +266,7 @@ describe("edge cases", () => {
         name: specialName,
       });
 
-    const collection = await newCollection({
+    const collection = await createCollection({
       name: specialName,
     });
     expect(collection).toBe(789);
