@@ -2366,6 +2366,7 @@
           - created_at
           - domain
           - id
+          - metabase_id
           - name
           - slug
           - updated_at
@@ -2418,6 +2419,13 @@
           - updated_at
         filter: {}
   update_permissions:
+    - role: api
+      permission:
+        columns:
+          - metabase_id
+        filter: {}
+        check: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
