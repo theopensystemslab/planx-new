@@ -39,5 +39,6 @@ export const updateMetabaseId = async (teamId: number, metabaseId: number) => {
       "There's been an error while updating the Metabase ID for this team",
       (e as Error).stack,
     );
+    throw e;
   }
 };
