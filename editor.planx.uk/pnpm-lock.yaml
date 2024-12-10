@@ -48,8 +48,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#6c6f308
-    version: github.com/theopensystemslab/planx-core/6c6f308(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#a9848d4
+    version: github.com/theopensystemslab/planx-core/a9848d4(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -4322,7 +4322,7 @@ packages:
   /@storybook/client-logger@6.5.16:
     resolution: {integrity: sha512-pxcNaCj3ItDdicPTXTtmYJE3YC1SjxFrBmHcyrN+nffeNyiMuViJdOOZzzzucTUG0wcOOX8jaSyak+nnHg5H1Q==}
     dependencies:
-      core-js: 3.31.0
+      core-js: 3.39.0
       global: 4.4.0
     dev: true
 
@@ -6814,7 +6814,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.26.0
       '@types/raf': 3.4.3
-      core-js: 3.31.0
+      core-js: 3.39.0
       raf: 3.4.1
       regenerator-runtime: 0.13.11
       rgbcolor: 1.0.1
@@ -7205,7 +7205,6 @@ packages:
   /core-js@3.39.0:
     resolution: {integrity: sha512-raM0ew0/jJUqkJ0E6e8UDtl+y/7ktFivgWvqw8dNSQeNWoSDLvQ1H/RN3aPXB9tBd4/FhyR4RDPGhsNIMsAn7g==}
     requiresBuild: true
-    dev: true
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -10079,7 +10078,7 @@ packages:
       fflate: 0.8.2
     optionalDependencies:
       canvg: 3.0.10
-      core-js: 3.31.0
+      core-js: 3.39.0
       dompurify: 2.5.8
       html2canvas: 1.4.1
     dev: false
@@ -14513,9 +14512,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/6c6f308(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6c6f308}
-    id: github.com/theopensystemslab/planx-core/6c6f308
+  github.com/theopensystemslab/planx-core/a9848d4(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a9848d4}
+    id: github.com/theopensystemslab/planx-core/a9848d4
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
