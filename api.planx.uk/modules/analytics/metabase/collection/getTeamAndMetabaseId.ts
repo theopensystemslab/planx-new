@@ -10,13 +10,12 @@ interface GetMetabaseId {
 }
 
 export const getTeamAndMetabaseId = async (name: string) => {
-  const lowerName = name.toLowerCase();
   console.log("RUNNING getTeamAndMetabaseId...");
   try {
     const response = await $api.client.request<GetMetabaseId>(
       gql`
         query GetTeamAndMetabaseId($name: String!) {
-          teams(where: { name: { _eq: $name } }) {
+          teams(where: { name: { _ilike: $name } }) {
             id
             name
             metabaseId: metabase_id
@@ -24,7 +23,7 @@ export const getTeamAndMetabaseId = async (name: string) => {
         }
       `,
       {
-        name: lowerName,
+        name: name,
       },
     );
     console.log("Raw response:");

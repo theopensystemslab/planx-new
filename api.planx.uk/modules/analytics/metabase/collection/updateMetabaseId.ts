@@ -9,6 +9,7 @@ interface UpdateMetabaseId {
   };
 }
 
+/** Updates column `metabase_id` in the Planx DB `teams` table */
 export const updateMetabaseId = async (teamId: number, metabaseId: number) => {
   try {
     const response = await $api.client.request<UpdateMetabaseId>(
@@ -31,7 +32,6 @@ export const updateMetabaseId = async (teamId: number, metabaseId: number) => {
         metabaseId: metabaseId,
       },
     );
-    console.log({ response });
     return response;
   } catch (e) {
     console.error(
