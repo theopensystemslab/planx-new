@@ -12,6 +12,7 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
       console.log(
         `Collection "${params.name}" already exists with ID: ${existingCollectionId}`,
       );
+      await updateMetabaseId(1, existingCollectionId); // TODO: remove hard-coded team id
       return existingCollectionId;
     }
 
@@ -21,7 +22,7 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
     );
-    await updateMetabaseId(3, response.data.id); // hard-coded team id
+    await updateMetabaseId(1, response.data.id); // TODO: remove hard-coded team id
     return response.data.id;
   } catch (error) {
     console.error("Error in newCollection:", error);
@@ -39,8 +40,9 @@ export async function checkCollections(teamName: string): Promise<any> {
     // Get collections from Metabase
     const response = await client.get(`/api/collection/`);
 
-    const matchingCollection = response.data.find((collection: any) =>
-      collection.name.toLowerCase().includes(teamName.toLowerCase()),
+    const matchingCollection = response.data.find(
+      (collection: any) =>
+        collection.name.toLowerCase === teamName.toLowerCase(),
     );
 
     if (matchingCollection) {
