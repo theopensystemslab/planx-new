@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
   checklistValidationSchema,
@@ -62,6 +63,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     img,
     previouslySubmittedData,
     id,
+    exclusiveOrOption,
   } = props;
 
   const formik = useFormik<{ checked: Array<string> }>({
@@ -152,6 +154,24 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                   />
                 </Grid>
               ),
+            )}
+            {exclusiveOrOption && (
+              <FormWrapper key={exclusiveOrOption[0].id}>
+                <Grid item xs={12} key={exclusiveOrOption[0].data.text}>
+                  <Typography width={36} display="flex" justifyContent="center">
+                    or
+                  </Typography>
+
+                  <ChecklistItem
+                    onChange={changeCheckbox(exclusiveOrOption[0].id)}
+                    label={exclusiveOrOption[0].data.text}
+                    id={exclusiveOrOption[0].id}
+                    checked={formik.values.checked.includes(
+                      exclusiveOrOption[0].id,
+                    )}
+                  />
+                </Grid>
+              </FormWrapper>
             )}
 
             {groupedOptions && (

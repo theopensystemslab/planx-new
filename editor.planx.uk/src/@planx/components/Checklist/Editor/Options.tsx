@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -145,6 +146,29 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           Editor={ChecklistOptionsEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
+      )}
+      {formik.values.options && (
+        <Box mt={1}>
+          <ListManager
+            values={formik.values.exclusiveOrOption || []}
+            onChange={(newOptions) => {
+              formik.setFieldValue("exclusiveOrOption", newOptions);
+            }}
+            newValueLabel="add exclusive or option"
+            maxItems={1}
+            newValue={() =>
+              ({
+                data: {
+                  text: "",
+                  description: "",
+                  val: "",
+                },
+              }) as Option
+            }
+            Editor={BaseOptionsEditor}
+            editorExtraProps={{ showValueField: !!formik.values.fn }}
+          />
+        </Box>
       )}
     </ModalSectionContent>
   );

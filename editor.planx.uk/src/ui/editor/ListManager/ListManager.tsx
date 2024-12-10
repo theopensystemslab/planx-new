@@ -163,9 +163,7 @@ export default function ListManager<T, EditorExtraProps>(
                           aria-label="Delete"
                           size="large"
                           disabled={
-                            isViewOnly ||
-                            (props?.isFieldDisabled &&
-                              props.isFieldDisabled(item, index))
+                            isViewOnly || props?.isFieldDisabled?.(item, index)
                           }
                         >
                           <Delete />

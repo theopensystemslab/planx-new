@@ -18,7 +18,7 @@ import { toggleExpandableChecklist } from "../model";
 import { ChecklistProps } from "../types";
 import { Options } from "./Options";
 
-export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
+export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
   const type = TYPES.Checklist;
 
   const formik = useFormik<Checklist>({
@@ -31,6 +31,7 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
       img: props.node?.data?.img || "",
       options: props.options,
       text: props.node?.data?.text || "",
+      exclusiveOrOption: props.exclusiveOrOption || undefined,
       ...parseBaseNodeData(props.node?.data),
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {
@@ -186,4 +187,4 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
   );
 };
 
-export default ChecklistComponent;
+export default ChecklistEditor;
