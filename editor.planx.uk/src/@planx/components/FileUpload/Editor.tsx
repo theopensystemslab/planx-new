@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -9,6 +10,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 
 function Component(props: any) {
   const formik = useFormik<{
@@ -38,8 +40,12 @@ function Component(props: any) {
         props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
+
+  // Rather than default to generic `useStore().geFlowSchema()`
+  //   File Upload components can specificly reference ODP Schema enum options
+  const schema = getValidSchemaValues("FileType");
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -48,7 +54,7 @@ function Component(props: any) {
           <InputRow>
             <Input
               format="large"
-              placeholder="File Upload"
+              placeholder="Title"
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
@@ -62,16 +68,7 @@ function Component(props: any) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete schema={schema} value={formik.values.fn} onChange={formik.handleChange} /> 
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} />
