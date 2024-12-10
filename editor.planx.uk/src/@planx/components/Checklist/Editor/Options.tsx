@@ -151,8 +151,8 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}
-      {/* TODO: only show if more than one option */}
-      {formik.values.options && (
+      {/* Having an exclusive Or option only makes sense when there are multiple options */}
+      {formik.values?.options?.length > 1 ? (
         <Box pt={2}>
           <InputRow>
             <InputRowLabel>Exclusive or option</InputRowLabel>
@@ -182,6 +182,8 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             </InputRowItem>
           </InputRow>
         </Box>
+      ) : (
+        <></>
       )}
     </ModalSectionContent>
   );
