@@ -13,7 +13,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic = {
-  render: () => (
-    <VerifySubmissionEmail params={{ sessionId: "1", team: "PlanX" }} />
-  ),
-};
+  args: {
+    params: { sessionId: "1", team: "barking and dagenham" },
+  },
+  render: (args) => <VerifySubmissionEmail {...args} />,
+} satisfies Story;
