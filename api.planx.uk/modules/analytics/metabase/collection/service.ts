@@ -1,9 +1,25 @@
 import { MetabaseError, createMetabaseClient } from "../shared/client.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
-import { getTeamAndMetabaseId } from "./getMetabaseId.js";
+import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
 
 const client = createMetabaseClient();
+
+export async function createCollection(
+  params: NewCollectionParams,
+): Promise<any> {
+  const transformedParams = {
+    name: params.name,
+    parent_id: params.parentId,
+  };
+
+  const response = await client.post(`/api/collection/`, transformedParams);
+
+  console.log(
+    `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
+  );
+  return response.data.id;
+}
 
 /**
  * First checks if a collection with a specified name exists.
@@ -15,23 +31,15 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
   try {
     const teamAndMetabaseId = await getTeamAndMetabaseId(params.name);
     const { metabaseId, id } = teamAndMetabaseId;
-    console.log({ metabaseId });
     if (metabaseId) {
+      console.log("Updating MetabaseId...");
       await updateMetabaseId(id, metabaseId);
       return metabaseId;
     }
-    const transformedParams = {
-      name: params.name,
-      parent_id: params.parentId,
-    };
 
-    const response = await client.post(`/api/collection/`, transformedParams);
-
-    console.log(
-      `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
-    );
-    await updateMetabaseId(id, response.data.id); // TODO: remove hard-coded team id
-    return response.data.id;
+    const newMetabaseId = await createCollection(params);
+    await updateMetabaseId(id, newMetabaseId);
+    return newMetabaseId;
   } catch (error) {
     console.error("Error in newCollection:", error);
     throw error;
