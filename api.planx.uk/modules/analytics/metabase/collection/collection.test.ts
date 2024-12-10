@@ -1,13 +1,10 @@
-import {
-  checkCollections,
-  getCollection,
-  createCollection,
-} from "./service.js";
+import { checkCollections, getCollection } from "./service.js";
 import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
+import { createCollection } from "./createCollection.js";
 
 describe("checkCollections", () => {
   beforeEach(() => {

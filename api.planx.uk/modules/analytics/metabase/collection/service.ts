@@ -1,25 +1,10 @@
-import { MetabaseError, createMetabaseClient } from "../shared/client.js";
+import { createMetabaseClient } from "../shared/client.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
 import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
+import { createCollection } from "./createCollection.js";
 
 const client = createMetabaseClient();
-
-export async function createCollection(
-  params: NewCollectionParams,
-): Promise<any> {
-  const transformedParams = {
-    name: params.name,
-    parent_id: params.parentId,
-  };
-
-  const response = await client.post(`/api/collection/`, transformedParams);
-
-  console.log(
-    `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
-  );
-  return response.data.id;
-}
 
 /**
  * First uses name to get teams.id and .metabase_id, if present.
