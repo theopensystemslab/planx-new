@@ -20,14 +20,19 @@ import {
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
 import {
+  alterDrawGeoJson,
   checkGeoJsonContent,
   checkUploadFileAltRoute,
+  getMapProperties,
+  resetMapBoundary,
+  waitForMapComponent,
 } from "./helpers/geospatialChecks";
 import {
+  GeoJsonChangeHandler,
+  mockChangedMapGeoJson,
   mockMapGeoJson,
   mockPropertyTypeOptions,
 } from "./mocks/geospatialMocks";
-import exp from "node:constants";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -181,13 +186,35 @@ test.describe("Flow creation, publish and preview", () => {
 
     await checkGeoJsonContent(page, "drawgeojsondata", mockMapGeoJson);
 
+    const area = "490.37";
+
+    await expect(
+      page.getByText(area),
+      "We can see a value for area",
+    ).toBeVisible();
+
     // navigate to upload file page
     await checkUploadFileAltRoute(page);
 
-    // ensure we are back on the Draw Boundary component
     await expect(
       drawBoundaryTitle,
       "We have navigated back to the map component",
+    ).toBeVisible();
+
+    await waitForMapComponent(page);
+
+    await resetMapBoundary(page);
+    await alterDrawGeoJson(page);
+
+    // extra new GeoJSON data
+    const newGeoJSON = await getMapProperties(page, "drawgeojsondata");
+    const parsedJson: GeoJsonChangeHandler = JSON.parse(newGeoJSON!);
+
+    await checkGeoJsonContent(page, "drawgeojsondata", mockChangedMapGeoJson);
+
+    await expect(
+      page.getByText(`${parsedJson.properties!["area.squareMetres"]}`),
+      "We can see a new value for area",
     ).toBeVisible();
 
     // TODO: answer uploadAndLabel
