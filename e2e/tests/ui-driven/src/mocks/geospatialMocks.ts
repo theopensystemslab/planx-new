@@ -86,7 +86,8 @@ export const mockChangedMapGeoJson: GeoJsonChangeHandler = {
 };
 
 export const mockPropertyConstraints = {
-  sourceRequest: "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POINT%28-0.1151501+51.4745098%29&geometry_relation=intersects&exclude_field=geometry%2Cpoint&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=brownfield-land&dataset=brownfield-site&dataset=area-of-outstanding-natural-beauty&dataset=conservation-area&dataset=green-belt&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=flood-risk-zone&dataset=listed-building&dataset=listed-building-outline&dataset=scheduled-monument&dataset=ancient-woodland&dataset=ramsar&dataset=special-area-of-conservation&dataset=special-protection-area&dataset=site-of-special-scientific-interest&dataset=park-and-garden&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone",
+  sourceRequest:
+    "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POINT%28-0.1151501+51.4745098%29&geometry_relation=intersects&exclude_field=geometry%2Cpoint&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=brownfield-land&dataset=brownfield-site&dataset=area-of-outstanding-natural-beauty&dataset=conservation-area&dataset=green-belt&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=flood-risk-zone&dataset=listed-building&dataset=listed-building-outline&dataset=scheduled-monument&dataset=ancient-woodland&dataset=ramsar&dataset=special-area-of-conservation&dataset=special-protection-area&dataset=site-of-special-scientific-interest&dataset=park-and-garden&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone",
   constraints: {
     listed: {
       fn: "listed",
@@ -103,10 +104,10 @@ export const mockPropertyConstraints = {
           typology: "geography",
           reference: "12/435 and 963/1",
           prefix: "listed-building-outline",
-          "organisation-entity": "192"
-        }
+          "organisation-entity": "192",
+        },
       ],
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     "designated.conservationArea": {
       fn: "designated.conservationArea",
@@ -124,126 +125,126 @@ export const mockPropertyConstraints = {
           reference: "CA16",
           prefix: "conservation-area",
           "organisation-entity": "192",
-          "designation-date": "1974-06-25"
-        }
+          "designation-date": "1974-06-25",
+        },
       ],
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     article4: {
       fn: "article4",
       value: false,
       text: "is not in an Article 4 direction area",
-      category: "General policy"
+      category: "General policy",
     },
     "article4.caz": {
       fn: "article4.caz",
       value: false,
       text: "is not in the Central Activities Zone",
-      category: "General policy"
+      category: "General policy",
     },
     brownfieldSite: {
       fn: "brownfieldSite",
       value: false,
       text: "is not on Brownfield land",
-      category: "General policy"
+      category: "General policy",
     },
     "designated.AONB": {
       fn: "designated.AONB",
-      value: false,
+      value: true,
       text: "is not in an Area of Outstanding Natural Beauty",
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     greenBelt: {
       fn: "greenBelt",
       value: false,
       text: "is not in a Green Belt",
-      category: "General policy"
+      category: "General policy",
     },
     "designated.nationalPark": {
       fn: "designated.nationalPark",
       value: false,
       text: "is not in a National Park",
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     "designated.nationalPark.broads": {
       fn: "designated.nationalPark.broads",
-      value: false
+      value: false,
     },
     "designated.WHS": {
       fn: "designated.WHS",
       value: false,
       text: "is not an UNESCO World Heritage Site",
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     flood: {
       fn: "flood",
       value: false,
       text: "is not in a Flood Risk Zone",
-      category: "Flooding"
+      category: "Flooding",
     },
     monument: {
       fn: "monument",
       value: false,
       text: "is not the site of a Scheduled Monument",
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     "nature.ASNW": {
       fn: "nature.ASNW",
       value: false,
       text: "is not in an Ancient Semi-Natural Woodland (ASNW)",
-      category: "Ecology"
+      category: "Ecology",
     },
     "nature.ramsarSite": {
       fn: "nature.ramsarSite",
       value: false,
       text: "is not in a Ramsar Site",
-      category: "Ecology"
+      category: "Ecology",
     },
     "nature.SAC": {
       fn: "nature.SAC",
       value: false,
       text: "is not in a Special Area of Conservation (SAC)",
-      category: "Ecology"
+      category: "Ecology",
     },
     "nature.SPA": {
       fn: "nature.SPA",
       value: false,
       text: "is not in a Special Protection Area (SPA)",
-      category: "Ecology"
+      category: "Ecology",
     },
     "nature.SSSI": {
       fn: "nature.SSSI",
       value: false,
       text: "is not a Site of Special Scientific Interest (SSSI)",
-      category: "Ecology"
+      category: "Ecology",
     },
     registeredPark: {
       fn: "registeredPark",
       value: false,
       text: "is not in a Historic Park or Garden",
-      category: "Heritage and conservation"
+      category: "Heritage and conservation",
     },
     tpo: {
       fn: "tpo",
       value: false,
       text: "is not in a Tree Preservation Order (TPO) Zone",
-      category: "Trees"
+      category: "Trees",
     },
     designated: {
-      value: true
+      value: true,
     },
     "listed.grade.I": {
       fn: "listed.grade.I",
-      value: false
+      value: false,
     },
     "listed.grade.II": {
       fn: "listed.grade.II",
-      value: false
+      value: false,
     },
     "listed.grade.II*": {
       fn: "listed.grade.II*",
-      value: false
-    }
+      value: false,
+    },
   },
   metadata: {
     article4: {
@@ -252,7 +253,8 @@ export const mockPropertyConstraints = {
       "end-date": "",
       collection: "article-4-direction",
       dataset: "article-4-direction-area",
-      description: "Orders made by the local planning authority to remove all or some of the permitted development rights on a site in order to protect it",
+      description:
+        "Orders made by the local planning authority to remove all or some of the permitted development rights on a site in order to protect it",
       name: "Article 4 direction area",
       plural: "Article 4 direction areas",
       prefix: "",
@@ -264,13 +266,14 @@ export const mockPropertyConstraints = {
       themes: ["heritage"],
       "entity-count": {
         dataset: "article-4-direction-area",
-        count: 2444
+        count: 2444,
       },
       "paint-options": "",
       attribution: "crown-copyright",
       "attribution-text": "© Crown copyright and database right 2024",
       licence: "ogl3",
-      "licence-text": "Licensed under the [Open Government Licence v.3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).",
+      "licence-text":
+        "Licensed under the [Open Government Licence v.3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).",
       consideration: "article-4-directions",
       "github-discussion": 30,
       "entity-minimum": 7010000000,
@@ -278,27 +281,30 @@ export const mockPropertyConstraints = {
       phase: "beta",
       realm: "dataset",
       "replacement-dataset": "",
-      version: "3.0"
+      version: "3.0",
     },
     // ... rest of metadata entries follow same structure
-  }
+  },
 };
 
 export const mockRoadData = {
-  sourceRequest: "https://api.os.uk/features/v1/wfs?service=WFS&request=GetFeature&version=2.0.0&typeNames=Highways_RoadLink&outputFormat=GEOJSON&srsName=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A4326&count=1&filter=%0A++++%3Cogc%3AFilter%3E%0A++++++%3Cogc%3APropertyIsLike+wildCard%3D%22%25%22+singleChar%3D%22%23%22+escapeChar%3D%22%21%22%3E%0A++++++++%3Cogc%3APropertyName%3EFormsPartOf%3C%2Fogc%3APropertyName%3E%0A++++++++%3Cogc%3ALiteral%3E%25Street%23usrn21900651%25%3C%2Fogc%3ALiteral%3E%0A++++++%3C%2Fogc%3APropertyIsLike%3E%0A++++%3C%2Fogc%3AFilter%3E%0A++&",
+  sourceRequest:
+    "https://api.os.uk/features/v1/wfs?service=WFS&request=GetFeature&version=2.0.0&typeNames=Highways_RoadLink&outputFormat=GEOJSON&srsName=urn%3Aogc%3Adef%3Acrs%3AEPSG%3A%3A4326&count=1&filter=%0A++++%3Cogc%3AFilter%3E%0A++++++%3Cogc%3APropertyIsLike+wildCard%3D%22%25%22+singleChar%3D%22%23%22+escapeChar%3D%22%21%22%3E%0A++++++++%3Cogc%3APropertyName%3EFormsPartOf%3C%2Fogc%3APropertyName%3E%0A++++++++%3Cogc%3ALiteral%3E%25Street%23usrn21900651%25%3C%2Fogc%3ALiteral%3E%0A++++++%3C%2Fogc%3APropertyIsLike%3E%0A++++%3C%2Fogc%3AFilter%3E%0A++&",
   metadata: {
     "road.classified": {
       name: "Classified road",
       plural: "Classified roads",
-      text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road."
-    }
+      text: "This will effect your project if you are looking to add a dropped kerb. It may also impact some agricultural or forestry projects within 25 metres of a classified road.",
+    },
   },
   constraints: {
     "road.classified": {
       fn: "road.classified",
       value: false,
       text: "is not on a Classified Road",
-      category: "General policy"
-    }
-  }
+      category: "General policy",
+    },
+  },
 };
+
+export const mockDigitalLandURL = `https://api.editor.planx.dev/gis/testing?geom=POINT%28-0.1151501+51.4745098%29&vals=article4%2Carticle4.caz%2CbrownfieldSite%2Cdesignated.AONB%2Cdesignated.conservationArea%2CgreenBelt%2Cdesignated.nationalPark%2Cdesignated.nationalPark.broads%2Cdesignated.WHS%2Cflood%2Clisted%2Cmonument%2Cnature.ASNW%2Cnature.ramsarSite%2Cnature.SAC%2Cnature.SPA%2Cnature.SSSI%2CregisteredPark%2Ctpo%2Croad.classified`;

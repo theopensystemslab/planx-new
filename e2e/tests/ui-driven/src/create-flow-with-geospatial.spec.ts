@@ -37,6 +37,10 @@ import {
   setupOSMapsStyles,
   setupOSMapsVectorTiles,
 } from "./mocks/osMapsResponse";
+import {
+  setupGISMockResponse,
+  setupRoadsMockResponse,
+} from "./mocks/gisResponse";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -133,6 +137,9 @@ test.describe("Flow creation, publish and preview", () => {
     setupOSMapsStyles(page);
     setupOSMapsVectorTiles(page);
 
+    await setupGISMockResponse(page);
+    await setupRoadsMockResponse(page);
+
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
@@ -227,6 +234,12 @@ test.describe("Flow creation, publish and preview", () => {
 
     await expect(
       page.locator("h1", { hasText: "Planning constraints" }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText(
+        "These are the planning constraints we think apply to this property",
+      ),
     ).toBeVisible();
 
     // TODO: answer uploadAndLabel
