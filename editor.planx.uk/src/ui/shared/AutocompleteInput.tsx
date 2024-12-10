@@ -1,5 +1,9 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import Autocomplete, { autocompleteClasses, AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete, {
+  autocompleteClasses,
+  AutocompleteProps,
+  createFilterOptions,
+} from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import { inputLabelClasses } from "@mui/material/InputLabel";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
@@ -21,15 +25,21 @@ type RequiredAutocompleteProps<T> = Pick<
   "options" | "onChange"
 >;
 
+type OptionalAutocompleteProps<T> = Partial<
+  AutocompleteProps<T, false, true, true, "div">
+>;
+
 type WithLabel<T> = {
   label: string;
   placeholder?: never;
-} & RequiredAutocompleteProps<T>;
+} & RequiredAutocompleteProps<T> &
+  OptionalAutocompleteProps<T>;
 
 type WithPlaceholder<T> = {
   label?: never;
   placeholder: string;
-} & RequiredAutocompleteProps<T>;
+} & RequiredAutocompleteProps<T> &
+  OptionalAutocompleteProps<T>;
 
 type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 
@@ -78,7 +88,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-
 export default function AutocompleteInput<T>(props: Props<T>) {
   const isSelectEmpty = !props.value;
   const placeholder = isSelectEmpty ? props.placeholder : undefined;
@@ -91,7 +100,6 @@ export default function AutocompleteInput<T>(props: Props<T>) {
         aria-atomic={true}
         aria-live="polite"
         disableClearable
-        freeSolo
         popupIcon={PopupIcon}
         renderInput={(params) => (
           <StyledTextField

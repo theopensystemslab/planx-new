@@ -17,9 +17,12 @@ interface Props {
 const filter = createFilterOptions<string>();
 
 export const DataFieldAutocomplete: React.FC<Props> = (props) => {
-  const { value: initialValue, schema: options } = props;
+  const { value: initialValue, schema: options = [] } = props;
 
-  const value: string | undefined = useMemo(() => options?.find((option) => option === initialValue), [initialValue]);
+  const value: string | undefined = useMemo(
+    () => options?.find((option) => option === initialValue),
+    [initialValue, options],
+  );
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -36,16 +39,17 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         key="data-field-autocomplete"
         placeholder="Data field"
         options={options}
-        getOptionLabel={(option: string) => option}
         onChange={handleChange}
-        isOptionEqualToValue={(option: string, value: string) => option === value}
+        isOptionEqualToValue={(option: string, value: string) =>
+          option === value
+        }
         value={value}
-        filterOptions={(options: string[], params: any) => {
+        filterOptions={(options, params) => {
           const filtered = filter(options, params);
           const { inputValue } = params;
           // Suggest the creation of a new value
           const isExisting = options.some((option) => inputValue === option);
-          if (inputValue !== '' && !isExisting) {
+          if (inputValue !== "" && !isExisting) {
             filtered.push(`Add "${inputValue}"`);
           }
           return filtered;
