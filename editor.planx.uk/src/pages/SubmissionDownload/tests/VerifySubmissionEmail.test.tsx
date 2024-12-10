@@ -11,7 +11,9 @@ describe("when the VerifySubmissionEmail component renders", () => {
     expect(
       screen.queryByText("Verify your submission email address"),
     ).toBeInTheDocument();
-    expect(screen.queryByLabelText("Email address")).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Submission email address"),
+    ).toBeInTheDocument();
   });
   it.todo("should not display an error message");
   it.todo(
