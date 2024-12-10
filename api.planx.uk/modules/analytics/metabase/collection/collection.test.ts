@@ -1,15 +1,30 @@
 import { newCollection, getCollection } from "./service.js";
 import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
+import { $api } from "../../../../client/index.js";
+import { updateMetabaseId } from "./updateMetabaseId.js";
 
 describe("newCollection", () => {
   beforeEach(() => {
     nock.cleanAll();
+
+    // Mock GraphQL
+    vi.spyOn($api.client, "request").mockResolvedValue({
+      update_teams: {
+        returning: [
+          {
+            id: 1,
+            name: "Test Team",
+            metabase_id: expect.any(Number),
+          },
+        ],
+      },
+    });
   });
 
   test("returns a collection ID if collection exists", async () => {
     // Mock collection check endpoint
-    nock(process.env.METABASE_URL_EXT!)
+    const metabaseMock = nock(process.env.METABASE_URL_EXT!)
       .get("/api/collection/")
       .reply(200, [
         { id: 20, name: "Barnet" },
@@ -19,18 +34,21 @@ describe("newCollection", () => {
     const collection = await newCollection({
       name: "Barnet",
     });
-    console.log("HERE IS THE COLLECTION: ", collection);
     expect(collection).toBe(20);
+    expect(metabaseMock.isDone()).toBe(true);
   });
 
   test("successfully places new collection in parent", async () => {
     const testName = "Example council";
+    const metabaseMock = nock(process.env.METABASE_URL_EXT!);
+
+    console.log("Setting up mocks...");
 
     // Mock collection check endpoint
-    nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
+    metabaseMock.get("/api/collection/").reply(200, []);
 
     // Mock collection creation endpoint
-    nock(process.env.METABASE_URL_EXT!)
+    metabaseMock
       .post("/api/collection/", {
         name: testName,
         parent_id: 100,
@@ -42,7 +60,7 @@ describe("newCollection", () => {
       });
 
     // Mock GET request for verifying the new collection
-    nock(process.env.METABASE_URL_EXT!).get("/api/collection/123").reply(200, {
+    metabaseMock.get("/api/collection/123").reply(200, {
       id: 123,
       name: testName,
       parent_id: 100,
@@ -59,6 +77,7 @@ describe("newCollection", () => {
     // Verify the collection details using the service function
     const collection = await getCollection(collectionId);
     expect(collection.parent_id).toBe(100);
+    expect(metabaseMock.isDone()).toBe(true);
   });
 
   test("returns collection correctly no matter collection name case", async () => {
@@ -151,7 +170,73 @@ describe("newCollection", () => {
   });
 });
 
+describe("updateMetabaseId", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("successfully updates metabase ID", async () => {
+    // Mock the GraphQL request
+    vi.spyOn($api.client, "request").mockResolvedValue({
+      update_teams: {
+        returning: [
+          {
+            id: 1,
+            name: "Test Team",
+            metabase_id: 123,
+          },
+        ],
+      },
+    });
+
+    const result = await updateMetabaseId(1, 123);
+
+    expect(result).toEqual({
+      update_teams: {
+        returning: [
+          {
+            id: 1,
+            name: "Test Team",
+            metabase_id: 123,
+          },
+        ],
+      },
+    });
+
+    expect($api.client.request).toHaveBeenCalledWith(expect.any(String), {
+      id: 1,
+      metabaseId: 123,
+    });
+  });
+
+  test("handles GraphQL error", async () => {
+    // Mock a failed GraphQL request
+    vi.spyOn($api.client, "request").mockRejectedValue(
+      new Error("GraphQL error"),
+    );
+
+    await expect(updateMetabaseId(1, 123)).rejects.toThrow("GraphQL error");
+  });
+});
+
 describe("edge cases", () => {
+  beforeEach(() => {
+    nock.cleanAll();
+
+    // Mock GraphQL
+    vi.spyOn($api.client, "request").mockResolvedValue({
+      update_teams: {
+        returning: [
+          {
+            id: 1,
+            name: "Test Team",
+            metabase_id: expect.any(Number),
+          },
+        ],
+      },
+    });
+  });
+
   test("handles missing name", async () => {
     await expect(
       newCollection({
