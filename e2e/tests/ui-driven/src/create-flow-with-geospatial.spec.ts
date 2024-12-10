@@ -225,6 +225,10 @@ test.describe("Flow creation, publish and preview", () => {
       "The correct value for area comes from the map properties ",
     ).toBeVisible();
 
+    await expect(
+      page.locator("h1", { hasText: "Planning constraints" }),
+    ).toBeVisible();
+
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerPlanningConstraints
   });
