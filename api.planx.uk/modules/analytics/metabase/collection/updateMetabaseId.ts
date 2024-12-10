@@ -10,7 +10,6 @@ interface UpdateMetabaseId {
 }
 
 export const updateMetabaseId = async (teamId: number, metabaseId: number) => {
-  console.log({ teamId, metabaseId });
   try {
     const response = await $api.client.request<UpdateMetabaseId>(
       gql`
