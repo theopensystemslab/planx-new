@@ -128,15 +128,6 @@ const VisibleChecklist: React.FC<Props> = (props) => {
               layout === ChecklistLayout.Basic ? (
                 <FormWrapper key={option.id}>
                   <Grid item xs={12} key={option.data.text}>
-                    {option.data.text === exclusiveOrOption && (
-                      <Typography
-                        width={36}
-                        display="flex"
-                        justifyContent="center"
-                      >
-                        or
-                      </Typography>
-                    )}
                     <ChecklistItem
                       onChange={changeCheckbox(option.id)}
                       label={option.data.text}
@@ -163,6 +154,24 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                   />
                 </Grid>
               ),
+            )}
+            {exclusiveOrOption && (
+              <FormWrapper key={exclusiveOrOption[0].id}>
+                <Grid item xs={12} key={exclusiveOrOption[0].data.text}>
+                  <Typography width={36} display="flex" justifyContent="center">
+                    or
+                  </Typography>
+
+                  <ChecklistItem
+                    onChange={changeCheckbox(exclusiveOrOption[0].id)}
+                    label={exclusiveOrOption[0].data.text}
+                    id={exclusiveOrOption[0].id}
+                    checked={formik.values.checked.includes(
+                      exclusiveOrOption[0].id,
+                    )}
+                  />
+                </Grid>
+              </FormWrapper>
             )}
 
             {groupedOptions && (

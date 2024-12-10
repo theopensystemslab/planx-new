@@ -2,7 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
+import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -10,20 +10,14 @@ import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { Option } from "../../shared";
 import type { Group } from "../model";
-import { reorderOptions } from "../Public/helpers";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  const multipleOptionsConfigured = formik.values?.options?.length > 1;
-
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
@@ -153,39 +147,24 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}
-      {multipleOptionsConfigured ? (
-        <Box pt={2}>
-          <InputRow>
-            <InputRowLabel>Exclusive or option</InputRowLabel>
-            <InputRowItem>
-              <SelectInput
-                name="exclusiveOrOption"
-                onChange={(e) => {
-                  formik.setFieldValue("exclusiveOrOption", e.target.value);
-
-                  const reorderedOptions = reorderOptions(
-                    formik.values.options,
-                    e.target.value as string,
-                  );
-                  formik.setFieldValue("options", reorderedOptions);
-                }}
-                value={formik.values.exclusiveOrOption || ""}
-              >
-                {formik.values?.options?.map((option: Option) => {
-                  const optionTitle = option?.data?.text;
-                  return (
-                    <MenuItem key={optionTitle} value={optionTitle}>
-                      {optionTitle}
-                    </MenuItem>
-                  );
-                })}
-              </SelectInput>
-            </InputRowItem>
-          </InputRow>
-        </Box>
-      ) : (
-        <></>
-      )}
+      <ListManager
+        values={formik.values.exclusiveOrOption || []}
+        onChange={(newOptions) => {
+          formik.setFieldValue("exclusiveOrOption", newOptions);
+        }}
+        newValueLabel="add exclusive or option"
+        newValue={() =>
+          ({
+            data: {
+              text: "",
+              description: "",
+              val: "",
+            },
+          }) as Option
+        }
+        Editor={BaseOptionsEditor}
+        editorExtraProps={{ showValueField: !!formik.values.fn }}
+      />
     </ModalSectionContent>
   );
 };

@@ -23,7 +23,7 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
-  exclusiveOrOption?: string;
+  exclusiveOrOption?: Array<Option>;
 }
 
 interface ChecklistExpandableProps {
@@ -129,19 +129,13 @@ export const checklistValidationSchema = ({
     })
     .test({
       name: "notExclusiveOrSelection",
-      message: `Cannot select "${exclusiveOrOption}" alongside other options`,
+      message: `Cannot select "${exclusiveOrOption?.[0].data.text}" alongside other options`,
       test: (checked?: Array<string>) => {
+        const exclusiveOptionHasBeenPicked =
+          exclusiveOrOption && checked?.includes(exclusiveOrOption[0].id);
         const multipleSelectedOptionsIncludesExclusiveOr =
-          exclusiveOrOption &&
-          flatOptions.some((option) => {
-            const optionHasBeenPicked = checked?.includes(option.id);
-            return (
-              checked &&
-              optionHasBeenPicked &&
-              checked.length > 1 &&
-              option.data.text === exclusiveOrOption
-            );
-          });
+          checked && exclusiveOptionHasBeenPicked && checked.length > 1;
+
         return !multipleSelectedOptionsIncludesExclusiveOr;
       },
     });
