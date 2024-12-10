@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { $public } from "../../../../client/index.js";
+import { $api } from "../../../../client/index.js";
 
 interface UpdateMetabaseId {
   teams: {
@@ -10,18 +10,23 @@ interface UpdateMetabaseId {
 }
 
 export const updateMetabaseId = async (teamId: number, metabaseId: number) => {
-  console.log({ teamId, metabaseId }, typeof teamId, typeof metabaseId);
+  console.log({ teamId, metabaseId });
   try {
-    const response = await $public.client.request<UpdateMetabaseId>(
+    const response = await $api.client.request<UpdateMetabaseId>(
       gql`
-    mutation UpdateTeamMetabaseId($id: Int!, $metabaseId: Int!) {
-      update_teams(where: {id: {_eq:$id}}, _set:{ metabase_id: $metabaseId }) {
-      returning { id
-      name
-      metabase_id
-      }
-    }
-    `,
+        mutation UpdateTeamMetabaseId($id: Int!, $metabaseId: Int!) {
+          update_teams(
+            where: { id: { _eq: $id } }
+            _set: { metabase_id: $metabaseId }
+          ) {
+            returning {
+              id
+              name
+              metabase_id
+            }
+          }
+        }
+      `,
       {
         id: teamId,
         metabaseId: metabaseId,
