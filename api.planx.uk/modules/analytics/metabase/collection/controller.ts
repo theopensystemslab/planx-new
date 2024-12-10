@@ -1,13 +1,13 @@
-import { newCollection } from "./service.js";
+import { checkCollections } from "./service.js";
 import type { NewCollectionRequestHandler } from "./types.js";
 
-export const newCollectionController: NewCollectionRequestHandler = async (
+export const checkCollectionsController: NewCollectionRequestHandler = async (
   _req,
   res,
 ) => {
   try {
     const params = res.locals.parsedReq.body;
-    const collection = await newCollection(params);
+    const collection = await checkCollections(params);
     res.status(201).json({ data: collection });
   } catch (error) {
     res.status(400).json({

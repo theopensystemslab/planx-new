@@ -1,11 +1,15 @@
-import { newCollection, getCollection, createCollection } from "./service.js";
+import {
+  checkCollections,
+  getCollection,
+  createCollection,
+} from "./service.js";
 import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
 
-describe("newCollection", () => {
+describe("checkCollections", () => {
   beforeEach(() => {
     nock.cleanAll();
   });
@@ -245,7 +249,7 @@ describe("edge cases", () => {
 
   test("handles missing name", async () => {
     await expect(
-      newCollection({
+      checkCollections({
         name: "",
       }),
     ).rejects.toThrow();
@@ -286,7 +290,7 @@ describe("edge cases", () => {
       });
 
     await expect(
-      newCollection({
+      checkCollections({
         name: longName,
       }),
     ).rejects.toThrow();
