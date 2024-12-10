@@ -1,5 +1,5 @@
 import { MetabaseError, createMetabaseClient } from "../shared/client.js";
-import { updateMetabaseId } from "./addMetabaseId.js";
+import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
 
 const client = createMetabaseClient();
@@ -23,7 +23,13 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
     }
 
     console.log({ params });
-    const response = await client.post(`/api/collection/`, params);
+
+    const transformedParams = {
+      name: params.name,
+      parent_id: params.parentId,
+    };
+
+    const response = await client.post(`/api/collection/`, transformedParams);
 
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
@@ -48,7 +54,7 @@ export async function checkCollections(teamName: string): Promise<any> {
 
     const matchingCollection = response.data.find(
       (collection: any) =>
-        collection.name.toLowerCase === teamName.toLowerCase(),
+        collection.name.toLowerCase() === teamName.toLowerCase(),
     );
 
     if (matchingCollection) {
