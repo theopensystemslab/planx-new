@@ -1,6 +1,7 @@
 import { MetabaseError, createMetabaseClient } from "../shared/client.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
+import { getTeamAndMetabaseId } from "./getMetabaseId.js";
 
 const client = createMetabaseClient();
 
@@ -12,18 +13,13 @@ const client = createMetabaseClient();
  */
 export async function newCollection(params: NewCollectionParams): Promise<any> {
   try {
-    // Check if collection exists
-    const existingCollectionId = await checkCollections(params.name);
-    if (existingCollectionId) {
-      console.log(
-        `Collection "${params.name}" already exists with ID: ${existingCollectionId}`,
-      );
-      await updateMetabaseId(1, existingCollectionId); // TODO: remove hard-coded team id
-      return existingCollectionId;
+    const teamAndMetabaseId = await getTeamAndMetabaseId(params.name);
+    const { metabaseId, id } = teamAndMetabaseId;
+    console.log({ metabaseId });
+    if (metabaseId) {
+      await updateMetabaseId(id, metabaseId);
+      return metabaseId;
     }
-
-    console.log({ params });
-
     const transformedParams = {
       name: params.name,
       parent_id: params.parentId,
@@ -34,7 +30,7 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
     console.log(
       `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
     );
-    await updateMetabaseId(1, response.data.id); // TODO: remove hard-coded team id
+    await updateMetabaseId(id, response.data.id); // TODO: remove hard-coded team id
     return response.data.id;
   } catch (error) {
     console.error("Error in newCollection:", error);
@@ -43,44 +39,11 @@ export async function newCollection(params: NewCollectionParams): Promise<any> {
 }
 
 /**
- * Checks if a collection exists with name matching `teamName` exists.
- * Returns the matching collection ID if exists, otherwise false. */
-export async function checkCollections(teamName: string): Promise<any> {
-  try {
-    console.log("Checking for collection: ", teamName);
-
-    // Get collections from Metabase
-    const response = await client.get(`/api/collection/`);
-
-    const matchingCollection = response.data.find(
-      (collection: any) =>
-        collection.name.toLowerCase() === teamName.toLowerCase(),
-    );
-
-    if (matchingCollection) {
-      console.log("Matching collection found with ID: ", matchingCollection.id);
-      return matchingCollection.id;
-    } else {
-      console.log("No matching collection found");
-      return undefined;
-    }
-  } catch (error) {
-    console.error("Error: ", error);
-    if (error instanceof MetabaseError) {
-      console.error("Metabase API error:", {
-        message: error.message,
-        statusCode: error.statusCode,
-      });
-    }
-    throw error;
-  }
-}
-
-/**
- * Retrieves info on a collection from Metabase, use to check a parent
+ * Retrieves info on a collection from Metabase, use to check a parent. Currently only used in tests but could be useful for other Metabase functionality
  * @param id
  * @returns
  */
+// TODO: is this more suited to be part of the collection.test.ts?
 export async function getCollection(id: number): Promise<any> {
   const response = await client.get(`/api/collection/${id}`);
   return response.data;
