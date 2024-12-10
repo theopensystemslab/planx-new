@@ -193,7 +193,7 @@ test.describe("Flow creation, publish and preview", () => {
       "We can see a value for area",
     ).toBeVisible();
 
-    // navigate to upload file page
+    // navigate to upload file page and back
     await checkUploadFileAltRoute(page);
 
     await expect(
@@ -201,15 +201,18 @@ test.describe("Flow creation, publish and preview", () => {
       "We have navigated back to the map component",
     ).toBeVisible();
 
+    // ensure map has loaded correctly
     await waitForMapComponent(page);
 
     await resetMapBoundary(page);
+
     await alterDrawGeoJson(page);
 
-    // extra new GeoJSON data
-    const newGeoJSON = await getMapProperties(page, "drawgeojsondata");
-    const parsedJson: GeoJsonChangeHandler = JSON.parse(newGeoJSON!);
+    // extract new GeoJSON data
+    const newGeoJson = await getMapProperties(page, "drawgeojsondata");
+    const parsedJson: GeoJsonChangeHandler = JSON.parse(newGeoJson!);
 
+    // check it matches our static mock
     await checkGeoJsonContent(page, "drawgeojsondata", mockChangedMapGeoJson);
 
     await expect(
