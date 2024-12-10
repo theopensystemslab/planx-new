@@ -7,6 +7,13 @@ import Checklist, { ChecklistLayout } from "../Public";
 import { options } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 
+const tentOption = {
+  id: "tent_id",
+  data: {
+    text: "Tent",
+  },
+};
+
 describe("when a user selects the exclusive 'or' option and nothing else", () => {
   it("does not throw an error", async () => {
     const handleSubmit = vi.fn();
@@ -15,22 +22,22 @@ describe("when a user selects the exclusive 'or' option and nothing else", () =>
       <Checklist
         allRequired={false}
         description=""
-        text="Which Earth-based houses have you lived in?"
+        text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
         options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption="Spaceship"
+        exclusiveOrOption={[tentOption]}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
-      "Which Earth-based houses have you lived in?",
+      "Which permanent structures have you lived in?",
     );
 
-    await pressOption("Spaceship");
+    await pressOption("Tent");
 
     await pressContinue();
 
     expect(handleSubmit).toHaveBeenCalledWith({
-      answers: ["spaceship_id"],
+      answers: ["tent_id"],
     });
   });
 
@@ -48,23 +55,23 @@ describe("when a user selects the exclusive 'or' option alongside another option
       <Checklist
         allRequired={false}
         description=""
-        text="Which Earth-based houses have you lived in?"
+        text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
         options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption="Spaceship"
+        exclusiveOrOption={[tentOption]}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
-      "Which Earth-based houses have you lived in?",
+      "Which permanent structures have you lived in?",
     );
 
-    await pressOption("Spaceship");
+    await pressOption("Tent");
     await pressOption("Flat");
 
     await pressContinue();
 
     const errorMessage = screen.getByText(
-      'Cannot select "Spaceship" alongside other options',
+      'Cannot select "Tent" alongside other options',
     );
 
     expect(errorMessage).toBeVisible();
@@ -80,14 +87,14 @@ describe("when an exclusiveOr option is configured", () => {
       <Checklist
         allRequired={false}
         description=""
-        text="Which Earth-based houses have you lived in?"
+        text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
         options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption="Spaceship"
+        exclusiveOrOption={[tentOption]}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
-      "Which Earth-based houses have you lived in?",
+      "Which permanent structures have you lived in?",
     );
 
     await pressOption("Caravan");
