@@ -360,6 +360,10 @@ export = async () => {
             value: config.requireSecret("file-api-key-southwark"),
           },
           {
+            name: "FILE_API_KEY_EPSOM_EWELL",
+            value: config.requireSecret("file-api-key-epsom-ewell"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },

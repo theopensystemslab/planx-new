@@ -20,7 +20,7 @@ Once a council has confirmed they're cleared from their IT dept to use this meth
   - Root `docker-compose.yml`
   - API's `modules/auth/middleware.ts` function `isAuthenticated`
   - Pulumi's `infrastructure/application/index.ts` list of `apiService` "environment" variables
-    - Run `pulumi config set file-api-key-{team_slug} --stack {stack}` 2x for each staging & production stacks
-  - Encrypt the values using _our_ encrypt scripts (again see `how-to-generate-a-secret`) and add to `team_integrations.production_file_api_key` & `team_integrations.staging_file_api_key` via the production Hasura console. Please note these values are _not_ currently read, but suitable for a potential future refactor (just a bit tricky because file API keys are issued to a mix of _teams_ and _systems_ (eg BOPS & Idox)).
+    - Run `pulumi config set file-api-key-{team_slug} {your-new-secret} --secret --stack {stack}` once for each staging & production stacks, making sure that the secret you used for the root `.env` is the STAGING secret.
+  - Encrypt the values using _our_ encrypt scripts (see [`how-to-add-a-team-secret.md`](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/secrets/how-to-add-a-team-secret.md)) and add to `team_integrations.production_file_api_key` & `team_integrations.staging_file_api_key` via the production Hasura console. Please note these values are _not_ currently read, but suitable for a potential future refactor (just a bit tricky because file API keys are issued to a mix of _teams_ and _systems_ (eg BOPS & Idox)).
 
 4. Securely share tokens back to council contact via onetimesecret or similar
