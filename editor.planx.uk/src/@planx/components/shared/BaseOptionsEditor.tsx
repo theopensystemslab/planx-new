@@ -10,6 +10,7 @@ import { FlagsSelect } from "./FlagsSelect";
 export interface BaseOptionsEditorProps {
   value: Option;
   showValueField?: boolean;
+  showDescriptionField?: boolean;
   onChange: (newVal: Option) => void;
   children?: ReactNode;
 }
@@ -50,8 +51,26 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
           });
         }}
       />
+      {props.children}
     </InputRow>
-    {props.children && <InputRow>{props.children}</InputRow>}
+    {props.showDescriptionField && (
+      <InputRow>
+        <Input
+          value={props.value.data.description || ""}
+          placeholder="Description"
+          multiline
+          onChange={(ev) =>
+            props.onChange({
+              ...props.value,
+              data: {
+                ...props.value.data,
+                description: ev.target.value,
+              },
+            })
+          }
+        />
+      </InputRow>
+    )}
     {props.showValueField && (
       <InputRow>
         <Input
