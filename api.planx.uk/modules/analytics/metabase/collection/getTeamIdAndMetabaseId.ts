@@ -9,7 +9,7 @@ interface GetMetabaseId {
   }[];
 }
 
-export const getTeamAndMetabaseId = async (name: string) => {
+export const getTeamIdAndMetabaseId = async (name: string) => {
   try {
     const response = await $api.client.request<GetMetabaseId>(
       gql`

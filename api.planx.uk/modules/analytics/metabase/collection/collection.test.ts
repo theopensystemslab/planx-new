@@ -4,7 +4,7 @@ import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
-import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
+import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
 describe("checkCollections", () => {
@@ -13,7 +13,7 @@ describe("checkCollections", () => {
   });
 
   test("returns an existing Metabase collection ID if collection exists", async () => {
-    // Mock getTeamAndMetabaseId response
+    // Mock getTeamIdAndMetabaseId response
     vi.spyOn($api.client, "request").mockResolvedValueOnce({
       teams: [
         {
@@ -24,13 +24,13 @@ describe("checkCollections", () => {
       ],
     });
 
-    const collectionId = await getTeamAndMetabaseId("Barnet");
+    const collectionId = await getTeamIdAndMetabaseId("Barnet");
 
     expect(collectionId.metabaseId).toBe(20);
   });
 
   test("creates new collection when metabase ID doesn't exist", async () => {
-    // Mock getTeamAndMetabaseId response with null metabase_id
+    // Mock getTeamIdAndMetabaseId response with null metabase_id
     vi.spyOn($api.client, "request").mockResolvedValueOnce({
       teams: [
         {
@@ -120,7 +120,7 @@ describe("checkCollections", () => {
       ],
     });
 
-    const collection = await getTeamAndMetabaseId("BARNET");
+    const collection = await getTeamIdAndMetabaseId("BARNET");
     expect(collection.metabaseId).toBe(20);
   });
 
@@ -149,7 +149,7 @@ describe("checkCollections", () => {
   });
 });
 
-describe("getTeamAndMetabaseId", () => {
+describe("getTeamIdAndMetabaseId", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -165,7 +165,7 @@ describe("getTeamAndMetabaseId", () => {
       ],
     });
 
-    const teamAndMetabaseId = await getTeamAndMetabaseId("Barnet");
+    const teamAndMetabaseId = await getTeamIdAndMetabaseId("Barnet");
 
     expect(teamAndMetabaseId.id).toEqual(26);
     expect(teamAndMetabaseId.metabaseId).toEqual(20);
@@ -182,7 +182,7 @@ describe("getTeamAndMetabaseId", () => {
       ],
     });
 
-    const teamAndMetabaseId = await getTeamAndMetabaseId("Barnet");
+    const teamAndMetabaseId = await getTeamIdAndMetabaseId("Barnet");
 
     expect(teamAndMetabaseId.id).toEqual(26);
     expect(teamAndMetabaseId.metabaseId).toBeNull();

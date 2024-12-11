@@ -1,7 +1,7 @@
 import { createMetabaseClient } from "../shared/client.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
-import { getTeamAndMetabaseId } from "./getTeamAndMetabaseId.js";
+import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
 const client = createMetabaseClient();
@@ -16,7 +16,7 @@ export async function checkCollections(
   params: NewCollectionParams,
 ): Promise<number> {
   try {
-    const teamAndMetabaseId = await getTeamAndMetabaseId(params.name);
+    const teamAndMetabaseId = await getTeamIdAndMetabaseId(params.name);
     const { metabaseId, id } = teamAndMetabaseId;
 
     if (metabaseId) {
