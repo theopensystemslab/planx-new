@@ -7,8 +7,6 @@ import type {
   PaymentRequest,
   PaymentStatus,
 } from "@opensystemslab/planx-core/types";
-import Card from "@planx/components/shared/Preview/Card";
-import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
@@ -164,7 +162,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
   return isLoading ? (
     <DelayedLoadingIndicator />
   ) : (
-    <Card>
+    <>
       <StyledForm onSubmit={formik.handleSubmit}>
         <Typography variant="h2">{nomineeTitle}</Typography>
         {nomineeDescription && (
@@ -279,8 +277,7 @@ const InviteToPayForm: React.FC<InviteToPayFormProps> = ({
       >
         {"I want to pay for this application myself"}
       </Button>
-      {isSaveReturn && <SaveResumeButton />}
-    </Card>
+    </>
   );
 };
 

@@ -24,7 +24,12 @@ import { FeeBreakdown } from "./FeeBreakdown/FeeBreakdown";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
-type State = "error" | "informationOnly" | "inviteToPay" | "zeroFee" | "pay";
+type ComponentState =
+  | "error"
+  | "informationOnly"
+  | "inviteToPay"
+  | "zeroFee"
+  | "pay";
 
 export interface Props extends Omit<Pay, "title" | "fn" | "govPayMetadata"> {
   title?: string;
@@ -75,111 +80,81 @@ const Error: React.FC<Props> = ({ onConfirm, error }) => {
 };
 
 const PayBody: React.FC<PayBodyProps> = (props) => {
-  const path = useStore((state) => state.path);
-  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const defaults = getDefaultContent();
 
   return (
-    <Card>
-      <PayText>
-        <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
-          {props.instructionsTitle || defaults.instructionsTitle}
-        </Typography>
-        <ReactMarkdownOrHtml
-          source={
-            props.instructionsDescription || defaults.instructionsDescription
-          }
-          openLinksOnNewTab
-        />
+    <>
+      <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
+        {props.instructionsTitle || defaults.instructionsTitle}
+      </Typography>
+      <ReactMarkdownOrHtml
+        source={
+          props.instructionsDescription || defaults.instructionsDescription
+        }
+        openLinksOnNewTab
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        onClick={props.onConfirm}
+      >
+        {props.buttonTitle || "Pay now using GOV.UK Pay"}
+      </Button>
+      {props.showInviteToPay && (
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           size="large"
-          onClick={props.onConfirm}
+          onClick={props.changePage}
+          disabled={Boolean(props?.paymentStatus)}
+          data-testid="invite-page-link"
         >
-          {props.buttonTitle || "Pay now using GOV.UK Pay"}
+          {"Invite someone else to pay for this application"}
         </Button>
-        {props.showInviteToPay && (
-          <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            onClick={props.changePage}
-            disabled={Boolean(props?.paymentStatus)}
-            data-testid="invite-page-link"
-          >
-            {"Invite someone else to pay for this application"}
-          </Button>
-        )}
-        {isSaveReturn && <SaveResumeButton />}
-      </PayText>
-    </Card>
+      )}
+    </>
   );
 };
 
 const InformationOnly: React.FC<Props> = (props) => {
-  const path = useStore((state) => state.path);
-  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
   const defaults = getDefaultContent();
 
   return (
-    <Card>
-      <PayText>
-        <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
-          {props.instructionsTitle || defaults.instructionsTitle}
-        </Typography>
-        <ReactMarkdownOrHtml
-          source={
-            props.instructionsDescription || defaults.instructionsDescription
-          }
-          openLinksOnNewTab
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={props.onConfirm}
-        >
-          Continue
-        </Button>
-        {isSaveReturn && <SaveResumeButton />}
-      </PayText>
-    </Card>
+    <>
+      <Typography variant="h2" component={props.hideFeeBanner ? "h2" : "h3"}>
+        {props.instructionsTitle || defaults.instructionsTitle}
+      </Typography>
+      <ReactMarkdownOrHtml
+        source={
+          props.instructionsDescription || defaults.instructionsDescription
+        }
+        openLinksOnNewTab
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        onClick={props.onConfirm}
+      >
+        Continue
+      </Button>
+    </>
   );
 };
 
-const ZeroFee: React.FC<Props> = (props) => {
-  const path = useStore((state) => state.path);
-  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
-  const defaults = getDefaultContent();
+const ZeroFee: React.FC<Props> = (props) => (
+  <Button
+    variant="contained"
+    color="primary"
+    size="large"
+    onClick={props.onConfirm}
+  >
+    Continue
+  </Button>
+);
 
-  return (
-    <Card>
-      <PayText>
-        <Typography variant="h2" component="h3">
-          {props.instructionsTitle || defaults.instructionsTitle}
-        </Typography>
-        <ReactMarkdownOrHtml
-          source={
-            props.instructionsDescription || defaults.instructionsDescription
-          }
-          openLinksOnNewTab
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={props.onConfirm}
-        >
-          Continue
-        </Button>
-        {isSaveReturn && <SaveResumeButton />}
-      </PayText>
-    </Card>
-  );
-};
-
-const getInitialState = (props: Props): State => {
+const getInitialState = (props: Props): ComponentState => {
   if (props.error) return "error";
   if (props.hidePay) return "informationOnly";
   if (props.fee === 0) return "zeroFee";
@@ -189,17 +164,17 @@ const getInitialState = (props: Props): State => {
 
 export default function Confirm(props: Props) {
   const theme = useTheme();
-  const [state, setState] = useState<State>(getInitialState(props));
+  const [componentState, setComponentState] = useState<ComponentState>(
+    getInitialState(props),
+  );
+
+  const toggleToPayPage = () => setComponentState("pay");
+  const toggleToInviteToPayPage = () => setComponentState("inviteToPay");
 
   const defaults = getDefaultContent();
 
-  const changePage = () => {
-    if (state === "pay" && !props.paymentStatus) {
-      setState("inviteToPay");
-    } else {
-      setState("pay");
-    }
-  };
+  const path = useStore((state) => state.path);
+  const isSaveReturn = path === ApplicationPath.SaveAndReturn;
 
   const inviteToPayFormProps: InviteToPayFormProps = {
     nomineeTitle: props.nomineeTitle,
@@ -208,63 +183,68 @@ export default function Confirm(props: Props) {
     yourDetailsDescription: props.yourDetailsDescription,
     yourDetailsLabel: props.yourDetailsLabel,
     paymentStatus: props.paymentStatus,
-    changePage,
+    changePage: toggleToPayPage,
   };
 
   return (
     <Box textAlign="left" width="100%">
-      <>
-        <Container maxWidth="contentWrap">
-          <Typography variant="h2" component="h1" align="left" pb={3}>
-            {state === "inviteToPay" ? props.secondaryPageTitle : props.title}
-          </Typography>
-        </Container>
-        {state !== "inviteToPay" && !props.hideFeeBanner && (
-          <Banner
-            color={{
-              background: theme.palette.info.light,
-              text: theme.palette.text.primary,
-            }}
-          >
-            <FormWrapper>
-              <Typography
-                variant="h3"
-                gutterBottom
-                className="marginBottom"
-                component="h2"
-              >
-                {props.bannerTitle || defaults.bannerTitle}
-              </Typography>
-              <Typography
-                variant="h1"
-                gutterBottom
-                className="marginBottom"
-                component="span"
-              >
-                {isNaN(props.fee)
-                  ? "Unknown"
-                  : formattedPriceWithCurrencySymbol(props.fee)}
-              </Typography>
-              <Typography variant="subtitle1" component="span" color="inherit">
-                <ReactMarkdownOrHtml
-                  source={props.description}
-                  openLinksOnNewTab
-                />
-              </Typography>
-            </FormWrapper>
-            {hasFeatureFlag("FEE_BREAKDOWN") && <FeeBreakdown />}
-          </Banner>
-        )}
-        {
+      <Container maxWidth="contentWrap">
+        <Typography variant="h2" component="h1" align="left" pb={3}>
+          {componentState === "inviteToPay"
+            ? props.secondaryPageTitle
+            : props.title}
+        </Typography>
+      </Container>
+      {componentState !== "inviteToPay" && !props.hideFeeBanner && (
+        <Banner
+          color={{
+            background: theme.palette.info.light,
+            text: theme.palette.text.primary,
+          }}
+        >
+          <FormWrapper>
+            <Typography
+              variant="h3"
+              gutterBottom
+              className="marginBottom"
+              component="h2"
+            >
+              {props.bannerTitle || defaults.bannerTitle}
+            </Typography>
+            <Typography
+              variant="h1"
+              gutterBottom
+              className="marginBottom"
+              component="span"
+            >
+              {isNaN(props.fee)
+                ? "Unknown"
+                : formattedPriceWithCurrencySymbol(props.fee)}
+            </Typography>
+            <Typography variant="subtitle1" component="span" color="inherit">
+              <ReactMarkdownOrHtml
+                source={props.description}
+                openLinksOnNewTab
+              />
+            </Typography>
+          </FormWrapper>
+          {hasFeatureFlag("FEE_BREAKDOWN") && <FeeBreakdown />}
+        </Banner>
+      )}
+      <Card>
+        <PayText>
           {
-            pay: <PayBody {...props} changePage={changePage} />,
-            informationOnly: <InformationOnly {...props} />,
-            inviteToPay: <InviteToPayForm {...inviteToPayFormProps} />,
-            error: <Error {...props} />,
-            zeroFee: <ZeroFee {...props} />,
-          }[state]
-        }
-      </>
+            {
+              pay: <PayBody {...props} changePage={toggleToInviteToPayPage} />,
+              informationOnly: <InformationOnly {...props} />,
+              inviteToPay: <InviteToPayForm {...inviteToPayFormProps} />,
+              error: <Error {...props} />,
+              zeroFee: <ZeroFee {...props} />,
+            }[componentState]
+          }
+          {isSaveReturn && <SaveResumeButton />}
+        </PayText>
+      </Card>
     </Box>
   );
 }
