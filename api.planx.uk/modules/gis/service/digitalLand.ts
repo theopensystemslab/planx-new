@@ -252,7 +252,7 @@ async function go(
     const a4s = planningConstraints["article4"]["records"] || undefined;
 
     // loop through any intersecting a4 data entities and set granular planx values based on this local authority's schema
-    if (a4s && formattedResult["article4"].value) {
+    if (a4s && formattedResult["article4"]?.value) {
       formattedResult["article4"]?.data?.forEach((entity: any) => {
         Object.keys(a4s)?.forEach((key) => {
           if (
@@ -280,8 +280,8 @@ async function go(
 
       // if caz is true, but parent a4 is false, sync a4 for accurate granularity
       if (
-        formattedResult[localCaz].value &&
-        !formattedResult["article4"].value
+        formattedResult[localCaz]?.value &&
+        !formattedResult["article4"]?.value
       ) {
         formattedResult["article4"] = {
           fn: "article4",
