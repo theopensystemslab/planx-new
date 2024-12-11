@@ -12,7 +12,7 @@ Once a council has confirmed they're cleared from their IT dept to use this meth
 
 2. Create 2x tokens for sending secure requests to the Power Automate webhook and add both encrypted values to:
   - `team_integrations.production_power_automate_api_key` & `team_integrations.staging_power_automate_api_key` via the production Hasura console
-  - See `how-to-generate-a-secret` for how to properly generate tokens and encrypt values
+  - See `how-to-generate-a-secret` and `how-to-add-a-team-secret` for how to properly generate tokens and encrypt values
 
 3. Create 2x tokens for downloading files from the PlanX S3 Bucket and add values to:
   - Root `.env.example` & `.env`, API's `.env.test` & `.env.test.example` as `FILE_API_KEY_{TEAM_SLUG}`
@@ -23,4 +23,6 @@ Once a council has confirmed they're cleared from their IT dept to use this meth
     - Run `pulumi config set file-api-key-{team_slug} {your-new-secret} --secret --stack {stack}` once for each staging & production stacks, making sure that the secret you used for the root `.env` is the STAGING secret.
   - Encrypt the values using _our_ encrypt scripts (see [`how-to-add-a-team-secret.md`](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/secrets/how-to-add-a-team-secret.md)) and add to `team_integrations.production_file_api_key` & `team_integrations.staging_file_api_key` via the production Hasura console. Please note these values are _not_ currently read, but suitable for a potential future refactor (just a bit tricky because file API keys are issued to a mix of _teams_ and _systems_ (eg BOPS & Idox)).
 
-4. Securely share tokens back to council contact via onetimesecret or similar
+4. Securely share all four raw tokens back to council contact via onetimesecret or similar:
+- The two Power Automate API keys
+- The two file API keys
