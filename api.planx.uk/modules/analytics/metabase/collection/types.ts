@@ -40,7 +40,7 @@ export const createCollectionIfDoesNotExistSchema = z.object({
 
 export type NewCollectionRequestHandler = ValidatedRequestHandler<
   typeof createCollectionIfDoesNotExistSchema,
-  ApiResponse<NewCollectionResponse>
+  ApiResponse<number>
 >;
 
 export interface NewCollectionResponse {
