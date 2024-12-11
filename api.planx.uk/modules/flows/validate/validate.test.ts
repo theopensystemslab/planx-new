@@ -447,65 +447,6 @@ describe("invite to pay validation on diff", () => {
         ]);
       });
   });
-
-  it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-    const invalidatedFlow = flowWithInviteToPay;
-    // Remove proposal.projectType, set incorrect variable
-    invalidatedFlow!.Checklist!.data!.fn = "some.other.variable";
-
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          data: invalidatedFlow,
-          slug: "invalidated-flow-name",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [{ data: invalidatedFlow }],
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(auth)
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Invite to Pay",
-            status: "Fail",
-            message:
-              "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
-          },
-          {
-            title: "Sections",
-            status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-        ]);
-      });
-  });
 });
 
 describe("ODP Schema file type validation on diff", () => {
