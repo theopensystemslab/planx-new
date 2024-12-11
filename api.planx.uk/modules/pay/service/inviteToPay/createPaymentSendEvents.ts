@@ -43,6 +43,7 @@ const createPaymentSendEvents = async (
     }
 
     // Find this sessions Send component, determine which "destinations" we need to queue up events for
+    //   REMINDER to keep these destinations in sync with api.planx.uk/modules/send/createSendEvents/controller.ts
     const sendNode: [string, Node] | undefined = Object.entries(
       publishedFlowData,
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
@@ -54,7 +55,7 @@ const createPaymentSendEvents = async (
     if (destinations.includes("bops")) {
       const bopsEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/bops/${teamSlug}`,
-        schedule_at: now,
+        schedule_at: new Date(now.getTime() + 15 * 1000),
         payload: eventPayload,
         comment: `bops_submission_${payload.sessionId}`,
       });
@@ -91,7 +92,7 @@ const createPaymentSendEvents = async (
 
       const uniformEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/uniform/${teamSlug}`,
-        schedule_at: now,
+        schedule_at: new Date(now.getTime() + 30 * 1000),
         payload: eventPayload,
         comment: `uniform_submission_${payload.sessionId}`,
       });
