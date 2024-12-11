@@ -20,8 +20,6 @@ export async function checkCollections(
     const { metabaseId, id } = teamAndMetabaseId;
 
     if (metabaseId) {
-      console.log("Updating MetabaseId...");
-      await updateMetabaseId(id, metabaseId);
       return metabaseId;
     }
 
