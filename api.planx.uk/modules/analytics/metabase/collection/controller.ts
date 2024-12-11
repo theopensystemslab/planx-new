@@ -1,7 +1,7 @@
 import { createCollectionIfDoesNotExist } from "./service.js";
 import type { NewCollectionRequestHandler } from "./types.js";
 
-export const createCollectionIfDoesNotExistController: NewCollectionRequestHandler =
+export const MetabaseCollectionsController: NewCollectionRequestHandler =
   async (_req, res) => {
     try {
       const params = res.locals.parsedReq.body;
