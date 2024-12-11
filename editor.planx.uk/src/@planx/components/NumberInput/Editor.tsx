@@ -14,6 +14,8 @@ import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
+import { useStore } from "pages/FlowEditor/lib/store";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.NumberInput, NumberInput>;
@@ -28,6 +30,9 @@ export default function NumberInputComponent(props: Props): FCReturn {
     },
     validate: () => {},
   });
+
+  const schema = useStore().getFlowSchema()?.nodes;
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -52,16 +57,11 @@ export default function NumberInputComponent(props: Props): FCReturn {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              // required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            schema={schema}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
           <InputRow>
             <InputRowLabel>units</InputRowLabel>
             <InputRowItem>

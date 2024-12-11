@@ -9,8 +9,8 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { ICONS } from "../shared/icons";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
+import { ICONS } from "../shared/icons";
 
 function Component(props: any) {
   const formik = useFormik<{
@@ -43,8 +43,8 @@ function Component(props: any) {
     validate: () => { },
   });
 
-  // Rather than default to generic `useStore().geFlowSchema()`
-  //   File Upload components can specificly reference ODP Schema enum options
+  // Rather than default to generic `useStore().getFlowSchema()`
+  //   File Upload components can specifically reference ODP Schema enum options
   const schema = getValidSchemaValues("FileType");
 
   return (
@@ -53,6 +53,7 @@ function Component(props: any) {
         <ModalSectionContent title="File upload" Icon={ICONS[TYPES.FileUpload]}>
           <InputRow>
             <Input
+              required
               format="large"
               placeholder="Title"
               name="title"
@@ -68,7 +69,12 @@ function Component(props: any) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <DataFieldAutocomplete schema={schema} value={formik.values.fn} onChange={formik.handleChange} /> 
+          <DataFieldAutocomplete
+            required
+            schema={schema}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} />

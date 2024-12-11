@@ -1,7 +1,7 @@
 import {
   AutocompleteChangeReason,
   AutocompleteProps,
-  createFilterOptions,
+  createFilterOptions
 } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import React, { useMemo } from "react";
@@ -11,8 +11,21 @@ import InputRow from "ui/shared/InputRow";
 interface Props {
   schema?: string[];
   value?: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | null) => void;
+  required?: boolean;
 }
+
+const renderOptions: AutocompleteProps<
+  string,
+  false,
+  false,
+  true,
+  "div"
+>["renderOption"] = (props, value) => (
+  <ListItem key={value} sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }} {...props}>
+    {value}
+  </ListItem>
+);
 
 const filter = createFilterOptions<string>();
 
@@ -26,7 +39,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
 
   const handleChange = (
     _event: React.SyntheticEvent,
-    value: string,
+    value: string | null,
     _reason: AutocompleteChangeReason,
   ) => {
     props.onChange(value);
@@ -38,6 +51,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         id="data-field-autocomplete"
         key="data-field-autocomplete"
         placeholder="Data field"
+        required={Boolean(props.required)}
         options={options}
         onChange={handleChange}
         isOptionEqualToValue={(option: string, value: string) =>
@@ -54,6 +68,10 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           }
           return filtered;
         }}
+        renderOption={renderOptions}
+        selectOnFocus
+        clearOnEscape
+        handleHomeEndKeys
       />
     </InputRow>
   );

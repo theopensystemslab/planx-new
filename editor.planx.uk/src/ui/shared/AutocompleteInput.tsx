@@ -2,7 +2,6 @@ import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Autocomplete, {
   autocompleteClasses,
   AutocompleteProps,
-  createFilterOptions,
 } from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import { inputLabelClasses } from "@mui/material/InputLabel";
@@ -19,25 +18,26 @@ const PopupIcon = (
   />
 );
 
-// T = value = string, multiple=false, disableClearable=true, freeSolo=true, chip="div"
 type RequiredAutocompleteProps<T> = Pick<
-  AutocompleteProps<T, false, true, true, "div">,
+  AutocompleteProps<T, false, false, true, "div">,
   "options" | "onChange"
 >;
 
 type OptionalAutocompleteProps<T> = Partial<
-  AutocompleteProps<T, false, true, true, "div">
+  AutocompleteProps<T, false, false, true, "div">
 >;
 
 type WithLabel<T> = {
   label: string;
   placeholder?: never;
+  required: boolean;
 } & RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T>;
 
 type WithPlaceholder<T> = {
   label?: never;
   placeholder: string;
+  required: boolean;
 } & RequiredAutocompleteProps<T> &
   OptionalAutocompleteProps<T>;
 
@@ -74,7 +74,9 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   [`& .${outlinedInputClasses.root}, input`]: {
     cursor: "pointer",
-    backgroundColor: theme.palette.background.default,
+    // TODO extract as `format="data"` prop more like `Input` ? 
+    backgroundColor: "#f0f0f0",
+    fontFamily: theme.typography.data.fontFamily,
   },
   [`& .${inputLabelClasses.root}`]: {
     textDecoration: "underline",
@@ -94,12 +96,10 @@ export default function AutocompleteInput<T>(props: Props<T>) {
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
-      <StyledAutocomplete<T, false, true, true, "div">
-        sx={{ width: 300 }}
+      <StyledAutocomplete<T, false, false, true, "div">
         role="status"
         aria-atomic={true}
         aria-live="polite"
-        disableClearable
         popupIcon={PopupIcon}
         renderInput={(params) => (
           <StyledTextField
@@ -109,7 +109,8 @@ export default function AutocompleteInput<T>(props: Props<T>) {
               notched: false,
             }}
             label={props.label}
-            placeholder={props.placeholder}
+            placeholder={placeholder}
+            required={props.required}
           />
         )}
         componentsProps={{
