@@ -5,8 +5,8 @@ import {
   logUserExitController,
   logUserResumeController,
 } from "./analyticsLog/controller.js";
-import { checkCollectionsController } from "./metabase/collection/controller.js";
-import { checkCollectionsSchema } from "./metabase/collection/types.js";
+import { createCollectionIfDoesNotExistController } from "./metabase/collection/controller.js";
+import { createCollectionIfDoesNotExistSchema } from "./metabase/collection/types.js";
 
 const router = Router();
 
@@ -22,8 +22,8 @@ router.post(
 );
 router.post(
   "/collection",
-  validate(checkCollectionsSchema),
-  checkCollectionsController,
+  validate(createCollectionIfDoesNotExistSchema),
+  createCollectionIfDoesNotExistController,
 );
 
 export default router;

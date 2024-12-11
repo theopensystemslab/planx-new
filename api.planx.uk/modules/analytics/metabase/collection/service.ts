@@ -12,7 +12,7 @@ const client = createMetabaseClient();
  * @params `name` is required, but `description` and `parent_id` are optional.
  * @returns `response.data`, so use dot notation to access `id` or `parent_id`.
  */
-export async function checkCollections(
+export async function createCollectionIfDoesNotExist(
   params: NewCollectionParams,
 ): Promise<number> {
   try {
@@ -30,7 +30,7 @@ export async function checkCollections(
     console.log({ newMetabaseId });
     return newMetabaseId;
   } catch (error) {
-    console.error("Error in checkCollections:", error);
+    console.error("Error in createCollectionIfDoesNotExist:", error);
     throw error;
   }
 }

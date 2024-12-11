@@ -1,4 +1,4 @@
-import { checkCollections } from "./service.js";
+import { createCollectionIfDoesNotExist } from "./service.js";
 import { getCollection } from "./getCollection.js";
 import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
@@ -7,7 +7,7 @@ import { updateMetabaseId } from "./updateMetabaseId.js";
 import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
-describe("checkCollections", () => {
+describe("createCollectionIfDoesNotExist", () => {
   beforeEach(() => {
     nock.cleanAll();
   });
@@ -247,7 +247,7 @@ describe("edge cases", () => {
 
   test("handles missing name", async () => {
     await expect(
-      checkCollections({
+      createCollectionIfDoesNotExist({
         name: "",
       }),
     ).rejects.toThrow();
@@ -288,7 +288,7 @@ describe("edge cases", () => {
       });
 
     await expect(
-      checkCollections({
+      createCollectionIfDoesNotExist({
         name: longName,
       }),
     ).rejects.toThrow();
