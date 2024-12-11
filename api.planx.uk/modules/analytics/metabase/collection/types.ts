@@ -47,3 +47,9 @@ export interface NewCollectionResponse {
   id: number;
   name: string;
 }
+
+export interface GetCollectionResponse {
+  id: number;
+  name: string;
+  parent_id: number;
+}

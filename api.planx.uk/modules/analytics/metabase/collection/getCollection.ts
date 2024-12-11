@@ -1,4 +1,5 @@
 import { createMetabaseClient } from "../shared/client.js";
+import type { GetCollectionResponse } from "./types.js";
 
 const client = createMetabaseClient();
 /**
@@ -6,7 +7,9 @@ const client = createMetabaseClient();
  * @param id
  * @returns
  */
-export async function getCollection(id: number): Promise<any> {
+export async function getCollection(
+  id: number,
+): Promise<GetCollectionResponse> {
   const response = await client.get(`/api/collection/${id}`);
   return response.data;
 }
