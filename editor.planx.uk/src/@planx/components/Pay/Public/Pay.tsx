@@ -307,7 +307,6 @@ function Component(props: Props) {
           }
           showInviteToPay={showPayOptions && isTeamSupported}
           paymentStatus={govUkPayment?.state?.status}
-          hidePay={fee === 0 || props.hidePay}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
