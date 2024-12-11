@@ -28,3 +28,18 @@ export function getInitialExpandedGroups(
     [] as number[],
   );
 }
+
+export const toggleCheckbox = (
+  thisCheckboxId: string,
+  currentlyCheckedOptionIds: string[],
+) => {
+  const toggleOff = currentlyCheckedOptionIds.filter(
+    (id) => id !== thisCheckboxId,
+  );
+
+  const toggleOn = [...currentlyCheckedOptionIds, thisCheckboxId];
+
+  return currentlyCheckedOptionIds.includes(thisCheckboxId)
+    ? toggleOff
+    : toggleOn;
+};

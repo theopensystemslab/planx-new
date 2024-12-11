@@ -103,7 +103,6 @@ export const checklistValidationSchema = ({
   allRequired,
   options,
   groupedOptions,
-  exclusiveOrOption,
 }: Checklist) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
@@ -125,18 +124,6 @@ export const checklistValidationSchema = ({
         }
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
-      },
-    })
-    .test({
-      name: "notExclusiveOrSelection",
-      message: `Cannot select "${exclusiveOrOption?.[0].data.text}" alongside other options`,
-      test: (checked?: Array<string>) => {
-        const exclusiveOptionHasBeenPicked =
-          exclusiveOrOption && checked?.includes(exclusiveOrOption[0].id);
-        const multipleSelectedOptionsIncludesExclusiveOr =
-          checked && exclusiveOptionHasBeenPicked && checked.length > 1;
-
-        return !multipleSelectedOptionsIncludesExclusiveOr;
       },
     });
 };

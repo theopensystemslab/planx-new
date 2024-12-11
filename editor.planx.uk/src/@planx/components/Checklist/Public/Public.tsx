@@ -22,7 +22,11 @@ import { object } from "yup";
 
 import { Props } from "../types";
 import { AutoAnsweredChecklist } from "./AutoAnsweredChecklist";
-import { getInitialExpandedGroups, toggleInArray } from "./helpers";
+import {
+  getInitialExpandedGroups,
+  toggleCheckbox,
+  toggleInArray,
+} from "./helpers";
 
 export enum ChecklistLayout {
   Basic,
@@ -92,18 +96,35 @@ const VisibleChecklist: React.FC<Props> = (props) => {
   const layout = getLayout({ options, groupedOptions });
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
-  const changeCheckbox = (id: string) => (_checked: any) => {
-    const newCheckedIds = formik.values.checked.includes(id)
-      ? formik.values.checked.filter((x) => x !== id)
-      : [...formik.values.checked, id];
+  const sortCheckedIds = (ids: string[]): string[] => {
+    const originalIds = flatOptions.map((cb) => cb.id);
+    return ids.sort((a, b) => originalIds.indexOf(a) - originalIds.indexOf(b));
+  };
 
-    formik.setFieldValue(
-      "checked",
-      newCheckedIds.sort((a, b) => {
-        const originalIds = flatOptions.map((cb) => cb.id);
-        return originalIds.indexOf(a) - originalIds.indexOf(b);
-      }),
-    );
+  const exclusiveOptionIsConfigured =
+    exclusiveOrOption && exclusiveOrOption.length > 0;
+
+  const exclusiveOptionIsChecked =
+    exclusiveOptionIsConfigured &&
+    formik.values.checked.includes(exclusiveOrOption[0].id);
+
+  const changeCheckbox = (id: string) => () => {
+    const currentIds = formik.values.checked;
+    let newCheckedIds;
+    const currentCheckboxIsExclusiveOption =
+      exclusiveOptionIsConfigured && id === exclusiveOrOption[0].id;
+
+    if (currentCheckboxIsExclusiveOption) {
+      newCheckedIds = exclusiveOptionIsChecked ? [] : [id];
+    } else if (exclusiveOptionIsChecked) {
+      // nonExclusiveOptions should not become checked if exclusiveOptionIsChecked
+      return;
+    } else {
+      newCheckedIds = toggleCheckbox(id, currentIds);
+    }
+    const sortedCheckedIds = sortCheckedIds(newCheckedIds);
+
+    formik.setFieldValue("checked", sortedCheckedIds);
   };
 
   return (
@@ -132,7 +153,13 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                       onChange={changeCheckbox(option.id)}
                       label={option.data.text}
                       id={option.id}
-                      checked={formik.values.checked.includes(option.id)}
+                      inputProps={
+                        exclusiveOptionIsChecked ? { disabled: true } : {}
+                      }
+                      checked={
+                        formik.values.checked.includes(option.id) &&
+                        !exclusiveOptionIsChecked
+                      }
                     />
                   </Grid>
                 </FormWrapper>
@@ -155,7 +182,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                 </Grid>
               ),
             )}
-            {exclusiveOrOption && (
+            {exclusiveOptionIsConfigured && (
               <FormWrapper key={exclusiveOrOption[0].id}>
                 <Grid item xs={12} key={exclusiveOrOption[0].data.text}>
                   <Typography width={36} display="flex" justifyContent="center">

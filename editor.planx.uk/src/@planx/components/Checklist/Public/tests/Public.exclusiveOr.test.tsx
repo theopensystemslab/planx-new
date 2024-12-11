@@ -3,19 +3,22 @@ import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
+import { Option } from "../../../shared/index";
 import Checklist, { ChecklistLayout } from "../Public";
 import { options } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 
-const tentOption = {
-  id: "tent_id",
-  data: {
-    text: "Tent",
+const tentOption = [
+  {
+    id: "tent_id",
+    data: {
+      text: "Tent",
+    },
   },
-};
+] as Option[];
 
 describe("when a user selects the exclusive 'or' option and nothing else", () => {
-  it("does not throw an error", async () => {
+  it("does not throw an error on submit", async () => {
     const handleSubmit = vi.fn();
 
     setup(
@@ -25,7 +28,7 @@ describe("when a user selects the exclusive 'or' option and nothing else", () =>
         text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
         options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption={[tentOption]}
+        exclusiveOrOption={tentOption}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
@@ -41,41 +44,21 @@ describe("when a user selects the exclusive 'or' option and nothing else", () =>
     });
   });
 
-  // maybe for editor test
-  it.todo(
-    "styles the exclusive 'or' option correctly at the end of the checklist",
-  );
-});
-
-describe("when a user selects the exclusive 'or' option alongside another option", () => {
-  it("displays an error message and does not submit", async () => {
-    const handleSubmit = vi.fn();
-
-    setup(
+  it("disables the other checkboxes", async () => {
+    const { getByLabelText } = setup(
       <Checklist
         allRequired={false}
         description=""
         text="Which permanent structures have you lived in?"
-        handleSubmit={handleSubmit}
         options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption={[tentOption]}
+        exclusiveOrOption={tentOption}
       />,
     );
-    expect(screen.getByRole("heading")).toHaveTextContent(
-      "Which permanent structures have you lived in?",
-    );
-
     await pressOption("Tent");
-    await pressOption("Flat");
 
-    await pressContinue();
+    const nonExclusiveOption = getByLabelText("Caravan");
 
-    const errorMessage = screen.getByText(
-      'Cannot select "Tent" alongside other options',
-    );
-
-    expect(errorMessage).toBeVisible();
-    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(nonExclusiveOption).toBeDisabled();
   });
 });
 
@@ -90,7 +73,7 @@ describe("when an exclusiveOr option is configured", () => {
         text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
         options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption={[tentOption]}
+        exclusiveOrOption={tentOption}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
