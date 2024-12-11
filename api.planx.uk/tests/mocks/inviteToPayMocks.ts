@@ -134,6 +134,16 @@ export const createPaymentRequestQueryMock = {
       { key: "paidViaInviteToPay", value: true },
       { key: "flow", value: validSession.flow.slug },
     ],
+    feeBreakdown: {
+      amount: {
+        payable: 123.45,
+        calculated: 123.45,
+        vat: 0,
+        reduction: 0,
+      },
+      reductions: [],
+      exemptions: [],
+    },
   },
 };
 
