@@ -1,4 +1,5 @@
-import { checkCollections, getCollection } from "./service.js";
+import { checkCollections } from "./service.js";
+import { getCollection } from "./getCollection.js";
 import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";

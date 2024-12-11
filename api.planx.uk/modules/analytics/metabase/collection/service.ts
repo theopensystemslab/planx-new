@@ -32,14 +32,3 @@ export async function checkCollections(
     throw error;
   }
 }
-
-/**
- * Retrieves info on a collection from Metabase, use to check a parent. Currently only used in tests but could be useful for other Metabase functionality
- * @param id
- * @returns
- */
-// TODO: is this more suited to be part of the collection.test.ts?
-export async function getCollection(id: number): Promise<any> {
-  const response = await client.get(`/api/collection/${id}`);
-  return response.data;
-}
