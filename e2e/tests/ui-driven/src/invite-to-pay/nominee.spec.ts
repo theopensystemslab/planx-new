@@ -8,7 +8,7 @@ import {
   setUpTestContext,
   tearDownTestContext,
 } from "../helpers/context";
-import { cards } from "../helpers/globalHelpers";
+import { cards, setFeatureFlag } from "../helpers/globalHelpers";
 import { fillGovUkCardDetails } from "../helpers/userActions";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
 import { getPaymentRequestBySessionId } from "./helpers";
@@ -28,6 +28,10 @@ let context: TestContext = {
 const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can’t find that payment link";
 
 const adminGQLClient = getGraphQLClient();
+
+test.beforeAll(async ({ page }) => {
+  await setFeatureFlag(page, "FEE_BREAKDOWN");
+});
 
 test.describe("Nominee journey @regression", async () => {
   test.beforeAll(async () => {
@@ -60,7 +64,8 @@ test.describe("Nominee journey @regression", async () => {
       "Add a verandah or deck and changes to internal walls or layout";
     await expect(page.getByText(formattedProjectType)).toBeVisible();
 
-    await expect(page.getByText("Fee breakdown")).toBeVisible();
+    await expect(page.getByText("Fee")).toBeVisible();
+    await expect(page.getByTestId("fee-breakdown-table")).toBeVisible();
 
     const payButton = page.getByRole("button", {
       name: "Pay using GOV.UK Pay",
