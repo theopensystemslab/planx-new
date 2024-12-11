@@ -16,8 +16,9 @@ export async function checkCollections(
   params: NewCollectionParams,
 ): Promise<number> {
   try {
-    const teamAndMetabaseId = await getTeamIdAndMetabaseId(params.name);
-    const { metabaseId, id } = teamAndMetabaseId;
+    const { metabaseId, id: teamId } = await getTeamIdAndMetabaseId(
+      params.name,
+    );
 
     if (metabaseId) {
       return metabaseId;
@@ -25,7 +26,7 @@ export async function checkCollections(
 
     // Create new Metabase collection if !metabaseId
     const newMetabaseId = await createCollection(params);
-    await updateMetabaseId(id, newMetabaseId);
+    await updateMetabaseId(teamId, newMetabaseId);
     console.log({ newMetabaseId });
     return newMetabaseId;
   } catch (error) {
