@@ -29,10 +29,6 @@ const PAYMENT_NOT_FOUND_TEXT = "Sorry, we can’t find that payment link";
 
 const adminGQLClient = getGraphQLClient();
 
-test.beforeAll(async ({ page }) => {
-  await setFeatureFlag(page, "FEE_BREAKDOWN");
-});
-
 test.describe("Nominee journey @regression", async () => {
   test.beforeAll(async () => {
     try {
@@ -42,6 +38,10 @@ test.describe("Nominee journey @regression", async () => {
       await tearDownTestContext();
       throw e;
     }
+  });
+
+  test.beforeEach(async ({ page }) => {
+    await setFeatureFlag(page, "FEE_BREAKDOWN");
   });
 
   test.afterAll(async () => {
