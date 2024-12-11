@@ -7,21 +7,15 @@ import { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { setLocalFlow } from "lib/local.new";
+import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
-import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import {
-  createPayload,
-  getDefaultContent,
-  GOV_UK_PAY_URL,
-  Pay,
-  toDecimal,
-} from "../model";
+import { createPayload, getDefaultContent, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
+import { getGovUkPayUrlForTeam } from "./utils";
 
 export default Component;
 export type Props = PublicProps<Pay>;
@@ -122,11 +116,6 @@ function Component(props: Props) {
     // Log error silently - this was likely a content error that should be addressed
     if (fee < 0) {
       logger.notify(`Negative fee calculated for session ${sessionId}`);
-      return props.handleSubmit && props.handleSubmit({ auto: true });
-    }
-
-    // Auto-skip component when fee=0
-    if (fee === 0) {
       return props.handleSubmit && props.handleSubmit({ auto: true });
     }
 
@@ -279,6 +268,19 @@ function Component(props: Props) {
       });
   };
 
+  const continueWithoutPaying = () => {
+    props.handleSubmit && props.handleSubmit({ auto: false });
+  };
+
+  const onConfirm = () => {
+    const shouldContinueWithoutPaying =
+      fee === 0 || props.hidePay || state.status === "unsupported_team";
+
+    if (shouldContinueWithoutPaying) continueWithoutPaying();
+    if (state.status === "init") startNewPayment();
+    if (state.status === "retry") resumeExistingPayment();
+  };
+
   return (
     <>
       {state.status === "init" ||
@@ -288,16 +290,7 @@ function Component(props: Props) {
         <Confirm
           {...props}
           fee={fee}
-          onConfirm={() => {
-            if (props.hidePay || state.status === "unsupported_team") {
-              // Show "Continue" button to proceed
-              props.handleSubmit && props.handleSubmit({ auto: false });
-            } else if (state.status === "init") {
-              startNewPayment();
-            } else if (state.status === "retry") {
-              resumeExistingPayment();
-            }
-          }}
+          onConfirm={onConfirm}
           buttonTitle={
             state.status === "init"
               ? "Pay now using GOV.UK Pay"
@@ -314,33 +307,11 @@ function Component(props: Props) {
           }
           showInviteToPay={showPayOptions && isTeamSupported}
           paymentStatus={govUkPayment?.state?.status}
+          hidePay={fee === 0 || props.hidePay}
         />
       ) : (
         <DelayedLoadingIndicator text={state.displayText || state.status} />
       )}
     </>
   );
-}
-
-async function saveSession(session: Session) {
-  await setLocalFlow(session.sessionId, session);
-}
-
-function getGovUkPayUrlForTeam({
-  sessionId,
-  flowId,
-  teamSlug,
-  paymentId,
-}: {
-  sessionId: string;
-  flowId: string;
-  teamSlug: string;
-  paymentId?: string;
-}): string {
-  const baseURL = `${GOV_UK_PAY_URL}/${teamSlug}`;
-  const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
-  if (paymentId) {
-    return `${baseURL}/${paymentId}${queryString}`;
-  }
-  return `${baseURL}${queryString}`;
 }
