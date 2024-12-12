@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
+import { hasFeatureFlag } from "lib/featureFlags";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -19,6 +20,7 @@ import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   const exclusiveOrOptionManagerShouldRender =
+    hasFeatureFlag("EXCLUSIVE_OR") &&
     formik.values.options?.filter((opt: Option) => opt.data.exclusive !== true)
       .length > 0;
 
