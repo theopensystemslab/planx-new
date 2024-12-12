@@ -28,6 +28,8 @@ config:
     secure: AAABAHsoh7ZNkr6ep3xXsUZpp/JIjshBX+tJ0KOFgGnJ4wxR0oIcB6VewVDuwSyFJRVix72YahM=
   application:hasura-cpu: "512"
   application:hasura-memory: "2048"
+  application:hasura-proxy-cpu: "512"
+  application:hasura-proxy-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
   application:idox-nexus-client:
