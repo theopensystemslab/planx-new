@@ -4,6 +4,8 @@ import {
   createFilterOptions
 } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
+import { FilterOptionsState } from "@mui/material/useAutocomplete";
+import isNull from "lodash/isNull";
 import React, { useMemo } from "react";
 import AutocompleteInput from "ui/shared/AutocompleteInput";
 import InputRow from "ui/shared/InputRow";
@@ -21,11 +23,13 @@ const renderOptions: AutocompleteProps<
   false,
   true,
   "div"
->["renderOption"] = (props, value) => (
-  <ListItem key={value} sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }} {...props}>
-    {value}
-  </ListItem>
-);
+>["renderOption"] = (props, option) => {
+  return (
+    <ListItem key={option} sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }} {...props}>
+      {option}
+    </ListItem>
+  );
+};
 
 const filter = createFilterOptions<string>();
 
@@ -39,10 +43,19 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
 
   const handleChange = (
     _event: React.SyntheticEvent,
-    value: string | null,
+    value: string | FilterOptionsState<string> | null,
     _reason: AutocompleteChangeReason,
   ) => {
-    props.onChange(value);
+    if (typeof value === "string") {
+      // Selecting an option
+      props.onChange(value);
+    } else if (value && value.inputValue) {
+      // Adding a new option
+      props.onChange(value.inputValue);
+    } else if (isNull(value)) {
+      // Clearing an option
+      props.onChange(value);
+    }
   };
 
   return (
@@ -52,12 +65,12 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         key="data-field-autocomplete"
         placeholder="Data field"
         required={Boolean(props.required)}
-        options={options}
         onChange={handleChange}
+        value={value}
+        options={options}
         isOptionEqualToValue={(option: string, value: string) =>
           option === value
         }
-        value={value}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
           const { inputValue } = params;
@@ -68,6 +81,18 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           }
           return filtered;
         }}
+        // getOptionLabel={(option) => {
+        //   // Value selected with enter, right from the input
+        //   if (typeof option === 'string') {
+        //     return option;
+        //   }
+        //   // Add "xxx" option created dynamically
+        //   if (option.inputValue) {
+        //     return option.inputValue;
+        //   }
+        //   // Regular option
+        //   return option;
+        // }}
         renderOption={renderOptions}
         selectOnFocus
         clearOnEscape

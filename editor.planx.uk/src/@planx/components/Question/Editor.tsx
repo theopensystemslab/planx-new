@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FormikErrors, FormikValues, useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
@@ -95,35 +96,19 @@ const OptionEditor: React.FC<{
       />
     </InputRow>
     {props.showValueField && (
-      <InputRow>
-        <Input
-          format="data"
-          value={props.value.data.val || ""}
-          placeholder="Data Value"
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                val: ev.target.value,
-              },
-            });
-          }}
-        />
-      </InputRow>
-      // <DataFieldAutocomplete
-      //   schema={props.schema}
-      //   value={props.value.data.val || ""}
-      //   onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-      //     props.onChange({
-      //       ...props.value,
-      //       data: {
-      //         ...props.value.data,
-      //         val: ev.target.value,
-      //       },
-      //     });
-      //   }}
-      // />
+      <DataFieldAutocomplete
+        schema={props.schema}
+        value={props.value.data.val || ""}
+        onChange={(targetValue) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              val: targetValue ? targetValue : undefined,
+            },
+          });
+        }}
+      />
     )}
     <FlagsSelect
       value={
@@ -183,6 +168,17 @@ export const Question: React.FC<Props> = (props) => {
   });
 
   const schema = useStore().getFlowSchema();
+
+  const getOptionsSchemaByFn = (fn?: string, defaultOptionsSchema?: string[]) => {
+    let schema = defaultOptionsSchema;
+
+    // For certain data fields, suggest based on full ODP Schema enums rather than current flow schema
+    if (fn === "application.type") schema = getValidSchemaValues("ApplicationType");
+    if (fn === "proposal.projectType") schema = getValidSchemaValues("ProjectType");
+    if (fn === "property.type") schema = getValidSchemaValues("PropertyType");
+
+    return schema;
+  }
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -258,7 +254,10 @@ export const Question: React.FC<Props> = (props) => {
               }) as Option
             }
             Editor={OptionEditor}
-            editorExtraProps={{ showValueField: !!formik.values.fn }}
+            editorExtraProps={{ 
+              showValueField: !!formik.values.fn, 
+              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options),
+            }}
           />
         </ModalSectionContent>
       </ModalSection>
