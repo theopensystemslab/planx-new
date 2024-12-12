@@ -144,7 +144,10 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                 (opt: Option) => opt.data.exclusive,
               ) || [];
 
-            const newCombinedOptions = [...exclusiveOptions, ...newOptions];
+            const newCombinedOptions =
+              newOptions.length === 0
+                ? []
+                : [...exclusiveOptions, ...newOptions];
 
             formik.setFieldValue("options", newCombinedOptions);
           }}
@@ -171,7 +174,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               ) || []
             }
             onChange={(newExclusiveOptions) => {
-              const nonExclusiveOptions =
+              const nonExclusiveOptions: Option[] =
                 formik.values.options?.filter(
                   (opt: Option) => !opt.data.exclusive,
                 ) || [];
@@ -183,7 +186,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 
               formik.setFieldValue("options", newCombinedOptions);
             }}
-            newValueLabel="add exclusive or option"
+            newValueLabel='add "or" option'
             maxItems={1}
             newValue={() =>
               ({
