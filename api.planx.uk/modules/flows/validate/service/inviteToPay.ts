@@ -44,21 +44,6 @@ const validateInviteToPay = (flowGraph: FlowGraph): FlowValidationResponse => {
       };
     }
 
-    if (
-      !hasComponentType(
-        flowGraph,
-        ComponentType.Checklist,
-        "proposal.projectType",
-      )
-    ) {
-      return {
-        title: "Invite to Pay",
-        status: "Fail",
-        message:
-          "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
-      };
-    }
-
     return {
       title: "Invite to Pay",
       status: "Pass",

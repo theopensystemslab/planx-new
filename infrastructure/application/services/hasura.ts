@@ -59,7 +59,8 @@ export const createHasuraService = async ({
       containers: {
         hasuraProxy: {
           image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
-          memory: 1024 /*MB*/,
+          cpu: config.requireNumber("hasura-proxy-cpu"),
+          memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
@@ -110,6 +111,8 @@ export const createHasuraService = async ({
       },
     },
     desiredCount: 1,
+    // experiment with non-zero grace period to see if it resolves scale up failure
+    healthCheckGracePeriodSeconds: 180,
   });
   
   new cloudflare.Record("hasura", {

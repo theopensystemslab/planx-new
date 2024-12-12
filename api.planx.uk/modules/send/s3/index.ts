@@ -8,6 +8,7 @@ import { uploadPrivateFile } from "../../file/service/uploadFile.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { isApplicationTypeSupported } from "../utils/helpers.js";
 import type { SendIntegrationController } from "../types.js";
+import { convertObjectToMulterJSONFile } from "../../file/service/utils.js";
 
 interface CreateS3Application {
   insertS3Application: {
@@ -44,16 +45,16 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     const flowName = session?.flow?.name;
 
     // Generate the ODP Schema JSON, skipping validation if not a supported application type
-    const doValidation = isApplicationTypeSupported(passport);
-    const exportData = doValidation
-      ? await $api.export.digitalPlanningDataPayload(sessionId)
-      : await $api.export.digitalPlanningDataPayload(sessionId, true);
+    const skipValidation = !isApplicationTypeSupported(passport);
+    const exportData = await $api.export.digitalPlanningDataPayload(
+      sessionId,
+      skipValidation,
+    );
 
     // Create and upload the data as an S3 file
-    const { fileUrl } = await uploadPrivateFile(
-      exportData,
-      `${sessionId}.json`,
-    );
+    const filename = `${sessionId}.json`;
+    const file = convertObjectToMulterJSONFile(exportData, filename);
+    const { fileUrl } = await uploadPrivateFile(file, filename);
 
     // Send a notification with the file URL to the Power Automate webhook
     const webhookRequest: AxiosRequestConfig = {
@@ -69,65 +70,61 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
         service: flowName,
         environment: env,
         file: fileUrl,
-        payload: doValidation ? "Validated ODP Schema" : "Discretionary",
+        payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
       },
     };
-    const webhookResponse = await axios(webhookRequest)
-      .then(async (res) => {
-        // Mark session as submitted so that reminder and expiry emails are not triggered
-        markSessionAsSubmitted(sessionId);
 
-        // Create an audit entry
-        const applicationId = await $api.client.request<CreateS3Application>(
-          gql`
-            mutation CreateS3Application(
-              $session_id: String!
-              $team_slug: String!
-              $webhook_request: jsonb!
-              $webhook_response: jsonb = {}
-            ) {
-              insertS3Application: insert_s3_applications_one(
-                object: {
-                  session_id: $session_id
-                  team_slug: $team_slug
-                  webhook_request: $webhook_request
-                  webhook_response: $webhook_response
-                }
-              ) {
-                id
-              }
+    const webhookResponse = await axios(webhookRequest).catch((error) => {
+      throw new Error(
+        `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${error}`,
+      );
+    });
+
+    // Mark session as submitted so that reminder and expiry emails are not triggered
+    markSessionAsSubmitted(sessionId);
+
+    // Create an audit entry
+    const {
+      insertS3Application: { id: auditEntryId },
+    } = await $api.client.request<CreateS3Application>(
+      gql`
+        mutation CreateS3Application(
+          $session_id: String!
+          $team_slug: String!
+          $webhook_request: jsonb!
+          $webhook_response: jsonb = {}
+        ) {
+          insertS3Application: insert_s3_applications_one(
+            object: {
+              session_id: $session_id
+              team_slug: $team_slug
+              webhook_request: $webhook_request
+              webhook_response: $webhook_response
             }
-          `,
-          {
-            session_id: sessionId,
-            team_slug: localAuthority,
-            webhook_request: webhookRequest,
-            webhook_response: {
-              status: res.status,
-              statusText: res.statusText,
-              headers: res.headers,
-              config: res.config,
-              data: res.data,
-            },
-          },
-        );
-
-        return {
-          id: applicationId.insertS3Application?.id,
-          axiosResponse: res,
-        };
-      })
-      .catch((error) => {
-        throw new Error(
-          `Failed to send submission notification to ${localAuthority}'s Power Automate Webhook (${sessionId}): ${error}`,
-        );
-      });
+          ) {
+            id
+          }
+        }
+      `,
+      {
+        session_id: sessionId,
+        team_slug: localAuthority,
+        webhook_request: webhookRequest,
+        webhook_response: {
+          status: webhookResponse.status,
+          statusText: webhookResponse.statusText,
+          headers: webhookResponse.headers,
+          config: webhookResponse.config,
+          data: webhookResponse.data,
+        },
+      },
+    );
 
     res.status(200).send({
       message: `Successfully uploaded submission to S3: ${fileUrl}`,
-      payload: doValidation ? "Validated ODP Schema" : "Discretionary",
-      webhookResponse: webhookResponse.axiosResponse.status,
-      auditEntryId: webhookResponse.id,
+      payload: skipValidation ? "Discretionary" : "Validated ODP Schema",
+      webhookResponse: webhookResponse.status,
+      auditEntryId,
     });
   } catch (error) {
     return next({

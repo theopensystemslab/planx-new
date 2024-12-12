@@ -71,15 +71,30 @@ async function go(
   geom: string,
   extras: Record<string, string>,
 ): Promise<GISResponse> {
-  // generate list of digital land datasets we should query based on 'active' planx schema variables
+  // generate list of digital land datasets we should query and their associated passport values
   const activeDatasets: string[] = [];
-  Object.keys(baseSchema).forEach((key) => {
-    if (baseSchema[key]["active"]) {
-      baseSchema[key]["digital-land-datasets"]?.forEach((dataset: string) => {
-        activeDatasets.push(dataset);
-      });
-    }
-  });
+  let activeDataValues: string[] = [];
+  if (extras?.vals) {
+    // if the editor selected constraints, prioritise their selection
+    activeDataValues = extras.vals.split(",");
+    Object.keys(baseSchema).forEach((key) => {
+      if (activeDataValues.includes(key)) {
+        baseSchema[key]["digital-land-datasets"]?.forEach((dataset: string) => {
+          activeDatasets.push(dataset);
+        });
+      }
+    });
+  } else {
+    // else default to the internally maintained list of all "active" datasets
+    Object.keys(baseSchema).forEach((key) => {
+      if (baseSchema[key]["active"]) {
+        activeDataValues.push(key);
+        baseSchema[key]["digital-land-datasets"]?.forEach((dataset: string) => {
+          activeDatasets.push(dataset);
+        });
+      }
+    });
+  }
 
   // set up request query params per https://www.planning.data.gov.uk/docs
   const options = {
@@ -159,7 +174,8 @@ async function go(
   // TODO followup with digital land about how to return 'nots' via API (currently assumes any "active" metadata was successfully queried)
   const nots = Object.keys(baseSchema).filter(
     (key) =>
-      baseSchema[key]["active"] && !Object.keys(formattedResult).includes(key),
+      activeDataValues.includes(key) &&
+      !Object.keys(formattedResult).includes(key),
   );
   nots.forEach((not) => {
     formattedResult[not] = {
@@ -236,7 +252,7 @@ async function go(
     const a4s = planningConstraints["article4"]["records"] || undefined;
 
     // loop through any intersecting a4 data entities and set granular planx values based on this local authority's schema
-    if (a4s && formattedResult["article4"].value) {
+    if (a4s && formattedResult["article4"]?.value) {
       formattedResult["article4"]?.data?.forEach((entity: any) => {
         Object.keys(a4s)?.forEach((key) => {
           if (
@@ -264,8 +280,8 @@ async function go(
 
       // if caz is true, but parent a4 is false, sync a4 for accurate granularity
       if (
-        formattedResult[localCaz].value &&
-        !formattedResult["article4"].value
+        formattedResult[localCaz]?.value &&
+        !formattedResult["article4"]?.value
       ) {
         formattedResult["article4"] = {
           fn: "article4",

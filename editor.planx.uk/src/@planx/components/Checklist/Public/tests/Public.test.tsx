@@ -19,7 +19,7 @@ describe("Checklist Component - Grouped Layout", () => {
         text="home type?"
         handleSubmit={handleSubmit}
         groupedOptions={groupedOptions}
-      />,
+      />
     );
 
     await user.click(screen.getByText("Section 1"));
@@ -43,7 +43,7 @@ describe("Checklist Component - Grouped Layout", () => {
         handleSubmit={handleSubmit}
         previouslySubmittedData={{ answers: ["S1_Option1", "S3_Option1"] }}
         groupedOptions={groupedOptions}
-      />,
+      />
     );
 
     expect(screen.getByTestId("group-0-expanded")).toBeTruthy();
@@ -64,7 +64,7 @@ describe("Checklist Component - Grouped Layout", () => {
         description=""
         text="home type?"
         groupedOptions={groupedOptions}
-      />,
+      />
     );
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -80,7 +80,7 @@ describe("Checklist Component - Grouped Layout", () => {
         text="home type?"
         handleSubmit={handleSubmit}
         groupedOptions={groupedOptions}
-      />,
+      />
     );
     const [section1Button, section2Button, section3Button] =
       screen.getAllByRole("button");
@@ -137,7 +137,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           text="home type?"
           handleSubmit={handleSubmit}
           options={options[type]}
-        />,
+        />
       );
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
@@ -165,7 +165,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           handleSubmit={handleSubmit}
           previouslySubmittedData={{ answers: ["flat_id", "house_id"] }}
           options={options[type]}
-        />,
+        />
       );
 
       await user.click(screen.getByTestId("continue-button"));
@@ -182,7 +182,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           description=""
           text="home type?"
           options={options[type]}
-        />,
+        />
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -198,7 +198,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           text="home type?"
           handleSubmit={handleSubmit}
           options={options[type]}
-        />,
+        />
       );
 
       await user.tab();

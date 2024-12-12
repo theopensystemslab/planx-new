@@ -16,6 +16,7 @@ import { stringify } from "wkt";
 import { SiteAddress } from "../FindProperty/model";
 import { ErrorSummaryContainer } from "../shared/Preview/ErrorSummaryContainer";
 import {
+  availableDatasets,
   type IntersectingConstraints,
   type PlanningConstraints,
 } from "./model";
@@ -36,6 +37,9 @@ export type InaccurateConstraints =
 export default Component;
 
 function Component(props: Props) {
+  // Existing components will not have dataValues prop so should default to all available datasets
+  const dataValues = props.dataValues || availableDatasets.map((d) => d.val);
+
   const [
     currentCardId,
     cachedBreadcrumbs,
@@ -56,8 +60,7 @@ function Component(props: Props) {
 
   // PlanningConstraints must come after at least a FindProperty in the graph
   const showGraphError = !longitude || !latitude;
-  if (showGraphError)
-    throw new GraphError("mapInputFieldMustFollowFindProperty");
+  if (showGraphError) throw new GraphError("nodeMustFollowFindProperty");
 
   // Even though this component will fetch fresh GIS data when coming "back",
   //   still prepopulate any previously marked inaccurateConstraints
@@ -71,79 +74,80 @@ function Component(props: Props) {
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
 
+  const fetcher: Fetcher<GISResponse> = (url: string) =>
+    fetch(url).then((r) => r.json());
+
   // Get the WKT representation of the site boundary drawing or address point to pass to Planning Data
   const wktPoint = `POINT(${longitude} ${latitude})`;
   const wktPolygon: string | undefined =
     siteBoundary && stringify(siteBoundary);
-
   const planningDataParams: Record<string, string> = {
     geom: wktPolygon || wktPoint,
+    vals: dataValues.join(","),
     ...params,
   };
 
-  // Fetch planning constraints data for a given local authority
-  const root = `${import.meta.env.VITE_APP_API_URL}/gis/${teamSlug}?`;
+  // Fetch planning constraints data for a given local authority if Planning Data & a geometry is available
+  const shouldFetchPlanningData =
+    hasPlanningData &&
+    latitude &&
+    longitude &&
+    dataValues.some((val) => val !== "road.classified");
   const teamGisEndpoint: string =
-    root +
-    new URLSearchParams(
-      hasPlanningData ? planningDataParams : undefined,
-    ).toString();
-
-  const fetcher: Fetcher<GISResponse | GISResponse["constraints"]> = (
-    url: string,
-  ) => fetch(url).then((r) => r.json());
+    `${import.meta.env.VITE_APP_API_URL}/gis/${teamSlug}?` +
+    new URLSearchParams(planningDataParams).toString();
   const {
     data,
     mutate,
     error: dataError,
     isValidating,
-  } = useSWR(() => (latitude && longitude ? teamGisEndpoint : null), fetcher, {
-    revalidateOnFocus: false,
-  });
+  } = useSWR(
+    () => (shouldFetchPlanningData ? teamGisEndpoint : null),
+    fetcher,
+    { revalidateOnFocus: false },
+  );
 
   // If an OS address was selected, additionally fetch classified roads (available nationally) using the USRN identifier,
   //   skip if the applicant plotted a new non-UPRN address on the map
+  const shouldFetchRoads =
+    hasPlanningData && usrn && dataValues.includes("road.classified");
   const classifiedRoadsEndpoint: string =
     `${import.meta.env.VITE_APP_API_URL}/roads?` +
     new URLSearchParams(usrn ? { usrn } : undefined)?.toString();
-
   const {
     data: roads,
     error: roadsError,
     isValidating: isValidatingRoads,
   } = useSWR(
-    () => (usrn && hasPlanningData ? classifiedRoadsEndpoint : null),
+    () => (shouldFetchRoads ? classifiedRoadsEndpoint : null),
     fetcher,
     { revalidateOnFocus: false },
   );
 
   // Merge Planning Data and Roads responses for a unified list of constraints
-  const constraints: GISResponse["constraints"] | Record<string, any> = {
+  const constraints: GISResponse["constraints"] = {
     ...data?.constraints,
     ...roads?.constraints,
   };
-
-  const metadata: GISResponse["metadata"] | Record<string, any> = {
+  const metadata: GISResponse["metadata"] = {
     ...data?.metadata,
     ...roads?.metadata,
   };
 
   const handleSubmit = () => {
     // `_constraints` & `_overrides` are responsible for auditing
-    const _constraints: Array<
-      EnhancedGISResponse | GISResponse["constraints"]
-    > = [];
+    const _constraints: Array<EnhancedGISResponse> = [];
     if (hasPlanningData) {
       if (data && !dataError)
         _constraints.push({
           ...data,
           planxRequest: teamGisEndpoint,
-        } as EnhancedGISResponse);
+        });
       if (roads && !roadsError)
         _constraints.push({
           ...roads,
           planxRequest: classifiedRoadsEndpoint,
-        } as EnhancedGISResponse);
+        });
     }
 
     const hasInaccurateConstraints =
