@@ -28,7 +28,8 @@ type ComponentState =
   | { status: "retry" }
   | { status: "success"; displayText?: string }
   | { status: "unsupported_team" }
-  | { status: "undefined_fee" };
+  | { status: "undefined_fee" }
+  | { status: "zero_fee" };
 
 enum Action {
   NoFeeFound,
@@ -39,6 +40,7 @@ enum Action {
   StartNewPaymentError,
   ResumePayment,
   Success,
+  ZeroFee,
 }
 
 export const PAY_API_ERROR_UNSUPPORTED_TEAM = "GOV.UK Pay is not enabled for";
@@ -97,6 +99,8 @@ function Component(props: Props) {
         };
       case Action.Success:
         return { status: "success", displayText: "Payment Successful" };
+      case Action.ZeroFee:
+        return { status: "zero_fee" };
     }
   };
 
@@ -117,6 +121,12 @@ function Component(props: Props) {
     if (fee < 0) {
       logger.notify(`Negative fee calculated for session ${sessionId}`);
       return props.handleSubmit && props.handleSubmit({ auto: true });
+    }
+
+    // Do not contact GovPay at all if fee is 0, just show UI
+    if (fee === 0) {
+      dispatch(Action.ZeroFee);
+      return;
     }
 
     // If props.fn is undefined, display & log an error
@@ -286,7 +296,8 @@ function Component(props: Props) {
       {state.status === "init" ||
       state.status === "retry" ||
       state.status === "unsupported_team" ||
-      state.status === "undefined_fee" ? (
+      state.status === "undefined_fee" ||
+      state.status === "zero_fee" ? (
         <Confirm
           {...props}
           fee={fee}
