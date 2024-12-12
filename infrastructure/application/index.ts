@@ -94,7 +94,17 @@ const CUSTOM_DOMAINS: CustomDomains =
 export = async () => {
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
-  const repo = new awsx.ecr.Repository("repo");
+  const repo = new awsx.ecr.Repository("repo", {
+    lifeCyclePolicyArgs: {
+      rules: [
+        {
+          description: "Keep last 100 images",
+          maximumNumberOfImages: 100,
+          selection: "any",
+        },
+      ],
+    },
+  });
 
   const vpc = awsx.ec2.Vpc.fromExistingIds("vpc", {
     vpcId: networking.requireOutput("vpcId"),
