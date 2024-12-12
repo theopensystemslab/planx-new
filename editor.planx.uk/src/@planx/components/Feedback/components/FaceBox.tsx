@@ -28,7 +28,7 @@ export const FaceBox = ({
           px: 0,
           width: "100%",
           textTransform: "none",
-          [`&.${toggleButtonClasses.selected}`]: {
+          [`&.${toggleButtonClasses.selected} > div`]: {
             borderColor: (theme) => theme.palette.primary.dark,
             background: (theme) => theme.palette.background.paper,
           },
