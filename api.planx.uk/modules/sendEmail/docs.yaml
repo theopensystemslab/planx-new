@@ -55,6 +55,8 @@ paths:
     post:
       tags: [send email]
       summary: Send an email
+      security:
+        - hasuraAuth: []
       parameters:
         - name: template
           in: path
