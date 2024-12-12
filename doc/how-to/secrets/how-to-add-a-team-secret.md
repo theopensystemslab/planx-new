@@ -17,6 +17,7 @@ This guide will demonstrate how to -
 
 > [!NOTE]
 > The `stack_name` should be either `production` or `staging`, depending on which environment the secret is for (e.g. `staging_govpay_secret`).
+> I.e. the staging encryption key needs to be used for staging secrets (even though they need to get set on the production database)
 
 ### Encrypt the secret
 1. In `/scripts/encrypt`, run the encryption script using the encryption key and raw secret that you obtained in the previous steps: `pnpm encrypt <encryption-key> <secret>`.

@@ -5,7 +5,7 @@
 2. Secrets must meet the following criteria - 
    * Have a minimum length of 32 characters
    * All characters should be alphanumeric
-3. Follow [the current process for adding secrets](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/how-to-add-a-secret.md) to the application
+3. Follow [the current process for adding secrets](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/secrets/how-to-add-a-secret.md) to the application
 
 ## Principles
 - Staging and Production environments should not share secrets
