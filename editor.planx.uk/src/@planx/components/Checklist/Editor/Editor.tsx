@@ -31,7 +31,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       img: props.node?.data?.img || "",
       options: props.options,
       text: props.node?.data?.text || "",
-      exclusiveOrOption: props.exclusiveOrOption || undefined,
       ...parseBaseNodeData(props.node?.data),
     },
     onSubmit: ({ options, groupedOptions, ...values }) => {

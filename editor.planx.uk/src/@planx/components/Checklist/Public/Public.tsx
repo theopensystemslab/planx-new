@@ -67,7 +67,6 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     img,
     previouslySubmittedData,
     id,
-    exclusiveOrOption,
   } = props;
 
   const formik = useFormik<{ checked: Array<string> }>({
@@ -101,29 +100,30 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     return ids.sort((a, b) => originalIds.indexOf(a) - originalIds.indexOf(b));
   };
 
-  const exclusiveOptionIsConfigured =
-    exclusiveOrOption && exclusiveOrOption.length > 0;
+  const exclusiveOrOption =
+    options?.find((option) => option.data?.exclusive === true) || undefined;
 
   const exclusiveOptionIsChecked =
-    exclusiveOptionIsConfigured &&
-    formik.values.checked.includes(exclusiveOrOption[0].id);
+    exclusiveOrOption && formik.values.checked.includes(exclusiveOrOption.id);
 
   const changeCheckbox = (id: string) => () => {
     const currentIds = formik.values.checked;
     let newCheckedIds;
     const currentCheckboxIsExclusiveOption =
-      exclusiveOptionIsConfigured && id === exclusiveOrOption[0].id;
+      exclusiveOrOption && id === exclusiveOrOption.id;
 
     if (currentCheckboxIsExclusiveOption) {
       newCheckedIds = exclusiveOptionIsChecked ? [] : [id];
-    } else if (exclusiveOptionIsChecked) {
-      // nonExclusiveOptions should not become checked if exclusiveOptionIsChecked
-      return;
+    } else if (exclusiveOrOption) {
+      newCheckedIds = toggleCheckbox(id, currentIds);
+      const onlyNonExclusiveOptions = newCheckedIds.filter(
+        (id: string) => exclusiveOrOption && id !== exclusiveOrOption.id,
+      );
+      newCheckedIds = onlyNonExclusiveOptions;
     } else {
       newCheckedIds = toggleCheckbox(id, currentIds);
     }
     const sortedCheckedIds = sortCheckedIds(newCheckedIds);
-
     formik.setFieldValue("checked", sortedCheckedIds);
   };
 
@@ -145,56 +145,55 @@ const VisibleChecklist: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options?.map((option) =>
-              layout === ChecklistLayout.Basic ? (
-                <FormWrapper key={option.id}>
-                  <Grid item xs={12} key={option.data.text}>
-                    <ChecklistItem
-                      onChange={changeCheckbox(option.id)}
-                      label={option.data.text}
+            {options
+              ?.filter((option) => option.data.exclusive !== true)
+              .map((option) =>
+                layout === ChecklistLayout.Basic ? (
+                  <FormWrapper key={option.id}>
+                    <Grid item xs={12} key={option.data.text}>
+                      <ChecklistItem
+                        onChange={changeCheckbox(option.id)}
+                        label={option.data.text}
+                        id={option.id}
+                        checked={
+                          formik.values.checked.includes(option.id) &&
+                          !exclusiveOptionIsChecked
+                        }
+                      />
+                    </Grid>
+                  </FormWrapper>
+                ) : (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    contentWrap={4}
+                    key={option.data.text}
+                  >
+                    <ImageButton
+                      title={option.data.text}
                       id={option.id}
-                      inputProps={
-                        exclusiveOptionIsChecked ? { disabled: true } : {}
-                      }
-                      checked={
-                        formik.values.checked.includes(option.id) &&
-                        !exclusiveOptionIsChecked
-                      }
+                      img={option.data.img}
+                      selected={formik.values.checked.includes(option.id)}
+                      onClick={changeCheckbox(option.id)}
+                      checkbox
                     />
                   </Grid>
-                </FormWrapper>
-              ) : (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  contentWrap={4}
-                  key={option.data.text}
-                >
-                  <ImageButton
-                    title={option.data.text}
-                    id={option.id}
-                    img={option.data.img}
-                    selected={formik.values.checked.includes(option.id)}
-                    onClick={changeCheckbox(option.id)}
-                    checkbox
-                  />
-                </Grid>
-              ),
-            )}
-            {exclusiveOptionIsConfigured && (
-              <FormWrapper key={exclusiveOrOption[0].id}>
-                <Grid item xs={12} key={exclusiveOrOption[0].data.text}>
+                ),
+              )}
+            {exclusiveOrOption && (
+              <FormWrapper key={exclusiveOrOption.id}>
+                <Grid item xs={12} key={exclusiveOrOption.data.text}>
                   <Typography width={36} display="flex" justifyContent="center">
                     or
                   </Typography>
 
                   <ChecklistItem
-                    onChange={changeCheckbox(exclusiveOrOption[0].id)}
-                    label={exclusiveOrOption[0].data.text}
-                    id={exclusiveOrOption[0].id}
+                    onChange={changeCheckbox(exclusiveOrOption.id)}
+                    label={exclusiveOrOption.data.text}
+                    id={exclusiveOrOption.id}
                     checked={formik.values.checked.includes(
-                      exclusiveOrOption[0].id,
+                      exclusiveOrOption.id,
                     )}
                   />
                 </Grid>

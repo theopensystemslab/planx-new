@@ -23,7 +23,6 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
-  exclusiveOrOption?: Array<Option>;
 }
 
 interface ChecklistExpandableProps {

@@ -14,7 +14,6 @@ export interface ChecklistProps extends Checklist {
       fn?: string;
       img?: string;
       text: string;
-      exclusiveOrOption?: Option;
     } & BaseNodeData;
   };
 }

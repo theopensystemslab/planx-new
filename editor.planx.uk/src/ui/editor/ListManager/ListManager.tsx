@@ -84,11 +84,7 @@ export default function ListManager<T, EditorExtraProps>(
                   }}
                   aria-label="Delete"
                   size="large"
-                  disabled={
-                    isViewOnly ||
-                    (props?.isFieldDisabled &&
-                      props.isFieldDisabled(item, index))
-                  }
+                  disabled={isViewOnly || props?.isFieldDisabled?.(item, index)}
                 >
                   <Delete />
                 </IconButton>
@@ -137,9 +133,9 @@ export default function ListManager<T, EditorExtraProps>(
                       <Box>
                         <IconButton
                           disableRipple
-                          {...(!props.disableDragAndDrop
-                            ? provided.dragHandleProps
-                            : { disabled: true || isViewOnly })}
+                          {...(props.disableDragAndDrop
+                            ? { disabled: true || isViewOnly }
+                            : provided.dragHandleProps)}
                           aria-label="Drag"
                           size="large"
                           disabled={isViewOnly}

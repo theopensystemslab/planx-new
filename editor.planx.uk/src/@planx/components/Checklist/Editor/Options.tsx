@@ -18,6 +18,10 @@ import type { Group } from "../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
+  const exclusiveOrOptionManagerShouldRender =
+    formik.values.options?.filter((opt: Option) => opt.data.exclusive !== true)
+      .length > 0;
+
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
@@ -129,9 +133,20 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         </Box>
       ) : (
         <ListManager
-          values={formik.values.options || []}
+          values={
+            formik.values.options?.filter(
+              (opt: Option) => !opt.data.exclusive,
+            ) || []
+          }
           onChange={(newOptions) => {
-            formik.setFieldValue("options", newOptions);
+            const exclusiveOptions =
+              formik.values.options?.filter(
+                (opt: Option) => opt.data.exclusive,
+              ) || [];
+
+            const newCombinedOptions = [...exclusiveOptions, ...newOptions];
+
+            formik.setFieldValue("options", newCombinedOptions);
           }}
           newValueLabel="add new option"
           newValue={() =>
@@ -147,12 +162,26 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
       )}
-      {formik.values.options && (
+      {exclusiveOrOptionManagerShouldRender ? (
         <Box mt={1}>
           <ListManager
-            values={formik.values.exclusiveOrOption || []}
-            onChange={(newOptions) => {
-              formik.setFieldValue("exclusiveOrOption", newOptions);
+            values={
+              formik.values.options?.filter(
+                (opt: Option) => opt.data.exclusive,
+              ) || []
+            }
+            onChange={(newExclusiveOptions) => {
+              const nonExclusiveOptions =
+                formik.values.options?.filter(
+                  (opt: Option) => !opt.data.exclusive,
+                ) || [];
+
+              const newCombinedOptions = [
+                ...nonExclusiveOptions,
+                ...newExclusiveOptions,
+              ];
+
+              formik.setFieldValue("options", newCombinedOptions);
             }}
             newValueLabel="add exclusive or option"
             maxItems={1}
@@ -162,6 +191,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                   text: "",
                   description: "",
                   val: "",
+                  exclusive: true,
                 },
               }) as Option
             }
@@ -169,6 +199,8 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             editorExtraProps={{ showValueField: !!formik.values.fn }}
           />
         </Box>
+      ) : (
+        <></>
       )}
     </ModalSectionContent>
   );

@@ -3,19 +3,9 @@ import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import { Option } from "../../../shared/index";
-import Checklist, { ChecklistLayout } from "../Public";
-import { options } from "./mockOptions";
+import Checklist from "../Public";
+import { optionsWithExclusiveOption } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
-
-const tentOption = [
-  {
-    id: "tent_id",
-    data: {
-      text: "Tent",
-    },
-  },
-] as Option[];
 
 describe("when a user selects the exclusive 'or' option and nothing else", () => {
   it("does not throw an error on submit", async () => {
@@ -27,8 +17,7 @@ describe("when a user selects the exclusive 'or' option and nothing else", () =>
         description=""
         text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
-        options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption={tentOption}
+        options={optionsWithExclusiveOption}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
@@ -43,24 +32,45 @@ describe("when a user selects the exclusive 'or' option and nothing else", () =>
       answers: ["tent_id"],
     });
   });
-
-  it("disables the other checkboxes", async () => {
-    const { getByLabelText } = setup(
-      <Checklist
-        allRequired={false}
-        description=""
-        text="Which permanent structures have you lived in?"
-        options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption={tentOption}
-      />,
-    );
-    await pressOption("Tent");
-
-    const nonExclusiveOption = getByLabelText("Caravan");
-
-    expect(nonExclusiveOption).toBeDisabled();
-  });
 });
+
+describe.each([
+  {
+    optionType: "a non-exclusive",
+    optionLabelText: "Caravan",
+    oppositeOptionLabelText: "Tent",
+  },
+  {
+    optionType: "an exclusive",
+    optionLabelText: "Tent",
+    oppositeOptionLabelText: "Caravan",
+  },
+])(
+  "when a user selects $optionType option",
+  ({ oppositeOptionLabelText, optionLabelText }) => {
+    it("deselects it when the opposite type of option is selected", async () => {
+      const { getByLabelText } = setup(
+        <Checklist
+          allRequired={false}
+          description=""
+          text="Which permanent structures have you lived in?"
+          options={optionsWithExclusiveOption}
+        />,
+      );
+      const firstSelectedOption = getByLabelText(optionLabelText);
+      const secondSelectedOption = getByLabelText(oppositeOptionLabelText);
+
+      await pressOption(optionLabelText);
+
+      expect(firstSelectedOption).toHaveAttribute("checked");
+
+      await pressOption(oppositeOptionLabelText);
+
+      expect(firstSelectedOption).not.toHaveAttribute("checked");
+      expect(secondSelectedOption).toHaveAttribute("checked");
+    });
+  },
+);
 
 describe("when an exclusiveOr option is configured", () => {
   it("does not affect the user's ability to select multiple other options", async () => {
@@ -72,8 +82,7 @@ describe("when an exclusiveOr option is configured", () => {
         description=""
         text="Which permanent structures have you lived in?"
         handleSubmit={handleSubmit}
-        options={options[ChecklistLayout.Basic]}
-        exclusiveOrOption={tentOption}
+        options={optionsWithExclusiveOption}
       />,
     );
     expect(screen.getByRole("heading")).toHaveTextContent(
