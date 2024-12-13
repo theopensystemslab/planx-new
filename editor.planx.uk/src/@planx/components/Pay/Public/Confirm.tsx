@@ -55,6 +55,10 @@ const PayText = styled(Box)(({ theme }) => ({
   },
 }));
 
+/**
+ * Displayed when component is in an error state
+ * Relies on props.error being set
+ */
 const Error: React.FC<Props> = ({ onConfirm, error }) => {
   if (error?.startsWith(PAY_API_ERROR_UNSUPPORTED_TEAM)) {
     return (
@@ -79,6 +83,10 @@ const Error: React.FC<Props> = ({ onConfirm, error }) => {
   );
 };
 
+/**
+ * Main functionality
+ * Allows users to make a payment via GovUK Pay
+ */
 const PayBody: React.FC<PayBodyProps> = (props) => {
   const defaults = getDefaultContent();
 
@@ -117,6 +125,10 @@ const PayBody: React.FC<PayBodyProps> = (props) => {
   );
 };
 
+/**
+ * Display information only - does not allow users to pay
+ * Generally used at the end of guidance services as an illustrative example of what you could pay
+ */
 const InformationOnly: React.FC<Props> = (props) => {
   const defaults = getDefaultContent();
 
@@ -143,6 +155,10 @@ const InformationOnly: React.FC<Props> = (props) => {
   );
 };
 
+/**
+ * Displayed if the fee is calculated as £0
+ * Still displays component and fee breakdown, but allows user to continue without making a payment
+ */
 const ZeroFee: React.FC<Props> = (props) => (
   <Button
     variant="contained"
