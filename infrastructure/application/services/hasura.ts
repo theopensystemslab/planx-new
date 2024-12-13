@@ -98,6 +98,7 @@ export const createHasuraService = async ({
               name: "HASURA_GRAPHQL_DATABASE_URL",
               value: dbRootUrl,
             },
+            { name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT", value: "300" },
             {
               name: "HASURA_PLANX_API_URL",
               value: `https://api.${DOMAIN}`,
