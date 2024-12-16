@@ -1,10 +1,7 @@
-import { createMetabaseClient } from "../shared/client.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
 import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
-
-const client = createMetabaseClient();
 
 /**
  * First uses name to get teams.id and .metabase_id, if present.
