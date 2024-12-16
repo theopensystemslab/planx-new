@@ -1,1 +1,0 @@
-docker run --rm -it -v "$(pwd)/Caddyfile:/etc/caddy/Caddyfile" -w /etc/caddy/ $(docker build -q .) /bin/sh

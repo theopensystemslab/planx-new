@@ -3,17 +3,17 @@ import Axios from "axios";
 
 export const gqlAdmin = async (query, variables = {}) => {
   const HASURA_GRAPHQL_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET;
-  const HASURA_PROXY_PORT = process.env.HASURA_PROXY_PORT;
+  const HASURA_GRAPHQL_PORT = process.env.HASURA_GRAPHQL_PORT;
 
   const response = await Axios(
-    `http://localhost:${HASURA_PROXY_PORT}/v1/graphql`,
+    `http://localhost:${HASURA_GRAPHQL_PORT}/v1/graphql`,
     {
       method: "POST",
       headers: {
         "X-Hasura-Admin-Secret": HASURA_GRAPHQL_ADMIN_SECRET,
       },
       data: { query, variables },
-    },
+    }
   );
   const { data: json } = response;
 

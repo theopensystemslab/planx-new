@@ -47,6 +47,8 @@ services:
   hasura:
     build:
       context: ./hasura.planx.uk
+    ports:
+      - ${HASURA_GRAPHQL_PORT}:8080
     depends_on:
       postgres:
         condition: service_healthy
@@ -77,31 +79,13 @@ services:
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
 
-  hasura-proxy:
-    build:
-      context: ./hasura.planx.uk/proxy
-    depends_on:
-      hasura:
-        condition: service_healthy
-    restart: always
-    ports:
-      - ${HASURA_PROXY_PORT}:${HASURA_PROXY_PORT}
-    environment:
-      HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
-      HASURA_NETWORK_LOCATION: "hasura"
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
-      interval: 15s
-      timeout: 3s
-      retries: 3
-
   api:
     restart: unless-stopped
     build:
       context: ./api.planx.uk
       target: production
     depends_on:
-      hasura-proxy:
+      hasura:
         condition: service_healthy
     ports:
       - ${API_PORT}:${API_PORT}
@@ -137,10 +121,10 @@ services:
       MICROSOFT_CLIENT_SECRET: ${MICROSOFT_CLIENT_SECRET}
       GOVUK_NOTIFY_API_KEY: ${GOVUK_NOTIFY_API_KEY}
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
-      HASURA_GRAPHQL_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/graphql
-      HASURA_METADATA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v1/metadata
+      HASURA_GRAPHQL_URL: http://hasura:8080/v1/graphql
+      HASURA_GRAPHQL_ENDPOINT: http://hasura:8080/
       HASURA_PLANX_API_KEY: ${HASURA_PLANX_API_KEY}
-      HASURA_SCHEMA_URL: http://hasura-proxy:${HASURA_PROXY_PORT}/v2/query
+      HASURA_SCHEMA_URL: http://hasura:8080/v2/query
       IDOX_NEXUS_CLIENT: ${IDOX_NEXUS_CLIENT}
       IDOX_NEXUS_SUBMISSION_URL: ${IDOX_NEXUS_SUBMISSION_URL}
       IDOX_NEXUS_TOKEN_URL: ${IDOX_NEXUS_TOKEN_URL}
@@ -174,7 +158,7 @@ services:
       - "./sharedb.planx.uk:/sharedb"
       - "/sharedb/node_modules"
     depends_on:
-      hasura-proxy:
+      hasura:
         condition: service_healthy
     ports:
       - ${SHAREDB_PORT}:8000

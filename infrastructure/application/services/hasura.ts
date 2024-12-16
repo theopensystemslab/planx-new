@@ -29,9 +29,9 @@ export const createHasuraService = async ({
     subnets: networking.requireOutput("publicSubnetIds"),
   });
   // XXX: If you change the port, you'll have to make the security group accept incoming connections on the new port
-  const HASURA_PROXY_PORT = 80;
+  const HASURA_GRAPHQL_PORT = 80;
   const targetHasura = lbHasura.createTargetGroup("hasura", {
-    port: HASURA_PROXY_PORT,
+    port: HASURA_GRAPHQL_PORT,
     protocol: "HTTP",
     healthCheck: {
       path: "/healthz",
@@ -45,9 +45,6 @@ export const createHasuraService = async ({
     domain: DOMAIN,
   });
 
-  // hasuraService is composed of two tightly coupled containers
-  // hasuraProxy is publicly exposed (behind the load balancer) and reverse proxies requests to hasura
-  // hasura has no externally exposed ports, and can only be accessed by hasuraService
   const hasuraService = new awsx.ecs.FargateService("hasura", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -57,16 +54,6 @@ export const createHasuraService = async ({
         retentionInDays: 30,
       }),
       containers: {
-        hasuraProxy: {
-          image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
-          cpu: config.requireNumber("hasura-proxy-cpu"),
-          memory: config.requireNumber("hasura-proxy-memory"),
-          portMappings: [hasuraListenerHttp],
-          environment: [
-            { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
-            { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
-          ],
-        },
         hasura: {
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           cpu: config.requireNumber("hasura-cpu"),

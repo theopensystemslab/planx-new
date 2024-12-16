@@ -105,8 +105,8 @@ export function getCoreDomainClient(): CoreDomainClient {
   assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);
 
   const API = process.env.HASURA_GRAPHQL_URL!.replace(
-    "${HASURA_PROXY_PORT}",
-    process.env.HASURA_PROXY_PORT!,
+    "${HASURA_GRAPHQL_PORT}",
+    process.env.HASURA_GRAPHQL_PORT!,
   );
   const SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET!;
   return new CoreDomainClient({

@@ -14,13 +14,8 @@ services:
 
   hasura:
     labels:
-      virtual.port: 8080
-      virtual.tls-email: ${TLS_EMAIL}
-
-  hasura-proxy:
-    labels:
       virtual.host: hasura.${ROOT_DOMAIN}
-      virtual.port: ${HASURA_PROXY_PORT}
+      virtual.port: 8080
       virtual.tls-email: ${TLS_EMAIL}
 
   api:
