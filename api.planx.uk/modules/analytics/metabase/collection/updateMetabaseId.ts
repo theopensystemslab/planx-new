@@ -4,7 +4,7 @@ import { $api } from "../../../../client/index.js";
 interface UpdateMetabaseId {
   teams: {
     id: number;
-    name: string;
+    slug: string;
     metabaseId: number;
   };
 }
@@ -21,7 +21,7 @@ export const updateMetabaseId = async (teamId: number, metabaseId: number) => {
           ) {
             returning {
               id
-              name
+              slug
               metabase_id
             }
           }

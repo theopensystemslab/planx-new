@@ -12,13 +12,13 @@ describe("getTeamIdAndMetabaseId", () => {
       teams: [
         {
           id: 26,
-          name: "Barnet",
+          slug: "barnet",
           metabaseId: 20,
         },
       ],
     });
 
-    const teamAndMetabaseId = await getTeamIdAndMetabaseId("Barnet");
+    const teamAndMetabaseId = await getTeamIdAndMetabaseId("barnet");
 
     expect(teamAndMetabaseId.id).toEqual(26);
     expect(teamAndMetabaseId.metabaseId).toEqual(20);
@@ -29,7 +29,7 @@ describe("getTeamIdAndMetabaseId", () => {
       teams: [
         {
           id: 26,
-          name: "Barnet",
+          slug: "barnet",
           metabaseId: null,
         },
       ],
@@ -54,7 +54,7 @@ describe("updateMetabaseId", () => {
         returning: [
           {
             id: 1,
-            name: "Test Team",
+            slug: "testteam",
             metabase_id: 123,
           },
         ],
@@ -68,7 +68,7 @@ describe("updateMetabaseId", () => {
         returning: [
           {
             id: 1,
-            name: "Test Team",
+            slug: "testteam",
             metabase_id: 123,
           },
         ],

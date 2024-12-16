@@ -4,25 +4,25 @@ import { $api } from "../../../../client/index.js";
 interface GetMetabaseId {
   teams: {
     id: number;
-    name: string;
+    slug: string;
     metabaseId: number | null;
   }[];
 }
 
-export const getTeamIdAndMetabaseId = async (name: string) => {
+export const getTeamIdAndMetabaseId = async (slug: string) => {
   try {
     const response = await $api.client.request<GetMetabaseId>(
       gql`
-        query GetTeamAndMetabaseId($name: String!) {
-          teams(where: { name: { _ilike: $name } }) {
+        query GetTeamAndMetabaseId($slug: String!) {
+          teams(where: { slug: { _eq: $slug } }) {
             id
-            name
+            slug
             metabaseId: metabase_id
           }
         }
       `,
       {
-        name: name,
+        slug: slug,
       },
     );
 
