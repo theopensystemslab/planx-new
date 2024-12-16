@@ -1,12 +1,9 @@
-import axios from "axios";
 import {
   validateConfig,
   createMetabaseClient,
   MetabaseError,
 } from "./client.js";
 import nock from "nock";
-
-const axiosCreateSpy = vi.spyOn(axios, "create");
 
 describe("Metabase client", () => {
   beforeEach(() => {
