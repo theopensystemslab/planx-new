@@ -28,7 +28,7 @@ export async function setupRoadsMockResponse(page: Page) {
   });
 }
 
-export const planningConstraintHeaders = [
+export const planningConstraintHeadersMock = [
   "Planning constraints",
   "These are the planning constraints we think apply to this property",
   "Heritage and conservation",

@@ -34,11 +34,10 @@ import {
   setupOSMapsVectorTiles,
 } from "./mocks/osMapsResponse";
 import {
-  planningConstraintHeaders,
+  planningConstraintHeadersMock,
   setupGISMockResponse,
   setupRoadsMockResponse,
 } from "./mocks/gisResponse";
-import exp from "node:constants";
 import {
   answerFindProperty,
   userChallengesPlanningConstraint,
@@ -258,6 +257,7 @@ test.describe("Flow creation, publish and preview", () => {
       listedBuildingConstraintRowItem.getByText("Marked as not applicable"),
     ).toBeVisible();
 
+    // click to hide constraint data
     await listedBuildingConstraintRowItem.click();
 
     // ensure constraints that don't apply show up
@@ -267,7 +267,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     const dontApplyHeadings = await page.getByRole("heading").allTextContents();
 
-    expect(dontApplyHeadings).toEqual(planningConstraintHeaders);
+    expect(dontApplyHeadings).toEqual(planningConstraintHeadersMock);
 
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerPlanningConstraints

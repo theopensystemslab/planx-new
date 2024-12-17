@@ -1,6 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { setupOSMockResponse } from "../mocks/osPlacesResponse";
 import { findSessionId, getGraphQLClient } from "./context";
 import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers";
 import { TestContext } from "./types";
