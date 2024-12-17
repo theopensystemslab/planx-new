@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { partition } from "lodash";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -19,16 +20,13 @@ import type { Group } from "../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  const getNonExclusiveOptions = (): Option[] => {
-    return formik.values.options?.filter((opt: Option) => !opt.data.exclusive);
-  };
-
-  const getExclusiveOptions = (): Option[] => {
-    return formik.values.options?.filter((opt: Option) => opt.data.exclusive);
-  };
+  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+    formik.values.options,
+    (option) => option.data.exclusive
+  );
 
   const exclusiveOrOptionManagerShouldRender =
-    hasFeatureFlag("EXCLUSIVE_OR") && getNonExclusiveOptions().length;
+    hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptions.length;
 
   return (
     <ModalSectionContent subtitle="Options">
@@ -141,10 +139,8 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         </Box>
       ) : (
         <ListManager
-          values={getNonExclusiveOptions() || []}
+          values={nonExclusiveOptions || []}
           onChange={(newOptions) => {
-            const exclusiveOptions = getExclusiveOptions() || [];
-
             const newCombinedOptions =
               newOptions.length === 0
                 ? []
@@ -169,16 +165,12 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
       {exclusiveOrOptionManagerShouldRender ? (
         <Box mt={1}>
           <ListManager
-            values={getExclusiveOptions() || []}
+            values={exclusiveOptions || []}
             onChange={(newExclusiveOptions) => {
-              const nonExclusiveOptions: Option[] =
-                getNonExclusiveOptions() || [];
-
               const newCombinedOptions = [
                 ...nonExclusiveOptions,
                 ...newExclusiveOptions,
               ];
-
               formik.setFieldValue("options", newCombinedOptions);
             }}
             newValueLabel='add "or" option'
