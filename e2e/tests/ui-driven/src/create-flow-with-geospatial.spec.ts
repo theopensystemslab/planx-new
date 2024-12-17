@@ -30,9 +30,10 @@ import {
 import {
   GeoJsonChangeHandler,
   mockChangedMapGeoJson,
-  mockMapGeoJson,
   mockPropertyTypeOptions,
+  mockTitleBoundaryGeoJson,
 } from "./mocks/geospatialMocks";
+import { setupOSMapsStyles, setupOSMapsVectorTiles } from "./mocks/osMapsResponse";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -126,6 +127,9 @@ test.describe("Flow creation, publish and preview", () => {
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
+    setupOSMapsStyles(page)
+    setupOSMapsVectorTiles(page)
+
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
@@ -137,7 +141,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     // Check map component has geoJson content
-    await checkGeoJsonContent(page, "geojsondata", mockMapGeoJson);
+    await checkGeoJsonContent(page, "geojsondata", mockTitleBoundaryGeoJson);
 
     // Check property info is being shown
     await expect(page.getByText("Test Street, Testville")).toBeVisible();
@@ -181,16 +185,14 @@ test.describe("Flow creation, publish and preview", () => {
     });
     await expect(
       drawBoundaryTitle,
-      "We are in the Draw Boundary component",
     ).toBeVisible();
 
-    await checkGeoJsonContent(page, "drawgeojsondata", mockMapGeoJson);
+    await checkGeoJsonContent(page, "drawgeojsondata", mockTitleBoundaryGeoJson);
 
-    const area = "490.37";
+    const area = "The property boundary you have drawn is 490.37";
 
     await expect(
       page.getByText(area),
-      "We can see a value for area",
     ).toBeVisible();
 
     // navigate to upload file page and back
@@ -217,7 +219,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await expect(
       page.getByText(`${parsedJson.properties!["area.squareMetres"]}`),
-      "We can see a new value for area",
+      "The correct value for area comes from the map properties ",
     ).toBeVisible();
 
     // TODO: answer uploadAndLabel

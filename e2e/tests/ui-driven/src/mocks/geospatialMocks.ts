@@ -1,5 +1,5 @@
 import { OptionWithDataValues } from "../helpers/types";
-import { Feature, Polygon, Position } from "geojson";
+import { Feature, Polygon } from "geojson";
 
 type ChangeHandlerProperties = {
   label: string;
@@ -14,22 +14,20 @@ export const mockPropertyTypeOptions: OptionWithDataValues[] = [
   { optionText: "Commercial", dataValue: "commercial" },
 ];
 
-const mockCoordinates: Position[][][] = [
-  [
-    [
-      [-0.633498, 51.605485],
-      [-0.633455, 51.605606],
-      [-0.633788, 51.605643],
-      [-0.634429, 51.605799],
-      [-0.634429, 51.605767],
-      [-0.633498, 51.605485],
-    ],
-  ],
-];
-
-export const mockMapGeoJson: Feature = {
+export const mockTitleBoundaryGeoJson: Feature = {
   type: "Feature",
-  geometry: { type: "MultiPolygon", coordinates: mockCoordinates },
+  geometry: { type: "MultiPolygon", coordinates: [
+    [
+      [
+        [-0.633498, 51.605485],
+        [-0.633455, 51.605606],
+        [-0.633788, 51.605643],
+        [-0.634429, 51.605799],
+        [-0.634429, 51.605767],
+        [-0.633498, 51.605485],
+      ],
+    ],
+  ]},
   properties: {
     "entry-date": "2024-05-06",
     "start-date": "2010-05-12",
