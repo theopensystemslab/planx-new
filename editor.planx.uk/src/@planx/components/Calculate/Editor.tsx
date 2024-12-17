@@ -126,10 +126,10 @@ export default function Component(props: Props) {
           <InputRow>
             <Input
               required
-              placeholder="output data field"
-              name="output"
+              placeholder="Data field"
+              name="fn"
               format="data"
-              value={formik.values.output}
+              value={formik.values.fn}
               onChange={formik.handleChange}
             />
           </InputRow>
@@ -199,7 +199,7 @@ export default function Component(props: Props) {
             <></>
           )}
           <p>
-            <strong>{formik.values.output || "<output>"}</strong> would be set
+            <strong>{formik.values.fn || "<output>"}</strong> would be set
             to <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>

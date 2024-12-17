@@ -19,7 +19,6 @@ export const getFlowSchema = async (flowId: string) => {
       planx_variable:
         nodeData.data?.fn ||
         nodeData.data?.val ||
-        nodeData.data?.output ||
         nodeData.data?.dataFieldBoundary,
     }),
   );
