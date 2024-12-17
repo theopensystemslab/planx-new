@@ -19,10 +19,16 @@ import type { Group } from "../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  // exclusive Or options should render if at least one option configured
+  const getNonExclusiveOptions = (): Option[] => {
+    return formik.values.options?.filter((opt: Option) => !opt.data.exclusive);
+  };
+
+  const getExclusiveOptions = (): Option[] => {
+    return formik.values.options?.filter((opt: Option) => opt.data.exclusive);
+  };
+
   const exclusiveOrOptionManagerShouldRender =
-    hasFeatureFlag("EXCLUSIVE_OR") &&
-    formik.values.options?.filter((opt: Option) => !opt.data.exclusive).length;
+    hasFeatureFlag("EXCLUSIVE_OR") && getNonExclusiveOptions().length;
 
   return (
     <ModalSectionContent subtitle="Options">
@@ -135,16 +141,9 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         </Box>
       ) : (
         <ListManager
-          values={
-            formik.values.options?.filter(
-              (opt: Option) => !opt.data.exclusive
-            ) || []
-          }
+          values={getNonExclusiveOptions() || []}
           onChange={(newOptions) => {
-            const exclusiveOptions =
-              formik.values.options?.filter(
-                (opt: Option) => opt.data.exclusive
-              ) || [];
+            const exclusiveOptions = getExclusiveOptions() || [];
 
             const newCombinedOptions =
               newOptions.length === 0
@@ -170,16 +169,10 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
       {exclusiveOrOptionManagerShouldRender ? (
         <Box mt={1}>
           <ListManager
-            values={
-              formik.values.options?.filter(
-                (opt: Option) => opt.data.exclusive
-              ) || []
-            }
+            values={getExclusiveOptions() || []}
             onChange={(newExclusiveOptions) => {
               const nonExclusiveOptions: Option[] =
-                formik.values.options?.filter(
-                  (opt: Option) => !opt.data.exclusive
-                ) || [];
+                getNonExclusiveOptions() || [];
 
               const newCombinedOptions = [
                 ...nonExclusiveOptions,
