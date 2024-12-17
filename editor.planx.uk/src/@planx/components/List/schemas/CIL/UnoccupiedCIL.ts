@@ -1,13 +1,13 @@
 import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
-export const ExistingBuildingsCIL: Schema = {
-  type: "Existing building or part of building",
+export const UnoccupiedBuildingsCIL: Schema = {
+  type: "Building not meant for occupation or temporarily permitted",
   fields: [
     {
       type: "text",
       data: {
-        title: "Describe the existing building or part",
+        title: "Describe the existing building",
         fn: "descriptionExisting",
         type: TextInputType.Short,
       },
@@ -37,27 +37,6 @@ export const ExistingBuildingsCIL: Schema = {
         units: "m²",
         fn: "area.loss",
         allowNegatives: false,
-      },
-    },
-    {
-      type: "question",
-      data: {
-        title:
-          "Has the building or part been lawfully occupied for 6 continuous months in the past 36 months?",
-        fn: "continuousOccupation",
-        options: [
-          { id: "true", data: { text: "Yes", val: "true" } },
-          { id: "false", data: { text: "No", val: "false" } },
-        ],
-      },
-    },
-    {
-      type: "text",
-      data: {
-        title: "When was it last occupied for its lawful use?",
-        description: "Please enter a date or whether it is still in use.",
-        fn: "lastOccupation",
-        type: TextInputType.Short,
       },
     },
   ],
