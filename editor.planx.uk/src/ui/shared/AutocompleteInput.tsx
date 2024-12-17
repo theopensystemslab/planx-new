@@ -100,7 +100,7 @@ export default function AutocompleteInput<T>(props: Props<T>) {
         role="status"
         aria-atomic={true}
         aria-live="polite"
-        popupIcon={PopupIcon}
+        forcePopupIcon={false}
         renderInput={(params) => (
           <StyledTextField
             {...params}
