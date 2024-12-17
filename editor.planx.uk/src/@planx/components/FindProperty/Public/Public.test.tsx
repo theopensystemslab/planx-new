@@ -85,8 +85,8 @@ const proposedAddressProps = {
   },
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
-  "proposal.site.area": 1232.22,
-  "proposal.site.area.hectares": 0.123222,
+  "property.boundary.area": 1232.22,
+  "property.boundary.area.hectares": 0.123222,
   "property.boundary": {
     geometry: {
       type: "MultiPolygon",
