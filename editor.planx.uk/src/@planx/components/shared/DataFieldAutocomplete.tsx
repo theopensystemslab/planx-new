@@ -4,7 +4,6 @@ import {
   createFilterOptions
 } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
-import { FilterOptionsState } from "@mui/material/useAutocomplete";
 import isNull from "lodash/isNull";
 import React, { useMemo } from "react";
 import AutocompleteInput from "ui/shared/AutocompleteInput";
@@ -43,15 +42,17 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
 
   const handleChange = (
     _event: React.SyntheticEvent,
-    value: string | FilterOptionsState<string> | null,
+    value: string | null,
     _reason: AutocompleteChangeReason,
   ) => {
     if (typeof value === "string") {
-      // Selecting an option
-      props.onChange(value);
-    } else if (value && value.inputValue) {
       // Adding a new option
-      props.onChange(value.inputValue);
+      if (value.startsWith('Add "')) {
+        props.onChange(value.split(('"'))[1]);
+      } else {
+        // Selecting an option
+        props.onChange(value);
+      }
     } else if (isNull(value)) {
       // Clearing an option
       props.onChange(value);
@@ -68,9 +69,6 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         onChange={handleChange}
         value={value}
         options={options}
-        isOptionEqualToValue={(option: string, value: string) =>
-          option === value
-        }
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
           const { inputValue } = params;
@@ -81,22 +79,20 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           }
           return filtered;
         }}
-        // getOptionLabel={(option) => {
-        //   // Value selected with enter, right from the input
-        //   if (typeof option === 'string') {
-        //     return option;
-        //   }
-        //   // Add "xxx" option created dynamically
-        //   if (option.inputValue) {
-        //     return option.inputValue;
-        //   }
-        //   // Regular option
-        //   return option;
-        // }}
+        getOptionLabel={(option) => {
+          let formattedOption = option;
+          // If a new option was added, strip out the value between ""
+          if (option.startsWith('Add "')) {
+            formattedOption = option.split('"')[1];
+          }
+          return formattedOption;
+        }}
         renderOption={renderOptions}
+        freeSolo
         selectOnFocus
         clearOnEscape
         handleHomeEndKeys
+        autoHighlight
       />
     </InputRow>
   );

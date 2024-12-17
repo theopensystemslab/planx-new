@@ -1,4 +1,3 @@
-import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FormikErrors, FormikValues, useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
@@ -19,6 +18,7 @@ import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformat
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
+import { getOptionsSchemaByFn } from "../shared/utils";
 import QuestionOptionsEditor from "./OptionsEditor";
 
 interface Props {
@@ -75,25 +75,7 @@ export const Question: React.FC<Props> = (props) => {
   });
 
   const schema = useStore().getFlowSchema();
-
-  const getOptionsSchemaByFn = (fn?: string, defaultOptionsSchema?: string[]) => {
-    let schema = defaultOptionsSchema;
-
-    // For certain data fields, suggest based on full ODP Schema enums rather than current flow schema
-    if (fn === "application.type") schema = getValidSchemaValues("ApplicationType");
-    if (fn === "proposal.projectType") schema = getValidSchemaValues("ProjectType");
-    if (fn === "property.type") schema = getValidSchemaValues("PropertyType");
-
-    // Ensure that any initial values outside of ODP Schema enums will still be recognised/pre-populated when modal loads
-    const initialOptions = props.options?.map((option) => option.data?.val);
-    initialOptions?.forEach((option) => {
-      if (option && !schema?.includes(option)) {
-        schema?.push(option);
-      }
-    });
-
-    return schema;
-  }
+  const initialOptionVals = props.options?.map((option) => option.data?.val);
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -171,7 +153,7 @@ export const Question: React.FC<Props> = (props) => {
             Editor={QuestionOptionsEditor}
             editorExtraProps={{ 
               showValueField: !!formik.values.fn, 
-              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options),
+              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
             }}
           />
         </ModalSectionContent>
