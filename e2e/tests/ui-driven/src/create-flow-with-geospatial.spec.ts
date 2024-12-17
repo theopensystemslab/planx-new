@@ -6,11 +6,7 @@ import {
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import {
-  answerFindProperty,
-  answerQuestion,
-  clickContinue,
-} from "./helpers/userActions";
+import { answerQuestion, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 import {
   navigateToService,
@@ -42,6 +38,11 @@ import {
   setupGISMockResponse,
   setupRoadsMockResponse,
 } from "./mocks/gisResponse";
+import exp from "node:constants";
+import {
+  answerFindProperty,
+  userChallengesPlanningConstraint,
+} from "./helpers/geoSpatialUserActions";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -243,9 +244,21 @@ test.describe("Flow creation, publish and preview", () => {
       ),
     ).toBeVisible();
 
+    const listedBuildingConstraintRowItem = page.getByRole("button", {
+      name: "is, or is within, a Listed",
+    });
+
+    await expect(listedBuildingConstraintRowItem).toBeVisible();
+
+    await listedBuildingConstraintRowItem.click();
+
+    await userChallengesPlanningConstraint(page);
+
     await expect(
-      page.getByRole("button", { name: "is, or is within, a Listed" }),
+      listedBuildingConstraintRowItem.getByText("Marked as not applicable"),
     ).toBeVisible();
+
+    await listedBuildingConstraintRowItem.click();
 
     // ensure constraints that don't apply show up
     await page
