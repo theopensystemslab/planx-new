@@ -26,8 +26,8 @@ import { Props } from "../types";
 import { AutoAnsweredChecklist } from "./AutoAnsweredChecklist";
 import {
   getInitialExpandedGroups,
-  toggleCheckbox,
   toggleInArray,
+  toggleNonExclusiveCheckbox,
 } from "./helpers";
 
 export enum ChecklistLayout {
@@ -85,6 +85,11 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     }),
   });
 
+  const setCheckedFieldValue = (optionIds: string[]) => {
+    const sortedCheckedIds = sortCheckedIds(optionIds);
+    formik.setFieldValue("checked", sortedCheckedIds);
+  };
+
   const initialExpandedGroups = getInitialExpandedGroups(
     groupedOptions,
     previouslySubmittedData
@@ -112,25 +117,27 @@ const VisibleChecklist: React.FC<Props> = (props) => {
   const exclusiveOptionIsChecked =
     exclusiveOrOption && formik.values.checked.includes(exclusiveOrOption.id);
 
+  const toggleExclusiveCheckbox = (checkboxId: string) => {
+    return exclusiveOptionIsChecked ? [] : [checkboxId];
+  };
+
   const changeCheckbox = (id: string) => () => {
-    const currentIds = formik.values.checked;
-    let newCheckedIds;
+    const currentCheckedIds = formik.values.checked;
+
     const currentCheckboxIsExclusiveOption =
       exclusiveOrOption && id === exclusiveOrOption.id;
 
     if (currentCheckboxIsExclusiveOption) {
-      newCheckedIds = exclusiveOptionIsChecked ? [] : [id];
-    } else if (exclusiveOrOption) {
-      newCheckedIds = toggleCheckbox(id, currentIds);
-      const onlyNonExclusiveOptions = newCheckedIds.filter(
-        (id: string) => exclusiveOrOption && id !== exclusiveOrOption.id
-      );
-      newCheckedIds = onlyNonExclusiveOptions;
-    } else {
-      newCheckedIds = toggleCheckbox(id, currentIds);
+      const newCheckedIds = toggleExclusiveCheckbox(id);
+      setCheckedFieldValue(newCheckedIds);
+      return;
     }
-    const sortedCheckedIds = sortCheckedIds(newCheckedIds);
-    formik.setFieldValue("checked", sortedCheckedIds);
+    const newCheckedIds = toggleNonExclusiveCheckbox(
+      id,
+      currentCheckedIds,
+      exclusiveOrOption
+    );
+    setCheckedFieldValue(newCheckedIds);
   };
 
   return (
