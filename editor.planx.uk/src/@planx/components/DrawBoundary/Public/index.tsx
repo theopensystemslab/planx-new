@@ -54,10 +54,10 @@ export default function Component(props: Props) {
   const passport = useStore((state) => state.computePassport());
 
   const previousBoundary =
-    props.previouslySubmittedData?.data?.[props.dataFieldBoundary] ||
+    props.previouslySubmittedData?.data?.[props.fn] ||
     passport.data?.["property.boundary.title"];
   const previousArea =
-    props.previouslySubmittedData?.data?.[props.dataFieldArea] ||
+    props.previouslySubmittedData?.data?.[props.fn] ||
     passport.data?.["property.boundary.title.area"];
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
@@ -150,17 +150,17 @@ export default function Component(props: Props) {
         props.handleSubmit?.({ data: { ...newPassportData } });
       }
 
-      if (boundary && props.dataFieldBoundary) {
-        newPassportData[props.dataFieldBoundary] = boundary;
-        newPassportData[`${props.dataFieldBoundary}.buffered`] = buffer(
+      if (boundary && props.fn) {
+        newPassportData[props.fn] = boundary;
+        newPassportData[`${props.fn}.buffered`] = buffer(
           boundary,
           bufferInMeters,
           { units: "meters" },
         );
 
-        if (area && props.dataFieldArea) {
-          newPassportData[props.dataFieldArea] = area;
-          newPassportData[`${props.dataFieldArea}.hectares`] =
+        if (area && props.fn) {
+          newPassportData[`${props.fn}.area`] = area;
+          newPassportData[`${props.fn}.hectares`] =
             squareMetresToHectares(area);
         }
 

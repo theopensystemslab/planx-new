@@ -32,7 +32,7 @@
   },
   "drawBoundary": {
     "data": {
-      "dataFieldBoundary": "property.boundary.site"
+      "fn": "property.boundary.site"
     },
     "type": 10
   },

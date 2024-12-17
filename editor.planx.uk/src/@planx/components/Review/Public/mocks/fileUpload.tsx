@@ -156,9 +156,8 @@ export const drawBoundaryFlow = {
   EO6DzPso8o: {
     data: {
       title: "Draw the boundary of the property",
-      dataFieldArea: "property.boundary.area",
       hideFileUpload: false,
-      dataFieldBoundary: "property.boundary.site",
+      fn: "property.boundary.site",
       titleForUploading: "Upload a location plan",
     },
     type: 10,

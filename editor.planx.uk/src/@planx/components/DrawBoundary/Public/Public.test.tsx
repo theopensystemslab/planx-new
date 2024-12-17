@@ -42,8 +42,7 @@ test("recovers previously submitted files when clicking the back button", async 
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -85,8 +84,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -108,8 +106,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description="description1"
       descriptionForUploading="description1"
       title="Draw a boundary"
@@ -125,8 +122,7 @@ test("shows the file upload option by default and requires user data to continue
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -161,8 +157,7 @@ test("hides the upload option and allows user to continue without drawing if edi
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -197,8 +192,7 @@ test("captures output data in the correct format when uploading a file", async (
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -334,8 +328,7 @@ test("appends to existing '_requestedFiles' value", async () => {
         titleForUploading: "Upload a location plan",
         descriptionForUploading: "",
         hideFileUpload: false,
-        dataFieldBoundary: "property.boundary.site",
-        dataFieldArea: "property.boundary.area",
+        fn: "property.boundary.site",
       },
     },
   };
@@ -344,8 +337,7 @@ test("appends to existing '_requestedFiles' value", async () => {
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -427,8 +419,7 @@ test("submits data based on the page you continue onwards from", async () => {
 
   const { user } = setup(
     <DrawBoundary
-      dataFieldBoundary="property.boundary.site"
-      dataFieldArea="property.area.site"
+      fn="property.boundary.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
