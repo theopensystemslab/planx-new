@@ -77,9 +77,9 @@ export const checkUploadFileAltRoute = async (page: Page) => {
     "A button for uploading files is visible",
   ).toBeVisible();
 
-  await page.getByTestId('continue-button').click()
+  await page.getByTestId("continue-button").click();
 
-  await page.getByTestId('error-message-upload-location-plan').isVisible()
+  await page.getByTestId("error-message-upload-location-plan").isVisible();
 
   const useMapButton = page.getByTestId("use-map-button");
 

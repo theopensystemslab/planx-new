@@ -16,18 +16,21 @@ export const mockPropertyTypeOptions: OptionWithDataValues[] = [
 
 export const mockTitleBoundaryGeoJson: Feature = {
   type: "Feature",
-  geometry: { type: "MultiPolygon", coordinates: [
-    [
+  geometry: {
+    type: "MultiPolygon",
+    coordinates: [
       [
-        [-0.633498, 51.605485],
-        [-0.633455, 51.605606],
-        [-0.633788, 51.605643],
-        [-0.634429, 51.605799],
-        [-0.634429, 51.605767],
-        [-0.633498, 51.605485],
+        [
+          [-0.633498, 51.605485],
+          [-0.633455, 51.605606],
+          [-0.633788, 51.605643],
+          [-0.634429, 51.605799],
+          [-0.634429, 51.605767],
+          [-0.633498, 51.605485],
+        ],
       ],
     ],
-  ]},
+  },
   properties: {
     "entry-date": "2024-05-06",
     "start-date": "2010-05-12",

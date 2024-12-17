@@ -33,7 +33,10 @@ import {
   mockPropertyTypeOptions,
   mockTitleBoundaryGeoJson,
 } from "./mocks/geospatialMocks";
-import { setupOSMapsStyles, setupOSMapsVectorTiles } from "./mocks/osMapsResponse";
+import {
+  setupOSMapsStyles,
+  setupOSMapsVectorTiles,
+} from "./mocks/osMapsResponse";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -127,8 +130,8 @@ test.describe("Flow creation, publish and preview", () => {
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
-    setupOSMapsStyles(page)
-    setupOSMapsVectorTiles(page)
+    setupOSMapsStyles(page);
+    setupOSMapsVectorTiles(page);
 
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
@@ -183,17 +186,17 @@ test.describe("Flow creation, publish and preview", () => {
     const drawBoundaryTitle = page.getByRole("heading", {
       name: "Confirm your location plan",
     });
-    await expect(
-      drawBoundaryTitle,
-    ).toBeVisible();
+    await expect(drawBoundaryTitle).toBeVisible();
 
-    await checkGeoJsonContent(page, "drawgeojsondata", mockTitleBoundaryGeoJson);
+    await checkGeoJsonContent(
+      page,
+      "drawgeojsondata",
+      mockTitleBoundaryGeoJson,
+    );
 
     const area = "The property boundary you have drawn is 490.37";
 
-    await expect(
-      page.getByText(area),
-    ).toBeVisible();
+    await expect(page.getByText(area)).toBeVisible();
 
     // navigate to upload file page and back
     await checkUploadFileAltRoute(page);

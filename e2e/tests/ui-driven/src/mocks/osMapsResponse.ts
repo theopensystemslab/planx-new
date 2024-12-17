@@ -13,15 +13,15 @@ export async function setupOSMapsStyles(page: Page) {
   });
 }
 
-export async function setupOSMapsVectorTiles(page: Page){
-    const ordnanceSurveyVectorTiles = new RegExp(
-        /\/proxy\/ordnance-survey\/maps\/vector\/v1\/vts\/tile/,
-    )
+export async function setupOSMapsVectorTiles(page: Page) {
+  const ordnanceSurveyVectorTiles = new RegExp(
+    /\/proxy\/ordnance-survey\/maps\/vector\/v1\/vts\/tile/,
+  );
 
-    await page.route(ordnanceSurveyVectorTiles, async (route) => {
-        await route.fulfill({
-          status: 200,
-          body: Buffer.from([]),
-        });
-      });
+  await page.route(ordnanceSurveyVectorTiles, async (route) => {
+    await route.fulfill({
+      status: 200,
+      body: Buffer.from([]),
+    });
+  });
 }
