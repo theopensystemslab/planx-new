@@ -11,6 +11,7 @@ import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
+import { partition } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
@@ -20,6 +21,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
+import { Option } from "../../shared";
 import { Props } from "../types";
 import { AutoAnsweredChecklist } from "./AutoAnsweredChecklist";
 import {
@@ -100,7 +102,12 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     return ids.sort((a, b) => originalIds.indexOf(a) - originalIds.indexOf(b));
   };
 
-  const exclusiveOrOption = options?.find((option) => option.data?.exclusive);
+  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+    options,
+    (option) => option.data.exclusive
+  );
+
+  const exclusiveOrOption = exclusiveOptions[0];
 
   const exclusiveOptionIsChecked =
     exclusiveOrOption && formik.values.checked.includes(exclusiveOrOption.id);
@@ -144,42 +151,40 @@ const VisibleChecklist: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options
-              ?.filter((option) => option.data.exclusive !== true)
-              .map((option) =>
-                layout === ChecklistLayout.Basic ? (
-                  <FormWrapper key={option.id}>
-                    <Grid item xs={12} key={option.data.text}>
-                      <ChecklistItem
-                        onChange={changeCheckbox(option.id)}
-                        label={option.data.text}
-                        id={option.id}
-                        checked={
-                          formik.values.checked.includes(option.id) &&
-                          !exclusiveOptionIsChecked
-                        }
-                      />
-                    </Grid>
-                  </FormWrapper>
-                ) : (
-                  <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    contentWrap={4}
-                    key={option.data.text}
-                  >
-                    <ImageButton
-                      title={option.data.text}
+            {nonExclusiveOptions.map((option) =>
+              layout === ChecklistLayout.Basic ? (
+                <FormWrapper key={option.id}>
+                  <Grid item xs={12} key={option.data.text}>
+                    <ChecklistItem
+                      onChange={changeCheckbox(option.id)}
+                      label={option.data.text}
                       id={option.id}
-                      img={option.data.img}
-                      selected={formik.values.checked.includes(option.id)}
-                      onClick={changeCheckbox(option.id)}
-                      checkbox
+                      checked={
+                        formik.values.checked.includes(option.id) &&
+                        !exclusiveOptionIsChecked
+                      }
                     />
                   </Grid>
-                )
-              )}
+                </FormWrapper>
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  contentWrap={4}
+                  key={option.data.text}
+                >
+                  <ImageButton
+                    title={option.data.text}
+                    id={option.id}
+                    img={option.data.img}
+                    selected={formik.values.checked.includes(option.id)}
+                    onClick={changeCheckbox(option.id)}
+                    checkbox
+                  />
+                </Grid>
+              )
+            )}
             {exclusiveOrOption && (
               <FormWrapper key={exclusiveOrOption.id}>
                 <Grid item xs={12} key={exclusiveOrOption.data.text}>
