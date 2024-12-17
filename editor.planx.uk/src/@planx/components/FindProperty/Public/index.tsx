@@ -156,9 +156,9 @@ function Component(props: Props) {
       if (titleBoundary) {
         const areaSquareMetres =
           Math.round(area(titleBoundary as Feature) * 100) / 100;
-        newPassportData["property.boundary.title"] = titleBoundary;
-        newPassportData["property.boundary.title.area"] = areaSquareMetres;
-        newPassportData["property.boundary.title.area.hectares"] =
+        newPassportData["property.boundary"] = titleBoundary;
+        newPassportData["property.boundary.area"] = areaSquareMetres;
+        newPassportData["property.boundary.area.hectares"] =
           squareMetresToHectares(areaSquareMetres);
       }
 

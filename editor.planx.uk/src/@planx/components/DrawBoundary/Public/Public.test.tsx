@@ -42,7 +42,7 @@ test("recovers previously submitted files when clicking the back button", async 
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -64,7 +64,7 @@ test("recovers previously submitted files when clicking the back button", async 
 test("recovers previously submitted drawing when clicking the back button", async () => {
   const handleSubmit = vi.fn();
   const previouslySubmittedData = {
-    "property.boundary.site": {
+    "proposal.site": {
       type: "Feature",
       properties: {},
       geometry: {
@@ -84,7 +84,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -106,7 +106,7 @@ test("recovers previously submitted drawing when clicking the back button", asyn
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description="description1"
       descriptionForUploading="description1"
       title="Draw a boundary"
@@ -122,7 +122,7 @@ test("shows the file upload option by default and requires user data to continue
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -157,7 +157,7 @@ test("hides the upload option and allows user to continue without drawing if edi
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -192,7 +192,7 @@ test("captures output data in the correct format when uploading a file", async (
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -328,7 +328,7 @@ test("appends to existing '_requestedFiles' value", async () => {
         titleForUploading: "Upload a location plan",
         descriptionForUploading: "",
         hideFileUpload: false,
-        fn: "property.boundary.site",
+        fn: "proposal.site",
       },
     },
   };
@@ -337,7 +337,7 @@ test("appends to existing '_requestedFiles' value", async () => {
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -399,7 +399,7 @@ test("submits data based on the page you continue onwards from", async () => {
 
   // Previously submitted data is a good proxy for having previously fetched a title boundary and arriving to Draw with geojson in passport !
   const previouslySubmittedData = {
-    "property.boundary.site": {
+    "proposal.site": {
       type: "Feature",
       properties: {},
       geometry: {
@@ -419,7 +419,7 @@ test("submits data based on the page you continue onwards from", async () => {
 
   const { user } = setup(
     <DrawBoundary
-      fn="property.boundary.site"
+      fn="proposal.site"
       description=""
       descriptionForUploading=""
       title="Draw a boundary"
@@ -449,8 +449,8 @@ test("submits data based on the page you continue onwards from", async () => {
   // Confirm that file is NOT saved to passport, but geojson is
   const submitted = handleSubmit.mock.calls[0][0];
   expect(submitted.data).not.toHaveProperty(PASSPORT_UPLOAD_KEY);
-  expect(submitted.data["property.boundary.site"]).toEqual(
-    previouslySubmittedData["property.boundary.site"],
+  expect(submitted.data["proposal.site"]).toEqual(
+    previouslySubmittedData["proposal.site"],
   );
 
   // DrawBoundary action captured correctly based on page

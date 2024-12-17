@@ -51,7 +51,7 @@ const defaultContent: DrawBoundary = {
   howMeasured:
     '<p>We have pre-populated the map with a red outline that includes the entire property using information from Land Registry.</p><p>In some cases, this outline might not include all the works or the areas that will be closed off. This might be because you&apos;re proposing works to a public highway (such as a dropped kerb), doing works that involve multiple properties, or works to a building that is part of a larger estate.</p><p>In these cases, you should amend the red outline by dragging the edges, or erase it by clicking the :wastebasket:-icon on the map and draw a new outline.</p><p></p><h1>How to draw and amend the outline</h1><ol><li><p>Move the cursor to the corner you want to start with and click or tap once.</p></li><li><p>Move the cursor to the next corner and click or tap.</p></li><li><p>Repeat until you have the shape you need.</p></li><li><p>Click or tap the last corner again to stop drawing.</p></li><li><p>To amend the outline, click or tap on a line and drag it into a new position.</p></li></ol><img src="https://api.editor.planx.uk/file/public/dni98ojg/Draw_Outline_2.gif">',
   hideFileUpload: false,
-  fn: "property.boundary.site",
+  fn: "proposal.site",
   titleForUploading: "Upload a location plan",
   descriptionForUploading:
     "<p>Your location plan must:</p><ul><li><p>be based on an accurate, recognisable map</p></li><li><p>be drawn to a scale, labelled, and/or marked with a scale bar</p></li><li><p>show the site outline in red</p></li><li><p>include a<strong> </strong>north point</p></li></ul>",

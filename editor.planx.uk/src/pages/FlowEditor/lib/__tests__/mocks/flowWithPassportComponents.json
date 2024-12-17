@@ -32,7 +32,7 @@
   },
   "drawBoundary": {
     "data": {
-      "fn": "property.boundary.site"
+      "fn": "proposal.site"
     },
     "type": 10
   },
