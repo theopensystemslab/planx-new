@@ -19,10 +19,10 @@ import type { Group } from "../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
+  // exclusive Or options should render if at least one option configured
   const exclusiveOrOptionManagerShouldRender =
     hasFeatureFlag("EXCLUSIVE_OR") &&
-    formik.values.options?.filter((opt: Option) => opt.data.exclusive !== true)
-      .length > 0;
+    formik.values.options?.filter((opt: Option) => !opt.data.exclusive).length;
 
   return (
     <ModalSectionContent subtitle="Options">
@@ -49,7 +49,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       onClick={() => {
                         formik.setFieldValue(
                           `groupedOptions`,
-                          remove(groupIndex, 1, formik.values.groupedOptions),
+                          remove(groupIndex, 1, formik.values.groupedOptions)
                         );
                       }}
                       size="large"
@@ -64,7 +64,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                     onChange={(newOptions) => {
                       formik.setFieldValue(
                         `groupedOptions[${groupIndex}].children`,
-                        newOptions,
+                        newOptions
                       );
                     }}
                     newValue={() =>
@@ -83,7 +83,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       showValueField: !!formik.values.fn,
                       onMoveToGroup: (
                         movedItemIndex: number,
-                        moveToGroupIndex: number,
+                        moveToGroupIndex: number
                       ) => {
                         const item = groupedOption.children[movedItemIndex];
                         formik.setFieldValue(
@@ -94,27 +94,27 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                               (option: Group<Option>) => ({
                                 ...option,
                                 children: [...option.children, item],
-                              }),
+                              })
                             ),
                             adjust(groupIndex, (option: Group<Option>) => ({
                               ...option,
                               children: remove(
                                 movedItemIndex,
                                 1,
-                                option.children,
+                                option.children
                               ),
-                            })),
-                          )(formik.values.groupedOptions),
+                            }))
+                          )(formik.values.groupedOptions)
                         );
                       },
                       groups: formik.values.groupedOptions.map(
-                        (opt: Group<Option>) => opt.title,
+                        (opt: Group<Option>) => opt.title
                       ),
                     }}
                   />
                 </Box>
               </Box>
-            ),
+            )
           )}
           <Box mt={1}>
             <Button
@@ -137,13 +137,13 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         <ListManager
           values={
             formik.values.options?.filter(
-              (opt: Option) => !opt.data.exclusive,
+              (opt: Option) => !opt.data.exclusive
             ) || []
           }
           onChange={(newOptions) => {
             const exclusiveOptions =
               formik.values.options?.filter(
-                (opt: Option) => opt.data.exclusive,
+                (opt: Option) => opt.data.exclusive
               ) || [];
 
             const newCombinedOptions =
@@ -172,13 +172,13 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           <ListManager
             values={
               formik.values.options?.filter(
-                (opt: Option) => opt.data.exclusive,
+                (opt: Option) => opt.data.exclusive
               ) || []
             }
             onChange={(newExclusiveOptions) => {
               const nonExclusiveOptions: Option[] =
                 formik.values.options?.filter(
-                  (opt: Option) => !opt.data.exclusive,
+                  (opt: Option) => !opt.data.exclusive
                 ) || [];
 
               const newCombinedOptions = [

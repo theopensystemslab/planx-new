@@ -32,7 +32,7 @@ export interface Option {
     img?: string;
     text: string;
     val?: string;
-    exclusive?: boolean;
+    exclusive?: true;
   };
 }
 

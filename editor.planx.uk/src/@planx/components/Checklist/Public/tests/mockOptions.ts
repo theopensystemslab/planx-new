@@ -64,19 +64,10 @@ export const options: {
   ],
 };
 
-const newMockOptions = [];
-if (options[ChecklistLayout.Basic]) {
-  newMockOptions.push(...options[ChecklistLayout.Basic]);
-  newMockOptions.push({
-    id: "tent_id",
-    data: {
-      text: "Tent",
-      exclusive: true,
-    },
-  });
-}
-
-export const optionsWithExclusiveOption: Array<Option> = newMockOptions;
+export const optionsWithExclusiveOption: Array<Option> = [
+  ...options[ChecklistLayout.Basic] || [],
+  { id: "tent_id", data: { text: "Tent", exclusive: true } },
+];
 
 export const groupedOptions: Array<Group<Option>> = [
   {
