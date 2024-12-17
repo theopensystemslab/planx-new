@@ -225,44 +225,6 @@ export const mockPropertyConstraints = {
       value: false,
     },
   },
-  metadata: {
-    article4: {
-      "entry-date": "",
-      "start-date": "",
-      "end-date": "",
-      collection: "article-4-direction",
-      dataset: "article-4-direction-area",
-      description:
-        "Orders made by the local planning authority to remove all or some of the permitted development rights on a site in order to protect it",
-      name: "Article 4 direction area",
-      plural: "Article 4 direction areas",
-      prefix: "",
-      text: "A local planning authority may create an [article 4 direction](https://www.gov.uk/guidance/when-is-permission-required#article-4-direction) to alter or remove [permitted development rights](https://www.gov.uk/government/publications/permitted-development-rights-for-householders-technical-guidance) from a building or area.\n\nEach [article 4 direction](/dataset/article-4-direction) may apply to one or more article 4 direction areas.",
-      typology: "geography",
-      wikidata: "",
-      wikipedia: "",
-      entities: "",
-      themes: ["heritage"],
-      "entity-count": {
-        dataset: "article-4-direction-area",
-        count: 2444,
-      },
-      "paint-options": "",
-      attribution: "crown-copyright",
-      "attribution-text": "© Crown copyright and database right 2024",
-      licence: "ogl3",
-      "licence-text":
-        "Licensed under the [Open Government Licence v.3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).",
-      consideration: "article-4-directions",
-      "github-discussion": 30,
-      "entity-minimum": 7010000000,
-      "entity-maximum": 7019999999,
-      phase: "beta",
-      realm: "dataset",
-      "replacement-dataset": "",
-      version: "3.0",
-    },
-  },
 };
 
 export const mockRoadData = {
@@ -284,5 +246,3 @@ export const mockRoadData = {
     },
   },
 };
-
-export const mockDigitalLandURL = `https://api.editor.planx.dev/gis/testing?geom=POINT%28-0.1151501+51.4745098%29&vals=article4%2Carticle4.caz%2CbrownfieldSite%2Cdesignated.AONB%2Cdesignated.conservationArea%2CgreenBelt%2Cdesignated.nationalPark%2Cdesignated.nationalPark.broads%2Cdesignated.WHS%2Cflood%2Clisted%2Cmonument%2Cnature.ASNW%2Cnature.ramsarSite%2Cnature.SAC%2Cnature.SPA%2Cnature.SSSI%2CregisteredPark%2Ctpo%2Croad.classified`;
