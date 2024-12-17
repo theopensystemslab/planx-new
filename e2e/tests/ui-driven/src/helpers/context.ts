@@ -50,7 +50,9 @@ export async function setUpTestContext(
         submissionEmail: context.team.settings?.submissionEmail,
       },
     });
-    const integrations = await $admin.client.request(
+
+    // has_planning_data needs to be altered manually for geospatial tests
+    await $admin.client.request(
       gql`
         mutation AddPlanningData($teamId: Int) {
           update_team_integrations(

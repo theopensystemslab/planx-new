@@ -1,15 +1,21 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import { mockPropertyConstraints, mockRoadData } from "./geospatialMocks";
 
 export async function setupGISMockResponse(page: Page) {
-  const gisDigitalLandEndpoint = new RegExp(/\/gis\/E2E\?geom.*/);
-  const wildcardPattern = "**/gis/E2E?geom*";
-  await page.route(wildcardPattern, async (route) => {
+  const gisDigitalLandEndpoint = "**/gis/E2E?geom*";
+  await page.route(gisDigitalLandEndpoint, async (route, request) => {
+    const urlContainsConstraints = checkGISMockRequestUrl(request.url());
+    expect(urlContainsConstraints).toEqual(true);
     await route.fulfill({
       status: 200,
       body: JSON.stringify(mockPropertyConstraints),
     });
   });
+}
+
+export function checkGISMockRequestUrl(url: string) {
+  const splitUrl = url.split("/").pop()?.split("%2C");
+  return !splitUrl?.includes("designated.conservationArea");
 }
 
 export async function setupRoadsMockResponse(page: Page) {
@@ -21,3 +27,14 @@ export async function setupRoadsMockResponse(page: Page) {
     });
   });
 }
+
+export const planningConstraintHeaders = [
+  "Planning constraints",
+  "These are the planning constraints we think apply to this property",
+  "Heritage and conservation",
+  "General policy",
+  "Heritage and conservation",
+  "Flooding",
+  "Ecology",
+  "Trees",
+];

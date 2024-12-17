@@ -38,6 +38,7 @@ import {
   setupOSMapsVectorTiles,
 } from "./mocks/osMapsResponse";
 import {
+  planningConstraintHeaders,
   setupGISMockResponse,
   setupRoadsMockResponse,
 } from "./mocks/gisResponse";
@@ -245,6 +246,15 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(
       page.getByRole("button", { name: "is, or is within, a Listed" }),
     ).toBeVisible();
+
+    // ensure constraints that don't apply show up
+    await page
+      .getByRole("button", { name: "Constraints that don't apply" })
+      .click();
+
+    const dontApplyHeadings = await page.getByRole("heading").allTextContents();
+
+    expect(dontApplyHeadings).toEqual(planningConstraintHeaders);
 
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerPlanningConstraints

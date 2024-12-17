@@ -109,27 +109,6 @@ export const mockPropertyConstraints = {
       ],
       category: "Heritage and conservation",
     },
-    "designated.conservationArea": {
-      fn: "designated.conservationArea",
-      value: true,
-      text: "is in a Conservation Area",
-      data: [
-        {
-          "entry-date": "2024-01-13",
-          "start-date": "1974-06-25",
-          "end-date": "",
-          entity: 44000877,
-          name: "Hackford Road",
-          dataset: "conservation-area",
-          typology: "geography",
-          reference: "CA16",
-          prefix: "conservation-area",
-          "organisation-entity": "192",
-          "designation-date": "1974-06-25",
-        },
-      ],
-      category: "Heritage and conservation",
-    },
     article4: {
       fn: "article4",
       value: false,
@@ -150,7 +129,7 @@ export const mockPropertyConstraints = {
     },
     "designated.AONB": {
       fn: "designated.AONB",
-      value: true,
+      value: false,
       text: "is not in an Area of Outstanding Natural Beauty",
       category: "Heritage and conservation",
     },
@@ -283,7 +262,6 @@ export const mockPropertyConstraints = {
       "replacement-dataset": "",
       version: "3.0",
     },
-    // ... rest of metadata entries follow same structure
   },
 };
 
