@@ -190,6 +190,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             }}
             newValueLabel='add "or" option'
             maxItems={1}
+            disableDragAndDrop
             newValue={() =>
               ({
                 data: {
