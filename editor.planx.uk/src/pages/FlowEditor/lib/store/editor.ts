@@ -5,6 +5,7 @@ import {
   FlowGraph,
   NodeId,
   OrderedFlow,
+  flatFlags,
 } from "@opensystemslab/planx-core/types";
 import {
   add,
@@ -616,12 +617,15 @@ export const editorStore: StateCreator<
       if (node.data?.output) nodes.add(node.data.output);
       if (node.data?.dataFieldBoundary) nodes.add(node.data.dataFieldBoundary);
 
-      // TODO filter out flag values
-      if (node.data?.val) options.add(node.data.val);
+      if (node.data?.val) {
+        // Exclude flag values; Filter options are not configurable by editors, therefore their val shouldn't be suggested
+        const flagVals = flatFlags.map((flag) => flag.value);
+        if (!flagVals.includes(node.data.val)) options.add(node.data.val)
+      };
     });
 
     return {
-      nodes: Array.from(nodes).sort(),
+      nodes: Array.from(nodes).filter((node) => node !== "flag").sort(),
       options: Array.from(options).sort(),
     };
   },

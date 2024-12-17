@@ -10,8 +10,12 @@ config:
     secure: AAABAGyTfLujGho+V0tEhFXQRET5FjYK6txyaFTB3gY/VaKzq8yNlocJTAM5nt8mBhF6T+AeQD2GxW63
   application:file-api-key-barnet:
     secure: AAABANMl+fVFsRVGXvJV/aLManXO+TldXVDhp5QH6KGWJoG7O9Ket63zIW1iOiinINWJ2I5OizI=
+  application:file-api-key-epsom-ewell:
+    secure: AAABANvwhiVRBq8NH7ZqcToUzYn4X+KfC5Wm8WjWUKXT5TuVXqC6zHhVVKFBbmdtKjC4j5M4+bWsLiFO9dO0MLobxLpK7YCE
   application:file-api-key-lambeth:
     secure: AAABAMNhdCTlFx3fZH/nO71ildypZB2JR5NixlQCENsS1VqwdiOX17q/Gi1UFrCQi2qaY2sZFG4=
+  application:file-api-key-medway:
+    secure: AAABABXSnk3j06JukiZ2u/me+pnRjHWAm+rf9FW9bSmzMfr9SWSKyN4XlltOYv1iZKujgI9hGIGiVR40+uYjGjy7BwNqOFxI
   application:file-api-key-nexus:
     secure: AAABAB2cv4GAf8RqN1hHbRbO68p8o4kLJYWsip9BoPdobrNtQB787M3s+gJnKKl9DfyXRHOXHGc=
   application:file-api-key-southwark:
@@ -25,6 +29,8 @@ config:
     secure: AAABAHfDtVpAD8w32yINWTjgvuRQixWXYFf3/rEcyh59/pRSz+J4ZYCXNq5jqBiIXM2emB+7zOY=
   application:hasura-cpu: "512"
   application:hasura-memory: "2048"
+  application:hasura-proxy-cpu: "512"
+  application:hasura-proxy-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
   application:idox-nexus-client:
