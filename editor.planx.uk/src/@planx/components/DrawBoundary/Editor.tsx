@@ -53,25 +53,13 @@ function DrawBoundaryComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputGroup label="Boundary data field">
+          <InputGroup label="Data field">
             <InputRow>
               <Input
-                name="dataFieldBoundary"
-                placeholder=""
+                name="fn"
                 format="data"
-                value={formik.values.dataFieldBoundary}
-                onChange={formik.handleChange}
-              />
-            </InputRow>
-          </InputGroup>
-          <InputGroup label="Area data field (square metres)">
-            <InputRow>
-              <Input
-                name="dataFieldArea"
-                placeholder="property.boundary.area"
-                format="data"
-                value={formik.values.dataFieldArea}
-                onChange={formik.handleChange}
+                value={formik.values.fn}
+                disabled
               />
             </InputRow>
           </InputGroup>

@@ -21,18 +21,12 @@ const listData: SearchFacets = [
   "data.schema.fields.data.options.data.val",
 ];
 
-const drawBoundaryData: SearchFacets = [
-  "data.dataFieldBoundary",
-  "data.dataFieldArea",
-];
-
 /** Data fields used across PlanX components */
 export const DATA_FACETS: SearchFacets = [
   ...generalData,
   ...fileUploadAndLabelData,
   ...calculateData,
   ...listData,
-  ...drawBoundaryData,
 ];
 
 const stripHTMLTags = (html = "") =>

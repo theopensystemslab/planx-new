@@ -17,10 +17,7 @@ export const getFlowSchema = async (flowId: string) => {
       type: nodeData?.type?.toString() || "_root",
       text: nodeData.data?.text,
       planx_variable:
-        nodeData.data?.fn ||
-        nodeData.data?.val ||
-        nodeData.data?.output ||
-        nodeData.data?.dataFieldBoundary,
+        nodeData.data?.fn || nodeData.data?.val || nodeData.data?.output,
     }),
   );
 

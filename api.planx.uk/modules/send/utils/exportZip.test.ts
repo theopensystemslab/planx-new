@@ -136,7 +136,7 @@ describe("buildSubmissionExportZip", () => {
   });
 
   test("geojson and location plan is excluded when not present", async () => {
-    // set-up mock session passport excluding "property.boundary.site"
+    // set-up mock session passport excluding "proposal.site"
     const lowcalSessionWithoutBoundary: Partial<LowCalSession> = {
       ...mockLowcalSession,
       id: "1234",
@@ -146,7 +146,7 @@ describe("buildSubmissionExportZip", () => {
         passport: {
           data: {
             ...mockLowcalSession.data!.passport.data,
-            "property.boundary.site": undefined,
+            "proposal.site": undefined,
           },
         },
       },

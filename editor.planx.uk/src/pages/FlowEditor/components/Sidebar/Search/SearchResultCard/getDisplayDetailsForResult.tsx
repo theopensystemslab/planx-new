@@ -44,12 +44,6 @@ const keyFormatters: KeyMap = {
   "data.fileTypes.fn": {
     getDisplayKey: () => "File type (data)",
   },
-  "data.dataFieldBoundary": {
-    getDisplayKey: () => "Boundary",
-  },
-  "data.dataFieldArea": {
-    getDisplayKey: () => "Area",
-  },
   "data.description": {
     getDisplayKey: ({ item }) =>
       item.type === ComponentType.Answer

@@ -44,7 +44,7 @@ function Component(props: PublicProps<PropertyInformation>) {
       localAuthorityDistrict={
         passport.data?.["property.localAuthorityDistrict"]
       }
-      titleBoundary={passport.data?.["property.boundary.title"]}
+      titleBoundary={passport.data?.["property.boundary"]}
       blpuCodes={blpuCodes}
       overrideAnswer={overrideAnswer}
       handleSubmit={() => {
