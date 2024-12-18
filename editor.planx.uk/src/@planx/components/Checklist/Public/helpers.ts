@@ -53,7 +53,10 @@ export const toggleNonExclusiveCheckbox = (
     thisCheckboxId,
     currentlyCheckedOptionIds
   );
-  return newCheckedOptionIds.filter(
-    (id: string) => exclusiveOrOption && id !== exclusiveOrOption.id
-  );
+  if (exclusiveOrOption) {
+    return newCheckedOptionIds.filter(
+      (id: string) => exclusiveOrOption && id !== exclusiveOrOption.id
+    );
+  }
+  return newCheckedOptionIds;
 };

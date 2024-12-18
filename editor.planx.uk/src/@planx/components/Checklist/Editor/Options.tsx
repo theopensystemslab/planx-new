@@ -12,6 +12,7 @@ import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -164,32 +165,34 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
       )}
       {exclusiveOrOptionManagerShouldRender ? (
         <Box mt={1}>
-          <ListManager
-            values={exclusiveOptions || []}
-            onChange={(newExclusiveOptions) => {
-              const newCombinedOptions = [
-                ...nonExclusiveOptions,
-                ...newExclusiveOptions,
-              ];
-              formik.setFieldValue("options", newCombinedOptions);
-            }}
-            newValueLabel='add "or" option'
-            maxItems={1}
-            disableDragAndDrop
-            newValue={() =>
-              ({
-                data: {
-                  text: "",
-                  description: "",
-                  val: "",
-                  exclusive: true,
-                },
-              }) as Option
-            }
-            Editor={BaseOptionsEditor}
-            editorExtraProps={{ showValueField: !!formik.values.fn }}
-          />
-        </Box>
+            <ErrorWrapper error={formik.errors.allRequired as string}>
+            <ListManager
+              values={exclusiveOptions || []}
+              onChange={(newExclusiveOptions) => {
+                const newCombinedOptions = [
+                  ...nonExclusiveOptions,
+                  ...newExclusiveOptions,
+                ];
+                formik.setFieldValue("options", newCombinedOptions);
+              }}
+              newValueLabel='add "or" option'
+              maxItems={1}
+              disableDragAndDrop
+              newValue={() =>
+                ({
+                  data: {
+                    text: "",
+                    description: "",
+                    val: "",
+                    exclusive: true,
+                  },
+                }) as Option
+              }
+              Editor={BaseOptionsEditor}
+              editorExtraProps={{ showValueField: !!formik.values.fn }}
+            />
+        </ErrorWrapper>
+          </Box>
       ) : (
         <></>
       )}
