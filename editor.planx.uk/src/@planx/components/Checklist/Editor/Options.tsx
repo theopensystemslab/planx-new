@@ -109,7 +109,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       groups: formik.values.groupedOptions.map(
                         (opt: Group<Option>) => opt.title,
                       ),
-                      schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+                      schema: getOptionsSchemaByFn(formik.values.fn, schema, initialOptionVals),
                     }}
                   />
                 </Box>
@@ -152,7 +152,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           Editor={ChecklistOptionsEditor}
           editorExtraProps={{ 
             showValueField: !!formik.values.fn,
-            schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+            schema: getOptionsSchemaByFn(formik.values.fn, schema, initialOptionVals),
           }}
         />
       )}
