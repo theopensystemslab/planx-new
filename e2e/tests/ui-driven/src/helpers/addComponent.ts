@@ -377,7 +377,10 @@ async function createComponentOptionsWithDataValues(
   for (const option of options) {
     await page.locator("button").filter({ hasText: "add new" }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
-    await page.locator("id=data-field-autocomplete").nth(index).fill(option.dataValue);
+    await page
+      .locator("id=data-field-autocomplete")
+      .nth(index)
+      .fill(option.dataValue);
     index++;
   }
 }
