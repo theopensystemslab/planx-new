@@ -1,10 +1,10 @@
 import {
-  ComponentType as TYPES,
   NodeTag,
+  ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
-import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
@@ -64,11 +64,8 @@ const ExternalPortalForm: React.FC<{
             ))}
           </select>
         </ModalSectionContent>
-        <ComponentTagSelect
-          value={formik.values.tags}
-          onChange={(value) => formik.setFieldValue("tags", value)}
-        />
       </ModalSection>
+      <ModalFooter formik={formik} showMoreInformation={false} />
     </form>
   );
 };
