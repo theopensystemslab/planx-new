@@ -15,7 +15,10 @@ export async function setupGISMockResponse(page: Page) {
 
 export function checkGISMockRequestUrl(url: string) {
   const splitUrl = url.split("/").pop()?.split("%2C");
-  return !splitUrl?.includes("designated.conservationArea");
+  return (
+    !splitUrl?.includes("designated.conservationArea") &&
+    splitUrl?.includes("listed")
+  );
 }
 
 export async function setupRoadsMockResponse(page: Page) {
