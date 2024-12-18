@@ -9,7 +9,7 @@ import { ApplicationPath } from "types";
 
 import { contentFlowSpacing } from "./Card";
 
-const InnerContainer = styled(Box)(({ theme }) => ({
+export const InnerContainer = styled(Box)(({ theme }) => ({
   "& p": {
     ...contentFlowSpacing(theme),
   },
