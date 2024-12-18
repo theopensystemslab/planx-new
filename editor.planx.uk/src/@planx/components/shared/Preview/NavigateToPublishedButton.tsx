@@ -2,21 +2,23 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { useNavigation } from "react-navi";
 
 import { InnerContainer } from "./SaveResumeButton";
 
 const NavigateToPublishedButton: React.FC = () => {
-  const navigate = useNavigation();
-  const [teamSlug, flowSlug] = useStore((state) => [
+  const [teamSlug, teamDomain, flowSlug] = useStore((state) => [
     state.teamSlug,
+    state.teamDomain,
     state.flowSlug,
   ]);
+
+  const subdomainLink = `https://${teamDomain}/${flowSlug}/published`;
+  const standardLink = `${window.location.origin}/${teamSlug}/${flowSlug}/published`;
+
+  const redirectLink = teamDomain ? subdomainLink : standardLink;
+
   const handleClick = () => {
-    window.open(
-      `${window.location.origin}/${teamSlug}/${flowSlug}/published`,
-      "_blank",
-    );
+    window.open(redirectLink, "_blank");
   };
 
   console.log(window.location.origin);
