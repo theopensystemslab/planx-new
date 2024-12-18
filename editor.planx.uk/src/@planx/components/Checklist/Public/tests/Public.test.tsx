@@ -4,7 +4,8 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Checklist, { ChecklistLayout } from "../Public";
+import { ChecklistLayout } from "../components/VisibleChecklist";
+import Checklist from "../Public";
 import { groupedOptions, options } from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 
