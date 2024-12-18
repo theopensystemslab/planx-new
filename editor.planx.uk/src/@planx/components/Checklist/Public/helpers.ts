@@ -2,7 +2,6 @@ import { type Group } from "@planx/components/Checklist/model";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { Option } from "../../shared";
-import { FormikProps } from "formik";
 
 export function toggleInArray<T>(value: T, arr: Array<T>): Array<T> {
   return arr.includes(value)
