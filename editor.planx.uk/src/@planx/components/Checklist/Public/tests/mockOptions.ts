@@ -1,7 +1,8 @@
 import { Option } from "@planx/components/shared";
 
 import { Group } from "../../model";
-import { ChecklistLayout } from "../Public";
+import { ChecklistLayout } from "../components/VisibleChecklist";
+
 
 export const options: {
   [key in ChecklistLayout]?: Array<Option>;
@@ -63,6 +64,12 @@ export const options: {
     },
   ],
 };
+
+export const optionsWithExclusiveOption: Array<Option> = [
+  ...(options[ChecklistLayout.Basic] || []),
+  { id: "tent_id", data: { text: "Tent", exclusive: true } },
+];
+
 export const groupedOptions: Array<Group<Option>> = [
   {
     title: "Section 1",

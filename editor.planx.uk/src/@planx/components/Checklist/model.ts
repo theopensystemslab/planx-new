@@ -1,7 +1,7 @@
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public/Public";
+import { ChecklistLayout } from "./Public/components/VisibleChecklist";
 
 export interface Group<T> {
   title: string;
@@ -31,7 +31,7 @@ interface ChecklistExpandableProps {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps,
+  checklist: ChecklistExpandableProps
 ): ChecklistExpandableProps => {
   if (checklist.options !== undefined && checklist.options.length > 0) {
     return {
@@ -102,8 +102,10 @@ export const checklistValidationSchema = ({
   allRequired,
   options,
   groupedOptions,
-}: Checklist) =>
-  array()
+}: Checklist) => {
+  const flatOptions = getFlatOptions({ options, groupedOptions });
+
+  return array()
     .required()
     .test({
       name: "atLeastOneChecked",
@@ -119,8 +121,8 @@ export const checklistValidationSchema = ({
         if (!allRequired) {
           return true;
         }
-        const flatOptions = getFlatOptions({ options, groupedOptions });
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },
     });
+};
