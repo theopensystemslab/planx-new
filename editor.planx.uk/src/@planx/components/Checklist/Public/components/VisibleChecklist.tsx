@@ -10,7 +10,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
 import { partition } from "lodash";
-import React, { useState } from "react";
+import React from "react";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
@@ -20,13 +20,11 @@ import { object } from "yup";
 
 import { Option } from "../../../shared";
 import { Props } from "../../types";
+import { useExclusiveOption } from "../hooks/useExclusiveOption";
+import { useExpandedGroups } from "../hooks/useExpandedGroups";
 import { NonExclusiveChecklistItems } from "./../components/ChecklistItems";
 import { ExclusiveChecklistItem } from "./../components/ExclusiveChecklistItem";
-import {
-  getInitialExpandedGroups,
-  toggleInArray,
-  toggleNonExclusiveCheckbox,
-} from "./../helpers";
+import { toggleNonExclusiveCheckbox } from "./../helpers";
 
 export enum ChecklistLayout {
   Basic,
@@ -68,13 +66,9 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
     formik.setFieldValue("checked", sortedCheckedIds);
   };
 
-  const initialExpandedGroups = getInitialExpandedGroups(
+  const { expandedGroups, toggleGroup } = useExpandedGroups(
     groupedOptions,
     previouslySubmittedData
-  );
-
-  const [expandedGroups, setExpandedGroups] = useState<Array<number>>(
-    initialExpandedGroups
   );
 
   const layout = getLayout({ options, groupedOptions });
@@ -90,14 +84,11 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
     (option) => option.data.exclusive
   );
 
-  const exclusiveOrOption = exclusiveOptions[0];
-
-  const exclusiveOptionIsChecked =
-    exclusiveOrOption && formik.values.checked.includes(exclusiveOrOption.id);
-
-  const toggleExclusiveCheckbox = (checkboxId: string) => {
-    return exclusiveOptionIsChecked ? [] : [checkboxId];
-  };
+  const {
+    exclusiveOrOption,
+    exclusiveOptionIsChecked,
+    toggleExclusiveCheckbox,
+  } = useExclusiveOption(exclusiveOptions, formik);
 
   const changeCheckbox = (id: string) => () => {
     const currentCheckedIds = formik.values.checked;
@@ -161,11 +152,7 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
                         <ExpandableListItem
                           key={index}
                           expanded={isExpanded}
-                          onToggle={() => {
-                            setExpandedGroups((previous) =>
-                              toggleInArray(index, previous)
-                            );
-                          }}
+                          onToggle={() => toggleGroup(index)}
                           headingId={`group-${index}-heading`}
                           groupId={`group-${index}-content`}
                           title={group.title}
