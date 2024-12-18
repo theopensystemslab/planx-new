@@ -6,7 +6,7 @@ import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
-import { ChecklistLayout } from "./../Public";
+import { ChecklistLayout } from "./VisibleChecklist";
 
 interface NonExclusiveChecklistItemsProps {
   nonExclusiveOptions: Option[];
