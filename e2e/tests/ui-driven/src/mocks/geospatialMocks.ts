@@ -1,5 +1,6 @@
 import { OptionWithDataValues } from "../helpers/types";
 import { Feature, Polygon } from "geojson";
+import propertyConstraintsMetadata from "./propertyConstraintMetadata.json";
 
 type ChangeHandlerProperties = {
   label: string;
@@ -65,29 +66,9 @@ export const mockChangedMapGeoJson: GeoJsonChangeHandler = {
   },
 };
 
-export const mockChangedMapGeoJson: GeoJsonChangeHandler = {
-  type: "Feature",
-  geometry: {
-    type: "Polygon",
-    coordinates: [
-      [
-        [-0.6341888375038146, 51.60562241658701],
-        [-0.6341217822784424, 51.605580770520504],
-        [-0.63405472705307, 51.605580770520504],
-        [-0.6341888375038146, 51.60562241658701],
-      ],
-    ],
-  },
-  properties: {
-    label: "1",
-    "area.squareMetres": 10.72,
-    "area.hectares": 0.001072,
-  },
-};
-
 export const mockPropertyConstraints = {
   sourceRequest:
-    "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POINT%28-0.1151501+51.4745098%29&geometry_relation=intersects&exclude_field=geometry%2Cpoint&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=brownfield-land&dataset=brownfield-site&dataset=area-of-outstanding-natural-beauty&dataset=conservation-area&dataset=green-belt&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=flood-risk-zone&dataset=listed-building&dataset=listed-building-outline&dataset=scheduled-monument&dataset=ancient-woodland&dataset=ramsar&dataset=special-area-of-conservation&dataset=special-protection-area&dataset=site-of-special-scientific-interest&dataset=park-and-garden&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone",
+    "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POINT%28-0.1151501+51.4745098%29&geometry_relation=intersects&exclude_field=geometry%2Cpoint&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=brownfield-land&dataset=brownfield-site&dataset=area-of-outstanding-natural-beauty&dataset=green-belt&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=flood-risk-zone&dataset=listed-building&dataset=listed-building-outline&dataset=scheduled-monument&dataset=ancient-woodland&dataset=ramsar&dataset=special-area-of-conservation&dataset=special-protection-area&dataset=site-of-special-scientific-interest&dataset=park-and-garden&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone",
   constraints: {
     listed: {
       fn: "listed",
@@ -225,6 +206,7 @@ export const mockPropertyConstraints = {
       value: false,
     },
   },
+  metadata: propertyConstraintsMetadata,
 };
 
 export const mockRoadData = {

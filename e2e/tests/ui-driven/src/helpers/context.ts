@@ -54,7 +54,7 @@ export async function setUpTestContext(
     // has_planning_data needs to be altered manually for geospatial tests
     await $admin.client.request(
       gql`
-        mutation AddPlanningData($teamId: Int) {
+        mutation TogglePlanningData($teamId: Int) {
           update_team_integrations(
             where: { team_id: { _eq: $teamId } }
             _set: { has_planning_data: true }

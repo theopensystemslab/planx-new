@@ -233,6 +233,8 @@ test.describe("Flow creation, publish and preview", () => {
       "The correct value for area comes from the map properties ",
     ).toBeVisible();
 
+    await clickContinue({ page });
+
     await expect(
       page.locator("h1", { hasText: "Planning constraints" }),
     ).toBeVisible();
@@ -244,7 +246,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     const listedBuildingConstraintRowItem = page.getByRole("button", {
-      name: "is, or is within, a Listed",
+      name: "Listed building outlines",
     });
 
     await expect(listedBuildingConstraintRowItem).toBeVisible();
