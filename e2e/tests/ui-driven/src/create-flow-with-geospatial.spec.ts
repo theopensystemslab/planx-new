@@ -19,11 +19,24 @@ import {
 } from "./helpers/navigateAndPublish";
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
-import { checkGeoJsonContent } from "./helpers/geospatialChecks";
 import {
-  mockMapGeoJson,
+  alterDrawGeoJson,
+  checkGeoJsonContent,
+  checkUploadFileAltRoute,
+  getMapProperties,
+  resetMapBoundary,
+  waitForMapComponent,
+} from "./helpers/geospatialChecks";
+import {
+  GeoJsonChangeHandler,
+  mockChangedMapGeoJson,
   mockPropertyTypeOptions,
+  mockTitleBoundaryGeoJson,
 } from "./mocks/geospatialMocks";
+import {
+  setupOSMapsStyles,
+  setupOSMapsVectorTiles,
+} from "./mocks/osMapsResponse";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -72,8 +85,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createUploadAndLabel();
-    // TODO: editor.createPropertyInfo()
+    // await editor.createUploadAndLabel();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
@@ -81,7 +93,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
       // "File upload",
@@ -119,6 +130,9 @@ test.describe("Flow creation, publish and preview", () => {
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
+    setupOSMapsStyles(page);
+    setupOSMapsVectorTiles(page);
+
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
@@ -130,7 +144,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     // Check map component has geoJson content
-    await checkGeoJsonContent(page, mockMapGeoJson);
+    await checkGeoJsonContent(page, "geojsondata", mockTitleBoundaryGeoJson);
 
     // Check property info is being shown
     await expect(page.getByText("Test Street, Testville")).toBeVisible();
@@ -169,7 +183,49 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    const drawBoundaryTitle = page.getByRole("heading", {
+      name: "Confirm your location plan",
+    });
+    await expect(drawBoundaryTitle).toBeVisible();
+
+    await checkGeoJsonContent(
+      page,
+      "drawgeojsondata",
+      mockTitleBoundaryGeoJson,
+    );
+
+    const area = "The property boundary you have drawn is 490.37";
+
+    await expect(page.getByText(area)).toBeVisible();
+
+    // navigate to upload file page and back
+    await checkUploadFileAltRoute(page);
+
+    await expect(
+      drawBoundaryTitle,
+      "We have navigated back to the map component",
+    ).toBeVisible();
+
+    // ensure map has loaded correctly
+    await waitForMapComponent(page);
+
+    await resetMapBoundary(page);
+
+    await alterDrawGeoJson(page);
+
+    // extract new GeoJSON data
+    const newGeoJson = await getMapProperties(page, "drawgeojsondata");
+    const parsedJson: GeoJsonChangeHandler = JSON.parse(newGeoJson!);
+
+    // check it matches our static mock
+    await checkGeoJsonContent(page, "drawgeojsondata", mockChangedMapGeoJson);
+
+    await expect(
+      page.getByText(`${parsedJson.properties!["area.squareMetres"]}`),
+      "The correct value for area comes from the map properties ",
+    ).toBeVisible();
+
     // TODO: answer uploadAndLabel
-    // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
+    // TODO: answerPropertyInfo, answerPlanningConstraints
   });
 });
