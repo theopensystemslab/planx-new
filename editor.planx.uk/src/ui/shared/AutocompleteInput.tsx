@@ -1,4 +1,3 @@
-import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Autocomplete, {
   autocompleteClasses,
   AutocompleteProps,
@@ -10,13 +9,6 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import React from "react";
 import { borderedFocusStyle } from "theme";
-
-const PopupIcon = (
-  <ArrowIcon
-    sx={(theme) => ({ color: theme.palette.primary.main })}
-    fontSize="large"
-  />
-);
 
 type RequiredAutocompleteProps<T> = Pick<
   AutocompleteProps<T, false, false, true, "div">,

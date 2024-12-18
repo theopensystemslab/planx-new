@@ -55,11 +55,11 @@ const createBaseComponent = async (
       break;
     case ComponentType.AddressInput:
       await page.getByPlaceholder("Title").fill(title || "");
-      await page.getByPlaceholder("Data field").fill(options?.[0] || "");
+      await page.locator("id=data-field-autocomplete").fill(options?.[0] || "");
       break;
     case ComponentType.ContactInput:
       await page.getByPlaceholder("Title").fill(title || "");
-      await page.getByPlaceholder("Data field").fill(options?.[0] || "");
+      await page.locator("id=data-field-autocomplete").fill(options?.[0] || "");
       break;
     case ComponentType.TaskList:
       await page.getByPlaceholder("Main Title").fill(title || "");
@@ -108,15 +108,15 @@ const createBaseComponent = async (
       }
       break;
     case ComponentType.FileUpload:
-      await page.getByPlaceholder("Data field").fill(options?.[0] || "");
+      await page.locator("id=data-field-autocomplete").fill(options?.[0] || "");
       break;
     case ComponentType.FileUploadAndLabel:
       await page.getByPlaceholder("File type").fill(options?.[0] || "");
-      await page.getByPlaceholder("Data field").fill(options?.[1] || "");
+      await page.locator("id=data-field-autocomplete").fill(options?.[1] || "");
       break;
     case ComponentType.List:
       await page.getByPlaceholder("Title").fill(title || "");
-      await page.getByPlaceholder("Data field").fill(options?.[0] || "");
+      await page.locator("id=data-field-autocomplete").fill(options?.[0] || "");
       break;
     case ComponentType.Content:
       await page
@@ -172,7 +172,7 @@ export const createQuestionWithDataFieldOptions = async (
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
   await page.getByPlaceholder("Text").fill(questionText);
-  await page.getByPlaceholder("Data field").fill(dataField);
+  await page.locator("id=data-field-autocomplete").fill(dataField);
   await createComponentOptionsWithDataValues(page, options);
   await page.locator('button[form="modal"][type="submit"]').click();
 };
@@ -377,7 +377,7 @@ async function createComponentOptionsWithDataValues(
   for (const option of options) {
     await page.locator("button").filter({ hasText: "add new" }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
-    await page.getByPlaceholder("Data field").nth(index).fill(option.dataValue);
+    await page.locator("id=data-field-autocomplete").nth(index).fill(option.dataValue);
     index++;
   }
 }
