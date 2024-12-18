@@ -44,8 +44,11 @@ function Component(props: any) {
   });
 
   // Rather than default to generic `useStore().getFlowSchema()`
-  //   File Upload components can specifically reference ODP Schema enum options
-  const schema = getValidSchemaValues("FileType");
+  //   File Upload components can specifically suggest based on ODP Schema enum options
+  let schema = getValidSchemaValues("FileType") || [];
+  // // Additionally ensure that existing initial values are supported & pre-populated on load
+  if (formik.initialValues?.fn && !schema?.includes(formik.initialValues.fn)) 
+    schema.push(formik.initialValues.fn);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

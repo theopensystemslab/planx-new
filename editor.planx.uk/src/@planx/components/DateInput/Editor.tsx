@@ -17,6 +17,8 @@ import DateInputUi from "ui/shared/DateInput/DateInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { useStore } from "pages/FlowEditor/lib/store";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 
 export type Props = EditorProps<TYPES.DateInput, DateInput>;
@@ -35,6 +37,8 @@ const DateInputComponent: React.FC<Props> = (props) => {
     validateOnChange: false,
     validationSchema: editorValidationSchema(),
   });
+
+  const schema = useStore().getFlowSchema()?.nodes;
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal" name="modal">
@@ -57,16 +61,11 @@ const DateInputComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              // required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            schema={schema}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
           <Box mt={2}>
             <InputRow>
               <DateInputUi
