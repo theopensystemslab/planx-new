@@ -12,11 +12,17 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { useStore } from "pages/FlowEditor/lib/store";
 import { Option } from "../../shared";
 import type { Group } from "../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
+import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
+  const schema = useStore().getFlowSchema()?.options;
+  const initialOptions: Option[] | undefined = formik.initialValues.options || formik.initialValues.groupedOptions?.map((group: Group<Option>) => group.children)?.flat();
+  const initialOptionVals = initialOptions?.map((option) => option.data?.val);
+
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
@@ -103,6 +109,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       groups: formik.values.groupedOptions.map(
                         (opt: Group<Option>) => opt.title,
                       ),
+                      schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
                     }}
                   />
                 </Box>
@@ -143,7 +150,10 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
             }) as Option
           }
           Editor={ChecklistOptionsEditor}
-          editorExtraProps={{ showValueField: !!formik.values.fn }}
+          editorExtraProps={{ 
+            showValueField: !!formik.values.fn,
+            schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+          }}
         />
       )}
     </ModalSectionContent>

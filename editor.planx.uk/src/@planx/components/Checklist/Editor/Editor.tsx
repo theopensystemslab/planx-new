@@ -11,6 +11,8 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
@@ -95,6 +97,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
     }, 50);
   }, []);
 
+  const schema = useStore().getFlowSchema()?.nodes;
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -110,7 +114,6 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 inputRef={focusRef}
                 required
               />
-
               <ImgInput
                 img={formik.values.img}
                 onChange={(newUrl) => {
@@ -118,7 +121,6 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 }}
               />
             </InputRow>
-
             <InputRow>
               <RichTextInput
                 name="description"
@@ -127,18 +129,11 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-
-            <InputRow>
-              <Input
-                format="data"
-                name="fn"
-                value={formik.values.fn}
-                placeholder="Data Field"
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors?.fn)}
-                errorMessage={formik.errors?.fn}
-              />
-            </InputRow>
+            <DataFieldAutocomplete
+              schema={schema}
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
             <InputRow>
               <Switch
                 checked={!!formik.values.groupedOptions}
@@ -180,10 +175,8 @@ export const ChecklistComponent: React.FC<ChecklistProps> = (props) => {
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
-
         <Options formik={formik} />
       </ModalSection>
-
       <ModalFooter formik={formik} />
     </form>
   );

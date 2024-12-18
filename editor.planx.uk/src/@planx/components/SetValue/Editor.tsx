@@ -12,6 +12,8 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { useStore } from "pages/FlowEditor/lib/store";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { parseSetValue, SetValue } from "./model";
 
 type Props = EditorProps<TYPES.SetValue, SetValue>;
@@ -92,20 +94,18 @@ function SetValueComponent(props: Props) {
     formik.setFieldValue("operation", target.value);
   };
 
+  const schema = useStore().getFlowSchema()?.nodes;
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent title="Passport field name">
-          <InputRow>
-            <Input
-              required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="key"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            schema={schema}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
         </ModalSectionContent>
         {formik.values.operation !== "removeAll" && (
           <ModalSectionContent title="Field value">

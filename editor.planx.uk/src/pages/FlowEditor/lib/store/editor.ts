@@ -612,20 +612,24 @@ export const editorStore: StateCreator<
     const options: Set<string> = new Set();
 
     Object.entries(flow).map(([_id, node]) => {
+      if (node.data?.fn) {
+        // Exclude Filter fn value as not exposed to editors
+        if (node.data?.fn !== "flag") nodes.add(node.data.fn)
+      };
+  
       // TODO align to (reuse?) data facets from search
-      if (node.data?.fn) nodes.add(node.data.fn);
       if (node.data?.output) nodes.add(node.data.output);
       if (node.data?.dataFieldBoundary) nodes.add(node.data.dataFieldBoundary);
 
       if (node.data?.val) {
-        // Exclude flag values; Filter options are not configurable by editors, therefore their val shouldn't be suggested
+        // Exclude Filter Option flag values as not exposed to editors
         const flagVals = flatFlags.map((flag) => flag.value);
         if (!flagVals.includes(node.data.val)) options.add(node.data.val)
       };
     });
 
     return {
-      nodes: Array.from(nodes).filter((node) => node !== "flag").sort(),
+      nodes: Array.from(nodes).sort(),
       options: Array.from(options).sort(),
     };
   },

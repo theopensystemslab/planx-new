@@ -75,7 +75,7 @@ export const Question: React.FC<Props> = (props) => {
   });
 
   const schema = useStore().getFlowSchema();
-  const initialOptionVals = props.options?.map((option) => option.data?.val);
+  const initialOptionVals = formik.initialValues.options?.map((option) => option.data?.val);
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
