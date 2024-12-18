@@ -1,6 +1,6 @@
 import {
-  NodeTag,
   ComponentType as TYPES,
+  NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -18,14 +18,16 @@ interface Flow {
 const ExternalPortalForm: React.FC<{
   id?: string;
   flowId?: string;
+  notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ id, handleSubmit, flowId = "", flows = [], tags = [] }) => {
+}> = ({ id, handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
   const formik = useFormik({
     initialValues: {
       flowId,
       tags,
+      notes,
     },
     onSubmit: (values) => {
       if (handleSubmit) {

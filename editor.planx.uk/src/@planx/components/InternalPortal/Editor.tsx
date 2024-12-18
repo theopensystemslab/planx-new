@@ -1,7 +1,7 @@
 import MenuItem from "@mui/material/MenuItem";
 import {
-  NodeTag,
   ComponentType as TYPES,
+  NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -24,15 +24,24 @@ const InternalPortalForm: React.FC<{
   id?: string;
   text?: string;
   flowId?: string;
+  notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ handleSubmit, text = "", flowId = "", flows = [], tags = [] }) => {
+}> = ({
+  handleSubmit,
+  text = "",
+  flowId = "",
+  flows = [],
+  tags = [],
+  notes = "",
+}) => {
   const formik = useFormik({
     initialValues: {
       text,
       flowId,
       tags,
+      notes,
     },
     validate: (values) => {
       const errors: Record<string, string> = {};
