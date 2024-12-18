@@ -63,6 +63,12 @@ export const options: {
     },
   ],
 };
+
+export const optionsWithExclusiveOption: Array<Option> = [
+  ...options[ChecklistLayout.Basic] || [],
+  { id: "tent_id", data: { text: "Tent", exclusive: true } },
+];
+
 export const groupedOptions: Array<Group<Option>> = [
   {
     title: "Section 1",

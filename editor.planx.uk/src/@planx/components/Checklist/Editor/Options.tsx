@@ -2,6 +2,9 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
+import { hasFeatureFlag } from "lib/featureFlags";
+import { partition } from "lodash";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -9,6 +12,7 @@ import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
@@ -17,6 +21,14 @@ import type { Group } from "../model";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
+  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+    formik.values.options,
+    (option) => option.data.exclusive
+  );
+
+  const exclusiveOrOptionManagerShouldRender =
+    hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptions.length;
+
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
@@ -42,7 +54,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       onClick={() => {
                         formik.setFieldValue(
                           `groupedOptions`,
-                          remove(groupIndex, 1, formik.values.groupedOptions),
+                          remove(groupIndex, 1, formik.values.groupedOptions)
                         );
                       }}
                       size="large"
@@ -57,7 +69,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                     onChange={(newOptions) => {
                       formik.setFieldValue(
                         `groupedOptions[${groupIndex}].children`,
-                        newOptions,
+                        newOptions
                       );
                     }}
                     newValue={() =>
@@ -76,7 +88,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                       showValueField: !!formik.values.fn,
                       onMoveToGroup: (
                         movedItemIndex: number,
-                        moveToGroupIndex: number,
+                        moveToGroupIndex: number
                       ) => {
                         const item = groupedOption.children[movedItemIndex];
                         formik.setFieldValue(
@@ -87,27 +99,27 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
                               (option: Group<Option>) => ({
                                 ...option,
                                 children: [...option.children, item],
-                              }),
+                              })
                             ),
                             adjust(groupIndex, (option: Group<Option>) => ({
                               ...option,
                               children: remove(
                                 movedItemIndex,
                                 1,
-                                option.children,
+                                option.children
                               ),
-                            })),
-                          )(formik.values.groupedOptions),
+                            }))
+                          )(formik.values.groupedOptions)
                         );
                       },
                       groups: formik.values.groupedOptions.map(
-                        (opt: Group<Option>) => opt.title,
+                        (opt: Group<Option>) => opt.title
                       ),
                     }}
                   />
                 </Box>
               </Box>
-            ),
+            )
           )}
           <Box mt={1}>
             <Button
@@ -128,9 +140,14 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
         </Box>
       ) : (
         <ListManager
-          values={formik.values.options || []}
+          values={nonExclusiveOptions || []}
           onChange={(newOptions) => {
-            formik.setFieldValue("options", newOptions);
+            const newCombinedOptions =
+              newOptions.length === 0
+                ? []
+                : [...exclusiveOptions, ...newOptions];
+
+            formik.setFieldValue("options", newCombinedOptions);
           }}
           newValueLabel="add new option"
           newValue={() =>
@@ -145,6 +162,39 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
           Editor={ChecklistOptionsEditor}
           editorExtraProps={{ showValueField: !!formik.values.fn }}
         />
+      )}
+      {exclusiveOrOptionManagerShouldRender ? (
+        <Box mt={1}>
+            <ErrorWrapper error={formik.errors.allRequired as string}>
+            <ListManager
+              values={exclusiveOptions || []}
+              onChange={(newExclusiveOptions) => {
+                const newCombinedOptions = [
+                  ...nonExclusiveOptions,
+                  ...newExclusiveOptions,
+                ];
+                formik.setFieldValue("options", newCombinedOptions);
+              }}
+              newValueLabel='add "or" option'
+              maxItems={1}
+              disableDragAndDrop
+              newValue={() =>
+                ({
+                  data: {
+                    text: "",
+                    description: "",
+                    val: "",
+                    exclusive: true,
+                  },
+                }) as Option
+              }
+              Editor={BaseOptionsEditor}
+              editorExtraProps={{ showValueField: !!formik.values.fn }}
+            />
+        </ErrorWrapper>
+          </Box>
+      ) : (
+        <></>
       )}
     </ModalSectionContent>
   );

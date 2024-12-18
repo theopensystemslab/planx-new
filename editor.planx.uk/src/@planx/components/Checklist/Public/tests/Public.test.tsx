@@ -1,8 +1,4 @@
 import { screen } from "@testing-library/react";
-// eslint-disable-next-line no-restricted-imports
-import userEvent, {
-  PointerEventsCheckLevel,
-} from "@testing-library/user-event";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -10,6 +6,7 @@ import { axe } from "vitest-axe";
 
 import Checklist, { ChecklistLayout } from "../Public";
 import { groupedOptions, options } from "./mockOptions";
+import { pressContinue, pressOption } from "./testUtils";
 
 describe("Checklist Component - Grouped Layout", () => {
   it("answers are submitted in order they were supplied", async () => {
@@ -145,20 +142,11 @@ describe("Checklist Component - Basic & Images Layout", () => {
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
 
-      // Disabling pointerEventsCheck here allows us to bypass a false negative thrown by react-testing-library
-      // Tests fail to click the text elements when using ChecklistLayout.Images due to the pointerEvents: "none" style applied to textLabelWrapper, but the element can be clicked in all tested browsers
-      await userEvent.click(screen.getByText("Spaceship"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
-      await userEvent.click(screen.getByText("Flat"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
-      await userEvent.click(screen.getByText("House"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
-      await userEvent.click(screen.getByTestId("continue-button"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
+      await pressOption("Spaceship");
+      await pressOption("Flat");
+      await pressOption("House");
+
+      await pressContinue();
 
       // order matches the order of the options, not order they were clicked
       expect(handleSubmit).toHaveBeenCalledWith({

@@ -102,8 +102,10 @@ export const checklistValidationSchema = ({
   allRequired,
   options,
   groupedOptions,
-}: Checklist) =>
-  array()
+}: Checklist) => {
+  const flatOptions = getFlatOptions({ options, groupedOptions });
+
+  return array()
     .required()
     .test({
       name: "atLeastOneChecked",
@@ -119,8 +121,8 @@ export const checklistValidationSchema = ({
         if (!allRequired) {
           return true;
         }
-        const flatOptions = getFlatOptions({ options, groupedOptions });
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },
     });
+};

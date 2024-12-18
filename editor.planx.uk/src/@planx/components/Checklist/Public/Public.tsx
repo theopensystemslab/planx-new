@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import {
   checklistValidationSchema,
@@ -10,6 +11,7 @@ import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
+import { partition } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
@@ -19,9 +21,14 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
+import { Option } from "../../shared";
 import { Props } from "../types";
 import { AutoAnsweredChecklist } from "./AutoAnsweredChecklist";
-import { getInitialExpandedGroups, toggleInArray } from "./helpers";
+import {
+  getInitialExpandedGroups,
+  toggleInArray,
+  toggleNonExclusiveCheckbox,
+} from "./helpers";
 
 export enum ChecklistLayout {
   Basic,
@@ -31,7 +38,7 @@ export enum ChecklistLayout {
 
 const ChecklistComponent: React.FC<Props> = (props) => {
   const autoAnswerableOptions = useStore(
-    (state) => state.autoAnswerableOptions,
+    (state) => state.autoAnswerableOptions
   );
 
   if (props.neverAutoAnswer) {
@@ -78,30 +85,59 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     }),
   });
 
+  const setCheckedFieldValue = (optionIds: string[]) => {
+    const sortedCheckedIds = sortCheckedIds(optionIds);
+    formik.setFieldValue("checked", sortedCheckedIds);
+  };
+
   const initialExpandedGroups = getInitialExpandedGroups(
     groupedOptions,
-    previouslySubmittedData,
+    previouslySubmittedData
   );
 
   const [expandedGroups, setExpandedGroups] = useState<Array<number>>(
-    initialExpandedGroups,
+    initialExpandedGroups
   );
 
   const layout = getLayout({ options, groupedOptions });
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
-  const changeCheckbox = (id: string) => (_checked: any) => {
-    const newCheckedIds = formik.values.checked.includes(id)
-      ? formik.values.checked.filter((x) => x !== id)
-      : [...formik.values.checked, id];
+  const sortCheckedIds = (ids: string[]): string[] => {
+    const originalIds = flatOptions.map((cb) => cb.id);
+    return ids.sort((a, b) => originalIds.indexOf(a) - originalIds.indexOf(b));
+  };
 
-    formik.setFieldValue(
-      "checked",
-      newCheckedIds.sort((a, b) => {
-        const originalIds = flatOptions.map((cb) => cb.id);
-        return originalIds.indexOf(a) - originalIds.indexOf(b);
-      }),
+  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+    options,
+    (option) => option.data.exclusive
+  );
+
+  const exclusiveOrOption = exclusiveOptions[0];
+
+  const exclusiveOptionIsChecked =
+    exclusiveOrOption && formik.values.checked.includes(exclusiveOrOption.id);
+
+  const toggleExclusiveCheckbox = (checkboxId: string) => {
+    return exclusiveOptionIsChecked ? [] : [checkboxId];
+  };
+
+  const changeCheckbox = (id: string) => () => {
+    const currentCheckedIds = formik.values.checked;
+
+    const currentCheckboxIsExclusiveOption =
+      exclusiveOrOption && id === exclusiveOrOption.id;
+
+    if (currentCheckboxIsExclusiveOption) {
+      const newCheckedIds = toggleExclusiveCheckbox(id);
+      setCheckedFieldValue(newCheckedIds);
+      return;
+    }
+    const newCheckedIds = toggleNonExclusiveCheckbox(
+      id,
+      currentCheckedIds,
+      exclusiveOrOption
     );
+    setCheckedFieldValue(newCheckedIds);
   };
 
   return (
@@ -122,7 +158,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options?.map((option) =>
+            {nonExclusiveOptions.map((option) =>
               layout === ChecklistLayout.Basic ? (
                 <FormWrapper key={option.id}>
                   <Grid item xs={12} key={option.data.text}>
@@ -130,7 +166,10 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                       onChange={changeCheckbox(option.id)}
                       label={option.data.text}
                       id={option.id}
-                      checked={formik.values.checked.includes(option.id)}
+                      checked={
+                        formik.values.checked.includes(option.id) &&
+                        !exclusiveOptionIsChecked
+                      }
                     />
                   </Grid>
                 </FormWrapper>
@@ -151,7 +190,25 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                     checkbox
                   />
                 </Grid>
-              ),
+              )
+            )}
+            {exclusiveOrOption && (
+              <FormWrapper key={exclusiveOrOption.id}>
+                <Grid item xs={12} key={exclusiveOrOption.data.text}>
+                  <Typography width={36} display="flex" justifyContent="center">
+                    or
+                  </Typography>
+
+                  <ChecklistItem
+                    onChange={changeCheckbox(exclusiveOrOption.id)}
+                    label={exclusiveOrOption.data.text}
+                    id={exclusiveOrOption.id}
+                    checked={formik.values.checked.includes(
+                      exclusiveOrOption.id
+                    )}
+                  />
+                </Grid>
+              </FormWrapper>
             )}
 
             {groupedOptions && (
@@ -166,7 +223,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                           expanded={isExpanded}
                           onToggle={() => {
                             setExpandedGroups((previous) =>
-                              toggleInArray(index, previous),
+                              toggleInArray(index, previous)
                             );
                           }}
                           headingId={`group-${index}-heading`}
@@ -189,7 +246,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
                                 label={option.data.text}
                                 id={option.id}
                                 checked={formik.values.checked.includes(
-                                  option.id,
+                                  option.id
                                 )}
                               />
                             ))}
