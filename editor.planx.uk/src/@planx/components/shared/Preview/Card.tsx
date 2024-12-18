@@ -9,11 +9,13 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { ApplicationPath } from "types";
 
+import NavigateToPublishedButton from "./NavigateToPublishedButton";
 import SaveResumeButton from "./SaveResumeButton";
 
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
+  isTest?: boolean;
   handleSubmit?: (data?: any) => void;
 }
 
@@ -66,6 +68,10 @@ const Card: React.FC<Props> = ({
     path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
   const { track } = useAnalyticsTracking();
 
+  const showGoToPublishedServiceButton =
+    window.location.pathname.endsWith("/draft") ||
+    (window.location.pathname.endsWith("/preview") && props.isTest);
+
   useEffect(() => {
     // The Card component is only rendered when there's content the user will see
     if (visibleNode?.id) track(visibleNode?.id);
@@ -102,6 +108,7 @@ const Card: React.FC<Props> = ({
               </Button>
             )}
             {showSaveResumeButton && <SaveResumeButton />}
+            {showGoToPublishedServiceButton && <NavigateToPublishedButton />}
           </Box>
         </InnerContainer>
       </Container>
