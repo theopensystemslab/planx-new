@@ -8,7 +8,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
 import { ChecklistLayout } from "./VisibleChecklist";
 
-interface NonExclusiveChecklistItemsProps {
+interface Props {
   nonExclusiveOptions: Option[];
   layout: ChecklistLayout;
   changeCheckbox: (id: string) => () => void;
@@ -16,13 +16,13 @@ interface NonExclusiveChecklistItemsProps {
   exclusiveOptionIsChecked: boolean;
 }
 
-export const NonExclusiveChecklistItems = ({
+export const ChecklistItems = ({
   nonExclusiveOptions,
   layout,
   changeCheckbox,
   formik,
   exclusiveOptionIsChecked,
-}: NonExclusiveChecklistItemsProps) => (
+}: Props) => (
   <>
     {nonExclusiveOptions.map((option: Option) =>
       layout === ChecklistLayout.Basic ? (

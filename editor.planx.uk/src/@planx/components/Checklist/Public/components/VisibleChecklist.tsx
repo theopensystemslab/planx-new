@@ -14,7 +14,7 @@ import { Option } from "../../../shared";
 import { Props } from "../../types";
 import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
-import { NonExclusiveChecklistItems } from "./../components/ChecklistItems";
+import { ChecklistItems } from "./../components/ChecklistItems";
 import { ExclusiveChecklistItem } from "./../components/ExclusiveChecklistItem";
 import { toggleNonExclusiveCheckbox } from "./../helpers";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
@@ -108,7 +108,7 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            <NonExclusiveChecklistItems
+            <ChecklistItems
               nonExclusiveOptions={nonExclusiveOptions}
               layout={layout}
               changeCheckbox={changeCheckbox}
@@ -122,7 +122,6 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
                 formik={formik}
               />
             )}
-
             {groupedOptions && (
               <GroupedChecklistOptions
                 groupedOptions={groupedOptions}

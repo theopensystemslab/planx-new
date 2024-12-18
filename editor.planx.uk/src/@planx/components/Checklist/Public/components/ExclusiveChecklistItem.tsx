@@ -21,7 +21,6 @@ export const ExclusiveChecklistItem = ({
       <Typography width={36} display="flex" justifyContent="center">
         or
       </Typography>
-
       <ChecklistItem
         onChange={changeCheckbox(exclusiveOrOption.id)}
         label={exclusiveOrOption.data.text}
