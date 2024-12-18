@@ -1,30 +1,23 @@
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import {
-  checklistValidationSchema,
-  getFlatOptions,
-  getLayout,
-} from "@planx/components/Checklist/model";
+import { checklistValidationSchema } from "@planx/components/Checklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
 import { partition } from "lodash";
 import React from "react";
-import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
-import FormWrapper from "ui/public/FormWrapper";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
-import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
 import { Option } from "../../../shared";
 import { Props } from "../../types";
 import { useExclusiveOption } from "../hooks/useExclusiveOption";
-import { useExpandedGroups } from "../hooks/useExpandedGroups";
+import { useSortedOptions } from "../hooks/useSortedOptions";
 import { NonExclusiveChecklistItems } from "./../components/ChecklistItems";
 import { ExclusiveChecklistItem } from "./../components/ExclusiveChecklistItem";
 import { toggleNonExclusiveCheckbox } from "./../helpers";
+import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
 
 export enum ChecklistLayout {
   Basic,
@@ -61,23 +54,11 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
     }),
   });
 
-  const setCheckedFieldValue = (optionIds: string[]) => {
-    const sortedCheckedIds = sortCheckedIds(optionIds);
-    formik.setFieldValue("checked", sortedCheckedIds);
-  };
-
-  const { expandedGroups, toggleGroup } = useExpandedGroups(
+  const { setCheckedFieldValue, layout } = useSortedOptions(
+    options,
     groupedOptions,
-    previouslySubmittedData
+    formik
   );
-
-  const layout = getLayout({ options, groupedOptions });
-  const flatOptions = getFlatOptions({ options, groupedOptions });
-
-  const sortCheckedIds = (ids: string[]): string[] => {
-    const originalIds = flatOptions.map((cb) => cb.id);
-    return ids.sort((a, b) => originalIds.indexOf(a) - originalIds.indexOf(b));
-  };
 
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
     options,
@@ -143,47 +124,12 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
             )}
 
             {groupedOptions && (
-              <FormWrapper>
-                <Grid item xs={12}>
-                  <ExpandableList>
-                    {groupedOptions.map((group, index) => {
-                      const isExpanded = expandedGroups.includes(index);
-                      return (
-                        <ExpandableListItem
-                          key={index}
-                          expanded={isExpanded}
-                          onToggle={() => toggleGroup(index)}
-                          headingId={`group-${index}-heading`}
-                          groupId={`group-${index}-content`}
-                          title={group.title}
-                        >
-                          <Box
-                            pt={0.5}
-                            pb={2}
-                            aria-labelledby={`group-${index}-heading`}
-                            id={`group-${index}-content`}
-                            data-testid={`group-${index}${
-                              isExpanded ? "-expanded" : ""
-                            }`}
-                          >
-                            {group.children.map((option) => (
-                              <ChecklistItem
-                                onChange={changeCheckbox(option.id)}
-                                key={option.data.text}
-                                label={option.data.text}
-                                id={option.id}
-                                checked={formik.values.checked.includes(
-                                  option.id
-                                )}
-                              />
-                            ))}
-                          </Box>
-                        </ExpandableListItem>
-                      );
-                    })}
-                  </ExpandableList>
-                </Grid>
-              </FormWrapper>
+              <GroupedChecklistOptions
+                groupedOptions={groupedOptions}
+                previouslySubmittedData={previouslySubmittedData}
+                changeCheckbox={changeCheckbox}
+                formik={formik}
+              />
             )}
           </Grid>
         </ErrorWrapper>
