@@ -1,13 +1,21 @@
 import { OptionWithDataValues } from "../helpers/types";
+import { Feature, Polygon } from "geojson";
+
+type ChangeHandlerProperties = {
+  label: string;
+  "area.squareMetres": number;
+  "area.hectares": number;
+};
+
+export type GeoJsonChangeHandler = Feature<Polygon, ChangeHandlerProperties>;
 
 export const mockPropertyTypeOptions: OptionWithDataValues[] = [
   { optionText: "Residential", dataValue: "residential" },
   { optionText: "Commercial", dataValue: "commercial" },
 ];
 
-import { Feature } from "geojson";
-
-export const mockMapGeoJson: Feature = {
+export const mockTitleBoundaryGeoJson: Feature = {
+  type: "Feature",
   geometry: {
     type: "MultiPolygon",
     coordinates: [
@@ -23,7 +31,6 @@ export const mockMapGeoJson: Feature = {
       ],
     ],
   },
-  type: "Feature",
   properties: {
     "entry-date": "2024-05-06",
     "start-date": "2010-05-12",
@@ -35,5 +42,25 @@ export const mockMapGeoJson: Feature = {
     reference: "45211072",
     prefix: "title-boundary",
     "organisation-entity": "13",
+  },
+};
+
+export const mockChangedMapGeoJson: GeoJsonChangeHandler = {
+  type: "Feature",
+  geometry: {
+    type: "Polygon",
+    coordinates: [
+      [
+        [-0.6341888375038146, 51.60562241658701],
+        [-0.6341217822784424, 51.605580770520504],
+        [-0.63405472705307, 51.605580770520504],
+        [-0.6341888375038146, 51.60562241658701],
+      ],
+    ],
+  },
+  properties: {
+    label: "1",
+    "area.squareMetres": 10.72,
+    "area.hectares": 0.001072,
   },
 };

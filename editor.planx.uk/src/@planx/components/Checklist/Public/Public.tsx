@@ -1,6 +1,7 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
+import { Option } from "../../shared";
 import { Props } from "../types";
 import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
 import { VisibleChecklist } from "./components/VisibleChecklist";

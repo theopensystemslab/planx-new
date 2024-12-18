@@ -17,6 +17,9 @@ import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
+import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
+import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
@@ -69,6 +72,9 @@ export const SCHEMAS = [
   { name: "Proposed advertisements", schema: ProposedAdvertisements },
   { name: "Parking details", schema: Parking },
   { name: "Parking details (GLA)", schema: ParkingGLA },
+  { name: "Existing buildings (CIL)", schema: ExistingBuildingsCIL },
+  { name: "Unoccupied buildings (CIL)", schema: UnoccupiedBuildingsCIL },
+  { name: "Mezzanine floors (CIL)", schema: MezzanineCIL },
   { name: "Trees", schema: Trees },
   { name: "Trees (Map first)", schema: TreesMapFirst },
 ];
