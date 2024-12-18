@@ -181,7 +181,7 @@ export const mockFlow: FlowGraph = {
   zryBH8H7vD: {
     data: {
       title: "This is a calculate component",
-      output: "calculateOutput",
+      fn: "calculateOutput",
       formula: "formulaOne + formulaTwo",
       defaults: {
         formulaOne: "1",
@@ -623,7 +623,7 @@ export const mockCalculateRootResult: SearchResult<IndexedNode> = {
     type: 700,
     data: {
       title: "This is a calculate component",
-      output: "calculateOutput",
+      fn: "calculateOutput",
       formula: "formulaOne + formulaTwo",
       defaults: {
         formulaOne: "1",
@@ -633,7 +633,7 @@ export const mockCalculateRootResult: SearchResult<IndexedNode> = {
       samples: {},
     },
   },
-  key: "data.output",
+  key: "data.fn",
   matchIndices: [[0, 14]],
   refIndex: 0,
   matchValue: "calculateOutput",
@@ -646,7 +646,7 @@ export const mockCalculateFormulaResult: SearchResult<IndexedNode> = {
     type: 700,
     data: {
       title: "This is a calculate component",
-      output: "calculateOutput",
+      fn: "calculateOutput",
       formula: "formulaOne + formulaTwo",
       defaults: {
         formulaOne: "1",

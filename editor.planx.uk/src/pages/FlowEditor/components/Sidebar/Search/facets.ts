@@ -9,7 +9,6 @@ const generalData: SearchFacets = ["data.fn", "data.val"];
 const fileUploadAndLabelData: SearchFacets = ["data.fileTypes.fn"];
 
 const calculateData: SearchFacets = [
-  "data.output",
   {
     name: "formula",
     getFn: (node: IndexedNode) => Object.keys(node.data?.defaults || {}),

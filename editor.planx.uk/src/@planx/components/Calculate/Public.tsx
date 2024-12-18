@@ -19,7 +19,7 @@ export default function Component(props: Props) {
         props.formatOutputForAutomations
           ? [evaluatedResult.toString()]
           : evaluatedResult,
-        props.output,
+        props.fn,
       ),
       // don't show this component to the user, auto=true required
       // for back button to skip past this component when going back
