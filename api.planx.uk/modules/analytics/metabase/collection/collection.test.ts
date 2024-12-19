@@ -28,15 +28,15 @@ describe("createTeamCollection", () => {
     // Mock Metabase API calls
     const metabaseMock = nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        slug: "barnet",
+        name: "Barnet",
       })
       .reply(200, {
         id: 123,
-        slug: "barnet",
+        name: "Barnet",
       });
 
     const collectionId = await createCollection({
-      slug: "barnet",
+      name: "Barnet",
     });
 
     expect(collectionId).toBe(123);
@@ -81,7 +81,7 @@ describe("createTeamCollection", () => {
     });
 
     const collectionId = await createCollection({
-      slug: testSlug,
+      name: testName,
       parentId: 100,
     });
 
@@ -117,7 +117,7 @@ describe("createTeamCollection", () => {
 
     await expect(
       createCollection({
-        slug: "test-collection",
+        name: "Test Collection",
       }),
     ).rejects.toThrow("Network error occurred");
   });
@@ -129,7 +129,7 @@ describe("createTeamCollection", () => {
 
     await expect(
       createCollection({
-        slug: "test-collection",
+        name: "Test Collection",
       }),
     ).rejects.toThrow(MetabaseError);
   });
@@ -247,15 +247,15 @@ describe("edge cases", () => {
 
     nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        slug: specialSlug,
+        name: specialName,
       })
       .reply(200, {
         id: 789,
-        slug: specialSlug,
+        name: specialName,
       });
 
     const collection = await createCollection({
-      slug: specialSlug,
+      name: specialName,
     });
     expect(collection).toBe(789);
   });
