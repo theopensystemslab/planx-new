@@ -56,6 +56,7 @@ const renderOption: FlowAutocompleteListProps["renderOption"] = (
   <MenuItem
     {...props}
     key={option.id}
+    data-testid={`flow-${option.id}`}
     sx={(theme) => ({ paddingY: `${theme.spacing(1.25)}` })}
   >
     {option.name}
@@ -149,6 +150,8 @@ const ExternalPortalForm: React.FC<{
         </ModalSectionContent>
         <ModalSectionContent title="Pick a flow">
           <Autocomplete
+            data-testid="flowId"
+            id="flowId"
             role="status"
             aria-atomic={true}
             aria-live="polite"
