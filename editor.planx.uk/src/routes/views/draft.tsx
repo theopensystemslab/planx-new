@@ -5,6 +5,7 @@ import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import PublicLayout from "pages/layout/PublicLayout";
+import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings } from "types";
@@ -39,7 +40,9 @@ export const draftView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <View />
+      <TestWarningPage>
+        <View />
+      </TestWarningPage>
     </PublicLayout>
   );
 };
