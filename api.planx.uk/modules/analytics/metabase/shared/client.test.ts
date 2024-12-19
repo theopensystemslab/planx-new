@@ -4,6 +4,7 @@ import {
   MetabaseError,
 } from "./client.js";
 import nock from "nock";
+import { $metabase } from "./client.js";
 
 describe("Metabase client", () => {
   beforeEach(() => {
@@ -16,13 +17,12 @@ describe("Metabase client", () => {
   });
 
   test("returns configured client", async () => {
-    const client = createMetabaseClient();
-    expect(client.defaults.baseURL).toBe(process.env.METABASE_URL_EXT);
-    expect(client.defaults.headers["X-API-Key"]).toBe(
+    expect($metabase.defaults.baseURL).toBe(process.env.METABASE_URL_EXT);
+    expect($metabase.defaults.headers["X-API-Key"]).toBe(
       process.env.METABASE_API_KEY,
     );
-    expect(client.defaults.headers["Content-Type"]).toBe("application/json");
-    expect(client.defaults.timeout).toBe(30_000);
+    expect($metabase.defaults.headers["Content-Type"]).toBe("application/json");
+    expect($metabase.defaults.timeout).toBe(30_000);
   });
 
   describe("validates configuration", () => {
@@ -61,8 +61,7 @@ describe("Metabase client", () => {
         .get("/test")
         .reply(200, { data: "success" });
 
-      const client = createMetabaseClient();
-      const response = await client.get("/test");
+      const response = await $metabase.get("/test");
 
       expect(response.data).toEqual({ data: "success" });
       expect(metabaseScope.isDone()).toBe(true);
@@ -76,10 +75,10 @@ describe("Metabase client", () => {
         .times(4)
         .reply(500, { message: "Internal Server Error" });
 
-      const client = createMetabaseClient();
+      const $metabase = createMetabaseClient();
 
       try {
-        await client.get("/test");
+        await $metabase.get("/test");
         expect.fail("Should have thrown an error");
       } catch (error) {
         expect(error).toBeInstanceOf(MetabaseError);
@@ -93,8 +92,8 @@ describe("Metabase client", () => {
 
       metabaseScope.get("/test").once().reply(200, { data: "success" });
 
-      const client = createMetabaseClient();
-      const response = await client.get("/test");
+      const $metabase = createMetabaseClient();
+      const response = await $metabase.get("/test");
 
       expect(response.data).toEqual({ data: "success" });
 
