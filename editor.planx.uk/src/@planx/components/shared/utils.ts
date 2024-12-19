@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import isNil from "lodash/isNil";
 
 export const validateEmail = (email: string) => {
@@ -63,3 +64,21 @@ export const getPreviouslySubmittedData = ({
 
   return data;
 };
+
+export const getOptionsSchemaByFn = (fn?: string, defaultOptionsSchema?: string[], initialOptions?: (string | undefined)[]) => {
+    let schema = defaultOptionsSchema;
+
+    // For certain data fields, suggest based on full ODP Schema enums rather than current flow schema
+    if (fn === "application.type") schema = getValidSchemaValues("ApplicationType");
+    if (fn === "proposal.projectType") schema = getValidSchemaValues("ProjectType");
+    if (fn === "property.type") schema = getValidSchemaValues("PropertyType");
+
+    // Ensure that any initial values outside of ODP Schema enums will still be recognised/pre-populated when modal loads
+    initialOptions?.forEach((option) => {
+      if (option && !schema?.includes(option)) {
+        schema?.push(option);
+      }
+    });
+
+    return schema;
+  }

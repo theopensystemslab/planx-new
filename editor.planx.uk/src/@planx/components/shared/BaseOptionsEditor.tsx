@@ -6,9 +6,11 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option } from ".";
 import { FlagsSelect } from "./FlagsSelect";
+import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
 
 export interface BaseOptionsEditorProps {
   value: Option;
+  schema?: string[];
   showValueField?: boolean;
   showDescriptionField?: boolean;
   onChange: (newVal: Option) => void;
@@ -72,22 +74,19 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
       </InputRow>
     )}
     {props.showValueField && (
-      <InputRow>
-        <Input
-          format="data"
-          value={props.value.data.val || ""}
-          placeholder="Data Value"
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                val: ev.target.value,
-              },
-            });
-          }}
-        />
-      </InputRow>
+      <DataFieldAutocomplete
+        schema={props.schema}
+        value={props.value.data.val || ""}
+        onChange={(targetValue) => {
+          props.onChange({
+            ...props.value,
+            data: {
+              ...props.value.data,
+              val: targetValue ? targetValue : undefined,
+            },
+          });
+        }}
+      />
     )}
     <FlagsSelect
       value={
