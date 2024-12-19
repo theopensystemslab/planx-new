@@ -9,11 +9,13 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { ApplicationPath } from "types";
 
+import NavigateToPublishedButton from "./NavigateToPublishedButton";
 import SaveResumeButton from "./SaveResumeButton";
 
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
+  isTestWarningWrapper?: boolean;
   handleSubmit?: (data?: any) => void;
 }
 
@@ -102,6 +104,7 @@ const Card: React.FC<Props> = ({
               </Button>
             )}
             {showSaveResumeButton && <SaveResumeButton />}
+            {props.isTestWarningWrapper && <NavigateToPublishedButton />}
           </Box>
         </InnerContainer>
       </Container>
