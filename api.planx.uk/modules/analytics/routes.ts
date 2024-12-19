@@ -5,7 +5,7 @@ import {
   logUserExitController,
   logUserResumeController,
 } from "./analyticsLog/controller.js";
-import { MetabaseCollectionsController } from "./metabase/collection/controller.js";
+import { metabaseCollectionsController } from "./metabase/collection/controller.js";
 import { createCollectionIfDoesNotExistSchema } from "./metabase/collection/types.js";
 
 const router = Router();
@@ -23,7 +23,7 @@ router.post(
 router.post(
   "/collection",
   validate(createCollectionIfDoesNotExistSchema),
-  MetabaseCollectionsController,
+  metabaseCollectionsController,
 );
 
 export default router;
