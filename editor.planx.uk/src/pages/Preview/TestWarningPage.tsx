@@ -11,7 +11,10 @@ export const TestWarningPage = ({ children }: PropsWithChildren) => {
         children
       ) : (
         <Box width="100%">
-          <Card handleSubmit={() => setShowChildren(true)} isTestWrapper={true}>
+          <Card
+            handleSubmit={() => setShowChildren(true)}
+            isTestWarningWrapper={true}
+          >
             <CardHeader
               title="This is a test environment"
               description="This version of the service is unpublished and for testing only. Do not use it to submit real applications"

@@ -1,10 +1,13 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { useNavigation } from "react-navi";
 
 import { InnerContainer } from "./SaveResumeButton";
 
 const NavigateToPublishedButton: React.FC = () => {
+  const navigation = useNavigation();
+
   const testEnvironment = window.location.pathname.endsWith("/draft")
     ? "/draft"
     : "/preview";
@@ -13,10 +16,9 @@ const NavigateToPublishedButton: React.FC = () => {
     testEnvironment,
     "/published",
   ) as `/${string}`;
-  const redirectLink = `${window.location.origin}${editorLink}`;
 
   const handleClick = () => {
-    window.open(redirectLink, "_blank");
+    navigation.navigate(editorLink);
   };
 
   return (
