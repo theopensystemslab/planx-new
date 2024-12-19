@@ -89,7 +89,6 @@ describe("createTeamCollection", () => {
 
     // Verify the collection details using the service function
     const collection = await getCollection(collectionId);
-    console.log({ collection });
     expect(collection.parentId).toBe(100);
     expect(metabaseMock.isDone()).toBe(true);
   });
