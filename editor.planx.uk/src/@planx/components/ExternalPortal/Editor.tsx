@@ -1,20 +1,88 @@
+import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
+import ListItem from "@mui/material/ListItem";
+import ListSubheader from "@mui/material/ListSubheader";
+import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import {
+  CustomCheckbox,
+  SelectMultiple,
+  StyledTextField,
+} from "ui/shared/SelectMultiple";
 
 import { ICONS } from "../shared/icons";
 
 interface Flow {
   id: string;
-  text: string;
+  slug: string;
+  name: string;
+  team: string;
 }
 
+type FlowAutocompleteListProps = AutocompleteProps<
+  Flow,
+  false,
+  true,
+  false,
+  "li"
+>;
+type FlowAutocompleteInputProps = AutocompleteProps<
+  Flow,
+  false,
+  true,
+  false,
+  "input"
+>;
+
+const AutocompleteSubHeader = styled(ListSubheader)(({ theme }) => ({
+  borderTop: 1,
+  borderColor: theme.palette.border.main,
+}));
+
+const renderOption: FlowAutocompleteListProps["renderOption"] = (
+  props,
+  option,
+) => (
+  <MenuItem
+    {...props}
+    key={option.id}
+    sx={(theme) => ({ paddingY: `${theme.spacing(1.25)}` })}
+  >
+    {option.name}
+  </MenuItem>
+);
+
+const renderInput: FlowAutocompleteInputProps["renderInput"] = (params) => (
+  <StyledTextField
+    {...params}
+    key={params.id}
+    InputProps={{
+      ...params.InputProps,
+      notched: false,
+    }}
+  />
+);
+
+const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => (
+  <>
+    <AutocompleteSubHeader key={params.children?.toString()}>
+      <Typography py={1} variant="subtitle2" component="h4">
+        {params.group}
+      </Typography>
+    </AutocompleteSubHeader>
+    {params.children}
+  </>
+);
 const ExternalPortalForm: React.FC<{
   id?: string;
   flowId?: string;
@@ -23,6 +91,10 @@ const ExternalPortalForm: React.FC<{
   flows?: Array<Flow>;
   tags?: NodeTag[];
 }> = ({ id, handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
+  const [teamArray, setTeamArray] = useState<string[]>([]);
+
+  const uniqueTeamArray = [...new Set(flows.map((item) => item.team))];
+
   const formik = useFormik({
     initialValues: {
       flowId,
@@ -51,20 +123,58 @@ const ExternalPortalForm: React.FC<{
             flow that it references.
           </span>
         </ModalSectionContent>
+        <ModalSectionContent title="Select a team">
+          <SelectMultiple
+            onChange={(_options, event) => {
+              console.log(event);
+              setTeamArray([...event]);
+            }}
+            value={teamArray}
+            options={uniqueTeamArray}
+            renderOption={(props, option, { selected }) => (
+              <ListItem key={`${option}-listitem`} {...props}>
+                <CustomCheckbox
+                  key={`${option}-checkbox`}
+                  aria-hidden="true"
+                  className={selected ? "selected" : ""}
+                />
+                {option}
+              </ListItem>
+            )}
+            placeholder=""
+          />
+        </ModalSectionContent>
         <ModalSectionContent title="Pick a flow">
-          <select
-            data-testid="flowId"
-            name="flowId"
-            value={formik.values.flowId}
-            onChange={formik.handleChange}
-          >
-            {!id && <option value="" />}
-            {flows.map((flow) => (
-              <option key={flow.id} value={flow.id}>
-                {flow.text}
-              </option>
-            ))}
-          </select>
+          <Autocomplete
+            role="status"
+            aria-atomic={true}
+            aria-live="polite"
+            fullWidth
+            ListboxProps={{
+              sx: (theme) => ({
+                paddingY: 0,
+                backgroundColor: theme.palette.background.default,
+              }),
+            }}
+            onChange={(_event, newValue: Flow) => {
+              formik.setFieldValue("flowId", newValue.id);
+            }}
+            options={flows.filter((flow) => {
+              if (teamArray.length > 0) return teamArray.includes(flow.team);
+              return true;
+            })}
+            groupBy={(option) => option.team}
+            getOptionLabel={(option) => option.name}
+            renderOption={renderOption}
+            renderInput={renderInput}
+            renderGroup={renderGroup}
+            slotProps={{
+              popper: {
+                placement: "bottom-start",
+                modifiers: [{ name: "flip", enabled: false }],
+              },
+            }}
+          />
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} showMoreInformation={false} />
