@@ -21,7 +21,7 @@ router.post(
   logUserResumeController,
 );
 router.post(
-  "/collection",
+  "/metabase/collection",
   validate(createTeamCollectionSchema),
   metabaseCollectionsController,
 );
