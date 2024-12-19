@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -8,6 +9,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 
 function Component(props: any) {
@@ -38,8 +40,15 @@ function Component(props: any) {
         props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
+
+  // Rather than default to generic `useStore().getFlowSchema()`
+  //   File Upload components can specifically suggest based on ODP Schema enum options
+  let schema = getValidSchemaValues("FileType") || [];
+  // // Additionally ensure that existing initial values are supported & pre-populated on load
+  if (formik.initialValues?.fn && !schema?.includes(formik.initialValues.fn)) 
+    schema.push(formik.initialValues.fn);
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -47,8 +56,9 @@ function Component(props: any) {
         <ModalSectionContent title="File upload" Icon={ICONS[TYPES.FileUpload]}>
           <InputRow>
             <Input
+              required
               format="large"
-              placeholder="File Upload"
+              placeholder="Title"
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
@@ -62,16 +72,12 @@ function Component(props: any) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            schema={schema}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} />

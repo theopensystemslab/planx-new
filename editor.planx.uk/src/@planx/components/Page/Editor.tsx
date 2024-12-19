@@ -12,6 +12,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
+import { useStore } from "pages/FlowEditor/lib/store";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { Page, parsePage } from "./model";
@@ -33,6 +35,8 @@ function PageComponent(props: Props) {
       });
     },
   });
+
+  const dataFieldSchema = useStore().getFlowSchema()?.nodes;
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -56,16 +60,12 @@ function PageComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-              required
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            schema={dataFieldSchema}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
           <InputRow>
             <InputRowLabel>Schema</InputRowLabel>
             <InputRowItem>
