@@ -3,7 +3,6 @@ import { Option } from "@planx/components/shared";
 import { Group } from "../../model";
 import { ChecklistLayout } from "../components/VisibleChecklist";
 
-
 export const options: {
   [key in ChecklistLayout]?: Array<Option>;
 } = {
@@ -118,6 +117,68 @@ export const groupedOptions: Array<Group<Option>> = [
         id: "S3_Option2",
         data: {
           text: "S3 Option2",
+        },
+      },
+    ],
+  },
+];
+
+export const groupedOptionsWithExclusiveOptions: Array<Group<Option>> = [
+  {
+    title: "Section 1",
+    children: [
+      {
+        id: "S1_Option1",
+        data: {
+          text: "S1 Option1",
+          exclusive: true,
+        },
+      },
+      {
+        id: "S1_Option2",
+        data: {
+          text: "S1 Option2",
+        },
+      },
+    ],
+  },
+  {
+    title: "Section 2",
+    children: [
+      {
+        id: "S2_Option1",
+        data: {
+          text: "S2 Option1",
+        },
+      },
+      {
+        id: "S2_Option2",
+        data: {
+          text: "S2 Option2",
+        },
+      },
+    ],
+  },
+  {
+    title: "Section 3",
+    children: [
+      {
+        id: "S3_Option1",
+        data: {
+          text: "S3 Option1",
+        },
+      },
+      {
+        id: "S3_Option2",
+        data: {
+          text: "S3 Option2",
+          exclusive: true,
+        },
+      },
+      {
+        id: "S3_Option3",
+        data: {
+          text: "S3 Option3",
         },
       },
     ],
