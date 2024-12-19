@@ -9,7 +9,7 @@ import { createCollection } from "./createCollection.js";
  * @params `name` is required, but `description` and `parent_id` are optional.
  * @returns `response.data`, so use dot notation to access `id` or `parent_id`.
  */
-export async function createCollectionIfDoesNotExist(
+export async function createTeamCollection(
   params: NewCollectionParams,
 ): Promise<number> {
   try {
@@ -27,7 +27,7 @@ export async function createCollectionIfDoesNotExist(
     console.log({ newMetabaseId });
     return newMetabaseId;
   } catch (error) {
-    console.error("Error in createCollectionIfDoesNotExist:", error);
+    console.error("Error in createTeamCollection:", error);
     throw error;
   }
 }

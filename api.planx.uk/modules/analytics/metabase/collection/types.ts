@@ -24,7 +24,7 @@ export interface MetabaseCollectionParams {
 /** Metbase collection ID for the the "Council" collection **/
 // const COUNCILS_COLLECTION_ID = 58;
 
-export const createCollectionIfDoesNotExistSchema = z.object({
+export const createTeamCollectionSchema = z.object({
   body: z.object({
     name: z.string(),
     description: z.string().optional(),
@@ -33,7 +33,7 @@ export const createCollectionIfDoesNotExistSchema = z.object({
 });
 
 export type NewCollectionRequestHandler = ValidatedRequestHandler<
-  typeof createCollectionIfDoesNotExistSchema,
+  typeof createTeamCollectionSchema,
   ApiResponse<number>
 >;
 
