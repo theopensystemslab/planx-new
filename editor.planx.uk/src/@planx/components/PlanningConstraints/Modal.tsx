@@ -194,7 +194,7 @@ export const OverrideEntitiesModal = ({
                     entities?.map((e) => (
                       <ChecklistItem
                         key={`${e.entity}`}
-                        id={`${e.entity}`}
+                        id={`entity-checkbox-${e.entity}`}
                         label={formatEntityName(e, metadata)}
                         checked={
                           checkedOptions?.includes(`${e.entity}`) || false

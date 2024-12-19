@@ -50,6 +50,26 @@ export async function setUpTestContext(
         submissionEmail: context.team.settings?.submissionEmail,
       },
     });
+
+    // has_planning_data needs to be altered manually for geospatial tests
+    await $admin.client.request(
+      gql`
+        mutation TogglePlanningData($teamId: Int) {
+          update_team_integrations(
+            where: { team_id: { _eq: $teamId } }
+            _set: { has_planning_data: true }
+          ) {
+            returning {
+              has_planning_data
+              team_id
+            }
+          }
+        }
+      `,
+      {
+        teamId: context.team.id,
+      },
+    );
   }
   if (
     context.flow &&
