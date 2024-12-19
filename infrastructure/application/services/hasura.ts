@@ -35,6 +35,10 @@ export const createHasuraService = async ({
     protocol: "HTTP",
     healthCheck: {
       path: "/healthz",
+      interval: 30,
+      timeout: 10,
+      healthyThreshold: 3,
+      unhealthyThreshold: 5,
     },
   });  
   const hasuraListenerHttp = targetHasura.createListener("hasura-http", { protocol: "HTTP" });
@@ -51,6 +55,12 @@ export const createHasuraService = async ({
   const hasuraService = new awsx.ecs.FargateService("hasura", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
+    desiredCount: 1,
+    deploymentMinimumHealthyPercent: 100,
+    deploymentMaximumPercent: 400,
+    // extend service-level health check grace period to match hasura server migrations timeout
+    healthCheckGracePeriodSeconds: 600,
+    
     taskDefinitionArgs: {
       logGroup: new aws.cloudwatch.LogGroup("hasura", {
         namePrefix: "hasura",
@@ -62,15 +72,38 @@ export const createHasuraService = async ({
           cpu: config.requireNumber("hasura-proxy-cpu"),
           memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
+          // hasuraProxy should wait for the hasura container to spin up before starting
+          dependsOn: [{
+            containerName: "hasura",
+            condition: "HEALTHY"
+          }],
+          healthCheck: {
+            // hasuraProxy health depends on hasura health
+            command: ["CMD-SHELL", `curl --head http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
+            interval: 15,
+            timeout: 3,
+            retries: 3,
+          },
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
             { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
           ],
         },
         hasura: {
+          // hasuraProxy dependency timeout should mirror migration timeout
+          startTimeout: 600,
+          stopTimeout: 120,
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           cpu: config.requireNumber("hasura-cpu"),
           memory: config.requireNumber("hasura-memory"),
+          healthCheck: {
+            command: ["CMD-SHELL", "curl --head http://localhost:8080/healthz || exit 1"],
+            // wait 5m before running container-level health check, using same params as docker-compose
+            startPeriod: 300,
+            interval: 15,
+            timeout: 3,
+            retries: 10,
+          },
           environment: [
             { name: "HASURA_GRAPHQL_ENABLE_CONSOLE", value: "true" },
             {
@@ -98,7 +131,6 @@ export const createHasuraService = async ({
               name: "HASURA_GRAPHQL_DATABASE_URL",
               value: dbRootUrl,
             },
-            { name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT", value: "300" },
             {
               name: "HASURA_PLANX_API_URL",
               value: `https://api.${DOMAIN}`,
@@ -107,13 +139,26 @@ export const createHasuraService = async ({
               name: "HASURA_PLANX_API_KEY",
               value: config.require("hasura-planx-api-key"),
             },
+            // extend timeout for migrations during setup to 10 mins (default is 30s)
+            {
+              name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT",
+              value: "600",
+            },
+            // ensure migrations run sequentially
+            {
+              name: "HASURA_GRAPHQL_MIGRATIONS_CONCURRENCY",
+              value: "1",
+            },
+            // get more detailed logs during attempted migration
+            {
+              name: "HASURA_GRAPHQL_MIGRATIONS_LOG_LEVEL",
+              value: "debug",
+            },
           ],
         },
       },
     },
-    desiredCount: 1,
-    // experiment with non-zero grace period to see if it resolves scale up failure
-    healthCheckGracePeriodSeconds: 180,
+
   });
   
   new cloudflare.Record("hasura", {
