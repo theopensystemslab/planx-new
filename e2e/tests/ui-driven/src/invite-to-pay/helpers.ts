@@ -5,10 +5,10 @@ import { TEST_EMAIL, addSessionToContext, log } from "../helpers/globalHelpers";
 import {
   answerChecklist,
   answerContactInput,
-  answerFindProperty,
   fillInEmail,
 } from "../helpers/userActions";
 import { TestContext } from "../helpers/types";
+import { answerFindProperty } from "../helpers/geoSpatialUserActions";
 
 /**
  * Navigates to pay component whilst completing the minimum requirements for an Invite to Pay flow

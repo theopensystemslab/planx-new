@@ -6,11 +6,7 @@ import {
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import {
-  answerFindProperty,
-  answerQuestion,
-  clickContinue,
-} from "./helpers/userActions";
+import { answerQuestion, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 import {
   navigateToService,
@@ -37,6 +33,15 @@ import {
   setupOSMapsStyles,
   setupOSMapsVectorTiles,
 } from "./mocks/osMapsResponse";
+import {
+  planningConstraintHeadersMock,
+  setupGISMockResponse,
+  setupRoadsMockResponse,
+} from "./mocks/gisResponse";
+import {
+  answerFindProperty,
+  userChallengesPlanningConstraint,
+} from "./helpers/geoSpatialUserActions";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -133,6 +138,9 @@ test.describe("Flow creation, publish and preview", () => {
     setupOSMapsStyles(page);
     setupOSMapsVectorTiles(page);
 
+    await setupGISMockResponse(page);
+    await setupRoadsMockResponse(page);
+
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
@@ -224,6 +232,44 @@ test.describe("Flow creation, publish and preview", () => {
       page.getByText(`${parsedJson.properties!["area.squareMetres"]}`),
       "The correct value for area comes from the map properties ",
     ).toBeVisible();
+
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "Planning constraints" }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText(
+        "These are the planning constraints we think apply to this property",
+      ),
+    ).toBeVisible();
+
+    const listedBuildingConstraintRowItem = page.getByRole("button", {
+      name: "Listed building outlines",
+    });
+
+    await expect(listedBuildingConstraintRowItem).toBeVisible();
+
+    await listedBuildingConstraintRowItem.click();
+
+    await userChallengesPlanningConstraint(page);
+
+    await expect(
+      listedBuildingConstraintRowItem.getByText("Marked as not applicable"),
+    ).toBeVisible();
+
+    // click to hide constraint data
+    await listedBuildingConstraintRowItem.click();
+
+    // ensure constraints that don't apply show up
+    await page
+      .getByRole("button", { name: "Constraints that don't apply" })
+      .click();
+
+    const dontApplyHeadings = await page.getByRole("heading").allTextContents();
+
+    expect(dontApplyHeadings).toEqual(planningConstraintHeadersMock);
 
     // TODO: answer uploadAndLabel
     // TODO: answerPropertyInfo, answerPlanningConstraints
