@@ -15,13 +15,8 @@ components:
   schemas:
     NewCollection:
       type: object
-      required:
-        - slug
-      properties:
-        slug:
-          type: string
-          description: Name of the collection
-        description:
+      properties:  
+        description:  
           type: string
           description: Optional description for the collection
         parentId:
@@ -49,12 +44,19 @@ paths:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
 
-  /metabase/collection:
+  /metabase/collection/{slug}:  
     post:
       summary: Create new Metabase collection
       description: Creates a new collection in Metabase if it doesn't already exist
       tags:
         - metabase
+      parameters:  
+        - name: slug  
+          in: path  
+          required: true  
+          schema:  
+            type: string  
+          description: PlanX team slug  
       requestBody:
         required: true
         content:
@@ -70,7 +72,8 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: "#/components/schemas/NewCollection"
+                    type: integer  
+                    description: Metabase collection ID  
         "400":
           description: Bad request or collection creation failed
           content:

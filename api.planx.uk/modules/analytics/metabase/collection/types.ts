@@ -23,8 +23,10 @@ export type MetabaseCollectionParams = Omit<NewCollectionParams, "slug"> & {
 // const COUNCILS_COLLECTION_ID = 58;
 
 export const createTeamCollectionSchema = z.object({
-  body: z.object({
+  params: z.object({
     slug: z.string(),
+  }),
+  body: z.object({
     description: z.string().optional(),
     parentId: z.number().optional(), //.default(COUNCILS_COLLECTION_ID),
   }),
