@@ -15,7 +15,7 @@ import SaveResumeButton from "./SaveResumeButton";
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
-  isTest?: boolean;
+  isTestWrapper?: boolean;
   handleSubmit?: (data?: any) => void;
 }
 
@@ -48,6 +48,7 @@ const Card: React.FC<Props> = ({
   children,
   isValid = true,
   handleSubmit,
+  isTestWrapper,
   ...props
 }) => {
   const theme = useTheme();
@@ -67,10 +68,6 @@ const Card: React.FC<Props> = ({
   const showSaveResumeButton =
     path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
   const { track } = useAnalyticsTracking();
-
-  const showGoToPublishedServiceButton =
-    window.location.pathname.endsWith("/draft") ||
-    (window.location.pathname.endsWith("/preview") && props.isTest);
 
   useEffect(() => {
     // The Card component is only rendered when there's content the user will see
@@ -108,7 +105,7 @@ const Card: React.FC<Props> = ({
               </Button>
             )}
             {showSaveResumeButton && <SaveResumeButton />}
-            {showGoToPublishedServiceButton && <NavigateToPublishedButton />}
+            {isTestWrapper && <NavigateToPublishedButton />}
           </Box>
         </InnerContainer>
       </Container>
