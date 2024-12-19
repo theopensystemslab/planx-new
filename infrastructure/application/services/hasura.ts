@@ -56,11 +56,10 @@ export const createHasuraService = async ({
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
     desiredCount: 1,
-    deploymentMinimumHealthyPercent: 100,
-    deploymentMaximumPercent: 400,
+    deploymentMinimumHealthyPercent: 50,
+    deploymentMaximumPercent: 200,
     // extend service-level health check grace period to match hasura server migrations timeout
     healthCheckGracePeriodSeconds: 600,
-    
     taskDefinitionArgs: {
       logGroup: new aws.cloudwatch.LogGroup("hasura", {
         namePrefix: "hasura",
@@ -158,9 +157,49 @@ export const createHasuraService = async ({
         },
       },
     },
-
   });
-  
+
+  // TODO: bump awsx to 1.x to use the FargateService scaleConfig option to replace more verbose config below
+  const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
+    // start conservative, can always bump max as required
+    maxCapacity: 3,
+    minCapacity: 1,
+    resourceId: pulumi.interpolate`service/${cluster.cluster.name}/${hasuraService.service.name}`,
+    scalableDimension: "ecs:service:DesiredCount",
+    serviceNamespace: "ecs",
+  });
+
+  const hasuraCpuScaling = new aws.appautoscaling.Policy("hasura-cpu-scaling", {
+    policyType: "TargetTrackingScaling",
+    resourceId: hasuraScalingTarget.resourceId,
+    scalableDimension: hasuraScalingTarget.scalableDimension,
+    serviceNamespace: hasuraScalingTarget.serviceNamespace,
+    targetTrackingScalingPolicyConfiguration: {
+        predefinedMetricSpecification: {
+            predefinedMetricType: "ECSServiceAverageCPUUtilization",
+        },
+        // scale out quickly for responsiveness, but scale in more slowly to avoid thrashing
+        targetValue: 60.0,
+        scaleInCooldown: 300,
+        scaleOutCooldown: 60,
+    },
+  });
+
+  const hasuraMemoryScaling = new aws.appautoscaling.Policy("hasura-memory-scaling", {
+    policyType: "TargetTrackingScaling",
+    resourceId: hasuraScalingTarget.resourceId,
+    scalableDimension: hasuraScalingTarget.scalableDimension,
+    serviceNamespace: hasuraScalingTarget.serviceNamespace,
+    targetTrackingScalingPolicyConfiguration: {
+        predefinedMetricSpecification: {
+            predefinedMetricType: "ECSServiceAverageMemoryUtilization",
+        },
+        targetValue: 75.0,
+        scaleInCooldown: 300,
+        scaleOutCooldown: 60,
+    },
+  });
+
   new cloudflare.Record("hasura", {
     name: tldjs.getSubdomain(DOMAIN)
       ? `hasura.${tldjs.getSubdomain(DOMAIN)}`
