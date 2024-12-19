@@ -1,32 +1,28 @@
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { InnerContainer } from "./SaveResumeButton";
 
 const NavigateToPublishedButton: React.FC = () => {
-  const [teamSlug, teamDomain, flowSlug] = useStore((state) => [
-    state.teamSlug,
-    state.teamDomain,
-    state.flowSlug,
-  ]);
+  const testEnvironment = window.location.pathname.endsWith("/draft")
+    ? "/draft"
+    : "/preview";
 
-  const subdomainLink = `https://${teamDomain}/${flowSlug}/published`;
-  const standardLink = `${window.location.origin}/${teamSlug}/${flowSlug}/published`;
-
-  const redirectLink = teamDomain ? subdomainLink : standardLink;
+  const editorLink = window.location.pathname.replace(
+    testEnvironment,
+    "/published",
+  ) as `/${string}`;
+  const redirectLink = `${window.location.origin}${editorLink}`;
 
   const handleClick = () => {
     window.open(redirectLink, "_blank");
   };
 
-  console.log(window.location.origin);
-
   return (
     <InnerContainer>
       <Typography variant="body1">or</Typography>
-      <Link component="button" onClick={handleClick}>
+      <Link onClick={handleClick} component="button">
         <Typography variant="body1" textAlign="left">
           Go to the live service
         </Typography>
