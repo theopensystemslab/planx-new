@@ -2465,6 +2465,19 @@
         filter: {}
       comment: ""
 - table:
+    name: temp_data_migrations_audit
+    schema: public
+  object_relationships:
+    - name: flows
+      using:
+        manual_configuration:
+          column_mapping:
+            flow_id: id
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
+- table:
     name: uniform_applications
     schema: public
   insert_permissions:
