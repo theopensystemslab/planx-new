@@ -15,7 +15,7 @@ import SaveResumeButton from "./SaveResumeButton";
 interface Props {
   children: React.ReactNode;
   isValid?: boolean;
-  isTestWrapper?: boolean;
+  isTestWarningWrapper?: boolean;
   handleSubmit?: (data?: any) => void;
 }
 
@@ -48,7 +48,6 @@ const Card: React.FC<Props> = ({
   children,
   isValid = true,
   handleSubmit,
-  isTestWrapper,
   ...props
 }) => {
   const theme = useTheme();
@@ -105,7 +104,7 @@ const Card: React.FC<Props> = ({
               </Button>
             )}
             {showSaveResumeButton && <SaveResumeButton />}
-            {isTestWrapper && <NavigateToPublishedButton />}
+            {props.isTestWarningWrapper && <NavigateToPublishedButton />}
           </Box>
         </InnerContainer>
       </Container>
