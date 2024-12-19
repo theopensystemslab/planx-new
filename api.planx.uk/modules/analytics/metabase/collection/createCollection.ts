@@ -1,18 +1,12 @@
 import { createMetabaseClient } from "../shared/client.js";
-import type { NewCollectionParams } from "./types.js";
+import type { MetabaseCollectionParams, NewCollectionParams } from "./types.js";
 
 const client = createMetabaseClient();
 
 export async function createCollection(
-  params: NewCollectionParams,
+  params: MetabaseCollectionParams,
 ): Promise<number> {
-  const transformedParams = {
-    slug: params.slug,
-    parent_id: params.parentId,
-  };
-
-  const response = await client.post(`/api/collection/`, transformedParams);
-  const slug = response.data.slug;
+  const response = await client.post(`/api/collection/`, params);
   console.log(
     `New collection: ${response.data.slug}, new collection ID: ${response.data.id}`,
   );

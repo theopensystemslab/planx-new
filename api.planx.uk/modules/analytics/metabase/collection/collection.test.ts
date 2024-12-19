@@ -27,15 +27,15 @@ describe("createTeamCollection", () => {
     // Mock Metabase API calls
     const metabaseMock = nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        slug: "barnet",
+        name: "Barnet",
       })
       .reply(200, {
         id: 123,
-        slug: "barnet",
+        name: "Barnet",
       });
 
     const collectionId = await createCollection({
-      slug: "barnet",
+      name: "Barnet",
     });
 
     expect(collectionId).toBe(123);
@@ -49,6 +49,7 @@ describe("createTeamCollection", () => {
         returning: [
           {
             id: 26,
+            name: "Barnet",
             slug: "barnet",
             metabase_id: 123,
           },
@@ -56,30 +57,30 @@ describe("createTeamCollection", () => {
       },
     });
 
-    const testSlug = "example-council";
+    const testName = "Example Council";
     const metabaseMock = nock(process.env.METABASE_URL_EXT!);
 
     // Mock collection creation endpoint
     metabaseMock
       .post("/api/collection/", {
-        slug: testSlug,
-        parent_id: 100,
+        name: testName,
+        parentId: 100,
       })
       .reply(200, {
         id: 123,
-        slug: testSlug,
-        parent_id: 100,
+        name: testName,
+        parentId: 100,
       });
 
     // Mock GET request for verifying the new collection
     metabaseMock.get("/api/collection/123").reply(200, {
       id: 123,
-      slug: testSlug,
-      parent_id: 100,
+      name: testName,
+      parentId: 100,
     });
 
     const collectionId = await createCollection({
-      slug: testSlug,
+      name: testName,
       parentId: 100,
     });
 
@@ -88,7 +89,8 @@ describe("createTeamCollection", () => {
 
     // Verify the collection details using the service function
     const collection = await getCollection(collectionId);
-    expect(collection.parent_id).toBe(100);
+    console.log({ collection });
+    expect(collection.parentId).toBe(100);
     expect(metabaseMock.isDone()).toBe(true);
   });
 
@@ -97,6 +99,7 @@ describe("createTeamCollection", () => {
       teams: [
         {
           id: 26,
+          name: "Barnet",
           slug: "barnet",
           metabaseId: 20,
         },
@@ -114,7 +117,7 @@ describe("createTeamCollection", () => {
 
     await expect(
       createCollection({
-        slug: "test-collection",
+        name: "Test Collection",
       }),
     ).rejects.toThrow("Network error occurred");
   });
@@ -126,7 +129,7 @@ describe("createTeamCollection", () => {
 
     await expect(
       createCollection({
-        slug: "test-collection",
+        name: "Test Collection",
       }),
     ).rejects.toThrow(MetabaseError);
   });
@@ -142,6 +145,7 @@ describe("getTeamIdAndMetabaseId", () => {
       teams: [
         {
           id: 26,
+          name: "Barnet",
           slug: "barnet",
           metabaseId: 20,
         },
@@ -236,22 +240,22 @@ describe("edge cases", () => {
     ).rejects.toThrow();
   });
 
-  test("handles slug with special characters", async () => {
-    const specialSlug = "@#$%^&*";
+  test("handles name with special characters", async () => {
+    const specialName = "@#$%^&*";
 
     nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
 
     nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        slug: specialSlug,
+        name: specialName,
       })
       .reply(200, {
         id: 789,
-        slug: specialSlug,
+        name: specialName,
       });
 
     const collection = await createCollection({
-      slug: specialSlug,
+      name: specialName,
     });
     expect(collection).toBe(789);
   });

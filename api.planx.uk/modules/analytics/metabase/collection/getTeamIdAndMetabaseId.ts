@@ -4,6 +4,7 @@ import { $api } from "../../../../client/index.js";
 interface GetMetabaseId {
   teams: {
     id: number;
+    name: string;
     slug: string;
     metabaseId: number | null;
   }[];
@@ -16,6 +17,7 @@ export const getTeamIdAndMetabaseId = async (slug: string) => {
         query GetTeamAndMetabaseId($slug: String!) {
           teams(where: { slug: { _eq: $slug } }) {
             id
+            name
             slug
             metabaseId: metabase_id
           }

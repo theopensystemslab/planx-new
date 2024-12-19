@@ -15,11 +15,9 @@ export interface NewCollectionParams {
 }
 
 /** Interface for request after transforming to snake case (Metabase takes snake while PlanX API takes camel) */
-export interface MetabaseCollectionParams {
+export type MetabaseCollectionParams = Omit<NewCollectionParams, "slug"> & {
   name: string;
-  description?: string;
-  parent_id?: number;
-}
+};
 
 /** Metbase collection ID for the the "Council" collection **/
 // const COUNCILS_COLLECTION_ID = 58;
@@ -45,5 +43,5 @@ export interface NewCollectionResponse {
 export interface GetCollectionResponse {
   id: number;
   slug: string;
-  parent_id: number;
+  parentId: number;
 }

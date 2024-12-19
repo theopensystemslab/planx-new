@@ -1,5 +1,5 @@
 import { updateMetabaseId } from "./updateMetabaseId.js";
-import type { NewCollectionParams } from "./types.js";
+import type { NewCollectionParams, MetabaseCollectionParams } from "./types.js";
 import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
@@ -14,15 +14,24 @@ export async function createTeamCollection(
   params: NewCollectionParams,
 ): Promise<number> {
   try {
-    const { metabaseId, id: teamId } = await getTeamIdAndMetabaseId(
-      params.slug,
-    );
+    const {
+      metabaseId,
+      name,
+      id: teamId,
+    } = await getTeamIdAndMetabaseId(params.slug);
 
     if (metabaseId) {
       return metabaseId;
     }
 
-    const newMetabaseId = await createCollection(params);
+    const { slug, ...rest } = params;
+    const metabaseParams = {
+      name,
+      ...rest,
+    } as const;
+
+    const newMetabaseId = await createCollection(metabaseParams);
+
     await updateMetabaseId(teamId, newMetabaseId);
     return newMetabaseId;
   } catch (error) {
