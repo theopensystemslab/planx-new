@@ -4,9 +4,10 @@ import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
 /**
- * First uses name to get teams.id and .metabase_id, if present.
- * If metabase_id is null, return an object that includes its id. If not, create the collection.
- * @params `name` is required, but `description` and `parent_id` are optional.
+ * The `getTeamIdAndMetabaseId()` function is run here to first get teams.id and .metabase_id from PlanX db, if present,
+ * so that the service can figure out if it needs to run `createCollection()` or not.
+ * Instead of running `getTeamIdAndMetabaseId()` first in the controller, it is encapsulated in `createTeamCollection` to keep business logic in `service.ts` instead of `controller.ts`.
+ * @params `slug` is required, but `description` and `parent_id` are optional.
  * @returns `response.data`, so use dot notation to access `id` or `parent_id`.
  */
 export async function createTeamCollection(
@@ -14,17 +15,15 @@ export async function createTeamCollection(
 ): Promise<number> {
   try {
     const { metabaseId, id: teamId } = await getTeamIdAndMetabaseId(
-      params.name,
+      params.slug,
     );
 
     if (metabaseId) {
       return metabaseId;
     }
 
-    // Create new Metabase collection if !metabaseId
     const newMetabaseId = await createCollection(params);
     await updateMetabaseId(teamId, newMetabaseId);
-    console.log({ newMetabaseId });
     return newMetabaseId;
   } catch (error) {
     console.error("Error in createTeamCollection:", error);

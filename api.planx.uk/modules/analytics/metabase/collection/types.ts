@@ -8,7 +8,7 @@ type ApiResponse<T> = {
 
 /** Interface for incoming request, in camelCase */
 export interface NewCollectionParams {
-  name: string;
+  slug: string;
   description?: string;
   /** Optional; if the collection is a child of a parent, specify parent ID here */
   parentId?: number;
@@ -26,7 +26,7 @@ export interface MetabaseCollectionParams {
 
 export const createTeamCollectionSchema = z.object({
   body: z.object({
-    name: z.string(),
+    slug: z.string(),
     description: z.string().optional(),
     parentId: z.number().optional(), //.default(COUNCILS_COLLECTION_ID),
   }),
@@ -39,11 +39,11 @@ export type NewCollectionRequestHandler = ValidatedRequestHandler<
 
 export interface NewCollectionResponse {
   id: number;
-  name: string;
+  slug: string;
 }
 
 export interface GetCollectionResponse {
   id: number;
-  name: string;
+  slug: string;
   parent_id: number;
 }

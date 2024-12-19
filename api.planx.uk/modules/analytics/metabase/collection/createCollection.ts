@@ -7,14 +7,14 @@ export async function createCollection(
   params: NewCollectionParams,
 ): Promise<number> {
   const transformedParams = {
-    name: params.name,
+    slug: params.slug,
     parent_id: params.parentId,
   };
 
   const response = await client.post(`/api/collection/`, transformedParams);
-
+  const slug = response.data.slug;
   console.log(
-    `New collection: ${response.data.name}, new collection ID: ${response.data.id}`,
+    `New collection: ${response.data.slug}, new collection ID: ${response.data.id}`,
   );
   return response.data.id;
 }

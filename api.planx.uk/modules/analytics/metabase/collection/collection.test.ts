@@ -18,7 +18,7 @@ describe("createTeamCollection", () => {
       teams: [
         {
           id: 26,
-          name: "Barnet",
+          slug: "barnet",
           metabase_id: null,
         },
       ],
@@ -27,15 +27,15 @@ describe("createTeamCollection", () => {
     // Mock Metabase API calls
     const metabaseMock = nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        name: "Barnet",
+        slug: "barnet",
       })
       .reply(200, {
         id: 123,
-        name: "Barnet",
+        slug: "barnet",
       });
 
     const collectionId = await createCollection({
-      name: "Barnet",
+      slug: "barnet",
     });
 
     expect(collectionId).toBe(123);
@@ -49,37 +49,37 @@ describe("createTeamCollection", () => {
         returning: [
           {
             id: 26,
-            name: "Barnet",
+            slug: "barnet",
             metabase_id: 123,
           },
         ],
       },
     });
 
-    const testName = "Example council";
+    const testSlug = "example-council";
     const metabaseMock = nock(process.env.METABASE_URL_EXT!);
 
     // Mock collection creation endpoint
     metabaseMock
       .post("/api/collection/", {
-        name: testName,
+        slug: testSlug,
         parent_id: 100,
       })
       .reply(200, {
         id: 123,
-        name: testName,
+        slug: testSlug,
         parent_id: 100,
       });
 
     // Mock GET request for verifying the new collection
     metabaseMock.get("/api/collection/123").reply(200, {
       id: 123,
-      name: testName,
+      slug: testSlug,
       parent_id: 100,
     });
 
     const collectionId = await createCollection({
-      name: testName,
+      slug: testSlug,
       parentId: 100,
     });
 
@@ -92,12 +92,12 @@ describe("createTeamCollection", () => {
     expect(metabaseMock.isDone()).toBe(true);
   });
 
-  test("returns collection correctly no matter collection name case", async () => {
+  test("returns collection correctly no matter collection slug case", async () => {
     vi.spyOn($api.client, "request").mockResolvedValueOnce({
       teams: [
         {
           id: 26,
-          name: "barnet",
+          slug: "barnet",
           metabaseId: 20,
         },
       ],
@@ -114,7 +114,7 @@ describe("createTeamCollection", () => {
 
     await expect(
       createCollection({
-        name: "Test Collection",
+        slug: "test-collection",
       }),
     ).rejects.toThrow("Network error occurred");
   });
@@ -126,7 +126,7 @@ describe("createTeamCollection", () => {
 
     await expect(
       createCollection({
-        name: "Test Collection",
+        slug: "test-collection",
       }),
     ).rejects.toThrow(MetabaseError);
   });
@@ -228,50 +228,50 @@ describe("edge cases", () => {
     vi.resetAllMocks();
   });
 
-  test("handles missing name", async () => {
+  test("handles missing slug", async () => {
     await expect(
       createTeamCollection({
-        name: "",
+        slug: "",
       }),
     ).rejects.toThrow();
   });
 
-  test("handles names with special characters", async () => {
-    const specialName = "@#$%^&*";
+  test("handles slug with special characters", async () => {
+    const specialSlug = "@#$%^&*";
 
     nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
 
     nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        name: specialName,
+        slug: specialSlug,
       })
       .reply(200, {
         id: 789,
-        name: specialName,
+        slug: specialSlug,
       });
 
     const collection = await createCollection({
-      name: specialName,
+      slug: specialSlug,
     });
     expect(collection).toBe(789);
   });
 
-  test("handles very long names", async () => {
-    const longName = "A".repeat(101);
+  test("handles very long slugs", async () => {
+    const longSlug = "A".repeat(101);
 
     nock(process.env.METABASE_URL_EXT!).get("/api/collection/").reply(200, []);
 
     nock(process.env.METABASE_URL_EXT!)
       .post("/api/collection/", {
-        name: longName,
+        slug: longSlug,
       })
       .reply(400, {
-        message: "Name too long",
+        message: "Slug too long",
       });
 
     await expect(
       createTeamCollection({
-        name: longName,
+        slug: longSlug,
       }),
     ).rejects.toThrow();
   });
