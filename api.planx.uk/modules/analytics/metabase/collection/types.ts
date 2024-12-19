@@ -25,17 +25,11 @@ export interface MetabaseCollectionParams {
 // const COUNCILS_COLLECTION_ID = 58;
 
 export const createCollectionIfDoesNotExistSchema = z.object({
-  body: z
-    .object({
-      name: z.string(),
-      description: z.string().optional(),
-      parentId: z.number().optional(), //.default(COUNCILS_COLLECTION_ID),
-    })
-    .transform((data) => ({
-      name: data.name,
-      description: data.description,
-      parent_id: data.parentId,
-    })),
+  body: z.object({
+    name: z.string(),
+    description: z.string().optional(),
+    parentId: z.number().optional(), //.default(COUNCILS_COLLECTION_ID),
+  }),
 });
 
 export type NewCollectionRequestHandler = ValidatedRequestHandler<

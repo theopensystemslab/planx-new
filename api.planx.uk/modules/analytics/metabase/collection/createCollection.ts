@@ -5,7 +5,7 @@ const client = createMetabaseClient();
 
 export async function createCollection(
   params: NewCollectionParams,
-): Promise<any> {
+): Promise<number> {
   const transformedParams = {
     name: params.name,
     parent_id: params.parentId,
