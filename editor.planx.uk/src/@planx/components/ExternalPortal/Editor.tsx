@@ -10,7 +10,6 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -45,8 +44,9 @@ type FlowAutocompleteInputProps = AutocompleteProps<
 >;
 
 const AutocompleteSubHeader = styled(ListSubheader)(({ theme }) => ({
-  borderTop: 1,
-  borderColor: theme.palette.border.main,
+  border: "none",
+  borderTop: `1px solid ${theme.palette.border.main}`,
+  backgroundColor: theme.palette.background.default,
 }));
 
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
@@ -75,8 +75,12 @@ const renderInput: FlowAutocompleteInputProps["renderInput"] = (params) => (
 
 const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => (
   <>
-    <AutocompleteSubHeader key={params.children?.toString()}>
-      <Typography py={1} variant="subtitle2" component="h4">
+    <AutocompleteSubHeader
+      disableSticky
+      key={params.children?.toString()}
+      aria-label={`${params.group}`}
+    >
+      <Typography py={1.5} variant="subtitle2" component="h4">
         {params.group}
       </Typography>
     </AutocompleteSubHeader>
@@ -84,13 +88,12 @@ const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => (
   </>
 );
 const ExternalPortalForm: React.FC<{
-  id?: string;
   flowId?: string;
   notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ id, handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
+}> = ({ handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
   const [teamArray, setTeamArray] = useState<string[]>([]);
 
   const uniqueTeamArray = [...new Set(flows.map((item) => item.team))];
@@ -156,6 +159,7 @@ const ExternalPortalForm: React.FC<{
                 backgroundColor: theme.palette.background.default,
               }),
             }}
+            value={flows.find((flow: Flow) => flow.id === formik.values.flowId)}
             onChange={(_event, newValue: Flow) => {
               formik.setFieldValue("flowId", newValue.id);
             }}
