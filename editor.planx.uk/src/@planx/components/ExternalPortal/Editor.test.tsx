@@ -32,6 +32,7 @@ test("adding an external portal", async () => {
       data: {
         flowId: "b",
         tags: [],
+        notes: "",
       },
     }),
   );
@@ -65,6 +66,7 @@ test("changing an external portal", async () => {
       data: {
         flowId: "a",
         tags: [],
+        notes: "",
       },
     }),
   );

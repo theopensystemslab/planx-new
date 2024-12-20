@@ -32,14 +32,13 @@ export const SummaryListTable = styled("dl", {
   ({ theme, showChangeButton, dense }) => ({
     display: "grid",
     gridTemplateColumns: showChangeButton ? "1fr 2fr 100px" : "1fr 2fr",
-    gridRowGap: "10px",
     marginTop: dense ? theme.spacing(1) : theme.spacing(2),
     marginBottom: dense ? theme.spacing(2) : theme.spacing(4),
     fontSize: dense ? theme.typography.body2.fontSize : "inherit",
     "& > *": {
       borderBottom: `1px solid ${theme.palette.border.main}`,
-      paddingBottom: dense ? theme.spacing(1) : theme.spacing(2),
-      paddingTop: dense ? theme.spacing(1) : theme.spacing(2),
+      paddingBottom: dense ? theme.spacing(1) : theme.spacing(2.5),
+      paddingTop: dense ? theme.spacing(1) : theme.spacing(2.5),
       verticalAlign: "top",
       margin: 0,
     },
@@ -52,7 +51,7 @@ export const SummaryListTable = styled("dl", {
       // left column
       fontWeight: FONT_WEIGHT_SEMI_BOLD,
     },
-    "& dd:nth-of-type(n)": {
+    "& dd": {
       // middle column
       paddingLeft: "10px",
     },
@@ -65,20 +64,22 @@ export const SummaryListTable = styled("dl", {
       flexDirection: "column",
       "& dt": {
         // top row
-        paddingLeft: theme.spacing(1),
         paddingTop: dense ? theme.spacing(1) : theme.spacing(2),
-        marginTop: theme.spacing(1),
+        marginTop: theme.spacing(1.5),
+        paddingBottom: 0,
         borderTop: `1px solid ${theme.palette.border.main}`,
         borderBottom: "none",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
       },
-      "& dd:nth-of-type(n)": {
-        // middle row
+      "& dd": {
         textAlign: "left",
-        paddingTop: 0,
-        paddingBottom: 0,
+        padding: 0,
         margin: 0,
         borderBottom: "none",
+      },
+      "& dd:nth-of-type(2n-1)": {
+        // middle row
+        padding: theme.spacing(1, 0),
       },
       "& dd:nth-of-type(2n)": {
         // bottom row

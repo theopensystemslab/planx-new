@@ -2370,6 +2370,7 @@
           - created_at
           - domain
           - id
+          - metabase_id
           - name
           - slug
           - updated_at
@@ -2422,6 +2423,13 @@
           - updated_at
         filter: {}
   update_permissions:
+    - role: api
+      permission:
+        columns:
+          - metabase_id
+        filter: {}
+        check: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -2456,6 +2464,19 @@
           - subdomain
         filter: {}
       comment: ""
+- table:
+    name: temp_data_migrations_audit
+    schema: public
+  object_relationships:
+    - name: flows
+      using:
+        manual_configuration:
+          column_mapping:
+            flow_id: id
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
 - table:
     name: uniform_applications
     schema: public

@@ -13,8 +13,12 @@ config:
     secure: AAABAFpZq81zy3CKFXUgi9oEGIGp7LDVD3TNlYkZD4liX0bxOrmMJYdDpMmyGt4aGARF63nEUmo=
   application:file-api-key-epsom-ewell:
     secure: AAABAD1/nlJ2EOEglLiiNsOLbOd3KWCONhNhJAIdZQVnrSRsNIzX2luszOreQf20EYl8AZ4L1TiheqUHSt22e5z1FiLWoCtY
+  application:file-api-key-gateshead:
+    secure: AAABAC40pz4+QnXhA2QOYP2F33dc4bCnpL0Njd6hgxR4sTtzt1xF4+2HJpMGdptL2zVrbmdH+cMzrizu6cTmGELrsAoUIEvB
   application:file-api-key-lambeth:
     secure: AAABALQTeIf/uScxASJkhmoPRhewQT94Guad4iJ7GRk0DcND8wDUG0eNxDU4+XwUQZqCnL2DP+E=
+  application:file-api-key-medway:
+    secure: AAABABCpSTmTDJU81pG7U57Igr4OtBbX6VuqRooq9Ipzoq1peTenbNQYBWacZn6lyg7ceLAgbiHQgT7LqX2tKN1QwON/BSQh
   application:file-api-key-nexus:
     secure: AAABAJFgaBoTWNmZyXDkGRngwU8KpOt6CeBLxGBgBG0JFMsKK7rWT39TsjJ9pL1wZaBoT0YZhCg=
   application:file-api-key-southwark:
@@ -30,6 +34,8 @@ config:
   application:hasura-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
+  application:hasura-proxy-cpu: "512"
+  application:hasura-proxy-memory: "2048"
   application:idox-nexus-client:
     secure: AAABABprDQomVM9wJQkTMTVtUKvj9lVVVJLdpEBR5p3ibZYvSMedTOb2jztPa0vm6UCH2hilyOV2fsd+akYd3sP8Up5G26mkEKSLSSN4Nc9fu/Hi3Apn1rXHnw==
   application:idox-nexus-submission-url: https://dev.identity.idoxgroup.com/agw/submission-api

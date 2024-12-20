@@ -374,6 +374,14 @@ export = async () => {
             value: config.requireSecret("file-api-key-epsom-ewell"),
           },
           {
+            name: "FILE_API_KEY_MEDWAY",
+            value: config.requireSecret("file-api-key-medway"),
+          },
+          {
+            name: "FILE_API_KEY_GATESHEAD",
+            value: config.requireSecret("file-api-key-gateshead"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },

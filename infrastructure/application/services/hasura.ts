@@ -59,7 +59,8 @@ export const createHasuraService = async ({
       containers: {
         hasuraProxy: {
           image: repo.buildAndPushImage("../../hasura.planx.uk/proxy"),
-          memory: 1024 /*MB*/,
+          cpu: config.requireNumber("hasura-proxy-cpu"),
+          memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
@@ -97,6 +98,7 @@ export const createHasuraService = async ({
               name: "HASURA_GRAPHQL_DATABASE_URL",
               value: dbRootUrl,
             },
+            { name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT", value: "300" },
             {
               name: "HASURA_PLANX_API_URL",
               value: `https://api.${DOMAIN}`,

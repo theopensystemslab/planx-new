@@ -6,11 +6,7 @@ import {
 } from "./helpers/context";
 import { getTeamPage } from "./helpers/getPage";
 import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import {
-  answerFindProperty,
-  answerQuestion,
-  clickContinue,
-} from "./helpers/userActions";
+import { answerQuestion, clickContinue } from "./helpers/userActions";
 import { PlaywrightEditor } from "./pages/Editor";
 import {
   navigateToService,
@@ -19,11 +15,33 @@ import {
 } from "./helpers/navigateAndPublish";
 import { TestContext } from "./helpers/types";
 import { serviceProps } from "./helpers/serviceData";
-import { checkGeoJsonContent } from "./helpers/geospatialChecks";
 import {
-  mockMapGeoJson,
+  alterDrawGeoJson,
+  checkGeoJsonContent,
+  checkUploadFileAltRoute,
+  getMapProperties,
+  resetMapBoundary,
+  waitForMapComponent,
+} from "./helpers/geospatialChecks";
+import {
+  GeoJsonChangeHandler,
+  mockChangedMapGeoJson,
   mockPropertyTypeOptions,
+  mockTitleBoundaryGeoJson,
 } from "./mocks/geospatialMocks";
+import {
+  setupOSMapsStyles,
+  setupOSMapsVectorTiles,
+} from "./mocks/osMapsResponse";
+import {
+  planningConstraintHeadersMock,
+  setupGISMockResponse,
+  setupRoadsMockResponse,
+} from "./mocks/gisResponse";
+import {
+  answerFindProperty,
+  userChallengesPlanningConstraint,
+} from "./helpers/geoSpatialUserActions";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -72,8 +90,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
     await page.getByRole("link", { name: "start" }).click(); // return to main flow
-    await editor.createUploadAndLabel();
-    // TODO: editor.createPropertyInfo()
+    // await editor.createUploadAndLabel();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
     // await editor.createFileUpload();
@@ -81,7 +98,6 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText([
       "Find property",
       "an internal portalEdit Portal",
-      "Upload and label",
       "Confirm your location plan",
       "Planning constraints",
       // "File upload",
@@ -119,6 +135,12 @@ test.describe("Flow creation, publish and preview", () => {
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
     );
 
+    setupOSMapsStyles(page);
+    setupOSMapsVectorTiles(page);
+
+    await setupGISMockResponse(page);
+    await setupRoadsMockResponse(page);
+
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
     ).toBeVisible();
@@ -130,7 +152,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     // Check map component has geoJson content
-    await checkGeoJsonContent(page, mockMapGeoJson);
+    await checkGeoJsonContent(page, "geojsondata", mockTitleBoundaryGeoJson);
 
     // Check property info is being shown
     await expect(page.getByText("Test Street, Testville")).toBeVisible();
@@ -169,7 +191,87 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
     await clickContinue({ page });
 
+    const drawBoundaryTitle = page.getByRole("heading", {
+      name: "Confirm your location plan",
+    });
+    await expect(drawBoundaryTitle).toBeVisible();
+
+    await checkGeoJsonContent(
+      page,
+      "drawgeojsondata",
+      mockTitleBoundaryGeoJson,
+    );
+
+    const area = "The property boundary you have drawn is 490.37";
+
+    await expect(page.getByText(area)).toBeVisible();
+
+    // navigate to upload file page and back
+    await checkUploadFileAltRoute(page);
+
+    await expect(
+      drawBoundaryTitle,
+      "We have navigated back to the map component",
+    ).toBeVisible();
+
+    // ensure map has loaded correctly
+    await waitForMapComponent(page);
+
+    await resetMapBoundary(page);
+
+    await alterDrawGeoJson(page);
+
+    // extract new GeoJSON data
+    const newGeoJson = await getMapProperties(page, "drawgeojsondata");
+    const parsedJson: GeoJsonChangeHandler = JSON.parse(newGeoJson!);
+
+    // check it matches our static mock
+    await checkGeoJsonContent(page, "drawgeojsondata", mockChangedMapGeoJson);
+
+    await expect(
+      page.getByText(`${parsedJson.properties!["area.squareMetres"]}`),
+      "The correct value for area comes from the map properties ",
+    ).toBeVisible();
+
+    await clickContinue({ page });
+
+    await expect(
+      page.locator("h1", { hasText: "Planning constraints" }),
+    ).toBeVisible();
+
+    await expect(
+      page.getByText(
+        "These are the planning constraints we think apply to this property",
+      ),
+    ).toBeVisible();
+
+    const listedBuildingConstraintRowItem = page.getByRole("button", {
+      name: "Listed building outlines",
+    });
+
+    await expect(listedBuildingConstraintRowItem).toBeVisible();
+
+    await listedBuildingConstraintRowItem.click();
+
+    await userChallengesPlanningConstraint(page);
+
+    await expect(
+      listedBuildingConstraintRowItem.getByText("Marked as not applicable"),
+    ).toBeVisible();
+
+    // click to hide constraint data
+    await listedBuildingConstraintRowItem.click();
+
+    // ensure constraints that don't apply show up
+    await page
+      .getByRole("button", { name: "Constraints that don't apply" })
+      .click();
+
+    const dontApplyHeadings = await page.getByRole("heading").allTextContents();
+
+    expect(dontApplyHeadings).toEqual(planningConstraintHeadersMock);
+
     // TODO: answer uploadAndLabel
-    // TODO: answerPropertyInfo, answerDrawBoundary, answerPlanningConstraints
+    // TODO: answerPropertyInfo, answerPlanningConstraints
   });
 });
