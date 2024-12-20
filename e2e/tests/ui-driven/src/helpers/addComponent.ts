@@ -394,20 +394,13 @@ async function createComponentOptionsWithDataValues(
   page: Page,
   options: OptionWithDataValues[],
 ) {
-  let index = 0;
   for (const option of options) {
     await page.locator("button").filter({ hasText: "add new" }).click();
-    await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
-    await page.getByRole("combobox", { name: "Data field" }).nth(index).click();
+    await page.getByPlaceholder("Option").last().fill(option.optionText);
+    await page.getByRole("combobox", { name: "Data field" }).last().click();
     await page
-      .getByRole("combobox", { name: "Data field" })
-      .nth(index)
-      .fill(option.dataValue);
-    await page
-      .getByRole("combobox", { name: "Data field" })
-      .nth(index)
-      .press("Enter");
-    index++;
+      .getByRole("option", { name: option.dataValue, exact: true })
+      .click();
   }
 }
 
