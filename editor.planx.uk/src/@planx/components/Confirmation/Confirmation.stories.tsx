@@ -46,7 +46,7 @@ export const Basic = {
     contactInfo: `
       You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
       <br/><br/>
-      What did you think of this service? Please give us your feedback using the link in the footer below.
+      <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>
     `,
     data: [],
   },
