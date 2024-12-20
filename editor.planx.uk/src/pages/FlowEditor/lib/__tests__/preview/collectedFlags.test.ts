@@ -9,8 +9,8 @@ describe("Collecting flags", () => {
     resetPreview();
   });
 
-  test("Correctly collects flags when an option's `data.flag` prop is the new array format", () => {
-    setState({ flow: flowWithNewFlags });
+  test("Correctly collects flags based on an option's `data.flags` prop", () => {
+    setState({ flow });
 
     // Manually proceed through a Question that sets multiple flags on a single option
     clickContinue("Question", { answers: ["YesOption"], auto: false });
@@ -26,34 +26,8 @@ describe("Collecting flags", () => {
     });
   });
 
-  test("Correctly collects flags when an option's `data.flag` prop is the legacy string format", () => {
-    setState({ flow: flowWithLegacyFlags });
-
-    // Manually proceed a Checklist and select every option that sets a single flag
-    clickContinue("Checklist", {
-      answers: [
-        "PPImmuneOption",
-        "PPImmune2Option",
-        "PPPDOption",
-        "WTTRequiredOption",
-        "MCUYesOption",
-      ],
-      auto: false,
-    });
-
-    expect(collectedFlags()).toEqual({
-      "Community infrastructure levy": [],
-      "Demolition in a conservation area": [],
-      "Listed building consent": [],
-      "Material change of use": ["Material change of use"],
-      "Planning permission": ["Immune", "Permitted development"], // Multiple flags of same value have been de-deduplicated
-      "Planning policy": [],
-      "Works to trees & hedges": ["Required"],
-    });
-  });
-
   test("Returns empty arrays for each category if no flags have been collected", () => {
-    setState({ flow: flowWithNewFlags });
+    setState({ flow });
 
     // Manually proceed through a Question option without flags
     clickContinue("Question", { answers: ["NoOption"], auto: false });
@@ -70,7 +44,7 @@ describe("Collecting flags", () => {
   });
 });
 
-const flowWithNewFlags: Store.Flow = {
+const flow: Store.Flow = {
   _root: {
     edges: ["Question"],
   },
@@ -86,7 +60,7 @@ const flowWithNewFlags: Store.Flow = {
     type: 200,
     data: {
       text: "Yes",
-      flag: ["PP-NOTICE", "EDGE_CASE", "CO_RELIEF", "PRIOR_APPROVAL"], // `flag` is an array for freshly created/updated Question & Checklist options
+      flags: ["PP-NOTICE", "EDGE_CASE", "CO_RELIEF", "PRIOR_APPROVAL"],
     },
   },
   NoOption: {
@@ -94,61 +68,5 @@ const flowWithNewFlags: Store.Flow = {
     data: {
       text: "No",
     },
-  },
-};
-
-const flowWithLegacyFlags: Store.Flow = {
-  _root: {
-    edges: ["Checklist"],
-  },
-  Checklist: {
-    type: 105,
-    data: {
-      allRequired: false,
-      neverAutoAnswer: false,
-      text: "Pick up flags?",
-    },
-    edges: [
-      "PPImmuneOption",
-      "PPImmune2Option",
-      "PPPDOption",
-      "WTTRequiredOption",
-      "MCUYesOption",
-    ],
-  },
-  PPImmuneOption: {
-    data: {
-      text: "PP Immune",
-      flag: "IMMUNE",
-    },
-    type: 200,
-  },
-  PPImmune2Option: {
-    data: {
-      text: "PP Immune again",
-      flag: "IMMUNE",
-    },
-    type: 200,
-  },
-  PPPDOption: {
-    data: {
-      text: "PP Permitted dev",
-      flag: "NO_APP_REQUIRED",
-    },
-    type: 200,
-  },
-  WTTRequiredOption: {
-    data: {
-      text: "WTT Required",
-      flag: "TR-REQUIRED",
-    },
-    type: 200,
-  },
-  MCUYesOption: {
-    data: {
-      text: "MCU Yes",
-      flag: "MCOU_TRUE",
-    },
-    type: 200,
   },
 };

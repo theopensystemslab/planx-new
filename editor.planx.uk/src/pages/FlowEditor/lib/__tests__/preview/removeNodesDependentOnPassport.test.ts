@@ -394,7 +394,7 @@ const mockFlowData = {
     },
     "4FRZMfNlXf": {
       data: {
-        flag: "PP-NOT_DEVELOPMENT",
+        flags: ["PP-NOT_DEVELOPMENT"],
         text: "Not development",
       },
       type: TYPES.Answer,
@@ -428,7 +428,7 @@ const mockFlowData = {
     },
     IzT93uCmyF: {
       data: {
-        flag: "PRIOR_APPROVAL",
+        flags: ["PRIOR_APPROVAL"],
         text: "Prior",
       },
       type: TYPES.Answer,
