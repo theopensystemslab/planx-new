@@ -61,7 +61,7 @@ export const simpleBreadcrumbs: Store.Breadcrumbs = {
       "property.type": ["commercial.office.workspace.gov.local"],
       "property.localAuthorityDistrict": ["Birmingham"],
       "property.region": ["West Midlands"],
-      "property.boundary.title": {
+      "property.boundary": {
         geometry: {
           type: "MultiPolygon",
           coordinates: [
@@ -88,8 +88,8 @@ export const simpleBreadcrumbs: Store.Breadcrumbs = {
           "organisation-entity": "13",
         },
       },
-      "property.boundary.title.area": 8242.37,
-      "property.boundary.title.area.hectares": 0.8242370000000001,
+      "proposal.site.area": 8242.37,
+      "proposal.site.area.hectares": 0.8242370000000001,
       "findProperty.action": "Selected an existing address",
     },
   },

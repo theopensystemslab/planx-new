@@ -28,7 +28,7 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
 
     const responses = await $api.export.csvData(req.params.sessionId);
     const boundingBox = session.data.passport.data[
-      "property.boundary.site.buffered"
+      "proposal.site.buffered"
     ] as unknown as GeoJSON.Feature;
     const userAction = session.data.passport.data?.[
       "drawBoundary.action"
@@ -75,7 +75,7 @@ export const getRedactedHTMLExport: HTMLExportHandler = async (
       req.params.sessionId,
     );
     const boundingBox = session.data.passport.data[
-      "property.boundary.site.buffered"
+      "proposal.site.buffered"
     ] as unknown as GeoJSON.Feature;
     const userAction = session.data.passport.data?.[
       "drawBoundary.action"

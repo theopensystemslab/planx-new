@@ -42,7 +42,7 @@ export const mockLowcalSession: LowCalSession = {
         },
         "drawBoundary.action": "Amended the title boundary",
         "proposal.projectType": ["new.office"],
-        "property.boundary.site": {
+        "proposal.site": {
           type: "Feature",
           geometry: {
             type: "Polygon",

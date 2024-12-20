@@ -72,7 +72,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               height={400}
               basemap={mapOptions?.basemap}
               geojsonData={JSON.stringify(
-                passport.data?.["property.boundary.site"],
+                passport.data?.["proposal.site"],
               )}
               geojsonBuffer={30}
               drawMode

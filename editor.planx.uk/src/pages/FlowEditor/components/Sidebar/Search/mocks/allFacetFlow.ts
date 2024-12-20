@@ -170,9 +170,8 @@ export const mockFlow: FlowGraph = {
     data: {
       title: ".",
       description: "<p>.</p>",
-      dataFieldArea: "property.boundary.area",
       hideFileUpload: false,
-      dataFieldBoundary: "property.boundary.site",
+      fn: "proposal.site",
       titleForUploading: "Elephant",
       descriptionForUploading: "<p>Panda</p>",
     },
@@ -610,9 +609,8 @@ export const mockDrawBoundaryResult: SearchResult<IndexedNode> = {
     data: {
       title: ".",
       description: "<p>.</p>",
-      dataFieldArea: "property.boundary.area",
       hideFileUpload: false,
-      dataFieldBoundary: "property.boundary.site",
+      fn: "proposal.site",
       titleForUploading: "Elephant",
       descriptionForUploading: "<p>Panda</p>",
     },

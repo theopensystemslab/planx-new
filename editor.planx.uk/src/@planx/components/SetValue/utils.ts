@@ -21,7 +21,7 @@ export const handleSetValue: HandleSetValue = ({
 }) => {
   // We do not amend values set at objects
   // These are internal exceptions we do not want to allow users to edit
-  // e.g. property.boundary.title
+  // e.g. property.boundary
   const isObject =
     typeof previousValues === "object" &&
     !Array.isArray(previousValues) &&

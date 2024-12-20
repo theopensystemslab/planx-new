@@ -481,7 +481,7 @@ function DateInput(props: ComponentProps) {
 
 function DrawBoundary(props: ComponentProps) {
   // check if the user drew a boundary, uploaded a file, or both (or neither if props.node.data?.hideFileUpload is triggered "on")
-  const geodata = props.userData?.data?.[props.node.data?.dataFieldBoundary];
+  const geodata = props.userData?.data?.[props.node.data?.fn];
   const locationPlan = props.userData?.data?.[PASSPORT_UPLOAD_KEY];
 
   const fileName = locationPlan ? locationPlan[0].url.split("/").pop() : "";
