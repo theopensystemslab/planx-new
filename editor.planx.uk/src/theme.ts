@@ -156,11 +156,17 @@ const getThemeOptions = ({
         fontSize: "3rem",
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
+        "@media (max-width: 500px)": {
+          fontSize: "2.125rem",
+        },
       },
       h2: {
         fontSize: "2.25rem",
         letterSpacing: SPACING_TIGHT,
         fontWeight: FONT_WEIGHT_BOLD,
+        "@media (max-width: 500px)": {
+          fontSize: "1.65rem",
+        },
       },
       h3: {
         fontSize: "1.5rem",
@@ -169,6 +175,9 @@ const getThemeOptions = ({
       h4: {
         fontSize: "1.188rem",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
+        "@media (min-width: 500px) and (max-width: 768px)": {
+          fontSize: "1.15rem !important",
+        },
       },
       h5: {
         fontSize: "1rem",
