@@ -448,6 +448,15 @@
           table:
             name: flow_document_templates
             schema: public
+    - name: lowcal_sessions
+      using:
+        manual_configuration:
+          column_mapping:
+            id: flow_id
+          insertion_order: null
+          remote_table:
+            name: lowcal_sessions
+            schema: public
     - name: operations
       using:
         foreign_key_constraint_on:
@@ -2468,7 +2477,7 @@
     name: temp_data_migrations_audit
     schema: public
   object_relationships:
-    - name: flows
+    - name: flow
       using:
         manual_configuration:
           column_mapping:
