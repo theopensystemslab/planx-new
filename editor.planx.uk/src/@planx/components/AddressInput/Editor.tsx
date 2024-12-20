@@ -9,7 +9,6 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { AddressInput, parseAddressInput } from "./model";
