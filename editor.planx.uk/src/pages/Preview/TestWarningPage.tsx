@@ -4,15 +4,15 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import React, { PropsWithChildren, useState } from "react";
 
 export const TestWarningPage = ({ children }: PropsWithChildren) => {
-  const [showChildren, setShowChildren] = useState(false);
+  const [hasAcknowledgedWarning, setHasAcknowledgedWarning] = useState(false);
   return (
     <>
-      {showChildren ? (
+      {hasAcknowledgedWarning ? (
         children
       ) : (
         <Box width="100%">
           <Card
-            handleSubmit={() => setShowChildren(true)}
+            handleSubmit={() => setHasAcknowledgedWarning(true)}
             isTestWarningWrapper={true}
           >
             <CardHeader
