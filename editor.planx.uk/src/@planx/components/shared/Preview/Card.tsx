@@ -9,8 +9,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
 import { ApplicationPath } from "types";
 
-import NavigateToPublishedButton from "./NavigateToPublishedButton";
-import SaveResumeButton from "./SaveResumeButton";
+import OrNavigationButton from "./OrNavigationButton";
 
 interface Props {
   children: React.ReactNode;
@@ -18,6 +17,8 @@ interface Props {
   isTestWarningWrapper?: boolean;
   handleSubmit?: (data?: any) => void;
 }
+
+export type OrNavigationType = "save-resume" | "navigate-to-published";
 
 export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
   marginTop: theme.spacing(2),
@@ -48,6 +49,7 @@ const Card: React.FC<Props> = ({
   children,
   isValid = true,
   handleSubmit,
+  isTestWarningWrapper,
   ...props
 }) => {
   const theme = useTheme();
@@ -57,21 +59,33 @@ const Card: React.FC<Props> = ({
     state.breadcrumbs,
     state.flow,
   ]);
-
-  // Check if we have a Send node in our breadcrumbs
-  //   This is a better/more immediate proxy for "submitted" in the frontend because actual send events that populate lowcal_sessions.submitted_at are queued via Hasura
-  const hasSent = Object.keys(breadcrumbs).some(
-    (breadcrumbNodeId: string) => flow[breadcrumbNodeId]?.type === TYPES.Send,
-  );
-
-  const showSaveResumeButton =
-    path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
   const { track } = useAnalyticsTracking();
+
+  const defineNavigationType = (): OrNavigationType | undefined => {
+    // Check if we have a Send node in our breadcrumbs
+    //   This is a better/more immediate proxy for "submitted" in the frontend because actual send events that populate lowcal_sessions.submitted_at are queued via Hasura
+    const hasSent = Object.keys(breadcrumbs).some(
+      (breadcrumbNodeId: string) => flow[breadcrumbNodeId]?.type === TYPES.Send,
+    );
+
+    const showSaveResumeButton =
+      path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
+
+    if (showSaveResumeButton && !isTestWarningWrapper) {
+      return "save-resume";
+    }
+
+    if (!showSaveResumeButton && isTestWarningWrapper) {
+      return "navigate-to-published";
+    }
+  };
 
   useEffect(() => {
     // The Card component is only rendered when there's content the user will see
     if (visibleNode?.id) track(visibleNode?.id);
   }, []);
+
+  const orNavigationType = defineNavigationType();
 
   return (
     <Fade
@@ -103,8 +117,9 @@ const Card: React.FC<Props> = ({
                 Continue
               </Button>
             )}
-            {showSaveResumeButton && <SaveResumeButton />}
-            {props.isTestWarningWrapper && <NavigateToPublishedButton />}
+            {orNavigationType !== undefined && (
+              <OrNavigationButton type={orNavigationType} />
+            )}
           </Box>
         </InnerContainer>
       </Container>
