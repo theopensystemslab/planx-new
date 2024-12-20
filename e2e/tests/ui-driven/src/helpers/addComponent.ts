@@ -93,6 +93,10 @@ const createBaseComponent = async (
       await page.getByLabel("Show users a 'change' link to").click();
       break;
     case ComponentType.PlanningConstraints:
+      await page
+        .getByRole("row", { name: "via Planning Data: conservation-area" })
+        .locator("span")
+        .click();
       break;
     case ComponentType.DrawBoundary:
       break;

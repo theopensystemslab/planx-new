@@ -42,12 +42,11 @@ export const Basic = {
     ## You will be contacted
     - if there is anything missing from the information you have provided so far
     - if any additional information is required
-    - to arrange a site visit, if required
-    - to inform you whether a certificate has been granted or not`,
+    - to arrange a site visit, if required`,
     contactInfo: `
-      You can contact us at <em>planning@lambeth.gov.uk</em>
+      You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
       <br/><br/>
-      What did you think of this service? Please give us your feedback using the link in the footer below.
+      <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>
     `,
     data: [],
   },

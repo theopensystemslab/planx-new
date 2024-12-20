@@ -5,7 +5,8 @@ CREATE TEMPORARY TABLE sync_teams (
   slug text,
   created_at timestamptz,
   updated_at timestamptz,
-  domain text
+  domain text,
+  metabase_id integer
 );
 
 \copy sync_teams FROM '/tmp/teams.csv' WITH (FORMAT csv, DELIMITER ';');
