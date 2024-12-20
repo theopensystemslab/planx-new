@@ -90,17 +90,13 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
       </InputRow>
     )}
     <FlagsSelect
-      value={
-        Array.isArray(props.value.data.flag)
-          ? props.value.data.flag
-          : [props.value.data.flag]
-      }
+      value={props.value.data.flags}
       onChange={(ev) => {
         props.onChange({
           ...props.value,
           data: {
             ...props.value.data,
-            flag: ev,
+            flags: ev,
           },
         });
       }}

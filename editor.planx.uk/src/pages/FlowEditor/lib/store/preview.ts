@@ -414,11 +414,8 @@ export const previewStore: StateCreator<
         }));
         const hidden = !selections.some(
           (selection) =>
-            selection.data?.flag &&
-            // Account for both new flag values (array) and legacy flag value (string)
-            ((Array.isArray(selection.data.flag) &&
-              selection.data.flag.includes(flag?.value)) ||
-              selection.data.flag === flag?.value),
+            selection.data?.flags &&
+            selection.data.flags.includes(flag?.value)
         );
 
         return {
@@ -934,16 +931,10 @@ const collectedFlagValuesByCategory = (
     if (breadcrumb.answers) {
       breadcrumb.answers.forEach((answerId) => {
         const node = flow[answerId];
-        // Account for both new flag values (array) and legacy flag value (string)
-        if (node.data?.flag && Array.isArray(node.data.flag)) {
-          node.data.flag.forEach((flag) => {
+        if (node.data?.flags) {
+          node.data.flags.forEach((flag: Flag["value"]) => {
             if (possibleFlagValues.includes(flag)) collectedFlags.push(flag);
           });
-        } else if (
-          node.data?.flag &&
-          possibleFlagValues.includes(node.data.flag)
-        ) {
-          collectedFlags.push(node.data.flag);
         }
       });
     }

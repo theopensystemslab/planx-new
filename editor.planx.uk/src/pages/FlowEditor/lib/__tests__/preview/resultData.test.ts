@@ -143,7 +143,7 @@ const flow: Store.Flow = {
   },
   MaterialOptionNo: {
     data: {
-      flag: ["MCOU_FALSE", "NO_APP_REQUIRED"],
+      flags: ["MCOU_FALSE", "NO_APP_REQUIRED"],
       text: "No",
     },
     type: 200,
@@ -156,7 +156,7 @@ const flow: Store.Flow = {
   },
   ListedBuildingOptionNo: {
     data: {
-      flag: ["LB-NOT_REQUIRED"],
+      flags: ["LB-NOT_REQUIRED"],
       text: "No",
     },
     type: 200,
@@ -205,14 +205,14 @@ const flow: Store.Flow = {
   },
   MaterialOptionYes: {
     data: {
-      flag: ["MCOU_TRUE", "PLANNING_PERMISSION_REQUIRED"],
+      flags: ["MCOU_TRUE", "PLANNING_PERMISSION_REQUIRED"],
       text: "Yes",
     },
     type: 200,
   },
   ListedBuildingOptionYes: {
     data: {
-      flag: ["PLANNING_PERMISSION_REQUIRED", "LB-REQUIRED"],
+      flags: ["PLANNING_PERMISSION_REQUIRED", "LB-REQUIRED"],
       text: "Yes",
     },
     type: 200,
