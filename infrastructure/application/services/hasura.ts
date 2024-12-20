@@ -82,7 +82,7 @@ export const createHasuraService = async ({
           }],
           healthCheck: {
             // hasuraProxy health depends on hasura health
-            command: ["CMD-SHELL", `curl --head http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
+            command: ["CMD-SHELL", `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
             interval: 15,
             timeout: 3,
             retries: 3,
