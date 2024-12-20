@@ -12,7 +12,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import type { Calculate } from "./model";
@@ -104,8 +103,6 @@ export default function Component(props: Props) {
     }
   }, [formik.values.formula]);
 
-  const schema = useStore().getFlowSchema()?.nodes;
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -130,7 +127,6 @@ export default function Component(props: Props) {
         <ModalSectionContent title="Output">
           <DataFieldAutocomplete
             required
-            schema={schema}
             value={formik.values.output}
             onChange={(value) => formik.setFieldValue("output", value)}
           />

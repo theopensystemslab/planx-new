@@ -13,7 +13,6 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { Option, parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
@@ -110,8 +109,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
     }, 50);
   }, []);
 
-  const schema = useStore().getFlowSchema()?.nodes;
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -143,7 +140,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
               />
             </InputRow>
             <DataFieldAutocomplete
-              schema={schema}
               value={formik.values.fn}
               onChange={(value) => formik.setFieldValue("fn", value)}
             />

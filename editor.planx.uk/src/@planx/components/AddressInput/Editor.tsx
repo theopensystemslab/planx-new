@@ -30,8 +30,6 @@ export default function AddressInputComponent(props: Props): FCReturn {
     validate: () => { },
   });
 
-  const schema = useStore().getFlowSchema()?.nodes;
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -58,7 +56,6 @@ export default function AddressInputComponent(props: Props): FCReturn {
           </InputRow>
           <DataFieldAutocomplete
             required
-            schema={schema}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
           />

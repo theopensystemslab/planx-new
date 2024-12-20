@@ -13,7 +13,6 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
@@ -94,8 +93,6 @@ function ListComponent(props: Props) {
     validateOnChange: false,
   });
 
-  const dataFieldSchema = useStore().getFlowSchema()?.nodes;
-
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -120,7 +117,6 @@ function ListComponent(props: Props) {
           </InputRow>
           <DataFieldAutocomplete
             required
-            schema={dataFieldSchema}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
           />

@@ -17,7 +17,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio";
@@ -41,8 +40,6 @@ function MapAndLabelComponent(props: Props) {
       });
     },
   });
-
-  const dataFieldSchema = useStore().getFlowSchema()?.nodes;
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -72,7 +69,6 @@ function MapAndLabelComponent(props: Props) {
             </InputRow>
             <DataFieldAutocomplete
               required
-              schema={dataFieldSchema}
               value={formik.values.fn}
               onChange={(value) => formik.setFieldValue("fn", value)}
             />

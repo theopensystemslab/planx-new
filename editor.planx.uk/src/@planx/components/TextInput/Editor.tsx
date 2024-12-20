@@ -12,7 +12,6 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { parseTextInput, TextInput } from "./model";
@@ -32,8 +31,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
     },
     validate: () => { },
   });
-
-  const schema = useStore().getFlowSchema()?.nodes;
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
@@ -62,7 +59,6 @@ const TextInputComponent: React.FC<Props> = (props) => {
             />
           </InputRow>
           <DataFieldAutocomplete
-            schema={schema}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
           />

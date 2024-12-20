@@ -14,7 +14,6 @@ import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 
@@ -30,8 +29,6 @@ export default function NumberInputComponent(props: Props): FCReturn {
     },
     validate: () => {},
   });
-
-  const schema = useStore().getFlowSchema()?.nodes;
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -58,7 +55,6 @@ export default function NumberInputComponent(props: Props): FCReturn {
             />
           </InputRow>
           <DataFieldAutocomplete
-            schema={schema}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
           />

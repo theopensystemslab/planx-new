@@ -5,6 +5,7 @@ import {
 } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import isNull from "lodash/isNull";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo } from "react";
 import AutocompleteInput from "ui/shared/AutocompleteInput";
 import InputRow from "ui/shared/InputRow";
@@ -33,7 +34,8 @@ const renderOptions: AutocompleteProps<
 const filter = createFilterOptions<string>();
 
 export const DataFieldAutocomplete: React.FC<Props> = (props) => {
-  const { value: initialValue, schema: options = [] } = props;
+  const defaultSchema = useStore().getFlowSchema()?.nodes || [];
+  const { value: initialValue, schema: options = defaultSchema } = props;
 
   const value: string | undefined = useMemo(
     () => options?.find((option) => option === initialValue),
