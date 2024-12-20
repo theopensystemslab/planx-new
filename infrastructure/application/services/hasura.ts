@@ -60,6 +60,10 @@ export const createHasuraService = async ({
     deploymentMaximumPercent: 200,
     // extend service-level health check grace period to match hasura server migrations timeout
     healthCheckGracePeriodSeconds: 600,
+    deploymentCircuitBreaker: {
+      enable: true,
+      rollback: true,
+    },
     taskDefinitionArgs: {
       logGroup: new aws.cloudwatch.LogGroup("hasura", {
         namePrefix: "hasura",
