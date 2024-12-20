@@ -55,12 +55,14 @@ const createBaseComponent = async (
       break;
     case ComponentType.AddressInput:
       await page.getByPlaceholder("Title").fill(title || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
         .fill(options?.[0] || "");
       break;
     case ComponentType.ContactInput:
       await page.getByPlaceholder("Title").fill(title || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
         .fill(options?.[0] || "");
@@ -112,18 +114,21 @@ const createBaseComponent = async (
       }
       break;
     case ComponentType.FileUpload:
+      await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
         .fill(options?.[0] || "");
       break;
     case ComponentType.FileUploadAndLabel:
       await page.getByPlaceholder("File type").fill(options?.[0] || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
         .fill(options?.[1] || "");
       break;
     case ComponentType.List:
       await page.getByPlaceholder("Title").fill(title || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
         .fill(options?.[0] || "");
@@ -387,6 +392,7 @@ async function createComponentOptionsWithDataValues(
   for (const option of options) {
     await page.locator("button").filter({ hasText: "add new" }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
+    await page.getByRole("combobox", { name: "Data field" }).click();
     await page
       .getByRole("combobox", { name: "Data field" })
       .nth(index)
