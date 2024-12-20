@@ -187,7 +187,9 @@ export const createQuestionWithDataFieldOptions = async (
   await locatingNode.click();
   await page.getByRole("dialog").waitFor();
   await page.getByPlaceholder("Text").fill(questionText);
+  await page.getByRole("combobox", { name: "Data field" }).click();
   await page.getByRole("combobox", { name: "Data field" }).fill(dataField);
+  await page.getByRole("combobox", { name: "Data field" }).press("Enter");
   await createComponentOptionsWithDataValues(page, options);
   await page.locator('button[form="modal"][type="submit"]').click();
 };
@@ -392,11 +394,15 @@ async function createComponentOptionsWithDataValues(
   for (const option of options) {
     await page.locator("button").filter({ hasText: "add new" }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option.optionText);
-    await page.getByRole("combobox", { name: "Data field" }).click();
+    await page.getByRole("combobox", { name: "Data field" }).nth(index).click();
     await page
       .getByRole("combobox", { name: "Data field" })
       .nth(index)
       .fill(option.dataValue);
+    await page
+      .getByRole("combobox", { name: "Data field" })
+      .nth(index)
+      .press("Enter");
     index++;
   }
 }
