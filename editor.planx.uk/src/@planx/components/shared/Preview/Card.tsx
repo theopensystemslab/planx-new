@@ -44,6 +44,7 @@ const InnerContainer = styled(Box)(({ theme }) => ({
  * @param {object} props Component props
  * @param {bool} props.handleSubmit if included then show the Continue button
  * @param {bool} props.isValid if falsey then disable Continue button, otherwise enable
+ * @param {bool} props.isTestWarningWrapper if truthy then show navigate to publish Or button
  */
 const Card: React.FC<Props> = ({
   children,
