@@ -34,8 +34,10 @@ const getExternalPortals = async () => {
         flows(order_by: { slug: asc }) {
           id
           slug
+          name
           team {
             slug
+            name
           }
         }
       }
@@ -48,11 +50,21 @@ const getExternalPortals = async () => {
         flow.team &&
         !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`),
     )
-    .map(({ id, team, slug }: Flow) => ({
+    .map(({ id, team, slug, name }: Flow) => ({
       id,
-      text: [team.slug, slug].join("/"),
+      name,
+      slug,
+      team: team.name,
     }))
-    .sort(sortFlows);
+    .sort((a: Flow, b: Flow) => {
+      if (a.team > b.team) {
+        return 1;
+      } else if (b.team > a.team) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
 };
 
 const newNode = route(async (req) => {
