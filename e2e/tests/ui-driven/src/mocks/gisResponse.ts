@@ -1,5 +1,6 @@
 import { expect, Page } from "@playwright/test";
-import { mockPropertyConstraints, mockRoadData } from "./geospatialMocks";
+import { mockRoadData } from "./geospatialMocks";
+import propertyConstraintsResponse from "./propertyConstraintResponse.json";
 
 export async function setupGISMockResponse(page: Page) {
   const gisDigitalLandEndpoint = "**/gis/E2E?geom*";
@@ -8,7 +9,7 @@ export async function setupGISMockResponse(page: Page) {
     expect(urlContainsConstraints).toEqual(true);
     await route.fulfill({
       status: 200,
-      body: JSON.stringify(mockPropertyConstraints),
+      body: JSON.stringify(propertyConstraintsResponse),
     });
   });
 }
