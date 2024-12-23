@@ -23,6 +23,11 @@ vi.mock("../../file/service/uploadFile.js", () => ({
 
 vi.mock("../../client/index.js");
 
+// Mock the Metabase client which also relies on Axios which these tests need to mock
+vi.mock("../../analytics/metabase/shared/client.js", () => ({
+  createMetabaseClient: vi.fn(),
+}));
+
 vi.mock("axios", () => ({
   default: vi.fn(),
 }));
