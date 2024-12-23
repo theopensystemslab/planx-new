@@ -1,4 +1,3 @@
-import { createMetabaseClient } from "../shared/client.js";
 import type { GetCollectionResponse } from "./types.js";
 import { $metabase } from "../shared/client.js";
 

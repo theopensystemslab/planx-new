@@ -1,5 +1,5 @@
 import { updateMetabaseId } from "./updateMetabaseId.js";
-import type { NewCollectionParams, MetabaseCollectionParams } from "./types.js";
+import type { NewCollectionParams } from "./types.js";
 import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
@@ -10,27 +10,23 @@ import { createCollection } from "./createCollection.js";
  * @params `slug` is required, but `description` and `parent_id` are optional.
  * @returns `response.data`, so use dot notation to access `id` or `parent_id`.
  */
-export async function createTeamCollection(
-  params: NewCollectionParams,
-): Promise<number> {
+export async function createTeamCollection({
+  slug,
+  parentId,
+  description,
+}: NewCollectionParams): Promise<number> {
   try {
-    const {
-      metabaseId,
-      name,
-      id: teamId,
-    } = await getTeamIdAndMetabaseId(params.slug);
+    const { metabaseId, name, id: teamId } = await getTeamIdAndMetabaseId(slug);
 
     if (metabaseId) {
       return metabaseId;
     }
 
-    const { slug, ...rest } = params;
-    const metabaseParams = {
+    const newMetabaseId = await createCollection({
       name,
-      ...rest,
-    } as const;
-
-    const newMetabaseId = await createCollection(metabaseParams);
+      parentId,
+      description,
+    });
 
     await updateMetabaseId(teamId, newMetabaseId);
     return newMetabaseId;
