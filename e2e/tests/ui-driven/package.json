@@ -12,7 +12,7 @@
     "axios": "^1.7.4",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
-    "graphql": "^16.9.0",
+    "graphql": "^16.10.0",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
