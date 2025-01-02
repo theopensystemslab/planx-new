@@ -1,11 +1,11 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { Props } from "../types";
+import { PublicChecklistProps } from "../types";
 import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
 import { VisibleChecklist } from "./components/VisibleChecklist";
 
-const ChecklistComponent: React.FC<Props> = (props) => {
+const ChecklistComponent: React.FC<PublicChecklistProps> = (props) => {
   const autoAnswerableOptions = useStore(
     (state) => state.autoAnswerableOptions
   );

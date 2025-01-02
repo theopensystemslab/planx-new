@@ -1,4 +1,4 @@
-import { BaseNodeData, Option } from "../shared";
+import { BaseNodeData } from "../shared";
 import { PublicProps } from "../shared/types";
 import type { Category, Checklist } from "./model";
 
@@ -18,4 +18,4 @@ export interface ChecklistProps extends Checklist {
   };
 }
 
-export type Props = PublicProps<Checklist>;
+export type PublicChecklistProps = PublicProps<Checklist>;
