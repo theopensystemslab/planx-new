@@ -398,9 +398,7 @@ async function createComponentOptionsWithDataValues(
     await page.locator("button").filter({ hasText: "add new" }).click();
     await page.getByPlaceholder("Option").last().fill(option.optionText);
     await page.getByRole("combobox", { name: "Data field" }).last().click();
-    await page
-      .getByRole("option", { name: /option.dataValue/ })
-      .click();
+    await page.getByRole("option", { name: /option.dataValue/ }).click();
   }
 }
 
