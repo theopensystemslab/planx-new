@@ -399,7 +399,8 @@ async function createComponentOptionsWithDataValues(
     await page.getByPlaceholder("Option").last().fill(option.optionText);
     await page.getByRole("combobox", { name: "Data field" }).last().click();
     await page
-      .getByRole("option", { name: option.dataValue, exact: true })
+      // Check for existing schema values first, fallback to option for adding new data value to the schema
+      .getByRole("option", { name: option.dataValue || `Add ${option.dataValue}`, exact: true })
       .click();
   }
 }
