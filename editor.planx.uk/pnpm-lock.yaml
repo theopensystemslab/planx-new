@@ -48,8 +48,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#a7ec46d
-    version: github.com/theopensystemslab/planx-core/a7ec46d(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#d004278
+    version: github.com/theopensystemslab/planx-core/d004278(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -14494,8 +14494,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zod@3.24.0:
-    resolution: {integrity: sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==}
+  /zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
   /zstddec@0.1.0:
@@ -14523,9 +14523,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/a7ec46d(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a7ec46d}
-    id: github.com/theopensystemslab/planx-core/a7ec46d
+  github.com/theopensystemslab/planx-core/d004278(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d004278}
+    id: github.com/theopensystemslab/planx-core/d004278
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14553,7 +14553,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.31.0
       uuid: 11.0.3
-      zod: 3.24.0
+      zod: 3.24.1
     transitivePeerDependencies:
       - '@types/react'
       - encoding

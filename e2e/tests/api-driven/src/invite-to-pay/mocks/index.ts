@@ -5,8 +5,8 @@ import type {
   Node,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import flow from "./flow.json" assert { type: "json" };
-import session from "./session.json" assert { type: "json" };
+import flow from "./flow.json" with { type: "json" };
+import session from "./session.json" with { type: "json" };
 
 export const mockBreadcrumbs = session.data?.breadcrumbs as Breadcrumbs;
 

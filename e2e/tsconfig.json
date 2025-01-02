@@ -3,16 +3,19 @@
     "allowJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2021", "DOM"],
-    "module": "commonjs",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "rootDir": "tests",
     "skipLibCheck": true,
     "strict": true,
     "noImplicitAny": false,
     "target": "es2021",
-    "noEmit": true
+    "noEmit": true,
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
   },
   "exclude": ["node_modules"]
 }

@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#a7ec46d
-    version: github.com/theopensystemslab/planx-core/a7ec46d
+    specifier: git+https://github.com/theopensystemslab/planx-core#d004278
+    version: github.com/theopensystemslab/planx-core/d004278
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@22.10.1)(typescript@5.4.3)
@@ -2092,12 +2092,12 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /zod@3.24.0:
-    resolution: {integrity: sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==}
+  /zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/a7ec46d:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a7ec46d}
+  github.com/theopensystemslab/planx-core/d004278:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d004278}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2125,7 +2125,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.30.2
       uuid: 11.0.3
-      zod: 3.24.0
+      zod: 3.24.1
     transitivePeerDependencies:
       - '@types/react'
       - encoding

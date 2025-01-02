@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#a7ec46d
-    version: github.com/theopensystemslab/planx-core/a7ec46d
+    specifier: git+https://github.com/theopensystemslab/planx-core#d004278
+    version: github.com/theopensystemslab/planx-core/d004278
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -38,8 +38,8 @@ dependencies:
 
 devDependencies:
   '@playwright/test':
-    specifier: ^1.49.0
-    version: 1.49.0
+    specifier: ^1.49.1
+    version: 1.49.1
   '@types/geojson':
     specifier: ^7946.0.14
     version: 7946.0.14
@@ -639,12 +639,12 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  /@playwright/test@1.49.0:
-    resolution: {integrity: sha512-DMulbwQURa8rNIQrf94+jPJQ4FmOVdpE5ZppRNvWVjvhC+6sOeo28r8MgIpQRYouXRtt/FCCXU7zn20jnHR4Qw==}
+  /@playwright/test@1.49.1:
+    resolution: {integrity: sha512-Ky+BVzPz8pL6PQxHqNRW1k3mIyv933LML7HktS8uik0bUXNCdPhoS/kLihiO1tMf/egaJb4IutXd7UywvXEW+g==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      playwright: 1.49.0
+      playwright: 1.49.1
     dev: true
 
   /@popperjs/core@2.11.8:
@@ -2055,18 +2055,18 @@ packages:
     engines: {node: '>=12'}
     dev: false
 
-  /playwright-core@1.49.0:
-    resolution: {integrity: sha512-R+3KKTQF3npy5GTiKH/T+kdhoJfJojjHESR1YEWhYuEKRVfVaxH3+4+GvXE5xyCngCxhxnykk0Vlah9v8fs3jA==}
+  /playwright-core@1.49.1:
+    resolution: {integrity: sha512-BzmpVcs4kE2CH15rWfzpjzVGhWERJfmnXmniSyKeRZUs9Ws65m+RGIi7mjJK/euCegfn3i7jvqWeWyHe9y3Vgg==}
     engines: {node: '>=18'}
     hasBin: true
     dev: true
 
-  /playwright@1.49.0:
-    resolution: {integrity: sha512-eKpmys0UFDnfNb3vfsf8Vx2LEOtflgRebl0Im2eQQnYMA4Aqd+Zw8bEOB+7ZKvN76901mRnqdsiOGKxzVTbi7A==}
+  /playwright@1.49.1:
+    resolution: {integrity: sha512-VYL8zLoNTBxVOrJBbDuRgDWa3i+mfQgDTrL8Ah9QXZ7ax4Dsj0MSq5bYgytRnDVVe+njoKnfsYkH3HzqVj5UZA==}
     engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      playwright-core: 1.49.0
+      playwright-core: 1.49.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
@@ -2597,12 +2597,12 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  /zod@3.24.0:
-    resolution: {integrity: sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==}
+  /zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/a7ec46d:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a7ec46d}
+  github.com/theopensystemslab/planx-core/d004278:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d004278}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2630,7 +2630,7 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.31.0
       uuid: 11.0.3
-      zod: 3.24.0
+      zod: 3.24.1
     transitivePeerDependencies:
       - '@types/react'
       - encoding

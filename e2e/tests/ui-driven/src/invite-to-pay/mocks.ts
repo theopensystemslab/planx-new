@@ -4,8 +4,8 @@ import {
   PaymentRequest,
   SessionData,
 } from "@opensystemslab/planx-core/types";
-import { TEST_EMAIL } from "../helpers/globalHelpers";
-import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
+import { TEST_EMAIL } from "../helpers/globalHelpers.js";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow.js";
 
 export const mockPaymentRequest: Partial<PaymentRequest> = {
   payeeEmail: TEST_EMAIL,
