@@ -10,7 +10,9 @@
     "test:debug": "DEBUG_LOG=true pnpm test",
     "lint": "eslint './tests/**/*.{js,ts}' && prettier -c ./tests",
     "lint:fix": "eslint --fix './tests/**/*.{js,ts}' && prettier -w ./tests",
-    "check": "tsc && pnpm lint",
+    "check": "pnpm check:api && pnpm check:ui && pnpm lint",
+    "check:api": "tsc --project './tests/api-driven/tsconfig.json' && pnpm lint",
+    "check:ui": "tsc --project './tests/ui-driven/tsconfig.json' && pnpm lint",
     "postinstall": "cd tests/ui-driven && pnpm install && cd ../api-driven && pnpm install",
     "prepare": "cd .. && husky install e2e/.husky"
   },

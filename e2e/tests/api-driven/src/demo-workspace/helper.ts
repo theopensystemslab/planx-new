@@ -1,5 +1,5 @@
-import gql from "graphql-tag";
-import { $admin } from "../client";
+import { gql } from "graphql-tag";
+import { $admin } from "../client.js";
 import { Team, User } from "@opensystemslab/planx-core/types";
 import { UUID } from "crypto";
 

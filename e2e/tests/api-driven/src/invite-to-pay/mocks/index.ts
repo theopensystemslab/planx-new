@@ -5,14 +5,14 @@ import type {
   Node,
 } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
-import flow from "./flow.json";
-import session from "./session.json";
+import flow from "./flow.json" assert { type: "json" };
+import session from "./session.json" assert { type: "json" };
 
 export const mockBreadcrumbs = session.data?.breadcrumbs as Breadcrumbs;
 
 export const mockPassport = session.data?.passport as Passport;
 
-export const inviteToPayFlowGraph = flow.data as FlowGraph;
+export const inviteToPayFlowGraph = flow?.data as FlowGraph;
 
 export function sendNodeWithDestination(destination: string): Node {
   return {

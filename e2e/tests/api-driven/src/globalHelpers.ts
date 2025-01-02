@@ -1,5 +1,9 @@
-import { TEST_EMAIL } from "../../ui-driven/src/helpers/globalHelpers";
-import { $admin } from "./client";
+import { $admin } from "./client.js";
+
+// Gov.uk Notify requests testing service use smoke test email addresses
+// see https://docs.notifications.service.gov.uk/rest-api.html#smoke-testing
+export const TEST_EMAIL =
+  "simulate-delivered@notifications.service.gov.uk" as const;
 
 export function createTeam(
   args?: Partial<Parameters<typeof $admin.team.create>[0]>,
