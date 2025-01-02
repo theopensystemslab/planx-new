@@ -9,8 +9,8 @@ dependencies:
     specifier: ^9.3.0
     version: 9.3.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#f2f555b
-    version: github.com/theopensystemslab/planx-core/f2f555b
+    specifier: git+https://github.com/theopensystemslab/planx-core#a7ec46d
+    version: github.com/theopensystemslab/planx-core/a7ec46d
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -2808,8 +2808,8 @@ packages:
     resolution: {integrity: sha512-Hz+wiY8yD0VLA2k/+nsg2Abez674dDGTai33SwNvMPuf9uIrBC9eFgIMQxBBbHFxVXi8W+5nX9DcAh9YNSQm/w==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/f2f555b:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f2f555b}
+  github.com/theopensystemslab/planx-core/a7ec46d:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a7ec46d}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2830,7 +2830,7 @@ packages:
       graphql: 16.10.0
       graphql-request: 6.1.0(graphql@16.10.0)
       json-schema-to-typescript: 15.0.3
-      lodash: 4.17.21
+      lodash-es: 4.17.21
       marked: 15.0.5
       prettier: 3.4.2
       react: 18.3.1
