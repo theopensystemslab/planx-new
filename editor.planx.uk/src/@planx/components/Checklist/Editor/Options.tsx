@@ -5,10 +5,10 @@ import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
-import { Option } from "../../../shared";
-import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
-import { GroupedOptions } from "./GroupedOptions";
-import ChecklistOptionsEditor from "./OptionsEditor";
+import { Option } from "../../shared";
+import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";
+import { GroupedOptions } from "./components/GroupedOptions";
+import ChecklistOptionsEditor from "./components/OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
