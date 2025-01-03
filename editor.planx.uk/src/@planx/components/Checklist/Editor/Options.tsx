@@ -1,3 +1,4 @@
+import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { partition } from "lodash";
 import React from "react";
@@ -6,6 +7,7 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { Option } from "../../shared";
+import { useInitialOptions } from "../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";
 import { GroupedOptions } from "./components/GroupedOptions";
 import ChecklistOptionsEditor from "./components/OptionsEditor";
@@ -18,6 +20,9 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 
   const exclusiveOrOptionManagerShouldRender =
     hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptions.length;
+
+  const { schema, initialOptionVals } =
+    useInitialOptions(formik);
 
   return (
     <ModalSectionContent subtitle="Options">
@@ -46,7 +51,14 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               }) as Option
             }
             Editor={ChecklistOptionsEditor}
-            editorExtraProps={{ showValueField: !!formik.values.fn }}
+            editorExtraProps={{
+              showValueField: !!formik.values.fn,
+              schema: getOptionsSchemaByFn(
+                formik.values.fn,
+                schema,
+                initialOptionVals
+              ),
+            }}
           />
           {exclusiveOrOptionManagerShouldRender ? (
             <ExclusiveOrOptionManager

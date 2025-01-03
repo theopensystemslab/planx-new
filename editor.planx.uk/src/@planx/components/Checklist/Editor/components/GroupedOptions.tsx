@@ -2,6 +2,7 @@ import Delete from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -14,6 +15,7 @@ import InputRow from "ui/shared/InputRow";
 import { Option } from "../../../shared";
 import type { Group } from "../../model";
 import { partitionOptions } from "../../Public/helpers";
+import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
@@ -22,6 +24,8 @@ interface Props {
 }
 
 export const GroupedOptions = ({ formik }: Props) => {
+  const { schema, initialOptionVals } = useInitialOptions(formik);
+
   return (
     <Box>
       {formik.values.groupedOptions.map(
@@ -98,6 +102,11 @@ export const GroupedOptions = ({ formik }: Props) => {
                   },
                   groups: formik.values.groupedOptions.map(
                     (opt: Group<Option>) => opt.title
+                  ),
+                  schema: getOptionsSchemaByFn(
+                    formik.values.fn,
+                    schema,
+                    initialOptionVals
                   ),
                 }}
               />

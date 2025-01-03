@@ -1,11 +1,13 @@
 import Box from "@mui/material/Box";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
+import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
 import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { Option } from "../../../shared";
+import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
 
 interface Props {
   formik: FormikHookReturn;
@@ -22,6 +24,8 @@ export const ExclusiveOrOptionManager = ({
   groupIndex,
   grouped,
 }: Props) => {
+  const { schema, initialOptionVals } = useInitialOptions(formik);
+
   return (
     <Box mt={1}>
       <ErrorWrapper error={formik.errors.allRequired as string}>
@@ -55,7 +59,15 @@ export const ExclusiveOrOptionManager = ({
             } as Option;
           }}
           Editor={BaseOptionsEditor}
-          editorExtraProps={{ showValueField: !!formik.values.fn, groupIndex }}
+          editorExtraProps={{
+            showValueField: !!formik.values.fn,
+            groupIndex,
+            schema: getOptionsSchemaByFn(
+              formik.values.fn,
+              schema,
+              initialOptionVals
+            ),
+          }}
         />
       </ErrorWrapper>
     </Box>

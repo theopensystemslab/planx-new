@@ -1,6 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { setupOSMockResponse } from "../mocks/osPlacesResponse";
 import { findSessionId, getGraphQLClient } from "./context";
 import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers";
 import { TestContext } from "./types";
@@ -194,13 +193,6 @@ export async function submitCardDetails(page: Page) {
   await page.locator("#confirm").click();
 }
 
-export async function answerFindProperty(page: Page) {
-  await setupOSMockResponse(page);
-  await page.getByLabel("Postcode").fill("SW1 1AA");
-  await page.getByLabel("Select an address").click();
-  await page.getByRole("option").first().click();
-}
-
 export async function answerContactInput(
   page: Page,
   {
@@ -336,14 +328,14 @@ export async function answerListInput(
   await page
     .getByRole("combobox", { name: "What best describes this unit?" })
     .click();
-  await page.getByRole("option", { name: unitType }).click();
+  await page.getByRole("option", { name: unitType, exact: true }).click();
 
   await page
     .getByRole("combobox", {
       name: "What best describes the tenure of this unit?",
     })
     .click();
-  await page.getByRole("option", { name: tenure }).click();
+  await page.getByRole("option", { name: tenure, exact: true }).click();
 
   await page
     .getByLabel("How many bedrooms does this unit have?")

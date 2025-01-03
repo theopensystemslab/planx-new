@@ -12,10 +12,13 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import { useStore } from "pages/FlowEditor/lib/store";
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
+import { getOptionsSchemaByFn } from "../shared/utils";
 import QuestionOptionsEditor from "./OptionsEditor";
 
 interface Props {
@@ -71,6 +74,9 @@ export const Question: React.FC<Props> = (props) => {
     },
   });
 
+  const schema = useStore().getFlowSchema();
+  const initialOptionVals = formik.initialValues.options?.map((option) => option.data?.val);
+
   const focusRef = useRef<HTMLInputElement | null>(null);
 
   // horrible hack to remove focus from Rich Text Editor
@@ -110,18 +116,11 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <InputRow>
-              <Input
-                // required
-                format="data"
-                name="fn"
-                value={formik.values.fn}
-                placeholder="Data Field"
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors?.fn)}
-                errorMessage={formik.errors?.fn}
-              />
-            </InputRow>
+            <DataFieldAutocomplete
+              schema={schema?.nodes}
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
             <InputRow>
               <Switch
                 checked={formik.values.neverAutoAnswer}
@@ -152,7 +151,10 @@ export const Question: React.FC<Props> = (props) => {
               }) as Option
             }
             Editor={QuestionOptionsEditor}
-            editorExtraProps={{ showValueField: !!formik.values.fn }}
+            editorExtraProps={{ 
+              showValueField: !!formik.values.fn, 
+              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+            }}
           />
         </ModalSectionContent>
       </ModalSection>

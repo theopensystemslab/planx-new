@@ -12,6 +12,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { Option, parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
@@ -123,7 +124,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 inputRef={focusRef}
                 required
               />
-
               <ImgInput
                 img={formik.values.img}
                 onChange={(newUrl) => {
@@ -131,7 +131,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 }}
               />
             </InputRow>
-
             <InputRow>
               <RichTextInput
                 name="description"
@@ -140,18 +139,10 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-
-            <InputRow>
-              <Input
-                format="data"
-                name="fn"
-                value={formik.values.fn}
-                placeholder="Data Field"
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors?.fn)}
-                errorMessage={formik.errors?.fn}
-              />
-            </InputRow>
+            <DataFieldAutocomplete
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
             <InputRow>
               <Switch
                 checked={!!formik.values.groupedOptions}
@@ -198,7 +189,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           <Options formik={formik} />
         </ErrorWrapper>
       </ModalSection>
-
       <ModalFooter formik={formik} />
     </form>
   );
