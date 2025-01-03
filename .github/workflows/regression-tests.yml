@@ -35,8 +35,7 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          # node-version: ${{ vars.NODE_VERSION }}
-          node-version: 22.10.0
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -75,8 +74,7 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          # node-version: ${{ vars.NODE_VERSION }}
-          node-version: 22.10.0
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Setup .gitconfig
@@ -112,8 +110,7 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          # node-version: ${{ vars.NODE_VERSION }}
-          node-version: 22.10.0
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Setup .gitconfig
@@ -146,8 +143,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          # node-version: ${{ vars.NODE_VERSION }}
-          node-version: 22.10.0
+          node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Setup .gitconfig
