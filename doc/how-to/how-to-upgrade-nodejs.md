@@ -22,13 +22,15 @@ nvm use 22.10.0
 
 5. Fix any type issues flagged by the above change
 
-5. Update `README.md`
+6. Update references to `engines` in API `package.json` file
 
-6. Rebuild docker containers, test and run locally 
+7. Update `README.md`
 
-6. Upgrade the `NODE_VERSION` on GitHub (Settings > Secrets and variables > Actions > "Variables" tab > Update `NODE_VERSION` variable). This variable is used across our GitHub actions to define which Node version runs our CI services.
+8. Rebuild docker containers, test and run locally 
+
+9. Upgrade the `NODE_VERSION` on GitHub (Settings > Secrets and variables > Actions > "Variables" tab > Update `NODE_VERSION` variable). This variable is used across our GitHub actions to define which Node version runs our CI services.
 
 Please note - this update is immediate and will effect other open PRs. It's advisable to hardcode the desired Node version into the GitHub action files initially to test CI and regression tests, before making this change.
 
 ## planx-core
-Steps 4, 5 & 6 also apply here and should be updated shortly after.
+Steps 4, 5 & 9 also apply here and should be updated shortly after.
