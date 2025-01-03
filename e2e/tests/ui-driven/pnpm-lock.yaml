@@ -44,8 +44,8 @@ devDependencies:
     specifier: ^7946.0.14
     version: 7946.0.14
   '@types/node':
-    specifier: 18.16.1
-    version: 18.16.1
+    specifier: 22.10.5
+    version: 22.10.5
   eslint-plugin-playwright:
     specifier: ^0.20.0
     version: 0.20.0(eslint@8.56.0)
@@ -663,15 +663,10 @@ packages:
     resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
     dev: false
 
-  /@types/node@18.16.1:
-    resolution: {integrity: sha512-DZxSZWXxFfOlx7k7Rv4LAyiMroaxa3Ly/7OOzZO8cBNho0YzAi4qlbrx8W27JGqG57IgR/6J7r+nOJWw6kcvZA==}
-    dev: true
-
-  /@types/node@22.10.1:
-    resolution: {integrity: sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==}
+  /@types/node@22.10.5:
+    resolution: {integrity: sha512-F8Q+SeGimwOo86fiovQh8qiXfFEh2/ocYv7tU5pJ3EXMSSxk1Joj5wefpFK2fHTf/N6HKGSxIDBT9f3gCxXPkQ==}
     dependencies:
       undici-types: 6.20.0
-    dev: false
 
   /@types/parse-json@4.0.2:
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -1098,7 +1093,7 @@ packages:
     resolution: {integrity: sha512-XOtseSTRrkKN/sV5jNBqyLazyhNpWfaUhpuKc22cs+5DavNjRQvchnohb0g0S+x/96/D06U/i0/U/Gc4E5kwuQ==}
     engines: {node: '>=10'}
     dependencies:
-      '@types/node': 22.10.1
+      '@types/node': 22.10.5
       hash.js: 1.1.7
       jszip: 3.10.1
       nanoid: 5.0.9
@@ -2442,7 +2437,6 @@ packages:
 
   /undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
-    dev: false
 
   /undici@6.21.0:
     resolution: {integrity: sha512-BUgJXc752Kou3oOIuU1i+yZZypyZRqNPW0vqoMPl8VaoalSfeR0D8/t4iAS3yirs79SSMTxTag+ZC86uswv+Cw==}

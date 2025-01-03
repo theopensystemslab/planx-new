@@ -84,7 +84,8 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          # node-version: ${{ vars.NODE_VERSION }}
+          node-version: 22.10.0
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -127,7 +128,8 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          # node-version: ${{ vars.NODE_VERSION }}
+          node-version: 22.10.0
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
@@ -163,7 +165,8 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          # node-version: ${{ vars.NODE_VERSION }}
+          node-version: 22.10.0
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Setup .gitconfig
@@ -195,7 +198,8 @@ jobs:
       - uses: actions/setup-node@v4
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          # node-version: ${{ vars.NODE_VERSION }}
+          node-version: 22.10.0
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Setup .gitconfig
@@ -252,7 +256,8 @@ jobs:
           version: ${{ vars.PNPM_VERSION }}
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          # node-version: ${{ vars.NODE_VERSION }}
+          node-version: 22.10.0
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - run: pnpm install --frozen-lockfile
@@ -465,7 +470,8 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ vars.NODE_VERSION }}
+          # node-version: ${{ vars.NODE_VERSION }}
+          node-version: 22.10.0
           cache: "pnpm"
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Setup .gitconfig
