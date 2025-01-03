@@ -62,6 +62,8 @@ test.describe("Flow creation, publish and preview", () => {
   });
 
   test("Create a flow", async ({ browser }) => {
+    test.setTimeout(60_000);
+
     const page = await getTeamPage({
       browser,
       userId: context.user!.id!,
@@ -107,6 +109,8 @@ test.describe("Flow creation, publish and preview", () => {
   test("Publish and preview flow with geospatial components", async ({
     browser,
   }) => {
+    test.setTimeout(60_000);
+
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,

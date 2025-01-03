@@ -328,14 +328,14 @@ export async function answerListInput(
   await page
     .getByRole("combobox", { name: "What best describes this unit?" })
     .click();
-  await page.getByRole("option", { name: unitType }).click();
+  await page.getByRole("option", { name: unitType, exact: true }).click();
 
   await page
     .getByRole("combobox", {
       name: "What best describes the tenure of this unit?",
     })
     .click();
-  await page.getByRole("option", { name: tenure }).click();
+  await page.getByRole("option", { name: tenure, exact: true }).click();
 
   await page
     .getByLabel("How many bedrooms does this unit have?")

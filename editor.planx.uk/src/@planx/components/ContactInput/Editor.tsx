@@ -9,6 +9,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { ContactInput, parseContactInput } from "./model";
 
@@ -27,6 +28,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
     },
     validate: () => {},
   });
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -51,16 +53,11 @@ export default function ContactInputComponent(props: Props): FCReturn {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} />
