@@ -22,8 +22,7 @@ export const ChecklistItems = ({
   changeCheckbox,
   formik,
   exclusiveOptionIsChecked,
-}: Props) => {
-  return (
+}: Props) => (
     <>
       {nonExclusiveOptions.map((option: Option) =>
         layout === ChecklistLayout.Basic ? (
@@ -55,4 +54,3 @@ export const ChecklistItems = ({
       )}
     </>
   );
-};
