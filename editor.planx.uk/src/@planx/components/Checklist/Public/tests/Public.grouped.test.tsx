@@ -72,22 +72,33 @@ describe("Checklist Component - Grouped Layout", () => {
       />
     );
 
+    // user presses exclusive option in section 1
     await user.click(screen.getByText("Section 1"));
-
-    const exclusiveOptionInSection1 = screen.getByText("S1 Option1");
-    const nonExclusiveOptionInSection1 = screen.getByText("S1 Option2");
-
+    const exclusiveOptionInSection1 = screen.getByLabelText("S1 Option1");
+    const nonExclusiveOptionInSection1 = screen.getByLabelText("S1 Option2");
     await user.click(exclusiveOptionInSection1);
+
     expect(exclusiveOptionInSection1).toHaveAttribute("checked");
 
+     // user presses non-exclusive option in section 1, exclusive option should uncheck.
     await user.click(nonExclusiveOptionInSection1);
     expect(exclusiveOptionInSection1).not.toHaveAttribute("checked");
     expect(nonExclusiveOptionInSection1).toHaveAttribute("checked");
 
+     // user presses exclusive option in section 3
     await user.click(screen.getByText("Section 3"));
+    const exclusiveOptionInSection3 = screen.getByLabelText("S3 Option2");
+    await user.click(exclusiveOptionInSection3);
+
+    // options in other checklists should not be affected
+    expect(exclusiveOptionInSection3).toHaveAttribute("checked");
+    expect(nonExclusiveOptionInSection1).toHaveAttribute("checked");
+
     // user presses two non-exclusive options in this section
     await user.click(screen.getByText("S3 Option1"));
     await user.click(screen.getByText("S3 Option3"));
+
+    expect(exclusiveOptionInSection3).not.toHaveAttribute("checked");
 
     await user.click(screen.getByTestId("continue-button"));
 
@@ -161,5 +172,12 @@ describe("Checklist Component - Grouped Layout", () => {
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S2_Option1", "S2_Option2"],
     });
+    // expect(handleSubmit).toHaveBeenCalledWith({
+    //   answers: {
+    //     "Section 1": [],
+    //     "Section 2": ["S2_Option1", "S2_Option2"],
+    //     "Section 3": [],
+    //   },
+    // });
   });
 });

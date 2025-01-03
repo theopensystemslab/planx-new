@@ -1,6 +1,9 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import { checklistValidationSchema } from "@planx/components/Checklist/model";
+import {
+  getLayout,
+  groupedChecklistValidationSchema,
+} from "@planx/components/Checklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
@@ -10,7 +13,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
 import { PublicChecklistProps } from "../../../types";
-import { useSortedOptions } from "../../hooks/useSortedOptions";
 import { ChecklistLayout } from "../VisibleChecklist";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
 
@@ -29,25 +31,34 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
     id,
   } = props;
 
-  const formik = useFormik<{ checked: Array<string> }>({
+  const formik = useFormik<{ checked: Record<string, Array<string>> }>({
     initialValues: {
-      checked: previouslySubmittedData?.answers || [],
+      // e.g. { 'Section 1': [], 'Section 2': [ 'S2_Option2' ] }
+      checked:
+        groupedOptions?.reduce(
+          (acc, group) => ({
+            ...acc,
+            [group.title]:
+              previouslySubmittedData?.answers?.filter((id) =>
+                group.children.some((item) => item.id === id)
+              ) || [],
+          }),
+          {}
+        ) || {},
     },
     onSubmit: (values) => {
-      handleSubmit?.({ answers: values.checked });
+      const flattenedCheckedIds = Object.values(values.checked).flat();
+      handleSubmit?.({ answers: flattenedCheckedIds });
     },
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      checked: checklistValidationSchema(props),
+      checked: groupedChecklistValidationSchema(props),
     }),
   });
 
-  const { setCheckedFieldValue, layout } = useSortedOptions(
-    options,
-    groupedOptions,
-    formik
-  );
+  // TODO: do we need useSortedOptions ?
+  const layout = getLayout({ options, groupedOptions });
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -71,7 +82,6 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
               <GroupedChecklistOptions
                 groupedOptions={groupedOptions}
                 previouslySubmittedData={previouslySubmittedData}
-                setCheckedFieldValue={setCheckedFieldValue}
                 formik={formik}
               />
             )}

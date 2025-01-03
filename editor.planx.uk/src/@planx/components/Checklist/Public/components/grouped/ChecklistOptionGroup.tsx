@@ -1,24 +1,25 @@
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import { Group } from "@planx/components/Checklist/model";
 import { FormikProps } from "formik";
 import { partition } from "lodash";
 import React from "react";
 import { ExpandableListItem } from "ui/public/ExpandableList";
+import FormWrapper from "ui/public/FormWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
 import { Option } from "../../../../shared";
 import { toggleNonExclusiveCheckbox } from "../../helpers";
-import { useExclusiveOption } from "../../hooks/useExclusiveOption";
-import { ExclusiveChecklistItem } from "../ExclusiveChecklistItem";
+import { useExclusiveOptionInGroupedChecklists } from "../../hooks/useExclusiveOption";
 
 interface Props {
   group: Group<Option>;
   index: number;
   isExpanded: boolean;
   formik: FormikProps<{
-    checked: Array<string>;
+    checked: Record<string, Array<string>>;
   }>;
-  setCheckedFieldValue: (optionIds: string[]) => void;
   toggleGroup: (index: number) => void;
 }
 
@@ -27,7 +28,6 @@ export const ChecklistOptionGroup = ({
   index,
   isExpanded,
   formik,
-  setCheckedFieldValue,
   toggleGroup,
 }: Props) => {
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
@@ -35,20 +35,23 @@ export const ChecklistOptionGroup = ({
     (option: Option) => option.data.exclusive
   );
 
-  const { exclusiveOrOption, toggleExclusiveCheckbox } = useExclusiveOption(
-    exclusiveOptions,
-    formik
-  );
+  const { exclusiveOrOption, toggleExclusiveCheckbox } =
+    useExclusiveOptionInGroupedChecklists(
+      exclusiveOptions,
+      group.title,
+      formik
+    );
 
   const changeCheckbox = (id: string) => () => {
-    const currentCheckedIds = formik.values.checked;
+    const allCheckedIds = formik.values.checked;
+    const currentCheckedIds = allCheckedIds[group.title];
 
     const currentCheckboxIsExclusiveOption =
       exclusiveOrOption && id === exclusiveOrOption.id;
 
     if (currentCheckboxIsExclusiveOption) {
       const newCheckedIds = toggleExclusiveCheckbox(id);
-      setCheckedFieldValue(newCheckedIds);
+      formik.setFieldValue("checked", newCheckedIds);
       return;
     }
     const newCheckedIds = toggleNonExclusiveCheckbox(
@@ -56,7 +59,10 @@ export const ChecklistOptionGroup = ({
       currentCheckedIds,
       exclusiveOrOption
     );
-    setCheckedFieldValue(newCheckedIds);
+
+    allCheckedIds[group.title] = newCheckedIds;
+
+    formik.setFieldValue("checked", allCheckedIds);
   };
 
   return (
@@ -81,15 +87,26 @@ export const ChecklistOptionGroup = ({
             key={option.data.text}
             label={option.data.text}
             id={option.id}
-            checked={formik.values.checked.includes(option.id)}
+            checked={formik.values.checked[group.title].includes(option.id)}
           />
         ))}
         {exclusiveOrOption && (
-          <ExclusiveChecklistItem
-            exclusiveOrOption={exclusiveOrOption}
-            changeCheckbox={changeCheckbox}
-            formik={formik}
-          />
+          // Exclusive or option
+          <FormWrapper key={exclusiveOrOption.id}>
+            <Grid item xs={12} key={exclusiveOrOption.data.text}>
+              <Typography width={36} display="flex" justifyContent="center">
+                or
+              </Typography>
+              <ChecklistItem
+                onChange={changeCheckbox(exclusiveOrOption.id)}
+                label={exclusiveOrOption.data.text}
+                id={exclusiveOrOption.id}
+                checked={formik.values.checked[group.title].includes(
+                  exclusiveOrOption.id
+                )}
+              />
+            </Grid>
+          </FormWrapper>
         )}
       </Box>
     </ExpandableListItem>

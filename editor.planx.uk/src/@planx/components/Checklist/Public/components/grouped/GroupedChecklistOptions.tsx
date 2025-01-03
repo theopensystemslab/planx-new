@@ -13,14 +13,12 @@ import { ChecklistOptionGroup } from "./ChecklistOptionGroup";
 interface GroupedChecklistOptionsProps {
   groupedOptions: Group<Option>[];
   previouslySubmittedData: Store.UserData | undefined;
-  setCheckedFieldValue: (optionIds: string[]) => void;
-  formik: FormikProps<{ checked: Array<string> }>;
+  formik: FormikProps<{ checked: Record<string, Array<string>> }>;
 }
 
 export const GroupedChecklistOptions = ({
   groupedOptions,
   previouslySubmittedData,
-  setCheckedFieldValue,
   formik,
 }: GroupedChecklistOptionsProps) => {
   const { expandedGroups, toggleGroup } = useExpandedGroups(
@@ -42,7 +40,6 @@ export const GroupedChecklistOptions = ({
                 isExpanded={isExpanded}
                 index={index}
                 formik={formik}
-                setCheckedFieldValue={setCheckedFieldValue}
                 toggleGroup={toggleGroup}
               />
             );
