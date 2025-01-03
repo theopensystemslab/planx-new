@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
+  ChecklistLayout,
   getLayout,
   groupedChecklistValidationSchema,
 } from "@planx/components/Checklist/model";
@@ -14,7 +15,6 @@ import { object } from "yup";
 
 import { PublicChecklistProps } from "../../types";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
-import { ChecklistLayout } from "./VisibleChecklist";
 
 export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
   const {

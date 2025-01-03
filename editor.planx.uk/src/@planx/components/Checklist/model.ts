@@ -1,7 +1,6 @@
 import { array, object, string } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public/components/VisibleChecklist";
 
 export interface Group<T> {
   title: string;
@@ -28,6 +27,12 @@ export interface Checklist extends BaseNodeData {
 interface ChecklistExpandableProps {
   options?: Array<Option>;
   groupedOptions?: Array<Group<Option>>;
+}
+
+export enum ChecklistLayout {
+  Basic,
+  Grouped,
+  Images,
 }
 
 export const toggleExpandableChecklist = (

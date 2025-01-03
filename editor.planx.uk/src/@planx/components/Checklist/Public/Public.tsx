@@ -3,15 +3,22 @@ import React from "react";
 
 import { PublicChecklistProps } from "../types";
 import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
-import { VisibleChecklist } from "./components/VisibleChecklist";
+import { Checklist } from "./components/Checklist";
+import { GroupedChecklist } from "./components/GroupedChecklist";
 
 const ChecklistComponent: React.FC<PublicChecklistProps> = (props) => {
   const autoAnswerableOptions = useStore(
     (state) => state.autoAnswerableOptions
   );
+  const { groupedOptions, options } = props;
 
   if (props.neverAutoAnswer) {
-    return <VisibleChecklist {...props} />;
+    return (
+      <>
+        {groupedOptions && <GroupedChecklist {...props} />}
+        {options && <Checklist {...props} />}
+      </>
+    );
   }
 
   let idsThatCanBeAutoAnswered: string[] | undefined;
@@ -22,7 +29,12 @@ const ChecklistComponent: React.FC<PublicChecklistProps> = (props) => {
     );
   }
 
-  return <VisibleChecklist {...props} />;
+  return (
+    <>
+      {groupedOptions && <GroupedChecklist {...props} />}
+      {options && <Checklist {...props} />}
+    </>
+  );
 };
 
 export default ChecklistComponent;

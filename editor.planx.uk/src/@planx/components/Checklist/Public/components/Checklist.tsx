@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import { checklistValidationSchema } from "@planx/components/Checklist/model";
+import { ChecklistLayout, checklistValidationSchema } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -17,7 +17,7 @@ import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
-import { ChecklistLayout } from "./VisibleChecklist";
+
 
 export const Checklist: React.FC<PublicChecklistProps> = (props) => {
   const {

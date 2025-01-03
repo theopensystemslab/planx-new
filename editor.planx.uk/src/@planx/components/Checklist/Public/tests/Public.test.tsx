@@ -4,9 +4,13 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { ChecklistLayout } from "../components/VisibleChecklist";
+import { ChecklistLayout } from "../../model";
 import Checklist from "../Public";
-import { groupedOptions, groupedOptionsWithExclusiveOptions, options } from "./mockOptions";
+import {
+  groupedOptions,
+  groupedOptionsWithExclusiveOptions,
+  options,
+} from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 
 describe("Checklist Component - Grouped Layout", () => {
@@ -79,12 +83,12 @@ describe("Checklist Component - Grouped Layout", () => {
 
     expect(exclusiveOptionInSection1).toHaveAttribute("checked");
 
-     // user presses non-exclusive option in section 1, exclusive option should uncheck.
+    // user presses non-exclusive option in section 1, exclusive option should uncheck.
     await user.click(nonExclusiveOptionInSection1);
     expect(exclusiveOptionInSection1).not.toHaveAttribute("checked");
     expect(nonExclusiveOptionInSection1).toHaveAttribute("checked");
 
-     // user presses exclusive option in section 3
+    // user presses exclusive option in section 3
     await user.click(screen.getByText("Section 3"));
     const exclusiveOptionInSection3 = screen.getByLabelText("S3 Option2");
     await user.click(exclusiveOptionInSection3);
