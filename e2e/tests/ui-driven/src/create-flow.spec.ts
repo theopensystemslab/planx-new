@@ -233,7 +233,7 @@ test.describe("Flow creation, publish and preview", () => {
     await publishService(page);
   });
 
-  test("Can preview a published flow", async ({
+  test("Can preview a published flow with an external portal", async ({
     browser,
   }: {
     browser: Browser;
@@ -243,11 +243,16 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
+    await navigateToService(page, serviceProps.slug);
 
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
+
+    const previewLink = page.getByRole("link", {
+      name: "Open published service",
+    });
+    await expect(previewLink).toBeVisible();
 
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
@@ -275,6 +280,7 @@ test.describe("Flow creation, publish and preview", () => {
     });
     await clickContinue({ page });
 
+    // The external portal question has been flattened into the overall flow data structure and can be successfully navigated through
     await answerQuestion({
       page,
       title: externalPortalFlowData.title,

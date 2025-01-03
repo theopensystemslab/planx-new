@@ -58,14 +58,16 @@ const createBaseComponent = async (
       await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
-        .fill(options?.[0] || "");
+        .fill(options?.[0] || "proposal.address");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.ContactInput:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
-        .fill(options?.[0] || "");
+        .fill(options?.[0] || "proposal.contact");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.TaskList:
       await page.getByPlaceholder("Main Title").fill(title || "");
@@ -121,21 +123,24 @@ const createBaseComponent = async (
       await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
-        .fill(options?.[0] || "");
+        .fill(options?.[0] || "otherDocument");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.FileUploadAndLabel:
       await page.getByPlaceholder("File type").fill(options?.[0] || "");
       await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
-        .fill(options?.[1] || "");
+        .fill(options?.[1] || "otherDocument");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.List:
       await page.getByPlaceholder("Title").fill(title || "");
       await page.getByRole("combobox", { name: "Data field" }).click();
       await page
         .getByRole("combobox", { name: "Data field" })
-        .fill(options?.[0] || "");
+        .fill(options?.[0] || "proposal.list");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.Content:
       await page
