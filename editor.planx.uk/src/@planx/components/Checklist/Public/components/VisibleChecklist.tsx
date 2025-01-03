@@ -1,8 +1,8 @@
 import React from "react";
 
 import { PublicChecklistProps } from "../../types";
-import { GroupedChecklist } from "./grouped/GroupedChecklist";
-import { Checklist } from "./nonGrouped/Checklist";
+import { Checklist } from "./Checklist";
+import { GroupedChecklist } from "./GroupedChecklist";
 
 export enum ChecklistLayout {
   Basic,

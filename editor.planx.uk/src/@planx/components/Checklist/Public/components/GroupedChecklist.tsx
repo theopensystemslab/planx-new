@@ -12,9 +12,9 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { PublicChecklistProps } from "../../../types";
-import { ChecklistLayout } from "../VisibleChecklist";
+import { PublicChecklistProps } from "../../types";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
+import { ChecklistLayout } from "./VisibleChecklist";
 
 export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
   const {

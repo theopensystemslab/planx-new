@@ -11,13 +11,13 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { PublicChecklistProps } from "../../../types";
-import { toggleNonExclusiveCheckbox } from "../../helpers";
-import { useExclusiveOption } from "../../hooks/useExclusiveOption";
-import { useSortedOptions } from "../../hooks/useSortedOptions";
-import { ExclusiveChecklistItem } from "../ExclusiveChecklistItem";
-import { ChecklistLayout } from "../VisibleChecklist";
+import { PublicChecklistProps } from "../../types";
+import { toggleNonExclusiveCheckbox } from "../helpers";
+import { useExclusiveOption } from "../hooks/useExclusiveOption";
+import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
+import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
+import { ChecklistLayout } from "./VisibleChecklist";
 
 export const Checklist: React.FC<PublicChecklistProps> = (props) => {
   const {

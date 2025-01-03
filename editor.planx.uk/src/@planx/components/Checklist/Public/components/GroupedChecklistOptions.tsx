@@ -6,8 +6,8 @@ import React from "react";
 import { ExpandableList } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 
-import { Option } from "../../../../shared";
-import { useExpandedGroups } from "../../hooks/useExpandedGroups";
+import { Option } from "../../../shared";
+import { useExpandedGroups } from "../hooks/useExpandedGroups";
 import { ChecklistOptionGroup } from "./ChecklistOptionGroup";
 
 interface GroupedChecklistOptionsProps {
