@@ -4,9 +4,13 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { ChecklistLayout } from "../components/VisibleChecklist";
+import { ChecklistLayout } from "../../model";
 import Checklist from "../Public";
-import { groupedOptions, options } from "./mockOptions";
+import {
+  groupedOptions,
+  groupedOptionsWithExclusiveOptions,
+  options,
+} from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 
 describe("Checklist Component - Grouped Layout", () => {
@@ -55,6 +59,54 @@ describe("Checklist Component - Grouped Layout", () => {
 
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S1_Option1", "S3_Option1"],
+    });
+  });
+
+  it("handles exclusive Or options correctly", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <Checklist
+        allRequired={false}
+        description=""
+        text="home type?"
+        handleSubmit={handleSubmit}
+        groupedOptions={groupedOptionsWithExclusiveOptions}
+      />
+    );
+
+    // user presses exclusive option in section 1
+    await user.click(screen.getByText("Section 1"));
+    const exclusiveOptionInSection1 = screen.getByLabelText("S1 Option1");
+    const nonExclusiveOptionInSection1 = screen.getByLabelText("S1 Option2");
+    await user.click(exclusiveOptionInSection1);
+
+    expect(exclusiveOptionInSection1).toHaveAttribute("checked");
+
+    // user presses non-exclusive option in section 1, exclusive option should uncheck.
+    await user.click(nonExclusiveOptionInSection1);
+    expect(exclusiveOptionInSection1).not.toHaveAttribute("checked");
+    expect(nonExclusiveOptionInSection1).toHaveAttribute("checked");
+
+    // user presses exclusive option in section 3
+    await user.click(screen.getByText("Section 3"));
+    const exclusiveOptionInSection3 = screen.getByLabelText("S3 Option2");
+    await user.click(exclusiveOptionInSection3);
+
+    // options in other checklists should not be affected
+    expect(exclusiveOptionInSection3).toHaveAttribute("checked");
+    expect(nonExclusiveOptionInSection1).toHaveAttribute("checked");
+
+    // user presses two non-exclusive options in this section
+    await user.click(screen.getByText("S3 Option1"));
+    await user.click(screen.getByText("S3 Option3"));
+
+    expect(exclusiveOptionInSection3).not.toHaveAttribute("checked");
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalledWith({
+      answers: ["S1_Option2", "S3_Option1", "S3_Option3"],
     });
   });
 

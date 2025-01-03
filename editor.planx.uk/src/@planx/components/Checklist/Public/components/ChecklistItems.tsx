@@ -6,7 +6,7 @@ import React from "react";
 import FormWrapper from "ui/public/FormWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
-import { ChecklistLayout } from "./VisibleChecklist";
+import { ChecklistLayout } from "../../model";
 
 interface Props {
   nonExclusiveOptions: Option[];
@@ -42,12 +42,12 @@ export const ChecklistItems = ({
       ) : (
         <Grid item xs={12} sm={6} contentWrap={4} key={option.data.text}>
           <ImageButton
+            checkbox
             title={option.data.text}
             id={option.id}
             img={option.data.img}
             selected={formik.values.checked.includes(option.id)}
             onClick={changeCheckbox(option.id)}
-            checkbox
           />
         </Grid>
       )

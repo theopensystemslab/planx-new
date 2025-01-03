@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import { checklistValidationSchema } from "@planx/components/Checklist/model";
+import { ChecklistLayout, checklistValidationSchema } from "@planx/components/Checklist/model";
+import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
@@ -10,22 +11,15 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { Option } from "../../../shared";
-import { Props } from "../../types";
+import { PublicChecklistProps } from "../../types";
+import { toggleNonExclusiveCheckbox } from "../helpers";
 import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
-import { ChecklistItems } from "./../components/ChecklistItems";
-import { ExclusiveChecklistItem } from "./../components/ExclusiveChecklistItem";
-import { toggleNonExclusiveCheckbox } from "./../helpers";
-import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
+import { ChecklistItems } from "./ChecklistItems";
+import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 
-export enum ChecklistLayout {
-  Basic,
-  Grouped,
-  Images,
-}
 
-export const VisibleChecklist: React.FC<Props> = (props) => {
+export const Checklist: React.FC<PublicChecklistProps> = (props) => {
   const {
     description = "",
     groupedOptions,
@@ -118,14 +112,6 @@ export const VisibleChecklist: React.FC<Props> = (props) => {
             {exclusiveOrOption && (
               <ExclusiveChecklistItem
                 exclusiveOrOption={exclusiveOrOption}
-                changeCheckbox={changeCheckbox}
-                formik={formik}
-              />
-            )}
-            {groupedOptions && (
-              <GroupedChecklistOptions
-                groupedOptions={groupedOptions}
-                previouslySubmittedData={previouslySubmittedData}
                 changeCheckbox={changeCheckbox}
                 formik={formik}
               />

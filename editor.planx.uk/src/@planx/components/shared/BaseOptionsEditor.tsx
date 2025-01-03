@@ -5,8 +5,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option } from ".";
-import { FlagsSelect } from "./FlagsSelect";
 import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
+import { FlagsSelect } from "./FlagsSelect";
 
 export interface BaseOptionsEditorProps {
   value: Option;

@@ -1,7 +1,6 @@
-import { array } from "yup";
+import { array, object, string } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public/components/VisibleChecklist";
 
 export interface Group<T> {
   title: string;
@@ -28,6 +27,12 @@ export interface Checklist extends BaseNodeData {
 interface ChecklistExpandableProps {
   options?: Array<Option>;
   groupedOptions?: Array<Group<Option>>;
+}
+
+export enum ChecklistLayout {
+  Basic,
+  Grouped,
+  Images,
 }
 
 export const toggleExpandableChecklist = (
@@ -122,6 +127,44 @@ export const checklistValidationSchema = ({
           return true;
         }
         const allChecked = checked && checked.length === flatOptions.length;
+        return Boolean(allChecked);
+      },
+    });
+};
+
+export const groupedChecklistValidationSchema = ({
+  allRequired,
+  options,
+  groupedOptions,
+}: Checklist) => {
+  const flatOptions = getFlatOptions({ options, groupedOptions });
+
+  return object()
+    .shape(
+      Object.fromEntries(
+        groupedOptions?.map((group) => [group.title, array().of(string())]) ||
+          []
+      )
+    )
+    .required()
+    .test({
+      name: "atLeastOneChecked",
+      message: "Select at least one option",
+      test: (value: Record<string, string[]>) => {
+        const arrayOfArrays = Object.values(value || {});
+        return arrayOfArrays.some((arr) => arr.length > 0);
+      },
+    })
+    .test({
+      name: "notAllChecked",
+      message: "All options must be checked",
+      test: (checked?: Record<string, string[]>) => {
+        if (!allRequired) {
+          return true;
+        }
+        const allChecked =
+          checked &&
+          Object.values(checked).flat().length === flatOptions.length;
         return Boolean(allChecked);
       },
     });

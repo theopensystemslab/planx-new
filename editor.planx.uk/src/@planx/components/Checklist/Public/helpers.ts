@@ -1,4 +1,5 @@
 import { type Group } from "@planx/components/Checklist/model";
+import { partition } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { Option } from "../../shared";
@@ -59,4 +60,12 @@ export const toggleNonExclusiveCheckbox = (
     );
   }
   return newCheckedOptionIds;
+};
+
+export const partitionOptions = (options: Option[]): Option[][] => {
+  const [exclusiveOptions, nonExclusiveOptions] = partition(
+    options,
+    (option: Option) => option.data.exclusive
+  );
+  return [exclusiveOptions, nonExclusiveOptions];
 };
