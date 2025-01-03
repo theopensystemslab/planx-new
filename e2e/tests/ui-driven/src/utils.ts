@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import Axios from "axios";
 
 export const gqlAdmin = async (query, variables = {}) => {
@@ -35,7 +35,7 @@ export const getJWT = (userId) => {
     },
   };
 
-  return sign(data, process.env.JWT_SECRET);
+  return jwt.sign(data, process.env.JWT_SECRET!);
 };
 
 export const insertTeam = async (teamName) => {

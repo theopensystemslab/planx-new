@@ -10,7 +10,7 @@ import {
   waitForResponse,
   cleanup,
   setup,
-} from "./helpers";
+} from "./helpers.js";
 
 export class CustomWorld extends World {
   teamId!: number;

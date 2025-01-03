@@ -3,8 +3,8 @@ import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
-import { modifyFlow } from "./helpers/globalHelpers";
+} from "./helpers/context.js";
+import { modifyFlow } from "./helpers/globalHelpers.js";
 import {
   answerQuestion,
   clickContinue,
@@ -12,12 +12,12 @@ import {
   findQuestion,
   returnToSession,
   saveSession,
-} from "./helpers/userActions";
+} from "./helpers/userActions.js";
 import {
   modifiedSimpleSendFlow,
   simpleSendFlow,
-} from "./mocks/flows/save-and-return-flows";
-import { TestContext } from "./helpers/types";
+} from "./mocks/flows/save-and-return-flows.js";
+import { TestContext } from "./helpers/types.js";
 
 test.describe("Save and return", () => {
   let context: TestContext = {

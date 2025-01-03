@@ -7,16 +7,19 @@ import {
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
+} from "./helpers/context.js";
 import {
   cards,
   getSessionId,
   log,
   waitForPaymentResponse,
-} from "./helpers/globalHelpers";
-import { fillGovUkCardDetails, submitCardDetails } from "./helpers/userActions";
-import payFlow from "./mocks/flows/pay-flow.json";
-import { TestContext } from "./helpers/types";
+} from "./helpers/globalHelpers.js";
+import {
+  fillGovUkCardDetails,
+  submitCardDetails,
+} from "./helpers/userActions.js";
+import payFlow from "./mocks/flows/pay-flow.json" with { type: "json" };
+import { TestContext } from "./helpers/types.js";
 
 let context: TestContext = {
   ...contextDefaults,

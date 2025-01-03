@@ -1,5 +1,5 @@
 import { Browser, Page } from "@playwright/test";
-import { createAuthenticatedSession } from "./globalHelpers";
+import { createAuthenticatedSession } from "./globalHelpers.js";
 
 export async function getAdminPage({
   browser,

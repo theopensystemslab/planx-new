@@ -1,8 +1,8 @@
 import { When } from "@cucumber/cucumber";
-import { $admin } from "../../client";
+import { $admin } from "../../client.js";
 import { strict as assert } from "node:assert";
-import { getFlowBySlug, getTeamAndFlowsBySlug, getTeams } from "../helper";
-import { CustomWorld } from "./background_steps";
+import { getFlowBySlug, getTeamAndFlowsBySlug, getTeams } from "../helper.js";
+import { CustomWorld } from "./background_steps.js";
 
 When<CustomWorld>("I am in the {string} team", async function (this, teamSlug) {
   const team = await getTeamAndFlowsBySlug(this.demoClient, teamSlug);

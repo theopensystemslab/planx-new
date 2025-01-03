@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { osMapsStylesResponse } from "./osMapsMockData";
+import { osMapsStylesResponse } from "./osMapsMockData.js";
 
 export async function setupOSMapsStyles(page: Page) {
   const ordnanceSurveyMapsStyles = new RegExp(

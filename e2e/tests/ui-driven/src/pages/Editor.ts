@@ -28,9 +28,9 @@ import {
   createTaskList,
   createTextInput,
   createUploadAndLabel,
-} from "../helpers/addComponent";
-import { OptionWithDataValues } from "../helpers/types";
-import { selectedFlag } from "../helpers/globalHelpers";
+} from "../helpers/addComponent.js";
+import { OptionWithDataValues } from "../helpers/types.js";
+import { selectedFlag } from "../helpers/globalHelpers.js";
 
 export class PlaywrightEditor {
   readonly page: Page;

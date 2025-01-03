@@ -1,6 +1,6 @@
-import { sign } from "jsonwebtoken";
+import JWT from "jsonwebtoken";
 import { User, Role } from "@opensystemslab/planx-core/types";
-import { $admin } from "./client";
+import { $admin } from "./client.js";
 
 // This code is copied from api.planx.uk/modules/auth/service.ts
 
@@ -13,7 +13,7 @@ export const buildJWT = async (email: string): Promise<string | undefined> => {
     "https://hasura.io/jwt/claims": generateHasuraClaimsForUser(user),
   };
 
-  const jwt = sign(data, process.env.JWT_SECRET!);
+  const jwt = JWT.sign(data, process.env.JWT_SECRET!);
   return jwt;
 };
 

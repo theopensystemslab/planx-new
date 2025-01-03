@@ -1,8 +1,8 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import assert from "node:assert";
-import { TestContext } from "./types";
+import { TestContext } from "./types.js";
 
 export const contextDefaults: TestContext = {
   user: {
@@ -107,7 +107,7 @@ export async function tearDownTestContext() {
 
 export function generateAuthenticationToken(userId: string) {
   assert(process.env.JWT_SECRET);
-  return sign(
+  return jwt.sign(
     {
       sub: `${userId}`,
       "https://hasura.io/jwt/claims": {

@@ -3,18 +3,17 @@ import type {
   PaymentRequest,
 } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import gql from "graphql-tag";
+import { gql } from "graphql-tag";
 import { readFileSync } from "node:fs";
-import { TEST_EMAIL } from "../../../ui-driven/src/helpers/globalHelpers";
-import { $admin } from "../client";
-import { createTeam, createUser } from "../globalHelpers";
+import { $admin } from "../client.js";
+import { createTeam, createUser, TEST_EMAIL } from "../globalHelpers.js";
 import {
   inviteToPayFlowGraph,
   mockBreadcrumbs,
   mockPassport,
   sendNodeWithDestination,
-} from "./mocks";
-import { CustomWorld } from "./steps";
+} from "./mocks/index.js";
+import { CustomWorld } from "./steps.js";
 
 export async function setUpMocks() {
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);

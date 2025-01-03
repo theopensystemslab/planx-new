@@ -1,10 +1,9 @@
 {
   "default": {
-    "requireModule": ["ts-node/register"],
-    "require": ["src/env.ts", "src/**/*.ts"],
+    "loader": ["ts-node/esm"],
+    "import": ["src/env.ts", "src/**/*.ts"],
     "paths": ["src/**/*.feature"],
     "format": ["summary"],
-    "publishQuiet": true,
     "formatOptions": {
       "snippetInterface": "async-await"
     }

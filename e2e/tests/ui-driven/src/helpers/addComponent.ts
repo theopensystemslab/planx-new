@@ -1,9 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
-import { contextDefaults } from "./context";
-import { externalPortalServiceProps } from "./serviceData";
-import { OptionWithDataValues } from "./types";
-import { selectedFlag } from "./globalHelpers";
+import { contextDefaults } from "./context.js";
+import { externalPortalServiceProps } from "./serviceData.js";
+import { OptionWithDataValues } from "./types.js";
+import { selectedFlag } from "./globalHelpers.js";
 
 const createBaseComponent = async (
   page: Page,

@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { buildJWT } from "./jwt";
+import { buildJWT } from "./jwt.js";
 
 // check env variables are defined
 assert(process.env.HASURA_GRAPHQL_ADMIN_SECRET);

@@ -1,8 +1,13 @@
 import { When, Then, World, After, Before, Given } from "@cucumber/cucumber";
 import assert from "assert";
-import { cleanup, getFlowStatus, getFlowStatusHistory, setup } from "./helpers";
-import { createFlow } from "../globalHelpers";
-import { $admin } from "../client";
+import {
+  cleanup,
+  getFlowStatus,
+  getFlowStatusHistory,
+  setup,
+} from "./helpers.js";
+import { createFlow } from "../globalHelpers.js";
+import { $admin } from "../client.js";
 
 export class CustomWorld extends World {
   teamId!: number;
