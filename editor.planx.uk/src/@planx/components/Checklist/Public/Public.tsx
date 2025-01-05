@@ -4,7 +4,7 @@ import React from "react";
 import { PublicChecklistProps } from "../types";
 import { AutoAnsweredChecklist } from "./components/AutoAnsweredChecklist";
 import { Checklist } from "./components/Checklist";
-import { GroupedChecklist } from "./components/GroupedChecklist";
+import { GroupedChecklist } from "./components/grouped/GroupedChecklist";
 
 const ChecklistComponent: React.FC<PublicChecklistProps> = (props) => {
   const autoAnswerableOptions = useStore(
