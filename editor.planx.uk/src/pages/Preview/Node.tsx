@@ -115,6 +115,7 @@ const Node: React.FC<Props> = (props) => {
       const childNodes = childNodesOf(
         nodeId,
       ) as (typeof checklistProps)["options"];
+      const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
 
       return (
         <ChecklistComponent
@@ -139,6 +140,7 @@ const Node: React.FC<Props> = (props) => {
                   checklistProps.categories,
                 )[1]
           }
+          autoAnswers={autoAnswers}
         />
       );
     }

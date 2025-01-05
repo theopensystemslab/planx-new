@@ -25,7 +25,7 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
-  // Questions without edges act like "sticky notes" in the graph for editors only & are auto-answered
+  // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
   const flow = useStore().flow;
   const edges = props.id ? flow[props.id]?.edges : undefined;
   const isStickyNote = !edges || edges.length === 0;
@@ -66,6 +66,7 @@ const QuestionComponent: React.FC<Question> = (props) => {
     layout = QuestionLayout.Descriptions;
   }
 
+  // Auto-answered Questions still set a breadcrumb even though they render null
   useEffect(() => {
     if (isStickyNote || props.autoAnswers) {
       props.handleSubmit?.({
@@ -75,7 +76,7 @@ const QuestionComponent: React.FC<Question> = (props) => {
     }
   }, [isStickyNote, props.autoAnswers]);
 
-  // Auto-answered questions are not publicly visible
+  // Auto-answered Questions are not publicly visible
   if (isStickyNote || props.autoAnswers) {
     return null;
   }

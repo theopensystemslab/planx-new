@@ -1,7 +1,7 @@
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public/components/VisibleChecklist";
+import { ChecklistLayout } from "./Public/Public";
 
 export interface Group<T> {
   title: string;
@@ -23,6 +23,7 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
+  autoAnswers?: string[] | undefined;
 }
 
 interface ChecklistExpandableProps {
@@ -31,7 +32,7 @@ interface ChecklistExpandableProps {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps
+  checklist: ChecklistExpandableProps,
 ): ChecklistExpandableProps => {
   if (checklist.options !== undefined && checklist.options.length > 0) {
     return {

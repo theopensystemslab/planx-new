@@ -1,8 +1,7 @@
 import { Option } from "@planx/components/shared";
 
 import { Group } from "../../model";
-import { ChecklistLayout } from "../components/VisibleChecklist";
-
+import { ChecklistLayout } from "../Public";
 
 export const options: {
   [key in ChecklistLayout]?: Array<Option>;
