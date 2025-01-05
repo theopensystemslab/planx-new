@@ -75,10 +75,18 @@ interface Props {
 }
 
 const Node: React.FC<Props> = (props) => {
-  const [childNodesOf, resetPreview, cachedBreadcrumbs] = useStore((state) => [
+  const [
+    childNodesOf,
+    resetPreview,
+    cachedBreadcrumbs,
+    autoAnswerableFlag,
+    autoAnswerableOptions,
+  ] = useStore((state) => [
     state.childNodesOf,
     state.resetPreview,
     state.cachedBreadcrumbs,
+    state.autoAnswerableFlag,
+    state.autoAnswerableOptions,
   ]);
 
   const handleSubmit = props.handleSubmit;
@@ -96,13 +104,16 @@ const Node: React.FC<Props> = (props) => {
   });
 
   switch (props.node.type) {
+    case TYPES.AddressInput:
+      return <AddressInputComponent {...getComponentProps<AddressInput>()} />;
+
     case TYPES.Calculate:
       return <CalculateComponent {...getComponentProps<Calculate>()} />;
 
     case TYPES.Checklist: {
       const checklistProps = getComponentProps<Checklist>();
       const childNodes = childNodesOf(
-        props.node.id,
+        nodeId,
       ) as (typeof checklistProps)["options"];
 
       return (
@@ -135,6 +146,9 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Confirmation:
       return <ConfirmationComponent {...getComponentProps<Confirmation>()} />;
 
+    case TYPES.ContactInput:
+      return <ContactInputComponent {...getComponentProps<ContactInput>()} />;
+
     case TYPES.Content:
       return <ContentComponent {...getComponentProps<Content>()} />;
 
@@ -143,8 +157,10 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.DrawBoundary:
       return <DrawBoundaryComponent {...getComponentProps<DrawBoundary>()} />;
+
     case TYPES.Feedback:
       return <FeedbackComponent {...getComponentProps<Feedback>()} />;
+
     case TYPES.FileUpload:
       return <FileUploadComponent {...getComponentProps<FileUpload>()} />;
 
@@ -154,6 +170,13 @@ const Node: React.FC<Props> = (props) => {
           {...getComponentProps<FileUploadAndLabel>()}
         />
       );
+
+    case TYPES.Filter: {
+      const filterProps = getComponentProps<Filter>();
+      const autoAnswer = nodeId ? autoAnswerableFlag(nodeId) : undefined;
+
+      return <FilterComponent {...filterProps} autoAnswer={autoAnswer} />;
+    }
 
     case TYPES.FindProperty:
       return <FindPropertyComponent {...getComponentProps<FindProperty>()} />;
@@ -179,6 +202,38 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Pay:
       return <PayComponent {...getComponentProps<Pay>()} />;
 
+    case TYPES.PlanningConstraints:
+      return (
+        <PlanningConstraintsComponent
+          {...getComponentProps<PlanningConstraints>()}
+        />
+      );
+
+    case TYPES.PropertyInformation:
+      return (
+        <PropertyInformationComponent
+          {...getComponentProps<PropertyInformation>()}
+        />
+      );
+
+    case TYPES.Question: {
+      const questionProps = getComponentProps<Question>();
+      const autoAnswers = nodeId ? autoAnswerableOptions(nodeId) : undefined;
+
+      return (
+        <QuestionComponent
+          {...questionProps}
+          responses={childNodesOf(nodeId).map((n, i) => ({
+            id: n.id,
+            responseKey: i + 1,
+            title: n.data?.text,
+            ...n.data,
+          }))}
+          autoAnswers={autoAnswers}
+        />
+      );
+    }
+
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;
 
@@ -194,19 +249,6 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.SetValue:
       return <SetValueComponent {...getComponentProps<SetValue>()} />;
 
-    case TYPES.Question:
-      return (
-        <QuestionComponent
-          {...getComponentProps<Question>()}
-          responses={childNodesOf(props.node.id).map((n, i) => ({
-            id: n.id,
-            responseKey: i + 1,
-            title: n.data?.text,
-            ...n.data,
-          }))}
-        />
-      );
-
     case TYPES.TaskList: {
       const taskListProps = getComponentProps<TaskList>();
 
@@ -221,34 +263,11 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.TextInput:
       return <TextInputComponent {...getComponentProps<TextInput>()} />;
 
-    case TYPES.AddressInput:
-      return <AddressInputComponent {...getComponentProps<AddressInput>()} />;
-
-    case TYPES.ContactInput:
-      return <ContactInputComponent {...getComponentProps<ContactInput>()} />;
-
-    case TYPES.PlanningConstraints:
-      return (
-        <PlanningConstraintsComponent
-          {...getComponentProps<PlanningConstraints>()}
-        />
-      );
-
-    case TYPES.PropertyInformation:
-      return (
-        <PropertyInformationComponent
-          {...getComponentProps<PropertyInformation>()}
-        />
-      );
-
-    case TYPES.Filter:
-      return <FilterComponent {...getComponentProps<Filter>()} />;
-
     // These types are never seen by users, nor do they leave their own breadcrumbs entry
+    case TYPES.Answer:
     case TYPES.ExternalPortal:
     case TYPES.Flow:
     case TYPES.InternalPortal:
-    case TYPES.Answer:
     case undefined:
       return null;
 

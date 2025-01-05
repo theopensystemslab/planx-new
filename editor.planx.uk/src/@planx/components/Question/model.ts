@@ -18,4 +18,5 @@ export interface Question extends BaseNodeData {
   }[];
   previouslySubmittedData?: Store.UserData;
   handleSubmit: HandleSubmit;
+  autoAnswers?: string[] | undefined;
 }
