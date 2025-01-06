@@ -6,9 +6,11 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ApplicationPath } from "types";
 
-import { contentFlowSpacing, OrNavigationType } from "./Card";
+import { contentFlowSpacing } from "./Card";
 import NavigateToPublishedButton from "./NavigateToPublishedButton";
 import SaveResumeButton from "./SaveResumeButton";
+
+type OrNavigationType = "save-resume" | "navigate-to-published";
 
 export const InnerContainer = styled(Box)(({ theme }) => ({
   "& p": {
@@ -21,7 +23,11 @@ const BUTTON_COMPONENTS = {
   "navigate-to-published": NavigateToPublishedButton,
 } as const;
 
-const OrNavigationButton = () => {
+const OrNavigationButton = ({
+  handleSubmit,
+}: {
+  handleSubmit: ((data?: any) => void) | undefined;
+}) => {
   const [path, breadcrumbs, flow] = useStore((state) => [
     state.path,
     state.breadcrumbs,
@@ -41,7 +47,7 @@ const OrNavigationButton = () => {
     );
 
     const showSaveResumeButton =
-      path === ApplicationPath.SaveAndReturn && !hasSent;
+      path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
 
     if (showSaveResumeButton && !isTestEnvironment) {
       return "save-resume";

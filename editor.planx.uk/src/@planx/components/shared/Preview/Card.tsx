@@ -15,8 +15,6 @@ interface Props {
   handleSubmit?: (data?: any) => void;
 }
 
-export type OrNavigationType = "save-resume" | "navigate-to-published";
-
 export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
   marginTop: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
@@ -88,7 +86,7 @@ const Card: React.FC<Props> = ({
                 Continue
               </Button>
             )}
-            <OrNavigationButton />
+            <OrNavigationButton handleSubmit={handleSubmit} />
           </Box>
         </InnerContainer>
       </Container>
