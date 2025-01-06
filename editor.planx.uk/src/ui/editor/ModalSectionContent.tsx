@@ -1,7 +1,7 @@
+import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import SvgIcon from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Unstable_Grid2";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 

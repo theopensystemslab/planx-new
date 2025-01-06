@@ -1,4 +1,4 @@
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import { Option } from "@planx/components/shared";
 import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import { FormikProps } from "formik";

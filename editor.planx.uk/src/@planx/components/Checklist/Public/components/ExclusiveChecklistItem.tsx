@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Unstable_Grid2";
 import { FormikProps } from "formik";
 import React from "react";
 import FormWrapper from "ui/public/FormWrapper";

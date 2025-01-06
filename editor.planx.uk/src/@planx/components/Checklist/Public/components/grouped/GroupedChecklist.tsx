@@ -1,4 +1,4 @@
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
   ChecklistLayout,

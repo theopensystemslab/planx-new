@@ -1,4 +1,4 @@
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import { Group } from "@planx/components/Checklist/model";
 import { FormikProps } from "formik";
 import { Store } from "pages/FlowEditor/lib/store";
