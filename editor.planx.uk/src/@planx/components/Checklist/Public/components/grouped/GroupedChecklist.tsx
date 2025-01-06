@@ -9,7 +9,7 @@ import { PublicChecklistProps } from "@planx/components/Checklist/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
@@ -29,6 +29,7 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
     img,
     previouslySubmittedData,
     id,
+    autoAnswers,
   } = props;
 
   const formik = useFormik<{ checked: Record<string, Array<string>> }>({
@@ -59,6 +60,21 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
 
   // TODO: do we need useSortedOptions ?
   const layout = getLayout({ options, groupedOptions });
+
+  // Auto-answered Checklists still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (autoAnswers) {
+      handleSubmit?.({
+        answers: autoAnswers,
+        auto: true,
+      });
+    }
+  }, [autoAnswers, handleSubmit]);
+
+  // Auto-answered Checklists are not publicly visible
+  if (autoAnswers) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>

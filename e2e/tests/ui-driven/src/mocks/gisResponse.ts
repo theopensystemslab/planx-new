@@ -1,6 +1,6 @@
 import { expect, Page } from "@playwright/test";
-import { mockRoadData } from "./geospatialMocks";
-import propertyConstraintsResponse from "./propertyConstraintResponse.json";
+import { mockRoadData } from "./geospatialMocks.js";
+import propertyConstraintsResponse from "./propertyConstraintResponse.json" with { type: "json" };
 
 export async function setupGISMockResponse(page: Page) {
   const gisDigitalLandEndpoint = "**/gis/E2E?geom*";

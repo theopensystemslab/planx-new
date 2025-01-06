@@ -4,10 +4,11 @@
     "test": "cucumber-js --tags 'not @regression'",
     "test:regression": "cucumber-js"
   },
+  "type": "module",
   "packageManager": "pnpm@8.6.6",
   "dependencies": {
-    "@cucumber/cucumber": "^9.3.0",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#a9848d4",
+    "@cucumber/cucumber": "^11.1.1",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#d004278",
     "axios": "^1.7.4",
     "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
@@ -17,6 +18,7 @@
     "nock": "^13.3.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash.zipobject": "^4.1.7",
     "@types/node": "22.10.5",
     "ts-node": "^10.9.1",

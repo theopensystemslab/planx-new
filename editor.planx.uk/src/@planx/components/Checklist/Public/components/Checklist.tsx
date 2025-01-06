@@ -1,12 +1,15 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import { ChecklistLayout, checklistValidationSchema } from "@planx/components/Checklist/model";
+import {
+  ChecklistLayout,
+  checklistValidationSchema,
+} from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
 import { partition } from "lodash";
-import React from "react";
+import React, { useEffect } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
@@ -17,7 +20,6 @@ import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
-
 
 export const Checklist: React.FC<PublicChecklistProps> = (props) => {
   const {
@@ -32,6 +34,7 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     img,
     previouslySubmittedData,
     id,
+    autoAnswers,
   } = props;
 
   const formik = useFormik<{ checked: Array<string> }>({
@@ -83,6 +86,21 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     );
     setCheckedFieldValue(newCheckedIds);
   };
+
+  // Auto-answered Checklists still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (autoAnswers) {
+      handleSubmit?.({
+        answers: autoAnswers,
+        auto: true,
+      });
+    }
+  }, [autoAnswers, handleSubmit]);
+
+  // Auto-answered Checklists are not publicly visible
+  if (autoAnswers) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>

@@ -1,7 +1,6 @@
-import { TEST_EMAIL } from "../../../ui-driven/src/helpers/globalHelpers";
-import { $admin } from "../client";
-import { safely } from "../globalHelpers";
-import gql from "graphql-tag";
+import { $admin } from "../client.js";
+import { safely, TEST_EMAIL } from "../globalHelpers.js";
+import { gql } from "graphql-tag";
 
 export const cleanup = async () => {
   await $admin.user._destroyAll();

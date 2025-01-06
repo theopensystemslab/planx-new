@@ -3,7 +3,6 @@ import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import RadioGroup from "@mui/material/RadioGroup";
 import { visuallyHidden } from "@mui/utils";
-import { Edges } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
@@ -17,7 +16,7 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { mixed, object, string } from "yup";
 
-import { Question } from "../model";
+import { Question } from "./model";
 
 export enum QuestionLayout {
   Basic,
@@ -26,48 +25,11 @@ export enum QuestionLayout {
 }
 
 const QuestionComponent: React.FC<Question> = (props) => {
-  const [flow, autoAnswerableOptions] = useStore((state) => [
-    state.flow,
-    state.autoAnswerableOptions,
-  ]);
+  // Questions without edges act like "sticky notes" in the graph for editors only & should be auto-answered
+  const flow = useStore().flow;
+  const edges = props.id ? flow[props.id]?.edges : undefined;
+  const isStickyNote = !edges || edges.length === 0;
 
-  if (props.neverAutoAnswer) {
-    return <VisibleQuestion {...props} />;
-  }
-
-  // Questions without edges act like "sticky notes" in the graph for editors only & can be immediately auto-answered
-  let edges: Edges | undefined;
-  if (props.id) edges = flow[props.id]?.edges;
-  if (!edges || edges.length === 0) {
-    return <AutoAnsweredQuestion {...props} answerIds={undefined} />;
-  }
-
-  let idsThatCanBeAutoAnswered: string[] | undefined;
-  if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
-  if (idsThatCanBeAutoAnswered) {
-    return (
-      <AutoAnsweredQuestion {...props} answerIds={idsThatCanBeAutoAnswered} />
-    );
-  }
-
-  return <VisibleQuestion {...props} />;
-};
-
-// An auto-answered Question won't be seen by the user, but still leaves a breadcrumb
-const AutoAnsweredQuestion: React.FC<
-  Question & { answerIds: string[] | undefined }
-> = (props) => {
-  useEffect(() => {
-    props.handleSubmit?.({
-      answers: props.answerIds,
-      auto: true,
-    });
-  }, []);
-
-  return null;
-};
-
-const VisibleQuestion: React.FC<Question> = (props) => {
   const previousResponseId = props?.previouslySubmittedData?.answers?.[0];
   const previousResponseKey = props.responses.find(
     (response) => response.id === previousResponseId,
@@ -102,6 +64,21 @@ const VisibleQuestion: React.FC<Question> = (props) => {
     props.responses.find((r) => r.description && r.description.length)
   ) {
     layout = QuestionLayout.Descriptions;
+  }
+
+  // Auto-answered Questions still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (isStickyNote || props.autoAnswers) {
+      props.handleSubmit?.({
+        answers: props.autoAnswers,
+        auto: true,
+      });
+    }
+  }, [isStickyNote, props.autoAnswers]);
+
+  // Auto-answered Questions are not publicly visible
+  if (isStickyNote || props.autoAnswers) {
+    return null;
   }
 
   return (

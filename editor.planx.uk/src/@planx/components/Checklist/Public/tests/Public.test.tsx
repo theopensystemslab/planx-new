@@ -21,7 +21,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           text="home type?"
           handleSubmit={handleSubmit}
           options={options[type]}
-        />
+        />,
       );
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
@@ -49,7 +49,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           handleSubmit={handleSubmit}
           previouslySubmittedData={{ answers: ["flat_id", "house_id"] }}
           options={options[type]}
-        />
+        />,
       );
 
       await user.click(screen.getByTestId("continue-button"));
@@ -66,7 +66,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           description=""
           text="home type?"
           options={options[type]}
-        />
+        />,
       );
       const results = await axe(container);
       expect(results).toHaveNoViolations();
@@ -82,7 +82,7 @@ describe("Checklist Component - Basic & Images Layout", () => {
           text="home type?"
           handleSubmit={handleSubmit}
           options={options[type]}
-        />
+        />,
       );
 
       await user.tab();

@@ -22,6 +22,7 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
+  autoAnswers?: string[] | undefined;
 }
 
 interface ChecklistExpandableProps {
@@ -36,7 +37,7 @@ export enum ChecklistLayout {
 }
 
 export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps
+  checklist: ChecklistExpandableProps,
 ): ChecklistExpandableProps => {
   if (checklist.options !== undefined && checklist.options.length > 0) {
     return {

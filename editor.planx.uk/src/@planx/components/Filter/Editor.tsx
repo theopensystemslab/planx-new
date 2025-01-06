@@ -3,6 +3,7 @@ import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
+  Node,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -15,6 +16,7 @@ export interface Props {
   id?: string;
   handleSubmit?: (data: any, children?: any) => void;
   node?: any;
+  autoAnswer?: Node["id"];
 }
 
 const Filter: React.FC<Props> = (props) => {
