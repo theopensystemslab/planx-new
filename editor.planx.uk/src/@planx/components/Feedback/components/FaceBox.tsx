@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Unstable_Grid2";
 import React, { ReactElement } from "react";
 
 interface FaceBoxProps {

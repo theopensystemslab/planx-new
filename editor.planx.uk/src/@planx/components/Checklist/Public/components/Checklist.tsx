@@ -1,4 +1,4 @@
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 import { visuallyHidden } from "@mui/utils";
 import {
   ChecklistLayout,
@@ -54,12 +54,12 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
   const { setCheckedFieldValue, layout } = useSortedOptions(
     options,
     groupedOptions,
-    formik
+    formik,
   );
 
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
     options,
-    (option) => option.data.exclusive
+    (option) => option.data.exclusive,
   );
 
   const {
@@ -82,7 +82,7 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     const newCheckedIds = toggleNonExclusiveCheckbox(
       id,
       currentCheckedIds,
-      exclusiveOrOption
+      exclusiveOrOption,
     );
     setCheckedFieldValue(newCheckedIds);
   };

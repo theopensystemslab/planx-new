@@ -1,7 +1,7 @@
 import Warning from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Unstable_Grid2";
 import {
   ComponentType as TYPES,
   SendIntegration,

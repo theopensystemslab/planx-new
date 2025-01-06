@@ -5,7 +5,6 @@ import {
   getLayout,
   groupedChecklistValidationSchema,
 } from "@planx/components/Checklist/model";
-import { PublicChecklistProps } from "@planx/components/Checklist/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
@@ -14,7 +13,8 @@ import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
-import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
+import { PublicChecklistProps } from "../../types";
+import { GroupedChecklistOptions } from "./grouped/GroupedChecklistOptions";
 
 export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
   const {

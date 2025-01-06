@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Unstable_Grid2";
 import { Group } from "@planx/components/Checklist/model";
 import { FormikProps } from "formik";
 import { partition } from "lodash";
@@ -32,14 +32,14 @@ export const ChecklistOptionGroup = ({
 }: Props) => {
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
     group.children,
-    (option: Option) => option.data.exclusive
+    (option: Option) => option.data.exclusive,
   );
 
   const { exclusiveOrOption, toggleExclusiveCheckbox } =
     useExclusiveOptionInGroupedChecklists(
       exclusiveOptions,
       group.title,
-      formik
+      formik,
     );
 
   const changeCheckbox = (id: string) => () => {
@@ -57,7 +57,7 @@ export const ChecklistOptionGroup = ({
     const newCheckedIds = toggleNonExclusiveCheckbox(
       id,
       currentCheckedIds,
-      exclusiveOrOption
+      exclusiveOrOption,
     );
 
     allCheckedIds[group.title] = newCheckedIds;
@@ -94,15 +94,15 @@ export const ChecklistOptionGroup = ({
           // Exclusive or option
           <FormWrapper key={exclusiveOrOption.id}>
             <Grid item xs={12} key={exclusiveOrOption.data.text}>
-              <Typography width={36} display="flex" justifyContent="center">
-                or
-              </Typography>
+              <Box width={36}>
+                <Typography align="center">or</Typography>
+              </Box>
               <ChecklistItem
                 onChange={changeCheckbox(exclusiveOrOption.id)}
                 label={exclusiveOrOption.data.text}
                 id={exclusiveOrOption.id}
                 checked={formik.values.checked[group.title].includes(
-                  exclusiveOrOption.id
+                  exclusiveOrOption.id,
                 )}
               />
             </Grid>
