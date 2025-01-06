@@ -9,9 +9,9 @@ import { ExpandableListItem } from "ui/public/ExpandableList";
 import FormWrapper from "ui/public/FormWrapper";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
-import { Option } from "../../../shared";
-import { toggleNonExclusiveCheckbox } from "../helpers";
-import { useExclusiveOptionInGroupedChecklists } from "../hooks/useExclusiveOption";
+import { Option } from "../../../../shared";
+import { toggleNonExclusiveCheckbox } from "../../helpers";
+import { useExclusiveOptionInGroupedChecklists } from "../../hooks/useExclusiveOption";
 
 interface Props {
   group: Group<Option>;
