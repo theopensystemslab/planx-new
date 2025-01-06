@@ -223,19 +223,27 @@ export const previewStore: StateCreator<
           if (passportValue.length > 0) {
             const existingValue = acc.data?.[key] ?? [];
 
-            const combined = key === planningConstraintsFn 
-              ? passportValue.concat(existingValue) // Planning constraints uniquely store all-levels of granularity, rather than most granular only
-              : passportValue
-              .concat(existingValue)
-              .reduce(
-                (acc: string[], curr: string, _i: number, arr: string[]) => {
-                  if (!arr.some((x) => x !== curr && x?.startsWith(curr))) {
-                    acc.push(curr);
-                  }
-                  return acc;
-                },
-                [],
-              );
+            const combined =
+              key === planningConstraintsFn
+                ? passportValue.concat(existingValue) // Planning constraints uniquely store all-levels of granularity, rather than most granular only
+                : passportValue
+                    .concat(existingValue)
+                    .reduce(
+                      (
+                        acc: string[],
+                        curr: string,
+                        _i: number,
+                        arr: string[],
+                      ) => {
+                        if (
+                          !arr.some((x) => x !== curr && x?.startsWith(curr))
+                        ) {
+                          acc.push(curr);
+                        }
+                        return acc;
+                      },
+                      [],
+                    );
 
             passportData[key] = uniq(combined);
           }
@@ -486,15 +494,13 @@ export const previewStore: StateCreator<
       Object.values(breadcrumbs)
         // in reverse order
         .flatMap(({ answers }) => answers as Array<NodeId>)
-        // .filter(Boolean)
         .reverse()
-        // ending with _root
+        // always ending with _root
         .concat("_root"),
       // run nodeIdsConnectedFrom(answerId)
     ).forEach(nodeIdsConnectedFrom);
 
-    // Then return an array of the upcoming node ids, in depth-first order
-    return sortIdsDepthFirst(flow)(ids);
+    return Array.from(ids);
   },
 
   /**
@@ -566,11 +572,12 @@ export const previewStore: StateCreator<
 
     // Get existing passport value(s) for this node's fn, accounting for Planning Constraints special `_nots`
     const passportValues = passport.data?.[data.fn];
-    const nots: string[] | undefined = passport.data?.["_nots"]?.[planningConstraintsFn];
+    const nots: string[] | undefined =
+      passport.data?.["_nots"]?.[planningConstraintsFn];
 
     const foundPassportValues =
       Array.isArray(passportValues) && passportValues.length > 0;
-    
+
     // If we have existing passport value(s) for this fn in an eligible automation format (eg not numbers or plain strings),
     //   then proceed through the matching option(s) or the blank option independent if other vals have been seen before
     if (foundPassportValues && data.fn !== planningConstraintsFn) {
@@ -601,20 +608,22 @@ export const previewStore: StateCreator<
           });
         });
       } else {
-        if (blankOption?.id) { optionsThatCanBeAutoAnswered.push(blankOption.id) };
+        if (blankOption?.id) {
+          optionsThatCanBeAutoAnswered.push(blankOption.id);
+        }
       }
     }
 
     if (data.fn === planningConstraintsFn && (foundPassportValues || nots)) {
-      // Planning constraints queried from an external source are stored via two separate passport vars: 
+      // Planning constraints queried from an external source are stored via two separate passport vars:
       //   - One for intersections aka `planningConstraintsFn`
       //   - Another for not-intersections aka `_nots`
       const matchingIntersectingConstraints = passportValues?.filter(
         (passportValue: any) =>
-          sortedOptions.some((option) => passportValue === option.data?.val)
+          sortedOptions.some((option) => passportValue === option.data?.val),
       );
-      const matchingNots = nots?.filter(
-        (not) => sortedOptions.some((option => not === option.data?.val))
+      const matchingNots = nots?.filter((not) =>
+        sortedOptions.some((option) => not === option.data?.val),
       );
 
       if (matchingIntersectingConstraints?.length > 0) {
@@ -632,12 +641,13 @@ export const previewStore: StateCreator<
         sortedOptions.forEach((option) => {
           nots?.forEach((not) => {
             if (not === option.data?.val) {
-              if (blankOption?.id) optionsThatCanBeAutoAnswered.push(blankOption.id);
+              if (blankOption?.id)
+                optionsThatCanBeAutoAnswered.push(blankOption.id);
             }
           });
         });
       } else {
-        // If this node is asking about a constraint that we have NOT queried from an external source, 
+        // If this node is asking about a constraint that we have NOT queried from an external source,
         //   Then put it to the user exactly once and automate future instances of it
         if (blankOption?.id && hasVisitedEveryOption)
           optionsThatCanBeAutoAnswered.push(blankOption.id);
@@ -834,9 +844,9 @@ export const sortBreadcrumbs = (
   return editingNodes?.length
     ? nextBreadcrumbs
     : sortIdsDepthFirst(flow)(new Set(Object.keys(nextBreadcrumbs))).reduce(
-      (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
-      {} as Store.Breadcrumbs,
-    );
+        (acc, id) => ({ ...acc, [id]: nextBreadcrumbs[id] }),
+        {} as Store.Breadcrumbs,
+      );
 };
 
 function handleNodesWithPassport({
