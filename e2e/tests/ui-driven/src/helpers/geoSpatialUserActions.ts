@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { setupOSMockResponse } from "../mocks/osPlacesResponse";
+import { setupOSMockResponse } from "../mocks/osPlacesResponse.js";
 
 export async function answerFindProperty(page: Page) {
   await setupOSMockResponse(page);

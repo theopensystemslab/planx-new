@@ -3,13 +3,13 @@ import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
-import { getTeamPage } from "./helpers/getPage";
+} from "./helpers/context.js";
+import { getTeamPage } from "./helpers/getPage.js";
 import {
   createAuthenticatedSession,
   filterFlags,
   selectedFlag,
-} from "./helpers/globalHelpers";
+} from "./helpers/globalHelpers.js";
 import {
   answerAddressInput,
   answerChecklist,
@@ -20,19 +20,19 @@ import {
   answerQuestion,
   answerTextInput,
   clickContinue,
-} from "./helpers/userActions";
-import { PlaywrightEditor } from "./pages/Editor";
-import { createExternalPortal } from "./helpers/addComponent";
+} from "./helpers/userActions.js";
+import { PlaywrightEditor } from "./pages/Editor.js";
+import { createExternalPortal } from "./helpers/addComponent.js";
 import {
   navigateToService,
   publishService,
   turnServiceOnline,
-} from "./helpers/navigateAndPublish";
-import { TestContext } from "./helpers/types";
+} from "./helpers/navigateAndPublish.js";
+import { TestContext } from "./helpers/types.js";
 import {
   externalPortalFlowData,
   externalPortalServiceProps,
-} from "./helpers/serviceData";
+} from "./helpers/serviceData.js";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {

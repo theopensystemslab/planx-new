@@ -50,7 +50,7 @@ export const ChecklistItems = ({
             onClick={changeCheckbox(option.id)}
           />
         </Grid>
-      )
+      ),
     )}
   </>
 );

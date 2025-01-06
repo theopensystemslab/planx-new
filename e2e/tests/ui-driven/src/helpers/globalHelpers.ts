@@ -1,8 +1,8 @@
 import { FlowGraph } from "@opensystemslab/planx-core/types";
 import { type Browser, type Page, type Request } from "@playwright/test";
 import { gql } from "graphql-request";
-import { generateAuthenticationToken, getGraphQLClient } from "./context";
-import { TestContext } from "./types";
+import { generateAuthenticationToken, getGraphQLClient } from "./context.js";
+import { TestContext } from "./types.js";
 import { flatFlags } from "@opensystemslab/planx-core/types";
 
 // Test card numbers to be used in gov.uk sandbox environment
