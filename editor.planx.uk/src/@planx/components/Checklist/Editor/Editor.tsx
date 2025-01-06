@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { FormikErrors, FormikValues, useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -12,7 +13,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { Option, parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
@@ -186,7 +186,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           </InputGroup>
         </ModalSectionContent>
         <ErrorWrapper error={formik.errors.options}>
-          <Options formik={formik} />
+          <Options data-testid='jo-test' formik={formik}  />
         </ErrorWrapper>
       </ModalSection>
       <ModalFooter formik={formik} />
