@@ -1,6 +1,5 @@
 import { compose, lazy, map, mount, redirect, route, withView } from "navi";
 import { loadingView } from "pages/layout/LoadingLayout";
-import { VerifySubmissionEmail } from "pages/SubmissionDownload/VerifySubmissionEmail";
 import * as React from "react";
 
 import { client } from "../lib/graphql";
@@ -30,13 +29,6 @@ const editorRoutes = mount({
           view: <Login />,
         }),
   ),
-
-  "/:team/:flow/:sessionId/download-application": map((req) => {
-    return route({
-      title: makeTitle("Download application"),
-      view: <VerifySubmissionEmail params={req.params} />,
-    });
-  }),
 
   "/logout": map((): any => {
     try {
