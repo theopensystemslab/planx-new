@@ -6,18 +6,20 @@ import { axe } from "vitest-axe";
 import { VerifySubmissionEmail } from "../VerifySubmissionEmail";
 
 describe("when the VerifySubmissionEmail component renders", () => {
-  beforeEach(() => {
-    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
-  });
-
   it("displays the email address input", () => {
+    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+
     expect(
-      screen.queryByText("Verify your submission email address"),
+      screen.getByText("Verify your submission email address"),
     ).toBeInTheDocument();
-    expect(screen.queryByLabelText("Submission email address")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Submission email address"),
+    ).toBeInTheDocument();
   });
 
   it("should not display an error message", () => {
+    setup(<VerifySubmissionEmail params={{ sessionId: "1" }} />);
+
     expect(
       screen.queryByText("Sorry, something went wrong. Please try again."),
     ).not.toBeInTheDocument();
@@ -32,9 +34,19 @@ describe("when the VerifySubmissionEmail component renders", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it.todo(
-    "shows sessionId and local authority in the application details table",
-  );
+  it("shows sessionId and local authority in the application details table", async () => {
+    setup(
+      <VerifySubmissionEmail
+        params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
+      />,
+    );
+    expect(screen.getByText("Session ID")).toBeInTheDocument();
+    expect(screen.getByText("a-session-id")).toBeInTheDocument();
+
+    expect(screen.getByText("Local Authority")).toBeInTheDocument();
+
+    expect(screen.getByText("Barking And Dagenham")).toBeInTheDocument(); // with correct casing
+  });
 });
 
 describe("when the user submits a correct email address", () => {
