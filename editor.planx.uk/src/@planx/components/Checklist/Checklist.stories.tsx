@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import Checklist from "./Public";
+import Checklist from "./Public/Public";
 
 const meta = {
   title: "PlanX Components/Checklist",

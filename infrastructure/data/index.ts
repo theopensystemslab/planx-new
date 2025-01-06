@@ -16,7 +16,7 @@ const db = new aws.rds.Instance("app", {
   // $ aws rds describe-db-engine-versions --default-only --engine postgres
   engineVersion: "12.17",
   // Available instance types: https://aws.amazon.com/rds/instance-types/
-  instanceClass: env === "production" ? "db.t3.medium" : "db.t3.micro",
+  instanceClass: env === "production" ? "db.t3.medium" : "db.t3.small",
   allocatedStorage: env === "production" ? 100 : 20,
   allowMajorVersionUpgrade: true,
   dbSubnetGroupName: networking.requireOutput("subnetId"),

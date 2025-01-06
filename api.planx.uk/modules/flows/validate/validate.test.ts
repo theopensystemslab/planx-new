@@ -131,6 +131,11 @@ describe("sections validation on diff", () => {
             message:
               'Your flow is not using Checklists which set "proposal.projectType"',
           },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
+          },
         ]);
       });
   });
@@ -190,6 +195,11 @@ describe("sections validation on diff", () => {
             message:
               'Your flow is not using Checklists which set "proposal.projectType"',
           },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
+          },
         ]);
       });
   });
@@ -239,6 +249,11 @@ describe("invite to pay validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
           },
         ]);
       });
@@ -300,6 +315,11 @@ describe("invite to pay validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
           },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
+          },
         ]);
       });
   });
@@ -355,6 +375,11 @@ describe("invite to pay validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
           },
         ]);
       });
@@ -414,59 +439,10 @@ describe("invite to pay validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
           },
-        ]);
-      });
-  });
-
-  it("does not update if invite to pay is enabled, but there is not a Checklist that sets `proposal.projectType`", async () => {
-    const invalidatedFlow = flowWithInviteToPay;
-    // Remove proposal.projectType, set incorrect variable
-    invalidatedFlow!.Checklist!.data!.fn = "some.other.variable";
-
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          data: invalidatedFlow,
-          slug: "invalidated-flow-name",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [{ data: invalidatedFlow }],
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(auth)
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
           {
-            title: "Invite to Pay",
-            status: "Fail",
-            message:
-              "When using Invite to Pay, your flow must have a Checklist that sets `proposal.projectType`",
-          },
-          {
-            title: "Sections",
+            title: "Planning Constraints",
             status: "Not applicable",
-            message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
+            message: "Your flow is not using Planning Constraints",
           },
         ]);
       });
@@ -555,6 +531,11 @@ describe("ODP Schema file type validation on diff", () => {
             message:
               'Your flow is not using Checklists which set "proposal.projectType"',
           },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
+          },
         ]);
       });
   });
@@ -626,6 +607,151 @@ describe("ODP Schema file type validation on diff", () => {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
+          },
+        ]);
+      });
+  });
+});
+
+describe("planning constraints validation on diff", () => {
+  it("passes if there is exactly one planning constraints component", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      PlanningConstraints: {
+        type: 11,
+        data: {
+          title: "Check all constraints",
+          fn: "property.constraints.planning",
+        },
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Sections",
+            status: "Pass",
+            message: "Your flow has valid Sections",
+          },
+          {
+            title: "Planning Constraints",
+            status: "Pass",
+            message: "Your flow has valid Planning Constraints",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "File types",
+            status: "Not applicable",
+            message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
+        ]);
+      });
+  });
+
+  it("warns if there is more than one planning constraints component", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      PlanningConstraints: {
+        type: 11,
+        data: {
+          title: "Check all constraints",
+          fn: "property.constraints.planning",
+        },
+      },
+      PlanningConstraintsTwo: {
+        type: 11,
+        data: {
+          title: "Check all constraints (dupe)",
+          fn: "property.constraints.planning",
+        },
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Planning Constraints",
+            status: "Fail",
+            message:
+              "When using Planning Constraints, your flow must have exactly ONE Planning Constraints component",
+          },
+          {
+            title: "Sections",
+            status: "Pass",
+            message: "Your flow has valid Sections",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "File types",
+            status: "Not applicable",
+            message: "Your flow is not using FileUpload or UploadAndLabel",
           },
           {
             title: "Project types",

@@ -1,5 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { parsePay, Pay, validationSchema } from "@planx/components/Pay/model";
+import { parsePay, Pay, PAY_FN, validationSchema } from "@planx/components/Pay/model";
 import { Form, Formik } from "formik";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
@@ -69,9 +69,8 @@ const Component: React.FC<Props> = (props: Props) => {
                 <Input
                   format="data"
                   name="fn"
-                  value={values.fn}
-                  placeholder="Data field for calculated amount"
-                  onChange={handleChange}
+                  value={PAY_FN}
+                  disabled
                 />
               </InputRow>
             </ModalSectionContent>
@@ -102,9 +101,9 @@ const Component: React.FC<Props> = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <GovPayMetadataSection />
-          <InviteToPaySection />
-          <FeeBreakdownSection />
+          <GovPayMetadataSection/>
+          <InviteToPaySection/>
+          <FeeBreakdownSection/>
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}

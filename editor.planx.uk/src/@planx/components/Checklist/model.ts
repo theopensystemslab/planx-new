@@ -1,7 +1,12 @@
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public";
+
+export enum ChecklistLayout {
+  Basic,
+  Grouped,
+  Images,
+}
 
 export interface Group<T> {
   title: string;
@@ -23,6 +28,7 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
+  autoAnswers?: string[] | undefined;
 }
 
 interface ChecklistExpandableProps {
@@ -102,8 +108,10 @@ export const checklistValidationSchema = ({
   allRequired,
   options,
   groupedOptions,
-}: Checklist) =>
-  array()
+}: Checklist) => {
+  const flatOptions = getFlatOptions({ options, groupedOptions });
+
+  return array()
     .required()
     .test({
       name: "atLeastOneChecked",
@@ -119,8 +127,8 @@ export const checklistValidationSchema = ({
         if (!allRequired) {
           return true;
         }
-        const flatOptions = getFlatOptions({ options, groupedOptions });
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },
     });
+};

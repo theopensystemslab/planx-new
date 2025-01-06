@@ -448,6 +448,15 @@
           table:
             name: flow_document_templates
             schema: public
+    - name: lowcal_sessions
+      using:
+        manual_configuration:
+          column_mapping:
+            id: flow_id
+          insertion_order: null
+          remote_table:
+            name: lowcal_sessions
+            schema: public
     - name: operations
       using:
         foreign_key_constraint_on:
@@ -1235,6 +1244,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_metadata
           - govpay_payment_id
           - id
@@ -1250,6 +1260,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_metadata
           - govpay_payment_id
           - id
@@ -1265,6 +1276,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_payment_id
           - id
           - paid_at
@@ -1279,6 +1291,7 @@
         columns:
           - applicant_name
           - created_at
+          - fee_breakdown
           - govpay_metadata
           - govpay_payment_id
           - id
@@ -2366,6 +2379,7 @@
           - created_at
           - domain
           - id
+          - metabase_id
           - name
           - slug
           - updated_at
@@ -2418,6 +2432,13 @@
           - updated_at
         filter: {}
   update_permissions:
+    - role: api
+      permission:
+        columns:
+          - metabase_id
+        filter: {}
+        check: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -2452,6 +2473,19 @@
           - subdomain
         filter: {}
       comment: ""
+- table:
+    name: temp_data_migrations_audit
+    schema: public
+  object_relationships:
+    - name: flow
+      using:
+        manual_configuration:
+          column_mapping:
+            flow_id: id
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
 - table:
     name: uniform_applications
     schema: public

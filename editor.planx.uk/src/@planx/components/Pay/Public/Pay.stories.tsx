@@ -88,6 +88,5 @@ export const WithFeeBreakdown = {
     onConfirm: () => {},
     error: undefined,
     showInviteToPay: false,
-    showFeeBreakdown: true,
   },
 } satisfies Story;

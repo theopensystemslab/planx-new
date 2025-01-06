@@ -1,4 +1,4 @@
-import gql from "graphql-tag";
+import { gql } from "graphql-tag";
 
 export const SELECT_TEAM_MEMBERS_QUERY = gql`
   query SelectTeamMembersE2E($user1Id: Int) {

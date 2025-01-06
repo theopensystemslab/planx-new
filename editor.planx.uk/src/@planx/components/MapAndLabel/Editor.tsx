@@ -17,6 +17,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio";
 import { EditorProps } from "../shared/types";
@@ -66,16 +67,11 @@ function MapAndLabelComponent(props: Props) {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <InputRow>
-              <Input
-                format="data"
-                name="fn"
-                placeholder={"Data Field"}
-                value={formik.values.fn}
-                onChange={formik.handleChange}
-                required
-              />
-            </InputRow>
+            <DataFieldAutocomplete
+              required
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent title="Map options">

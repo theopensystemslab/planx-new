@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import Question from "./Question";
+import Question from "./Public";
 
 const meta = {
   title: "PlanX Components/Question",

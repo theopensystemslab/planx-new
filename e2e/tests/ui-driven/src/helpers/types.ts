@@ -1,5 +1,5 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
-import { User } from "@opensystemslab/planx-core/dist/types";
+import { User } from "@opensystemslab/planx-core/types";
 
 type NewTeam = Parameters<CoreDomainClient["team"]["create"]>[0];
 
@@ -21,3 +21,5 @@ export interface TestContext {
   externalPortalFlow?: Flow;
   sessionIds?: string[];
 }
+
+export type OptionWithDataValues = { optionText: string; dataValue: string };

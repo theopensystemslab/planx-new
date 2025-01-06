@@ -8,7 +8,7 @@ export default function Fixture() {
       handleSubmit={console.log}
       title="Pay"
       description=""
-      fn="fee"
+      fn="application.fee.payable"
       color="#efefef"
       govPayMetadata={[]}
     />

@@ -1,14 +1,18 @@
-import { PaymentRequest } from "@opensystemslab/planx-core/dist/types";
+import { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { expect, type Page } from "@playwright/test";
 import { GraphQLClient, gql } from "graphql-request";
-import { TEST_EMAIL, addSessionToContext, log } from "../helpers/globalHelpers";
+import {
+  TEST_EMAIL,
+  addSessionToContext,
+  log,
+} from "../helpers/globalHelpers.js";
 import {
   answerChecklist,
   answerContactInput,
-  answerFindProperty,
   fillInEmail,
-} from "../helpers/userActions";
-import { TestContext } from "../helpers/types";
+} from "../helpers/userActions.js";
+import { TestContext } from "../helpers/types.js";
+import { answerFindProperty } from "../helpers/geoSpatialUserActions.js";
 
 /**
  * Navigates to pay component whilst completing the minimum requirements for an Invite to Pay flow
@@ -69,6 +73,7 @@ export async function getPaymentRequestBySessionId({
               paymentAmount: payment_amount
               applicantName: applicant_name
               paidAt: paid_at
+              feeBreakdown: fee_breakdown
             }
           }
         `,

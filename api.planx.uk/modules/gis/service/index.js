@@ -18,6 +18,11 @@ const localAuthorities = { digitalLand };
  *        type: string
  *        required: true
  *        description: Well-Known Text (WKT) formatted polygon or point
+ *      - in: query
+ *        name: vals
+ *        type: string
+ *        required: false
+ *        description: Comma-separated list of planning constraint values (formatted using `fn` property names) that should be returned
  */
 export async function locationSearch(req, res, next) {
   // 'geom' param signals this localAuthority has data available via Planning Data

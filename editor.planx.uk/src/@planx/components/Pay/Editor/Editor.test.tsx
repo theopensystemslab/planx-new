@@ -117,7 +117,7 @@ describe("Pay component - Editor Modal", () => {
             <PayComponent
               id="test"
               handleSubmit={handleSubmit}
-              node={{ data: { fn: "fee" } }}
+              node={{ data: { fn: "application.fee.payable" } }}
             />
           </DndProvider>,
         );
@@ -146,7 +146,7 @@ describe("Pay component - Editor Modal", () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
       const mockNode = {
         data: {
-          fn: "fee",
+          fn: "application.fee.payable",
           govPayMetadata: [
             { key: "flow", value: "flowName" },
             { key: "source", value: "PlanX" },
@@ -260,7 +260,7 @@ describe("Pay component - Editor Modal", () => {
           <PayComponent
             id="test"
             handleSubmit={handleSubmit}
-            node={{ data: { fn: "fee" } }}
+            node={{ data: { fn: "application.fee.payable" } }}
           />
         </DndProvider>,
       );

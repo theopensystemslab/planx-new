@@ -59,7 +59,6 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
             </li>
             <li>if any additional information is required</li>
             <li>to arrange a site visit, if required</li>
-            <li>to inform you whether a certificate has been granted or not</li>
           </List>
           <Divider sx={{ mt: 4 }} />
           <Typography variant="h2" mt={4}>

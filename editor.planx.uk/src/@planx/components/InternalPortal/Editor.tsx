@@ -5,7 +5,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
-import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
@@ -24,15 +24,24 @@ const InternalPortalForm: React.FC<{
   id?: string;
   text?: string;
   flowId?: string;
+  notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ handleSubmit, text = "", flowId = "", flows = [], tags = [] }) => {
+}> = ({
+  handleSubmit,
+  text = "",
+  flowId = "",
+  flows = [],
+  tags = [],
+  notes = "",
+}) => {
   const formik = useFormik({
     initialValues: {
       text,
       flowId,
       tags,
+      notes,
     },
     validate: (values) => {
       const errors: Record<string, string> = {};
@@ -101,11 +110,8 @@ const InternalPortalForm: React.FC<{
             </SelectInput>
           </ModalSectionContent>
         )}
-        <ComponentTagSelect
-          value={formik.values.tags}
-          onChange={(value) => formik.setFieldValue("tags", value)}
-        />
       </ModalSection>
+      <ModalFooter formik={formik} showMoreInformation={false} />
     </form>
   );
 };

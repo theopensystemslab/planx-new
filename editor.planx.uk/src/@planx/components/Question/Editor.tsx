@@ -10,14 +10,16 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
+import { useStore } from "pages/FlowEditor/lib/store";
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
-import { FlagsSelect } from "../shared/FlagsSelect";
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
+import { getOptionsSchemaByFn } from "../shared/utils";
+import QuestionOptionsEditor from "./OptionsEditor";
 
 interface Props {
   node: {
@@ -33,100 +35,6 @@ interface Props {
   options?: Option[];
   handleSubmit?: Function;
 }
-
-const OptionEditor: React.FC<{
-  value: Option;
-  onChange: (newVal: Option) => void;
-  showValueField?: boolean;
-}> = (props) => (
-  <div style={{ width: "100%" }}>
-    <InputRow>
-      {props.value.id && (
-        <input type="hidden" value={props.value.id} readOnly />
-      )}
-      <InputRowItem width="200%">
-        <Input
-          required
-          format="bold"
-          multiline
-          value={props.value.data.text || ""}
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                text: ev.target.value,
-              },
-            });
-          }}
-          placeholder="Option"
-        />
-      </InputRowItem>
-      <ImgInput
-        img={props.value.data.img}
-        onChange={(img) => {
-          props.onChange({
-            ...props.value,
-            data: {
-              ...props.value.data,
-              img,
-            },
-          });
-        }}
-      />
-    </InputRow>
-    <InputRow>
-      <Input
-        value={props.value.data.description || ""}
-        placeholder="Description"
-        multiline
-        onChange={(ev) => {
-          props.onChange({
-            ...props.value,
-            data: {
-              ...props.value.data,
-              description: ev.target.value,
-            },
-          });
-        }}
-      />
-    </InputRow>
-    {props.showValueField && (
-      <InputRow>
-        <Input
-          format="data"
-          value={props.value.data.val || ""}
-          placeholder="Data Value"
-          onChange={(ev) => {
-            props.onChange({
-              ...props.value,
-              data: {
-                ...props.value.data,
-                val: ev.target.value,
-              },
-            });
-          }}
-        />
-      </InputRow>
-    )}
-    <FlagsSelect
-      value={
-        Array.isArray(props.value.data.flag)
-          ? props.value.data.flag
-          : [props.value.data.flag]
-      }
-      onChange={(ev) => {
-        props.onChange({
-          ...props.value,
-          data: {
-            ...props.value.data,
-            flag: ev,
-          },
-        });
-      }}
-    />
-  </div>
-);
 
 export const Question: React.FC<Props> = (props) => {
   const type = TYPES.Question;
@@ -165,6 +73,9 @@ export const Question: React.FC<Props> = (props) => {
       return errors;
     },
   });
+
+  const schema = useStore().getFlowSchema();
+  const initialOptionVals = formik.initialValues.options?.map((option) => option.data?.val);
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -205,18 +116,11 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <InputRow>
-              <Input
-                // required
-                format="data"
-                name="fn"
-                value={formik.values.fn}
-                placeholder="Data Field"
-                onChange={formik.handleChange}
-                error={Boolean(formik.errors?.fn)}
-                errorMessage={formik.errors?.fn}
-              />
-            </InputRow>
+            <DataFieldAutocomplete
+              schema={schema?.nodes}
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
             <InputRow>
               <Switch
                 checked={formik.values.neverAutoAnswer}
@@ -246,8 +150,11 @@ export const Question: React.FC<Props> = (props) => {
                 },
               }) as Option
             }
-            Editor={OptionEditor}
-            editorExtraProps={{ showValueField: !!formik.values.fn }}
+            Editor={QuestionOptionsEditor}
+            editorExtraProps={{ 
+              showValueField: !!formik.values.fn, 
+              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+            }}
           />
         </ModalSectionContent>
       </ModalSection>

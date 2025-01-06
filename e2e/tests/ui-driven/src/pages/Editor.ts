@@ -20,13 +20,17 @@ import {
   createNotice,
   createNumberInput,
   createPlanningConstraints,
+  createPropertyInformation,
+  createQuestionWithDataFieldOptions,
   createQuestionWithOptions,
   createResult,
   createReview,
   createTaskList,
   createTextInput,
   createUploadAndLabel,
-} from "../helpers/addComponent";
+} from "../helpers/addComponent.js";
+import { OptionWithDataValues } from "../helpers/types.js";
+import { selectedFlag } from "../helpers/globalHelpers.js";
 
 export class PlaywrightEditor {
   readonly page: Page;
@@ -76,6 +80,23 @@ export class PlaywrightEditor {
 
   async createQuestionWithOptions(title: string, answers: string[]) {
     await createQuestionWithOptions(this.page, this.firstNode, title, answers);
+    await expect(
+      this.page.locator("a").filter({ hasText: title }),
+    ).toBeVisible();
+  }
+
+  async createQuestionWithDataFieldOptions(
+    title: string,
+    answers: OptionWithDataValues[],
+    dataField: string,
+  ) {
+    await createQuestionWithDataFieldOptions(
+      this.page,
+      this.getNextNode(),
+      title,
+      answers,
+      dataField,
+    );
     await expect(
       this.page.locator("a").filter({ hasText: title }),
     ).toBeVisible();
@@ -168,6 +189,10 @@ export class PlaywrightEditor {
     await createFindProperty(this.page, this.getNextNode());
   }
 
+  async createPropertyInformation() {
+    await createPropertyInformation(this.page, this.getNextNode());
+  }
+
   async createDrawBoundary() {
     await createDrawBoundary(this.page, this.getNextNode());
   }
@@ -222,6 +247,18 @@ export class PlaywrightEditor {
 
   async createFilter() {
     await createFilter(this.page, this.getNextNode());
+    // select the branch filter and add some content
+    const filteredBranch = this.page
+      .locator("li")
+      .filter({ hasText: /Material change of use$/ })
+      .getByRole("listitem")
+      .getByRole("link");
+
+    await createContent(
+      this.page,
+      filteredBranch,
+      `This is the ${selectedFlag} filter`,
+    );
   }
 
   async createInternalPortal() {

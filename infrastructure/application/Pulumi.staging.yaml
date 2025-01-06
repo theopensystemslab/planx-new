@@ -11,8 +11,14 @@ config:
     secure: AAABAN0LjLOgxCkr5ZqQLn6FkZPcrPlvNG4fbNZ02W2qC1VVYVee/3aToZQuXuokVwnIPNbbe2w=
   application:file-api-key-barnet:
     secure: AAABAFpZq81zy3CKFXUgi9oEGIGp7LDVD3TNlYkZD4liX0bxOrmMJYdDpMmyGt4aGARF63nEUmo=
+  application:file-api-key-epsom-ewell:
+    secure: AAABAD1/nlJ2EOEglLiiNsOLbOd3KWCONhNhJAIdZQVnrSRsNIzX2luszOreQf20EYl8AZ4L1TiheqUHSt22e5z1FiLWoCtY
+  application:file-api-key-gateshead:
+    secure: AAABAC40pz4+QnXhA2QOYP2F33dc4bCnpL0Njd6hgxR4sTtzt1xF4+2HJpMGdptL2zVrbmdH+cMzrizu6cTmGELrsAoUIEvB
   application:file-api-key-lambeth:
     secure: AAABALQTeIf/uScxASJkhmoPRhewQT94Guad4iJ7GRk0DcND8wDUG0eNxDU4+XwUQZqCnL2DP+E=
+  application:file-api-key-medway:
+    secure: AAABABCpSTmTDJU81pG7U57Igr4OtBbX6VuqRooq9Ipzoq1peTenbNQYBWacZn6lyg7ceLAgbiHQgT7LqX2tKN1QwON/BSQh
   application:file-api-key-nexus:
     secure: AAABAJFgaBoTWNmZyXDkGRngwU8KpOt6CeBLxGBgBG0JFMsKK7rWT39TsjJ9pL1wZaBoT0YZhCg=
   application:file-api-key-southwark:
@@ -24,10 +30,12 @@ config:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:
     secure: AAABAHsoh7ZNkr6ep3xXsUZpp/JIjshBX+tJ0KOFgGnJ4wxR0oIcB6VewVDuwSyFJRVix72YahM=
-  application:hasura-cpu: "512"
+  application:hasura-cpu: "1024"
   application:hasura-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
+  application:hasura-proxy-cpu: "512"
+  application:hasura-proxy-memory: "2048"
   application:idox-nexus-client:
     secure: AAABABprDQomVM9wJQkTMTVtUKvj9lVVVJLdpEBR5p3ibZYvSMedTOb2jztPa0vm6UCH2hilyOV2fsd+akYd3sP8Up5G26mkEKSLSSN4Nc9fu/Hi3Apn1rXHnw==
   application:idox-nexus-submission-url: https://dev.identity.idoxgroup.com/agw/submission-api
@@ -36,6 +44,8 @@ config:
     secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
+  application:metabase-api-key:
+    secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==
   application:metabase-encryption-secret-key:
     secure: AAABAGmfVICD8sR+IE6mHC8BNUY1WQXGCbv5F3C1fSgA+1ADiRem3GNrwY0YRZociRYuPIo3MIRS0aIg44jt10SBCE0ik58wHamcKA==
   application:metabasePgPassword:
@@ -66,5 +76,3 @@ config:
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   cloudflare:apiToken:
     secure: AAABABWhDm+7RstbxLXd1D8CcxkylHS6UKMqk4kOaY7Y0E7FJS4bZfvyGs0nks80hl3vjENH4eDuFbUgA82/sA4SmDlfpNXr
-  application:metabase-api-key:
-    secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==

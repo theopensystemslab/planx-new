@@ -10,12 +10,14 @@ import { array, boolean, object, string } from "yup";
 
 import { type BaseNodeData, parseBaseNodeData } from "../shared";
 
+export const PAY_FN = "application.fee.payable" as const;
+
 export interface Pay extends BaseNodeData {
   title: string;
   bannerTitle?: string;
   description?: string;
   color?: string;
-  fn: string;
+  fn: typeof PAY_FN;
   instructionsTitle?: string;
   instructionsDescription?: string;
   hidePay?: boolean;
@@ -27,7 +29,6 @@ export interface Pay extends BaseNodeData {
   yourDetailsDescription?: string;
   yourDetailsLabel?: string;
   govPayMetadata: GovPayMetadata[];
-  showFeeBreakdown?: boolean;
 }
 
 export const toPence = (decimal: number) => Math.trunc(decimal * 100);
@@ -138,7 +139,7 @@ export const validationSchema = object({
   title: string().trim().required(),
   bannerTitle: string().trim().required(),
   description: string().trim().required(),
-  fn: string().trim().required("Data field is required"),
+  fn: string().oneOf([PAY_FN]).default(PAY_FN).required(),
   instructionsTitle: string().trim().required(),
   instructionsDescription: string().trim().required(),
   hidePay: boolean(),
@@ -169,7 +170,7 @@ export const validationSchema = object({
 export const getDefaultContent = (): Pay => ({
   title: "Pay for your application",
   bannerTitle: "The planning fee for this application is",
-  fn: "application.fee.payable",
+  fn: PAY_FN,
   description: `<p>The planning fee covers the cost of processing your application.\
     <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">Find out more about how planning fees are calculated</a> (opens in new tab).</p>`,
   instructionsTitle: "How to pay",
@@ -182,7 +183,6 @@ export const getDefaultContent = (): Pay => ({
   nomineeTitle: "Details of the person paying",
   yourDetailsTitle: "Your details",
   yourDetailsLabel: "Your name or organisation name",
-  showFeeBreakdown: false,
   govPayMetadata: [
     {
       key: "flow",
