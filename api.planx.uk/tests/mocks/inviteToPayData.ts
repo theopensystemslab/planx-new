@@ -62,6 +62,16 @@ export const paymentRequestResponse: Partial<PaymentRequest> = {
   payeeEmail: payee.email,
   paymentAmount: paymentAmountPence,
   sessionPreviewData: sessionPreviewData,
+  feeBreakdown: {
+    amount: {
+      payable: 123.45,
+      calculated: 123.45,
+      vat: 0,
+      reduction: 0,
+    },
+    reductions: [],
+    exemptions: [],
+  },
 };
 
 export const validPaymentRequest = {

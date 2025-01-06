@@ -1,4 +1,3 @@
-import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -98,35 +97,21 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
     setLastPublishedTitle(formatLastPublishMessage(date, user));
   }, [flowId]);
 
-  const _validateAndDiffRequest = useAsync(async () => {
-    const newChanges = await validateAndDiffFlow(flowId);
-    setAlteredNodes(
-      newChanges?.data.alteredNodes ? newChanges.data.alteredNodes : [],
-    );
-  }, [flowId]);
-
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
   return (
     <Box width="100%" mt={2}>
       <Box display="flex" flexDirection="column" alignItems="flex-end">
-        <Badge
+        <Button
           sx={{ width: "100%" }}
-          badgeContent={alteredNodes && alteredNodes.length}
-          max={999}
-          color="warning"
+          variant="contained"
+          color="primary"
+          disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+          onClick={handleCheckForChangesToPublish}
         >
-          <Button
-            sx={{ width: "100%" }}
-            variant="contained"
-            color="primary"
-            disabled={!useStore.getState().canUserEditTeam(teamSlug)}
-            onClick={handleCheckForChangesToPublish}
-          >
-            CHECK FOR CHANGES TO PUBLISH
-          </Button>
-        </Badge>
+          CHECK FOR CHANGES TO PUBLISH
+        </Button>
         <Dialog
           open={dialogOpen}
           onClose={() => setDialogOpen(false)}

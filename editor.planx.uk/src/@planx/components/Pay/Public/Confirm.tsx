@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
+import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ApplicationPath } from "types";
@@ -19,7 +20,7 @@ import {
   getDefaultContent,
   Pay,
 } from "../model";
-import { FeeBreakdown } from "./FeeBreakdown";
+import { FeeBreakdown } from "./FeeBreakdown/FeeBreakdown";
 import InviteToPayForm, { InviteToPayFormProps } from "./InviteToPayForm";
 import { PAY_API_ERROR_UNSUPPORTED_TEAM } from "./Pay";
 
@@ -181,7 +182,7 @@ export default function Confirm(props: Props) {
                 />
               </Typography>
             </FormWrapper>
-            {props.showFeeBreakdown && <FeeBreakdown />}
+            {hasFeatureFlag("FEE_BREAKDOWN") && <FeeBreakdown />}
           </Banner>
         )}
         {page === "Pay" ? (

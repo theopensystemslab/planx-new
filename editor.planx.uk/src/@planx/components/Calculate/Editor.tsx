@@ -12,6 +12,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import type { Calculate } from "./model";
 import { evaluate, getVariables, parseCalculate } from "./model";
@@ -25,6 +26,7 @@ const ConditionLabel = styled("span")(() => ({
 }));
 
 const UNKNOWN = "unknown";
+
 export default function Component(props: Props) {
   const formik = useFormik({
     initialValues: parseCalculate(props.node?.data),
@@ -123,16 +125,11 @@ export default function Component(props: Props) {
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Output">
-          <InputRow>
-            <Input
-              required
-              placeholder="output data field"
-              name="output"
-              format="data"
-              value={formik.values.output}
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            value={formik.values.output}
+            onChange={(value) => formik.setFieldValue("output", value)}
+          />
           <InputRow>
           <Switch            
             checked={formik.values.formatOutputForAutomations}

@@ -36,7 +36,11 @@ export const sendSlackNotification = async (
   const pilotServices = [
     "uniform",
     "happ",
+    "hapr",
+    "hret",
     "ldc",
+    "minor",
+    "major",
     "apply for planning permission",
     "apply for a lawful development certificate",
   ];

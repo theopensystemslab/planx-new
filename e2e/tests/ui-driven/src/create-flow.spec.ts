@@ -3,9 +3,13 @@ import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
-import { getTeamPage } from "./helpers/getPage";
-import { createAuthenticatedSession } from "./helpers/globalHelpers";
+} from "./helpers/context.js";
+import { getTeamPage } from "./helpers/getPage.js";
+import {
+  createAuthenticatedSession,
+  filterFlags,
+  selectedFlag,
+} from "./helpers/globalHelpers.js";
 import {
   answerAddressInput,
   answerChecklist,
@@ -16,19 +20,19 @@ import {
   answerQuestion,
   answerTextInput,
   clickContinue,
-} from "./helpers/userActions";
-import { PlaywrightEditor } from "./pages/Editor";
-import { createExternalPortal } from "./helpers/addComponent";
+} from "./helpers/userActions.js";
+import { PlaywrightEditor } from "./pages/Editor.js";
+import { createExternalPortal } from "./helpers/addComponent.js";
 import {
   navigateToService,
   publishService,
   turnServiceOnline,
-} from "./helpers/navigateAndPublish";
-import { TestContext } from "./helpers/types";
+} from "./helpers/navigateAndPublish.js";
+import { TestContext } from "./helpers/types.js";
 import {
   externalPortalFlowData,
   externalPortalServiceProps,
-} from "./helpers/serviceData";
+} from "./helpers/serviceData.js";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -54,6 +58,8 @@ test.describe("Flow creation, publish and preview", () => {
   });
 
   test("Create a flow", async ({ browser }) => {
+    test.setTimeout(60_000);
+
     const page = await getTeamPage({
       browser,
       userId: context.user!.id!,
@@ -79,7 +85,7 @@ test.describe("Flow creation, publish and preview", () => {
     await editor.createList();
     await editor.createTaskList();
     await editor.createContent();
-
+    await editor.createFilter();
     await editor.createResult();
     await editor.createNextSteps();
     await editor.createReview();
@@ -99,6 +105,7 @@ test.describe("Flow creation, publish and preview", () => {
       "A list title",
       "What you should do next",
       "Some content",
+      ...filterFlags,
       "Planning permission", // default result flag
       "Next steps",
       "Check your answers before sending your application",
@@ -226,7 +233,7 @@ test.describe("Flow creation, publish and preview", () => {
     await publishService(page);
   });
 
-  test("Can preview a published flow", async ({
+  test("Can preview a published flow with an external portal", async ({
     browser,
   }: {
     browser: Browser;
@@ -236,11 +243,16 @@ test.describe("Flow creation, publish and preview", () => {
       userId: context.user!.id!,
     });
 
-    await page.goto(`/${context.team.slug}/${serviceProps.slug}`);
+    await navigateToService(page, serviceProps.slug);
 
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),
     ).toBeVisible();
+
+    const previewLink = page.getByRole("link", {
+      name: "Open published service",
+    });
+    await expect(previewLink).toBeVisible();
 
     await page.goto(
       `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
@@ -268,6 +280,7 @@ test.describe("Flow creation, publish and preview", () => {
     });
     await clickContinue({ page });
 
+    // The external portal question has been flattened into the overall flow data structure and can be successfully navigated through
     await answerQuestion({
       page,
       title: externalPortalFlowData.title,
@@ -334,6 +347,14 @@ test.describe("Flow creation, publish and preview", () => {
     await clickContinue({ page });
 
     await expect(page.locator("p", { hasText: "Some content" })).toBeVisible();
+    await clickContinue({ page });
+
+    // this is the content placed in the filtered branch
+    await expect(
+      page.locator("p", {
+        hasText: `This is the ${selectedFlag} filter`,
+      }),
+    ).toBeVisible();
     await clickContinue({ page });
 
     await expect(page.locator("h1", { hasText: "No result" })).toBeVisible();

@@ -112,6 +112,7 @@ const fetchPaymentRequest = async (paymentRequestId: string) => {
           ) {
             id
             sessionPreviewData: session_preview_data
+            feeBreakdown: fee_breakdown
             createdAt: created_at
             paymentAmount: payment_amount
             govPayPaymentId: govpay_payment_id

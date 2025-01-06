@@ -1,7 +1,9 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
-import { contextDefaults } from "./context";
-import { externalPortalServiceProps } from "./serviceData";
+import { contextDefaults } from "./context.js";
+import { externalPortalServiceProps } from "./serviceData.js";
+import { OptionWithDataValues } from "./types.js";
+import { selectedFlag } from "./globalHelpers.js";
 
 const createBaseComponent = async (
   page: Page,
@@ -53,11 +55,19 @@ const createBaseComponent = async (
       break;
     case ComponentType.AddressInput:
       await page.getByPlaceholder("Title").fill(title || "");
-      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
+      await page
+        .getByRole("combobox", { name: "Data field" })
+        .fill(options?.[0] || "proposal.address");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.ContactInput:
       await page.getByPlaceholder("Title").fill(title || "");
-      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
+      await page
+        .getByRole("combobox", { name: "Data field" })
+        .fill(options?.[0] || "proposal.contact");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.TaskList:
       await page.getByPlaceholder("Main Title").fill(title || "");
@@ -81,7 +91,14 @@ const createBaseComponent = async (
       break;
     case ComponentType.FindProperty:
       break;
+    case ComponentType.PropertyInformation:
+      await page.getByLabel("Show users a 'change' link to").click();
+      break;
     case ComponentType.PlanningConstraints:
+      await page
+        .getByRole("row", { name: "via Planning Data: conservation-area" })
+        .locator("span")
+        .click();
       break;
     case ComponentType.DrawBoundary:
       break;
@@ -103,15 +120,27 @@ const createBaseComponent = async (
       }
       break;
     case ComponentType.FileUpload:
-      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
+      await page
+        .getByRole("combobox", { name: "Data field" })
+        .fill(options?.[0] || "otherDocument");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.FileUploadAndLabel:
       await page.getByPlaceholder("File type").fill(options?.[0] || "");
-      await page.getByPlaceholder("Data Field").fill(options?.[1] || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
+      await page
+        .getByRole("combobox", { name: "Data field" })
+        .fill(options?.[1] || "otherDocument");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.List:
       await page.getByPlaceholder("Title").fill(title || "");
-      await page.getByPlaceholder("Data Field").fill(options?.[0] || "");
+      await page.getByRole("combobox", { name: "Data field" }).click();
+      await page
+        .getByRole("combobox", { name: "Data field" })
+        .fill(options?.[0] || "proposal.list");
+      await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
     case ComponentType.Content:
       await page
@@ -119,6 +148,10 @@ const createBaseComponent = async (
         .fill(options?.[0] || "");
       break;
     case ComponentType.Filter:
+      await page
+        .getByTestId("flagset-category-select")
+        .selectOption(selectedFlag);
+      break;
     case ComponentType.Feedback:
       break;
     case ComponentType.InternalPortal:
@@ -151,6 +184,23 @@ export const createQuestionWithOptions = async (
     questionText,
     options,
   );
+};
+
+export const createQuestionWithDataFieldOptions = async (
+  page: Page,
+  locatingNode: Locator,
+  questionText: string,
+  options: OptionWithDataValues[],
+  dataField: string,
+) => {
+  await locatingNode.click();
+  await page.getByRole("dialog").waitFor();
+  await page.getByPlaceholder("Text").fill(questionText);
+  await page.getByRole("combobox", { name: "Data field" }).click();
+  await page.getByRole("combobox", { name: "Data field" }).fill(dataField);
+  await page.getByRole("combobox", { name: "Data field" }).press("Enter");
+  await createComponentOptionsWithDataValues(page, options);
+  await page.locator('button[form="modal"][type="submit"]').click();
 };
 
 export const createNotice = async (
@@ -275,6 +325,17 @@ export const createFindProperty = async (page: Page, locatingNode: Locator) => {
   await createBaseComponent(page, locatingNode, ComponentType.FindProperty);
 };
 
+export const createPropertyInformation = async (
+  page: Page,
+  locatingNode: Locator,
+) => {
+  await createBaseComponent(
+    page,
+    locatingNode,
+    ComponentType.PropertyInformation,
+  );
+};
+
 export const createPlanningConstraints = async (
   page: Page,
   locatingNode: Locator,
@@ -328,6 +389,23 @@ async function createComponentOptions(
     await page.locator("button").filter({ hasText: buttonText }).click();
     await page.getByPlaceholder("Option").nth(index).fill(option);
     index++;
+  }
+
+  await page.getByPlaceholder("Flags (up to one per category)").nth(1).click();
+  await page.getByRole("option", { name: selectedFlag, exact: true }).click();
+}
+
+async function createComponentOptionsWithDataValues(
+  page: Page,
+  options: OptionWithDataValues[],
+) {
+  for (const option of options) {
+    await page.locator("button").filter({ hasText: "add new" }).click();
+    await page.getByPlaceholder("Option").last().fill(option.optionText);
+    await page.getByRole("combobox", { name: "Data field" }).last().click();
+    await page
+      .getByRole("option", { name: option.dataValue, exact: true })
+      .click();
   }
 }
 

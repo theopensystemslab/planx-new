@@ -258,59 +258,57 @@ const FlowItem: React.FC<FlowItemProps> = ({
 };
 
 const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
-  <Box sx={(theme) => ({ 
-      mt: 4, 
-      backgroundColor: theme.palette.background.paper, 
-      borderRadius: "8px", 
-      display: "flex", 
-      flexDirection: "column", 
+  <Box
+    sx={(theme) => ({
+      mt: 4,
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: "8px",
+      display: "flex",
+      flexDirection: "column",
       alignItems: "center",
-      gap: 2, 
-      padding: 2 
-    })}>
-    <Typography variant="h3">No services found</Typography>  
-    <Typography>Get started by creating your first service</Typography>  
-    <AddFlowButton flows={flows}/>
+      gap: 2,
+      padding: 2,
+    })}
+  >
+    <Typography variant="h3">No services found</Typography>
+    <Typography>Get started by creating your first service</Typography>
+    <AddFlowButton flows={flows} />
   </Box>
-)
+);
 
 const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
   const { navigate } = useNavigation();
-  const { teamId, createFlow, teamSlug } = useStore()
+  const { teamId, createFlow, teamSlug } = useStore();
 
   const addFlow = async () => {
     const newFlowName = prompt("Service name");
     if (!newFlowName) return;
 
     const newFlowSlug = slugify(newFlowName);
-    const duplicateFlowName = flows?.find(
-      (flow) => flow.slug === newFlowSlug,
-    );
+    const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
 
     if (duplicateFlowName) {
       alert(
         `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
       );
+      return;
     }
 
     const newId = await createFlow(teamId, newFlowSlug, newFlowName);
     navigate(`/${teamSlug}/${newId}`);
-  }
+  };
 
-  return(
-    <AddButton onClick={addFlow}>
-      Add a new service
-    </AddButton>
-  )
-}
+  return <AddButton onClick={addFlow}>Add a new service</AddButton>;
+};
 
 const Team: React.FC = () => {
-  const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore((state) => [state.getTeam(), state.canUserEditTeam, state.getFlows ]);
+  const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
+    (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
+  );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
 
   const fetchFlows = useCallback(() => {
-    getFlows(teamId)
-    .then((flows) => {
+    getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
       const sortedFlows = flows.toSorted((a, b) =>
         b.operations[0]["createdAt"].localeCompare(
@@ -325,7 +323,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = flows && Boolean(flows.length)
+  const teamHasFlows = flows && Boolean(flows.length);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
@@ -349,15 +347,9 @@ const Team: React.FC = () => {
           <Typography variant="h2" component="h1" pr={1}>
             Services
           </Typography>
-          {canUserEditTeam(slug) ? (
-            <Edit />
-          ) : (
-            <Visibility />
-          )}
+          {canUserEditTeam(slug) ? <Edit /> : <Visibility />}
         </Box>
-        {showAddFlowButton && (
-          <AddFlowButton flows={flows}/>
-        )}
+        {showAddFlowButton && <AddFlowButton flows={flows} />}
       </Box>
       {teamHasFlows && (
         <DashboardList>
@@ -373,9 +365,9 @@ const Team: React.FC = () => {
               }}
             />
           ))}
-        </DashboardList>)
-      }
-      { flows && !flows.length && <GetStarted flows={flows}/> }
+        </DashboardList>
+      )}
+      {flows && !flows.length && <GetStarted flows={flows} />}
     </Container>
   );
 };

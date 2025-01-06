@@ -1,4 +1,4 @@
-import ChecklistComponent from "@planx/components/Checklist/Editor";
+import ChecklistComponent from "@planx/components/Checklist/Editor/Editor";
 import { within } from "@testing-library/react";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
 import { useStore } from "pages/FlowEditor/lib/store";

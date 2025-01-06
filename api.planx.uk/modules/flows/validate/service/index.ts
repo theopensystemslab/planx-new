@@ -8,8 +8,9 @@ import * as jsondiffpatch from "jsondiffpatch";
 import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers.js";
 import { validateFileTypes } from "./fileTypes.js";
 import { validateInviteToPay } from "./inviteToPay.js";
-import { validateSections } from "./sections.js";
+import { validatePlanningConstraints } from "./planningConstraints.js";
 import { validateProjectTypes } from "./projectTypes.js";
+import { validateSections } from "./sections.js";
 
 type AlteredNode = {
   id: string;
@@ -54,7 +55,14 @@ const validateAndDiffFlow = async (
   const inviteToPay = validateInviteToPay(flattenedFlow);
   const fileTypes = validateFileTypes(flattenedFlow);
   const projectTypes = validateProjectTypes(flattenedFlow);
-  validationChecks.push(sections, inviteToPay, fileTypes, projectTypes);
+  const planningConstraints = validatePlanningConstraints(flattenedFlow);
+  validationChecks.push(
+    sections,
+    inviteToPay,
+    fileTypes,
+    projectTypes,
+    planningConstraints,
+  );
 
   // Arrange list of validation checks in order of status: Fail, Warn, Pass, Not applicable
   const failingChecks = validationChecks.filter((v) => v.status == "Fail");

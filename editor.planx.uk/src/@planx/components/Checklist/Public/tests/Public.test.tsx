@@ -1,131 +1,13 @@
 import { screen } from "@testing-library/react";
-// eslint-disable-next-line no-restricted-imports
-import userEvent, {
-  PointerEventsCheckLevel,
-} from "@testing-library/user-event";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { Option } from "../shared";
-import { Group } from "./model";
-import Checklist, { ChecklistLayout } from "./Public";
-
-const options: {
-  [key in ChecklistLayout]?: Array<Option>;
-} = {
-  [ChecklistLayout.Basic]: [
-    {
-      id: "flat_id",
-      data: {
-        text: "Flat",
-      },
-    },
-    {
-      id: "caravan_id",
-      data: {
-        text: "Caravan",
-      },
-    },
-    {
-      id: "house_id",
-      data: {
-        text: "House",
-      },
-    },
-    {
-      id: "spaceship_id",
-      data: {
-        text: "Spaceship",
-      },
-    },
-  ],
-  [ChecklistLayout.Images]: [
-    {
-      id: "flat_id",
-      data: {
-        text: "Flat",
-        img: "flat.jpg",
-      },
-    },
-    {
-      id: "caravan_id",
-      data: {
-        text: "Caravan",
-        img: "caravan.jpg",
-      },
-    },
-    {
-      id: "house_id",
-      data: {
-        text: "House",
-        img: "house.jpg",
-      },
-    },
-    {
-      id: "spaceship_id",
-      data: {
-        text: "Spaceship",
-        img: "spaceship.jpg",
-      },
-    },
-  ],
-};
-
-const groupedOptions: Array<Group<Option>> = [
-  {
-    title: "Section 1",
-    children: [
-      {
-        id: "S1_Option1",
-        data: {
-          text: "S1 Option1",
-        },
-      },
-      {
-        id: "S1_Option2",
-        data: {
-          text: "S1 Option2",
-        },
-      },
-    ],
-  },
-  {
-    title: "Section 2",
-    children: [
-      {
-        id: "S2_Option1",
-        data: {
-          text: "S2 Option1",
-        },
-      },
-      {
-        id: "S2_Option2",
-        data: {
-          text: "S2 Option2",
-        },
-      },
-    ],
-  },
-  {
-    title: "Section 3",
-    children: [
-      {
-        id: "S3_Option1",
-        data: {
-          text: "S3 Option1",
-        },
-      },
-      {
-        id: "S3_Option2",
-        data: {
-          text: "S3 Option2",
-        },
-      },
-    ],
-  },
-];
+import { ChecklistLayout } from "../../model";
+import Checklist from "../Public";
+import { groupedOptions, options } from "./mockOptions";
+import { pressContinue, pressOption } from "./testUtils";
 
 describe("Checklist Component - Grouped Layout", () => {
   it("answers are submitted in order they were supplied", async () => {
@@ -201,7 +83,7 @@ describe("Checklist Component - Grouped Layout", () => {
         groupedOptions={groupedOptions}
       />,
     );
-    const [section1Button, section2Button, section3Button, _continueButton] =
+    const [section1Button, section2Button, section3Button] =
       screen.getAllByRole("button");
 
     // All accordion sections begin collapsed
@@ -261,20 +143,11 @@ describe("Checklist Component - Basic & Images Layout", () => {
 
       expect(screen.getByRole("heading")).toHaveTextContent("home type?");
 
-      // Disabling pointerEventsCheck here allows us to bypass a false negative thrown by react-testing-library
-      // Tests fail to click the text elements when using ChecklistLayout.Images due to the pointerEvents: "none" style applied to textLabelWrapper, but the element can be clicked in all tested browsers
-      await userEvent.click(screen.getByText("Spaceship"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
-      await userEvent.click(screen.getByText("Flat"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
-      await userEvent.click(screen.getByText("House"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
-      await userEvent.click(screen.getByTestId("continue-button"), {
-        pointerEventsCheck: PointerEventsCheckLevel.Never,
-      });
+      await pressOption("Spaceship");
+      await pressOption("Flat");
+      await pressOption("House");
+
+      await pressContinue();
 
       // order matches the order of the options, not order they were clicked
       expect(handleSubmit).toHaveBeenCalledWith({

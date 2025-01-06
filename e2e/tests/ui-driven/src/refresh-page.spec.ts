@@ -3,12 +3,12 @@ import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
+} from "./helpers/context.js";
 import {
   createAuthenticatedSession,
   isGetUserRequest,
-} from "./helpers/globalHelpers";
-import { TestContext } from "./helpers/types";
+} from "./helpers/globalHelpers.js";
+import { TestContext } from "./helpers/types.js";
 
 test.describe("Refresh page", () => {
   let context: TestContext = {
