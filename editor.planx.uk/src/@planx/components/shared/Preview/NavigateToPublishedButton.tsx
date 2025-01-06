@@ -2,9 +2,9 @@ import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { useNavigation } from "react-navi";
+
 const NavigateToPublishedButton: React.FC = () => {
   const { navigate } = useNavigation();
-
   const handleClick = () => {
     navigate("published");
   };

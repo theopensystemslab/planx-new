@@ -23,6 +23,8 @@ const BUTTON_COMPONENTS = {
   "navigate-to-published": NavigateToPublishedButton,
 } as const;
 
+const TEST_ENVIRONMENTS = new Set(["preview", "draft"]);
+
 const OrNavigationButton = ({
   handleSubmit,
 }: {
@@ -35,7 +37,6 @@ const OrNavigationButton = ({
   ]);
 
   const endOfUrl = window.location.pathname.split("/").slice(-1)[0];
-  const TEST_ENVIRONMENTS = new Set(["preview", "draft"]);
 
   const isTestEnvironment: boolean = TEST_ENVIRONMENTS.has(endOfUrl);
 
@@ -67,7 +68,7 @@ const OrNavigationButton = ({
     ButtonComponent && (
       <InnerContainer>
         <Typography variant="body1">or</Typography>
-        {<ButtonComponent />}
+        <ButtonComponent />
       </InnerContainer>
     )
   );
