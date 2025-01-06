@@ -14,7 +14,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
     expect(
       screen.queryByText("Verify your submission email address"),
     ).toBeInTheDocument();
-    expect(screen.queryByLabelText("Email address")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Submission email address")).toBeInTheDocument();
   });
 
   it("should not display an error message", () => {
@@ -31,6 +31,7 @@ describe("when the VerifySubmissionEmail component renders", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
   it.todo(
     "shows sessionId and local authority in the application details table",
   );

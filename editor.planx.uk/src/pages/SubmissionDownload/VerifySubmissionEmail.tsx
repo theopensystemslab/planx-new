@@ -7,6 +7,7 @@ import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
 import axios, { isAxiosError } from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useFormik } from "formik";
+import startCase from "lodash/startCase.js";
 import React, { useState } from "react";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -27,7 +28,7 @@ const verifySubmissionEmailSchema = object({
 export const VerifySubmissionEmail = ({
   params,
 }: VerifySubmissionEmailProps): JSX.Element => {
-  const { sessionId, team } = params;
+  const { sessionId, team, flow } = params;
   const [downloadApplicationError, setDownloadApplicationError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +46,7 @@ export const VerifySubmissionEmail = ({
         const { data } = await axios.get(url, {
           responseType: "arraybuffer",
         });
-        downloadZipFile(data);
+        downloadZipFile(data, { filename: `${flow}-${sessionId}.zip` });
         resetForm();
         setLoading(false);
       } catch (error) {
@@ -73,6 +74,15 @@ export const VerifySubmissionEmail = ({
       ) : (
         <Box width="100%">
           <Card handleSubmit={formik.handleSubmit}>
+            <Typography maxWidth="formWrap" variant="h2" gutterBottom>
+              Application details
+            </Typography>
+            <SummaryListTable>
+              <Box component="dt">Session ID</Box>
+              <Box component="dd">{sessionId}</Box>
+              <Box component="dt">Local Authority</Box>
+              <Box component="dd">{startCase(team)}</Box>
+            </SummaryListTable>
             <ErrorWrapper error={downloadApplicationError}>
               <>
                 <CardHeader
@@ -80,7 +90,10 @@ export const VerifySubmissionEmail = ({
                   description="We will use this to confirm that you have access to the submission email inbox that is set up for your team. Entering the correct email address will start the file download automatically."
                 />
                 <InputRow>
-                  <InputLabel label={"Email address"} htmlFor={"email"}>
+                  <InputLabel
+                    label={"Submission email address"}
+                    htmlFor={"email"}
+                  >
                     <Input
                       bordered
                       errorMessage={
@@ -97,20 +110,6 @@ export const VerifySubmissionEmail = ({
                     />
                   </InputLabel>
                 </InputRow>
-                <Typography
-                  maxWidth="formWrap"
-                  variant="h2"
-                  pt={5}
-                  gutterBottom
-                >
-                  Application details
-                </Typography>
-                <SummaryListTable>
-                  <Box component="dt">Session ID</Box>
-                  <Box component="dd">{sessionId}</Box>
-                  <Box component="dt">Local Authority</Box>
-                  <Box component="dd">{team}</Box>
-                </SummaryListTable>
               </>
             </ErrorWrapper>
           </Card>

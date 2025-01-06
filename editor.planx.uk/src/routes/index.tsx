@@ -65,6 +65,12 @@ const editorRoutes = mount({
   ),
 });
 
+const loadSendToEmailRoutes = () =>
+  compose(
+    withView(loadingView),
+    lazy(() => import("./sendToEmailSubmissions")),
+  );
+
 const loadPayRoutes = () =>
   compose(
     withView(loadingView),
@@ -108,5 +114,7 @@ export default isPreviewOnlyDomain
       "/:team/:flow/preview": loadPreviewRoutes(), // loads current draft flow and latest published external portals, or throws Not Found if any external portal is unpublished
       "/:team/:flow/draft": loadDraftRoutes(), // loads current draft flow and draft external portals
       "/:team/:flow/pay": loadPayRoutes(),
+      "/:team/:flow/:sessionId/download-application": loadSendToEmailRoutes(),
+
       "*": editorRoutes,
     });
