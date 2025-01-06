@@ -1,9 +1,9 @@
 import { After, Given, Then, When, World } from "@cucumber/cucumber";
-import { cleanup, createDemoUser } from "./helpers";
+import { cleanup, createDemoUser } from "./helpers.js";
 import { User } from "@opensystemslab/planx-core/types";
-import { $admin } from "../client";
+import { $admin } from "../client.js";
 import assert from "assert";
-import { createTeam, createUser } from "../globalHelpers";
+import { createTeam, createUser } from "../globalHelpers.js";
 
 export class CustomWorld extends World {
   user!: User;

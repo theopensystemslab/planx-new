@@ -1,5 +1,5 @@
 import type { Role } from "@opensystemslab/planx-core/types";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 function getJWT({ role }: { role: Role }) {
   const data = {
@@ -12,7 +12,7 @@ function getJWT({ role }: { role: Role }) {
     },
   };
 
-  return sign(data, process.env.JWT_SECRET!);
+  return jwt.sign(data, process.env.JWT_SECRET!);
 }
 
 function authHeader({ role }: { role: Role }) {
