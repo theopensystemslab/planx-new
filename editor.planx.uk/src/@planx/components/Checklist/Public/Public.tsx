@@ -1,6 +1,9 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
-import { checklistValidationSchema } from "@planx/components/Checklist/model";
+import {
+  ChecklistLayout,
+  checklistValidationSchema,
+} from "@planx/components/Checklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
@@ -18,12 +21,6 @@ import { GroupedChecklistOptions } from "./components/GroupedChecklistOptions";
 import { toggleNonExclusiveCheckbox } from "./helpers";
 import { useExclusiveOption } from "./hooks/useExclusiveOption";
 import { useSortedOptions } from "./hooks/useSortedOptions";
-
-export enum ChecklistLayout {
-  Basic,
-  Grouped,
-  Images,
-}
 
 const ChecklistComponent: React.FC<Props> = (props) => {
   const {

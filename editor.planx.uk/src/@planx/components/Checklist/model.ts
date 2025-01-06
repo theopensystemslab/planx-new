@@ -1,7 +1,12 @@
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
-import { ChecklistLayout } from "./Public/Public";
+
+export enum ChecklistLayout {
+  Basic,
+  Grouped,
+  Images,
+}
 
 export interface Group<T> {
   title: string;
