@@ -70,8 +70,6 @@ describe("when the user submits a correct email address", () => {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
-  it.todo("displays visual feedback to the user");
-
   it("downloads the application file", async () => {
     const { user } = setup(
       <VerifySubmissionEmail
@@ -93,9 +91,65 @@ describe("when the user submits a correct email address", () => {
 });
 
 describe("when the user submits an incorrect email address", () => {
-  it.todo("displays a suitable error message");
+  const server = setupServer(
+    http.get(
+      "http://localhost:7002/download-application-files/a-session-id/?email=wrong_email%40council.com&localAuthority=barking-and-dagenham",
+      () => {
+        return new HttpResponse(null, { status: 403 });
+      },
+    ),
+  );
+
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
+  it("displays a suitable error message", async () => {
+    const { user } = setup(
+      <VerifySubmissionEmail
+        params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
+      />,
+    );
+    const emailInput = screen.getByLabelText("Submission email address");
+    await user.type(emailInput, "wrong_email@council.com");
+    await user.click(screen.getByRole("button", { name: "Continue" }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText("Sorry, something went wrong. Please try again."),
+      ).toBeInTheDocument(),
+    );
+  });
 });
 
-describe("when user submits an email address and there is a server-side issue", () => {
-  it.todo("displays a suitable error message");
+describe("when user submits a correct email address but there is a server-side issue", () => {
+  const server = setupServer(
+    http.get(
+      "http://localhost:7002/download-application-files/a-session-id/?email=submission%40council.com&localAuthority=barking-and-dagenham",
+      () => {
+        return new HttpResponse(null, { status: 500 });
+      },
+    ),
+  );
+
+  beforeAll(() => server.listen());
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
+
+  it("displays a suitable error message", async () => {
+    const { user } = setup(
+      <VerifySubmissionEmail
+        params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
+      />,
+    );
+    const emailInput = screen.getByLabelText("Submission email address");
+    await user.type(emailInput, "submission@council.com");
+    await user.click(screen.getByRole("button", { name: "Continue" }));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText("Sorry, something went wrong. Please try again."),
+      ).toBeInTheDocument(),
+    );
+  });
 });
