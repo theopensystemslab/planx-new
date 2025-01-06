@@ -1,6 +1,11 @@
 import { screen, waitFor } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
+import {
+  getWith403,
+  getWithData,
+  getWithServerSideError,
+  mockData,
+} from "mockServer/handlers/mockDownloadApplicationFile";
+import server from "mockServer/server";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -56,21 +61,8 @@ describe("when the VerifySubmissionEmail component renders", () => {
 });
 
 describe("when the user submits a correct email address", () => {
-  const mockData = new ArrayBuffer();
-  const server = setupServer(
-    http.get(
-      "http://localhost:7002/download-application-files/a-session-id/?email=submission%40council.com&localAuthority=barking-and-dagenham",
-      () => {
-        return new HttpResponse(mockData, { status: 200 });
-      },
-    ),
-  );
-
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-
   it("downloads the application file", async () => {
+    server.use(getWithData);
     const { user } = setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
@@ -91,20 +83,8 @@ describe("when the user submits a correct email address", () => {
 });
 
 describe("when the user submits an incorrect email address", () => {
-  const server = setupServer(
-    http.get(
-      "http://localhost:7002/download-application-files/a-session-id/?email=wrong_email%40council.com&localAuthority=barking-and-dagenham",
-      () => {
-        return new HttpResponse(null, { status: 403 });
-      },
-    ),
-  );
-
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-
   it("displays a suitable error message", async () => {
+    server.use(getWith403);
     const { user } = setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
@@ -123,20 +103,8 @@ describe("when the user submits an incorrect email address", () => {
 });
 
 describe("when user submits a correct email address but there is a server-side issue", () => {
-  const server = setupServer(
-    http.get(
-      "http://localhost:7002/download-application-files/a-session-id/?email=submission%40council.com&localAuthority=barking-and-dagenham",
-      () => {
-        return new HttpResponse(null, { status: 500 });
-      },
-    ),
-  );
-
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-
   it("displays a suitable error message", async () => {
+    server.use(getWithServerSideError);
     const { user } = setup(
       <VerifySubmissionEmail
         params={{ sessionId: "a-session-id", team: "barking-and-dagenham" }}
