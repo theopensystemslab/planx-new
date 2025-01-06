@@ -9,8 +9,8 @@ import {
   DataTableArray,
   DataTableRecord,
   Flow,
-} from "../helper";
-import { $admin, getClient } from "../../client";
+} from "../helper.js";
+import { $admin, getClient } from "../../client.js";
 import { strict as assert } from "node:assert";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Team, User } from "@opensystemslab/planx-core/types";

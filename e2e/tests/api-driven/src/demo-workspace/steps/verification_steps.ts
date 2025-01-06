@@ -1,5 +1,5 @@
 import { Then } from "@cucumber/cucumber";
-import { CustomWorld } from "./background_steps";
+import { CustomWorld } from "./background_steps.js";
 import { strict as assert } from "node:assert";
 import {
   createFlow,
@@ -8,7 +8,7 @@ import {
   getFlowBySlug,
   updateFlow,
   updateTeamSettings,
-} from "../helper";
+} from "../helper.js";
 
 Then<CustomWorld>("I should only see my own flows", async function (this) {
   assert.equal(

@@ -188,21 +188,21 @@ const _add = (
   });
 };
 
+type NodeDataWithId = { id?: string; type?: number; data?: object };
+type AddContext = {
+  children?: Child[];
+  parent?: string;
+  before?: string;
+};
+
 export const add =
   (
-    {
-      id = uniqueId(),
-      ...nodeData
-    }: { id?: string; type?: number; data?: object },
+    { id = uniqueId(), ...nodeData }: NodeDataWithId,
     {
       children = [],
       parent = ROOT_NODE_KEY,
       before = undefined,
-    }: {
-      children?: Child[];
-      parent?: string;
-      before?: string;
-    } = {},
+    }: AddContext = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {

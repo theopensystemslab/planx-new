@@ -198,9 +198,6 @@ const keyFormatters: KeyMap = {
     getDisplayKey: () => "Formula",
     getHeadline: ({ item }) => (item.data as unknown as Calculate).formula,
   },
-  "data.output": {
-    getDisplayKey: () => "Data",
-  },
   // List contains data variables nested within its schema
   "data.schema.fields.data.fn": {
     getDisplayKey: () => "Data",

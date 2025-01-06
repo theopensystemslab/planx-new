@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
-  ComponentType,
+  ComponentType as TYPES,
   FlowGraph,
   NodeId,
   OrderedFlow,
+  flatFlags,
 } from "@opensystemslab/planx-core/types";
 import {
   add,
@@ -188,6 +189,7 @@ export interface EditorStore extends Store.Store {
     href: string;
   }) => void;
   getURLForNode: (nodeId: string) => string;
+  getFlowSchema: () => { nodes?: string[], options?: string[] } | undefined;
 }
 
 export const editorStore: StateCreator<
@@ -577,7 +579,7 @@ export const editorStore: StateCreator<
 
     const path = getPathForNode({ nodeId, flow });
     const internalPortals = path.filter(
-      ({ type }) => type === ComponentType.InternalPortal,
+      ({ type }) => type === TYPES.InternalPortal,
     );
     const [node, parent, grandparent] = path;
 
@@ -594,11 +596,40 @@ export const editorStore: StateCreator<
 
     // Determine node path based on the node type
     const nodePath =
-      node.type === ComponentType.Answer
+      node.type === TYPES.Answer
         ? `nodes/${grandparent.id}/nodes/${parent.id}/edit`
         : `nodes/${parent.id}/nodes/${node.id}/edit`;
 
     const urlPath = `/${teamSlug}/${flowSlug}${portalPath}/${nodePath}`;
     return urlPath;
+  },
+
+  getFlowSchema: () => {
+    const { flow } = get();
+    if (!flow) return;
+
+    const nodes: Set<string> = new Set();
+    const options: Set<string> = new Set();
+
+    Object.entries(flow).map(([_id, node]) => {
+      if (node.data?.fn) {
+        // Exclude Filter fn value as not exposed to editors
+        if (node.data?.fn !== "flag") nodes.add(node.data.fn)
+      };
+  
+      // TODO align to (reuse?) data facets from search
+      if (node.data?.dataFieldBoundary) nodes.add(node.data.dataFieldBoundary);
+
+      if (node.data?.val) {
+        // Exclude Filter Option flag values as not exposed to editors
+        const flagVals = flatFlags.map((flag) => flag.value);
+        if (!flagVals.includes(node.data.val)) options.add(node.data.val)
+      };
+    });
+
+    return {
+      nodes: Array.from(nodes).sort(),
+      options: Array.from(options).sort(),
+    };
   },
 });

@@ -7,13 +7,13 @@ import {
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "../helpers/context";
-import { cards, setFeatureFlag } from "../helpers/globalHelpers";
-import { fillGovUkCardDetails } from "../helpers/userActions";
-import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow";
-import { getPaymentRequestBySessionId } from "./helpers";
-import { mockPaymentRequestDetails, mockSessionData } from "./mocks";
-import { TestContext } from "../helpers/types";
+} from "../helpers/context.js";
+import { cards, setFeatureFlag } from "../helpers/globalHelpers.js";
+import { fillGovUkCardDetails } from "../helpers/userActions.js";
+import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow.js";
+import { getPaymentRequestBySessionId } from "./helpers.js";
+import { mockPaymentRequestDetails, mockSessionData } from "./mocks.js";
+import { TestContext } from "../helpers/types.js";
 
 let context: TestContext = {
   ...contextDefaults,
