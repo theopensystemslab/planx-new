@@ -80,10 +80,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       // Account for flat or expandable Checklist options
       options =
         options || groupedOptions?.map((group) => group.children)?.flat();
-      if (values.fn && !options?.some((option) => option.data.val)) {
-        errors.fn =
-          "At least one option must set a data value when the checklist has a data field";
-      }
 
       const exclusiveOptions: Option[] | undefined = options?.filter(
         (option) => option.data.exclusive,
@@ -92,7 +88,11 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
         errors.allRequired =
           'Cannot configure exclusive "or" option alongside "all required" setting';
       }
-      if (exclusiveOptions && exclusiveOptions.length > 1) {
+      if (values.fn && !options?.some((option) => option.data.val)) {
+        errors.fn =
+          "At least one option must set a data value when the checklist has a data field";
+      }
+      if (exclusiveOptions && exclusiveOptions.length > 1 && !groupedOptions) {
         errors.options =
           "There should be a maximum of one exclusive option configured";
       }
