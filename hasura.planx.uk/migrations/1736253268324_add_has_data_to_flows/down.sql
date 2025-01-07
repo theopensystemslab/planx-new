@@ -1,0 +1,1 @@
+ALTER TABLE "public"."flows" DROP COLUMN "has_send_component";
