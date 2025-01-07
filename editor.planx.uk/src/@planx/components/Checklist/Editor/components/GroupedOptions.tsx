@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
+import { hasFeatureFlag } from "lib/featureFlags";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -14,7 +15,9 @@ import InputRow from "ui/shared/InputRow";
 
 import { Option } from "../../../shared";
 import type { Group } from "../../model";
+import { partitionGroupedOptions } from "../../Public/helpers";
 import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
+import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props {
@@ -23,6 +26,12 @@ interface Props {
 
 export const GroupedOptions = ({ formik }: Props) => {
   const { schema, initialOptionVals } = useInitialOptions(formik);
+
+  const [exclusiveOptions, nonExclusiveOptions]: Option[][] =
+    partitionGroupedOptions(formik.values.groupedOptions);
+
+  const exclusiveOrOptionManagerShouldRender =
+    hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptions.length > 0;
   return (
     <Box>
       {formik.values.groupedOptions.map(
@@ -127,6 +136,15 @@ export const GroupedOptions = ({ formik }: Props) => {
           add new group
         </Button>
       </Box>
+      {exclusiveOrOptionManagerShouldRender ? (
+        <ExclusiveOrOptionManager
+          formik={formik}
+          exclusiveOptions={exclusiveOptions}
+          nonExclusiveOptions={nonExclusiveOptions}
+        />
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };
