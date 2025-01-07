@@ -1,1 +1,1 @@
-ALTER TABLE "public"."flows" DROP COLUMN "has_send_component";
+ALTER TABLE "public"."published_flows" DROP COLUMN "has_send_component";

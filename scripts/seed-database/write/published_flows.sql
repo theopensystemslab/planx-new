@@ -5,7 +5,8 @@ CREATE TEMPORARY TABLE sync_published_flows (
   flow_id uuid,
   summary text,
   publisher_id int,
-  created_at timestamptz
+  created_at timestamptz,
+  has_send_component boolean
 );
 
 \copy sync_published_flows (id, data, flow_id, summary, publisher_id, created_at) FROM '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');
