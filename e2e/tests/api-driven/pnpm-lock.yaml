@@ -9,8 +9,8 @@ dependencies:
     specifier: ^11.1.1
     version: 11.1.1
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#e3b4420
-    version: github.com/theopensystemslab/planx-core/e3b4420
+    specifier: git+https://github.com/theopensystemslab/planx-core#f8cdf5b
+    version: github.com/theopensystemslab/planx-core/f8cdf5b
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -1137,7 +1137,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: false
 
   /convert-source-map@1.9.0:
@@ -1970,6 +1970,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: false
+
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: false
 
   /lodash.includes@4.3.0:
@@ -3043,8 +3047,8 @@ packages:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/e3b4420:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/e3b4420}
+  github.com/theopensystemslab/planx-core/f8cdf5b:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f8cdf5b}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -3065,7 +3069,7 @@ packages:
       graphql: 16.10.0
       graphql-request: 6.1.0(graphql@16.10.0)
       json-schema-to-typescript: 15.0.3
-      lodash: 4.17.21
+      lodash-es: 4.17.21
       marked: 15.0.5
       prettier: 3.4.2
       react: 18.3.1
