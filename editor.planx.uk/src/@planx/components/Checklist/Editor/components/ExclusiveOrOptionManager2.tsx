@@ -12,18 +12,14 @@ import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
 
 interface Props {
   formik: FormikHookReturn;
-  exclusiveOptions: Option[];
-  nonExclusiveOptions: Option[] | Array<Group<Option>>;
-  groupIndex?: number;
-  grouped?: true;
+  exclusiveOptionGroup: Array<Group<Option>>;
+  nonExclusiveOptionGroups: Array<Group<Option>>;
 }
 
-export const ExclusiveOrOptionManager = ({
+export const ExclusiveOrOptionManager2 = ({
   formik,
-  exclusiveOptions,
-  nonExclusiveOptions,
-  groupIndex,
-  grouped,
+  exclusiveOptionGroup,
+  nonExclusiveOptionGroups,
 }: Props) => {
   const { schema, initialOptionVals } = useInitialOptions(formik);
 
@@ -31,16 +27,35 @@ export const ExclusiveOrOptionManager = ({
     <Box mt={1}>
       <ErrorWrapper error={formik.errors.allRequired as string}>
         <ListManager
-          values={exclusiveOptions || []}
+          values={
+            (exclusiveOptionGroup.length && exclusiveOptionGroup[0].children) ||
+            []
+          }
           onChange={(newExclusiveOptions) => {
-            const newCombinedOptions = [
-              ...nonExclusiveOptions,
-              ...newExclusiveOptions,
+            // empty array or optionArray with new option added
+
+            // raise error if already an excl option
+
+            const exclusiveOptionGroup = [
+              {
+                title: "Exclusive Or Option",
+                children: newExclusiveOptions,
+              },
             ];
-            formik.setFieldValue(
-              grouped ? "groupedOptions" : "options",
-              newCombinedOptions,
-            );
+            console.log("exclusiveOptionGroup", exclusiveOptionGroup);
+            const newGroupedOptions = [
+              ...formik.values.groupedOptions,
+              ...exclusiveOptionGroup,
+            ];
+            console.log("newGroupedOptions", newGroupedOptions);
+
+            formik.setFieldValue("groupedOptions", newGroupedOptions);
+            return;
+            // const newCombinedOptions = [
+            //   ...nonExclusiveOptions,
+            //   ...newExclusiveOptions,
+            // ];
+            // formik.setFieldValue("options", newCombinedOptions);
           }}
           newValueLabel='add "or" option'
           maxItems={1}
@@ -58,7 +73,6 @@ export const ExclusiveOrOptionManager = ({
           Editor={BaseOptionsEditor}
           editorExtraProps={{
             showValueField: !!formik.values.fn,
-            groupIndex,
             schema: getOptionsSchemaByFn(
               formik.values.fn,
               schema,

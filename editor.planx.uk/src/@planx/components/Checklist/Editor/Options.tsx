@@ -13,10 +13,6 @@ import { GroupedOptions } from "./components/GroupedOptions";
 import ChecklistOptionsEditor from "./components/OptionsEditor";
 
 export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
-  React.useEffect(() => {
-    console.log("FORMIK OPTIONS", formik.values.options);
-  }, [formik]);
-
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
     formik.values.options,
     (option) => option.data.exclusive,
@@ -24,12 +20,6 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 
   const exclusiveOrOptionManagerShouldRender =
     hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptions.length > 0;
-
-  React.useEffect(() => {
-    console.log("nonExclusive", nonExclusiveOptions, {
-      exclusiveOrOptionManagerShouldRender,
-    });
-  }, [exclusiveOrOptionManagerShouldRender, nonExclusiveOptions]);
 
   const { schema, initialOptionVals } = useInitialOptions(formik);
 

@@ -81,6 +81,8 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       options =
         options || groupedOptions?.map((group) => group.children)?.flat();
 
+      console.log("OPTIONS IN EDITOR", options);
+
       const exclusiveOptions: Option[] | undefined = options?.filter(
         (option) => option.data.exclusive,
       );
