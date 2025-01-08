@@ -15,7 +15,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { Option } from "../../../shared";
 import type { Group } from "../../model";
-import { partitionGroupedOptions2 } from "../../Public/helpers";
+import { partitionGroupedOptions } from "../../Public/helpers";
 import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
@@ -27,113 +27,101 @@ interface Props {
 export const GroupedOptions = ({ formik }: Props) => {
   const { schema, initialOptionVals } = useInitialOptions(formik);
 
-  const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions2(
+  const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
     formik.values.groupedOptions,
   );
 
   const exclusiveOrOptionManagerShouldRender =
     hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptionGroups.length > 0;
 
-  // const nonExclusiveOptionGroups = formik.values.groupedOptions.filter(
-  //   (group: Group<Option>) =>
-  //     !group.children.some((child: Option) => child.data.exclusive === true)
-  // );
-
-  const bla = formik.values.groupedOptions.filter(
-    (object: Group<Option> | Option) => {
-      return "title" in object;
-    },
-  );
-  //   const exclusiveOptionGroups = formik.values.groupedOptions.filter(
-  //     (group: Group<Option>) =>
-  //       group.children.some((child: Option) => child.data.exclusive === true)
-  //   );
   return (
     <Box>
-      {bla.map((groupedOption: Group<Option>, groupIndex: number) => (
-        <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
-          <Box display="flex" pb={1}>
-            <InputRow>
-              <Input
-                required
-                format="bold"
-                name={`groupedOptions[${groupIndex}].title`}
-                value={groupedOption.title}
-                placeholder="Section Title"
-                onChange={formik.handleChange}
-              />
-            </InputRow>
-            <Box flex={0}>
-              <IconButton
-                title="Delete group"
-                aria-label="Delete group"
-                onClick={() => {
+      {nonExclusiveOptionGroups.map(
+        (groupedOption: Group<Option>, groupIndex: number) => (
+          <Box key={groupIndex} mt={groupIndex === 0 ? 0 : 4}>
+            <Box display="flex" pb={1}>
+              <InputRow>
+                <Input
+                  required
+                  format="bold"
+                  name={`groupedOptions[${groupIndex}].title`}
+                  value={groupedOption.title}
+                  placeholder="Section Title"
+                  onChange={formik.handleChange}
+                />
+              </InputRow>
+              <Box flex={0}>
+                <IconButton
+                  title="Delete group"
+                  aria-label="Delete group"
+                  onClick={() => {
+                    formik.setFieldValue(
+                      `groupedOptions`,
+                      remove(groupIndex, 1, formik.values.groupedOptions),
+                    );
+                  }}
+                  size="large"
+                >
+                  <Delete />
+                </IconButton>
+              </Box>
+            </Box>
+            <Box pl={{ md: 2 }}>
+              <ListManager
+                values={groupedOption.children}
+                onChange={(newOptions) => {
                   formik.setFieldValue(
-                    `groupedOptions`,
-                    remove(groupIndex, 1, formik.values.groupedOptions),
+                    `groupedOptions[${groupIndex}].children`,
+                    newOptions,
                   );
                 }}
-                size="large"
-              >
-                <Delete />
-              </IconButton>
+                newValue={() =>
+                  ({
+                    data: {
+                      text: "",
+                      description: "",
+                      val: "",
+                    },
+                  }) as Option
+                }
+                newValueLabel="add new option"
+                Editor={ChecklistOptionsEditor}
+                editorExtraProps={{
+                  groupIndex,
+                  showValueField: !!formik.values.fn,
+                  onMoveToGroup: (
+                    movedItemIndex: number,
+                    moveToGroupIndex: number,
+                  ) => {
+                    const item = groupedOption.children[movedItemIndex];
+                    formik.setFieldValue(
+                      "groupedOptions",
+                      compose(
+                        adjust(moveToGroupIndex, (option: Group<Option>) => ({
+                          ...option,
+                          children: [...option.children, item],
+                        })),
+                        adjust(groupIndex, (option: Group<Option>) => ({
+                          ...option,
+                          children: remove(movedItemIndex, 1, option.children),
+                        })),
+                      )(formik.values.groupedOptions),
+                    );
+                  },
+                  groups: formik.values.groupedOptions.map(
+                    (opt: Group<Option>) => opt.title,
+                  ),
+                  schema: getOptionsSchemaByFn(
+                    formik.values.fn,
+                    schema,
+                    initialOptionVals,
+                  ),
+                }}
+              />
             </Box>
           </Box>
-          <Box pl={{ md: 2 }}>
-            <ListManager
-              values={groupedOption.children}
-              onChange={(newOptions) => {
-                formik.setFieldValue(
-                  `groupedOptions[${groupIndex}].children`,
-                  newOptions,
-                );
-              }}
-              newValue={() =>
-                ({
-                  data: {
-                    text: "",
-                    description: "",
-                    val: "",
-                  },
-                }) as Option
-              }
-              newValueLabel="add new option"
-              Editor={ChecklistOptionsEditor}
-              editorExtraProps={{
-                groupIndex,
-                showValueField: !!formik.values.fn,
-                onMoveToGroup: (
-                  movedItemIndex: number,
-                  moveToGroupIndex: number,
-                ) => {
-                  const item = groupedOption.children[movedItemIndex];
-                  formik.setFieldValue(
-                    "groupedOptions",
-                    compose(
-                      adjust(moveToGroupIndex, (option: Group<Option>) => ({
-                        ...option,
-                        children: [...option.children, item],
-                      })),
-                      adjust(groupIndex, (option: Group<Option>) => ({
-                        ...option,
-                        children: remove(movedItemIndex, 1, option.children),
-                      })),
-                    )(formik.values.groupedOptions),
-                  );
-                },
-                groups: formik.values.groupedOptions.map(
-                  (opt: Group<Option>) => opt.title,
-                ),
-                schema: getOptionsSchemaByFn(
-                  formik.values.fn,
-                  schema,
-                  initialOptionVals,
-                ),
-              }}
-            />
-          </Box>
-        </Box>
-      ))}
+        ),
+      )}
       <Box mt={1}>
         <Button
           size="large"
