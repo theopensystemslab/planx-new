@@ -108,7 +108,7 @@ export const GroupedOptions = ({ formik }: Props) => {
                       )(formik.values.groupedOptions),
                     );
                   },
-                  groups: formik.values.groupedOptions.map(
+                  groups: nonExclusiveOptionGroups.map(
                     (opt: Group<Option>) => opt.title,
                   ),
                   schema: getOptionsSchemaByFn(
@@ -127,11 +127,12 @@ export const GroupedOptions = ({ formik }: Props) => {
           size="large"
           onClick={() => {
             formik.setFieldValue(`groupedOptions`, [
-              ...formik.values.groupedOptions,
+              ...nonExclusiveOptionGroups,
               {
                 title: "",
                 children: [],
               },
+              ...exclusiveOptions,
             ]);
           }}
         >
