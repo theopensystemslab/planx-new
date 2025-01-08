@@ -58,7 +58,7 @@ export default function Component(props: Props) {
     passport.data?.["property.boundary"];
   const previousArea =
     props.previouslySubmittedData?.data?.[props.fn] ||
-    passport.data?.["proposal.site.area"];
+    passport.data?.["property.boundary.area"];
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
   const [mapValidationError, setMapValidationError] = useState<string>();
