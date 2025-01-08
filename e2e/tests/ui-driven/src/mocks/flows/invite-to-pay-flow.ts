@@ -23,7 +23,7 @@ const flow: FlowGraph = {
   },
   F9iwWG1jBQ: {
     data: {
-      output: "application.fee.payable",
+      fn: "application.fee.payable",
       formula: "123.45",
     },
     type: ComponentType.Calculate,

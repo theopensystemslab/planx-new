@@ -618,7 +618,6 @@ export const editorStore: StateCreator<
       };
   
       // TODO align to (reuse?) data facets from search
-      if (node.data?.output) nodes.add(node.data.output);
       if (node.data?.dataFieldBoundary) nodes.add(node.data.dataFieldBoundary);
 
       if (node.data?.val) {
