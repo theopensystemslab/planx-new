@@ -202,7 +202,6 @@ export const editorStore: StateCreator<
     { id = undefined, type, data },
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {},
   ) => {
-    console.log("ops data", data);
     const [, ops] = add(
       { id, type, data },
       { children, parent, before },
