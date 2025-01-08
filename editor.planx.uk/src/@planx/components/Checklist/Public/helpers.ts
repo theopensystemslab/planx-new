@@ -63,19 +63,6 @@ export const toggleNonExclusiveCheckbox = (
 };
 
 export const partitionGroupedOptions = (
-  groupedOptions: Array<Group<Option> | Option>,
-): [Option[], Group<Option>[]] => {
-  const [exclusiveOptions, nonExclusiveOptionGroups] = partition(
-    groupedOptions,
-    (group: Group<Option> | Option) => !("title" in group),
-  );
-  return [
-    exclusiveOptions as Option[],
-    nonExclusiveOptionGroups as Group<Option>[],
-  ];
-};
-
-export const partitionGroupedOptionsAgain = (
   groupedOptions: Group<Option>[],
 ): Group<Option>[][] => {
   const [exclusiveOptionGroup, nonExclusiveOptionGroups] = partition(
@@ -84,15 +71,4 @@ export const partitionGroupedOptionsAgain = (
       group.children.some((child) => child.data.exclusive === true),
   );
   return [exclusiveOptionGroup, nonExclusiveOptionGroups];
-};
-
-export const flattenGroupedOptionsWithExclusiveOptions = (
-  allOptions: Array<Group<Option> | Option>,
-) => {
-  const [exclusiveOptions, nonExclusiveOptionGroups] =
-    partitionGroupedOptions(allOptions);
-  const flattenedOptionGroups = nonExclusiveOptionGroups.flatMap(
-    (group) => group.children,
-  );
-  return [...flattenedOptionGroups, ...exclusiveOptions];
 };

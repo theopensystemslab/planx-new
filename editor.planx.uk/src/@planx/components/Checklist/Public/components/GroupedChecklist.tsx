@@ -14,7 +14,7 @@ import { object } from "yup";
 
 import { PublicChecklistProps } from "../../types";
 import {
-  partitionGroupedOptionsAgain,
+  partitionGroupedOptions,
   toggleNonExclusiveCheckbox,
 } from "../helpers";
 import { useExclusiveOptionInGroupedChecklist } from "../hooks/useExclusiveOption";
@@ -59,7 +59,7 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
   );
 
   const [exclusiveOptionGroups, nonExclusiveOptionGroups] =
-    partitionGroupedOptionsAgain(groupedOptions!);
+    partitionGroupedOptions(groupedOptions!);
 
   const { exclusiveOrOptionGroup, toggleExclusiveCheckbox } =
     useExclusiveOptionInGroupedChecklist(exclusiveOptionGroups, formik);

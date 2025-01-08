@@ -15,7 +15,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { Option } from "../../../shared";
 import type { Group } from "../../model";
-import { partitionGroupedOptionsAgain } from "../../Public/helpers";
+import { partitionGroupedOptions } from "../../Public/helpers";
 import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
@@ -27,9 +27,9 @@ interface Props {
 export const GroupedOptions = ({ formik }: Props) => {
   const { schema, initialOptionVals } = useInitialOptions(formik);
 
-  // both are now groups
-  const [exclusiveOptions, nonExclusiveOptionGroups] =
-    partitionGroupedOptionsAgain(formik.values.groupedOptions);
+  const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
+    formik.values.groupedOptions,
+  );
 
   const exclusiveOrOptionManagerShouldRender =
     hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptionGroups.length > 0;
