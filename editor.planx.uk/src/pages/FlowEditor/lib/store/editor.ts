@@ -617,9 +617,6 @@ export const editorStore: StateCreator<
         if (node.data?.fn !== "flag") nodes.add(node.data.fn)
       };
   
-      // TODO align to (reuse?) data facets from search
-      if (node.data?.dataFieldBoundary) nodes.add(node.data.dataFieldBoundary);
-
       if (node.data?.val) {
         // Exclude Filter Option flag values as not exposed to editors
         const flagVals = flatFlags.map((flag) => flag.value);

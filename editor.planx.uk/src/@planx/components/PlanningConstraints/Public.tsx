@@ -53,7 +53,7 @@ function Component(props: Props) {
     state.cachedBreadcrumbs,
     state.teamSlug,
     state.teamIntegrations?.hasPlanningData,
-    state.computePassport().data?.["property.boundary.site"],
+    state.computePassport().data?.["proposal.site"],
     state.computePassport().data?.["_overrides"],
     (state.computePassport().data?.["_address"] as SiteAddress) || {},
   ]);

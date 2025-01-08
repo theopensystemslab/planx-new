@@ -126,7 +126,7 @@ describe("nodesDependentOnPassport with record", () => {
     } as Store.CachedBreadcrumbs;
     const userData = {
       data: {
-        "property.boundary.site": {
+        "proposal.site": {
           type: "Feature",
           geometry: {
             type: "Polygon",
@@ -142,7 +142,7 @@ describe("nodesDependentOnPassport with record", () => {
           },
           properties: null,
         },
-        "property.boundary.area": 76.27,
+        "proposal.site.area": 76.27,
       },
       auto: false,
     };
