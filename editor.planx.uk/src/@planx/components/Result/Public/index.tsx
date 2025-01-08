@@ -52,7 +52,7 @@ const Responses = ({
     if (isAnsweredByUser) return true;
 
     // Retain responses with flags which are auto answered
-    const hasFlag = response.selections.some((s) => s.data?.flag);
+    const hasFlag = response.selections.some((s) => s.data?.flags);
     return hasFlag;
   };
 
