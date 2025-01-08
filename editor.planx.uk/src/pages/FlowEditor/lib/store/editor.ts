@@ -2,10 +2,10 @@ import { gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType as TYPES,
+  flatFlags,
   FlowGraph,
   NodeId,
   OrderedFlow,
-  flatFlags,
 } from "@opensystemslab/planx-core/types";
 import {
   add,
@@ -189,7 +189,7 @@ export interface EditorStore extends Store.Store {
     href: string;
   }) => void;
   getURLForNode: (nodeId: string) => string;
-  getFlowSchema: () => { nodes?: string[], options?: string[] } | undefined;
+  getFlowSchema: () => { nodes?: string[]; options?: string[] } | undefined;
 }
 
 export const editorStore: StateCreator<
@@ -202,6 +202,7 @@ export const editorStore: StateCreator<
     { id = undefined, type, data },
     { children = undefined, parent = ROOT_NODE_KEY, before = undefined } = {},
   ) => {
+    console.log("ops data", data);
     const [, ops] = add(
       { id, type, data },
       { children, parent, before },
@@ -614,9 +615,9 @@ export const editorStore: StateCreator<
     Object.entries(flow).map(([_id, node]) => {
       if (node.data?.fn) {
         // Exclude Filter fn value as not exposed to editors
-        if (node.data?.fn !== "flag") nodes.add(node.data.fn)
-      };
-  
+        if (node.data?.fn !== "flag") nodes.add(node.data.fn);
+      }
+
       // TODO align to (reuse?) data facets from search
       if (node.data?.output) nodes.add(node.data.output);
       if (node.data?.dataFieldBoundary) nodes.add(node.data.dataFieldBoundary);
@@ -624,8 +625,8 @@ export const editorStore: StateCreator<
       if (node.data?.val) {
         // Exclude Filter Option flag values as not exposed to editors
         const flagVals = flatFlags.map((flag) => flag.value);
-        if (!flagVals.includes(node.data.val)) options.add(node.data.val)
-      };
+        if (!flagVals.includes(node.data.val)) options.add(node.data.val);
+      }
     });
 
     return {

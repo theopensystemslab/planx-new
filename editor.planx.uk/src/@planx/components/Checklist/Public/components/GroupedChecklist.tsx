@@ -19,6 +19,7 @@ import {
 } from "../helpers";
 import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
+import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
 
 export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
@@ -123,6 +124,13 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
               <GroupedChecklistOptions
                 groupedOptions={groupedOptions}
                 previouslySubmittedData={previouslySubmittedData}
+                changeCheckbox={changeCheckbox}
+                formik={formik}
+              />
+            )}
+            {exclusiveOrOption && (
+              <ExclusiveChecklistItem
+                exclusiveOrOption={exclusiveOrOption}
                 changeCheckbox={changeCheckbox}
                 formik={formik}
               />

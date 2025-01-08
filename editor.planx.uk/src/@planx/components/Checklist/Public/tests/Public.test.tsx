@@ -6,7 +6,11 @@ import { axe } from "vitest-axe";
 
 import { ChecklistLayout } from "../../model";
 import Checklist from "../Public";
-import { groupedOptions, options } from "./mockOptions";
+import {
+  groupedOptions,
+  groupedOptionsWithExclusiveOption,
+  options,
+} from "./mockOptions";
 import { pressContinue, pressOption } from "./testUtils";
 
 describe("Checklist Component - Grouped Layout", () => {
@@ -55,6 +59,49 @@ describe("Checklist Component - Grouped Layout", () => {
 
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S1_Option1", "S3_Option1"],
+    });
+  });
+
+  it("handles exclusive Or options correctly", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <Checklist
+        allRequired={false}
+        description=""
+        text="home type?"
+        handleSubmit={handleSubmit}
+        groupedOptions={groupedOptionsWithExclusiveOption}
+      />,
+    );
+
+    // user presses an option in section 1
+    await user.click(screen.getByText("Section 1"));
+
+    const nonExclusiveOption = screen.getByLabelText("S1 Option1");
+    await user.click(nonExclusiveOption);
+    expect(nonExclusiveOption).toHaveAttribute("checked");
+
+    const exclusiveOption = screen.getByLabelText("Exclusive");
+    await user.click(exclusiveOption);
+
+    expect(nonExclusiveOption).not.toHaveAttribute("checked");
+    expect(exclusiveOption).toHaveAttribute("checked");
+
+    const exclusiveOptionInSection2 = screen.getByLabelText("S2 Option1");
+    await user.click(exclusiveOptionInSection2);
+
+    expect(exclusiveOptionInSection2).toHaveAttribute("checked");
+    expect(exclusiveOption).not.toHaveAttribute("checked");
+
+    // user presses two more non-exclusive options
+    await user.click(screen.getByText("S1 Option1"));
+    await user.click(screen.getByText("S2 Option2"));
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalledWith({
+      answers: ["S1_Option2", "S2_Option1", "S2_Option2"],
     });
   });
 

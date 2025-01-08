@@ -33,14 +33,23 @@ export const ExclusiveOrOptionManager = ({
         <ListManager
           values={exclusiveOptions || []}
           onChange={(newExclusiveOptions) => {
+            if (grouped) {
+              const exclusiveOptionGroup = {
+                title: "Or",
+                children: newExclusiveOptions,
+              };
+              const newCombinedOptions = [
+                ...nonExclusiveOptions,
+                exclusiveOptionGroup,
+              ];
+              formik.setFieldValue("groupedOptions", newCombinedOptions);
+              return;
+            }
             const newCombinedOptions = [
               ...nonExclusiveOptions,
               ...newExclusiveOptions,
             ];
-            formik.setFieldValue(
-              grouped ? "groupedOptions" : "options",
-              newCombinedOptions,
-            );
+            formik.setFieldValue("options", newCombinedOptions);
           }}
           newValueLabel='add "or" option'
           maxItems={1}

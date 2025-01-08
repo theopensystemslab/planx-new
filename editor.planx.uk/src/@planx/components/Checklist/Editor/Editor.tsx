@@ -17,7 +17,6 @@ import { Option, parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
 import { toggleExpandableChecklist } from "../model";
-import { flattenGroupedOptionsWithExclusiveOptions } from "../Public/helpers";
 import { ChecklistProps } from "../types";
 import { Options } from "./Options";
 
@@ -39,7 +38,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
     onSubmit: ({ options, groupedOptions, ...values }) => {
       const sourceOptions = options?.length
         ? options
-        : flattenGroupedOptionsWithExclusiveOptions(groupedOptions!);
+        : groupedOptions?.flatMap((group) => group.children);
 
       const filteredOptions = (sourceOptions || []).filter(
         (option) => option.data.text,
@@ -59,12 +58,10 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                    categories: groupedOptions
-                      .filter((group) => "title" in group)
-                      .map((group) => ({
-                        title: group.title,
-                        count: group.children.length,
-                      })),
+                    categories: groupedOptions.map((group) => ({
+                      title: group.title,
+                      count: group.children.length,
+                    })),
                   }
                 : {
                     categories: undefined,
@@ -81,8 +78,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       const errors: FormikErrors<FormikValues> = {};
 
       // Account for flat or expandable Checklist options
-      options =
-        options || flattenGroupedOptionsWithExclusiveOptions(groupedOptions!);
+      options = options || groupedOptions?.flatMap((group) => group.children);
 
       const exclusiveOptions: Option[] | undefined = options?.filter(
         (option) => option.data.exclusive,

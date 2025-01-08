@@ -75,6 +75,17 @@ export const partitionGroupedOptions = (
   ];
 };
 
+export const partitionGroupedOptionsAgain = (
+  groupedOptions: Group<Option>[],
+): Group<Option>[][] => {
+  const [exclusiveOptionGroup, nonExclusiveOptionGroups] = partition(
+    groupedOptions,
+    (group: Group<Option>) =>
+      group.children.some((child) => child.data.exclusive === true),
+  );
+  return [exclusiveOptionGroup, nonExclusiveOptionGroups];
+};
+
 export const flattenGroupedOptionsWithExclusiveOptions = (
   allOptions: Array<Group<Option> | Option>,
 ) => {

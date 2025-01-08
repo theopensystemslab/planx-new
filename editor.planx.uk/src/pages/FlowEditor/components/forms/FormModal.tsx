@@ -167,17 +167,20 @@ const FormModal: React.FC<{
                 connect(parent, data, { before });
               } else {
                 const parsedData = parseFormValues(Object.entries(data));
+                console.log("parsedData", parsedData);
                 const parsedChildren =
                   children?.map((o: any) =>
                     parseFormValues(Object.entries(o)),
                   ) || undefined;
 
                 if (handleDelete) {
+                  console.log("updating node", parsedData, parsedChildren);
                   updateNode(
                     { id, ...parsedData },
                     { children: parsedChildren },
                   );
                 } else {
+                  console.log("adding node");
                   addNode(parsedData, {
                     children: parsedChildren,
                     parent,
