@@ -14,10 +14,10 @@ import { object } from "yup";
 
 import { PublicChecklistProps } from "../../types";
 import {
-  partitionGroupedOptions,
+  partitionGroupedOptionsAgain,
   toggleNonExclusiveCheckbox,
 } from "../helpers";
-import { useExclusiveOption } from "../hooks/useExclusiveOption";
+import { useExclusiveOptionInGroupedChecklist } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
 import { GroupedChecklistOptions } from "./GroupedChecklistOptions";
@@ -58,21 +58,17 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
     formik,
   );
 
-  const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
-    groupedOptions!,
-  );
+  const [exclusiveOptionGroups, nonExclusiveOptionGroups] =
+    partitionGroupedOptionsAgain(groupedOptions!);
 
-  const {
-    exclusiveOrOption,
-    exclusiveOptionIsChecked,
-    toggleExclusiveCheckbox,
-  } = useExclusiveOption(exclusiveOptions, formik);
+  const { exclusiveOrOptionGroup, toggleExclusiveCheckbox } =
+    useExclusiveOptionInGroupedChecklist(exclusiveOptionGroups, formik);
 
   const changeCheckbox = (id: string) => () => {
     const currentCheckedIds = formik.values.checked;
 
     const currentCheckboxIsExclusiveOption =
-      exclusiveOrOption && id === exclusiveOrOption.id;
+      exclusiveOrOptionGroup && id === exclusiveOrOptionGroup.children[0].id;
 
     if (currentCheckboxIsExclusiveOption) {
       const newCheckedIds = toggleExclusiveCheckbox(id);
@@ -82,7 +78,7 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
     const newCheckedIds = toggleNonExclusiveCheckbox(
       id,
       currentCheckedIds,
-      exclusiveOrOption,
+      exclusiveOrOptionGroup?.children[0],
     );
     setCheckedFieldValue(newCheckedIds);
   };
@@ -120,17 +116,17 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {groupedOptions && (
+            {nonExclusiveOptionGroups && (
               <GroupedChecklistOptions
-                groupedOptions={groupedOptions}
+                groupedOptions={nonExclusiveOptionGroups}
                 previouslySubmittedData={previouslySubmittedData}
                 changeCheckbox={changeCheckbox}
                 formik={formik}
               />
             )}
-            {exclusiveOrOption && (
+            {exclusiveOrOptionGroup && (
               <ExclusiveChecklistItem
-                exclusiveOrOption={exclusiveOrOption}
+                exclusiveOrOption={exclusiveOrOptionGroup?.children[0]}
                 changeCheckbox={changeCheckbox}
                 formik={formik}
               />

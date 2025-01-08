@@ -88,6 +88,7 @@ describe("Checklist Component - Grouped Layout", () => {
     expect(nonExclusiveOption).not.toHaveAttribute("checked");
     expect(exclusiveOption).toHaveAttribute("checked");
 
+    await user.click(screen.getByText("Section 2"));
     const exclusiveOptionInSection2 = screen.getByLabelText("S2 Option1");
     await user.click(exclusiveOptionInSection2);
 
@@ -101,7 +102,7 @@ describe("Checklist Component - Grouped Layout", () => {
     await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).toHaveBeenCalledWith({
-      answers: ["S1_Option2", "S2_Option1", "S2_Option2"],
+      answers: ["S1_Option1", "S2_Option1", "S2_Option2"],
     });
   });
 
