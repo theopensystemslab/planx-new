@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
@@ -111,13 +112,15 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
                 formik={formik}
               />
             )}
-            {exclusiveOrOptionGroup && (
-              <ExclusiveChecklistItem
-                exclusiveOrOption={exclusiveOrOptionGroup?.children[0]}
-                changeCheckbox={toggleCheckbox}
-                formik={formik}
-              />
-            )}
+            <Box pt={1}>
+              {exclusiveOrOptionGroup && (
+                <ExclusiveChecklistItem
+                  exclusiveOrOption={exclusiveOrOptionGroup?.children[0]}
+                  changeCheckbox={toggleCheckbox}
+                  formik={formik}
+                />
+              )}
+            </Box>
           </Grid>
         </ErrorWrapper>
       </FullWidthWrapper>

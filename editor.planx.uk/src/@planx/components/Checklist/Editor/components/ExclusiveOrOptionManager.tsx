@@ -28,53 +28,56 @@ export const ExclusiveOrOptionManager = ({
   const { schema, initialOptionVals } = useInitialOptions(formik);
 
   return (
-    <Box mt={1}>
+    <Box mt={2}>
       <ErrorWrapper error={formik.errors.allRequired as string}>
-        <ListManager
-          values={exclusiveOptions || []}
-          onChange={(newExclusiveOptions) => {
-            if (grouped) {
-              const exclusiveOptionGroup = {
-                title: "Or",
-                children: newExclusiveOptions,
-              };
+        <Box mt={1}>
+          <ListManager
+            values={exclusiveOptions || []}
+            onChange={(newExclusiveOptions) => {
+              if (grouped) {
+                const exclusiveOptionGroup = {
+                  title: "Or",
+                  children: newExclusiveOptions,
+                };
+                const newCombinedOptions = [
+                  ...nonExclusiveOptions,
+                  exclusiveOptionGroup,
+                ];
+                formik.setFieldValue("groupedOptions", newCombinedOptions);
+                return;
+              }
               const newCombinedOptions = [
                 ...nonExclusiveOptions,
-                exclusiveOptionGroup,
+                ...newExclusiveOptions,
               ];
-              formik.setFieldValue("groupedOptions", newCombinedOptions);
-              return;
-            }
-            const newCombinedOptions = [
-              ...nonExclusiveOptions,
-              ...newExclusiveOptions,
-            ];
-            formik.setFieldValue("options", newCombinedOptions);
-          }}
-          newValueLabel='add "or" option'
-          maxItems={1}
-          disableDragAndDrop
-          newValue={() => {
-            return {
-              data: {
-                text: "",
-                description: "",
-                val: "",
-                exclusive: true,
-              },
-            } as Option;
-          }}
-          Editor={BaseOptionsEditor}
-          editorExtraProps={{
-            showValueField: !!formik.values.fn,
-            groupIndex,
-            schema: getOptionsSchemaByFn(
-              formik.values.fn,
-              schema,
-              initialOptionVals,
-            ),
-          }}
-        />
+              formik.setFieldValue("options", newCombinedOptions);
+            }}
+            newValueLabel='add "or" option'
+            maxItems={1}
+            disableDragAndDrop
+            newValue={() => {
+              return {
+                data: {
+                  text: "",
+                  description: "",
+                  val: "",
+                  exclusive: true,
+                },
+              } as Option;
+            }}
+            Editor={BaseOptionsEditor}
+            editorExtraProps={{
+              showValueField: !!formik.values.fn,
+              groupIndex,
+              optionPlaceholder: "Exclusive 'or' option",
+              schema: getOptionsSchemaByFn(
+                formik.values.fn,
+                schema,
+                initialOptionVals,
+              ),
+            }}
+          />
+        </Box>
       </ErrorWrapper>
     </Box>
   );

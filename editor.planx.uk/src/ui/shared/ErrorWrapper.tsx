@@ -54,7 +54,7 @@ export default function ErrorWrapper({
   return (
     <Root error={error} role={role} data-testid="error-wrapper">
       <ErrorText id={inputId} data-testid={inputId} variant="body1">
-        {error && error}
+        {error}
       </ErrorText>
       {children || null}
     </Root>
