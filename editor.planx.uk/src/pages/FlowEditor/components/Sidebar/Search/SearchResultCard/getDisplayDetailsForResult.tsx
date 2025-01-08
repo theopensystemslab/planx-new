@@ -44,12 +44,6 @@ const keyFormatters: KeyMap = {
   "data.fileTypes.fn": {
     getDisplayKey: () => "File type (data)",
   },
-  "data.dataFieldBoundary": {
-    getDisplayKey: () => "Boundary",
-  },
-  "data.dataFieldArea": {
-    getDisplayKey: () => "Area",
-  },
   "data.description": {
     getDisplayKey: ({ item }) =>
       item.type === ComponentType.Answer
@@ -197,9 +191,6 @@ const keyFormatters: KeyMap = {
   formula: {
     getDisplayKey: () => "Formula",
     getHeadline: ({ item }) => (item.data as unknown as Calculate).formula,
-  },
-  "data.output": {
-    getDisplayKey: () => "Output (data)",
   },
   // List contains data variables nested within its schema
   "data.schema.fields.data.fn": {

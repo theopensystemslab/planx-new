@@ -32,7 +32,7 @@
   "drawBoundary": {
     "auto": false,
     "data": {
-      "property.boundary.site": {
+      "proposal.site": {
         "type": "Feature",
         "geometry": {
           "type": "Polygon",
@@ -48,7 +48,7 @@
         },
         "properties": null
       },
-      "property.boundary.area": 109.43
+      "proposal.site.area": 109.43
     }
   },
   "planningConstraints": {

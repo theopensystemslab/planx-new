@@ -5,6 +5,8 @@ import type {
 import axios from "axios";
 import { gql } from "graphql-tag";
 import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { $admin } from "../client.js";
 import { createTeam, createUser, TEST_EMAIL } from "../globalHelpers.js";
 import {
@@ -16,6 +18,10 @@ import {
 import { CustomWorld } from "./steps.js";
 
 export async function setUpMocks() {
+  // we can't directly access `__dirname` in ESM, so get equivalent using fileURLToPath
+  const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+  const __dirname = path.dirname(__filename); // get the name of the directory
+
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
   return axios({
     method: "POST",
