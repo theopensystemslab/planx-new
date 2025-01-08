@@ -153,6 +153,7 @@ export const groupedOptionsWithExclusiveOption: Array<Group<Option>> = [
   },
   {
     title: "Exclusive 'Or' Option",
+    exclusive: true,
     children: [
       {
         id: "exclusive_option",

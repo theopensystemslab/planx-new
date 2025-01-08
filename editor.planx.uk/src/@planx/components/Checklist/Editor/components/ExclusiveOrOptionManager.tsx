@@ -37,6 +37,7 @@ export const ExclusiveOrOptionManager = ({
               if (grouped) {
                 const exclusiveOptionGroup = {
                   title: "Or",
+                  exclusive: true,
                   children: newExclusiveOptions,
                 };
                 const newCombinedOptions = [

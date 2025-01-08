@@ -68,6 +68,7 @@ export const partitionGroupedOptions = (
   const [exclusiveOptionGroup, nonExclusiveOptionGroups] = partition(
     groupedOptions,
     (group: Group<Option>) =>
+      group.exclusive ||
       group.children.some((child) => child.data.exclusive === true),
   );
   return [exclusiveOptionGroup, nonExclusiveOptionGroups];

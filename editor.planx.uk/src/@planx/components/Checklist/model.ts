@@ -10,6 +10,7 @@ export enum ChecklistLayout {
 
 export interface Group<T> {
   title: string;
+  exclusive?: true;
   children: Array<T>;
 }
 
