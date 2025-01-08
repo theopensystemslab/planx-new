@@ -72,3 +72,34 @@ export const partitionGroupedOptions = (
   );
   return [exclusiveOptionGroup, nonExclusiveOptionGroups];
 };
+
+export const changeCheckbox =
+  ({
+    id,
+    setCheckedFieldValue,
+    currentCheckedIds,
+    exclusiveOrOption,
+    toggleExclusiveCheckbox,
+  }: {
+    id: string;
+    setCheckedFieldValue: (optionIds: string[]) => void;
+    currentCheckedIds: string[];
+    exclusiveOrOption: Option;
+    toggleExclusiveCheckbox: (checkboxId: string) => string[];
+  }) =>
+  () => {
+    const currentCheckboxIsExclusiveOption =
+      exclusiveOrOption && id === exclusiveOrOption.id;
+
+    if (currentCheckboxIsExclusiveOption) {
+      const newCheckedIds = toggleExclusiveCheckbox(id);
+      setCheckedFieldValue(newCheckedIds);
+      return;
+    }
+    const newCheckedIds = toggleNonExclusiveCheckbox(
+      id,
+      currentCheckedIds,
+      exclusiveOrOption,
+    );
+    setCheckedFieldValue(newCheckedIds);
+  };

@@ -13,10 +13,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
 import { PublicChecklistProps } from "../../types";
-import {
-  partitionGroupedOptions,
-  toggleNonExclusiveCheckbox,
-} from "../helpers";
+import { changeCheckbox, partitionGroupedOptions } from "../helpers";
 import { useExclusiveOptionInGroupedChecklist } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ExclusiveChecklistItem } from "./ExclusiveChecklistItem";
@@ -64,24 +61,14 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
   const { exclusiveOrOptionGroup, toggleExclusiveCheckbox } =
     useExclusiveOptionInGroupedChecklist(exclusiveOptionGroups, formik);
 
-  const changeCheckbox = (id: string) => () => {
-    const currentCheckedIds = formik.values.checked;
-
-    const currentCheckboxIsExclusiveOption =
-      exclusiveOrOptionGroup && id === exclusiveOrOptionGroup.children[0].id;
-
-    if (currentCheckboxIsExclusiveOption) {
-      const newCheckedIds = toggleExclusiveCheckbox(id);
-      setCheckedFieldValue(newCheckedIds);
-      return;
-    }
-    const newCheckedIds = toggleNonExclusiveCheckbox(
+  const toggleCheckbox = (id: string) =>
+    changeCheckbox({
       id,
-      currentCheckedIds,
-      exclusiveOrOptionGroup?.children[0],
-    );
-    setCheckedFieldValue(newCheckedIds);
-  };
+      setCheckedFieldValue,
+      currentCheckedIds: formik.values.checked,
+      exclusiveOrOption: exclusiveOrOptionGroup?.children[0],
+      toggleExclusiveCheckbox,
+    });
 
   // Auto-answered Checklists still set a breadcrumb even though they render null
   useEffect(() => {
@@ -120,14 +107,14 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
               <GroupedChecklistOptions
                 groupedOptions={nonExclusiveOptionGroups}
                 previouslySubmittedData={previouslySubmittedData}
-                changeCheckbox={changeCheckbox}
+                changeCheckbox={toggleCheckbox}
                 formik={formik}
               />
             )}
             {exclusiveOrOptionGroup && (
               <ExclusiveChecklistItem
                 exclusiveOrOption={exclusiveOrOptionGroup?.children[0]}
-                changeCheckbox={changeCheckbox}
+                changeCheckbox={toggleCheckbox}
                 formik={formik}
               />
             )}

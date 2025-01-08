@@ -15,7 +15,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
 import { PublicChecklistProps } from "../../types";
-import { toggleNonExclusiveCheckbox } from "../helpers";
+import { changeCheckbox } from "../helpers";
 import { useExclusiveOption } from "../hooks/useExclusiveOption";
 import { useSortedOptions } from "../hooks/useSortedOptions";
 import { ChecklistItems } from "./ChecklistItems";
@@ -68,24 +68,14 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     toggleExclusiveCheckbox,
   } = useExclusiveOption(exclusiveOptions, formik);
 
-  const changeCheckbox = (id: string) => () => {
-    const currentCheckedIds = formik.values.checked;
-
-    const currentCheckboxIsExclusiveOption =
-      exclusiveOrOption && id === exclusiveOrOption.id;
-
-    if (currentCheckboxIsExclusiveOption) {
-      const newCheckedIds = toggleExclusiveCheckbox(id);
-      setCheckedFieldValue(newCheckedIds);
-      return;
-    }
-    const newCheckedIds = toggleNonExclusiveCheckbox(
+  const toggleCheckbox = (id: string) =>
+    changeCheckbox({
       id,
-      currentCheckedIds,
+      setCheckedFieldValue,
+      currentCheckedIds: formik.values.checked,
       exclusiveOrOption,
-    );
-    setCheckedFieldValue(newCheckedIds);
-  };
+      toggleExclusiveCheckbox,
+    });
 
   // Auto-answered Checklists still set a breadcrumb even though they render null
   useEffect(() => {
@@ -123,14 +113,14 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
             <ChecklistItems
               nonExclusiveOptions={nonExclusiveOptions}
               layout={layout}
-              changeCheckbox={changeCheckbox}
+              changeCheckbox={toggleCheckbox}
               formik={formik}
               exclusiveOptionIsChecked={exclusiveOptionIsChecked}
             />
             {exclusiveOrOption && (
               <ExclusiveChecklistItem
                 exclusiveOrOption={exclusiveOrOption}
-                changeCheckbox={changeCheckbox}
+                changeCheckbox={toggleCheckbox}
                 formik={formik}
               />
             )}
