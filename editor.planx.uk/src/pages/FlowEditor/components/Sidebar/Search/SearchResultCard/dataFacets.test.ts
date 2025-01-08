@@ -93,7 +93,7 @@ describe("Calculate component", () => {
       componentType: "Calculate",
       headline: "calculateOutput",
       iconKey: ComponentType.Calculate,
-      key: "Output (data)",
+      key: "Data",
       title: "This is a calculate component",
     });
   });

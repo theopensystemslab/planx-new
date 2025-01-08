@@ -17,15 +17,11 @@ const Option: React.FC<any> = (props) => {
   let flags: Flag[] | undefined;
 
   try {
-    // Question & Checklist Options set zero or many flag values under "data.flag"
-    if (props.data?.flag) {
-      if (Array.isArray(props.data?.flag)) {
-        flags = flatFlags.filter(
-          ({ value }) => props.data?.flag?.includes(value),
-        );
-      } else {
-        flags = flatFlags.filter(({ value }) => props.data?.flag === value);
-      }
+    // Question & Checklist Options set zero or many flag values under "data.flags"
+    if (props.data?.flags) {
+      flags = flatFlags.filter(
+        ({ value }) => props.data?.flags?.includes(value),
+      );
     }
 
     // Filter Options set single flag value under "data.val" (Questions & Checklists use this same field for passport values)
@@ -61,7 +57,9 @@ const Option: React.FC<any> = (props) => {
         )}
       </Link>
       <ol className="decisions">
-        {childNodes.map((child: any) => (<Node key={child.id} parent={props.id} {...child} />))}
+        {childNodes.map((child: any) => (
+          <Node key={child.id} parent={props.id} {...child} />
+        ))}
         <Hanger parent={props.id} />
       </ol>
     </li>

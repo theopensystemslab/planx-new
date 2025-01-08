@@ -127,20 +127,20 @@ export default function Component(props: Props) {
         <ModalSectionContent title="Output">
           <DataFieldAutocomplete
             required
-            value={formik.values.output}
-            onChange={(value) => formik.setFieldValue("output", value)}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
           />
           <InputRow>
-          <Switch            
-            checked={formik.values.formatOutputForAutomations}
-            onChange={() =>
-              formik.setFieldValue(
-                "formatOutputForAutomations",
-                !formik.values.formatOutputForAutomations
-              )
-            }
-            label="Format the output to automate a future Question or Checklist only"
-          />
+            <Switch
+              checked={formik.values.formatOutputForAutomations}
+              onChange={() =>
+                formik.setFieldValue(
+                  "formatOutputForAutomations",
+                  !formik.values.formatOutputForAutomations,
+                )
+              }
+              label="Format the output to automate a future Question or Checklist only"
+            />
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
@@ -196,8 +196,8 @@ export default function Component(props: Props) {
             <></>
           )}
           <p>
-            <strong>{formik.values.output || "<output>"}</strong> would be set
-            to <strong>{sampleResult}</strong>
+            <strong>{formik.values.fn || "<output>"}</strong> would be set to{" "}
+            <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>
       </ModalSection>

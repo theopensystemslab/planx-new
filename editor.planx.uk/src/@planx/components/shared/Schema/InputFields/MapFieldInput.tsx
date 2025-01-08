@@ -71,9 +71,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               // ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
               height={400}
               basemap={mapOptions?.basemap}
-              geojsonData={JSON.stringify(
-                passport.data?.["property.boundary.site"],
-              )}
+              geojsonData={JSON.stringify(passport.data?.["proposal.site"])}
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={

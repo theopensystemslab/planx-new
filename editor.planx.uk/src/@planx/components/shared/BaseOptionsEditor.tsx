@@ -5,8 +5,8 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option } from ".";
-import { FlagsSelect } from "./FlagsSelect";
 import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
+import { FlagsSelect } from "./FlagsSelect";
 
 export interface BaseOptionsEditorProps {
   value: Option;
@@ -89,17 +89,13 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
       />
     )}
     <FlagsSelect
-      value={
-        Array.isArray(props.value.data.flag)
-          ? props.value.data.flag
-          : [props.value.data.flag]
-      }
+      value={props.value.data.flags}
       onChange={(ev) => {
         props.onChange({
           ...props.value,
           data: {
             ...props.value.data,
-            flag: ev,
+            flags: ev,
           },
         });
       }}
