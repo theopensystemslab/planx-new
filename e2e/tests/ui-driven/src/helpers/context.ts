@@ -1,8 +1,8 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { GraphQLClient, gql } from "graphql-request";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import assert from "node:assert";
-import { TestContext } from "./types";
+import { TestContext } from "./types.js";
 
 export const contextDefaults: TestContext = {
   user: {
@@ -50,6 +50,26 @@ export async function setUpTestContext(
         submissionEmail: context.team.settings?.submissionEmail,
       },
     });
+
+    // has_planning_data needs to be altered manually for geospatial tests
+    await $admin.client.request(
+      gql`
+        mutation TogglePlanningData($teamId: Int) {
+          update_team_integrations(
+            where: { team_id: { _eq: $teamId } }
+            _set: { has_planning_data: true }
+          ) {
+            returning {
+              has_planning_data
+              team_id
+            }
+          }
+        }
+      `,
+      {
+        teamId: context.team.id,
+      },
+    );
   }
   if (
     context.flow &&
@@ -87,7 +107,7 @@ export async function tearDownTestContext() {
 
 export function generateAuthenticationToken(userId: string) {
   assert(process.env.JWT_SECRET);
-  return sign(
+  return jwt.sign(
     {
       sub: `${userId}`,
       "https://hasura.io/jwt/claims": {

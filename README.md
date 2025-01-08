@@ -28,7 +28,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [PNPM](https://github.com/pnpm/pnpm) `npm install -g pnpm@8.6.6`
-- [Node](https://nodejs.org/en/download) `pnpm env use --global 18.16.1`
+- [Node](https://nodejs.org/en/download) `pnpm env use --global 22.10.0`
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 **If you're an OSL developer:**

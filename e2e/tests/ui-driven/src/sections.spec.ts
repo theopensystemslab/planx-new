@@ -6,7 +6,7 @@ import {
   getGraphQLClient,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
+} from "./helpers/context.js";
 import {
   answerChecklist,
   answerQuestion,
@@ -18,9 +18,9 @@ import {
   fillInEmail,
   returnToSession,
   saveSession,
-} from "./helpers/userActions";
-import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow";
-import { TestContext } from "./helpers/types";
+} from "./helpers/userActions.js";
+import { flow, updatedQuestionAnswers } from "./mocks/flows/sections-flow.js";
+import { TestContext } from "./helpers/types.js";
 
 // TODO: move this type to planx-core
 // also defined in editor.planx.uk/src/types.ts

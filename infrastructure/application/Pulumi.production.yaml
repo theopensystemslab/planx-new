@@ -12,6 +12,8 @@ config:
     secure: AAABANMl+fVFsRVGXvJV/aLManXO+TldXVDhp5QH6KGWJoG7O9Ket63zIW1iOiinINWJ2I5OizI=
   application:file-api-key-epsom-ewell:
     secure: AAABANvwhiVRBq8NH7ZqcToUzYn4X+KfC5Wm8WjWUKXT5TuVXqC6zHhVVKFBbmdtKjC4j5M4+bWsLiFO9dO0MLobxLpK7YCE
+  application:file-api-key-gateshead:
+    secure: AAABAIIeEiX2htVth4Obb5JMQ3fcezHG/utwUsPikaLNmX+rSmMpGQgcG3LM1pN7XDeaO8J/eZHMilG5OvxGyz7Yo+RxVZV0
   application:file-api-key-lambeth:
     secure: AAABAMNhdCTlFx3fZH/nO71ildypZB2JR5NixlQCENsS1VqwdiOX17q/Gi1UFrCQi2qaY2sZFG4=
   application:file-api-key-medway:
@@ -27,12 +29,12 @@ config:
     secure: AAABADo05EPv/HWj7Rkf19nBeTcPJd4pEcRi2/uhyB3agraFODpLvNMx2bXfISf5pZ4HA41GYCE4f7OLcJN6hIV6ZMWUlEriPzvkoUAixbLlz1LIERiyk73R8E4F2bV65/9aFqi4l7caLS5c8iDJrE+JAvu2i7oS
   application:hasura-admin-secret:
     secure: AAABAHfDtVpAD8w32yINWTjgvuRQixWXYFf3/rEcyh59/pRSz+J4ZYCXNq5jqBiIXM2emB+7zOY=
-  application:hasura-cpu: "512"
+  application:hasura-cpu: "1024"
   application:hasura-memory: "2048"
-  application:hasura-proxy-cpu: "512"
-  application:hasura-proxy-memory: "2048"
   application:hasura-planx-api-key:
     secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
+  application:hasura-proxy-cpu: "512"
+  application:hasura-proxy-memory: "2048"
   application:idox-nexus-client:
     secure: AAABACdm6IyRjfVPrHLCS5eKQD0ixA2lFC5h04HULwcCXx3j
   application:idox-nexus-submission-url: todo

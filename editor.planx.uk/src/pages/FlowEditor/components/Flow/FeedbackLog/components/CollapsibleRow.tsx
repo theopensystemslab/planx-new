@@ -167,7 +167,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ padding: 0, border: "none" }} colSpan={4}>
+        <TableCell sx={{ padding: 0, border: "none" }} colSpan={5}>
           <Collapse
             in={open}
             timeout="auto"

@@ -98,8 +98,15 @@ describe("teams", () => {
       expect(i.queries).toContain("teams");
     });
 
-    test("cannot create, update, or delete teams", () => {
-      expect(i).toHaveNoMutationsFor("teams");
+    test("can update teams", () => { 
+      expect(i.mutations).toContain("update_teams");
+      expect(i.mutations).toContain("update_teams_by_pk"); 
+      expect(i.mutations).toContain("update_teams_many"); 
+    }); 
+
+    test("cannot create or delete teams", () => {
+      expect(i.mutations).not.toContain("insert_teams"); 
+      expect(i.mutations).not.toContain("delete_teams");
     });
   });
 });

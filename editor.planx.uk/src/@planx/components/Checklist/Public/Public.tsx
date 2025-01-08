@@ -1,55 +1,28 @@
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
+  ChecklistLayout,
   checklistValidationSchema,
-  getFlatOptions,
-  getLayout,
 } from "@planx/components/Checklist/model";
-import ImageButton from "@planx/components/shared/Buttons/ImageButton";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { getIn, useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
-import { ExpandableList, ExpandableListItem } from "ui/public/ExpandableList";
-import FormWrapper from "ui/public/FormWrapper";
+import { partition } from "lodash";
+import React, { useEffect } from "react";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
-import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { object } from "yup";
 
+import { Option } from "../../shared";
 import { Props } from "../types";
-import { AutoAnsweredChecklist } from "./AutoAnsweredChecklist";
-import { getInitialExpandedGroups, toggleInArray } from "./helpers";
-
-export enum ChecklistLayout {
-  Basic,
-  Grouped,
-  Images,
-}
+import { ChecklistItems } from "./components/ChecklistItems";
+import { ExclusiveChecklistItem } from "./components/ExclusiveChecklistItem";
+import { GroupedChecklistOptions } from "./components/GroupedChecklistOptions";
+import { toggleNonExclusiveCheckbox } from "./helpers";
+import { useExclusiveOption } from "./hooks/useExclusiveOption";
+import { useSortedOptions } from "./hooks/useSortedOptions";
 
 const ChecklistComponent: React.FC<Props> = (props) => {
-  const autoAnswerableOptions = useStore(
-    (state) => state.autoAnswerableOptions,
-  );
-
-  if (props.neverAutoAnswer) {
-    return <VisibleChecklist {...props} />;
-  }
-
-  let idsThatCanBeAutoAnswered: string[] | undefined;
-  if (props.id) idsThatCanBeAutoAnswered = autoAnswerableOptions(props.id);
-  if (idsThatCanBeAutoAnswered) {
-    return (
-      <AutoAnsweredChecklist {...props} answerIds={idsThatCanBeAutoAnswered} />
-    );
-  }
-
-  return <VisibleChecklist {...props} />;
-};
-
-const VisibleChecklist: React.FC<Props> = (props) => {
   const {
     description = "",
     groupedOptions,
@@ -62,6 +35,7 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     img,
     previouslySubmittedData,
     id,
+    autoAnswers,
   } = props;
 
   const formik = useFormik<{ checked: Array<string> }>({
@@ -78,31 +52,56 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     }),
   });
 
-  const initialExpandedGroups = getInitialExpandedGroups(
+  const { setCheckedFieldValue, layout } = useSortedOptions(
+    options,
     groupedOptions,
-    previouslySubmittedData,
+    formik,
   );
 
-  const [expandedGroups, setExpandedGroups] = useState<Array<number>>(
-    initialExpandedGroups,
+  const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+    options,
+    (option) => option.data.exclusive,
   );
 
-  const layout = getLayout({ options, groupedOptions });
-  const flatOptions = getFlatOptions({ options, groupedOptions });
+  const {
+    exclusiveOrOption,
+    exclusiveOptionIsChecked,
+    toggleExclusiveCheckbox,
+  } = useExclusiveOption(exclusiveOptions, formik);
 
-  const changeCheckbox = (id: string) => (_checked: any) => {
-    const newCheckedIds = formik.values.checked.includes(id)
-      ? formik.values.checked.filter((x) => x !== id)
-      : [...formik.values.checked, id];
+  const changeCheckbox = (id: string) => () => {
+    const currentCheckedIds = formik.values.checked;
 
-    formik.setFieldValue(
-      "checked",
-      newCheckedIds.sort((a, b) => {
-        const originalIds = flatOptions.map((cb) => cb.id);
-        return originalIds.indexOf(a) - originalIds.indexOf(b);
-      }),
+    const currentCheckboxIsExclusiveOption =
+      exclusiveOrOption && id === exclusiveOrOption.id;
+
+    if (currentCheckboxIsExclusiveOption) {
+      const newCheckedIds = toggleExclusiveCheckbox(id);
+      setCheckedFieldValue(newCheckedIds);
+      return;
+    }
+    const newCheckedIds = toggleNonExclusiveCheckbox(
+      id,
+      currentCheckedIds,
+      exclusiveOrOption,
     );
+    setCheckedFieldValue(newCheckedIds);
   };
+
+  // Auto-answered Checklists still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (autoAnswers) {
+      handleSubmit?.({
+        answers: autoAnswers,
+        auto: true,
+      });
+    }
+  }, [autoAnswers]);
+
+  // Auto-answered Checklists are not publicly visible
+  if (autoAnswers) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -122,84 +121,27 @@ const VisibleChecklist: React.FC<Props> = (props) => {
             component="fieldset"
           >
             <legend style={visuallyHidden}>{text}</legend>
-            {options?.map((option) =>
-              layout === ChecklistLayout.Basic ? (
-                <FormWrapper key={option.id}>
-                  <Grid item xs={12} key={option.data.text}>
-                    <ChecklistItem
-                      onChange={changeCheckbox(option.id)}
-                      label={option.data.text}
-                      id={option.id}
-                      checked={formik.values.checked.includes(option.id)}
-                    />
-                  </Grid>
-                </FormWrapper>
-              ) : (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  contentWrap={4}
-                  key={option.data.text}
-                >
-                  <ImageButton
-                    title={option.data.text}
-                    id={option.id}
-                    img={option.data.img}
-                    selected={formik.values.checked.includes(option.id)}
-                    onClick={changeCheckbox(option.id)}
-                    checkbox
-                  />
-                </Grid>
-              ),
+            <ChecklistItems
+              nonExclusiveOptions={nonExclusiveOptions}
+              layout={layout}
+              changeCheckbox={changeCheckbox}
+              formik={formik}
+              exclusiveOptionIsChecked={exclusiveOptionIsChecked}
+            />
+            {exclusiveOrOption && (
+              <ExclusiveChecklistItem
+                exclusiveOrOption={exclusiveOrOption}
+                changeCheckbox={changeCheckbox}
+                formik={formik}
+              />
             )}
-
             {groupedOptions && (
-              <FormWrapper>
-                <Grid item xs={12}>
-                  <ExpandableList>
-                    {groupedOptions.map((group, index) => {
-                      const isExpanded = expandedGroups.includes(index);
-                      return (
-                        <ExpandableListItem
-                          key={index}
-                          expanded={isExpanded}
-                          onToggle={() => {
-                            setExpandedGroups((previous) =>
-                              toggleInArray(index, previous),
-                            );
-                          }}
-                          headingId={`group-${index}-heading`}
-                          groupId={`group-${index}-content`}
-                          title={group.title}
-                        >
-                          <Box
-                            pt={0.5}
-                            pb={2}
-                            aria-labelledby={`group-${index}-heading`}
-                            id={`group-${index}-content`}
-                            data-testid={`group-${index}${
-                              isExpanded ? "-expanded" : ""
-                            }`}
-                          >
-                            {group.children.map((option) => (
-                              <ChecklistItem
-                                onChange={changeCheckbox(option.id)}
-                                key={option.data.text}
-                                label={option.data.text}
-                                id={option.id}
-                                checked={formik.values.checked.includes(
-                                  option.id,
-                                )}
-                              />
-                            ))}
-                          </Box>
-                        </ExpandableListItem>
-                      );
-                    })}
-                  </ExpandableList>
-                </Grid>
-              </FormWrapper>
+              <GroupedChecklistOptions
+                groupedOptions={groupedOptions}
+                previouslySubmittedData={previouslySubmittedData}
+                changeCheckbox={changeCheckbox}
+                formik={formik}
+              />
             )}
           </Grid>
         </ErrorWrapper>
@@ -207,4 +149,5 @@ const VisibleChecklist: React.FC<Props> = (props) => {
     </Card>
   );
 };
+
 export default ChecklistComponent;

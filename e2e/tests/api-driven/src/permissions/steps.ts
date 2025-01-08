@@ -1,6 +1,6 @@
 import { After, Before, Given, Then, When, World } from "@cucumber/cucumber";
 import { strict as assert } from "node:assert";
-import { getUser } from "../globalHelpers";
+import { getUser } from "../globalHelpers.js";
 import {
   Action,
   GQLQueryResult,
@@ -9,7 +9,7 @@ import {
   cleanup,
   performGQLQuery,
   setup,
-} from "./helpers";
+} from "./helpers.js";
 
 export class CustomWorld extends World {
   // A teamEditor for team1

@@ -531,7 +531,7 @@ export const previewStore: StateCreator<
     if (!visitedFns.length) return;
 
     // For each visited node, get the data values of its' options (aka edges or Answer nodes)
-    let visitedOptionVals: string[] = [];
+    const visitedOptionVals: string[] = [];
     visitedFns.forEach(([nodeId, _breadcrumb]) => {
       flow[nodeId].edges?.map((edgeId) => {
         if (flow[edgeId].type === TYPES.Answer && flow[edgeId].data?.val) {
