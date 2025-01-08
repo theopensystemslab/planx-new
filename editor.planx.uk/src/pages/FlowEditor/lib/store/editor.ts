@@ -132,18 +132,27 @@ interface PublishFlowResponse {
   message: string;
 }
 
+export type PublishedFlowSummary = {
+  publishedAt: string;
+  hasSendComponent: boolean;
+};
+
+export type FlowSummaryOperations = {
+  createdAt: string;
+  actor: {
+    firstName: string;
+    lastName: string;
+  };
+};
+
 export interface FlowSummary {
   id: string;
   name: string;
   slug: string;
+  status: "online" | "offline";
   updatedAt: string;
-  operations: {
-    createdAt: string;
-    actor: {
-      firstName: string;
-      lastName: string;
-    };
-  }[];
+  operations: FlowSummaryOperations[];
+  publishedFlows: PublishedFlowSummary[];
 }
 
 export interface EditorStore extends Store.Store {
@@ -382,6 +391,7 @@ export const editorStore: StateCreator<
             id
             name
             slug
+            status
             updatedAt: updated_at
             operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
@@ -389,6 +399,13 @@ export const editorStore: StateCreator<
                 firstName: first_name
                 lastName: last_name
               }
+            }
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
+              publishedAt: created_at
+              hasSendComponent: has_send_component
             }
           }
         }
@@ -614,9 +631,9 @@ export const editorStore: StateCreator<
     Object.entries(flow).map(([_id, node]) => {
       if (node.data?.fn) {
         // Exclude Filter fn value as not exposed to editors
-        if (node.data?.fn !== "flag") nodes.add(node.data.fn)
-      };
-  
+        if (node.data?.fn !== "flag") nodes.add(node.data.fn);
+      }
+
       if (node.data?.val) {
         // Exclude Filter Option flag values as not exposed to editors
         const flagVals = flatFlags.map((flag) => flag.value);

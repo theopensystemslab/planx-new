@@ -11,12 +11,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { flow } from "lodash";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
+import { SortFlowsSelect } from "ui/editor/SortFlowsSelect";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -351,6 +352,9 @@ const Team: React.FC = () => {
         </Box>
         {showAddFlowButton && <AddFlowButton flows={flows} />}
       </Box>
+      {hasFeatureFlag("SORT_FLOWS") && flows && (
+        <SortFlowsSelect flows={flows} setFlows={setFlows} />
+      )}
       {teamHasFlows && (
         <DashboardList>
           {flows.map((flow) => (
