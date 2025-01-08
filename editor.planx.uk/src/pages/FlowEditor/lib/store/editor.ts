@@ -614,9 +614,9 @@ export const editorStore: StateCreator<
     Object.entries(flow).map(([_id, node]) => {
       if (node.data?.fn) {
         // Exclude Filter fn value as not exposed to editors
-        if (node.data?.fn !== "flag") nodes.add(node.data.fn);
-      }
-
+        if (node.data?.fn !== "flag") nodes.add(node.data.fn)
+      };
+  
       if (node.data?.val) {
         // Exclude Filter Option flag values as not exposed to editors
         const flagVals = flatFlags.map((flag) => flag.value);

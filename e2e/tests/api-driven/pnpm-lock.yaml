@@ -9,8 +9,8 @@ dependencies:
     specifier: ^11.1.1
     version: 11.1.1
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#d004278
-    version: github.com/theopensystemslab/planx-core/d004278
+    specifier: git+https://github.com/theopensystemslab/planx-core#dc2386b
+    version: github.com/theopensystemslab/planx-core/dc2386b
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -486,31 +486,31 @@ packages:
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
     dev: false
 
-  /@formatjs/ecma402-abstract@2.3.1:
-    resolution: {integrity: sha512-Ip9uV+/MpLXWRk03U/GzeJMuPeOXpJBSB5V1tjA6kJhvqssye5J5LoYLc7Z5IAHb7nR62sRoguzrFiVCP/hnzw==}
+  /@formatjs/ecma402-abstract@2.3.2:
+    resolution: {integrity: sha512-6sE5nyvDloULiyOMbOTJEEgWL32w+VHkZQs8S02Lnn8Y/O5aQhjOEXwWzvR7SsBE/exxlSpY2EsWZgqHbtLatg==}
     dependencies:
-      '@formatjs/fast-memoize': 2.2.5
-      '@formatjs/intl-localematcher': 0.5.9
+      '@formatjs/fast-memoize': 2.2.6
+      '@formatjs/intl-localematcher': 0.5.10
       decimal.js: 10.4.3
       tslib: 2.8.1
     dev: false
 
-  /@formatjs/fast-memoize@2.2.5:
-    resolution: {integrity: sha512-6PoewUMrrcqxSoBXAOJDiW1m+AmkrAj0RiXnOMD59GRaswjXhm3MDhgepXPBgonc09oSirAJTsAggzAGQf6A6g==}
+  /@formatjs/fast-memoize@2.2.6:
+    resolution: {integrity: sha512-luIXeE2LJbQnnzotY1f2U2m7xuQNj2DA8Vq4ce1BY9ebRZaoPB1+8eZ6nXpLzsxuW5spQxr7LdCg+CApZwkqkw==}
     dependencies:
       tslib: 2.8.1
     dev: false
 
-  /@formatjs/intl-listformat@7.7.8:
-    resolution: {integrity: sha512-ezlfqfyegMbepGVcf3rTApVGIbZQvJwx1PZsXjMe2xAqEU1jSBZ/2efLE8u3sUBHGrrsdWER98W85zCg4N7rmQ==}
+  /@formatjs/intl-listformat@7.7.9:
+    resolution: {integrity: sha512-VGbGrngcjwrlPvstc6ysCwGlbxaq3PKXSkC9P5DYyfLI+C6I+PIog9UW8rPwH1xLXMfmyZblrkvkRboGn3E8qA==}
     dependencies:
-      '@formatjs/ecma402-abstract': 2.3.1
-      '@formatjs/intl-localematcher': 0.5.9
+      '@formatjs/ecma402-abstract': 2.3.2
+      '@formatjs/intl-localematcher': 0.5.10
       tslib: 2.8.1
     dev: false
 
-  /@formatjs/intl-localematcher@0.5.9:
-    resolution: {integrity: sha512-8zkGu/sv5euxbjfZ/xmklqLyDGQSxsLqg8XOq88JW3cmJtzhCP8EtSJXlaKZnVO4beEaoiT9wj4eIoCQ9smwxA==}
+  /@formatjs/intl-localematcher@0.5.10:
+    resolution: {integrity: sha512-af3qATX+m4Rnd9+wHcjJ4w2ijq+rAVP3CCinJQvFv1kgSu1W6jypUmvleJxcewdxmutM8dmIRZFxO/IQBZmP2Q==}
     dependencies:
       tslib: 2.8.1
     dev: false
@@ -2886,8 +2886,8 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: false
 
-  /uuid@11.0.3:
-    resolution: {integrity: sha512-d0z310fCWv5dJwnX1Y/MncBAqGMKEzlBb1AOf7z9K8ALnd0utBX/msg/fA0+sbyN1ihbMsLhrBlnl1ak7Wa0rg==}
+  /uuid@11.0.4:
+    resolution: {integrity: sha512-IzL6VtTTYcAhA/oghbFJ1Dkmqev+FpQWnCBaKq/gUluLxliWvO8DPFWfIviRmYbtaavtSQe4WBL++rFjdcGWEg==}
     hasBin: true
     dev: false
 
@@ -3047,8 +3047,8 @@ packages:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/d004278:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/d004278}
+  github.com/theopensystemslab/planx-core/dc2386b:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dc2386b}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -3056,7 +3056,7 @@ packages:
     dependencies:
       '@emotion/react': 11.14.0(react@18.3.1)
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0)(react@18.3.1)
-      '@formatjs/intl-listformat': 7.7.8
+      '@formatjs/intl-listformat': 7.7.9
       '@mui/base': 5.0.0-beta.60(react-dom@18.3.1)(react@18.3.1)
       '@mui/material': 5.16.9(@emotion/react@11.14.0)(@emotion/styled@11.14.0)(react-dom@18.3.1)(react@18.3.1)
       ajv: 8.17.1
@@ -3075,7 +3075,7 @@ packages:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.31.0
-      uuid: 11.0.3
+      uuid: 11.0.4
       zod: 3.24.1
     transitivePeerDependencies:
       - '@types/react'

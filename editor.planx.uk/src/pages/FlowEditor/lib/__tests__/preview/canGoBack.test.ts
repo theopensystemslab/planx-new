@@ -34,7 +34,7 @@ const flow: Store.Flow = {
   Calculate: {
     type: TYPES.Calculate,
     data: {
-      output: "fee",
+      fn: "fee",
       formula: "10",
     },
   },

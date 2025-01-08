@@ -93,7 +93,7 @@
         "uniform.consentRegime": ["Certificate of Lawfulness"],
         "application.about.form": ["Proposed building works"],
         "property.EPCKnown.form": ["No"],
-        "property.boundary.site": {
+        "proposal.site": {
           "type": "Feature",
           "geometry": {
             "type": "Polygon",
@@ -814,7 +814,7 @@
         "auto": false,
         "data": {
           "proposal.siteArea": 21.6,
-          "property.boundary.site": {
+          "proposal.site": {
             "type": "Feature",
             "geometry": {
               "type": "Polygon",

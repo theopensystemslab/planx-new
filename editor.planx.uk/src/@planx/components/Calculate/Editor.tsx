@@ -127,8 +127,8 @@ export default function Component(props: Props) {
         <ModalSectionContent title="Output">
           <DataFieldAutocomplete
             required
-            value={formik.values.output}
-            onChange={(value) => formik.setFieldValue("output", value)}
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
           />
           <InputRow>
           <Switch            
@@ -196,7 +196,7 @@ export default function Component(props: Props) {
             <></>
           )}
           <p>
-            <strong>{formik.values.output || "<output>"}</strong> would be set
+            <strong>{formik.values.fn || "<output>"}</strong> would be set
             to <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>

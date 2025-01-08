@@ -228,14 +228,14 @@ const flowWithFilters: Store.Flow = {
   SecondQuestionYesAnswer: {
     data: {
       val: "alter.landscaping",
-      flag: "MCOU_TRUE",
+      flags: ["MCOU_TRUE"],
       text: "Yes",
     },
     type: 200,
   },
   FirstQuestionNoAnswer: {
     data: {
-      flag: "MCOU_FALSE",
+      flags: ["MCOU_FALSE"],
       text: "No",
     },
     type: 200,
@@ -336,7 +336,7 @@ const flowWithFilters: Store.Flow = {
   FirstQuestionYesAnswer: {
     data: {
       val: "alter.facade",
-      flag: "MCOU_TRUE",
+      flags: ["MCOU_TRUE"],
       text: "Yes",
     },
     type: 200,
@@ -371,7 +371,7 @@ const flowWithFilters: Store.Flow = {
   },
   SecondQuestionNoAnswer: {
     data: {
-      flag: "MCOU_FALSE",
+      flags: ["MCOU_FALSE"],
       text: "No",
     },
     type: 200,
