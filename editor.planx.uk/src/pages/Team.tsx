@@ -3,6 +3,7 @@ import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,11 +18,16 @@ import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
+import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
+import Filters from "./Filters";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
@@ -30,18 +36,21 @@ const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(0, 0, 3),
   borderBottom: "1px solid #fff",
   margin: 0,
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "1fr 1fr 1fr",
+  gridGap: theme.spacing(2),
 }));
 
 const DashboardListItem = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
-  color: theme.palette.common.white,
-  margin: theme.spacing(1, 0),
-  background: theme.palette.text.primary,
   display: "flex",
-  justifyContent: "space-between",
-  alignItems: "stretch",
-  borderRadius: "2px",
+  flexDirection: "column",
+  borderRadius: "4px",
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.border.main}`,
+  boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
 }));
 
 const DashboardLink = styled(Link)(({ theme }) => ({
@@ -60,11 +69,11 @@ const DashboardLink = styled(Link)(({ theme }) => ({
 
 const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   display: "flex",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
+  marginTop: "auto",
 }));
 
 const LinkSubText = styled(Box)(({ theme }) => ({
-  color: theme.palette.grey[400],
+  color: theme.palette.text.secondary,
   fontWeight: "normal",
   paddingTop: "0.5em",
 }));
@@ -112,7 +121,6 @@ interface FlowItemProps {
   teamSlug: string;
   refreshFlows: () => void;
 }
-
 const FlowItem: React.FC<FlowItemProps> = ({
   flow,
   flows,
@@ -147,6 +155,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
       });
   };
 
+  const getStatusColor = (status: string) => {
+    return status === "online" ? "success" : "secondary";
+  };
+
   return (
     <>
       {deleting && (
@@ -163,7 +175,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
       )}
       <DashboardListItem>
         <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-          <Typography variant="h4" component="h2">
+          <Typography variant="h3" component="h2">
             {flow.name}
           </Typography>
           <LinkSubText>
@@ -172,6 +184,11 @@ const FlowItem: React.FC<FlowItemProps> = ({
               flow.operations[0]?.actor,
             )}
           </LinkSubText>
+          <Chip
+            label={flow.status}
+            color={getStatusColor(flow.status)}
+            size="small"
+          />
         </DashboardLink>
         {useStore.getState().canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
@@ -345,7 +362,7 @@ const Team: React.FC = () => {
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
-    <Container maxWidth="formWrap">
+    <Container maxWidth="lg">
       <Box
         pb={1}
         sx={{
@@ -360,14 +377,25 @@ const Team: React.FC = () => {
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            gap: 2,
           }}
         >
           <Typography variant="h2" component="h1" pr={1}>
             Services
           </Typography>
-          {canUserEditTeam(slug) ? <Edit /> : <Visibility />}
+          {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
+          {showAddFlowButton && <AddFlowButton flows={flows} />}
         </Box>
-        {showAddFlowButton && <AddFlowButton flows={flows} />}
+        <Box maxWidth={360}>
+          <InputRow>
+            <InputRowLabel>
+              <strong>Search</strong>
+            </InputRowLabel>
+            <InputRowItem>
+              <Input sx={{ borderColor: "black" }} name="search" id="search" />
+            </InputRowItem>
+          </InputRow>
+        </Box>
       </Box>
       {hasFeatureFlag("SORT_FLOWS") && flows && (
         <SortControl<FlowSummary>
@@ -376,6 +404,7 @@ const Team: React.FC = () => {
           sortOptions={sortOptions}
         />
       )}
+      <Filters />
       {teamHasFlows && (
         <DashboardList>
           {flows.map((flow) => (
