@@ -152,6 +152,7 @@ export interface FlowSummary {
   slug: string;
   status: FlowStatus;
   updatedAt: string;
+  description: string;
   operations: FlowSummaryOperations[];
   publishedFlows: PublishedFlowSummary[];
 }
@@ -393,6 +394,7 @@ export const editorStore: StateCreator<
             name
             slug
             status
+            description
             updatedAt: updated_at
             operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at

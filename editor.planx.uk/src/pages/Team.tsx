@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
-import { borderedFocusStyle } from "theme";
+import { inputFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import Input from "ui/shared/Input/Input";
@@ -49,7 +49,6 @@ const FlowCard = styled("li")(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
-  overflow: "hidden",
 }));
 
 const FlowCardContent = styled(Box)(({ theme }) => ({
@@ -72,8 +71,8 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   width: "100%",
   height: "100%",
   zIndex: 1,
-  "&:focus-within": {
-    ...borderedFocusStyle,
+  "&:focus": {
+    ...inputFocusStyle,
   },
 }));
 
@@ -89,6 +88,7 @@ const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.main}`,
   backgroundColor: theme.palette.background.paper,
   overflow: "hidden",
+  borderRadius: "0px 0px 4px 4px",
 }));
 
 const Confirm = ({
@@ -208,13 +208,22 @@ const FlowItem: React.FC<FlowItemProps> = ({
             </FlowTag>
           </Box>
           <DashboardLink href={`./${flow.slug}`} prefetch={false} />
-          <Typography
-            variant="body2"
-            sx={{ "& > a": { position: "relative", zIndex: 2 } }}
-          >
-            Allows users to apply for prior approval that is required for some
-            types of... <a href="https://planx.uk">read more</a>
-          </Typography>
+          {flow.description && (
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+            >
+              {`${flow.description.split(" ").slice(0, 10).join(" ")}... `}
+              <Button
+                variant="link"
+                href="https://planx.uk"
+                sx={{ minHeight: 0 }}
+              >
+                read more
+              </Button>
+            </Typography>
+          )}
         </FlowCardContent>
         {useStore.getState().canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
