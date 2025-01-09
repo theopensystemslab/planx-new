@@ -20,7 +20,7 @@ export const createHasuraService = async ({
 }: CreateService) => {
 
   const config = new pulumi.Config();
-  const dbRootUrl: string = config.requireSecret("db-url");
+  const dbRootUrl = config.requireSecret("db-url").get();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
