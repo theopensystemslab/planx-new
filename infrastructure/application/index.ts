@@ -380,6 +380,9 @@ export = async () => {
           {
             name: "FILE_API_KEY_GATESHEAD",
             value: config.requireSecret("file-api-key-gateshead"),
+          },          {
+            name: "FILE_API_KEY_DONCASTER",
+            value: config.requireSecret("file-api-key-doncaster"),
           },
           {
             name: "GOOGLE_CLIENT_ID",
