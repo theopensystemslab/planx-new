@@ -12,7 +12,7 @@ config:
   application:file-api-key-barnet:
     secure: AAABAFpZq81zy3CKFXUgi9oEGIGp7LDVD3TNlYkZD4liX0bxOrmMJYdDpMmyGt4aGARF63nEUmo=
   application:file-api-key-doncaster:
-    secure: AAABAGflOiDR2agEFZYNZRXzzPmua5Ts+F5sXpa6LpOAWNfJOO7qYsTMgY5Oj+AB8qVW7VcTjWriFG8BdfjDcyl1RtMWxYfOHXFjNKmvlABuOR+pxD7ygFAwlvp5dm8UPPFothtZIgi9nYS6qxnGSLomvqApF17D29R8ydJdYcTJmjPHufWcIRjT3tx72+R1o57i3QFnoQqbZIOSw7ELVqI=
+    secure: AAABAIZjfr4tVG+HG9+83bPYQjgD1hmK5P+SbYpq4qGue07rHA02kciAkTMCyxD5Lzb0WX0K6fm5cvH2tof5mmX7gJGTkMVc
   application:file-api-key-epsom-ewell:
     secure: AAABAD1/nlJ2EOEglLiiNsOLbOd3KWCONhNhJAIdZQVnrSRsNIzX2luszOreQf20EYl8AZ4L1TiheqUHSt22e5z1FiLWoCtY
   application:file-api-key-gateshead:
