@@ -11,6 +11,8 @@ config:
     secure: AAABAN0LjLOgxCkr5ZqQLn6FkZPcrPlvNG4fbNZ02W2qC1VVYVee/3aToZQuXuokVwnIPNbbe2w=
   application:file-api-key-barnet:
     secure: AAABAFpZq81zy3CKFXUgi9oEGIGp7LDVD3TNlYkZD4liX0bxOrmMJYdDpMmyGt4aGARF63nEUmo=
+  application:file-api-key-doncaster:
+    secure: AAABAIZjfr4tVG+HG9+83bPYQjgD1hmK5P+SbYpq4qGue07rHA02kciAkTMCyxD5Lzb0WX0K6fm5cvH2tof5mmX7gJGTkMVc
   application:file-api-key-epsom-ewell:
     secure: AAABAD1/nlJ2EOEglLiiNsOLbOd3KWCONhNhJAIdZQVnrSRsNIzX2luszOreQf20EYl8AZ4L1TiheqUHSt22e5z1FiLWoCtY
   application:file-api-key-gateshead:
