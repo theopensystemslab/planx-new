@@ -1,9 +1,6 @@
 import { gql } from "@apollo/client";
-import Edit from "@mui/icons-material/Edit";
-import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,9 +12,9 @@ import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
+import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -33,7 +30,7 @@ import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(0, 0, 3),
+  padding: theme.spacing(3, 0),
   borderBottom: "1px solid #fff",
   margin: 0,
   display: "grid",
@@ -42,40 +39,56 @@ const DashboardList = styled("ul")(({ theme }) => ({
   gridGap: theme.spacing(2),
 }));
 
-const DashboardListItem = styled("li")(({ theme }) => ({
+const FlowCard = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
   display: "flex",
   flexDirection: "column",
+  justifyContent: "stretch",
   borderRadius: "4px",
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
+  overflow: "hidden",
+}));
+
+const FlowCardContent = styled(Box)(({ theme }) => ({
+  position: "relative",
+  height: "100%",
+  textDecoration: "none",
+  color: "currentColor",
+  padding: theme.spacing(2),
+  display: "flex",
+  flexDirection: "column",
+  gap: theme.spacing(1.5),
+  margin: 0,
+  width: "100%",
 }));
 
 const DashboardLink = styled(Link)(({ theme }) => ({
-  display: "block",
-  fontSize: theme.typography.h4.fontSize,
-  textDecoration: "none",
-  color: "currentColor",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  padding: theme.spacing(2),
-  margin: 0,
+  position: "absolute",
+  left: 0,
+  top: 0,
   width: "100%",
+  height: "100%",
+  zIndex: 1,
   "&:focus-within": {
     ...borderedFocusStyle,
   },
 }));
 
-const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  marginTop: "auto",
-}));
-
 const LinkSubText = styled(Box)(({ theme }) => ({
   color: theme.palette.text.secondary,
   fontWeight: "normal",
-  paddingTop: "0.5em",
+  paddingTop: theme.spacing(0.75),
+}));
+
+const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
+  display: "flex",
+  marginTop: "auto",
+  borderTop: `1px solid ${theme.palette.border.main}`,
+  backgroundColor: theme.palette.background.paper,
+  overflow: "hidden",
 }));
 
 const Confirm = ({
@@ -121,6 +134,7 @@ interface FlowItemProps {
   teamSlug: string;
   refreshFlows: () => void;
 }
+
 const FlowItem: React.FC<FlowItemProps> = ({
   flow,
   flows,
@@ -129,6 +143,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
   refreshFlows,
 }) => {
   const [deleting, setDeleting] = useState(false);
+
   const handleDelete = () => {
     useStore
       .getState()
@@ -138,6 +153,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
         refreshFlows();
       });
   };
+
   const handleCopy = () => {
     useStore
       .getState()
@@ -146,6 +162,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
         refreshFlows();
       });
   };
+
   const handleMove = (newTeam: string) => {
     useStore
       .getState()
@@ -155,9 +172,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
       });
   };
 
-  const getStatusColor = (status: string) => {
-    return status === "online" ? "success" : "secondary";
-  };
+  const statusVariant =
+    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
   return (
     <>
@@ -173,23 +189,33 @@ const FlowItem: React.FC<FlowItemProps> = ({
           submitLabel="Delete Service"
         />
       )}
-      <DashboardListItem>
-        <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-          <Typography variant="h3" component="h2">
-            {flow.name}
+      <FlowCard>
+        <FlowCardContent>
+          <Box>
+            <Typography variant="h3" component="h2">
+              {flow.name}
+            </Typography>
+            <LinkSubText>
+              {formatLastEditMessage(
+                flow.operations[0].createdAt,
+                flow.operations[0]?.actor,
+              )}
+            </LinkSubText>
+          </Box>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
+              {flow.status}
+            </FlowTag>
+          </Box>
+          <DashboardLink href={`./${flow.slug}`} prefetch={false} />
+          <Typography
+            variant="body2"
+            sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+          >
+            Allows users to apply for prior approval that is required for some
+            types of... <a href="https://planx.uk">read more</a>
           </Typography>
-          <LinkSubText>
-            {formatLastEditMessage(
-              flow.operations[0].createdAt,
-              flow.operations[0]?.actor,
-            )}
-          </LinkSubText>
-          <Chip
-            label={flow.status}
-            color={getStatusColor(flow.status)}
-            size="small"
-          />
-        </DashboardLink>
+        </FlowCardContent>
         {useStore.getState().canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[
@@ -270,7 +296,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
             ]}
           />
         )}
-      </DashboardListItem>
+      </FlowCard>
     </>
   );
 };
@@ -362,42 +388,47 @@ const Team: React.FC = () => {
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
-    <Container maxWidth="lg">
-      <Box
-        pb={1}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <Box bgcolor={"background.paper"} flexGrow={1}>
+      <Container maxWidth="lg">
         <Box
+          pb={1}
           sx={{
             display: "flex",
             flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: 2,
           }}
         >
-          <Typography variant="h2" component="h1" pr={1}>
-            Services
-          </Typography>
-          {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
-          {showAddFlowButton && <AddFlowButton flows={flows} />}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h2" component="h1" pr={1}>
+              Services
+            </Typography>
+            {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
+            {showAddFlowButton && <AddFlowButton flows={flows} />}
+          </Box>
+          <Box maxWidth={360}>
+            <InputRow>
+              <InputRowLabel>
+                <strong>Search</strong>
+              </InputRowLabel>
+              <InputRowItem>
+                <Input
+                  sx={{ borderColor: "black" }}
+                  name="search"
+                  id="search"
+                />
+              </InputRowItem>
+            </InputRow>
+          </Box>
         </Box>
-        <Box maxWidth={360}>
-          <InputRow>
-            <InputRowLabel>
-              <strong>Search</strong>
-            </InputRowLabel>
-            <InputRowItem>
-              <Input sx={{ borderColor: "black" }} name="search" id="search" />
-            </InputRowItem>
-          </InputRow>
-        </Box>
-      </Box>
-      {hasFeatureFlag("SORT_FLOWS") && flows && (
+        {hasFeatureFlag("SORT_FLOWS") && flows && (
         <SortControl<FlowSummary>
           records={flows}
           setRecords={setFlows}
@@ -405,24 +436,41 @@ const Team: React.FC = () => {
         />
       )}
       <Filters />
-      {teamHasFlows && (
-        <DashboardList>
-          {flows.map((flow) => (
-            <FlowItem
-              flow={flow}
-              flows={flows}
-              key={flow.slug}
-              teamId={teamId}
-              teamSlug={slug}
-              refreshFlows={() => {
-                fetchFlows();
+        {teamHasFlows && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 2,
               }}
-            />
-          ))}
-        </DashboardList>
-      )}
-      {flows && !flows.length && <GetStarted flows={flows} />}
-    </Container>
+            >
+              <Typography variant="h3" component="h2">
+                Showing all services
+              </Typography>
+              Order toggle
+            </Box>
+
+            <DashboardList>
+              {flows.map((flow) => (
+                <FlowItem
+                  flow={flow}
+                  flows={flows}
+                  key={flow.slug}
+                  teamId={teamId}
+                  teamSlug={slug}
+                  refreshFlows={() => {
+                    fetchFlows();
+                  }}
+                />
+              ))}
+            </DashboardList>
+          </>
+        )}
+        {flows && !flows.length && <GetStarted flows={flows} />}
+      </Container>
+    </Box>
   );
 };
 
