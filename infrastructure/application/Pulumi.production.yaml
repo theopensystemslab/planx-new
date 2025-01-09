@@ -4,6 +4,8 @@ config:
   application:airbrake-project-key:
     secure: AAABAPIGB+gWevPn0SzWnuSuV1RmdwpLOlWKnu8cM/kxLfslvdCIRcU0n0M0XNJ3jwj4EdFn7/llsL1Kg2XnDA==
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
+  application:db-url:
+    secure: AAABAFMl4J25TQyb+dAVA/8g5KR1aIP7cOZrrLqYzv4ScF4AGIDWnp6zC9wV+Odja2LZyy10cbUojs1mybg1EV82UAZfEX+HCcaNixJvTuoC0h4swDMdLXX9vvs1QqsC6Q+7qp96hQCT8CW81TbdDSVIu2mLbV8dnjyuD2R8o4tt5pBmXKCVJJ4zWI5LuukolIj3nw==
   application:encryption-key:
     secure: AAABAGbTpoRtazwoNFNmaPCW0RdeTqjhEzQuYR1kl4ft7EWNxqswAu8Dc9T+YBxkYr3uaHbu5obzyo8I4QuVgg==
   application:file-api-key:
