@@ -5,6 +5,10 @@ config:
     secure: AAABABujxMHxU8Abj4QpyQTz7bLt3AP2wBFaypVkDZ2khzc6eh6lHLljTEkzpLUncno3gNNDXnrmxzXvqKnQdQ==
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
+  application:db-host:
+    secure: AAABANgnZHJlsCzbsGz1dXhEb2zQzEOM6wQd+AnqQKvn54W/eNcf6NWtlFUpTvVmd/9IhLzl7TSHowXKq8EGjeTnaBDsnefFq9wNGAft76dmYCU=
+  application:db-password:
+    secure: AAABAKd+etETq8AV5V3Xrl5X2H+rYtSw91GDBSwFyjT/HLJT9sOLNR296GTxrHkNQ8BxSOq4rxrlMHIt0lL/DQ==
   application:db-url:
     secure: AAABAHaVuHg4NkZjMQv7N8hpKRJL13IW721pPo/ou6+itPn2PLYr8s8YjTbaxDGZg9LiB5QAgbihA1fSnIolokoZ/wJ7VzkHOI59Icci0CEoOgQrUfzDFevpgt3HaTmyrxIzemMbOPl/dGcJCTW0K9NkRADWE4z2OERcFwQBRUZuRSwIbV7teXpbY15IAW24FLNM+g==
   application:encryption-key:

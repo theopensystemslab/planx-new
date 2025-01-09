@@ -114,16 +114,15 @@ export = async () => {
     vpc,
   });
 
-  const dbRootUrl = config.requireSecret("db-url").get();
+  const DB_ROOT_USERNAME = "dbuser";
 
   // ----------------------- Metabase
-  const pgRoot = url.parse(dbRootUrl);
   const provider = new postgres.Provider("metabase", {
-    host: pgRoot.hostname as string,
-    port: Number(pgRoot.port),
-    username: pgRoot.auth!.split(":")[0] as string,
-    password: pgRoot.auth!.split(":")[1] as string,
-    database: pgRoot.path!.substring(1) as string,
+    host: config.requireSecret("db-host"),
+    port: 5432,
+    username: DB_ROOT_USERNAME,
+    password: config.requireSecret("db-password"),
+    database: "postgres",
     superuser: false,
   });
   const metabasePgPassword = config.requireSecret("metabasePgPassword");
