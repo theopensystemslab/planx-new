@@ -20,7 +20,6 @@ export const createHasuraService = async ({
 }: CreateService) => {
 
   const config = new pulumi.Config();
-  const dbRootUrl = config.requireSecret("db-url").get();
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
@@ -76,13 +75,18 @@ export const createHasuraService = async ({
           memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
           // hasuraProxy should wait for the hasura container to spin up before starting
-          dependsOn: [{
-            containerName: "hasura",
-            condition: "HEALTHY"
-          }],
+          dependsOn: [
+            {
+              containerName: "hasura",
+              condition: "HEALTHY",
+            },
+          ],
           healthCheck: {
             // hasuraProxy health depends on hasura health
-            command: ["CMD-SHELL", `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
+            command: [
+              "CMD-SHELL",
+              `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`,
+            ],
             interval: 15,
             timeout: 3,
             retries: 3,
@@ -100,7 +104,10 @@ export const createHasuraService = async ({
           cpu: config.requireNumber("hasura-cpu"),
           memory: config.requireNumber("hasura-memory"),
           healthCheck: {
-            command: ["CMD-SHELL", "curl --head http://localhost:8080/healthz || exit 1"],
+            command: [
+              "CMD-SHELL",
+              "curl --head http://localhost:8080/healthz || exit 1",
+            ],
             // wait 5m before running container-level health check, using same params as docker-compose
             startPeriod: 300,
             interval: 15,
@@ -132,7 +139,7 @@ export const createHasuraService = async ({
             { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
             {
               name: "HASURA_GRAPHQL_DATABASE_URL",
-              value: dbRootUrl,
+              value: config.requireSecret("db-url"),
             },
             {
               name: "HASURA_PLANX_API_URL",
