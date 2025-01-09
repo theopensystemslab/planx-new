@@ -52,6 +52,8 @@ config:
     secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
+  application:mb-db-connection-uri:
+    secure: AAABAJowah1iT5v6cgduzhTzJxcFLVRW1/nfh80aL0+IxD9MlCABab5L/rKxMeVN+wdxU7XyyXbRwXcShYKpQtLWBCD+yaFiIJgXgbdsfMnd2IEZxwWZu5GwAGbo2zY/fHOsS/mq1F5pysSliEJubFz8EIpOHQFykXXgUFtNy+NmL5GIiex+Zz5MJKSEFBQkyRrkcOEz
   application:metabase-api-key:
     secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==
   application:metabase-encryption-secret-key:
