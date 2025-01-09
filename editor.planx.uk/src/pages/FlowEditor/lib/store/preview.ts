@@ -520,10 +520,9 @@ export const previewStore: StateCreator<
 
     // Only proceed if the user has seen at least one node with this fn before
     const visitedFns = Object.entries(breadcrumbs).filter(
-      ([nodeId, _breadcrumb]) =>{
-        return flow[nodeId]?.data?.fn === data.fn ||
+      ([nodeId, _breadcrumb]) => flow[nodeId]?.data?.fn === data.fn ||
         // Account for nodes like FindProperty that don't have `data.fn` prop but still set passport vars like `property.region` etc
-        Object.keys(passport?.data || {}).includes(data.fn)}
+        Object.keys(passport?.data || {}).includes(data.fn)
     );
     if (!visitedFns.length) return;
 
