@@ -114,7 +114,7 @@ export = async () => {
     vpc,
   });
 
-  const dbRootUrl: string = config.requireSecret("db-url");
+  const dbRootUrl = config.requireSecret("db-url").get();
 
   // ----------------------- Metabase
   const pgRoot = url.parse(dbRootUrl);
