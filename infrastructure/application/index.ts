@@ -209,10 +209,6 @@ export = async () => {
           // https://www.metabase.com/docs/latest/troubleshooting-guide/running.html#heap-space-outofmemoryerrors
           { name: "JAVA_OPTS", value: `-Xmx2g` },
           { name: "MB_DB_TYPE", value: "postgres" },
-          {
-            name: "MB_DB_CONNECTION_URI",
-            value: pulumi.interpolate`postgres://${role.name}:${metabasePgPassword}@${pgRoot.hostname}:${pgRoot.port}/${metabasePgDatabase.name}`,
-          },
           { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
           {
@@ -549,7 +545,7 @@ export = async () => {
           },
           {
             name: "PG_URL",
-            value: dbRootUrl,
+            value: config.requireSecret("db-url"),
           },
         ],
       },
