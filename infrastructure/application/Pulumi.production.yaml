@@ -5,11 +5,11 @@ config:
     secure: AAABAPIGB+gWevPn0SzWnuSuV1RmdwpLOlWKnu8cM/kxLfslvdCIRcU0n0M0XNJ3jwj4EdFn7/llsL1Kg2XnDA==
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
   application:db-host:
-    secure: AAABAKLhVuIZjULxXm7L5orM9cKtWXnC4/HWfaKulZ/mFMmUV6vX7brSfmI1ablEf3aUtUJ7/T/RzcLJkL86yEw0n88SkgQrxj+KLybM0ZH8Sy8=
+    secure: AAABAKwKjFnIcXMFrWd1q378VFvSly5wFJaNaKk/mGv0W0AVyFn9reP3pZsI2BxfAliC3jn083AA+6kuh/uSezRId08GN0XBN9oqLdkeAFeucP4=
   application:db-password:
     secure: AAABAExMwTLOjC9suf2i6hYygiqnvm7cNaS2F2iqr/zpPMX4dhh7My8Nm5dD0WRGiTsiv9I2v24eUfAVZgLC0w==
   application:db-url:
-    secure: AAABAFMl4J25TQyb+dAVA/8g5KR1aIP7cOZrrLqYzv4ScF4AGIDWnp6zC9wV+Odja2LZyy10cbUojs1mybg1EV82UAZfEX+HCcaNixJvTuoC0h4swDMdLXX9vvs1QqsC6Q+7qp96hQCT8CW81TbdDSVIu2mLbV8dnjyuD2R8o4tt5pBmXKCVJJ4zWI5LuukolIj3nw==
+    secure: AAABAFI7BWi1MiV42eCEbNb5pkqvXsMD/AGFr76HpI96ZISZMDoTEZqMjkIOt8LKR6/dmxkgPa1pWfRYdKDYYnHJ0PY5brtHC5EwndG6Rpc9OcPmbkqjGIITv06jk1/IDxC1CRW9oq4xXhxDF4FN/MmhqqyCncUxS7jL2BhfKrQ/LMBrZtGF/e4GrXgHEqMXMTCHJQ==
   application:encryption-key:
     secure: AAABAGbTpoRtazwoNFNmaPCW0RdeTqjhEzQuYR1kl4ft7EWNxqswAu8Dc9T+YBxkYr3uaHbu5obzyo8I4QuVgg==
   application:file-api-key:
