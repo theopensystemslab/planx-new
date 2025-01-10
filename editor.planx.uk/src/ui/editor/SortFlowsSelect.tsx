@@ -9,6 +9,7 @@ import {
   PublishedFlowSummary,
 } from "pages/FlowEditor/lib/store/editor";
 import React, { useEffect, useState } from "react";
+import { useNavigation } from "react-navi";
 
 import SelectInput from "./SelectInput/SelectInput";
 
@@ -64,6 +65,32 @@ export const SortFlowsSelect = ({
 }) => {
   const [sortBy, setSortBy] = useState<SortObject>(sortArray[0]);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
+  const navigation = useNavigation();
+
+  const addToSearchParams = (sortKey: SortTypes) => {
+    navigation.navigate(
+      {
+        pathname: window.location.pathname,
+        search: `?sort=${sortKey}`,
+      },
+      {
+        replace: true,
+      },
+    );
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlSort = params.get("sort") as SortTypes;
+    const newSortObj = sortArray.find(
+      (sort) =>
+        sort.sortKey === urlSort ||
+        (sort.sortKey === "publishedFlows" && sort.nestedKey === urlSort),
+    );
+    newSortObj && setSortBy(newSortObj);
+  }, []);
+
   useEffect(() => {
     const { sortKey } = sortBy;
 
@@ -81,11 +108,13 @@ export const SortFlowsSelect = ({
         return sortFlowList(aValue, bValue, sortDirection);
       });
       sortedFlows && setFlows([...sortedFlows]);
+      addToSearchParams(sortBy.nestedKey);
     } else {
       const sortedFlows = flows?.sort((a: FlowSummary, b: FlowSummary) =>
         sortFlowList(a[sortKey], b[sortKey], sortDirection),
       );
       sortedFlows && setFlows([...sortedFlows]);
+      addToSearchParams(sortBy.sortKey);
     }
   }, [sortBy, sortDirection]);
 
