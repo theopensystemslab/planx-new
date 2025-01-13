@@ -320,7 +320,9 @@ const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
   </Box>
 );
 
-const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
+const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
+  flows,
+}) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore();
 
@@ -350,6 +352,9 @@ const Team: React.FC = () => {
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -377,6 +382,7 @@ const Team: React.FC = () => {
         ),
       );
       setFlows(sortedFlows);
+      setFilteredFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -384,7 +390,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = flows && Boolean(flows.length);
+  const teamHasFlows = filteredFlows && Boolean(filteredFlows.length);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
@@ -435,7 +441,7 @@ const Team: React.FC = () => {
           sortOptions={sortOptions}
         />
       )}
-      <Filters />
+      {flows && <Filters flows={flows} setFilteredFlows={setFilteredFlows} />}
         {teamHasFlows && (
           <>
             <Box
@@ -453,10 +459,10 @@ const Team: React.FC = () => {
             </Box>
 
             <DashboardList>
-              {flows.map((flow) => (
+              {filteredFlows.map((flow) => (
                 <FlowItem
                   flow={flow}
-                  flows={flows}
+                  flows={filteredFlows}
                   key={flow.slug}
                   teamId={teamId}
                   teamSlug={slug}
