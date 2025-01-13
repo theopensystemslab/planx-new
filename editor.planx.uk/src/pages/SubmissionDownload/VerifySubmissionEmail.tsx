@@ -39,11 +39,16 @@ export const VerifySubmissionEmail = ({
     onSubmit: async (values, { resetForm }) => {
       setDownloadApplicationError("");
       setLoading(true);
-      const url = `${DOWNLOAD_APPLICATION_FILE_URL}/${sessionId}/?email=${encodeURIComponent(
-        values.email,
-      )}&localAuthority=${team}`;
+
+      // Make application files download magic link
+      const params = new URLSearchParams({
+        email: encodeURIComponent(values.email),
+        localAuthority: team,
+      });
+      const applicationFilesDownloadLink = `${DOWNLOAD_APPLICATION_FILE_URL}/${sessionId}?${params}`;
+
       try {
-        const { data } = await axios.get(url, {
+        const { data } = await axios.get(applicationFilesDownloadLink, {
           responseType: "arraybuffer",
         });
         downloadZipFile(data, { filename: `${flow}-${sessionId}.zip` });
