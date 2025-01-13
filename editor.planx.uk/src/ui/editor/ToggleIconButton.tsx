@@ -23,6 +23,7 @@ const ToggleIconButton: React.FC<ToggleIconButtonProps> = ({
     <Tooltip title={tooltip} placement="right">
       <IconButton
         aria-label={ariaLabel}
+        aria-pressed={isToggled}
         onClick={onToggle}
         size="large"
         sx={(theme) => ({
@@ -30,8 +31,8 @@ const ToggleIconButton: React.FC<ToggleIconButtonProps> = ({
           background: theme.palette.background.paper,
           padding: theme.spacing(1),
           color: isToggled
-            ? theme.palette.text.disabled
-            : theme.palette.text.primary,
+            ? theme.palette.text.primary
+            : theme.palette.text.disabled,
 
           "&:hover": {
             background: theme.palette.common.white,
@@ -45,7 +46,7 @@ const ToggleIconButton: React.FC<ToggleIconButtonProps> = ({
             top: "55%",
             left: "48%",
             transform: "translate(-50%, -50%)",
-            opacity: isToggled ? 1 : 0,
+            opacity: isToggled ? 0 : 1,
             transition: "opacity 0.2s ease-in-out",
           }}
         >

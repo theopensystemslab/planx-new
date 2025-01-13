@@ -114,16 +114,15 @@ export = async () => {
     vpc,
   });
 
-  const dbRootUrl: string = await data.requireOutputValue("dbRootUrl");
+  const DB_ROOT_USERNAME = "dbuser";
 
   // ----------------------- Metabase
-  const pgRoot = url.parse(dbRootUrl);
   const provider = new postgres.Provider("metabase", {
-    host: pgRoot.hostname as string,
-    port: Number(pgRoot.port),
-    username: pgRoot.auth!.split(":")[0] as string,
-    password: pgRoot.auth!.split(":")[1] as string,
-    database: pgRoot.path!.substring(1) as string,
+    host: config.requireSecret("db-host"),
+    port: 5432,
+    username: DB_ROOT_USERNAME,
+    password: config.requireSecret("db-password"),
+    database: "postgres",
     superuser: false,
   });
   const metabasePgPassword = config.requireSecret("metabasePgPassword");
@@ -212,7 +211,7 @@ export = async () => {
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
-            value: pulumi.interpolate`postgres://${role.name}:${metabasePgPassword}@${pgRoot.hostname}:${pgRoot.port}/${metabasePgDatabase.name}`,
+            value: config.requireSecret("mb-db-connection-uri"),
           },
           { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
@@ -382,6 +381,10 @@ export = async () => {
             value: config.requireSecret("file-api-key-gateshead"),
           },
           {
+            name: "FILE_API_KEY_DONCASTER",
+            value: config.requireSecret("file-api-key-doncaster"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },
@@ -546,7 +549,7 @@ export = async () => {
           },
           {
             name: "PG_URL",
-            value: dbRootUrl,
+            value: config.requireSecret("db-url"),
           },
         ],
       },
