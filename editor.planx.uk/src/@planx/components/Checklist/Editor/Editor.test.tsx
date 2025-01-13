@@ -1,4 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
+// eslint-disable-next-line no-restricted-imports
+import userEvent, {
+  PointerEventsCheckLevel,
+} from "@testing-library/user-event";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -23,11 +27,9 @@ describe("Checklist editor component", () => {
   });
 
   it("displays the grouped checklist inputs when the 'expandable' toggle is clicked", async () => {
-    const handleSubmit = vi.fn();
-
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
-        <ChecklistEditor text={"hi"} handleSubmit={handleSubmit} />
+        <ChecklistEditor text={""} />
       </DndProvider>,
     );
 
@@ -41,6 +43,25 @@ describe("Checklist editor component", () => {
 
   it.todo(
     "displays the options editor when the 'add new option' button is clicked",
+    async () => {
+      setup(
+        <DndProvider backend={HTML5Backend}>
+          <ChecklistEditor text={""} />
+        </DndProvider>,
+      );
+
+      await waitFor(() =>
+        userEvent.click(
+          screen.getByRole("button", { name: /add new option/i }),
+          {
+            pointerEventsCheck: PointerEventsCheckLevel.Never,
+          },
+        ),
+      );
+
+      const optionsEditor = await screen.findByPlaceholderText("Option");
+      expect(optionsEditor).toBeInTheDocument();
+    },
   );
 
   it.todo("adds a new section when the 'add new group' button is clicked");
