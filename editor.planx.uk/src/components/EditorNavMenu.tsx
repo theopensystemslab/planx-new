@@ -5,6 +5,7 @@ import GroupIcon from "@mui/icons-material/Group";
 import Info from "@mui/icons-material/Info";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import PaletteIcon from "@mui/icons-material/Palette";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -171,9 +172,9 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
     {
-      title: "Feedback",
+      title: "About this service",
       Icon: Info,
-      route: `/${teamSlug}/${flowSlug}/feedback`,
+      route: `/${teamSlug}/${flowSlug}/about`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
@@ -186,6 +187,12 @@ function EditorNavMenu() {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
+    {
+      title: "Feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/${flowSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];

@@ -18,9 +18,12 @@ let cached: { flowSlug?: string; teamSlug?: string } = {
 
 const setFlowAndLazyLoad = (importComponent: Parameters<typeof lazy>[0]) => {
   return map(async (request) => {
-    const data = await getFlowEditorData(request.params.flow, request.params.team);
+    const data = await getFlowEditorData(
+      request.params.flow,
+      request.params.team,
+    );
     useStore.setState({ ...data, flowSlug: request.params.flow });
-    
+
     return lazy(importComponent);
   });
 };
@@ -85,6 +88,8 @@ const routes = compose(
     }),
 
     "/:flow/feedback": setFlowAndLazyLoad(() => import("./feedback")),
+
+    "/:flow/about": setFlowAndLazyLoad(() => import("./readMePage")),
 
     "/:flow/service": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
