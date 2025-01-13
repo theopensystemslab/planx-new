@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { FormikProps } from "formik";
@@ -18,9 +19,9 @@ export const ExclusiveChecklistItem = ({
 }) => (
   <FormWrapper key={exclusiveOrOption.id}>
     <Grid item xs={12} key={exclusiveOrOption.data.text}>
-      <Typography width={36} display="flex" justifyContent="center">
-        or
-      </Typography>
+      <Box width={36}>
+        <Typography align="center">or</Typography>
+      </Box>
       <ChecklistItem
         onChange={changeCheckbox(exclusiveOrOption.id)}
         label={exclusiveOrOption.data.text}
