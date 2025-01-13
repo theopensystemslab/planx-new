@@ -13,6 +13,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
@@ -114,16 +115,11 @@ function ListComponent(props: Props) {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-              required
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            required
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
           <ErrorWrapper error={formik.errors.schema?.max}>
             <InputRow>
               <InputRowLabel>Schema</InputRowLabel>

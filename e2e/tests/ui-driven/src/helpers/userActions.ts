@@ -1,8 +1,8 @@
 import type { Locator, Page } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { findSessionId, getGraphQLClient } from "./context";
-import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers";
-import { TestContext } from "./types";
+import { findSessionId, getGraphQLClient } from "./context.js";
+import { TEST_EMAIL, log, waitForDebugLog } from "./globalHelpers.js";
+import { TestContext } from "./types.js";
 
 export async function saveSession({
   page,
@@ -328,14 +328,14 @@ export async function answerListInput(
   await page
     .getByRole("combobox", { name: "What best describes this unit?" })
     .click();
-  await page.getByRole("option", { name: unitType }).click();
+  await page.getByRole("option", { name: unitType, exact: true }).click();
 
   await page
     .getByRole("combobox", {
       name: "What best describes the tenure of this unit?",
     })
     .click();
-  await page.getByRole("option", { name: tenure }).click();
+  await page.getByRole("option", { name: tenure, exact: true }).click();
 
   await page
     .getByLabel("How many bedrooms does this unit have?")

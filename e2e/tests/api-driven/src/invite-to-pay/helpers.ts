@@ -3,20 +3,25 @@ import type {
   PaymentRequest,
 } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import gql from "graphql-tag";
+import { gql } from "graphql-tag";
 import { readFileSync } from "node:fs";
-import { TEST_EMAIL } from "../../../ui-driven/src/helpers/globalHelpers";
-import { $admin } from "../client";
-import { createTeam, createUser } from "../globalHelpers";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { $admin } from "../client.js";
+import { createTeam, createUser, TEST_EMAIL } from "../globalHelpers.js";
 import {
   inviteToPayFlowGraph,
   mockBreadcrumbs,
   mockPassport,
   sendNodeWithDestination,
-} from "./mocks";
-import { CustomWorld } from "./steps";
+} from "./mocks/index.js";
+import { CustomWorld } from "./steps.js";
 
 export async function setUpMocks() {
+  // we can't directly access `__dirname` in ESM, so get equivalent using fileURLToPath
+  const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+  const __dirname = path.dirname(__filename); // get the name of the directory
+
   const serverMockFile = readFileSync(`${__dirname}/mocks/server-mocks.yaml`);
   return axios({
     method: "POST",

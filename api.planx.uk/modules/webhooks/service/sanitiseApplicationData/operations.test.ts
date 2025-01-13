@@ -1,4 +1,4 @@
-import type planxCore from "@opensystemslab/planx-core";
+import type * as planxCore from "@opensystemslab/planx-core";
 import { runSQL } from "../../../../lib/hasura/schema/index.js";
 import { queryMock } from "../../../../tests/graphqlQueryMock.js";
 import {

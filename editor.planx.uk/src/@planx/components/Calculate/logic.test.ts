@@ -54,7 +54,7 @@ const flowWithAutomation: Store.Flow = {
   },
   Calculate: {
     data: {
-      output: "testGroup",
+      fn: "testGroup",
       formula: "pickRandom([1,2])",
       formatOutputForAutomations: true,
     },
@@ -108,7 +108,7 @@ const flowWithoutAutomation: Store.Flow = {
   },
   Calculate: {
     data: {
-      output: "testGroup",
+      fn: "testGroup",
       formula: "pickRandom([1,2])",
       formatOutputForAutomations: false,
     },

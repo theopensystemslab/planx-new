@@ -1,4 +1,4 @@
-import { OptionWithDataValues } from "../helpers/types";
+import { OptionWithDataValues } from "../helpers/types.js";
 import { Feature, Polygon } from "geojson";
 
 type ChangeHandlerProperties = {

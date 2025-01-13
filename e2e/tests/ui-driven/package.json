@@ -7,12 +7,13 @@
     "ui": "serve ../../../editor.planx.uk/build --single --listen 3000",
     "postinstall": "./install-dependencies.sh"
   },
+  "type": "module",
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#a9848d4",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#e126742",
     "axios": "^1.7.4",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
-    "graphql": "^16.9.0",
+    "graphql": "^16.10.0",
     "graphql-request": "^6.1.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
@@ -21,9 +22,9 @@
   },
   "packageManager": "pnpm@8.6.6",
   "devDependencies": {
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.49.1",
     "@types/geojson": "^7946.0.14",
-    "@types/node": "18.16.1",
+    "@types/node": "22.10.5",
     "eslint-plugin-playwright": "^0.20.0"
   }
 }

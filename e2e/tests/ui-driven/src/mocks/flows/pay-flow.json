@@ -10,7 +10,7 @@
   },
   "KzuRf6vqc1": {
     "data": {
-      "output": "pay.test",
+      "fn": "pay.test",
       "formula": "10"
     },
     "type": 700

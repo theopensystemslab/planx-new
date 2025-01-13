@@ -15,6 +15,7 @@ export type ChecklistOptionsEditorProps = BaseOptionsEditorProps & {
 
 const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
   value,
+  schema,
   onChange,
   showValueField = false,
   groups,
@@ -24,6 +25,7 @@ const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
   return (
     <BaseOptionsEditor
       value={value}
+      schema={schema}
       onChange={onChange}
       showValueField={showValueField}
     >

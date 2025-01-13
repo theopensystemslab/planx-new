@@ -3,18 +3,18 @@ import {
   contextDefaults,
   setUpTestContext,
   tearDownTestContext,
-} from "./helpers/context";
-import { getTeamPage } from "./helpers/getPage";
-import { createAuthenticatedSession } from "./helpers/globalHelpers";
-import { answerQuestion, clickContinue } from "./helpers/userActions";
-import { PlaywrightEditor } from "./pages/Editor";
+} from "./helpers/context.js";
+import { getTeamPage } from "./helpers/getPage.js";
+import { createAuthenticatedSession } from "./helpers/globalHelpers.js";
+import { answerQuestion, clickContinue } from "./helpers/userActions.js";
+import { PlaywrightEditor } from "./pages/Editor.js";
 import {
   navigateToService,
   publishService,
   turnServiceOnline,
-} from "./helpers/navigateAndPublish";
-import { TestContext } from "./helpers/types";
-import { serviceProps } from "./helpers/serviceData";
+} from "./helpers/navigateAndPublish.js";
+import { TestContext } from "./helpers/types.js";
+import { serviceProps } from "./helpers/serviceData.js";
 import {
   alterDrawGeoJson,
   checkGeoJsonContent,
@@ -22,26 +22,26 @@ import {
   getMapProperties,
   resetMapBoundary,
   waitForMapComponent,
-} from "./helpers/geospatialChecks";
+} from "./helpers/geospatialChecks.js";
 import {
   GeoJsonChangeHandler,
   mockChangedMapGeoJson,
   mockPropertyTypeOptions,
   mockTitleBoundaryGeoJson,
-} from "./mocks/geospatialMocks";
+} from "./mocks/geospatialMocks.js";
 import {
   setupOSMapsStyles,
   setupOSMapsVectorTiles,
-} from "./mocks/osMapsResponse";
+} from "./mocks/osMapsResponse.js";
 import {
   planningConstraintHeadersMock,
   setupGISMockResponse,
   setupRoadsMockResponse,
-} from "./mocks/gisResponse";
+} from "./mocks/gisResponse.js";
 import {
   answerFindProperty,
   userChallengesPlanningConstraint,
-} from "./helpers/geoSpatialUserActions";
+} from "./helpers/geoSpatialUserActions.js";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -62,6 +62,8 @@ test.describe("Flow creation, publish and preview", () => {
   });
 
   test("Create a flow", async ({ browser }) => {
+    test.setTimeout(60_000);
+
     const page = await getTeamPage({
       browser,
       userId: context.user!.id!,
@@ -107,6 +109,8 @@ test.describe("Flow creation, publish and preview", () => {
   test("Publish and preview flow with geospatial components", async ({
     browser,
   }) => {
+    test.setTimeout(60_000);
+
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,

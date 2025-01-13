@@ -9,7 +9,7 @@ describe("Calculate component", () => {
     const handleSubmit = vi.fn();
     setup(
       <Calculate
-        output="testGroup"
+        fn="testGroup"
         formula="pickRandom([1,2])"
         formatOutputForAutomations={true}
         defaults={{}}

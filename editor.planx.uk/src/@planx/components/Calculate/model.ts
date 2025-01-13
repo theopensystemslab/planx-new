@@ -4,7 +4,7 @@ import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export interface Calculate extends BaseNodeData {
   title?: string;
-  output: string;
+  fn: string;
   defaults: Record<string, number>;
   formula: string;
   samples: Record<string, number>;
@@ -20,7 +20,7 @@ export const parseCalculate = (
   data: Record<string, any> | undefined,
 ): Calculate => ({
   ...parseBaseNodeData(data),
-  output: data?.output || "",
+  fn: data?.fn || "",
   defaults: data?.defaults || {},
   formula: data?.formula || "",
   samples: data?.samples || {},

@@ -12,6 +12,7 @@ import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { parseTextInput, TextInput } from "./model";
 
@@ -28,7 +29,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validate: () => {},
+    validate: () => { },
   });
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
@@ -57,16 +58,10 @@ const TextInputComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
             />
           </InputRow>
-          <InputRow>
-            <Input
-              // required
-              format="data"
-              name="fn"
-              value={formik.values.fn}
-              placeholder="Data Field"
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <DataFieldAutocomplete
+            value={formik.values.fn}
+            onChange={(value) => formik.setFieldValue("fn", value)}
+          />
         </ModalSectionContent>
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">

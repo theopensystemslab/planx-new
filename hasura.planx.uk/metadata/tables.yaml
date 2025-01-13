@@ -448,6 +448,15 @@
           table:
             name: flow_document_templates
             schema: public
+    - name: lowcal_sessions
+      using:
+        manual_configuration:
+          column_mapping:
+            id: flow_id
+          insertion_order: null
+          remote_table:
+            name: lowcal_sessions
+            schema: public
     - name: operations
       using:
         foreign_key_constraint_on:
@@ -1491,12 +1500,13 @@
       permission:
         check: {}
         columns:
+          - created_at
+          - data
+          - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
-          - created_at
-          - flow_id
-          - data
     - role: demoUser
       permission:
         check:
@@ -1509,23 +1519,25 @@
                   id:
                     _eq: 32
         columns:
+          - created_at
+          - data
+          - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
-          - created_at
-          - flow_id
-          - data
       comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
     - role: platformAdmin
       permission:
         check: {}
         columns:
+          - created_at
+          - data
+          - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
-          - created_at
-          - flow_id
-          - data
     - role: teamEditor
       permission:
         check:
@@ -1538,22 +1550,24 @@
                   - role:
                       _eq: teamEditor
         columns:
+          - created_at
+          - data
+          - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
-          - created_at
-          - flow_id
-          - data
   select_permissions:
     - role: api
       permission:
         columns:
+          - created_at
+          - data
+          - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
-          - created_at
-          - flow_id
-          - data
         filter: {}
         allow_aggregations: true
     - role: demoUser
@@ -1562,6 +1576,7 @@
           - created_at
           - data
           - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
@@ -1573,6 +1588,7 @@
           - created_at
           - data
           - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
@@ -1584,6 +1600,7 @@
           - created_at
           - data
           - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
@@ -1595,6 +1612,7 @@
           - created_at
           - data
           - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
@@ -2468,7 +2486,7 @@
     name: temp_data_migrations_audit
     schema: public
   object_relationships:
-    - name: flows
+    - name: flow
       using:
         manual_configuration:
           column_mapping:

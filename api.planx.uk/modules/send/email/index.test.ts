@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import type planxCore from "@opensystemslab/planx-core";
+import type * as planxCore from "@opensystemslab/planx-core";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
 

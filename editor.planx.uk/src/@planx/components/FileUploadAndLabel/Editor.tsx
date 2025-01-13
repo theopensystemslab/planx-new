@@ -4,6 +4,7 @@ import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
@@ -24,6 +25,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { Switch } from "ui/shared/Switch";
 
+import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import {
   checkIfConditionalRule,
@@ -122,6 +124,13 @@ function FileUploadAndLabelComponent(props: Props) {
 function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
   const isConditionalRule = checkIfConditionalRule(props.value.rule.condition);
 
+  // Rather than default to generic `useStore().getFlowSchema()`
+  //   File Upload components can specifically suggest based on ODP Schema enum options
+  let schema = getValidSchemaValues("FileType") || [];
+  // Additionally ensure that existing initial values are supported & pre-populated on load
+  if (props.value.fn && !schema?.includes(props.value.fn))
+    schema.push(props.value.fn);
+
   return (
     <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
       <ModalSubtitle title="File" />
@@ -136,18 +145,14 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           placeholder="File type"
         />
       </InputRow>
-      <InputRow>
-        <Input
-          required
-          name="fn"
-          format="data"
-          value={props.value.fn}
-          onChange={(e) =>
-            props.onChange(merge(props.value, { fn: e.target.value }))
-          }
-          placeholder="Data field"
-        />
-      </InputRow>
+      <DataFieldAutocomplete
+        required
+        schema={schema}
+        value={props.value.fn}
+        onChange={(value) => 
+          props.onChange(merge(props.value, { fn: value }))
+        }
+      />
       <ModalSubtitle title="Rule" />
       <InputRow>
         <SelectInput

@@ -126,7 +126,7 @@ describe("nodesDependentOnPassport with record", () => {
     } as Store.CachedBreadcrumbs;
     const userData = {
       data: {
-        "property.boundary.site": {
+        "proposal.site": {
           type: "Feature",
           geometry: {
             type: "Polygon",
@@ -142,7 +142,7 @@ describe("nodesDependentOnPassport with record", () => {
           },
           properties: null,
         },
-        "property.boundary.area": 76.27,
+        "proposal.site.area": 76.27,
       },
       auto: false,
     };
@@ -394,7 +394,7 @@ const mockFlowData = {
     },
     "4FRZMfNlXf": {
       data: {
-        flag: "PP-NOT_DEVELOPMENT",
+        flags: ["PP-NOT_DEVELOPMENT"],
         text: "Not development",
       },
       type: TYPES.Answer,
@@ -428,7 +428,7 @@ const mockFlowData = {
     },
     IzT93uCmyF: {
       data: {
-        flag: "PRIOR_APPROVAL",
+        flags: ["PRIOR_APPROVAL"],
         text: "Prior",
       },
       type: TYPES.Answer,

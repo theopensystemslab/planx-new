@@ -146,7 +146,7 @@ export async function buildSubmissionExportZip({
     }
   }
 
-  const boundingBox = passport.data["property.boundary.site.buffered"];
+  const boundingBox = passport.data["proposal.site.buffered"];
   const userAction = passport.data?.["drawBoundary.action"];
 
   // generate and add an HTML overview document for the submission to zip
@@ -173,7 +173,7 @@ export async function buildSubmissionExportZip({
 
   // add an optional GeoJSON file to zip
   const geojson: GeoJSON.Feature | undefined =
-    passport?.data?.["property.boundary.site"];
+    passport?.data?.["proposal.site"];
   if (geojson) {
     if (userAction) {
       geojson["properties"] ??= {};

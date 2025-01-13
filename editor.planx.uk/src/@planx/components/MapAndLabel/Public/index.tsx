@@ -261,7 +261,7 @@ const Root = () => {
               basemap={basemap}
               ariaLabelOlFixedOverlay={`An interactive map for plotting and describing individual ${schemaName.toLocaleLowerCase()}`}
               geojsonData={
-                passport && JSON.stringify(passport["property.boundary.site"])
+                passport && JSON.stringify(passport["proposal.site"])
               }
               geojsonBuffer={30}
               drawMode
