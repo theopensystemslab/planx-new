@@ -158,9 +158,9 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Portal name").fill(title || "");
       break;
     case ComponentType.ExternalPortal:
-       page.getByTestId('flowId').click()
-       await expect(page.getByText("An External Portal Service")).toBeVisible()
-       page.getByText("An External Portal Service").click()
+      page.getByTestId("flowId").click();
+      await expect(page.getByText("An External Portal Service")).toBeVisible();
+      page.getByText("An External Portal Service").click();
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
