@@ -6,7 +6,9 @@ import {
   logUserResumeController,
 } from "./analyticsLog/controller.js";
 import { metabaseCollectionsController } from "./metabase/collection/controller.js";
+import { metabaseDashboardsController } from "./metabase/dashboard/controller.js";
 import { createTeamCollectionSchema } from "./metabase/collection/types.js";
+import { createNewDashboardSchema } from "./metabase/dashboard/types.js";
 
 const router = Router();
 
@@ -24,6 +26,11 @@ router.post(
   "/metabase/collection/:slug",
   validate(createTeamCollectionSchema),
   metabaseCollectionsController,
+);
+router.post(
+  "/metabase/dashboard/:slug/:service",
+  validate(createNewDashboardSchema),
+  metabaseDashboardsController,
 );
 
 export default router;
