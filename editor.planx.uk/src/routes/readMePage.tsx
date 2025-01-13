@@ -13,7 +13,7 @@ const readMePageRoutes = compose(
 
   mount({
     "/": route(async (req) => {
-      const { team: teamSlug } = req.params;
+      const { team: teamSlug, flow: flowSlug } = req.params;
 
       const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
       if (!isAuthorised)
@@ -23,7 +23,7 @@ const readMePageRoutes = compose(
 
       return {
         title: makeTitle("About this page"),
-        view: <ReadMePage />,
+        view: <ReadMePage flowSlug={flowSlug} teamSlug={teamSlug} />,
       };
     }),
   }),

@@ -10,7 +10,15 @@ import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
 import Input from "ui/shared/Input/Input";
 
-export const ReadMePage: React.FC = () => {
+interface ReadMePageProps {
+  flowSlug: string;
+  teamSlug: string;
+}
+
+export const ReadMePage: React.FC<ReadMePageProps> = ({
+  flowSlug,
+  teamSlug,
+}) => {
   return (
     <Container maxWidth="contentWrap">
       <SettingsSection>
@@ -19,7 +27,8 @@ export const ReadMePage: React.FC = () => {
         </Typography>
         <Typography variant="body1">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. {flowSlug}{" "}
+          {teamSlug}
         </Typography>
         <Box display={"flex"} justifyContent={"space-between"} width={300}>
           <Chip label="Online" color="success" />
@@ -32,7 +41,6 @@ export const ReadMePage: React.FC = () => {
           <InputGroup flowSpacing>
             <InputLegend>Service Description</InputLegend>
             <SettingsDescription>
-              {" "}
               <>
                 A short blurb on what this service is, how it should be used,
                 and if there are any dependencies related to this service.
