@@ -35,13 +35,21 @@ export const sendToEmail: SendIntegrationController = async (
     const flowName = flow.name;
     const serviceURL = `${process.env.EDITOR_URL_EXT}/${localAuthority}/${flow.slug}/${sessionId}`;
 
+    // Make application files download magic link
+    const params = new URLSearchParams({
+      email: teamSettings.submissionEmail,
+      localAuthority: localAuthority,
+    });
+    const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
+
     // Prepare email template
     const config: EmailSubmissionNotifyConfig = {
       personalisation: {
         serviceName: flowName,
         sessionId,
         applicantEmail: email,
-        downloadLink: `${serviceURL}/download-application`,
+//      downloadLink: `${serviceURL}/download-application`,
+        downloadLink: applicationFilesDownloadLink,
         ...teamSettings,
       },
     };

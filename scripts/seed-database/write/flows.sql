@@ -15,8 +15,7 @@ CREATE TEMPORARY TABLE sync_flows (
   name text,
   templated_from uuid,
   description text
-);
-
+  );
 \copy sync_flows FROM '/tmp/flows.csv' WITH (FORMAT csv, DELIMITER ';');
 
 INSERT INTO flows (
