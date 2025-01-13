@@ -5,10 +5,12 @@ CREATE TEMPORARY TABLE sync_published_flows (
   flow_id uuid,
   summary text,
   publisher_id int,
-  created_at timestamptz
-);
+  created_at timestamptz,
+  has_send_component boolean
+  );
 
-\copy sync_published_flows (id, data, flow_id, summary, publisher_id, created_at) FROM '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');
+/* Ensure columns here are kept in sync with container.sh */
+\copy sync_published_flows (id, data, flow_id, summary, publisher_id, created_at, has_send_component) FROM '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');
 
 INSERT INTO published_flows (
   id,
@@ -16,15 +18,17 @@ INSERT INTO published_flows (
   flow_id,
   summary,
   publisher_id,
-  created_at
-)
+  created_at,
+  has_send_component
+  )
 SELECT
   id,
   data,
   flow_id,
   summary,
   publisher_id,
-  created_at
+  created_at,
+  has_send_component
 FROM sync_published_flows
 ON CONFLICT (id) DO UPDATE
 SET
@@ -32,4 +36,5 @@ SET
   flow_id = EXCLUDED.flow_id,
   summary = EXCLUDED.summary,
   publisher_id = EXCLUDED.publisher_id,
-  created_at = EXCLUDED.created_at;
+  created_at = EXCLUDED.created_at,
+  has_send_component = EXCLUDED.has_send_component;
