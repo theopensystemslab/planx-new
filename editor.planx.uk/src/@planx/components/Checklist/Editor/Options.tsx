@@ -35,7 +35,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               const newCombinedOptions =
                 newOptions.length === 0
                   ? []
-                  : [...exclusiveOptions, ...newOptions];
+                  : [...newOptions, ...exclusiveOptions];
 
               formik.setFieldValue("options", newCombinedOptions);
             }}
