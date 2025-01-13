@@ -38,4 +38,14 @@ describe("Checklist editor component", () => {
     );
     expect(groupedOptionsEditor).toBeInTheDocument();
   });
+
+  it.todo(
+    "displays the options editor when the 'add new option' button is clicked",
+  );
+
+  it.todo("adds a new section when the 'add new group' button is clicked");
+
+  it.todo(
+    "shows the 'add exclusive or' button only when an option has been added already",
+  );
 });
