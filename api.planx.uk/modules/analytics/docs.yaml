@@ -8,6 +8,45 @@ components:
   responses:
     AnalyticsResponse:
       description: Successful response with no content. Not awaited from server as endpoint is called via the Beacon API
+
+  schemas:
+    NewCollection:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Optional description for the collection
+        parentId:
+          type: integer
+          description: Optional ID of the parent collection
+
+    NewDashboard:
+      type: object
+      properties:
+        templateId:
+          type: integer
+          description: ID of the template dashboard to copy from
+        description:
+          type: string
+          description: Optional description for the dashboard
+        collectionId:
+          type: integer
+          description: Optional ID of the collection to place the dashboard in
+        collectionPosition:
+          type: integer
+          description: Optional position within the collection
+          minimum: 0
+        filter:
+          type: string
+          description: Filter parameter to update
+        value:
+          type: string
+          description: Value to set for the filter
+      required:
+        - templateId
+        - filter
+        - value
+
 paths:
   /analytics/log-user-exit:
     post:
@@ -27,3 +66,91 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
+
+  /metabase/collection/{slug}:
+    post:
+      summary: Create new Metabase collection
+      description: Creates a new collection in Metabase if it doesn't already exist
+      tags:
+        - metabase
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: PlanX team slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewCollection"
+      responses:
+        "201":
+          description: Collection created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: integer
+                    description: Metabase collection ID
+        "400":
+          description: Bad request or collection creation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
+
+  /metabase/dashboard/{slug}/{service}:
+    post:
+      summary: Create new Metabase dashboard
+      description: Creates a new dashboard in Metabase by copying a template and updating filters
+      tags:
+        - metabase
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: PlanX team slug
+        - name: service
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Service identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewDashboard"
+      responses:
+        "201":
+          description: Dashboard created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: Public link to the created dashboard
+        "400":
+          description: Bad request or dashboard creation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
