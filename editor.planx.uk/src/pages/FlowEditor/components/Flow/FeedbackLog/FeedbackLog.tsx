@@ -1,78 +1,98 @@
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import InputGroup from "ui/editor/InputGroup";
+import InputLegend from "ui/editor/InputLegend";
+import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
-import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
+import Input from "ui/shared/Input/Input";
 
-import { CollapsibleRow } from "./components/CollapsibleRow";
-import { Feed } from "./styled";
 import { FeedbackLogProps } from "./types";
 
-export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
-  const displayFeedbackItems = [
-    "userComment",
-    "address",
-    "projectType",
-    "where",
-    "browserPlatform",
-  ];
-
+export const FeedbackLog: React.FC<FeedbackLogProps> = () => {
   return (
     <Container maxWidth="contentWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          Feedback log
+          About this Service
         </Typography>
         <Typography variant="body1">
-          Feedback from users about this service.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua.
         </Typography>
+        <Box display={"flex"} justifyContent={"space-between"} width={300}>
+          <Chip label="Online" color="success" />
+          <Chip label="Submission" color="primary" />
+          <Chip label="Discretionary" color="info" />
+        </Box>
       </SettingsSection>
       <SettingsSection>
-        {feedback.length === 0 ? (
-          <ErrorSummary
-            format="info"
-            heading="No feedback found for this service"
-            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-          />
-        ) : (
-          <Feed>
-            <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                <TableRow
-                  sx={{ "& > *": { borderBottomColor: "black !important" } }}
-                >
-                  <TableCell sx={{ width: 160 }}>
-                    <strong>Type</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <strong>Date</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 140 }}>
-                    <strong>Rating</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 340 }}>
-                    <strong>Comment</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 60 }} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {feedback.map((item) => (
-                  <CollapsibleRow
-                    key={item.id}
-                    {...item}
-                    displayFeedbackItems={displayFeedbackItems}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </Feed>
-        )}
+        <form onSubmit={() => {}}>
+          <InputGroup flowSpacing>
+            <InputLegend>Service Description</InputLegend>
+            <SettingsDescription>
+              {" "}
+              <>
+                A short blurb on what this service is, how it should be used,
+                and if there are any dependencies related to this service.
+              </>
+            </SettingsDescription>
+            <Input
+              multiline
+              name="description"
+              placeholder="Description"
+              onChange={() => {}}
+              value={""}
+              id="description"
+            />
+          </InputGroup>
+          <InputGroup flowSpacing>
+            <InputLegend>What does this service do?</InputLegend>
+            <SettingsDescription>
+              <>For example, what does the service include?</>
+            </SettingsDescription>
+            <Input
+              multiline
+              name="description"
+              placeholder="The service..."
+              onChange={() => {}}
+              value={""}
+              id="description"
+            />
+          </InputGroup>
+          <InputGroup flowSpacing>
+            <InputLegend>Limitations of the Service</InputLegend>
+            <SettingsDescription>
+              <>What does this flow not include?</>
+            </SettingsDescription>
+            <Input
+              multiline
+              name="description"
+              placeholder="Limitations"
+              onChange={() => {}}
+              value={""}
+              id="description"
+            />
+          </InputGroup>
+
+          <Box>
+            <Button type="submit" variant="contained">
+              Save
+            </Button>
+            <Button
+              onClick={() => {}}
+              type="reset"
+              variant="contained"
+              color="secondary"
+              sx={{ ml: 1.5 }}
+            >
+              Reset changes
+            </Button>
+          </Box>
+        </form>
       </SettingsSection>
     </Container>
   );
