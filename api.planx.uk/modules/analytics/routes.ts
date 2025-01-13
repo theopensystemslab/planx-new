@@ -5,6 +5,8 @@ import {
   logUserExitController,
   logUserResumeController,
 } from "./analyticsLog/controller.js";
+import { metabaseDashboardsController } from "./metabase/dashboard/controller.js";
+import { createNewDashboardSchema } from "./metabase/dashboard/types.js";
 
 const router = Router();
 
@@ -17,6 +19,11 @@ router.post(
   "/analytics/log-user-resume",
   validate(logAnalyticsSchema),
   logUserResumeController,
+);
+router.post(
+  "/metabase/dashboard/:slug/:service",
+  validate(createNewDashboardSchema),
+  metabaseDashboardsController,
 );
 
 export default router;
