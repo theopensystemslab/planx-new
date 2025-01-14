@@ -58,14 +58,14 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                    categories: groupedOptions.map((group) => ({
-                      title: group.title,
-                      count: group.children.length,
-                    })),
-                  }
+                  categories: groupedOptions.map((group) => ({
+                    title: group.title,
+                    count: group.children.length,
+                  })),
+                }
                 : {
-                    categories: undefined,
-                  }),
+                  categories: undefined,
+                }),
             },
           },
           processedOptions,
@@ -89,7 +89,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       }
       if (values.fn && !options?.some((option) => option.data.val)) {
         errors.fn =
-          "At least one option must set a data value when the checklist has a data field";
+          "At least one option must also set a data field";
       }
       if (exclusiveOptions && exclusiveOptions.length > 1) {
         errors.options =
@@ -139,10 +139,12 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <DataFieldAutocomplete
-              value={formik.values.fn}
-              onChange={(value) => formik.setFieldValue("fn", value)}
-            />
+            <ErrorWrapper error={formik.errors.fn}>
+              <DataFieldAutocomplete
+                value={formik.values.fn}
+                onChange={(value) => formik.setFieldValue("fn", value)}
+              />
+            </ErrorWrapper>
             <InputRow>
               <Switch
                 checked={!!formik.values.groupedOptions}
