@@ -30,12 +30,14 @@ const OrNavigationButton = ({
 }: {
   handleSubmit: ((data?: unknown) => void) | undefined;
 }) => {
-  const [path, breadcrumbs, flow, getCurrentCard] = useStore((state) => [
-    state.path,
-    state.breadcrumbs,
-    state.flow,
-    state.getCurrentCard,
-  ]);
+  const [path, breadcrumbs, flow, hasAcknowledgedWarning] = useStore(
+    (state) => [
+      state.path,
+      state.breadcrumbs,
+      state.flow,
+      state.hasAcknowledgedWarning,
+    ],
+  );
 
   const endOfUrl = window.location.pathname.split("/").slice(-1)[0];
 
@@ -64,7 +66,7 @@ const OrNavigationButton = ({
 
   if (!orNavigationType) return null;
 
-  if (getCurrentCard() && orNavigationType === "navigate-to-published")
+  if (hasAcknowledgedWarning && orNavigationType === "navigate-to-published")
     return null;
 
   const ButtonComponent = BUTTON_COMPONENTS[orNavigationType];
