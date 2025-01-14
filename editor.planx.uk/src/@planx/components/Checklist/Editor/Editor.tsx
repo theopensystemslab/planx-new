@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { FormikErrors, FormikValues, useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -12,7 +13,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { Option, parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
@@ -41,7 +41,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
         : groupedOptions?.flatMap((group) => group.children);
 
       const filteredOptions = (sourceOptions || []).filter(
-        (option) => option.data.text
+        (option) => option.data.text,
       );
 
       const processedOptions = filteredOptions.map((option) => ({
@@ -68,7 +68,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                   }),
             },
           },
-          processedOptions
+          processedOptions,
         );
       } else {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
@@ -77,16 +77,16 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
     validate: ({ options, groupedOptions, allRequired, ...values }) => {
       const errors: FormikErrors<FormikValues> = {};
 
+      // Account for flat or expandable Checklist options
+      options = options || groupedOptions?.flatMap((group) => group.children);
+
       const exclusiveOptions: Option[] | undefined = options?.filter(
-        (option) => option.data.exclusive
+        (option) => option.data.exclusive,
       );
       if (allRequired && exclusiveOptions && exclusiveOptions.length > 0) {
         errors.allRequired =
           'Cannot configure exclusive "or" option alongside "all required" setting';
       }
-      // Account for flat or expandable Checklist options
-      options =
-        options || groupedOptions?.map((group) => group.children)?.flat();
       if (values.fn && !options?.some((option) => option.data.val)) {
         errors.fn =
           "At least one option must set a data value when the checklist has a data field";
@@ -164,7 +164,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 onChange={() =>
                   formik.setFieldValue(
                     "allRequired",
-                    !formik.values.allRequired
+                    !formik.values.allRequired,
                   )
                 }
                 label="All required"
@@ -177,7 +177,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 onChange={() =>
                   formik.setFieldValue(
                     "neverAutoAnswer",
-                    !formik.values.neverAutoAnswer
+                    !formik.values.neverAutoAnswer,
                   )
                 }
                 label="Always put to user (forgo automation)"

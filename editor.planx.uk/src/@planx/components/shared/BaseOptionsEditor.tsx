@@ -5,12 +5,13 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option } from ".";
-import { FlagsSelect } from "./FlagsSelect";
 import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
+import { FlagsSelect } from "./FlagsSelect";
 
 export interface BaseOptionsEditorProps {
   value: Option;
   schema?: string[];
+  optionPlaceholder?: string;
   showValueField?: boolean;
   showDescriptionField?: boolean;
   onChange: (newVal: Option) => void;
@@ -38,7 +39,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
               },
             });
           }}
-          placeholder="Option"
+          placeholder={props.optionPlaceholder || "Option"}
         />
       </InputRowItem>
       <ImgInput
