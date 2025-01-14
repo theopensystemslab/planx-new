@@ -1,3 +1,4 @@
+import { error } from "console";
 import { $metabase } from "../shared/client.js";
 import type { UpdateFilterParams } from "./types.js";
 
@@ -11,6 +12,12 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
   let updatedFilter;
   const updatedParameters = response.data.parameters.map((param: any) => {
     if (param.name === params.filter) {
+      // Check if the filter is a string type
+      if (!param.type.startsWith("string/")) {
+        throw new Error(
+          `Filter type '${param.type}' is not supported. Only string filters are currently supported.`,
+        );
+      }
       updatedFilter = param.name;
       return { ...param, default: [params.value] };
     }
@@ -18,7 +25,9 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
   });
 
   if (!updatedFilter) {
-    console.warn(`Filter "${params.filter}" not found in dashboard parameters`);
+    throw new Error(
+      `Filter "${params.filter}" not found in dashboard parameters`,
+    );
   }
 
   // Prepare the update payload
@@ -32,10 +41,6 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
     updatePayload,
   );
 
-  const updatedResponseDataParamFields = updatedResponse.data.param_fields;
-  console.log({ updatedResponseDataParamFields });
-  const updatePayloadParams = updatePayload.parameters;
-  console.log({ updatePayloadParams });
   console.log(
     `Updated dashboard ${params.dashboardId} filter "${updatedFilter}" with: ${params.value}`,
   );
