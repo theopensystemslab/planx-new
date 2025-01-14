@@ -28,7 +28,7 @@ router.post(
   metabaseCollectionsController,
 );
 router.post(
-  "/metabase/dashboard/:slug/:service",
+  "/metabase/dashboard/:slug/:service/:templateId",
   validate(createNewDashboardSchema),
   metabaseDashboardsController,
 );
