@@ -154,7 +154,9 @@
         "articleFour.buckinghamshire.chalklaneanhydehealth": { "value": false },
         "articleFour.buckinghamshire.chartridgelane": { "value": false },
         "articleFour.buckinghamshire.cheshamroad": { "value": false },
-        "articleFour.buckinghamshire.chessfieldparkenclosure": { "value": false },
+        "articleFour.buckinghamshire.chessfieldparkenclosure": {
+          "value": false
+        },
         "articleFour.buckinghamshire.churchlane": { "value": false },
         "articleFour.buckinghamshire.collegeplantation": { "value": false },
         "articleFour.buckinghamshire.collumgreen": { "value": false },
@@ -165,14 +167,22 @@
         "articleFour.buckinghamshire.commonwoodpennroad": { "value": false },
         "articleFour.buckinghamshire.coneybankwood": { "value": false },
         "articleFour.buckinghamshire.copperkinslanecaravan": { "value": false },
-        "articleFour.buckinghamshire.cooperkinslaneenclosure": { "value": false },
-        "articleFour.buckinghamshire.coppicesouthheathcaravan": { "value": false },
+        "articleFour.buckinghamshire.cooperkinslaneenclosure": {
+          "value": false
+        },
+        "articleFour.buckinghamshire.coppicesouthheathcaravan": {
+          "value": false
+        },
         "articleFour.buckinghamshire.cryershillroad": { "value": false },
         "articleFour.buckinghamshire.deanfield": { "value": false },
         "articleFour.buckinghamshire.DO10fulmer": { "value": false },
         "articleFour.buckinghamshire.dorneywoodroad": { "value": false },
-        "articleFour.buckinghamshire.eastamershamroadOS0006": { "value": false },
-        "articleFour.buckinghamshire.eastamershamroadOS9269": { "value": false },
+        "articleFour.buckinghamshire.eastamershamroadOS0006": {
+          "value": false
+        },
+        "articleFour.buckinghamshire.eastamershamroadOS9269": {
+          "value": false
+        },
         "articleFour.buckinghamshire.eastjasonshill": { "value": false },
         "articleFour.buckinghamshire.eastjordanslane": { "value": false },
         "articleFour.buckinghamshire.eastlatimervillage": { "value": false },
@@ -200,7 +210,9 @@
         "articleFour.buckinghamshire.lodgelane": { "value": false },
         "articleFour.buckinghamshire.lodgelaneagri": { "value": false },
         "articleFour.buckinghamshire.lodgelaneenclosure": { "value": false },
-        "articleFour.buckinghamshire.lodgelanewestenclosure": { "value": false },
+        "articleFour.buckinghamshire.lodgelanewestenclosure": {
+          "value": false
+        },
         "articleFour.buckinghamshire.manorfarm": { "value": false },
         "articleFour.buckinghamshire.mansionlanesouth": { "value": false },
         "articleFour.buckinghamshire.mansionlanewest": { "value": false },
@@ -208,7 +220,9 @@
         "articleFour.buckinghamshire.ministrywharf": { "value": false },
         "articleFour.buckinghamshire.nightingaleslanestrip": { "value": false },
         "articleFour.buckinghamshire.northA404": { "value": false },
-        "articleFour.buckinghamshire.northandsouthhollowway": { "value": false },
+        "articleFour.buckinghamshire.northandsouthhollowway": {
+          "value": false
+        },
         "articleFour.buckinghamshire.northballingerroadvaravan": {
           "value": false
         },
@@ -232,7 +246,9 @@
         "articleFour.buckinghamshire.parkspringwood": { "value": false },
         "articleFour.buckinghamshire.parslowshillock": { "value": false },
         "articleFour.buckinghamshire.pednorhighroad": { "value": false },
-        "articleFour.buckinghamshire.pednorroadanddrydelllane": { "value": false },
+        "articleFour.buckinghamshire.pednorroadanddrydelllane": {
+          "value": false
+        },
         "articleFour.buckinghamshire.pednorroadcaravan": { "value": false },
         "articleFour.buckinghamshire.pednorroaddrydelllane": { "value": false },
         "articleFour.buckinghamshire.pednorroadenclosure": { "value": false },
@@ -295,7 +311,9 @@
           "value": false
         },
         "articleFour.buckinghamshire.wycombeheathfarm": { "value": false },
-        "articleFour.buckinghamshire.wycombeheathfarmcaravan": { "value": false },
+        "articleFour.buckinghamshire.wycombeheathfarmcaravan": {
+          "value": false
+        },
         "articleFour.buckinghamshire.caz": {
           "value": false,
           "text": "is not in the Central Activities Zone"
