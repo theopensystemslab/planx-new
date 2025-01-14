@@ -39,13 +39,13 @@ interface Dataset {
 export const availableDatasets: Dataset[] = [
   {
     text: "Article 4 Directions",
-    val: "article4",
+    val: "articleFour",
     source: "Planning Data",
-    datasets: ["article4-direction-area"],
+    datasets: ["article-4-direction-area"],
   },
   {
     text: "Central Activities Zones",
-    val: "article4.caz",
+    val: "articleFour.caz",
     source: "Planning Data",
     datasets: ["central-activities-zone"],
   },

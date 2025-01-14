@@ -96,8 +96,8 @@ export const mockConstraints: GISResponse["constraints"] = {
     ],
     category: "Flooding",
   },
-  article4: {
-    fn: "article4",
+  articleFour: {
+    fn: "articleFour",
     value: true,
     text: "is in an Article 4 direction area",
     data: [
@@ -229,76 +229,76 @@ export const mockConstraints: GISResponse["constraints"] = {
     fn: "designated",
     value: true,
   },
-  "flood.zone.2": {
-    fn: "flood.zone.2",
+  "flood.zoneTwo": {
+    fn: "flood.zoneTwo",
     value: true,
   },
-  "flood.zone.3": {
-    fn: "flood.zone.3",
+  "flood.zoneThree": {
+    fn: "flood.zoneThree",
     value: true,
   },
-  "listed.grade.I": {
-    fn: "listed.grade.I",
+  "listed.gradeOne": {
+    fn: "listed.gradeOne",
     value: false,
   },
-  "listed.grade.II": {
-    fn: "listed.grade.II",
+  "listed.gradeTwo": {
+    fn: "listed.gradeTwo",
     value: true,
   },
-  "listed.grade.II*": {
-    fn: "listed.grade.II*",
+  "listed.gradeTwoStar": {
+    fn: "listed.gradeTwoStar",
     value: false,
   },
-  "article4.lambeth.streathamLodge": {
-    fn: "article4.lambeth.streathamLodge",
+  "articleFour.lambeth.streathamLodge": {
+    fn: "articleFour.lambeth.streathamLodge",
     value: false,
   },
-  "article4.lambeth.stockwell": {
-    fn: "article4.lambeth.stockwell",
+  "articleFour.lambeth.stockwell": {
+    fn: "articleFour.lambeth.stockwell",
     value: false,
   },
-  "article4.lambeth.leigham": {
-    fn: "article4.lambeth.leigham",
+  "articleFour.lambeth.leigham": {
+    fn: "articleFour.lambeth.leigham",
     value: false,
   },
-  "article4.lambeth.stMarks": {
-    fn: "article4.lambeth.stMarks",
+  "articleFour.lambeth.stMarks": {
+    fn: "articleFour.lambeth.stMarks",
     value: false,
   },
-  "article4.lambeth.hanover": {
-    fn: "article4.lambeth.hanover",
+  "articleFour.lambeth.hanover": {
+    fn: "articleFour.lambeth.hanover",
     value: false,
   },
-  "article4.lambeth.parkHall": {
-    fn: "article4.lambeth.parkHall",
+  "articleFour.lambeth.parkHall": {
+    fn: "articleFour.lambeth.parkHall",
     value: false,
   },
-  "article4.lambeth.lansdowne": {
-    fn: "article4.lambeth.lansdowne",
+  "articleFour.lambeth.lansdowne": {
+    fn: "articleFour.lambeth.lansdowne",
     value: false,
   },
-  "article4.lambeth.albert": {
-    fn: "article4.lambeth.albert",
+  "articleFour.lambeth.albert": {
+    fn: "articleFour.lambeth.albert",
     value: false,
   },
-  "article4.lambeth.hydeFarm": {
-    fn: "article4.lambeth.hydeFarm",
+  "articleFour.lambeth.hydeFarm": {
+    fn: "articleFour.lambeth.hydeFarm",
     value: false,
   },
-  "article4.lambeth.kiba": {
-    fn: "article4.lambeth.kiba",
+  "articleFour.lambeth.kiba": {
+    fn: "articleFour.lambeth.kiba",
     value: true,
   },
-  "article4.lambeth.kiba.clapham": {
-    fn: "article4.lambeth.kiba.clapham",
+  "articleFour.lambeth.kiba.clapham": {
+    fn: "articleFour.lambeth.kiba.clapham",
     value: false,
   },
-  "article4.lambeth.kiba.brixton": {
-    fn: "article4.lambeth.kiba.brixton",
+  "articleFour.lambeth.kiba.brixton": {
+    fn: "articleFour.lambeth.kiba.brixton",
     value: false,
   },
-  "article4.lambeth.caz": {
-    fn: "article4.caz",
+  "articleFour.lambeth.caz": {
+    fn: "articleFour.caz",
     value: true,
     text: "is in the Central Activities Zone",
     data: [
@@ -397,41 +397,41 @@ export const mockConstraints: GISResponse["constraints"] = {
 
 export const defaultIntersectingConstraints = {
   [DEFAULT_FN]: [
-    "article4",
-    "article4.lambeth.caz",
-    "article4.lambeth.kiba",
+    "articleFour",
+    "articleFour.lambeth.caz",
+    "articleFour.lambeth.kiba",
     "designated",
     "designated.conservationArea",
     "flood",
-    "flood.zone.2",
-    "flood.zone.3",
+    "flood.zoneTwo",
+    "flood.zoneThree",
     "listed",
-    "listed.grade.II",
+    "listed.gradeTwo",
     "road.classified",
   ],
 };
 
 export const defaultNots = {
   [DEFAULT_FN]: [
-    "article4.lambeth.albert",
-    "article4.lambeth.hanover",
-    "article4.lambeth.hydeFarm",
-    "article4.lambeth.kiba.brixton",
-    "article4.lambeth.kiba.clapham",
-    "article4.lambeth.lansdowne",
-    "article4.lambeth.leigham",
-    "article4.lambeth.parkHall",
-    "article4.lambeth.stMarks",
-    "article4.lambeth.stockwell",
-    "article4.lambeth.streathamLodge",
+    "articleFour.lambeth.albert",
+    "articleFour.lambeth.hanover",
+    "articleFour.lambeth.hydeFarm",
+    "articleFour.lambeth.kiba.brixton",
+    "articleFour.lambeth.kiba.clapham",
+    "articleFour.lambeth.lansdowne",
+    "articleFour.lambeth.leigham",
+    "articleFour.lambeth.parkHall",
+    "articleFour.lambeth.stMarks",
+    "articleFour.lambeth.stockwell",
+    "articleFour.lambeth.streathamLodge",
     "brownfieldSite",
     "designated.AONB",
     "designated.nationalPark.broads",
     "designated.nationalPark",
     "designated.WHS",
     "greenBelt",
-    "listed.grade.I",
-    "listed.grade.II*",
+    "listed.gradeOne",
+    "listed.gradeTwoStar",
     "monument",
     "nature.ASNW",
     "nature.ramsarSite",

@@ -12,15 +12,15 @@ type PlanningConstraintsBaseSchema = Record<string, PlanningConstraintConfig>;
 //   flag as 'active' based on dataset status/availability here https://www.planning.data.gov.uk/dataset/
 //   planx passport variable names & categories come from https://docs.google.com/spreadsheets/d/1ePihRD37-2071Wq6t2Y7QtBt7juySWuVP6SAF6T-0vo/edit?usp=sharing
 const baseSchema: PlanningConstraintsBaseSchema = {
-  article4: {
+  articleFour: {
     active: true,
     neg: "is not in an Article 4 direction area",
     pos: "is in an Article 4 direction area",
     "digital-land-datasets": ["article-4-direction-area"],
     category: "General policy",
   },
-  "article4.caz": {
-    // will be renamed to `article4.localAuthority.caz` when applicable
+  "articleFour.caz": {
+    // will be renamed to `articleFour.localAuthority.caz` when applicable
     active: true,
     neg: "is not in the Central Activities Zone",
     pos: "is in the Central Activities Zone",
