@@ -2,6 +2,7 @@ import type { ValidatedRequestHandler } from "../../../../shared/middleware/vali
 import { z } from "zod";
 
 export interface CreateNewDashboardParams {
+  teamName: string;
   /** Original / template Metabase Dashboard ID, it is the number that follows /dashboard/ in the URL */
   templateId: number;
   /**  What the copied dashboard should be named;
@@ -73,6 +74,7 @@ export const createNewDashboardSchema = z.object({
     templateId: z.coerce.number(),
   }),
   body: z.object({
+    teamName: z.string(),
     description: z.string().optional(),
     collectionId: z.coerce.number(),
     collectionPosition: z.coerce.number().nullable().optional(),

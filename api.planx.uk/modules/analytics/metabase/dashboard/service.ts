@@ -4,14 +4,17 @@ import { updateFilter } from "./updateFilter.js";
 import { generatePublicLink } from "./generatePublicLink.js";
 import type { CreateNewDashboardParams } from "./types.js";
 
+/**
+ * @returns The dashboard name (the Metabase API performs GETs with the dashboard ID, so we have to have that locally already--no need to return it here)
+ */
 export async function createNewDashboard(
   params: CreateNewDashboardParams,
 ): Promise<string> {
   try {
     const templateName = await getDashboard(params.templateId);
-    // TODO: string processing to pull template name and update it
+    const newName = templateName.replace("Template", params.teamName);
     const copiedDashboardId = await copyDashboard({
-      name: templateName,
+      name: newName,
       templateId: params.templateId,
       description: params.description,
       collectionId: params.collectionId,
