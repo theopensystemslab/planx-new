@@ -1,4 +1,10 @@
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Accordion, { accordionClasses } from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary, {
+  accordionSummaryClasses,
+} from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -9,27 +15,61 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 
-const FiltersContainer = styled(Box)(({ theme }) => ({
+const FiltersContainer = styled(Accordion)(({ theme }) => ({
   width: "100%",
   display: "flex",
   flexDirection: "column",
-  background: "#eee",
   margin: theme.spacing(1, 0, 3),
+  [`&.${accordionClasses.root}.Mui-expanded`]: {
+    margin: theme.spacing(1, 0, 3),
+  },
+  [`& .${accordionSummaryClasses.root} > div`]: {
+    margin: "0",
+  },
 }));
 
-const FiltersHeader = styled(Box)(({ theme }) => ({
+const FiltersHeader = styled(AccordionSummary)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "flex-start",
+  justifyContent: "space-between",
   padding: theme.spacing(2),
-  gap: theme.spacing(1),
+  gap: theme.spacing(3),
+  background: "#eee",
+  "&:hover": {
+    background: "#eee",
+  },
+  "& .MuiAccordionSummary-expandIconWrapper": {
+    display: "none",
+  },
 }));
 
-const FiltersBody = styled(Box)(({ theme }) => ({}));
+const FiltersToggle = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(0.5),
+  minWidth: "160px",
+}));
+
+const FilterChip = styled(Button)(({ theme }) => ({
+  background: theme.palette.background.default,
+  color: theme.palette.text.primary,
+  padding: theme.spacing(0.5, 1),
+  boxShadow: "none",
+  "&::before": {
+    content: '"✕"',
+    fontSize: "0.8em",
+    paddingRight: theme.spacing(0.75),
+  },
+}));
+
+const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
+  background: "#eee",
+  padding: 0,
+}));
 
 const FiltersContent = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.main}`,
-  padding: theme.spacing(1.5, 2.5),
+  padding: theme.spacing(2.5),
   display: "flex",
   flexDirection: "row",
   flexWrap: "wrap",
@@ -74,6 +114,7 @@ export const Filters: React.FC<FiltersProps> = ({
   }
 
   const [filters, setFilters] = useState<FilterState>();
+  const [expanded, setExpanded] = useState<boolean>(false);
 
   const navigation = useNavigation();
 
@@ -145,10 +186,25 @@ export const Filters: React.FC<FiltersProps> = ({
       : setFilters({ ...filters, [filterKey]: filterValue });
 
   return (
-    <FiltersContainer>
-      <FiltersHeader>
-        <KeyboardArrowUpIcon />
-        <Typography variant="h4">Hide filters</Typography>
+    <FiltersContainer
+      expanded={expanded}
+      onChange={() => setExpanded(!expanded)}
+    >
+      <FiltersHeader
+        expandIcon={
+          expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
+        }
+      >
+        <FiltersToggle>
+          {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          <Typography variant="h4">
+            {expanded ? "Hide filters" : "Show filters"}
+          </Typography>
+        </FiltersToggle>
+        {/* Example chips to show active filters */}
+        <Box>
+          <FilterChip onClick={(e) => e.stopPropagation()}>Online</FilterChip>
+        </Box>
       </FiltersHeader>
       <FiltersBody>
         <FiltersContent>
