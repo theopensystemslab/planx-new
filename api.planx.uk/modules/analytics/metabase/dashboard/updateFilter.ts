@@ -8,16 +8,16 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
   const response = await $metabase.get(`/api/dashboard/${params.dashboardId}`);
 
   // Update filter default value parameter
-  let updatedParam;
+  let updatedFilter;
   const updatedParameters = response.data.parameters.map((param: any) => {
-    if (param.name === param.filter) {
-      updatedParam = param.name;
-      return { ...param, default: [param.value] };
+    if (param.name === params.filter) {
+      updatedFilter = param.name;
+      return { ...param, default: [params.value] };
     }
     return param;
   });
 
-  if (!updatedParam) {
+  if (!updatedFilter) {
     console.warn(`Filter "${params.filter}" not found in dashboard parameters`);
   }
 
@@ -31,7 +31,12 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
     `/api/dashboard/${params.dashboardId}`,
     updatePayload,
   );
+
+  const updatedResponseDataParamFields = updatedResponse.data.param_fields;
+  console.log({ updatedResponseDataParamFields });
+  const updatePayloadParams = updatePayload.parameters;
+  console.log({ updatePayloadParams });
   console.log(
-    `Updated dashboard ${params.dashboardId} filter "${updatedParam}" with: ${params.value}`,
+    `Updated dashboard ${params.dashboardId} filter "${updatedFilter}" with: ${params.value}`,
   );
 }
