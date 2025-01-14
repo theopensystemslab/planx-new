@@ -35,16 +35,21 @@ export const ExclusiveOrOptionManager = ({
             values={exclusiveOptions || []}
             onChange={(newExclusiveOptions) => {
               if (grouped) {
-                const exclusiveOptionGroup = {
-                  title: "Or",
-                  exclusive: true,
-                  children: newExclusiveOptions,
+                const updateGroupedOptions = () => {
+                  if (newExclusiveOptions.length > 0) {
+                    const exclusiveOptionGroup = {
+                      title: "Or",
+                      exclusive: true,
+                      children: newExclusiveOptions,
+                    };
+
+                    return [...nonExclusiveOptions, exclusiveOptionGroup];
+                  } else {
+                    return [...nonExclusiveOptions];
+                  }
                 };
-                const newCombinedOptions = [
-                  ...nonExclusiveOptions,
-                  exclusiveOptionGroup,
-                ];
-                formik.setFieldValue("groupedOptions", newCombinedOptions);
+
+                formik.setFieldValue("groupedOptions", updateGroupedOptions());
                 return;
               }
               const newCombinedOptions = [
