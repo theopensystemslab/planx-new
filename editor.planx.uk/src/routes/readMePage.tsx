@@ -5,6 +5,8 @@ import React from "react";
 
 import { makeTitle } from "./utils";
 
+const getFlowInformation = useStore.getState().getFlowInformation;
+
 const readMePageRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
@@ -15,6 +17,9 @@ const readMePageRoutes = compose(
     "/": route(async (req) => {
       const { team: teamSlug, flow: flowSlug } = req.params;
 
+      // TODO: custom data fetch here?
+      const data = await getFlowInformation(req.params.flow, req.params.team); // returns settings, description and flow status (published)
+
       const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
       if (!isAuthorised)
         throw new NotFoundError(
@@ -23,7 +28,7 @@ const readMePageRoutes = compose(
 
       return {
         title: makeTitle("About this page"),
-        view: <ReadMePage flowSlug={flowSlug} teamSlug={teamSlug} />,
+        view: <ReadMePage flowSlug={flowSlug} flowInformation={data} />,
       };
     }),
   }),
