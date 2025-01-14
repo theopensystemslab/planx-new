@@ -10,10 +10,15 @@ export const metabaseDashboardsController: NewDashboardHandler = async (
       ...res.locals.parsedReq.params,
       ...res.locals.parsedReq.body,
     };
+    console.log("Received params:", params);
     const dashboard = await createNewDashboard(params);
-    res.status(201).json({ data: dashboard });
+    return res.status(201).json({ data: dashboard });
   } catch (error) {
-    res.status(400).json({
+    console.error("Controller error:", error);
+    if (error instanceof Error) {
+      console.error("Error stack:", error.stack);
+    }
+    return res.status(400).json({
       error:
         error instanceof Error ? error.message : "An unexpected error occurred",
     });
