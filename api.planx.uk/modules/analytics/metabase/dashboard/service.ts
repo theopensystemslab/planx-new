@@ -11,15 +11,14 @@ export async function createNewDashboard(
   params: CreateNewDashboardParams,
 ): Promise<string> {
   try {
-    const templateName = await getDashboard(params.templateId);
-    const newName = templateName.replace("Template", params.teamName);
+    const template = await getDashboard(params.templateId);
+    const newName = template.name.replace("Template", params.teamName);
     const copiedDashboardId = await copyDashboard({
       name: newName,
       templateId: params.templateId,
       description: params.description,
       collectionId: params.collectionId,
       collectionPosition: params.collectionPosition,
-      isDeepCopy: false,
     });
 
     // updateFilter() does not need to be saved to a variable because we don't need to access its output anywhere else
