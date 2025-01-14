@@ -28,17 +28,18 @@ const TEST_ENVIRONMENTS = new Set(["preview", "draft"]);
 const OrNavigationButton = ({
   handleSubmit,
 }: {
-  handleSubmit: ((data?: any) => void) | undefined;
+  handleSubmit: ((data?: unknown) => void) | undefined;
 }) => {
-  const [path, breadcrumbs, flow] = useStore((state) => [
+  const [path, breadcrumbs, flow, getCurrentCard] = useStore((state) => [
     state.path,
     state.breadcrumbs,
     state.flow,
+    state.getCurrentCard,
   ]);
 
   const endOfUrl = window.location.pathname.split("/").slice(-1)[0];
 
-  const isTestEnvironment: boolean = TEST_ENVIRONMENTS.has(endOfUrl);
+  const isTestEnvironment = TEST_ENVIRONMENTS.has(endOfUrl);
 
   const defineNavigationType = (): OrNavigationType | undefined => {
     // Check if we have a Send node in our breadcrumbs
@@ -61,8 +62,12 @@ const OrNavigationButton = ({
 
   const orNavigationType = defineNavigationType();
 
-  const ButtonComponent =
-    orNavigationType && BUTTON_COMPONENTS[orNavigationType];
+  if (!orNavigationType) return null;
+
+  if (getCurrentCard() && orNavigationType === "navigate-to-published")
+    return null;
+
+  const ButtonComponent = BUTTON_COMPONENTS[orNavigationType];
 
   return (
     ButtonComponent && (
