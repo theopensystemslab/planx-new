@@ -5,7 +5,7 @@ export interface CreateNewDashboardParams {
   teamName: string;
   /** Original / template Metabase Dashboard ID, it is the number that follows /dashboard/ in the URL */
   templateId: number;
-  /**  What the copied dashboard should be named;
+  /** What the copied dashboard should be named;
    * should be the original dashboard name
    * but with 'Template' replaced with council name */
   // name?: string;
@@ -15,25 +15,18 @@ export interface CreateNewDashboardParams {
   collectionId: number;
   /** Optional number for the copied dashboard's placement within the collection */
   collectionPosition?: number | null;
-  /** Toggle whether or not the questions are copied as well;
-   * Metabase deep-copies by default, but we want shallow
-   * shallow = "Only duplicate the dashboard" */
-  isDeepCopy: boolean;
   /** A filter that should be automatically set, eg `Team slug` */
   filter: string;
   /** Default filter value, eg `council-name` */
   value: string;
 }
 
+/* We don't want users to be able to deep copy templates / dashboards because it will wreak Metabase havoc. This is why there is no isDeepCopy option here */
 export type CopyDashboardParams = {
   name: string;
 } & Pick<
   CreateNewDashboardParams,
-  | "templateId"
-  | "description"
-  | "collectionId"
-  | "collectionPosition"
-  | "isDeepCopy"
+  "templateId" | "description" | "collectionId" | "collectionPosition"
 >;
 
 // Version of CopyDashboardParams suitable for Metabase API
@@ -42,7 +35,7 @@ export type MetabaseCopyDashboardParams = {
   description?: string;
   collection_id?: number;
   collection_position?: number | null;
-  is_deep_copy: boolean;
+  is_deep_copy?: boolean;
 };
 
 // Convert to Metabase API structure
@@ -54,7 +47,8 @@ export function toMetabaseParams(
     description: params.description,
     collection_id: params.collectionId,
     collection_position: params.collectionPosition,
-    is_deep_copy: params.isDeepCopy,
+    /* Hard-coded false because deep copies will be messy in Metabase */
+    is_deep_copy: false,
   };
 }
 
@@ -78,7 +72,6 @@ export const createNewDashboardSchema = z.object({
     description: z.string().optional(),
     collectionId: z.coerce.number(),
     collectionPosition: z.coerce.number().nullable().optional(),
-    isDeepCopy: z.coerce.boolean().default(false),
     filter: z.string(),
     value: z.string(),
   }),
