@@ -35,6 +35,28 @@ export type CopyDashboardParams = {
   | "isDeepCopy"
 >;
 
+// Version of CopyDashboardParams suitable for Metabase API
+export type MetabaseCopyDashboardParams = {
+  name: string;
+  description?: string;
+  collection_id?: number;
+  collection_position?: number | null;
+  is_deep_copy: boolean;
+};
+
+// Convert to Metabase API structure
+export function toMetabaseParams(
+  params: CopyDashboardParams,
+): MetabaseCopyDashboardParams {
+  return {
+    name: params.name,
+    description: params.description,
+    collection_id: params.collectionId,
+    collection_position: params.collectionPosition,
+    is_deep_copy: params.isDeepCopy,
+  };
+}
+
 export type UpdateFilterParams = {
   dashboardId: number;
 } & Pick<CreateNewDashboardParams, "filter" | "value">;
@@ -46,17 +68,17 @@ type ApiResponse<T> = {
 
 export const createNewDashboardSchema = z.object({
   params: z.object({
-    templateId: z.number(),
-    description: z.string().optional(),
-    collectionId: z.number(),
-    collectionPosition: z.number().optional(),
-    isDeepCopy: z.boolean(),
-    filter: z.string(),
-    value: z.string(),
+    slug: z.string(),
+    service: z.string(),
+    templateId: z.coerce.number(),
   }),
   body: z.object({
     description: z.string().optional(),
-    parentId: z.number().optional(), //.default(COUNCILS_COLLECTION_ID),
+    collectionId: z.coerce.number(),
+    collectionPosition: z.coerce.number().nullable().optional(),
+    isDeepCopy: z.coerce.boolean().default(false),
+    filter: z.string(),
+    value: z.string(),
   }),
 });
 
