@@ -115,6 +115,19 @@ const editorRoutes = compose(
       });
     }),
 
+    "/resources": route(() => {
+      return {
+        title: makeTitle("Resources"),
+        view: (
+          <iframe
+            title="notion"
+            src="https://www.notioniframe.com/notion/23i4jzez4xn"
+            style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
+          />
+        ),
+      };
+    }),
+
     "/:team": lazy(() => import("./team")),
   }),
 );
