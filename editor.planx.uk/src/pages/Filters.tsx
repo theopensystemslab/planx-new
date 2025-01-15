@@ -7,6 +7,7 @@ import AccordionSummary, {
 } from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
@@ -48,18 +49,6 @@ const FiltersToggle = styled(Box)(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing(0.5),
   minWidth: "160px",
-}));
-
-const FilterChip = styled(Button)(({ theme }) => ({
-  background: theme.palette.background.default,
-  color: theme.palette.text.primary,
-  padding: theme.spacing(0.5, 1),
-  boxShadow: "none",
-  "&::before": {
-    content: '"✕"',
-    fontSize: "0.8em",
-    paddingRight: theme.spacing(0.75),
-  },
 }));
 
 const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
@@ -114,6 +103,7 @@ export const Filters: React.FC<FiltersProps> = ({
   }
 
   const [filters, setFilters] = useState<FilterState>();
+  const [selectedFilters, setSelectedFilters] = useState<FilterValues[] | []>();
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const navigation = useNavigation();
@@ -158,23 +148,25 @@ export const Filters: React.FC<FiltersProps> = ({
           break;
       }
       setFilters(filterObj);
+      setSelectedFilters(Object.values(filterObj));
     });
   }, []);
 
-  const handleFiltering = () => {
+  const handleFiltering = (filtersArg) => {
     const filterByStatus = flows.filter((flow: FlowSummary) => {
-      if (filters?.status) {
-        return flow.status === filters.status;
+      if (filtersArg?.status) {
+        return flow.status === filtersArg.status;
       } else {
         return true;
       }
     });
     filterByStatus && setFilteredFlows(filterByStatus);
-    filters && addToSearchParams(filters);
+    filtersArg && addToSearchParams(filtersArg);
+    filtersArg && setSelectedFilters(Object.values(filtersArg));
     if (
-      !filters?.status &&
-      !filters?.applicationType &&
-      !filters?.serviceType
+      !filtersArg?.status &&
+      !filtersArg?.applicationType &&
+      !filtersArg?.serviceType
     ) {
       setFilteredFlows(flows);
     }
@@ -184,6 +176,8 @@ export const Filters: React.FC<FiltersProps> = ({
     filters?.[filterKey] === filterValue
       ? setFilters({ ...filters, [filterKey]: undefined })
       : setFilters({ ...filters, [filterKey]: filterValue });
+
+  filters && console.log(Object.values(filters));
 
   return (
     <FiltersContainer
@@ -201,9 +195,33 @@ export const Filters: React.FC<FiltersProps> = ({
             {expanded ? "Hide filters" : "Show filters"}
           </Typography>
         </FiltersToggle>
-        {/* Example chips to show active filters */}
         <Box>
-          <FilterChip onClick={(e) => e.stopPropagation()}>Online</FilterChip>
+          {selectedFilters &&
+            selectedFilters.map(
+              (filter) =>
+                filter && (
+                  <Chip
+                    sx={{ textTransform: "capitalize" }}
+                    onClick={(e) => e.stopPropagation()}
+                    label={filter}
+                    onDelete={() => {
+                      const deleteFilter =
+                        filters &&
+                        Object.keys(filters).find((key) => {
+                          return filters[key] === filter;
+                        });
+                      console.log(deleteFilter);
+                      deleteFilter &&
+                        setFilters({ ...filters, [deleteFilter]: undefined });
+                      deleteFilter &&
+                        handleFiltering({
+                          ...filters,
+                          [deleteFilter]: undefined,
+                        });
+                    }}
+                  />
+                ),
+            )}
         </Box>
       </FiltersHeader>
       <FiltersBody>
@@ -255,7 +273,13 @@ export const Filters: React.FC<FiltersProps> = ({
           </FiltersColumn>
         </FiltersContent>
         <FiltersFooter>
-          <Button variant="contained" color="primary" onClick={handleFiltering}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              handleFiltering(filters);
+            }}
+          >
             Apply filters
           </Button>
         </FiltersFooter>
