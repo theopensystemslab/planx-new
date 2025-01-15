@@ -92,6 +92,21 @@ export const formatSchemaDisplayValue = <T extends Field>(
   }
 };
 
+const isIdenticalUnitsField = (
+  item: SchemaUserResponse,
+): item is Record<"identicalUnits", ResponseValue<NumberField>> =>
+  "identicalUnits" in item && typeof item.identicalUnits === "number";
+
+const isIdenticalUnitsDevelopmentField = (
+  item: SchemaUserResponse,
+): item is Record<
+  "identicalUnits" | "development",
+  ResponseValue<NumberField>
+> =>
+  "identicalUnits" in item &&
+  "development" in item &&
+  typeof item.identicalUnits === "number";
+
 /**
  * If the schema includes a field that sets fn = "identicalUnits", sum of total units
  * @param fn - passport key of current List
@@ -104,10 +119,8 @@ export function sumIdenticalUnits(
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
-    // TODO: Remove this check?
-
-    if (!Array.isArray(item?.identicalUnits)) {
-      sum += parseInt(item?.identicalUnits);
+    if (isIdenticalUnitsField(item)) {
+      sum += item.identicalUnits;
     }
   });
   return sum;
@@ -136,9 +149,8 @@ export function sumIdenticalUnitsByDevelopmentType(
     notKnown: 0,
   };
   passportData[`${fn}`].map((item) => {
-    // TODO: Remove this check?
-    if (!Array.isArray(item?.identicalUnits)) {
-      baseSums[`${item?.development}`] += parseInt(item?.identicalUnits);
+    if (isIdenticalUnitsDevelopmentField(item)) {
+      baseSums[`${item?.development}`] += item.identicalUnits;
     }
   });
 

@@ -125,6 +125,8 @@ export type ResponseValue<T extends Field> = T extends MapField
   ? Feature[]
   : T extends ChecklistField
   ? string[]
+  : T extends NumberField
+  ? number
   : string;
 
 export type SchemaUserResponse = Record<
