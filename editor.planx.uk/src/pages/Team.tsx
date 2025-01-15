@@ -402,6 +402,13 @@ const Team: React.FC = () => {
   const teamHasFlows = filteredFlows && Boolean(filteredFlows.length);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
+  const numberOfServices = filteredFlows?.length || 0;
+  const pluralisedService = numberOfServices === 1 ? "service" : "services";
+  const listTitle =
+    filteredFlows === flows
+      ? "Showing all services"
+      : `Showing ${numberOfServices} ${pluralisedService}`;
+
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
       <Container maxWidth="lg">
@@ -462,7 +469,7 @@ const Team: React.FC = () => {
               }}
             >
               <Typography variant="h3" component="h2">
-                Showing all services
+                {listTitle}
               </Typography>
               Order toggle
             </Box>
