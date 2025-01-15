@@ -42,7 +42,7 @@ describe("globalLayoutRoutes", () => {
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    expect(menuItems).toHaveLength(2);
   });
 
   it("displays for platformAdmins", () => {
