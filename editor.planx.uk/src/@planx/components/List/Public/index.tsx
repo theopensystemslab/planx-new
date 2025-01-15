@@ -8,6 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
+import { MapField, ResponseValue } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/shared/types";
 import React, { useEffect, useRef } from "react";
@@ -139,7 +140,9 @@ const InactiveListCard: React.FC<{
         {mapPreview && (
           <Box sx={{ flexBasis: "50%" }}>
             {formatSchemaDisplayValue(
-              formik.values.schemaData[i][mapPreview.data.fn],
+              formik.values.schemaData[i][
+                mapPreview.data.fn
+              ] as ResponseValue<MapField>,
               mapPreview,
             )}
           </Box>

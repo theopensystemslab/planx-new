@@ -17,7 +17,12 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { SchemaUserResponse } from "../Schema/model";
+import {
+  Field,
+  MapField,
+  ResponseValue,
+  SchemaUserResponse,
+} from "../Schema/model";
 
 export default SummaryListsBySections;
 
@@ -640,8 +645,13 @@ function Page(props: ComponentProps) {
             </Typography>
             <Typography>
               {field.type === "map"
-                ? `${answers[0][field.data.fn].length || 0} features`
-                : answers[0][field.data.fn]}
+                ? `${
+                    (answers[0][field.data.fn] as ResponseValue<MapField>)
+                      .length || 0
+                  } features`
+                : (answers[0][field.data.fn] as ResponseValue<
+                    Exclude<Field, MapField>
+                  >)}
             </Typography>
           </Box>
         ))}

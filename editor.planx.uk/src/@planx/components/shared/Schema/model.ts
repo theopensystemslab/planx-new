@@ -118,10 +118,19 @@ export interface Schema {
   max?: number;
 }
 
+/**
+ * Value returned per field, based on field type
+ */
+export type ResponseValue<T extends Field> = T extends MapField
+  ? Feature[]
+  : T extends ChecklistField
+  ? string[]
+  : string;
+
 export type SchemaUserResponse = Record<
   Field["data"]["fn"],
-  string | string[] | any[]
->; // string | string[] | Feature[]
+  ResponseValue<Field>
+>;
 
 /**
  * Output data from a form using the useSchema hook
@@ -187,9 +196,15 @@ export const generateValidationSchema = (schema: Schema) => {
 export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
   const initialValues: SchemaUserResponse = {};
   schema.fields.forEach((field) => {
-    ["checklist", "map"].includes(field.type)
-      ? (initialValues[field.data.fn] = [])
-      : (initialValues[field.data.fn] = "");
+    switch (field.type) {
+      case "checklist":
+      case "map":
+        initialValues[field.data.fn] = [];
+        break;
+      default:
+        initialValues[field.data.fn] = "";
+        break;
+    }
   });
   return initialValues;
 };

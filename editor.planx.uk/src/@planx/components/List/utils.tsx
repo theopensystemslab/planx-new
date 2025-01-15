@@ -1,7 +1,15 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { Field, SchemaUserResponse } from "./../shared/Schema/model";
+import {
+  ChecklistField,
+  DateField,
+  Field,
+  NumberField,
+  ResponseValue,
+  SchemaUserResponse,
+  TextField,
+} from "./../shared/Schema/model";
 
 const List = styled("ul")(() => ({
   listStylePosition: "inside",
@@ -15,19 +23,26 @@ const List = styled("ul")(() => ({
  * @param field - the Field object
  * @returns string | React.JSX.Element - the `text` for the given value `val`, or the original value
  */
-export function formatSchemaDisplayValue(
-  value: string | string[],
-  field: Field,
-) {
+export const formatSchemaDisplayValue = <T extends Field>(
+  value: ResponseValue<T>,
+  field: T,
+) => {
   switch (field.type) {
-    case "number":
-      return field.data.units ? `${value} ${field.data.units}` : value;
+    case "number": {
+      const numberValue = value as ResponseValue<NumberField>;
+      return field.data.units
+        ? `${numberValue} ${field.data.units}`
+        : numberValue;
+    }
     case "text":
-    case "date":
-      return value;
+    case "date": {
+      const textOrDataValue = value as ResponseValue<DateField | TextField>;
+      return textOrDataValue;
+    }
     case "checklist": {
+      const checklistValue = value as ResponseValue<ChecklistField>;
       const matchingOptions = field.data.options.filter((option) =>
-        (value as string[]).includes(option.id),
+        checklistValue.includes(option.id),
       );
       return (
         <List>
@@ -75,7 +90,7 @@ export function formatSchemaDisplayValue(
       );
     }
   }
-}
+};
 
 /**
  * If the schema includes a field that sets fn = "identicalUnits", sum of total units
@@ -89,6 +104,8 @@ export function sumIdenticalUnits(
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
+    // TODO: Remove this check?
+
     if (!Array.isArray(item?.identicalUnits)) {
       sum += parseInt(item?.identicalUnits);
     }
@@ -119,6 +136,7 @@ export function sumIdenticalUnitsByDevelopmentType(
     notKnown: 0,
   };
   passportData[`${fn}`].map((item) => {
+    // TODO: Remove this check?
     if (!Array.isArray(item?.identicalUnits)) {
       baseSums[`${item?.development}`] += parseInt(item?.identicalUnits);
     }

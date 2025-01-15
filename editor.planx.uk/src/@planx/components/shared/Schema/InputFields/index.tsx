@@ -1,5 +1,6 @@
 import type {
   Field,
+  ResponseValue,
   SchemaUserData,
 } from "@planx/components/shared/Schema/model";
 import { FormikProps } from "formik";
@@ -31,7 +32,9 @@ export const getFieldProps = <T extends Field>(props: Props<T>) => ({
     props.data.fn,
   ]),
   name: `schemaData[${props.activeIndex}]['${props.data.fn}']`,
-  value: props.formik.values.schemaData[props.activeIndex][props.data.fn],
+  value: props.formik.values.schemaData[props.activeIndex][
+    props.data.fn
+  ] as ResponseValue<T>,
 });
 
 /**
