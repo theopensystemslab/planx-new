@@ -97,7 +97,7 @@ describe("GovPayMetadata Schema", () => {
     expect(errors[0]).toMatch(/Keys must be unique/);
   });
 
-  test("max 10 entries can be added", async () => {
+  test("max 15 entries can be added", async () => {
     const input = [
       ...defaults,
       { key: "four", value: "someValue" },
@@ -107,6 +107,11 @@ describe("GovPayMetadata Schema", () => {
       { key: "eight", value: "someValue" },
       { key: "nine", value: "someValue" },
       { key: "ten", value: "someValue" },
+      { key: "eleven", value: "someValue" },
+      { key: "twelve", value: "someValue" },
+      { key: "thirteen", value: "someValue" },
+      { key: "fourteen", value: "someValue" },
+      { key: "fifteen", value: "someValue" },
     ];
 
     const result = await validate(input);
@@ -114,12 +119,13 @@ describe("GovPayMetadata Schema", () => {
     // No errors, input returned from validation
     expect(result).toEqual(input);
 
-    // Try 11 total values
+    // Try 16 total values - i.e. one more than permitted
     const errors = await validate([
       ...input,
-      { key: "eleven", value: "someValue" },
+      { key: "sixteen", value: "someValue" },
     ]);
+
     expect(errors).toHaveLength(1);
-    expect(errors[0]).toMatch(/A maximum of 10 fields can be set as metadata/);
+    expect(errors[0]).toMatch(/A maximum of 15 fields can be set as metadata/);
   });
 });
