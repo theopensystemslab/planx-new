@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
-import { hasFeatureFlag } from "lib/featureFlags";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -32,7 +31,7 @@ export const GroupedOptions = ({ formik }: Props) => {
   );
 
   const exclusiveOrOptionManagerShouldRender =
-    hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptionGroups.length > 0;
+    nonExclusiveOptionGroups.length > 0;
 
   return (
     <Box>

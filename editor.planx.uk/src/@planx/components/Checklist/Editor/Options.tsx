@@ -1,5 +1,4 @@
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { partition } from "lodash";
 import React from "react";
 import { FormikHookReturn } from "types";
@@ -18,8 +17,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
     (option) => option.data.exclusive,
   );
 
-  const exclusiveOrOptionManagerShouldRender =
-    hasFeatureFlag("EXCLUSIVE_OR") && nonExclusiveOptions.length > 0;
+  const exclusiveOrOptionManagerShouldRender = nonExclusiveOptions.length > 0;
 
   const { schema, initialOptionVals } = useInitialOptions(formik);
 

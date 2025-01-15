@@ -7,13 +7,8 @@ import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
-import { vi } from "vitest";
 
 import { ChecklistEditor } from "./Editor";
-
-vi.mock("lib/featureFlags", () => ({
-  hasFeatureFlag: () => true,
-}));
 
 describe("Checklist editor component", () => {
   it("renders without error", () => {
