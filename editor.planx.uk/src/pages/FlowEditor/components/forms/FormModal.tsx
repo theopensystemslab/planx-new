@@ -19,6 +19,9 @@ import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiPaper-elevation": {
+    height: "100%",
+  },
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
   "& > * > *": {
     backgroundColor: theme.palette.background.paper,

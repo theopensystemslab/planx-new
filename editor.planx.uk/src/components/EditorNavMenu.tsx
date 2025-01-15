@@ -4,6 +4,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import Info from "@mui/icons-material/Info";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -137,6 +138,12 @@ function EditorNavMenu() {
       Icon: AdminPanelSettingsIcon,
       route: "admin-panel",
       accessibleBy: ["platformAdmin"],
+    },
+    {
+      title: "Resources",
+      Icon: MenuBookIcon,
+      route: "resources",
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
   ];
 
