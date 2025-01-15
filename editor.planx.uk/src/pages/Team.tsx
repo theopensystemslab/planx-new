@@ -17,7 +17,10 @@ import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
-import { SortFlowsSelect } from "ui/editor/SortFlowsSelect";
+import {
+  SortableFields,
+  SortControl,
+} from "ui/editor/SortControl";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -308,6 +311,15 @@ const Team: React.FC = () => {
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
 
+  const sortArray: SortableFields<FlowSummary>[] = [
+    { displayName: "Name", fieldName: "name" },
+    { displayName: "Last updated", fieldName: "updatedAt" },
+    {
+      displayName: "Last published",
+      fieldName: `publishedFlows.0.publishedAt`,
+    },
+  ];
+
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
@@ -353,7 +365,11 @@ const Team: React.FC = () => {
         {showAddFlowButton && <AddFlowButton flows={flows} />}
       </Box>
       {hasFeatureFlag("SORT_FLOWS") && flows && (
-        <SortFlowsSelect flows={flows} setFlows={setFlows} />
+        <SortControl<FlowSummary>
+          records={flows}
+          setRecords={setFlows}
+          sortOptions={sortArray}
+        />
       )}
       {teamHasFlows && (
         <DashboardList>
