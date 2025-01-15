@@ -124,7 +124,7 @@ export const GovPayMetadataSection: React.FC = () => {
               </Typography>
             </Box>
             <ListManager
-              maxItems={10}
+              maxItems={15}
               disableDragAndDrop
               values={values.govPayMetadata || []}
               onChange={(metadata) => {
