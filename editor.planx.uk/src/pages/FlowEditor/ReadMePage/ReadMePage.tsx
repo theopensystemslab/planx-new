@@ -2,10 +2,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize.js";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
@@ -16,6 +15,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
+import { useStore } from "../lib/store";
 import { FlowInformation } from "../utils";
 
 interface ReadMePageProps {
@@ -33,7 +33,13 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
   flowSlug,
   flowInformation,
 }) => {
-  const { status: flowStatus, description: flowDescription } = flowInformation;
+  const { status: flowStatus } = flowInformation;
+  const [flowDescription, updateFlowDescription] = useStore((state) => [
+    state.flowDescription,
+    state.updateFlowDescription,
+  ]);
+
+  const toast = useToast();
 
   const formik = useFormik<ReadMePageForm>({
     initialValues: {
@@ -41,14 +47,24 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       serviceDescription: "service description" || "",
       serviceLimitations: "service limitations" || "",
     },
-    // onSubmit: (values) => {
-    //   handleSubmit?.({ answers: values.checked });
-    // },
-    onSubmit: () => {},
+    onSubmit: async (values) => {
+      // TODO: handle changes to any field, not just description
+      const isSuccess = await updateFlowDescription(values.serviceSummary);
+      if (isSuccess) {
+        toast.success("Service description updated successfully");
+      }
+      if (!isSuccess) {
+        formik.setFieldError(
+          "serviceSummary",
+          "Unable to update the service description. Please try again.",
+        );
+      }
+    },
     validateOnBlur: false,
     validateOnChange: false,
+    // enableReinitialize: true,
     // validationSchema: object({
-    //   checked: checklistValidationSchema(props),
+    //   checked: checklistValidationSchema(props), // character limit?
     // }),
   });
 
@@ -85,9 +101,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <Input
               multiline
-              name="Service summary"
+              name="serviceSummary"
               placeholder="Description"
               onChange={formik.handleChange}
+              errorMessage={formik.errors.serviceSummary}
               value={formik.values.serviceSummary}
             />
           </InputGroup>
