@@ -29,6 +29,7 @@ interface FlowValidateAndDiffResponse {
   alteredNodes: AlteredNode[] | null;
   message: string;
   validationChecks?: FlowValidationResponse[];
+  flattenedFlow?: any
 }
 
 const validateAndDiffFlow = async (
@@ -80,6 +81,7 @@ const validateAndDiffFlow = async (
     alteredNodes,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
+    flattenedFlow: flattenedFlow
   };
 };
 
