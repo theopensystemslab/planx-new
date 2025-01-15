@@ -50,7 +50,7 @@ describe("globalLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(3);
+    expect(menuItems).toHaveLength(4);
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 });
