@@ -45,7 +45,7 @@ const FlowCard = styled("li")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "stretch",
-  borderRadius: "4px",
+  borderRadius: "3px",
   backgroundColor: theme.palette.background.default,
   border: `1px solid ${theme.palette.border.main}`,
   boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",

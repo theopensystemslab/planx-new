@@ -21,6 +21,7 @@ const FiltersContainer = styled(Accordion)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   margin: theme.spacing(1, 0, 3),
+  border: `1px solid ${theme.palette.border.main}`,
   [`&.${accordionClasses.root}.Mui-expanded`]: {
     margin: theme.spacing(1, 0, 3),
   },
@@ -33,11 +34,11 @@ const FiltersHeader = styled(AccordionSummary)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  padding: theme.spacing(2),
+  padding: theme.spacing(1.75, 2),
   gap: theme.spacing(3),
-  background: "#eee",
+  background: theme.palette.background.midGray,
   "&:hover": {
-    background: "#eee",
+    background: theme.palette.background.midGray,
   },
   "& .MuiAccordionSummary-expandIconWrapper": {
     display: "none",
@@ -49,10 +50,22 @@ const FiltersToggle = styled(Box)(({ theme }) => ({
   alignItems: "center",
   gap: theme.spacing(0.5),
   minWidth: "160px",
+  minHeight: "32px",
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+  background: theme.palette.common.white,
+  cursor: "default",
+  "&:hover": {
+    background: theme.palette.common.white,
+  },
+  "& > svg": {
+    fill: theme.palette.text.primary,
+  },
 }));
 
 const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
-  background: "#eee",
+  background: theme.palette.background.midGray,
   padding: 0,
 }));
 
@@ -64,7 +77,7 @@ const FiltersContent = styled(Box)(({ theme }) => ({
   flexWrap: "wrap",
 }));
 
-const FiltersColumn = styled(Box)(({ theme }) => ({
+const FiltersColumn = styled(Box)(() => ({
   flexBasis: "20%",
 }));
 
@@ -184,12 +197,12 @@ export const Filters: React.FC<FiltersProps> = ({
             {expanded ? "Hide filters" : "Show filters"}
           </Typography>
         </FiltersToggle>
-        <Box>
+        <Box sx={{ display: "flex", gap: 1 }}>
           {selectedFilters &&
             selectedFilters.map(
               (filter) =>
                 filter && (
-                  <Chip
+                  <StyledChip
                     sx={{ textTransform: "capitalize" }}
                     onClick={(e) => e.stopPropagation()}
                     label={filter}
