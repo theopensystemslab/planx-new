@@ -1,3 +1,4 @@
+import { partition } from "lodash";
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
@@ -10,6 +11,7 @@ export enum ChecklistLayout {
 
 export interface Group<T> {
   title: string;
+  exclusive?: true;
   children: Array<T>;
 }
 
@@ -36,34 +38,51 @@ interface ChecklistExpandableProps {
   groupedOptions?: Array<Group<Option>>;
 }
 
-export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps,
-): ChecklistExpandableProps => {
-  if (checklist.options !== undefined && checklist.options.length > 0) {
+export const toggleExpandableChecklist = ({
+  options,
+  groupedOptions,
+}: ChecklistExpandableProps) => {
+  const checklist = [options, groupedOptions];
+
+  // toggle from unexpanded to expanded
+  if (options !== undefined && options.length > 0) {
+    const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+      options,
+      (option) => option.data.exclusive,
+    );
+
+    const newGroupedOptions = [
+      {
+        title: "Section 1",
+        children: nonExclusiveOptions,
+      },
+    ];
+
+    if (exclusiveOptions.length > 0) {
+      newGroupedOptions.push({
+        title: "Or",
+        children: exclusiveOptions,
+      });
+    }
+
     return {
       ...checklist,
-      groupedOptions: [
-        {
-          title: "Section 1",
-          children: checklist.options,
-        },
-      ],
+      groupedOptions: newGroupedOptions,
       options: undefined,
     };
-  } else if (
-    checklist.groupedOptions !== undefined &&
-    checklist.groupedOptions.length > 0
-  ) {
+
+    // toggle from expanded to unexpanded
+  } else if (groupedOptions !== undefined && groupedOptions.length > 0) {
     return {
       ...checklist,
-      options: checklist.groupedOptions.flatMap((opt) => opt.children),
+      options: groupedOptions.flatMap((opt) => opt.children),
       groupedOptions: undefined,
     };
   } else {
     return {
       ...checklist,
-      options: checklist.options || [],
-      groupedOptions: checklist.groupedOptions || [
+      options: options || [],
+      groupedOptions: groupedOptions || [
         {
           title: "Section 1",
           children: [],

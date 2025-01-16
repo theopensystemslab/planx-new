@@ -942,7 +942,7 @@ const collectedFlagValuesByCategory = (
     if (breadcrumb.answers) {
       breadcrumb.answers.forEach((answerId) => {
         const node = flow[answerId];
-        if (node.data?.flags) {
+        if (node?.data?.flags) {
           node.data.flags.forEach((flag: Flag["value"]) => {
             if (possibleFlagValues.includes(flag)) collectedFlags.push(flag);
           });
