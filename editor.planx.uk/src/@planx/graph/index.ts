@@ -307,13 +307,13 @@ const _remove = (draft: Graph, id: string, parent: string) => {
 
   const idx = parentNode.edges.indexOf(id);
   if (idx >= 0) {
-    if (parentNode.edges.length === 1) delete parentNode.edges;
+    if (parent !== ROOT_NODE_KEY && parentNode.edges.length === 1) delete parentNode.edges;
     else parentNode.edges.splice(idx, 1);
   } else {
     throw new Error("not found in parent");
   }
 
-  if (Object.keys(draft[parent]).length === 0) delete draft[parent];
+  if (parent !== ROOT_NODE_KEY && Object.keys(draft[parent]).length === 0) delete draft[parent];
 
   if (numberOfEdgesTo(id, draft) === 0) {
     const { edges } = draft[id];
