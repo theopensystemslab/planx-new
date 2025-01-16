@@ -494,6 +494,7 @@
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -523,6 +524,7 @@
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -542,6 +544,7 @@
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -576,6 +579,7 @@
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -602,6 +606,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -622,6 +627,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -655,6 +661,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -694,6 +701,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -715,6 +723,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -741,6 +750,7 @@
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -761,6 +771,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
         filter: {}
         check: null
@@ -782,6 +793,7 @@
           - settings
           - slug
           - status
+          - summary
           - team_id
         filter:
           team:
@@ -1500,13 +1512,12 @@
       permission:
         check: {}
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
     - role: demoUser
       permission:
         check:
@@ -1519,25 +1530,23 @@
                   id:
                     _eq: 32
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
       comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
     - role: platformAdmin
       permission:
         check: {}
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
     - role: teamEditor
       permission:
         check:
@@ -1550,24 +1559,22 @@
                   - role:
                       _eq: teamEditor
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
   select_permissions:
     - role: api
       permission:
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
         filter: {}
         allow_aggregations: true
     - role: demoUser
@@ -1576,7 +1583,6 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
@@ -1588,7 +1594,6 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
@@ -1600,7 +1605,6 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary
@@ -1612,7 +1616,6 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - publisher_id
           - summary

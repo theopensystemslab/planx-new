@@ -34,7 +34,14 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
   flowInformation,
 }) => {
   const { status: flowStatus } = flowInformation;
-  const [flowDescription, updateFlowDescription] = useStore((state) => [
+  const [
+    flowDescription,
+    updateFlowDescription,
+    flowSummary,
+    updateFlowSummary,
+  ] = useStore((state) => [
+    state.flowSummary,
+    state.updateFlowSummary,
     state.flowDescription,
     state.updateFlowDescription,
   ]);
@@ -43,21 +50,50 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
 
   const formik = useFormik<ReadMePageForm>({
     initialValues: {
-      serviceSummary: flowDescription || "",
-      serviceDescription: "service description" || "",
+      serviceSummary: flowSummary || "",
+      serviceDescription: flowDescription || "",
       serviceLimitations: "service limitations" || "",
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setSubmitting, setFieldError }) => {
       // TODO: handle changes to any field, not just description
-      const isSuccess = await updateFlowDescription(values.serviceSummary);
-      if (isSuccess) {
-        toast.success("Service description updated successfully");
-      }
-      if (!isSuccess) {
-        formik.setFieldError(
-          "serviceSummary",
-          "Unable to update the service description. Please try again.",
+
+      try {
+        const updateFlowDescriptionPromise = updateFlowDescription(
+          values.serviceDescription,
         );
+        const updateFlowSummaryPromise = updateFlowSummary(
+          values.serviceSummary,
+        );
+
+        const [descriptionResult, summaryResult] = await Promise.all([
+          updateFlowDescriptionPromise,
+          updateFlowSummaryPromise,
+        ]);
+
+        if (descriptionResult && summaryResult) {
+          toast.success("Updated successfully");
+        } else {
+          if (!descriptionResult) {
+            setFieldError(
+              "serviceDescription",
+              "Unable to update the flow description. Please try again.",
+            );
+          }
+          if (!summaryResult) {
+            setFieldError(
+              "serviceSummary",
+              "Unable to update the service summary. Please try again.",
+            );
+          }
+          throw new Error("One or more updates failed");
+        }
+      } catch (error) {
+        console.error("Error updating descriptions:", error);
+        toast.error(
+          "An error occurred while updating descriptions. Please try again.",
+        );
+      } finally {
+        setSubmitting(false);
       }
     },
     validateOnBlur: false,
@@ -101,11 +137,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <Input
               multiline
-              name="serviceSummary"
+              {...formik.getFieldProps("serviceSummary")}
+              id="serviceSummary"
               placeholder="Description"
-              onChange={formik.handleChange}
               errorMessage={formik.errors.serviceSummary}
-              value={formik.values.serviceSummary}
             />
           </InputGroup>
           <InputGroup flowSpacing>
@@ -115,10 +150,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <InputRow>
               <RichTextInput
+                {...formik.getFieldProps("serviceDescription")}
+                id="serviceDescription"
                 placeholder="The service..."
-                name="Service description"
-                value={formik.values.serviceDescription}
-                onChange={formik.handleChange}
+                errorMessage={formik.errors.serviceDescription}
               />
             </InputRow>
           </InputGroup>
