@@ -6,6 +6,7 @@ export interface FlowInformation {
   settings: FlowSettings;
   status: FlowStatus;
   description: string;
+  summary: string;
 }
 
 export interface GetFlowInformation {

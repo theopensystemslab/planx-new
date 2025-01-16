@@ -26,7 +26,7 @@ interface ReadMePageProps {
 interface ReadMePageForm {
   serviceSummary: string;
   serviceDescription: string;
-  serviceLimitations: string;
+  // serviceLimitations: string;
 }
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
@@ -40,10 +40,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     flowSummary,
     updateFlowSummary,
   ] = useStore((state) => [
-    state.flowSummary,
-    state.updateFlowSummary,
     state.flowDescription,
     state.updateFlowDescription,
+    state.flowSummary,
+    state.updateFlowSummary,
   ]);
 
   const toast = useToast();
@@ -52,7 +52,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     initialValues: {
       serviceSummary: flowSummary || "",
       serviceDescription: flowDescription || "",
-      serviceLimitations: "service limitations" || "",
     },
     onSubmit: async (values, { setSubmitting, setFieldError }) => {
       // TODO: handle changes to any field, not just description
@@ -138,6 +137,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             <Input
               multiline
               {...formik.getFieldProps("serviceSummary")}
+              // value={formik.values.serviceSummary}
+              // onChange={formik.handleChange}
+              // name="serviceSummary"
               id="serviceSummary"
               placeholder="Description"
               errorMessage={formik.errors.serviceSummary}
@@ -153,6 +155,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
                 placeholder="The service..."
+                // onChange={formik.handleChange}
+                // name="serviceDescription"
+                // value={formik.values.serviceDescription}
                 errorMessage={formik.errors.serviceDescription}
               />
             </InputRow>
@@ -167,7 +172,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 name="Service limitations"
                 placeholder="Limitations"
                 onChange={formik.handleChange}
-                value={formik.values.serviceLimitations}
+                // value={formik.values.serviceLimitations}
               />
             </InputRow>
           </InputGroup>

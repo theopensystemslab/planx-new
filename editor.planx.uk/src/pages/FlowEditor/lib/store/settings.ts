@@ -87,7 +87,7 @@ export const settingsStore: StateCreator<
   getFlowInformation: async (flowSlug, teamSlug) => {
     const {
       data: {
-        flows: [{ settings, status, description }],
+        flows: [{ settings, status, description, summary }],
       },
     } = await client.query<GetFlowInformation>({
       query: gql`
@@ -99,6 +99,7 @@ export const settingsStore: StateCreator<
             id
             settings
             description
+            summary
             status
           }
         }
@@ -114,6 +115,7 @@ export const settingsStore: StateCreator<
       flowSettings: settings,
       flowStatus: status,
       flowDescription: description,
+      flowSummary: summary,
     });
 
     return { settings, status, description };
