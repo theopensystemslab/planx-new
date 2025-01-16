@@ -56,11 +56,15 @@ const FiltersToggle = styled(Box)(({ theme }) => ({
 const StyledChip = styled(Chip)(({ theme }) => ({
   background: theme.palette.common.white,
   cursor: "default",
+  textTransform: "capitalize",
+  "& > svg": {
+    fill: theme.palette.text.secondary,
+  },
   "&:hover": {
     background: theme.palette.common.white,
-  },
-  "& > svg": {
-    fill: theme.palette.text.primary,
+    "& > svg": {
+      fill: theme.palette.text.primary,
+    },
   },
 }));
 
@@ -201,7 +205,6 @@ export const Filters: React.FC<FiltersProps> = ({
           {selectedFilters &&
             selectedFilters.map((filter) => (
               <StyledChip
-                sx={{ textTransform: "capitalize" }}
                 onClick={(e) => e.stopPropagation()}
                 label={filter}
                 key={filter}
