@@ -9,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
@@ -365,6 +366,11 @@ const Team: React.FC = () => {
     null,
   );
 
+  const formik = useFormik({
+    initialValues: { pattern: "", keys: ["name"] },
+    onSubmit: () => {},
+  });
+
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
       displayName: "Name",
@@ -445,6 +451,9 @@ const Team: React.FC = () => {
                   sx={{ borderColor: "black" }}
                   name="search"
                   id="search"
+                  onChange={(e) => {
+                    formik.setFieldValue("pattern", e.target.value);
+                  }}
                 />
               </InputRowItem>
             </InputRow>
@@ -457,7 +466,13 @@ const Team: React.FC = () => {
           sortOptions={sortOptions}
         />
       )}
-      {flows && <Filters flows={flows} setFilteredFlows={setFilteredFlows} />}
+      {flows && (
+          <Filters
+            flows={flows}
+            setFilteredFlows={setFilteredFlows}
+            formik={formik}
+          />
+        )}
         {teamHasFlows && (
           <>
             <Box

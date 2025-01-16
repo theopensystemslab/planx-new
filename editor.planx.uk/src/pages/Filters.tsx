@@ -10,8 +10,10 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { FormikConfig, FormikProps } from "formik";
+import { useSearch } from "hooks/useSearch";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "react-navi";
+import { useCurrentRoute, useNavigation } from "react-navi";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
@@ -93,6 +95,7 @@ const FiltersFooter = styled(Box)(({ theme }) => ({
 interface FiltersProps {
   flows: FlowSummary[];
   setFilteredFlows: React.Dispatch<React.SetStateAction<FlowSummary[] | null>>;
+  formik: FormikProps<{ pattern: string; keys: string[] }>;
 }
 
 interface FilterState {
@@ -107,12 +110,21 @@ type FilterValues = FilterState[keyof FilterState];
 export const Filters: React.FC<FiltersProps> = ({
   flows,
   setFilteredFlows,
+  formik,
 }) => {
   const [filters, setFilters] = useState<FilterState>();
-  const [selectedFilters, setSelectedFilters] = useState<FilterValues[] | []>();
+  const [selectedFilters, setSelectedFilters] = useState<
+    FilterValues[] | string[] | []
+  >();
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const navigation = useNavigation();
+  const route = useCurrentRoute();
+
+  const { results, search } = useSearch({
+    list: flows,
+    keys: formik.values.keys,
+  });
 
   const addToSearchParams = (params: FilterState) => {
     const newSearchParams = new URLSearchParams();
@@ -139,36 +151,49 @@ export const Filters: React.FC<FiltersProps> = ({
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    let filterObj = {};
-    params.forEach((value, key) => {
-      switch (key) {
-        case "status":
-          filterObj = { ...filterObj, status: value };
-          break;
-        case "applicationType":
-          filterObj = { ...filterObj, applicationType: value };
-          break;
-        case "serviceType":
-          filterObj = { ...filterObj, serviceType: value };
-          break;
-      }
-      setFilters(filterObj);
-      setSelectedFilters(Object.values(filterObj));
-    });
+    const params = route.url.query;
+    if (params) {
+      setFilters(params);
+      setSelectedFilters(Object.values(params));
+      handleFiltering(params);
+    }
   }, []);
 
-  const handleFiltering = (filtersArg: FilterState) => {
-    const filterByStatus = flows.filter((flow: FlowSummary) => {
+  useEffect(() => {
+    if (formik.values.pattern) {
+      search(formik.values.pattern);
+      handleFiltering(filters);
+    }
+  }, [formik.values.pattern]);
+
+  const getSearchResults = () => {
+    const searchResults = results.map((result) => result.item);
+    return {
+      hasSearchResults: Boolean(searchResults[0]),
+      searchResults: searchResults,
+    };
+  };
+
+  const handleFiltering = (filtersArg: FilterState | undefined) => {
+    // Get the results of the search
+    const { hasSearchResults, searchResults } = getSearchResults();
+    // if there's search results, filter those, if not, filter flows
+    const resultsToFilter = hasSearchResults ? searchResults : flows;
+
+    // this will filter the above by status only for now
+    const filterByStatus = resultsToFilter.filter((flow: FlowSummary) => {
       if (filtersArg?.status) {
         return flow.status === filtersArg.status;
       } else {
         return true;
       }
     });
-    filterByStatus && setFilteredFlows(filterByStatus);
-    filtersArg && addToSearchParams(filtersArg);
-    filtersArg && setSelectedFilters(Object.values(filtersArg));
+    // update the list with the new filtered and searched flows
+    // if there's no search results, we will just filter by flows again
+    // flows stays constant
+    if (filterByStatus) {
+      setFilteredFlows(filterByStatus);
+    }
     if (
       !filtersArg?.status &&
       !filtersArg?.applicationType &&
@@ -182,8 +207,6 @@ export const Filters: React.FC<FiltersProps> = ({
     filters?.[filterKey] === filterValue
       ? setFilters({ ...filters, [filterKey]: undefined })
       : setFilters({ ...filters, [filterKey]: filterValue });
-
-  filters && console.log(Object.values(filters));
 
   return (
     <FiltersContainer
@@ -203,31 +226,35 @@ export const Filters: React.FC<FiltersProps> = ({
         </FiltersToggle>
         <Box sx={{ display: "flex", gap: 1 }}>
           {selectedFilters &&
-            selectedFilters.map((filter) => (
-              <StyledChip
-                onClick={(e) => e.stopPropagation()}
-                label={filter}
-                key={filter}
-                onDelete={() => {
-                  if (filters) {
-                    const deleteFilter = Object.keys(filters) as FilterKeys[];
-                    const targetFilter = deleteFilter.find(
-                      (key: FilterKeys) => {
-                        return filters[key] === filter;
-                      },
-                    );
+            selectedFilters.map((filter) => {
+              if (!filter) return;
+              return (
+                <StyledChip
+                  sx={{ textTransform: "capitalize" }}
+                  onClick={(e) => e.stopPropagation()}
+                  label={filter}
+                  key={filter}
+                  onDelete={() => {
+                    if (filters) {
+                      const deleteFilter = Object.keys(filters) as FilterKeys[];
+                      const targetFilter = deleteFilter.find(
+                        (key: FilterKeys) => {
+                          return filters[key] === filter;
+                        },
+                      );
 
-                    if (targetFilter) {
-                      setFilters({ ...filters, [targetFilter]: undefined });
-                      handleFiltering({
-                        ...filters,
-                        [targetFilter]: undefined,
-                      });
+                      if (targetFilter) {
+                        setFilters({ ...filters, [targetFilter]: undefined });
+                        handleFiltering({
+                          ...filters,
+                          [targetFilter]: undefined,
+                        });
+                      }
                     }
-                  }
-                }}
-              />
-            ))}
+                  }}
+                />
+              );
+            })}
         </Box>
       </FiltersHeader>
       <FiltersBody>
@@ -295,7 +322,11 @@ export const Filters: React.FC<FiltersProps> = ({
             variant="contained"
             color="primary"
             onClick={() => {
-              filters && handleFiltering(filters);
+              if (filters) {
+                handleFiltering(filters);
+                addToSearchParams(filters);
+                setSelectedFilters(Object.values(filters));
+              }
             }}
           >
             Apply filters
