@@ -199,36 +199,32 @@ export const Filters: React.FC<FiltersProps> = ({
         </FiltersToggle>
         <Box sx={{ display: "flex", gap: 1 }}>
           {selectedFilters &&
-            selectedFilters.map(
-              (filter) =>
-                filter && (
-                  <StyledChip
-                    sx={{ textTransform: "capitalize" }}
-                    onClick={(e) => e.stopPropagation()}
-                    label={filter}
-                    onDelete={() => {
-                      if (filters) {
-                        const deleteFilter = Object.keys(
-                          filters,
-                        ) as FilterKeys[];
-                        const targetFilter = deleteFilter.find(
-                          (key: FilterKeys) => {
-                            return filters[key] === filter;
-                          },
-                        );
+            selectedFilters.map((filter) => (
+              <StyledChip
+                sx={{ textTransform: "capitalize" }}
+                onClick={(e) => e.stopPropagation()}
+                label={filter}
+                key={filter}
+                onDelete={() => {
+                  if (filters) {
+                    const deleteFilter = Object.keys(filters) as FilterKeys[];
+                    const targetFilter = deleteFilter.find(
+                      (key: FilterKeys) => {
+                        return filters[key] === filter;
+                      },
+                    );
 
-                        if (targetFilter) {
-                          setFilters({ ...filters, [targetFilter]: undefined });
-                          handleFiltering({
-                            ...filters,
-                            [targetFilter]: undefined,
-                          });
-                        }
-                      }
-                    }}
-                  />
-                ),
-            )}
+                    if (targetFilter) {
+                      setFilters({ ...filters, [targetFilter]: undefined });
+                      handleFiltering({
+                        ...filters,
+                        [targetFilter]: undefined,
+                      });
+                    }
+                  }
+                }}
+              />
+            ))}
         </Box>
       </FiltersHeader>
       <FiltersBody>
