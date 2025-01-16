@@ -118,7 +118,7 @@ export const settingsStore: StateCreator<
       flowSummary: summary,
     });
 
-    return { settings, status, description };
+    return { settings, status, description, summary };
   },
 
   globalSettings: undefined,
