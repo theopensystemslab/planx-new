@@ -230,46 +230,58 @@ export const Filters: React.FC<FiltersProps> = ({
       <FiltersBody>
         <FiltersContent>
           <FiltersColumn>
-            <Typography variant="h5">Online status</Typography>
+            <Typography variant="h5" pb={0.5}>
+              Online status
+            </Typography>
             <ChecklistItem
               onChange={() => handleChange("status", "online")}
               label={"Online"}
+              id={"online"}
               checked={filters?.status === "online"}
               variant="compact"
             />
             <ChecklistItem
               onChange={() => handleChange("status", "offline")}
               label={"Offline"}
+              id={"offline"}
               checked={filters?.status === "offline"}
               variant="compact"
             />
           </FiltersColumn>
           <FiltersColumn>
-            <Typography variant="h5">Application type</Typography>
+            <Typography variant="h5" pb={0.5}>
+              Application type
+            </Typography>
             <ChecklistItem
               onChange={() => handleChange("applicationType", "submission")}
               label={"Submission"}
+              id={"submission"}
               checked={filters?.applicationType === "submission"}
               variant="compact"
             />
             <ChecklistItem
               onChange={() => handleChange("applicationType", "guidance")}
               label={"Guidance"}
+              id={"guidance"}
               checked={filters?.applicationType === "guidance"}
               variant="compact"
             />
           </FiltersColumn>
           <FiltersColumn>
-            <Typography variant="h5">Service type</Typography>
+            <Typography variant="h5" pb={0.5}>
+              Service type
+            </Typography>
             <ChecklistItem
               onChange={() => handleChange("serviceType", "statutory")}
               label={"Statutory"}
+              id={"statutory"}
               checked={filters?.serviceType === "statutory"}
               variant="compact"
             />
             <ChecklistItem
               onChange={() => handleChange("serviceType", "discretionary")}
               label={"Discretionary"}
+              id={"discretionary"}
               checked={filters?.serviceType === "discretionary"}
               variant="compact"
             />
