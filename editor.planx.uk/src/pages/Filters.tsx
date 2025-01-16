@@ -91,17 +91,6 @@ export const Filters: React.FC<FiltersProps> = ({
   flows,
   setFilteredFlows,
 }) => {
-  {
-    /*
-  - thinking here is to build in type safety into the filter categories
-  - create a fn to setFlows based on the filters selected
-  - could we build a <FilterGroup> component which has the Column, Typo and ChecklistItems
-      ~ This way we could build a type safe filterOptions array which we can iterate over to create
-        the filter options. Could make it scale nicely
-  - I've also added a new flows list called filteredFlows so we can maintain an original
-  */
-  }
-
   const [filters, setFilters] = useState<FilterState>();
   const [selectedFilters, setSelectedFilters] = useState<FilterValues[] | []>();
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -152,7 +141,7 @@ export const Filters: React.FC<FiltersProps> = ({
     });
   }, []);
 
-  const handleFiltering = (filtersArg) => {
+  const handleFiltering = (filtersArg: FilterState) => {
     const filterByStatus = flows.filter((flow: FlowSummary) => {
       if (filtersArg?.status) {
         return flow.status === filtersArg.status;
@@ -205,19 +194,24 @@ export const Filters: React.FC<FiltersProps> = ({
                     onClick={(e) => e.stopPropagation()}
                     label={filter}
                     onDelete={() => {
-                      const deleteFilter =
-                        filters &&
-                        Object.keys(filters).find((key) => {
-                          return filters[key] === filter;
-                        });
-                      console.log(deleteFilter);
-                      deleteFilter &&
-                        setFilters({ ...filters, [deleteFilter]: undefined });
-                      deleteFilter &&
-                        handleFiltering({
-                          ...filters,
-                          [deleteFilter]: undefined,
-                        });
+                      if (filters) {
+                        const deleteFilter = Object.keys(
+                          filters,
+                        ) as FilterKeys[];
+                        const targetFilter = deleteFilter.find(
+                          (key: FilterKeys) => {
+                            return filters[key] === filter;
+                          },
+                        );
+
+                        if (targetFilter) {
+                          setFilters({ ...filters, [targetFilter]: undefined });
+                          handleFiltering({
+                            ...filters,
+                            [targetFilter]: undefined,
+                          });
+                        }
+                      }
                     }}
                   />
                 ),
@@ -277,7 +271,7 @@ export const Filters: React.FC<FiltersProps> = ({
             variant="contained"
             color="primary"
             onClick={() => {
-              handleFiltering(filters);
+              filters && handleFiltering(filters);
             }}
           >
             Apply filters
