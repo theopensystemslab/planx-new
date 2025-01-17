@@ -35,12 +35,14 @@ export const AddressFieldInput: React.FC<Props<AddressField>> = (props) => {
       {data.description && (
         <FieldInputDescription description={data.description} />
       )}
-      <AddressFields
-        id={id}
-        values={value}
-        errors={errorMessage}
-        handleChange={handleChange}
-      />
+      <Box sx={{ gap: 2, display: "flex", flexDirection: "column" }}>
+        <AddressFields
+          id={id}
+          values={value}
+          errors={errorMessage}
+          handleChange={handleChange}
+        />
+      </Box>
     </Box>
   );
 };
