@@ -1,3 +1,4 @@
+import { Address } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
@@ -10,21 +11,12 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { AddressInput } from "./model";
-import { userDataSchema } from "./model";
+import { addressValidationSchema } from "./model";
 
 export type Props = PublicProps<AddressInput>;
 
-export interface FormProps {
-  line1: string;
-  line2: string;
-  town: string;
-  county: string;
-  postcode: string;
-  country: string;
-}
-
 export default function AddressInputComponent(props: Props): FCReturn {
-  const formik = useFormik<FormProps>({
+  const formik = useFormik<Address>({
     initialValues: getPreviouslySubmittedData(props) ?? {
       line1: "",
       line2: "",
@@ -38,7 +30,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: userDataSchema,
+    validationSchema: addressValidationSchema,
   });
 
   return (
@@ -62,8 +54,8 @@ export default function AddressInputComponent(props: Props): FCReturn {
 
 interface AddressFieldsProps {
   id?: string;
-  values: FormProps;
-  errors: FormikErrors<FormProps>;
+  values: Address;
+  errors: FormikErrors<Address>;
   handleChange: (e: React.ChangeEvent) => void;
 }
 

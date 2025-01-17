@@ -1,7 +1,7 @@
 import { Address } from "@opensystemslab/planx-core/types";
 import {
   AddressInput,
-  userDataSchema as addressValidationSchema,
+  addressValidationSchema,
 } from "@planx/components/AddressInput/model";
 import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
@@ -175,6 +175,11 @@ export const isChecklistFieldResponse = (
 ): response is ResponseValue<ChecklistField> =>
   Array.isArray(response) && !isMapFieldResponse(response);
 
+export const isAddressFieldResponse = (
+  response: unknown,
+): response is ResponseValue<AddressField> =>
+  typeof response === "object" && response !== null && "line1" in response;
+
 /**
  * For each field in schema, return a map of Yup validation schema
  * Matches both the field type and data
@@ -202,7 +207,7 @@ const generateValidationSchemaForFields = (
         fieldSchemas[data.fn] = dateValidationSchema(data);
         break;
       case "address":
-        fieldSchemas[data.fn] = addressValidationSchema(data);
+        fieldSchemas[data.fn] = addressValidationSchema();
         break;
       case "map":
         fieldSchemas[data.fn] = mapValidationSchema(data);
