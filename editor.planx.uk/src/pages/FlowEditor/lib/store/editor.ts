@@ -4,6 +4,7 @@ import {
   ComponentType as TYPES,
   flatFlags,
   FlowGraph,
+  FlowStatus,
   NodeId,
   OrderedFlow,
 } from "@opensystemslab/planx-core/types";
@@ -149,7 +150,7 @@ export interface FlowSummary {
   id: string;
   name: string;
   slug: string;
-  status: "online" | "offline";
+  status: FlowStatus;
   updatedAt: string;
   operations: FlowSummaryOperations[];
   publishedFlows: PublishedFlowSummary[];

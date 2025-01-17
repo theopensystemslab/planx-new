@@ -1,9 +1,6 @@
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
-import { get } from "lodash";
+import { get, orderBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
@@ -14,24 +11,28 @@ import SelectInput from "./SelectInput/SelectInput";
 type SortDirection = "asc" | "desc";
 
 export interface SortableFields<T> {
+  /** displayName is a string to use in the Select */
   displayName: string;
+  /** fieldName is the key of the object used to sort */
   fieldName: Paths<T>;
+  /** directionNames should be an object specifying display values for ascending and descending sort order */
+  directionNames: { asc: string; desc: string };
 }
-
-const compareValues = (
-  a: string | boolean,
-  b: string | boolean,
-  sortDirection: SortDirection,
-) => {
-  if (a < b) {
-    return sortDirection === "asc" ? 1 : -1;
-  }
-  if (a > b) {
-    return sortDirection === "asc" ? -1 : 1;
-  }
-  return 0;
-};
-
+/**
+ * @component
+ * @description Sorts a list of objects
+ * @param {Type} T - a type to define the shape of the data in the records array
+ * @param {Array} props.records - an array of objects to sort
+ * @param {Function} props.setRecords - A way to set the new sorted order of the array
+ * @param {Array} props.sortOptions - An array of objects to define displayName, fieldName, and directionNames
+ * @returns {JSX.Element} Two select components to switch between fieldName and directionNames
+ * @example
+ *  <SortControl<FlowSummary>
+ *        records={flows}
+ *        setRecords={setFlows}
+ *       sortOptions={sortOptions}
+ *     />
+ */
 export const SortControl = <T extends object>({
   records,
   setRecords,
@@ -51,12 +52,8 @@ export const SortControl = <T extends object>({
   const selectedDisplaySlug = slugify(selectedSort.displayName);
 
   const sortOptionsMap = useMemo(() => {
-    return sortOptions.reduce(
-      (acc, option) => ({
-        ...acc,
-        [slugify(option.displayName)]: option,
-      }),
-      {} as Record<string, SortableFields<T>>,
+    return Object.groupBy(sortOptions, ({ displayName }) =>
+      slugify(displayName),
     );
   }, [sortOptions]);
 
@@ -75,22 +72,25 @@ export const SortControl = <T extends object>({
     );
   };
 
-  useEffect(() => {
+  const parseStateFromURL = () => {
     const { sort: sortParam, sortDirection: sortDirectionParam } =
       route.url.query;
     const matchingSortOption = sortOptionsMap[sortParam];
-    matchingSortOption && setSelectedSort(matchingSortOption);
+    if (!matchingSortOption) return;
+    setSelectedSort(matchingSortOption[0]);
     if (sortDirectionParam === "asc" || sortDirectionParam === "desc") {
       setSortDirection(sortDirection);
     }
+  };
+
+  useEffect(() => {
+    parseStateFromURL();
   }, []);
 
   useEffect(() => {
     const { fieldName } = selectedSort;
-    const sortedFlows = records?.sort((a: T, b: T) =>
-      compareValues(get(a, fieldName), get(b, fieldName), sortDirection),
-    );
-    sortedFlows && setRecords([...sortedFlows]);
+    const sortNewFlows = orderBy(records, fieldName, sortDirection);
+    setRecords(sortNewFlows);
     updateSortParam(selectedDisplaySlug);
   }, [selectedSort, sortDirection]);
 
@@ -101,7 +101,8 @@ export const SortControl = <T extends object>({
         onChange={(e) => {
           const targetKey = e.target.value as string;
           const matchingSortOption = sortOptionsMap[targetKey];
-          matchingSortOption && setSelectedSort(matchingSortOption);
+          if (!matchingSortOption) return;
+          setSelectedSort(matchingSortOption?.[0]);
         }}
       >
         {sortOptions.map(({ displayName }) => (
@@ -110,17 +111,23 @@ export const SortControl = <T extends object>({
           </MenuItem>
         ))}
       </SelectInput>
-      <IconButton
-        title="ordering"
-        aria-label="ordering"
-        onClick={() =>
-          sortDirection === "asc"
-            ? setSortDirection("desc")
-            : setSortDirection("asc")
-        }
+      <SelectInput
+        value={sortDirection}
+        onChange={(e) => {
+          const newDirection = e.target.value as SortDirection;
+          setSortDirection(newDirection);
+        }}
       >
-        {sortDirection === "asc" ? <TrendingUpIcon /> : <TrendingDownIcon />}
-      </IconButton>
+        <MenuItem key={slugify(selectedSort.directionNames.asc)} value={"asc"}>
+          {selectedSort.directionNames.asc}
+        </MenuItem>
+        <MenuItem
+          key={slugify(selectedSort.directionNames.desc)}
+          value={"desc"}
+        >
+          {selectedSort.directionNames.desc}
+        </MenuItem>
+      </SelectInput>
     </Box>
   );
 };
