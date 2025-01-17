@@ -132,7 +132,7 @@ export const Filters: React.FC<FiltersProps> = ({
       debounce((pattern: string) => {
         console.debug("Search term: ", pattern);
         search(pattern);
-      }, 500),
+      }, 250),
     [search],
   );
 
@@ -192,6 +192,7 @@ export const Filters: React.FC<FiltersProps> = ({
     const { hasSearchResults, searchResults } = getSearchResults();
     // if there's search results, filter those, if not, filter flows
     const resultsToFilter = hasSearchResults ? searchResults : flows;
+
     // this will filter the above by status only for now
     const filterByStatus = resultsToFilter.filter((flow: FlowSummary) => {
       if (filtersArg?.status) {
@@ -209,7 +210,8 @@ export const Filters: React.FC<FiltersProps> = ({
     if (
       !filtersArg?.status &&
       !filtersArg?.applicationType &&
-      !filtersArg?.serviceType
+      !filtersArg?.serviceType &&
+      !hasSearchResults
     ) {
       setFilteredFlows(flows);
     }
