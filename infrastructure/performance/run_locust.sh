@@ -13,12 +13,13 @@ else
   export TARGET_ENV=$3
 fi
 
-# this script assumes your machine has 8 cores, each of which can handle ~ 500 users
+# this script assumes your machine has 8 cores, each of which can handle ~ 300 users (will depend on workload)
 # check core count with lscpu, test and adjust constants accordingly for your use case
 LOCAL_CORES=8
-USERS_PER_CORE=500
+USERS_PER_CORE=300
 
-PROCESSES=$(($USERS / $USERS_PER_CORE))
+# get the ceiling of division, rather than floor (i.e. lean towards more workers)
+PROCESSES=$((($USERS + $USERS_PER_CORE - 1) / $USERS_PER_CORE))
 PROCESSES=$(($PROCESSES > 0 ? $PROCESSES : 1))
 WORKERS=$PROCESSES
 if [ $WORKERS -gt $LOCAL_CORES ]; then
@@ -27,7 +28,7 @@ if [ $WORKERS -gt $LOCAL_CORES ]; then
 fi
 
 # we keep spawn rate relatively low to avoid overwhelming CPUs during ramp up
-SPAWN_RATE=10
+SPAWN_RATE=5
 
 # run load test for thrice as long as total ramp up time (or 5 minutes, whichever is higher)
 RUN_TIME_SECONDS=$((($USERS / $SPAWN_RATE) * 3))

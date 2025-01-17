@@ -114,7 +114,8 @@ class HasuraWorkload(OpenWorkloadBase):
     if not aggregate_count:
       return
 
-    # this last request comes immediately after the last
+    # this last request comes immediately after the last, and will likely be the heaviest
+    # (because published flow data is one of the largest fetches we ever handle)
     with self.rest(
       "POST",
       HASURA_GRAPHQL_ENDPOINT,
@@ -129,6 +130,7 @@ class HasuraWorkload(OpenWorkloadBase):
             flows(where: {id: {_eq: $id}}) {
               published_flows(limit: 1, order_by: {data: asc, created_at: desc}) {
                 created_at
+                data
               }
             }
           }
