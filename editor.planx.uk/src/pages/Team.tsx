@@ -60,6 +60,7 @@ const FlowCardContent = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   display: "flex",
   flexDirection: "column",
+  alignItems: "flex-start",
   gap: theme.spacing(1.5),
   margin: 0,
   width: "100%",
@@ -312,22 +313,15 @@ const FlowItem: React.FC<FlowItemProps> = ({
 };
 
 const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
-  <Box
-    sx={(theme) => ({
-      mt: 4,
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: "8px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      padding: 2,
-    })}
-  >
-    <Typography variant="h3">No services found</Typography>
-    <Typography>Get started by creating your first service</Typography>
-    <AddFlowButton flows={flows} />
-  </Box>
+  <DashboardList sx={{ paddingTop: 0 }}>
+    <FlowCard>
+      <FlowCardContent>
+        <Typography variant="h3">No services found</Typography>
+        <Typography>Get started by creating your first service</Typography>
+        <AddFlowButton flows={flows} />
+      </FlowCardContent>
+    </FlowCard>
+  </DashboardList>
 );
 
 const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
