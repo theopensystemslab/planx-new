@@ -57,7 +57,7 @@ const OrNavigationButton = ({
       return "save-resume";
     }
 
-    if (!showSaveResumeButton && isTestEnvironment) {
+    if (!showSaveResumeButton && isTestEnvironment && !hasAcknowledgedWarning) {
       return "navigate-to-published";
     }
   };
@@ -65,9 +65,6 @@ const OrNavigationButton = ({
   const orNavigationType = defineNavigationType();
 
   if (!orNavigationType) return null;
-
-  if (hasAcknowledgedWarning && orNavigationType === "navigate-to-published")
-    return null;
 
   const ButtonComponent = BUTTON_COMPONENTS[orNavigationType];
 
