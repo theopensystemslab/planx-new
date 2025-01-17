@@ -32,12 +32,17 @@ import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(3, 0),
-  borderBottom: "1px solid #fff",
   margin: 0,
   display: "grid",
   gridAutoRows: "1fr",
-  gridTemplateColumns: "1fr 1fr 1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
   gridGap: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
+  },
 }));
 
 const FlowCard = styled("li")(({ theme }) => ({
@@ -416,9 +421,10 @@ const Team: React.FC = () => {
           pb={1}
           sx={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: { xs: "column", contentWrap: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "flex-start", contentWrap: "center" },
+            gap: 2,
           }}
         >
           <Box
