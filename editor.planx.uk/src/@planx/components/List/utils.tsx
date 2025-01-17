@@ -2,13 +2,14 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 
 import {
-  ChecklistField,
-  DateField,
   Field,
+  isChecklistFieldResponse,
+  isMapFieldResponse,
+  isNumberFieldResponse,
+  isTextResponse,
   NumberField,
   ResponseValue,
   SchemaUserResponse,
-  TextField,
 } from "./../shared/Schema/model";
 
 const List = styled("ul")(() => ({
@@ -29,20 +30,21 @@ export const formatSchemaDisplayValue = <T extends Field>(
 ) => {
   switch (field.type) {
     case "number": {
-      const numberValue = value as ResponseValue<NumberField>;
-      return field.data.units
-        ? `${numberValue} ${field.data.units}`
-        : numberValue;
+      if (!isNumberFieldResponse(value)) return;
+
+      return field.data.units ? `${value} ${field.data.units}` : value;
     }
     case "text":
     case "date": {
-      const textOrDataValue = value as ResponseValue<DateField | TextField>;
-      return textOrDataValue;
+      if (!isTextResponse(value)) return;
+
+      return value;
     }
     case "checklist": {
-      const checklistValue = value as ResponseValue<ChecklistField>;
+      if (!isChecklistFieldResponse(value)) return;
+
       const matchingOptions = field.data.options.filter((option) =>
-        checklistValue.includes(option.id),
+        value.includes(option.id),
       );
       return (
         <List>
@@ -53,12 +55,16 @@ export const formatSchemaDisplayValue = <T extends Field>(
       );
     }
     case "question": {
+      if (!isTextResponse(value)) return;
+
       const matchingOption = field.data.options.find(
         (option) => option.data.text === value || option.data.val === value,
       );
       return matchingOption?.data.text;
     }
     case "map": {
+      if (!isMapFieldResponse(value)) return;
+
       return (
         <>
           {/* @ts-ignore */}
@@ -95,7 +101,7 @@ export const formatSchemaDisplayValue = <T extends Field>(
 const isIdenticalUnitsField = (
   item: SchemaUserResponse,
 ): item is Record<"identicalUnits", ResponseValue<NumberField>> =>
-  "identicalUnits" in item && typeof item.identicalUnits === "number";
+  "identicalUnits" in item && isNumberFieldResponse(item.identicalUnits);
 
 const isIdenticalUnitsDevelopmentField = (
   item: SchemaUserResponse,
@@ -105,7 +111,7 @@ const isIdenticalUnitsDevelopmentField = (
 > =>
   "identicalUnits" in item &&
   "development" in item &&
-  typeof item.identicalUnits === "number";
+  isNumberFieldResponse(item.identicalUnits);
 
 /**
  * If the schema includes a field that sets fn = "identicalUnits", sum of total units

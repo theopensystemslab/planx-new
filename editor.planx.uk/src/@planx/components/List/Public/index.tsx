@@ -8,7 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import { MapField, ResponseValue } from "@planx/components/shared/Schema/model";
+import { isMapFieldResponse } from "@planx/components/shared/Schema/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { PublicProps } from "@planx/components/shared/types";
 import React, { useEffect, useRef } from "react";
@@ -129,7 +129,17 @@ const InactiveListCard: React.FC<{
 }> = ({ index: i }) => {
   const { schema, formik, removeItem, editItem } = useListContext();
 
-  const mapPreview = schema.fields.find((field) => field.type === "map");
+  const formattedMapResponse = (() => {
+    const mapField = schema.fields.find((field) => field.type === "map");
+    if (!mapField) return null;
+
+    const mapResponse = formik.values.schemaData[i][mapField.data.fn];
+    if (!mapResponse) return null;
+
+    return isMapFieldResponse(mapResponse)
+      ? formatSchemaDisplayValue(mapResponse, mapField)
+      : null;
+  })();
 
   return (
     <ListCard data-testid={`list-card-${i}`}>
@@ -137,15 +147,8 @@ const InactiveListCard: React.FC<{
         {`${schema.type} ${i + 1}`}
       </Typography>
       <InactiveListCardLayout>
-        {mapPreview && (
-          <Box sx={{ flexBasis: "50%" }}>
-            {formatSchemaDisplayValue(
-              formik.values.schemaData[i][
-                mapPreview.data.fn
-              ] as ResponseValue<MapField>,
-              mapPreview,
-            )}
-          </Box>
+        {formattedMapResponse && (
+          <Box sx={{ flexBasis: "50%" }}>{formattedMapResponse}</Box>
         )}
         <Table>
           <TableBody>

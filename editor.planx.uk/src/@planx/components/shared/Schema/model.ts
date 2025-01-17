@@ -141,6 +141,27 @@ export type SchemaUserData = {
   schemaData: SchemaUserResponse[];
 };
 
+// Type-guards to narrow the type of response values
+// Required as we often need to match a value with it's corresponding schema field
+export const isNumberFieldResponse = (
+  response: unknown,
+): response is ResponseValue<NumberField> => typeof response === "number";
+
+export const isTextResponse = (
+  response: unknown,
+): response is ResponseValue<TextField | DateField | QuestionField> =>
+  typeof response === "string";
+
+export const isMapFieldResponse = (
+  response: unknown,
+): response is ResponseValue<MapField> =>
+  Array.isArray(response) && response[0]?.type === "Feature";
+
+export const isChecklistFieldResponse = (
+  response: unknown,
+): response is ResponseValue<ChecklistField> =>
+  Array.isArray(response) && !isMapFieldResponse(response);
+
 /**
  * For each field in schema, return a map of Yup validation schema
  * Matches both the field type and data

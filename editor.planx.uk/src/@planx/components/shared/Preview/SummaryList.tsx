@@ -19,7 +19,9 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import {
   Field,
-  MapField,
+  isMapFieldResponse,
+  isNumberFieldResponse,
+  isTextResponse,
   ResponseValue,
   SchemaUserResponse,
 } from "../Schema/model";
@@ -631,6 +633,15 @@ function Page(props: ComponentProps) {
   const answers = getAnswersByNode(props) as SchemaUserResponse[];
   const fields = (props.node.data as Page).schema.fields;
 
+  const displayValue = (answer: ResponseValue<Field>) => {
+    if (isTextResponse(answer)) return answer;
+    if (isNumberFieldResponse(answer)) return answer.toString();
+    if (isMapFieldResponse(answer)) return `${answer.length || 0} features`;
+
+    // TODO: Handle other types more gracefully
+    return answer;
+  };
+
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
@@ -644,14 +655,7 @@ function Page(props: ComponentProps) {
               {field.data.title}
             </Typography>
             <Typography>
-              {field.type === "map"
-                ? `${
-                    (answers[0][field.data.fn] as ResponseValue<MapField>)
-                      .length || 0
-                  } features`
-                : (answers[0][field.data.fn] as ResponseValue<
-                    Exclude<Field, MapField>
-                  >)}
+              <>{displayValue(answers[0][field.data.fn])}</>
             </Typography>
           </Box>
         ))}
