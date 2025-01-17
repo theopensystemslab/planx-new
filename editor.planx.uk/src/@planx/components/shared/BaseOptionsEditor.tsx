@@ -76,8 +76,9 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
     )}
     {props.showValueField && (
       <DataFieldAutocomplete
+        key={`${props.value.id}-data-field-autocomplete`}
         schema={props.schema}
-        value={props.value.data.val || ""}
+        value={props.value.data.val}
         onChange={(targetValue) => {
           props.onChange({
             ...props.value,
