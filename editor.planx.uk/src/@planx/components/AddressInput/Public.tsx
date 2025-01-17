@@ -52,11 +52,11 @@ export default function AddressInputComponent(props: Props): FCReturn {
   );
 }
 
-interface AddressFieldsProps {
+export interface AddressFieldsProps {
   id?: string;
   values: Address;
   errors: FormikErrors<Address>;
-  handleChange: (e: React.ChangeEvent) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function AddressFields(props: AddressFieldsProps): FCReturn {

@@ -1,6 +1,9 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { AddressFields } from "@planx/components/AddressInput/Public";
+import {
+  AddressFields,
+  AddressFieldsProps,
+} from "@planx/components/AddressInput/Public";
 import React from "react";
 import InputLegend from "ui/editor/InputLegend";
 
@@ -10,7 +13,17 @@ import { FieldInputDescription } from "./shared";
 
 export const AddressFieldInput: React.FC<Props<AddressField>> = (props) => {
   const { data, formik } = props;
-  const { id, errorMessage, value } = getFieldProps(props);
+  const { id, errorMessage, value, name } = getFieldProps(props);
+
+  /**
+   * Maps changes from AddressField inputs to their corresponding nested form fields
+   * @example
+   * The input for name=line1 will be mapped to the schemaData[0][yourFn]["line1"] formik field
+   */
+  const handleChange: AddressFieldsProps["handleChange"] = (e) => {
+    const field = `${name}.${e.target.name}`;
+    formik.setFieldValue(field, e.target.value);
+  };
 
   return (
     <Box component="fieldset">
@@ -26,7 +39,7 @@ export const AddressFieldInput: React.FC<Props<AddressField>> = (props) => {
         id={id}
         values={value}
         errors={errorMessage}
-        handleChange={formik.handleChange}
+        handleChange={handleChange}
       />
     </Box>
   );
