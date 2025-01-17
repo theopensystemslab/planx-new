@@ -43,7 +43,8 @@ config:
     secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
   application:hasura-proxy-cpu: "512"
   application:hasura-proxy-memory: "1024"
-  application:hasura-scaling-maximum: "4"
+  application:hasura-service-scaling-minimum: "1"
+  application:hasura-service-scaling-maximum: "4"
   application:idox-nexus-client:
     secure: AAABACdm6IyRjfVPrHLCS5eKQD0ixA2lFC5h04HULwcCXx3j
   application:idox-nexus-submission-url: todo
