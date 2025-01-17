@@ -10,9 +10,10 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { FormikConfig, FormikProps } from "formik";
+import { FormikProps } from "formik";
 import { useSearch } from "hooks/useSearch";
-import React, { useEffect, useState } from "react";
+import { debounce } from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
@@ -126,6 +127,15 @@ export const Filters: React.FC<FiltersProps> = ({
     keys: formik.values.keys,
   });
 
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((pattern: string) => {
+        console.debug("Search term: ", pattern);
+        search(pattern);
+      }, 500),
+    [search],
+  );
+
   const addToSearchParams = (params: FilterState) => {
     const newSearchParams = new URLSearchParams();
     filters &&
@@ -160,11 +170,14 @@ export const Filters: React.FC<FiltersProps> = ({
   }, []);
 
   useEffect(() => {
+    debouncedSearch(formik.values.pattern);
     if (formik.values.pattern) {
-      search(formik.values.pattern);
       handleFiltering(filters);
     }
-  }, [formik.values.pattern]);
+    if (!formik.values.pattern && filters) {
+      handleFiltering(filters);
+    }
+  }, [formik.values.pattern, search, debouncedSearch, results]);
 
   const getSearchResults = () => {
     const searchResults = results.map((result) => result.item);
@@ -179,7 +192,6 @@ export const Filters: React.FC<FiltersProps> = ({
     const { hasSearchResults, searchResults } = getSearchResults();
     // if there's search results, filter those, if not, filter flows
     const resultsToFilter = hasSearchResults ? searchResults : flows;
-
     // this will filter the above by status only for now
     const filterByStatus = resultsToFilter.filter((flow: FlowSummary) => {
       if (filtersArg?.status) {
