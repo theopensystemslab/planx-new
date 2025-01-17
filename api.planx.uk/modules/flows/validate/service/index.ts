@@ -9,8 +9,9 @@ import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers.js";
 import { validateFileTypes } from "./fileTypes.js";
 import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
-import { validateProjectTypes } from "./projectTypes.js";
+import { getApplicationTypeVals, validateProjectTypes } from "./projectTypes.js";
 import { validateSections } from "./sections.js";
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 
 type AlteredNode = {
   id: string;
@@ -29,12 +30,24 @@ interface FlowValidateAndDiffResponse {
   alteredNodes: AlteredNode[] | null;
   message: string;
   validationChecks?: FlowValidationResponse[];
+  applicationTypes?: any;
+  isStatutoryApplication?:boolean;
+  trackerArray?: any;
 }
 
 const validateAndDiffFlow = async (
   flowId: string,
 ): Promise<FlowValidateAndDiffResponse> => {
   const flattenedFlow = await dataMerged(flowId);
+  const applicationTypes = getApplicationTypeVals(flattenedFlow)
+  const validApplicationTypes = getValidSchemaValues("ApplicationType");
+  const trackerArray: {value:string, result: boolean | undefined}[] = []
+  // What I want is, for the array of app types in the flow, 
+  // do they all match with schema application type values?
+  const isStatutoryApplication = applicationTypes.some((value)=> {
+    const result = validApplicationTypes?.includes(value)
+    trackerArray.push({value: value, result: result})
+    return result })
   const mostRecent = await getMostRecentPublishedFlow(flowId);
 
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
@@ -80,6 +93,9 @@ const validateAndDiffFlow = async (
     alteredNodes,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
+    applicationTypes: applicationTypes,
+    isStatutoryApplication: isStatutoryApplication,
+    trackerArray: trackerArray
   };
 };
 

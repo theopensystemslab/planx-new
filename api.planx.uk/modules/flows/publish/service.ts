@@ -4,6 +4,7 @@ import { gql } from "graphql-request";
 import type { FlowGraph, Node } from "@opensystemslab/planx-core/types";
 import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
+import { getApplicationTypeVals } from "../validate/service/projectTypes.js";
 
 interface PublishFlow {
   publishedFlow: {

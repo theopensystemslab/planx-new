@@ -78,7 +78,7 @@ const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
 
 const FiltersContent = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.main}`,
-  padding: theme.spacing(2.5),
+  padding: theme.spacing(2.5, 2.5, 2, 2.5),
   display: "flex",
   flexDirection: "row",
   flexWrap: "wrap",
@@ -97,11 +97,12 @@ interface FiltersProps {
   flows: FlowSummary[];
   setFilteredFlows: React.Dispatch<React.SetStateAction<FlowSummary[] | null>>;
   formik: FormikProps<{ pattern: string; keys: string[] }>;
+  clearFilters: boolean;
 }
 
 interface FilterState {
   status?: "online" | "offline";
-  applicationType?: "submission" | "guidance";
+  applicationType?: "submission";
   serviceType?: "statutory" | "discretionary";
 }
 
@@ -112,6 +113,7 @@ export const Filters: React.FC<FiltersProps> = ({
   flows,
   setFilteredFlows,
   formik,
+  clearFilters,
 }) => {
   const [filters, setFilters] = useState<FilterState>();
   const [selectedFilters, setSelectedFilters] = useState<
@@ -137,22 +139,22 @@ export const Filters: React.FC<FiltersProps> = ({
   );
 
   const addToSearchParams = (params: FilterState) => {
-    const newSearchParams = new URLSearchParams();
-    filters &&
-      Object.entries(params).forEach(([key, value]) => {
-        if (value) {
-          newSearchParams.set(key, value);
-        } else {
-          newSearchParams.delete(key);
-        }
-      });
+    const searchParams = new URLSearchParams(route.url.search);
+
+    // Update or remove filter parameters
+    Object.entries(params).forEach(([key, value]) => {
+      if (value) {
+        searchParams.set(key, value);
+      } else {
+        console.log("hitting delete");
+        searchParams.delete(key);
+      }
+    });
 
     navigation.navigate(
       {
         pathname: window.location.pathname,
-        search: newSearchParams.toString()
-          ? `?${newSearchParams.toString()}`
-          : "",
+        search: searchParams.toString(), // Use the complete searchParams object
       },
       {
         replace: true,
@@ -160,31 +162,27 @@ export const Filters: React.FC<FiltersProps> = ({
     );
   };
 
-  useEffect(() => {
-    const params = route.url.query;
-    if (params) {
-      setFilters(params);
-      setSelectedFilters(Object.values(params));
-      handleFiltering(params);
-    }
-  }, []);
+  const clearSearchParams = () => {
+    const searchParams = new URLSearchParams(route.url.search);
+    searchParams.delete("status");
+    searchParams.delete("applicationType");
+    searchParams.delete("serviceType");
+    navigation.navigate(
+      {
+        pathname: window.location.pathname,
+        search: searchParams.toString(), // Use the complete searchParams object
+      },
+      {
+        replace: true,
+      },
+    );
+  };
 
-  useEffect(() => {
-    debouncedSearch(formik.values.pattern);
-    if (formik.values.pattern) {
-      handleFiltering(filters);
-    }
-    if (!formik.values.pattern && filters) {
-      handleFiltering(filters);
-    }
-  }, [formik.values.pattern, search, debouncedSearch, results]);
-
-  const getSearchResults = () => {
-    const searchResults = results.map((result) => result.item);
-    return {
-      hasSearchResults: Boolean(searchResults[0]),
-      searchResults: searchResults,
-    };
+  const clearAllFilters = () => {
+    setFilters({});
+    setSelectedFilters([]);
+    formik.setFieldValue("pattern", "");
+    clearSearchParams();
   };
 
   const handleFiltering = (filtersArg: FilterState | undefined) => {
@@ -193,19 +191,11 @@ export const Filters: React.FC<FiltersProps> = ({
     // if there's search results, filter those, if not, filter flows
     const resultsToFilter = hasSearchResults ? searchResults : flows;
 
-    // this will filter the above by status only for now
-    const filterByStatus = resultsToFilter.filter((flow: FlowSummary) => {
-      if (filtersArg?.status) {
-        return flow.status === filtersArg.status;
-      } else {
-        return true;
-      }
-    });
-    // update the list with the new filtered and searched flows
-    // if there's no search results, we will just filter by flows again
-    // flows stays constant
-    if (filterByStatus) {
-      setFilteredFlows(filterByStatus);
+    // this will filter the above by status or app type only for now
+    const filteredList = filterListByKeys(resultsToFilter);
+
+    if (filteredList) {
+      setFilteredFlows(filteredList);
     }
     if (
       !filtersArg?.status &&
@@ -217,10 +207,81 @@ export const Filters: React.FC<FiltersProps> = ({
     }
   };
 
+  useEffect(() => {
+    const { status, applicationType, serviceType }: FilterState =
+      route.url.query;
+    const filtersToAssign = {
+      status: status,
+      applicationType: applicationType,
+      serviceType: serviceType,
+    };
+    if (status || applicationType || serviceType) {
+      setFilters(filtersToAssign);
+      setSelectedFilters(Object.values(filtersToAssign));
+      handleFiltering(filtersToAssign);
+    }
+  }, []);
+
+  useEffect(() => {
+    debouncedSearch(formik.values.pattern);
+    if (formik.values.pattern) {
+      handleFiltering(filters);
+    }
+    if (!formik.values.pattern && filters) {
+      handleFiltering(filters);
+    }
+  }, [
+    formik.values.pattern,
+    search,
+    debouncedSearch,
+    results,
+    selectedFilters,
+  ]);
+
+  useEffect(() => {
+    if (clearFilters) {
+      clearAllFilters();
+    }
+  }, [clearFilters]);
+
+  const getSearchResults = () => {
+    const searchResults = results.map((result) => result.item);
+    return {
+      hasSearchResults: Boolean(searchResults[0]),
+      searchResults: searchResults,
+    };
+  };
+
+  const filterListByKeys = (recordToFilter: FlowSummary[]) => {
+    if (!selectedFilters?.[0]) return recordToFilter;
+    const filteredResults = recordToFilter.filter((flow) => {
+      return selectedFilters.every((selectedFilterValue) => {
+        // Handle status filter
+        if (
+          selectedFilterValue === "online" ||
+          selectedFilterValue === "offline"
+        )
+          return flow.status === selectedFilterValue;
+
+        // Handle applicationType (submission) filter
+        if (selectedFilterValue === "submission")
+          return flow.publishedFlows[0]?.hasSendComponent === true;
+        return true;
+      });
+    });
+    return filteredResults;
+  };
+
   const handleChange = (filterKey: FilterKeys, filterValue: FilterValues) =>
     filters?.[filterKey] === filterValue
-      ? setFilters({ ...filters, [filterKey]: undefined })
+      ? removeFilter(filterKey)
       : setFilters({ ...filters, [filterKey]: filterValue });
+
+  const removeFilter = (targetFilter: FilterKeys) => {
+    const newFilters = { ...filters };
+    delete newFilters[targetFilter];
+    setFilters(newFilters);
+  };
 
   return (
     <FiltersContainer
@@ -249,6 +310,14 @@ export const Filters: React.FC<FiltersProps> = ({
                   label={filter}
                   key={filter}
                   onDelete={() => {
+                    const newSelectedFilters =
+                      (selectedFilters.filter(
+                        (selectedFilter) =>
+                          selectedFilter !== filter &&
+                          selectedFilter !== undefined,
+                      ) as string[]) || [];
+                    console.log(newSelectedFilters);
+                    setSelectedFilters(newSelectedFilters);
                     if (filters) {
                       const deleteFilter = Object.keys(filters) as FilterKeys[];
                       const targetFilter = deleteFilter.find(
@@ -258,11 +327,14 @@ export const Filters: React.FC<FiltersProps> = ({
                       );
 
                       if (targetFilter) {
-                        setFilters({ ...filters, [targetFilter]: undefined });
-                        handleFiltering({
+                        const newFilters = { ...filters };
+                        delete newFilters[targetFilter];
+                        removeFilter(targetFilter);
+                        addToSearchParams({
                           ...filters,
                           [targetFilter]: undefined,
                         });
+                        handleFiltering(newFilters);
                       }
                     }
                   }}
@@ -303,13 +375,6 @@ export const Filters: React.FC<FiltersProps> = ({
               checked={filters?.applicationType === "submission"}
               variant="compact"
             />
-            <ChecklistItem
-              onChange={() => handleChange("applicationType", "guidance")}
-              label={"Guidance"}
-              id={"guidance"}
-              checked={filters?.applicationType === "guidance"}
-              variant="compact"
-            />
           </FiltersColumn>
           <FiltersColumn>
             <Typography variant="h5" pb={0.5}>
@@ -339,7 +404,11 @@ export const Filters: React.FC<FiltersProps> = ({
               if (filters) {
                 handleFiltering(filters);
                 addToSearchParams(filters);
-                setSelectedFilters(Object.values(filters));
+                setSelectedFilters(
+                  Object.values(filters).filter(
+                    (values) => values !== undefined,
+                  ),
+                );
               }
             }}
           >

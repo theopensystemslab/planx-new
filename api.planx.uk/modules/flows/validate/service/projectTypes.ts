@@ -67,4 +67,22 @@ const getProjectTypeVals = (flowGraph: FlowGraph): string[] => {
   return answerVals;
 };
 
-export { validateProjectTypes };
+const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
+  const applicationTypeChecklistNodes = Object.entries(flowGraph).filter(
+    (entry) =>
+      entry[1].data?.fn === "application.type",
+  );
+
+  const answerVals: string[] = [];
+  applicationTypeChecklistNodes.map(([_nodeId, node]) =>
+    node.edges?.map((edgeId) => {
+      if (typeof flowGraph[edgeId]?.data?.val === "string") {
+        answerVals.push(flowGraph[edgeId]?.data?.val);
+      }
+    }),
+  );
+
+  return answerVals;
+};
+
+export { validateProjectTypes, getApplicationTypeVals };

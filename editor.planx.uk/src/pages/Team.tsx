@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import ClearIcon from "@mui/icons-material/Clear";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -8,20 +9,22 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { filter } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { inputFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
+import { SortableFields, SortControl } from "ui/editor/SortControl";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
-import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -72,7 +75,7 @@ const FlowCardContent = styled(Box)(({ theme }) => ({
   width: "100%",
 }));
 
-const DashboardLink = styled(Link)(({ theme }) => ({
+const DashboardLink = styled(Link)(() => ({
   position: "absolute",
   left: 0,
   top: 0,
@@ -188,6 +191,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
       });
   };
 
+  const isPublished = Boolean(flow.publishedFlows[0]);
+  const isSubmissionService =
+    isPublished && flow.publishedFlows[0].hasSendComponent;
+
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
@@ -222,6 +229,14 @@ const FlowItem: React.FC<FlowItemProps> = ({
             <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
               {flow.status}
             </FlowTag>
+            {isSubmissionService && (
+              <FlowTag
+                tagType={FlowTagType.ServiceType}
+                statusVariant={statusVariant}
+              >
+                {"Submission"}
+              </FlowTag>
+            )}
           </Box>
           <DashboardLink href={`./${flow.slug}`} prefetch={false} />
           {flow.description && (
@@ -380,18 +395,24 @@ const Team: React.FC = () => {
   const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [triggerClearFilters, setTriggerClearFilters] =
+    useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: { pattern: "", keys: ["name"] },
     onSubmit: () => {},
   });
 
+  const haveFlowsBeenFiltered = filteredFlows?.length !== flows?.length;
+
+  useEffect(() => {
+    // resets trigger when filters cleared
+    if (!haveFlowsBeenFiltered) {
+      setTriggerClearFilters(false);
+    }
+  }, [haveFlowsBeenFiltered]);
+
   const sortOptions: SortableFields<FlowSummary>[] = [
-    {
-      displayName: "Name",
-      fieldName: "name",
-      directionNames: { asc: "A - Z", desc: "Z - A" },
-    },
     {
       displayName: "Last updated",
       fieldName: "updatedAt",
@@ -401,6 +422,11 @@ const Team: React.FC = () => {
       displayName: "Last published",
       fieldName: `publishedFlows.0.publishedAt`,
       directionNames: { asc: "Oldest first", desc: "Newest first" },
+    },
+    {
+      displayName: "Name",
+      fieldName: "name",
+      directionNames: { asc: "A - Z", desc: "Z - A" },
     },
   ];
   const fetchFlows = useCallback(() => {
@@ -425,10 +451,9 @@ const Team: React.FC = () => {
 
   const numberOfServices = filteredFlows?.length || 0;
   const pluralisedService = numberOfServices === 1 ? "service" : "services";
-  const listTitle =
-    filteredFlows === flows
-      ? "Showing all services"
-      : `Showing ${numberOfServices} ${pluralisedService}`;
+  const listTitle = haveFlowsBeenFiltered
+    ? "Showing all services"
+    : `Showing ${numberOfServices} ${pluralisedService}`;
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
@@ -463,33 +488,50 @@ const Team: React.FC = () => {
                 <strong>Search</strong>
               </InputRowLabel>
               <InputRowItem>
-                <Input
-                  sx={{ borderColor: "black" }}
-                  name="search"
-                  id="search"
-                  onChange={(e) => {
-                    formik.setFieldValue("pattern", e.target.value);
-                  }}
-                />
+                <Box sx={{ position: "relative" }}>
+                  <Input
+                    sx={{
+                      borderColor: (theme) => theme.palette.border.input,
+                      pr: 5,
+                    }}
+                    name="search"
+                    id="search"
+                    value={formik.values.pattern}
+                    onChange={(e) => {
+                      formik.setFieldValue("pattern", e.target.value);
+                    }}
+                  />
+                  {formik.values.pattern && (
+                    <IconButton
+                      aria-label="clear search"
+                      onClick={() => formik.setFieldValue("pattern", "")}
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        right: (theme) => theme.spacing(1),
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        padding: 0.5,
+                        zIndex: 1,
+                      }}
+                    >
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                </Box>
               </InputRowItem>
             </InputRow>
           </Box>
         </Box>
-        {hasFeatureFlag("SORT_FLOWS") && flows && (
-        <SortControl<FlowSummary>
-          records={flows}
-          setRecords={setFlows}
-          sortOptions={sortOptions}
-        />
-      )}
-      {flows && (
+        {flows && (
           <Filters
             flows={flows}
             setFilteredFlows={setFilteredFlows}
             formik={formik}
+            clearFilters={triggerClearFilters}
           />
         )}
-        {teamHasFlows && (
+        {teamHasFlows ? (
           <>
             <Box
               sx={{
@@ -499,10 +541,38 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              <Typography variant="h3" component="h2">
-                {listTitle}
-              </Typography>
-              Order toggle
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Typography variant="h3" component="h2">
+                  {listTitle}
+                </Typography>
+                {haveFlowsBeenFiltered && (
+                  <Button
+                    onClick={() => setTriggerClearFilters(true)}
+                    variant="link"
+                  >
+                    Clear filters
+                  </Button>
+                )}
+              </Box>
+              {hasFeatureFlag("SORT_FLOWS") && flows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={filteredFlows}
+                    setRecords={setFilteredFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
             </Box>
 
             <DashboardList>
@@ -520,6 +590,23 @@ const Team: React.FC = () => {
               ))}
             </DashboardList>
           </>
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              gap: 2,
+              minHeight: "50px",
+            }}
+          >
+            <Typography variant="h3" textAlign="center">
+              No results
+            </Typography>
+            <Button onClick={() => setTriggerClearFilters(true)} variant="link">
+              Clear filters
+            </Button>
+          </Box>
         )}
         {flows && !flows.length && <GetStarted flows={flows} />}
       </Container>
