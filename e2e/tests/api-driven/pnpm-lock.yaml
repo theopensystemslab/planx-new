@@ -9,8 +9,8 @@ dependencies:
     specifier: ^11.1.1
     version: 11.1.1
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#574df5e
-    version: github.com/theopensystemslab/planx-core/574df5e
+    specifier: git+https://github.com/theopensystemslab/planx-core#ae6e7f4
+    version: github.com/theopensystemslab/planx-core/ae6e7f4
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -1137,7 +1137,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
     dev: false
 
   /convert-source-map@1.9.0:
@@ -3052,8 +3052,8 @@ packages:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/574df5e:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/574df5e}
+  github.com/theopensystemslab/planx-core/ae6e7f4:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ae6e7f4}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
