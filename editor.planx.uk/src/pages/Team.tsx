@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -96,6 +97,14 @@ const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   overflow: "hidden",
   borderRadius: "0px 0px 4px 4px",
+  "& > button": {
+    padding: theme.spacing(0.25, 1),
+    width: "100%",
+    justifyContent: "flex-start",
+    "& > svg": {
+      display: "none",
+    },
+  },
 }));
 
 const Confirm = ({
@@ -310,7 +319,14 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 error: true,
               },
             ]}
-          />
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
+              <MoreHoriz sx={{ fontSize: "1.4em" }} />
+              <Typography variant="body2" fontSize="small">
+                <strong>Menu</strong>
+              </Typography>
+            </Box>
+          </StyledSimpleMenu>
         )}
       </FlowCard>
     </>
