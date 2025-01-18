@@ -1,6 +1,7 @@
 import { object, string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { FieldValidationSchema } from "../shared/Schema/model";
 
 export interface NumberInput extends BaseNodeData {
   title: string;
@@ -33,15 +34,10 @@ export const parseNumberInput = (
   ...parseBaseNodeData(data),
 });
 
-type ValidationSchema = {
-  data: NumberInput;
-  required: boolean;
-};
-
 export const numberInputValidationSchema = ({
   data,
   required,
-}: ValidationSchema) =>
+}: FieldValidationSchema<NumberInput>) =>
   string()
     .when([], {
       is: () => required,
@@ -81,7 +77,7 @@ export const numberInputValidationSchema = ({
       },
     });
 
-export const validationSchema = (args: ValidationSchema) =>
+export const validationSchema = (args: FieldValidationSchema<NumberInput>) =>
   object({
     value: numberInputValidationSchema(args),
   });

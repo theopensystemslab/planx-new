@@ -123,15 +123,14 @@ export const getLayout = ({
   return ChecklistLayout.Basic;
 };
 
-interface ValidationSchema {
-  data: Checklist;
-  required: boolean;
-}
-
 export const checklistValidationSchema = ({
   data: { allRequired, options, groupedOptions },
   required,
-}: ValidationSchema) => {
+}: {
+  // Cannot use FieldValidationSchema<ChecklistInput> as this is a simplified representation (i.e. no groups)
+  data: Checklist;
+  required: boolean;
+}) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   return array()

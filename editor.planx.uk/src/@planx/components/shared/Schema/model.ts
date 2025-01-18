@@ -40,17 +40,14 @@ interface ChecklistInput {
 export const questionInputValidationSchema = ({
   data,
   required,
-}: {
-  data: QuestionInput;
-  required: boolean;
-}) =>
+}: FieldValidationSchema<QuestionInput>) =>
   string()
     .when([], {
       is: () => required,
       then: string().required("Select your answer before continuing"),
       otherwise: string().notRequired(),
     })
-    .test("is-valid-option", "Invalid selection", (value) => {
+    .test("isValidOption", "Invalid selection", (value) => {
       if (!required && !value) return true;
 
       return data.options.some(
@@ -58,15 +55,18 @@ export const questionInputValidationSchema = ({
       );
     });
 
-interface ValidationSchema {
-  data: MapInput;
+/**
+ * Describes the input of function which returns a Yup validation schema for a field
+ */
+export interface FieldValidationSchema<T extends Omit<Field["data"], "fn">> {
+  data: T;
   required: boolean;
 }
 
 export const mapValidationSchema = ({
   data: { mapOptions },
   required,
-}: ValidationSchema) =>
+}: FieldValidationSchema<MapInput>) =>
   array()
     .when([], {
       is: () => required,

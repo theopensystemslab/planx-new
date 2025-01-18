@@ -2,6 +2,7 @@ import { isValid, parseISO } from "date-fns";
 import { object, string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { FieldValidationSchema } from "../shared/Schema/model";
 
 // Expected format: YYYY-MM-DD
 export type UserData = string;
@@ -112,15 +113,13 @@ export const dateSchema = ({ required }: { required: boolean }) => {
     );
 };
 
-interface ValidationSchema {
-  data: DateInput;
-  required: boolean;
-}
-
 /**
  * Validates that date is both valid and fits within the provided min/max
  */
-export const dateRangeSchema = ({ data, required }: ValidationSchema) =>
+export const dateRangeSchema = ({
+  data,
+  required,
+}: FieldValidationSchema<DateInput>) =>
   dateSchema({ required })
     .when([], {
       is: () => required,
