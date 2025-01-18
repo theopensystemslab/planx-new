@@ -36,20 +36,51 @@ interface ChecklistInput {
 /**
  * As above, we need a simplified validation schema for QuestionsInputs
  */
-const questionInputValidationSchema = (data: QuestionInput) =>
-  string()
-    .oneOf(data.options.map((option) => option.data.val || option.data.text))
-    .required("Select your answer before continuing");
 
-const mapValidationSchema = ({ mapOptions }: MapField["data"]) =>
+const questionInputValidationSchema = ({
+  data,
+  required,
+}: {
+  data: QuestionInput;
+  required: boolean;
+}) =>
+  string()
+    .when([], {
+      is: () => required,
+      then: string().required("Select your answer before continuing"),
+      otherwise: string().notRequired(),
+    })
+    .test("is-valid-option", "Invalid selection", (value) => {
+      if (!required && !value) return true;
+
+      return data.options.some(
+        (option) => value === (option.data.val || option.data.text),
+      );
+    });
+
+interface ValidationSchema {
+  data: MapInput;
+  required: boolean;
+}
+
+const mapValidationSchema = ({
+  data: { mapOptions },
+  required,
+}: ValidationSchema) =>
   array()
-    .required()
+    .when([], {
+      is: () => required,
+      then: array().required(),
+      otherwise: array().notRequired(),
+    })
     .test({
       name: "atLeastOneFeature",
       message: `Draw at least one ${
         mapOptions?.drawType?.toLocaleLowerCase() || "feature"
       } on the map`,
       test: (features?: Array<Feature>) => {
+        if (!required) return true;
+
         return Boolean(features && features?.length > 0);
       },
     });
@@ -182,28 +213,37 @@ const generateValidationSchemaForFields = (
 ): ObjectSchema<Record<Field["data"]["fn"], BaseSchema>> => {
   const fieldSchemas: { [key: string]: BaseSchema } = {};
 
-  fields.forEach(({ data, type }) => {
+  fields.forEach(({ data, type, required = true }) => {
     switch (type) {
       case "text":
-        fieldSchemas[data.fn] = textInputValidationSchema(data);
+        fieldSchemas[data.fn] = textInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "number":
-        fieldSchemas[data.fn] = numberInputValidationSchema(data);
+        fieldSchemas[data.fn] = numberInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "question":
-        fieldSchemas[data.fn] = questionInputValidationSchema(data);
+        fieldSchemas[data.fn] = questionInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "checklist":
-        fieldSchemas[data.fn] = checklistValidationSchema(data);
+        fieldSchemas[data.fn] = checklistValidationSchema({ data, required });
         break;
       case "date":
-        fieldSchemas[data.fn] = dateValidationSchema(data);
+        fieldSchemas[data.fn] = dateValidationSchema({ data, required });
         break;
       case "address":
         fieldSchemas[data.fn] = addressValidationSchema();
         break;
       case "map":
-        fieldSchemas[data.fn] = mapValidationSchema(data);
+        fieldSchemas[data.fn] = mapValidationSchema({ data, required });
         break;
       default:
         return exhaustiveCheck(type);

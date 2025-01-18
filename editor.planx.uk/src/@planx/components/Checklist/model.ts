@@ -123,19 +123,29 @@ export const getLayout = ({
   return ChecklistLayout.Basic;
 };
 
+interface ValidationSchema {
+  data: Checklist;
+  required: boolean;
+}
+
 export const checklistValidationSchema = ({
-  allRequired,
-  options,
-  groupedOptions,
-}: Checklist) => {
+  data: { allRequired, options, groupedOptions },
+  required,
+}: ValidationSchema) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   return array()
-    .required()
+    .when([], {
+      is: () => required,
+      then: array().required(),
+      otherwise: array().notRequired(),
+    })
     .test({
       name: "atLeastOneChecked",
       message: "Select at least one option",
       test: (checked?: Array<string>) => {
+        if (!required) return true;
+
         return Boolean(checked && checked.length > 0);
       },
     })
@@ -143,9 +153,9 @@ export const checklistValidationSchema = ({
       name: "notAllChecked",
       message: "All options must be checked",
       test: (checked?: Array<string>) => {
-        if (!allRequired) {
-          return true;
-        }
+        if (!required) return true;
+        if (!allRequired) return true;
+
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },

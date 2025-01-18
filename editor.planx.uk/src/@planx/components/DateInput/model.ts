@@ -1,5 +1,5 @@
 import { isValid, parseISO } from "date-fns";
-import { object, SchemaOf, string } from "yup";
+import { object, string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 
@@ -100,30 +100,37 @@ export const dateSchema = () => {
     );
 };
 
+interface ValidationSchema {
+  data: DateInput;
+  required: boolean;
+}
+
 /**
  * Validates that date is both valid and fits within the provided min/max
  */
-export const dateValidationSchema: (input: DateInput) => SchemaOf<string> = (
-  params,
-) =>
+export const dateValidationSchema = ({ data, required }: ValidationSchema) =>
   dateSchema()
-    .required("Enter a valid date in DD.MM.YYYY format")
+    .when([], {
+      is: () => required,
+      then: string().required("Enter a valid date in DD.MM.YYYY format"),
+      otherwise: string().notRequired(),
+    })
     .test({
       name: "too soon",
-      message: `Enter a date later than ${
-        params.min && displayDate(params.min)
-      }`,
-      test: (date: string | undefined) => {
-        return Boolean(date && !(params.min && date < params.min));
+      message: `Enter a date later than ${data.min && displayDate(data.min)}`,
+      test: (date) => {
+        if (!required && !date) return true;
+
+        return Boolean(date && !(data.min && date < data.min));
       },
     })
     .test({
       name: "too late",
-      message: `Enter a date earlier than ${
-        params.max && displayDate(params.max)
-      }`,
-      test: (date: string | undefined) => {
-        return Boolean(date && !(params.max && date > params.max));
+      message: `Enter a date earlier than ${data.max && displayDate(data.max)}`,
+      test: (date) => {
+        if (!required && !date) return true;
+
+        return Boolean(date && !(data.max && date > data.max));
       },
     });
 

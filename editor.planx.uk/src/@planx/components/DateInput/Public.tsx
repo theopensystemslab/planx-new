@@ -30,7 +30,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      date: dateValidationSchema(props),
+      date: dateValidationSchema({ data: props, required: true }),
     }),
   });
 

@@ -47,7 +47,7 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      checked: checklistValidationSchema(props),
+      checked: checklistValidationSchema({ data: props, required: true }),
     }),
   });
 
