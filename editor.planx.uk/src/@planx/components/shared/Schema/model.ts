@@ -37,7 +37,7 @@ interface ChecklistInput {
  * As above, we need a simplified validation schema for QuestionsInputs
  */
 
-const questionInputValidationSchema = ({
+export const questionInputValidationSchema = ({
   data,
   required,
 }: {
@@ -63,7 +63,7 @@ interface ValidationSchema {
   required: boolean;
 }
 
-const mapValidationSchema = ({
+export const mapValidationSchema = ({
   data: { mapOptions },
   required,
 }: ValidationSchema) =>
@@ -79,9 +79,12 @@ const mapValidationSchema = ({
         mapOptions?.drawType?.toLocaleLowerCase() || "feature"
       } on the map`,
       test: (features?: Array<Feature>) => {
-        if (!required) return true;
+        if (!required && !features?.length) return true;
+        if (!features || !features.length) return false;
 
-        return Boolean(features && features?.length > 0);
+        const isGeoJSON = (input: Feature) => input?.type === "Feature";
+
+        return features.every(isGeoJSON);
       },
     });
 

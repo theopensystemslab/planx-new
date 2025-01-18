@@ -43,12 +43,16 @@ describe("parseDate helper function", () => {
 
 describe("dateSchema", () => {
   test("basic validation", async () => {
-    expect(await dateSchema().isValid("2021-03-23")).toBe(true);
-    expect(await dateSchema().isValid("2021-23-03")).toBe(false);
+    expect(await dateSchema({ required: true }).isValid("2021-03-23")).toBe(
+      true,
+    );
+    expect(await dateSchema({ required: true }).isValid("2021-23-03")).toBe(
+      false,
+    );
   });
 
   const validate = async (date?: string) =>
-    await dateSchema()
+    await dateSchema({ required: true })
       .validate(date)
       .catch((err) => err.errors);
 
@@ -130,6 +134,28 @@ describe("dateValidationSchema", () => {
         required: true,
       }).isValid("1980-06-15"),
     ).toBe(false);
+  });
+
+  describe("optional fields", () => {
+    const validationSchema = dateRangeSchema({
+      data: {
+        title: "test",
+        min: "1990-01-01",
+        max: "1999-12-31",
+      },
+      required: false,
+    });
+
+    it("does not validate fields without a value", async () => {
+      const result = await validationSchema.validate(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it("validates optional fields with a value", async () => {
+      await expect(() =>
+        validationSchema.validate("2023-02-29"),
+      ).rejects.toThrow(/Enter a valid date in DD.MM.YYYY format/);
+    });
   });
 });
 

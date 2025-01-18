@@ -68,25 +68,35 @@ export const parseDate = (date?: string) => {
 /**
  * Validates that a given string is a date in the correct format
  */
-export const dateSchema = () => {
+export const dateSchema = ({ required }: { required: boolean }) => {
   return string()
     .test("missing day", "Date must include a day", (date?: string) => {
+      if (!required && !date) return true;
+
       const { day } = parseDate(date);
       return day !== undefined;
     })
     .test("missing month", "Date must include a month", (date?: string) => {
+      if (!required && !date) return true;
+
       const { month } = parseDate(date);
       return month !== undefined;
     })
     .test("missing year", "Date must include a year", (date?: string) => {
+      if (!required && !date) return true;
+
       const { year } = parseDate(date);
       return year !== undefined;
     })
     .test("invalid day", "Day must be valid", (date?: string) => {
+      if (!required && !date) return true;
+
       const { day } = parseDate(date);
       return Boolean(day && day <= 31);
     })
     .test("invalid month", "Month must be valid", (date?: string) => {
+      if (!required && !date) return true;
+
       const { month } = parseDate(date);
       return Boolean(month && month <= 12);
     })
@@ -94,6 +104,8 @@ export const dateSchema = () => {
       "valid",
       "Enter a valid date in DD.MM.YYYY format",
       (date: string | undefined) => {
+        if (!required && !date) return true;
+
         // test runs regardless of required status, so don't fail it if it's undefined
         return Boolean(!date || isDateValid(date));
       },
@@ -108,12 +120,14 @@ interface ValidationSchema {
 /**
  * Validates that date is both valid and fits within the provided min/max
  */
-export const dateValidationSchema = ({ data, required }: ValidationSchema) =>
-  dateSchema()
+export const dateRangeSchema = ({ data, required }: ValidationSchema) =>
+  dateSchema({ required })
     .when([], {
       is: () => required,
-      then: string().required("Enter a valid date in DD.MM.YYYY format"),
-      otherwise: string().notRequired(),
+      then: dateSchema({ required }).required(
+        "Enter a valid date in DD.MM.YYYY format",
+      ),
+      otherwise: dateSchema({ required }).notRequired(),
     })
     .test({
       name: "too soon",
@@ -147,7 +161,7 @@ export const parseDateInput = (
 
 export const editorValidationSchema = () =>
   object({
-    min: dateSchema().test({
+    min: dateSchema({ required: true }).test({
       name: "Min less than max",
       message: "Min must be less than max",
       test(date: string | undefined) {
@@ -155,7 +169,7 @@ export const editorValidationSchema = () =>
         return date < this.parent.max;
       },
     }),
-    max: dateSchema().test({
+    max: dateSchema({ required: true }).test({
       name: "Max greater than min",
       message: "Max must be greater than min",
       test(date: string | undefined) {

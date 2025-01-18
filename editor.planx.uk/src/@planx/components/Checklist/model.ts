@@ -144,7 +144,7 @@ export const checklistValidationSchema = ({
       name: "atLeastOneChecked",
       message: "Select at least one option",
       test: (checked?: Array<string>) => {
-        if (!required) return true;
+        if (!required && !checked?.length) return true;
 
         return Boolean(checked && checked.length > 0);
       },
@@ -153,7 +153,7 @@ export const checklistValidationSchema = ({
       name: "notAllChecked",
       message: "All options must be checked",
       test: (checked?: Array<string>) => {
-        if (!required) return true;
+        if (!required && !checked?.length) return true;
         if (!allRequired) return true;
 
         const allChecked = checked && checked.length === flatOptions.length;
