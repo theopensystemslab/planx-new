@@ -116,7 +116,7 @@ export const dateSchema = ({ required }: { required: boolean }) => {
 /**
  * Validates that date is both valid and fits within the provided min/max
  */
-export const dateRangeSchema = ({
+export const dateInputValidationSchema = ({
   data,
   required,
 }: FieldValidationSchema<DateInput>) =>
@@ -124,7 +124,7 @@ export const dateRangeSchema = ({
     .when([], {
       is: () => required,
       then: dateSchema({ required }).required(
-        "Enter a valid date in DD.MM.YYYY format",
+        "Enter a valid date in DD.MM.YYYY format"
       ),
       otherwise: dateSchema({ required }).notRequired(),
     })

@@ -123,7 +123,7 @@ export const getLayout = ({
   return ChecklistLayout.Basic;
 };
 
-export const checklistValidationSchema = ({
+export const checklistInputValidationSchema = ({
   data: { allRequired, options, groupedOptions },
   required,
 }: {

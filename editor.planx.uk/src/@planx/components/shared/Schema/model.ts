@@ -7,8 +7,8 @@ import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
-import { checklistValidationSchema } from "../../Checklist/model";
-import { DateInput, dateValidationSchema } from "../../DateInput/model";
+import { checklistInputValidationSchema } from "../../Checklist/model";
+import { DateInput, dateInputValidationSchema } from "../../DateInput/model";
 import {
   NumberInput,
   numberInputValidationSchema,
@@ -63,7 +63,7 @@ export interface FieldValidationSchema<T extends Omit<Field["data"], "fn">> {
   required: boolean;
 }
 
-export const mapValidationSchema = ({
+export const mapInputValidationSchema = ({
   data: { mapOptions },
   required,
 }: FieldValidationSchema<MapInput>) =>
@@ -237,16 +237,19 @@ const generateValidationSchemaForFields = (
         });
         break;
       case "checklist":
-        fieldSchemas[data.fn] = checklistValidationSchema({ data, required });
+        fieldSchemas[data.fn] = checklistInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "date":
-        fieldSchemas[data.fn] = dateValidationSchema({ data, required });
+        fieldSchemas[data.fn] = dateInputValidationSchema({ data, required });
         break;
       case "address":
         fieldSchemas[data.fn] = addressValidationSchema();
         break;
       case "map":
-        fieldSchemas[data.fn] = mapValidationSchema({ data, required });
+        fieldSchemas[data.fn] = mapInputValidationSchema({ data, required });
         break;
       default:
         return exhaustiveCheck(type);

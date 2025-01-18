@@ -1,4 +1,7 @@
-import { mapValidationSchema, questionInputValidationSchema } from "./model";
+import {
+  mapInputValidationSchema,
+  questionInputValidationSchema,
+} from "./model";
 
 describe("QuestionField - validation", () => {
   describe("optional fields", () => {
@@ -28,7 +31,7 @@ describe("QuestionField - validation", () => {
 
 describe("MapField - validation", () => {
   describe("optional fields", () => {
-    const validationSchema = mapValidationSchema({
+    const validationSchema = mapInputValidationSchema({
       data: {
         title: "test",
         fn: "test",
