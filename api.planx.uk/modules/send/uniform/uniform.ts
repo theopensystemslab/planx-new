@@ -131,10 +131,10 @@ export const sendToUniform: SendIntegrationController = async (
     const errorMessage = isAxiosError(error)
       ? JSON.stringify(error.response?.data)
       : (error as Error).message;
-    return next({
-      error,
-      message: `Failed to send to Uniform (${localAuthority}): ${errorMessage}`,
-    });
+
+    throw Error(
+      `Failed to send to Uniform (${localAuthority}): ${errorMessage}`,
+    );
   }
 };
 

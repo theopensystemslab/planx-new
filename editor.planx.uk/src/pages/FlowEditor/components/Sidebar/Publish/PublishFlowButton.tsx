@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
+import { logger } from "airbrake";
 import { AxiosError } from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
@@ -66,6 +67,7 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
 
       if (error instanceof AxiosError) {
         alert(error.response?.data?.error);
+        logger.notify(error);
       } else {
         alert(
           `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,

@@ -1,11 +1,12 @@
 import { SendIntegration } from "@opensystemslab/planx-core/types";
-import { waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
+import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
-import { it,vi } from "vitest";
+import { it, vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
@@ -15,6 +16,10 @@ import SendComponent from "./Public";
 const { getState, setState } = useStore;
 
 let initialState: FullStore;
+
+vi.spyOn(ReactNavi, "useNavigation").mockImplementation(
+  () => ({ navigate: vi.fn() }) as any,
+);
 
 /**
  * Adds a small tick to allow MUI to render (e.g. card transitions)

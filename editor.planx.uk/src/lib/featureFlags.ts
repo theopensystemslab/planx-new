@@ -1,5 +1,5 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["FEE_BREAKDOWN"] as const;
+const AVAILABLE_FEATURE_FLAGS = ["FEE_BREAKDOWN", "SORT_FLOWS"] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
