@@ -54,51 +54,50 @@ const mapValidationSchema = ({ mapOptions }: MapField["data"]) =>
       },
     });
 
-export type TextField = {
+type BaseField<T> = {
+  required?: boolean;
+  data: T & { fn: string };
+};
+
+export interface TextField extends BaseField<TextInput> {
   type: "text";
-  data: TextInput & { fn: string };
-};
+}
 
-export type NumberField = {
+export interface NumberField extends BaseField<NumberInput> {
   type: "number";
-  data: NumberInput & { fn: string };
-};
+}
 
-export type QuestionField = {
+export interface QuestionField extends BaseField<QuestionInput> {
   type: "question";
-  data: QuestionInput & { fn: string };
-};
+}
 
-export type ChecklistField = {
+export interface ChecklistField extends BaseField<ChecklistInput> {
   type: "checklist";
-  required?: true;
-  data: ChecklistInput & { fn: string };
-};
+}
 
-export type DateField = {
+export interface DateField extends BaseField<DateInput> {
   type: "date";
-  data: DateInput & { fn: string };
-};
+}
 
-export type AddressField = {
+export interface AddressField extends BaseField<AddressInput> {
   type: "address";
-  data: AddressInput & { fn: string };
 };
 
-export type MapField = {
-  type: "map";
-  data: {
-    title: string;
-    description?: string;
-    fn: string;
-    mapOptions?: {
-      basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
-      drawType?: "Point" | "Polygon";
-      drawColor?: string;
-      drawMany?: boolean;
-    };
+type MapInput = {
+  title: string;
+  description?: string;
+  fn: string;
+  mapOptions?: {
+    basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
+    drawType?: "Point" | "Polygon";
+    drawColor?: string;
+    drawMany?: boolean;
   };
 };
+
+export interface MapField extends BaseField<MapInput> {
+  type: "map";
+}
 
 /**
  * Represents the input types available in the List component

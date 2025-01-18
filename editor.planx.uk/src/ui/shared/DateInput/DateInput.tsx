@@ -13,6 +13,7 @@ export interface Props {
   bordered?: boolean;
   id?: string;
   onChange: (newDate: string, eventType: string) => void;
+  required?: boolean;
 }
 
 const INPUT_DATE_WIDTH = "65px";
@@ -71,6 +72,7 @@ export default function DateInput(props: Props): FCReturn {
                 ev.type,
               );
             }}
+            required={props.required}
           />
         </Box>
         <Box sx={{ width: INPUT_DATE_WIDTH }}>
@@ -98,6 +100,7 @@ export default function DateInput(props: Props): FCReturn {
                 ev.type,
               );
             }}
+            required={props.required}
           />
         </Box>
         <Box sx={{ width: INPUT_YEAR_WIDTH }}>
@@ -119,6 +122,7 @@ export default function DateInput(props: Props): FCReturn {
                 ev.type,
               );
             }}
+            required={props.required}
           />
         </Box>
       </Root>
