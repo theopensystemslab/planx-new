@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -40,7 +40,7 @@ describe("Checklist editor component", () => {
       </DndProvider>,
     );
 
-    await waitFor(() => user.click(screen.getByLabelText("Expandable")));
+    await user.click(screen.getByLabelText("Expandable"));
 
     const groupedOptionsEditor = await screen.findByPlaceholderText(
       "Section Title",
@@ -61,9 +61,39 @@ describe("Checklist editor component", () => {
     expect(optionsEditor).toBeInTheDocument();
   });
 
-  it.todo("adds a new section when the 'add new group' button is clicked");
+  it("adds a new section when the 'add new group' button is clicked", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} />
+      </DndProvider>,
+    );
 
-  it.todo(
-    "shows the 'add exclusive or' button only when an option has been added already",
-  );
+    await user.click(screen.getByLabelText("Expandable"));
+
+    await screen.findByPlaceholderText("Section Title");
+
+    await user.click(screen.getByRole("button", { name: /add new group/i }));
+
+    expect(await screen.findAllByPlaceholderText("Section Title")).toHaveLength(
+      2,
+    );
+  });
+
+  it("shows the 'add exclusive or' button only when an option has been added already", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} />
+      </DndProvider>,
+    );
+
+    expect(
+      screen.queryByRole("button", { name: /add "or" option/i }),
+    ).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /add new option/i }));
+
+    expect(
+      screen.queryByRole("button", { name: /add "or" option/i }),
+    ).toBeInTheDocument();
+  });
 });
