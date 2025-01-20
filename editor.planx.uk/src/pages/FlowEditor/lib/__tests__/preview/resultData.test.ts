@@ -61,7 +61,7 @@ describe("Computing result data based on collected flags", () => {
       category: category,
       color: "#000000",
       text: collectedPPFlags[0],
-      value: "PLANNING_PERMISSION_REQUIRED",
+      value: "flag.pp.permissionNeeded",
       description:
         "It looks like the proposed changes may require planning permission.",
     });
