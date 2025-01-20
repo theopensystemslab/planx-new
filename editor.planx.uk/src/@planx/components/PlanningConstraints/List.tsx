@@ -172,7 +172,7 @@ function ConstraintListItem({ children, ...props }: ConstraintListItemProps) {
   // Whether to show the button to the override modal
   const showOverrideButton =
     hasPlanningData && // skip teams that don't publish via Planning Data eg Braintree
-    !props.fn.startsWith("article4") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
+    !props.fn.startsWith("articleFour") && // skip A4s (and therefore CAZs) because we can't confidently update granular passport vars based on entity data
     props.value && // skip negative constraints that don't apply to this property
     Boolean(props.data?.length); // skip any positive constraints that don't have individual linked entities
 

@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FormikErrors, FormikValues, useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -8,11 +9,11 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
@@ -67,15 +68,16 @@ export const Question: React.FC<Props> = (props) => {
     validate: ({ options, ...values }) => {
       const errors: FormikErrors<FormikValues> = {};
       if (values.fn && !options.some((option) => option.data.val)) {
-        errors.fn =
-          "At least one option must set a data value when the question has a data field";
+        errors.fn = "At least one option must also set a data field";
       }
       return errors;
     },
   });
 
   const schema = useStore().getFlowSchema();
-  const initialOptionVals = formik.initialValues.options?.map((option) => option.data?.val);
+  const initialOptionVals = formik.initialValues.options?.map(
+    (option) => option.data?.val,
+  );
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -116,11 +118,13 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <DataFieldAutocomplete
-              schema={schema?.nodes}
-              value={formik.values.fn}
-              onChange={(value) => formik.setFieldValue("fn", value)}
-            />
+            <ErrorWrapper error={formik.errors.fn}>
+              <DataFieldAutocomplete
+                schema={schema?.nodes}
+                value={formik.values.fn}
+                onChange={(value) => formik.setFieldValue("fn", value)}
+              />
+            </ErrorWrapper>
             <InputRow>
               <Switch
                 checked={formik.values.neverAutoAnswer}
@@ -151,9 +155,13 @@ export const Question: React.FC<Props> = (props) => {
               }) as Option
             }
             Editor={QuestionOptionsEditor}
-            editorExtraProps={{ 
-              showValueField: !!formik.values.fn, 
-              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+            editorExtraProps={{
+              showValueField: !!formik.values.fn,
+              schema: getOptionsSchemaByFn(
+                formik.values.fn,
+                schema?.options,
+                initialOptionVals,
+              ),
             }}
           />
         </ModalSectionContent>

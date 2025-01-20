@@ -80,8 +80,8 @@ export default {
       ],
       category: "Heritage and conservation",
     },
-    article4: {
-      fn: "article4",
+    articleFour: {
+      fn: "articleFour",
       value: true,
       text: "is subject to local permitted development restrictions (known as Article 4 directions)",
       data: [
@@ -166,8 +166,8 @@ export default {
       text: "is not in an Ancient Semi-Natural Woodland (ASNW)",
       category: "Ecology",
     },
-    "article4.lambeth.caz": {
-      fn: "article4.caz",
+    "articleFour.lambeth.caz": {
+      fn: "articleFour.caz",
       value: true,
       text: "is in the Central Activities Zone",
       data: [
@@ -190,7 +190,7 @@ export default {
     },
   },
   metadata: {
-    article4: {
+    articleFour: {
       "entry-date": "",
       "start-date": "",
       "end-date": "",
@@ -218,7 +218,7 @@ export default {
       "licence-text":
         "Licensed under the [Open Government Licence v.3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).",
     },
-    "article4.caz": {
+    "articleFour.caz": {
       "entry-date": "",
       "start-date": "",
       "end-date": "",

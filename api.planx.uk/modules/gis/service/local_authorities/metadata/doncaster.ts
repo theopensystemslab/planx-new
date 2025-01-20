@@ -11,11 +11,11 @@ https://www.doncaster.gov.uk/services/planning/houses-in-multiple-occupation-art
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "article4.doncaster.hmo": "Article 4 (HMO) Boundary", // https://www.planning.data.gov.uk/entity/6100030/
-      "article4.doncaster.demolition": "Article 4 (DSA) Boundary", // https://www.planning.data.gov.uk/entity/6100031/
+      "articleFour.doncaster.hmo": "Article 4 (HMO) Boundary", // https://www.planning.data.gov.uk/entity/6100030/
+      "articleFour.doncaster.demolition": "Article 4 (DSA) Boundary", // https://www.planning.data.gov.uk/entity/6100031/
     },
   },
 };

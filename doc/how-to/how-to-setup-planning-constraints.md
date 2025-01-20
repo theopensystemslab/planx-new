@@ -3,7 +3,7 @@
 ## Context 🖼️
 Planx queries planning.data.gov.uk to fetch data about constraints for councils participating in ODP. The ability to query constraints via the Planning Constraints component in Planx is disabled by default for new teams. This is to prevent the component displaying "false negatives" for early testers - eg saying that the site does not overlap with any constraints, when actually there isn't yet a local available data source for it to check against. The Planning Data API response shape currently looks identical for a non-overlapping constraint with available data and for one without available data. 
 
-Our /gis API sets the passport variable `article4` by default for _any_ entities in the `article-4-direction-area` dataset. But Article 4s are a unique case where individual entities within the _same_ dataset reflect _different_ policies. So, rather than `article4`, councils actually want each entity to correspond to its' own passport variable - eg `article4.council.something`.
+Our /gis API sets the passport variable `articleFour` by default for _any_ entities in the `article-4-direction-area` dataset. But Article 4s are a unique case where individual entities within the _same_ dataset reflect _different_ policies. So, rather than `articleFour`, councils actually want each entity to correspond to its' own passport variable - eg `articleFour.council.something`.
 
 ## Process ⚙️
 1. **Council** - Shares & publishes their data on planning.data.gov.uk
@@ -12,7 +12,7 @@ Our /gis API sets the passport variable `article4` by default for _any_ entities
 
 (Note that it's common for councils to be ready to complete steps 1 & 2 well before steps 3-5; that's completely okay for testing, but all steps should be completed before a service "goes live".)
 
-3. **Council & Planx content team** - Write `article4` flow in Planx editor and fill out "GIS spreadsheet" googlesheet template. Content team creates a Trello ticket in "New requests" when this is complete.
+3. **Council & Planx content team** - Write `articleFour` flow in Planx editor and fill out "GIS spreadsheet" googlesheet template. Content team creates a Trello ticket in "New requests" when this is complete.
 
 4. **Planx** - Create a new metadata template in `api.planx.uk/modules/gis/service/local_authorities/metadata/{council}.ts`. 
 
@@ -30,10 +30,10 @@ https://docs.google.com/spreadsheets/d/this-council
 import { LocalAuthorityMetadata } from "../../digitalLand";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land {entity.reference}
     records: {
-      "article4.council.something": "REF-1"
+      "articleFour.council.something": "REF-1"
     },
   },
 };

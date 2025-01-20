@@ -76,7 +76,7 @@ test("Updating an existing filter to another category", async () => {
   );
 
   expect(screen.getByTestId("flagset-category-select")).toHaveValue(
-    "Listed building consent",
+    "Works to listed buildings",
   );
 
   fireEvent.change(screen.getByTestId("flagset-category-select"), {
@@ -102,7 +102,7 @@ test("Updating an existing filter to another category", async () => {
 const mockExistingFilterNode = {
   data: {
     fn: "flag",
-    category: "Listed building consent",
+    category: "Works to listed buildings",
   },
   type: 500,
   edges: ["flag1", "flag2", "flag3", "flag4", "blankFlag"],

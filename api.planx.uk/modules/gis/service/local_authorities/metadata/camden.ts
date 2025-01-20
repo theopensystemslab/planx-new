@@ -11,25 +11,25 @@ https://docs.google.com/spreadsheets/d/1pFzq0cv_cwDx33d8QgRPVfIXtiseSxgmwQb6cORC
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "article4.camden.147kentishTown": "A4KTRa1",
-      "article4.camden.187kentishTown": "A4KTRa2",
-      "article4.camden.33yorkRise": "A4aYR1",
-      "article4.camden.basements": "A4Ba3",
-      "article4.camden.belsize": "A4Ba1",
-      "article4.camden.belsizeAvenue": "A4Ba2",
-      "article4.camden.eC3Caz": "A4EC3a1",
-      "article4.camden.eC3NoCaz": "A4EC3b1",
-      "article4.camden.fitzjohnAvenue": "A4Fa2",
-      "article4.camden.frognal": "A4Fa1",
-      "article4.camden.hampstead": "A4Ha1",
-      "article4.camden.parkway": "A4Pa2",
-      "article4.camden.primroseHill": "A4Pa1",
-      "article4.camden.southHill": "A4aSHP1",
-      "article4.camden.suiGenC3": "A4SGC3a1",
-      "article4.camden.swissCottage": "A4Sa1",
+      "articleFour.camden.OneFourSevenKentishTown": "A4KTRa1",
+      "articleFour.camden.OneEightSevenKentishTown": "A4KTRa2",
+      "articleFour.camden.ThreeThreeYorkRise": "A4aYR1",
+      "articleFour.camden.basements": "A4Ba3",
+      "articleFour.camden.belsize": "A4Ba1",
+      "articleFour.camden.belsizeAvenue": "A4Ba2",
+      "articleFour.camden.eCThreeCaz": "A4EC3a1",
+      "articleFour.camden.eCThreeNoCaz": "A4EC3b1",
+      "articleFour.camden.fitzjohnAvenue": "A4Fa2",
+      "articleFour.camden.frognal": "A4Fa1",
+      "articleFour.camden.hampstead": "A4Ha1",
+      "articleFour.camden.parkway": "A4Pa2",
+      "articleFour.camden.primroseHill": "A4Pa1",
+      "articleFour.camden.southHill": "A4aSHP1",
+      "articleFour.camden.suiGenCThree": "A4SGC3a1",
+      "articleFour.camden.swissCottage": "A4Sa1",
     },
   },
 };

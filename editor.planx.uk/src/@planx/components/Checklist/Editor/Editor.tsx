@@ -88,8 +88,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           'Cannot configure exclusive "or" option alongside "all required" setting';
       }
       if (values.fn && !options?.some((option) => option.data.val)) {
-        errors.fn =
-          "At least one option must set a data value when the checklist has a data field";
+        errors.fn = "At least one option must also set a data field";
       }
       if (exclusiveOptions && exclusiveOptions.length > 1) {
         errors.options =
@@ -139,10 +138,12 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <DataFieldAutocomplete
-              value={formik.values.fn}
-              onChange={(value) => formik.setFieldValue("fn", value)}
-            />
+            <ErrorWrapper error={formik.errors.fn}>
+              <DataFieldAutocomplete
+                value={formik.values.fn}
+                onChange={(value) => formik.setFieldValue("fn", value)}
+              />
+            </ErrorWrapper>
             <InputRow>
               <Switch
                 checked={!!formik.values.groupedOptions}

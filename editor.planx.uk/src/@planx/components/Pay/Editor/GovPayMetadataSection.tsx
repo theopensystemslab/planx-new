@@ -107,7 +107,7 @@ export const GovPayMetadataSection: React.FC = () => {
               }}
             >
               <Typography
-                sx={{ width: "100%", ml: 5 }}
+                sx={{ width: "100%", mr: -4 }}
                 variant="subtitle2"
                 component="label"
                 id="key-label"
@@ -115,7 +115,7 @@ export const GovPayMetadataSection: React.FC = () => {
                 Key
               </Typography>
               <Typography
-                sx={{ width: "100%", ml: -5 }}
+                sx={{ width: "100%" }}
                 variant="subtitle2"
                 component="label"
                 id="value-label"
@@ -125,7 +125,7 @@ export const GovPayMetadataSection: React.FC = () => {
             </Box>
             <ListManager
               maxItems={15}
-              disableDragAndDrop
+              noDragAndDrop
               values={values.govPayMetadata || []}
               onChange={(metadata) => {
                 setFieldValue("govPayMetadata", metadata);
