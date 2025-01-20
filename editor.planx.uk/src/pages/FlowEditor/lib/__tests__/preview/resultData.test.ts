@@ -80,9 +80,9 @@ describe("Computing result data based on collected flags", () => {
     });
     clickContinue("TextInput", { data: { name: "Test" }, auto: false });
 
-    const category = "Listed building consent";
+    const category = "Works to listed buildings";
     const collectedLBCFlags = collectedFlags()?.[category];
-    expect(collectedLBCFlags).toEqual(["Required"]);
+    expect(collectedLBCFlags).toEqual(["Consent needed"]);
 
     // The result should be the first flag
     expect(resultData(category)?.[category]?.displayText).toEqual({
@@ -94,7 +94,7 @@ describe("Computing result data based on collected flags", () => {
       category: category,
       color: "#000000",
       text: collectedLBCFlags[0],
-      value: "LB-REQUIRED",
+      value: "flag.lbc.consentNeeded",
     });
     expect(resultData(category)?.[category]?.responses).toHaveLength(2); // TextInput is omitted
   });
@@ -111,13 +111,13 @@ describe("Computing result data based on collected flags", () => {
     });
     clickContinue("TextInput", { data: { name: "Test" }, auto: false });
 
-    const category = "Listed building consent";
+    const category = "Works to listed buildings";
     const collectedLBCFlags = collectedFlags()?.[category];
-    expect(collectedLBCFlags).toEqual(["Required"]);
+    expect(collectedLBCFlags).toEqual(["Consent needed"]);
 
     // The result should be the first flag
     const editorOverrides = {
-      "LB-REQUIRED": {
+      "flag.lbc.consentNeeded": {
         description: "This is a custom description",
       },
     };
@@ -156,7 +156,7 @@ const flow: Store.Flow = {
   },
   ListedBuildingOptionNo: {
     data: {
-      flags: ["LB-NOT_REQUIRED"],
+      flags: ["flag.lbc.notRequired"],
       text: "No",
     },
     type: 200,
@@ -186,9 +186,9 @@ const flow: Store.Flow = {
   },
   ListedBuildingConsentResult: {
     data: {
-      flagSet: "Listed building consent",
+      flagSet: "Works to listed buildings",
       overrides: {
-        "LB-REQUIRED": {
+        "flag.lbc.consentNeeded": {
           description: "This is a custom description",
         },
       },
@@ -212,7 +212,7 @@ const flow: Store.Flow = {
   },
   ListedBuildingOptionYes: {
     data: {
-      flags: ["PLANNING_PERMISSION_REQUIRED", "LB-REQUIRED"],
+      flags: ["PLANNING_PERMISSION_REQUIRED", "flag.lbc.consentNeeded"],
       text: "Yes",
     },
     type: 200,
