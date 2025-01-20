@@ -10,7 +10,6 @@ export const metabaseDashboardsController: NewDashboardHandler = async (
       ...res.locals.parsedReq.params,
       ...res.locals.parsedReq.body,
     };
-    console.log("Received params:", params);
     const dashboard = await createNewDashboard(params);
     return res.status(201).json({ data: dashboard });
   } catch (error) {

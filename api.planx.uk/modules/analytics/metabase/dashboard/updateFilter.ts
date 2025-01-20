@@ -1,4 +1,3 @@
-import { error } from "console";
 import { $metabase } from "../shared/client.js";
 import type { UpdateFilterParams } from "./types.js";
 
@@ -39,9 +38,5 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
   const updatedResponse = await $metabase.put(
     `/api/dashboard/${params.dashboardId}`,
     updatePayload,
-  );
-
-  console.log(
-    `Updated dashboard ${params.dashboardId} filter "${updatedFilter}" with: ${params.value}`,
   );
 }
