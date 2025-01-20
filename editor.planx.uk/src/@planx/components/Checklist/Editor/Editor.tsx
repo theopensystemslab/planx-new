@@ -58,14 +58,14 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                    categories: groupedOptions.map((group) => ({
-                      title: group.title,
-                      count: group.children.length,
-                    })),
-                  }
+                  categories: groupedOptions.map((group) => ({
+                    title: group.title,
+                    count: group.children.length,
+                  })),
+                }
                 : {
-                    categories: undefined,
-                  }),
+                  categories: undefined,
+                }),
             },
           },
           processedOptions,
@@ -88,7 +88,8 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           'Cannot configure exclusive "or" option alongside "all required" setting';
       }
       if (values.fn && !options?.some((option) => option.data.val)) {
-        errors.fn = "At least one option must also set a data field";
+        errors.fn =
+          "At least one option must also set a data field";
       }
       if (exclusiveOptions && exclusiveOptions.length > 1) {
         errors.options =
