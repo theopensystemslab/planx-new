@@ -8,6 +8,7 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
@@ -68,7 +69,7 @@ export const Question: React.FC<Props> = (props) => {
       const errors: FormikErrors<FormikValues> = {};
       if (values.fn && !options.some((option) => option.data.val)) {
         errors.fn =
-          "At least one option must set a data value when the question has a data field";
+          "At least one option must also set a data field";
       }
       return errors;
     },
@@ -116,11 +117,13 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
               />
             </InputRow>
-            <DataFieldAutocomplete
-              schema={schema?.nodes}
-              value={formik.values.fn}
-              onChange={(value) => formik.setFieldValue("fn", value)}
-            />
+            <ErrorWrapper error={formik.errors.fn}>
+              <DataFieldAutocomplete
+                schema={schema?.nodes}
+                value={formik.values.fn}
+                onChange={(value) => formik.setFieldValue("fn", value)}
+              />
+            </ErrorWrapper>
             <InputRow>
               <Switch
                 checked={formik.values.neverAutoAnswer}
@@ -151,8 +154,8 @@ export const Question: React.FC<Props> = (props) => {
               }) as Option
             }
             Editor={QuestionOptionsEditor}
-            editorExtraProps={{ 
-              showValueField: !!formik.values.fn, 
+            editorExtraProps={{
+              showValueField: !!formik.values.fn,
               schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
             }}
           />

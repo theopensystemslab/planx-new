@@ -118,10 +118,21 @@ export interface Schema {
   max?: number;
 }
 
+/**
+ * Value returned per field, based on field type
+ */
+export type ResponseValue<T extends Field> = T extends MapField
+  ? Feature[]
+  : T extends ChecklistField
+  ? string[]
+  : T extends NumberField
+  ? number
+  : string;
+
 export type SchemaUserResponse = Record<
   Field["data"]["fn"],
-  string | string[] | any[]
->; // string | string[] | Feature[]
+  ResponseValue<Field>
+>;
 
 /**
  * Output data from a form using the useSchema hook
@@ -129,6 +140,27 @@ export type SchemaUserResponse = Record<
 export type SchemaUserData = {
   schemaData: SchemaUserResponse[];
 };
+
+// Type-guards to narrow the type of response values
+// Required as we often need to match a value with it's corresponding schema field
+export const isNumberFieldResponse = (
+  response: unknown,
+): response is ResponseValue<NumberField> => typeof response === "number";
+
+export const isTextResponse = (
+  response: unknown,
+): response is ResponseValue<TextField | DateField | QuestionField> =>
+  typeof response === "string";
+
+export const isMapFieldResponse = (
+  response: unknown,
+): response is ResponseValue<MapField> =>
+  Array.isArray(response) && response[0]?.type === "Feature";
+
+export const isChecklistFieldResponse = (
+  response: unknown,
+): response is ResponseValue<ChecklistField> =>
+  Array.isArray(response) && !isMapFieldResponse(response);
 
 /**
  * For each field in schema, return a map of Yup validation schema
@@ -187,9 +219,15 @@ export const generateValidationSchema = (schema: Schema) => {
 export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
   const initialValues: SchemaUserResponse = {};
   schema.fields.forEach((field) => {
-    ["checklist", "map"].includes(field.type)
-      ? (initialValues[field.data.fn] = [])
-      : (initialValues[field.data.fn] = "");
+    switch (field.type) {
+      case "checklist":
+      case "map":
+        initialValues[field.data.fn] = [];
+        break;
+      default:
+        initialValues[field.data.fn] = "";
+        break;
+    }
   });
   return initialValues;
 };

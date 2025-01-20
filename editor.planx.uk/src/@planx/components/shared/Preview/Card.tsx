@@ -3,13 +3,11 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
 import { styled, Theme, useTheme } from "@mui/material/styles";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
-import { ApplicationPath } from "types";
 
-import SaveResumeButton from "./SaveResumeButton";
+import OrNavigationButton from "./OrNavigationButton";
 
 interface Props {
   children: React.ReactNode;
@@ -41,6 +39,7 @@ const InnerContainer = styled(Box)(({ theme }) => ({
  * @param {object} props Component props
  * @param {bool} props.handleSubmit if included then show the Continue button
  * @param {bool} props.isValid if falsey then disable Continue button, otherwise enable
+ * @param {bool} props.isTestWarningWrapper if truthy then show navigate to publish Or button
  */
 const Card: React.FC<Props> = ({
   children,
@@ -49,21 +48,7 @@ const Card: React.FC<Props> = ({
   ...props
 }) => {
   const theme = useTheme();
-  const [path, visibleNode, breadcrumbs, flow] = useStore((state) => [
-    state.path,
-    state.currentCard,
-    state.breadcrumbs,
-    state.flow,
-  ]);
-
-  // Check if we have a Send node in our breadcrumbs
-  //   This is a better/more immediate proxy for "submitted" in the frontend because actual send events that populate lowcal_sessions.submitted_at are queued via Hasura
-  const hasSent = Object.keys(breadcrumbs).some(
-    (breadcrumbNodeId: string) => flow[breadcrumbNodeId]?.type === TYPES.Send,
-  );
-
-  const showSaveResumeButton =
-    path === ApplicationPath.SaveAndReturn && handleSubmit && !hasSent;
+  const [visibleNode] = useStore((state) => [state.currentCard]);
   const { track } = useAnalyticsTracking();
 
   useEffect(() => {
@@ -101,7 +86,7 @@ const Card: React.FC<Props> = ({
                 Continue
               </Button>
             )}
-            {showSaveResumeButton && <SaveResumeButton />}
+            <OrNavigationButton handleSubmit={handleSubmit} />
           </Box>
         </InnerContainer>
       </Container>

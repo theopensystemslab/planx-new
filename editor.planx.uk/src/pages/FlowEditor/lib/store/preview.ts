@@ -91,6 +91,8 @@ export interface PreviewStore extends Store.Store {
   requestedFiles: () => FileList;
   autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
+  hasAcknowledgedWarning: boolean;
+  setHasAcknowledgedWarning: () => void;
 }
 
 export const previewStore: StateCreator<
@@ -790,6 +792,9 @@ export const previewStore: StateCreator<
   currentCard: null,
 
   getCurrentCard: () => get().currentCard,
+
+  hasAcknowledgedWarning: false,
+  setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
 });
 
 interface RemoveOrphansFromBreadcrumbsProps {
