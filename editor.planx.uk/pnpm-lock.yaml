@@ -48,8 +48,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#ae6e7f4
-    version: github.com/theopensystemslab/planx-core/ae6e7f4(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#90601e1
+    version: github.com/theopensystemslab/planx-core/90601e1(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -10076,8 +10076,8 @@ packages:
   /json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
 
-  /json-schema-to-typescript@15.0.3:
-    resolution: {integrity: sha512-iOKdzTUWEVM4nlxpFudFsWyUiu/Jakkga4OZPEt7CGoSEsAsUgdOZqR6pcgx2STBek9Gm4hcarJpXSzIvZ/hKA==}
+  /json-schema-to-typescript@15.0.4:
+    resolution: {integrity: sha512-Su9oK8DR4xCmDsLlyvadkXzX6+GGXJpbhwoLtOGArAG61dvbW4YQmSEno2y66ahpIdmLMg6YUf/QHLgiwvkrHQ==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
@@ -14560,9 +14560,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/ae6e7f4(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ae6e7f4}
-    id: github.com/theopensystemslab/planx-core/ae6e7f4
+  github.com/theopensystemslab/planx-core/90601e1(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/90601e1}
+    id: github.com/theopensystemslab/planx-core/90601e1
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14582,7 +14582,7 @@ packages:
       fast-xml-parser: 4.5.1
       graphql: 16.10.0
       graphql-request: 6.1.0(graphql@16.10.0)
-      json-schema-to-typescript: 15.0.3
+      json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.21
       marked: 15.0.6
       prettier: 3.4.2

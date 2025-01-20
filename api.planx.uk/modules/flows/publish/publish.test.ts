@@ -106,7 +106,7 @@ describe("publish", () => {
         data: {
           flagSet: "Planning permission",
           overrides: {
-            NO_APP_REQUIRED: {
+            "flag.pp.permittedDevelopment": {
               heading: "Some Other Heading",
             },
           },
@@ -155,7 +155,7 @@ describe("publish", () => {
               data: {
                 flagSet: "Planning permission",
                 overrides: {
-                  NO_APP_REQUIRED: {
+                  "flag.pp.permittedDevelopment": {
                     heading: "Some Other Heading",
                   },
                 },
