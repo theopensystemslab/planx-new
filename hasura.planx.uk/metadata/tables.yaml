@@ -1525,6 +1525,7 @@
           - flow_id
           - has_send_component
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
       comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
@@ -1557,6 +1558,7 @@
           - flow_id
           - has_send_component
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
   select_permissions:
