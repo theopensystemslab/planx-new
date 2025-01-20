@@ -87,3 +87,8 @@ export interface UpdateFilterResponse {
   success: boolean;
   updatedFilter: string;
 }
+
+export interface FilterParam {
+  name: string;
+  type: string;
+}
