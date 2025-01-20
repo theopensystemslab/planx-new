@@ -44,7 +44,8 @@ config:
     secure: AAABANHLs3ItPxkteh0chwMP2bKuHO3ovuRLi4FsIrCqerzXVIaTLFDqNR+4KBTeMPz4cnF5tCTwsrJv9GruZdXU+lg=
   application:hasura-proxy-cpu: "512"
   application:hasura-proxy-memory: "1024"
-  application:hasura-scaling-maximum: "2"
+  application:hasura-service-scaling-minimum: "1"
+  application:hasura-service-scaling-maximum: "2"
   application:idox-nexus-client:
     secure: AAABABprDQomVM9wJQkTMTVtUKvj9lVVVJLdpEBR5p3ibZYvSMedTOb2jztPa0vm6UCH2hilyOV2fsd+akYd3sP8Up5G26mkEKSLSSN4Nc9fu/Hi3Apn1rXHnw==
   application:idox-nexus-submission-url: https://dev.identity.idoxgroup.com/agw/submission-api
