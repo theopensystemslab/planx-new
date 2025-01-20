@@ -17,7 +17,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
+import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import {
+  addToSearchParams,
+  clearSearchParams,
+  filterSelectedFilters,
+} from "./helpers";
 
 const FiltersContainer = styled(Accordion)(({ theme }) => ({
   width: "100%",
@@ -100,14 +105,14 @@ interface FiltersProps {
   clearFilters: boolean;
 }
 
-interface FilterState {
+export interface FilterState {
   status?: "online" | "offline";
   applicationType?: "statutory";
   serviceType?: "submission";
 }
 
-type FilterKeys = keyof FilterState;
-type FilterValues = FilterState[keyof FilterState];
+export type FilterKeys = keyof FilterState;
+export type FilterValues = FilterState[keyof FilterState];
 
 export const Filters: React.FC<FiltersProps> = ({
   flows,
@@ -134,55 +139,15 @@ export const Filters: React.FC<FiltersProps> = ({
       debounce((pattern: string) => {
         console.debug("Search term: ", pattern);
         search(pattern);
-      }, 250),
+      }, 500),
     [search],
   );
-
-  const addToSearchParams = (params: FilterState) => {
-    const searchParams = new URLSearchParams(route.url.search);
-
-    // Update or remove filter parameters
-    Object.entries(params).forEach(([key, value]) => {
-      if (value) {
-        searchParams.set(key, value);
-      } else {
-        console.log("hitting delete");
-        searchParams.delete(key);
-      }
-    });
-
-    navigation.navigate(
-      {
-        pathname: window.location.pathname,
-        search: searchParams.toString(), // Use the complete searchParams object
-      },
-      {
-        replace: true,
-      },
-    );
-  };
-
-  const clearSearchParams = () => {
-    const searchParams = new URLSearchParams(route.url.search);
-    searchParams.delete("status");
-    searchParams.delete("applicationType");
-    searchParams.delete("serviceType");
-    navigation.navigate(
-      {
-        pathname: window.location.pathname,
-        search: searchParams.toString(), // Use the complete searchParams object
-      },
-      {
-        replace: true,
-      },
-    );
-  };
 
   const clearAllFilters = () => {
     setFilters({});
     setSelectedFilters([]);
     formik.setFieldValue("pattern", "");
-    clearSearchParams();
+    clearSearchParams(route, navigation);
   };
 
   const handleFiltering = (filtersArg: FilterState | undefined) => {
@@ -314,13 +279,10 @@ export const Filters: React.FC<FiltersProps> = ({
                   label={filter}
                   key={filter}
                   onDelete={() => {
-                    const newSelectedFilters =
-                      (selectedFilters.filter(
-                        (selectedFilter) =>
-                          selectedFilter !== filter &&
-                          selectedFilter !== undefined,
-                      ) as string[]) || [];
-                    console.log(newSelectedFilters);
+                    const newSelectedFilters = filterSelectedFilters(
+                      selectedFilters,
+                      filter,
+                    );
                     setSelectedFilters(newSelectedFilters);
                     if (filters) {
                       const deleteFilter = Object.keys(filters) as FilterKeys[];
@@ -334,10 +296,14 @@ export const Filters: React.FC<FiltersProps> = ({
                         const newFilters = { ...filters };
                         delete newFilters[targetFilter];
                         removeFilter(targetFilter);
-                        addToSearchParams({
-                          ...filters,
-                          [targetFilter]: undefined,
-                        });
+                        addToSearchParams(
+                          {
+                            ...filters,
+                            [targetFilter]: undefined,
+                          },
+                          route,
+                          navigation,
+                        );
                         handleFiltering(newFilters);
                       }
                     }
@@ -400,7 +366,7 @@ export const Filters: React.FC<FiltersProps> = ({
             onClick={() => {
               if (filters) {
                 handleFiltering(filters);
-                addToSearchParams(filters);
+                addToSearchParams(filters, route, navigation);
                 setSelectedFilters(
                   Object.values(filters).filter(
                     (values) => values !== undefined,

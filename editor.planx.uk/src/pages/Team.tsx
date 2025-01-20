@@ -29,7 +29,7 @@ import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
-import Filters from "./Filters";
+import Filters from "./Filters/Filters";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
