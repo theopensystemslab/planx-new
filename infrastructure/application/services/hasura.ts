@@ -79,12 +79,11 @@ export const createHasuraService = async ({
           ],
           healthCheck: {
             // hasuraProxy health depends on hasura health
-            command: [
-              "CMD-SHELL",
-              `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`,
-            ],
-            interval: 15,
-            timeout: 3,
+            // use wget since busybox applet is included in Alpine base image (curl is not)
+            command: ["CMD-SHELL", `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
+            // generous config; if hasura is saturated/blocking, we give service a chance to scale out before whole task is replaced
+            interval: 30,
+            timeout: 15,
             retries: 3,
           },
           environment: [
@@ -169,8 +168,10 @@ export const createHasuraService = async ({
   // TODO: bump awsx to 1.x to use the FargateService scaleConfig option to replace more verbose config below
   const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
     // maxCapacity should consider compute power of the RDS instance which Hasura relies on
-    maxCapacity: parseInt(config.require("hasura-scaling-maximum")),
-    minCapacity: 1,
+    maxCapacity: parseInt(config.require("hasura-service-scaling-maximum")),
+    // minCapacity should reflect the baseline load expected
+    // see: https://hasura.io/docs/2.0/deployment/performance-tuning/#scalability
+    minCapacity: parseInt(config.require("hasura-service-scaling-minimum")),
     resourceId: pulumi.interpolate`service/${cluster.cluster.name}/${hasuraService.service.name}`,
     scalableDimension: "ecs:service:DesiredCount",
     serviceNamespace: "ecs",
@@ -185,10 +186,10 @@ export const createHasuraService = async ({
         predefinedMetricSpecification: {
             predefinedMetricType: "ECSServiceAverageCPUUtilization",
         },
-        // scale out early and quickly for responsiveness, but scale in more slowly to avoid thrashing
-        targetValue: 50.0,
+        // scale out quickly for responsiveness, but scale in more slowly to avoid thrashing
+        targetValue: 30.0,
         scaleInCooldown: 300,
-        scaleOutCooldown: 30,
+        scaleOutCooldown: 60,
     },
   });
 
@@ -201,9 +202,9 @@ export const createHasuraService = async ({
         predefinedMetricSpecification: {
             predefinedMetricType: "ECSServiceAverageMemoryUtilization",
         },
-        targetValue: 50.0,
+        targetValue: 30.0,
         scaleInCooldown: 300,
-        scaleOutCooldown: 30,
+        scaleOutCooldown: 60,
     },
   });
 
