@@ -101,12 +101,12 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
         "Valley Road/Cryers Hill Road, Hughenden - Caravan Sites",
       "articleFour.buckinghamshire.deanfield":
         "Part Fields SW of Deanfield, Saunderton (b) - Caravan sites",
-      "articleFour.buckinghamshire.DO10fulmer": "Fulmer - Agricultural",
+      "articleFour.buckinghamshire.DOTenfulmer": "Fulmer - Agricultural",
       "articleFour.buckinghamshire.dorneywoodroad":
         "Dorney Wood Road, Burnham - Agricultural",
-      "articleFour.buckinghamshire.eastamershamroadOS0006":
+      "articleFour.buckinghamshire.eastamershamroadOSZeroZeroZeroSix":
         "Land East of Amersham Road including OS parcel 0006. Agricultural Buildings.",
-      "articleFour.buckinghamshire.eastamershamroadOS9269":
+      "articleFour.buckinghamshire.eastamershamroadOSNineTwoSixNine":
         "Land East of Amersham Road including OS Parcel 9269 Agricultural buildings.",
       "articleFour.buckinghamshire.eastjasonshill":
         "Land to the East of Jasons Hill, Ley Hill Agricultural buildings.",
@@ -176,7 +176,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
         "NW of Ministry Wharf, Saunderton - Gates etc, Markets, Racing",
       "articleFour.buckinghamshire.nightingaleslanestrip":
         "Land surrounding Nightingales Lane, 2290 metre long strip. - Means of enclosure.",
-      "articleFour.buckinghamshire.northA404":
+      "articleFour.buckinghamshire.northAFourZeroFour":
         "Land north of A404 Agricultural buildings and mineral working.",
       "articleFour.buckinghamshire.northandsouthhollowway":
         "Land north and south of Hollow Way between Chesham and Pednor - Agricultural buildings and mineral working.",
@@ -196,25 +196,25 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
         "Land North of Welders Lane, South of Jordans Way Agricultural buildings and mineral working.",
       "articleFour.buckinghamshire.officetoresi":
         "Change of use from offices to residential", // DESCRIPTIO starts with, no DEV_TYPE match
-      "articleFour.buckinghamshire.os1178":
+      "articleFour.buckinghamshire.osOneOneSevenEight":
         "OS parcel 1178, 1179, 1180 nr Asheridge Farm Agricultural Buildings",
-      "articleFour.buckinghamshire.os262":
+      "articleFour.buckinghamshire.osTwoSixTwo":
         "OS Parcel 262, Penfolds Lane, Holmer Green Means of enclosure.",
-      "articleFour.buckinghamshire.os3100":
+      "articleFour.buckinghamshire.osThreeOneZeroZero":
         "OS Parcels 3100, 2829 - Means of enclosure and agricultural buildings.",
-      "articleFour.buckinghamshire.os3313.a":
+      "articleFour.buckinghamshire.osThreeThreeOneThree.a":
         "OS parcel 3313 north of Welders Lane Caravan sites.", // split a/b
-      "articleFour.buckinghamshire.os3313.b":
+      "articleFour.buckinghamshire.osThreeThreeOneThree.b":
         "OS parcel 3313 north of Welders Lane Means of enclosure.", // split a/b
-      "articleFour.buckinghamshire.os4729":
+      "articleFour.buckinghamshire.osFourSevenTwoNine":
         "O.S. Parcel No. 4729 at Swan Bottom Agricultural Buildings.",
-      "articleFour.buckinghamshire.os5200":
+      "articleFour.buckinghamshire.osFiveTwoZeroZero":
         "OS Parcel 5200, Windsor Lane, Little Kingshill Means of enclosure.",
-      "articleFour.buckinghamshire.os6961":
+      "articleFour.buckinghamshire.osSixNineSixOne":
         "OS parcel 6961 to West of Amersham Road, Chalfont St Giles Means of enclosure.",
-      "articleFour.buckinghamshire.os8050":
+      "articleFour.buckinghamshire.osEightZeroFiveZero":
         "Land West of Amersham Road OS parcels 8050 and 8750 Means of enclosure.",
-      "articleFour.buckinghamshire.os8349":
+      "articleFour.buckinghamshire.osEightThreeFourNine":
         "OS parcel 8349, 6265, 7466, off Bellingdon Road Agricultural buildings.",
       "articleFour.buckinghamshire.parkspringwood":
         "Parkspring Wood, Fulmer - Agricultural",
@@ -272,7 +272,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
         "Land at Skimmers Orchard, Holmer Green Caravan Site", // split a/b/c
       "articleFour.buckinghamshire.skimmersorchard.c":
         "Land at Skimmers Orchard, Holmer Green Means of Enclosure.", // split a/b/c
-      "articleFour.buckinghamshire.southA413":
+      "articleFour.buckinghamshire.southAFourOneThree":
         "Land South of A413 in Little Missenden Agricultural buildings and mineral working.",
       "articleFour.buckinghamshire.southchartridge":
         "Southern side Chartridge Lane between Chartridge-Pednor Bottom. Agricultural buildings and mineral working. OS parcels 1348, 1347, 1369, 1367, Southern side Chartridge Lane Agricultural buildings and mineral working. OS parcels 1274, 1279, 1328, Northern",
@@ -286,7 +286,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
         "Land south of Penfold Lane and adjoining the rear of properties in Shepherds Fold and Winters Way Agricultural Buildings.", // split a/b
       "articleFour.buckinghamshire.southpenfoldlane.b":
         "Land to the South of Penfold Lane Agricultural Buildings.", // split a/b
-      "articleFour.buckinghamshire.southpenfoldlaneOS262":
+      "articleFour.buckinghamshire.southpenfoldlaneOSTwoSixTwo":
         "Land south of Penfold Lane (OS Parcel 262) Caravan Sites.",
       "articleFour.buckinghamshire.southsheepcoteroad":
         "Land South of Sheepcote Dell Road, Holmer Green, including Land East of Earl Howe Road Agricultural Buildings.",
