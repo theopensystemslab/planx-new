@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.701.0
     version: 3.701.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#ae6e7f4
-    version: github.com/theopensystemslab/planx-core/ae6e7f4
+    specifier: git+https://github.com/theopensystemslab/planx-core#90601e1
+    version: github.com/theopensystemslab/planx-core/90601e1
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -5217,8 +5217,8 @@ packages:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
     dev: false
 
-  /json-schema-to-typescript@15.0.3:
-    resolution: {integrity: sha512-iOKdzTUWEVM4nlxpFudFsWyUiu/Jakkga4OZPEt7CGoSEsAsUgdOZqR6pcgx2STBek9Gm4hcarJpXSzIvZ/hKA==}
+  /json-schema-to-typescript@15.0.4:
+    resolution: {integrity: sha512-Su9oK8DR4xCmDsLlyvadkXzX6+GGXJpbhwoLtOGArAG61dvbW4YQmSEno2y66ahpIdmLMg6YUf/QHLgiwvkrHQ==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
@@ -7312,8 +7312,8 @@ packages:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/ae6e7f4:
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ae6e7f4}
+  github.com/theopensystemslab/planx-core/90601e1:
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/90601e1}
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -7333,7 +7333,7 @@ packages:
       fast-xml-parser: 4.5.1
       graphql: 16.10.0
       graphql-request: 6.1.0(graphql@16.10.0)
-      json-schema-to-typescript: 15.0.3
+      json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.21
       marked: 15.0.6
       prettier: 3.4.2
