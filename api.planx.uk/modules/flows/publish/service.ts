@@ -1,14 +1,9 @@
 import * as jsondiffpatch from "jsondiffpatch";
 import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
 import { gql } from "graphql-request";
-import {
-  ComponentType,
-  type FlowGraph,
-  type Node,
-} from "@opensystemslab/planx-core/types";
+import type { FlowGraph, Node } from "@opensystemslab/planx-core/types";
 import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
-import { hasComponentType } from "../validate/helpers.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -26,7 +21,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
 
   const flattenedFlow = await dataMerged(flowId);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
-  const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
   if (!delta) return null;
@@ -39,7 +33,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
         $flow_id: uuid
         $publisher_id: Int
         $summary: String
-        $has_send_component: Boolean
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -47,7 +40,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
             flow_id: $flow_id
             publisher_id: $publisher_id
             summary: $summary
-            has_send_component: $has_send_component
           }
         ) {
           id
@@ -63,7 +55,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       flow_id: flowId,
       publisher_id: parseInt(userId),
       summary: summary ?? null,
-      has_send_component: hasSendComponent,
     },
   );
 
