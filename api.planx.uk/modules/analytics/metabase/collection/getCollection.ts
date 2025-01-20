@@ -3,8 +3,6 @@ import { $metabase } from "../shared/client.js";
 
 /**
  * Retrieves info on a collection from Metabase, use to check a parent. Currently only used in tests but could be useful for other Metabase functionality
- * @param id
- * @returns
  */
 export async function getCollection(
   id: number,

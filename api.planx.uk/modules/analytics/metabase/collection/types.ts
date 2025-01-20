@@ -19,7 +19,10 @@ export type MetabaseCollectionParams = Omit<NewCollectionParams, "slug"> & {
   name: string;
 };
 
-/** Metbase collection ID for the the "Council" collection **/
+/** TODO: when running on production, turn below comment back into code
+ * the Metabase collection ID is for the "Council" collection
+ * see https://github.com/theopensystemslab/planx-new/pull/4072#discussion_r1892631692
+ **/
 // const COUNCILS_COLLECTION_ID = 58;
 
 export const createTeamCollectionSchema = z.object({
