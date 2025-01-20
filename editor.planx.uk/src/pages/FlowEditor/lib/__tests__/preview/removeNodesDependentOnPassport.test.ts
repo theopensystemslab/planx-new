@@ -394,7 +394,7 @@ const mockFlowData = {
     },
     "4FRZMfNlXf": {
       data: {
-        flags: ["PP-NOT_DEVELOPMENT"],
+        flags: ["flag.pp.notDevelopment"],
         text: "Not development",
       },
       type: TYPES.Answer,
