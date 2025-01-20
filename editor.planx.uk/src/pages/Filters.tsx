@@ -102,8 +102,8 @@ interface FiltersProps {
 
 interface FilterState {
   status?: "online" | "offline";
-  applicationType?: "submission";
-  serviceType?: "statutory" | "discretionary";
+  applicationType?: "statutory";
+  serviceType?: "submission";
 }
 
 type FilterKeys = keyof FilterState;
@@ -370,32 +370,25 @@ export const Filters: React.FC<FiltersProps> = ({
           </FiltersColumn>
           <FiltersColumn>
             <Typography variant="h5" pb={0.5}>
-              Application type
+              Service type
             </Typography>
             <ChecklistItem
-              onChange={() => handleChange("applicationType", "submission")}
+              onChange={() => handleChange("serviceType", "submission")}
               label={"Submission"}
               id={"submission"}
-              checked={filters?.applicationType === "submission"}
+              checked={filters?.serviceType === "submission"}
               variant="compact"
             />
           </FiltersColumn>
           <FiltersColumn>
             <Typography variant="h5" pb={0.5}>
-              Service type
+              Application type
             </Typography>
             <ChecklistItem
-              onChange={() => handleChange("serviceType", "statutory")}
+              onChange={() => handleChange("applicationType", "statutory")}
               label={"Statutory"}
               id={"statutory"}
-              checked={filters?.serviceType === "statutory"}
-              variant="compact"
-            />
-            <ChecklistItem
-              onChange={() => handleChange("serviceType", "discretionary")}
-              label={"Discretionary"}
-              id={"discretionary"}
-              checked={filters?.serviceType === "discretionary"}
+              checked={filters?.applicationType === "statutory"}
               variant="compact"
             />
           </FiltersColumn>
