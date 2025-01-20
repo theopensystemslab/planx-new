@@ -1,4 +1,5 @@
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
+import type { ApiResponse } from "../shared/types.js";
 import { z } from "zod";
 
 export interface CreateNewDashboardParams {
@@ -54,11 +55,6 @@ export function toMetabaseParams(
 export type UpdateFilterParams = {
   dashboardId: number;
 } & Pick<CreateNewDashboardParams, "filter" | "value">;
-
-type ApiResponse<T> = {
-  data?: T;
-  error?: string;
-};
 
 export const createNewDashboardSchema = z.object({
   params: z.object({
