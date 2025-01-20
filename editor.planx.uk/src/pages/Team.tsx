@@ -14,9 +14,9 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { filter } from "lodash";
+import { orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
+import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { inputFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
@@ -397,6 +397,7 @@ const Team: React.FC = () => {
   );
   const [triggerClearFilters, setTriggerClearFilters] =
     useState<boolean>(false);
+  const route = useCurrentRoute();
 
   const formik = useFormik({
     initialValues: { pattern: "", keys: ["name"] },
@@ -430,15 +431,14 @@ const Team: React.FC = () => {
     },
   ];
   const fetchFlows = useCallback(() => {
+    const { sort, sortDirection } = route.url.query;
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      const sortedFlows = flows.toSorted((a, b) =>
-        b.operations[0]["createdAt"].localeCompare(
-          a.operations[0]["createdAt"],
-        ),
-      );
-      setFlows(sortedFlows);
-      setFilteredFlows(sortedFlows);
+      if (sortDirection === "asc" || sortDirection === "desc") {
+        const sortedFlows = orderBy(flows, sort, sortDirection);
+        setFlows(sortedFlows);
+        setFilteredFlows(sortedFlows);
+      }
     });
   }, [teamId, setFlows, getFlows]);
 
