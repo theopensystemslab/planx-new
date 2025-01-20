@@ -21,7 +21,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
   if (!userId) throw Error("User details missing from request");
 
   const flattenedFlow = await dataMerged(flowId);
-  const isStatutoryService = checkStatutoryApplicationTypes(flattenedFlow) 
+  const isStatutoryService = checkStatutoryApplicationTypes(flattenedFlow);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
@@ -60,7 +60,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       flow_id: flowId,
       publisher_id: parseInt(userId),
       summary: summary ?? null,
-      is_statutory_application_type: isStatutoryService
+      is_statutory_application_type: isStatutoryService,
     },
   );
 
