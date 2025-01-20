@@ -1,5 +1,9 @@
 import { $metabase } from "../shared/client.js";
-import type { UpdateFilterParams, UpdateFilterResponse } from "./types.js";
+import type {
+  UpdateFilterParams,
+  UpdateFilterResponse,
+  FilterParam,
+} from "./types.js";
 
 /** Takes the ID of the dashboard to be updated, the name of the filter (a string, must be an exact match), and the new value to be filtered on.
  * Currently only works for strings. */
@@ -11,19 +15,21 @@ export async function updateFilter(
 
   // Update filter default value parameter
   let updatedFilter;
-  const updatedParameters = response.data.parameters.map((param: any) => {
-    if (param.name === params.filter) {
-      // Check if the filter is a string type
-      if (!param.type.startsWith("string/")) {
-        throw new Error(
-          `Filter type '${param.type}' is not supported. Only string filters are currently supported.`,
-        );
+  const updatedParameters = response.data.parameters.map(
+    (param: FilterParam) => {
+      if (param.name === params.filter) {
+        // Check if the filter is a string type
+        if (!param.type.startsWith("string/")) {
+          throw new Error(
+            `Filter type '${param.type}' is not supported. Only string filters are currently supported.`,
+          );
+        }
+        updatedFilter = param.name;
+        return { ...param, default: [params.value] };
       }
-      updatedFilter = param.name;
-      return { ...param, default: [params.value] };
-    }
-    return param;
-  });
+      return param;
+    },
+  );
 
   if (!updatedFilter) {
     throw new Error(
