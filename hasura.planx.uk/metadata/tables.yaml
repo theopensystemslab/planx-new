@@ -1518,6 +1518,7 @@
           - created_at
           - flow_id
           - data
+          - has_send_component
     - role: demoUser
       permission:
         check:
@@ -1536,6 +1537,7 @@
           - created_at
           - flow_id
           - data
+          - has_send_component
       comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
     - role: platformAdmin
       permission:
@@ -1547,6 +1549,7 @@
           - created_at
           - flow_id
           - data
+          - has_send_component
     - role: teamEditor
       permission:
         check:
@@ -1565,6 +1568,7 @@
           - created_at
           - flow_id
           - data
+          - has_send_component
   select_permissions:
     - role: api
       permission:
@@ -1575,6 +1579,7 @@
           - created_at
           - flow_id
           - data
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: demoUser
@@ -1586,6 +1591,7 @@
           - id
           - publisher_id
           - summary
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: platformAdmin
@@ -1597,6 +1603,7 @@
           - id
           - publisher_id
           - summary
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: public
@@ -1608,6 +1615,7 @@
           - id
           - publisher_id
           - summary
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: teamEditor
@@ -1616,6 +1624,7 @@
           - created_at
           - data
           - flow_id
+          - has_send_component
           - id
           - publisher_id
           - summary
