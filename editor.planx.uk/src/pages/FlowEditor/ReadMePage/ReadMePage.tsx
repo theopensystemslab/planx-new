@@ -26,7 +26,7 @@ interface ReadMePageProps {
 interface ReadMePageForm {
   serviceSummary: string;
   serviceDescription: string;
-  // serviceLimitations: string;
+  serviceLimitations: string;
 }
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
@@ -39,11 +39,15 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     updateFlowDescription,
     flowSummary,
     updateFlowSummary,
+    flowLimitations,
+    updateFlowLimitations,
   ] = useStore((state) => [
     state.flowDescription,
     state.updateFlowDescription,
     state.flowSummary,
     state.updateFlowSummary,
+    state.flowLimitations,
+    state.updateFlowLimitations,
   ]);
 
   const toast = useToast();
@@ -52,6 +56,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     initialValues: {
       serviceSummary: flowSummary || "",
       serviceDescription: flowDescription || "",
+      serviceLimitations: flowLimitations || "",
     },
     onSubmit: async (values, { setSubmitting, setFieldError }) => {
       // TODO: handle changes to any field, not just description
@@ -64,12 +69,18 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           values.serviceSummary,
         );
 
-        const [descriptionResult, summaryResult] = await Promise.all([
-          updateFlowDescriptionPromise,
-          updateFlowSummaryPromise,
-        ]);
+        const updateFlowLimitationsPromise = updateFlowLimitations(
+          values.serviceLimitations,
+        );
 
-        if (descriptionResult && summaryResult) {
+        const [descriptionResult, summaryResult, limitationsResult] =
+          await Promise.all([
+            updateFlowDescriptionPromise,
+            updateFlowSummaryPromise,
+            updateFlowLimitationsPromise,
+          ]);
+
+        if (descriptionResult && summaryResult && limitationsResult) {
           toast.success("Updated successfully");
         } else {
           if (!descriptionResult) {
@@ -82,6 +93,12 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             setFieldError(
               "serviceSummary",
               "Unable to update the service summary. Please try again.",
+            );
+          }
+          if (!limitationsResult) {
+            setFieldError(
+              "serviceLimitations",
+              "Unable to update the service limitations. Please try again.",
             );
           }
           throw new Error("One or more updates failed");
@@ -137,9 +154,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             <Input
               multiline
               {...formik.getFieldProps("serviceSummary")}
-              // value={formik.values.serviceSummary}
-              // onChange={formik.handleChange}
-              // name="serviceSummary"
               id="serviceSummary"
               placeholder="Description"
               errorMessage={formik.errors.serviceSummary}
@@ -155,9 +169,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
                 placeholder="The service..."
-                // onChange={formik.handleChange}
-                // name="serviceDescription"
-                // value={formik.values.serviceDescription}
                 errorMessage={formik.errors.serviceDescription}
               />
             </InputRow>
@@ -169,10 +180,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <InputRow>
               <RichTextInput
-                name="Service limitations"
+                {...formik.getFieldProps("serviceLimitations")}
+                id="serviceLimitations"
+                errorMessage={formik.errors.serviceLimitations}
                 placeholder="Limitations"
-                onChange={formik.handleChange}
-                // value={formik.values.serviceLimitations}
               />
             </InputRow>
           </InputGroup>

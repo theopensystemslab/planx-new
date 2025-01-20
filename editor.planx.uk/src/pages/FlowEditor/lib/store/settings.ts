@@ -28,6 +28,8 @@ export interface SettingsStore {
   updateFlowSummary: (newSummary: string) => Promise<boolean>;
   flowDescription?: string;
   updateFlowDescription: (newDescription: string) => Promise<boolean>;
+  flowLimitations?: string;
+  updateFlowLimitations: (newLimitations: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
@@ -84,10 +86,22 @@ export const settingsStore: StateCreator<
     return Boolean(result?.id);
   },
 
+  flowLimitations: "",
+
+  updateFlowLimitations: async (newLimitations: string) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setLimitations({
+      flow: { id },
+      limitations: newLimitations,
+    });
+    set({ flowLimitations: newLimitations });
+    return Boolean(result?.id);
+  },
+
   getFlowInformation: async (flowSlug, teamSlug) => {
     const {
       data: {
-        flows: [{ settings, status, description, summary }],
+        flows: [{ settings, status, description, summary, limitations }],
       },
     } = await client.query<GetFlowInformation>({
       query: gql`
@@ -101,6 +115,7 @@ export const settingsStore: StateCreator<
             description
             summary
             status
+            limitations
           }
         }
       `,
@@ -116,9 +131,10 @@ export const settingsStore: StateCreator<
       flowStatus: status,
       flowDescription: description,
       flowSummary: summary,
+      flowLimitations: limitations,
     });
 
-    return { settings, status, description, summary };
+    return { settings, status, description, summary, limitations };
   },
 
   globalSettings: undefined,

@@ -491,6 +491,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -521,6 +522,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -541,6 +543,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -576,6 +579,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -602,6 +606,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -623,6 +628,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -657,6 +663,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -697,6 +704,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -719,6 +727,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -747,6 +756,7 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
@@ -767,6 +777,7 @@
         columns:
           - data
           - description
+          - limitations
           - name
           - settings
           - slug
@@ -789,6 +800,7 @@
         columns:
           - data
           - description
+          - limitations
           - name
           - settings
           - slug
