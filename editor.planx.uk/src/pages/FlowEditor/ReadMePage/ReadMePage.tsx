@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize.js";
 import React from "react";
+import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -59,18 +59,16 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       serviceLimitations: flowLimitations || "",
     },
     onSubmit: async (values, { setSubmitting, setFieldError }) => {
-      // TODO: handle changes to any field, not just description
-
       try {
         const updateFlowDescriptionPromise = updateFlowDescription(
-          values.serviceDescription,
+          values.serviceDescription
         );
         const updateFlowSummaryPromise = updateFlowSummary(
-          values.serviceSummary,
+          values.serviceSummary
         );
 
         const updateFlowLimitationsPromise = updateFlowLimitations(
-          values.serviceLimitations,
+          values.serviceLimitations
         );
 
         const [descriptionResult, summaryResult, limitationsResult] =
@@ -86,19 +84,19 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           if (!descriptionResult) {
             setFieldError(
               "serviceDescription",
-              "Unable to update the flow description. Please try again.",
+              "Unable to update the flow description. Please try again."
             );
           }
           if (!summaryResult) {
             setFieldError(
               "serviceSummary",
-              "Unable to update the service summary. Please try again.",
+              "Unable to update the service summary. Please try again."
             );
           }
           if (!limitationsResult) {
             setFieldError(
               "serviceLimitations",
-              "Unable to update the service limitations. Please try again.",
+              "Unable to update the service limitations. Please try again."
             );
           }
           throw new Error("One or more updates failed");
@@ -106,7 +104,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       } catch (error) {
         console.error("Error updating descriptions:", error);
         toast.error(
-          "An error occurred while updating descriptions. Please try again.",
+          "An error occurred while updating descriptions. Please try again."
         );
       } finally {
         setSubmitting(false);
@@ -127,19 +125,21 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           {capitalize(flowSlug.replaceAll("-", " "))}
         </Typography>
 
-        {/* TODO: get rid of Box width */}
-        <Box display={"flex"} justifyContent={"space-between"} width={300}>
-          <Chip
-            label={capitalize(flowStatus)}
-            color={flowStatus === "online" ? "success" : "error"}
-          />
-          {/* <Chip
-            label={isFlowPublished ? "Published" : "Unpublished"}
-            color={isFlowPublished ? "success" : "error"}
-          /> */}
-          <Chip label="Submission" color="primary" />
-          <Chip label="Discretionary" color="info" />
+        <Box display={"flex"}>
+          <FlowTag
+            tagType={FlowTagType.Status}
+            statusVariant={
+              flowStatus === "online"
+                ? StatusVariant.Online
+                : StatusVariant.Offline
+            }
+          >
+            {flowStatus}
+          </FlowTag>
+          {/* <FlowTag tagType={FlowTagType.ApplicationType}>Submission</FlowTag>
+          <FlowTag tagType={FlowTagType.ServiceType}>Discretionary</FlowTag> */}
         </Box>
+
       </SettingsSection>
       <SettingsSection>
         <form onSubmit={formik.handleSubmit}>
@@ -193,9 +193,10 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               Save
             </Button>
             <Button
-              onClick={() => {}}
+              onClick={() => formik.resetForm()}
               type="reset"
               variant="contained"
+              disabled={!formik.dirty}
               color="secondary"
               sx={{ ml: 1.5 }}
             >
