@@ -1,9 +1,11 @@
 import { $metabase } from "../shared/client.js";
-import type { UpdateFilterParams } from "./types.js";
+import type { UpdateFilterParams, UpdateFilterResponse } from "./types.js";
 
 /** Takes the ID of the dashboard to be updated, the name of the filter (a string, must be an exact match), and the new value to be filtered on.
  * Currently only works for strings. */
-export async function updateFilter(params: UpdateFilterParams): Promise<any> {
+export async function updateFilter(
+  params: UpdateFilterParams,
+): Promise<UpdateFilterResponse> {
   // Get existing dashboard data
   const response = await $metabase.get(`/api/dashboard/${params.dashboardId}`);
 
@@ -35,8 +37,10 @@ export async function updateFilter(params: UpdateFilterParams): Promise<any> {
   };
 
   // Send the updated data back using PUT
-  const updatedResponse = await $metabase.put(
-    `/api/dashboard/${params.dashboardId}`,
-    updatePayload,
-  );
+  await $metabase.put(`/api/dashboard/${params.dashboardId}`, updatePayload);
+
+  return {
+    success: true,
+    updatedFilter,
+  };
 }

@@ -76,3 +76,14 @@ export type NewDashboardHandler = ValidatedRequestHandler<
   typeof createNewDashboardSchema,
   ApiResponse<string>
 >;
+
+export interface GetDashboardResponse {
+  name: string;
+  id: number;
+  collection_id: number;
+}
+
+export interface UpdateFilterResponse {
+  success: boolean;
+  updatedFilter: string;
+}
