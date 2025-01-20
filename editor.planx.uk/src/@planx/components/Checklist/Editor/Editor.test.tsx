@@ -96,4 +96,24 @@ describe("Checklist editor component", () => {
       screen.queryByRole("button", { name: /add "or" option/i }),
     ).toBeInTheDocument();
   });
+
+  it("shows an error if an exclusive 'or' option has been set alongside the 'all required' toggle", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} />
+      </DndProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: /add new option/i }));
+
+    await user.click(screen.getByRole("button", { name: /add "or" option/i }));
+
+    await user.click(screen.getByLabelText("All required"));
+
+    expect(
+      screen.getByText(
+        'Cannot configure exclusive "or" option alongside "all required" setting',
+      ),
+    ).toBeInTheDocument();
+  });
 });
