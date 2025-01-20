@@ -26,7 +26,7 @@ export const mockFlowData: FlowGraph = {
     data: {
       flagSet: "Planning permission",
       overrides: {
-        NO_APP_REQUIRED: {
+        "flag.pp.permittedDevelopment": {
           heading: "Congratulations!",
         },
       },

@@ -428,7 +428,7 @@ const mockFlowData = {
     },
     IzT93uCmyF: {
       data: {
-        flags: ["PRIOR_APPROVAL"],
+        flags: ["flag.pp.priorApproval"],
         text: "Prior",
       },
       type: TYPES.Answer,

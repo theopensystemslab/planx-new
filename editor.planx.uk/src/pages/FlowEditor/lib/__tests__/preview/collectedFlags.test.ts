@@ -60,7 +60,12 @@ const flow: Store.Flow = {
     type: 200,
     data: {
       text: "Yes",
-      flags: ["PP-NOTICE", "EDGE_CASE", "CO_RELIEF", "PRIOR_APPROVAL"],
+      flags: [
+        "flag.pp.notice",
+        "flag.planningPolicy.edgeCase",
+        "flag.cil.relief",
+        "flag.pp.priorApproval",
+      ],
     },
   },
   NoOption: {

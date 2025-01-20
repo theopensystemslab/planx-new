@@ -756,12 +756,12 @@ describe("result fields", () => {
   it("renders the heading", () => {
     const output = getDisplayDetailsForResult({
       ...mockResultResult,
-      key: "data.overrides.IMMUNE.heading",
+      key: "data.overrides.flag.pp.immune.heading",
       matchValue: "Squid",
     });
 
     expect(output).toStrictEqual<Output>({
-      key: "Heading (IMMUNE flag)",
+      key: "Heading (flag.pp.immune flag)",
       iconKey: ComponentType.Result,
       componentType: "Result",
       title: "",
@@ -772,12 +772,12 @@ describe("result fields", () => {
   it("renders the description", () => {
     const output = getDisplayDetailsForResult({
       ...mockResultResult,
-      key: "data.overrides.IMMUNE.description",
+      key: "data.overrides.flag.pp.immune.description",
       matchValue: "Eagle",
     });
 
     expect(output).toStrictEqual<Output>({
-      key: "Description (IMMUNE flag)",
+      key: "Description (flag.pp.immune flag)",
       iconKey: ComponentType.Result,
       componentType: "Result",
       title: "",
