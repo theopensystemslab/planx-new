@@ -11,26 +11,26 @@ https://docs.google.com/spreadsheets/d/1ZjqYdC7upA8YS9rBoyRIQPT1sqCXJBaxQDrvUh1t
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land article-4-direction and entity.reference
     records: {
-      "article4.barnet.finchleyChurchEnd": "A4D1",
-      "article4.barnet.finchleyGardenVillage": "A4D2A1",
-      "article4.barnet.glenhillClose": "A4D3A1",
-      "article4.barnet.hendonBurroughs.1": "A4D5A1",
-      "article4.barnet.hendonBurroughs.2": "A4D5A2",
-      "article4.barnet.hampsteadGardenSuburb": "A4D4A1",
-      "article4.barnet.spaniardsEnd": "	A4D4A2",
-      "article4.barnet.millHillA": "A4D6",
-      "article4.barnet.millHillB": "A4D7",
-      "article4.barnet.monkenHadleyA": "A4D8",
-      "article4.barnet.monkenHadleyB": "A4D9",
-      "article4.barnet.mossHall": "A4D10",
-      "article4.barnet.totteridgeA": "A4D11",
-      "article4.barnet.totteridgeB": "A4D12",
-      "article4.barnet.woodStreet": "A4D13",
-      "article4.barnet.hmo": "A4D14",
-      "article4.barnet.agriculturalLand": "A4D15",
+      "articleFour.barnet.finchleyChurchEnd": "A4D1",
+      "articleFour.barnet.finchleyGardenVillage": "A4D2A1",
+      "articleFour.barnet.glenhillClose": "A4D3A1",
+      "articleFour.barnet.hendonBurroughs.one": "A4D5A1",
+      "articleFour.barnet.hendonBurroughs.two": "A4D5A2",
+      "articleFour.barnet.hampsteadGardenSuburb": "A4D4A1",
+      "articleFour.barnet.spaniardsEnd": "	A4D4A2",
+      "articleFour.barnet.millHillA": "A4D6",
+      "articleFour.barnet.millHillB": "A4D7",
+      "articleFour.barnet.monkenHadleyA": "A4D8",
+      "articleFour.barnet.monkenHadleyB": "A4D9",
+      "articleFour.barnet.mossHall": "A4D10",
+      "articleFour.barnet.totteridgeA": "A4D11",
+      "articleFour.barnet.totteridgeB": "A4D12",
+      "articleFour.barnet.woodStreet": "A4D13",
+      "articleFour.barnet.hmo": "A4D14",
+      "articleFour.barnet.agriculturalLand": "A4D15",
     },
   },
 };

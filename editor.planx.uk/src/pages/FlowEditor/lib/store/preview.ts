@@ -627,7 +627,7 @@ export const previewStore: StateCreator<
       );
 
       if (matchingIntersectingConstraints?.length > 0) {
-        // Planning constraints uniquely store passport values for every level of granularity (eg `listed`, `listed.grade.I`)
+        // Planning constraints uniquely store passport values for every level of granularity (eg `listed`, `listed.gradeOne`)
         //   So only auto-answer based on exact matches and do not apply `startsWith` logic
         sortedOptions.forEach((option) => {
           passportValues.forEach((passportValue: any) => {

@@ -11,23 +11,23 @@ https://docs.google.com/spreadsheets/d/1GhxQEuKeSnrchZ_quxg6Rg7fHEWPDUr7/edit#gi
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Newcastle's source data in the following ways:
     //   * exact match of Digital Land's entity.reference
     records: {
-      "article4.newcastle.brandyVaults": "A4BV",
-      "article4.newcastle.dukesCottage": "A4DC",
-      "article4.newcastle.hmo1": "A4HMO1",
-      "article4.newcastle.hmo2": "A4HMO2",
-      "article4.newcastle.hmo3": "A4HMO3",
-      "article4.newcastle.northumberlandGardens": "A4NG",
-      "article4.newcastle.northumberlandGardens2": "A4NG/E",
-      "article4.newcastle.saintPetersBasin1": "A4SPBa1",
-      "article4.newcastle.saintPetersBasin2": "A4SPBa2",
-      "article4.newcastle.saintPetersBasin3": "A4SPBa3",
-      "article4.newcastle.saintPetersBasin4": "A4SPBa4",
-      "article4.newcastle.saintPetersBasin5": "A4SPBa5",
-      "article4.newcastle.summerhill": "A4SH",
+      "articleFour.newcastle.brandyVaults": "A4BV",
+      "articleFour.newcastle.dukesCottage": "A4DC",
+      "articleFour.newcastle.hmoOne": "A4HMO1",
+      "articleFour.newcastle.hmoTwo": "A4HMO2",
+      "articleFour.newcastle.hmoThree": "A4HMO3",
+      "articleFour.newcastle.northumberlandGardens": "A4NG",
+      "articleFour.newcastle.northumberlandGardensTwo": "A4NG/E",
+      "articleFour.newcastle.saintPetersBasinOne": "A4SPBa1",
+      "articleFour.newcastle.saintPetersBasinTwo": "A4SPBa2",
+      "articleFour.newcastle.saintPetersBasinThree": "A4SPBa3",
+      "articleFour.newcastle.saintPetersBasinFour": "A4SPBa4",
+      "articleFour.newcastle.saintPetersBasinFive": "A4SPBa5",
+      "articleFour.newcastle.summerhill": "A4SH",
     },
   },
 };

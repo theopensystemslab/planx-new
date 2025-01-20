@@ -31,7 +31,7 @@ describe.skip("fetching GIS data from Digital Land for supported local authoriti
         .get(`/gis/${location.council}?geom=${location.geom}`)
         .expect(200)
         .then((res) => {
-          expect(res.body["constraints"]["article4"]).toBeDefined();
+          expect(res.body["constraints"]["articleFour"]).toBeDefined();
           expect(res.body["constraints"]["listed"]).toBeDefined();
           expect(
             res.body["constraints"]["designated.conservationArea"],

@@ -11,12 +11,12 @@ https://docs.google.com/spreadsheets/d/1ALSH4hiupdUlrA7Rq7jhfHnWr0-PcB-IzhsztPLl
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "article4.gloucester.southgateStreetConservationArea":
+      "articleFour.gloucester.southgateStreetConservationArea":
         "Southgate Street Conservation Area",
-      "article4.gloucester.stMichaelsSquare":
+      "articleFour.gloucester.stMichaelsSquare":
         "St Michael’s Square Article 4 direction",
     },
   },

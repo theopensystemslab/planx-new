@@ -11,18 +11,18 @@ https://docs.google.com/spreadsheets/d/1dRTb8xhcJgsQB8zIFregenm5aEzrZGU_/edit#gi
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land article-4-direction and entity.reference
     records: {
-      "article4.westBerkshire.oxfordroad": "23/00295/ART4",
-      "article4.westBerkshire.theobalddrive": "23/00294/ART4",
-      "article4.westBerkshire.hollies": "23/00293/ART4",
-      "article4.westBerkshire.bridleway": "23/00292/ART4",
-      "article4.westBerkshire.sawmills": "22/00011/ART4",
-      "article4.westBerkshire.fordsfarmestate": "23/00291/ART4",
-      "article4.westBerkshire.hollybushlane": "22/00012/ART4",
-      "article4.westBerkshire.shawroad": "23/00296/ART4",
-      "article4.westBerkshire.eastgarston": "22/00010/ART4",
+      "articleFour.westBerkshire.oxfordroad": "23/00295/ART4",
+      "articleFour.westBerkshire.theobalddrive": "23/00294/ART4",
+      "articleFour.westBerkshire.hollies": "23/00293/ART4",
+      "articleFour.westBerkshire.bridleway": "23/00292/ART4",
+      "articleFour.westBerkshire.sawmills": "22/00011/ART4",
+      "articleFour.westBerkshire.fordsfarmestate": "23/00291/ART4",
+      "articleFour.westBerkshire.hollybushlane": "22/00012/ART4",
+      "articleFour.westBerkshire.shawroad": "23/00296/ART4",
+      "articleFour.westBerkshire.eastgarston": "22/00010/ART4",
     },
   },
 };

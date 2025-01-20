@@ -73,7 +73,7 @@ describe("handleOverrides basic", () => {
     );
     expect(result["intersectingConstraints"][DEFAULT_FN]).toContain("listed");
     expect(result["intersectingConstraints"][DEFAULT_FN]).toContain(
-      "listed.grade.II",
+      "listed.gradeTwo",
     );
   });
 });
@@ -139,11 +139,11 @@ describe("handleOverrides with granular constraint categories (eg listed bldgs, 
 
     expect(result["intersectingConstraints"][DEFAULT_FN]).toContain("listed");
     expect(result["intersectingConstraints"][DEFAULT_FN]).toContain(
-      "listed.grade.II",
+      "listed.gradeTwo",
     );
 
     expect(result["nots"][DEFAULT_FN]).not.toContain("listed");
-    expect(result["nots"][DEFAULT_FN]).not.toContain("listed.grade.II");
+    expect(result["nots"][DEFAULT_FN]).not.toContain("listed.gradeTwo");
   });
 
   test("when flood zone 3 is inaccurate, but flood zone 2 still applies, the category and granular children variables are updated correctly", () => {
@@ -163,15 +163,15 @@ describe("handleOverrides with granular constraint categories (eg listed bldgs, 
 
     expect(result["intersectingConstraints"][DEFAULT_FN]).toContain("flood");
     expect(result["intersectingConstraints"][DEFAULT_FN]).toContain(
-      "flood.zone.2",
+      "flood.zoneTwo",
     );
     expect(result["intersectingConstraints"][DEFAULT_FN]).not.toContain(
-      "flood.zone.3",
+      "flood.zoneThree",
     );
 
     expect(result["nots"][DEFAULT_FN]).not.toContain("flood");
-    expect(result["nots"][DEFAULT_FN]).not.toContain("flood.zone.2");
-    expect(result["nots"][DEFAULT_FN]).toContain("flood.zone.3");
+    expect(result["nots"][DEFAULT_FN]).not.toContain("flood.zoneTwo");
+    expect(result["nots"][DEFAULT_FN]).toContain("flood.zoneThree");
   });
 
   test("when the only applicable constraint category within designated land is inaccurate, the parent desiganted key also no longer applies", () => {
@@ -220,10 +220,10 @@ describe("handleOverrides with granular constraint categories (eg listed bldgs, 
       "listed",
     );
     expect(result["intersectingConstraints"][DEFAULT_FN]).not.toContain(
-      "listed.grade.II",
+      "listed.gradeTwo",
     );
 
     expect(result["nots"][DEFAULT_FN]).toContain("listed");
-    expect(result["nots"][DEFAULT_FN]).toContain("listed.grade.II");
+    expect(result["nots"][DEFAULT_FN]).toContain("listed.gradeTwo");
   });
 });
