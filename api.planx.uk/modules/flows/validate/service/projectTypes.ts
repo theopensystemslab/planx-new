@@ -69,8 +69,10 @@ const getProjectTypeVals = (flowGraph: FlowGraph): string[] => {
 
 const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
   const applicationTypeChecklistNodes = Object.entries(flowGraph).filter(
-    (entry) =>
-      entry[1].data?.fn === "application.type",
+    (entry) => {
+      const checkComponentTypes = isComponentType(entry, ComponentType.Checklist) || isComponentType(entry, ComponentType.Question) || isComponentType(entry, ComponentType.SetValue)
+      return checkComponentTypes && entry[1].data?.fn === "application.type"
+    }
   );
 
   const answerVals: string[] = [];

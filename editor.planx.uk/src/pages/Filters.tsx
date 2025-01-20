@@ -188,9 +188,13 @@ export const Filters: React.FC<FiltersProps> = ({
   const handleFiltering = (filtersArg: FilterState | undefined) => {
     // Get the results of the search
     const { hasSearchResults, searchResults } = getSearchResults();
-    // if there's search results, filter those, if not, filter flows
-    const resultsToFilter = hasSearchResults ? searchResults : flows;
 
+    // if there's search results, filter those, if not, filter flows
+    const resultsToFilter = formik.values.pattern ? searchResults : flows;
+
+    if (!resultsToFilter[0]) {
+      return setFilteredFlows(searchResults);
+    }
     // this will filter the above by status or app type only for now
     const filteredList = filterListByKeys(resultsToFilter);
 

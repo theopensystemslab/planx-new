@@ -438,6 +438,10 @@ const Team: React.FC = () => {
         const sortedFlows = orderBy(flows, sort, sortDirection);
         setFlows(sortedFlows);
         setFilteredFlows(sortedFlows);
+      } else {
+        const sortedFlows = orderBy(flows, sortOptions[0].fieldName, "asc");
+        setFlows(sortedFlows);
+        setFilteredFlows(sortedFlows);
       }
     });
   }, [teamId, setFlows, getFlows]);
@@ -452,8 +456,8 @@ const Team: React.FC = () => {
   const numberOfServices = filteredFlows?.length || 0;
   const pluralisedService = numberOfServices === 1 ? "service" : "services";
   const listTitle = haveFlowsBeenFiltered
-    ? "Showing all services"
-    : `Showing ${numberOfServices} ${pluralisedService}`;
+    ? `Showing ${numberOfServices} ${pluralisedService}`
+    : "Showing all services";
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
