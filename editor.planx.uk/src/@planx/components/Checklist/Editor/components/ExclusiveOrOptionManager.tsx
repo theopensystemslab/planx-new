@@ -60,7 +60,7 @@ export const ExclusiveOrOptionManager = ({
             }}
             newValueLabel='add "or" option'
             maxItems={1}
-            disableDragAndDrop
+            noDragAndDrop
             newValue={() => {
               return {
                 data: {
