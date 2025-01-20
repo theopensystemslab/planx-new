@@ -1,10 +1,6 @@
 import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
-
-type ApiResponse<T> = {
-  data?: T;
-  error?: string;
-};
+import type { ApiResponse } from "../shared/types.js";
 
 /** Interface for incoming request, in camelCase */
 export interface NewCollectionParams {
