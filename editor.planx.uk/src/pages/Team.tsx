@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
-import Edit from "@mui/icons-material/Edit";
-import Visibility from "@mui/icons-material/Visibility";
+import ClearIcon from "@mui/icons-material/Clear";
+import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -9,15 +9,20 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import { borderedFocusStyle } from "theme";
+import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { inputFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
+import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -27,46 +32,79 @@ import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(0, 0, 3),
-  borderBottom: "1px solid #fff",
+  padding: theme.spacing(3, 0),
   margin: 0,
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
+  gridGap: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
+  },
 }));
 
-const DashboardListItem = styled("li")(({ theme }) => ({
+const FlowCard = styled("li")(({ theme }) => ({
   listStyle: "none",
   position: "relative",
-  color: theme.palette.common.white,
-  margin: theme.spacing(1, 0),
-  background: theme.palette.text.primary,
   display: "flex",
-  justifyContent: "space-between",
-  alignItems: "stretch",
-  borderRadius: "2px",
+  flexDirection: "column",
+  justifyContent: "stretch",
+  borderRadius: "3px",
+  backgroundColor: theme.palette.background.default,
+  border: `1px solid ${theme.palette.border.main}`,
+  boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
 }));
 
-const DashboardLink = styled(Link)(({ theme }) => ({
-  display: "block",
-  fontSize: theme.typography.h4.fontSize,
+const FlowCardContent = styled(Box)(({ theme }) => ({
+  position: "relative",
+  height: "100%",
   textDecoration: "none",
   color: "currentColor",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
   padding: theme.spacing(2),
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "flex-start",
+  gap: theme.spacing(1.5),
   margin: 0,
   width: "100%",
-  "&:focus-within": {
-    ...borderedFocusStyle,
+}));
+
+const DashboardLink = styled(Link)(() => ({
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  zIndex: 1,
+  "&:focus": {
+    ...inputFocusStyle,
   },
+}));
+
+const LinkSubText = styled(Box)(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontWeight: "normal",
+  paddingTop: theme.spacing(0.75),
 }));
 
 const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   display: "flex",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
-}));
-
-const LinkSubText = styled(Box)(({ theme }) => ({
-  color: theme.palette.grey[400],
-  fontWeight: "normal",
-  paddingTop: "0.5em",
+  marginTop: "auto",
+  borderTop: `1px solid ${theme.palette.border.main}`,
+  backgroundColor: theme.palette.background.paper,
+  overflow: "hidden",
+  borderRadius: "0px 0px 4px 4px",
+  "& > button": {
+    padding: theme.spacing(0.25, 1),
+    width: "100%",
+    justifyContent: "flex-start",
+    "& > svg": {
+      display: "none",
+    },
+  },
 }));
 
 const Confirm = ({
@@ -161,18 +199,21 @@ const FlowItem: React.FC<FlowItemProps> = ({
           submitLabel="Delete Service"
         />
       )}
-      <DashboardListItem>
-        <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-          <Typography variant="h4" component="h2">
-            {flow.name}
-          </Typography>
-          <LinkSubText>
-            {formatLastEditMessage(
-              flow.operations[0].createdAt,
-              flow.operations[0]?.actor,
-            )}
-          </LinkSubText>
-        </DashboardLink>
+      <FlowCard>
+        <FlowCardContent>
+          <Box>
+            <Typography variant="h3" component="h2">
+              {flow.name}
+            </Typography>
+            <LinkSubText>
+              {formatLastEditMessage(
+                flow.operations[0].createdAt,
+                flow.operations[0]?.actor,
+              )}
+            </LinkSubText>
+          </Box>
+          <DashboardLink href={`./${flow.slug}`} prefetch={false} />
+        </FlowCardContent>
         {useStore.getState().canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[
@@ -251,33 +292,35 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 error: true,
               },
             ]}
-          />
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.2 }}>
+              <MoreHoriz sx={{ fontSize: "1.4em" }} />
+              <Typography variant="body2" fontSize="small">
+                <strong>Menu</strong>
+              </Typography>
+            </Box>
+          </StyledSimpleMenu>
         )}
-      </DashboardListItem>
+      </FlowCard>
     </>
   );
 };
 
 const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
-  <Box
-    sx={(theme) => ({
-      mt: 4,
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: "8px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      padding: 2,
-    })}
-  >
-    <Typography variant="h3">No services found</Typography>
-    <Typography>Get started by creating your first service</Typography>
-    <AddFlowButton flows={flows} />
-  </Box>
+  <DashboardList sx={{ paddingTop: 0 }}>
+    <FlowCard>
+      <FlowCardContent>
+        <Typography variant="h3">No services found</Typography>
+        <Typography>Get started by creating your first service</Typography>
+        <AddFlowButton flows={flows} />
+      </FlowCardContent>
+    </FlowCard>
+  </DashboardList>
 );
 
-const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
+const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
+  flows,
+}) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore();
 
@@ -345,55 +388,82 @@ const Team: React.FC = () => {
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
-    <Container maxWidth="formWrap">
-      <Box
-        pb={1}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <Box bgcolor={"background.paper"} flexGrow={1}>
+      <Container maxWidth="lg">
         <Box
+          pb={1}
           sx={{
             display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: { xs: "column", contentWrap: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", contentWrap: "center" },
+            gap: 2,
           }}
         >
-          <Typography variant="h2" component="h1" pr={1}>
-            Services
-          </Typography>
-          {canUserEditTeam(slug) ? <Edit /> : <Visibility />}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h2" component="h1" pr={1}>
+              Services
+            </Typography>
+            {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
+            {showAddFlowButton && <AddFlowButton flows={flows} />}
+          </Box>
+          <Box maxWidth={360}>
+            <InputRow>
+              <InputRowLabel>
+                <strong>Search</strong>
+              </InputRowLabel>
+              <InputRowItem>
+                <Box sx={{ position: "relative" }}>
+                  <Input
+                    sx={{
+                      borderColor: (theme) => theme.palette.border.input,
+                      pr: 5,
+                    }}
+                    name="search"
+                    id="search"
+                  />
+                </Box>
+              </InputRowItem>
+            </InputRow>
+          </Box>
         </Box>
-        {showAddFlowButton && <AddFlowButton flows={flows} />}
-      </Box>
-      {hasFeatureFlag("SORT_FLOWS") && flows && (
-        <SortControl<FlowSummary>
-          records={flows}
-          setRecords={setFlows}
-          sortOptions={sortOptions}
-        />
-      )}
-      {teamHasFlows && (
-        <DashboardList>
-          {flows.map((flow) => (
-            <FlowItem
-              flow={flow}
-              flows={flows}
-              key={flow.slug}
-              teamId={teamId}
-              teamSlug={slug}
-              refreshFlows={() => {
-                fetchFlows();
-              }}
+        <Box>
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
+            <SortControl<FlowSummary>
+              records={flows}
+              setRecords={setFlows}
+              sortOptions={sortOptions}
             />
-          ))}
-        </DashboardList>
-      )}
-      {flows && !flows.length && <GetStarted flows={flows} />}
-    </Container>
+          )}
+        </Box>
+        <Box>
+          {teamHasFlows && (
+            <DashboardList>
+              {flows.map((flow) => (
+                <FlowItem
+                  flow={flow}
+                  flows={flows}
+                  key={flow.slug}
+                  teamId={teamId}
+                  teamSlug={slug}
+                  refreshFlows={() => {
+                    fetchFlows();
+                  }}
+                />
+              ))}
+            </DashboardList>
+          )}
+          {flows && !flows.length && <GetStarted flows={flows} />}
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
