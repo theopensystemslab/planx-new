@@ -401,7 +401,7 @@ const Team: React.FC = () => {
   const route = useCurrentRoute();
 
   const formik = useFormik({
-    initialValues: { pattern: "", keys: ["name"] },
+    initialValues: { pattern: "", keys: ["name", "slug"] },
     onSubmit: () => {},
   });
 
@@ -487,11 +487,12 @@ const Team: React.FC = () => {
             {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          {teamHasFlows && (
+          {flows && (
             <SearchBox<FlowSummary>
               records={filteredFlows || []}
+              staticRecords={flows}
               setRecords={setFilteredFlows}
-              searchKey={["name"]}
+              searchKey={["name", "slug"]}
             />
           )}
         </Box>
