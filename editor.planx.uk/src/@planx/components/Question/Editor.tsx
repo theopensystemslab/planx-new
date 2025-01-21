@@ -1,5 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { FormikErrors, FormikValues, useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -13,7 +14,6 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { useStore } from "pages/FlowEditor/lib/store";
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
@@ -68,15 +68,19 @@ export const Question: React.FC<Props> = (props) => {
     validate: ({ options, ...values }) => {
       const errors: FormikErrors<FormikValues> = {};
       if (values.fn && !options.some((option) => option.data.val)) {
-        errors.fn =
-          "At least one option must also set a data field";
+        errors.fn = "At least one option must also set a data field";
       }
       return errors;
     },
   });
 
   const schema = useStore().getFlowSchema();
-  const initialOptionVals = formik.initialValues.options?.map((option) => option.data?.val);
+  const initialOptionVals = formik.values.options?.map(
+    (option) => option.data?.val,
+  );
+  // const initialOptionVals = useMemo(() => formik.values.options?.map((option) => option.data?.val), [formik.values.options])
+  // const initialOptionVals = formik.values.options?.map((option) => option.data?.val);
+  // const optionsSchema = useMemo(() => getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals), [formik.values.fn, schema?.options, initialOptionVals])
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
@@ -144,19 +148,24 @@ export const Question: React.FC<Props> = (props) => {
             onChange={(newOptions) => {
               formik.setFieldValue("options", newOptions);
             }}
-            newValue={() =>
-              ({
-                data: {
-                  text: "",
-                  description: "",
-                  val: "",
-                },
-              }) as Option
-            }
+            newValue={() => ({
+              // TODO: check how ID is populated
+              id: "",
+              data: {
+                text: "",
+                description: "",
+                val: "",
+                flags: [],
+              },
+            })}
             Editor={QuestionOptionsEditor}
             editorExtraProps={{
               showValueField: !!formik.values.fn,
-              schema: getOptionsSchemaByFn(formik.values.fn, schema?.options, initialOptionVals),
+              schema: getOptionsSchemaByFn(
+                formik.values.fn,
+                schema?.options,
+                initialOptionVals,
+              ),
             }}
           />
         </ModalSectionContent>
