@@ -52,7 +52,7 @@ export const SearchBox = <T extends object>({
     if (!formik.values.pattern) {
       debouncedSearch(staticRecords);
     }
-  }, [results]);
+  }, [formik.values.pattern]);
 
   return (
     <Box maxWidth={360}>
