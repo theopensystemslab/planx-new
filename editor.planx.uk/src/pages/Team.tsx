@@ -209,7 +209,11 @@ const FlowItem: React.FC<FlowItemProps> = ({
               )}
             </LinkSubText>
           </Box>
-          <DashboardLink href={`./${flow.slug}`} prefetch={false} />
+          <DashboardLink
+            aria-label={flow.name}
+            href={`./${flow.slug}`}
+            prefetch={false}
+          />
         </FlowCardContent>
         {useStore.getState().canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
