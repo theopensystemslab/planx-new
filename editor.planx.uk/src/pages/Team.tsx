@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import ClearIcon from "@mui/icons-material/Clear";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -9,28 +8,21 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { orderBy } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { inputFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
 import SimpleMenu from "../ui/editor/SimpleMenu";
-import Filters from "./Filters";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
@@ -399,11 +391,6 @@ const Team: React.FC = () => {
   const [triggerClearFilters, setTriggerClearFilters] =
     useState<boolean>(false);
   const route = useCurrentRoute();
-
-  const formik = useFormik({
-    initialValues: { pattern: "", keys: ["name", "slug"] },
-    onSubmit: () => {},
-  });
 
   const haveFlowsBeenFiltered = filteredFlows?.length !== flows?.length;
 
