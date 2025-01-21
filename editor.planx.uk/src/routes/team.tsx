@@ -23,7 +23,6 @@ const setFlowAndLazyLoad = (importComponent: Parameters<typeof lazy>[0]) => {
       request.params.team,
     );
     useStore.setState({ ...data, flowSlug: request.params.flow });
-
     return lazy(importComponent);
   });
 };

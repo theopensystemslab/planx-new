@@ -17,8 +17,7 @@ const readMePageRoutes = compose(
     "/": route(async (req) => {
       const { team: teamSlug, flow: flowSlug } = req.params;
 
-      // TODO: custom data fetch here?
-      const data = await getFlowInformation(req.params.flow, req.params.team); // returns settings, description and flow status (published)
+      const data = await getFlowInformation(req.params.flow, req.params.team);
 
       const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
       if (!isAuthorised)
