@@ -530,6 +530,15 @@
           - team_id
           - updated_at
           - version
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
       comment: They can only insert into Demo team [id = 32]
     - role: platformAdmin
       permission:
@@ -771,6 +780,15 @@
             - creator_id:
                 _eq: x-hasura-user-id
         check: null
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
       comment: ""
     - role: platformAdmin
       permission:
