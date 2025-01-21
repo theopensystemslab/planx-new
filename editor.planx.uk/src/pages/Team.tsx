@@ -17,6 +17,11 @@ import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
+import Filters, {
+  FilterKey,
+  FilterOptions,
+  FilterValues,
+} from "ui/editor/Filter/Filter";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { slugify } from "utils";
 
@@ -307,6 +312,9 @@ const Team: React.FC = () => {
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -325,6 +333,33 @@ const Team: React.FC = () => {
       directionNames: { asc: "Oldest first", desc: "Newest first" },
     },
   ];
+
+  const checkFlowStatus = (flow: FlowSummary, value: unknown) =>
+    flow.status === value;
+  const checkFlowServiceType = (flow: FlowSummary, _value: unknown) =>
+    flow.publishedFlows[0].hasSendComponent;
+  const checkFlowApplicationType = () => true;
+
+  const filterOptions: FilterOptions<FlowSummary>[] = [
+    {
+      displayName: "Online status",
+      optionKey: "status",
+      optionValue: ["online", "offline"],
+      validationFn: checkFlowStatus,
+    },
+    {
+      displayName: "Service type",
+      optionKey: `publishedFlows.0.hasSendComponent`,
+      optionValue: ["submission"],
+      validationFn: checkFlowServiceType,
+    },
+    {
+      displayName: "Application type",
+      optionKey: `name`,
+      optionValue: ["statutory"],
+      validationFn: checkFlowStatus,
+    },
+  ];
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
@@ -334,6 +369,7 @@ const Team: React.FC = () => {
         ),
       );
       setFlows(sortedFlows);
+      setFilteredFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -369,6 +405,13 @@ const Team: React.FC = () => {
         </Box>
         {showAddFlowButton && <AddFlowButton flows={flows} />}
       </Box>
+      {filteredFlows && (
+        <Filters<FlowSummary>
+          records={filteredFlows}
+          setFilteredRecords={setFilteredFlows}
+          filterOptions={filterOptions}
+        />
+      )}
       {hasFeatureFlag("SORT_FLOWS") && flows && (
         <SortControl<FlowSummary>
           records={flows}
