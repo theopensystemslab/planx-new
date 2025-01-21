@@ -15,7 +15,7 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { orderBy } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { inputFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
@@ -25,6 +25,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -486,55 +487,14 @@ const Team: React.FC = () => {
             {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          <Box maxWidth={360}>
-            <InputRow>
-              <InputRowLabel>
-                <strong>Search</strong>
-              </InputRowLabel>
-              <InputRowItem>
-                <Box sx={{ position: "relative" }}>
-                  <Input
-                    sx={{
-                      borderColor: (theme) => theme.palette.border.input,
-                      pr: 5,
-                    }}
-                    name="search"
-                    id="search"
-                    value={formik.values.pattern}
-                    onChange={(e) => {
-                      formik.setFieldValue("pattern", e.target.value);
-                    }}
-                  />
-                  {formik.values.pattern && (
-                    <IconButton
-                      aria-label="clear search"
-                      onClick={() => formik.setFieldValue("pattern", "")}
-                      size="small"
-                      sx={{
-                        position: "absolute",
-                        right: (theme) => theme.spacing(1),
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        padding: 0.5,
-                        zIndex: 1,
-                      }}
-                    >
-                      <ClearIcon fontSize="small" />
-                    </IconButton>
-                  )}
-                </Box>
-              </InputRowItem>
-            </InputRow>
-          </Box>
+          {teamHasFlows && (
+            <SearchBox<FlowSummary>
+              records={filteredFlows || []}
+              setRecords={setFilteredFlows}
+              searchKey={["name"]}
+            />
+          )}
         </Box>
-        {flows && (
-          <Filters
-            flows={flows}
-            setFilteredFlows={setFilteredFlows}
-            formik={formik}
-            clearFilters={triggerClearFilters}
-          />
-        )}
         {teamHasFlows ? (
           <>
             <Box
