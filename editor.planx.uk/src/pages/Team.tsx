@@ -1,6 +1,4 @@
 import { gql } from "@apollo/client";
-import Edit from "@mui/icons-material/Edit";
-import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -13,11 +11,12 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useNavigation } from "react-navi";
+import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -307,6 +306,13 @@ const Team: React.FC = () => {
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
+
+  const route = useCurrentRoute();
+
+  const haveFlowsBeenFiltered = filteredFlows?.length !== flows?.length;
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -341,31 +347,44 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = flows && Boolean(flows.length);
-  const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const teamHasFlows = filteredFlows && Boolean(filteredFlows.length);
+  const showAddFlowButton = flows && canUserEditTeam(slug);
 
   return (
-    <Container maxWidth="formWrap">
-      <Box
-        pb={1}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <Container maxWidth="lg">
+      <Box bgcolor={"background.paper"} flexGrow={1}>
         <Box
+          pb={1}
           sx={{
             display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: { xs: "column", contentWrap: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", contentWrap: "center" },
+            gap: 2,
           }}
         >
-          <Typography variant="h2" component="h1" pr={1}>
-            Services
-          </Typography>
-          {canUserEditTeam(slug) ? <Edit /> : <Visibility />}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h2" component="h1" pr={1}>
+              Services
+            </Typography>
+            {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
+            {showAddFlowButton && <AddFlowButton flows={flows} />}
+          </Box>
+          {flows && (
+            <SearchBox<FlowSummary>
+              records={filteredFlows || []}
+              staticRecords={flows}
+              setRecords={setFilteredFlows}
+              searchKey={["name", "slug"]}
+            />
+          )}
         </Box>
         {showAddFlowButton && <AddFlowButton flows={flows} />}
       </Box>
@@ -378,10 +397,10 @@ const Team: React.FC = () => {
       )}
       {teamHasFlows && (
         <DashboardList>
-          {flows.map((flow) => (
+          {filteredFlows.map((flow) => (
             <FlowItem
               flow={flow}
-              flows={flows}
+              flows={filteredFlows}
               key={flow.slug}
               teamId={teamId}
               teamSlug={slug}
