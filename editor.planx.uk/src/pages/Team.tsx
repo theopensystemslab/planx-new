@@ -9,7 +9,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AddButton } from "ui/editor/AddButton";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
+import Filters, {
+  FilterKey,
+  FilterOptions,
+  FilterValues,
+} from "ui/editor/Filter/Filter";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -174,6 +178,33 @@ const Team: React.FC = () => {
       directionNames: { asc: "Oldest first", desc: "Newest first" },
     },
   ];
+
+  const checkFlowStatus = (flow: FlowSummary, value: unknown) =>
+    flow.status === value;
+  const checkFlowServiceType = (flow: FlowSummary, _value: unknown) =>
+    flow.publishedFlows[0].hasSendComponent;
+  const checkFlowApplicationType = () => true;
+
+  const filterOptions: FilterOptions<FlowSummary>[] = [
+    {
+      displayName: "Online status",
+      optionKey: "status",
+      optionValue: ["online", "offline"],
+      validationFn: checkFlowStatus,
+    },
+    {
+      displayName: "Service type",
+      optionKey: `publishedFlows.0.hasSendComponent`,
+      optionValue: ["submission"],
+      validationFn: checkFlowServiceType,
+    },
+    {
+      displayName: "Application type",
+      optionKey: `name`,
+      optionValue: ["statutory"],
+      validationFn: checkFlowStatus,
+    },
+  ];
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
@@ -232,8 +263,15 @@ const Team: React.FC = () => {
             <StartFromTemplateButton />
           )}
         </Box>
-      <Box>
-          {hasFeatureFlag("SORT_FLOWS") && flows && (
+        <Box>
+          {filteredFlows && (
+        <Filters<FlowSummary>
+          records={filteredFlows}
+          setFilteredRecords={setFilteredFlows}
+          filterOptions={filterOptions}
+        />
+      )}
+      {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SortControl<FlowSummary>
               records={flows}
               setRecords={setFlows}
