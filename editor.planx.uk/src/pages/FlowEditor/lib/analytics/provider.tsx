@@ -353,7 +353,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     await publicClient.mutate({
       mutation: UPDATE_ALLOW_LIST_ANSWERS,
       variables: {
-        id: lastVisibleNodeAnalyticsLogId,
+        id: lastVisibleNodeAnalyticsLogId, // TODO ensure this is correct id when isAutoanswered = true ! Currently lagging ~2 logs (need last log, not *visible* node) else empty mutation response
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
@@ -386,11 +386,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
       const breadcrumb = breadcrumbs[breadcrumbKey];
-      if (breadcrumb.auto) {
+
+      // track() is called from the Card, so auto-answers are naturally omitted because they aren't rendered to a user
+      //   instead we manually insert their analytics_logs here
+      if (breadcrumb?.auto) {
         track(breadcrumbKey);
-      } else {
-        updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
       }
+
+      // Any node should check for and record any allow-list answers
+      updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
     });
   }
 };
