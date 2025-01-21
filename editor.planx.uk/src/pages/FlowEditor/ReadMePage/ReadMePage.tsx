@@ -21,7 +21,7 @@ import { object, string } from "yup";
 import { useStore } from "../lib/store";
 import { FlowInformation } from "../utils";
 
-interface ReadMePageProps {
+export interface ReadMePageProps {
   flowSlug: string;
   flowInformation: FlowInformation;
 }
