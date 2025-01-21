@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize.js";
@@ -12,8 +13,10 @@ import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
+import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { object, string } from "yup";
 
 import { useStore } from "../lib/store";
 import { FlowInformation } from "../utils";
@@ -112,14 +115,16 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     },
     validateOnBlur: false,
     validateOnChange: false,
-    // enableReinitialize: true,
-    // validationSchema: object({
-    //   checked: checklistValidationSchema(props), // character limit?
-    // }),
+    validationSchema: object({
+      serviceSummary: string().max(
+        120,
+        "Service description must be 120 characters or less"
+      ),
+    }),
   });
 
   return (
-    <Container maxWidth="contentWrap">
+    <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           {capitalize(flowSlug.replaceAll("-", " "))}
@@ -139,7 +144,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           {/* <FlowTag tagType={FlowTagType.ApplicationType}>Submission</FlowTag>
           <FlowTag tagType={FlowTagType.ServiceType}>Discretionary</FlowTag> */}
         </Box>
-
       </SettingsSection>
       <SettingsSection>
         <form onSubmit={formik.handleSubmit}>
@@ -157,6 +161,14 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               id="serviceSummary"
               placeholder="Description"
               errorMessage={formik.errors.serviceSummary}
+              inputProps={{
+                "aria-describedby": "A short blurb on what this service is.",
+              }}
+            />
+            <CharacterCounter
+              count={formik.values.serviceSummary.length}
+              textInputType={TextInputType.Short} // 120 characters
+              error={Boolean(formik.errors.serviceSummary)}
             />
           </InputGroup>
           <InputGroup flowSpacing>
@@ -166,6 +178,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <InputRow>
               <RichTextInput
+                inputProps={{
+                  "aria-describedby": "What does this service include?",
+                }}
                 {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
                 placeholder="The service..."
@@ -176,10 +191,13 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           <InputGroup flowSpacing>
             <InputLegend>Limitations of the Service</InputLegend>
             <SettingsDescription>
-              <>What does this flow not include?</>
+              <>What does this service not include?</>
             </SettingsDescription>
             <InputRow>
               <RichTextInput
+                inputProps={{
+                  "aria-describedby": "What does this service not include",
+                }}
                 {...formik.getFieldProps("serviceLimitations")}
                 id="serviceLimitations"
                 errorMessage={formik.errors.serviceLimitations}
@@ -193,7 +211,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               Save
             </Button>
             <Button
-              onClick={() => formik.resetForm()}
+              onClick={() => window.location.reload()}
               type="reset"
               variant="contained"
               disabled={!formik.dirty}

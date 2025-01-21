@@ -12,7 +12,7 @@ export type Props = {
 };
 
 export function isLongTextType(
-  type: TextInputType,
+  type: TextInputType
 ): type is TextInputType.Long | TextInputType.ExtraLong {
   return type === TextInputType.Long || type === TextInputType.ExtraLong;
 }
@@ -34,11 +34,9 @@ export const CharacterCounter: React.FC<Props> = ({
   );
 
   function getLongTextLimit(type: TextInputType): number {
-    if (isLongTextType(type)) {
-      return TEXT_LIMITS[type];
-    } else {
-      return 0;
-    }
+    return isLongTextType(type) || type === TextInputType.Short
+      ? TEXT_LIMITS[type]
+      : 0;
   }
 
   const currentCharacterCount = getLongTextLimit(textInputType) - count;
@@ -83,7 +81,7 @@ export const CharacterCounter: React.FC<Props> = ({
         aria-atomic="true"
         sx={visuallyHidden}
         data-testid="screen-reader-count"
-        aria-hidden={count === 0 ? true : false}
+        aria-hidden={count === 0}
       >
         {showReaderCount && screenReaderCountText}
       </Typography>
