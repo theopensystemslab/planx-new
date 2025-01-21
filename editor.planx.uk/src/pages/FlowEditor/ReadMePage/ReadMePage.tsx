@@ -141,8 +141,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           >
             {flowStatus}
           </FlowTag>
-          {/* <FlowTag tagType={FlowTagType.ApplicationType}>Submission</FlowTag>
-          <FlowTag tagType={FlowTagType.ServiceType}>Discretionary</FlowTag> */}
         </Box>
       </SettingsSection>
       <SettingsSection>
@@ -150,10 +148,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           <InputGroup flowSpacing>
             <InputLegend>Service Description</InputLegend>
             <SettingsDescription>
-              <>
-                A short blurb on what this service is, how it should be used,
-                and if there are any dependencies related to this service.
-              </>
+              <>A short blurb on what this service is.</>
             </SettingsDescription>
             <Input
               multiline
@@ -174,12 +169,16 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           <InputGroup flowSpacing>
             <InputLegend>What does this service do?</InputLegend>
             <SettingsDescription>
-              <>For example, what does the service include?</>
+              <>
+                A longer description of the service. <br />
+                <br /> How should the service be used? What does it include? Are
+                there are any dependencies related to this service?
+              </>
             </SettingsDescription>
             <InputRow>
               <RichTextInput
                 inputProps={{
-                  "aria-describedby": "What does this service include?",
+                  "aria-describedby": "A longer description of the service.",
                 }}
                 {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
