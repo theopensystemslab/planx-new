@@ -158,6 +158,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               errorMessage={formik.errors.serviceSummary}
               inputProps={{
                 "aria-describedby": "A short blurb on what this service is.",
+                "aria-label": "Service Description",
               }}
             />
             <CharacterCounter

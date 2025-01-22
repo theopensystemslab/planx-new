@@ -1,4 +1,4 @@
-import { act } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
@@ -30,7 +30,27 @@ describe("Read Me Page component", () => {
     act(() => setState(initialState));
   });
 
-  it.todo("renders and submits data without an error");
+  it("renders and submits data without an error", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ReadMePage {...defaultProps} />
+      </DndProvider>
+    );
+
+    expect(getState().flowSummary).toBe("");
+
+    const serviceSummaryInput = screen.getByPlaceholderText("Description");
+
+    await user.type(serviceSummaryInput, "a summary");
+
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    expect(screen.getByText("a summary")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data
+
+    expect(getState().flowSummary).toEqual("a summary");
+    expect(screen.getByText("a summary")).toBeInTheDocument();
+  });
 
   it.todo(
     "throws an error if the service description is longer than 120 characters"
@@ -45,22 +65,6 @@ describe("Read Me Page component", () => {
   );
 
   it.todo("displays an error toast if there is a server-side issue");
-
-  //   it("will save matching emails to state", async () => {
-  //     const children = <Button>Testing 123</Button>;
-  //     const { user } = setup(<SaveAndReturn children={children}></SaveAndReturn>);
-  //     expect(getState().saveToEmail).toBeUndefined();
-
-  //     await user.type(screen.getByLabelText("Email address"), "test@test.com");
-  //     await user.type(
-  //       screen.getByLabelText("Confirm email address"),
-  //       "test@test.com"
-  //     );
-  //     await user.click(screen.getByTestId("continue-button"));
-
-  //     expect(getState().saveToEmail).toEqual("test@test.com");
-  //     expect(screen.getByText("Testing 123")).toBeInTheDocument();
-  //   });
 
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
