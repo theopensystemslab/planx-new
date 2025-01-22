@@ -186,7 +186,7 @@ const Team: React.FC = () => {
   const checkFlowStatus = (flow: FlowSummary, value: unknown) =>
     flow.status === value;
   const checkFlowServiceType = (flow: FlowSummary, _value: unknown) =>
-    flow.publishedFlows[0].hasSendComponent;
+    flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
   const checkFlowApplicationType = () => true;
 
   const filterOptions: FilterOptions<FlowSummary>[] = [

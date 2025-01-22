@@ -15,7 +15,7 @@ interface FiltersColumnProps<T> {
   title: string;
   optionKey: FilterKey<T>;
   optionValues: FilterValues<T>[];
-  filters?: Filters<T>;
+  filters?: Filters<T> | {};
   handleChange: (key: FilterKey<T>, value: FilterValues<T>) => void;
 }
 
