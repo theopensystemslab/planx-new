@@ -55,7 +55,7 @@ describe("Pay component - Editor Modal", () => {
           <PayComponent id="test" />
         </DndProvider>,
       );
-      expect(getByText("GOV.UK Pay Metadata")).toBeInTheDocument();
+      expect(getByText("GOV.UK Pay metadata")).toBeInTheDocument();
     });
 
     it("lists the default values", () => {
