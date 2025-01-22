@@ -420,10 +420,9 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
       const breadcrumb = breadcrumbs[breadcrumbKey];
-
-      // track() is called from the Card component, so auto-answers are naturally omitted because they aren't rendered to a user
-      //   instead we manually insert their analytics_logs and track allow list answers as applicable here
-      if (breadcrumb?.auto) {
+      if (breadcrumb.auto) {
+        // track() is called from the Card component, so auto-answers are naturally omitted because they aren't rendered to a user
+        //   instead we manually insert their analytics_logs and track allow list answers as applicable here
         track(breadcrumbKey);
         updateAutoAnsweredNodeWithAllowListAnswers(breadcrumbKey, breadcrumb);
       } else {
