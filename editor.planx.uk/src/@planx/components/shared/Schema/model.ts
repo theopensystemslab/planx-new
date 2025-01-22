@@ -8,18 +8,12 @@ import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
 import { checklistValidationSchema } from "../../Checklist/model";
-import {
-  DateInput,
-  dateRangeSchema as dateValidationSchema,
-} from "../../DateInput/model";
+import { DateInput, dateValidationSchema } from "../../DateInput/model";
 import {
   NumberInput,
   numberInputValidationSchema,
 } from "../../NumberInput/model";
-import {
-  TextInput,
-  userDataSchema as textInputValidationSchema,
-} from "../../TextInput/model";
+import { TextInput, textInputValidationSchema } from "../../TextInput/model";
 import { Option } from "..";
 
 /**

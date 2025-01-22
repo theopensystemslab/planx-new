@@ -1,7 +1,7 @@
 import {
   DateInput,
-  dateRangeSchema,
   dateSchema,
+  dateValidationSchema,
   paddedDate,
   parseDate,
 } from "./model";
@@ -104,22 +104,22 @@ describe("dateSchema", () => {
   });
 });
 
-describe("dateRangeSchema", () => {
+describe("dateValidationSchema", () => {
   test("basic validation", async () => {
     expect(
-      await dateRangeSchema({
+      await dateValidationSchema({
         min: "1990-01-01",
         max: "1999-12-31",
       } as DateInput).isValid("1995-06-15"),
     ).toBe(true);
     expect(
-      await dateRangeSchema({
+      await dateValidationSchema({
         min: "1990-01-01",
         max: "1999-12-31",
       } as DateInput).isValid("2021-06-15"),
     ).toBe(false);
     expect(
-      await dateRangeSchema({
+      await dateValidationSchema({
         min: "1990-01-01",
         max: "1999-12-31",
       } as DateInput).isValid("1980-06-15"),
