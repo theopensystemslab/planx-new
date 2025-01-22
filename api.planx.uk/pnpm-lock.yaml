@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.701.0
     version: 3.701.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#90601e1
-    version: github.com/theopensystemslab/planx-core/90601e1(@types/react@19.0.7)
+    specifier: git+https://github.com/theopensystemslab/planx-core#01d3dc6
+    version: github.com/theopensystemslab/planx-core/01d3dc6(@types/react@19.0.7)
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -5625,6 +5625,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
+    bundledDependencies: []
 
   /jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -7735,9 +7736,9 @@ packages:
     resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/90601e1(@types/react@19.0.7):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/90601e1}
-    id: github.com/theopensystemslab/planx-core/90601e1
+  github.com/theopensystemslab/planx-core/01d3dc6(@types/react@19.0.7):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/01d3dc6}
+    id: github.com/theopensystemslab/planx-core/01d3dc6
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
