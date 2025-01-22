@@ -15,7 +15,7 @@ export const Basic = {
   args: {
     title: "Prior approval",
     img: "null",
-    onChange: () => console.log("hi"),
+    onChange: () => console.log("Radio changed"),
     description: "This option has a description underneath.",
     id: "1",
   },
