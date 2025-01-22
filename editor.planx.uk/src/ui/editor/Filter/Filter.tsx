@@ -29,7 +29,6 @@ import { FiltersColumn } from "./FiltersColumn";
 import {
   addFilterSearchParam,
   mapFilters,
-  removeFilterSearchParam,
   removeUnusedFilterSearchParam,
 } from "./helpers";
 
