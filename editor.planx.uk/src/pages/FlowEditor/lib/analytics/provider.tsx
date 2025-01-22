@@ -13,6 +13,7 @@ import {
   TRACK_INPUT_ERRORS,
   UPDATE_ALLOW_LIST_ANSWERS,
   UPDATE_ANALYTICS_LOG_METADATA,
+  UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS,
   UPDATE_FLOW_DIRECTION,
   UPDATE_HAS_CLICKED_HELP,
   UPDATE_HAS_CLICKED_SAVE,
@@ -353,7 +354,40 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     await publicClient.mutate({
       mutation: UPDATE_ALLOW_LIST_ANSWERS,
       variables: {
-        id: lastVisibleNodeAnalyticsLogId, // TODO ensure this is correct id when isAutoanswered = true ! Currently lagging ~2 logs (need last log, not *visible* node) else empty mutation response
+        id: lastVisibleNodeAnalyticsLogId,
+        allow_list_answers: allowListAnswers,
+        node_id: nodeId,
+      },
+    });
+  }
+
+  async function updateAutoAnsweredNodeWithAllowListAnswers(
+    nodeId: string,
+    breadcrumb: Store.UserData,
+  ) {
+    if (shouldSkipTracking()) return;
+
+    // Only proceed if it's a SetValue component that is appending or replacing (not removing) a value
+    //   Do not track allow list answers for Questions or Checklists because these will always be equal or less granular data values than put to the user
+    if (
+      flow[nodeId]?.type !== TYPES.SetValue ||
+      ["removeOne", "removeAll"].includes(flow[nodeId]?.data?.operation)
+    )
+      return;
+
+    const allowListAnswers = getAllowListAnswers(
+      nodeId,
+      breadcrumb,
+      flow,
+      breadcrumbs,
+    );
+    if (!allowListAnswers) return;
+
+    // We can't rely on lastVisibleNodeAnalyticsLogId variable here because we have an auto-answered node (not visible)
+    //   But this shouldn't matter in the case of SetValues because very nodeId has same data value (this would not hold for Questions and Checklists with different option paths)
+    await publicClient.mutate({
+      mutation: UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS,
+      variables: {
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
@@ -387,14 +421,15 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
       const breadcrumb = breadcrumbs[breadcrumbKey];
 
-      // track() is called from the Card, so auto-answers are naturally omitted because they aren't rendered to a user
-      //   instead we manually insert their analytics_logs here
+      // track() is called from the Card component, so auto-answers are naturally omitted because they aren't rendered to a user
+      //   instead we manually insert their analytics_logs and track allow list answers as applicable here
       if (breadcrumb?.auto) {
         track(breadcrumbKey);
+        updateAutoAnsweredNodeWithAllowListAnswers(breadcrumbKey, breadcrumb);
+      } else {
+        // Visible nodes always track allow list answers independent of component type
+        updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
       }
-
-      // Any node should check for and record any allow-list answers
-      updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
     });
   }
 };
