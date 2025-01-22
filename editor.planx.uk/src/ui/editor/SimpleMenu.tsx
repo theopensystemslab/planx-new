@@ -30,6 +30,7 @@ export default function SimpleMenu({
         }}
         aria-label="Options"
         size="large"
+        disableRipple
       >
         <MoreVert />
         {children}
