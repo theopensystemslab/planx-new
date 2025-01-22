@@ -23,6 +23,9 @@ const defaultProps = {
   },
 } as ReadMePageProps;
 
+const longInput =
+  "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my who"; // 122 characters
+
 describe("Read Me Page component", () => {
   beforeAll(() => (initialState = getState()));
 
@@ -52,13 +55,50 @@ describe("Read Me Page component", () => {
     expect(screen.getByText("a summary")).toBeInTheDocument();
   });
 
-  it.todo(
-    "throws an error if the service description is longer than 120 characters"
-  );
+  it("displays an error if the service description is longer than 120 characters", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ReadMePage {...defaultProps} />
+      </DndProvider>
+    );
 
-  it.todo(
-    "displays data in the fields if there is already flow information in the database"
-  );
+    expect(getState().flowSummary).toBe("");
+
+    const serviceSummaryInput = screen.getByPlaceholderText("Description");
+
+    await user.type(serviceSummaryInput, longInput);
+
+    expect(
+      screen.getByText("You have 2 characters too many")
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    expect(
+      screen.getByText("Service description must be 120 characters or less")
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data
+    expect(getState().flowSummary).toBe(""); // db has not been updated
+  });
+
+  it("displays data in the fields if there is already flow information in the database", async () => {
+    await act(async () =>
+      setState({
+        flowSummary: "This flow summary is in the db already",
+      })
+    );
+
+    setup(
+      <DndProvider backend={HTML5Backend}>
+        <ReadMePage {...defaultProps} />
+      </DndProvider>
+    );
+
+    expect(
+      screen.getByText("This flow summary is in the db already")
+    ).toBeInTheDocument();
+  });
 
   it.todo(
     "counts down the number of characters remaining on the service description field"
