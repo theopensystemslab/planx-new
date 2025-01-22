@@ -18,6 +18,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object, string } from "yup";
 
+import { ExternalPortals } from "../components/Sidebar/Search/ExternalPortalList/ExternalPortals";
 import { useStore } from "../lib/store";
 import { FlowInformation } from "../utils";
 
@@ -44,6 +45,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     updateFlowSummary,
     flowLimitations,
     updateFlowLimitations,
+    externalPortals,
   ] = useStore((state) => [
     state.flowDescription,
     state.updateFlowDescription,
@@ -51,9 +53,14 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     state.updateFlowSummary,
     state.flowLimitations,
     state.updateFlowLimitations,
+    state.externalPortals,
   ]);
 
   const toast = useToast();
+
+  const hasExternalPortals = Boolean(Object.keys(externalPortals).length);
+
+  console.log({ externalPortals, hasExternalPortals });
 
   const formik = useFormik<ReadMePageForm>({
     initialValues: {
@@ -223,6 +230,15 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </Box>
         </form>
       </SettingsSection>
+      {hasExternalPortals && (
+        <Box pt={2} data-testid="searchExternalPortalList">
+          <InputLegend>External Portals</InputLegend>
+          <Typography variant="body1" my={2}>
+            Your service contains the following external portals:
+          </Typography>
+          <ExternalPortals externalPortals={externalPortals} />
+        </Box>
+      )}
     </Container>
   );
 };

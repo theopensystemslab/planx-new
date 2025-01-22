@@ -100,11 +100,7 @@ describe("Read Me Page component", () => {
     ).toBeInTheDocument();
   });
 
-  it.todo(
-    "counts down the number of characters remaining on the service description field"
-  );
-
-  it.todo("displays an error toast if there is a server-side issue");
+  it.todo("displays an error toast if there is a server-side issue"); // waiting for PR 4019 to merge first
 
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
