@@ -379,7 +379,7 @@ const Team: React.FC = () => {
             {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
             {showAddFlowButton && <AddFlowButton flows={flows || []} />}
           </Box>
-          {!isEmpty(flows) && (
+          {hasFeatureFlag("SORT_FLOWS") && !isEmpty(flows) && (
             <SearchBox<FlowSummary>
               records={filteredFlows || []}
               staticRecords={flows || []}
