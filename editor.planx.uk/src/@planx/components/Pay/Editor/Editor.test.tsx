@@ -178,7 +178,7 @@ describe("Pay component - Editor Modal", () => {
 
       await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
 
-      expect(handleSubmit.mock.lastCall[0].data.govPayMetadata).toEqual([
+      expect(handleSubmit.mock.lastCall?.[0].data.govPayMetadata).toEqual([
         { key: "flow", value: "flowName" },
         { key: "source", value: "PlanX" },
         { key: "paidViaInviteToPay", value: "@paidViaInviteToPay" },

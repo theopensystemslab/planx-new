@@ -8,9 +8,6 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
     port: 3000,
-    fs: {
-      cachedChecks: false,
-    },
     hmr: {
       host: "localhost",
       protocol: "ws",
