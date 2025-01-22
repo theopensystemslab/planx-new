@@ -5,7 +5,7 @@ import type { QuestionField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
-import BasicRadio from "../../Radio/BasicRadio";
+import BasicRadio from "../../Radio/BasicRadio/BasicRadio";
 import { getFieldProps, Props } from ".";
 import { FieldInputDescription } from "./shared";
 
