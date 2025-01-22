@@ -10,6 +10,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -347,8 +348,9 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = filteredFlows && Boolean(filteredFlows.length);
-  const showAddFlowButton = flows && canUserEditTeam(slug);
+  const teamHasFlows =
+    !isEmpty(filteredFlows) && Boolean(filteredFlows?.length);
+  const showAddFlowButton = !isEmpty(flows) && canUserEditTeam(slug);
 
   return (
     <Container maxWidth="lg">
@@ -375,12 +377,12 @@ const Team: React.FC = () => {
               Services
             </Typography>
             {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
-            {showAddFlowButton && <AddFlowButton flows={flows} />}
+            {showAddFlowButton && <AddFlowButton flows={flows || []} />}
           </Box>
-          {flows && (
+          {!isEmpty(flows) && (
             <SearchBox<FlowSummary>
               records={filteredFlows || []}
-              staticRecords={flows}
+              staticRecords={flows || []}
               setRecords={setFilteredFlows}
               searchKey={["name", "slug"]}
             />
@@ -396,7 +398,7 @@ const Team: React.FC = () => {
       )}
       {teamHasFlows && (
         <DashboardList>
-          {filteredFlows.map((flow) => (
+          {filteredFlows?.map((flow) => (
             <FlowItem
               flow={flow}
               flows={filteredFlows}
