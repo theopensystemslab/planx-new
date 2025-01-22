@@ -337,7 +337,7 @@ const Team: React.FC = () => {
   const checkFlowStatus = (flow: FlowSummary, value: unknown) =>
     flow.status === value;
   const checkFlowServiceType = (flow: FlowSummary, _value: unknown) =>
-    flow.publishedFlows[0].hasSendComponent;
+    flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
   const checkFlowApplicationType = () => true;
 
   const filterOptions: FilterOptions<FlowSummary>[] = [
@@ -377,7 +377,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = flows && Boolean(flows.length);
+  const teamHasFlows = filteredFlows && flows && Boolean(flows.length);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
@@ -405,7 +405,7 @@ const Team: React.FC = () => {
         </Box>
         {showAddFlowButton && <AddFlowButton flows={flows} />}
       </Box>
-      {filteredFlows && (
+      {filteredFlows && flows && (
         <Filters<FlowSummary>
           records={filteredFlows}
           setFilteredRecords={setFilteredFlows}
@@ -421,7 +421,7 @@ const Team: React.FC = () => {
       )}
       {teamHasFlows && (
         <DashboardList>
-          {flows.map((flow) => (
+          {filteredFlows.map((flow) => (
             <FlowItem
               flow={flow}
               flows={flows}
