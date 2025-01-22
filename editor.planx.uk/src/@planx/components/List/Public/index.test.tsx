@@ -167,7 +167,7 @@ describe("Building a list", () => {
     expect(addItemButton).not.toBeInTheDocument();
   });
 
-  test("Adding an item", { timeout: 35000 }, async () => {
+  test("Adding an item", { timeout: 35_000 }, async () => {
     const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockZooProps} />,
     );
@@ -198,7 +198,7 @@ describe("Building a list", () => {
     ).toBeInTheDocument();
   });
 
-  test("Editing an item", { timeout: 45000 }, async () => {
+  test("Editing an item", { timeout: 45_000 }, async () => {
     // Setup three cards
     const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockZooProps} />,
@@ -251,7 +251,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when all cards are inactive",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       // Setup three cards
       const {
@@ -330,7 +330,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when another card is active",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       // Setup two cards
       const { getAllByTestId, getByTestId, user } = setup(
@@ -367,7 +367,7 @@ describe("Building a list", () => {
 
   test(
     "Cancelling an invalid (new) item removes it",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
         setup(<ListComponent {...mockZooProps} />);
@@ -398,7 +398,7 @@ describe("Building a list", () => {
 
   test(
     "Cancelling a valid (existing) item resets previous state",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       const {
         getByLabelText,
@@ -622,7 +622,7 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the minimum number of items is not met",
-    { timeout: 10000 },
+    { timeout: 10_000 },
     async () => {
       const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
         schema: { min: 2 },
@@ -648,7 +648,7 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the maximum number of items is exceeded",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       const { user, getAllByTestId, getByTestId, getByText } = setup(
         <ListComponent {...mockZooProps} />,
@@ -721,7 +721,7 @@ describe("Form validation and error handling", () => {
 
 test(
   "Input data is displayed in the inactive card view",
-  { timeout: 35000 },
+  { timeout: 35_000 },
   async () => {
     const { getByText, user } = setup(<ListComponent {...mockZooProps} />);
 
@@ -773,7 +773,7 @@ test(
 describe("Payload generation", () => {
   it(
     "generates a valid payload on submission (Zoo)",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       const handleSubmit = vi.fn();
       const { getByTestId, user } = setup(
@@ -795,7 +795,7 @@ describe("Payload generation", () => {
 
   it(
     "generates a valid payload with summary stats on submission (Units)",
-    { timeout: 35000 },
+    { timeout: 35_000 },
     async () => {
       const handleSubmit = vi.fn();
       const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
