@@ -44,14 +44,14 @@ const FlowDescription = () => {
     <Box mb={2}>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          Service Information
+          Service information
         </Typography>
         <Typography variant="body1">
           Useful information about this service.
         </Typography>
       </SettingsSection>
       <SettingsForm
-        legend="Service Description"
+        legend="Service description"
         formik={formik}
         description={
           <>

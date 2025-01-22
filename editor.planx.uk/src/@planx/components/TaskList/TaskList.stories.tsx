@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
-    title: "Your Next Steps",
+    title: "Your next steps",
     description: "To reverse climate change",
     tasks: [
       { title: "Do this first", description: "It's a very important task." },

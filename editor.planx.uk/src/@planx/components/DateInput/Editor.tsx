@@ -40,7 +40,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal" name="modal">
       <ModalSection>
-        <ModalSectionContent title="Date Input" Icon={ICONS[TYPES.DateInput]}>
+        <ModalSectionContent title="Date input" Icon={ICONS[TYPES.DateInput]}>
           <InputRow>
             <Input
               format="large"
