@@ -136,10 +136,6 @@ export const Filters = <T extends object>({
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  useEffect(() => {
-    setOriginalRecords(records);
-  }, []);
-
   const addToSearchParams = (params: Filters<T> | {}) => {
     const searchParams = new URLSearchParams(route.url.search);
     const mappedFilters = mapFilters(params, filterOptions);
@@ -179,6 +175,35 @@ export const Filters = <T extends object>({
     );
   };
 
+  const parseStateFromURL = () => {
+    const searchParams = new URLSearchParams(route.url.search);
+    const searchParamToMap = searchParams.entries().toArray() as [
+      FilterKey<T>,
+      FilterValues<T>,
+    ][];
+
+    const searchParamFilters = searchParamToMap.map((key) => {
+      const findOption = filterOptions.find(
+        (option) => slugify(`${option.displayName}`) === `${key[0]}`,
+      );
+      return findOption && { [`${findOption.optionKey}`]: `${key[1]}` };
+    });
+
+    const paramFilters = {};
+
+    searchParamFilters.forEach((param) => Object.assign(paramFilters, param));
+
+    !isEmpty(paramFilters) && updateFilterState(paramFilters);
+  };
+
+  useEffect(() => {
+    setOriginalRecords(records);
+  }, []);
+
+  useEffect(() => {
+    parseStateFromURL();
+  }, [originalRecords]);
+
   const clearAllFilters = () => {
     setFilters({});
     setSelectedFilters([]);
@@ -189,6 +214,7 @@ export const Filters = <T extends object>({
     if (!collectedFilters && originalRecords)
       return setFilteredRecords(originalRecords);
     const filteredRecords = filter(originalRecords, (record: T) => {
+      console.log(collectedFilters);
       return filterOptions.every((value: FilterOptions<T>) => {
         const valueToFilter = get(collectedFilters, value.optionKey);
         if (valueToFilter) {
@@ -197,6 +223,8 @@ export const Filters = <T extends object>({
         return true;
       });
     });
+
+    console.log("just befre setFilteredRecords");
 
     setFilteredRecords(filteredRecords);
   };
@@ -229,6 +257,7 @@ export const Filters = <T extends object>({
   };
 
   const updateFilterState = (newFilters: Filters<T> | {}) => {
+    console.log(newFilters);
     setSelectedFilters(newFilters);
     setFilters(newFilters);
     isEmpty(newFilters) ? clearSearchParams() : addToSearchParams(newFilters);
