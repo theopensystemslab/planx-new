@@ -10,17 +10,28 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { AnyARecord } from "dns";
-import { FormikProps } from "formik";
-import { useSearch } from "hooks/useSearch";
-import { capitalize, debounce } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import {
+  __,
+  capitalize,
+  filter,
+  findKey,
+  get,
+  isEmpty,
+  map,
+  omit,
+} from "lodash";
+import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths, ValueOf } from "type-fest";
-import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
+import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
+import {
+  addFilterSearchParam,
+  mapFilters,
+  removeFilterSearchParam,
+  removeUnusedFilterSearchParam,
+} from "./helpers";
 
 const FiltersContainer = styled(Accordion)(({ theme }) => ({
   width: "100%",
@@ -112,44 +123,38 @@ interface FiltersProps<T> {
   clearFilters?: boolean;
 }
 
-interface FilterState {
-  status?: "online" | "offline";
-  applicationType?: "statutory";
-  serviceType?: "submission";
-}
-
 export const Filters = <T extends object>({
   records,
   setFilteredRecords,
   filterOptions,
   clearFilters,
 }: FiltersProps<T>) => {
-  const [filters, setFilters] = useState<Filters<T>>();
-  const [selectedFilters, setSelectedFilters] = useState<
-    FilterValues<T>[] | string[] | []
-  >();
+  const [filters, setFilters] = useState<Filters<T> | {}>();
+  const [selectedFilters, setSelectedFilters] = useState<Filters<T> | {}>();
+  const [originalRecords, setOriginalRecords] = useState<T[]>();
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  const addToSearchParams = (params: FilterState) => {
-    const searchParams = new URLSearchParams(route.url.search);
+  useEffect(() => {
+    setOriginalRecords(records);
+  }, []);
 
-    // Update or remove filter parameters
-    Object.entries(params).forEach(([key, value]) => {
-      if (value) {
-        searchParams.set(key, value);
-      } else {
-        console.log("hitting delete");
-        searchParams.delete(key);
-      }
-    });
+  const addToSearchParams = (params: Filters<T> | {}) => {
+    const searchParams = new URLSearchParams(route.url.search);
+    const mappedFilters = mapFilters(params, filterOptions);
+    addFilterSearchParam<T>(searchParams, mappedFilters);
+    removeUnusedFilterSearchParam<T>(
+      filterOptions,
+      searchParams,
+      mappedFilters,
+    );
 
     navigation.navigate(
       {
         pathname: window.location.pathname,
-        search: searchParams.toString(), // Use the complete searchParams object
+        search: searchParams.toString(),
       },
       {
         replace: true,
@@ -159,9 +164,11 @@ export const Filters = <T extends object>({
 
   const clearSearchParams = () => {
     const searchParams = new URLSearchParams(route.url.search);
-    searchParams.delete("status");
-    searchParams.delete("applicationType");
-    searchParams.delete("serviceType");
+    const displayNames = filterOptions.map((option) => option.displayName);
+    displayNames.forEach((name) => {
+      searchParams.delete(slugify(name));
+    });
+
     navigation.navigate(
       {
         pathname: window.location.pathname,
@@ -179,40 +186,21 @@ export const Filters = <T extends object>({
     clearSearchParams();
   };
 
-  const handleFiltering = (filtersArg: FilterState | undefined) => {
-    if (!resultsToFilter[0]) {
-      return setFilteredRecords(searchResults);
-    }
-    // this will filter the above by status or app type only for now
-    const filteredList = filterListByKeys(resultsToFilter);
+  const handleFiltering = (collectedFilters: Filters<T> | {}) => {
+    if (!collectedFilters && originalRecords)
+      return setFilteredRecords(originalRecords);
+    const filteredRecords = filter(originalRecords, (record: T) => {
+      return filterOptions.every((value: FilterOptions<T>) => {
+        const valueToFilter = get(collectedFilters, value.optionKey);
+        if (valueToFilter) {
+          return value.validationFn(record, valueToFilter);
+        }
+        return true;
+      });
+    });
 
-    if (filteredList) {
-      setFilteredRecords(filteredList);
-    }
-    if (
-      !filtersArg?.status &&
-      !filtersArg?.applicationType &&
-      !filtersArg?.serviceType &&
-      !hasSearchResults
-    ) {
-      setFilteredRecords(records);
-    }
+    setFilteredRecords(filteredRecords);
   };
-
-  useEffect(() => {
-    const { status, applicationType, serviceType }: FilterState =
-      route.url.query;
-    const filtersToAssign = {
-      status: status,
-      applicationType: applicationType,
-      serviceType: serviceType,
-    };
-    if (status || applicationType || serviceType) {
-      setFilters(filtersToAssign);
-      setSelectedFilters(Object.values(filtersToAssign));
-      handleFiltering(filtersToAssign);
-    }
-  }, []);
 
   useEffect(() => {
     if (clearFilters) {
@@ -220,18 +208,33 @@ export const Filters = <T extends object>({
     }
   }, [clearFilters]);
 
-  const handleChange = (filterKey: FilterKeys, filterValue: FilterValues) =>
-    filters?.[filterKey] === filterValue
+  const handleChange = (
+    filterKey: FilterKey<T>,
+    filterValue: FilterValues<T>,
+  ) => {
+    const newObject = { ...filters, [filterKey]: filterValue } as Filters<T>;
+    get(filters, filterKey) === filterValue
       ? removeFilter(filterKey)
-      : setFilters({ ...filters, [filterKey]: filterValue });
+      : setFilters(newObject);
+  };
 
-  const removeFilter = (targetFilter: FilterKeys) => {
-    const newFilters = { ...filters };
-    delete newFilters[targetFilter];
+  const removeFilter = (targetFilter: FilterKey<T>) => {
+    const newFilters = omit(filters, targetFilter) as Filters<T>;
     setFilters(newFilters);
   };
 
-  console.log(filters);
+  const removeSelectedFilter = (targetFilter: FilterKey<T>) => {
+    const newFilters =
+      (omit(selectedFilters, targetFilter) as Filters<T>) || {};
+    updateFilterState(newFilters);
+  };
+
+  const updateFilterState = (newFilters: Filters<T> | {}) => {
+    setSelectedFilters(newFilters);
+    setFilters(newFilters);
+    isEmpty(newFilters) ? clearSearchParams() : addToSearchParams(newFilters);
+    handleFiltering(newFilters);
+  };
 
   return (
     <FiltersContainer
@@ -249,49 +252,26 @@ export const Filters = <T extends object>({
             {expanded ? "Hide filters" : "Show filters"}
           </Typography>
         </FiltersToggle>
-        {/* <Box sx={{ display: "flex", gap: 1 }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           {selectedFilters &&
-            selectedFilters.map((filter) => {
+            map(selectedFilters, (filter: FilterValues<T>) => {
               if (!filter) return;
               return (
                 <StyledChip
-                  sx={{ textTransform: "capitalize" }}
                   onClick={(e) => e.stopPropagation()}
-                  label={filter}
-                  key={filter}
+                  label={capitalize(`${filter}`)}
+                  key={`${filter}`}
                   onDelete={() => {
-                    const newSelectedFilters =
-                      (selectedFilters.filter(
-                        (selectedFilter) =>
-                          selectedFilter !== filter &&
-                          selectedFilter !== undefined,
-                      ) as string[]) || [];
-                    console.log(newSelectedFilters);
-                    setSelectedFilters(newSelectedFilters);
-                    if (filters) {
-                      const deleteFilter = Object.keys(filters) as FilterKeys[];
-                      const targetFilter = deleteFilter.find(
-                        (key: FilterKeys) => {
-                          return filters[key] === filter;
-                        },
-                      );
-
-                      if (targetFilter) {
-                        const newFilters = { ...filters };
-                        delete newFilters[targetFilter];
-                        removeFilter(targetFilter);
-                        addToSearchParams({
-                          ...filters,
-                          [targetFilter]: undefined,
-                        });
-                        handleFiltering(newFilters);
-                      }
-                    }
+                    const targetKey = findKey(
+                      selectedFilters,
+                      (keys) => keys === filter,
+                    ) as FilterKey<T>;
+                    removeSelectedFilter(targetKey);
                   }}
                 />
               );
             })}
-        </Box> */}
+        </Box>
       </FiltersHeader>
       <FiltersBody>
         <FiltersContent>
@@ -311,15 +291,7 @@ export const Filters = <T extends object>({
             variant="contained"
             color="primary"
             onClick={() => {
-              if (filters) {
-                handleFiltering(filters);
-                addToSearchParams(filters);
-                setSelectedFilters(
-                  Object.values(filters).filter(
-                    (values) => values !== undefined,
-                  ),
-                );
-              }
+              filters && updateFilterState(filters);
             }}
           >
             Apply filters
