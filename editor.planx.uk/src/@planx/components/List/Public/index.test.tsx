@@ -167,7 +167,7 @@ describe("Building a list", () => {
     expect(addItemButton).not.toBeInTheDocument();
   });
 
-  test("Adding an item", { timeout: 20000 }, async () => {
+  test("Adding an item", { timeout: 35_000 }, async () => {
     const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockZooProps} />,
     );
@@ -198,7 +198,7 @@ describe("Building a list", () => {
     ).toBeInTheDocument();
   });
 
-  test("Editing an item", { timeout: 25000 }, async () => {
+  test("Editing an item", { timeout: 45_000 }, async () => {
     // Setup three cards
     const { getAllByTestId, getByTestId, user } = setup(
       <ListComponent {...mockZooProps} />,
@@ -251,7 +251,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when all cards are inactive",
-    { timeout: 25000 },
+    { timeout: 35_000 },
     async () => {
       // Setup three cards
       const {
@@ -330,7 +330,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when another card is active",
-    { timeout: 20000 },
+    { timeout: 35_000 },
     async () => {
       // Setup two cards
       const { getAllByTestId, getByTestId, user } = setup(
@@ -367,7 +367,7 @@ describe("Building a list", () => {
 
   test(
     "Cancelling an invalid (new) item removes it",
-    { timeout: 20000 },
+    { timeout: 35_000 },
     async () => {
       const { getAllByTestId, getByText, user, queryAllByTestId, getByTestId } =
         setup(<ListComponent {...mockZooProps} />);
@@ -398,7 +398,7 @@ describe("Building a list", () => {
 
   test(
     "Cancelling a valid (existing) item resets previous state",
-    { timeout: 20000 },
+    { timeout: 35_000 },
     async () => {
       const {
         getByLabelText,
@@ -452,8 +452,23 @@ describe("Form validation and error handling", () => {
     );
 
     let errorMessages = getAllByTestId(/error-message-input/);
-    // One error per field, plus 3 for a date input (one per input)
-    const numberOfErrors = mockZooProps.schema.fields.length + 3;
+
+    let numberOfErrors = 0;
+    mockZooProps.schema.fields.forEach((field) => {
+      switch (field.type) {
+        case "date":
+          // Parent wrapper + 3 inputs
+          numberOfErrors += 4;
+          break;
+        case "address":
+          // 3 mandatory fields
+          numberOfErrors += 3;
+          break;
+        default:
+          numberOfErrors += 1;
+          break;
+      }
+    });
 
     // Each field has an ErrorWrapper
     expect(errorMessages).toHaveLength(numberOfErrors);
@@ -469,10 +484,10 @@ describe("Form validation and error handling", () => {
     errorMessages = getAllByTestId(/error-message-input/);
     expect(errorMessages).toHaveLength(numberOfErrors);
 
-    // Each field is in an error state, ignoring individual date input fields
+    // Each field is in an error state, ignoring individual date and address input fields
     const fieldErrors = errorMessages.slice(
       0,
-      mockZooProps.schema.fields.length,
+      mockZooProps.schema.fields.length - 1,
     );
 
     fieldErrors.forEach((message) => {
@@ -490,7 +505,7 @@ describe("Form validation and error handling", () => {
         <ListComponent {...mockZooProps} />,
       );
 
-      const nameInput = screen.getByLabelText(/name/);
+      const nameInput = screen.getByLabelText(/What's their name/);
       await user.type(
         nameInput,
         "This is a long string of text over one hundred and twenty characters, which should trigger the 'short' text validation warning",
@@ -585,11 +600,29 @@ describe("Form validation and error handling", () => {
         /Date must include a day/,
       );
     });
+
+    test.todo("map fields");
+
+    test("address fields", async () => {
+      const { user, getByRole, getAllByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const addressInputErrorMessage = getAllByTestId(
+        /error-message-input-address-address-line1/,
+      )[0];
+
+      expect(addressInputErrorMessage).toHaveTextContent(
+        /Enter the first line of an address/,
+      );
+    });
   });
 
   test(
     "an error displays if the minimum number of items is not met",
-    { timeout: 10000 },
+    { timeout: 10_000 },
     async () => {
       const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
         schema: { min: 2 },
@@ -615,7 +648,7 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the maximum number of items is exceeded",
-    { timeout: 25000 },
+    { timeout: 35_000 },
     async () => {
       const { user, getAllByTestId, getByTestId, getByText } = setup(
         <ListComponent {...mockZooProps} />,
@@ -650,7 +683,7 @@ describe("Form validation and error handling", () => {
       <ListComponent {...mockZooProps} />,
     );
     // Start filling out item
-    const nameInput = getByLabelText(/name/);
+    const nameInput = getByLabelText(/What's their name/);
     await user.type(nameInput, "Richard Parker");
 
     const emailInput = getByLabelText(/email/);
@@ -670,7 +703,7 @@ describe("Form validation and error handling", () => {
       <ListComponent {...mockZooProps} />,
     );
     // Start filling out item
-    const nameInput = getByLabelText(/name/);
+    const nameInput = getByLabelText(/What's their name/);
     await user.type(nameInput, "Richard Parker");
 
     const emailInput = getByLabelText(/email/);
@@ -688,7 +721,7 @@ describe("Form validation and error handling", () => {
 
 test(
   "Input data is displayed in the inactive card view",
-  { timeout: 20000 },
+  { timeout: 35_000 },
   async () => {
     const { getByText, user } = setup(<ListComponent {...mockZooProps} />);
 
@@ -723,13 +756,24 @@ test(
     expect(getByText("Meat", { selector: "li" })).toBeVisible();
     expect(getByText("Leaves", { selector: "li" })).toBeVisible();
     expect(getByText("Bamboo", { selector: "li" })).toBeVisible();
+
+    // Address input
+    expect(
+      getByText("What's their address?", { selector: "td" }),
+    ).toBeVisible();
+    expect(
+      getByText(
+        "134 Corstorphine Rd, Corstorphine, Edinburgh, Midlothian, EH12 6TS, Scotland",
+        { selector: "td" },
+      ),
+    ).toBeVisible();
   },
 );
 
 describe("Payload generation", () => {
   it(
     "generates a valid payload on submission (Zoo)",
-    { timeout: 20000 },
+    { timeout: 35_000 },
     async () => {
       const handleSubmit = vi.fn();
       const { getByTestId, user } = setup(
@@ -751,7 +795,7 @@ describe("Payload generation", () => {
 
   it(
     "generates a valid payload with summary stats on submission (Units)",
-    { timeout: 20000 },
+    { timeout: 35_000 },
     async () => {
       const handleSubmit = vi.fn();
       const { getByTestId, user, getByRole, getAllByRole, getByLabelText } =
@@ -842,7 +886,7 @@ describe("Navigating back", () => {
  * Helper function to fill out a list item form
  */
 const fillInResponse = async (user: UserEvent) => {
-  const nameInput = screen.getByLabelText(/name/);
+  const nameInput = screen.getByLabelText(/What's their name/);
   await user.type(nameInput, "Richard Parker");
 
   const emailInput = screen.getByLabelText(/email/);
@@ -869,6 +913,19 @@ const fillInResponse = async (user: UserEvent) => {
   await user.type(dayInput, "14");
   await user.type(monthInput, "7");
   await user.type(yearInput, "1988");
+
+  const line1Input = screen.getByLabelText("Address line 1");
+  const line2Input = screen.getByLabelText("Address line 2 (optional)");
+  const townInput = screen.getByLabelText("Town");
+  const countyInput = screen.getByLabelText("County (optional)");
+  const postcodeInput = screen.getByLabelText("Postcode");
+  const countryInput = screen.getByLabelText("Country (optional)");
+  await user.type(line1Input, "134 Corstorphine Rd");
+  await user.type(line2Input, "Corstorphine");
+  await user.type(townInput, "Edinburgh");
+  await user.type(countyInput, "Midlothian");
+  await user.type(postcodeInput, "EH12 6TS");
+  await user.type(countryInput, "Scotland");
 
   const saveButton = screen.getByRole("button", {
     name: /Save/,

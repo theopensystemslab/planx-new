@@ -1,8 +1,10 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
+import { formatAsSingleLineAddress } from "../AddressInput/model";
 import {
   Field,
+  isAddressFieldResponse,
   isChecklistFieldResponse,
   isMapFieldResponse,
   isNumberFieldResponse,
@@ -29,17 +31,19 @@ export const formatSchemaDisplayValue = <T extends Field>(
   field: T,
 ) => {
   switch (field.type) {
-    case "number": {
+    case "number":
       if (!isNumberFieldResponse(value)) return;
 
       return field.data.units ? `${value} ${field.data.units}` : value;
-    }
+    case "address":
+      if (!isAddressFieldResponse(value)) return;
+
+      return formatAsSingleLineAddress(value);
     case "text":
-    case "date": {
+    case "date":
       if (!isTextResponse(value)) return;
 
       return value;
-    }
     case "checklist": {
       if (!isChecklistFieldResponse(value)) return;
 
@@ -62,7 +66,7 @@ export const formatSchemaDisplayValue = <T extends Field>(
       );
       return matchingOption?.data.text;
     }
-    case "map": {
+    case "map":
       if (!isMapFieldResponse(value)) return;
 
       return (
@@ -94,7 +98,6 @@ export const formatSchemaDisplayValue = <T extends Field>(
           />
         </>
       );
-    }
   }
 };
 
