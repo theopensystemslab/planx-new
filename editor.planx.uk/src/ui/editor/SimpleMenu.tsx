@@ -2,7 +2,7 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 
 interface Props {
   className?: string;
@@ -19,7 +19,7 @@ export default function SimpleMenu({
   items,
   children,
   ...restProps
-}: Props): FCReturn {
+}: PropsWithChildren<Props>): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   return (
     <div {...restProps}>
