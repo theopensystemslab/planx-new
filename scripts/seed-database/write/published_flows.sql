@@ -6,7 +6,8 @@ CREATE TEMPORARY TABLE sync_published_flows (
   summary text,
   publisher_id int,
   created_at timestamptz,
-  has_send_component boolean  );
+  has_send_component boolean  
+  );
 
 /* Ensure columns here are kept in sync with container.sh */
 \copy sync_published_flows (id, data, flow_id, summary, publisher_id, created_at, has_send_component) FROM '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');
@@ -18,7 +19,8 @@ INSERT INTO published_flows (
   summary,
   publisher_id,
   created_at,
-  has_send_component  )
+  has_send_component  
+  )
 SELECT
   id,
   data,
