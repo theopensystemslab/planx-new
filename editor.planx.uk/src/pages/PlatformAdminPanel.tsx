@@ -44,7 +44,7 @@ function Component() {
     <Container maxWidth={false}>
       <SettingsSection>
         <Typography variant="h2" component="h1" gutterBottom>
-          Platform Admin Panel
+          Platform admin panel
         </Typography>
         <Typography variant="body1">
           {`This is an overview of each team's integrations and settings for the `}

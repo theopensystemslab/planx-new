@@ -1,7 +1,7 @@
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import BasicRadio from "@planx/components/shared/Radio/BasicRadio";
+import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -29,7 +29,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validate: () => { },
+    validate: () => {},
   });
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
@@ -40,7 +40,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Text Input" Icon={ICONS[TYPES.TextInput]}>
+        <ModalSectionContent title="Text input" Icon={ICONS[TYPES.TextInput]}>
           <InputRow>
             <Input
               format="large"

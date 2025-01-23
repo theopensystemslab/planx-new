@@ -117,6 +117,7 @@ export function generateAuthenticationToken(userId: string) {
       },
     },
     process.env.JWT_SECRET,
+    { expiresIn: "24h" },
   );
 }
 

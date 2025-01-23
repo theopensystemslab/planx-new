@@ -108,7 +108,7 @@ const ResultComponent: React.FC<Props> = (props) => {
 
           <Box mt={2}>
             <Typography variant="h5" component="h6">
-              Flag Text Overrides (optional)
+              Flag text overrides (optional)
             </Typography>
             <Typography variant="body2">
               The overrides you set here will change what is displayed to the

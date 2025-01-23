@@ -17,7 +17,7 @@ export const InviteToPaySection: React.FC = () => {
 
   return (
     <ModalSection>
-      <ModalSectionContent title="Invite to Pay" Icon={ICONS[TYPES.Pay]}>
+      <ModalSectionContent title="Invite to pay" Icon={ICONS[TYPES.Pay]}>
         <InputRow>
           <Switch
             checked={values.allowInviteToPay}

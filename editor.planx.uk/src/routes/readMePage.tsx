@@ -19,15 +19,9 @@ const readMePageRoutes = compose(
 
       const data = await getFlowInformation(req.params.flow, req.params.team);
 
-      const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
-      if (!isAuthorised)
-        throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`,
-        );
-
       return {
         title: makeTitle("About this page"),
-        view: <ReadMePage flowSlug={flowSlug} flowInformation={data} />,
+        view: <ReadMePage teamSlug={teamSlug} flowSlug={flowSlug} flowInformation={data} />,
       };
     }),
   }),

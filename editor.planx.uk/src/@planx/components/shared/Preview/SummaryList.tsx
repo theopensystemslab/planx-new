@@ -7,6 +7,7 @@ import {
   ComponentType as TYPES,
   NodeId,
 } from "@opensystemslab/planx-core/types";
+import { formatAsSingleLineAddress } from "@planx/components/AddressInput/model";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import type { Page } from "@planx/components/Page/model";
@@ -19,6 +20,7 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import {
   Field,
+  isAddressFieldResponse,
   isMapFieldResponse,
   isNumberFieldResponse,
   isTextResponse,
@@ -637,6 +639,8 @@ function Page(props: ComponentProps) {
     if (isTextResponse(answer)) return answer;
     if (isNumberFieldResponse(answer)) return answer.toString();
     if (isMapFieldResponse(answer)) return `${answer.length || 0} features`;
+    if (isAddressFieldResponse(answer))
+      return formatAsSingleLineAddress(answer);
 
     // TODO: Handle other types more gracefully
     return answer;

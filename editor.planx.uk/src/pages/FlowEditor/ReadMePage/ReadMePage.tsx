@@ -26,6 +26,7 @@ import { FlowInformation } from "../utils";
 export interface ReadMePageProps {
   flowSlug: string;
   flowInformation: FlowInformation;
+  teamSlug: string;
 }
 
 interface ReadMePageForm {
@@ -37,6 +38,7 @@ interface ReadMePageForm {
 export const ReadMePage: React.FC<ReadMePageProps> = ({
   flowSlug,
   flowInformation,
+  teamSlug,
 }) => {
   const { status: flowStatus } = flowInformation;
   const [
@@ -164,6 +166,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               id="serviceSummary"
               placeholder="Description"
               errorMessage={formik.errors.serviceSummary}
+              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               inputProps={{
                 "aria-describedby": "A short blurb on what this service is.",
                 "aria-label": "Service Description",
@@ -186,6 +189,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <InputRow>
               <RichTextInput
+                disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 inputProps={{
                   "aria-describedby": "A longer description of the service.",
                 }}
@@ -203,6 +207,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <InputRow>
               <RichTextInput
+                disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 inputProps={{
                   "aria-describedby": "What does this service not include",
                 }}
@@ -215,14 +220,20 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </InputGroup>
 
           <Box>
-            <Button type="submit" variant="contained">
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+            >
               Save
             </Button>
             <Button
               onClick={() => window.location.reload()}
               type="reset"
               variant="contained"
-              disabled={!formik.dirty}
+              disabled={
+                !formik.dirty
+              }
               color="secondary"
               sx={{ ml: 1.5 }}
             >

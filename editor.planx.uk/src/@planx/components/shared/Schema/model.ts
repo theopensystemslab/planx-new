@@ -1,20 +1,19 @@
+import { Address } from "@opensystemslab/planx-core/types";
+import {
+  AddressInput,
+  addressValidationSchema,
+} from "@planx/components/AddressInput/model";
 import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
 import { checklistValidationSchema } from "../../Checklist/model";
-import {
-  DateInput,
-  dateRangeSchema as dateValidationSchema,
-} from "../../DateInput/model";
+import { DateInput, dateValidationSchema } from "../../DateInput/model";
 import {
   NumberInput,
   numberInputValidationSchema,
 } from "../../NumberInput/model";
-import {
-  TextInput,
-  userDataSchema as textInputValidationSchema,
-} from "../../TextInput/model";
+import { TextInput, textInputValidationSchema } from "../../TextInput/model";
 import { Option } from "..";
 
 /**
@@ -81,6 +80,11 @@ export type DateField = {
   data: DateInput & { fn: string };
 };
 
+export type AddressField = {
+  type: "address";
+  data: AddressInput & { fn: string };
+};
+
 export type MapField = {
   type: "map";
   data: {
@@ -106,6 +110,7 @@ export type Field =
   | QuestionField
   | ChecklistField
   | DateField
+  | AddressField
   | MapField;
 
 /**
@@ -127,6 +132,8 @@ export type ResponseValue<T extends Field> = T extends MapField
   ? string[]
   : T extends NumberField
   ? number
+  : T extends AddressField
+  ? Address
   : string;
 
 export type SchemaUserResponse = Record<
@@ -162,6 +169,11 @@ export const isChecklistFieldResponse = (
 ): response is ResponseValue<ChecklistField> =>
   Array.isArray(response) && !isMapFieldResponse(response);
 
+export const isAddressFieldResponse = (
+  response: unknown,
+): response is ResponseValue<AddressField> =>
+  typeof response === "object" && response !== null && "line1" in response;
+
 /**
  * For each field in schema, return a map of Yup validation schema
  * Matches both the field type and data
@@ -187,6 +199,9 @@ const generateValidationSchemaForFields = (
         break;
       case "date":
         fieldSchemas[data.fn] = dateValidationSchema(data);
+        break;
+      case "address":
+        fieldSchemas[data.fn] = addressValidationSchema();
         break;
       case "map":
         fieldSchemas[data.fn] = mapValidationSchema(data);
@@ -223,6 +238,16 @@ export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
       case "checklist":
       case "map":
         initialValues[field.data.fn] = [];
+        break;
+      case "address":
+        initialValues[field.data.fn] = {
+          line1: "",
+          line2: "",
+          town: "",
+          county: "",
+          postcode: "",
+          country: "",
+        };
         break;
       default:
         initialValues[field.data.fn] = "";

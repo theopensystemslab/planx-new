@@ -1,12 +1,10 @@
 import {
-  AutocompleteChangeReason,
   AutocompleteProps,
-  createFilterOptions
+  createFilterOptions,
 } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
-import isNull from "lodash/isNull";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useMemo } from "react";
+import React from "react";
 import AutocompleteInput from "ui/shared/AutocompleteInput";
 import InputRow from "ui/shared/InputRow";
 
@@ -25,7 +23,11 @@ const renderOptions: AutocompleteProps<
   "div"
 >["renderOption"] = (props, option) => {
   return (
-    <ListItem key={option} sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }} {...props}>
+    <ListItem
+      key={option}
+      sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }}
+      {...props}
+    >
       {option}
     </ListItem>
   );
@@ -35,30 +37,18 @@ const filter = createFilterOptions<string>();
 
 export const DataFieldAutocomplete: React.FC<Props> = (props) => {
   const defaultSchema = useStore().getFlowSchema()?.nodes || [];
-  const { value: initialValue, schema: options = defaultSchema } = props;
+  const { value, schema: options = defaultSchema } = props;
 
-  const value: string | undefined = useMemo(
-    () => options?.find((option) => option === initialValue),
-    [initialValue, options],
-  );
-
-  const handleChange = (
-    _event: React.SyntheticEvent,
-    value: string | null,
-    _reason: AutocompleteChangeReason,
-  ) => {
-    if (typeof value === "string") {
-      // Adding a new option
-      if (value.startsWith('Add "')) {
-        props.onChange(value.split(('"'))[1]);
-      } else {
-        // Selecting an option
-        props.onChange(value);
-      }
-    } else if (isNull(value)) {
-      // Clearing an option
-      props.onChange(value);
+  const handleChange = (_event: React.SyntheticEvent, value: string | null) => {
+    // Adding a new option via the "Add" button
+    if (typeof value === "string" && value.startsWith('Add "')) {
+      const optionValue = value.split('"')[1];
+      props.onChange(optionValue);
+      return;
     }
+
+    // Selecting or clearing an option
+    props.onChange(value);
   };
 
   return (
@@ -69,6 +59,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         placeholder="Data field"
         required={Boolean(props.required)}
         onChange={handleChange}
+        autoSelect
         value={value}
         options={options}
         filterOptions={(options, params) => {

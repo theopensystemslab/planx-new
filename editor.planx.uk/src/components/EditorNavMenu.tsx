@@ -175,7 +175,7 @@ function EditorNavMenu() {
       title: "About this service",
       Icon: Info,
       route: `/${teamSlug}/${flowSlug}/about`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
     {
       title: "Service settings",

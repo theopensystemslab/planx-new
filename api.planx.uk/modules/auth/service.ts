@@ -28,6 +28,7 @@ export const buildJWTForAPIRole = () =>
       },
     },
     process.env.JWT_SECRET!,
+    { expiresIn: "24h" },
   );
 
 const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({

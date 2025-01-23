@@ -54,20 +54,20 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">
-        <option value={TYPES.TextInput}>Text Input</option>
-        <option value={TYPES.FileUpload}>File Upload</option>
+        <option value={TYPES.TextInput}>Text input</option>
+        <option value={TYPES.FileUpload}>File upload</option>
         <option value={TYPES.FileUploadAndLabel}>Upload and label</option>
-        <option value={TYPES.NumberInput}>Number Input</option>
-        <option value={TYPES.DateInput}>Date Input</option>
-        <option value={TYPES.AddressInput}>Address Input</option>
-        <option value={TYPES.ContactInput}>Contact Input</option>
+        <option value={TYPES.NumberInput}>Number input</option>
+        <option value={TYPES.DateInput}>Date input</option>
+        <option value={TYPES.AddressInput}>Address input</option>
+        <option value={TYPES.ContactInput}>Contact input</option>
         <option value={TYPES.List}>List</option>
         <option value={TYPES.Page}>Page</option>
-        <option value={TYPES.MapAndLabel}>Map and Label (Testing only)</option>
+        <option value={TYPES.MapAndLabel}>Map and label (testing only)</option>
         <option value={TYPES.Feedback}>Feedback</option>
       </optgroup>
       <optgroup label="Information">
-        <option value={TYPES.TaskList}>Task List</option>
+        <option value={TYPES.TaskList}>Task list</option>
         <option value={TYPES.Notice}>Notice</option>
         <option value={TYPES.Result}>Result</option>
         <option value={TYPES.Content}>Content</option>
@@ -82,10 +82,10 @@ const NodeTypeSelect: React.FC<{
       </optgroup>
       <optgroup label="Navigation">
         <option value={TYPES.Filter}>Filter</option>
-        <option value={TYPES.InternalPortal}>Internal Portal</option>
-        <option value={TYPES.ExternalPortal}>External Portal</option>
+        <option value={TYPES.InternalPortal}>Internal portal</option>
+        <option value={TYPES.ExternalPortal}>External portal</option>
         <option value={TYPES.Section}>Section</option>
-        <option value={TYPES.SetValue}>Set Value</option>
+        <option value={TYPES.SetValue}>Set value</option>
       </optgroup>
       <optgroup label="Payment">
         <option value={TYPES.Calculate}>Calculate</option>
