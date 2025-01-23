@@ -13,6 +13,9 @@ import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { slugify } from "utils";
 
+import FlowCard, { Card, CardContent } from "./FlowCard";
+import { useStore } from "./FlowEditor/lib/store";
+import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { client } from "../../lib/graphql";
 import SimpleMenu from "../../ui/editor/SimpleMenu";
 import { useStore } from "../FlowEditor/lib/store";
@@ -25,34 +28,17 @@ import {
 } from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(0, 0, 3),
-  borderBottom: "1px solid #fff",
+  padding: theme.spacing(3, 0),
   margin: 0,
-}));
-
-const DashboardListItem = styled("li")(({ theme }) => ({
-  listStyle: "none",
-  position: "relative",
-  color: theme.palette.common.white,
-  margin: theme.spacing(1, 0),
-  background: theme.palette.text.primary,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "stretch",
-  borderRadius: "2px",
-}));
-
-const DashboardLink = styled(Link)(({ theme }) => ({
-  display: "block",
-  fontSize: theme.typography.h4.fontSize,
-  textDecoration: "none",
-  color: "currentColor",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  padding: theme.spacing(2),
-  margin: 0,
-  width: "100%",
-  "&:focus-within": {
-    ...borderedFocusStyle,
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
+  gridGap: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
   },
 }));
 
@@ -210,25 +196,20 @@ const FlowItem: React.FC<FlowItemProps> = ({
 };
 
 const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
-  <Box
-    sx={(theme) => ({
-      mt: 4,
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: "8px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      padding: 2,
-    })}
-  >
-    <Typography variant="h3">No services found</Typography>
-    <Typography>Get started by creating your first service</Typography>
-    <AddFlowButton flows={flows} />
-  </Box>
+  <DashboardList sx={{ paddingTop: 0 }}>
+    <Card>
+      <CardContent>
+        <Typography variant="h3">No services found</Typography>
+        <Typography>Get started by creating your first service</Typography>
+        <AddFlowButton flows={flows} />
+      </CardContent>
+    </Card>
+  </DashboardList>
 );
 
-const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
+const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
+  flows,
+}) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore();
 
@@ -305,27 +286,50 @@ const Team: React.FC = () => {
     hasFeatureFlag("TEMPLATES");
 
   return (
-    <Container maxWidth="formWrap">
-      <Box
-        pb={1}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <Box bgcolor={"background.paper"} flexGrow={1}>
+      <Container maxWidth="lg">
         <Box
+          pb={1}
           sx={{
             display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: { xs: "column", contentWrap: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", contentWrap: "center" },
+            gap: 2,
           }}
         >
-          <Typography variant="h2" component="h1" pr={1}>
-            Services
-          </Typography>
-          {canUserEditTeam(slug) ? <Edit /> : <Visibility />}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h2" component="h1" pr={1}>
+              Services
+            </Typography>
+            {showAddFlowButton && <AddFlowButton flows={flows} />}
+          </Box>
+          <Box maxWidth={360}>
+            <InputRow>
+              <InputRowLabel>
+                <strong>Search</strong>
+              </InputRowLabel>
+              <InputRowItem>
+                <Box sx={{ position: "relative" }}>
+                  <Input
+                    sx={{
+                      borderColor: (theme) => theme.palette.border.input,
+                      pr: 5,
+                    }}
+                    name="search"
+                    id="search"
+                  />
+                </Box>
+              </InputRowItem>
+            </InputRow>
+          </Box>
         </Box>
         <Box
           sx={{
