@@ -8,10 +8,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
@@ -145,25 +141,13 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          <Box maxWidth={360}>
-            <InputRow>
-              <InputRowLabel>
-                <strong>Search</strong>
-              </InputRowLabel>
-              <InputRowItem>
-                <Box sx={{ position: "relative" }}>
-                  <Input
-                    sx={{
-                      borderColor: (theme) => theme.palette.border.input,
-                      pr: 5,
-                    }}
-                    name="search"
-                    id="search"
-                  />
-                </Box>
-              </InputRowItem>
-            </InputRow>
-          </Box>
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
+            <SearchBox<FlowSummary>
+              records={filteredFlows}
+              setRecords={setFilteredFlows}
+              searchKey={["name", "slug"]}
+            />
+          )}
         </Box>
         <Box>
           {hasFeatureFlag("SORT_FLOWS") && flows && (
@@ -175,9 +159,9 @@ const Team: React.FC = () => {
           )}
         </Box>
         <Box>
-          {teamHasFlows && (
+          {filteredFlows && flows && (
             <DashboardList>
-              {flows.map((flow) => (
+              {filteredFlows.map((flow) => (
                 <FlowCard
                   flow={flow}
                   flows={flows}
