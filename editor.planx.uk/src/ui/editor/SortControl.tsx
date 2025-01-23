@@ -73,6 +73,7 @@ export const SortControl = <T extends object>({
   };
 
   const parseStateFromURL = () => {
+    console.log("Sort control parse");
     const { sort: sortParam, sortDirection: sortDirectionParam } =
       route.url.query;
     const matchingSortOption = sortOptionsMap[sortParam];
