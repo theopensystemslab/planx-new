@@ -155,7 +155,10 @@ const ExternalPortalForm: React.FC<{
             flow that it references.
           </span>
         </ModalSectionContent>
-        <ModalSectionContent key={"team-section"} title="Select a team">
+        <ModalSectionContent
+          key={"team-section"}
+          title="Select a team (optional)"
+        >
           <SelectMultiple
             id="team-select"
             onChange={(_options, event) => {
