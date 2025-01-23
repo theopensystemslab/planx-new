@@ -33,30 +33,32 @@ const Flow = ({ breadcrumbs = [] }: any) => {
       <ol id="flow" data-layout={flowLayout} className="decisions">
         <EndPoint text="start" />
         {!(breadcrumbs.length > 0 || childNodes.length > 0) && (
+          // Example code for demo, would be ideal to make this kind of inline
+          // graph content into a component for production
           <Box
-            sx={{
+            sx={(theme) => ({
               display: "flex",
-              gap: "10px",
+              gap: theme.spacing(1),
               width: "266px",
-              padding: "20px",
-              background: "#F9F8F8",
-              border: `1px solid #B2B4B6`,
+              padding: theme.spacing(2),
+              background: theme.palette.background.paper,
+              border: `1px solid ${theme.palette.border.main}`,
               position: "relative",
-              marginTop: "10px",
-              borderRadius: "5px",
+              marginTop: theme.spacing(1),
+              borderRadius: "4px",
               "&::before": {
                 content: "''",
                 position: "absolute",
-                top: "-10px",
+                top: "-11px",
                 left: `calc(50% - 1px)`,
                 width: "2px",
-                height: "10px",
+                height: theme.spacing(1),
                 background: "#D0D0D0",
               },
-            }}
+            })}
           >
             <SchoolIcon />
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <Typography variant="body1">
                 <strong>New to Plan✕?</strong>
               </Typography>
