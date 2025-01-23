@@ -1,7 +1,7 @@
 import {
   AutocompleteChangeReason,
   AutocompleteProps,
-  createFilterOptions
+  createFilterOptions,
 } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import isNull from "lodash/isNull";
@@ -25,7 +25,11 @@ const renderOptions: AutocompleteProps<
   "div"
 >["renderOption"] = (props, option) => {
   return (
-    <ListItem key={option} sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }} {...props}>
+    <ListItem
+      key={option}
+      sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }}
+      {...props}
+    >
       {option}
     </ListItem>
   );
@@ -50,7 +54,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     if (typeof value === "string") {
       // Adding a new option
       if (value.startsWith('Add "')) {
-        props.onChange(value.split(('"'))[1]);
+        props.onChange(value.split('"')[1]);
       } else {
         // Selecting an option
         props.onChange(value);
@@ -69,6 +73,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         placeholder="Data field"
         required={Boolean(props.required)}
         onChange={handleChange}
+        autoSelect
         value={value}
         options={options}
         filterOptions={(options, params) => {
