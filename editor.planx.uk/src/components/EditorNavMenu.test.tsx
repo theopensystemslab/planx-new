@@ -99,12 +99,12 @@ describe("flowLayoutRoutes", () => {
     mockFlowName = "test-flow";
   });
 
-  it("does not display for teamViewers", () => {
+  it("only displays the 'about this service' route for teamViewers", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    expect(menuItems).toHaveLength(2); // Flow and About this service
   });
 
   it("displays for teamEditors", () => {
