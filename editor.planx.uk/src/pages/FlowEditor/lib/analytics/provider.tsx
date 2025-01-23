@@ -371,7 +371,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     //   Do not track allow list answers for Questions or Checklists because these will always be equal or less granular data values than put to the user
     if (
       flow[nodeId]?.type !== TYPES.SetValue ||
-      ["removeOne", "removeAll"].includes(flow[nodeId]?.data?.operation)
+      !["append", "replace"].includes(flow[nodeId]?.data?.operation)
     )
       return;
 
@@ -383,11 +383,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
     if (!allowListAnswers) return;
 
-    // We can't rely on lastVisibleNodeAnalyticsLogId variable here because we have an auto-answered node (not visible)
+    // We can't rely on lastVisibleNodeAnalyticsLogId variable here to mutate a single record because we have an auto-answered node (not visible), so instead we update entire session using analyticsId
     //   But this shouldn't matter in the case of SetValues because very nodeId has same data value (this would not hold for Questions and Checklists with different option paths)
     await publicClient.mutate({
       mutation: UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS,
       variables: {
+        analytics_id: analyticsId,
         allow_list_answers: allowListAnswers,
         node_id: nodeId,
       },
