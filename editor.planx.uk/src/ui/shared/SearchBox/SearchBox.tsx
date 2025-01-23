@@ -1,10 +1,12 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import { useFormik } from "formik";
 import { FuseOptionKey } from "fuse.js";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
+import { DEBOUNCE_MS } from "pages/FlowEditor/components/Sidebar/Search";
 import React, { useEffect, useMemo, useState } from "react";
 
 import Input from "../Input/Input";
@@ -13,46 +15,51 @@ import InputRowItem from "../InputRowItem";
 import InputRowLabel from "../InputRowLabel";
 
 interface SearchBoxProps<T> {
-  records: T[];
-  staticRecords: T[];
+  records: T[] | null;
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   searchKey: FuseOptionKey<T>[];
 }
 
 export const SearchBox = <T extends object>({
   records,
-  staticRecords,
   setRecords,
   searchKey,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState<string>();
+  const [originalRecords] = useState(records);
 
   const formik = useFormik({
     initialValues: { pattern: "", keys: searchKey },
-    onSubmit: () => {},
+    onSubmit: ({ pattern }) => {
+      setIsSearching(true);
+      debouncedSearch(pattern);
+    },
   });
-
   const { results, search } = useSearch({
-    list: records,
+    list: originalRecords || [],
     keys: formik.values.keys,
   });
 
   const debouncedSearch = useMemo(
     () =>
-      debounce((recordsToUpdate: T[]) => {
-        setRecords(recordsToUpdate);
+      debounce((pattern: string) => {
+        search(pattern);
+        setSearchedTerm(pattern);
         setIsSearching(false);
-      }, 500),
-    [],
+      }, DEBOUNCE_MS),
+    [search],
   );
 
   useEffect(() => {
-    const mappedResults = results.map((result) => result.item);
-    formik.values.pattern && debouncedSearch(mappedResults);
-    if (!formik.values.pattern) {
-      debouncedSearch(staticRecords);
+    if (results && searchedTerm) {
+      const mappedResults = results.map((result) => result.item);
+      setRecords(mappedResults);
     }
-  }, [formik.values.pattern]);
+    if (results && !searchedTerm) {
+      originalRecords && setRecords(originalRecords);
+    }
+  }, [results, setRecords, searchedTerm, originalRecords]);
 
   return (
     <Box maxWidth={360}>
@@ -72,17 +79,15 @@ export const SearchBox = <T extends object>({
               value={formik.values.pattern}
               onChange={(e) => {
                 formik.setFieldValue("pattern", e.target.value);
-                setIsSearching(true);
-                search(e.target.value);
+                formik.submitForm();
               }}
             />
-            {formik.values.pattern && !isSearching && (
+            {searchedTerm && !isSearching && (
               <IconButton
                 aria-label="clear search"
                 onClick={() => {
                   formik.setFieldValue("pattern", "");
-                  search("");
-                  setRecords(staticRecords);
+                  formik.submitForm();
                 }}
                 size="small"
                 sx={{
@@ -95,6 +100,26 @@ export const SearchBox = <T extends object>({
                 }}
               >
                 <ClearIcon fontSize="small" />
+              </IconButton>
+            )}
+            {isSearching && (
+              <IconButton
+                aria-label="clear search"
+                onClick={() => {
+                  formik.setFieldValue("pattern", "");
+                  formik.submitForm();
+                }}
+                size="small"
+                sx={{
+                  position: "absolute",
+                  right: (theme) => theme.spacing(1),
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  padding: 0.5,
+                  zIndex: 1,
+                }}
+              >
+                <CircularProgress size={"1.5rem"} />
               </IconButton>
             )}
           </Box>

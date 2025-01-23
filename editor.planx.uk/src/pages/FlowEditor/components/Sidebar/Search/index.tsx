@@ -17,7 +17,7 @@ import { ALL_FACETS, SearchFacets } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";
 
-const DEBOUNCE_MS = 500;
+export const DEBOUNCE_MS = 500;
 
 interface SearchNodes {
   pattern: string;

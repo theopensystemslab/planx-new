@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { Link, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
@@ -258,7 +258,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
   );
 };
 
-const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
+const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
   <Box
     sx={(theme) => ({
       mt: 4,
@@ -277,7 +277,9 @@ const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
   </Box>
 );
 
-const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
+const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
+  flows,
+}) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore();
 
@@ -311,10 +313,6 @@ const Team: React.FC = () => {
     null,
   );
 
-  const route = useCurrentRoute();
-
-  const haveFlowsBeenFiltered = filteredFlows?.length !== flows?.length;
-
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
       displayName: "Name",
@@ -333,6 +331,7 @@ const Team: React.FC = () => {
     },
   ];
   const fetchFlows = useCallback(() => {
+    console.log("fetch flows");
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
       const sortedFlows = flows.toSorted((a, b) =>
@@ -341,6 +340,7 @@ const Team: React.FC = () => {
         ),
       );
       setFlows(sortedFlows);
+      setFilteredFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -348,9 +348,10 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows =
-    !isEmpty(filteredFlows) && Boolean(filteredFlows?.length);
-  const showAddFlowButton = !isEmpty(flows) && canUserEditTeam(slug);
+  const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
+  const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+
+  console.log(flows);
 
   return (
     <Container maxWidth="lg">
@@ -376,13 +377,11 @@ const Team: React.FC = () => {
             <Typography variant="h2" component="h1" pr={1}>
               Services
             </Typography>
-            {/* {canUserEditTeam(slug) ? <Edit /> : <Visibility />} */}
-            {showAddFlowButton && <AddFlowButton flows={flows || []} />}
+            {showAddFlowButton && flows && <AddFlowButton flows={flows} />}
           </Box>
-          {hasFeatureFlag("SORT_FLOWS") && !isEmpty(flows) && (
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SearchBox<FlowSummary>
-              records={filteredFlows || []}
-              staticRecords={flows || []}
+              records={filteredFlows}
               setRecords={setFilteredFlows}
               searchKey={["name", "slug"]}
             />
@@ -396,12 +395,12 @@ const Team: React.FC = () => {
           sortOptions={sortOptions}
         />
       )}
-      {teamHasFlows && (
+      {teamHasFlows && flows && (
         <DashboardList>
           {filteredFlows?.map((flow) => (
             <FlowItem
               flow={flow}
-              flows={filteredFlows}
+              flows={flows}
               key={flow.slug}
               teamId={teamId}
               teamSlug={slug}
@@ -412,7 +411,7 @@ const Team: React.FC = () => {
           ))}
         </DashboardList>
       )}
-      {flows && !flows.length && <GetStarted flows={flows} />}
+      {!flows && <GetStarted flows={flows} />}
     </Container>
   );
 };
