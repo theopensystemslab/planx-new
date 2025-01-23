@@ -331,7 +331,6 @@ const Team: React.FC = () => {
     },
   ];
   const fetchFlows = useCallback(() => {
-    console.log("fetch flows");
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
       const sortedFlows = flows.toSorted((a, b) =>
@@ -350,8 +349,6 @@ const Team: React.FC = () => {
 
   const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
-
-  console.log(flows);
 
   return (
     <Container maxWidth="lg">
