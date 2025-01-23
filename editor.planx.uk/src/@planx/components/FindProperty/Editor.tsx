@@ -34,7 +34,7 @@ function FindPropertyComponent(props: Props) {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Find Property"
+          title="Find property"
           Icon={ICONS[TYPES.FindProperty]}
         >
           <InputRow>

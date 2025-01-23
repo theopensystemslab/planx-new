@@ -20,7 +20,7 @@ import type { FlowSettings } from "../../../../../types";
 import { useStore } from "../../../lib/store";
 
 const TextInput: React.FC<{
-  title: Capitalize<string>;
+  title: string;
   richText?: boolean;
   description?: string;
   switchProps?: SwitchProps;
@@ -123,7 +123,7 @@ export const FooterLinksAndLegalDisclaimer = () => {
       </SettingsSection>
       <SettingsSection background>
         <TextInput
-          title="Legal Disclaimer"
+          title="Legal disclaimer"
           description="Displayed on the 'Result' pages of the service (if it contains any)"
           switchProps={{
             name: "elements.legalDisclaimer.show",
@@ -144,10 +144,10 @@ export const FooterLinksAndLegalDisclaimer = () => {
       </SettingsSection>
       <SettingsSection background>
         <InputGroup flowSpacing>
-          <InputLegend>Footer Links</InputLegend>
+          <InputLegend>Footer links</InputLegend>
           <InputRow>
             <TextInput
-              title="Help Page"
+              title="Help page"
               richText
               description="A place to communicate FAQs, useful tips, or contact information"
               switchProps={{
@@ -169,7 +169,7 @@ export const FooterLinksAndLegalDisclaimer = () => {
           </InputRow>
           <InputRow>
             <TextInput
-              title="Privacy Page"
+              title="Privacy page"
               richText
               description="Your privacy policy"
               switchProps={{

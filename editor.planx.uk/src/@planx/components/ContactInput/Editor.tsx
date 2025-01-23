@@ -33,7 +33,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Contact Input"
+          title="Contact input"
           Icon={ICONS[TYPES.ContactInput]}
         >
           <InputRow>

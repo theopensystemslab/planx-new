@@ -40,7 +40,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Text Input" Icon={ICONS[TYPES.TextInput]}>
+        <ModalSectionContent title="Text input" Icon={ICONS[TYPES.TextInput]}>
           <InputRow>
             <Input
               format="large"

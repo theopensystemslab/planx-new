@@ -72,14 +72,14 @@ const TaskListComponent: React.FC<Props> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Task List" Icon={ICONS[TYPES.TaskList]}>
+        <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
           <Box mb="1rem">
             <InputRow>
               <Input
                 name="title"
                 value={formik.values.title}
                 onChange={formik.handleChange}
-                placeholder="Main Title"
+                placeholder="Main title"
                 format="large"
               />
             </InputRow>
@@ -88,7 +88,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
                 name="description"
                 value={formik.values.description}
                 onChange={formik.handleChange}
-                placeholder="Main Description"
+                placeholder="Main description"
               />
             </InputRow>
           </Box>
