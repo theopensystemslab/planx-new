@@ -6,6 +6,7 @@ import React, { PropsWithChildren, useState } from "react";
 
 interface Props {
   className?: string;
+  children?: React.ReactNode;
   items: Array<{
     label: string;
     disabled?: boolean;

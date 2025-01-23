@@ -263,8 +263,7 @@ const Team: React.FC = () => {
             <StartFromTemplateButton />
           )}
         </Box>
-        {showAddFlowButton && <AddFlowButton flows={flows} />}
-      </Box>
+        <Box>
       {filteredFlows && flows && (
         <Filters<FlowSummary>
           records={filteredFlows}
