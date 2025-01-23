@@ -2,7 +2,7 @@ import { slugify } from "utils";
 
 import Filters, { FilterKey, FilterOptions, FilterValues } from "./Filter";
 
-interface MappedFilters<T> {
+export interface MappedFilters<T> {
   displayName: string;
   filterValue: FilterValues<T>;
 }
@@ -38,27 +38,4 @@ export const addDisplayNamesToFilters = <T extends object>(
   };
 
   return newMappedFilterOptions;
-};
-
-export const addFilterSearchParam = <T extends object>(
-  searchParams: URLSearchParams,
-  mappedFilters: MappedFilters<T>[],
-) => {
-  mappedFilters.forEach((filter) =>
-    searchParams.set(filter.displayName, `${filter.filterValue}`),
-  );
-};
-
-export const removeUnusedFilterSearchParam = <T extends object>(
-  filterOptions: FilterOptions<T>[],
-  searchParams: URLSearchParams,
-  mappedFilters: MappedFilters<T>[],
-) => {
-  const displayNames = filterOptions.map((option) => option.displayName);
-  displayNames.map((name) => {
-    const paramToDelete = mappedFilters.find(
-      (filter) => filter.displayName === slugify(name),
-    );
-    !paramToDelete && searchParams.delete(slugify(name));
-  });
 };

@@ -26,11 +26,12 @@ import { Paths, ValueOf } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
+import { mapFilters } from "./helpers";
 import {
   addFilterSearchParam,
-  mapFilters,
   removeUnusedFilterSearchParam,
-} from "./helpers";
+  updateUrl,
+} from "./searchParamUtils";
 
 const FiltersContainer = styled(Accordion)(({ theme }) => ({
   width: "100%",
@@ -146,15 +147,7 @@ export const Filters = <T extends object>({
       mappedFilters,
     );
 
-    navigation.navigate(
-      {
-        pathname: window.location.pathname,
-        search: searchParams.toString(),
-      },
-      {
-        replace: true,
-      },
-    );
+    updateUrl(navigation, searchParams);
   };
 
   const clearSearchParams = () => {
@@ -164,15 +157,7 @@ export const Filters = <T extends object>({
       searchParams.delete(slugify(name));
     });
 
-    navigation.navigate(
-      {
-        pathname: window.location.pathname,
-        search: searchParams.toString(), // Use the complete searchParams object
-      },
-      {
-        replace: true,
-      },
-    );
+    updateUrl(navigation, searchParams);
   };
 
   const parseStateFromURL = () => {
@@ -214,7 +199,6 @@ export const Filters = <T extends object>({
     if (!collectedFilters && originalRecords)
       return setFilteredRecords(originalRecords);
     const filteredRecords = filter(originalRecords, (record: T) => {
-      console.log(collectedFilters);
       return filterOptions.every((value: FilterOptions<T>) => {
         const valueToFilter = get(collectedFilters, value.optionKey);
         if (valueToFilter) {
@@ -223,8 +207,6 @@ export const Filters = <T extends object>({
         return true;
       });
     });
-
-    console.log("just befre setFilteredRecords");
 
     setFilteredRecords(filteredRecords);
   };
@@ -257,7 +239,6 @@ export const Filters = <T extends object>({
   };
 
   const updateFilterState = (newFilters: Filters<T> | {}) => {
-    console.log(newFilters);
     setSelectedFilters(newFilters);
     setFilters(newFilters);
     isEmpty(newFilters) ? clearSearchParams() : addToSearchParams(newFilters);
