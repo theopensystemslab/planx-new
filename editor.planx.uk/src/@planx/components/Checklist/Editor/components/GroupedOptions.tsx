@@ -74,15 +74,15 @@ export const GroupedOptions = ({ formik }: Props) => {
                     newOptions,
                   );
                 }}
-                newValue={() =>
-                  ({
-                    data: {
-                      text: "",
-                      description: "",
-                      val: "",
-                    },
-                  }) as Option
-                }
+                newValue={() => ({
+                  id: "",
+                  data: {
+                    text: "",
+                    description: "",
+                    val: "",
+                    flags: [],
+                  },
+                })}
                 newValueLabel="add new option"
                 Editor={ChecklistOptionsEditor}
                 editorExtraProps={{
