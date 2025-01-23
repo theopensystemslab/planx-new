@@ -2,10 +2,11 @@ import MoreVert from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 
 interface Props {
   className?: string;
+  children?: React.ReactNode;
   items: Array<{
     label: string;
     disabled?: boolean;
@@ -14,7 +15,11 @@ interface Props {
   }>;
 }
 
-export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
+export default function SimpleMenu({
+  items,
+  children,
+  ...restProps
+}: PropsWithChildren<Props>): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   return (
     <div {...restProps}>
@@ -25,8 +30,10 @@ export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
         }}
         aria-label="Options"
         size="large"
+        disableRipple
       >
         <MoreVert />
+        {children}
       </IconButton>
       <Menu
         id="long-menu"
