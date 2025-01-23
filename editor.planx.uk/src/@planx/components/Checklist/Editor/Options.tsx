@@ -38,15 +38,15 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               formik.setFieldValue("options", newCombinedOptions);
             }}
             newValueLabel="add new option"
-            newValue={() =>
-              ({
-                data: {
-                  text: "",
-                  description: "",
-                  val: "",
-                },
-              }) as Option
-            }
+            newValue={() => ({
+              id: "",
+              data: {
+                text: "",
+                description: "",
+                val: "",
+                flags: [],
+              },
+            })}
             Editor={ChecklistOptionsEditor}
             editorExtraProps={{
               showValueField: !!formik.values.fn,

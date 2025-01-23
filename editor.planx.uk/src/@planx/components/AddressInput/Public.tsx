@@ -1,7 +1,8 @@
+import { Address } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
@@ -10,21 +11,12 @@ import InputRowItem from "ui/shared/InputRowItem";
 import { ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { AddressInput } from "./model";
-import { userDataSchema } from "./model";
+import { addressValidationSchema } from "./model";
 
 export type Props = PublicProps<AddressInput>;
 
-interface FormProps {
-  line1: string;
-  line2: string;
-  town: string;
-  county: string;
-  postcode: string;
-  country: string;
-}
-
 export default function AddressInputComponent(props: Props): FCReturn {
-  const formik = useFormik<FormProps>({
+  const formik = useFormik<Address>({
     initialValues: getPreviouslySubmittedData(props) ?? {
       line1: "",
       line2: "",
@@ -38,7 +30,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: userDataSchema,
+    validationSchema: addressValidationSchema,
   });
 
   return (
@@ -50,16 +42,36 @@ export default function AddressInputComponent(props: Props): FCReturn {
         policyRef={props.policyRef}
         howMeasured={props.howMeasured}
       />
+      <AddressFields
+        id={props.id}
+        values={formik.values}
+        errors={formik.errors}
+        handleChange={formik.handleChange}
+      />
+    </Card>
+  );
+}
+
+export interface AddressFieldsProps {
+  id?: string;
+  values: Address;
+  errors: FormikErrors<Address>;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export function AddressFields(props: AddressFieldsProps): FCReturn {
+  return (
+    <>
       <InputLabel label="Address line 1">
         <Input
           name="line1"
-          value={formik.values.line1}
+          value={props.values?.line1}
           bordered
-          errorMessage={formik.errors.line1}
-          onChange={formik.handleChange}
+          errorMessage={props.errors?.line1}
+          onChange={props.handleChange}
           id={`${props.id}-line1`}
           inputProps={{
-            "aria-describedby": formik.errors.line1
+            "aria-describedby": props.errors?.line1
               ? `${ERROR_MESSAGE}-${props.id}-line1`
               : "",
           }}
@@ -68,22 +80,22 @@ export default function AddressInputComponent(props: Props): FCReturn {
       <InputLabel label="Address line 2 (optional)">
         <Input
           name="line2"
-          value={formik.values.line2}
+          value={props.values?.line2}
           bordered
-          errorMessage={formik.errors.line2}
-          onChange={formik.handleChange}
+          errorMessage={props.errors?.line2}
+          onChange={props.handleChange}
         />
       </InputLabel>
       <InputLabel label="Town">
         <Input
           name="town"
-          value={formik.values.town}
+          value={props.values?.town}
           bordered
-          errorMessage={formik.errors.town}
-          onChange={formik.handleChange}
+          errorMessage={props.errors?.town}
+          onChange={props.handleChange}
           id={`${props.id}-town`}
           inputProps={{
-            "aria-describedby": formik.errors.town
+            "aria-describedby": props.errors?.town
               ? `${ERROR_MESSAGE}-${props.id}-town`
               : "",
           }}
@@ -92,23 +104,23 @@ export default function AddressInputComponent(props: Props): FCReturn {
       <InputLabel label="County (optional)">
         <Input
           name="county"
-          value={formik.values.county}
+          value={props.values?.county}
           bordered
-          errorMessage={formik.errors.county}
-          onChange={formik.handleChange}
+          errorMessage={props.errors?.county}
+          onChange={props.handleChange}
         />
       </InputLabel>
       <InputLabel label="Postcode">
         <InputRowItem width="40%">
           <Input
             name="postcode"
-            value={formik.values.postcode}
+            value={props.values?.postcode}
             bordered
-            errorMessage={formik.errors.postcode}
-            onChange={formik.handleChange}
+            errorMessage={props.errors?.postcode}
+            onChange={props.handleChange}
             id={`${props.id}-postcode`}
             inputProps={{
-              "aria-describedby": formik.errors.postcode
+              "aria-describedby": props.errors?.postcode
                 ? `${ERROR_MESSAGE}-${props.id}-postcode`
                 : "",
             }}
@@ -119,13 +131,13 @@ export default function AddressInputComponent(props: Props): FCReturn {
         <InputRowItem>
           <Input
             name="country"
-            value={formik.values.country}
+            value={props.values?.country}
             bordered
-            errorMessage={formik.errors.country}
-            onChange={formik.handleChange}
+            errorMessage={props.errors?.country}
+            onChange={props.handleChange}
           />
         </InputRowItem>
       </InputLabel>
-    </Card>
+    </>
   );
 }

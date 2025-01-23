@@ -69,7 +69,7 @@ const InternalPortalForm: React.FC<{
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
       <ModalSection>
         <ModalSectionContent
-          title="Internal Portal"
+          title="Internal portal"
           Icon={ICONS[TYPES.InternalPortal]}
         >
           <ErrorWrapper error={formik.errors.text}>

@@ -35,7 +35,7 @@ export const getJWT = (userId) => {
     },
   };
 
-  return jwt.sign(data, process.env.JWT_SECRET!);
+  return jwt.sign(data, process.env.JWT_SECRET!, { expiresIn: "24h" });
 };
 
 export const insertTeam = async (teamName) => {

@@ -29,6 +29,7 @@ import { OpenSpaceGLA } from "./schemas/GLA/OpenSpace";
 import { ParkingGLA } from "./schemas/GLA/ParkingGLA";
 import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { MaterialDetails } from "./schemas/Materials";
+import { Owners } from "./schemas/Owners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
 import { ResidentialUnitsExistingLDCE } from "./schemas/ResidentialUnits/ExistingLDCE";
@@ -78,6 +79,7 @@ export const SCHEMAS = [
   { name: "Mezzanine floors (CIL)", schema: MezzanineCIL },
   { name: "Trees", schema: Trees },
   { name: "Trees (Map first)", schema: TreesMapFirst },
+  { name: "Owners", schema: Owners },
 ];
 
 function ListComponent(props: Props) {

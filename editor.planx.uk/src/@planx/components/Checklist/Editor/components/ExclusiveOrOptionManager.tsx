@@ -61,16 +61,18 @@ export const ExclusiveOrOptionManager = ({
             newValueLabel='add "or" option'
             maxItems={1}
             noDragAndDrop
-            newValue={() => {
-              return {
+            newValue={() =>
+              ({
+                id: "",
                 data: {
                   text: "",
                   description: "",
                   val: "",
+                  flags: [],
                   exclusive: true,
                 },
-              } as Option;
-            }}
+              }) satisfies Option
+            }
             Editor={BaseOptionsEditor}
             editorExtraProps={{
               showValueField: !!formik.values.fn,

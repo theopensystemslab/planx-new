@@ -19,7 +19,7 @@ import InputRowItem from "ui/shared/InputRowItem";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import BasicRadio from "../shared/Radio/BasicRadio";
+import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent } from "./model";
 import { Trees } from "./schemas/Trees";

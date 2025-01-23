@@ -12,7 +12,7 @@ function getJWT({ role }: { role: Role }) {
     },
   };
 
-  return jwt.sign(data, process.env.JWT_SECRET!);
+  return jwt.sign(data, process.env.JWT_SECRET!, { expiresIn: "24h" });
 }
 
 function authHeader({ role }: { role: Role }) {

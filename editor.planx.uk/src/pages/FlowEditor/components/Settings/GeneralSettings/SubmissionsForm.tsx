@@ -33,7 +33,7 @@ export default function SubmissionsForm({
 
   return (
     <SettingsForm
-      legend="Submission Information"
+      legend="Submission information"
       formik={formik}
       description={
         <>

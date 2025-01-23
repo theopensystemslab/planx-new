@@ -73,7 +73,7 @@ export const GovPayMetadataSection: React.FC = () => {
 
   return (
     <ModalSection>
-      <ModalSectionContent title="GOV.UK Pay Metadata" Icon={DataObjectIcon}>
+      <ModalSectionContent title="GOV.UK Pay metadata" Icon={DataObjectIcon}>
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
           Include metadata alongside payments, such as VAT codes, cost centers,
           or ledger codes. See{" "}
