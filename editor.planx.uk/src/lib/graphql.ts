@@ -128,6 +128,7 @@ const handleHasuraGraphQLErrors = (
 
     const errors = parseErrorTypeFromHasuraResponse(message);
 
+    if (errors.expiredJWT) handleExpiredJWTErrors();
     if (errors.validation) handleValidationErrors(operation);
     if (errors.permission) handlePermissionErrors(operation);
   });
@@ -143,11 +144,16 @@ const parseErrorTypeFromHasuraResponse = (message: string) => {
 
   const validationErrors = [/Invalid HTML content/gi];
 
+  const expiredJWTError = [/Could not verify JWT: JWTExpired/gi];
+
   return {
     permission: permissionErrors.some((re) => re.test(message)),
     validation: validationErrors.some((re) => re.test(message)),
+    expiredJWT: expiredJWTError.some((re) => re.test(message)),
   };
 };
+
+const handleExpiredJWTErrors = () => (window.location.href = "/logout");
 
 const handleValidationErrors = (operation: Operation) => {
   const user = useStore.getState().getUser();

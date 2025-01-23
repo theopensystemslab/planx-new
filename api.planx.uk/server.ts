@@ -5,16 +5,14 @@ import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
 import type { CorsOptions } from "cors";
 import cors from "cors";
-import type { ErrorRequestHandler } from "express";
 import express from "express";
 import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
 import { Server, type IncomingMessage } from "http";
 import "isomorphic-fetch";
 import noir from "pino-noir";
-import airbrake from "./airbrake.js";
 import { useSwaggerDocs } from "./docs/index.js";
-import { ServerError } from "./errors/index.js";
+import { errorHandler, expiredJWTHandler } from "./errors/requestHandlers.js";
 import adminRoutes from "./modules/admin/routes.js";
 import analyticsRoutes from "./modules/analytics/routes.js";
 import getPassport from "./modules/auth/passport.js";
@@ -151,30 +149,9 @@ app.use(testRoutes);
 app.use(userRoutes);
 app.use(webhookRoutes);
 
-const errorHandler: ErrorRequestHandler = (errorObject, _req, res, _next) => {
-  const { status = 500, message = "Something went wrong" } = (() => {
-    if (
-      airbrake &&
-      (errorObject instanceof Error || errorObject instanceof ServerError)
-    ) {
-      airbrake.notify(errorObject);
-      return {
-        ...errorObject,
-        message: errorObject.message.concat(", this error has been logged"),
-      };
-    } else {
-      console.log(errorObject);
-      return errorObject;
-    }
-  })();
-
-  res.status(status).send({
-    error: message,
-  });
-};
-
 // Handle any server errors that were passed with next(err)
-// Order is significant, this should be the final app.use()
+// Order is significant, these should be the final app.use()
+app.use(expiredJWTHandler);
 app.use(errorHandler);
 
 const server = new Server(app);
