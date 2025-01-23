@@ -6,40 +6,18 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { axe } from "vitest-axe";
 
-import { ReadMePage } from "./ReadMePage";
-import { ReadMePageProps } from "./types";
+import { ReadMePage } from "../ReadMePage";
+import { defaultProps, longInput, platformAdminUser } from "./helpers";
 
 const { getState, setState } = useStore;
 
 let initialState: FullStore;
 
-const defaultProps = {
-  flowSlug: "find-out-if-you-need-planning-permission",
-  flowInformation: {
-    status: "online",
-    description: "A long description of a service",
-    summary: "A short blurb",
-    limitations: "",
-    settings: {},
-  },
-} as ReadMePageProps;
-
-const longInput =
-  "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my who"; // 122 characters
-
 describe("Read Me Page component", () => {
   beforeAll(() => (initialState = getState()));
 
   beforeEach(() => {
-    getState().setUser({
-      id: 1,
-      firstName: "Editor",
-      lastName: "Test",
-      isPlatformAdmin: true,
-      email: "test@test.com",
-      teams: [],
-      jwt: "x.y.z",
-    });
+    getState().setUser(platformAdminUser);
   });
 
   afterEach(() => {
@@ -113,7 +91,7 @@ describe("Read Me Page component", () => {
     ).toBeInTheDocument();
   });
 
-  it.todo("displays an error toast if there is a server-side issue"); // waiting for PR 4019 to merge first
+  it.todo("displays an error toast if there is a server-side issue"); // waiting for PR 4019 to merge first so can use msw package
 
   it("should not have any accessibility violations", async () => {
     const { container } = setup(
@@ -124,5 +102,25 @@ describe("Read Me Page component", () => {
 
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+  });
+
+  it("is not editable if the user has the teamViewer role", async () => {
+    const teamViewerUser = { ...platformAdminUser, isPlatformAdmin: false };
+    getState().setUser(teamViewerUser);
+
+    getState().setTeamMembers([{ ...teamViewerUser, role: "teamViewer" }]);
+
+    setup(
+      <DndProvider backend={HTML5Backend}>
+        <ReadMePage {...defaultProps} />
+      </DndProvider>
+    );
+
+    expect(getState().flowSummary).toBe("");
+
+    const serviceSummaryInput = screen.getByPlaceholderText("Description");
+
+    expect(serviceSummaryInput).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
   });
 });
