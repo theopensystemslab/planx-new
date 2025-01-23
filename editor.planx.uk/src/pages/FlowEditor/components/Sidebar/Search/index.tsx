@@ -11,13 +11,12 @@ import { debounce } from "lodash";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { Components, Virtuoso } from "react-virtuoso";
+import { SEARCH_DEBOUNCE_MS } from "ui/shared/constants";
 
 import { ExternalPortalList } from "./ExternalPortalList";
 import { ALL_FACETS, SearchFacets } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";
-
-export const DEBOUNCE_MS = 500;
 
 interface SearchNodes {
   pattern: string;
@@ -87,7 +86,7 @@ const Search: React.FC = () => {
         search(pattern);
         setLastPattern(pattern);
         setIsSearching(false);
-      }, DEBOUNCE_MS),
+      }, SEARCH_DEBOUNCE_MS),
     [search],
   );
 

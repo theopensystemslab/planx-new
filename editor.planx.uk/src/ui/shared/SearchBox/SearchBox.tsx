@@ -6,9 +6,9 @@ import { useFormik } from "formik";
 import { FuseOptionKey } from "fuse.js";
 import { useSearch } from "hooks/useSearch";
 import { debounce } from "lodash";
-import { DEBOUNCE_MS } from "pages/FlowEditor/components/Sidebar/Search";
 import React, { useEffect, useMemo, useState } from "react";
 
+import { SEARCH_DEBOUNCE_MS } from "../constants";
 import Input from "../Input/Input";
 import InputRow from "../InputRow";
 import InputRowItem from "../InputRowItem";
@@ -47,7 +47,7 @@ export const SearchBox = <T extends object>({
         search(pattern);
         setSearchedTerm(pattern);
         setIsSearching(false);
-      }, DEBOUNCE_MS),
+      }, SEARCH_DEBOUNCE_MS),
     [search],
   );
 
