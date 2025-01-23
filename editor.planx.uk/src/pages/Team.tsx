@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -15,6 +14,10 @@ import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
+import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
+import InputRowItem from "ui/shared/InputRowItem";
+import InputRowLabel from "ui/shared/InputRowLabel";
 import InputLabel from "ui/public/InputLabel";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
