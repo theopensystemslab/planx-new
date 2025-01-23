@@ -146,7 +146,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       <SettingsSection>
         <form onSubmit={formik.handleSubmit}>
           <InputGroup flowSpacing>
-            <InputLegend>Service Description</InputLegend>
+            <InputLegend>Service description</InputLegend>
             <SettingsDescription>
               <>A short blurb on what this service is.</>
             </SettingsDescription>
@@ -188,7 +188,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </InputRow>
           </InputGroup>
           <InputGroup flowSpacing>
-            <InputLegend>Limitations of the Service</InputLegend>
+            <InputLegend>Limitations of the service</InputLegend>
             <SettingsDescription>
               <>What does this service not include?</>
             </SettingsDescription>
