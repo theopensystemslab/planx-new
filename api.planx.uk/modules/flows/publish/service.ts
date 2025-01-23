@@ -4,7 +4,6 @@ import { gql } from "graphql-request";
 import type { FlowGraph, Node } from "@opensystemslab/planx-core/types";
 import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
-import { checkStatutoryApplicationTypes } from "../validate/service/applicationTypes.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -21,7 +20,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
   if (!userId) throw Error("User details missing from request");
 
   const flattenedFlow = await dataMerged(flowId);
-  const isStatutoryService = checkStatutoryApplicationTypes(flattenedFlow);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
@@ -35,7 +33,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
         $flow_id: uuid
         $publisher_id: Int
         $summary: String
-        $is_statutory_application_type: Boolean
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -43,7 +40,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
             flow_id: $flow_id
             publisher_id: $publisher_id
             summary: $summary
-            is_statutory_application_type: $is_statutory_application_type
           }
         ) {
           id
@@ -51,7 +47,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
           publisherId: publisher_id
           createdAt: created_at
           data
-          is_statutory_application_type: is_statutory_application_type
         }
       }
     `,
@@ -60,7 +55,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       flow_id: flowId,
       publisher_id: parseInt(userId),
       summary: summary ?? null,
-      is_statutory_application_type: isStatutoryService,
     },
   );
 
