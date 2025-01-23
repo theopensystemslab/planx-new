@@ -6,7 +6,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { axe } from "vitest-axe";
 
-import { ReadMePage, ReadMePageProps } from "./ReadMePage";
+import { ReadMePage } from "./ReadMePage";
+import { ReadMePageProps } from "./types";
 
 const { getState, setState } = useStore;
 

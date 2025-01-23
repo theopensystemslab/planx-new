@@ -21,19 +21,7 @@ import { object, string } from "yup";
 
 import { ExternalPortals } from "../components/Sidebar/Search/ExternalPortalList/ExternalPortals";
 import { useStore } from "../lib/store";
-import { FlowInformation } from "../utils";
-
-export interface ReadMePageProps {
-  flowSlug: string;
-  flowInformation: FlowInformation;
-  teamSlug: string;
-}
-
-interface ReadMePageForm {
-  serviceSummary: string;
-  serviceDescription: string;
-  serviceLimitations: string;
-}
+import { ReadMePageForm, ReadMePageProps } from "./types";
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
   flowSlug,
@@ -231,9 +219,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               onClick={() => window.location.reload()}
               type="reset"
               variant="contained"
-              disabled={
-                !formik.dirty
-              }
+              disabled={!formik.dirty}
               color="secondary"
               sx={{ ml: 1.5 }}
             >
