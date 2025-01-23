@@ -30,6 +30,18 @@ const longInput =
 describe("Read Me Page component", () => {
   beforeAll(() => (initialState = getState()));
 
+  beforeEach(() => {
+    getState().setUser({
+      id: 1,
+      firstName: "Editor",
+      lastName: "Test",
+      isPlatformAdmin: true,
+      email: "test@test.com",
+      teams: [],
+      jwt: "x.y.z",
+    });
+  });
+
   afterEach(() => {
     act(() => setState(initialState));
   });
@@ -70,7 +82,7 @@ describe("Read Me Page component", () => {
     await user.type(serviceSummaryInput, longInput);
 
     expect(
-      screen.getByText("You have 2 characters too many")
+      await screen.findByText("You have 2 characters too many")
     ).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Save" }));
