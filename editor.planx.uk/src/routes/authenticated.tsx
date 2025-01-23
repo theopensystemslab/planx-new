@@ -121,7 +121,33 @@ const editorRoutes = compose(
         view: (
           <iframe
             title="notion"
-            src="https://www.notioniframe.com/notion/23i4jzez4xn"
+            src="https://www.notioniframe.com/notion/28nuwlsxpaz"
+            style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
+          />
+        ),
+      };
+    }),
+
+    "/onboarding": route(() => {
+      return {
+        title: makeTitle("Onboarding"),
+        view: (
+          <iframe
+            title="notion"
+            src="https://www.notioniframe.com/notion/1fjdisq3i73"
+            style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
+          />
+        ),
+      };
+    }),
+
+    "/tutorials": route(() => {
+      return {
+        title: makeTitle("Tutorials"),
+        view: (
+          <iframe
+            title="notion"
+            src="https://www.notioniframe.com/notion/1wf4jidsdbv"
             style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
           />
         ),
