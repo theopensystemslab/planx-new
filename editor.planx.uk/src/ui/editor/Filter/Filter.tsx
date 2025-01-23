@@ -131,7 +131,7 @@ export const Filters = <T extends object>({
 }: FiltersProps<T>) => {
   const [filters, setFilters] = useState<Filters<T> | {}>();
   const [selectedFilters, setSelectedFilters] = useState<Filters<T> | {}>();
-  const [originalRecords, setOriginalRecords] = useState<T[]>();
+  const [originalRecords] = useState<T[]>(records);
   const [expanded, setExpanded] = useState<boolean>(false);
 
   const navigation = useNavigation();
@@ -146,7 +146,6 @@ export const Filters = <T extends object>({
       searchParams,
       mappedFilters,
     );
-
     updateUrl(navigation, searchParams);
   };
 
@@ -182,12 +181,8 @@ export const Filters = <T extends object>({
   };
 
   useEffect(() => {
-    setOriginalRecords(records);
-  }, []);
-
-  useEffect(() => {
     parseStateFromURL();
-  }, [originalRecords]);
+  }, []);
 
   const clearAllFilters = () => {
     setFilters({});
@@ -207,7 +202,6 @@ export const Filters = <T extends object>({
         return true;
       });
     });
-
     setFilteredRecords(filteredRecords);
   };
 

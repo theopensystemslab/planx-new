@@ -12,11 +12,7 @@ import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
-import Filters, {
-  FilterKey,
-  FilterOptions,
-  FilterValues,
-} from "ui/editor/Filter/Filter";
+import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -187,6 +183,7 @@ const Team: React.FC = () => {
     flow.status === value;
   const checkFlowServiceType = (flow: FlowSummary, _value: unknown) =>
     flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
+  // validation can be added when we have statutory data coming through
   const checkFlowApplicationType = () => true;
 
   const filterOptions: FilterOptions<FlowSummary>[] = [
