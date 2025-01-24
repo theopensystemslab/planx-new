@@ -3,8 +3,8 @@ import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import countBy from "lodash/countBy.js";
 
-import { isComponentType } from "../helpers.js";
 import type { FlowValidationResponse } from "./index.js";
+import { isComponentType } from "../../flowHelpers.js";
 
 const validateProjectTypes = (flowGraph: FlowGraph): FlowValidationResponse => {
   // Get all passport values set by Answers of Checklists that set fn "proposal.projectType"

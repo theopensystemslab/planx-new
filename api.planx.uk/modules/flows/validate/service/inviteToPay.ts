@@ -3,10 +3,10 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 
 import {
   hasComponentType,
-  isComponentType,
   numberOfComponentType,
 } from "../helpers.js";
 import type { FlowValidationResponse } from "./index.js";
+import { isComponentType } from "../../flowHelpers.js";
 
 const validateInviteToPay = (flowGraph: FlowGraph): FlowValidationResponse => {
   if (inviteToPayEnabled(flowGraph)) {
