@@ -128,6 +128,7 @@ const handleHasuraGraphQLErrors = (
 
     const errors = parseErrorTypeFromHasuraResponse(message);
 
+    if (errors.expiredJWT) handleExpiredJWTErrors();
     if (errors.validation) handleValidationErrors(operation);
     if (errors.permission) handlePermissionErrors(operation);
   });
@@ -143,11 +144,29 @@ const parseErrorTypeFromHasuraResponse = (message: string) => {
 
   const validationErrors = [/Invalid HTML content/gi];
 
+  const expiredJWTError = [/Could not verify JWT: JWTExpired/gi];
+
   return {
     permission: permissionErrors.some((re) => re.test(message)),
     validation: validationErrors.some((re) => re.test(message)),
+    expiredJWT: expiredJWTError.some((re) => re.test(message)),
   };
 };
+
+export const handleExpiredJWTErrors = () => {
+  toast.error("Session expired, redirecting to login page...", {
+    toastId: "jwt_expiry_error",
+    hideProgressBar: false,
+    progress: undefined,
+    autoClose: 2_000,
+    onClose: () => (window.location.href = "/logout"),
+  });
+
+  // Fallback if case of toast not firing
+  setTimeout(() => {
+    window.location.href = "/logout"
+  }, 2_500);
+}
 
 const handleValidationErrors = (operation: Operation) => {
   const user = useStore.getState().getUser();

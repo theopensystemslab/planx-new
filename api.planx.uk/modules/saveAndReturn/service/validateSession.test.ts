@@ -16,7 +16,7 @@ import {
 } from "../../../tests/mocks/saveAndReturnMocks.js";
 import type { Node, Flow, Breadcrumb } from "../../../types.js";
 import { userContext } from "../../auth/middleware.js";
-import { getJWT } from "../../../tests/mockJWT.js";
+import { getTestJWT } from "../../../tests/mockJWT.js";
 
 const validateSessionPath = "/validate-session";
 const getStoreMock = vi.spyOn(userContext, "getStore");
@@ -28,7 +28,7 @@ describe("Validate Session endpoint", () => {
     getStoreMock.mockReturnValue({
       user: {
         sub: "123",
-        jwt: getJWT({ role: "teamEditor" }),
+        jwt: getTestJWT({ role: "teamEditor" }),
       },
     });
   });

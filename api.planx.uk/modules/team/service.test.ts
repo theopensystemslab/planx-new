@@ -1,4 +1,4 @@
-import { getJWT } from "../../tests/mockJWT.js";
+import { getTestJWT } from "../../tests/mockJWT.js";
 import { userContext } from "../auth/middleware.js";
 
 import {
@@ -40,7 +40,7 @@ describe("TeamService", () => {
     getStoreMock.mockReturnValue({
       user: {
         sub: "123",
-        jwt: getJWT({ role: "teamEditor" }),
+        jwt: getTestJWT({ role: "teamEditor" }),
       },
     });
   });
