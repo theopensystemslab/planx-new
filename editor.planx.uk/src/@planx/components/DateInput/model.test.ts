@@ -1,4 +1,4 @@
-import { dateSchema, dateValidationSchema, paddedDate, parseDate } from "./model";
+import { dateInputValidationSchema, dateSchema, paddedDate, parseDate } from "./model";
 
 describe("parseDate helper function", () => {
   it("returns a day value", () => {
@@ -102,20 +102,20 @@ describe("dateSchema", () => {
   });
 });
 
-describe("dateValidationSchema", () => {
+describe("dateInputValidationSchema", () => {
   test("basic validation", async () => {
     expect(
-      await dateValidationSchema({
+      await dateInputValidationSchema({
         data: {
           title: "test",
           min: "1990-01-01",
           max: "1999-12-31",
         },
         required: true,
-      }).isValid("1995-06-15"),
+      }).isValid("1995-06-15")
     ).toBe(true);
     expect(
-      await dateValidationSchema({
+      await dateInputValidationSchema({
         data: {
           title: "test",
           min: "1990-01-01",
@@ -125,7 +125,7 @@ describe("dateValidationSchema", () => {
       }).isValid("2021-06-15"),
     ).toBe(false);
     expect(
-      await dateValidationSchema({
+      await dateInputValidationSchema({
         data: {
           title: "test",
           min: "1990-01-01",
@@ -137,7 +137,7 @@ describe("dateValidationSchema", () => {
   });
 
   describe("optional fields", () => {
-    const validationSchema = dateRangeSchema({
+    const validationSchema = dateInputValidationSchema({
       data: {
         title: "test",
         min: "1990-01-01",

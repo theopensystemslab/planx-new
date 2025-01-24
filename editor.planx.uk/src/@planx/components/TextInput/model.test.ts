@@ -1,8 +1,8 @@
-import { TextInputType, userDataSchema } from "./model";
+import { TextInputType, textInputValidationSchema } from "./model";
 
 describe("validation", () => {
   describe("optional fields", () => {
-    const validationSchema = userDataSchema({
+    const validationSchema = textInputValidationSchema({
       data: { title: "test", type: TextInputType.Email },
       required: false,
     });

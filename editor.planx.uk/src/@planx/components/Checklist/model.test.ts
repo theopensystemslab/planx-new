@@ -1,8 +1,8 @@
-import { checklistValidationSchema } from "./model";
+import { checklistInputValidationSchema } from "./model";
 
 describe("Checklist - validation", () => {
   describe("optional fields", () => {
-    const validationSchema = checklistValidationSchema({
+    const validationSchema = checklistInputValidationSchema({
       data: {
         options: [
           { id: "test1", data: { text: "Test 1", val: "test1" } },
