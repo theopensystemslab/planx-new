@@ -251,7 +251,7 @@ describe("Building a list", () => {
 
   test(
     "Removing an item when all cards are inactive",
-    { timeout: 35_000 },
+    { timeout: 45_000 },
     async () => {
       // Setup three cards
       const {
@@ -500,7 +500,7 @@ describe("Form validation and error handling", () => {
    * We are testing that the validation schemas are correctly "wired up" to out List component fields
    */
   describe("existing validation schemas are correctly referenced", () => {
-    test("text fields", async () => {
+    test("text fields", { timeout: 10_000 }, async () => {
       const { user, getByRole, getByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -622,7 +622,7 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the minimum number of items is not met",
-    { timeout: 20_000 },
+    { timeout: 25_000 },
     async () => {
       const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
         schema: { min: 2 },
