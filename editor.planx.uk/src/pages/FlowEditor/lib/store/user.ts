@@ -77,7 +77,7 @@ const getLoggedInUser = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch user matching JWT cookie");
-    handleExpiredJWTErrors()
+    handleExpiredJWTErrors();
+    throw Error("Failed to fetch user matching JWT cookie");
   }
 };
