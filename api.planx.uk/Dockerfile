@@ -35,4 +35,5 @@ CMD ["npm", "start"]
 FROM base as development
 ENV NODE_ENV development
 RUN pnpm install
+
 CMD ["pnpm", "dev"]
