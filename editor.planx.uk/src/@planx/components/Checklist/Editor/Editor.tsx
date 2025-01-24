@@ -1,7 +1,12 @@
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
 import { FormikErrors, FormikValues, useFormik } from "formik";
-import React, { useEffect, useRef } from "react";
+import { TabList } from "pages/FlowEditor/components/Sidebar";
+import StyledTab from "pages/FlowEditor/components/Sidebar/StyledTab";
+import React, { useEffect, useRef,useState } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -109,89 +114,128 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
     }, 50);
   }, []);
 
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <ModalSection>
-        <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
-          <InputGroup>
-            <InputRow>
-              <Input
-                format="large"
-                name="text"
-                value={formik.values.text}
-                placeholder="Text"
-                onChange={formik.handleChange}
-                inputRef={focusRef}
-                required
-              />
-              <ImgInput
-                img={formik.values.img}
-                onChange={(newUrl) => {
-                  formik.setFieldValue("img", newUrl);
-                }}
-              />
-            </InputRow>
-            <InputRow>
-              <RichTextInput
-                name="description"
-                value={formik.values.description}
-                placeholder="Description"
-                onChange={formik.handleChange}
-              />
-            </InputRow>
-            <ErrorWrapper error={formik.errors.fn}>
+      <TabList sx={{ marginLeft: "-24px", width: "calc(100% + 48px)" }}>
+        <Tabs value={activeTab} onChange={handleTabChange}>
+          <StyledTab label="Component settings" />
+          <StyledTab label="How to use this component" />
+        </Tabs>
+      </TabList>
+      <Box
+        style={{
+          display: activeTab === 0 ? "flex" : "none",
+          flexDirection: "column",
+          flex: 1,
+          overflow: "auto",
+        }}
+      >
+        <ModalSection>
+          <ModalSectionContent title="Checklist" Icon={ICONS[type]}>
+            <InputGroup>
+              <InputRow>
+                <Input
+                  format="large"
+                  name="text"
+                  value={formik.values.text}
+                  placeholder="Text"
+                  onChange={formik.handleChange}
+                  inputRef={focusRef}
+                  required
+                />
+                <ImgInput
+                  img={formik.values.img}
+                  onChange={(newUrl) => {
+                    formik.setFieldValue("img", newUrl);
+                  }}
+                />
+              </InputRow>
+              <InputRow>
+                <RichTextInput
+                  name="description"
+                  value={formik.values.description}
+                  placeholder="Description"
+                  onChange={formik.handleChange}
+                />
+              </InputRow>
               <DataFieldAutocomplete
                 value={formik.values.fn}
                 onChange={(value) => formik.setFieldValue("fn", value)}
               />
-            </ErrorWrapper>
-            <InputRow>
-              <Switch
-                checked={!!formik.values.groupedOptions}
-                onChange={() =>
-                  formik.setValues({
-                    ...formik.values,
-                    ...toggleExpandableChecklist({
-                      options: formik.values.options,
-                      groupedOptions: formik.values.groupedOptions,
-                    }),
-                  })
-                }
-                label="Expandable"
-              />
-            </InputRow>
-            <InputRow>
-              <Switch
-                checked={formik.values.allRequired}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "allRequired",
-                    !formik.values.allRequired,
-                  )
-                }
-                label="All required"
-              />
-            </InputRow>
+              <InputRow>
+                <Switch
+                  checked={!!formik.values.groupedOptions}
+                  onChange={() =>
+                    formik.setValues({
+                      ...formik.values,
+                      ...toggleExpandableChecklist({
+                        options: formik.values.options,
+                        groupedOptions: formik.values.groupedOptions,
+                      }),
+                    })
+                  }
+                  label="Expandable"
+                />
+              </InputRow>
+              <InputRow>
+                <Switch
+                  checked={formik.values.allRequired}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "allRequired",
+                      !formik.values.allRequired,
+                    )
+                  }
+                  label="All required"
+                />
+              </InputRow>
 
-            <InputRow>
-              <Switch
-                checked={formik.values.neverAutoAnswer}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "neverAutoAnswer",
-                    !formik.values.neverAutoAnswer,
-                  )
-                }
-                label="Always put to user (forgo automation)"
-              />
-            </InputRow>
-          </InputGroup>
-        </ModalSectionContent>
-        <ErrorWrapper error={formik.errors.options}>
-          <Options formik={formik} />
-        </ErrorWrapper>
-      </ModalSection>
-      <ModalFooter formik={formik} />
+              <InputRow>
+                <Switch
+                  checked={formik.values.neverAutoAnswer}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "neverAutoAnswer",
+                      !formik.values.neverAutoAnswer,
+                    )
+                  }
+                  label="Always put to user (forgo automation)"
+                />
+              </InputRow>
+            </InputGroup>
+          </ModalSectionContent>
+          <ErrorWrapper error={formik.errors.options}>
+            <Options formik={formik} />
+          </ErrorWrapper>
+        </ModalSection>
+        <ModalFooter formik={formik} />
+      </Box>
+      <Box
+        sx={{
+          display: activeTab === 1 ? "flex" : "none",
+          flexDirection: "column",
+          flex: 1,
+          padding: "16px",
+          overflow: "auto",
+        }}
+      >
+        <Box mt={1}>
+          <iframe
+            width="680"
+            height="680"
+            src="https://scribehow.com/shared/Creating_a_Checklist_in_PlanX_Editor__E-wF1ViORmm-ieO-V0mpMA"
+            title="Using the checklist component"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            style={{ border: "1px solid #DBDADA" }}
+          ></iframe>
+        </Box>
+      </Box>
     </form>
   );
 };
