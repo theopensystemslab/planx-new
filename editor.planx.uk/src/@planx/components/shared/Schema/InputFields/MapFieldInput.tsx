@@ -12,7 +12,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { getFieldProps, Props } from ".";
 import { FieldInputDescription } from "./shared";
 
-// TODO: Think about "required" here
 export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
   // Ensure there's a FindProperty component preceding this field (eg address data in state to position map view)
   const { longitude, latitude } = useStore(

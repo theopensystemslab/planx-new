@@ -22,7 +22,7 @@ export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
         <SelectInput
           bordered
           required={required}
-          title={data.title}
+          title={title}
           labelId={`select-label-${id}`}
           value={value}
           onChange={formik.handleChange}
