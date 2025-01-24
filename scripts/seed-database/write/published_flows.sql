@@ -6,11 +6,11 @@ CREATE TEMPORARY TABLE sync_published_flows (
   summary text,
   publisher_id int,
   created_at timestamptz,
-  has_send_component boolean  
+  has_send_component boolean,
+  is_statutory_application_type boolean,
   );
-
 /* Ensure columns here are kept in sync with container.sh */
-\copy sync_published_flows (id, data, flow_id, summary, publisher_id, created_at, has_send_component) FROM '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');
+\copy sync_published_flows (id, data, flow_id, summary, publisher_id, created_at, has_send_component,is_statutory_application_type) FROM '/tmp/published_flows.csv' (FORMAT csv, DELIMITER ';');
 
 INSERT INTO published_flows (
   id,
@@ -19,8 +19,9 @@ INSERT INTO published_flows (
   summary,
   publisher_id,
   created_at,
-  has_send_component  
-  )
+  has_send_component,
+  is_statutory_application_type, 
+)
 SELECT
   id,
   data,
@@ -28,8 +29,9 @@ SELECT
   summary,
   publisher_id,
   created_at,
-  has_send_component
-  FROM sync_published_flows
+  has_send_component,
+  is_statutory_application_type
+FROM sync_published_flows
 ON CONFLICT (id) DO UPDATE
 SET
   data = EXCLUDED.data,
@@ -37,4 +39,5 @@ SET
   summary = EXCLUDED.summary,
   publisher_id = EXCLUDED.publisher_id,
   created_at = EXCLUDED.created_at,
-  has_send_component = EXCLUDED.has_send_component;
+  has_send_component = EXCLUDED.has_send_component,
+  is_statutory_application_type = EXCLUDED.is_statutory_application_type;
