@@ -153,7 +153,20 @@ const parseErrorTypeFromHasuraResponse = (message: string) => {
   };
 };
 
-const handleExpiredJWTErrors = () => (window.location.href = "/logout");
+export const handleExpiredJWTErrors = () => {
+  toast.error("Session expired, redirecting to login page...", {
+    toastId: "jwt_expiry_error",
+    hideProgressBar: false,
+    progress: undefined,
+    autoClose: 2_000,
+    onClose: () => (window.location.href = "/logout"),
+  });
+
+  // Fallback if case of toast not firing
+  setTimeout(() => {
+    window.location.href = "/logout"
+  }, 2_500);
+}
 
 const handleValidationErrors = (operation: Operation) => {
   const user = useStore.getState().getUser();
