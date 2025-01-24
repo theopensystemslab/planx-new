@@ -29,3 +29,10 @@ Then find the Locust GUI at `http://localhost:8089/`.
 ### Development
 
 The `OpenWorkloadBase` class in `base_workload.py` provides a base class which all the `test_*.py` scripts inherit from. Any new workload should follow the same pattern.
+
+Also note that this project using [ruff](https://docs.astral.sh/ruff/) for linting and formatting. So before pushing up changes (and with the venv activated), run the following:
+
+```
+ruff check
+ruff format
+```
