@@ -23,7 +23,7 @@ describe("QuestionField - validation", () => {
 
     it("validates optional fields with a value", async () => {
       await expect(() =>
-        validationSchema.validate("not a valid options"),
+        validationSchema.validate("not a valid option"),
       ).rejects.toThrow(/Invalid selection/);
     });
   });

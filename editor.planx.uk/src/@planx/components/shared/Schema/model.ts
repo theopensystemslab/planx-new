@@ -48,8 +48,9 @@ export const questionInputValidationSchema = ({
       otherwise: string().notRequired(),
     })
     .test("isValidOption", "Invalid selection", (value) => {
-      if (!required && !value) return true;
+      if (!value) return true;
 
+      // Check validity regardless of "required" status
       return data.options.some(
         (option) => value === (option.data.val || option.data.text),
       );
