@@ -3,7 +3,9 @@ import { $api } from "../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
 import type { HasuraClaims, JWTData } from "./types.js";
 
-export const buildJWT = async (email: string): Promise<string | undefined> => {
+export const buildUserJWT = async (
+  email: string,
+): Promise<string | undefined> => {
   const user = await $api.user.getByEmail(email);
   if (!user) return;
 
@@ -28,7 +30,6 @@ export const buildJWTForAPIRole = () =>
       },
     },
     process.env.JWT_SECRET!,
-    { expiresIn: "24h" },
   );
 
 const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({
