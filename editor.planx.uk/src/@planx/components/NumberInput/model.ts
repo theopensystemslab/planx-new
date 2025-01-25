@@ -54,8 +54,7 @@ export const numberInputValidationSchema = ({
         return "Enter a number";
       })(),
       test: (value?: string) => {
-        if (!value && !required) return true;
-        if (!value) return false;
+        if (!value) return true;
 
         if (!data.allowNegatives && value.startsWith("-")) {
           return false;
@@ -67,8 +66,7 @@ export const numberInputValidationSchema = ({
       name: "check for a whole number",
       message: "Enter a whole number",
       test: (value?: string) => {
-        if (!value && !required) return true;
-        if (!value) return false;
+        if (!value) return true;
 
         if (data.isInteger && !Number.isInteger(Number(value))) {
           return false;

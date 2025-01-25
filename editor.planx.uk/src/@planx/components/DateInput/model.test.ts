@@ -43,23 +43,18 @@ describe("parseDate helper function", () => {
 
 describe("dateSchema", () => {
   test("basic validation", async () => {
-    expect(await dateSchema({ required: true }).isValid("2021-03-23")).toBe(
+    expect(await dateSchema().isValid("2021-03-23")).toBe(
       true,
     );
-    expect(await dateSchema({ required: true }).isValid("2021-23-03")).toBe(
+    expect(await dateSchema().isValid("2021-23-03")).toBe(
       false,
     );
   });
 
   const validate = async (date?: string) =>
-    await dateSchema({ required: true })
+    await dateSchema()
       .validate(date)
       .catch((err) => err.errors);
-
-  it("throws an error for an undefined value (empty form)", async () => {
-    const errors = await validate(undefined);
-    expect(errors[0]).toMatch(/Date must include a day/);
-  });
 
   it("throws an error for an nonsensical value", async () => {
     const errors = await validate("ab-cd-efgh");

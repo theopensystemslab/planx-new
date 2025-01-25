@@ -71,17 +71,16 @@ export const mapInputValidationSchema = ({
   array()
     .when([], {
       is: () => required,
-      then: array().required(),
+      then: array().min(1, `Draw at least one ${
+        mapOptions?.drawType?.toLocaleLowerCase() || "feature"
+      } on the map`,),
       otherwise: array().notRequired(),
     })
     .test({
-      name: "atLeastOneFeature",
-      message: `Draw at least one ${
-        mapOptions?.drawType?.toLocaleLowerCase() || "feature"
-      } on the map`,
+      name: "validGeoJSON",
+      message: "Input must be valid GeoJSON",
       test: (features?: Array<Feature>) => {
-        if (!required && !features?.length) return true;
-        if (!features || !features.length) return false;
+        if (!features?.length) return true;
 
         const isGeoJSON = (input: Feature) => input?.type === "Feature";
 

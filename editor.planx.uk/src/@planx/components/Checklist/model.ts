@@ -136,23 +136,14 @@ export const checklistInputValidationSchema = ({
   return array()
     .when([], {
       is: () => required,
-      then: array().required(),
+      then: array().min(1, "Select at least one option"),
       otherwise: array().notRequired(),
-    })
-    .test({
-      name: "atLeastOneChecked",
-      message: "Select at least one option",
-      test: (checked?: Array<string>) => {
-        if (!required && !checked?.length) return true;
-
-        return Boolean(checked && checked.length > 0);
-      },
     })
     .test({
       name: "notAllChecked",
       message: "All options must be checked",
       test: (checked?: Array<string>) => {
-        if (!required && !checked?.length) return true;
+        if (!checked?.length) return true;
         if (!allRequired) return true;
 
         const allChecked = checked && checked.length === flatOptions.length;

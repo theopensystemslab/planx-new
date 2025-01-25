@@ -50,7 +50,7 @@ export const textInputValidationSchema = ({
         return `Your answer must be ${TEXT_LIMITS[type]} characters or fewer.`;
       })(),
       test: (value?: string) => {
-        if (!required && !value) return true;
+        if (!value) return true;
         if (!type) return true;
 
         if (type === TextInputType.Email) {
