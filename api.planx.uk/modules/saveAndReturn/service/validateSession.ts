@@ -136,7 +136,7 @@ async function reconcileSessionData({
   };
 
   // remove all auto-answered breadcrumbs
-  // (auto-answers are reconstructed in the editor by `upcomingCards`)
+  // (auto-answers can be reconstructed on resume if they are still auto-answerable after changes)
   for (const [id, crumb] of Object.entries(sessionData.breadcrumbs)) {
     if (crumb.auto === true && sessionData.breadcrumbs[id]) {
       delete sessionData.breadcrumbs[id];
