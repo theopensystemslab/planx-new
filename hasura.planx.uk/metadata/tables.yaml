@@ -247,6 +247,49 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: email_events_log
+    schema: public
+  select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - retry
+          - response
+          - event_id
+          - event_type
+          - status
+          - created_at
+          - flow_id
+          - session_id
+        filter: {}
+      comment: ""
+- table:
     name: feedback
     schema: public
   object_relationships:
