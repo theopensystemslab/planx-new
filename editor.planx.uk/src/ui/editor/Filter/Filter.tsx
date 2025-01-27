@@ -132,7 +132,7 @@ export const Filters = <T extends object>({
   const handleFiltering = (collectedFilters: Filters<T> | null) => {
     if (!collectedFilters && originalRecords)
       return setFilteredRecords(originalRecords);
-    const filteredRecords = filter(originalRecords, (record: T) => {
+    const filteredRecords = originalRecords.filter((record: T) => {
       return filterOptions.every((value: FilterOptions<T>) => {
         const valueToFilter = get(collectedFilters, value.optionKey);
         if (valueToFilter) {
