@@ -1,107 +1,28 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Accordion, { accordionClasses } from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary, {
-  accordionSummaryClasses,
-} from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import {
-  __,
-  capitalize,
-  filter,
-  findKey,
-  get,
-  isEmpty,
-  map,
-  omit,
-} from "lodash";
+import { capitalize, findKey, get, isEmpty, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths, ValueOf } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
+import {
+  FiltersBody,
+  FiltersContainer,
+  FiltersContent,
+  FiltersHeader,
+  FiltersToggle,
+  StyledChip,
+} from "./FilterStyles";
 import { mapFilters } from "./helpers";
 import {
   addFilterSearchParam,
   removeUnusedFilterSearchParam,
   updateUrl,
 } from "./searchParamUtils";
-
-const FiltersContainer = styled(Accordion)(({ theme }) => ({
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
-  margin: theme.spacing(1, 0, 3),
-  border: `1px solid ${theme.palette.border.main}`,
-  [`&.${accordionClasses.root}.Mui-expanded`]: {
-    margin: theme.spacing(1, 0, 3),
-  },
-  [`& .${accordionSummaryClasses.root} > div`]: {
-    margin: "0",
-  },
-}));
-
-const FiltersHeader = styled(AccordionSummary)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: theme.spacing(1.75, 2),
-  gap: theme.spacing(3),
-  background: theme.palette.background.midGray,
-  "&:hover": {
-    background: theme.palette.background.midGray,
-  },
-  "& .MuiAccordionSummary-expandIconWrapper": {
-    display: "none",
-  },
-}));
-
-const FiltersToggle = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: theme.spacing(0.5),
-  minWidth: "160px",
-  minHeight: "32px",
-}));
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-  background: theme.palette.common.white,
-  cursor: "default",
-  textTransform: "capitalize",
-  "& > svg": {
-    fill: theme.palette.text.secondary,
-  },
-  "&:hover": {
-    background: theme.palette.common.white,
-    "& > svg": {
-      fill: theme.palette.text.primary,
-    },
-  },
-}));
-
-const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
-  background: theme.palette.background.midGray,
-  padding: 0,
-}));
-
-const FiltersContent = styled(Box)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.border.main}`,
-  padding: theme.spacing(2.5, 2.5, 2, 2.5),
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-}));
-
-const FiltersFooter = styled(Box)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.border.main}`,
-  padding: theme.spacing(1.5, 2),
-}));
 
 export type FilterKey<T> = Paths<T>;
 export type FilterValues<T> = ValueOf<T>;
@@ -110,10 +31,14 @@ export type Filters<T> = {
 };
 
 export interface FilterOptions<T> {
+  /** displayName is a string used to group to options in the UI */
   displayName: string;
+  /** optionKey is what is passed in to filter the records */
   optionKey: FilterKey<T>;
+  /** optionValue is displayed under displayName for selecting filters and can be used for filtering */
   optionValue: FilterValues<T>[];
-  validationFn: (option: T, value: unknown) => boolean;
+  /** the function passed into the filter to determine if it should be included or excluded */
+  validationFn: (option: T, value?: FilterValues<T>) => boolean;
 }
 
 interface FiltersProps<T> {
@@ -123,99 +48,117 @@ interface FiltersProps<T> {
   clearFilters?: boolean;
 }
 
+/**
+ * @component
+ * @description Filters a list of records
+ * @param {Type} T - a type to define the shape of the data in the records array
+ * @param {Array} props.records - an array of objects to filter
+ * @param {Function} props.setFilteredRecords - A way to set the new filtered order of the array
+ * @param {Array} props.filterOptions - An array of objects to define how to filter the records - the FilterOptions type has more information
+ * @returns {JSX.Element} A drop-down accordion displaying lists of grouped checkboxes
+ * @example
+ * <Filters<FlowSummary>
+ *   records={flows}
+ *   setFilteredRecords={setFilteredFlows}
+ *   filterOptions={filterOptions}
+ * />
+ */
+
 export const Filters = <T extends object>({
   records,
   setFilteredRecords,
   filterOptions,
-  clearFilters,
 }: FiltersProps<T>) => {
-  const [filters, setFilters] = useState<Filters<T> | {}>();
-  const [selectedFilters, setSelectedFilters] = useState<Filters<T> | {}>();
-  const [originalRecords] = useState<T[]>(records);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [filters, setFilters] = useState<Filters<T> | null>(null);
+  const [optionsToFilter] = useState(filterOptions);
 
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  const addToSearchParams = (params: Filters<T> | {}) => {
-    const searchParams = new URLSearchParams(route.url.search);
-    const mappedFilters = mapFilters(params, filterOptions);
-    addFilterSearchParam<T>(searchParams, mappedFilters);
-    removeUnusedFilterSearchParam<T>(
-      filterOptions,
-      searchParams,
-      mappedFilters,
-    );
-    updateUrl(navigation, searchParams);
-  };
-
-  const clearSearchParams = () => {
-    const searchParams = new URLSearchParams(route.url.search);
-    const displayNames = filterOptions.map((option) => option.displayName);
-    displayNames.forEach((name) => {
-      searchParams.delete(slugify(name));
-    });
-
-    updateUrl(navigation, searchParams);
-  };
-
-  const parseStateFromURL = () => {
-    const searchParams = new URLSearchParams(route.url.search);
-    const searchParamToMap = searchParams.entries().toArray() as [
-      FilterKey<T>,
-      FilterValues<T>,
-    ][];
-
-    const searchParamFilters = searchParamToMap.map((key) => {
-      const findOption = filterOptions.find(
-        (option) => slugify(`${option.displayName}`) === `${key[0]}`,
-      );
-      return findOption && { [`${findOption.optionKey}`]: `${key[1]}` };
-    });
-
-    const paramFilters = {};
-
-    searchParamFilters.forEach((param) => Object.assign(paramFilters, param));
-
-    !isEmpty(paramFilters) && updateFilterState(paramFilters);
-  };
-
   useEffect(() => {
-    parseStateFromURL();
-  }, []);
+    const parseStateFromURL = () => {
+      const searchParams = new URLSearchParams(route.url.search);
+      const searchParamToMap = searchParams.entries().toArray() as [
+        FilterKey<T>,
+        FilterValues<T>,
+      ][];
 
-  const clearAllFilters = () => {
-    setFilters({});
-    setSelectedFilters([]);
-    clearSearchParams();
-  };
+      const searchParamFilters = searchParamToMap
+        .map((key) => {
+          const findOption = optionsToFilter.find(
+            (option) => slugify(`${option.displayName}`) === `${key[0]}`,
+          );
+          return findOption && { [`${findOption.optionKey}`]: `${key[1]}` };
+        })
+        .filter((result) => result !== undefined);
 
-  const handleFiltering = (collectedFilters: Filters<T> | {}) => {
-    if (!collectedFilters && originalRecords)
-      return setFilteredRecords(originalRecords);
-    const filteredRecords = filter(originalRecords, (record: T) => {
-      return filterOptions.every((value: FilterOptions<T>) => {
-        const valueToFilter = get(collectedFilters, value.optionKey);
-        if (valueToFilter) {
-          return value.validationFn(record, valueToFilter);
-        }
-        return true;
+      let filtersToApply: Filters<T> | null = null;
+
+      searchParamFilters.forEach((param) => {
+        // map method above ensures we create an array of type Filters<T>
+        const filterParam = param as Filters<T>;
+        filtersToApply = { ...filtersToApply, ...filterParam };
       });
-    });
-    setFilteredRecords(filteredRecords);
-  };
+      !isEmpty(filtersToApply) && setFilters(filtersToApply);
+    };
+
+    if (filters === null) {
+      parseStateFromURL();
+    }
+  });
 
   useEffect(() => {
-    if (clearFilters) {
-      clearAllFilters();
+    if (!filters && records) {
+      setFilteredRecords(records);
+    } else {
+      const filteredRecords = records.filter((record: T) => {
+        return optionsToFilter.every((value: FilterOptions<T>) => {
+          const valueToFilter = get(filters, value.optionKey);
+          if (valueToFilter) {
+            return value.validationFn(record, valueToFilter);
+          }
+          return true;
+        });
+      });
+      setFilteredRecords(filteredRecords);
     }
-  }, [clearFilters]);
+  }, [filters, setFilteredRecords, records, optionsToFilter]);
+
+  useEffect(() => {
+    const addToSearchParams = (params: Filters<T>) => {
+      const searchParams = new URLSearchParams(route.url.search);
+      const mappedFilters = mapFilters(params, optionsToFilter);
+      mappedFilters && addFilterSearchParam<T>(searchParams, mappedFilters);
+      removeUnusedFilterSearchParam<T>(
+        optionsToFilter,
+        searchParams,
+        mappedFilters || [],
+      );
+      updateUrl(navigation, searchParams);
+    };
+
+    const clearSearchParams = () => {
+      const searchParams = new URLSearchParams(route.url.search);
+      const displayNames = optionsToFilter.map((option) => option.displayName);
+      displayNames.forEach((name) => {
+        searchParams.delete(slugify(name));
+      });
+
+      updateUrl(navigation, searchParams);
+    };
+
+    filters ? addToSearchParams(filters) : clearSearchParams();
+  }, [filters, optionsToFilter, navigation, route.url.search]);
 
   const handleChange = (
     filterKey: FilterKey<T>,
     filterValue: FilterValues<T>,
   ) => {
-    const newObject = { ...filters, [filterKey]: filterValue } as Filters<T>;
+    const newObject = {
+      ...filters,
+      [filterKey]: filterValue,
+    } as Filters<T>;
     get(filters, filterKey) === filterValue
       ? removeFilter(filterKey)
       : setFilters(newObject);
@@ -224,19 +167,6 @@ export const Filters = <T extends object>({
   const removeFilter = (targetFilter: FilterKey<T>) => {
     const newFilters = omit(filters, targetFilter) as Filters<T>;
     setFilters(newFilters);
-  };
-
-  const removeSelectedFilter = (targetFilter: FilterKey<T>) => {
-    const newFilters =
-      (omit(selectedFilters, targetFilter) as Filters<T>) || {};
-    updateFilterState(newFilters);
-  };
-
-  const updateFilterState = (newFilters: Filters<T> | {}) => {
-    setSelectedFilters(newFilters);
-    setFilters(newFilters);
-    isEmpty(newFilters) ? clearSearchParams() : addToSearchParams(newFilters);
-    handleFiltering(newFilters);
   };
 
   return (
@@ -256,20 +186,20 @@ export const Filters = <T extends object>({
           </Typography>
         </FiltersToggle>
         <Box sx={{ display: "flex", gap: 1 }}>
-          {selectedFilters &&
-            map(selectedFilters, (filter: FilterValues<T>) => {
-              if (!filter) return;
+          {filters &&
+            Object.entries(filters).map(([_key, value]) => {
+              if (!value) return;
               return (
                 <StyledChip
                   onClick={(e) => e.stopPropagation()}
-                  label={capitalize(`${filter}`)}
-                  key={`${filter}`}
+                  label={capitalize(`${value}`)}
+                  key={`${value}`}
                   onDelete={() => {
                     const targetKey = findKey(
-                      selectedFilters,
-                      (keys) => keys === filter,
+                      filters,
+                      (keys) => keys === value,
                     ) as FilterKey<T>;
-                    removeSelectedFilter(targetKey);
+                    removeFilter(targetKey);
                   }}
                 />
               );
@@ -278,7 +208,7 @@ export const Filters = <T extends object>({
       </FiltersHeader>
       <FiltersBody>
         <FiltersContent>
-          {filterOptions.map((option) => (
+          {optionsToFilter.map((option) => (
             <FiltersColumn
               key={`${option.displayName}-filter-column`}
               title={option.displayName}
@@ -289,17 +219,6 @@ export const Filters = <T extends object>({
             />
           ))}
         </FiltersContent>
-        <FiltersFooter>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              filters && updateFilterState(filters);
-            }}
-          >
-            Apply filters
-          </Button>
-        </FiltersFooter>
       </FiltersBody>
     </FiltersContainer>
   );

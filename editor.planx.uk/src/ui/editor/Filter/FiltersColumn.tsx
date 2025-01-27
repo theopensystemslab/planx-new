@@ -15,7 +15,7 @@ interface FiltersColumnProps<T> {
   title: string;
   optionKey: FilterKey<T>;
   optionValues: FilterValues<T>[];
-  filters?: Filters<T> | {};
+  filters?: Filters<T> | null;
   handleChange: (key: FilterKey<T>, value: FilterValues<T>) => void;
 }
 
@@ -24,7 +24,7 @@ export const FiltersColumn = <T extends object>(
 ) => {
   return (
     <Column>
-      <Typography variant="h5" pb={0.5}>
+      <Typography component={"legend"} variant="h5" pb={0.5}>
         {props.title}
       </Typography>
       {props.optionValues.map((value) => (

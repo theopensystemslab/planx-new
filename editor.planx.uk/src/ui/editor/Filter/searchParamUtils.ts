@@ -31,7 +31,7 @@ export const addFilterSearchParam = <T extends object>(
 export const removeUnusedFilterSearchParam = <T extends object>(
   filterOptions: FilterOptions<T>[],
   searchParams: URLSearchParams,
-  mappedFilters: MappedFilters<T>[],
+  mappedFilters: MappedFilters<T>[] | [],
 ) => {
   const displayNames = filterOptions.map((option) => option.displayName);
   displayNames.map((name) => {
