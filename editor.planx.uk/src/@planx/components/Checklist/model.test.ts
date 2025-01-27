@@ -1,7 +1,7 @@
 import { checklistInputValidationSchema } from "./model";
 
 describe("Checklist - validation", () => {
-  describe("optional fields", () => {
+  describe("optional checklist fields in schema", () => {
     const validationSchema = checklistInputValidationSchema({
       data: {
         options: [
@@ -23,7 +23,7 @@ describe("Checklist - validation", () => {
 
     it("validates optional fields with a value", async () => {
       await expect(() => validationSchema.validate(["test1"])).rejects.toThrow(
-        /All options must be checked/,
+        /All options must be checked/
       );
     });
   });

@@ -127,7 +127,7 @@ export const checklistInputValidationSchema = ({
   data: { allRequired, options, groupedOptions },
   required,
 }: {
-  // Cannot use FieldValidationSchema<ChecklistInput> as this is a simplified representation (i.e. no groups)
+  // Cannot use type FieldValidationSchema<ChecklistInput> as this is a simplified representation (i.e. no groups)
   data: Checklist;
   required: boolean;
 }) => {

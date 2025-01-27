@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
-  ChecklistLayout,
   checklistInputValidationSchema,
+  ChecklistLayout,
 } from "@planx/components/Checklist/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
