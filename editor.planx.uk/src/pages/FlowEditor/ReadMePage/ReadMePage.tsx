@@ -187,6 +187,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
                 placeholder="The service..."
+                multiline
+                rows={6}
                 errorMessage={formik.errors.serviceDescription}
               />
             </InputRow>
@@ -206,6 +208,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 id="serviceLimitations"
                 errorMessage={formik.errors.serviceLimitations}
                 placeholder="Limitations"
+                multiline
+                rows={6}
               />
             </InputRow>
           </InputGroup>
