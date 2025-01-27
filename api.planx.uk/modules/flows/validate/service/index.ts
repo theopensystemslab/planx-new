@@ -11,6 +11,7 @@ import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
 import { validateProjectTypes } from "./projectTypes.js";
 import { validateSections } from "./sections.js";
+import { checkStatutoryApplicationTypes } from "../../publish/service/applicationTypes.js";
 
 type AlteredNode = {
   id: string;
@@ -29,6 +30,7 @@ interface FlowValidateAndDiffResponse {
   alteredNodes: AlteredNode[] | null;
   message: string;
   validationChecks?: FlowValidationResponse[];
+  isStatutoryApplication?: boolean;
 }
 
 const validateAndDiffFlow = async (
@@ -36,6 +38,8 @@ const validateAndDiffFlow = async (
 ): Promise<FlowValidateAndDiffResponse> => {
   const flattenedFlow = await dataMerged(flowId);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
+  const isStatutoryApplication = checkStatutoryApplicationTypes(flattenedFlow)
+  
 
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
   if (!delta)
@@ -80,6 +84,7 @@ const validateAndDiffFlow = async (
     alteredNodes,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
+    isStatutoryApplication: isStatutoryApplication
   };
 };
 
