@@ -207,17 +207,17 @@ export const Filters = <T extends object>({
             </FiltersToggle>
             <Box sx={{ display: "flex", gap: 1 }}>
               {values.selectedFilters &&
-                map(values.selectedFilters, (filter: FilterValues<T>) => {
-                  if (!filter) return;
+                Object.entries(values.selectedFilters).map(([_key, value]) => {
+                  if (!value) return;
                   return (
                     <StyledChip
                       onClick={(e) => e.stopPropagation()}
-                      label={capitalize(`${filter}`)}
-                      key={`${filter}`}
+                      label={capitalize(`${value}`)}
+                      key={`${value}`}
                       onDelete={() => {
                         const targetKey = findKey(
                           values.selectedFilters,
-                          (keys) => keys === filter,
+                          (keys) => keys === value,
                         ) as FilterKey<T>;
                         removeSelectedFilter(targetKey);
                       }}
