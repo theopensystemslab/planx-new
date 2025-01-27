@@ -17,19 +17,16 @@ import InputRowLabel from "../InputRowLabel";
 interface SearchBoxProps<T> {
   records: T[] | null;
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
-  searchKey: FuseOptionKey<T>[];
+  searchKeys: FuseOptionKey<T>[];
 }
 
 export const SearchBox = <T extends object>({
   records,
   setRecords,
-  searchKey,
+  searchKeys,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
-  const [originalRecords] = useState(records);
-
-  const keys = useMemo(() => searchKey, [searchKey]);
 
   const formik = useFormik({
     initialValues: { pattern: "" },
@@ -40,8 +37,8 @@ export const SearchBox = <T extends object>({
   });
 
   const { results, search } = useSearch({
-    list: originalRecords || [],
-    keys: keys,
+    list: records || [],
+    keys: searchKeys,
   });
 
   const debouncedSearch = useMemo(
@@ -60,9 +57,9 @@ export const SearchBox = <T extends object>({
       setRecords(mappedResults);
     }
     if (results && !searchedTerm) {
-      originalRecords && setRecords(originalRecords);
+      records && setRecords(records);
     }
-  }, [results, setRecords, searchedTerm, originalRecords]);
+  }, [results, setRecords, searchedTerm, records]);
 
   return (
     <Box maxWidth={360}>

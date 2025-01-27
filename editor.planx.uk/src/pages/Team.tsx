@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
@@ -114,6 +114,7 @@ const Team: React.FC = () => {
 
   const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const searchKeys = useMemo(() => ["name", "slug"], []);
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
@@ -143,9 +144,9 @@ const Team: React.FC = () => {
           </Box>
           {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SearchBox<FlowSummary>
-              records={filteredFlows}
+              records={flows}
               setRecords={setFilteredFlows}
-              searchKey={["name", "slug"]}
+              searchKeys={searchKeys}
             />
           )}
         </Box>
