@@ -99,12 +99,19 @@ const Team: React.FC = () => {
     },
   ];
 
-  const checkFlowStatus = (flow: FlowSummary, value: unknown) =>
-    flow.status === value;
-  const checkFlowServiceType = (flow: FlowSummary, _value: unknown) =>
-    flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
+  const checkFlowStatus: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    value,
+  ) => flow.status === value;
+  const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    _value,
+  ) => flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
   // validation can be added when we have statutory data coming through
-  const checkFlowApplicationType = () => true;
+  const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    _value,
+  ) => flow.publishedFlows[0].isStatutoryApplicationType;
 
   const filterOptions: FilterOptions<FlowSummary>[] = [
     {
@@ -123,7 +130,7 @@ const Team: React.FC = () => {
       displayName: "Application type",
       optionKey: `name`,
       optionValue: ["statutory"],
-      validationFn: checkFlowStatus,
+      validationFn: checkFlowApplicationType,
     },
   ];
   const fetchFlows = useCallback(() => {
@@ -172,34 +179,15 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          <Box maxWidth={360}>
-            <InputRow>
-              <InputRowLabel>
-                <strong>Search</strong>
-              </InputRowLabel>
-              <InputRowItem>
-                <Box sx={{ position: "relative" }}>
-                  <Input
-                    sx={{
-                      borderColor: (theme) => theme.palette.border.input,
-                      pr: 5,
-                    }}
-                    name="search"
-                    id="search"
-                  />
-                </Box>
-              </InputRowItem>
-            </InputRow>
-          </Box>
         </Box>
         <Box>
-      {filteredFlows && flows && (
-        <Filters<FlowSummary>
-          records={filteredFlows}
-          setFilteredRecords={setFilteredFlows}
-          filterOptions={filterOptions}
-        />
-      )}
+          {filteredFlows && flows && (
+            <Filters<FlowSummary>
+              records={filteredFlows}
+              setFilteredRecords={setFilteredFlows}
+              filterOptions={filterOptions}
+            />
+          )}
           {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SortControl<FlowSummary>
               records={flows}

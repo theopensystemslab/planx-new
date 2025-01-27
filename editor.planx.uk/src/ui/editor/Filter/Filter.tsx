@@ -10,16 +10,8 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import {
-  __,
-  capitalize,
-  filter,
-  findKey,
-  get,
-  isEmpty,
-  map,
-  omit,
-} from "lodash";
+import { useFormik, useFormikContext } from "formik";
+import { capitalize, filter, findKey, get, isEmpty, map, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths, ValueOf } from "type-fest";
@@ -113,7 +105,7 @@ export interface FilterOptions<T> {
   displayName: string;
   optionKey: FilterKey<T>;
   optionValue: FilterValues<T>[];
-  validationFn: (option: T, value: unknown) => boolean;
+  validationFn: (option: T, value?: FilterValues<T>) => boolean;
 }
 
 interface FiltersProps<T> {
@@ -123,30 +115,43 @@ interface FiltersProps<T> {
   clearFilters?: boolean;
 }
 
+interface FormikFilterProps<T> {
+  filters: Filters<T> | null;
+  selectedFilters: Filters<T> | null;
+}
+
 export const Filters = <T extends object>({
   records,
   setFilteredRecords,
   filterOptions,
   clearFilters,
 }: FiltersProps<T>) => {
-  const [filters, setFilters] = useState<Filters<T> | {}>();
-  const [selectedFilters, setSelectedFilters] = useState<Filters<T> | {}>();
   const [originalRecords] = useState<T[]>(records);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [haveFiltersChanged, setHaveFiltersChanged] = useState<boolean>(false);
+
+  const { values, setFieldValue, handleSubmit, resetForm } = useFormik<
+    FormikFilterProps<T>
+  >({
+    initialValues: { filters: null, selectedFilters: null },
+    onSubmit: ({ selectedFilters }) => handleFiltering(selectedFilters),
+  });
 
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  const addToSearchParams = (params: Filters<T> | {}) => {
+  const addToSearchParams = (params: Filters<T>) => {
     const searchParams = new URLSearchParams(route.url.search);
-    const mappedFilters = mapFilters(params, filterOptions);
-    addFilterSearchParam<T>(searchParams, mappedFilters);
-    removeUnusedFilterSearchParam<T>(
-      filterOptions,
-      searchParams,
-      mappedFilters,
-    );
-    updateUrl(navigation, searchParams);
+    if (params) {
+      const mappedFilters = mapFilters(params, filterOptions);
+      addFilterSearchParam<T>(searchParams, mappedFilters);
+      removeUnusedFilterSearchParam<T>(
+        filterOptions,
+        searchParams,
+        mappedFilters,
+      );
+      updateUrl(navigation, searchParams);
+    }
   };
 
   const clearSearchParams = () => {
@@ -166,31 +171,33 @@ export const Filters = <T extends object>({
       FilterValues<T>,
     ][];
 
-    const searchParamFilters = searchParamToMap.map((key) => {
-      const findOption = filterOptions.find(
-        (option) => slugify(`${option.displayName}`) === `${key[0]}`,
-      );
-      return findOption && { [`${findOption.optionKey}`]: `${key[1]}` };
-    });
+    const searchParamFilters = searchParamToMap
+      .map((key) => {
+        const findOption = filterOptions.find(
+          (option) => slugify(`${option.displayName}`) === `${key[0]}`,
+        );
+        return findOption && { [`${findOption.optionKey}`]: `${key[1]}` };
+      })
+      .filter((result) => result !== undefined);
 
-    const paramFilters = {};
-
-    searchParamFilters.forEach((param) => Object.assign(paramFilters, param));
-
-    !isEmpty(paramFilters) && updateFilterState(paramFilters);
+    searchParamFilters.forEach((param) =>
+      setFieldValue("selectedFilters", param),
+    );
   };
 
   useEffect(() => {
     parseStateFromURL();
   }, []);
 
-  const clearAllFilters = () => {
-    setFilters({});
-    setSelectedFilters([]);
-    clearSearchParams();
-  };
+  useEffect(() => {
+    handleSubmit();
+  }, [values, handleSubmit]);
 
-  const handleFiltering = (collectedFilters: Filters<T> | {}) => {
+  useEffect(() => {
+    resetForm();
+  }, [resetForm]);
+
+  const handleFiltering = (collectedFilters: Filters<T> | null) => {
     if (!collectedFilters && originalRecords)
       return setFilteredRecords(originalRecords);
     const filteredRecords = filter(originalRecords, (record: T) => {
@@ -205,38 +212,47 @@ export const Filters = <T extends object>({
     setFilteredRecords(filteredRecords);
   };
 
-  useEffect(() => {
-    if (clearFilters) {
-      clearAllFilters();
-    }
-  }, [clearFilters]);
-
   const handleChange = (
     filterKey: FilterKey<T>,
     filterValue: FilterValues<T>,
   ) => {
-    const newObject = { ...filters, [filterKey]: filterValue } as Filters<T>;
-    get(filters, filterKey) === filterValue
+    const newObject = {
+      ...values.filters,
+      [filterKey]: filterValue,
+    } as Filters<T>;
+    get(values.filters, filterKey) === filterValue
       ? removeFilter(filterKey)
-      : setFilters(newObject);
+      : setFieldValue("filters", newObject);
+    setHaveFiltersChanged(true);
   };
 
   const removeFilter = (targetFilter: FilterKey<T>) => {
-    const newFilters = omit(filters, targetFilter) as Filters<T>;
-    setFilters(newFilters);
+    const newFilters = omit(values.filters, targetFilter) as Filters<T>;
+    setFieldValue("filters", newFilters);
   };
 
   const removeSelectedFilter = (targetFilter: FilterKey<T>) => {
-    const newFilters =
-      (omit(selectedFilters, targetFilter) as Filters<T>) || {};
-    updateFilterState(newFilters);
+    const newFilters = omit(
+      values.selectedFilters,
+      targetFilter,
+    ) as Filters<T> | null;
+    if (!isEmpty(newFilters)) {
+      updateFilterState(newFilters);
+      handleSubmit();
+    }
+    if (isEmpty(newFilters)) {
+      resetForm();
+      handleSubmit();
+      clearSearchParams();
+    }
   };
 
-  const updateFilterState = (newFilters: Filters<T> | {}) => {
-    setSelectedFilters(newFilters);
-    setFilters(newFilters);
-    isEmpty(newFilters) ? clearSearchParams() : addToSearchParams(newFilters);
-    handleFiltering(newFilters);
+  const updateFilterState = (newFilters: Filters<T> | null) => {
+    setFieldValue("selectedFilters", newFilters);
+    setFieldValue("filters", newFilters);
+    isEmpty(newFilters) && !newFilters
+      ? clearSearchParams()
+      : addToSearchParams(newFilters);
   };
 
   return (
@@ -244,63 +260,70 @@ export const Filters = <T extends object>({
       expanded={expanded}
       onChange={() => setExpanded(!expanded)}
     >
-      <FiltersHeader
-        expandIcon={
-          expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
-        }
-      >
-        <FiltersToggle>
-          {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          <Typography variant="h4">
-            {expanded ? "Hide filters" : "Show filters"}
-          </Typography>
-        </FiltersToggle>
-        <Box sx={{ display: "flex", gap: 1 }}>
-          {selectedFilters &&
-            map(selectedFilters, (filter: FilterValues<T>) => {
-              if (!filter) return;
-              return (
-                <StyledChip
-                  onClick={(e) => e.stopPropagation()}
-                  label={capitalize(`${filter}`)}
-                  key={`${filter}`}
-                  onDelete={() => {
-                    const targetKey = findKey(
-                      selectedFilters,
-                      (keys) => keys === filter,
-                    ) as FilterKey<T>;
-                    removeSelectedFilter(targetKey);
-                  }}
-                />
-              );
-            })}
-        </Box>
-      </FiltersHeader>
-      <FiltersBody>
-        <FiltersContent>
-          {filterOptions.map((option) => (
-            <FiltersColumn
-              key={`${option.displayName}-filter-column`}
-              title={option.displayName}
-              optionKey={option.optionKey}
-              optionValues={option.optionValue}
-              filters={filters}
-              handleChange={handleChange}
-            />
-          ))}
-        </FiltersContent>
-        <FiltersFooter>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              filters && updateFilterState(filters);
-            }}
+      <form onSubmit={() => handleSubmit()}>
+        <fieldset>
+          <FiltersHeader
+            expandIcon={
+              expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
+            }
           >
-            Apply filters
-          </Button>
-        </FiltersFooter>
-      </FiltersBody>
+            <FiltersToggle>
+              {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              <Typography variant="h4">
+                {expanded ? "Hide filters" : "Show filters"}
+              </Typography>
+            </FiltersToggle>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {values.selectedFilters &&
+                map(values.selectedFilters, (filter: FilterValues<T>) => {
+                  if (!filter) return;
+                  return (
+                    <StyledChip
+                      onClick={(e) => e.stopPropagation()}
+                      label={capitalize(`${filter}`)}
+                      key={`${filter}`}
+                      onDelete={() => {
+                        const targetKey = findKey(
+                          values.selectedFilters,
+                          (keys) => keys === filter,
+                        ) as FilterKey<T>;
+                        removeSelectedFilter(targetKey);
+                      }}
+                    />
+                  );
+                })}
+            </Box>
+          </FiltersHeader>
+          <FiltersBody>
+            <FiltersContent>
+              {filterOptions.map((option) => (
+                <FiltersColumn
+                  key={`${option.displayName}-filter-column`}
+                  title={option.displayName}
+                  optionKey={option.optionKey}
+                  optionValues={option.optionValue}
+                  filters={values.filters}
+                  handleChange={handleChange}
+                />
+              ))}
+            </FiltersContent>
+            <FiltersFooter>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!haveFiltersChanged}
+                onClick={() => {
+                  updateFilterState(values.filters);
+                  handleSubmit();
+                  setHaveFiltersChanged(false);
+                }}
+              >
+                Apply filters
+              </Button>
+            </FiltersFooter>
+          </FiltersBody>
+        </fieldset>
+      </form>
     </FiltersContainer>
   );
 };
