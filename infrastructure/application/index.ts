@@ -385,6 +385,14 @@ export = async () => {
             value: config.requireSecret("file-api-key-doncaster"),
           },
           {
+            name: "FILE_API_KEY_GLOUCESTER",
+            value: config.requireSecret("file-api-key-gloucester"),
+          },
+          {
+            name: "FILE_API_KEY_TEWKESBURY",
+            value: config.requireSecret("file-api-key-tewkesbury"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },
