@@ -9,6 +9,7 @@ import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import { isApplicationTypeSupported } from "../utils/helpers.js";
 import type { SendIntegrationController } from "../types.js";
 import { convertObjectToMulterJSONFile } from "../../file/service/utils.js";
+import { ServerError } from "../../../errors/serverError.js";
 
 interface CreateS3Application {
   insertS3Application: {
@@ -127,12 +128,13 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
       auditEntryId,
     });
   } catch (error) {
-    return next({
-      error,
-      message: `Failed to upload submission to S3 (${localAuthority}): ${
-        (error as Error).message
-      }`,
-    });
+    return next(
+      new ServerError({
+        message: `Failed to upload submission to S3 (${localAuthority}): ${
+          (error as Error).message
+        }`,
+      }),
+    );
   }
 };
 
