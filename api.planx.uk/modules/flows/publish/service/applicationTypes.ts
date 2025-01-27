@@ -32,7 +32,6 @@ const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
 
   const answerVals: string[] = [];
   nodesWithApplicationType.forEach((node) => {
-    console.log(flowGraph[node]);
     if (flowGraph[node].edges) {
       flowGraph[node].edges.forEach(
         (edge) =>
