@@ -74,7 +74,6 @@ export const SearchBox = <T extends object>({
           <Box sx={{ position: "relative" }}>
             <Input
               sx={{
-                borderColor: (theme) => theme.palette.border.input,
                 pr: 5,
               }}
               name="search"
