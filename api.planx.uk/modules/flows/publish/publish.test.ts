@@ -5,6 +5,8 @@ import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { userContext } from "../../auth/middleware.js";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
+import * as applicationTypes from "./service/applicationTypes.js";
+import { setValueApplicationTypePass } from "../../../tests/mocks/applicationTypeCheckMocks.js";
 
 beforeAll(() => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
@@ -82,7 +84,6 @@ describe("publish", () => {
         },
       },
     });
-
     await supertest(app).post("/flows/1/publish").set(auth).expect(200);
   });
 
@@ -176,6 +177,52 @@ describe("publish", () => {
       .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(/User details missing from request/);
+      });
+  });
+
+  it("updates is_statutory_application_type for SetValue component", async () => {
+    const publishMut = vi.spyOn(
+      applicationTypes,
+      "checkStatutoryApplicationTypes",
+    );
+
+    const alteredFlow = {
+      ...mockFlowData,
+      ...setValueApplicationTypePass,
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "PublishFlow",
+      matchOnVariables: false,
+      data: {
+        publishedFlow: {
+          data: alteredFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(auth)
+      .expect(200)
+      .then(() => {
+        expect(publishMut).toEqual(true);
       });
   });
 });
