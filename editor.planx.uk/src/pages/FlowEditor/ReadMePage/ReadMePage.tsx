@@ -145,7 +145,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </FlowTag>
         </Box>
       </SettingsSection>
-      <SettingsSection>
+      <SettingsSection background>
         <form onSubmit={formik.handleSubmit}>
           <InputGroup flowSpacing>
             <InputLegend>Service description</InputLegend>
@@ -222,9 +222,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               onClick={() => window.location.reload()}
               type="reset"
               variant="contained"
-              disabled={
-                !formik.dirty
-              }
+              disabled={!formik.dirty}
               color="secondary"
               sx={{ ml: 1.5 }}
             >
