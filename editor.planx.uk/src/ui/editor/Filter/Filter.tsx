@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import { capitalize, filter, findKey, get, isEmpty, map, omit } from "lodash";
+import { capitalize, findKey, get, isEmpty, map, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths, ValueOf } from "type-fest";
