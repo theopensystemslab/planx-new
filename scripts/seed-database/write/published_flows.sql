@@ -6,7 +6,7 @@ CREATE TEMPORARY TABLE sync_published_flows (
   summary text,
   publisher_id int,
   created_at timestamptz,
-  has_send_component boolean
+  has_send_component boolean  
   );
 
 /* Ensure columns here are kept in sync with container.sh */
@@ -19,7 +19,7 @@ INSERT INTO published_flows (
   summary,
   publisher_id,
   created_at,
-  has_send_component
+  has_send_component  
   )
 SELECT
   id,
@@ -29,7 +29,7 @@ SELECT
   publisher_id,
   created_at,
   has_send_component
-FROM sync_published_flows
+  FROM sync_published_flows
 ON CONFLICT (id) DO UPDATE
 SET
   data = EXCLUDED.data,

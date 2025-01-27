@@ -56,12 +56,12 @@ function Component() {
       <form onSubmit={formik.handleSubmit}>
         <SettingsSection>
           <Typography variant="h2" component="h3" gutterBottom>
-            Global Settings
+            Global settings
           </Typography>
         </SettingsSection>
         <SettingsSection background>
           <InputGroup flowSpacing>
-            <InputLegend>Footer Elements</InputLegend>
+            <InputLegend>Footer elements</InputLegend>
             <SettingsDescription>
               <p>Manage the content that will appear in the footer.</p>
               <p>

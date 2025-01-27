@@ -15,7 +15,7 @@ export const Basic = {
   args: {
     title: "Prior approval",
     description: "This option has a description underneath.",
-    onChange: () => console.log("hi"),
+    onChange: () => console.log("Radio changed"),
     id: "1",
   },
 } satisfies Story;

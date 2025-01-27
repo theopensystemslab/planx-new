@@ -21,8 +21,12 @@ hasura.planx.uk/.env.test
 /playwright-report/
 /playwright/.cache/
 api.planx.uk/tmp/
+
+# Python
 .python-version
 __pycache__
+.venv/
+.ruff_cache/
 
 # Ignore certificate files
 **/*.chain

@@ -13,7 +13,7 @@ export const buildJWT = async (email: string): Promise<string | undefined> => {
     "https://hasura.io/jwt/claims": generateHasuraClaimsForUser(user),
   };
 
-  const jwt = JWT.sign(data, process.env.JWT_SECRET!);
+  const jwt = JWT.sign(data, process.env.JWT_SECRET!, { expiresIn: "24h" });
   return jwt;
 };
 

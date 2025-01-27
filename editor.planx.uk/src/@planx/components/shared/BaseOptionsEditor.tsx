@@ -84,7 +84,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
             ...props.value,
             data: {
               ...props.value.data,
-              val: targetValue ? targetValue : undefined,
+              val: targetValue ?? "",
             },
           });
         }}

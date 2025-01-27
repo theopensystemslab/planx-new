@@ -67,7 +67,7 @@ export default function ListManager<T, EditorExtraProps>(
                 }}
                 {...(props.editorExtraProps || {})}
               />
-              <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+              <Box sx={{ display: "flex", alignItems: "flex-start" }}>
                 <IconButton
                   onClick={() => {
                     props.onChange(removeAt(index, props.values));

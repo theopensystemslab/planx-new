@@ -12,7 +12,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { TextInputType, userDataSchema } from "./model";
+import { TextInputType, textInputValidationSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
@@ -28,7 +28,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      text: userDataSchema(props),
+      text: textInputValidationSchema(props),
     }),
   });
 

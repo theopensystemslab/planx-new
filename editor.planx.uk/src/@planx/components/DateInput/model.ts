@@ -65,6 +65,9 @@ export const parseDate = (date?: string) => {
   return { year, month, day };
 };
 
+/**
+ * Validates that a given string is a date in the correct format
+ */
 export const dateSchema = () => {
   return string()
     .test("missing day", "Date must include a day", (date?: string) => {
@@ -97,7 +100,10 @@ export const dateSchema = () => {
     );
 };
 
-export const dateRangeSchema: (input: DateInput) => SchemaOf<string> = (
+/**
+ * Validates that date is both valid and fits within the provided min/max
+ */
+export const dateValidationSchema: (input: DateInput) => SchemaOf<string> = (
   params,
 ) =>
   dateSchema()

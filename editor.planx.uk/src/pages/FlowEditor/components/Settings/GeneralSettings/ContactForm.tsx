@@ -46,7 +46,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
 
   return (
     <SettingsForm
-      legend="Contact Information"
+      legend="Contact information"
       formik={formik}
       description={
         <>
