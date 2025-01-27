@@ -29,7 +29,7 @@ export const SearchBox = <T extends object>({
   const [searchedTerm, setSearchedTerm] = useState<string>();
   const [originalRecords] = useState(records);
 
-  const keys = useMemo(() => searchKey, [searchKey]);
+  const searchKeys = useMemo(() => searchKey, []);
 
   const formik = useFormik({
     initialValues: { pattern: "" },
@@ -41,7 +41,7 @@ export const SearchBox = <T extends object>({
 
   const { results, search } = useSearch({
     list: originalRecords || [],
-    keys: keys,
+    keys: searchKeys,
   });
 
   const debouncedSearch = useMemo(
