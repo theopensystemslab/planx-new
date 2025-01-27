@@ -1,6 +1,7 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Role, Team, User, UserTeams } from "@opensystemslab/planx-core/types";
 import axios from "axios";
+import { handleExpiredJWTErrors } from "lib/graphql";
 import type { StateCreator } from "zustand";
 
 import { EditorStore } from "./editor";
@@ -76,6 +77,7 @@ const getLoggedInUser = async () => {
     });
     return response.data;
   } catch (error) {
+    handleExpiredJWTErrors();
     throw Error("Failed to fetch user matching JWT cookie");
   }
 };

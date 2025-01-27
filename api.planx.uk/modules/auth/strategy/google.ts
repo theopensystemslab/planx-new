@@ -1,5 +1,5 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { buildJWT } from "../service.js";
+import { buildUserJWT } from "../service.js";
 
 export const googleStrategy = new GoogleStrategy(
   {
@@ -11,7 +11,7 @@ export const googleStrategy = new GoogleStrategy(
     const { email } = profile._json;
     if (!email) throw Error("Unable to authenticate without email");
 
-    const jwt = await buildJWT(email);
+    const jwt = await buildUserJWT(email);
 
     if (!jwt) {
       return done({
