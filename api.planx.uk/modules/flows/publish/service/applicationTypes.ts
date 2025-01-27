@@ -23,15 +23,20 @@ const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
         isComponentType(node, ComponentType.SetValue);
 
       if (checkComponentTypes && node[1].data?.fn === "application.type") {
-        return node[1].id;
+        return node[0]
       }
 
       return;
     })
     .filter((node) => node !== undefined);
 
+
   const answerVals: string[] = [];
   nodesWithApplicationType.forEach((node) => {
+    console.log(flowGraph[node]);
+    if(flowGraph[node].edges){
+      flowGraph[node].edges.forEach((edge)=>typeof flowGraph[edge]?.data?.val === "string" && answerVals.push(flowGraph[edge]?.data?.val))
+    }
     if (typeof flowGraph[node]?.data?.val === "string") {
       answerVals.push(flowGraph[node]?.data?.val);
     }

@@ -59,6 +59,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
           publisherId: publisher_id
           createdAt: created_at
           data
+          is_statutory_application_type
         }
       }
     `,

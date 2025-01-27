@@ -52,6 +52,8 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
     try {
       setLastPublishedTitle("Checking for changes...");
       const alteredFlow = await validateAndDiffFlow(flowId);
+      console.log(alteredFlow);
+
       setAlteredNodes(
         alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
       );
