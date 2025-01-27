@@ -1,10 +1,9 @@
 import "@mui/material/Chip";
+import "@mui/material/Radio";
+import "@mui/material/styles";
 // eslint-disable-next-line no-restricted-imports
 import "@mui/material/styles/createPalette";
-import "@mui/material/styles";
 import "@mui/material/Typography";
-
-import { RadioProps } from "@mui/material/Radio";
 
 declare module "@mui/material/Chip" {
   interface ChipPropsVariantOverrides {
@@ -38,6 +37,12 @@ declare module "@mui/material/styles/createPalette" {
       blocking: string;
       information: string;
     };
+    flowTag: {
+      online: string;
+      offline: string;
+      applicationType: string;
+      serviceType: string;
+    };
   }
 
   interface PaletteOptions {
@@ -54,6 +59,12 @@ declare module "@mui/material/styles/createPalette" {
       nonBlocking: string;
       blocking: string;
       information: string;
+    };
+    flowTag?: {
+      online: string;
+      offline: string;
+      applicationType: string;
+      serviceType: string;
     };
   }
 
