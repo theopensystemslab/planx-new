@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
+import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -160,6 +161,24 @@ const FlowCard: React.FC<FlowCardProps> = ({
       });
   };
 
+  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
+
+  const statusVariant =
+    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+
+  const displayTags = [
+    {
+      type: FlowTagType.Status,
+      displayName: statusVariant,
+      shouldAddTag: true,
+    },
+    {
+      type: FlowTagType.ServiceType,
+      displayName: "Submission",
+      shouldAddTag: isSubmissionService,
+    },
+  ];
+
   return (
     <>
       {deleting && (
@@ -186,6 +205,20 @@ const FlowCard: React.FC<FlowCardProps> = ({
                 flow.operations[0]?.actor,
               )}
             </LinkSubText>
+          </Box>
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            {displayTags.map(
+              (tag, index) =>
+                tag.shouldAddTag && (
+                  <FlowTag
+                    key={index}
+                    tagType={tag.type}
+                    statusVariant={statusVariant}
+                  >
+                    {tag.displayName}
+                  </FlowTag>
+                ),
+            )}
           </Box>
           <DashboardLink
             aria-label={flow.name}

@@ -8,19 +8,19 @@ export interface MappedFilters<T> {
 }
 
 export const mapFilters = <T extends object>(
-  params: Filters<T> | {},
+  params: Filters<T> | null,
   filterOptions: FilterOptions<T>[],
 ) => {
-  const filtersToMap = Object.entries(params) as [
-    FilterKey<T>,
-    FilterValues<T>,
-  ][];
+  const filtersToMap =
+    params && (Object.entries(params) as [FilterKey<T>, FilterValues<T>][]);
 
-  const mappedArrayFilters = filtersToMap.map(([key, value]) =>
-    addDisplayNamesToFilters(key, value, filterOptions),
-  );
+  if (filtersToMap) {
+    const mappedArrayFilters = filtersToMap.map(([key, value]) =>
+      addDisplayNamesToFilters(key, value, filterOptions),
+    );
 
-  return mappedArrayFilters;
+    return mappedArrayFilters;
+  }
 };
 
 export const addDisplayNamesToFilters = <T extends object>(
