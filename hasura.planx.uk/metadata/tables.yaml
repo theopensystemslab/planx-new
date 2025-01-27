@@ -247,6 +247,9 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: email_events_log
+    schema: public
+- table:
     name: feedback
     schema: public
   object_relationships:
