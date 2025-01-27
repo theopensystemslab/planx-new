@@ -5,9 +5,9 @@ import { FlowSettings } from "types";
 export interface FlowInformation {
   settings: FlowSettings;
   status: FlowStatus;
-  description: string;
-  summary: string;
-  limitations: string;
+  description?: string;
+  summary?: string;
+  limitations?: string;
 }
 
 export interface GetFlowInformation {

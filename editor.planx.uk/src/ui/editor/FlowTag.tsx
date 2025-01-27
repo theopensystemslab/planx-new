@@ -3,16 +3,22 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-export enum FlowTagType {
-  Status = "status",
-  ApplicationType = "applicationType",
-  ServiceType = "serviceType",
-}
+export const FlowTagType = {
+  Status: "status",
+  ApplicationType: "applicationType",
+  ServiceType: "serviceType",
+} as const;
 
-export enum StatusVariant {
-  Online = "online",
-  Offline = "offline",
-}
+type ObjectValues<T> = T[keyof T];
+
+type FlowTagType = ObjectValues<typeof FlowTagType>;
+
+export const StatusVariant = {
+  Online: "online",
+  Offline: "offline",
+} as const;
+
+type StatusVariant = ObjectValues<typeof StatusVariant>;
 
 const BG_ONLINE = "#D6FFD7";
 const BG_OFFLINE = "#EAEAEA";
