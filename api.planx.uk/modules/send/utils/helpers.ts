@@ -9,9 +9,11 @@ import type { Passport } from "../../../types.js";
 export function isApplicationTypeSupported(passport: Passport): boolean {
   const userApplicationType = passport.data?.["application.type"]?.[0];
 
-  const statutoryApplicationTypes = getValidSchemaValues('ApplicationType');
+  const statutoryApplicationTypes = getValidSchemaValues("ApplicationType");
   const preApplicationType = "preApp";
-  const supportedApplicationTypes = (statutoryApplicationTypes || []).concat(preApplicationType);
-  
+  const supportedApplicationTypes = (statutoryApplicationTypes || []).concat(
+    preApplicationType,
+  );
+
   return supportedApplicationTypes.includes(userApplicationType);
 }
