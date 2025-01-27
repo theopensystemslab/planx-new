@@ -16,7 +16,6 @@ export type FlowTagType = ObjectValues<typeof FlowTagType>;
 export type StatusVariant = ObjectValues<typeof StatusVariant>;
 
 export interface FlowTagProps {
-  id?: string;
   tagType: FlowTagType;
   statusVariant?: StatusVariant;
   children?: React.ReactNode;

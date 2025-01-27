@@ -42,12 +42,11 @@ const Root = styled(Box, {
 }));
 
 const FlowTag: React.FC<FlowTagProps> = ({
-  id,
   tagType,
   statusVariant,
   children,
 }) => (
-  <Root id={id} tagType={tagType} statusVariant={statusVariant}>
+  <Root tagType={tagType} statusVariant={statusVariant}>
     {children}
   </Root>
 );
