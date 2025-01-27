@@ -1,7 +1,8 @@
 import { isValid, parseISO } from "date-fns";
-import { object, SchemaOf, string } from "yup";
+import { object, string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { FieldValidationSchema } from "../shared/Schema/model";
 
 // Expected format: YYYY-MM-DD
 export type UserData = string;
@@ -71,22 +72,32 @@ export const parseDate = (date?: string) => {
 export const dateSchema = () => {
   return string()
     .test("missing day", "Date must include a day", (date?: string) => {
+      if (!date) return true;
+
       const { day } = parseDate(date);
       return day !== undefined;
     })
     .test("missing month", "Date must include a month", (date?: string) => {
+      if (!date) return true;
+
       const { month } = parseDate(date);
       return month !== undefined;
     })
     .test("missing year", "Date must include a year", (date?: string) => {
+      if (!date) return true;
+
       const { year } = parseDate(date);
       return year !== undefined;
     })
     .test("invalid day", "Day must be valid", (date?: string) => {
+      if (!date) return true;
+
       const { day } = parseDate(date);
       return Boolean(day && day <= 31);
     })
     .test("invalid month", "Month must be valid", (date?: string) => {
+      if (!date) return true;
+
       const { month } = parseDate(date);
       return Boolean(month && month <= 12);
     })
@@ -94,6 +105,8 @@ export const dateSchema = () => {
       "valid",
       "Enter a valid date in DD.MM.YYYY format",
       (date: string | undefined) => {
+        if (!date) return true;
+
         // test runs regardless of required status, so don't fail it if it's undefined
         return Boolean(!date || isDateValid(date));
       },
@@ -103,27 +116,34 @@ export const dateSchema = () => {
 /**
  * Validates that date is both valid and fits within the provided min/max
  */
-export const dateValidationSchema: (input: DateInput) => SchemaOf<string> = (
-  params,
-) =>
+export const dateInputValidationSchema = ({
+  data,
+  required,
+}: FieldValidationSchema<DateInput>) =>
   dateSchema()
-    .required("Enter a valid date in DD.MM.YYYY format")
+    .when([], {
+      is: () => required,
+      then: dateSchema().required(
+        "Enter a valid date in DD.MM.YYYY format"
+      ),
+      otherwise: dateSchema().notRequired(),
+    })
     .test({
       name: "too soon",
-      message: `Enter a date later than ${
-        params.min && displayDate(params.min)
-      }`,
-      test: (date: string | undefined) => {
-        return Boolean(date && !(params.min && date < params.min));
+      message: `Enter a date later than ${data.min && displayDate(data.min)}`,
+      test: (date) => {
+        if (!date) return true;
+
+        return Boolean(date && !(data.min && date < data.min));
       },
     })
     .test({
       name: "too late",
-      message: `Enter a date earlier than ${
-        params.max && displayDate(params.max)
-      }`,
-      test: (date: string | undefined) => {
-        return Boolean(date && !(params.max && date > params.max));
+      message: `Enter a date earlier than ${data.max && displayDate(data.max)}`,
+      test: (date) => {
+        if (!date) return true;
+
+        return Boolean(date && !(data.max && date > data.max));
       },
     });
 

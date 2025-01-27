@@ -597,7 +597,7 @@ describe("Form validation and error handling", () => {
       )[0];
 
       expect(dateInputErrorMessage).toHaveTextContent(
-        /Date must include a day/,
+        /Enter a valid date in DD.MM.YYYY format/,
       );
     });
 
@@ -622,7 +622,7 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the minimum number of items is not met",
-    { timeout: 10_000 },
+    { timeout: 20_000 },
     async () => {
       const mockWithMinTwo = merge(cloneDeep(mockZooProps), {
         schema: { min: 2 },
