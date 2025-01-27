@@ -1,4 +1,4 @@
-import { compose, mount, NotFoundError, route, withData } from "navi";
+import { compose, mount, route, withData } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ReadMePage } from "pages/FlowEditor/ReadMePage/ReadMePage";
 import React from "react";
@@ -15,16 +15,16 @@ const readMePageRoutes = compose(
 
   mount({
     "/": route(async (req) => {
-      const { team: teamSlug, flow: flowSlug } = req.params;
+      const { team: teamSlug } = req.params;
 
       const data = await getFlowInformation(req.params.flow, req.params.team);
 
       return {
         title: makeTitle("About this page"),
-        view: <ReadMePage teamSlug={teamSlug} flowSlug={flowSlug} flowInformation={data} />,
+        view: <ReadMePage teamSlug={teamSlug} flowInformation={data} />,
       };
     }),
-  }),
+  })
 );
 
 export default readMePageRoutes;

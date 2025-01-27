@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
-import capitalize from "lodash/capitalize.js";
 import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
@@ -23,7 +22,6 @@ import { useStore } from "../lib/store";
 import { FlowInformation } from "../utils";
 
 interface ReadMePageProps {
-  flowSlug: string;
   flowInformation: FlowInformation;
   teamSlug: string;
 }
@@ -35,7 +33,6 @@ interface ReadMePageForm {
 }
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
-  flowSlug,
   flowInformation,
   teamSlug,
 }) => {
@@ -47,6 +44,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     updateFlowSummary,
     flowLimitations,
     updateFlowLimitations,
+    flowName,
   ] = useStore((state) => [
     state.flowDescription,
     state.updateFlowDescription,
@@ -54,6 +52,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     state.updateFlowSummary,
     state.flowLimitations,
     state.updateFlowLimitations,
+    state.flowName,
   ]);
 
   const toast = useToast();
@@ -130,7 +129,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          {capitalize(flowSlug.replaceAll("-", " "))}
+          {flowName}
         </Typography>
 
         <Box display={"flex"}>
