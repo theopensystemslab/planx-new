@@ -1,16 +1,9 @@
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Accordion, { accordionClasses } from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary, {
-  accordionSummaryClasses,
-} from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useFormik, useFormikContext } from "formik";
+import { useFormik } from "formik";
 import { capitalize, filter, findKey, get, isEmpty, map, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
@@ -18,82 +11,21 @@ import { Paths, ValueOf } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
+import {
+  FiltersBody,
+  FiltersContainer,
+  FiltersContent,
+  FiltersFooter,
+  FiltersHeader,
+  FiltersToggle,
+  StyledChip,
+} from "./FilterStyles";
 import { mapFilters } from "./helpers";
 import {
   addFilterSearchParam,
   removeUnusedFilterSearchParam,
   updateUrl,
 } from "./searchParamUtils";
-
-const FiltersContainer = styled(Accordion)(({ theme }) => ({
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
-  margin: theme.spacing(1, 0, 3),
-  border: `1px solid ${theme.palette.border.main}`,
-  [`&.${accordionClasses.root}.Mui-expanded`]: {
-    margin: theme.spacing(1, 0, 3),
-  },
-  [`& .${accordionSummaryClasses.root} > div`]: {
-    margin: "0",
-  },
-}));
-
-const FiltersHeader = styled(AccordionSummary)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: theme.spacing(1.75, 2),
-  gap: theme.spacing(3),
-  background: theme.palette.background.midGray,
-  "&:hover": {
-    background: theme.palette.background.midGray,
-  },
-  "& .MuiAccordionSummary-expandIconWrapper": {
-    display: "none",
-  },
-}));
-
-const FiltersToggle = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: theme.spacing(0.5),
-  minWidth: "160px",
-  minHeight: "32px",
-}));
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-  background: theme.palette.common.white,
-  cursor: "default",
-  textTransform: "capitalize",
-  "& > svg": {
-    fill: theme.palette.text.secondary,
-  },
-  "&:hover": {
-    background: theme.palette.common.white,
-    "& > svg": {
-      fill: theme.palette.text.primary,
-    },
-  },
-}));
-
-const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
-  background: theme.palette.background.midGray,
-  padding: 0,
-}));
-
-const FiltersContent = styled(Box)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.border.main}`,
-  padding: theme.spacing(2.5, 2.5, 2, 2.5),
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-}));
-
-const FiltersFooter = styled(Box)(({ theme }) => ({
-  borderTop: `1px solid ${theme.palette.border.main}`,
-  padding: theme.spacing(1.5, 2),
-}));
 
 export type FilterKey<T> = Paths<T>;
 export type FilterValues<T> = ValueOf<T>;
@@ -195,7 +127,7 @@ export const Filters = <T extends object>({
 
   useEffect(() => {
     resetForm();
-  }, [resetForm]);
+  }, [resetForm, clearFilters]);
 
   const handleFiltering = (collectedFilters: Filters<T> | null) => {
     if (!collectedFilters && originalRecords)
