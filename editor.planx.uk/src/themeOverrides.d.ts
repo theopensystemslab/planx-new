@@ -40,6 +40,7 @@ declare module "@mui/material/styles/createPalette" {
     flowTag: {
       online: string;
       offline: string;
+      lightOff: string;
       applicationType: string;
       serviceType: string;
     };
@@ -63,6 +64,7 @@ declare module "@mui/material/styles/createPalette" {
     flowTag?: {
       online: string;
       offline: string;
+      lightOff: string;
       applicationType: string;
       serviceType: string;
     };

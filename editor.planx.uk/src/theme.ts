@@ -85,6 +85,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   flowTag: {
     online: "#D6FFD7",
     offline: "#EAEAEA",
+    lightOff: "#a1a1a1",
     applicationType: "#D6EFFF",
     serviceType: "#FFEABE",
   },

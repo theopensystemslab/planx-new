@@ -30,7 +30,7 @@ const Root = styled(Box, {
       background:
         statusVariant === StatusVariant.Online
           ? theme.palette.success.main
-          : "#a1a1a1",
+          : theme.palette.flowTag.lightOff,
     },
   }),
   ...(tagType === FlowTagType.ApplicationType && {
