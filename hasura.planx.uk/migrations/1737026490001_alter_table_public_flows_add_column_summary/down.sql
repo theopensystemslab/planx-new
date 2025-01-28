@@ -1,1 +1,1 @@
-alter table "public"."flows" drop column "summary" text null, drop column "limitations" text null;
+alter table "public"."flows" drop column "summary" varchar(120) null, drop column "limitations" text null;
