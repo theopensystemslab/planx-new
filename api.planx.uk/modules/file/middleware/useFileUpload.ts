@@ -14,7 +14,7 @@ const FILE_SIZE_LIMIT = 30 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "application/pdf"];
 const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf"];
 
-const validateExtension = (filename: string): boolean => {
+export const validateExtension = (filename: string): boolean => {
   const extension = path.extname(filename).toLowerCase();
   return ALLOWED_EXTENSIONS.includes(extension);
 };
