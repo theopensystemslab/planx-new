@@ -14,7 +14,7 @@ export const checkStatutoryApplicationTypes = (flattenedFlow: FlowGraph) => {
   return isStatutoryApplication;
 };
 
-const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
+export const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
   const nodesWithApplicationType = Object.entries(flowGraph)
     .map((node) => {
       const checkComponentTypes =
@@ -32,12 +32,13 @@ const getApplicationTypeVals = (flowGraph: FlowGraph): string[] => {
 
   const answerVals: string[] = [];
   nodesWithApplicationType.forEach((node) => {
+    console.log(flowGraph[node]);
     if (flowGraph[node].edges) {
-      flowGraph[node].edges.forEach(
-        (edge) =>
-          typeof flowGraph[edge]?.data?.val === "string" &&
-          answerVals.push(flowGraph[edge]?.data?.val),
-      );
+      flowGraph[node].edges.forEach((edge) => {
+        console.log();
+        typeof flowGraph[edge]?.data?.val === "string" &&
+          answerVals.push(flowGraph[edge]?.data?.val);
+      });
     }
     if (typeof flowGraph[node]?.data?.val === "string") {
       answerVals.push(flowGraph[node]?.data?.val);

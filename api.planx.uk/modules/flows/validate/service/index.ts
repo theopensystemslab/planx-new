@@ -1,7 +1,6 @@
 import type {
   ComponentType,
   Edges,
-  FlowGraph,
   Node,
 } from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
@@ -30,7 +29,6 @@ interface FlowValidateAndDiffResponse {
   alteredNodes: AlteredNode[] | null;
   message: string;
   validationChecks?: FlowValidationResponse[];
-  flattenedFlow?: FlowGraph;
 }
 
 const validateAndDiffFlow = async (
@@ -82,7 +80,6 @@ const validateAndDiffFlow = async (
     alteredNodes,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
-    flattenedFlow: flattenedFlow,
   };
 };
 
