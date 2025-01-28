@@ -1,1 +1,1 @@
-alter table "public"."flows" add column "summary" text null, add column "limitations" text null;
+alter table "public"."flows" add column "summary" varchar(120) null, add column "limitations" text null;

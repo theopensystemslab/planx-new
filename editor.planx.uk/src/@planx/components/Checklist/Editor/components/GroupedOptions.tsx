@@ -15,7 +15,7 @@ import InputRow from "ui/shared/InputRow";
 import { Option } from "../../../shared";
 import type { Group } from "../../model";
 import { partitionGroupedOptions } from "../../Public/helpers";
-import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
+import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./ExclusiveOrOptionManager";
 import ChecklistOptionsEditor from "./OptionsEditor";
 
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const GroupedOptions = ({ formik }: Props) => {
-  const { schema, initialOptionVals } = useInitialOptions(formik);
+  const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
     formik.values.groupedOptions,
@@ -113,7 +113,7 @@ export const GroupedOptions = ({ formik }: Props) => {
                   schema: getOptionsSchemaByFn(
                     formik.values.fn,
                     schema,
-                    initialOptionVals,
+                    currentOptionVals,
                   ),
                 }}
               />

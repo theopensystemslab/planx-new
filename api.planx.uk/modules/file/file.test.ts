@@ -39,6 +39,9 @@ vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
   };
 });
 
+const PRIVATE_ENDPOINT = "/file/private/upload";
+const PUBLIC_ENDPOINT = "/file/public/upload";
+
 describe("File upload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -46,14 +49,74 @@ describe("File upload", () => {
     mockPutObject = vi.fn(() => Promise.resolve());
   });
 
-  describe("Private", () => {
-    const ENDPOINT = "/file/private/upload";
+  describe.each([PRIVATE_ENDPOINT, PUBLIC_ENDPOINT])(
+    "File type validation for %s",
+    (ENDPOINT) => {
+      it("should not upload a file with an invalid extension", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "")
+          .attach("file", Buffer.from("some data"), "some_file.xlxs")
+          .expect(500)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/Unsupported file type/);
+          });
+      });
 
+      it("should not upload a file with an invalid MIME type", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "")
+          .attach("file", Buffer.from("some data"), {
+            filename: "invalid_file.txt", // Invalid file type
+            contentType: "text/plain", // Invalid MIME type
+          })
+          .expect(500)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/Unsupported file type/);
+          });
+      });
+
+      it("should not upload a file a valid file type, but invalid MIME type", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "")
+          .attach("file", Buffer.from("some data"), {
+            filename: "invalid_file.png", // Valid file type
+            contentType: "text/plain", // Invalid MIME type
+          })
+          .expect(500)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/Unsupported file type/);
+          });
+      });
+
+      it("should not upload a file a valid MIME type, but invalid file type", async () => {
+        await supertest(app)
+          .post(ENDPOINT)
+          .field("filename", "")
+          .attach("file", Buffer.from("some data"), {
+            filename: "invalid_file.txt", // Invalid file type
+            contentType: "application/pdf", // Valid MIME type
+          })
+          .expect(500)
+          .then((res) => {
+            expect(mockPutObject).not.toHaveBeenCalled();
+            expect(res.body.error).toMatch(/Unsupported file type/);
+          });
+      });
+    },
+  );
+
+  describe("Private", () => {
     it("should not upload without filename", async () => {
       await supertest(app)
-        .post(ENDPOINT)
+        .post(PRIVATE_ENDPOINT)
         .field("filename", "")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .attach("file", Buffer.from("some data"), "some_file.jpg")
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
@@ -64,12 +127,27 @@ describe("File upload", () => {
 
     it("should not upload without file", async () => {
       await supertest(app)
-        .post(ENDPOINT)
-        .field("filename", "some filename")
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_filename.png")
         .expect(500)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Missing file/);
+        });
+    });
+
+    it("should not upload a file with an invalid extension in the filename parameter (no attachment)", async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "my_file.exe") // filename does not match multer.file.filename
+        .attach("file", Buffer.from("some data"), {
+          filename: "my_file.jpg",
+          contentType: "image/jpg",
+        })
+        .expect(500)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/Unsupported file type/);
         });
     });
 
@@ -78,12 +156,12 @@ describe("File upload", () => {
       vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
 
       await supertest(app)
-        .post(ENDPOINT)
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.jpg")
+        .attach("file", Buffer.from("some data"), "some_file.jpg")
         .then((res) => {
           expect(res.body).toEqual({
-            fileType: "text/plain",
+            fileType: "image/jpeg",
             // Bucket name stripped from URL
             fileUrl:
               "https://api.editor.planx.dev/file/private/nanoid/modified%20key",
@@ -97,9 +175,9 @@ describe("File upload", () => {
       mockPutObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
 
       await supertest(app)
-        .post("/file/private/upload")
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.jpg")
+        .attach("file", Buffer.from("some data"), "some_file.jpg")
         .expect(500)
         .then((res) => {
           expect(res.body.error).toMatch(/S3 error!/);
@@ -112,12 +190,12 @@ describe("File upload", () => {
       vi.stubEnv("NODE_ENV", "production");
 
       await supertest(app)
-        .post(ENDPOINT)
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.jpg")
+        .attach("file", Buffer.from("some data"), "some_file.jpg")
         .then((res) => {
           expect(res.body).toEqual({
-            fileType: "text/plain",
+            fileType: "image/jpeg",
             fileUrl:
               "https://api.editor.planx.uk/file/private/nanoid/modified%20key",
           });
@@ -128,8 +206,6 @@ describe("File upload", () => {
   });
 
   describe("Public", () => {
-    const ENDPOINT = "/file/public/upload";
-
     const auth = authHeader({ role: "teamEditor" });
 
     it("returns an error if authorization headers are not set", async () => {
@@ -145,10 +221,10 @@ describe("File upload", () => {
 
     it("should not upload without filename", async () => {
       await supertest(app)
-        .post(ENDPOINT)
+        .post(PUBLIC_ENDPOINT)
         .set(auth)
         .field("filename", "")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .attach("file", Buffer.from("some data"), "some_file.pdf")
         .expect(400)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
@@ -159,9 +235,9 @@ describe("File upload", () => {
 
     it("should not upload without file", async () => {
       await supertest(app)
-        .post(ENDPOINT)
+        .post(PUBLIC_ENDPOINT)
         .set(auth)
-        .field("filename", "some filename")
+        .field("filename", "some_filename.jpg")
         .expect(500)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
@@ -169,15 +245,31 @@ describe("File upload", () => {
         });
     });
 
+    it("should not upload a file with an invalid extension in the filename parameter (no attachment)", async () => {
+      await supertest(app)
+        .post(PUBLIC_ENDPOINT)
+        .set(auth)
+        .field("filename", "my_file.exe") // filename does not match multer.file.filename
+        .attach("file", Buffer.from("some data"), {
+          filename: "my_file.jpg",
+          contentType: "image/jpg",
+        })
+        .expect(500)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/Unsupported file type/);
+        });
+    });
+
     it("should upload file", async () => {
       await supertest(app)
-        .post(ENDPOINT)
+        .post(PUBLIC_ENDPOINT)
         .set(auth)
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .field("filename", "some_file.pdf")
+        .attach("file", Buffer.from("some data"), "some_file.pdf")
         .then((res) => {
           expect(res.body).toEqual({
-            fileType: "text/plain",
+            fileType: "application/pdf",
             fileUrl: expect.stringContaining(
               "file/public/nanoid/modified%20key",
             ),
@@ -191,10 +283,10 @@ describe("File upload", () => {
       mockPutObject = vi.fn(() => Promise.reject(new Error("S3 error!")));
 
       await supertest(app)
-        .post(ENDPOINT)
+        .post(PUBLIC_ENDPOINT)
         .set(auth)
-        .field("filename", "some_file.txt")
-        .attach("file", Buffer.from("some data"), "some_file.txt")
+        .field("filename", "some_file.pdf")
+        .attach("file", Buffer.from("some data"), "some_file.pdf")
         .expect(500)
         .then((res) => {
           expect(res.body.error).toMatch(/S3 error!/);

@@ -247,6 +247,9 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: email_events_log
+    schema: public
+- table:
     name: feedback
     schema: public
   object_relationships:
@@ -341,17 +344,17 @@
     - role: platformAdmin
       permission:
         columns:
-          - address
-          - created_at
-          - device
           - feedback_id
           - feedback_score
+          - device
+          - node_data
+          - address
+          - application_type
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
-          - node_data
           - node_id
           - node_text
           - node_title
@@ -363,22 +366,23 @@
           - uprn
           - user_comment
           - user_context
+          - created_at
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - address
-          - created_at
-          - device
           - feedback_id
           - feedback_score
+          - device
+          - node_data
+          - address
+          - application_type
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
-          - node_data
           - node_id
           - node_text
           - node_title
@@ -390,6 +394,7 @@
           - uprn
           - user_comment
           - user_context
+          - created_at
         filter:
           team:
             members:
@@ -1543,6 +1548,7 @@
         check: {}
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1562,6 +1568,7 @@
                     _eq: 32
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1574,6 +1581,7 @@
         check: {}
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1593,6 +1601,7 @@
                       _eq: teamEditor
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1604,6 +1613,7 @@
       permission:
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1619,6 +1629,7 @@
           - data
           - flow_id
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - has_send_component
@@ -1631,6 +1642,7 @@
           - data
           - flow_id
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - has_send_component
@@ -1643,6 +1655,7 @@
           - data
           - flow_id
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - has_send_component
@@ -1656,6 +1669,7 @@
           - flow_id
           - has_send_component
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
         filter: {}
@@ -1814,11 +1828,22 @@
 - table:
     name: submission_services_log
     schema: public
+  object_relationships:
+    - name: team
+      using:
+        manual_configuration:
+          column_mapping:
+            team_id: id
+          insertion_order: null
+          remote_table:
+            name: teams
+            schema: public
   select_permissions:
     - role: demoUser
       permission:
         columns:
           - retry
+          - team_id
           - response
           - event_id
           - event_type
@@ -1826,12 +1851,17 @@
           - created_at
           - flow_id
           - session_id
-        filter: {}
+        filter:
+          team:
+            flows:
+              creator_id:
+                _eq: x-hasura-user-id
       comment: ""
     - role: platformAdmin
       permission:
         columns:
           - retry
+          - team_id
           - response
           - event_id
           - event_type
@@ -1845,6 +1875,7 @@
       permission:
         columns:
           - retry
+          - team_id
           - response
           - event_id
           - event_type
@@ -1852,11 +1883,37 @@
           - created_at
           - flow_id
           - session_id
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
       comment: ""
 - table:
     name: submission_services_summary
     schema: public
+  object_relationships:
+    - name: session
+      using:
+        manual_configuration:
+          column_mapping:
+            session_id: id
+          insertion_order: null
+          remote_table:
+            name: lowcal_sessions
+            schema: public
+    - name: team
+      using:
+        manual_configuration:
+          column_mapping:
+            team_slug: slug
+          insertion_order: null
+          remote_table:
+            name: teams
+            schema: public
   select_permissions:
     - role: demoUser
       permission:
@@ -1888,7 +1945,11 @@
           - team_slug
           - created_at
           - submitted_at
-        filter: {}
+        filter:
+          team:
+            flows:
+              creator_id:
+                _eq: x-hasura-user-id
       comment: 'For future, if this moves outside of the Flow to somewhere like Team, we should update ''demoUser'' to only see submission data related to only their flows. '
     - role: platformAdmin
       permission:
@@ -1952,7 +2013,14 @@
           - team_slug
           - created_at
           - submitted_at
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
       comment: ""
 - table:
     name: team_integrations
@@ -2223,17 +2291,19 @@
     - role: platformAdmin
       permission:
         columns:
-          - boundary_bbox
-          - boundary_url
-          - email_reply_to_id
+          - id
           - external_planning_site_name
           - external_planning_site_url
+          - homepage
           - help_email
           - help_opening_hours
           - help_phone
-          - homepage
-          - reference_code
+          - email_reply_to_id
+          - team_id
+          - boundary_bbox
           - submission_email
+          - reference_code
+          - boundary_url
         filter: {}
         check: null
       comment: ""
@@ -2638,13 +2708,14 @@
       permission:
         check: {}
         columns:
-          - id
-          - first_name
-          - last_name
           - created_at
-          - updated_at
-          - is_platform_admin
           - email
+          - first_name
+          - id
+          - is_platform_admin
+          - is_staging_only
+          - last_name
+          - updated_at
   select_permissions:
     - role: api
       permission:
@@ -2672,13 +2743,13 @@
     - role: platformAdmin
       permission:
         columns:
-          - id
-          - first_name
-          - last_name
-          - email
           - created_at
-          - updated_at
+          - email
+          - first_name
+          - id
           - is_platform_admin
+          - last_name
+          - updated_at
         filter: {}
     - role: teamEditor
       permission:
@@ -2691,6 +2762,7 @@
           - last_name
           - updated_at
         filter: {}
+      comment: ""
   update_permissions:
     - role: platformAdmin
       permission:

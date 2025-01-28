@@ -25,7 +25,7 @@ export const gqlAdmin = async (query, variables = {}) => {
   return json;
 };
 
-export const getJWT = (userId) => {
+export const getTestJWT = (userId) => {
   const data = {
     sub: String(userId),
     "https://hasura.io/jwt/claims": {

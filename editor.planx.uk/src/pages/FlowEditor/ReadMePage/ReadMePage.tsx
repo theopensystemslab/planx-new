@@ -5,9 +5,9 @@ import Typography from "@mui/material/Typography";
 import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
-import capitalize from "lodash/capitalize.js";
 import React, { useState } from "react";
-import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
+import FlowTag from "ui/editor/FlowTag/FlowTag";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -24,7 +24,6 @@ import { useStore } from "../lib/store";
 import { ReadMePageForm, ReadMePageProps } from "./types";
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
-  flowSlug,
   flowInformation,
   teamSlug,
 }) => {
@@ -37,6 +36,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     flowLimitations,
     updateFlowLimitations,
     externalPortals,
+    flowName,
   ] = useStore((state) => [
     state.flowDescription,
     state.updateFlowDescription,
@@ -45,6 +45,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     state.flowLimitations,
     state.updateFlowLimitations,
     state.externalPortals,
+    state.flowName,
   ]);
 
   const toast = useToast();
@@ -125,7 +126,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          {capitalize(flowSlug.replaceAll("-", " "))}
+          {flowName}
         </Typography>
 
         <Box display={"flex"}>
@@ -184,6 +185,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
                 placeholder="The service..."
+                multiline
+                rows={6}
                 errorMessage={formik.errors.serviceDescription}
               />
             </InputRow>
@@ -203,6 +206,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
                 id="serviceLimitations"
                 errorMessage={formik.errors.serviceLimitations}
                 placeholder="Limitations"
+                multiline
+                rows={6}
               />
             </InputRow>
           </InputGroup>

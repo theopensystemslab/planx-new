@@ -50,7 +50,7 @@ const StyledInputBase = styled(InputBase, {
   width: "100%",
   padding: theme.spacing(0, 1.5),
   height: 50,
-  border: `1px solid ${theme.palette.border.light}`,
+  border: `1px solid ${theme.palette.border.main}`,
   "& input": {
     fontWeight: "inherit",
   },
@@ -59,11 +59,10 @@ const StyledInputBase = styled(InputBase, {
     opacity: 1,
   },
   ...(bordered && {
-    border: `2px solid ${theme.palette.text.primary}`,
+    border: `2px solid ${theme.palette.border.input}`,
   }),
   ...(format === "data" && {
     backgroundColor: "#f0f0f0",
-    borderColor: "#d3d3d3",
     fontFamily: theme.typography.data.fontFamily,
     "& input": {
       fontSize: theme.typography.body2.fontSize,

@@ -6,7 +6,7 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { Option } from "../../shared";
-import { useInitialOptions } from "../Public/hooks/useInitialOptions";
+import { useCurrentOptions } from "../Public/hooks/useInitialOptions";
 import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager";
 import { GroupedOptions } from "./components/GroupedOptions";
 import ChecklistOptionsEditor from "./components/OptionsEditor";
@@ -19,7 +19,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 
   const exclusiveOrOptionManagerShouldRender = nonExclusiveOptions.length > 0;
 
-  const { schema, initialOptionVals } = useInitialOptions(formik);
+  const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   return (
     <ModalSectionContent subtitle="Options">
@@ -53,7 +53,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
                 schema,
-                initialOptionVals,
+                currentOptionVals,
               ),
             }}
           />

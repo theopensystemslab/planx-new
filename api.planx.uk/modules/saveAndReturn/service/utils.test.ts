@@ -30,7 +30,8 @@ describe("getResumeLink util function", () => {
       propertyType: "house",
     };
     const testCase = getResumeLink(session, { slug: "team" } as Team, "flow");
-    const expectedResult = "example.com/team/flow/published?sessionId=123";
+    const expectedResult =
+      "https://www.example.com/team/flow/published?sessionId=123";
     expect(testCase).toEqual(expectedResult);
   });
 });

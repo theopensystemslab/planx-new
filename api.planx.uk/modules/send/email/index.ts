@@ -1,3 +1,4 @@
+import { ServerError } from "../../../errors/serverError.js";
 import { sendEmail } from "../../../lib/notify/index.js";
 import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
@@ -77,11 +78,12 @@ export const sendToEmail: SendIntegrationController = async (
       govuk_notify_template: "Submit",
     });
   } catch (error) {
-    return next({
-      error,
-      message: `Failed to send "Submit" email (${localAuthority}): ${
-        (error as Error).message
-      }`,
-    });
+    return next(
+      new ServerError({
+        message: `Failed to send "Submit" email (${localAuthority}): ${
+          (error as Error).message
+        }`,
+      }),
+    );
   }
 };

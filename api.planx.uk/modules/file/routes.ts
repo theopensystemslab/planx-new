@@ -15,12 +15,13 @@ import {
   uploadFileSchema,
 } from "./controller.js";
 import { validate } from "../../shared/middleware/validate.js";
+import { useFileUpload } from "./middleware/useFileUpload.js";
 
 const router = Router();
 
 router.post(
   "/file/public/upload",
-  multer().single("file"),
+  useFileUpload,
   useTeamEditorAuth,
   validate(uploadFileSchema),
   publicUploadController,
@@ -28,7 +29,7 @@ router.post(
 
 router.post(
   "/file/private/upload",
-  multer().single("file"),
+  useFileUpload,
   validate(uploadFileSchema),
   privateUploadController,
 );

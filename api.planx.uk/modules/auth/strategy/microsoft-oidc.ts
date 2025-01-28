@@ -6,7 +6,7 @@ import type {
   StrategyVerifyCallbackReq,
 } from "openid-client";
 import { Strategy } from "openid-client";
-import { buildJWT } from "../service.js";
+import { buildUserJWT } from "../service.js";
 
 export const MICROSOFT_OPENID_CONFIG_URL =
   "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
@@ -70,7 +70,7 @@ const verifyCallback: StrategyVerifyCallbackReq<Express.User> = async (
     return done(new Error("Unable to authenticate without email"));
   }
 
-  const jwt = await buildJWT(email);
+  const jwt = await buildUserJWT(email);
   if (!jwt) {
     return done({
       status: 404,

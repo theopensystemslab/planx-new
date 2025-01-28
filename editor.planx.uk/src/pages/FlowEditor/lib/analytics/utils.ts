@@ -29,7 +29,10 @@ export function extractNodeTitle(node: Store.Node): string {
   const nodeTitle =
     node?.type === TYPES.Content
       ? getContentTitle(node)
-      : node?.data?.title ?? node?.data?.text ?? node?.data?.flagSet;
+      : node?.data?.title ??
+        node?.data?.text ??
+        node?.data?.flagSet ??
+        node?.data?.category;
   return nodeTitle;
 }
 

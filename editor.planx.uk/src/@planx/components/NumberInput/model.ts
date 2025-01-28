@@ -1,6 +1,7 @@
 import { object, string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { FieldValidationSchema } from "../shared/Schema/model";
 
 export interface NumberInput extends BaseNodeData {
   title: string;
@@ -33,23 +34,29 @@ export const parseNumberInput = (
   ...parseBaseNodeData(data),
 });
 
-export const numberInputValidationSchema = (input: NumberInput) =>
+export const numberInputValidationSchema = ({
+  data,
+  required,
+}: FieldValidationSchema<NumberInput>) =>
   string()
-    .required("Enter your answer before continuing")
+    .when([], {
+      is: () => required,
+      then: string().required("Enter your answer before continuing"),
+      otherwise: string().notRequired(),
+    })
     .test({
       name: "not a number",
       message: (() => {
-        if (!input.allowNegatives) {
+        if (!data.allowNegatives) {
           return "Enter a positive number";
         }
 
         return "Enter a number";
       })(),
-      test: (value: string | undefined) => {
-        if (!value) {
-          return false;
-        }
-        if (!input.allowNegatives && value.startsWith("-")) {
+      test: (value?: string) => {
+        if (!value) return true;
+
+        if (!data.allowNegatives && value.startsWith("-")) {
           return false;
         }
         return value === "0" ? true : Boolean(parseNumber(value));
@@ -58,18 +65,17 @@ export const numberInputValidationSchema = (input: NumberInput) =>
     .test({
       name: "check for a whole number",
       message: "Enter a whole number",
-      test: (value: string | undefined) => {
-        if (!value) {
-          return false;
-        }
-        if (input.isInteger && !Number.isInteger(Number(value))) {
+      test: (value?: string) => {
+        if (!value) return true;
+
+        if (data.isInteger && !Number.isInteger(Number(value))) {
           return false;
         }
         return true;
       },
     });
 
-export const validationSchema = (input: NumberInput) =>
+export const validationSchema = (args: FieldValidationSchema<NumberInput>) =>
   object({
-    value: numberInputValidationSchema(input),
+    value: numberInputValidationSchema(args),
   });

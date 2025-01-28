@@ -79,6 +79,9 @@ const MenuButton = styled(IconButton, {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.main}`,
+    "&:hover": {
+      borderColor: theme.palette.border.main,
+    },
   }),
   ...(disabled && {
     color: theme.palette.text.disabled,

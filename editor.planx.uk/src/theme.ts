@@ -82,6 +82,13 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     nonBlocking: "#FFFDB0",
     information: "#B7FAD7",
   },
+  flowTag: {
+    online: "#D6FFD7",
+    offline: "#EAEAEA",
+    lightOff: "#a1a1a1",
+    applicationType: "#D6EFFF",
+    serviceType: "#FFEABE",
+  },
   tonalOffset: DEFAULT_TONAL_OFFSET,
 };
 
@@ -686,7 +693,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  },
+  }
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
