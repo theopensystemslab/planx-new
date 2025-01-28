@@ -48,7 +48,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
       {characterCountLimit && (
         <CharacterCounter
           textInputType={data.type || TextInputType.Long}
-          count={fieldProps.value.length}
+          count={fieldProps?.value?.length}
           error={Boolean(fieldProps.errorMessage)}
         />
       )}
