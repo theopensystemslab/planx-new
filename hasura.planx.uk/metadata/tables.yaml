@@ -2721,7 +2721,7 @@
         filter:
           created_flows:
             creator_id:
-              _eq: '"x-hasura-user-id"'
+              _eq: x-hasura-user-id
     - role: platformAdmin
       permission:
         columns:
@@ -2749,7 +2749,7 @@
           teams:
             _and:
               - user_id:
-                  _eq: '"x-hasura-user-id"'
+                  _eq: x-hasura-user-id
               - role:
                   _eq: teamEditor
       comment: ""
