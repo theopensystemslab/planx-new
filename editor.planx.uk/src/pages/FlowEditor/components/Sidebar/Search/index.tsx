@@ -1,5 +1,6 @@
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import { useTheme } from "@mui/material/styles";
 import { IndexedNode } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import {
@@ -70,6 +71,11 @@ const Search: React.FC = () => {
     },
   });
 
+  const theme = useTheme();
+  const backgroundStyle = {
+    background: theme.palette.background.paper,
+  };
+
   // Set up spinner UI in search bar
   const [isSearching, setIsSearching] = useState(false);
   const [lastPattern, setLastPattern] = useState("");
@@ -93,6 +99,7 @@ const Search: React.FC = () => {
 
   return (
     <Virtuoso<Data, Context>
+      style={backgroundStyle}
       totalCount={results.length}
       context={{
         results,
