@@ -2190,8 +2190,14 @@
           - submission_email
           - reference_code
           - boundary_url
-        filter: {}
-      comment: ""
+        filter:
+          id:
+            _in:
+              - 1
+              - 29
+              - 30
+              - 32
+      comment: 'For the demo user, we want to ensure they can only select their own team settings [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team. The demo user cannot insert or update any settings.'
     - role: platformAdmin
       permission:
         columns:
@@ -2243,23 +2249,32 @@
           - reference_code
           - submission_email
           - team_id
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
       comment: ""
   update_permissions:
     - role: platformAdmin
       permission:
         columns:
-          - boundary_bbox
-          - boundary_url
-          - email_reply_to_id
+          - id
           - external_planning_site_name
           - external_planning_site_url
+          - homepage
           - help_email
           - help_opening_hours
           - help_phone
-          - homepage
-          - reference_code
+          - email_reply_to_id
+          - team_id
+          - boundary_bbox
           - submission_email
+          - reference_code
+          - boundary_url
         filter: {}
         check: null
       comment: ""
