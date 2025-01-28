@@ -72,6 +72,7 @@ const flow: Store.Flow = {
     type: 200,
     data: {
       text: "No",
+      flags: [],
     },
   },
 };

@@ -1,7 +1,7 @@
 import supertest from "supertest";
 
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
-import { authHeader, getJWT } from "../../../tests/mockJWT.js";
+import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { flowWithInviteToPay } from "../../../tests/mocks/inviteToPayData.js";
 import { userContext } from "../../auth/middleware.js";
@@ -13,7 +13,7 @@ beforeAll(() => {
   getStoreMock.mockReturnValue({
     user: {
       sub: "123",
-      jwt: getJWT({ role: "teamEditor" }),
+      jwt: getTestJWT({ role: "teamEditor" }),
     },
   });
 });

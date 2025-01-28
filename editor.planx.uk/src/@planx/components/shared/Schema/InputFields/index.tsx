@@ -23,6 +23,14 @@ export type Props<T extends Field> = {
 } & T;
 
 /**
+ * Apply "(optional)" suffix to optional fields
+ */
+export const formatTitle = ({
+  required = true,
+  data: { title },
+}: Props<Field>): string => (required ? title : (title += " (optional)"));
+
+/**
  * Helper function to get shared props derived from `Field` and `props.formik`
  */
 export const getFieldProps = <T extends Field>(props: Props<T>) => ({
@@ -36,6 +44,8 @@ export const getFieldProps = <T extends Field>(props: Props<T>) => ({
   value: props.formik.values.schemaData[props.activeIndex][
     props.data.fn
   ] as ResponseValue<T>,
+  title: formatTitle(props),
+  required: props.required ?? true,
 });
 
 /**

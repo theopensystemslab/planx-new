@@ -123,29 +123,29 @@ export const getLayout = ({
   return ChecklistLayout.Basic;
 };
 
-export const checklistValidationSchema = ({
-  allRequired,
-  options,
-  groupedOptions,
-}: Checklist) => {
+export const checklistInputValidationSchema = ({
+  data: { allRequired, options, groupedOptions },
+  required,
+}: {
+  // Cannot use type FieldValidationSchema<ChecklistInput> as this is a simplified representation (i.e. no groups)
+  data: Checklist;
+  required: boolean;
+}) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   return array()
-    .required()
-    .test({
-      name: "atLeastOneChecked",
-      message: "Select at least one option",
-      test: (checked?: Array<string>) => {
-        return Boolean(checked && checked.length > 0);
-      },
+    .when([], {
+      is: () => required,
+      then: array().min(1, "Select at least one option"),
+      otherwise: array().notRequired(),
     })
     .test({
       name: "notAllChecked",
       message: "All options must be checked",
       test: (checked?: Array<string>) => {
-        if (!allRequired) {
-          return true;
-        }
+        if (!checked?.length) return true;
+        if (!allRequired) return true;
+
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },

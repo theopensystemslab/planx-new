@@ -12,11 +12,11 @@ import { FieldInputDescription } from "./shared";
 export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const fieldProps = getFieldProps(props);
   const { data, formik } = props;
-  const { id, errorMessage } = fieldProps;
+  const { id, errorMessage, required, title } = fieldProps;
 
   const characterCountLimit = data.type && getTextLimit(data.type);
   return (
-    <InputLabel label={data.title} htmlFor={id}>
+    <InputLabel label={title} htmlFor={id}>
       {data.description && (
         <FieldInputDescription description={data.description} />
       )}
@@ -33,7 +33,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
         rows={
           data.type && ["long", "extraLong"].includes(data.type) ? 5 : undefined
         }
-        required
+        required={required}
         inputProps={{
           "aria-describedby": [
             data.description

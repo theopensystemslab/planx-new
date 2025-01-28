@@ -247,6 +247,9 @@
         url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
         version: 2
 - table:
+    name: email_events_log
+    schema: public
+- table:
     name: feedback
     schema: public
   object_relationships:
@@ -1543,6 +1546,7 @@
         check: {}
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1562,6 +1566,7 @@
                     _eq: 32
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1574,6 +1579,7 @@
         check: {}
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1593,6 +1599,7 @@
                       _eq: teamEditor
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1604,6 +1611,7 @@
       permission:
         columns:
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - created_at
@@ -1619,6 +1627,7 @@
           - data
           - flow_id
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - has_send_component
@@ -1631,6 +1640,7 @@
           - data
           - flow_id
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - has_send_component
@@ -1643,6 +1653,7 @@
           - data
           - flow_id
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
           - has_send_component
@@ -1656,6 +1667,7 @@
           - flow_id
           - has_send_component
           - id
+          - is_statutory_application_type
           - publisher_id
           - summary
         filter: {}
@@ -1857,6 +1869,25 @@
 - table:
     name: submission_services_summary
     schema: public
+  object_relationships:
+    - name: session
+      using:
+        manual_configuration:
+          column_mapping:
+            session_id: id
+          insertion_order: null
+          remote_table:
+            name: lowcal_sessions
+            schema: public
+    - name: team
+      using:
+        manual_configuration:
+          column_mapping:
+            team_slug: slug
+          insertion_order: null
+          remote_table:
+            name: teams
+            schema: public
   select_permissions:
     - role: demoUser
       permission:
@@ -1888,7 +1919,11 @@
           - team_slug
           - created_at
           - submitted_at
-        filter: {}
+        filter:
+          team:
+            flows:
+              creator_id:
+                _eq: x-hasura-user-id
       comment: 'For future, if this moves outside of the Flow to somewhere like Team, we should update ''demoUser'' to only see submission data related to only their flows. '
     - role: platformAdmin
       permission:
@@ -1952,7 +1987,14 @@
           - team_slug
           - created_at
           - submitted_at
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
       comment: ""
 - table:
     name: team_integrations

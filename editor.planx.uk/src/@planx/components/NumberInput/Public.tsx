@@ -31,7 +31,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: validationSchema(props),
+    validationSchema: validationSchema({ data: props, required: true }),
   });
 
   const inputRef = useRef<HTMLInputElement>(null);
