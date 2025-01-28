@@ -18,6 +18,7 @@ const SearchResultCardRoot = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
 })<{ portalId?: string }>(({ theme, portalId }) => ({
   border: `1px solid ${theme.palette.common.black}`,
+  background: theme.palette.background.default,
   display: "block",
   padding: 0,
   borderWidth: portalId ? 4 : 2,
