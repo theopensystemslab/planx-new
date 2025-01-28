@@ -128,11 +128,26 @@ describe("File upload", () => {
     it("should not upload without file", async () => {
       await supertest(app)
         .post(PRIVATE_ENDPOINT)
-        .field("filename", "some filename")
+        .field("filename", "some_filename.png")
         .expect(500)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Missing file/);
+        });
+    });
+
+    it("should not upload a file with an invalid extension in the filename parameter (no attachment)", async () => {
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "my_file.exe") // filename does not match multer.file.filename
+        .attach("file", Buffer.from("some data"), {
+          filename: "my_file.jpg",
+          contentType: "image/jpg",
+        })
+        .expect(500)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/Unsupported file type/);
         });
     });
 
@@ -222,11 +237,27 @@ describe("File upload", () => {
       await supertest(app)
         .post(PUBLIC_ENDPOINT)
         .set(auth)
-        .field("filename", "some filename")
+        .field("filename", "some_filename.jpg")
         .expect(500)
         .then((res) => {
           expect(mockPutObject).not.toHaveBeenCalled();
           expect(res.body.error).toMatch(/Missing file/);
+        });
+    });
+
+    it("should not upload a file with an invalid extension in the filename parameter (no attachment)", async () => {
+      await supertest(app)
+        .post(PUBLIC_ENDPOINT)
+        .set(auth)
+        .field("filename", "my_file.exe") // filename does not match multer.file.filename
+        .attach("file", Buffer.from("some data"), {
+          filename: "my_file.jpg",
+          contentType: "image/jpg",
+        })
+        .expect(500)
+        .then((res) => {
+          expect(mockPutObject).not.toHaveBeenCalled();
+          expect(res.body.error).toMatch(/Unsupported file type/);
         });
     });
 
