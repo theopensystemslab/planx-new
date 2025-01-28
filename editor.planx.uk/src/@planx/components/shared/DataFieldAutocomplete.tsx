@@ -85,7 +85,6 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         selectOnFocus
         clearOnEscape
         handleHomeEndKeys
-        autoHighlight
       />
     </InputRow>
   );
