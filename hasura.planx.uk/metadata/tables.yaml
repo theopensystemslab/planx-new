@@ -344,17 +344,17 @@
     - role: platformAdmin
       permission:
         columns:
-          - address
-          - created_at
-          - device
           - feedback_id
           - feedback_score
+          - device
+          - node_data
+          - address
+          - application_type
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
-          - node_data
           - node_id
           - node_text
           - node_title
@@ -366,22 +366,23 @@
           - uprn
           - user_comment
           - user_context
+          - created_at
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - address
-          - created_at
-          - device
           - feedback_id
           - feedback_score
+          - device
+          - node_data
+          - address
+          - application_type
           - feedback_type
           - help_definition
           - help_sources
           - help_text
           - intersecting_constraints
-          - node_data
           - node_id
           - node_text
           - node_title
@@ -393,6 +394,7 @@
           - uprn
           - user_comment
           - user_context
+          - created_at
         filter:
           team:
             members:
@@ -1784,11 +1786,22 @@
 - table:
     name: submission_services_log
     schema: public
+  object_relationships:
+    - name: team
+      using:
+        manual_configuration:
+          column_mapping:
+            team_id: id
+          insertion_order: null
+          remote_table:
+            name: teams
+            schema: public
   select_permissions:
     - role: demoUser
       permission:
         columns:
           - retry
+          - team_id
           - response
           - event_id
           - event_type
@@ -1796,12 +1809,17 @@
           - created_at
           - flow_id
           - session_id
-        filter: {}
+        filter:
+          team:
+            flows:
+              creator_id:
+                _eq: x-hasura-user-id
       comment: ""
     - role: platformAdmin
       permission:
         columns:
           - retry
+          - team_id
           - response
           - event_id
           - event_type
@@ -1815,6 +1833,7 @@
       permission:
         columns:
           - retry
+          - team_id
           - response
           - event_id
           - event_type
@@ -1822,7 +1841,14 @@
           - created_at
           - flow_id
           - session_id
-        filter: {}
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
       comment: ""
 - table:
     name: submission_services_summary
@@ -2223,17 +2249,19 @@
     - role: platformAdmin
       permission:
         columns:
-          - boundary_bbox
-          - boundary_url
-          - email_reply_to_id
+          - id
           - external_planning_site_name
           - external_planning_site_url
+          - homepage
           - help_email
           - help_opening_hours
           - help_phone
-          - homepage
-          - reference_code
+          - email_reply_to_id
+          - team_id
+          - boundary_bbox
           - submission_email
+          - reference_code
+          - boundary_url
         filter: {}
         check: null
       comment: ""
@@ -2638,13 +2666,14 @@
       permission:
         check: {}
         columns:
-          - id
-          - first_name
-          - last_name
           - created_at
-          - updated_at
-          - is_platform_admin
           - email
+          - first_name
+          - id
+          - is_platform_admin
+          - is_staging_only
+          - last_name
+          - updated_at
   select_permissions:
     - role: api
       permission:
@@ -2672,13 +2701,13 @@
     - role: platformAdmin
       permission:
         columns:
-          - id
-          - first_name
-          - last_name
-          - email
           - created_at
-          - updated_at
+          - email
+          - first_name
+          - id
           - is_platform_admin
+          - last_name
+          - updated_at
         filter: {}
     - role: teamEditor
       permission:
@@ -2691,6 +2720,7 @@
           - last_name
           - updated_at
         filter: {}
+      comment: ""
   update_permissions:
     - role: platformAdmin
       permission:
