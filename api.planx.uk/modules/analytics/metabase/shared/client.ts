@@ -1,4 +1,5 @@
 import axios from "axios";
+import assert from "assert";
 import type {
   AxiosInstance,
   AxiosError,
@@ -120,10 +121,4 @@ export const createMetabaseClient = (): AxiosInstance => {
   return client;
 };
 
-// // Export both client and instance with delayed instantiation for test purposes
-// export let metabaseClient: AxiosInstance;
-
-// export const initializeMetabaseClient = () => {
-//   metabaseClient = createMetabaseClient();
-//   return metabaseClient;
-// };
+export const $metabase = createMetabaseClient();
