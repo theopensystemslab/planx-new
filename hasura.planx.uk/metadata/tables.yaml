@@ -496,9 +496,11 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -525,12 +527,23 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
       comment: They can only insert into Demo team [id = 32]
     - role: platformAdmin
       permission:
@@ -544,9 +557,11 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -578,9 +593,11 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -603,10 +620,12 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -623,10 +642,12 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -656,10 +677,12 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -695,10 +718,12 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -716,10 +741,12 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
           - updated_at
           - version
@@ -743,9 +770,11 @@
           - data
           - description
           - id
+          - limitations
           - name
           - settings
           - slug
+          - summary
           - team_id
           - updated_at
           - version
@@ -756,16 +785,27 @@
             - creator_id:
                 _eq: x-hasura-user-id
         check: null
+        validate_input:
+          definition:
+            forward_client_headers: false
+            headers:
+              - name: authorization
+                value: '{{HASURA_PLANX_API_KEY}}'
+            timeout: 10
+            url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+          type: http
       comment: ""
     - role: platformAdmin
       permission:
         columns:
           - data
           - description
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
         filter: {}
         check: null
@@ -783,10 +823,12 @@
         columns:
           - data
           - description
+          - limitations
           - name
           - settings
           - slug
           - status
+          - summary
           - team_id
         filter:
           team:
@@ -1505,14 +1547,14 @@
       permission:
         check: {}
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
+          - has_send_component
     - role: demoUser
       permission:
         check:
@@ -1525,27 +1567,27 @@
                   id:
                     _eq: 32
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
+          - has_send_component
       comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
     - role: platformAdmin
       permission:
         check: {}
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
+          - has_send_component
     - role: teamEditor
       permission:
         check:
@@ -1558,26 +1600,26 @@
                   - role:
                       _eq: teamEditor
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
+          - has_send_component
   select_permissions:
     - role: api
       permission:
         columns:
-          - created_at
-          - data
-          - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - created_at
+          - flow_id
+          - data
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: demoUser
@@ -1586,11 +1628,11 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: platformAdmin
@@ -1599,11 +1641,11 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: public
@@ -1612,11 +1654,11 @@
           - created_at
           - data
           - flow_id
-          - has_send_component
           - id
           - is_statutory_application_type
           - publisher_id
           - summary
+          - has_send_component
         filter: {}
         allow_aggregations: true
     - role: teamEditor
