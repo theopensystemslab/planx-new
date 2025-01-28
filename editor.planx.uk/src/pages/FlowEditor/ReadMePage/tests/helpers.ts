@@ -9,6 +9,7 @@ export const platformAdminUser = {
   teams: [],
   jwt: "x.y.z",
 };
+
 export const defaultProps = {
   flowSlug: "find-out-if-you-need-planning-permission",
   flowInformation: {
@@ -19,5 +20,6 @@ export const defaultProps = {
     settings: {},
   },
 } as ReadMePageProps;
+
 export const longInput =
   "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my who"; // 122 characters
