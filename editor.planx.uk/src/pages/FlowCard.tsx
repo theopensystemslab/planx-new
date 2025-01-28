@@ -161,9 +161,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
       });
   };
 
-  const isPublished = Boolean(flow.publishedFlows[0]);
-  const isSubmissionService =
-    isPublished && flow.publishedFlows[0].hasSendComponent;
+  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
