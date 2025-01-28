@@ -2190,14 +2190,8 @@
           - submission_email
           - reference_code
           - boundary_url
-        filter:
-          id:
-            _in:
-              - 1
-              - 29
-              - 30
-              - 32
-      comment: 'For the demo user, we want to ensure they can only select their own team settings [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team. The demo user cannot insert or update any settings.'
+        filter: {}
+      comment: ""
     - role: platformAdmin
       permission:
         columns:
@@ -2249,14 +2243,7 @@
           - reference_code
           - submission_email
           - team_id
-        filter:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
+        filter: {}
       comment: ""
   update_permissions:
     - role: platformAdmin
@@ -2496,12 +2483,11 @@
     - role: platformAdmin
       permission:
         columns:
-          - id
-          - metabase_id
+          - created_at
           - domain
+          - id
           - name
           - slug
-          - created_at
           - updated_at
         filter: {}
     - role: public
@@ -2523,13 +2509,7 @@
           - name
           - slug
           - updated_at
-        filter:
-          members:
-            _and:
-              - user_id:
-                  _eq: x-hasura-user-id
-              - role:
-                  _eq: teamEditor
+        filter: {}
   update_permissions:
     - role: api
       permission:
@@ -2710,48 +2690,36 @@
     - role: demoUser
       permission:
         columns:
-          - id
-          - first_name
-          - last_name
           - created_at
-          - updated_at
-          - is_platform_admin
-          - is_staging_only
           - email
-        filter:
-          created_flows:
-            creator_id:
-              _eq: x-hasura-user-id
+          - first_name
+          - id
+          - is_platform_admin
+          - last_name
+          - updated_at
+        filter: {}
     - role: platformAdmin
       permission:
         columns:
-          - id
-          - first_name
-          - last_name
           - created_at
-          - updated_at
-          - is_platform_admin
-          - is_staging_only
           - email
+          - first_name
+          - id
+          - is_platform_admin
+          - last_name
+          - updated_at
         filter: {}
     - role: teamEditor
       permission:
         columns:
-          - id
-          - first_name
-          - last_name
           - created_at
-          - updated_at
-          - is_platform_admin
-          - is_staging_only
           - email
-        filter:
-          teams:
-            _and:
-              - user_id:
-                  _eq: x-hasura-user-id
-              - role:
-                  _eq: teamEditor
+          - first_name
+          - id
+          - is_platform_admin
+          - last_name
+          - updated_at
+        filter: {}
       comment: ""
   update_permissions:
     - role: platformAdmin
