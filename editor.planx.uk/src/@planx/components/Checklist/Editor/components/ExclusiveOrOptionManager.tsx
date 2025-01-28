@@ -8,7 +8,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { Option } from "../../../shared";
 import { Group } from "../../model";
-import { useInitialOptions } from "../../Public/hooks/useInitialOptions";
+import { useCurrentOptions } from "../../Public/hooks/useInitialOptions";
 
 interface Props {
   formik: FormikHookReturn;
@@ -25,7 +25,7 @@ export const ExclusiveOrOptionManager = ({
   groupIndex,
   grouped,
 }: Props) => {
-  const { schema, initialOptionVals } = useInitialOptions(formik);
+  const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   return (
     <Box mt={2}>
@@ -81,7 +81,7 @@ export const ExclusiveOrOptionManager = ({
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
                 schema,
-                initialOptionVals,
+                currentOptionVals,
               ),
             }}
           />
