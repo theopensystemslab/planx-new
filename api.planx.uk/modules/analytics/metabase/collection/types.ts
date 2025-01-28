@@ -23,7 +23,7 @@ export type MetabaseCollectionParams = Omit<NewCollectionParams, "slug"> & {
 
 export const createTeamCollectionSchema = z.object({
   params: z.object({
-    slug: z.string(),
+    slug: z.string().min(1),
   }),
   body: z.object({
     description: z.string().optional(),
