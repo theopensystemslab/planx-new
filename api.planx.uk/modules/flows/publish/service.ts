@@ -9,7 +9,10 @@ import {
 import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
 import { hasComponentType } from "../validate/helpers.js";
-import { checkStatutoryApplicationTypes } from "./service/applicationTypes.js";
+import {
+  checkStatutoryApplicationTypes,
+  getApplicationTypeVals,
+} from "./service/applicationTypes.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -27,6 +30,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
 
   const flattenedFlow = await dataMerged(flowId);
   const isStatutoryApplication = checkStatutoryApplicationTypes(flattenedFlow);
+  const typeVals = getApplicationTypeVals(flattenedFlow);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
