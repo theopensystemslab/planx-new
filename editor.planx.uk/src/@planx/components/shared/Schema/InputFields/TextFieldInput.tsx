@@ -15,6 +15,11 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const { id, errorMessage, required, title } = fieldProps;
 
   const characterCountLimit = data.type && getTextLimit(data.type);
+
+  const displayCharacterCount = Boolean(
+    data.type !== TextInputType.Short && characterCountLimit
+  );
+
   return (
     <InputLabel label={title} htmlFor={id}>
       {data.description && (
@@ -45,7 +50,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
             .join(" "),
         }}
       />
-      {characterCountLimit && (
+      {displayCharacterCount && (
         <CharacterCounter
           textInputType={data.type || TextInputType.Long}
           count={fieldProps?.value?.length}
