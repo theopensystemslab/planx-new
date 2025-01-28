@@ -24,9 +24,9 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
 
   const {
     formik,
-    data: { title, description, mapOptions },
+    data: { description, mapOptions },
   } = props;
-  const { id, errorMessage, name } = getFieldProps(props);
+  const { id, errorMessage, name, title } = getFieldProps(props);
 
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
@@ -49,7 +49,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
       }
     };
 
-    const map: any = document.getElementById(id);
+    const map: HTMLElement | null = document.getElementById(id);
 
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
 
@@ -71,9 +71,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               // ariaLabelOlFixedOverlay={`An interactive map for plotting and describing ${schema.type.toLocaleLowerCase()}`}
               height={400}
               basemap={mapOptions?.basemap}
-              geojsonData={JSON.stringify(
-                passport.data?.["proposal.site"],
-              )}
+              geojsonData={JSON.stringify(passport.data?.["proposal.site"])}
               geojsonBuffer={30}
               drawMode
               drawGeojsonData={

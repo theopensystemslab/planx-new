@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import {
   DateInput,
-  dateValidationSchema,
+  dateInputValidationSchema,
   paddedDate,
 } from "@planx/components/DateInput/model";
 import Card from "@planx/components/shared/Preview/Card";
@@ -30,7 +30,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      date: dateValidationSchema(props),
+      date: dateInputValidationSchema({ data: props, required: true }),
     }),
   });
 

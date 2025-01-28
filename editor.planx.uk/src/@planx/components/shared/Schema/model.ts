@@ -7,8 +7,8 @@ import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
-import { checklistValidationSchema } from "../../Checklist/model";
-import { DateInput, dateValidationSchema } from "../../DateInput/model";
+import { checklistInputValidationSchema } from "../../Checklist/model";
+import { DateInput, dateInputValidationSchema } from "../../DateInput/model";
 import {
   NumberInput,
   numberInputValidationSchema,
@@ -36,69 +36,102 @@ interface ChecklistInput {
 /**
  * As above, we need a simplified validation schema for QuestionsInputs
  */
-const questionInputValidationSchema = (data: QuestionInput) =>
-  string()
-    .oneOf(data.options.map((option) => option.data.val || option.data.text))
-    .required("Select your answer before continuing");
 
-const mapValidationSchema = ({ mapOptions }: MapField["data"]) =>
+export const questionInputValidationSchema = ({
+  data,
+  required,
+}: FieldValidationSchema<QuestionInput>) =>
+  string()
+    .when([], {
+      is: () => required,
+      then: string().required("Select your answer before continuing"),
+      otherwise: string().notRequired(),
+    })
+    .test("isValidOption", "Invalid selection", (value) => {
+      if (!value) return true;
+
+      // Check validity regardless of "required" status
+      return data.options.some(
+        (option) => value === (option.data.val || option.data.text),
+      );
+    });
+
+/**
+ * Describes the input of function which returns a Yup validation schema for a field
+ */
+export interface FieldValidationSchema<T extends Omit<Field["data"], "fn">> {
+  data: T;
+  required: boolean;
+}
+
+export const mapInputValidationSchema = ({
+  data: { mapOptions },
+  required,
+}: FieldValidationSchema<MapInput>) =>
   array()
-    .required()
-    .test({
-      name: "atLeastOneFeature",
-      message: `Draw at least one ${
+    .when([], {
+      is: () => required,
+      then: array().min(1, `Draw at least one ${
         mapOptions?.drawType?.toLocaleLowerCase() || "feature"
-      } on the map`,
+      } on the map`,),
+      otherwise: array().notRequired(),
+    })
+    .test({
+      name: "validGeoJSON",
+      message: "Input must be valid GeoJSON",
       test: (features?: Array<Feature>) => {
-        return Boolean(features && features?.length > 0);
+        if (!features?.length) return true;
+
+        const isGeoJSON = (input: Feature) => input?.type === "Feature";
+
+        return features.every(isGeoJSON);
       },
     });
 
-export type TextField = {
+type BaseField<T> = {
+  required?: boolean;
+  data: T & { fn: string };
+};
+
+export interface TextField extends BaseField<TextInput> {
   type: "text";
-  data: TextInput & { fn: string };
-};
+}
 
-export type NumberField = {
+export interface NumberField extends BaseField<NumberInput> {
   type: "number";
-  data: NumberInput & { fn: string };
-};
+}
 
-export type QuestionField = {
+export interface QuestionField extends BaseField<QuestionInput> {
   type: "question";
-  data: QuestionInput & { fn: string };
-};
+}
 
-export type ChecklistField = {
+export interface ChecklistField extends BaseField<ChecklistInput> {
   type: "checklist";
-  required?: true;
-  data: ChecklistInput & { fn: string };
-};
+}
 
-export type DateField = {
+export interface DateField extends BaseField<DateInput> {
   type: "date";
-  data: DateInput & { fn: string };
-};
+}
 
-export type AddressField = {
+export interface AddressField extends BaseField<AddressInput> {
   type: "address";
-  data: AddressInput & { fn: string };
 };
 
-export type MapField = {
-  type: "map";
-  data: {
-    title: string;
-    description?: string;
-    fn: string;
-    mapOptions?: {
-      basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
-      drawType?: "Point" | "Polygon";
-      drawColor?: string;
-      drawMany?: boolean;
-    };
+type MapInput = {
+  title: string;
+  description?: string;
+  fn: string;
+  mapOptions?: {
+    basemap?: "OSVectorTile" | "OSRaster" | "MapboxSatellite" | "OSM";
+    drawType?: "Point" | "Polygon";
+    drawColor?: string;
+    drawMany?: boolean;
   };
 };
+
+export interface MapField extends BaseField<MapInput> {
+  type: "map";
+}
 
 /**
  * Represents the input types available in the List component
@@ -183,28 +216,40 @@ const generateValidationSchemaForFields = (
 ): ObjectSchema<Record<Field["data"]["fn"], BaseSchema>> => {
   const fieldSchemas: { [key: string]: BaseSchema } = {};
 
-  fields.forEach(({ data, type }) => {
+  fields.forEach(({ data, type, required = true }) => {
     switch (type) {
       case "text":
-        fieldSchemas[data.fn] = textInputValidationSchema(data);
+        fieldSchemas[data.fn] = textInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "number":
-        fieldSchemas[data.fn] = numberInputValidationSchema(data);
+        fieldSchemas[data.fn] = numberInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "question":
-        fieldSchemas[data.fn] = questionInputValidationSchema(data);
+        fieldSchemas[data.fn] = questionInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "checklist":
-        fieldSchemas[data.fn] = checklistValidationSchema(data);
+        fieldSchemas[data.fn] = checklistInputValidationSchema({
+          data,
+          required,
+        });
         break;
       case "date":
-        fieldSchemas[data.fn] = dateValidationSchema(data);
+        fieldSchemas[data.fn] = dateInputValidationSchema({ data, required });
         break;
       case "address":
         fieldSchemas[data.fn] = addressValidationSchema();
         break;
       case "map":
-        fieldSchemas[data.fn] = mapValidationSchema(data);
+        fieldSchemas[data.fn] = mapInputValidationSchema({ data, required });
         break;
       default:
         return exhaustiveCheck(type);

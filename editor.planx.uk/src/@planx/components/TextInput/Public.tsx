@@ -28,7 +28,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      text: textInputValidationSchema(props),
+      text: textInputValidationSchema({ data: props, required: true }),
     }),
   });
 

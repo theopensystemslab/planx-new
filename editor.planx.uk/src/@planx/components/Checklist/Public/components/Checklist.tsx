@@ -1,8 +1,8 @@
 import Grid from "@mui/material/Grid";
 import { visuallyHidden } from "@mui/utils";
 import {
+  checklistInputValidationSchema,
   ChecklistLayout,
-  checklistValidationSchema,
 } from "@planx/components/Checklist/model";
 import { Option } from "@planx/components/shared";
 import Card from "@planx/components/shared/Preview/Card";
@@ -47,7 +47,7 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: object({
-      checked: checklistValidationSchema(props),
+      checked: checklistInputValidationSchema({ data: props, required: true }),
     }),
   });
 
