@@ -1,4 +1,4 @@
-import { SchemaOf, string } from "yup";
+import { string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 
@@ -23,10 +23,18 @@ export const emailRegex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const textInputValidationSchema = ({
-  type,
-}: TextInput): SchemaOf<UserData> =>
+  data: { type },
+  required,
+}: {
+  data: TextInput;
+  required: boolean;
+}) =>
   string()
-    .required("Enter your answer before continuing")
+    .when([], {
+      is: () => required,
+      then: string().required("Enter your answer before continuing"),
+      otherwise: string().notRequired(),
+    })
     .test({
       name: "valid",
       message: (() => {
@@ -41,10 +49,10 @@ export const textInputValidationSchema = ({
         }
         return `Your answer must be ${TEXT_LIMITS[type]} characters or fewer.`;
       })(),
-      test: (value: string | undefined) => {
-        if (!type) {
-          return true;
-        }
+      test: (value?: string) => {
+        if (!value) return true;
+        if (!type) return true;
+
         if (type === TextInputType.Email) {
           return Boolean(value && emailRegex.test(value));
         }
