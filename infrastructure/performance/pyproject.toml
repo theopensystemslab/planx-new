@@ -20,7 +20,7 @@ dependencies = [
     "har2locust==0.9.3",
     "idna==3.10",
     "itsdangerous==2.2.0",
-    "jinja2==3.1.4",
+    "jinja2==3.1.5",
     "locust==2.32.1",
     "locust-plugins==4.5.3",
     "markupsafe==3.0.2",
