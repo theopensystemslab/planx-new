@@ -2,7 +2,19 @@ import type { Passport } from "@opensystemslab/planx-core/types";
 
 import { isApplicationTypeSupported } from "./helpers.js";
 
+vi.mock("@opensystemslab/planx-core", () => {
+  return {
+    getValidSchemaValues: vi
+      .fn()
+      .mockImplementation(() => ["ldc", "ldc.p", "ldc.e", "pp", "pa"]),
+  };
+});
+
 describe("isApplicationTypeSupported", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   test("returns true for statutory application types", () => {
     const mockPassport: Passport = { data: { "application.type": ["ldc.p"] } };
     expect(isApplicationTypeSupported(mockPassport)).toEqual(true);
