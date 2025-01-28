@@ -179,25 +179,6 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          <Box maxWidth={360}>
-            <InputRow>
-              <InputRowLabel>
-                <strong>Search</strong>
-              </InputRowLabel>
-              <InputRowItem>
-                <Box sx={{ position: "relative" }}>
-                  <Input
-                    sx={{
-                      borderColor: (theme) => theme.palette.border.input,
-                      pr: 5,
-                    }}
-                    name="search"
-                    id="search"
-                  />
-                </Box>
-              </InputRowItem>
-            </InputRow>
-          </Box>
         </Box>
         <Box>
           {filteredFlows && flows && (
