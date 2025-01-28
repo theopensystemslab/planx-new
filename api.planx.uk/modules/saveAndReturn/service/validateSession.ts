@@ -135,8 +135,8 @@ async function reconcileSessionData({
     }
   };
 
-  // remove all auto-answered breadcrumbs
-  // (auto-answers can be reconstructed on resume if they are still auto-answerable after changes)
+  // remove all auto-answered breadcrumbs because their automation may rely on the same data values as an altered node
+  //   (auto-answers can be reconstructed on forwards navigation if they are still auto-answerable on resume)
   for (const [id, crumb] of Object.entries(sessionData.breadcrumbs)) {
     if (crumb.auto === true && sessionData.breadcrumbs[id]) {
       delete sessionData.breadcrumbs[id];
