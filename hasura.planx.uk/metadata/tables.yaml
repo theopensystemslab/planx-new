@@ -2496,11 +2496,12 @@
     - role: platformAdmin
       permission:
         columns:
-          - created_at
-          - domain
           - id
+          - metabase_id
+          - domain
           - name
           - slug
+          - created_at
           - updated_at
         filter: {}
     - role: public
@@ -2522,7 +2523,13 @@
           - name
           - slug
           - updated_at
-        filter: {}
+        filter:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
   update_permissions:
     - role: api
       permission:
