@@ -168,6 +168,19 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
+  const displayTags = [
+    {
+      type: FlowTagType.Status,
+      displayName: statusVariant,
+      shouldAddTag: statusVariant,
+    },
+    {
+      type: FlowTagType.ServiceType,
+      displayName: "Submission",
+      shouldAddTag: isSubmissionService,
+    },
+  ];
+
   return (
     <>
       {deleting && (
@@ -195,17 +208,18 @@ const FlowCard: React.FC<FlowCardProps> = ({
               )}
             </LinkSubText>
           </Box>
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <FlowTag tagType={FlowTagType.Status} statusVariant={statusVariant}>
-              {flow.status}
-            </FlowTag>
-            {isSubmissionService && (
-              <FlowTag
-                tagType={FlowTagType.ServiceType}
-                statusVariant={statusVariant}
-              >
-                {"Submission"}
-              </FlowTag>
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            {displayTags.map(
+              (tag, index) =>
+                tag.shouldAddTag && (
+                  <FlowTag
+                    key={index}
+                    tagType={tag.type}
+                    statusVariant={statusVariant}
+                  >
+                    {tag.displayName}
+                  </FlowTag>
+                ),
             )}
           </Box>
           <DashboardLink
