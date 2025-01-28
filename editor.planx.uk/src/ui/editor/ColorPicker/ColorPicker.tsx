@@ -71,7 +71,7 @@ const StyledButtonBase = styled(ButtonBase, {
   padding: theme.spacing(1),
   whiteSpace: "nowrap",
   backgroundColor: theme.palette.common.white,
-  border: `1px solid ${theme.palette.border.light}`,
+  border: `1px solid ${theme.palette.border.main}`,
   ...(show && {
     color: theme.palette.primary.dark,
     "& .swatch": {
