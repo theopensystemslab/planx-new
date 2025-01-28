@@ -10,6 +10,7 @@ import { createCollection } from "./createCollection.js";
 describe("createTeamCollection", () => {
   beforeEach(() => {
     nock.cleanAll();
+    vi.resetAllMocks();
   });
 
   test("creates new collection when metabase ID doesn't exist", async () => {
