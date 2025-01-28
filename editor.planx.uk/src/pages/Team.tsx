@@ -143,7 +143,7 @@ const Team: React.FC = () => {
           </Box>
           {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SearchBox<FlowSummary>
-              records={filteredFlows}
+              records={flows}
               setRecords={setFilteredFlows}
               searchKey={["name", "slug"]}
             />

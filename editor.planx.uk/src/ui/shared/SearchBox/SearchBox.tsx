@@ -27,7 +27,6 @@ export const SearchBox = <T extends object>({
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
-  const [originalRecords] = useState(records);
 
   const searchKeys = useMemo(() => searchKey, []);
 
@@ -40,7 +39,7 @@ export const SearchBox = <T extends object>({
   });
 
   const { results, search } = useSearch({
-    list: originalRecords || [],
+    list: records || [],
     keys: searchKeys,
   });
 
@@ -60,9 +59,9 @@ export const SearchBox = <T extends object>({
       setRecords(mappedResults);
     }
     if (results && !searchedTerm) {
-      originalRecords && setRecords(originalRecords);
+      records && setRecords(records);
     }
-  }, [results, setRecords, searchedTerm, originalRecords]);
+  }, [results, setRecords, searchedTerm, records]);
 
   return (
     <Box maxWidth={360}>
