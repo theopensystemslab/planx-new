@@ -86,7 +86,8 @@ const Header = styled("header")(({ theme }) => ({
     padding: "5px",
     marginRight: "5px",
     background: theme.palette.common.white,
-    border: "1px solid rgba(0, 0, 0, 0.2)",
+    border: "1px solid ${theme.palette.border.main}",
+    borderWidth: "1px",
   },
   "& svg": {
     cursor: "pointer",

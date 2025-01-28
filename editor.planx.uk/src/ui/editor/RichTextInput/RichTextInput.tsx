@@ -68,7 +68,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     padding: "12px 15px",
     backgroundColor: theme.palette.common.white,
     minHeight: "50px",
-    border: `1px solid ${theme.palette.border.light}`,
+    border: `1px solid ${theme.palette.border.main}`,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
