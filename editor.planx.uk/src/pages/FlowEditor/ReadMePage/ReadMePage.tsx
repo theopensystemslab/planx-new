@@ -244,15 +244,18 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           checked={showExternalPortals}
           onChange={() => setShowExternalPortals(!showExternalPortals)}
         />
-        {hasExternalPortals && showExternalPortals && (
-          <Box pt={2} data-testid="searchExternalPortalList">
-            <InputLegend>External Portals</InputLegend>
-            <Typography variant="body1" my={2}>
-              Your service contains the following external portals:
-            </Typography>
-            <ExternalPortals externalPortals={externalPortals} />
-          </Box>
-        )}
+        {showExternalPortals &&
+          (hasExternalPortals ? (
+            <Box pt={2} data-testid="searchExternalPortalList">
+              <InputLegend>External Portals</InputLegend>
+              <Typography variant="body1" my={2}>
+                Your service contains the following external portals:
+              </Typography>
+              <ExternalPortals externalPortals={externalPortals} />
+            </Box>
+          ) : (
+            <Typography>This service has no external portals.</Typography>
+          ))}
       </Box>
     </Container>
   );
