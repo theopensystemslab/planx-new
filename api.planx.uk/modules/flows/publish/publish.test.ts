@@ -5,6 +5,13 @@ import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { userContext } from "../../auth/middleware.js";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
+import {
+  applicationTypeFail,
+  checklistApplicationTypePass,
+  questionApplicationTypePass,
+  setValueApplicationTypePass,
+} from "../../../tests/mocks/applicationTypeCheckMocks.js";
+import * as applicationTypes from "./service/applicationTypes.js";
 
 beforeAll(() => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
@@ -82,7 +89,6 @@ describe("publish", () => {
         },
       },
     });
-
     await supertest(app).post("/flows/1/publish").set(auth).expect(200);
   });
 
@@ -176,6 +182,206 @@ describe("publish", () => {
       .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(/User details missing from request/);
+      });
+  });
+});
+
+describe("how 'is_statutory_application_Type' is updated when a service is published", () => {
+  beforeEach(() => {
+    const getStoreMock = vi.spyOn(userContext, "getStore");
+    getStoreMock.mockReturnValue({
+      user: {
+        sub: "123",
+        jwt: getTestJWT({ role: "teamEditor" }),
+      },
+    });
+  });
+  it("checks that is_statutory_application_type is true for SetValue component", async () => {
+    const checkStatutoryApplicationMock = vi.spyOn(
+      applicationTypes,
+      "checkStatutoryApplicationTypes",
+    );
+
+    const alteredFlow = {
+      ...mockFlowData,
+      ...setValueApplicationTypePass,
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "stat-app-set-value",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "PublishFlow",
+      matchOnVariables: false,
+      data: {
+        publishedFlow: {
+          data: alteredFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(auth)
+      .expect(200)
+      .then(() => {
+        const [isStatutoryApplicationType] =
+          checkStatutoryApplicationMock.mock.results;
+        expect(isStatutoryApplicationType.value).toEqual(true);
+      });
+  });
+  it("checks whether is_statutory_application_type is true for Checklist component", async () => {
+    const checkStatutoryApplicationMock = vi.spyOn(
+      applicationTypes,
+      "checkStatutoryApplicationTypes",
+    );
+
+    const alteredFlow = {
+      ...mockFlowData,
+      ...checklistApplicationTypePass,
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "stat-app-checklist",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "PublishFlow",
+      matchOnVariables: false,
+      data: {
+        publishedFlow: {
+          data: alteredFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(auth)
+      .expect(200)
+      .then(() => {
+        const [isStatutoryApplicationType] =
+          checkStatutoryApplicationMock.mock.results;
+        expect(isStatutoryApplicationType.value).toEqual(true);
+      });
+  });
+  it("checks is_statutory_application_type is true for Question component", async () => {
+    const checkStatutoryApplicationMock = vi.spyOn(
+      applicationTypes,
+      "checkStatutoryApplicationTypes",
+    );
+
+    const alteredFlow = {
+      ...mockFlowData,
+      ...questionApplicationTypePass,
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "stat-app-question",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "PublishFlow",
+      matchOnVariables: false,
+      data: {
+        publishedFlow: {
+          data: alteredFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(auth)
+      .expect(200)
+      .then(() => {
+        const [isStatutoryApplicationType] =
+          checkStatutoryApplicationMock.mock.results;
+        expect(isStatutoryApplicationType.value).toEqual(true);
+      });
+  });
+  it("checks is_statutory_application_type is false when no application type matches schema", async () => {
+    const checkStatutoryApplicationMock = vi.spyOn(
+      applicationTypes,
+      "checkStatutoryApplicationTypes",
+    );
+
+    const alteredFlow = {
+      ...mockFlowData,
+      ...applicationTypeFail,
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "stat-app-fail",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "PublishFlow",
+      matchOnVariables: false,
+      data: {
+        publishedFlow: {
+          data: alteredFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(auth)
+      .expect(200)
+      .then(() => {
+        const [isStatutoryApplicationType] =
+          checkStatutoryApplicationMock.mock.results;
+        expect(isStatutoryApplicationType.value).toEqual(false);
       });
   });
 });
