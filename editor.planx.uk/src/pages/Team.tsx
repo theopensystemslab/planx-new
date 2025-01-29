@@ -4,6 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -36,7 +37,7 @@ const DashboardList = styled("ul")(({ theme }) => ({
   },
 }));
 
-const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
+const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
   <DashboardList sx={{ paddingTop: 0 }}>
     <Card>
       <CardContent>
@@ -152,6 +153,9 @@ const Team: React.FC = () => {
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -179,6 +183,7 @@ const Team: React.FC = () => {
         ),
       );
       setFlows(sortedFlows);
+      setFilteredFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -186,7 +191,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = flows && Boolean(flows.length);
+  const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
@@ -237,9 +242,9 @@ const Team: React.FC = () => {
           )}
         </Box>
         <Box>
-          {teamHasFlows && (
+          {filteredFlows && flows && (
             <DashboardList>
-              {flows.map((flow) => (
+              {filteredFlows.map((flow) => (
                 <FlowCard
                   flow={flow}
                   flows={flows}
