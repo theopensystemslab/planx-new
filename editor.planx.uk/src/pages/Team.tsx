@@ -250,9 +250,9 @@ const Team: React.FC = () => {
             sortOptions={sortOptions}
           />
         )}
-        {teamHasFlows && (
+        {filteredFlows && flows && (
           <DashboardList>
-            {flows?.map((flow) => (
+            {filteredFlows?.map((flow) => (
               <FlowCard
                 flow={flow}
                 flows={flows}
