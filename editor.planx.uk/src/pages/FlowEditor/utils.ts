@@ -37,7 +37,7 @@ export const formatLastEditMessage = (
 export const formatLastPublishMessage = (date: string, user: string): string =>
   `Last published ${formatLastEditDate(date)} by ${user}`;
 
-export const formatLastPublishedDate = (date: string): string => {
-  const formattedDate = new Date(date).toLocaleString();
-  return `Last published: ${formattedDate}`;
+export const formatServiceLastUpdated = (date: string): string => {
+  const formattedDate = new Date(date).toLocaleDateString();
+  return `Service last updated ${formattedDate}`;
 };

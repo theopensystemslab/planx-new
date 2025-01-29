@@ -3,6 +3,8 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useStore } from "pages/FlowEditor/lib/store";
+import { formatServiceLastUpdated } from "pages/FlowEditor/utils";
 import React from "react";
 import { Link as ReactNaviLink } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -48,14 +50,25 @@ export interface Props {
 export default function Footer(props: Props) {
   const { items, children } = props;
 
+  const [lastPublishedDate] = useStore((state) => [state.lastPublishedDate]);
+
   return (
     <Root>
       <Container maxWidth={false}>
-        <ButtonGroup py={0.5}>
-          {items
-            ?.filter((item) => item.title)
-            .map((item) => <FooterItem {...item} key={item.title} />)}
-        </ButtonGroup>
+        <Box display={"flex"} justifyContent={"space-between"}>
+          {items && items.length > 0 && (
+            <ButtonGroup py={0.5}>
+              {items
+                ?.filter((item) => item.title)
+                .map((item) => <FooterItem {...item} key={item.title} />)}
+            </ButtonGroup>
+          )}
+          <Box py={0.5}>
+            <Typography variant="body2">
+              {formatServiceLastUpdated(lastPublishedDate)}
+            </Typography>
+          </Box>
+        </Box>
         <Box py={2}>{children}</Box>
       </Container>
     </Root>
