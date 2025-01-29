@@ -15,13 +15,19 @@ const readMePageRoutes = compose(
 
   mount({
     "/": route(async (req) => {
-      const { team: teamSlug } = req.params;
+      const { team: teamSlug, flow: flowSlug } = req.params;
 
       const data = await getFlowInformation(req.params.flow, req.params.team);
 
       return {
         title: makeTitle("About this page"),
-        view: <ReadMePage teamSlug={teamSlug} flowInformation={data} />,
+        view: (
+          <ReadMePage
+            teamSlug={teamSlug}
+            flowSlug={flowSlug}
+            flowInformation={data}
+          />
+        ),
       };
     }),
   }),

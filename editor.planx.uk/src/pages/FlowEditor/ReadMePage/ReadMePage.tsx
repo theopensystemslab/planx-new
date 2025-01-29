@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography";
 import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
-import React from "react";
+import capitalize from "lodash/capitalize";
+import React, { useState } from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import InputGroup from "ui/editor/InputGroup";
@@ -16,25 +17,17 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 import { object, string } from "yup";
 
+import { ExternalPortals } from "../components/Sidebar/Search/ExternalPortalList/ExternalPortals";
 import { useStore } from "../lib/store";
-import { FlowInformation } from "../utils";
-
-interface ReadMePageProps {
-  flowInformation: FlowInformation;
-  teamSlug: string;
-}
-
-interface ReadMePageForm {
-  serviceSummary: string;
-  serviceDescription: string;
-  serviceLimitations: string;
-}
+import { ReadMePageForm, ReadMePageProps } from "./types";
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
   flowInformation,
   teamSlug,
+  flowSlug,
 }) => {
   const { status: flowStatus } = flowInformation;
   const [
@@ -44,6 +37,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     updateFlowSummary,
     flowLimitations,
     updateFlowLimitations,
+    externalPortals,
     flowName,
   ] = useStore((state) => [
     state.flowDescription,
@@ -52,10 +46,15 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     state.updateFlowSummary,
     state.flowLimitations,
     state.updateFlowLimitations,
+    state.externalPortals,
     state.flowName,
   ]);
 
   const toast = useToast();
+
+  const hasExternalPortals = Boolean(Object.keys(externalPortals).length);
+
+  const [showExternalPortals, setShowExternalPortals] = useState(false);
 
   const formik = useFormik<ReadMePageForm>({
     initialValues: {
@@ -129,7 +128,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          {flowName}
+          {/* fallback from request params if store not populated with flowName */}
+          {flowName || capitalize(flowSlug.replaceAll("-", " "))}
         </Typography>
 
         <Box display={"flex"}>
@@ -161,6 +161,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               inputProps={{
                 "aria-describedby": "A short blurb on what this service is.",
+                "aria-label": "Service Description",
               }}
             />
             <CharacterCounter
@@ -235,6 +236,27 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           </Box>
         </form>
       </SettingsSection>
+      <Box pt={2}>
+        <Switch
+          label={"Show external portals"}
+          name={"service.status"}
+          variant="editorPage"
+          checked={showExternalPortals}
+          onChange={() => setShowExternalPortals(!showExternalPortals)}
+        />
+        {showExternalPortals &&
+          (hasExternalPortals ? (
+            <Box pt={2} data-testid="searchExternalPortalList">
+              <InputLegend>External Portals</InputLegend>
+              <Typography variant="body1" my={2}>
+                Your service contains the following external portals:
+              </Typography>
+              <ExternalPortals externalPortals={externalPortals} />
+            </Box>
+          ) : (
+            <Typography>This service has no external portals.</Typography>
+          ))}
+      </Box>
     </Container>
   );
 };
