@@ -68,7 +68,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
     padding: "12px 15px",
     backgroundColor: theme.palette.common.white,
     minHeight: "50px",
-    border: `1px solid ${theme.palette.border.light}`,
+    border: `1px solid ${theme.palette.border.main}`,
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -97,7 +97,7 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       },
     },
     // Styles for placeholder text, to match ui/Input.tsx
-    "& p.is-editor-empty:first-child::before": {
+    "& p.is-editor-empty:first-of-type::before": {
       color: theme.palette.text.placeholder,
       opacity: 1,
       content: `attr(data-placeholder)`,

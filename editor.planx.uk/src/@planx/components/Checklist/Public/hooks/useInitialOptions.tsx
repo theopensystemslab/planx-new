@@ -4,16 +4,16 @@ import { FormikHookReturn } from "types";
 
 import { Option } from "../../../shared";
 
-export const useInitialOptions = (formik: FormikHookReturn) => {
+export const useCurrentOptions = (formik: FormikHookReturn) => {
   const schema = useStore().getFlowSchema()?.options;
 
-  const initialOptions: Option[] | undefined =
-    formik.initialValues.options ||
-    formik.initialValues.groupedOptions
+  const currentOptions: Option[] | undefined =
+    formik.values.options ||
+    formik.values.groupedOptions
       ?.map((group: Group<Option>) => group.children)
       ?.flat();
 
-  const initialOptionVals = initialOptions?.map((option) => option.data?.val);
+  const currentOptionVals = currentOptions?.map((option) => option.data?.val);
 
-  return { initialOptions, schema, initialOptionVals };
+  return { currentOptions, schema, currentOptionVals };
 };

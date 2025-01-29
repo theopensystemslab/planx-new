@@ -75,7 +75,7 @@ export const Question: React.FC<Props> = (props) => {
   });
 
   const schema = useStore().getFlowSchema();
-  const initialOptionVals = formik.initialValues.options?.map(
+  const currentOptionVals = formik.values.options?.map(
     (option) => option.data?.val,
   );
 
@@ -160,7 +160,7 @@ export const Question: React.FC<Props> = (props) => {
               schema: getOptionsSchemaByFn(
                 formik.values.fn,
                 schema?.options,
-                initialOptionVals,
+                currentOptionVals,
               ),
             }}
           />

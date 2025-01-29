@@ -31,14 +31,14 @@ const Root = styled("fieldset", {
   margin: 0,
   padding: 0,
   "& + .inputGroup": {
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(4),
   },
   "& .inputGroup + .inputGroup": {
     marginTop: 0,
   },
   ...(flowSpacing && {
     "& > div > * + *": {
-      marginTop: theme.spacing(1.5),
+      marginTop: theme.spacing(1),
     },
   }),
 }));
