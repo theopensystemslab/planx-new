@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
+import capitalize from "lodash/capitalize";
 import React, { useState } from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
@@ -26,6 +27,7 @@ import { ReadMePageForm, ReadMePageProps } from "./types";
 export const ReadMePage: React.FC<ReadMePageProps> = ({
   flowInformation,
   teamSlug,
+  flowSlug,
 }) => {
   const { status: flowStatus } = flowInformation;
   const [
@@ -63,14 +65,14 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     onSubmit: async (values, { setSubmitting, setFieldError }) => {
       try {
         const updateFlowDescriptionPromise = updateFlowDescription(
-          values.serviceDescription
+          values.serviceDescription,
         );
         const updateFlowSummaryPromise = updateFlowSummary(
-          values.serviceSummary
+          values.serviceSummary,
         );
 
         const updateFlowLimitationsPromise = updateFlowLimitations(
-          values.serviceLimitations
+          values.serviceLimitations,
         );
 
         const [descriptionResult, summaryResult, limitationsResult] =
@@ -86,19 +88,19 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           if (!descriptionResult) {
             setFieldError(
               "serviceDescription",
-              "Unable to update the flow description. Please try again."
+              "Unable to update the flow description. Please try again.",
             );
           }
           if (!summaryResult) {
             setFieldError(
               "serviceSummary",
-              "Unable to update the service summary. Please try again."
+              "Unable to update the service summary. Please try again.",
             );
           }
           if (!limitationsResult) {
             setFieldError(
               "serviceLimitations",
-              "Unable to update the service limitations. Please try again."
+              "Unable to update the service limitations. Please try again.",
             );
           }
           throw new Error("One or more updates failed");
@@ -106,7 +108,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       } catch (error) {
         console.error("Error updating descriptions:", error);
         toast.error(
-          "An error occurred while updating descriptions. Please try again."
+          "An error occurred while updating descriptions. Please try again.",
         );
       } finally {
         setSubmitting(false);
@@ -117,7 +119,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     validationSchema: object({
       serviceSummary: string().max(
         120,
-        "Service description must be 120 characters or less"
+        "Service description must be 120 characters or less",
       ),
     }),
   });
@@ -126,7 +128,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     <Container maxWidth="formWrap">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          {flowName}
+          {/* fallback from request params if store not populated with flowName */}
+          {flowName || capitalize(flowSlug.replaceAll("-", " "))}
         </Typography>
 
         <Box display={"flex"}>

@@ -11,6 +11,8 @@ export const platformAdminUser = {
 };
 
 export const defaultProps = {
+  flowSlug: "apply-for-planning-permission",
+  teamSlug: "barnet",
   flowInformation: {
     status: "online",
     description: "A long description of a service",

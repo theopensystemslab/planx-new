@@ -14,6 +14,7 @@ type Story = StoryObj<typeof meta>;
 export const Basic = {
   args: {
     teamSlug: "barnet",
+    flowSlug: "Apply for prior permission",
     flowInformation: {
       status: "online",
       description: "A long description of a service",
