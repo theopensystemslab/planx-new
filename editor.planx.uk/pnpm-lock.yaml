@@ -48,8 +48,8 @@ dependencies:
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#6f16516
-    version: github.com/theopensystemslab/planx-core/6f16516(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#03de3e0
+    version: github.com/theopensystemslab/planx-core/03de3e0(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -13723,6 +13723,11 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
+  /type-fest@4.33.0:
+    resolution: {integrity: sha512-s6zVrxuyKbbAsSAD5ZPTB77q4YIdRctkTbJ2/Dqlinwz+8ooH2gd+YA7VA6Pa93KML9GockVvoxjZ2vHP+mu8g==}
+    engines: {node: '>=16'}
+    dev: false
+
   /type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -14690,9 +14695,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/6f16516(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6f16516}
-    id: github.com/theopensystemslab/planx-core/6f16516
+  github.com/theopensystemslab/planx-core/03de3e0(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/03de3e0}
+    id: github.com/theopensystemslab/planx-core/03de3e0
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14718,7 +14723,7 @@ packages:
       prettier: 3.4.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.32.0
+      type-fest: 4.33.0
       uuid: 11.0.5
       zod: 3.24.1
     transitivePeerDependencies:
