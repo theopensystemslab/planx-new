@@ -42,10 +42,12 @@ const originalLocation = window.location.pathname;
 
 beforeAll(() => (initialState = getState()));
 
-beforeEach(() => act(() => setState({ teamSlug: "testTeam" })));
+beforeEach(() => {
+  act(() => setState({ teamSlug: "testTeam" }));
+  vi.clearAllMocks();
+});
 
 afterEach(() => {
-  vi.clearAllMocks();
   window.history.pushState({}, "", originalLocation);
   act(() => setState(initialState));
 });

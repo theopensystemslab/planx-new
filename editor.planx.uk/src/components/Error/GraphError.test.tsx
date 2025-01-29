@@ -22,6 +22,8 @@ const ThrowGraphError: React.FC = () => {
   throw new GraphError("nodeMustFollowFindProperty");
 };
 
+beforeEach(() => vi.clearAllMocks());
+
 it("does not render if a child does not throw an error", () => {
   const { queryByRole } = setup(
     <ErrorBoundary FallbackComponent={ErrorFallback}>

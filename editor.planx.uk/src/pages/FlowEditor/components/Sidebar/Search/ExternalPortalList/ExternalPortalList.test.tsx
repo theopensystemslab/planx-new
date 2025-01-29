@@ -16,14 +16,14 @@ vi.mock("react-navi", () => ({
   }),
 }));
 
-const { getState, setState } = useStore;
+const { setState } = useStore;
 
-let initialState: FullStore;
+beforeAll(() => setState({ flow }));
 
-beforeAll(() => (initialState = getState()));
-
-beforeEach(() => setState({ flow }));
-afterEach(() => act(() => setState(initialState)));
+beforeEach(() => {
+  setState({ orderedFlow: undefined });
+  vi.clearAllMocks();
+});
 
 const externalPortals: FullStore["externalPortals"] = {
   abc: { name: "Portal 1", href: "myTeam/portalOne" },
