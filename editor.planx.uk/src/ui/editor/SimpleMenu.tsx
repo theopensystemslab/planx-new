@@ -6,6 +6,7 @@ import React, { useState } from "react";
 
 interface Props {
   className?: string;
+  children?: React.ReactNode;
   items: Array<{
     label: string;
     disabled?: boolean;
@@ -14,7 +15,11 @@ interface Props {
   }>;
 }
 
-export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
+export default function SimpleMenu({
+  items,
+  children,
+  ...restProps
+}: Props): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   return (
     <div {...restProps}>
@@ -27,6 +32,7 @@ export default function SimpleMenu({ items, ...restProps }: Props): FCReturn {
         size="large"
       >
         <MoreVert />
+        {children}
       </IconButton>
       <Menu
         id="long-menu"
