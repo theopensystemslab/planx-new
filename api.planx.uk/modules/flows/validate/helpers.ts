@@ -3,7 +3,7 @@ import {
   type FlowGraph,
   type Node,
 } from "@opensystemslab/planx-core/types";
-import { isComponentType } from "../flowHelpers.js";
+import { isComponentType } from "../helpers.js";
 
 export const hasComponentType = (
   flowGraph: FlowGraph,

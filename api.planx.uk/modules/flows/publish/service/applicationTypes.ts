@@ -3,7 +3,7 @@ import {
   type FlowGraph,
 } from "@opensystemslab/planx-core/types";
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
-import { isComponentType } from "../../flowHelpers.js";
+import { isComponentType } from "../../helpers.js";
 
 export const checkStatutoryApplicationTypes = (flattenedFlow: FlowGraph) => {
   const applicationTypes = getApplicationTypeVals(flattenedFlow);
