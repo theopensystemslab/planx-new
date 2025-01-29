@@ -9,9 +9,9 @@ import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
-import Filters from "ui/editor/Filter/Filter";
-import { SortControl } from "ui/editor/SortControl";
+import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
+import Filters from "ui/editor/Filter/Filter";
 import { slugify } from "utils";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -107,7 +107,6 @@ const Team: React.FC = () => {
       );
       setFlows(sortedFlows);
       setFilteredFlows(sortedFlows);
-      setSearchedFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
