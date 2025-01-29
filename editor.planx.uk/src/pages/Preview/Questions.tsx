@@ -3,11 +3,13 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import { Typography } from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
+import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath, Session } from "types";
@@ -54,6 +56,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     getType,
     node,
     setCurrentCard,
+    lastPublishedDate,
   ] = useStore((state) => [
     state.previousCard,
     state.record,
@@ -68,6 +71,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
     state.currentCard,
     state.setCurrentCard,
+    state.lastPublishedDate,
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, trackEvent } = useAnalyticsTracking();
@@ -115,7 +119,16 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     isUsingLocalStorage
       ? setLocalFlow(id, session)
       : NEW.setLocalFlow(sessionId, session);
-  }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
+  }, [
+    gotFlow,
+    breadcrumbs,
+    passport,
+    sessionId,
+    id,
+    govUkPayment,
+    isStandalone,
+    isUsingLocalStorage,
+  ]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
@@ -166,6 +179,10 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%">
+      <Typography>
+        Last edited: {formatLastEditDate(lastPublishedDate)}
+      </Typography>
+
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton

@@ -1,9 +1,7 @@
 import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
-import { NaviRequest } from "navi";
-import { NotFoundError } from "navi";
-import { useStore } from "pages/FlowEditor/lib/store";
-import { Store } from "pages/FlowEditor/lib/store";
+import { NaviRequest, NotFoundError } from "navi";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import OfflineLayout from "pages/layout/OfflineLayout";
 import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
@@ -30,8 +28,11 @@ export const publishedView = async (req: NaviRequest) => {
   const teamSlug =
     req.params.team || (await getTeamFromDomain(window.location.hostname));
   const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
-
   const flow = data.flows[0];
+
+  const lastPublishedDate = await getLastPublishedAt(flow.id);
+  useStore.setState({ lastPublishedDate });
+
   if (!flow)
     throw new NotFoundError(`Flow ${flowSlug} not found for ${teamSlug}`);
 
@@ -51,6 +52,7 @@ export const publishedView = async (req: NaviRequest) => {
     flowStatus: flow.status,
     flowName: flow.name,
   });
+
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
@@ -130,6 +132,29 @@ export const fetchSettingsForPublishedView = async (
       },
     });
     return result.data;
+  } catch (error) {
+    console.error(error);
+    throw new NotFoundError();
+  }
+};
+
+export const getLastPublishedAt = async (flowId: string): Promise<string> => {
+  try {
+    const { data } = await publicClient.query({
+      query: gql`
+        query GetLastPublishedFlow($id: uuid) {
+          flows(limit: 1, where: { id: { _eq: $id } }) {
+            published_flows(order_by: { created_at: desc }, limit: 1) {
+              created_at
+            }
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
+    return data.flows[0].published_flows[0].created_at;
   } catch (error) {
     console.error(error);
     throw new NotFoundError();
