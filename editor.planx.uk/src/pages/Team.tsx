@@ -3,14 +3,12 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import FlowCard, { Card, CardContent } from "./FlowCard";
@@ -32,7 +30,7 @@ const DashboardList = styled("ul")(({ theme }) => ({
   },
 }));
 
-const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
+const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
   <DashboardList sx={{ paddingTop: 0 }}>
     <Card>
       <CardContent>
@@ -76,6 +74,9 @@ const Team: React.FC = () => {
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -103,6 +104,7 @@ const Team: React.FC = () => {
         ),
       );
       setFlows(sortedFlows);
+      setFilteredFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -110,7 +112,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = flows && Boolean(flows.length);
+  const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
@@ -139,25 +141,13 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          <Box maxWidth={360}>
-            <InputRow>
-              <InputRowLabel>
-                <strong>Search</strong>
-              </InputRowLabel>
-              <InputRowItem>
-                <Box sx={{ position: "relative" }}>
-                  <Input
-                    sx={{
-                      borderColor: (theme) => theme.palette.border.input,
-                      pr: 5,
-                    }}
-                    name="search"
-                    id="search"
-                  />
-                </Box>
-              </InputRowItem>
-            </InputRow>
-          </Box>
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
+            <SearchBox<FlowSummary>
+              records={flows}
+              setRecords={setFilteredFlows}
+              searchKey={["name", "slug"]}
+            />
+          )}
         </Box>
         <Box>
           {hasFeatureFlag("SORT_FLOWS") && flows && (
@@ -169,9 +159,9 @@ const Team: React.FC = () => {
           )}
         </Box>
         <Box>
-          {teamHasFlows && (
+          {filteredFlows && flows && (
             <DashboardList>
-              {flows.map((flow) => (
+              {filteredFlows.map((flow) => (
                 <FlowCard
                   flow={flow}
                   flows={flows}
