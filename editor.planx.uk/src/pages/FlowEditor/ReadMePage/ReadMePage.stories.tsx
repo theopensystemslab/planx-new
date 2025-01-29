@@ -13,7 +13,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic = {
   args: {
-    flowSlug: "find-out-if-you-need-planning-permission",
     teamSlug: "barnet",
     flowInformation: {
       status: "online",
