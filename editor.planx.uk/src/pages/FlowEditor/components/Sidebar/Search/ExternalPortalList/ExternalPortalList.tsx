@@ -1,21 +1,11 @@
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { Components } from "react-virtuoso";
 
-import { Context, Data } from ".";
-
-export const Root = styled(List)(({ theme }) => ({
-  color: theme.palette.text.primary,
-  padding: theme.spacing(0.5, 0),
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.border.light}`,
-}));
+import { Context, Data } from "..";
+import { ExternalPortals } from "./ExternalPortals";
 
 export const ExternalPortalList: Components<Data, Context>["Footer"] = ({
   context,
@@ -36,17 +26,7 @@ export const ExternalPortalList: Components<Data, Context>["Footer"] = ({
         Your service also contains the following external portals, which have
         not been searched:
       </Typography>
-      <Root>
-        {Object.values(externalPortals).map(({ name, href }) => (
-          <ListItem key={`external-portal-card-${name}`} disablePadding>
-            <ListItemButton component="a" href={`../${href}`}>
-              <Typography variant="body2">
-                {href.replaceAll("/", " / ")}
-              </Typography>
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </Root>
+      <ExternalPortals externalPortals={externalPortals} />
     </Box>
   );
 };
