@@ -4,7 +4,7 @@ import Questions from "pages/Preview/Questions";
 import React from "react";
 
 import { getTeamFromDomain, validateTeamRoute } from "./utils";
-import { publishedView } from "./views/published";
+import { publishedView } from "./views/published/publishedView";
 
 const routes = compose(
   withData(async (req) => {

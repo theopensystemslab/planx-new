@@ -8,7 +8,7 @@ import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain } from "routes/utils";
 
-import { fetchSettingsForPublishedView } from "./published";
+import { fetchSettingsForPublishedView } from "./published/queries";
 
 /**
  * View wrapper for /preview
