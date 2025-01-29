@@ -9,10 +9,7 @@ import {
 import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
 import { hasComponentType } from "../validate/helpers.js";
-import {
-  checkStatutoryApplicationTypes,
-  getApplicationTypeVals,
-} from "./service/applicationTypes.js";
+import { hasStatutoryApplicationPath } from "./helpers.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -29,13 +26,17 @@ export const publishFlow = async (flowId: string, summary?: string) => {
   if (!userId) throw Error("User details missing from request");
 
   const flattenedFlow = await dataMerged(flowId);
-  const isStatutoryApplication = checkStatutoryApplicationTypes(flattenedFlow);
-  const typeVals = getApplicationTypeVals(flattenedFlow);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
-  const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
+  
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
-
   if (!delta) return null;
+
+  // Only need to do these checks if there are changes to publish
+  const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
+  let isStatutoryApplicationType = false;
+  if (hasSendComponent) {
+    isStatutoryApplicationType = hasStatutoryApplicationPath(flattenedFlow);
+  }
 
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(
@@ -73,7 +74,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       publisher_id: parseInt(userId),
       summary: summary ?? null,
       has_send_component: hasSendComponent,
-      is_statutory_application_type: isStatutoryApplication,
+      is_statutory_application_type: isStatutoryApplicationType,
     },
   );
 
@@ -84,5 +85,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
     ...publishedFlow[key],
   }));
 
+  // TODO do we want to return `hasSendComponent`, `isStatutory` in addition to `alteredNodes` here ?
+  //   Then add to entire `res.json()` in controller.js and check/test res.body in publish.test.ts (via existing tests/mocks rather than new ones) ? 
   return alteredNodes;
 };
