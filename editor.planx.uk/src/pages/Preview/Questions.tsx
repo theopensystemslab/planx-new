@@ -9,7 +9,7 @@ import { getLocalFlow, setLocalFlow } from "lib/local";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import { formatLastEditDate } from "pages/FlowEditor/utils";
+import { formatLastPublishedDate } from "pages/FlowEditor/utils";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath, Session } from "types";
@@ -179,10 +179,11 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   return (
     <Box width="100%">
-      <Typography>
-        Last edited: {formatLastEditDate(lastPublishedDate)}
-      </Typography>
-
+      {isStandalone && (
+        <Box display="flex" justifyContent={"flex-end"} padding={1}>
+          <Typography>{formatLastPublishedDate(lastPublishedDate)}</Typography>
+        </Box>
+      )}
       <BackBar hidden={!showBackBar}>
         <Container maxWidth={false}>
           <BackButton
