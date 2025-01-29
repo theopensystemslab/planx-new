@@ -2,6 +2,7 @@
   "name": "editor.planx.uk",
   "private": true,
   "license": "MPL-2.0",
+  "type": "module",
   "dependencies": {
     "@airbrake/browser": "^2.1.8",
     "@apollo/client": "^3.8.8",
