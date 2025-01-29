@@ -1,31 +1,20 @@
 import { gql, useQuery } from "@apollo/client";
-import Edit from "@mui/icons-material/Edit";
-import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
-import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
-import FlowCard, { Card, CardContent } from "./FlowCard";
-import { useStore } from "./FlowEditor/lib/store";
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
-import { client } from "../../lib/graphql";
-import SimpleMenu from "../../ui/editor/SimpleMenu";
+import FlowCard, { Card, CardContent } from "../FlowCard";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "../FlowEditor/utils";
 import {
   StartFromTemplateButton,
   TemplateOverview,
@@ -46,202 +35,7 @@ const DashboardList = styled("ul")(({ theme }) => ({
   },
 }));
 
-const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
-}));
-
-const LinkSubText = styled(Box)(({ theme }) => ({
-  color: theme.palette.grey[400],
-  fontWeight: "normal",
-  paddingTop: "0.5em",
-}));
-
-const Confirm = ({
-  title,
-  content,
-  submitLabel,
-  open,
-  onClose,
-  onConfirm,
-}: {
-  title: string;
-  content: string;
-  submitLabel: string;
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}) => (
-  <Dialog
-    open={open}
-    onClose={() => {
-      onClose();
-    }}
-  >
-    <DialogTitle>{title}</DialogTitle>
-    <DialogContent>
-      <DialogContentText>{content}</DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} color="primary">
-        Cancel
-      </Button>
-      <Button onClick={onConfirm} color="primary">
-        {submitLabel}
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
-
-interface FlowItemProps {
-  flow: FlowSummary;
-  flows: FlowSummary[];
-  teamId: number;
-  teamSlug: string;
-  refreshFlows: () => void;
-}
-
-const FlowItem: React.FC<FlowItemProps> = ({
-  flow,
-  flows,
-  teamId,
-  teamSlug,
-  refreshFlows,
-}) => {
-  const [deleting, setDeleting] = useState(false);
-  const handleDelete = () => {
-    useStore
-      .getState()
-      .deleteFlow(teamId, flow.slug)
-      .then(() => {
-        setDeleting(false);
-        refreshFlows();
-      });
-  };
-  const handleCopy = () => {
-    useStore
-      .getState()
-      .copyFlow(flow.id)
-      .then(() => {
-        refreshFlows();
-      });
-  };
-  const handleMove = (newTeam: string, flowName: string) => {
-    useStore
-      .getState()
-      .moveFlow(flow.id, newTeam, flowName)
-      .then(() => {
-        refreshFlows();
-      });
-  };
-
-  return (
-    <>
-      {deleting && (
-        <Confirm
-          title="Confirm Delete"
-          open={deleting}
-          content="Deleting a service cannot be reversed."
-          onClose={() => {
-            setDeleting(false);
-          }}
-          onConfirm={handleDelete}
-          submitLabel="Delete Service"
-        />
-      )}
-      <DashboardListItem>
-        <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-          <Typography variant="h4" component="h2">
-            {flow.name}
-          </Typography>
-          <LinkSubText>
-            {formatLastEditMessage(
-              flow.operations[0].createdAt,
-              flow.operations[0]?.actor,
-            )}
-          </LinkSubText>
-        </DashboardLink>
-        {useStore.getState().canUserEditTeam(teamSlug) && (
-          <StyledSimpleMenu
-            items={[
-              {
-                onClick: async () => {
-                  const newName = prompt("New name", flow.name);
-                  if (newName && newName !== flow.name) {
-                    const uniqueFlow = getUniqueFlow(newName, flows);
-                    if (uniqueFlow) {
-                      await client.mutate({
-                        mutation: gql`
-                          mutation UpdateFlowSlug(
-                            $teamId: Int
-                            $slug: String
-                            $newSlug: String
-                            $newName: String
-                          ) {
-                            update_flows(
-                              where: {
-                                team: { id: { _eq: $teamId } }
-                                slug: { _eq: $slug }
-                              }
-                              _set: { slug: $newSlug, name: $newName }
-                            ) {
-                              affected_rows
-                            }
-                          }
-                        `,
-                        variables: {
-                          teamId: teamId,
-                          slug: flow.slug,
-                          newSlug: uniqueFlow.slug,
-                          newName: uniqueFlow.name,
-                        },
-                      });
-
-                      refreshFlows();
-                    }
-                  }
-                },
-                label: "Rename",
-              },
-              {
-                label: "Copy",
-                onClick: () => {
-                  handleCopy();
-                },
-              },
-              {
-                label: "Move",
-                onClick: () => {
-                  const newTeam = prompt(
-                    "Enter the destination team's slug. A slug is the URL name of a team, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
-                  );
-                  if (newTeam) {
-                    if (slugify(newTeam) === teamSlug) {
-                      alert(
-                        `This flow already belongs to ${teamSlug}, skipping move`,
-                      );
-                    } else {
-                      handleMove(slugify(newTeam), flow.name);
-                    }
-                  }
-                },
-              },
-              {
-                label: "Delete",
-                onClick: () => {
-                  setDeleting(true);
-                },
-                error: true,
-              },
-            ]}
-          />
-        )}
-      </DashboardListItem>
-    </>
-  );
-};
-
-const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
+const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
   <DashboardList sx={{ paddingTop: 0 }}>
     <Card>
       <CardContent>
@@ -279,6 +73,9 @@ const Team: React.FC = () => {
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -306,6 +103,7 @@ const Team: React.FC = () => {
         ),
       );
       setFlows(sortedFlows);
+      setFilteredFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -323,7 +121,7 @@ const Team: React.FC = () => {
     }
   `);
 
-  const teamHasFlows = flows && Boolean(flows.length);
+  const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
   const showAddTemplateButton =
     showAddFlowButton &&
@@ -357,25 +155,13 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          <Box maxWidth={360}>
-            <InputRow>
-              <InputRowLabel>
-                <strong>Search</strong>
-              </InputRowLabel>
-              <InputRowItem>
-                <Box sx={{ position: "relative" }}>
-                  <Input
-                    sx={{
-                      borderColor: (theme) => theme.palette.border.input,
-                      pr: 5,
-                    }}
-                    name="search"
-                    id="search"
-                  />
-                </Box>
-              </InputRowItem>
-            </InputRow>
-          </Box>
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
+            <SearchBox<FlowSummary>
+              records={flows}
+              setRecords={setFilteredFlows}
+              searchKey={["name", "slug"]}
+            />
+          )}
         </Box>
         <Box
           sx={{
@@ -389,7 +175,7 @@ const Team: React.FC = () => {
             <StartFromTemplateButton templates={templates.flows} />
           )}
         </Box>
-      </Box>
+     
       {hasFeatureFlag("SORT_FLOWS") && flows && (
         <SortControl<FlowSummary>
           records={flows}
@@ -397,10 +183,10 @@ const Team: React.FC = () => {
           sortOptions={sortOptions}
         />
       )}
-      {teamHasFlows && (
+      {teamHasFlows  && (
         <DashboardList>
-          {flows.map((flow) => (
-            <FlowItem
+          {flows?.map((flow) => (
+            <FlowCard
               flow={flow}
               flows={flows}
               key={flow.slug}
@@ -415,6 +201,7 @@ const Team: React.FC = () => {
       )}
       {flows && !flows.length && <GetStarted flows={flows} />}
     </Container>
+    </Box>
   );
 };
 
@@ -422,7 +209,7 @@ export default Team;
 
 const getUniqueFlow = (
   name: string,
-  flows: FlowSummary[],
+  flows: FlowSummary[] | null,
 ): { slug: string; name: string } | undefined => {
   const newFlowSlug = slugify(name);
   const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
