@@ -1,15 +1,9 @@
 import { gql } from "@apollo/client";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
 import { slugify } from "utils";
@@ -19,6 +13,7 @@ import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
+import { ArchiveDialog } from "./Team/components/ArchiveDialog";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -81,42 +76,6 @@ const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   },
 }));
 
-const Confirm = ({
-  title,
-  content,
-  submitLabel,
-  open,
-  onClose,
-  onConfirm,
-}: {
-  title: string;
-  content: string;
-  submitLabel: string;
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}) => (
-  <Dialog
-    open={open}
-    onClose={() => {
-      onClose();
-    }}
-  >
-    <DialogTitle>{title}</DialogTitle>
-    <DialogContent>
-      <DialogContentText>{content}</DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} color="primary">
-        Cancel
-      </Button>
-      <Button onClick={onConfirm} color="primary">
-        {submitLabel}
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
-
 interface FlowCardProps {
   flow: FlowSummary;
   flows: FlowSummary[];
@@ -132,46 +91,42 @@ const FlowCard: React.FC<FlowCardProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const [deleting, setDeleting] = React.useState(false);
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState<boolean>(false);
+  const [archiveFlow, copyFlow, moveFlow, canUserEditTeam] = useStore((state) => [
+    state.archiveFlow,
+    state.copyFlow,
+    state.moveFlow,
+    state.canUserEditTeam
+  ]);
 
-  const handleDelete = () => {
-    useStore
-      .getState()
-      .deleteFlow(teamId, flow.slug)
-      .then(() => {
-        setDeleting(false);
-        refreshFlows();
-      });
+  const handleArchive = () => {
+    archiveFlow(flow.id).then(() => {
+      refreshFlows();
+    });
   };
   const handleCopy = () => {
-    useStore
-      .getState()
-      .copyFlow(flow.id)
-      .then(() => {
-        refreshFlows();
-      });
+    copyFlow(flow.id).then(() => {
+      refreshFlows();
+    });
   };
-  const handleMove = (newTeam: string) => {
-    useStore
-      .getState()
-      .moveFlow(flow.id, newTeam)
-      .then(() => {
-        refreshFlows();
-      });
+  const handleMove = (newTeam: string, flowName: string) => {
+    moveFlow(flow.id, newTeam, flowName).then(() => {
+      refreshFlows();
+    });
   };
 
   return (
     <>
-      {deleting && (
-        <Confirm
-          title="Confirm Delete"
-          open={deleting}
-          content="Deleting a service cannot be reversed."
+       {isArchiveDialogOpen && (
+        <ArchiveDialog
+          title="Archive service"
+          open={isArchiveDialogOpen}
+          content={`Archiving this service will remove it from PlanX. Services can be restored by an admin`}
           onClose={() => {
-            setDeleting(false);
+            setIsArchiveDialogOpen(false);
           }}
-          onConfirm={handleDelete}
-          submitLabel="Delete Service"
+          onConfirm={handleArchive}
+          submitLabel="Archive Service"
         />
       )}
       <Card>
@@ -193,7 +148,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
             prefetch={false}
           />
         </CardContent>
-        {useStore.getState().canUserEditTeam(teamSlug) && (
+        {canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[
               {
@@ -258,17 +213,14 @@ const FlowCard: React.FC<FlowCardProps> = ({
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(slugify(newTeam));
+                      handleMove(slugify(newTeam), flow.name);
                     }
                   }
                 },
               },
               {
-                label: "Delete",
-                onClick: () => {
-                  setDeleting(true);
-                },
-                error: true,
+                label: "Archive",
+                onClick: () => setIsArchiveDialogOpen(true),
               },
             ]}
           >
