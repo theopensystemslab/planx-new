@@ -9,10 +9,6 @@ import {
 import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
 import { hasComponentType } from "../validate/helpers.js";
-import {
-  checkStatutoryApplicationTypes,
-  getApplicationTypeVals,
-} from "./service/applicationTypes.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -29,8 +25,6 @@ export const publishFlow = async (flowId: string, summary?: string) => {
   if (!userId) throw Error("User details missing from request");
 
   const flattenedFlow = await dataMerged(flowId);
-  const isStatutoryApplication = checkStatutoryApplicationTypes(flattenedFlow);
-  const typeVals = getApplicationTypeVals(flattenedFlow);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
@@ -73,7 +67,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       publisher_id: parseInt(userId),
       summary: summary ?? null,
       has_send_component: hasSendComponent,
-      is_statutory_application_type: isStatutoryApplication,
+      is_statutory_application_type: false,
     },
   );
 
