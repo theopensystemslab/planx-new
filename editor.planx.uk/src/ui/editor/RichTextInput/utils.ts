@@ -90,8 +90,6 @@ export const useVariablesStore = create<VariablesState>()((set) => ({
     set((state) => ({ variables: [...state.variables, newVariable] })),
 }));
 
-export const passportClassName = "passport";
-
 export const emptyContent = "<p></p>";
 
 // Specify whether a selection is unsuitable for ensuring accessible links

@@ -24,10 +24,11 @@ import React, {
 
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
+import { H1Button, H2Button } from "./components/HeadingButtons";
 import { PopupError } from "./components/PopUpError";
 import { suggestion } from "./components/suggestion";
 import { RichContentContainer, StyledBubbleMenu } from "./styles";
-import { commonExtensions } from "./tiptapExtensions";
+import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import { Props } from "./types";
 import {
   fromHtml,
@@ -35,7 +36,6 @@ import {
   getLinkNewTabError,
   initialUrlValue,
   linkSelectionError,
-  passportClassName,
   toHtml,
   trimUrlValue,
 } from "./utils";
@@ -208,32 +208,8 @@ const RichTextInput: FC<Props> = (props) => {
             />
           ) : (
             <>
-              <IconButton
-                size="small"
-                color={
-                  editor.isActive("heading", { level: 1 })
-                    ? "primary"
-                    : undefined
-                }
-                onClick={() => {
-                  editor.chain().focus().toggleHeading({ level: 1 }).run();
-                }}
-              >
-                <strong>H1</strong>
-              </IconButton>
-              <IconButton
-                size="small"
-                color={
-                  editor.isActive("heading", { level: 2 })
-                    ? "primary"
-                    : undefined
-                }
-                onClick={() => {
-                  editor.chain().focus().toggleHeading({ level: 2 }).run();
-                }}
-              >
-                <strong>H2</strong>
-              </IconButton>
+              <H1Button editor={editor} />
+              <H2Button editor={editor} />
               <IconButton
                 size="small"
                 color={editor.isActive("bold") ? "primary" : undefined}

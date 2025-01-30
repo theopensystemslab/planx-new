@@ -12,7 +12,8 @@ import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 
 import CustomImage from "../RichTextImage";
-import { passportClassName } from "./utils";
+
+export const passportClassName = "passport";
 
 // Shared tiptap editor extensions
 export const commonExtensions = [

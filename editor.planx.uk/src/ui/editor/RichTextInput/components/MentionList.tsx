@@ -5,7 +5,8 @@ import React, {
   useState,
 } from "react";
 
-import { passportClassName, useVariablesStore } from "../utils";
+import { passportClassName } from "../tiptapExtensions";
+import { useVariablesStore } from "../utils";
 import {
   MentionItems,
   MentionItemsButton,
