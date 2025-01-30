@@ -30,7 +30,7 @@ export const hasStatutoryApplicationType = (flattenedFlow: FlowGraph) => {
       if (nodeToCheck.edges) {
         // Loop through each edge and check the value
         nodeToCheck.edges.some((edge) => {
-          const edgeData = flattenedFlow[edge].data;
+          const edgeData = flattenedFlow[edge]?.data;
           if (typeof edgeData?.val === "string") {
             isStatutoryApplication = statutoryApplicationTypes.includes(
               edgeData.val,

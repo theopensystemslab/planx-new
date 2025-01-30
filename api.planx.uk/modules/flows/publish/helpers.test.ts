@@ -4,6 +4,36 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { hasStatutoryApplicationType } from "./helpers.js";
 
+describe("hasStatutoryApplicationPath", () => {
+  test("returns false for a flow that doesn't have a Send", () => {
+    expect(hasStatutoryApplicationType(mockStatutoryFlowWithoutSend)).toEqual(
+      false,
+    );
+  });
+
+  test("returns false for a flow with Send but not any application.type", () => {
+    expect(
+      hasStatutoryApplicationType(mockStatutoryFlowWithoutAppType),
+    ).toEqual(false);
+  });
+
+  test("returns false for a flow with Send but only discretionary application.type values", () => {
+    expect(
+      hasStatutoryApplicationType(mockStatutoryFlowWithoutStatutoryApp),
+    ).toEqual(false);
+  });
+
+  test("returns true for a flow with Send and at least one statutory application.type value", () => {
+    expect(hasStatutoryApplicationType(mockStatutoryFlow)).toEqual(true);
+  });
+
+  test("returns true for a flow with Send and at least one statutory application.type in a SetValue Component", () => {
+    expect(
+      hasStatutoryApplicationType(mockSetValueStatutoryApplicationType),
+    ).toEqual(true);
+  });
+});
+
 const mockStatutoryFlow: FlowGraph = {
   _root: {
     edges: ["QuestionOne", "Send"],
@@ -74,22 +104,26 @@ const mockStatutoryFlow: FlowGraph = {
 const mockStatutoryFlowWithoutSend = { ...mockStatutoryFlow };
 delete mockStatutoryFlowWithoutSend["Send"];
 
-describe("hasStatutoryApplicationPath", () => {
-  test("returns false for a flow that doesn't have a Send", () => {
-    expect(hasStatutoryApplicationType(mockStatutoryFlowWithoutSend)).toEqual(
-      false,
-    );
-  });
+const mockStatutoryFlowWithoutAppType = { ...mockStatutoryFlow };
+delete mockStatutoryFlowWithoutAppType["QuestionTwo"];
 
-  test.todo("returns false for a flow with Send but not any application.type");
+const mockStatutoryFlowWithoutStatutoryApp = { ...mockStatutoryFlow };
+delete mockStatutoryFlowWithoutStatutoryApp[
+  "AnswerWithStatutoryApplicationValue"
+];
 
-  test.todo(
-    "returns false for a flow with Send but only discretionary application.type values",
-  );
+const mockSetValueStatutoryApplicationType = {
+  ...mockStatutoryFlow,
+  SetValueStatutoryAppType: {
+    data: {
+      fn: "application.type",
+      val: "ldc",
+      operation: "replace",
+    },
+    type: TYPES.SetValue,
+  },
+} as FlowGraph;
 
-  test("returns true for a flow with Send and at least one statutory application.type value", () => {
-    expect(hasStatutoryApplicationType(mockStatutoryFlow)).toEqual(true);
-  });
-});
-
-// TODO also add mocks which use SetValue, etc
+delete mockSetValueStatutoryApplicationType[
+  "AnswerWithStatutoryApplicationValue"
+];
