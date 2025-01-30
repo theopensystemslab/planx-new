@@ -14,9 +14,9 @@ const Column = styled(Box)(() => ({
 interface FiltersColumnProps<T> {
   title: string;
   optionKey: FilterKey<T>;
-  optionValues: FilterValues<T>[];
+  optionValues: FilterValues[];
   filters?: Filters<T> | null;
-  handleChange: (key: FilterKey<T>, value: FilterValues<T>) => void;
+  handleChange: (key: FilterKey<T>, value: FilterValues) => void;
 }
 
 export const FiltersColumn = <T extends object>(

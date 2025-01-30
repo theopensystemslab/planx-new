@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,13 +14,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 import InputLabel from "ui/public/InputLabel";
-import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import FlowCard, { Card, CardContent } from "./FlowCard";
@@ -313,6 +310,32 @@ const Team: React.FC = () => {
           )}
           {flows && !flows.length && <GetStarted flows={flows} />}
         
+      </Container>
+    </Box>
+        {hasFeatureFlag("SORT_FLOWS") && flows && (
+          <SortControl<FlowSummary>
+            records={flows}
+            setRecords={setFlows}
+            sortOptions={sortOptions}
+          />
+        )}
+        {teamHasFlows && (
+          <DashboardList>
+            {flows?.map((flow) => (
+              <FlowCard
+                flow={flow}
+                flows={flows}
+                key={flow.slug}
+                teamId={teamId}
+                teamSlug={slug}
+                refreshFlows={() => {
+                  fetchFlows();
+                }}
+              />
+            ))}
+          </DashboardList>
+        )}
+        {flows && !flows.length && <GetStarted flows={flows} />}
       </Container>
     </Box>
   );

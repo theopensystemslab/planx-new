@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { capitalize, findKey, get, isEmpty, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
-import { Paths, ValueOf } from "type-fest";
+import { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
@@ -25,7 +25,7 @@ import {
 } from "./searchParamUtils";
 
 export type FilterKey<T> = Paths<T>;
-export type FilterValues<T> = ValueOf<T>;
+export type FilterValues = string;
 export type Filters<T> = {
   [K in keyof T]: T[K];
 };
@@ -36,9 +36,9 @@ export interface FilterOptions<T> {
   /** optionKey is what is passed in to filter the records */
   optionKey: FilterKey<T>;
   /** optionValue is displayed under displayName for selecting filters and can be used for filtering */
-  optionValue: FilterValues<T>[];
+  optionValue: FilterValues[];
   /** the function passed into the filter to determine if it should be included or excluded */
-  validationFn: (option: T, value?: FilterValues<T>) => boolean;
+  validationFn: (option: T, value?: FilterValues) => boolean;
 }
 
 interface FiltersProps<T> {
@@ -81,7 +81,7 @@ export const Filters = <T extends object>({
       const searchParams = new URLSearchParams(route.url.search);
       const searchParamToMap = searchParams.entries().toArray() as [
         FilterKey<T>,
-        FilterValues<T>,
+        FilterValues,
       ][];
 
       const searchParamFilters = searchParamToMap
@@ -151,10 +151,7 @@ export const Filters = <T extends object>({
     filters ? addToSearchParams(filters) : clearSearchParams();
   }, [filters, optionsToFilter, navigation, route.url.search]);
 
-  const handleChange = (
-    filterKey: FilterKey<T>,
-    filterValue: FilterValues<T>,
-  ) => {
+  const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
     const newObject = {
       ...filters,
       [filterKey]: filterValue,
