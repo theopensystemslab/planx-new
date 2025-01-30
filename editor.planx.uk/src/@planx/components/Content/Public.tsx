@@ -9,7 +9,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React from "react";
 import { getContrastTextColor } from "styleUtils";
-import { emptyContent } from "ui/editor/RichTextInput/RichTextInput";
+import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { HelpButton, Image } from "../shared/Preview/CardHeader/styled";
