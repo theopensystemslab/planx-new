@@ -131,12 +131,13 @@ const RichTextInput: FC<Props> = (props) => {
       return;
     }
     const editorValue = internalValue.current || toHtml(editor.getJSON());
-    if (props.value !== editorValue) {
-      internalValue.current = stringValue;
-      const doc = fromHtml(stringValue);
-      setContentHierarchyError(getContentHierarchyError(doc));
-      editor.commands.setContent(doc);
+    if (props.value === editorValue) {
+      return;
     }
+    internalValue.current = stringValue;
+    const doc = fromHtml(stringValue);
+    setContentHierarchyError(getContentHierarchyError(doc));
+    editor.commands.setContent(doc);
   }, [stringValue]);
 
   // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
@@ -161,12 +162,13 @@ const RichTextInput: FC<Props> = (props) => {
 
   // Focus/select the URL input field value when it appears in the UI
   useEffect(() => {
-    if (isAddingLink) {
-      urlInputRef.current?.focus();
-      const href = editor?.getAttributes("link")?.href || initialUrlValue;
-      if (href !== initialUrlValue) {
-        urlInputRef.current?.select();
-      }
+    if (!isAddingLink) {
+      return;
+    }
+    urlInputRef.current?.focus();
+    const href = editor?.getAttributes("link")?.href || initialUrlValue;
+    if (href !== initialUrlValue) {
+      urlInputRef.current?.select();
     }
   }, [isAddingLink]);
 
