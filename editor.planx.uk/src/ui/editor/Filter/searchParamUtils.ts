@@ -21,7 +21,7 @@ export const updateUrl = (
 
 export const addFilterSearchParam = <T extends object>(
   searchParams: URLSearchParams,
-  mappedFilters: MappedFilters<T>[],
+  mappedFilters: MappedFilters[],
 ) => {
   mappedFilters.forEach((filter) =>
     searchParams.set(filter.displayName, `${filter.filterValue}`),
@@ -31,7 +31,7 @@ export const addFilterSearchParam = <T extends object>(
 export const removeUnusedFilterSearchParam = <T extends object>(
   filterOptions: FilterOptions<T>[],
   searchParams: URLSearchParams,
-  mappedFilters: MappedFilters<T>[] | [],
+  mappedFilters: MappedFilters[] | [],
 ) => {
   const displayNames = filterOptions.map((option) => option.displayName);
   displayNames.map((name) => {
