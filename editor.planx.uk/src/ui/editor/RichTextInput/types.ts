@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-restricted-imports
-import type { InputBaseProps } from "@mui/material";
+import type { InputBaseProps } from "@mui/material/InputBase";
 import { ChangeEvent } from "react";
 
 export interface MentionListProps {

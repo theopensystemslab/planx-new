@@ -32,15 +32,12 @@ import { suggestion } from "./components/suggestion";
 import { RichContentContainer, StyledBubbleMenu } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import { Props } from "./types";
+import { fromHtml, initialUrlValue, toHtml, trimUrlValue } from "./utils";
 import {
-  fromHtml,
   getContentHierarchyError,
   getLinkNewTabError,
-  initialUrlValue,
   linkSelectionError,
-  toHtml,
-  trimUrlValue,
-} from "./utils";
+} from "./validationHelpers";
 
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
