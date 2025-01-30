@@ -82,10 +82,8 @@ describe("publish", () => {
         },
       },
     });
-    await supertest(app)
-      .post("/flows/1/publish")
-      .set(authHeader({ role: "platformAdmin" }))
-      .expect(200);
+
+    await supertest(app).post("/flows/1/publish").set(auth).expect(200);
   });
 
   it("does not update if there are no new changes", async () => {

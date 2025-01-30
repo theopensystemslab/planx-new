@@ -5,6 +5,14 @@ import {
 import { hasStatutoryApplicationType } from "./helpers.js";
 
 describe("hasStatutoryApplicationPath", () => {
+  beforeAll(() => {
+    vi.mock("@opensystemslab/planx-core", () => {
+      return {
+        getValidSchemaValues: vi.fn().mockImplementation(() => ["ldc"]),
+      };
+    });
+  });
+
   test("returns false for a flow that doesn't have a Send", () => {
     expect(hasStatutoryApplicationType(mockStatutoryFlowWithoutSend)).toEqual(
       false,
