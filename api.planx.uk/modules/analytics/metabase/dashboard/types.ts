@@ -38,7 +38,6 @@ export type MetabaseCopyDashboardParams = {
   is_deep_copy?: boolean;
 };
 
-// Convert to Metabase API structure
 export function toMetabaseParams(
   params: CopyDashboardParams,
 ): MetabaseCopyDashboardParams {
@@ -77,10 +76,11 @@ export type NewDashboardHandler = ValidatedRequestHandler<
   ApiResponse<string>
 >;
 
-export interface GetDashboardResponse {
+export interface MetabaseDashboardResponse {
   name: string;
   id: number;
   collection_id: number;
+  parameters: FilterParam[];
 }
 
 export interface UpdateFilterResponse {
@@ -91,4 +91,18 @@ export interface UpdateFilterResponse {
 export interface FilterParam {
   name: string;
   type: string;
+  // The Metabase API expects filter default values as arrays, even if there's only one (eg for multi-select filters)
+  value: string[];
+}
+
+export type GetDashboardResponse = Pick<
+  MetabaseDashboardResponse,
+  "name" | "id" | "collection_id"
+>;
+
+export type GetFilterResponse = Pick<MetabaseDashboardResponse, "parameters">;
+
+export interface UpdatedFilterResponse {
+  parameter: FilterParam;
+  updatedValue: string | undefined;
 }
