@@ -13,6 +13,7 @@ export const hasStatutoryApplicationType = (flattenedFlow: FlowGraph) => {
   if (!statutoryApplicationTypes) return false;
 
   let isStatutoryApplication = false;
+
   Object.entries(flattenedFlow).some(([nodeId, _nodeData]) => {
     const nodeToCheck = flattenedFlow[nodeId];
 
@@ -23,6 +24,7 @@ export const hasStatutoryApplicationType = (flattenedFlow: FlowGraph) => {
         isStatutoryApplication = statutoryApplicationTypes.includes(
           nodeToCheck.data?.val,
         );
+
         return isStatutoryApplication;
       }
 
@@ -35,11 +37,13 @@ export const hasStatutoryApplicationType = (flattenedFlow: FlowGraph) => {
             isStatutoryApplication = statutoryApplicationTypes.includes(
               edgeData.val,
             );
+
             return isStatutoryApplication;
           }
         });
       }
     }
   });
+
   return isStatutoryApplication;
 };
