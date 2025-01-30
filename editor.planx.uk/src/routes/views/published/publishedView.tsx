@@ -16,7 +16,7 @@ export interface PublishedViewSettings {
 }
 
 interface PublishedFlow extends Flow {
-  publishedFlows: Record<string, Store.Flow>[];
+  publishedFlows: Array<Record<"data", Store.Flow> & { created_at?: string }>;
 }
 
 /**
