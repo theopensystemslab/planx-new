@@ -1,7 +1,6 @@
 import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
-import Error from "@mui/icons-material/Error";
 import FormatBold from "@mui/icons-material/FormatBold";
 import FormatItalic from "@mui/icons-material/FormatItalic";
 import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
@@ -10,9 +9,7 @@ import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { type InputBaseProps } from "@mui/material/InputBase";
-import Popover from "@mui/material/Popover";
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import { type Editor, type JSONContent } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -48,6 +45,7 @@ import { create } from "zustand";
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import CustomImage from "../RichTextImage";
+import { PopupError } from "./components/PopUpError";
 import {
   MentionItems,
   MentionItemsButton,
@@ -309,47 +307,6 @@ const getLinkNewTabError = (
   });
 
   return error;
-};
-
-const PopupError: FC<{ id: string; error: string }> = (props) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
-  return (
-    <Box>
-      <IconButton size="small" onClick={handleOpen}>
-        <Error />
-      </IconButton>
-      <Popover
-        id="popover"
-        sx={{
-          zIndex: 100000,
-          maxWidth: "xs",
-          padding: 10,
-        }}
-        open={open}
-        onClose={handleClose}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-      >
-        <Typography variant="body2" sx={{ padding: 1 }}>
-          {props.error}
-        </Typography>
-      </Popover>
-    </Box>
-  );
 };
 
 const RichTextInput: FC<Props> = (props) => {
