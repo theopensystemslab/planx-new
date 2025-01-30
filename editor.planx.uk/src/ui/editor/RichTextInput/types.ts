@@ -18,3 +18,7 @@ export interface Props extends InputBaseProps {
   bordered?: boolean;
   errorMessage?: string;
 }
+export interface VariablesState {
+  variables: string[];
+  addVariable: (newVariable: string) => void;
+}
