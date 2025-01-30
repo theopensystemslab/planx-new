@@ -55,21 +55,19 @@ export default function Footer(props: Props) {
   return (
     <Root>
       <Container maxWidth={false}>
-        <Box display={"flex"} justifyContent={"space-between"}>
-          {items && items.length > 0 && (
-            <ButtonGroup py={0.5}>
-              {items
-                ?.filter((item) => item.title)
-                .map((item) => <FooterItem {...item} key={item.title} />)}
-            </ButtonGroup>
-          )}
-          <Box py={0.5}>
-            <Typography variant="body2">
-              {formatServiceLastUpdated(lastPublishedDate)}
-            </Typography>
-          </Box>
+        <Box pb={2}>
+          <Typography variant="body2">
+            {formatServiceLastUpdated(lastPublishedDate)}
+          </Typography>
         </Box>
-        <Box py={2}>{children}</Box>
+        {items && items.length > 0 && (
+          <ButtonGroup pb={2.5}>
+            {items
+              ?.filter((item) => item.title)
+              .map((item) => <FooterItem {...item} key={item.title} />)}
+          </ButtonGroup>
+        )}
+        <Box>{children}</Box>
       </Container>
     </Root>
   );

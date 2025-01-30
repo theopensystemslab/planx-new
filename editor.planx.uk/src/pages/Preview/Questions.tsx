@@ -115,16 +115,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     isUsingLocalStorage
       ? setLocalFlow(id, session)
       : NEW.setLocalFlow(sessionId, session);
-  }, [
-    gotFlow,
-    breadcrumbs,
-    passport,
-    sessionId,
-    id,
-    govUkPayment,
-    isStandalone,
-    isUsingLocalStorage,
-  ]);
+  }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
