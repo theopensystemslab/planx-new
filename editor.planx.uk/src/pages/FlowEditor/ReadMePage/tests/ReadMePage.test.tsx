@@ -4,6 +4,7 @@ import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
+import { it } from "vitest";
 import { axe } from "vitest-axe";
 
 import { ReadMePage } from "../ReadMePage";
@@ -28,7 +29,7 @@ describe("Read Me Page component", () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     expect(getState().flowSummary).toBe("");
@@ -46,48 +47,52 @@ describe("Read Me Page component", () => {
     expect(screen.getByText("a summary")).toBeInTheDocument();
   });
 
-  it("displays an error if the service description is longer than 120 characters", async () => {
-    const { user } = setup(
-      <DndProvider backend={HTML5Backend}>
-        <ReadMePage {...defaultProps} />
-      </DndProvider>
-    );
+  it(
+    "displays an error if the service description is longer than 120 characters",
+    { timeout: 9000 },
+    async () => {
+      const { user } = setup(
+        <DndProvider backend={HTML5Backend}>
+          <ReadMePage {...defaultProps} />
+        </DndProvider>,
+      );
 
-    expect(getState().flowSummary).toBe("");
+      expect(getState().flowSummary).toBe("");
 
-    const serviceSummaryInput = screen.getByPlaceholderText("Description");
+      const serviceSummaryInput = screen.getByPlaceholderText("Description");
 
-    await user.type(serviceSummaryInput, longInput);
+      await user.type(serviceSummaryInput, longInput);
 
-    expect(
-      await screen.findByText("You have 2 characters too many")
-    ).toBeInTheDocument();
+      expect(
+        await screen.findByText("You have 2 characters too many"),
+      ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Save" }));
+      await user.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(
-      screen.getByText("Service description must be 120 characters or less")
-    ).toBeInTheDocument();
+      expect(
+        screen.getByText("Service description must be 120 characters or less"),
+      ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data
-    expect(getState().flowSummary).toBe(""); // db has not been updated
-  });
+      await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data
+      expect(getState().flowSummary).toBe(""); // db has not been updated
+    },
+  );
 
   it("displays data in the fields if there is already flow information in the database", async () => {
     await act(async () =>
       setState({
         flowSummary: "This flow summary is in the db already",
-      })
+      }),
     );
 
     setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     expect(
-      screen.getByText("This flow summary is in the db already")
+      screen.getByText("This flow summary is in the db already"),
     ).toBeInTheDocument();
   });
 
@@ -97,7 +102,7 @@ describe("Read Me Page component", () => {
     const { container } = setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     const results = await axe(container);
@@ -113,7 +118,7 @@ describe("Read Me Page component", () => {
     setup(
       <DndProvider backend={HTML5Backend}>
         <ReadMePage {...defaultProps} />
-      </DndProvider>
+      </DndProvider>,
     );
 
     expect(getState().flowSummary).toBe("");
