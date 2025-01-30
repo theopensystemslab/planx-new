@@ -1,10 +1,11 @@
-import { gql } from "graphql-request";
-import capitalize from "lodash/capitalize.js";
-import type { Flow, Node } from "./types.js";
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
+import { gql } from "graphql-request";
+import capitalize from "lodash/capitalize.js";
 import { $public, getClient } from "./client/index.js";
 import { userContext } from "./modules/auth/middleware.js";
+import { publishFlow } from "./modules/flows/publish/service.js";
+import type { Flow, Node } from "./types.js";
 
 export interface FlowData {
   slug: string;
@@ -63,7 +64,7 @@ interface InsertFlow {
 }
 
 // Insert a new flow into the `flows` table
-const insertFlow = async (
+const createFlow = async (
   teamId: number,
   slug: string,
   name: string,
@@ -109,6 +110,8 @@ const insertFlow = async (
     );
 
     await createAssociatedOperation(id);
+    await publishFlow(id, "Created flow");
+    
     return { id };
   } catch (error) {
     throw Error(
@@ -357,7 +360,8 @@ export {
   dataMerged,
   getChildren,
   makeUniqueFlow,
-  insertFlow,
+  createFlow,
   isLiveEnv,
   getFormattedEnvironment,
 };
+
