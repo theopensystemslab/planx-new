@@ -3,7 +3,7 @@ import React from "react";
 import { setup } from "testUtils";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 
-import { modifyDeep } from "./RichTextInput";
+import { modifyDeep } from "./utils";
 
 test("modifyDeep helper", () => {
   /**
