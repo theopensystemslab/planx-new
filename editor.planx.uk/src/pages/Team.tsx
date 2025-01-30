@@ -149,13 +149,37 @@ const Team: React.FC = () => {
             />
           )}
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h3" component="h2">
+              Showing X services
+            </Typography>
+          </Box>
           {hasFeatureFlag("SORT_FLOWS") && flows && (
-            <SortControl<FlowSummary>
-              records={flows}
-              setRecords={setFlows}
-              sortOptions={sortOptions}
-            />
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Typography variant="body2">
+                <strong>Sort by</strong>
+              </Typography>
+              <SortControl<FlowSummary>
+                records={flows}
+                setRecords={setFlows}
+                sortOptions={sortOptions}
+              />
+            </Box>
           )}
         </Box>
         <Box>
