@@ -8,7 +8,9 @@ describe("hasStatutoryApplicationPath", () => {
   beforeAll(() => {
     vi.mock("@opensystemslab/planx-core", () => {
       return {
-        getValidSchemaValues: vi.fn().mockImplementation(() => ["ldc"]),
+        getValidSchemaValues: vi
+          .fn()
+          .mockImplementation(() => ["ldc", "pp", "ldc.e"]),
       };
     });
   });
