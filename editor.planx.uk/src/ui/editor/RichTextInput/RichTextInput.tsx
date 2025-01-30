@@ -8,7 +8,6 @@ import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
 import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { type InputBaseProps } from "@mui/material/InputBase";
 import Popover from "@mui/material/Popover";
@@ -30,12 +29,7 @@ import Paragraph from "@tiptap/extension-paragraph";
 import ExtensionPlaceholder from "@tiptap/extension-placeholder";
 import Text from "@tiptap/extension-text";
 import { generateHTML, generateJSON } from "@tiptap/html";
-import {
-  BubbleMenu,
-  EditorContent,
-  ReactRenderer,
-  useEditor,
-} from "@tiptap/react";
+import { EditorContent, ReactRenderer, useEditor } from "@tiptap/react";
 import { map } from "ramda";
 import React, {
   ChangeEvent,
@@ -54,6 +48,12 @@ import { create } from "zustand";
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import CustomImage from "../RichTextImage";
+import {
+  MentionItems,
+  MentionItemsButton,
+  MentionItemsEmpty,
+  StyledBubbleMenu,
+} from "./styles";
 
 interface Props extends InputBaseProps {
   className?: string;
@@ -117,43 +117,6 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       borderRadius: "4px",
     },
   },
-}));
-
-const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
-  background: theme.palette.background.default,
-  boxShadow: "0 2px 6px 0 rgba(0, 0, 0, 0.2)",
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0.25),
-}));
-
-const MentionItems = styled(Box)(({ theme }) => ({
-  background: theme.palette.common.white,
-  fontSize: "0.875em",
-  boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-  borderRadius: "4px",
-  width: "150px",
-  overflow: "hidden",
-  padding: theme.spacing(0.25),
-}));
-
-const MentionItemsButton = styled(Button)(({ theme }) => ({
-  border: 0,
-  background: "none",
-  boxShadow: "none",
-  padding: theme.spacing(0.25),
-  display: "block",
-  width: "100%",
-  textAlign: "left",
-  "&.mention-item-selected": {
-    background: `rgba(0, 0, 0, 0.03)`,
-  },
-}));
-
-const MentionItemsEmpty = styled(Typography)(({ theme }) => ({
-  padding: theme.spacing(0.25),
-  margin: 0,
-  color: theme.palette.text.secondary,
 }));
 
 const passportClassName = "passport";
