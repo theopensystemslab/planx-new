@@ -6,22 +6,22 @@ import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
-import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import Input from "ui/shared/Input/Input";
-import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import InputRowLabel from "ui/shared/InputRowLabel";
 import InputLabel from "ui/public/InputLabel";
-import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import FlowCard, { Card, CardContent } from "./FlowCard";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(3, 0),

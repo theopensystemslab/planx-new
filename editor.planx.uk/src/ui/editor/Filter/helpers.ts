@@ -2,9 +2,9 @@ import { slugify } from "utils";
 
 import Filters, { FilterKey, FilterOptions, FilterValues } from "./Filter";
 
-export interface MappedFilters<T> {
+export interface MappedFilters {
   displayName: string;
-  filterValue: FilterValues<T>;
+  filterValue: FilterValues;
 }
 
 export const mapFilters = <T extends object>(
@@ -12,7 +12,7 @@ export const mapFilters = <T extends object>(
   filterOptions: FilterOptions<T>[],
 ) => {
   const filtersToMap =
-    params && (Object.entries(params) as [FilterKey<T>, FilterValues<T>][]);
+    params && (Object.entries(params) as [FilterKey<T>, FilterValues][]);
 
   if (filtersToMap) {
     const mappedArrayFilters = filtersToMap.map(([key, value]) =>
@@ -25,7 +25,7 @@ export const mapFilters = <T extends object>(
 
 export const addDisplayNamesToFilters = <T extends object>(
   key: FilterKey<T>,
-  value: FilterValues<T>,
+  value: FilterValues,
   filterOptions: FilterOptions<T>[],
 ) => {
   const matchingFilterOption = filterOptions.find(

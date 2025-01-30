@@ -151,10 +151,7 @@ export const Filters = <T extends object>({
     filters ? addToSearchParams(filters) : clearSearchParams();
   }, [filters, optionsToFilter, navigation, route.url.search]);
 
-  const handleChange = (
-    filterKey: FilterKey<T>,
-    filterValue: FilterValues,
-  ) => {
+  const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
     const newObject = {
       ...filters,
       [filterKey]: filterValue,
