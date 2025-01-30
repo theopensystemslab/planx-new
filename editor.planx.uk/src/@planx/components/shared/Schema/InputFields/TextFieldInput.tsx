@@ -17,7 +17,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
   const characterCountLimit = data.type && getTextLimit(data.type);
 
   const displayCharacterCount = Boolean(
-    data.type !== TextInputType.Short && characterCountLimit
+    data.type !== TextInputType.Short && characterCountLimit,
   );
 
   return (

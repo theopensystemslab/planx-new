@@ -33,8 +33,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
   });
 
   const characterCountLimit = props.type && getTextLimit(props.type);
-  const displayCharacterCount =
-    Boolean(props.type !== TextInputType.Short && characterCountLimit);
+  const displayCharacterCount = Boolean(
+    props.type !== TextInputType.Short && characterCountLimit,
+  );
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
