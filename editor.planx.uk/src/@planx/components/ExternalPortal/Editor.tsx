@@ -3,7 +3,6 @@ import Autocomplete, {
   autocompleteClasses,
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
-import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
@@ -13,20 +12,21 @@ import {
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import {
-  CustomCheckbox,
-  SelectMultiple,
   StyledTextField,
 } from "ui/shared/SelectMultiple";
 
 import { ICONS } from "../shared/icons";
+import * as Yup from "yup";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+
 
 interface Flow {
-  id: string | "select a flow";
+  id: string;
   slug: string;
   name: string;
   team: string;
@@ -112,35 +112,34 @@ const ExternalPortalForm: React.FC<{
   flows?: Array<Flow>;
   tags?: NodeTag[];
 }> = ({ handleSubmit, flowId, flows = [], tags = [], notes = "" }) => {
-  const [teamArray, setTeamArray] = useState<string[]>([]);
 
-  const uniqueTeamArray = [...new Set(flows.map((item) => item.team))];
-  const filterFlows = (event: string[]) => {
-    setTeamArray([...event]);
-    const filteredFlows = flows?.filter((flow: Flow) =>
-      event.includes(flow.team),
-    );
-    if (filteredFlows.length > 0) {
-      formik.setFieldValue("flowId", filteredFlows[0].id);
-    } else {
-      formik.setFieldValue("flowId", flows[0].id);
-    }
-  };
+    const portalSchema = Yup.object().shape({
+      flowId: Yup.string().required("Add a flow to submit"),
+    });
 
   const formik = useFormik({
     initialValues: {
-      flowId: flowId || flows[0].id,
+      flowId: flowId || null,
       tags,
       notes,
     },
     onSubmit: (values) => {
-      if (handleSubmit) {
+      formik.validateForm(values)
+      if (handleSubmit && !formik.errors.flowId) {
         handleSubmit({ type: TYPES.ExternalPortal, data: values });
       } else {
         alert(JSON.stringify(values, null, 2));
       }
     },
+    validationSchema:portalSchema,
+    validateOnChange:false,
+    validateOnBlur:false
   });
+
+  const value: Flow | null = useMemo(
+    () => flows?.find((flow) => flow.id === formik.values.flowId) || undefined,
+    [flows, formik.values.flowId],
+  );
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
@@ -155,33 +154,8 @@ const ExternalPortalForm: React.FC<{
             flow that it references.
           </span>
         </ModalSectionContent>
-        <ModalSectionContent
-          key={"team-section"}
-          title="Select a team (optional)"
-        >
-          <SelectMultiple
-            id="team-select"
-            onChange={(_options, event) => {
-              filterFlows(event);
-            }}
-            value={teamArray}
-            options={uniqueTeamArray}
-            renderOption={(props, option, { selected }) => {
-              return (
-                <ListItem {...props} key={`${option}-listitem`}>
-                  <CustomCheckbox
-                    key={`${option}-checkbox`}
-                    aria-hidden="true"
-                    className={selected ? "selected" : ""}
-                  />
-                  {option}
-                </ListItem>
-              );
-            }}
-            placeholder=""
-          />
-        </ModalSectionContent>
         <ModalSectionContent key={"flow-section"} title="Pick a flow">
+        <ErrorWrapper error={formik.errors.flowId}>
           <Autocomplete
             data-testid="flowId"
             id="flowId"
@@ -196,22 +170,15 @@ const ExternalPortalForm: React.FC<{
                 backgroundColor: theme.palette.background.default,
               }),
             }}
-            value={
-              flows.find((flow: Flow) => flow.id === formik.values.flowId) ||
-              flows[0]
-            }
-            onChange={(_event, newValue: Flow) => {
-              formik.setFieldValue("flowId", newValue.id);
+            value={value || null}
+            onChange={(_event, newValue: Flow | null) => {
+              formik.setFieldValue("flowId", newValue?.id || "");
             }}
             options={
-              flows &&
-              flows.filter((flow) => {
-                if (teamArray.length > 0) return teamArray.includes(flow.team);
-                return true;
-              })
+              flows
             }
-            groupBy={(option) => option.team}
-            getOptionLabel={(option) => option.name}
+            groupBy={(option) =>option && option.team}
+            getOptionLabel={(option: Flow | null) => option?.name || ""}
             renderOption={renderOption}
             renderInput={renderInput}
             renderGroup={renderGroup}
@@ -226,7 +193,11 @@ const ExternalPortalForm: React.FC<{
                 top: "unset",
               },
             }}
-          />
+            clearOnEscape
+            handleHomeEndKeys
+            autoHighlight
+            />
+            </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} showMoreInformation={false} />
