@@ -2,6 +2,7 @@ import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import capitalize from "lodash/capitalize.js";
+
 import { $public, getClient } from "./client/index.js";
 import { userContext } from "./modules/auth/middleware.js";
 import { publishFlow } from "./modules/flows/publish/service.js";
@@ -111,7 +112,7 @@ const createFlow = async (
 
     await createAssociatedOperation(id);
     await publishFlow(id, "Created flow");
-    
+
     return { id };
   } catch (error) {
     throw Error(
@@ -364,4 +365,3 @@ export {
   isLiveEnv,
   getFormattedEnvironment,
 };
-
