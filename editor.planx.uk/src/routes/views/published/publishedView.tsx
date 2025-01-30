@@ -8,7 +8,7 @@ import { View } from "react-navi";
 import { getTeamFromDomain, setPath } from "routes/utils";
 import { Flow, GlobalSettings } from "types";
 
-import { fetchSettingsForPublishedView } from "./queries";
+import { fetchSettingsForPublishedView, getLastPublishedAt } from "./queries";
 
 export interface PublishedViewSettings {
   flows: PublishedFlow[];
@@ -16,7 +16,7 @@ export interface PublishedViewSettings {
 }
 
 interface PublishedFlow extends Flow {
-  publishedFlows: Array<Record<"data", Store.Flow> & { created_at?: string }>;
+  publishedFlows: Record<"data", Store.Flow>[];
 }
 
 /**
@@ -30,7 +30,7 @@ export const publishedView = async (req: NaviRequest) => {
   const data = await fetchSettingsForPublishedView(flowSlug, teamSlug);
   const flow = data.flows[0];
 
-  const lastPublishedDate = flow.publishedFlows[0].created_at;
+  const lastPublishedDate = await getLastPublishedAt(flow.id);
   useStore.setState({ lastPublishedDate });
 
   if (!flow)

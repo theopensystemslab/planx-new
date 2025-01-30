@@ -55,7 +55,6 @@ export const fetchSettingsForPublishedView = async (
               order_by: { created_at: desc }
             ) {
               data
-              created_at
             }
           }
           globalSettings: global_settings {
@@ -69,6 +68,29 @@ export const fetchSettingsForPublishedView = async (
       },
     });
     return result.data;
+  } catch (error) {
+    console.error(error);
+    throw new NotFoundError();
+  }
+};
+
+export const getLastPublishedAt = async (flowId: string): Promise<string> => {
+  try {
+    const { data } = await publicClient.query({
+      query: gql`
+        query GetLastPublishedFlow($id: uuid) {
+          flows(limit: 1, where: { id: { _eq: $id } }) {
+            published_flows(order_by: { created_at: desc }, limit: 1) {
+              created_at
+            }
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
+    return data.flows[0].published_flows[0].created_at;
   } catch (error) {
     console.error(error);
     throw new NotFoundError();
