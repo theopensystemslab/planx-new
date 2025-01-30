@@ -21,7 +21,7 @@ const HeadingButton = ({
         .run();
     }}
   >
-    <strong>`H${level}</strong>
+    <strong>H{level}</strong>
   </IconButton>
 );
 

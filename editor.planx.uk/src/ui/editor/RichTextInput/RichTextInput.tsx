@@ -1,10 +1,6 @@
 import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
-import FormatBold from "@mui/icons-material/FormatBold";
-import FormatItalic from "@mui/icons-material/FormatItalic";
-import FormatListBulleted from "@mui/icons-material/FormatListBulleted";
-import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -26,6 +22,12 @@ import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import { H1Button, H2Button } from "./components/HeadingButtons";
 import { PopupError } from "./components/PopUpError";
+import {
+  BoldButton,
+  BulletListButton,
+  ItalicButton,
+  OrderedListButton,
+} from "./components/RichTextInputButtons";
 import { suggestion } from "./components/suggestion";
 import { RichContentContainer, StyledBubbleMenu } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
@@ -210,42 +212,10 @@ const RichTextInput: FC<Props> = (props) => {
             <>
               <H1Button editor={editor} />
               <H2Button editor={editor} />
-              <IconButton
-                size="small"
-                color={editor.isActive("bold") ? "primary" : undefined}
-                onClick={() => {
-                  editor.chain().focus().toggleBold().run();
-                }}
-              >
-                <FormatBold />
-              </IconButton>
-              <IconButton
-                size="small"
-                color={editor.isActive("italic") ? "primary" : undefined}
-                onClick={() => {
-                  editor.chain().focus().toggleItalic().run();
-                }}
-              >
-                <FormatItalic />
-              </IconButton>
-              <IconButton
-                size="small"
-                color={editor.isActive("bulletList") ? "primary" : undefined}
-                onClick={() => {
-                  editor.chain().focus().toggleBulletList().run();
-                }}
-              >
-                <FormatListBulleted />
-              </IconButton>
-              <IconButton
-                size="small"
-                color={editor.isActive("orderedList") ? "primary" : undefined}
-                onClick={() => {
-                  editor.chain().focus().toggleOrderedList().run();
-                }}
-              >
-                <FormatListNumbered />
-              </IconButton>
+              <BoldButton editor={editor} />
+              <ItalicButton editor={editor} />
+              <BulletListButton editor={editor} />
+              <OrderedListButton editor={editor} />
               <PublicFileUploadButton
                 variant="tooltip"
                 onChange={(src) =>
