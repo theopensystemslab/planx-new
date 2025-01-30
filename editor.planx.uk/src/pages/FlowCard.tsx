@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
+
 import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import { slugify } from "utils";
 
@@ -178,7 +179,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
       shouldAddTag: isSubmissionService,
     },
   ];
-
+    
   return (
     <>
       {deleting && (

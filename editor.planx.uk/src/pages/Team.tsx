@@ -16,6 +16,7 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import InputLabel from "ui/public/InputLabel";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import FlowCard, { Card, CardContent } from "./FlowCard";
