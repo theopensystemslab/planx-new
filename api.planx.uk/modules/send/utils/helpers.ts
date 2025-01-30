@@ -1,3 +1,4 @@
+import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import type { Passport } from "../../../types.js";
 
 /**
@@ -6,12 +7,14 @@ import type { Passport } from "../../../types.js";
  * @returns boolean
  */
 export function isApplicationTypeSupported(passport: Passport): boolean {
-  // Prefixes of application types that are supported by the ODP Schema
-  //   TODO in future look up via schema type definitions
-  const supportedAppTypes = ["ldc", "listed", "pa", "pp"];
+  const userApplicationType = passport.data?.["application.type"]?.[0];
+  if (!userApplicationType) return false;
 
-  const appType = passport.data?.["application.type"]?.[0];
-  const appTypePrefix = appType?.split(".")?.[0];
+  const statutoryApplicationTypes = getValidSchemaValues("ApplicationType");
+  const preApplicationType = "preApp";
+  const supportedApplicationTypes = (statutoryApplicationTypes || []).concat(
+    preApplicationType,
+  );
 
-  return supportedAppTypes.includes(appTypePrefix);
+  return supportedApplicationTypes.includes(userApplicationType);
 }

@@ -6,9 +6,9 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Search from ".";
-import { flow } from "./mocks/simple";
-import { VirtuosoWrapper } from "./testUtils";
+import Search from "..";
+import { flow } from "../mocks/simple";
+import { VirtuosoWrapper } from "../testUtils";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
@@ -34,7 +34,7 @@ it("does not display if there are no external portals in the flow", () => {
   const { queryByTestId } = setup(
     <VirtuosoWrapper>
       <Search />
-    </VirtuosoWrapper>,
+    </VirtuosoWrapper>
   );
 
   expect(queryByTestId("searchExternalPortalList")).not.toBeInTheDocument();
@@ -46,7 +46,7 @@ it("does not display if there is no search term provided", () => {
   const { queryByTestId } = setup(
     <VirtuosoWrapper>
       <Search />
-    </VirtuosoWrapper>,
+    </VirtuosoWrapper>
   );
 
   expect(queryByTestId("searchExternalPortalList")).not.toBeInTheDocument();
@@ -58,14 +58,14 @@ it("displays a list of external portals if present in the flow, and a search ter
   const { findByTestId, getByText, getByLabelText, user } = setup(
     <VirtuosoWrapper>
       <Search />
-    </VirtuosoWrapper>,
+    </VirtuosoWrapper>
   );
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
 
   const externalPortalList = await waitFor(() =>
-    findByTestId("searchExternalPortalList"),
+    findByTestId("searchExternalPortalList")
   );
 
   expect(externalPortalList).toBeDefined();
@@ -79,14 +79,14 @@ it("allows users to navigate to the external portals", async () => {
   const { getAllByRole, getByLabelText, user } = setup(
     <VirtuosoWrapper>
       <Search />
-    </VirtuosoWrapper>,
+    </VirtuosoWrapper>
   );
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
 
   const [first, second] = await waitFor(
-    () => getAllByRole("link") as HTMLAnchorElement[],
+    () => getAllByRole("link") as HTMLAnchorElement[]
   );
   expect(first).toHaveAttribute("href", "../myTeam/portalOne");
   expect(second).toHaveAttribute("href", "../myTeam/portalTwo");
@@ -98,14 +98,14 @@ it("should not have any accessibility violations on initial load", async () => {
   const { container, getByLabelText, user, findByTestId } = setup(
     <VirtuosoWrapper>
       <Search />
-    </VirtuosoWrapper>,
+    </VirtuosoWrapper>
   );
 
   const searchInput = getByLabelText("Search this flow and internal portals");
   user.type(searchInput, "ind");
 
   await waitFor(() =>
-    expect(findByTestId("searchExternalPortalList")).toBeDefined(),
+    expect(findByTestId("searchExternalPortalList")).toBeDefined()
   );
 
   const results = await axe(container);
