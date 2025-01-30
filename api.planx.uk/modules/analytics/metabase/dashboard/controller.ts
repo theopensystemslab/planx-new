@@ -1,9 +1,11 @@
 import { createNewDashboard } from "./service.js";
 import type { NewDashboardHandler } from "./types.js";
+import { ServerError } from "../../../../errors/serverError.js";
 
 export const metabaseDashboardsController: NewDashboardHandler = async (
   _req,
   res,
+  next,
 ) => {
   try {
     const params = {
@@ -13,13 +15,8 @@ export const metabaseDashboardsController: NewDashboardHandler = async (
     const dashboard = await createNewDashboard(params);
     return res.status(201).json({ data: dashboard });
   } catch (error) {
-    console.error("Controller error:", error);
-    if (error instanceof Error) {
-      console.error("Error stack:", error.stack);
-    }
-    return res.status(400).json({
-      error:
-        error instanceof Error ? error.message : "An unexpected error occurred",
-    });
+    next(
+      new ServerError({ message: "Failed to create dashboard", cause: error }),
+    );
   }
 };
