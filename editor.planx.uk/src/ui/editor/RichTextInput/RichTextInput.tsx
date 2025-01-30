@@ -8,8 +8,6 @@ import FormatListNumbered from "@mui/icons-material/FormatListNumbered";
 import LinkIcon from "@mui/icons-material/Link";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { type InputBaseProps } from "@mui/material/InputBase";
-import { styled } from "@mui/material/styles";
 import { type Editor, type JSONContent } from "@tiptap/core";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
@@ -38,7 +36,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { inputFocusStyle } from "theme";
 import tippy, { type Instance } from "tippy.js";
 import { create } from "zustand";
 
@@ -50,72 +47,10 @@ import {
   MentionItems,
   MentionItemsButton,
   MentionItemsEmpty,
+  RichContentContainer,
   StyledBubbleMenu,
 } from "./styles";
-
-interface Props extends InputBaseProps {
-  className?: string;
-  onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
-  bordered?: boolean;
-  errorMessage?: string;
-}
-
-export const RichContentContainer = styled(Box)(({ theme }) => ({
-  position: "relative",
-  "& .ProseMirror": {
-    padding: "12px 15px",
-    backgroundColor: theme.palette.common.white,
-    minHeight: "50px",
-    border: `1px solid ${theme.palette.border.main}`,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    wordBreak: "break-word",
-    "& a": {
-      color: "currentColor",
-    },
-    "& > *": {
-      margin: 0,
-    },
-    "& > * + *": {
-      marginTop: theme.spacing(1),
-    },
-    "& ol, & ul": {
-      marginBottom: theme.spacing(1),
-    },
-    "& ol li, & ul li": {
-      margin: theme.spacing(0.5, 0, 0),
-    },
-    "& ol p, & ul p": {
-      margin: 0,
-    },
-    "& h1, & h2, & h3": {
-      "& strong": {
-        fontWeight: "inherit",
-      },
-    },
-    // Styles for placeholder text, to match ui/Input.tsx
-    "& p.is-editor-empty:first-of-type::before": {
-      color: theme.palette.text.placeholder,
-      opacity: 1,
-      content: `attr(data-placeholder)`,
-      float: "left",
-      height: 0,
-      pointerEvents: "none",
-    },
-    // Focus styles
-    "&.ProseMirror-focused": {
-      ...inputFocusStyle,
-    },
-    // Styles for injected passport/mention
-    "& .passport": {
-      backgroundColor: theme.palette.secondary.main,
-      color: theme.palette.text.primary,
-      padding: theme.spacing(0.25, 0.5),
-      borderRadius: "4px",
-    },
-  },
-}));
+import { MentionListProps, Props } from "./types";
 
 const passportClassName = "passport";
 
@@ -700,18 +635,6 @@ const suggestion = {
     };
   },
 };
-
-export interface Placeholder {
-  id: string;
-  label: string;
-}
-
-interface MentionListProps {
-  items: Placeholder[];
-  query: string;
-  command: any;
-  onCreatePlaceholder: (val: string) => void;
-}
 
 // Implemented based on the mention plugin example code snippets: https://tiptap.dev/api/nodes/mention
 const MentionList = forwardRef((props: MentionListProps, ref) => {

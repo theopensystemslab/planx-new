@@ -3,6 +3,64 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { BubbleMenu } from "@tiptap/react";
+import { inputFocusStyle } from "theme";
+
+export const RichContentContainer = styled(Box)(({ theme }) => ({
+  position: "relative",
+  "& .ProseMirror": {
+    padding: "12px 15px",
+    backgroundColor: theme.palette.common.white,
+    minHeight: "50px",
+    border: `1px solid ${theme.palette.border.main}`,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    wordBreak: "break-word",
+    "& a": {
+      color: "currentColor",
+    },
+    "& > *": {
+      margin: 0,
+    },
+    "& > * + *": {
+      marginTop: theme.spacing(1),
+    },
+    "& ol, & ul": {
+      marginBottom: theme.spacing(1),
+    },
+    "& ol li, & ul li": {
+      margin: theme.spacing(0.5, 0, 0),
+    },
+    "& ol p, & ul p": {
+      margin: 0,
+    },
+    "& h1, & h2, & h3": {
+      "& strong": {
+        fontWeight: "inherit",
+      },
+    },
+    // Styles for placeholder text, to match ui/Input.tsx
+    "& p.is-editor-empty:first-of-type::before": {
+      color: theme.palette.text.placeholder,
+      opacity: 1,
+      content: `attr(data-placeholder)`,
+      float: "left",
+      height: 0,
+      pointerEvents: "none",
+    },
+    // Focus styles
+    "&.ProseMirror-focused": {
+      ...inputFocusStyle,
+    },
+    // Styles for injected passport/mention
+    "& .passport": {
+      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.text.primary,
+      padding: theme.spacing(0.25, 0.5),
+      borderRadius: "4px",
+    },
+  },
+}));
 
 export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
   background: theme.palette.background.default,
