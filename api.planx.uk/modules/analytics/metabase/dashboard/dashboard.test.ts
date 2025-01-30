@@ -99,7 +99,7 @@ describe("Dashboard Operations", () => {
             {
               name: filterName,
               type: "string/=",
-              default: ["old_value"],
+              value: ["old_value"],
             },
           ],
         });
@@ -110,7 +110,7 @@ describe("Dashboard Operations", () => {
             {
               name: filterName,
               type: "string/=",
-              default: [filterValue],
+              value: [filterValue],
             },
           ],
         })
@@ -119,19 +119,22 @@ describe("Dashboard Operations", () => {
             {
               name: filterName,
               type: "string/=",
-              default: [filterValue],
+              value: [filterValue],
             },
           ],
           param_fields: {},
         });
 
-      await expect(
-        updateFilter({
-          dashboardId: dashboardId,
-          filter: filterName,
-          value: filterValue,
-        }),
-      ).resolves.not.toThrow();
+      const result = await updateFilter({
+        dashboardId: dashboardId,
+        filter: filterName,
+        value: filterValue,
+      });
+
+      expect(result).toEqual({
+        success: true,
+        updatedFilter: filterName,
+      });
     });
 
     test("handles non-string filter type appropriately", async () => {
@@ -141,18 +144,15 @@ describe("Dashboard Operations", () => {
           parameters: [
             {
               name: filterName,
-              slug: "event",
-              id: "30a24538",
               type: "number/=",
-              sectionId: "number",
-              default: [42],
+              value: [42],
             },
           ],
         });
 
-      nock(BASE_URL!).put(`/api/dashboard/${dashboardId}`).reply(400, {
-        message: "Invalid parameter type. Expected number, got string.",
-      });
+      // nock(BASE_URL!).put(`/api/dashboard/${dashboardId}`).reply(400, {
+      //   message: "Invalid parameter type. Expected number, got string.",
+      // });
 
       await expect(
         updateFilter({
