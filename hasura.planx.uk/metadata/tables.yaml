@@ -485,7 +485,7 @@
           table:
             name: published_flows
             schema: public
-    - name: template_children
+    - name: templated_flows
       using:
         manual_configuration:
           column_mapping:
