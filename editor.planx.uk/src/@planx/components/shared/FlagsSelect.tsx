@@ -3,7 +3,6 @@ import {
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
-import ListItem from "@mui/material/ListItem";
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import React, { useMemo } from "react";
 import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
