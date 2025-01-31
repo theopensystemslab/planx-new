@@ -59,3 +59,28 @@ export const StyledDataField = styled(StyledTextField)(({ theme }) => ({
     fontFamily: theme.typography.data.fontFamily,
   },
 }));
+
+export const CustomCheckbox = styled("span")(({ theme }) => ({
+  display: "inline-flex",
+  flexShrink: 0,
+  position: "relative",
+  width: 40,
+  height: 40,
+  borderColor: theme.palette.text.primary,
+  border: "2px solid",
+  background: "transparent",
+  marginRight: theme.spacing(1.5),
+  "&.selected::after": {
+    content: "''",
+    position: "absolute",
+    height: 24,
+    width: 12,
+    borderColor: theme.palette.text.primary,
+    borderBottom: "5px solid",
+    borderRight: "5px solid",
+    left: "50%",
+    top: "42%",
+    transform: "translate(-50%, -50%) rotate(45deg)",
+    cursor: "pointer",
+  },
+}));

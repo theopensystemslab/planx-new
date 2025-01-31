@@ -8,9 +8,8 @@ import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";
 import React, { HTMLAttributes } from "react";
-import { CustomCheckbox } from "ui/shared/SelectMultiple";
 
-import { StyledDataField, StyledTextField } from "./styles";
+import { CustomCheckbox, StyledDataField, StyledTextField } from "./styles";
 
 interface RenderCheckboxProps {
   listProps: HTMLAttributes<HTMLLIElement>;
