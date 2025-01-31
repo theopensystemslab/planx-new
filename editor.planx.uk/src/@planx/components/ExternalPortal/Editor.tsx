@@ -14,7 +14,7 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
-import { RenderGroup } from "ui/shared/Autocomplete/RenderComponents";
+import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import * as Yup from "yup";
 
@@ -61,7 +61,11 @@ const renderOption: FlowAutocompleteListProps["renderOption"] = (
 
 const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => {
   return (
-    <RenderGroup key={params.key} params={params} displayName={params.group} />
+    <RenderGroupHeaderBlock
+      key={params.key}
+      params={params}
+      displayName={params.group}
+    />
   );
 };
 
