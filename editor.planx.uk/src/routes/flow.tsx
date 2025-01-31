@@ -1,5 +1,6 @@
 import { gql } from "@apollo/client";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { sortBy } from "lodash";
 import natsort from "natsort";
 import {
   compose,
@@ -44,7 +45,7 @@ const getExternalPortals = async () => {
     `,
   });
 
-  return data.flows
+  const filteredFlows = data.flows
     .filter(
       (flow: Flow) =>
         flow.team &&
@@ -55,16 +56,11 @@ const getExternalPortals = async () => {
       name,
       slug,
       team: team.name,
-    }))
-    .sort((a: Flow, b: Flow) => {
-      if (a.team > b.team) {
-        return 1;
-      } else if (b.team > a.team) {
-        return -1;
-      } else {
-        return 0;
-      }
-    });
+    }));
+
+  const flowsSortedByTeam = sortBy(filteredFlows, [(flow: Flow) => flow.team]);
+
+  return flowsSortedByTeam;
 };
 
 const newNode = route(async (req) => {

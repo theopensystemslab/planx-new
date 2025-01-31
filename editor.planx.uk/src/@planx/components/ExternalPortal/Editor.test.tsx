@@ -18,10 +18,8 @@ test("adding an external portal", async () => {
       handleSubmit={handleSubmit}
     />,
   );
-  const autocompleteComp = screen.getByTestId("flowId");
-  const autocompleteInput = within(autocompleteComp).getByRole("combobox");
-
-  screen.debug(autocompleteInput);
+  const autocompleteComponent = screen.getByTestId("flowId");
+  const autocompleteInput = within(autocompleteComponent).getByRole("combobox");
 
   expect(autocompleteInput).toHaveValue("flow a");
 
@@ -61,8 +59,8 @@ test("changing an external portal", async () => {
     />,
   );
 
-  const autocompleteComp = screen.getByTestId("flowId");
-  const autocompleteInput = within(autocompleteComp).getByRole("combobox");
+  const autocompleteComponent = screen.getByTestId("flowId");
+  const autocompleteInput = within(autocompleteComponent).getByRole("combobox");
 
   expect(autocompleteInput).toHaveValue("flow b");
 

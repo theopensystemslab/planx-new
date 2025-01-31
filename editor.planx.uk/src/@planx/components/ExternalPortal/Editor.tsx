@@ -115,7 +115,7 @@ const ExternalPortalForm: React.FC<{
               data-testid="flowId"
               id="flowId"
               role="status"
-              label=""
+              placeholder=""
               required
               aria-atomic={true}
               aria-live="polite"
