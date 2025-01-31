@@ -1,7 +1,10 @@
 import FormControl from "@mui/material/FormControl";
 import React from "react";
 
-import { RenderDataFieldInput, RenderTextFieldInput } from "./RenderComponents";
+import {
+  RenderDataFieldInput,
+  RenderTextFieldInput,
+} from "./components/RenderFieldInputs";
 import { StyledAutocomplete } from "./styles";
 import { WithLabel, WithPlaceholder } from "./types";
 

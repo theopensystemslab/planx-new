@@ -3,13 +3,11 @@ import {
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListSubheader from "@mui/material/ListSubheader";
-import Typography from "@mui/material/Typography";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo } from "react";
-import { CustomCheckbox, SelectMultiple } from "ui/shared/SelectMultiple";
+import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
+import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
+import { SelectMultiple } from "ui/shared/SelectMultiple";
 
 import { FileUploadSlot } from "../FileUpload/model";
 import {
@@ -39,28 +37,12 @@ const renderGroup: AutocompleteProps<
   true,
   false,
   "div"
->["renderGroup"] = ({ group, key, children }) => (
-  <List
-    key={`group-${key}`}
-    role="group"
-    sx={{ paddingY: 0 }}
-    aria-labelledby={`${group}-label`}
-  >
-    <ListSubheader
-      id={`${group}-label`}
-      role="presentation"
-      disableSticky
-      sx={(theme) => ({
-        borderTop: 1,
-        borderColor: theme.palette.border.main,
-      })}
-    >
-      <Typography py={1} variant="subtitle2" component="h4">
-        {`${capitalize(group)} files`}
-      </Typography>
-    </ListSubheader>
-    {children}
-  </List>
+>["renderGroup"] = (params) => (
+  <RenderGroupHeaderBlock
+    key={params.key}
+    params={params}
+    displayName={`${capitalize(params.group)} files`}
+  />
 );
 
 /**
@@ -72,11 +54,12 @@ const renderOption: AutocompleteProps<
   true,
   false,
   "div"
->["renderOption"] = (props, option, { selected }) => (
-  <ListItem {...props}>
-    <CustomCheckbox aria-hidden="true" className={selected ? "selected" : ""} />
-    {option.name}
-  </ListItem>
+>["renderOption"] = (props, option, state) => (
+  <RenderOptionCheckbox
+    listProps={props}
+    displayName={option.name}
+    state={state}
+  />
 );
 
 /**
