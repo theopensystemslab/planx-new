@@ -173,6 +173,8 @@ export interface EditorStore extends Store.Store {
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
+  lastPublishedDate: string;
+  setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (flowId: string, teamSlug: string) => Promise<any>;
@@ -441,7 +443,15 @@ export const editorStore: StateCreator<
       },
     });
 
-    return data.flows[0].published_flows[0].created_at;
+    const lastPublishedDate = data.flows[0].published_flows[0].created_at;
+    set({ lastPublishedDate });
+    return lastPublishedDate;
+  },
+
+  lastPublishedDate: "",
+
+  setLastPublishedDate: (date: string) => {
+    set({ lastPublishedDate: date });
   },
 
   lastPublisher: async (flowId: string) => {
