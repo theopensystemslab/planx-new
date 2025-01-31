@@ -786,6 +786,7 @@
           - created_at
           - creator_id
           - data
+          - deleted_at
           - description
           - id
           - limitations
@@ -817,6 +818,7 @@
       permission:
         columns:
           - data
+          - deleted_at
           - description
           - limitations
           - name
@@ -840,6 +842,7 @@
       permission:
         columns:
           - data
+          - deleted_at
           - description
           - limitations
           - name
