@@ -1,29 +1,24 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import Autocomplete, {
+import {
   autocompleteClasses,
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
-import ListSubheader from "@mui/material/ListSubheader";
-import MenuItem from "@mui/material/MenuItem";
-import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
+import ListItem from "@mui/material/ListItem";
 import {
   ComponentType as TYPES,
   NodeTag,
 } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import {
-  StyledTextField,
-} from "ui/shared/SelectMultiple";
+import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
+import { RenderGroup } from "ui/shared/Autocomplete/RenderComponents";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import * as Yup from "yup";
 
 import { ICONS } from "../shared/icons";
-import * as Yup from "yup";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
-
 
 interface Flow {
   id: string;
@@ -35,16 +30,9 @@ interface Flow {
 type FlowAutocompleteListProps = AutocompleteProps<
   Flow,
   false,
-  true,
-  false,
-  "li"
->;
-type FlowAutocompleteInputProps = AutocompleteProps<
-  Flow,
   false,
   true,
-  false,
-  "input"
+  "div"
 >;
 
 const PopupIcon = (
@@ -53,55 +41,27 @@ const PopupIcon = (
     fontSize="large"
   />
 );
-
-const AutocompleteSubHeader = styled(ListSubheader)(({ theme }) => ({
-  border: "none",
-  borderTop: `1px solid ${theme.palette.border.main}`,
-  backgroundColor: theme.palette.background.default,
-}));
-
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
   props,
   option,
 ) => {
+  if (option === null) return;
   return (
-    <MenuItem
+    <ListItem
       {...props}
+      key={option.id}
       id={option.id}
       data-testid={`flow-${option.id}`}
       sx={(theme) => ({ paddingY: `${theme.spacing(1.25)}` })}
     >
       {option.name}
-    </MenuItem>
+    </ListItem>
   );
 };
 
-const renderInput: FlowAutocompleteInputProps["renderInput"] = (params) => (
-  <StyledTextField
-    {...params}
-    id={params.id}
-    InputProps={{
-      ...params.InputProps,
-      notched: false,
-    }}
-    key={params.id}
-  />
-);
-
 const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => {
   return (
-    <React.Fragment key={params.group}>
-      <AutocompleteSubHeader
-        disableSticky
-        id={`group-header-${params.group}`}
-        aria-label={params.group}
-      >
-        <Typography variant="subtitle2" component="h4" py={1.5}>
-          {params.group}
-        </Typography>
-      </AutocompleteSubHeader>
-      {params.children}
-    </React.Fragment>
+    <RenderGroup key={params.key} params={params} displayName={params.group} />
   );
 };
 
@@ -112,34 +72,29 @@ const ExternalPortalForm: React.FC<{
   flows?: Array<Flow>;
   tags?: NodeTag[];
 }> = ({ handleSubmit, flowId, flows = [], tags = [], notes = "" }) => {
-
-    const portalSchema = Yup.object().shape({
-      flowId: Yup.string().required("Add a flow to submit"),
-    });
+  const portalSchema = Yup.object().shape({
+    flowId: Yup.string().required("Add a flow to submit"),
+  });
 
   const formik = useFormik({
     initialValues: {
+      flow: flows.find((flow) => flow.id === flowId) || null,
       flowId: flowId || null,
       tags,
       notes,
     },
     onSubmit: (values) => {
-      formik.validateForm(values)
+      formik.validateForm(values);
       if (handleSubmit && !formik.errors.flowId) {
         handleSubmit({ type: TYPES.ExternalPortal, data: values });
       } else {
         alert(JSON.stringify(values, null, 2));
       }
     },
-    validationSchema:portalSchema,
-    validateOnChange:false,
-    validateOnBlur:false
+    validationSchema: portalSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
-
-  const value: Flow | null = useMemo(
-    () => flows?.find((flow) => flow.id === formik.values.flowId) || undefined,
-    [flows, formik.values.flowId],
-  );
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
@@ -155,49 +110,57 @@ const ExternalPortalForm: React.FC<{
           </span>
         </ModalSectionContent>
         <ModalSectionContent key={"flow-section"} title="Pick a flow">
-        <ErrorWrapper error={formik.errors.flowId}>
-          <Autocomplete
-            data-testid="flowId"
-            id="flowId"
-            role="status"
-            aria-atomic={true}
-            aria-live="polite"
-            fullWidth
-            popupIcon={PopupIcon}
-            ListboxProps={{
-              sx: (theme) => ({
-                paddingY: 0,
-                backgroundColor: theme.palette.background.default,
-              }),
-            }}
-            value={value || null}
-            onChange={(_event, newValue: Flow | null) => {
-              formik.setFieldValue("flowId", newValue?.id || "");
-            }}
-            options={
-              flows
-            }
-            groupBy={(option) =>option && option.team}
-            getOptionLabel={(option: Flow | null) => option?.name || ""}
-            renderOption={renderOption}
-            renderInput={renderInput}
-            renderGroup={renderGroup}
-            slotProps={{
-              popper: {
-                placement: "bottom-start",
-                modifiers: [{ name: "flip", enabled: false }],
-              },
-            }}
-            sx={{
-              [`& .${autocompleteClasses.endAdornment}`]: {
-                top: "unset",
-              },
-            }}
-            clearOnEscape
-            handleHomeEndKeys
-            autoHighlight
+          <ErrorWrapper error={formik.errors.flowId}>
+            <AutocompleteInput<Flow>
+              data-testid="flowId"
+              id="flowId"
+              role="status"
+              label=""
+              required
+              aria-atomic={true}
+              aria-live="polite"
+              fullWidth
+              popupIcon={PopupIcon}
+              ListboxProps={{
+                sx: (theme) => ({
+                  paddingY: 0,
+                  backgroundColor: theme.palette.background.default,
+                }),
+              }}
+              value={formik.values.flow}
+              onChange={(_event, value: string | Flow | null) => {
+                if (typeof value !== "string") {
+                  formik.setFieldValue("flow", value);
+                  value?.id && formik.setFieldValue("flowId", value.id);
+                }
+              }}
+              options={flows}
+              groupBy={(option) => option && option.team}
+              getOptionLabel={(option: string | Flow | null) => {
+                if (typeof option !== "string" && option) {
+                  return option?.name;
+                } else {
+                  return "";
+                }
+              }}
+              renderOption={renderOption}
+              renderGroup={renderGroup}
+              slotProps={{
+                popper: {
+                  placement: "bottom-start",
+                  modifiers: [{ name: "flip", enabled: false }],
+                },
+              }}
+              sx={{
+                [`& .${autocompleteClasses.endAdornment}`]: {
+                  top: "unset",
+                },
+              }}
+              clearOnEscape
+              handleHomeEndKeys
+              autoHighlight
             />
-            </ErrorWrapper>
+          </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} showMoreInformation={false} />
