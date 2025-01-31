@@ -122,16 +122,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const [deleting, setDeleting] = useState(false);
-  const handleDelete = () => {
-    useStore
-      .getState()
-      .deleteFlow(teamId, flow.slug)
-      .then(() => {
-        setDeleting(false);
-        refreshFlows();
-      });
-  };
   const handleCopy = () => {
     useStore
       .getState()
@@ -151,18 +141,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
 
   return (
     <>
-      {deleting && (
-        <Confirm
-          title="Confirm Delete"
-          open={deleting}
-          content="Deleting a service cannot be reversed."
-          onClose={() => {
-            setDeleting(false);
-          }}
-          onConfirm={handleDelete}
-          submitLabel="Delete Service"
-        />
-      )}
       <DashboardListItem>
         <DashboardLink href={`./${flow.slug}`} prefetch={false}>
           <Typography variant="h4" component="h2">
@@ -244,13 +222,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
                     }
                   }
                 },
-              },
-              {
-                label: "Delete",
-                onClick: () => {
-                  setDeleting(true);
-                },
-                error: true,
               },
             ]}
           />
