@@ -1,7 +1,6 @@
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import { AutocompleteProps } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
-import ListItem from "@mui/material/ListItem";
 import { NODE_TAGS, NodeTag, Role } from "@opensystemslab/planx-core/types";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -9,8 +8,9 @@ import React from "react";
 import { getContrastTextColor } from "styleUtils";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
 import InputRow from "ui/shared/InputRow";
-import { CustomCheckbox, SelectMultiple } from "ui/shared/SelectMultiple";
+import { SelectMultiple } from "ui/shared/SelectMultiple";
 
 interface Props {
   value?: NodeTag[];
@@ -28,16 +28,14 @@ const renderOption: AutocompleteProps<
   true,
   false,
   "div"
->["renderOption"] = (props, tag, { selected }) => {
+>["renderOption"] = (props, tag, state) => {
   if (TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)) return null;
   return (
-    <ListItem {...props}>
-      <CustomCheckbox
-        aria-hidden="true"
-        className={selected ? "selected" : ""}
-      />
-      {TAG_DISPLAY_VALUES[tag].displayName}
-    </ListItem>
+    <RenderOptionCheckbox
+      listProps={props}
+      displayName={TAG_DISPLAY_VALUES[tag].displayName}
+      state={state}
+    />
   );
 };
 
