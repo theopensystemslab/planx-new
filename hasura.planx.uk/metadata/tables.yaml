@@ -892,29 +892,6 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
-  delete_permissions:
-    - role: demoUser
-      permission:
-        filter:
-          _and:
-            - team_id:
-                _eq: 32
-            - creator_id:
-                _eq: x-hasura-user-id
-      comment: ""
-    - role: platformAdmin
-      permission:
-        filter: {}
-    - role: teamEditor
-      permission:
-        filter:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
 - table:
     name: global_settings
     schema: public
