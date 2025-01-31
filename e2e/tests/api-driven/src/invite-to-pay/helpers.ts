@@ -41,7 +41,7 @@ export async function buildITPFlow({
   destination: string;
   userId: number;
   teamId: number;
-}): Promise<{ flowId: string; }> {
+}): Promise<{ flowId: string }> {
   const sendNode = sendNodeWithDestination(destination);
   const flowGraph: FlowGraph = {
     ...inviteToPayFlowGraph,
