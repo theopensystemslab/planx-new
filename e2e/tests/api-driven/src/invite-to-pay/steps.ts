@@ -35,7 +35,7 @@ Given(
   "a session with a payment request for an invite to pay flow where {string} is a send destination",
   { timeout: 60 * 1000 },
   async function (this: CustomWorld, destination: string) {
-    const { flowId, publishedFlowId } = await buildITPFlow({
+    const { flowId } = await buildITPFlow({
       destination,
       teamId: this.teamId,
       userId: this.userId,
@@ -43,10 +43,6 @@ Given(
     this.flowId = flowId;
     if (!this.flowId) {
       throw new Error("flow not found");
-    }
-    this.publishedFlowId = publishedFlowId;
-    if (!this.publishedFlowId) {
-      throw new Error("publishedFlowId not found");
     }
     this.sessionId = await buildSessionForFlow(this.flowId);
     if (!this.sessionId) {
