@@ -445,6 +445,15 @@
     - name: team
       using:
         foreign_key_constraint_on: team_id
+    - name: template
+      using:
+        manual_configuration:
+          column_mapping:
+            templated_from: id
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
   array_relationships:
     - name: document_templates
       using:
