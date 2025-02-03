@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
@@ -11,8 +11,7 @@ import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
-import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
@@ -242,32 +241,32 @@ const Team: React.FC = () => {
             <StartFromTemplateButton />
           )}
         </Box>
-      </Box>
-      {hasFeatureFlag("SORT_FLOWS") && flows && (
-        <SortControl<FlowSummary>
-          records={flows}
-          setRecords={setFlows}
-          sortOptions={sortOptions}
-        />
-      )}
-      {teamHasFlows && (
-        <DashboardList>
-          {flows.map((flow) => (
-            <FlowItem
-              flow={flow}
-              flows={flows}
-              key={flow.slug}
-              teamId={teamId}
-              teamSlug={slug}
-              refreshFlows={() => {
-                fetchFlows();
-              }}
-            />
-          ))}
-        </DashboardList>
-      )}
-      {flows && !flows.length && <GetStarted flows={flows} />}
-    </Container>
+        {hasFeatureFlag("SORT_FLOWS") && flows && (
+          <SortControl<FlowSummary>
+            records={flows}
+            setRecords={setFlows}
+            sortOptions={sortOptions}
+          />
+        )}
+        {teamHasFlows && (
+          <DashboardList>
+            {flows?.map((flow) => (
+              <FlowCard
+                flow={flow}
+                flows={flows}
+                key={flow.slug}
+                teamId={teamId}
+                teamSlug={slug}
+                refreshFlows={() => {
+                  fetchFlows();
+                }}
+              />
+            ))}
+          </DashboardList>
+        )}
+        {flows && !flows.length && <GetStarted flows={flows} />}
+      </Container>
+    </Box>
   );
 };
 
