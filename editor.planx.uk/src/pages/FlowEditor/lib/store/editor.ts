@@ -177,7 +177,11 @@ export interface EditorStore extends Store.Store {
   setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
-  moveFlow: (flowId: string, teamSlug: string) => Promise<any>;
+  moveFlow: (
+    flowId: string,
+    teamSlug: string,
+    flowName: string,
+  ) => Promise<any>;
   moveNode: (
     id: NodeId,
     parent?: NodeId,
@@ -485,7 +489,7 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  moveFlow(flowId: string, teamSlug: string) {
+  moveFlow(flowId: string, teamSlug: string, flowName: string) {
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
       alert(
@@ -507,11 +511,18 @@ export const editorStore: StateCreator<
         },
       )
       .then((res) => alert(res?.data?.message))
-      .catch(() =>
-        alert(
-          "Failed to move this flow. Make sure you're entering a valid team name and try again",
-        ),
-      );
+      .catch(({ response }) => {
+        const { data } = response;
+        if (data.error.toLowerCase().includes("uniqueness violation")) {
+          alert(
+            `${teamSlug} already have a service with name: '${flowName}'. Enter a different name and try again `,
+          );
+        } else {
+          alert(
+            "Failed to move this flow. Make sure you're entering a valid team name and try again",
+          );
+        }
+      });
   },
 
   moveNode(

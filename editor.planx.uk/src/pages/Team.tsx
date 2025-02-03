@@ -140,10 +140,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
         refreshFlows();
       });
   };
-  const handleMove = (newTeam: string) => {
+  const handleMove = (newTeam: string, flowName: string) => {
     useStore
       .getState()
-      .moveFlow(flow.id, newTeam)
+      .moveFlow(flow.id, newTeam, flowName)
       .then(() => {
         refreshFlows();
       });
@@ -182,11 +182,11 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 onClick: async () => {
                   const newName = prompt("New name", flow.name);
                   if (newName && newName !== flow.name) {
-                    const newSlug = slugify(newName);
-                    const duplicateFlowName = flows?.find(
-                      (flow: any) => flow.slug === newSlug,
+                    const verifiedNameAndSlug = checkForDuplicateFlowName(
+                      newName,
+                      flows,
                     );
-                    if (!duplicateFlowName) {
+                    if (verifiedNameAndSlug) {
                       await client.mutate({
                         mutation: gql`
                           mutation UpdateFlowSlug(
@@ -209,16 +209,12 @@ const FlowItem: React.FC<FlowItemProps> = ({
                         variables: {
                           teamId: teamId,
                           slug: flow.slug,
-                          newSlug: newSlug,
-                          newName: newName,
+                          newSlug: verifiedNameAndSlug.slug,
+                          newName: verifiedNameAndSlug.name,
                         },
                       });
 
                       refreshFlows();
-                    } else if (duplicateFlowName) {
-                      alert(
-                        `The flow "${newName}" already exists. Enter a unique flow name to continue`,
-                      );
                     }
                   }
                 },
@@ -240,7 +236,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(slugify(newTeam));
+                      handleMove(slugify(newTeam), flow.name);
                     }
                   }
                 },
@@ -279,6 +275,21 @@ const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
   </Box>
 );
 
+const checkForDuplicateFlowName = (name: string, flows: FlowSummary[]) => {
+  const newFlowSlug = slugify(name);
+  const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
+
+  if (duplicateFlowName) {
+    const updatedName = prompt(
+      `A service already exists with the name '${name}', enter another name`,
+      name,
+    );
+    if (!updatedName) return;
+    return checkForDuplicateFlowName(updatedName, flows);
+  }
+  return { slug: newFlowSlug, name: name };
+};
+
 const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore();
@@ -287,18 +298,16 @@ const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
     const newFlowName = prompt("Service name");
     if (!newFlowName) return;
 
-    const newFlowSlug = slugify(newFlowName);
-    const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
+    const verifiedNameAndSlug = checkForDuplicateFlowName(newFlowName, flows);
 
-    if (duplicateFlowName) {
-      alert(
-        `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
+    if (verifiedNameAndSlug) {
+      const newId = await createFlow(
+        teamId,
+        verifiedNameAndSlug.slug,
+        verifiedNameAndSlug.name,
       );
-      return;
+      navigate(`/${teamSlug}/${newId}`);
     }
-
-    const newId = await createFlow(teamId, newFlowSlug, newFlowName);
-    navigate(`/${teamSlug}/${newId}`);
   };
 
   return <AddButton onClick={addFlow}>Add a new service</AddButton>;
