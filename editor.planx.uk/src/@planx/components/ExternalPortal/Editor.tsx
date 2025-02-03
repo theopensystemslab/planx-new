@@ -142,7 +142,7 @@ const ExternalPortalForm: React.FC<{
               groupBy={(option) => option && option.team}
               getOptionLabel={(option: string | Flow | null) => {
                 if (typeof option !== "string" && option) {
-                  return option?.name;
+                  return `${option.team} - ${option?.name}`;
                 } else {
                   return "";
                 }
