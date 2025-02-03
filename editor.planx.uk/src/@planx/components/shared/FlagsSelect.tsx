@@ -3,11 +3,11 @@ import {
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
-import ListItem from "@mui/material/ListItem";
 import { Flag, flatFlags } from "@opensystemslab/planx-core/types";
 import React, { useMemo } from "react";
+import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
 import InputRow from "ui/shared/InputRow";
-import { CustomCheckbox, SelectMultiple } from "ui/shared/SelectMultiple";
+import { SelectMultiple } from "ui/shared/SelectMultiple";
 
 interface Props {
   value?: Array<Flag["value"]>;
@@ -20,15 +20,12 @@ const renderOptions: AutocompleteProps<
   true,
   false,
   "div"
->["renderOption"] = (props, flag, { selected }) => (
-  <ListItem {...props}>
-    <CustomCheckbox
-      aria-hidden="true"
-      className={selected ? "selected" : ""}
-      sx={{ backgroundColor: `${flag.bgColor}` }}
-    />
-    {flag.text}
-  </ListItem>
+>["renderOption"] = (props, flag, state) => (
+  <RenderOptionCheckbox
+    listProps={props}
+    displayName={flag.text}
+    state={state}
+  />
 );
 
 const renderTags: AutocompleteProps<

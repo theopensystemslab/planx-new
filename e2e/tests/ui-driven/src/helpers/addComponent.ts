@@ -1,7 +1,5 @@
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { expect, Locator, Page } from "@playwright/test";
-import { contextDefaults } from "./context.js";
-import { externalPortalServiceProps } from "./serviceData.js";
 import { OptionWithDataValues } from "./types.js";
 import { selectedFlag } from "./globalHelpers.js";
 
@@ -158,11 +156,16 @@ const createBaseComponent = async (
       await page.getByPlaceholder("Portal name").fill(title || "");
       break;
     case ComponentType.ExternalPortal:
-      await page
-        .getByTestId("flowId")
-        .selectOption(
-          `${contextDefaults.team.slug}/${externalPortalServiceProps.slug}`,
-        );
+      page.getByTestId("flowId").click();
+
+      // wait until we can see the group header of the autocomplete
+      await expect(page.getByText("E2E Test Team")).toBeVisible();
+
+      // click the option with the service name
+      page.getByText("An External Portal Service").click();
+
+      // wait for the group header of the autocomplete to disappear
+      await expect(page.getByText("E2E Test Team")).toBeHidden();
       break;
     default:
       throw new Error(`Unsupported type: ${type}`);
