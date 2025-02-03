@@ -13,8 +13,8 @@ CREATE TEMPORARY TABLE sync_flows (
   analytics_link text,
   status text,
   name text,
-  templated_from uuid,
   description text,
+  templated_from uuid,
   summary varchar(120),
   limitations text
   );
@@ -32,8 +32,8 @@ INSERT INTO flows (
   analytics_link,
   status,
   name,
-  templated_from,
   description,
+  templated_from,
   summary,
   limitations
 )
@@ -49,8 +49,8 @@ SELECT
   NULL,
   status,
   name,
-  templated_from,
   description,
+  templated_from,
   summary,
   limitations
 FROM sync_flows
@@ -66,8 +66,8 @@ SET
   analytics_link = NULL,
   status = EXCLUDED.status,
   name = EXCLUDED.name,
-  templated_from = EXCLUDED.templated_from,
   description = EXCLUDED.description,
+  templated_from = EXCLUDED.templated_from,
   summary = EXCLUDED.summary,
   limitations = EXCLUDED.limitations;
 
