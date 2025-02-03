@@ -312,32 +312,6 @@ const Team: React.FC = () => {
         
       </Container>
     </Box>
-        {hasFeatureFlag("SORT_FLOWS") && flows && (
-          <SortControl<FlowSummary>
-            records={flows}
-            setRecords={setFlows}
-            sortOptions={sortOptions}
-          />
-        )}
-        {teamHasFlows && (
-          <DashboardList>
-            {flows?.map((flow) => (
-              <FlowCard
-                flow={flow}
-                flows={flows}
-                key={flow.slug}
-                teamId={teamId}
-                teamSlug={slug}
-                refreshFlows={() => {
-                  fetchFlows();
-                }}
-              />
-            ))}
-          </DashboardList>
-        )}
-        {flows && !flows.length && <GetStarted flows={flows} />}
-      </Container>
-    </Box>
   );
 };
 
