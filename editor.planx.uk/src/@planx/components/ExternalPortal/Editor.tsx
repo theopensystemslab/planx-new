@@ -163,6 +163,7 @@ const ExternalPortalForm: React.FC<{
               clearOnEscape
               handleHomeEndKeys
               autoHighlight
+              forcePopupIcon={true}
             />
           </ErrorWrapper>
         </ModalSectionContent>
