@@ -75,7 +75,7 @@ config:
   application:session-secret:
     secure: AAABALL3iIm9+wB88/0ig7H+Y8Rmhb9OqaIz6sSTHmb5jf8+vBvXzY79z4pG6mJq9YPCxg==
   application:slack-internal-errors-webhook:
-    secure: AAABABwTdMsmBinkBYWM+0LjLw+VTtw+XtB71qZ7/Mqpo9MPO0IMctz5nAho7jyoSrcDCJRrRVlqJngTHgXt9Iyr2qsrg/jwtH+e1/n1nZ7hQYV0UWClw5pEPDQkInsX3qHinSknun3k
+    secure: AAABAPkO1mBzTkXVWjpzAeP9ZbkifOiBwxj+rL5OONBu6DY87Pw1FualS6jSmQ5yeoGovZowNy3iMsArq4lxSX2BnBAur4O4a90Qou5zGUFACSTfLkZOgsyImvbdwRRnFPBBskfQ+bqwX9OZjO5AAXkEa9bqu3ViFQ==
   application:slack-webhook-url:
     secure: AAABALzK5KLP5po8giGePS/+ZpcWQHf8LfvCcdlY/oSv6NvC3y6D44CeIAiUdDXTB7VeUX5JFeaceDyZ9C1N5CAWFOLPCCKvuLjuDtk7QZe/rczqd2QnMDLh+Q9wPlQSb4PIoK8jWNEmvQC3QMgq
   application:uniform-client-aylesbury-vale:
