@@ -1,0 +1,1 @@
+ALTER TABLE "public"."flows" DROP COLUMN "deleted_at";
