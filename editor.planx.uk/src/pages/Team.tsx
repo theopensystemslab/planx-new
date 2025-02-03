@@ -13,10 +13,10 @@ import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
+import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
-import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import FlowCard, { Card, CardContent } from "./FlowCard";
@@ -175,6 +175,42 @@ const Team: React.FC = () => {
       directionNames: { asc: "Oldest first", desc: "Newest first" },
     },
   ];
+
+  const checkFlowStatus: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    value,
+  ) => flow.status === value;
+  const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    _value,
+  ) => flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
+  // validation can be added when we have statutory data coming through
+  const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    _value,
+  ) => flow.publishedFlows[0].isStatutoryApplicationType;
+
+  const filterOptions: FilterOptions<FlowSummary>[] = [
+    {
+      displayName: "Online status",
+      optionKey: "status",
+      optionValue: ["online", "offline"],
+      validationFn: checkFlowStatus,
+    },
+    {
+      displayName: "Service type",
+      optionKey: `publishedFlows.0.hasSendComponent`,
+      optionValue: ["submission"],
+      validationFn: checkFlowServiceType,
+    },
+    {
+      displayName: "Application type",
+      optionKey: `name`,
+      optionValue: ["statutory"],
+      validationFn: checkFlowApplicationType,
+    },
+  ];
+
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
@@ -221,50 +257,42 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          {hasFeatureFlag("SORT_FLOWS") && flows && (
-            <SearchBox<FlowSummary>
+        </Box>
+        <Box>
+          {filteredFlows && flows && (
+            <Filters<FlowSummary>
               records={flows}
-              setRecords={setFilteredFlows}
-              searchKey={["name", "slug"]}
+              setFilteredRecords={setFilteredFlows}
+              filterOptions={filterOptions}
+            />
+          )}
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
+            <SortControl<FlowSummary>
+              records={flows}
+              setRecords={setFlows}
+              sortOptions={sortOptions}
             />
           )}
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-          }}
-        >
-          {showAddFlowButton && <AddFlowButton flows={flows} />}
-          {showAddFlowButton && hasFeatureFlag("TEMPLATES") && (
-            <StartFromTemplateButton />
+        <Box>
+          {filteredFlows && flows && (
+            <DashboardList>
+              {filteredFlows.map((flow) => (
+                <FlowCard
+                  flow={flow}
+                  flows={flows}
+                  key={flow.slug}
+                  teamId={teamId}
+                  teamSlug={slug}
+                  refreshFlows={() => {
+                    fetchFlows();
+                  }}
+                />
+              ))}
+            </DashboardList>
           )}
+          {flows && !flows.length && <GetStarted flows={flows} />}
         </Box>
-        {hasFeatureFlag("SORT_FLOWS") && flows && (
-          <SortControl<FlowSummary>
-            records={flows}
-            setRecords={setFlows}
-            sortOptions={sortOptions}
-          />
-        )}
-        {teamHasFlows && (
-          <DashboardList>
-            {flows?.map((flow) => (
-              <FlowCard
-                flow={flow}
-                flows={flows}
-                key={flow.slug}
-                teamId={teamId}
-                teamSlug={slug}
-                refreshFlows={() => {
-                  fetchFlows();
-                }}
-              />
-            ))}
-          </DashboardList>
-        )}
-        {flows && !flows.length && <GetStarted flows={flows} />}
       </Container>
     </Box>
   );

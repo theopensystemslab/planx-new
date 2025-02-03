@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import { get, orderBy } from "lodash";
+import { orderBy } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
