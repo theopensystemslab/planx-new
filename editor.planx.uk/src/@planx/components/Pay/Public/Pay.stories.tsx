@@ -90,3 +90,11 @@ export const WithFeeBreakdown = {
     showInviteToPay: false,
   },
 } satisfies Story;
+
+export const WithError = {
+  args: {
+    error: "GOV.UK Pay is not enabled for this local authority",
+    fee: 103,
+    onConfirm: () => {},
+  },
+} satisfies Story;
