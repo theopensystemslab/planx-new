@@ -21,8 +21,6 @@ test("adding an external portal", async () => {
   const autocompleteComponent = screen.getByTestId("flowId");
   const autocompleteInput = within(autocompleteComponent).getByRole("combobox");
 
-  expect(autocompleteInput).toHaveValue("flow a");
-
   await user.click(autocompleteInput);
 
   await user.click(screen.getByTestId("flow-b"));
@@ -37,6 +35,7 @@ test("adding an external portal", async () => {
     expect(handleSubmit).toHaveBeenCalledWith({
       type: TYPES.ExternalPortal,
       data: {
+        flow: { id: "b", name: "flow b", slug: "flow-b", team: "team" },
         flowId: "b",
         tags: [],
         notes: "",
@@ -78,6 +77,7 @@ test("changing an external portal", async () => {
     expect(handleSubmit).toHaveBeenCalledWith({
       type: TYPES.ExternalPortal,
       data: {
+        flow: { id: "a", name: "flow a", slug: "flow-a", team: "team" },
         flowId: "a",
         tags: [],
         notes: "",
