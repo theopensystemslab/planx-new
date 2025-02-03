@@ -22,6 +22,54 @@ export const getLinkNewTabError = (
   return error;
 };
 
+export const getLegislationLinkError = (
+  content: JSONContent | undefined = [],
+): string | undefined => {
+  let error: string | undefined;
+  if (!content) return;
+
+  content.forEach((child: JSONContent) => {
+    if (!child.content) return;
+
+    child.content.forEach(({ marks, text }) => {
+      const isLink = marks?.map(({ type }) => type).includes("link");
+
+      const isLegislationLink =
+        isLink &&
+        marks
+          ?.map(({ attrs }) => {
+            try {
+              const url = attrs && new URL(attrs.href);
+              return url?.hostname === "www.legislation.gov.uk";
+            } catch (error) {
+              return false;
+            }
+          })
+          .includes(true);
+
+      const hasMadeLinkEnding =
+        isLegislationLink &&
+        marks
+          ?.map(({ attrs }) => {
+            try {
+              const url = attrs && new URL(attrs.href);
+              return url?.pathname.endsWith("/made");
+            } catch (error) {
+              return false;
+            }
+          })
+          .includes(true);
+
+      if (isLegislationLink && hasMadeLinkEnding) {
+        error =
+          'Legislative policy links should not end in "/made" as these can be out of date.';
+      }
+    });
+  });
+
+  return error;
+};
+
 // Specify whether a selection is unsuitable for ensuring accessible links
 export const linkSelectionError = (selectionHtml: string): string | null => {
   if (selectionHtml.startsWith("<p>") && selectionHtml.endsWith("</p>")) {

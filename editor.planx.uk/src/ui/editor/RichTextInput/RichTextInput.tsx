@@ -35,6 +35,7 @@ import { Props } from "./types";
 import { fromHtml, initialUrlValue, toHtml, trimUrlValue } from "./utils";
 import {
   getContentHierarchyError,
+  getLegislationLinkError,
   getLinkNewTabError,
   linkSelectionError,
 } from "./validationHelpers";
@@ -77,6 +78,10 @@ const RichTextInput: FC<Props> = (props) => {
     getLinkNewTabError(fromHtml(stringValue).content),
   );
 
+  const [legislationLinkError, setLegislationLinkError] = useState<
+    string | undefined
+  >(getLegislationLinkError(fromHtml(stringValue).content));
+
   // Handle update events
   const handleUpdate = useCallback(
     (transaction: { editor: Editor }) => {
@@ -87,6 +92,7 @@ const RichTextInput: FC<Props> = (props) => {
 
       setContentHierarchyError(getContentHierarchyError(doc));
       setLinkNewTabError(getLinkNewTabError(doc.content));
+      setLegislationLinkError(getLegislationLinkError(doc.content));
 
       const html = toHtml(doc);
       internalValue.current = html;
@@ -305,6 +311,14 @@ const RichTextInput: FC<Props> = (props) => {
       {linkNewTabError && (
         <Box sx={{ position: "absolute", top: 0, right: 0 }}>
           <PopupError id="content-error-link-tab" error={linkNewTabError} />
+        </Box>
+      )}
+      {legislationLinkError && (
+        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
+          <PopupError
+            id="content-error-link-tab"
+            error={legislationLinkError}
+          />
         </Box>
       )}
     </RichContentContainer>
