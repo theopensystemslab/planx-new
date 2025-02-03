@@ -35,7 +35,7 @@ export const setupFailureNotificationForDeployments = (
       alarmActions: [topic.arn],
       comparisonOperator: "GreaterThanThreshold",
       evaluationPeriods: 1,
-      metricName: "ECSServiceFailedTaskCount",
+      metricName: "UnhealthyTaskCount",
       namespace: "AWS/ECS",
       period: 300,
       statistic: "Sum",
