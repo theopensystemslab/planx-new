@@ -1,4 +1,4 @@
-import { makeUniqueFlow, getFlowData, insertFlow } from "../../../helpers.js";
+import { makeUniqueFlow, getFlowData, createFlow } from "../../../helpers.js";
 
 const copyFlow = async (
   flowId: string,
@@ -17,7 +17,7 @@ const copyFlow = async (
     const newName = flow.name + " (copy)";
 
     // Insert the flow and an associated operation
-    await insertFlow(flow.team_id, newSlug, newName, uniqueFlowData, flowId);
+    await createFlow(flow.team_id, newSlug, newName, uniqueFlowData, flowId);
   }
 
   return { flow, uniqueFlowData };

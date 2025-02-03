@@ -347,6 +347,8 @@ export const editorStore: StateCreator<
       },
     });
 
+    response = await get().publishFlow(id, "Created flow");
+
     return newSlug;
   },
 

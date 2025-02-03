@@ -114,39 +114,7 @@ test.describe("Flow creation, publish and preview", () => {
     ]);
   });
 
-  test("Cannot preview an unpublished flow", async ({
-    browser,
-  }: {
-    browser: Browser;
-  }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
-
-    await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
-    );
-
-    await expect(page.getByText("Not Found")).toBeVisible();
-  });
-
-  test("Publish a flow", async ({ browser }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
-
-    await navigateToService(page, serviceProps.slug);
-    await publishService(page);
-
-    const previewLink = page.getByRole("link", {
-      name: "Open published service",
-    });
-    await expect(previewLink).toBeVisible();
-  });
-
-  test("Cannot preview an offline flow", async ({
+  test("Cannot preview an offline flow (published by default)", async ({
     browser,
   }: {
     browser: Browser;

@@ -12,6 +12,7 @@ import { $admin } from "../client.js";
 export class CustomWorld extends World {
   teamId!: number;
   flowId!: string;
+  userId!: number;
 }
 
 After("@flow-status-history", async function () {
@@ -19,8 +20,9 @@ After("@flow-status-history", async function () {
 });
 
 Before<CustomWorld>("@flow-status-history", async function () {
-  const { teamId } = await setup();
+  const { teamId, userId } = await setup();
   this.teamId = teamId;
+  this.userId = userId;
 });
 
 Given<CustomWorld>("a flow exists", async function () {
@@ -28,6 +30,7 @@ Given<CustomWorld>("a flow exists", async function () {
     teamId: this.teamId,
     slug: "test-flow",
     name: "Test Flow",
+    userId: this.userId,
   });
 
   assert.ok(flowId, "flowId is not defined");

@@ -29,7 +29,11 @@ const fileFilter: multer.Options["fileFilter"] = (_req, file, callback) => {
   if (isValidMimeType && isValidExtension) {
     callback(null, true);
   } else {
-    callback(new Error("Unsupported file type"));
+    callback(
+      new Error(
+        `Unsupported file type. Mimetype: ${file.mimetype}. Extension: ${path.extname(file.originalname).toLowerCase()}`,
+      ),
+    );
   }
 };
 
