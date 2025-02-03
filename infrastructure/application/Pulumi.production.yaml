@@ -73,6 +73,8 @@ config:
     secure: AAABAE+wD6ahxO45tq/JWp6odrHX9jOhdjlMsCqS6kFqBgJ+3T56fOSgpZ26nEftv9IwWZQh/v93tRtTDEb+uw==
   application:session-secret:
     secure: AAABACeZpncVIdwarlb/J9qtaPqUob0YwbaOVDNEgfhSJ71aq0pkZml1EP+JqMKvyhkG483LcIiGzEh/ZDJehMu2
+  application:slack-internal-errors-webhook:
+    secure: AAABAPmtMxpmHMrR6WYt9ymGMW8LhvB6oyRLUWf7nnKbE/8JIpMSaWVAaL8YJUsbQsqTHey/KnsGv3W0kSrQ862/WOLpWFoTQeDhUlpWS6zkaxAztEdA+LstkYJovV0TXNKU52TU/t05
   application:slack-webhook-url:
     secure: AAABANpjl5NnZcSFTUB3iHS4qsQuSgHGkki0yYn/LEB9Oq6kqg/RFSvwl6toXoLjgKRwhcguba8Qyp/gA+nCSMyFu7i36QVFiTRjPFsoQ9esTEo/zGqyNf2tCL/AFd+oE2/WLo1TSq7/Qt7hVm49
   application:ssl-barking-and-dagenham-cert:
