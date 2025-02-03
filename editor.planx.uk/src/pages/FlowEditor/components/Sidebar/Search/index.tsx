@@ -88,7 +88,7 @@ const Search: React.FC = () => {
         setLastPattern(pattern);
         setIsSearching(false);
       }, DEBOUNCE_MS),
-    [search]
+    [search],
   );
 
   return (
