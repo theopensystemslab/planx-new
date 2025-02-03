@@ -14,6 +14,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
 import { slugify } from "utils";
@@ -21,12 +22,6 @@ import { slugify } from "utils";
 import FlowCard, { Card, CardContent } from "./FlowCard";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(3, 0),
