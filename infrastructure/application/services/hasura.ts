@@ -7,7 +7,10 @@ import * as pulumi from "@pulumi/pulumi";
 import * as tldjs from "tldjs";
 
 import { CreateService } from './../types';
-import { addRedirectToCloudFlareListenerRule } from "../utils/addListenerRule";
+import {
+  addRedirectToCloudFlareListenerRule,
+  setupFailureNotificationForDeployments,
+} from "../utils";
 
 export const createHasuraService = async ({
   vpc,
@@ -218,4 +221,6 @@ export const createHasuraService = async ({
     ttl: 1,
     proxied: true,
   });
+
+  setupFailureNotificationForDeployments("hasura", cluster, hasuraService);
 }
