@@ -228,14 +228,14 @@ const flowWithFilters: Store.Flow = {
   SecondQuestionYesAnswer: {
     data: {
       val: "alter.landscaping",
-      flags: ["MCOU_TRUE"],
+      flags: ["flag.mcou.true"],
       text: "Yes",
     },
     type: 200,
   },
   FirstQuestionNoAnswer: {
     data: {
-      flags: ["MCOU_FALSE"],
+      flags: ["flag.mcou.false"],
       text: "No",
     },
     type: 200,
@@ -251,7 +251,7 @@ const flowWithFilters: Store.Flow = {
   },
   RootFilterYes: {
     data: {
-      val: "MCOU_TRUE",
+      val: "flag.mcou.true",
       text: "Material change of use",
     },
     type: 200,
@@ -288,7 +288,7 @@ const flowWithFilters: Store.Flow = {
   },
   BranchFilterNo: {
     data: {
-      val: "MCOU_FALSE",
+      val: "flag.mcou.false",
       text: "Not material change of use",
     },
     type: 200,
@@ -302,7 +302,7 @@ const flowWithFilters: Store.Flow = {
   },
   RootFilterNo: {
     data: {
-      val: "MCOU_FALSE",
+      val: "flag.mcou.false",
       text: "Not material change of use",
     },
     type: 200,
@@ -336,14 +336,14 @@ const flowWithFilters: Store.Flow = {
   FirstQuestionYesAnswer: {
     data: {
       val: "alter.facade",
-      flags: ["MCOU_TRUE"],
+      flags: ["flag.mcou.true"],
       text: "Yes",
     },
     type: 200,
   },
   BranchFilterYes: {
     data: {
-      val: "MCOU_TRUE",
+      val: "flag.mcou.true",
       text: "Material change of use",
     },
     type: 200,
@@ -371,7 +371,7 @@ const flowWithFilters: Store.Flow = {
   },
   SecondQuestionNoAnswer: {
     data: {
-      flags: ["MCOU_FALSE"],
+      flags: ["flag.mcou.false"],
       text: "No",
     },
     type: 200,

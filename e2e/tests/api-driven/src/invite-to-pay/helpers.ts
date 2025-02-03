@@ -41,7 +41,7 @@ export async function buildITPFlow({
   destination: string;
   userId: number;
   teamId: number;
-}): Promise<{ flowId: string; publishedFlowId: number }> {
+}): Promise<{ flowId: string }> {
   const sendNode = sendNodeWithDestination(destination);
   const flowGraph: FlowGraph = {
     ...inviteToPayFlowGraph,
@@ -51,14 +51,11 @@ export async function buildITPFlow({
     teamId,
     slug: `test-invite-to-pay-flow-with-send-to-${destination.toLowerCase()}`,
     name: `Test invite to pay flow with send to ${destination}`,
-    status: "online",
     data: flowGraph,
+    status: "online",
+    userId,
   });
-  const publishedFlowId = await $admin.flow.publish({
-    flow: { id: flowId, data: flowGraph },
-    publisherId: userId,
-  });
-  return { flowId, publishedFlowId };
+  return { flowId };
 }
 
 export async function buildSessionForFlow(flowId: string): Promise<string> {

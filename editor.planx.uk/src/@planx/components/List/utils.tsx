@@ -1,7 +1,18 @@
 import { styled } from "@mui/material/styles";
 import React from "react";
 
-import { Field, SchemaUserResponse } from "./../shared/Schema/model";
+import { formatAsSingleLineAddress } from "../AddressInput/model";
+import {
+  Field,
+  isAddressFieldResponse,
+  isChecklistFieldResponse,
+  isMapFieldResponse,
+  isNumberFieldResponse,
+  isTextResponse,
+  NumberField,
+  ResponseValue,
+  SchemaUserResponse,
+} from "./../shared/Schema/model";
 
 const List = styled("ul")(() => ({
   listStylePosition: "inside",
@@ -15,19 +26,29 @@ const List = styled("ul")(() => ({
  * @param field - the Field object
  * @returns string | React.JSX.Element - the `text` for the given value `val`, or the original value
  */
-export function formatSchemaDisplayValue(
-  value: string | string[],
-  field: Field,
-) {
+export const formatSchemaDisplayValue = <T extends Field>(
+  value: ResponseValue<T>,
+  field: T,
+) => {
   switch (field.type) {
     case "number":
+      if (!isNumberFieldResponse(value)) return;
+
       return field.data.units ? `${value} ${field.data.units}` : value;
+    case "address":
+      if (!isAddressFieldResponse(value)) return;
+
+      return formatAsSingleLineAddress(value);
     case "text":
     case "date":
+      if (!isTextResponse(value)) return;
+
       return value;
     case "checklist": {
+      if (!isChecklistFieldResponse(value)) return;
+
       const matchingOptions = field.data.options.filter((option) =>
-        (value as string[]).includes(option.id),
+        value.includes(option.id),
       );
       return (
         <List>
@@ -38,12 +59,16 @@ export function formatSchemaDisplayValue(
       );
     }
     case "question": {
+      if (!isTextResponse(value)) return;
+
       const matchingOption = field.data.options.find(
         (option) => option.data.text === value || option.data.val === value,
       );
       return matchingOption?.data.text;
     }
-    case "map": {
+    case "map":
+      if (!isMapFieldResponse(value)) return;
+
       return (
         <>
           {/* @ts-ignore */}
@@ -73,9 +98,23 @@ export function formatSchemaDisplayValue(
           />
         </>
       );
-    }
   }
-}
+};
+
+const isIdenticalUnitsField = (
+  item: SchemaUserResponse,
+): item is Record<"identicalUnits", ResponseValue<NumberField>> =>
+  "identicalUnits" in item && isNumberFieldResponse(item.identicalUnits);
+
+const isIdenticalUnitsDevelopmentField = (
+  item: SchemaUserResponse,
+): item is Record<
+  "identicalUnits" | "development",
+  ResponseValue<NumberField>
+> =>
+  "identicalUnits" in item &&
+  "development" in item &&
+  isNumberFieldResponse(item.identicalUnits);
 
 /**
  * If the schema includes a field that sets fn = "identicalUnits", sum of total units
@@ -89,8 +128,8 @@ export function sumIdenticalUnits(
 ): number {
   let sum = 0;
   passportData[`${fn}`].map((item) => {
-    if (!Array.isArray(item?.identicalUnits)) {
-      sum += parseInt(item?.identicalUnits);
+    if (isIdenticalUnitsField(item)) {
+      sum += item.identicalUnits;
     }
   });
   return sum;
@@ -119,8 +158,8 @@ export function sumIdenticalUnitsByDevelopmentType(
     notKnown: 0,
   };
   passportData[`${fn}`].map((item) => {
-    if (!Array.isArray(item?.identicalUnits)) {
-      baseSums[`${item?.development}`] += parseInt(item?.identicalUnits);
+    if (isIdenticalUnitsDevelopmentField(item)) {
+      baseSums[`${item?.development}`] += item.identicalUnits;
     }
   });
 

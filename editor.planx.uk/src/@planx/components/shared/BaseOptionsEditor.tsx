@@ -5,12 +5,13 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 
 import { Option } from ".";
-import { FlagsSelect } from "./FlagsSelect";
 import { DataFieldAutocomplete } from "./DataFieldAutocomplete";
+import { FlagsSelect } from "./FlagsSelect";
 
 export interface BaseOptionsEditorProps {
   value: Option;
   schema?: string[];
+  optionPlaceholder?: string;
   showValueField?: boolean;
   showDescriptionField?: boolean;
   onChange: (newVal: Option) => void;
@@ -38,7 +39,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
               },
             });
           }}
-          placeholder="Option"
+          placeholder={props.optionPlaceholder || "Option"}
         />
       </InputRowItem>
       <ImgInput
@@ -75,14 +76,15 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
     )}
     {props.showValueField && (
       <DataFieldAutocomplete
+        key={`${props.value.id}-data-field-autocomplete`}
         schema={props.schema}
-        value={props.value.data.val || ""}
+        value={props.value.data.val}
         onChange={(targetValue) => {
           props.onChange({
             ...props.value,
             data: {
               ...props.value.data,
-              val: targetValue ? targetValue : undefined,
+              val: targetValue ?? "",
             },
           });
         }}

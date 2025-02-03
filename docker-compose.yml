@@ -19,7 +19,7 @@ services:
 
   metabase:
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.50.26
+    image: metabase/metabase:v0.52.7
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -131,6 +131,8 @@ services:
       FILE_API_KEY_MEDWAY: ${FILE_API_KEY_MEDWAY}
       FILE_API_KEY_GATESHEAD: ${FILE_API_KEY_GATESHEAD}
       FILE_API_KEY_DONCASTER: ${FILE_API_KEY_DONCASTER}
+      FILE_API_KEY_GLOUCESTER: ${FILE_API_KEY_GLOUCESTER}
+      FILE_API_KEY_TEWKESBURY: ${FILE_API_KEY_TEWKESBURY}
       FILE_API_KEY_NEXUS: ${FILE_API_KEY_NEXUS}
       FILE_API_KEY: ${FILE_API_KEY}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}

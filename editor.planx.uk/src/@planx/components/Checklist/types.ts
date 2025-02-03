@@ -18,4 +18,4 @@ export interface ChecklistProps extends Checklist {
   };
 }
 
-export type Props = PublicProps<Checklist>;
+export type PublicChecklistProps = PublicProps<Checklist>;

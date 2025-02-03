@@ -13,6 +13,7 @@ import {
   TRACK_INPUT_ERRORS,
   UPDATE_ALLOW_LIST_ANSWERS,
   UPDATE_ANALYTICS_LOG_METADATA,
+  UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS,
   UPDATE_FLOW_DIRECTION,
   UPDATE_HAS_CLICKED_HELP,
   UPDATE_HAS_CLICKED_SAVE,
@@ -360,6 +361,40 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }
 
+  async function updateAutoAnsweredNodeWithAllowListAnswers(
+    nodeId: string,
+    breadcrumb: Store.UserData,
+  ) {
+    if (shouldSkipTracking()) return;
+
+    // Only proceed if it's a SetValue component that is appending or replacing (not removing) a value
+    //   Do not track allow list answers for Questions or Checklists because these will always be equal or less granular data values than put to the user
+    if (
+      flow[nodeId]?.type !== TYPES.SetValue ||
+      !["append", "replace"].includes(flow[nodeId]?.data?.operation)
+    )
+      return;
+
+    const allowListAnswers = getAllowListAnswers(
+      nodeId,
+      breadcrumb,
+      flow,
+      breadcrumbs,
+    );
+    if (!allowListAnswers) return;
+
+    // We can't rely on lastVisibleNodeAnalyticsLogId variable here to mutate a single record because we have an auto-answered node (not visible), so instead we update entire session using analyticsId
+    //   But this shouldn't matter in the case of SetValues because very nodeId has same data value (this would not hold for Questions and Checklists with different option paths)
+    await publicClient.mutate({
+      mutation: UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS,
+      variables: {
+        analytics_id: analyticsId,
+        allow_list_answers: allowListAnswers,
+        node_id: nodeId,
+      },
+    });
+  }
+
   /**
    * Capture user input errors caught by ErrorWrapper component
    */
@@ -387,8 +422,12 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     updatedBreadcrumbKeys.forEach((breadcrumbKey) => {
       const breadcrumb = breadcrumbs[breadcrumbKey];
       if (breadcrumb.auto) {
+        // track() is called from the Card component, so auto-answers are naturally omitted because they aren't rendered to a user
+        //   instead we manually insert their analytics_logs and track allow list answers as applicable here
         track(breadcrumbKey);
+        updateAutoAnsweredNodeWithAllowListAnswers(breadcrumbKey, breadcrumb);
       } else {
+        // Visible nodes always track allow list answers independent of component type
         updateLastVisibleNodeLogWithAllowListAnswers(breadcrumbKey, breadcrumb);
       }
     });

@@ -50,11 +50,11 @@ const renderTags: AutocompleteProps<
 export const FlagsSelect: React.FC<Props> = (props) => {
   const { value: initialFlagValues } = props;
 
-  const value: Flag[] | undefined = useMemo(
+  const value: Flag[] = useMemo(
     () =>
       initialFlagValues?.flatMap((initialFlagValue) =>
         flatFlags.filter((flag) => flag.value === initialFlagValue),
-      ),
+      ) || [],
     [initialFlagValues],
   );
 

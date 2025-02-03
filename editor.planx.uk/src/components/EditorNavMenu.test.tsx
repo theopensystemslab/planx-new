@@ -99,12 +99,12 @@ describe("flowLayoutRoutes", () => {
     mockFlowName = "test-flow";
   });
 
-  it("does not display for teamViewers", () => {
+  it("only displays the 'about this service' route for teamViewers", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    expect(menuItems).toHaveLength(2); // Flow and About this service
   });
 
   it("displays for teamEditors", () => {
@@ -112,7 +112,7 @@ describe("flowLayoutRoutes", () => {
 
     const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(5);
+    expect(menuItems).toHaveLength(6);
     expect(getByLabelText("Submissions log")).toBeInTheDocument();
   });
 
@@ -121,7 +121,7 @@ describe("flowLayoutRoutes", () => {
 
     const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(5);
+    expect(menuItems).toHaveLength(6);
     expect(getByLabelText("Submissions log")).toBeInTheDocument();
   });
 });

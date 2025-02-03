@@ -26,14 +26,14 @@ export default function AddressInputComponent(props: Props): FCReturn {
         });
       }
     },
-    validate: () => { },
+    validate: () => {},
   });
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
         <ModalSectionContent
-          title="Address Input"
+          title="Address input"
           Icon={ICONS[TYPES.AddressInput]}
         >
           <InputRow>

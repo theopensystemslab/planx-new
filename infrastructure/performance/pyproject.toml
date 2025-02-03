@@ -1,0 +1,41 @@
+[project]
+name = "performance"
+version = "0.1.0"
+description = "Load testing scripts for PlanX infra"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "blinker==1.8.2",
+    "brotli==1.1.0",
+    "certifi==2024.8.30",
+    "charset-normalizer==3.4.0",
+    "click==8.1.7",
+    "configargparse==1.7",
+    "flask==3.0.3",
+    "flask-cors==5.0.0",
+    "flask-login==0.6.3",
+    "gevent==24.10.3",
+    "geventhttpclient==2.3.1",
+    "greenlet==3.1.1",
+    "har2locust==0.9.3",
+    "idna==3.10",
+    "itsdangerous==2.2.0",
+    "jinja2==3.1.5",
+    "locust==2.32.1",
+    "locust-plugins==4.5.3",
+    "markupsafe==3.0.2",
+    "msgpack==1.1.0",
+    "psutil==6.1.0",
+    "pyzmq==26.2.0",
+    "requests==2.32.3",
+    "ruff==0.7.4",
+    "setuptools==75.3.0",
+    "typing-extensions==4.12.2",
+    "urllib3==2.2.3",
+    "werkzeug==3.1.2",
+    "zope-event==5.0",
+    "zope-interface==7.1.1",
+]
+
+[tool.ruff]
+indent-width=2

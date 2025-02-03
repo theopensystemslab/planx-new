@@ -11,19 +11,19 @@ https://docs.google.com/spreadsheets/d/19VMxVhzIt3z1CcvlhELuUxablfbw40Ri/edit#gi
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land article-4-direction dataset and entity.reference
     records: {
-      "article4.tewkesbury.ashleworthgreen": "A4Da2",
-      "article4.tewkesbury.buckland": "A4Da3",
-      "article4.tewkesbury.dumbleton": "A4Da4",
-      "article4.tewkesbury.forthampton": "A4Da5",
-      "article4.tewkesbury.laverton": "A4Da7",
-      "article4.tewkesbury.stanton": "A4Da8",
-      "article4.tewkesbury.tewkesbury": "A4Da9",
-      "article4.tewkesbury.twyningchurchend": "A4Da1",
-      "article4.tewkesbury.washbourne": "A4Da6",
-      "article4.tewkesbury.winchcombe": "A4Da10",
+      "articleFour.tewkesbury.ashleworthgreen": "A4Da2",
+      "articleFour.tewkesbury.buckland": "A4Da3",
+      "articleFour.tewkesbury.dumbleton": "A4Da4",
+      "articleFour.tewkesbury.forthampton": "A4Da5",
+      "articleFour.tewkesbury.laverton": "A4Da7",
+      "articleFour.tewkesbury.stanton": "A4Da8",
+      "articleFour.tewkesbury.tewkesbury": "A4Da9",
+      "articleFour.tewkesbury.twyningchurchend": "A4Da1",
+      "articleFour.tewkesbury.washbourne": "A4Da6",
+      "articleFour.tewkesbury.winchcombe": "A4Da10",
     },
   },
 };

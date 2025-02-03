@@ -11,13 +11,14 @@ import { FieldInputDescription } from "./shared";
 
 export const DateFieldInput: React.FC<Props<DateField>> = (props) => {
   const { data, formik } = props;
-  const { id, errorMessage, name, value } = getFieldProps(props);
+  const { id, errorMessage, name, value, title, required } =
+    getFieldProps(props);
 
   return (
     <Box component="fieldset">
       <InputLegend>
         <Typography variant="body1" pb={1}>
-          <strong>{data.title}</strong>
+          <strong>{title}</strong>
         </Typography>
       </InputLegend>
       {data.description && (
@@ -31,6 +32,7 @@ export const DateFieldInput: React.FC<Props<DateField>> = (props) => {
         }}
         error={errorMessage}
         id={id}
+        required={required}
       />
     </Box>
   );

@@ -127,7 +127,7 @@ export const expectedPlanningPermissionPayload = {
             overlaps: false,
           },
           {
-            value: "article4",
+            value: "articleFour",
             description: "Article 4 Direction area",
             overlaps: false,
           },
@@ -182,7 +182,7 @@ export const expectedPlanningPermissionPayload = {
             overlaps: false,
           },
           {
-            value: "article4.caz",
+            value: "articleFour.caz",
             description: "Central Activities Zone (CAZ)",
             overlaps: false,
           },

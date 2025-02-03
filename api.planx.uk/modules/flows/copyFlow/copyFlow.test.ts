@@ -36,6 +36,30 @@ beforeEach(() => {
       },
     },
   });
+
+  queryMock.mockQuery({
+    name: "GetMostRecentPublishedFlow",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        publishedFlows: [
+          {
+            data: mockFlowData,
+          },
+        ],
+      },
+    },
+  });
+
+  queryMock.mockQuery({
+    name: "PublishFlow",
+    matchOnVariables: false,
+    data: {
+      publishedFlow: {
+        data: mockFlowData,
+      },
+    },
+  });
 });
 
 const auth = authHeader({ role: "teamEditor" });

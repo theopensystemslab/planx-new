@@ -11,15 +11,16 @@ https://docs.google.com/spreadsheets/d/1UmxQ95SjU72j0KaVIIkrIfhdE_k_lcFNhUWBc53G
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to entity.reference on Planning Data
     records: {
-      "article4.barkingAndDagenham.additionalStoreys.dagenhamVillage": "A4D01",
-      "article4.barkingAndDagenham.additionalStoreys.lymington": "A4D02",
-      "article4.barkingAndDagenham.becontree":
+      "articleFour.barkingAndDagenham.additionalStoreys.dagenhamVillage":
+        "A4D01",
+      "articleFour.barkingAndDagenham.additionalStoreys.lymington": "A4D02",
+      "articleFour.barkingAndDagenham.becontree":
         "Proposed Becontree Design Guide Article 4",
-      // "article4.barkingAndDagenham.becontree.corners": "TBD",
-      "article4.barkingAndDagenham.hmo": "A4D03",
+      // "articleFour.barkingAndDagenham.becontree.corners": "TBD",
+      "articleFour.barkingAndDagenham.hmo": "A4D03",
     },
   },
 };

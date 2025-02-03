@@ -38,7 +38,7 @@ const Root = styled(ButtonBase, {
   flexGrow: 0,
   backgroundColor: theme.palette.background.default,
   color: theme.palette.primary.dark,
-  border: `1px solid ${theme.palette.border.light}`,
+  border: `1px solid ${theme.palette.border.main}`,
   ...(isDragActive && {
     border: `2px dashed ${theme.palette.primary.dark}`,
   }),

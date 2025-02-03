@@ -249,7 +249,7 @@ export const mockFlow: FlowGraph = {
     data: {
       flagSet: "Planning permission",
       overrides: {
-        IMMUNE: {
+        "flag.pp.immune": {
           heading: "Squid",
           description: "Eagle",
         },
@@ -647,14 +647,14 @@ export const mockResultResult: SearchResult<IndexedNode> = {
     data: {
       flagSet: "Planning permission",
       overrides: {
-        IMMUNE: {
+        "flag.pp.immune": {
           heading: "Squid",
           description: "Eagle",
         },
       },
     },
   },
-  key: "data.overrides.IMMUNE.heading",
+  key: "data.overrides.flag.pp.immune.heading",
   matchIndices: [[0, 4]],
   refIndex: 0,
   matchValue: "Squid",

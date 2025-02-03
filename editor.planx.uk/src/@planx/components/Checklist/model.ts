@@ -1,3 +1,4 @@
+import { partition } from "lodash";
 import { array } from "yup";
 
 import { BaseNodeData, Option } from "../shared";
@@ -10,6 +11,7 @@ export enum ChecklistLayout {
 
 export interface Group<T> {
   title: string;
+  exclusive?: true;
   children: Array<T>;
 }
 
@@ -36,34 +38,51 @@ interface ChecklistExpandableProps {
   groupedOptions?: Array<Group<Option>>;
 }
 
-export const toggleExpandableChecklist = (
-  checklist: ChecklistExpandableProps,
-): ChecklistExpandableProps => {
-  if (checklist.options !== undefined && checklist.options.length > 0) {
+export const toggleExpandableChecklist = ({
+  options,
+  groupedOptions,
+}: ChecklistExpandableProps) => {
+  const checklist = [options, groupedOptions];
+
+  // toggle from unexpanded to expanded
+  if (options !== undefined && options.length > 0) {
+    const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
+      options,
+      (option) => option.data.exclusive,
+    );
+
+    const newGroupedOptions = [
+      {
+        title: "Section 1",
+        children: nonExclusiveOptions,
+      },
+    ];
+
+    if (exclusiveOptions.length > 0) {
+      newGroupedOptions.push({
+        title: "Or",
+        children: exclusiveOptions,
+      });
+    }
+
     return {
       ...checklist,
-      groupedOptions: [
-        {
-          title: "Section 1",
-          children: checklist.options,
-        },
-      ],
+      groupedOptions: newGroupedOptions,
       options: undefined,
     };
-  } else if (
-    checklist.groupedOptions !== undefined &&
-    checklist.groupedOptions.length > 0
-  ) {
+
+    // toggle from expanded to unexpanded
+  } else if (groupedOptions !== undefined && groupedOptions.length > 0) {
     return {
       ...checklist,
-      options: checklist.groupedOptions.flatMap((opt) => opt.children),
+      options: groupedOptions.flatMap((opt) => opt.children),
       groupedOptions: undefined,
     };
   } else {
     return {
       ...checklist,
-      options: checklist.options || [],
-      groupedOptions: checklist.groupedOptions || [
+      options: options || [],
+      groupedOptions: groupedOptions || [
         {
           title: "Section 1",
           children: [],
@@ -104,29 +123,29 @@ export const getLayout = ({
   return ChecklistLayout.Basic;
 };
 
-export const checklistValidationSchema = ({
-  allRequired,
-  options,
-  groupedOptions,
-}: Checklist) => {
+export const checklistInputValidationSchema = ({
+  data: { allRequired, options, groupedOptions },
+  required,
+}: {
+  // Cannot use type FieldValidationSchema<ChecklistInput> as this is a simplified representation (i.e. no groups)
+  data: Checklist;
+  required: boolean;
+}) => {
   const flatOptions = getFlatOptions({ options, groupedOptions });
 
   return array()
-    .required()
-    .test({
-      name: "atLeastOneChecked",
-      message: "Select at least one option",
-      test: (checked?: Array<string>) => {
-        return Boolean(checked && checked.length > 0);
-      },
+    .when([], {
+      is: () => required,
+      then: array().min(1, "Select at least one option"),
+      otherwise: array().notRequired(),
     })
     .test({
       name: "notAllChecked",
       message: "All options must be checked",
       test: (checked?: Array<string>) => {
-        if (!allRequired) {
-          return true;
-        }
+        if (!checked?.length) return true;
+        if (!allRequired) return true;
+
         const allChecked = checked && checked.length === flatOptions.length;
         return Boolean(allChecked);
       },

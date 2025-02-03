@@ -5,7 +5,8 @@ import Stack from "@mui/material/Stack";
 import { Meta } from "@storybook/react";
 import React, { useState } from "react";
 
-import RichTextInput, { fromHtml, injectVariables } from "./RichTextInput";
+import RichTextInput from "./RichTextInput";
+import { fromHtml, injectVariables } from "./utils";
 
 const meta = {
   title: "Design System/Atoms/Form Elements/RichTextInput",

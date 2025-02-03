@@ -7,6 +7,7 @@ import {
   ComponentType as TYPES,
   NodeId,
 } from "@opensystemslab/planx-core/types";
+import { formatAsSingleLineAddress } from "@planx/components/AddressInput/model";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
 import type { Page } from "@planx/components/Page/model";
@@ -17,7 +18,15 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { SchemaUserResponse } from "../Schema/model";
+import {
+  Field,
+  isAddressFieldResponse,
+  isMapFieldResponse,
+  isNumberFieldResponse,
+  isTextResponse,
+  ResponseValue,
+  SchemaUserResponse,
+} from "../Schema/model";
 
 export default SummaryListsBySections;
 
@@ -626,6 +635,17 @@ function Page(props: ComponentProps) {
   const answers = getAnswersByNode(props) as SchemaUserResponse[];
   const fields = (props.node.data as Page).schema.fields;
 
+  const displayValue = (answer: ResponseValue<Field>) => {
+    if (isTextResponse(answer)) return answer;
+    if (isNumberFieldResponse(answer)) return answer.toString();
+    if (isMapFieldResponse(answer)) return `${answer.length || 0} features`;
+    if (isAddressFieldResponse(answer))
+      return formatAsSingleLineAddress(answer);
+
+    // TODO: Handle other types more gracefully
+    return answer;
+  };
+
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
@@ -639,9 +659,7 @@ function Page(props: ComponentProps) {
               {field.data.title}
             </Typography>
             <Typography>
-              {field.type === "map"
-                ? `${answers[0][field.data.fn].length || 0} features`
-                : answers[0][field.data.fn]}
+              <>{displayValue(answers[0][field.data.fn])}</>
             </Typography>
           </Box>
         ))}

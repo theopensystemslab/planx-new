@@ -113,6 +113,14 @@ export const useFilePermission: RequestHandler = (req, _res, next): void => {
     ) ||
     isEqual(
       req.headers["api-key"] as string,
+      process.env.FILE_API_KEY_GLOUCESTER!,
+    ) ||
+    isEqual(
+      req.headers["api-key"] as string,
+      process.env.FILE_API_KEY_TEWKESBURY!,
+    ) ||
+    isEqual(
+      req.headers["api-key"] as string,
       process.env.FILE_API_KEY_DONCASTER!,
     );
   if (!isAuthenticated) return next({ status: 401, message: "Unauthorised" });
@@ -209,7 +217,9 @@ type UseRoleAuth = (authRoles: Role[]) => RequestHandler;
  */
 export const useRoleAuth: UseRoleAuth =
   (authRoles) => async (req, res, next) => {
-    useJWT(req, res, () => {
+    useJWT(req, res, (err) => {
+      if (err) return next(err);
+
       if (!req?.user)
         return next({
           status: 401,
@@ -273,7 +283,9 @@ export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
  * Allow any logged in user to access route, without checking roles
  */
 export const useLoginAuth: RequestHandler = (req, res, next) =>
-  useJWT(req, res, () => {
+  useJWT(req, res, (err) => {
+    if (err) return next(err);
+
     if (req?.user?.sub) {
       userContext.run(
         {

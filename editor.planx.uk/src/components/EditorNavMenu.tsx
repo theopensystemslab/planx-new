@@ -2,6 +2,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
+import Info from "@mui/icons-material/Info";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
@@ -78,6 +79,9 @@ const MenuButton = styled(IconButton, {
     background: theme.palette.common.white,
     color: theme.palette.text.primary,
     border: `1px solid ${theme.palette.border.main}`,
+    "&:hover": {
+      borderColor: theme.palette.border.main,
+    },
   }),
   ...(disabled && {
     color: theme.palette.text.disabled,
@@ -168,6 +172,12 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+    },
+    {
+      title: "About this service",
+      Icon: Info,
+      route: `/${teamSlug}/${flowSlug}/about`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
     {

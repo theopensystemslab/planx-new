@@ -22,6 +22,8 @@ config:
     secure: AAABANvwhiVRBq8NH7ZqcToUzYn4X+KfC5Wm8WjWUKXT5TuVXqC6zHhVVKFBbmdtKjC4j5M4+bWsLiFO9dO0MLobxLpK7YCE
   application:file-api-key-gateshead:
     secure: AAABAIIeEiX2htVth4Obb5JMQ3fcezHG/utwUsPikaLNmX+rSmMpGQgcG3LM1pN7XDeaO8J/eZHMilG5OvxGyz7Yo+RxVZV0
+  application:file-api-key-gloucester:
+    secure: AAABADXXkyrzbTU7FroS71nVLEGH2rQI63hqcAnm2hLdZYnTEJs/bcUPJU7t/hx1HY5qEmFKpKKhhiO3v5QVXUhwqO0C6BaD
   application:file-api-key-lambeth:
     secure: AAABAMNhdCTlFx3fZH/nO71ildypZB2JR5NixlQCENsS1VqwdiOX17q/Gi1UFrCQi2qaY2sZFG4=
   application:file-api-key-medway:
@@ -30,6 +32,8 @@ config:
     secure: AAABAB2cv4GAf8RqN1hHbRbO68p8o4kLJYWsip9BoPdobrNtQB787M3s+gJnKKl9DfyXRHOXHGc=
   application:file-api-key-southwark:
     secure: AAABAL5G2cNl6XIQA0vcP6El4Us7Vk8Cz9JViRon25crc8MC0ix4ox2mE+XawsxYbLRwGfaRIJo=
+  application:file-api-key-tewkesbury:
+    secure: AAABAA1cz4BbfrTaXhcERQD0MaMSky0fC6ej9/N0n1IBB2w4iBd3S2hNi0T39VEiAB6CNouB+yElaoR7ZWg1xaIIJX2K6TGl
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==
@@ -42,7 +46,9 @@ config:
   application:hasura-planx-api-key:
     secure: AAABAExsXFL7HabeK0Z1oSUJzI2NqVqEmKJ1ojYXyX4Hi8Sbt1Ht9QJc/Yn3cPBAB2r32HKa4HtqqLmfGjS+04lFB/I=
   application:hasura-proxy-cpu: "512"
-  application:hasura-proxy-memory: "2048"
+  application:hasura-proxy-memory: "1024"
+  application:hasura-service-scaling-maximum: "4"
+  application:hasura-service-scaling-minimum: "1"
   application:idox-nexus-client:
     secure: AAABACdm6IyRjfVPrHLCS5eKQD0ixA2lFC5h04HULwcCXx3j
   application:idox-nexus-submission-url: todo

@@ -29,7 +29,7 @@ import * as westBerkshire from "./local_authorities/metadata/westBerkshire.js";
 
 export interface LocalAuthorityMetadata {
   planningConstraints: {
-    article4: {
+    articleFour: {
       records: Record<string, string>;
     };
   };
@@ -214,14 +214,19 @@ async function go(
   }
 
   // --- FLOODING ---
+  const zoneLookup: Record<string, string> = {
+    "flood.zone.2": "flood.zoneTwo",
+    "flood.zone.3": "flood.zoneThree",
+  };
   if (formattedResult["flood"] && formattedResult["flood"].value) {
-    ["flood.zone.2", "flood.zone.3"].forEach(
-      (zone) =>
-        (formattedResult[zone] = {
-          fn: zone,
+    Object.keys(zoneLookup).forEach(
+      (oldZone) =>
+        (formattedResult[zoneLookup[oldZone]] = {
+          fn: zoneLookup[oldZone],
           value: Boolean(
             formattedResult["flood"].data?.filter(
-              (entity) => entity["flood-risk-level"] === zone.split(".").pop(),
+              (entity) =>
+                entity["flood-risk-level"] === oldZone.split(".").pop(),
             ).length,
           ),
         }),
@@ -229,15 +234,20 @@ async function go(
   }
 
   // --- LISTED BUILDINGS ---
+  const gradeLookup: Record<string, string> = {
+    "listed.grade.I": "listed.gradeOne",
+    "listed.grade.II": "listed.gradeTwo",
+    "listed.grade.II*": "listed.gradeTwoStar",
+  };
   if (formattedResult["listed"] && formattedResult["listed"].value) {
-    ["listed.grade.I", "listed.grade.II", "listed.grade.II*"].forEach(
-      (grade) =>
-        (formattedResult[grade] = {
-          fn: grade,
+    Object.keys(gradeLookup).forEach(
+      (oldGrade) =>
+        (formattedResult[gradeLookup[oldGrade]] = {
+          fn: gradeLookup[oldGrade],
           value: Boolean(
             formattedResult["listed"].data?.filter(
               (entity) =>
-                entity["listed-building-grade"] === grade.split(".").pop(),
+                entity["listed-building-grade"] === oldGrade.split(".").pop(),
             ).length,
           ),
         }),
@@ -249,11 +259,11 @@ async function go(
   if (Object.keys(localAuthorityMetadata).includes(localAuthority)) {
     // get the article 4 schema map for this local authority
     const { planningConstraints } = localAuthorityMetadata[localAuthority];
-    const a4s = planningConstraints["article4"]["records"] || undefined;
+    const a4s = planningConstraints["articleFour"]["records"] || undefined;
 
     // loop through any intersecting a4 data entities and set granular planx values based on this local authority's schema
-    if (a4s && formattedResult["article4"]?.value) {
-      formattedResult["article4"]?.data?.forEach((entity: any) => {
+    if (a4s && formattedResult["articleFour"]?.value) {
+      formattedResult["articleFour"]?.data?.forEach((entity: any) => {
         Object.keys(a4s)?.forEach((key) => {
           if (
             // these are various ways we link source data to granular planx values (see local_authorities/metadata for specifics)
@@ -272,23 +282,23 @@ async function go(
       });
     }
 
-    // rename `article4.caz` to reflect localAuthority if applicable
-    const localCaz = `article4.${localAuthority}.caz`;
-    if (formattedResult["article4.caz"]) {
-      formattedResult[localCaz] = formattedResult["article4.caz"];
-      delete formattedResult["article4.caz"];
+    // rename `articleFour.caz` to reflect localAuthority if applicable
+    const localCaz = `articleFour.${localAuthority}.caz`;
+    if (formattedResult["articleFour.caz"]) {
+      formattedResult[localCaz] = formattedResult["articleFour.caz"];
+      delete formattedResult["articleFour.caz"];
 
       // if caz is true, but parent a4 is false, sync a4 for accurate granularity
       if (
         formattedResult[localCaz]?.value &&
-        !formattedResult["article4"]?.value
+        !formattedResult["articleFour"]?.value
       ) {
-        formattedResult["article4"] = {
-          fn: "article4",
+        formattedResult["articleFour"] = {
+          fn: "articleFour",
           value: true,
-          text: baseSchema["article4"].pos,
+          text: baseSchema["articleFour"].pos,
           data: formattedResult[localCaz].data,
-          category: baseSchema["article4"].category,
+          category: baseSchema["articleFour"].category,
         };
       }
     }

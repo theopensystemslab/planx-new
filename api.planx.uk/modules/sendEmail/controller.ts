@@ -27,7 +27,7 @@ export const singleApplicationEmailController: SingleApplicationEmail = async (
     });
     return res.json(response);
   } catch (error) {
-    emailErrorHandler(next, error, template);
+    emailErrorHandler(next, error, template, sessionId);
   }
 };
 
@@ -42,7 +42,12 @@ export const paymentEmailController: PaymentEmail = async (_req, res, next) => {
     });
     return res.json(response);
   } catch (error) {
-    emailErrorHandler(next, error, template);
+    emailErrorHandler(
+      next,
+      error,
+      template,
+      `(payment request) ${paymentRequestId}`,
+    );
   }
 };
 
@@ -69,7 +74,7 @@ export const confirmationEmailController: ConfirmationEmail = async (
       return res.json(response);
     }
   } catch (error) {
-    emailErrorHandler(next, error, template);
+    emailErrorHandler(next, error, template, sessionId);
   }
 };
 
@@ -77,11 +82,12 @@ const emailErrorHandler = (
   next: NextFunction,
   error: unknown,
   template: string,
+  sessionId: string,
 ) =>
   next(
     new ServerError({
       status: error instanceof ServerError ? error.status : undefined,
-      message: `Failed to send "${template}" email. ${
+      message: `Failed to send "${template}" email for session ${sessionId}. ${
         (error as Error).message
       }`,
     }),

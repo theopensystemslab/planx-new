@@ -104,7 +104,7 @@ export const govPayMetadataSchema = array(
       }),
   }),
 )
-  .max(10, "A maximum of 10 fields can be set as metadata")
+  .max(15, "A maximum of 15 fields can be set as metadata")
   .test({
     name: "unique-keys",
     message: "Keys must be unique",

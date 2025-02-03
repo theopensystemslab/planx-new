@@ -5,7 +5,9 @@ import { FlowSettings } from "types";
 export interface FlowInformation {
   settings: FlowSettings;
   status: FlowStatus;
-  description: string;
+  description?: string;
+  summary?: string;
+  limitations?: string;
 }
 
 export interface GetFlowInformation {
@@ -34,3 +36,8 @@ export const formatLastEditMessage = (
 
 export const formatLastPublishMessage = (date: string, user: string): string =>
   `Last published ${formatLastEditDate(date)} by ${user}`;
+
+export const formatServiceLastUpdated = (date: string): string => {
+  const formattedDate = new Date(date).toLocaleDateString("en-gb");
+  return `Service last updated ${formattedDate}`;
+};

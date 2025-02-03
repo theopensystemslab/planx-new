@@ -18,7 +18,7 @@ describe("Collecting flags", () => {
     expect(collectedFlags()).toEqual({
       "Community infrastructure levy": ["Relief"], // Flag value translated to display text
       "Demolition in a conservation area": [],
-      "Listed building consent": [],
+      "Works to listed buildings": [],
       "Material change of use": [],
       "Planning permission": ["Prior approval", "Notice"], // Many flags in same category are ordered highest to lowest, even if selected in opposite order
       "Planning policy": ["Edge case"],
@@ -35,7 +35,7 @@ describe("Collecting flags", () => {
     expect(collectedFlags()).toEqual({
       "Community infrastructure levy": [],
       "Demolition in a conservation area": [],
-      "Listed building consent": [],
+      "Works to listed buildings": [],
       "Material change of use": [],
       "Planning permission": [],
       "Planning policy": [],
@@ -60,13 +60,19 @@ const flow: Store.Flow = {
     type: 200,
     data: {
       text: "Yes",
-      flags: ["PP-NOTICE", "EDGE_CASE", "CO_RELIEF", "PRIOR_APPROVAL"],
+      flags: [
+        "flag.pp.notice",
+        "flag.planningPolicy.edgeCase",
+        "flag.cil.relief",
+        "flag.pp.priorApproval",
+      ],
     },
   },
   NoOption: {
     type: 200,
     data: {
       text: "No",
+      flags: [],
     },
   },
 };
