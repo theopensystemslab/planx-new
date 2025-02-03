@@ -14,7 +14,7 @@ import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
-import { emptyContent } from "ui/editor/RichTextInput/RichTextInput";
+import { emptyContent } from "ui/editor/RichTextInput/utils";
 import FullWidthWrapper from "ui/public/FullWidthWrapper";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";

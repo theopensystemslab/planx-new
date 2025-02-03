@@ -91,6 +91,8 @@ export interface PreviewStore extends Store.Store {
   requestedFiles: () => FileList;
   autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
+  hasAcknowledgedWarning: boolean;
+  setHasAcknowledgedWarning: () => void;
 }
 
 export const previewStore: StateCreator<
@@ -528,7 +530,7 @@ export const previewStore: StateCreator<
     // Only proceed if the user has seen at least one node with this fn before
     const visitedFns = Object.entries(breadcrumbs).filter(
       ([nodeId, _breadcrumb]) =>
-        flow[nodeId].data?.fn === data.fn ||
+        flow[nodeId]?.data?.fn === data.fn ||
         // Account for nodes like FindProperty that don't have `data.fn` prop but still set passport vars like `property.region` etc
         Object.keys(passport?.data || {}).includes(data.fn),
     );
@@ -537,7 +539,7 @@ export const previewStore: StateCreator<
     // For each visited node, get the data values of its' options (aka edges or Answer nodes)
     const visitedOptionVals: string[] = [];
     visitedFns.forEach(([nodeId, _breadcrumb]) => {
-      flow[nodeId].edges?.map((edgeId) => {
+      flow[nodeId]?.edges?.map((edgeId) => {
         if (flow[edgeId].type === TYPES.Answer && flow[edgeId].data?.val) {
           visitedOptionVals.push(flow[edgeId].data.val);
         }
@@ -625,7 +627,7 @@ export const previewStore: StateCreator<
       );
 
       if (matchingIntersectingConstraints?.length > 0) {
-        // Planning constraints uniquely store passport values for every level of granularity (eg `listed`, `listed.grade.I`)
+        // Planning constraints uniquely store passport values for every level of granularity (eg `listed`, `listed.gradeOne`)
         //   So only auto-answer based on exact matches and do not apply `startsWith` logic
         sortedOptions.forEach((option) => {
           passportValues.forEach((passportValue: any) => {
@@ -790,6 +792,9 @@ export const previewStore: StateCreator<
   currentCard: null,
 
   getCurrentCard: () => get().currentCard,
+
+  hasAcknowledgedWarning: false,
+  setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
 });
 
 interface RemoveOrphansFromBreadcrumbsProps {
@@ -942,7 +947,7 @@ const collectedFlagValuesByCategory = (
     if (breadcrumb.answers) {
       breadcrumb.answers.forEach((answerId) => {
         const node = flow[answerId];
-        if (node.data?.flags) {
+        if (node?.data?.flags) {
           node.data.flags.forEach((flag: Flag["value"]) => {
             if (possibleFlagValues.includes(flag)) collectedFlags.push(flag);
           });

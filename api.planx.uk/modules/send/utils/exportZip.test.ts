@@ -51,6 +51,9 @@ vi.mock("@opensystemslab/planx-core", () => {
       .fn()
       .mockImplementation(() => "<p>application</p>"),
     generateMapHTML: vi.fn().mockImplementation(() => "<p>map</p>"),
+    getValidSchemaValues: vi
+      .fn()
+      .mockImplementation(() => ["ldc", "ldc.p", "ldc.e", "pp", "pa"]),
   };
 });
 const mockGenerateOneAppXML = vi

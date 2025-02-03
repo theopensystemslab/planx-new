@@ -24,9 +24,12 @@ export interface SettingsStore {
   flowStatus?: FlowStatus;
   setFlowStatus: (flowStatus: FlowStatus) => void;
   updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
+  flowSummary?: string;
+  updateFlowSummary: (newSummary: string) => Promise<boolean>;
   flowDescription?: string;
-  setFlowDescription: (flowDescription: string) => void;
   updateFlowDescription: (newDescription: string) => Promise<boolean>;
+  flowLimitations?: string;
+  updateFlowLimitations: (newLimitations: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
@@ -59,9 +62,19 @@ export const settingsStore: StateCreator<
     return Boolean(result?.id);
   },
 
-  flowDescription: "",
+  flowSummary: "",
 
-  setFlowDescription: (flowDescription: string) => set({ flowDescription }),
+  updateFlowSummary: async (newSummary: string) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setSummary({
+      flow: { id },
+      summary: newSummary,
+    });
+    set({ flowSummary: newSummary });
+    return Boolean(result?.id);
+  },
+
+  flowDescription: "",
 
   updateFlowDescription: async (newDescription: string) => {
     const { id, $client } = get();
@@ -73,10 +86,22 @@ export const settingsStore: StateCreator<
     return Boolean(result?.id);
   },
 
+  flowLimitations: "",
+
+  updateFlowLimitations: async (newLimitations: string) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setLimitations({
+      flow: { id },
+      limitations: newLimitations,
+    });
+    set({ flowLimitations: newLimitations });
+    return Boolean(result?.id);
+  },
+
   getFlowInformation: async (flowSlug, teamSlug) => {
     const {
       data: {
-        flows: [{ settings, status, description }],
+        flows: [{ settings, status, description, summary, limitations }],
       },
     } = await client.query<GetFlowInformation>({
       query: gql`
@@ -88,7 +113,9 @@ export const settingsStore: StateCreator<
             id
             settings
             description
+            summary
             status
+            limitations
           }
         }
       `,
@@ -103,9 +130,11 @@ export const settingsStore: StateCreator<
       flowSettings: settings,
       flowStatus: status,
       flowDescription: description,
+      flowSummary: summary,
+      flowLimitations: limitations,
     });
 
-    return { settings, status, description };
+    return { settings, status, description, summary, limitations };
   },
 
   globalSettings: undefined,

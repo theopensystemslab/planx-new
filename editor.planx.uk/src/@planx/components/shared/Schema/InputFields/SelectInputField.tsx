@@ -10,18 +10,19 @@ import { FieldInputDescription } from "./shared";
 
 export const SelectFieldInput: React.FC<Props<QuestionField>> = (props) => {
   const { data, formik } = props;
-  const { id, errorMessage, name, value } = getFieldProps(props);
+  const { id, errorMessage, name, value, required, title } =
+    getFieldProps(props);
 
   return (
-    <InputLabel label={data.title} id={`select-label-${id}`}>
+    <InputLabel label={title} id={`select-label-${id}`}>
       {data.description && (
         <FieldInputDescription description={data.description} />
       )}
       <ErrorWrapper id={`${id}-error`} error={errorMessage}>
         <SelectInput
           bordered
-          required
-          title={data.title}
+          required={required}
+          title={title}
           labelId={`select-label-${id}`}
           value={value}
           onChange={formik.handleChange}

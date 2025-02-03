@@ -41,6 +41,14 @@ export function handleOverrides(
         );
       }
 
+      const gradeAndZoneLookup: Record<string, string> = {
+        I: "One",
+        II: "Two",
+        "II*": "TwoStar",
+        "2": "Two",
+        "3": "Three",
+      };
+
       // If less than all listed building or flood zone entities have been marked as inaccurate, ensure the granular children keys are correct
       if (
         !allEntitiesInaccurate &&
@@ -54,11 +62,15 @@ export function handleOverrides(
           );
           if (inaccurateEntity["listed-building-grade"]) {
             inaccurateGranularKeys.push(
-              `listed.grade.${inaccurateEntity["listed-building-grade"]}`,
+              `listed.grade${
+                gradeAndZoneLookup[inaccurateEntity["listed-building-grade"]]
+              }`,
             );
           } else if (inaccurateEntity["flood-risk-level"]) {
             inaccurateGranularKeys.push(
-              `flood.zone.${inaccurateEntity["flood-risk-level"]}`,
+              `flood.zone${
+                gradeAndZoneLookup[inaccurateEntity["flood-risk-level"]]
+              }`,
             );
           }
         });
@@ -72,11 +84,15 @@ export function handleOverrides(
         accurateEntities.forEach((accurateEntity: any) => {
           if (accurateEntity["listed-building-grade"]) {
             granularAccurateKeys.push(
-              `listed.grade.${accurateEntity["listed-building-grade"]}`,
+              `listed.grade${
+                gradeAndZoneLookup[accurateEntity["listed-building-grade"]]
+              }`,
             );
           } else if (accurateEntity["flood-risk-level"]) {
             granularAccurateKeys.push(
-              `flood.zone.${accurateEntity["flood-risk-level"]}`,
+              `flood.zone${
+                gradeAndZoneLookup[accurateEntity["flood-risk-level"]]
+              }`,
             );
           }
         });

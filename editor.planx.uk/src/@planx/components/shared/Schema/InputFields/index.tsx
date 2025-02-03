@@ -1,5 +1,6 @@
 import type {
   Field,
+  ResponseValue,
   SchemaUserData,
 } from "@planx/components/shared/Schema/model";
 import { FormikProps } from "formik";
@@ -7,6 +8,7 @@ import { get } from "lodash";
 import React from "react";
 import { exhaustiveCheck } from "utils";
 
+import { AddressFieldInput } from "./AddressFieldInput";
 import { ChecklistFieldInput } from "./ChecklistFieldInput";
 import { DateFieldInput } from "./DateFieldInput";
 import { MapFieldInput } from "./MapFieldInput";
@@ -21,6 +23,14 @@ export type Props<T extends Field> = {
 } & T;
 
 /**
+ * Apply "(optional)" suffix to optional fields
+ */
+export const formatTitle = ({
+  required = true,
+  data: { title },
+}: Props<Field>): string => (required ? title : (title += " (optional)"));
+
+/**
  * Helper function to get shared props derived from `Field` and `props.formik`
  */
 export const getFieldProps = <T extends Field>(props: Props<T>) => ({
@@ -31,7 +41,11 @@ export const getFieldProps = <T extends Field>(props: Props<T>) => ({
     props.data.fn,
   ]),
   name: `schemaData[${props.activeIndex}]['${props.data.fn}']`,
-  value: props.formik.values.schemaData[props.activeIndex][props.data.fn],
+  value: props.formik.values.schemaData[props.activeIndex][
+    props.data.fn
+  ] as ResponseValue<T>,
+  title: formatTitle(props),
+  required: props.required ?? true,
 });
 
 /**
@@ -57,6 +71,8 @@ export const InputFields: React.FC<Props<Field>> = (props) => {
       return <DateFieldInput {...props} />;
     case "map":
       return <MapFieldInput {...props} />;
+    case "address":
+      return <AddressFieldInput {...props} />;
     default:
       return exhaustiveCheck(type);
   }

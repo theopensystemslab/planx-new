@@ -24,9 +24,9 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
 
   const {
     formik,
-    data: { title, description, mapOptions },
+    data: { description, mapOptions },
   } = props;
-  const { id, errorMessage, name } = getFieldProps(props);
+  const { id, errorMessage, name, title } = getFieldProps(props);
 
   const teamSettings = useStore.getState().teamSettings;
   const passport = useStore((state) => state.computePassport());
@@ -49,7 +49,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
       }
     };
 
-    const map: any = document.getElementById(id);
+    const map: HTMLElement | null = document.getElementById(id);
 
     map?.addEventListener("geojsonChange", geojsonChangeHandler);
 

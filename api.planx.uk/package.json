@@ -13,7 +13,7 @@
     "@airbrake/node": "^2.1.8",
     "@aws-sdk/client-s3": "^3.696.0",
     "@aws-sdk/s3-request-presigner": "^3.701.0",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#dc2386b",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#db49201",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "axios": "^1.7.4",
@@ -50,6 +50,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pino-noir": "^2.2.1",
+    "sanitize-filename": "^1.6.3",
     "slack-notify": "^2.0.7",
     "string-to-stream": "^3.0.1",
     "swagger-jsdoc": "^6.2.8",
@@ -117,7 +118,7 @@
     "tsx": "^4.16.2",
     "typescript": "^5.5.2",
     "uuid": "^10.0.0",
-    "vitest": "^2.1.1"
+    "vitest": "^3.0.3"
   },
   "pnpm": {
     "peerDependencyRules": {

@@ -89,7 +89,7 @@ export default function ConfirmationEditor(props: Props) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Top Banner">
+        <ModalSectionContent title="Top banner">
           <InputRow>
             <Input
               placeholder="Heading"
@@ -110,7 +110,7 @@ export default function ConfirmationEditor(props: Props) {
       </ModalSection>
 
       <ModalSection>
-        <ModalSectionContent title="Next Steps" Icon={ICONS[TYPES.TaskList]}>
+        <ModalSectionContent title="Next steps" Icon={ICONS[TYPES.TaskList]}>
           <ListManager
             values={formik.values.nextSteps}
             onChange={(steps: Step[]) => {
@@ -124,7 +124,7 @@ export default function ConfirmationEditor(props: Props) {
 
       <ModalSection>
         <ModalSectionContent
-          title="More Information"
+          title="More information"
           Icon={ICONS[TYPES.Confirmation]}
         >
           <RichTextInput
@@ -136,7 +136,7 @@ export default function ConfirmationEditor(props: Props) {
       </ModalSection>
 
       <ModalSection>
-        <ModalSectionContent title="Contact Us" Icon={ICONS[TYPES.Send]}>
+        <ModalSectionContent title="Contact us" Icon={ICONS[TYPES.Send]}>
           <RichTextInput
             value={formik.values.contactInfo}
             name="contactInfo"

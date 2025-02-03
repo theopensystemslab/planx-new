@@ -1,9 +1,7 @@
-import ImageOffIcon from "@mui/icons-material/HideImage";
 import ImageIcon from "@mui/icons-material/Image";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import ToggleIconButton from "ui/editor/ToggleIconButton";
 
 export const ToggleImagesButton: React.FC = () => {
   const [showImages, toggleShowImages] = useStore((state) => [
@@ -12,24 +10,12 @@ export const ToggleImagesButton: React.FC = () => {
   ]);
 
   return (
-    <Tooltip title="Toggle images" placement="right">
-      <IconButton
-        aria-label="Toggle images"
-        onClick={toggleShowImages}
-        size="large"
-        sx={(theme) => ({
-          background: theme.palette.background.paper,
-          padding: theme.spacing(1),
-          color: showImages
-            ? theme.palette.text.primary
-            : theme.palette.text.disabled,
-          "&:hover": {
-            background: theme.palette.common.white,
-          },
-        })}
-      >
-        {showImages ? <ImageIcon /> : <ImageOffIcon />}
-      </IconButton>
-    </Tooltip>
+    <ToggleIconButton
+      isToggled={showImages}
+      onToggle={toggleShowImages}
+      icon={<ImageIcon />}
+      tooltip="Toggle images"
+      ariaLabel="Toggle images"
+    />
   );
 };

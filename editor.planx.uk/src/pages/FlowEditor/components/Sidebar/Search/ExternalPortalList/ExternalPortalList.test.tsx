@@ -6,9 +6,9 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Search from ".";
-import { flow } from "./mocks/simple";
-import { VirtuosoWrapper } from "./testUtils";
+import Search from "..";
+import { flow } from "../mocks/simple";
+import { VirtuosoWrapper } from "../testUtils";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({

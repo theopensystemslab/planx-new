@@ -123,6 +123,26 @@ export const UPDATE_ALLOW_LIST_ANSWERS = gql`
   }
 `;
 
+export const UPDATE_AUTO_ANSWERED_ALLOW_LIST_ANSWERS = gql`
+  mutation UpdateAllowListAnswers(
+    $analytics_id: bigint!
+    $allow_list_answers: jsonb
+    $node_id: String!
+  ) {
+    update_analytics_logs(
+      where: {
+        analytics_id: { _eq: $analytics_id }
+        node_id: { _eq: $node_id }
+      }
+      _set: { allow_list_answers: $allow_list_answers }
+    ) {
+      returning {
+        id
+      }
+    }
+  }
+`;
+
 export const TRACK_INPUT_ERRORS = gql`
   mutation TrackInputErrors($id: bigint!, $error: jsonb) {
     update_analytics_logs_by_pk(

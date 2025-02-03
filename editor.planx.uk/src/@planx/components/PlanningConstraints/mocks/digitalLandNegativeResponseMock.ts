@@ -4,8 +4,8 @@ export default {
   sourceRequest:
     "https://www.planning.data.gov.uk/entity.json?entries=current&geometry=POLYGON+%28%28-0.6332024931907679+51.60929241266979%2C+-0.6331099569797541+51.60907004020859%2C+-0.6330429017543818+51.60907920164237%2C+-0.633004009723666+51.60909086164631%2C+-0.6329812109470395+51.60910418736145%2C+-0.63296511769295+51.609116680215834%2C+-0.6329503655433681+51.60913000592336%2C+-0.6329154968261745+51.60917164873425%2C+-0.6328940391540554+51.609262429929544%2C+-0.6332024931907679+51.60929241266979%29%29&geometry_relation=intersects&limit=100&dataset=article-4-direction-area&dataset=central-activities-zone&dataset=listed-building&dataset=listed-building-outline&dataset=locally-listed-building&dataset=park-and-garden&dataset=conservation-area&dataset=area-of-outstanding-natural-beauty&dataset=national-park&dataset=world-heritage-site&dataset=world-heritage-site-buffer-zone&dataset=special-protection-area&dataset=scheduled-monument&dataset=tree&dataset=tree-preservation-order&dataset=tree-preservation-zone&dataset=site-of-special-scientific-interest&dataset=special-area-of-conservation&dataset=ancient-woodland",
   constraints: {
-    article4: {
-      fn: "article4",
+    articleFour: {
+      fn: "articleFour",
       value: false,
       text: "is not subject to local permitted development restrictions (known as Article 4 directions)",
       category: "General policy",
@@ -92,15 +92,15 @@ export default {
       text: "is not in an Ancient Semi-Natural Woodland (ASNW)",
       category: "Ecology",
     },
-    "article4.buckinghamshire.caz": {
-      fn: "article4.caz",
+    "articleFour.buckinghamshire.caz": {
+      fn: "articleFour.caz",
       value: false,
       text: "is not in the Central Activities Zone",
       category: "General policy",
     },
   },
   metadata: {
-    article4: {
+    articleFour: {
       "entry-date": "",
       "start-date": "",
       "end-date": "",
@@ -128,7 +128,7 @@ export default {
       "licence-text":
         "Licensed under the [Open Government Licence v.3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).",
     },
-    "article4.caz": {
+    "articleFour.caz": {
       "entry-date": "",
       "start-date": "",
       "end-date": "",

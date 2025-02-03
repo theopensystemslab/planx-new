@@ -85,13 +85,7 @@ export async function setUpTestContext(
       teamId: context.team.id,
       data: context.flow.data,
       status: "online",
-    });
-    context.flow.publishedId = await $admin.flow.publish({
-      flow: {
-        id: context.flow.id,
-        data: context.flow.data,
-      },
-      publisherId: context.user!.id!,
+      userId: context.user!.id!,
     });
   }
   await setupGovPaySecret($admin, context);
@@ -117,6 +111,7 @@ export function generateAuthenticationToken(userId: string) {
       },
     },
     process.env.JWT_SECRET,
+    { expiresIn: "24h" },
   );
 }
 

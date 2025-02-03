@@ -31,7 +31,7 @@ export interface Props<T, EditorExtraProps = {}> {
   newValueLabel?: string;
   Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
-  disableDragAndDrop?: boolean;
+  noDragAndDrop?: boolean;
   isFieldDisabled?: (item: T, index: number) => boolean;
   maxItems?: number;
 }
@@ -53,22 +53,12 @@ export default function ListManager<T, EditorExtraProps>(
   const isViewOnly = !useStore.getState().canUserEditTeam(teamSlug);
   const isMaxLength = props.values.length >= maxItems;
 
-  return props.disableDragAndDrop ? (
+  return props.noDragAndDrop ? (
     <>
       <Box>
         {props.values.map((item, index) => {
           return (
             <Item key={index}>
-              <Box>
-                <IconButton
-                  disableRipple
-                  disabled={true || isViewOnly}
-                  aria-label="Drag"
-                  size="large"
-                >
-                  <DragHandle />
-                </IconButton>
-              </Box>
               <Editor
                 index={index}
                 value={item}
@@ -77,7 +67,7 @@ export default function ListManager<T, EditorExtraProps>(
                 }}
                 {...(props.editorExtraProps || {})}
               />
-              <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+              <Box sx={{ display: "flex", alignItems: "flex-start" }}>
                 <IconButton
                   onClick={() => {
                     props.onChange(removeAt(index, props.values));
@@ -133,7 +123,7 @@ export default function ListManager<T, EditorExtraProps>(
                       <Box>
                         <IconButton
                           disableRipple
-                          {...(props.disableDragAndDrop
+                          {...(props.noDragAndDrop
                             ? { disabled: true || isViewOnly }
                             : provided.dragHandleProps)}
                           aria-label="Drag"

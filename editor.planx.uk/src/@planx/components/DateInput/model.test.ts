@@ -1,6 +1,5 @@
 import {
-  DateInput,
-  dateRangeSchema,
+  dateInputValidationSchema,
   dateSchema,
   paddedDate,
   parseDate,
@@ -58,11 +57,6 @@ describe("dateSchema", () => {
       .validate(date)
       .catch((err) => err.errors);
 
-  it("throws an error for an undefined value (empty form)", async () => {
-    const errors = await validate(undefined);
-    expect(errors[0]).toMatch(/Date must include a day/);
-  });
-
   it("throws an error for an nonsensical value", async () => {
     const errors = await validate("ab-cd-efgh");
     expect(errors[0]).toMatch(/Date must include a day/);
@@ -104,26 +98,60 @@ describe("dateSchema", () => {
   });
 });
 
-describe("dateRangeSchema", () => {
+describe("dateInputValidationSchema", () => {
   test("basic validation", async () => {
     expect(
-      await dateRangeSchema({
-        min: "1990-01-01",
-        max: "1999-12-31",
-      } as DateInput).isValid("1995-06-15"),
+      await dateInputValidationSchema({
+        data: {
+          title: "test",
+          min: "1990-01-01",
+          max: "1999-12-31",
+        },
+        required: true,
+      }).isValid("1995-06-15"),
     ).toBe(true);
     expect(
-      await dateRangeSchema({
-        min: "1990-01-01",
-        max: "1999-12-31",
-      } as DateInput).isValid("2021-06-15"),
+      await dateInputValidationSchema({
+        data: {
+          title: "test",
+          min: "1990-01-01",
+          max: "1999-12-31",
+        },
+        required: true,
+      }).isValid("2021-06-15"),
     ).toBe(false);
     expect(
-      await dateRangeSchema({
+      await dateInputValidationSchema({
+        data: {
+          title: "test",
+          min: "1990-01-01",
+          max: "1999-12-31",
+        },
+        required: true,
+      }).isValid("1980-06-15"),
+    ).toBe(false);
+  });
+
+  describe("optional fields", () => {
+    const validationSchema = dateInputValidationSchema({
+      data: {
+        title: "test",
         min: "1990-01-01",
         max: "1999-12-31",
-      } as DateInput).isValid("1980-06-15"),
-    ).toBe(false);
+      },
+      required: false,
+    });
+
+    it("does not validate fields without a value", async () => {
+      const result = await validationSchema.validate(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it("validates optional fields with a value", async () => {
+      await expect(() =>
+        validationSchema.validate("2023-02-29"),
+      ).rejects.toThrow(/Enter a valid date in DD.MM.YYYY format/);
+    });
   });
 });
 

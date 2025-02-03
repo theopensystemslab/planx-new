@@ -1,4 +1,5 @@
 import { Browser, expect, test } from "@playwright/test";
+import { createExternalPortal } from "./helpers/addComponent.js";
 import {
   contextDefaults,
   setUpTestContext,
@@ -11,6 +12,16 @@ import {
   selectedFlag,
 } from "./helpers/globalHelpers.js";
 import {
+  navigateToService,
+  publishService,
+  turnServiceOnline,
+} from "./helpers/navigateAndPublish.js";
+import {
+  externalPortalFlowData,
+  externalPortalServiceProps,
+} from "./helpers/serviceData.js";
+import { TestContext } from "./helpers/types.js";
+import {
   answerAddressInput,
   answerChecklist,
   answerContactInput,
@@ -22,17 +33,6 @@ import {
   clickContinue,
 } from "./helpers/userActions.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
-import { createExternalPortal } from "./helpers/addComponent.js";
-import {
-  navigateToService,
-  publishService,
-  turnServiceOnline,
-} from "./helpers/navigateAndPublish.js";
-import { TestContext } from "./helpers/types.js";
-import {
-  externalPortalFlowData,
-  externalPortalServiceProps,
-} from "./helpers/serviceData.js";
 
 test.describe("Flow creation, publish and preview", () => {
   let context: TestContext = {
@@ -114,39 +114,7 @@ test.describe("Flow creation, publish and preview", () => {
     ]);
   });
 
-  test("Cannot preview an unpublished flow", async ({
-    browser,
-  }: {
-    browser: Browser;
-  }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
-
-    await page.goto(
-      `/${context.team.slug}/${serviceProps.slug}/published?analytics=false`,
-    );
-
-    await expect(page.getByText("Not Found")).toBeVisible();
-  });
-
-  test("Publish a flow", async ({ browser }) => {
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
-
-    await navigateToService(page, serviceProps.slug);
-    await publishService(page);
-
-    const previewLink = page.getByRole("link", {
-      name: "Open published service",
-    });
-    await expect(previewLink).toBeVisible();
-  });
-
-  test("Cannot preview an offline flow", async ({
+  test("Cannot preview an offline flow (published by default)", async ({
     browser,
   }: {
     browser: Browser;
@@ -223,7 +191,7 @@ test.describe("Flow creation, publish and preview", () => {
     await navigateToService(page, serviceProps.slug);
 
     // Add our ext portal to the middle of the service
-    await createExternalPortal(page, page.locator("li:nth-child(6)"));
+    await createExternalPortal(page, page.locator("li.hanger > a").nth(6));
 
     await expect(
       page.getByRole("link", { name: "E2E/an-external-portal-service" }),

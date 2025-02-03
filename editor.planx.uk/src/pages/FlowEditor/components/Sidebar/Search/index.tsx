@@ -12,7 +12,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useMemo, useState } from "react";
 import { Components, Virtuoso } from "react-virtuoso";
 
-import { ExternalPortalList } from "./ExternalPortalList";
+import { ExternalPortalList } from "./ExternalPortalList/ExternalPortalList";
 import { ALL_FACETS, SearchFacets } from "./facets";
 import { SearchHeader } from "./SearchHeader";
 import { SearchResultCard } from "./SearchResultCard";

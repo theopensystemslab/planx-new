@@ -121,3 +121,47 @@ export const groupedOptions: Array<Group<Option>> = [
     ],
   },
 ];
+
+export const groupedOptionsWithExclusiveOption: Array<Group<Option>> = [
+  {
+    title: "Section 1",
+    children: [
+      {
+        id: "S1_Option1",
+        data: {
+          text: "S1 Option1",
+        },
+      },
+    ],
+  },
+  {
+    title: "Section 2",
+    children: [
+      {
+        id: "S2_Option1",
+        data: {
+          text: "S2 Option1",
+        },
+      },
+      {
+        id: "S2_Option2",
+        data: {
+          text: "S2 Option2",
+        },
+      },
+    ],
+  },
+  {
+    title: "Exclusive 'Or' Option",
+    exclusive: true,
+    children: [
+      {
+        id: "exclusive_option",
+        data: {
+          text: "Exclusive",
+          exclusive: true,
+        },
+      },
+    ],
+  },
+];

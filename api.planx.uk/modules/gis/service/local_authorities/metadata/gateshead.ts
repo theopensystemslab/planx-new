@@ -11,14 +11,14 @@ https://docs.google.com/spreadsheets/d/13RdEvCfydfSx6R6p4S742xubOhfea-tvR3n95sYU
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land article-4-direction dataset and entity.reference
     records: {
-      "article4.gateshead.saltwell.D1": "A401-01",
-      "article4.gateshead.saltwell.D2": "A402-01",
-      "article4.gateshead.saltwell.D3": "A403-01",
-      "article4.gateshead.saltwell.D4": "A404-01",
-      "article4.gateshead.saltwell.D5": "A405-01",
+      "articleFour.gateshead.saltwell.dOne": "A401-01",
+      "articleFour.gateshead.saltwell.dTwo": "A402-01",
+      "articleFour.gateshead.saltwell.dThree": "A403-01",
+      "articleFour.gateshead.saltwell.dFour": "A404-01",
+      "articleFour.gateshead.saltwell.dFive": "A405-01",
     },
   },
 };

@@ -21,14 +21,14 @@
       ],
       "category": "Heritage and conservation"
     },
-    "article4": {
-      "fn": "article4",
+    "articleFour": {
+      "fn": "articleFour",
       "value": false,
       "text": "is not in an Article 4 direction area",
       "category": "General policy"
     },
-    "article4.caz": {
-      "fn": "article4.caz",
+    "articleFour.caz": {
+      "fn": "articleFour.caz",
       "value": false,
       "text": "is not in the Central Activities Zone",
       "category": "General policy"
@@ -122,12 +122,12 @@
       "category": "Trees"
     },
     "designated": { "value": true },
-    "listed.grade.I": { "fn": "listed.grade.I", "value": false },
-    "listed.grade.II": { "fn": "listed.grade.II", "value": false },
-    "listed.grade.II*": { "fn": "listed.grade.II*", "value": false }
+    "listed.gradeOne": { "fn": "listed.gradeOne", "value": false },
+    "listed.gradeTwo": { "fn": "listed.gradeTwo", "value": false },
+    "listed.gradeTwoStar": { "fn": "listed.gradeTwoStar", "value": false }
   },
   "metadata": {
-    "article4": {
+    "articleFour": {
       "entry-date": "",
       "start-date": "",
       "end-date": "",
@@ -158,7 +158,7 @@
       "replacement-dataset": "",
       "version": "3.0"
     },
-    "article4.caz": {
+    "articleFour.caz": {
       "entry-date": "",
       "start-date": "",
       "end-date": "",

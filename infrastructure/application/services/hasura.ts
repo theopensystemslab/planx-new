@@ -20,7 +20,6 @@ export const createHasuraService = async ({
 }: CreateService) => {
 
   const config = new pulumi.Config();
-  const dbRootUrl: string = await data.requireOutputValue("dbRootUrl");
   const DOMAIN: string = await certificates.requireOutputValue("domain");
 
   const lbHasura = new awsx.lb.ApplicationLoadBalancer("hasura", {
@@ -35,10 +34,6 @@ export const createHasuraService = async ({
     protocol: "HTTP",
     healthCheck: {
       path: "/healthz",
-      interval: 30,
-      timeout: 10,
-      healthyThreshold: 3,
-      unhealthyThreshold: 5,
     },
   });  
   const hasuraListenerHttp = targetHasura.createListener("hasura-http", { protocol: "HTTP" });
@@ -58,8 +53,8 @@ export const createHasuraService = async ({
     desiredCount: 1,
     deploymentMinimumHealthyPercent: 50,
     deploymentMaximumPercent: 200,
-    // extend service-level health check grace period to match hasura server migrations timeout
-    healthCheckGracePeriodSeconds: 600,
+    // service-level health check grace period should exceed proxy dependency timeout
+    healthCheckGracePeriodSeconds: 240,
     deploymentCircuitBreaker: {
       enable: true,
       rollback: true,
@@ -76,15 +71,19 @@ export const createHasuraService = async ({
           memory: config.requireNumber("hasura-proxy-memory"),
           portMappings: [hasuraListenerHttp],
           // hasuraProxy should wait for the hasura container to spin up before starting
-          dependsOn: [{
-            containerName: "hasura",
-            condition: "HEALTHY"
-          }],
+          dependsOn: [
+            {
+              containerName: "hasura",
+              condition: "HEALTHY",
+            },
+          ],
           healthCheck: {
             // hasuraProxy health depends on hasura health
+            // use wget since busybox applet is included in Alpine base image (curl is not)
             command: ["CMD-SHELL", `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
-            interval: 15,
-            timeout: 3,
+            // generous config; if hasura is saturated/blocking, we give service a chance to scale out before whole task is replaced
+            interval: 30,
+            timeout: 15,
             retries: 3,
           },
           environment: [
@@ -94,15 +93,18 @@ export const createHasuraService = async ({
         },
         hasura: {
           // hasuraProxy dependency timeout should mirror migration timeout
-          startTimeout: 600,
-          stopTimeout: 120,
+          startTimeout: 180,
+          stopTimeout: 30,
           image: repo.buildAndPushImage("../../hasura.planx.uk"),
           cpu: config.requireNumber("hasura-cpu"),
           memory: config.requireNumber("hasura-memory"),
           healthCheck: {
-            command: ["CMD-SHELL", "curl --head http://localhost:8080/healthz || exit 1"],
-            // wait 5m before running container-level health check, using same params as docker-compose
-            startPeriod: 300,
+            command: [
+              "CMD-SHELL",
+              "curl --head http://localhost:8080/healthz || exit 1",
+            ],
+            // wait 15s before running container-level health check, using same params as docker-compose
+            startPeriod: 15,
             interval: 15,
             timeout: 3,
             retries: 10,
@@ -132,7 +134,7 @@ export const createHasuraService = async ({
             { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
             {
               name: "HASURA_GRAPHQL_DATABASE_URL",
-              value: dbRootUrl,
+              value: config.requireSecret("db-url"),
             },
             {
               name: "HASURA_PLANX_API_URL",
@@ -142,17 +144,17 @@ export const createHasuraService = async ({
               name: "HASURA_PLANX_API_KEY",
               value: config.require("hasura-planx-api-key"),
             },
-            // extend timeout for migrations during setup to 10 mins (default is 30s)
+            // extend timeout for migrations during setup to 3 mins (default is 30s)
             {
               name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT",
-              value: "600",
+              value: "180",
             },
-            // ensure migrations run sequentially
+            // ensure migrations run sequentially (to manage CPU load)
             {
               name: "HASURA_GRAPHQL_MIGRATIONS_CONCURRENCY",
               value: "1",
             },
-            // get more detailed logs during attempted migration
+            // get more detailed logs during migration (in case of failure)
             {
               name: "HASURA_GRAPHQL_MIGRATIONS_LOG_LEVEL",
               value: "debug",
@@ -165,9 +167,11 @@ export const createHasuraService = async ({
 
   // TODO: bump awsx to 1.x to use the FargateService scaleConfig option to replace more verbose config below
   const hasuraScalingTarget = new aws.appautoscaling.Target("hasura-scaling-target", {
-    // start conservative, can always bump max as required
-    maxCapacity: 3,
-    minCapacity: 1,
+    // maxCapacity should consider compute power of the RDS instance which Hasura relies on
+    maxCapacity: parseInt(config.require("hasura-service-scaling-maximum")),
+    // minCapacity should reflect the baseline load expected
+    // see: https://hasura.io/docs/2.0/deployment/performance-tuning/#scalability
+    minCapacity: parseInt(config.require("hasura-service-scaling-minimum")),
     resourceId: pulumi.interpolate`service/${cluster.cluster.name}/${hasuraService.service.name}`,
     scalableDimension: "ecs:service:DesiredCount",
     serviceNamespace: "ecs",
@@ -183,7 +187,7 @@ export const createHasuraService = async ({
             predefinedMetricType: "ECSServiceAverageCPUUtilization",
         },
         // scale out quickly for responsiveness, but scale in more slowly to avoid thrashing
-        targetValue: 60.0,
+        targetValue: 30.0,
         scaleInCooldown: 300,
         scaleOutCooldown: 60,
     },
@@ -198,7 +202,7 @@ export const createHasuraService = async ({
         predefinedMetricSpecification: {
             predefinedMetricType: "ECSServiceAverageMemoryUtilization",
         },
-        targetValue: 75.0,
+        targetValue: 30.0,
         scaleInCooldown: 300,
         scaleOutCooldown: 60,
     },

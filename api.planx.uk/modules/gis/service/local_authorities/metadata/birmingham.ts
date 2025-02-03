@@ -11,22 +11,22 @@ https://docs.google.com/spreadsheets/d/19t4DKDvyWix1Vf5huuQPVf9L8e6jcq1W/edit#gi
 import type { LocalAuthorityMetadata } from "../../digitalLand.js";
 
 const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
-  article4: {
+  articleFour: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "article4.birmingham.austinVillage": "30",
-      "article4.birmingham.bournvilleVillage": "8",
-      "article4.birmingham.cityWideHMO": "36",
-      "article4.birmingham.edgbaston": "15",
-      "article4.birmingham.greenfieldRoad": "32",
-      "article4.birmingham.highStSuttonColdfield": "13",
-      "article4.birmingham.moorPool": "7",
-      "article4.birmingham.moseleyVillage": "20",
-      "article4.birmingham.oldYardley": "5",
-      "article4.birmingham.sellyOak": "35",
-      "article4.birmingham.sellyPark": "34",
-      "article4.birmingham.sellyParkAvenues": "33",
-      "article4.birmingham.stAgnes": "22",
+      "articleFour.birmingham.austinVillage": "30",
+      "articleFour.birmingham.bournvilleVillage": "8",
+      "articleFour.birmingham.cityWideHMO": "36",
+      "articleFour.birmingham.edgbaston": "15",
+      "articleFour.birmingham.greenfieldRoad": "32",
+      "articleFour.birmingham.highStSuttonColdfield": "13",
+      "articleFour.birmingham.moorPool": "7",
+      "articleFour.birmingham.moseleyVillage": "20",
+      "articleFour.birmingham.oldYardley": "5",
+      "articleFour.birmingham.sellyOak": "35",
+      "articleFour.birmingham.sellyPark": "34",
+      "articleFour.birmingham.sellyParkAvenues": "33",
+      "articleFour.birmingham.stAgnes": "22",
     },
   },
 };

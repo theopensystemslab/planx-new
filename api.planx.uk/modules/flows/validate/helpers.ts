@@ -1,18 +1,9 @@
-import type {
+import {
   ComponentType,
-  FlowGraph,
-  Node,
+  type FlowGraph,
+  type Node,
 } from "@opensystemslab/planx-core/types";
-import type { Entry } from "type-fest";
-
-export const isComponentType = (
-  entry: Entry<FlowGraph>,
-  type: ComponentType,
-): entry is [string, Node] => {
-  const [nodeId, node] = entry;
-  if (nodeId === "_root") return false;
-  return Boolean(node?.type === type);
-};
+import { isComponentType } from "../helpers.js";
 
 export const hasComponentType = (
   flowGraph: FlowGraph,
@@ -24,7 +15,11 @@ export const hasComponentType = (
   );
 
   if (fn) {
-    return nodeIds.some(([, nodeData]) => nodeData?.data?.fn === fn);
+    if (type === ComponentType.Answer) {
+      return nodeIds.some(([, nodeData]) => nodeData?.data?.val === fn);
+    } else {
+      return nodeIds.some(([, nodeData]) => nodeData?.data?.fn === fn);
+    }
   }
 
   return Boolean(nodeIds.length);
@@ -39,11 +34,16 @@ export const numberOfComponentType = (
     (entry): entry is [string, Node] => isComponentType(entry, type),
   );
   if (fn) {
-    nodeIds
-      ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
-      ?.map(([nodeId, _nodeData]) => nodeId);
+    if (type === ComponentType.Answer) {
+      return nodeIds
+        ?.filter(([_nodeId, nodeData]) => nodeData?.data?.val === fn)
+        ?.map(([nodeId, _nodeData]) => nodeId)?.length;
+    } else {
+      return nodeIds
+        ?.filter(([_nodeId, nodeData]) => nodeData?.data?.fn === fn)
+        ?.map(([nodeId, _nodeData]) => nodeId)?.length;
+    }
   } else {
-    nodeIds?.map(([nodeId, _nodeData]) => nodeId);
+    return nodeIds?.map(([nodeId, _nodeData]) => nodeId)?.length;
   }
-  return nodeIds?.length;
 };

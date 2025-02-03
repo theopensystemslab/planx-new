@@ -88,7 +88,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Next Steps" Icon={ICONS[TYPES.NextSteps]}>
+        <ModalSectionContent title="Next steps" Icon={ICONS[TYPES.NextSteps]}>
           <Box mb="1rem">
             <InputRow>
               <Input

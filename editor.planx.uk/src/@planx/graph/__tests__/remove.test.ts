@@ -26,7 +26,7 @@ test("with clones", () => {
   ]);
 });
 
-test("with id", () => {
+test("final node with id", () => {
   const [graph, ops] = remove(
     "a",
     "_root",
@@ -43,9 +43,10 @@ test("with id", () => {
     },
     d: {},
   });
-  expect(graph).toEqual({});
+  // The `_root` node is never fully deleted, rather just "emptied out"
+  expect(graph).toEqual({ _root: { edges: [] } });
   expect(ops).toEqual([
-    { od: { edges: ["a"] }, p: ["_root"] },
+    { ld: "a", p: ["_root", "edges", 0] },
     { od: {}, p: ["b"] },
     { od: { edges: ["b", "c"] }, p: ["a"] },
     { od: { edges: ["d"] }, p: ["c"] },

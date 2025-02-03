@@ -25,7 +25,7 @@ export const gqlAdmin = async (query, variables = {}) => {
   return json;
 };
 
-export const getJWT = (userId) => {
+export const getTestJWT = (userId) => {
   const data = {
     sub: String(userId),
     "https://hasura.io/jwt/claims": {
@@ -35,7 +35,7 @@ export const getJWT = (userId) => {
     },
   };
 
-  return jwt.sign(data, process.env.JWT_SECRET!);
+  return jwt.sign(data, process.env.JWT_SECRET!, { expiresIn: "24h" });
 };
 
 export const insertTeam = async (teamName) => {

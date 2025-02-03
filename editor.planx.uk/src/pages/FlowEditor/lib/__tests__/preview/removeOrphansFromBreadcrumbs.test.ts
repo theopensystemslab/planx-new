@@ -79,7 +79,7 @@ const mockFlowData = {
     },
     "4FRZMfNlXf": {
       data: {
-        flags: ["PP-NOT_DEVELOPMENT"],
+        flags: ["flag.pp.notDevelopment"],
         text: "Not development",
       },
       type: 200,
@@ -113,7 +113,7 @@ const mockFlowData = {
     },
     IzT93uCmyF: {
       data: {
-        flags: ["PRIOR_APPROVAL"],
+        flags: ["flag.pp.priorApproval"],
         text: "Prior",
       },
       type: 200,

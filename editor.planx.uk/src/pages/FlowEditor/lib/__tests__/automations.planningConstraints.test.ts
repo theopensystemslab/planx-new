@@ -26,12 +26,12 @@ describe("Auto-answering based on planning constraints", () => {
     // Manually proceed forward through PlanningConstraints as if we've checked 4x datasets: Article 4, Conservation Area, Flood Zone 2, Flood Zone 3
     clickContinue("PlanningConstraints", {
       data: {
-        "property.constraints.planning": ["article4"],
+        "property.constraints.planning": ["articleFour"],
         _nots: {
           "property.constraints.planning": [
             "designated.conservationArea",
-            "flood.zone.2",
-            "flood.zone.3",
+            "flood.zoneTwo",
+            "flood.zoneThree",
           ],
         },
       },
@@ -67,10 +67,10 @@ describe("Auto-answering based on planning constraints", () => {
       data: {
         _nots: {
           "property.constraints.planning": [
-            "article4",
+            "articleFour",
             "designated.conservationArea",
-            "flood.zone.2",
-            "flood.zone.3",
+            "flood.zoneTwo",
+            "flood.zoneThree",
           ],
         },
       },
@@ -105,10 +105,10 @@ describe("Auto-answering based on planning constraints", () => {
     clickContinue("PlanningConstraints", {
       data: {
         "property.constraints.planning": [
-          "article4",
+          "articleFour",
           "designated.conservationArea",
-          "flood.zone.2",
-          "flood.zone.3",
+          "flood.zoneTwo",
+          "flood.zoneThree",
         ],
       },
       auto: false,
@@ -138,7 +138,7 @@ describe("Auto-answering based on planning constraints", () => {
           "PlanningConstraints",
           "ConservationAreaQuestion",
           "Article4Question",
-          "FloodZone1Question", // flood.zone.1 is NOT fetched or set by Planning Data
+          "FloodZone1Question", // flood.zoneOne is NOT fetched or set by Planning Data
           "FloodZone1QuestionAgain",
         ],
       },
@@ -157,7 +157,7 @@ describe("Auto-answering based on planning constraints", () => {
         type: 200,
         data: {
           text: "Yes (again)",
-          val: "flood.zone.1",
+          val: "flood.zoneOne",
         },
       },
       FloodZone1NoAgain: {
@@ -181,34 +181,61 @@ describe("Auto-answering based on planning constraints", () => {
     // Manually proceed forward through PlanningConstraints as if we've checked 4x datasets: Article 4, Conservation Area, Flood Zone 2, Flood Zone 3
     clickContinue("PlanningConstraints", {
       data: {
-        "property.constraints.planning": ["article4"],
+        "property.constraints.planning": ["articleFour"],
         _nots: {
           "property.constraints.planning": [
             "designated.conservationArea",
-            "flood.zone.2",
-            "flood.zone.3",
+            "flood.zoneTwo",
+            "flood.zoneThree",
           ],
         },
       },
       auto: false,
     });
 
-    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual(["article4"]);
-    expect(computePassport()?.data?.["_nots"]?.["property.constraints.planning"]).toEqual(["designated.conservationArea", "flood.zone.2", "flood.zone.3"]);
+    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual([
+      "articleFour",
+    ]);
+    expect(
+      computePassport()?.data?.["_nots"]?.["property.constraints.planning"],
+    ).toEqual([
+      "designated.conservationArea",
+      "flood.zoneTwo",
+      "flood.zoneThree",
+    ]);
 
     // Proceed through auto-answerable questions
-    clickContinue("ConservationAreaQuestion", { answers: autoAnswerableOptions("ConservationAreaQuestion"), auto: true });
-    clickContinue("Article4Question", { answers: autoAnswerableOptions("Article4Question"), auto: true });
+    clickContinue("ConservationAreaQuestion", {
+      answers: autoAnswerableOptions("ConservationAreaQuestion"),
+      auto: true,
+    });
+    clickContinue("Article4Question", {
+      answers: autoAnswerableOptions("Article4Question"),
+      auto: true,
+    });
 
     // Confirm passport is in same state
-    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual(["article4"]);
-    expect(computePassport()?.data?.["_nots"]?.["property.constraints.planning"]).toEqual(["designated.conservationArea", "flood.zone.2", "flood.zone.3"]);
+    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual([
+      "articleFour",
+    ]);
+    expect(
+      computePassport()?.data?.["_nots"]?.["property.constraints.planning"],
+    ).toEqual([
+      "designated.conservationArea",
+      "flood.zoneTwo",
+      "flood.zoneThree",
+    ]);
 
     // Manually proceed through the first Flood Zone 1 Question, and expect second occurance to be auto-answered because no longer unseen option
     expect(autoAnswerableOptions("FloodZone1Question")).toBeUndefined();
-    clickContinue("FloodZone1Question", { answers: ["FloodZone1No"], auto: false });
+    clickContinue("FloodZone1Question", {
+      answers: ["FloodZone1No"],
+      auto: false,
+    });
     expect(upcomingCardIds()).toEqual(["FloodZone1QuestionAgain"]);
-    expect(autoAnswerableOptions("FloodZone1QuestionAgain")).toEqual(["FloodZone1NoAgain"]);
+    expect(autoAnswerableOptions("FloodZone1QuestionAgain")).toEqual([
+      "FloodZone1NoAgain",
+    ]);
   });
 
   test("A less granular option is not auto-answered if the passport only has a more granular option (positive intersecting contraints)", () => {
@@ -219,7 +246,7 @@ describe("Auto-answering based on planning constraints", () => {
           "PlanningConstraints",
           "ConservationAreaQuestion",
           "Article4Question",
-          "FloodZone1Question", // flood.zone.1 is NOT fetched or set by Planning Data
+          "FloodZone1Question", // flood.zoneOne is NOT fetched or set by Planning Data
           "DesignatedLandQuestion",
         ],
       },
@@ -257,7 +284,9 @@ describe("Auto-answering based on planning constraints", () => {
       auto: false,
     });
 
-    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual(["designated.conservationArea"]);
+    expect(computePassport()?.data?.["property.constraints.planning"]).toEqual([
+      "designated.conservationArea",
+    ]);
 
     // Planning constraints should exact-match only, never `startsWith`, therefore put to user
     expect(autoAnswerableOptions("DesignatedLandQuestion")).toBeUndefined();
@@ -271,7 +300,7 @@ describe("Auto-answering based on planning constraints", () => {
           "PlanningConstraints",
           "ConservationAreaQuestion",
           "Article4Question",
-          "FloodZone1Question", // flood.zone.1 is NOT fetched or set by Planning Data
+          "FloodZone1Question", // flood.zoneOne is NOT fetched or set by Planning Data
           "DesignatedLandQuestion",
         ],
       },
@@ -304,15 +333,19 @@ describe("Auto-answering based on planning constraints", () => {
     // Manually proceed forward through PlanningConstraints as if we've checked 1 dataset: Conservation Area
     clickContinue("PlanningConstraints", {
       data: {
-        "_nots": {
+        _nots: {
           "property.constraints.planning": ["designated.conservationArea"],
-        }
+        },
       },
       auto: false,
     });
 
-    expect(computePassport()?.data?.["_nots"]?.["property.constraints.planning"]).toEqual(["designated.conservationArea"]);
-    expect(computePassport()?.data?.["property.constraints.planning"]).toBeUndefined();
+    expect(
+      computePassport()?.data?.["_nots"]?.["property.constraints.planning"],
+    ).toEqual(["designated.conservationArea"]);
+    expect(
+      computePassport()?.data?.["property.constraints.planning"],
+    ).toBeUndefined();
 
     // Planning constraints should exact-match only, never `startsWith`, therefore put to user
     expect(autoAnswerableOptions("DesignatedLandQuestion")).toBeUndefined();
@@ -325,7 +358,7 @@ const flow: Store.Flow = {
       "PlanningConstraints",
       "ConservationAreaQuestion",
       "Article4Question",
-      "FloodZone1Question", // flood.zone.1 is NOT fetched or set by Planning Data
+      "FloodZone1Question", // flood.zoneOne is NOT fetched or set by Planning Data
     ],
   },
   PlanningConstraints: {
@@ -375,7 +408,7 @@ const flow: Store.Flow = {
     type: 200,
     data: {
       text: "Yes",
-      val: "article4",
+      val: "articleFour",
     },
   },
   Article4No: {
@@ -399,7 +432,7 @@ const flow: Store.Flow = {
     type: 200,
     data: {
       text: "Yes",
-      val: "flood.zone.1",
+      val: "flood.zoneOne",
     },
   },
   FloodZone1No: {

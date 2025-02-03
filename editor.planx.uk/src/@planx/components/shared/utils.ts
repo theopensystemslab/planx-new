@@ -65,20 +65,26 @@ export const getPreviouslySubmittedData = ({
   return data;
 };
 
-export const getOptionsSchemaByFn = (fn?: string, defaultOptionsSchema?: string[], initialOptions?: (string | undefined)[]) => {
-    let schema = defaultOptionsSchema;
+export const getOptionsSchemaByFn = (
+  fn?: string,
+  defaultOptionsSchema?: string[],
+  currentOptions?: (string | undefined)[],
+) => {
+  let schema = defaultOptionsSchema;
 
-    // For certain data fields, suggest based on full ODP Schema enums rather than current flow schema
-    if (fn === "application.type") schema = getValidSchemaValues("ApplicationType");
-    if (fn === "proposal.projectType") schema = getValidSchemaValues("ProjectType");
-    if (fn === "property.type") schema = getValidSchemaValues("PropertyType");
+  // For certain data fields, suggest based on full ODP Schema enums rather than current flow schema
+  if (fn === "application.type")
+    schema = getValidSchemaValues("ApplicationType");
+  if (fn === "proposal.projectType")
+    schema = getValidSchemaValues("ProjectType");
+  if (fn === "property.type") schema = getValidSchemaValues("PropertyType");
 
-    // Ensure that any initial values outside of ODP Schema enums will still be recognised/pre-populated when modal loads
-    initialOptions?.forEach((option) => {
-      if (option && !schema?.includes(option)) {
-        schema?.push(option);
-      }
-    });
+  // Ensure that any initial values outside of ODP Schema enums will still be recognised/pre-populated when modal loads
+  currentOptions?.forEach((option) => {
+    if (option && !schema?.includes(option)) {
+      schema?.push(option);
+    }
+  });
 
-    return schema;
-  }
+  return schema;
+};

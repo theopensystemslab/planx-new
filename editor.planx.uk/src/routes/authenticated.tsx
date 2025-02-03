@@ -109,7 +109,7 @@ const editorRoutes = compose(
         useStore.getState().setAdminPanelData(data.adminPanel);
 
         return {
-          title: makeTitle("Platform Admin Panel"),
+          title: makeTitle("Platform admin panel"),
           view: <AdminPanelView />,
         };
       });

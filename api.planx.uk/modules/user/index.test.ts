@@ -1,6 +1,10 @@
 import supertest from "supertest";
 import app from "../../server.js";
-import { authHeader, getJWT } from "../../tests/mockJWT.js";
+import {
+  authHeader,
+  expiredAuthHeader,
+  getTestJWT,
+} from "../../tests/mockJWT.js";
 import { userContext } from "../auth/middleware.js";
 
 const getStoreMock = vi.spyOn(userContext, "getStore");
@@ -38,7 +42,7 @@ describe("/me endpoint", () => {
     getStoreMock.mockReturnValue({
       user: {
         sub: "123",
-        jwt: getJWT({ role: "teamEditor" }),
+        jwt: getTestJWT({ role: "teamEditor" }),
       },
     });
   });
@@ -58,7 +62,7 @@ describe("/me endpoint", () => {
     getStoreMock.mockReturnValue({
       user: {
         sub: undefined,
-        jwt: getJWT({ role: "teamEditor" }),
+        jwt: getTestJWT({ role: "teamEditor" }),
       },
     });
 
@@ -84,6 +88,17 @@ describe("/me endpoint", () => {
         expect(res.body).toEqual({
           error: "Unable to locate user with ID 123",
         });
+      });
+  });
+
+  it("returns a redirect for an expired JWT", async () => {
+    await supertest(app)
+      .get("/user/me")
+      .set(expiredAuthHeader({ role: "teamEditor" }))
+      .expect(302)
+      .then((res) => {
+        expect(res.redirect).toBe(true);
+        expect(res.header.location).toMatch(/logout/);
       });
   });
 

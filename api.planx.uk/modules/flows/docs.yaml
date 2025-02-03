@@ -273,6 +273,8 @@ paths:
       summary: Download flow schema
       description: Download a CSV file representing the flow's schema
       tags: ["flows"]
+      security:
+        - bearerAuth: []
       parameters:
         - $ref: "#/components/parameters/flowId"
       responses:
