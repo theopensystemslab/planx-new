@@ -6,6 +6,7 @@ import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../shared/middleware/validate.js";
 import { ServerError } from "../../errors/index.js";
 import { validateExtension } from "./middleware/useFileUpload.js";
+import path from "path";
 
 assert(process.env.AWS_S3_BUCKET);
 assert(process.env.AWS_S3_REGION);
@@ -23,7 +24,9 @@ export const uploadFileSchema = z.object({
       .string()
       .trim()
       .min(1)
-      .refine(validateExtension, { message: "Unsupported file type" }),
+      .refine(validateExtension, (input) => ({
+        message: `Unsupported file type: ${path.extname(input).toLowerCase()}`,
+      })),
   }),
 });
 
