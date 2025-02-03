@@ -485,6 +485,15 @@
           table:
             name: published_flows
             schema: public
+    - name: templated_flows
+      using:
+        manual_configuration:
+          column_mapping:
+            id: templated_from
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
   computed_fields:
     - name: data_merged
       definition:
