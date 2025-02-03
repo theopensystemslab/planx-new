@@ -74,7 +74,7 @@ config:
   application:session-secret:
     secure: AAABACeZpncVIdwarlb/J9qtaPqUob0YwbaOVDNEgfhSJ71aq0pkZml1EP+JqMKvyhkG483LcIiGzEh/ZDJehMu2
   application:slack-internal-errors-webhook:
-    secure: AAABAPmtMxpmHMrR6WYt9ymGMW8LhvB6oyRLUWf7nnKbE/8JIpMSaWVAaL8YJUsbQsqTHey/KnsGv3W0kSrQ862/WOLpWFoTQeDhUlpWS6zkaxAztEdA+LstkYJovV0TXNKU52TU/t05
+    secure: AAABAD03UlWhbs3DiYA1+dWxlmNKA1kvgNT1Z4NsKFUpfUUtgsB8nEV5xbVHE7ZfPaJHF/G/BknTO7FqTZdxP0FIWJeKBxAL587+Bo47hBJQO0ETy0VMy02D5YovAlJ+wd33ctyQRB/t5J2v30smkoV25slDfMwQ5A==
   application:slack-webhook-url:
     secure: AAABANpjl5NnZcSFTUB3iHS4qsQuSgHGkki0yYn/LEB9Oq6kqg/RFSvwl6toXoLjgKRwhcguba8Qyp/gA+nCSMyFu7i36QVFiTRjPFsoQ9esTEo/zGqyNf2tCL/AFd+oE2/WLo1TSq7/Qt7hVm49
   application:ssl-barking-and-dagenham-cert:
