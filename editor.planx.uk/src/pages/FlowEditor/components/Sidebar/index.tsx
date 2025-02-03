@@ -106,7 +106,7 @@ const ResetToggle = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const TabList = styled(Box)(({ theme }) => ({
+export const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
   "&::after": {
     content: "''",

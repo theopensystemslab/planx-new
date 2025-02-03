@@ -1,11 +1,15 @@
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
+import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import BasicRadio from "@planx/components/shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import { TabList } from "pages/FlowEditor/components/Sidebar";
+import StyledTab from "pages/FlowEditor/components/Sidebar/StyledTab";
+import React, { useState } from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -16,8 +20,6 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { parseSetValue, SetValue } from "./model";
 
 type Props = EditorProps<TYPES.SetValue, SetValue>;
-
-export default SetValueComponent;
 
 interface Option {
   value: SetValue["operation"];
@@ -77,7 +79,9 @@ const DescriptionText: React.FC<SetValue> = ({ fn, val, operation }) => {
   }
 };
 
-function SetValueComponent(props: Props) {
+const SetValueComponent: React.FC<Props> = (props) => {
+  const [activeTab, setActiveTab] = useState(0);
+
   const formik = useFormik({
     initialValues: parseSetValue(props.node?.data),
     onSubmit: (newValues) => {
@@ -93,49 +97,99 @@ function SetValueComponent(props: Props) {
     formik.setFieldValue("operation", target.value);
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <ModalSection>
-        <ModalSectionContent title="Passport field name">
-          <DataFieldAutocomplete
-            required
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-          />
-        </ModalSectionContent>
-        {formik.values.operation !== "removeAll" && (
-          <ModalSectionContent title="Field value">
-            <InputRow>
-              <Input
-                required
-                format="data"
-                name="val"
-                value={formik.values.val}
-                placeholder="value"
-                onChange={formik.handleChange}
-              />
-            </InputRow>
+      <TabList sx={{ marginLeft: "-24px", width: "calc(100% + 48px)" }}>
+        <Tabs value={activeTab} onChange={handleTabChange}>
+          <StyledTab label="Component settings" />
+          <StyledTab label="How to use this component" />
+        </Tabs>
+      </TabList>
+      <Box
+        style={{
+          display: activeTab === 0 ? "flex" : "none",
+          flexDirection: "column",
+          flex: 1,
+          overflow: "auto",
+        }}
+      >
+        <ModalSection>
+          <ModalSectionContent title="Passport field name">
+            <DataFieldAutocomplete
+              required
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
           </ModalSectionContent>
-        )}
-        <ModalSectionContent title="Operation">
-          <DescriptionText {...formik.values} />
-          <FormControl component="fieldset">
-            <RadioGroup defaultValue="replace" value={formik.values.operation}>
-              {options.map((option) => (
-                <BasicRadio
-                  key={option.value}
-                  id={option.value}
-                  title={option.label}
-                  variant="compact"
-                  value={option.value}
-                  onChange={handleRadioChange}
+          {formik.values.operation !== "removeAll" && (
+            <ModalSectionContent title="Field value">
+              <InputRow>
+                <Input
+                  required
+                  format="data"
+                  name="val"
+                  value={formik.values.val}
+                  placeholder="value"
+                  onChange={formik.handleChange}
                 />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </ModalSectionContent>
-      </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+              </InputRow>
+            </ModalSectionContent>
+          )}
+          <ModalSectionContent title="Operation">
+            <DescriptionText {...formik.values} />
+            <FormControl component="fieldset">
+              <RadioGroup
+                defaultValue="replace"
+                value={formik.values.operation}
+              >
+                {options.map((option) => (
+                  <BasicRadio
+                    key={option.value}
+                    id={option.value}
+                    title={option.label}
+                    variant="compact"
+                    value={option.value}
+                    onChange={handleRadioChange}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </ModalSectionContent>
+        </ModalSection>
+        <ModalFooter formik={formik} showMoreInformation={false} />
+      </Box>
+      <Box
+        sx={{
+          display: activeTab === 1 ? "flex" : "none",
+          flexDirection: "column",
+          flex: 1,
+          padding: "16px",
+          overflow: "auto",
+        }}
+      >
+        <Typography variant="body1" mt={2}>
+          The Set Value component allows you to modify the values of a specific
+          field in the Passport. You can choose an operation (e.g., replace,
+          append, remove) and specify the field name and value. Ensure you have
+          configured the appropriate field names and operations before saving
+          changes.
+        </Typography>
+        <Box mt={4}>
+          <iframe
+            width="680"
+            height="383"
+            src="https://www.youtube.com/embed/r3nXC0jgVIg"
+            title="10 Using the set component"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          ></iframe>
+        </Box>
+      </Box>
     </form>
   );
-}
+};
+
+export default SetValueComponent;
