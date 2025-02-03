@@ -36,3 +36,9 @@ Also note that this project using [ruff](https://docs.astral.sh/ruff/) for linti
 ruff check
 ruff format
 ```
+
+### Samples
+
+The API load testing script requires some files to work with, which are in `/samples`. Care should be taken to make sure anything added there is in the public domain.
+
+For example, I used [Unsplash](https://unsplash.com/s/photos/tree?license=free) to search for an image with a ['free' license](https://unsplash.com/license), and printed a page from the [WikiHouse](https://www.wikihouse.cc/) site as a PDF.
