@@ -517,7 +517,7 @@ export const editorStore: StateCreator<
         const { data } = response;
         if (data.error.toLowerCase().includes("uniqueness violation")) {
           alert(
-            `The ${teamName} team already has a service with name: '${flowName}'. Rename the service and try again `,
+            `The ${teamName} team already has a service with name '${flowName}'. Rename the service and try again `,
           );
         } else {
           alert(
