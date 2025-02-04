@@ -1,5 +1,10 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { parsePay, Pay, PAY_FN, validationSchema } from "@planx/components/Pay/model";
+import {
+  parsePay,
+  Pay,
+  PAY_FN,
+  validationSchema,
+} from "@planx/components/Pay/model";
 import { Form, Formik } from "formik";
 import React from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
@@ -14,7 +19,6 @@ import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../../shared/icons";
 import { EditorProps } from "../../shared/types";
-import { FeeBreakdownSection } from "./FeeBreakdownSection";
 import { GovPayMetadataSection } from "./GovPayMetadataSection";
 import { InviteToPaySection } from "./InviteToPaySection";
 
@@ -66,12 +70,7 @@ const Component: React.FC<Props> = (props: Props) => {
                 />
               </InputRow>
               <InputRow>
-                <Input
-                  format="data"
-                  name="fn"
-                  value={PAY_FN}
-                  disabled
-                />
+                <Input format="data" name="fn" value={PAY_FN} disabled />
               </InputRow>
             </ModalSectionContent>
             <ModalSectionContent>
@@ -101,9 +100,8 @@ const Component: React.FC<Props> = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <GovPayMetadataSection/>
-          <InviteToPaySection/>
-          <FeeBreakdownSection/>
+          <GovPayMetadataSection />
+          <InviteToPaySection />
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}
