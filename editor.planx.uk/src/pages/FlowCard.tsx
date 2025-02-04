@@ -208,10 +208,10 @@ const FlowCard: React.FC<FlowCardProps> = ({
           </Box>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
             {displayTags.map(
-              (tag, index) =>
+              (tag) =>
                 tag.shouldAddTag && (
                   <FlowTag
-                    key={index}
+                    key={`${tag.displayName}-flowtag`}
                     tagType={tag.type}
                     statusVariant={statusVariant}
                   >

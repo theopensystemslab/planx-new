@@ -42,19 +42,21 @@ export interface FilterOptions<T> {
 }
 
 interface FiltersProps<T> {
+  /** an array of objects to filter */
   records: T[];
+  /** A way to set the new filtered order of the array */
   setFilteredRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
+  /** An array of objects to define how to filter the records - the FilterOptions type has more information */
   filterOptions: FilterOptions<T>[];
-  clearFilters?: boolean;
 }
 
 /**
  * @component
  * @description Filters a list of records
  * @param {Type} T - a type to define the shape of the data in the records array
- * @param {Array} props.records - an array of objects to filter
- * @param {Function} props.setFilteredRecords - A way to set the new filtered order of the array
- * @param {Array} props.filterOptions - An array of objects to define how to filter the records - the FilterOptions type has more information
+ * @param {Array} props.records
+ * @param {Function} props.setFilteredRecords
+ * @param {Array} props.filterOptions
  * @returns {JSX.Element} A drop-down accordion displaying lists of grouped checkboxes
  * @example
  * <Filters<FlowSummary>
@@ -85,25 +87,32 @@ export const Filters = <T extends object>({
       ][];
 
       const searchParamFilters = searchParamToMap
-        .map((key) => {
+        .map(([displayName, optionValue]) => {
           const findOption = optionsToFilter.find(
-            (option) => slugify(`${option.displayName}`) === `${key[0]}`,
+            (option) => slugify(`${option.displayName}`) === `${displayName}`,
           );
-          return findOption && { [`${findOption.optionKey}`]: `${key[1]}` };
+          return (
+            findOption &&
+            ({ [`${findOption.optionKey}`]: `${optionValue}` } as
+              | Filters<T>
+              | undefined)
+          );
         })
         .filter((result) => result !== undefined);
 
       let filtersToApply: Filters<T> | null = null;
 
       searchParamFilters.forEach((param) => {
-        // map method above ensures we create an array of type Filters<T>
-        const filterParam = param as Filters<T>;
-        filtersToApply = { ...filtersToApply, ...filterParam };
+        if (param) {
+          // map method above ensures we create an array of type Filters<T>
+          const filterParam = param;
+          filtersToApply = { ...filtersToApply, ...filterParam };
+        }
       });
       !isEmpty(filtersToApply) && setFilters(filtersToApply);
     };
 
-    if (filters === null) {
+    if (filters) {
       parseStateFromURL();
     }
   });
