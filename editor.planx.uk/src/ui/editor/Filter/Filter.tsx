@@ -118,6 +118,7 @@ export const Filters = <T extends object>({
       const filteredRecords = records.filter((record: T) => {
         return optionsToFilter.every((value: FilterOptions<T>) => {
           const valueToFilter = get(values.filters, value.optionKey);
+
           return valueToFilter
             ? value.validationFn(record, valueToFilter)
             : true;
@@ -149,6 +150,7 @@ export const Filters = <T extends object>({
       ...values.filters,
       [filterKey]: filterValue,
     } as Filters<T>;
+
     get(values.filters, filterKey) === filterValue
       ? removeFilter(filterKey)
       : setFieldValue("filters", newObject);
@@ -159,7 +161,6 @@ export const Filters = <T extends object>({
     setFieldValue("filters", newFilters);
   };
 
-  console.log(values.filters);
   return (
     <FiltersContainer
       expanded={expanded}
