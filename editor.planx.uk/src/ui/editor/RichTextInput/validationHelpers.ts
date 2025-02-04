@@ -31,7 +31,7 @@ export const getLegislationLinkError = (
   content.forEach((child: JSONContent) => {
     if (!child.content) return;
 
-    child.content.forEach(({ marks, text }) => {
+    child.content.forEach(({ marks }) => {
       const isLink = marks?.map(({ type }) => type).includes("link");
 
       const isLegislationLink =

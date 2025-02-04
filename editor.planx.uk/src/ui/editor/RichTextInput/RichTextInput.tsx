@@ -316,7 +316,7 @@ const RichTextInput: FC<Props> = (props) => {
       {legislationLinkError && (
         <Box sx={{ position: "absolute", top: 0, right: 0 }}>
           <PopupError
-            id="content-error-link-tab"
+            id="content-error-legislation-link"
             error={legislationLinkError}
           />
         </Box>
