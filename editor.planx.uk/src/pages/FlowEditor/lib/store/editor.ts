@@ -28,6 +28,7 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
+import { slugify } from "utils";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -179,7 +180,7 @@ export interface EditorStore extends Store.Store {
   makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (
     flowId: string,
-    teamSlug: string,
+    teamName: string,
     flowName: string,
   ) => Promise<any>;
   moveNode: (
@@ -489,7 +490,8 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  moveFlow(flowId: string, teamSlug: string, flowName: string) {
+  moveFlow(flowId: string, teamName: string, flowName: string) {
+    const teamSlug = slugify(teamName);
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
       alert(
@@ -515,7 +517,7 @@ export const editorStore: StateCreator<
         const { data } = response;
         if (data.error.toLowerCase().includes("uniqueness violation")) {
           alert(
-            `The ${teamSlug} team already has a service with name: '${flowName}'. Rename the service and try again `,
+            `The ${teamName} team already has a service with name: '${flowName}'. Rename the service and try again `,
           );
         } else {
           alert(

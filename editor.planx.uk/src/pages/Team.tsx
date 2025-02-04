@@ -236,7 +236,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(slugify(newTeam), flow.name);
+                      handleMove(newTeam, flow.name);
                     }
                   }
                 },
