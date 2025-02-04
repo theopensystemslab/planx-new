@@ -24,7 +24,7 @@ const Node: React.FC<any> = (props) => {
   const allProps = {
     ...props,
     wasVisited,
-    tags: node.data?.tags,
+    tags: node?.data?.tags,
   };
 
   const type = props.type as TYPES;
