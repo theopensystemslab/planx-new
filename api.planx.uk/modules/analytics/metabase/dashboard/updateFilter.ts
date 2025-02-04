@@ -38,7 +38,7 @@ export async function updateFilter(
   const response = await $metabase.get<GetFilterResponse>(
     `/api/dashboard/${params.dashboardId}`,
   );
-  console.log({ response });
+
   // Update filter default value parameter
   let updatedFilter: string | undefined;
   const updatedParameters = response.data.parameters.map((param) => {
@@ -47,13 +47,12 @@ export async function updateFilter(
       params.filter,
       params.value,
     );
-    console.log({ result });
+
     if (result.updatedValue) {
       updatedFilter = result.updatedValue;
     }
     return result.parameter;
   });
-  console.log({ updatedParameters });
 
   if (!updatedFilter) {
     throw new Error(
