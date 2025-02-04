@@ -213,18 +213,22 @@ export const Filters = <T extends object>({
         </Box>
       </FiltersHeader>
       <FiltersBody>
-        <FiltersContent>
-          {optionsToFilter.map((option) => (
-            <FiltersColumn
-              key={`${option.displayName}-filter-column`}
-              title={option.displayName}
-              optionKey={option.optionKey}
-              optionValues={option.optionValue}
-              filters={filters}
-              handleChange={handleChange}
-            />
-          ))}
-        </FiltersContent>
+        <form name="filters" aria-label="Filter options">
+          <FiltersContent>
+            {optionsToFilter.map((option) => (
+              <fieldset key={option.displayName}>
+                <FiltersColumn
+                  key={`${option.displayName}-filter-column`}
+                  title={option.displayName}
+                  optionKey={option.optionKey}
+                  optionValues={option.optionValue}
+                  filters={filters}
+                  handleChange={handleChange}
+                />
+              </fieldset>
+            ))}
+          </FiltersContent>
+        </form>
       </FiltersBody>
     </FiltersContainer>
   );
