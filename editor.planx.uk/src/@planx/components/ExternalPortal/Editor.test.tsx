@@ -25,7 +25,7 @@ test("adding an external portal", async () => {
 
   await user.click(screen.getByTestId("flow-b"));
 
-  expect(autocompleteInput).toHaveValue("flow b");
+  expect(autocompleteInput).toHaveValue("team - flow b");
 
   const extPortalForm = screen.getByTestId("form");
 
@@ -61,13 +61,13 @@ test("changing an external portal", async () => {
   const autocompleteComponent = screen.getByTestId("flowId");
   const autocompleteInput = within(autocompleteComponent).getByRole("combobox");
 
-  expect(autocompleteInput).toHaveValue("flow b");
+  expect(autocompleteInput).toHaveValue("team - flow b");
 
   await user.click(autocompleteInput);
 
   await user.click(screen.getByTestId("flow-a"));
 
-  expect(autocompleteInput).toHaveValue("flow a");
+  expect(autocompleteInput).toHaveValue("team - flow a");
 
   const extPortalForm = screen.getByTestId("form");
 
