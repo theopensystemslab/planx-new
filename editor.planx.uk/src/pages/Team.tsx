@@ -184,13 +184,13 @@ const Team: React.FC = () => {
   const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
     flow,
     _value,
-  ) => flow.publishedFlows[0] && flow.publishedFlows[0].hasSendComponent;
+  ) => flow.publishedFlows[0]?.hasSendComponent;
 
   // validation can be added when we have statutory data coming through
   const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
     flow,
     _value,
-  ) => flow.publishedFlows[0].isStatutoryApplicationType;
+  ) => flow.publishedFlows[0]?.isStatutoryApplicationType;
 
   const filterOptions: FilterOptions<FlowSummary>[] = [
     {
