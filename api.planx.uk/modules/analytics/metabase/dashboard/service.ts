@@ -13,7 +13,6 @@ export async function createNewDashboard({
   templateId,
   description,
   collectionId,
-  collectionPosition,
   filter,
   value,
 }: CreateNewDashboardParams): Promise<string> {
@@ -25,10 +24,8 @@ export async function createNewDashboard({
       templateId,
       description,
       collectionId,
-      collectionPosition,
     });
 
-    // updateFilter() does not need to be saved to a variable because we don't need to access its output anywhere else
     await updateFilter({
       dashboardId: copiedDashboardId,
       filter: filter,

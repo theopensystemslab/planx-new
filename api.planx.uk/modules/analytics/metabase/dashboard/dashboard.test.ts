@@ -55,8 +55,6 @@ describe("Dashboard Operations", () => {
       const snakeCaseParams = toMetabaseParams(params);
       expect(snakeCaseParams).toHaveProperty("collection_id");
       expect(snakeCaseParams.collection_id).toBe(4);
-      expect(snakeCaseParams).toHaveProperty("collection_position");
-      expect(snakeCaseParams.collection_position).toBe(2);
     });
 
     test("places new dashboard into correct parent", async () => {
