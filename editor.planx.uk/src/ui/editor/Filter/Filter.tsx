@@ -18,12 +18,7 @@ import {
   FiltersToggle,
   StyledChip,
 } from "./FilterStyles";
-import { mapFilters } from "./helpers";
-import {
-  addFilterSearchParam,
-  removeUnusedFilterSearchParam,
-  updateUrl,
-} from "./searchParamUtils";
+import { addToSearchParams, clearSearchParams } from "./searchParamUtils";
 
 export type FilterKey<T> = Paths<T>;
 export type FilterValues = string;
@@ -52,13 +47,7 @@ interface FiltersProps<T> {
 }
 
 /**
- * @component
- * @description Filters a list of records
- * @param {Type} T - a type to define the shape of the data in the records array
- * @param {Array} props.records
- * @param {Function} props.setFilteredRecords
- * @param {Array} props.filterOptions
- * @returns {JSX.Element} A drop-down accordion displaying lists of grouped checkboxes
+ * Renders a drop-down accordion displaying lists of grouped checkboxes for filtering records
  * @example
  * <Filters<FlowSummary>
  *   records={flows}
@@ -73,14 +62,13 @@ export const Filters = <T extends object>({
   filterOptions,
 }: FiltersProps<T>) => {
   const [expanded, setExpanded] = useState<boolean>(false);
-  const [filters, setFilters] = useState<Filters<T> | null>(null);
   const [optionsToFilter] = useState(filterOptions);
 
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  const { values, resetForm, setFieldValue } = useFormik({
-    initialValues: { filters },
+  const { values, setFieldValue } = useFormik<{ filters: Filters<T> | null }>({
+    initialValues: { filters: null },
     onSubmit: () => {},
   });
 
@@ -115,21 +103,21 @@ export const Filters = <T extends object>({
           filtersToApply = { ...filtersToApply, ...filterParam };
         }
       });
-      !isEmpty(filtersToApply) && setFilters(filtersToApply);
+      !isEmpty(filtersToApply) && setFieldValue("filters", filtersToApply);
     };
 
-    if (!filters) {
+    if (!values.filters) {
       parseStateFromURL();
     }
   });
 
   useEffect(() => {
-    if (!filters && records) {
+    if (!values.filters && records) {
       setFilteredRecords(records);
     } else {
       const filteredRecords = records.filter((record: T) => {
         return optionsToFilter.every((value: FilterOptions<T>) => {
-          const valueToFilter = get(filters, value.optionKey);
+          const valueToFilter = get(values.filters, value.optionKey);
           if (valueToFilter) {
             return value.validationFn(record, valueToFilter);
           }
@@ -138,47 +126,38 @@ export const Filters = <T extends object>({
       });
       setFilteredRecords(filteredRecords);
     }
-  }, [filters, setFilteredRecords, records, optionsToFilter]);
+  }, [values.filters, setFilteredRecords, records, optionsToFilter]);
 
   useEffect(() => {
-    const addToSearchParams = (params: Filters<T>) => {
-      const searchParams = new URLSearchParams(route.url.search);
-      const mappedFilters = mapFilters(params, optionsToFilter);
-      mappedFilters && addFilterSearchParam<T>(searchParams, mappedFilters);
-      removeUnusedFilterSearchParam<T>(
+    if (values.filters) {
+      return addToSearchParams<T>(
+        values.filters,
+        route.url.search,
         optionsToFilter,
-        searchParams,
-        mappedFilters || [],
+        navigation,
       );
-      updateUrl(navigation, searchParams);
-    };
-
-    const clearSearchParams = () => {
-      const searchParams = new URLSearchParams(route.url.search);
-      const displayNames = optionsToFilter.map((option) => option.displayName);
-      displayNames.forEach((name) => {
-        searchParams.delete(slugify(name));
-      });
-
-      updateUrl(navigation, searchParams);
-    };
-
-    filters ? addToSearchParams(filters) : clearSearchParams();
-  }, [filters, optionsToFilter, navigation, route.url.search]);
+    } else {
+      return clearSearchParams<T>(
+        route.url.search,
+        optionsToFilter,
+        navigation,
+      );
+    }
+  }, [navigation, optionsToFilter, route.url.search, values.filters]);
 
   const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
     const newObject = {
-      ...filters,
+      ...values.filters,
       [filterKey]: filterValue,
     } as Filters<T>;
-    get(filters, filterKey) === filterValue
+    get(values.filters, filterKey) === filterValue
       ? removeFilter(filterKey)
-      : setFilters(newObject);
+      : setFieldValue("filters", newObject);
   };
 
   const removeFilter = (targetFilter: FilterKey<T>) => {
-    const newFilters = omit(filters, targetFilter) as Filters<T>;
-    setFilters(newFilters);
+    const newFilters = omit(values.filters, targetFilter) as Filters<T>;
+    setFieldValue("filters", newFilters);
   };
 
   return (
@@ -198,8 +177,8 @@ export const Filters = <T extends object>({
           </Typography>
         </FiltersToggle>
         <Box sx={{ display: "flex", gap: 1 }}>
-          {filters &&
-            Object.entries(filters).map(([_key, value]) => {
+          {values.filters &&
+            Object.entries(values.filters).map(([_key, value]) => {
               if (!value) return;
               return (
                 <StyledChip
@@ -208,7 +187,7 @@ export const Filters = <T extends object>({
                   key={`${value}`}
                   onDelete={() => {
                     const targetKey = findKey(
-                      filters,
+                      values.filters,
                       (keys) => keys === value,
                     ) as FilterKey<T>;
                     removeFilter(targetKey);
@@ -240,7 +219,7 @@ export const Filters = <T extends object>({
                   title={option.displayName}
                   optionKey={option.optionKey}
                   optionValues={option.optionValue}
-                  filters={filters}
+                  filters={values.filters}
                   handleChange={handleChange}
                 />
               </fieldset>
