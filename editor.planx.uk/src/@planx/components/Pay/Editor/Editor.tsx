@@ -100,8 +100,8 @@ const Component: React.FC<Props> = (props: Props) => {
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <GovPayMetadataSection />
           <InviteToPaySection />
+          <GovPayMetadataSection />
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}
