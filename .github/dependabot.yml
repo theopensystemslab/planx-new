@@ -116,6 +116,12 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+    groups:
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/coverage-istanbul"
+          - "@vitest/ui"
 
   - package-ecosystem: "docker"
     directory: "/api.planx.uk"
