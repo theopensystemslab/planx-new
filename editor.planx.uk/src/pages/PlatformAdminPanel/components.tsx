@@ -1,63 +1,17 @@
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
-import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import useSWR from "swr";
 import { AdminPanelData } from "types";
-import SettingsSection from "ui/editor/SettingsSection";
 import Caret from "ui/icons/Caret";
 
-const StyledTeamAccordion = styled(Accordion, {
-  shouldForwardProp: (prop) => prop !== "primaryColour",
-})<{ primaryColour?: string }>(({ theme, primaryColour }) => ({
-  backgroundColor: theme.palette.background.paper,
-  outline: `1px solid ${theme.palette.border.light}`,
-  width: "100%",
-  position: "relative",
-  "&::before": {
-    display: "none",
-  },
-  "&::after": {
-    content: "''",
-    position: "absolute",
-    left: 0,
-    top: 0,
-    width: theme.spacing(1.5),
-    height: "100%",
-    backgroundColor: primaryColour,
-  },
-}));
-
-function Component() {
-  const adminPanelData = useStore((state) => state.adminPanelData);
-
-  return (
-    <Container maxWidth={false}>
-      <SettingsSection>
-        <Typography variant="h2" component="h1" gutterBottom>
-          Platform admin panel
-        </Typography>
-        <Typography variant="body1">
-          {`This is an overview of each team's integrations and settings for the `}
-          <strong>{import.meta.env.VITE_APP_ENV}</strong>
-          {` environment.`}
-        </Typography>
-      </SettingsSection>
-      <SettingsSection>
-        {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)}
-      </SettingsSection>
-    </Container>
-  );
-}
+import { StyledTeamAccordion } from "./styles";
 
 interface TeamData {
   data: AdminPanelData;
@@ -67,7 +21,7 @@ const NotConfigured: React.FC = () => <Close color="error" fontSize="small" />;
 
 const Configured: React.FC = () => <Done color="success" fontSize="small" />;
 
-const TeamData: React.FC<TeamData> = ({ data }) => {
+export const TeamData: React.FC<TeamData> = ({ data }) => {
   const a4Endpoint = `${import.meta.env.VITE_APP_API_URL}/gis/${
     data.slug
   }/article4-schema`;
@@ -196,5 +150,3 @@ const TeamData: React.FC<TeamData> = ({ data }) => {
     </StyledTeamAccordion>
   );
 };
-
-export default Component;

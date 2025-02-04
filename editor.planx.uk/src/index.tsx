@@ -8,7 +8,7 @@ import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
-import ErrorPage from "pages/ErrorPage";
+import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
@@ -17,7 +17,6 @@ import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
 
 // init airbrake before everything else
-import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
 import { defaultTheme } from "./theme";

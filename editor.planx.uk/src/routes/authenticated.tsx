@@ -13,7 +13,7 @@ import React from "react";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
-import AdminPanelView from "../pages/PlatformAdminPanel";
+import AdminPanelView from "../pages/PlatformAdminPanel/PlatformAdminPanel";
 import Teams from "../pages/Teams";
 import { makeTitle } from "./utils";
 import { authenticatedView } from "./views/authenticated";
