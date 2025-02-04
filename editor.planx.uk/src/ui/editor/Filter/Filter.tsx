@@ -2,6 +2,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useFormik } from "formik";
 import { capitalize, findKey, get, isEmpty, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
@@ -78,6 +79,11 @@ export const Filters = <T extends object>({
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
+  const { values, resetForm, setFieldValue } = useFormik({
+    initialValues: { filters },
+    onSubmit: () => {},
+  });
+
   useEffect(() => {
     const parseStateFromURL = () => {
       const searchParams = new URLSearchParams(route.url.search);
@@ -112,7 +118,7 @@ export const Filters = <T extends object>({
       !isEmpty(filtersToApply) && setFilters(filtersToApply);
     };
 
-    if (filters) {
+    if (!filters) {
       parseStateFromURL();
     }
   });
@@ -216,7 +222,19 @@ export const Filters = <T extends object>({
         <form name="filters" aria-label="Filter options">
           <FiltersContent>
             {optionsToFilter.map((option) => (
-              <fieldset key={option.displayName}>
+              <fieldset
+                key={option.displayName}
+                aria-describedby={`${option.displayName}-description`}
+              >
+                <div
+                  key={`${option.displayName}-description`}
+                  id={`${option.displayName}-description`}
+                  className="sr-only"
+                  hidden
+                >
+                  Select options to filter the list by {option.displayName}
+                </div>
+
                 <FiltersColumn
                   key={`${option.displayName}-filter-column`}
                   title={option.displayName}
