@@ -17,6 +17,7 @@ import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import FlowCard, { Card, CardContent } from "./FlowCard";
@@ -278,15 +279,15 @@ const Team: React.FC = () => {
             <StartFromTemplateButton />
           )}
         </Box>
-      <Box>          
-            {filteredFlows && flows && (
+        <Box>
+          {filteredFlows && flows && (
             <Filters<FlowSummary>
               records={flows}
               setFilteredRecords={setFilteredFlows}
               filterOptions={filterOptions}
             />
           )}
-              {hasFeatureFlag("SORT_FLOWS") && flows && (
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SortControl<FlowSummary>
               records={flows}
               setRecords={setFlows}
@@ -294,24 +295,23 @@ const Team: React.FC = () => {
             />
           )}
         </Box>
-          {filteredFlows && flows && (
-            <DashboardList>
-              {filteredFlows.map((flow) => (
-                <FlowCard
-                  flow={flow}
-                  flows={flows}
-                  key={flow.slug}
-                  teamId={teamId}
-                  teamSlug={slug}
-                  refreshFlows={() => {
-                    fetchFlows();
-                  }}
-                />
-              ))}
-            </DashboardList>
-          )}
-          {flows && !flows.length && <GetStarted flows={flows} />}
-        
+        {filteredFlows && flows && (
+          <DashboardList>
+            {filteredFlows.map((flow) => (
+              <FlowCard
+                flow={flow}
+                flows={flows}
+                key={flow.slug}
+                teamId={teamId}
+                teamSlug={slug}
+                refreshFlows={() => {
+                  fetchFlows();
+                }}
+              />
+            ))}
+          </DashboardList>
+        )}
+        {flows && !flows.length && <GetStarted flows={flows} />}
       </Container>
     </Box>
   );
