@@ -109,7 +109,7 @@ export const Filters = <T extends object>({
     if (!values.filters) {
       parseStateFromURL();
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (!values.filters && records) {
@@ -118,10 +118,7 @@ export const Filters = <T extends object>({
       const filteredRecords = records.filter((record: T) => {
         return optionsToFilter.every((value: FilterOptions<T>) => {
           const valueToFilter = get(values.filters, value.optionKey);
-          if (valueToFilter) {
-            return value.validationFn(record, valueToFilter);
-          }
-          return true;
+          valueToFilter ? value.validationFn(record, valueToFilter) : true;
         });
       });
       setFilteredRecords(filteredRecords);
@@ -159,7 +156,6 @@ export const Filters = <T extends object>({
     const newFilters = omit(values.filters, targetFilter) as Filters<T>;
     setFieldValue("filters", newFilters);
   };
-
   return (
     <FiltersContainer
       expanded={expanded}
