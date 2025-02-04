@@ -1,3 +1,9 @@
+import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
+import {
+  autocompleteClasses,
+  AutocompleteProps,
+} from "@mui/material/Autocomplete";
+import ListItem from "@mui/material/ListItem";
 import {
   ComponentType as TYPES,
   NodeTag,
@@ -7,35 +13,91 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
+import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
+import * as Yup from "yup";
 
 import { ICONS } from "../shared/icons";
 
 interface Flow {
   id: string;
-  text: string;
+  slug: string;
+  name: string;
+  team: string;
 }
 
+type FlowAutocompleteListProps = AutocompleteProps<
+  Flow,
+  false,
+  false,
+  true,
+  "div"
+>;
+
+const PopupIcon = (
+  <ArrowIcon
+    sx={(theme) => ({ color: theme.palette.primary.main })}
+    fontSize="large"
+  />
+);
+const renderOption: FlowAutocompleteListProps["renderOption"] = (
+  props,
+  option,
+) => {
+  if (option === null) return;
+  return (
+    <ListItem
+      {...props}
+      key={option.id}
+      id={option.id}
+      data-testid={`flow-${option.id}`}
+      sx={(theme) => ({ paddingY: `${theme.spacing(1.25)}` })}
+    >
+      {option.name}
+    </ListItem>
+  );
+};
+
+const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => {
+  return (
+    <RenderGroupHeaderBlock
+      key={params.key}
+      params={params}
+      displayName={params.group}
+    />
+  );
+};
+
 const ExternalPortalForm: React.FC<{
-  id?: string;
   flowId?: string;
   notes?: string;
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ id, handleSubmit, flowId = "", flows = [], tags = [], notes = "" }) => {
+}> = ({ handleSubmit, flowId, flows = [], tags = [], notes = "" }) => {
+  const portalSchema = Yup.object().shape({
+    flowId: Yup.string().required("Add a flow to submit"),
+  });
+
   const formik = useFormik({
     initialValues: {
-      flowId,
+      flow: flows.find((flow) => flow.id === flowId) || null,
+      flowId: flowId || null,
       tags,
       notes,
     },
     onSubmit: (values) => {
-      if (handleSubmit) {
+      formik.validateForm(values);
+      if (handleSubmit && !formik.errors.flowId) {
         handleSubmit({ type: TYPES.ExternalPortal, data: values });
       } else {
         alert(JSON.stringify(values, null, 2));
       }
     },
+    validationSchema: portalSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (
@@ -51,20 +113,59 @@ const ExternalPortalForm: React.FC<{
             flow that it references.
           </span>
         </ModalSectionContent>
-        <ModalSectionContent title="Pick a flow">
-          <select
-            data-testid="flowId"
-            name="flowId"
-            value={formik.values.flowId}
-            onChange={formik.handleChange}
-          >
-            {!id && <option value="" />}
-            {flows.map((flow) => (
-              <option key={flow.id} value={flow.id}>
-                {flow.text}
-              </option>
-            ))}
-          </select>
+        <ModalSectionContent key={"flow-section"} title="Pick a flow">
+          <ErrorWrapper error={formik.errors.flowId}>
+            <AutocompleteInput<Flow>
+              data-testid="flowId"
+              id="flowId"
+              role="status"
+              placeholder=""
+              required
+              aria-atomic={true}
+              aria-live="polite"
+              fullWidth
+              popupIcon={PopupIcon}
+              ListboxProps={{
+                sx: (theme) => ({
+                  paddingY: 0,
+                  backgroundColor: theme.palette.background.default,
+                }),
+              }}
+              value={formik.values.flow}
+              onChange={(_event, value: string | Flow | null) => {
+                if (typeof value !== "string") {
+                  formik.setFieldValue("flow", value);
+                  value?.id && formik.setFieldValue("flowId", value.id);
+                }
+              }}
+              options={flows}
+              groupBy={(option) => option && option.team}
+              getOptionLabel={(option: string | Flow | null) => {
+                if (typeof option !== "string" && option) {
+                  return `${option.team} - ${option?.name}`;
+                } else {
+                  return "";
+                }
+              }}
+              renderOption={renderOption}
+              renderGroup={renderGroup}
+              slotProps={{
+                popper: {
+                  placement: "bottom-start",
+                  modifiers: [{ name: "flip", enabled: false }],
+                },
+              }}
+              sx={{
+                [`& .${autocompleteClasses.endAdornment}`]: {
+                  top: "unset",
+                },
+              }}
+              clearOnEscape
+              handleHomeEndKeys
+              autoHighlight
+              forcePopupIcon={true}
+            />
+          </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} showMoreInformation={false} />
