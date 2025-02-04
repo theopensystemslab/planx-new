@@ -1,15 +1,16 @@
 import { Router } from "express";
 
-import multer from "multer";
 import {
-  useNoCache,
   useFilePermission,
+  useNoCache,
+  usePlatformAdminAuth,
   useTeamEditorAuth,
 } from "../auth/middleware.js";
 import {
-  downloadFileSchema,
+  hostedFileSchema,
   privateDownloadController,
   privateUploadController,
+  publicDeleteController,
   publicDownloadController,
   publicUploadController,
   uploadFileSchema,
@@ -36,7 +37,7 @@ router.post(
 
 router.get(
   "/file/public/:fileKey/:fileName",
-  validate(downloadFileSchema),
+  validate(hostedFileSchema),
   publicDownloadController,
 );
 
@@ -44,8 +45,15 @@ router.get(
   "/file/private/:fileKey/:fileName",
   useNoCache,
   useFilePermission,
-  validate(downloadFileSchema),
+  validate(hostedFileSchema),
   privateDownloadController,
+);
+
+router.delete(
+  "/file/public/:fileKey/:fileName",
+  usePlatformAdminAuth,
+  validate(hostedFileSchema),
+  publicDeleteController,
 );
 
 export default router;

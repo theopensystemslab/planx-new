@@ -1,4 +1,5 @@
 import assert from "assert";
+import { deleteFilesByKey } from "./service/deleteFile.js";
 import { uploadPrivateFile, uploadPublicFile } from "./service/uploadFile.js";
 import { buildFilePath } from "./service/utils.js";
 import { getFileFromS3 } from "./service/getFile.js";
@@ -71,7 +72,7 @@ export const publicUploadController: UploadController = async (
   }
 };
 
-export const downloadFileSchema = z.object({
+export const hostedFileSchema = z.object({
   params: z.object({
     fileKey: z.string(),
     fileName: z.string(),
@@ -79,7 +80,7 @@ export const downloadFileSchema = z.object({
 });
 
 export type DownloadController = ValidatedRequestHandler<
-  typeof downloadFileSchema,
+  typeof hostedFileSchema,
   Buffer | undefined
 >;
 
@@ -121,6 +122,33 @@ export const privateDownloadController: DownloadController = async (
   } catch (error) {
     return next(
       new ServerError({ message: `Failed to download private file: ${error}` }),
+    );
+  }
+};
+
+export type DeleteController = ValidatedRequestHandler<
+  typeof hostedFileSchema,
+  Record<string, never>
+>;
+
+export const publicDeleteController: DeleteController = async (
+  _req,
+  res,
+  next,
+) => {
+  const { fileKey, fileName } = res.locals.parsedReq.params;
+  const filePath = buildFilePath(fileKey, fileName);
+
+  try {
+    const { isPrivate } = await getFileFromS3(filePath);
+    if (isPrivate) throw Error("Bad request");
+
+    // once we've established that the file is public, we can delete it
+    await deleteFilesByKey([filePath]);
+    res.status(204).send();
+  } catch (error) {
+    return next(
+      new ServerError({ message: `Failed to delete public file: ${error}` }),
     );
   }
 };

@@ -1,5 +1,6 @@
 import {
   GetObjectCommand,
+  type S3,
   type PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -19,7 +20,7 @@ export const uploadPublicFile = async (
   const { params, key, fileType } = generateFileParams(file, filename, filekey);
 
   await s3.putObject(params);
-  const fileUrl = await buildFileUrl(key, "public");
+  const fileUrl = await buildFileUrl(s3, key, "public");
 
   return {
     fileType,
@@ -41,7 +42,7 @@ export const uploadPrivateFile = async (
   };
 
   await s3.putObject(params);
-  const fileUrl = await buildFileUrl(key, "private");
+  const fileUrl = await buildFileUrl(s3, key, "private");
 
   return {
     fileType,
@@ -50,8 +51,11 @@ export const uploadPrivateFile = async (
 };
 
 // Construct an API URL for the uploaded file
-const buildFileUrl = async (key: string, path: "public" | "private") => {
-  const s3 = s3Factory();
+const buildFileUrl = async (
+  s3: S3,
+  key: string,
+  path: "public" | "private",
+) => {
   const s3Url = await getSignedUrl(
     s3,
     new GetObjectCommand({ Key: key, Bucket: process.env.AWS_S3_BUCKET }),
@@ -85,8 +89,8 @@ export function generateFileParams(
   };
 
   return {
-    fileType,
     params,
     key,
+    fileType,
   };
 }
