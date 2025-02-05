@@ -670,7 +670,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
     - role: demoUser
       permission:
@@ -694,19 +696,22 @@
         computed_fields:
           - data_merged
         filter:
-          _or:
-            - _and:
-                - creator_id:
-                    _eq: x-hasura-user-id
+          _and:
+            - _or:
+                - _and:
+                    - creator_id:
+                        _eq: x-hasura-user-id
+                    - team:
+                        id:
+                          _eq: 32
                 - team:
                     id:
-                      _eq: 32
-            - team:
-                id:
-                  _in:
-                    - 1
-                    - 29
-                    - 30
+                      _in:
+                        - 1
+                        - 29
+                        - 30
+            - deleted_at:
+                _is_null: true
       comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
     - role: platformAdmin
       permission:
@@ -729,7 +734,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
     - role: public
       permission:
@@ -748,7 +755,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
       comment: ""
     - role: teamEditor
@@ -772,7 +781,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
   update_permissions:
     - role: api
@@ -793,8 +804,15 @@
           - team_id
           - updated_at
           - version
-        filter: {}
-        check: {}
+        filter:
+          deleted_at:
+            _is_null: true
+        check:
+          _and:
+            - deleted_at:
+                _is_null: false
+            - templated_from:
+                _is_null: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -824,11 +842,19 @@
           - version
         filter:
           _and:
-            - team_id:
-                _eq: 32
-            - creator_id:
-                _eq: x-hasura-user-id
-        check: null
+            - _and:
+                - team_id:
+                    _eq: 32
+                - creator_id:
+                    _eq: x-hasura-user-id
+            - deleted_at:
+                _is_null: true
+        check:
+          _and:
+            - deleted_at:
+                _is_null: false
+            - templated_from:
+                _is_null: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -853,8 +879,15 @@
           - status
           - summary
           - team_id
-        filter: {}
-        check: null
+        filter:
+          deleted_at:
+            _is_null: true
+        check:
+          _and:
+            - deleted_at:
+                _is_null: false
+            - templated_from:
+                _is_null: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -878,14 +911,22 @@
           - summary
           - team_id
         filter:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
-        check: null
+          _and:
+            - team:
+                members:
+                  _and:
+                    - user_id:
+                        _eq: x-hasura-user-id
+                    - role:
+                        _eq: teamEditor
+            - deleted_at:
+                _is_null: true
+        check:
+          _and:
+            - deleted_at:
+                _is_null: false
+            - templated_from:
+                _is_null: true
         validate_input:
           definition:
             forward_client_headers: false
