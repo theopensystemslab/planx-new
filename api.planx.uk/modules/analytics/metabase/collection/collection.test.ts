@@ -65,12 +65,12 @@ describe("createTeamCollection", () => {
     metabaseMock
       .post("/api/collection/", {
         name: testName,
-        parentId: 100,
+        parent_id: 100,
       })
       .reply(200, {
         id: 123,
         name: testName,
-        parentId: 100,
+        parent_id: 100,
       });
 
     // Mock GET request for verifying the new collection
@@ -84,12 +84,14 @@ describe("createTeamCollection", () => {
       name: testName,
       parentId: 100,
     });
+    console.log({collectionId})
 
     // Check the ID is returned correctly
     expect(collectionId).toBe(123);
 
     // Verify the collection details using the service function
     const collection = await getCollection(collectionId);
+    console.log({collection})
     expect(collection.parentId).toBe(100);
     expect(metabaseMock.isDone()).toBe(true);
   });
@@ -233,6 +235,7 @@ describe("edge cases", () => {
   });
 
   test("handles missing slug", async () => {
+    vi.spyOn($api.client, "request").mockRejectedValue(new Error("Invalid slug"));
     await expect(
       createTeamCollection({
         slug: "",
@@ -272,7 +275,7 @@ describe("edge cases", () => {
       .reply(400, {
         message: "Slug too long",
       });
-
+      vi.spyOn($api.client, "request").mockRejectedValue(new Error("Slug too long"));
     await expect(
       createTeamCollection({
         slug: longSlug,

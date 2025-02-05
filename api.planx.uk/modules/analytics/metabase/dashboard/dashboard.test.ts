@@ -2,7 +2,6 @@ import nock from "nock";
 import { copyDashboard } from "./copyDashboard.js";
 import { getDashboard } from "./getDashboard.js";
 import { updateFilter } from "./updateFilter.js";
-import { toMetabaseParams } from "./types.js";
 import { generatePublicLink } from "./generatePublicLink.js";
 
 const BASE_URL = process.env.METABASE_URL_EXT;
@@ -38,7 +37,11 @@ describe("Dashboard Operations", () => {
   describe("copyDashboard", () => {
     test("copies dashboard template", async () => {
       const metabaseMock = nock(BASE_URL!)
-        .post("/api/dashboard/7/copy", toMetabaseParams(params))
+        .post("/api/dashboard/7/copy", {
+          name: params.name,
+          description: params.description,
+          collection_id: params.collectionId
+        })
         .reply(200, {
           id: 42,
           name: params.name,
@@ -51,19 +54,17 @@ describe("Dashboard Operations", () => {
       expect(metabaseMock.isDone()).toBe(true);
     });
 
-    test("transforms params to snake case for Metabase API", async () => {
-      const snakeCaseParams = toMetabaseParams(params);
-      expect(snakeCaseParams).toHaveProperty("collection_id");
-      expect(snakeCaseParams.collection_id).toBe(4);
-    });
-
     test("places new dashboard into correct parent", async () => {
       const metabasePostMock = nock(BASE_URL!)
-        .post("/api/dashboard/7/copy", toMetabaseParams(params))
+        .post("/api/dashboard/7/copy", {
+          name: params.name,
+          description: params.description,
+          collection_id: params.collectionId
+        })
         .reply(200, {
           id: 42,
           name: params.name,
-          collectionId: 4,
+          collection_id: 4,
           description: params.description,
         });
 
@@ -78,7 +79,7 @@ describe("Dashboard Operations", () => {
       const newDashboardId = await copyDashboard(params);
       const checkDashboard = await getDashboard(newDashboardId);
 
-      expect(checkDashboard.collection_id).toBe(4);
+      expect(checkDashboard.collectionId).toBe(4);
       expect(metabasePostMock.isDone()).toBe(true);
       expect(metabaseGetMock.isDone()).toBe(true);
     });
