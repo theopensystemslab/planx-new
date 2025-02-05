@@ -182,8 +182,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 onClick: async () => {
                   const newName = prompt("New name", flow.name);
                   if (newName && newName !== flow.name) {
-                    const verifiedNameAndSlug = getUniqueFlow(newName, flows);
-                    if (verifiedNameAndSlug) {
+                    const uniqueFlow = getUniqueFlow(newName, flows);
+                    if (uniqueFlow) {
                       await client.mutate({
                         mutation: gql`
                           mutation UpdateFlowSlug(
@@ -206,8 +206,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
                         variables: {
                           teamId: teamId,
                           slug: flow.slug,
-                          newSlug: verifiedNameAndSlug.slug,
-                          newName: verifiedNameAndSlug.name,
+                          newSlug: uniqueFlow.slug,
+                          newName: uniqueFlow.name,
                         },
                       });
 
@@ -230,7 +230,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                   if (newTeam) {
                     if (slugify(newTeam) === teamSlug) {
                       alert(
-                        `This service already belongs to ${teamSlug}, skipping move`,
+                        `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
                       handleMove(newTeam, flow.name);

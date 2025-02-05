@@ -492,11 +492,10 @@ export const editorStore: StateCreator<
 
   moveFlow(flowId: string, teamName: string, flowName: string) {
     const teamSlug = slugify(teamName);
-    console.log(teamSlug);
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
       alert(
-        `You do not have permission to move this service into ${teamSlug}, try again`,
+        `You do not have permission to move this flow into ${teamSlug}, try again`,
       );
       return Promise.resolve();
     }
@@ -518,11 +517,11 @@ export const editorStore: StateCreator<
         const { data } = response;
         if (data.error.toLowerCase().includes("uniqueness violation")) {
           alert(
-            `${teamName} already has a service with name '${flowName}'. Rename the service and try again`,
+            `Failed to move this flow. ${teamName} already has a flow with name '${flowName}'. Rename the flow and try again`,
           );
         } else {
           alert(
-            "Failed to move this service. Make sure you're entering a valid team name and try again",
+            "Failed to move this flow. Make sure you're entering a valid team name and try again",
           );
         }
       });
