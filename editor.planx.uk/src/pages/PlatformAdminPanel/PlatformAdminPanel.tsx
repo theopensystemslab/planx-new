@@ -6,7 +6,7 @@ import SettingsSection from "ui/editor/SettingsSection";
 
 import { TeamData } from "./components";
 
-export default function PlatformAdminPanel() {
+export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
   return (
@@ -26,4 +26,4 @@ export default function PlatformAdminPanel() {
       </SettingsSection>
     </Container>
   );
-}
+};
