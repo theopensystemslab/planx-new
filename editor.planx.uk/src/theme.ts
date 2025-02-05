@@ -15,6 +15,7 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { deepmerge } from "@mui/utils";
+import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
@@ -679,6 +680,13 @@ const getThemeOptions = ({
           },
         },
       },
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            margin: 1
+          },
+        },
+      },
     },
   };
 
@@ -693,7 +701,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  },
+  }
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
