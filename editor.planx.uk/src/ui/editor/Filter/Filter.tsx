@@ -72,6 +72,21 @@ export const Filters = <T extends object>({
     onSubmit: () => {},
   });
 
+  const findFiltersFromSearchParams = ([displayName, optionValue]: [
+    FilterKey<T>,
+    FilterValues,
+  ]) => {
+    const findOption = optionsToFilter.find(
+      (option) => slugify(`${option.displayName}`) === `${displayName}`,
+    );
+    return (
+      findOption &&
+      ({ [`${findOption.optionKey}`]: `${optionValue}` } as
+        | Filters<T>
+        | undefined)
+    );
+  };
+
   useEffect(() => {
     const parseStateFromURL = () => {
       const searchParams = new URLSearchParams(route.url.search);
@@ -81,17 +96,7 @@ export const Filters = <T extends object>({
       ][];
 
       const searchParamFilters = searchParamToMap
-        .map(([displayName, optionValue]) => {
-          const findOption = optionsToFilter.find(
-            (option) => slugify(`${option.displayName}`) === `${displayName}`,
-          );
-          return (
-            findOption &&
-            ({ [`${findOption.optionKey}`]: `${optionValue}` } as
-              | Filters<T>
-              | undefined)
-          );
-        })
+        .map(findFiltersFromSearchParams)
         .filter((result) => result !== undefined);
 
       let filtersToApply: Filters<T> | null = null;
