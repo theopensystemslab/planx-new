@@ -99,15 +99,27 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
-const containsMadeLink = (data: any) => {
-  // An anchor tag where the href attribute ends with '/made'
-  const regexPattern = /<a[^>]*href=["'].*?\/made["'][^>]*>/;
-
+const containsMadeLink = (data: Record<string, unknown>): boolean => {
   return Object.values(data).some((value) => {
-    if (typeof value === "string") {
-      return regexPattern.test(value);
-    }
-    return false;
+    if (typeof value !== "string") return false;
+
+    const anchorTags = value.match(/<a[^>]*href=["'].*?["'][^>]*>/g);
+    if (!anchorTags) return false;
+
+    return anchorTags.some((anchorTag) => {
+      const hrefMatch = anchorTag.match(/href=["'](.+?)["']/);
+      if (!hrefMatch) return false;
+
+      try {
+        const url = new URL(hrefMatch[1]);
+        return (
+          url.hostname.includes("legislation.gov.uk") &&
+          url.pathname.endsWith("/made")
+        );
+      } catch {
+        return false;
+      }
+    });
   });
 };
 
@@ -180,7 +192,7 @@ const FormModal: React.FC<{
             ) => {
               if (containsMadeLink(data.data)) {
                 toast.error(
-                  "Content errors detected. Please fix before continuing.",
+                  'Legislation GOV UK links incorrectly ending in "/made" detected in your content. Please fix before continuing.',
                 );
                 return;
               }
