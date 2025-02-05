@@ -1,7 +1,25 @@
 import type { JSONContent } from "@tiptap/core";
 
-export const getLinkNewTabError = (
+interface GetContentErrorsConfig {
+  shouldReport: ({
+    marks,
+    text,
+  }: {
+    marks:
+      | {
+          [key: string]: any;
+          type: string;
+          attrs?: Record<string, any> | undefined;
+        }[]
+      | undefined;
+    text?: string;
+  }) => boolean | undefined;
+  errorMessage: string;
+}
+
+export const getContentErrors = (
   content: JSONContent | undefined = [],
+  config: GetContentErrorsConfig,
 ): string | undefined => {
   let error: string | undefined;
   if (!content) return;
@@ -10,16 +28,61 @@ export const getLinkNewTabError = (
     if (!child.content) return;
 
     child.content.forEach(({ marks, text }) => {
-      const isLink = marks?.map(({ type }) => type).includes("link");
-      const hasOpenTabText = text?.includes("(opens in a new tab)");
-
-      if (hasOpenTabText && !isLink) {
-        error = 'Links must wrap the text "(opens in a new tab)"';
+      if (config.shouldReport({ marks, text })) {
+        error = config.errorMessage;
       }
     });
   });
-
   return error;
+};
+
+export const getLinkNewTabError = (
+  content: JSONContent | undefined = [],
+): string | undefined => {
+  return getContentErrors(content, {
+    shouldReport: ({ marks, text }) => {
+      const isLink = marks?.map(({ type }) => type).includes("link");
+      const hasOpenTabText = text?.includes("(opens in a new tab)");
+
+      return hasOpenTabText && !isLink;
+    },
+    errorMessage: 'Links must wrap the text "(opens in a new tab)"',
+  });
+};
+
+export const getLegislationLinkError = (
+  content: JSONContent | undefined = [],
+): string | undefined => {
+  const config = {
+    shouldReport: ({ marks }) => {
+      const isLink = marks?.map(({ type }) => type).includes("link");
+
+      const hasMadeLinkEnding =
+        isLink &&
+        marks
+          ?.map(({ attrs }) => {
+            try {
+              const url = attrs && new URL(attrs.href);
+              const allowedHosts = [
+                "legislation.gov.uk",
+                "www.legislation.gov.uk",
+              ];
+              if (url?.hostname && allowedHosts.includes(url.hostname)) {
+                return url?.pathname.endsWith("/made");
+              }
+            } catch (error) {
+              return false;
+            }
+          })
+          .includes(true);
+
+      return hasMadeLinkEnding;
+    },
+    errorMessage:
+      'Legislative policy links should not end in "/made" as these can be out of date.',
+  } as GetContentErrorsConfig;
+
+  return getContentErrors(content, config);
 };
 
 // Specify whether a selection is unsuitable for ensuring accessible links

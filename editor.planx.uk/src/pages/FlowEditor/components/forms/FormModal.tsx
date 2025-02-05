@@ -10,6 +10,7 @@ import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
+import { useToast } from "hooks/useToast";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
@@ -98,6 +99,30 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
+const containsMadeLink = (data: Record<string, unknown>): boolean => {
+  return Object.values(data).some((value) => {
+    if (typeof value !== "string") return false;
+
+    const anchorTags = value.match(/<a[^>]*href=["'].*?["'][^>]*>/g);
+    if (!anchorTags) return false;
+
+    return anchorTags.some((anchorTag) => {
+      const hrefMatch = anchorTag.match(/href=["'](.+?)["']/);
+      if (!hrefMatch) return false;
+
+      try {
+        const url = new URL(hrefMatch[1]);
+        const allowedHosts = ["legislation.gov.uk", "www.legislation.gov.uk"];
+        return (
+          allowedHosts.includes(url.hostname) && url.pathname.endsWith("/made")
+        );
+      } catch {
+        return false;
+      }
+    });
+  });
+};
+
 const FormModal: React.FC<{
   type: string;
   handleDelete?: () => void;
@@ -120,6 +145,8 @@ const FormModal: React.FC<{
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
+
+  const toast = useToast();
 
   return (
     <StyledDialog
@@ -163,6 +190,12 @@ const FormModal: React.FC<{
               data: any,
               children: Array<any> | undefined = undefined,
             ) => {
+              if (containsMadeLink(data.data)) {
+                toast.error(
+                  'Legislation GOV UK links incorrectly ending in "/made" detected in your content. Please fix before continuing.',
+                );
+                return;
+              }
               if (typeof data === "string") {
                 connect(parent, data, { before });
               } else {
