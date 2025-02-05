@@ -22,6 +22,11 @@ components:
       name: portalNodeId
       type: string
       required: true
+    templateId:
+      in: path
+      name: templateId
+      type: string
+      required: true
   schemas:
     Node:
       type: object
@@ -45,6 +50,32 @@ components:
         insert:
           type: boolean
           description: Operator to indicate if the copied flow should be inserted to the database, or simple returned in the response body
+    CreateFlow:
+      type: object
+      properties:
+        teamId:
+          type: number
+          example: 1
+          required: true
+        slug:
+          type: string
+          example: my-new-flow
+          required: true
+        name:
+          type: string
+          example: My new flow
+          required: true
+        data:
+          type: object
+          example: { _root: { edges: [] } }
+          required: true
+    CreateFlowFromTemplate:
+      type: object
+      properties:
+        teamId:
+          type: number
+          example: 1
+          required: true
     FlowData:
       type: object
       additionalProperties: true
@@ -76,6 +107,34 @@ components:
           example: Your flow has valid file types
       required: true
   responses:
+    CreateFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Successfully created flow my-new-flow"
+              id:
+                type: string
+                description: The UUID of the new flow
+              slug:
+                type: string
+    CreateFlowFromTemplate:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Successfully created flow from template my-new-flow-template"
+              id:
+                type: string
+                description: The UUID of the new templated flow
+              slug:
+                type: string
     CopyFlow:
       content:
         application/json:
@@ -165,6 +224,42 @@ components:
             properties:
               $ref: "#/components/schemas/FlowData"
 paths:
+  /flows/create:
+    post:
+      summary: Create a new flow
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFlow"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateFlow"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/create-from-template/{templateId}:
+    post:
+      summary: Create a new flow from a template
+      tags: ["flows"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/templateId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFlowFromTemplate"
+      responses:
+        "200":
+          $ref: "#/components/responses/CreateFlowFromTemplate"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
   /flows/{flowId}/copy:
     post:
       summary: Copy a flow
