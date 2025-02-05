@@ -2,7 +2,7 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const MezzanineCIL: Schema = {
-  type: "New mezzanine floor",
+  type: "Mezzanine floor",
   fields: [
     {
       type: "text",
