@@ -4,7 +4,6 @@ import type {
   UpdateFilterResponse,
   FilterParam,
   UpdatedFilterResponse,
-  GetFilterResponse,
 } from "./types.js";
 import { getDashboard } from "./getDashboard.js";
 
@@ -52,7 +51,6 @@ export async function updateFilter(
     }
     return result.parameter;
   });
-  console.log({ updatedParameters });
 
   if (!updatedFilter) {
     throw new Error(

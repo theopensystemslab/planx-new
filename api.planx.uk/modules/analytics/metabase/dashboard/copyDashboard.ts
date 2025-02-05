@@ -1,4 +1,4 @@
-import type { CopyDashboardParams, GetDashboardResponse } from "./types.js";
+import type { CopyDashboardParams, GetDashboardResponse, MetabaseCopyDashboardParams } from "./types.js";
 import { $metabase } from "../shared/client.js";
 
 export async function copyDashboard(
@@ -10,7 +10,7 @@ export async function copyDashboard(
       name: params.name,
       description: params.description,
       collection_id: params.collectionId,
-    },
+    } as MetabaseCopyDashboardParams,
   );
   return response.data.id;
 }

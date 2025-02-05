@@ -29,7 +29,6 @@ export type MetabaseCopyDashboardParams = {
   name: string;
   description?: string;
   collection_id?: number;
-  collection_position?: number | null;
 };
 
 export type UpdateFilterParams = {
@@ -83,8 +82,6 @@ export type GetDashboardResponse = Pick<
   MetabaseDashboardResponse,
   "name" | "id" | "collectionId" | "parameters"
 >;
-
-export type GetFilterResponse = Pick<MetabaseDashboardResponse, "parameters">;
 
 export interface UpdatedFilterResponse {
   parameter: FilterParam;

@@ -11,9 +11,15 @@ export interface NewCollectionParams {
 }
 
 /** We use a name and not slug here so that the eventual dashboard name is in title case */
-export type MetabaseCollectionParams = Omit<NewCollectionParams, "slug"> & {
+export type CreateCollectionParams = Omit<NewCollectionParams, "slug"> & {
   name: string;
 };
+
+export type MetabaseCreateCollectionParams = {
+    name: string;
+    description?: string;
+    parent_id?: number;
+}
 
 /** TODO: when running on production, turn below comment back into code
  * the Metabase collection ID is for the "Council" collection
