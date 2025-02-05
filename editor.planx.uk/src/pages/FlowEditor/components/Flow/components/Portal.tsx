@@ -86,6 +86,11 @@ const ExternalPortal: React.FC<any> = (props) => {
     editHref = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
+  const user = useStore.getState().getUser();
+  const tagsByRole = user?.isPlatformAdmin
+    ? props.tags
+    : props.tags?.filter((tag: NodeTag) => tag !== "customisation");
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -98,7 +103,7 @@ const ExternalPortal: React.FC<any> = (props) => {
             <MoreVert titleAccess="Edit Portal" />
           </Link>
         </Box>
-        {props.tags?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+        {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
       </li>
     </>
   );
@@ -138,6 +143,11 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
+  const user = useStore.getState().getUser();
+  const tagsByRole = user?.isPlatformAdmin
+    ? props.tags
+    : props.tags?.filter((tag: NodeTag) => tag !== "customisation");
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -156,7 +166,7 @@ const InternalPortal: React.FC<any> = (props) => {
             <MoreVert titleAccess="Edit Portal" />
           </Link>
         </Box>
-        {props.tags?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+        {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
       </li>
     </>
   );
