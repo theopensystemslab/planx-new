@@ -8,7 +8,7 @@ import { userContext } from "./modules/auth/middleware.js";
 import { publishFlow } from "./modules/flows/publish/service.js";
 import type { Flow, Node } from "./types.js";
 
-export interface FlowData {
+export interface GetFlowDataResponse {
   slug: string;
   name: string;
   data: Flow["data"];
@@ -25,9 +25,11 @@ export interface FlowData {
     | [];
 }
 
-// Get a flow's data (unflattened, without external portal nodes)
-const getFlowData = async (id: string): Promise<FlowData> => {
-  const { flow } = await $public.client.request<{ flow: FlowData | null }>(
+// Get a flow's data (unflattened)
+const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
+  const { flow } = await $public.client.request<{
+    flow: GetFlowDataResponse | null;
+  }>(
     gql`
       query GetFlowData($id: uuid!) {
         flow: flows_by_pk(id: $id) {
@@ -58,9 +60,9 @@ const getFlowData = async (id: string): Promise<FlowData> => {
   return flow;
 };
 
-interface InsertFlow {
+interface CreateFlowResponse {
   flow: {
-    id: string;
+    id: Flow["id"];
   };
 }
 
@@ -71,6 +73,7 @@ const createFlow = async (
   name: string,
   flowData: Flow["data"],
   copiedFrom?: Flow["id"],
+  templatedFrom?: Flow["id"],
 ) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
@@ -78,7 +81,7 @@ const createFlow = async (
   try {
     const {
       flow: { id },
-    } = await $client.request<InsertFlow>(
+    } = await $client.request<CreateFlowResponse>(
       gql`
         mutation InsertFlow(
           $team_id: Int!
@@ -86,6 +89,7 @@ const createFlow = async (
           $name: String!
           $data: jsonb = {}
           $copied_from: uuid
+          $templated_from: uuid
         ) {
           flow: insert_flows_one(
             object: {
@@ -95,6 +99,7 @@ const createFlow = async (
               data: $data
               version: 1
               copied_from: $copied_from
+              templated_from: $templated_from
             }
           ) {
             id
@@ -107,6 +112,7 @@ const createFlow = async (
         name: name,
         data: flowData,
         copied_from: copiedFrom,
+        templated_from: templatedFrom,
       },
     );
 
@@ -142,10 +148,9 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
   return data?.operation;
 };
 
-interface PublishedFlows {
+interface PublishedFlowsResponse {
   flow: {
     publishedFlows: {
-      // TODO: use FlowGraph from planx-core here
       data: Flow["data"];
       id: number;
     }[];
@@ -156,7 +161,7 @@ interface PublishedFlows {
 const getMostRecentPublishedFlow = async (
   id: string,
 ): Promise<Flow["data"] | undefined> => {
-  const { flow } = await $public.client.request<PublishedFlows>(
+  const { flow } = await $public.client.request<PublishedFlowsResponse>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
         flow: flows_by_pk(id: $id) {
@@ -179,7 +184,7 @@ const getMostRecentPublishedFlow = async (
 const getMostRecentPublishedFlowVersion = async (
   id: string,
 ): Promise<number | undefined> => {
-  const { flow } = await $public.client.request<PublishedFlows>(
+  const { flow } = await $public.client.request<PublishedFlowsResponse>(
     gql`
       query GetMostRecentPublishedFlowVersion($id: uuid!) {
         flow: flows_by_pk(id: $id) {

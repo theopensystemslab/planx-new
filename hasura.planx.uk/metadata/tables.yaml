@@ -520,6 +520,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -551,6 +552,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -581,6 +583,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -617,6 +620,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
