@@ -38,8 +38,6 @@ import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/PreviousLDCE";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
-import { Trees } from "./schemas/Trees";
-import { TreesMapFirst } from "./schemas/TreesMapFirst";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -78,8 +76,6 @@ export const SCHEMAS = [
   { name: "Existing buildings (CIL)", schema: ExistingBuildingsCIL },
   { name: "Unoccupied buildings (CIL)", schema: UnoccupiedBuildingsCIL },
   { name: "Mezzanine floors (CIL)", schema: MezzanineCIL },
-  { name: "Trees", schema: Trees },
-  { name: "Trees (Map first)", schema: TreesMapFirst },
   { name: "Interest in land (LDC)", schema: InterestInLandLDC },
   {
     name: "Ownership certificate - Owners",
