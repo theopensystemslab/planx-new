@@ -180,7 +180,7 @@ export interface EditorStore extends Store.Store {
   makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (
     flowId: string,
-    teamName: string,
+    teamSlug: string,
     flowName: string,
   ) => Promise<any>;
   moveNode: (
@@ -490,8 +490,7 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  moveFlow(flowId: string, teamName: string, flowName: string) {
-    const teamSlug = slugify(teamName);
+  moveFlow(flowId: string, teamSlug: string, flowName: string) {
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
       alert(
@@ -517,7 +516,7 @@ export const editorStore: StateCreator<
         const { data } = response;
         if (data.error.toLowerCase().includes("uniqueness violation")) {
           alert(
-            `Failed to move this flow. ${teamName} already has a flow with name '${flowName}'. Rename the flow and try again`,
+            `Failed to move this flow. ${teamSlug} already has a flow with name '${flowName}'. Rename the flow and try again`,
           );
         } else {
           alert(

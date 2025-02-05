@@ -226,14 +226,16 @@ const FlowItem: React.FC<FlowItemProps> = ({
               {
                 label: "Move",
                 onClick: () => {
-                  const newTeam = prompt("New team");
+                  const newTeam = prompt(
+                    "Add the new team's slug. A slug is a way to represent a team name, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
+                  );
                   if (newTeam) {
                     if (slugify(newTeam) === teamSlug) {
                       alert(
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(newTeam, flow.name);
+                      handleMove(slugify(newTeam), flow.name);
                     }
                   }
                 },
