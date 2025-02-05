@@ -1,21 +1,21 @@
 import { Schema } from "@planx/components/shared/Schema/model";
 
 import { PresentationalProps } from "../../Public";
-import { Trees } from "../../schemas/Trees";
+import { SketchPlanCA } from "../../schemas/SketchPlanCA";
 import {
   previouslySubmittedDoubleFeature,
   previouslySubmittedSingleFeature,
 } from "./mockPayload";
 
 const mockTreeSchema: Schema = {
-  ...Trees,
-  fields: Trees.fields.filter((field) => field.type !== "date"),
+  ...SketchPlanCA,
+  fields: SketchPlanCA.fields.filter((field) => field.type !== "date"),
 };
 
 export const props: PresentationalProps = {
   title: "Mock title",
   description: "Mock description",
-  schemaName: "Trees",
+  schemaName: "Sketch plan - Conservation areas",
   fn: "MockFn",
   schema: mockTreeSchema,
   basemap: "OSM",

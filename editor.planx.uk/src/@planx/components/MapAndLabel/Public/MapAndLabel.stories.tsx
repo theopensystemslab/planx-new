@@ -3,7 +3,7 @@ import React from "react";
 
 import Wrapper from "../../fixtures/Wrapper";
 import Editor from "../Editor";
-import { Trees } from "../schemas/Trees";
+import { Trees } from "../schemas/SketchPlanCA";
 import { Presentational as Public, PresentationalProps } from ".";
 
 const meta = {
