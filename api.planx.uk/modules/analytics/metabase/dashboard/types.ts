@@ -32,16 +32,6 @@ export type MetabaseCopyDashboardParams = {
   collection_position?: number | null;
 };
 
-export function toMetabaseParams(
-  params: CopyDashboardParams,
-): MetabaseCopyDashboardParams {
-  return {
-    name: params.name,
-    description: params.description,
-    collection_id: params.collectionId,
-  };
-}
-
 export type UpdateFilterParams = {
   dashboardId: number;
   filter: string;
@@ -72,7 +62,8 @@ export type NewDashboardHandler = ValidatedRequestHandler<
 export interface MetabaseDashboardResponse {
   name: string;
   id: number;
-  collection_id: number;
+  collectionId: number;
+  description: string;
   parameters: FilterParam[];
 }
 
@@ -90,7 +81,7 @@ export interface FilterParam {
 
 export type GetDashboardResponse = Pick<
   MetabaseDashboardResponse,
-  "name" | "id" | "collection_id"
+  "name" | "id" | "collectionId" | "parameters"
 >;
 
 export type GetFilterResponse = Pick<MetabaseDashboardResponse, "parameters">;

@@ -8,5 +8,14 @@ export async function getCollection(
   id: number,
 ): Promise<GetCollectionResponse> {
   const response = await $metabase.get(`/api/collection/${id}`);
-  return response.data;
+
+  const transformedCollection = {
+    name: response.data.name,
+    id: response.data.id,
+    description: response.data.description,
+    slug: response.data.slug,
+    parentId: response.data.parentId,
+  };
+
+  return transformedCollection;
 }
