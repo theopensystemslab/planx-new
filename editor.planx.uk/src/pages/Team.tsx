@@ -236,7 +236,6 @@ const Team: React.FC = () => {
             alignItems: "flex-end",
           }}
         >
-          {showAddFlowButton && <AddFlowButton flows={flows} />}
           {showAddFlowButton && hasFeatureFlag("TEMPLATES") && (
             <StartFromTemplateButton />
           )}
