@@ -102,9 +102,9 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@vitest/coverage-istanbul": "^2.1.1",
-    "@vitest/eslint-plugin": "^1.1.4",
-    "@vitest/ui": "^2.1.1",
+    "@vitest/coverage-istanbul": "^3.0.5",
+    "@vitest/eslint-plugin": "^1.1.25",
+    "@vitest/ui": "^3.0.5",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -118,7 +118,7 @@
     "tsx": "^4.16.2",
     "typescript": "^5.5.2",
     "uuid": "^10.0.0",
-    "vitest": "^3.0.3"
+    "vitest": "^3.0.5"
   },
   "pnpm": {
     "peerDependencyRules": {
