@@ -29,9 +29,6 @@ const BoldTableRow = styled(TableRow)(() => ({
 
 const VAT_RATE = 0.2;
 
-const DESCRIPTION =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
-
 type FeeBreakdownSection = React.FC<IFeeBreakdown>;
 
 const Header = () => (
@@ -131,25 +128,17 @@ export const FeeBreakdown: React.FC<{
   if (!breakdown) return null;
 
   return (
-    <Box mt={3}>
-      <Typography variant="h3" mb={1}>
-        Fee
-      </Typography>
-      <Typography variant="body1" mb={2}>
-        {DESCRIPTION}
-      </Typography>
-      <TableContainer>
-        <StyledTable data-testid="fee-breakdown-table">
-          <Header />
-          <TableBody>
-            <ApplicationFee {...breakdown} />
-            <Reductions {...breakdown} />
-            <Exemptions {...breakdown} />
-            <Total {...breakdown} />
-            <VAT {...breakdown} />
-          </TableBody>
-        </StyledTable>
-      </TableContainer>
-    </Box>
+    <TableContainer sx={{ mt: 3 }}>
+      <StyledTable data-testid="fee-breakdown-table">
+        <Header />
+        <TableBody>
+          <ApplicationFee {...breakdown} />
+          <Reductions {...breakdown} />
+          <Exemptions {...breakdown} />
+          <Total {...breakdown} />
+          <VAT {...breakdown} />
+        </TableBody>
+      </StyledTable>
+    </TableContainer>
   );
 };
