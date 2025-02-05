@@ -22,11 +22,15 @@ import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent } from "./model";
-import { Trees } from "./schemas/Trees";
+import { SketchPlanCA } from "./schemas/SketchPlanCA";
+import { SketchPlanTPO } from "./schemas/SketchPlanTPO";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
 
-export const SCHEMAS = [{ name: "Trees", schema: Trees }];
+export const SCHEMAS = [
+  { name: "Sketch plan - Conservation areas", schema: SketchPlanCA },
+  { name: "Sketch plan - TPO", schema: SketchPlanTPO },
+];
 
 export default MapAndLabelComponent;
 

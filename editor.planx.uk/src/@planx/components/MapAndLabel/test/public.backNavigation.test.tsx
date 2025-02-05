@@ -8,7 +8,7 @@ import { point1, point2, point3 } from "./mocks/geojson";
 import {
   previouslySubmittedDoubleFeatureProps,
   previouslySubmittedSingleFeatureProps,
-} from "./mocks/Trees";
+} from "./mocks/SketchPlanCA";
 import { addMultipleFeatures, clickContinue } from "./utils";
 
 beforeAll(() => {

@@ -8,7 +8,7 @@ import { axe } from "vitest-axe";
 
 import { mockTreeData } from "./mocks/GenericValues";
 import { mockFeaturePointObj, point1, point2, point3 } from "./mocks/geojson";
-import { props } from "./mocks/Trees";
+import { props } from "./mocks/SketchPlanCA";
 import {
   addFeaturesToMap,
   addMultipleFeatures,
