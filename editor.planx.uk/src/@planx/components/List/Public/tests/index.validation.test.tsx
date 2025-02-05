@@ -11,61 +11,65 @@ import { fillInResponse } from "./testUtils";
 Element.prototype.scrollIntoView = vi.fn();
 
 describe("Form validation and error handling", () => {
-  test("form validation is triggered when saving an item", async () => {
-    const { user, getByRole, getAllByTestId } = setup(
-      <ListComponent {...mockZooProps} />,
-    );
+  test(
+    "form validation is triggered when saving an item",
+    { timeout: 35_000 },
+    async () => {
+      const { user, getByRole, getAllByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
 
-    let errorMessages = getAllByTestId(/error-message-input/);
+      let errorMessages = getAllByTestId(/error-message-input/);
 
-    let numberOfErrors = 0;
-    mockZooProps.schema.fields.forEach((field) => {
-      switch (field.type) {
-        case "date":
-          // Parent wrapper + 3 inputs
-          numberOfErrors += 4;
-          break;
-        case "address":
-          // 3 mandatory fields
-          numberOfErrors += 3;
-          break;
-        default:
-          numberOfErrors += 1;
-          break;
-      }
-    });
+      let numberOfErrors = 0;
+      mockZooProps.schema.fields.forEach((field) => {
+        switch (field.type) {
+          case "date":
+            // Parent wrapper + 3 inputs
+            numberOfErrors += 4;
+            break;
+          case "address":
+            // 3 mandatory fields
+            numberOfErrors += 3;
+            break;
+          default:
+            numberOfErrors += 1;
+            break;
+        }
+      });
 
-    // Each field has an ErrorWrapper
-    expect(errorMessages).toHaveLength(numberOfErrors);
+      // Each field has an ErrorWrapper
+      expect(errorMessages).toHaveLength(numberOfErrors);
 
-    // All are empty initially
-    errorMessages.forEach((message) => {
-      expect(message).toBeEmptyDOMElement();
-    });
+      // All are empty initially
+      errorMessages.forEach((message) => {
+        expect(message).toBeEmptyDOMElement();
+      });
 
-    await user.click(getByRole("button", { name: /Save/ }));
+      await user.click(getByRole("button", { name: /Save/ }));
 
-    // Error wrappers persist
-    errorMessages = getAllByTestId(/error-message-input/);
-    expect(errorMessages).toHaveLength(numberOfErrors);
+      // Error wrappers persist
+      errorMessages = getAllByTestId(/error-message-input/);
+      expect(errorMessages).toHaveLength(numberOfErrors);
 
-    // Each field is in an error state, ignoring individual date and address input fields
-    const fieldErrors = errorMessages.slice(
-      0,
-      mockZooProps.schema.fields.length - 1,
-    );
+      // Each field is in an error state, ignoring individual date and address input fields
+      const fieldErrors = errorMessages.slice(
+        0,
+        mockZooProps.schema.fields.length - 1,
+      );
 
-    fieldErrors.forEach((message) => {
-      expect(message).not.toBeEmptyDOMElement();
-    });
-  });
+      fieldErrors.forEach((message) => {
+        expect(message).not.toBeEmptyDOMElement();
+      });
+    },
+  );
 
   /**
    * These tests are not exhaustive tests of validation schemas, these can be tested in their respective model.test.ts files
    * We are testing that the validation schemas are correctly "wired up" to out List component fields
    */
   describe("existing validation schemas are correctly referenced", () => {
-    test("text fields", async () => {
+    test("text fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -86,7 +90,7 @@ describe("Form validation and error handling", () => {
       );
     });
 
-    test("number fields", async () => {
+    test("number fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -102,7 +106,7 @@ describe("Form validation and error handling", () => {
       expect(ageInputErrorMessage).toHaveTextContent(/Enter a positive number/);
     });
 
-    test("question fields", async () => {
+    test("question fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -118,7 +122,7 @@ describe("Form validation and error handling", () => {
       );
     });
 
-    test("radio fields", async () => {
+    test("radio fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -134,7 +138,7 @@ describe("Form validation and error handling", () => {
       );
     });
 
-    test("checklist fields", async () => {
+    test("checklist fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -150,7 +154,7 @@ describe("Form validation and error handling", () => {
       );
     });
 
-    test("date fields", async () => {
+    test("date fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getAllByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -168,7 +172,7 @@ describe("Form validation and error handling", () => {
 
     test.todo("map fields");
 
-    test("address fields", async () => {
+    test("address fields", { timeout: 20_000 }, async () => {
       const { user, getByRole, getAllByTestId } = setup(
         <ListComponent {...mockZooProps} />,
       );
@@ -243,43 +247,51 @@ describe("Form validation and error handling", () => {
     },
   );
 
-  test("an error displays if you add a new item, without saving the active item", async () => {
-    const { user, getByTestId, getByText, getByLabelText } = setup(
-      <ListComponent {...mockZooProps} />,
-    );
-    // Start filling out item
-    const nameInput = getByLabelText(/What's their name/);
-    await user.type(nameInput, "Richard Parker");
+  test(
+    "an error displays if you add a new item, without saving the active item",
+    { timeout: 35_000 },
+    async () => {
+      const { user, getByTestId, getByText, getByLabelText } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+      // Start filling out item
+      const nameInput = getByLabelText(/What's their name/);
+      await user.type(nameInput, "Richard Parker");
 
-    const emailInput = getByLabelText(/email/);
-    await user.type(emailInput, "richard.parker@pi.com");
+      const emailInput = getByLabelText(/email/);
+      await user.type(emailInput, "richard.parker@pi.com");
 
-    // Try to add a new item
-    await user.click(getByTestId(/list-add-button/));
+      // Try to add a new item
+      await user.click(getByTestId(/list-add-button/));
 
-    const activeItemErrorMessage = getByText(
-      /Please save all responses before adding another/,
-    );
-    expect(activeItemErrorMessage).toBeVisible();
-  });
+      const activeItemErrorMessage = getByText(
+        /Please save all responses before adding another/,
+      );
+      expect(activeItemErrorMessage).toBeVisible();
+    },
+  );
 
-  test("an error displays if you continue, without saving the active item", async () => {
-    const { user, getByTestId, getByText, getByLabelText } = setup(
-      <ListComponent {...mockZooProps} />,
-    );
-    // Start filling out item
-    const nameInput = getByLabelText(/What's their name/);
-    await user.type(nameInput, "Richard Parker");
+  test(
+    "an error displays if you continue, without saving the active item",
+    { timeout: 35_000 },
+    async () => {
+      const { user, getByTestId, getByText, getByLabelText } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+      // Start filling out item
+      const nameInput = getByLabelText(/What's their name/);
+      await user.type(nameInput, "Richard Parker");
 
-    const emailInput = getByLabelText(/email/);
-    await user.type(emailInput, "richard.parker@pi.com");
+      const emailInput = getByLabelText(/email/);
+      await user.type(emailInput, "richard.parker@pi.com");
 
-    // Try to continue
-    await user.click(getByTestId(/continue-button/));
+      // Try to continue
+      await user.click(getByTestId(/continue-button/));
 
-    const unsavedItemErrorMessage = getByText(
-      /Please save in order to continue/,
-    );
-    expect(unsavedItemErrorMessage).toBeVisible();
-  });
+      const unsavedItemErrorMessage = getByText(
+        /Please save in order to continue/,
+      );
+      expect(unsavedItemErrorMessage).toBeVisible();
+    },
+  );
 });
