@@ -277,10 +277,13 @@ export async function updateFlow(client, flowId: UUID): Promise<UUID> {
 }
 
 export async function deleteFlow(client, flowId: UUID): Promise<UUID> {
-  const { delete_flows_by_pk: response } = await client.request(
+  const { update_flows_by_pk: response } = await client.request(
     gql`
-      mutation deleteFlow($flowId: uuid!) {
-        delete_flows_by_pk(id: $flowId) {
+      mutation softDeleteFlow($flowId: uuid!) {
+        update_flows_by_pk(
+          pk_columns: { id: $flowId }
+          _set: { deleted_at: "now()" }
+        ) {
           id
         }
       }
