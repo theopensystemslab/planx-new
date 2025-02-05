@@ -112,9 +112,9 @@ const containsMadeLink = (data: Record<string, unknown>): boolean => {
 
       try {
         const url = new URL(hrefMatch[1]);
+        const allowedHosts = ["legislation.gov.uk", "www.legislation.gov.uk"];
         return (
-          url.hostname.includes("legislation.gov.uk") &&
-          url.pathname.endsWith("/made")
+          allowedHosts.includes(url.hostname) && url.pathname.endsWith("/made")
         );
       } catch {
         return false;

@@ -63,7 +63,11 @@ export const getLegislationLinkError = (
           ?.map(({ attrs }) => {
             try {
               const url = attrs && new URL(attrs.href);
-              if (url?.hostname.includes("legislation.gov.uk")) {
+              const allowedHosts = [
+                "legislation.gov.uk",
+                "www.legislation.gov.uk",
+              ];
+              if (url?.hostname && allowedHosts.includes(url.hostname)) {
                 return url?.pathname.endsWith("/made");
               }
             } catch (error) {
