@@ -1,7 +1,8 @@
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
-import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { ServerError } from "../../../errors/index.js";
 import { createFlow } from "../../../helpers.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import type { Flow } from "../../../types.js";
 
 interface CreateFlowResponse {
@@ -15,7 +16,6 @@ export const createFlowSchema = z.object({
     teamId: z.number(),
     slug: z.string(),
     name: z.string(),
-    data: z.any(), // FlowGraph
   }),
 });
 
@@ -30,10 +30,11 @@ export const createFlowController: CreateFlowController = async (
   next,
 ) => {
   try {
-    const { teamId, slug, name, data } = res.locals.parsedReq.body;
+    const { teamId, slug, name } = res.locals.parsedReq.body;
+    const initialFlowData: FlowGraph = { _root: { edges: [] } };
 
     // createFlow automatically handles the associated operation and initial publish
-    const { id } = await createFlow(teamId, slug, name, data);
+    const { id } = await createFlow(teamId, slug, name, initialFlowData);
 
     res.status(200).send({
       message: `Successfully created flow ${slug}`,

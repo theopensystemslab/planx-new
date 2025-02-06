@@ -15,12 +15,10 @@ const validBody = {
   teamId: 1,
   slug: "my-new-flow",
   name: "My new flow",
-  data: mockNewFlowData,
 };
 
 const invalidBody = {
   slug: "my-new-flow",
-  data: mockNewFlowData,
 };
 
 beforeEach(() => {

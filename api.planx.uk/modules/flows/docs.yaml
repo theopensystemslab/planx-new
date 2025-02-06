@@ -65,10 +65,6 @@ components:
           type: string
           example: My new flow
           required: true
-        data:
-          type: object
-          example: { _root: { edges: [] } }
-          required: true
     CreateFlowFromTemplate:
       type: object
       properties:

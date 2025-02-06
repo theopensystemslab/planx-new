@@ -309,7 +309,6 @@ export const editorStore: StateCreator<
         teamId: teamId,
         slug: newSlug,
         name: newName,
-        data: { [ROOT_NODE_KEY]: { edges: [] } },
       },
       {
         headers: {
@@ -325,7 +324,9 @@ export const editorStore: StateCreator<
     const token = get().jwt;
 
     const response = await axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/flows/create-from-template/${templateId}`,
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/flows/create-from-template/${templateId}`,
       {
         teamId: teamId,
       },

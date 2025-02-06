@@ -16,7 +16,7 @@ const createFlowFromTemplate = async (
     newSlug,
     newName,
     sourceTemplate.data,
-    undefined,
+    undefined, // flows.copied_from
     templateId,
   );
 
