@@ -34,76 +34,82 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
 
   const rows: GridRowsProp = [{ id: 1, col1: "Hello", col2: "World" }];
 
-  const columns: GridColDef[] = [
-    {
-      field: "col1",
-      headerName: "Logo",
-      width: 150,
-      renderCell: (_params) => {
-        return data.logo ? <Configured /> : <NotConfigured />;
+  const columns: Record<string, GridColDef[]> = {
+    customisations: [
+      {
+        field: "col1",
+        headerName: "Logo",
+        width: 150,
+        renderCell: (_params) => {
+          return data.logo ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-    {
-      field: "col2",
-      headerName: "Favicon",
-      width: 150,
-      renderCell: (_params) => {
-        return data.favicon ? <Configured /> : <NotConfigured />;
+      {
+        field: "col2",
+        headerName: "Favicon",
+        width: 150,
+        renderCell: (_params) => {
+          return data.favicon ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-    {
-      field: "col3",
-      headerName: "Planning constraints",
-      width: 150,
-      renderCell: (_params) => {
-        return data.planningDataEnabled ? <Configured /> : <NotConfigured />;
+
+      {
+        field: "col5",
+        headerName: "Subdomain",
+        width: 150,
+        renderCell: (_params) => {
+          return data.subdomain ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-    {
-      field: "col4",
-      headerName: "Article 4s (API)",
-      width: 150,
-      renderCell: (_params) => {
-        return !isValidating && a4Check?.status ? (
-          <Configured />
-        ) : (
-          <NotConfigured />
-        );
+    ],
+    integrations: [
+      {
+        field: "col3",
+        headerName: "Planning constraints",
+        width: 150,
+        renderCell: (_params) => {
+          return data.planningDataEnabled ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-    {
-      field: "col5",
-      headerName: "Subdomain",
-      width: 150,
-      renderCell: (_params) => {
-        return data.subdomain ? <Configured /> : <NotConfigured />;
+      {
+        field: "col4",
+        headerName: "Article 4s (API)",
+        width: 150,
+        renderCell: (_params) => {
+          return !isValidating && a4Check?.status ? (
+            <Configured />
+          ) : (
+            <NotConfigured />
+          );
+        },
       },
-    },
-    {
-      field: "col6",
-      headerName: "GOV.UK Pay",
-      width: 150,
-      renderCell: (_params) => {
-        return data.govpayEnabled ? <Configured /> : <NotConfigured />;
+
+      {
+        field: "col6",
+        headerName: "GOV.UK Pay",
+        width: 150,
+        renderCell: (_params) => {
+          return data.govpayEnabled ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-    {
-      field: "col7",
-      headerName: "Send to email",
-      width: 150,
-      renderCell: (_params) => {
-        return data.sendToEmailAddress ? <Configured /> : <NotConfigured />;
+      {
+        field: "col7",
+        headerName: "Send to email",
+        width: 150,
+        renderCell: (_params) => {
+          return data.sendToEmailAddress ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-    {
-      field: "col8",
-      headerName: "BOPS",
-      width: 150,
-      renderCell: (_params) => {
-        return data.bopsSubmissionURL ? <Configured /> : <NotConfigured />;
+      {
+        field: "col8",
+        headerName: "BOPS",
+        width: 150,
+        renderCell: (_params) => {
+          return data.bopsSubmissionURL ? <Configured /> : <NotConfigured />;
+        },
       },
-    },
-  ];
+    ],
+  };
 
   return (
     <StyledTeamAccordion primaryColour={data.primaryColour} elevation={0}>
@@ -141,52 +147,16 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
                 <Box component="dt">{"Homepage"}</Box>
                 <Box component="dd">{data.homepage || <NotConfigured />}</Box>
               </>
-              {/* <>
-                <Box component="dt">{"Logo"}</Box>
-                <Box component="dd">
-                  {data.logo ? <Configured /> : <NotConfigured />}
-                </Box>
-              </>
-              <>
-                <Box component="dt">{"Favicon"}</Box>
-                <Box component="dd">
-                  {data.favicon ? <Configured /> : <NotConfigured />}
-                </Box>
-              </> */}
             </SummaryListTable>
           </Grid>
           <Grid item xs={12} md={4} width="100%">
             <SummaryListTable dense={true}>
-              {/* <>
-                <Box component="dt">{"Planning constraints"}</Box>
-                <Box component="dd">
-                  {data.planningDataEnabled ? (
-                    <Configured />
-                  ) : (
-                    <NotConfigured />
-                  )}
-                </Box>
-              </> */}
-              {/* <>
-                <Box component="dt">{"Article 4s (API)"}</Box>
-                <Box component="dd">
-                  {!isValidating && a4Check?.status ? (
-                    <Configured />
-                  ) : (
-                    <NotConfigured />
-                  )}
-                </Box>
-              </> */}
               <>
                 <Box component="dt">{"Reference code"}</Box>
                 <Box component="dd">
                   {data.referenceCode || <NotConfigured />}
                 </Box>
               </>
-              {/* <>
-                <Box component="dt">{"Subdomain"}</Box>
-                <Box component="dd">{data.subdomain || <NotConfigured />}</Box>
-              </> */}
             </SummaryListTable>
           </Grid>
           <Grid item xs={12} md={4} width="100%">
@@ -199,30 +169,31 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
                   )}
                 </Box>
               </>
-              {/* <>
-                <Box component="dt">{"GOV.UK Pay"}</Box>
-                <Box component="dd">
-                  {data.govpayEnabled ? <Configured /> : <NotConfigured />}
-                </Box>
-              </>
-              <>
-                <Box component="dt">{"Send to email"}</Box>
-                <Box component="dd">
-                  {data.sendToEmailAddress || <NotConfigured />}
-                </Box>
-              </>
-              <>
-                <Box component="dt">{"BOPS"}</Box>
-                <Box component="dd">
-                  {data.bopsSubmissionURL ? <Configured /> : <NotConfigured />}
-                </Box>
-              </> */}
             </SummaryListTable>
           </Grid>
         </Grid>
       </AccordionDetails>
-      <div style={{ height: 300, width: "100%" }}>
-        <DataGrid sx={{ margin: 3 }} rows={rows} columns={columns} />
+      <Typography mx={3} variant="h4" component="h3">
+        Customisations
+      </Typography>
+      <div style={{ width: "100%" }}>
+        <DataGrid
+          sx={{ margin: 3 }}
+          rows={rows}
+          columns={columns.customisations}
+          hideFooter
+        />
+      </div>
+      <Typography mx={3} variant="h4" component="h3">
+        Integrations
+      </Typography>
+      <div style={{ width: "100%" }}>
+        <DataGrid
+          sx={{ margin: 3 }}
+          rows={rows}
+          columns={columns.integrations}
+          hideFooter
+        />
       </div>
     </StyledTeamAccordion>
   );
