@@ -119,8 +119,9 @@ function Component(props: Props) {
     // Skip component when fee is negative
     // Log error silently - this was likely a content error that should be addressed
     if (fee < 0) {
+      dispatch(Action.NoFeeFound);
       logger.notify(`Negative fee calculated for session ${sessionId}`);
-      return props.handleSubmit && props.handleSubmit({ auto: true });
+      return;
     }
 
     // Do not contact GovPay at all if fee is 0, just show UI

@@ -161,7 +161,7 @@ describe("Pay component when fee is undefined or £0", () => {
     expect(handleSubmit).toHaveBeenCalled();
   });
 
-  it("Skips pay if fee is negative", () => {
+  it("Displays an error if fee is negative", () => {
     const handleSubmit = vi.fn();
     const loggerSpy = vi.spyOn(logger, "notify");
 
@@ -192,8 +192,12 @@ describe("Pay component when fee is undefined or £0", () => {
       />,
     );
 
-    // handleSubmit is called to auto-answer Pay (aka "skip" in card sequence)
-    expect(handleSubmit).toHaveBeenCalled();
+    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("We are unable to calculate your fee right now"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
+    
     expect(loggerSpy).toHaveBeenCalledWith(
       expect.stringMatching(/Negative fee calculated/),
     );
