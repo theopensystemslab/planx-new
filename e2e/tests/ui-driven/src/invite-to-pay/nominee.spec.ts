@@ -8,7 +8,7 @@ import {
   setUpTestContext,
   tearDownTestContext,
 } from "../helpers/context.js";
-import { cards, setFeatureFlag } from "../helpers/globalHelpers.js";
+import { cards } from "../helpers/globalHelpers.js";
 import { fillGovUkCardDetails } from "../helpers/userActions.js";
 import inviteToPayFlow from "../mocks/flows/invite-to-pay-flow.js";
 import { getPaymentRequestBySessionId } from "./helpers.js";
@@ -38,10 +38,6 @@ test.describe("Nominee journey @regression", async () => {
       await tearDownTestContext();
       throw e;
     }
-  });
-
-  test.beforeEach(async ({ page }) => {
-    await setFeatureFlag(page, "FEE_BREAKDOWN");
   });
 
   test.afterAll(async () => {

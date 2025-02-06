@@ -11,7 +11,6 @@ import {
 import { FeeBreakdown } from "@planx/components/Pay/Public/FeeBreakdown/FeeBreakdown";
 import axios from "axios";
 import { format } from "date-fns";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { getExpiryDateForPaymentRequest } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
@@ -232,11 +231,9 @@ export default function MakePayment({
         currentState === States.ReadyToRetry) &&
         !isLoading && (
           <>
-            {hasFeatureFlag("FEE_BREAKDOWN") && (
-              <Container maxWidth="contentWrap" sx={{ mt: 6, pb: 0 }}>
-                <FeeBreakdown inviteToPayFeeBreakdown={feeBreakdown} />
-              </Container>
-            )}
+            <Container maxWidth="contentWrap" sx={{ mt: 6, pb: 0 }}>
+              <FeeBreakdown inviteToPayFeeBreakdown={feeBreakdown} />
+            </Container>
             <Confirm
               fee={toDecimal(paymentAmount)}
               onConfirm={readyAction}

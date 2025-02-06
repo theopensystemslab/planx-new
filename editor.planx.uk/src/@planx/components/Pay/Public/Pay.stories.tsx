@@ -17,9 +17,6 @@ const meta = {
       }),
     },
   },
-  loaders: [
-    () => window.localStorage.setItem("FEATURE_FLAGS", '["FEE_BREAKDOWN"]'),
-  ],
 } satisfies Meta<typeof Confirm>;
 
 type Story = StoryObj<typeof meta>;
