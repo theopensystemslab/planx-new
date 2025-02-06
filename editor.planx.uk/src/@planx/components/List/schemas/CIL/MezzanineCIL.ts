@@ -2,7 +2,7 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const MezzanineCIL: Schema = {
-  type: "New mezzanine floor",
+  type: "Mezzanine floor",
   fields: [
     {
       type: "text",
@@ -15,8 +15,7 @@ export const MezzanineCIL: Schema = {
     {
       type: "number",
       data: {
-        title:
-          "What will be the Gross Internal Floor Area (GIA) of the mezzanine?",
+        title: "What will be the floorspace of the mezzanine?",
         units: "m²",
         fn: "area",
         allowNegatives: false,
