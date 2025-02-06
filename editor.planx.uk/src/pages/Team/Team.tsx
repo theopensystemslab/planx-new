@@ -22,11 +22,13 @@ import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
 import { slugify } from "utils";
 
-import { client } from "../lib/graphql";
-import SimpleMenu from "../ui/editor/SimpleMenu";
-import { useStore } from "./FlowEditor/lib/store";
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "./FlowEditor/utils";
+import { client } from "../../lib/graphql";
+import SimpleMenu from "../../ui/editor/SimpleMenu";
+import { useStore } from "../FlowEditor/lib/store";
+import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import { formatLastEditMessage } from "../FlowEditor/utils";
+import { FlowMenu } from "./FlowMenu/FlowMenu";
+import { getUniqueFlow } from "./FlowMenu/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(0, 0, 3),
@@ -176,78 +178,11 @@ const FlowItem: React.FC<FlowItemProps> = ({
           </LinkSubText>
         </DashboardLink>
         {useStore.getState().canUserEditTeam(teamSlug) && (
-          <StyledSimpleMenu
-            items={[
-              {
-                onClick: async () => {
-                  const newName = prompt("New name", flow.name);
-                  if (newName && newName !== flow.name) {
-                    const uniqueFlow = getUniqueFlow(newName, flows);
-                    if (uniqueFlow) {
-                      await client.mutate({
-                        mutation: gql`
-                          mutation UpdateFlowSlug(
-                            $teamId: Int
-                            $slug: String
-                            $newSlug: String
-                            $newName: String
-                          ) {
-                            update_flows(
-                              where: {
-                                team: { id: { _eq: $teamId } }
-                                slug: { _eq: $slug }
-                              }
-                              _set: { slug: $newSlug, name: $newName }
-                            ) {
-                              affected_rows
-                            }
-                          }
-                        `,
-                        variables: {
-                          teamId: teamId,
-                          slug: flow.slug,
-                          newSlug: uniqueFlow.slug,
-                          newName: uniqueFlow.name,
-                        },
-                      });
-
-                      refreshFlows();
-                    }
-                  }
-                },
-                label: "Rename",
-              },
-              {
-                label: "Copy",
-                onClick: () => {
-                  handleCopy();
-                },
-              },
-              {
-                label: "Move",
-                onClick: () => {
-                  const newTeam = prompt(
-                    "Enter the destination team's slug. A slug is the URL name of a team, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
-                  );
-                  if (newTeam) {
-                    if (slugify(newTeam) === teamSlug) {
-                      alert(
-                        `This flow already belongs to ${teamSlug}, skipping move`,
-                      );
-                    } else {
-                      handleMove(slugify(newTeam), flow.name);
-                    }
-                  }
-                },
-              },
-              {
-                label: "Delete",
-                onClick: () => {
-                  setDeleting(true);
-                },
-                error: true,
-              },
-            ]}
+          <FlowMenu
+            flow={flow}
+            flows={flows}
+            setDeleting={setDeleting}
+            refreshFlows={refreshFlows}
           />
         )}
       </DashboardListItem>
@@ -472,21 +407,3 @@ const Team: React.FC = () => {
 };
 
 export default Team;
-
-const getUniqueFlow = (
-  name: string,
-  flows: FlowSummary[],
-): { slug: string; name: string } | undefined => {
-  const newFlowSlug = slugify(name);
-  const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
-
-  if (duplicateFlowName) {
-    const updatedName = prompt(
-      `A service already exists with the name '${name}', enter another name`,
-      name,
-    );
-    if (!updatedName) return;
-    return getUniqueFlow(updatedName, flows);
-  }
-  return { slug: newFlowSlug, name: name };
-};

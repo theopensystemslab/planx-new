@@ -6,7 +6,7 @@ import React from "react";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import Team from "../pages/Team";
+import Team from "../pages/Team/Team";
 import { makeTitle } from "./utils";
 import { getFlowEditorData } from "./views/flowEditor";
 import { teamView } from "./views/team";
