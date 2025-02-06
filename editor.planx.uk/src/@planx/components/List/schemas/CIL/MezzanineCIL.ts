@@ -16,7 +16,7 @@ export const MezzanineCIL: Schema = {
       type: "number",
       data: {
         title:
-          "What will be the Gross Internal Floor Area (GIA) of the mezzanine?",
+          "What will be the floorspace of the mezzanine?",
         units: "m²",
         fn: "area",
         allowNegatives: false,
