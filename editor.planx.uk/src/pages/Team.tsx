@@ -13,6 +13,7 @@ import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
+import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
@@ -175,6 +176,43 @@ const Team: React.FC = () => {
       directionNames: { asc: "Oldest first", desc: "Newest first" },
     },
   ];
+
+  const checkFlowStatus: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    value,
+  ) => flow.status === value;
+
+  const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    _value,
+  ) => flow.publishedFlows[0]?.hasSendComponent;
+
+  const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
+    flow,
+    _value,
+  ) => flow.publishedFlows[0]?.isStatutoryApplicationType;
+
+  const filterOptions: FilterOptions<FlowSummary>[] = [
+    {
+      displayName: "Online status",
+      optionKey: "status",
+      optionValue: ["online", "offline"],
+      validationFn: checkFlowStatus,
+    },
+    {
+      displayName: "Service type",
+      optionKey: `publishedFlows.0.hasSendComponent`,
+      optionValue: ["submission"],
+      validationFn: checkFlowServiceType,
+    },
+    {
+      displayName: "Application type",
+      optionKey: `name`,
+      optionValue: ["statutory"],
+      validationFn: checkFlowApplicationType,
+    },
+  ];
+
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
@@ -240,16 +278,25 @@ const Team: React.FC = () => {
             <StartFromTemplateButton />
           )}
         </Box>
-        {hasFeatureFlag("SORT_FLOWS") && flows && (
-          <SortControl<FlowSummary>
-            records={flows}
-            setRecords={setFlows}
-            sortOptions={sortOptions}
-          />
-        )}
-        {teamHasFlows && (
+        <Box>
+          {filteredFlows && flows && (
+            <Filters<FlowSummary>
+              records={flows}
+              setFilteredRecords={setFilteredFlows}
+              filterOptions={filterOptions}
+            />
+          )}
+          {hasFeatureFlag("SORT_FLOWS") && flows && (
+            <SortControl<FlowSummary>
+              records={flows}
+              setRecords={setFlows}
+              sortOptions={sortOptions}
+            />
+          )}
+        </Box>
+        {filteredFlows && flows && (
           <DashboardList>
-            {flows?.map((flow) => (
+            {filteredFlows.map((flow) => (
               <FlowCard
                 flow={flow}
                 flows={flows}
