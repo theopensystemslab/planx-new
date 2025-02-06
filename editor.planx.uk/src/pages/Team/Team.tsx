@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
@@ -20,9 +19,7 @@ import { AddButton } from "ui/editor/AddButton";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
-import { slugify } from "utils";
 
-import { client } from "../../lib/graphql";
 import SimpleMenu from "../../ui/editor/SimpleMenu";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
@@ -60,11 +57,6 @@ const DashboardLink = styled(Link)(({ theme }) => ({
   "&:focus-within": {
     ...borderedFocusStyle,
   },
-}));
-
-const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
 }));
 
 const LinkSubText = styled(Box)(({ theme }) => ({
@@ -131,22 +123,6 @@ const FlowItem: React.FC<FlowItemProps> = ({
       .deleteFlow(teamId, flow.slug)
       .then(() => {
         setDeleting(false);
-        refreshFlows();
-      });
-  };
-  const handleCopy = () => {
-    useStore
-      .getState()
-      .copyFlow(flow.id)
-      .then(() => {
-        refreshFlows();
-      });
-  };
-  const handleMove = (newTeam: string, flowName: string) => {
-    useStore
-      .getState()
-      .moveFlow(flow.id, newTeam, flowName)
-      .then(() => {
         refreshFlows();
       });
   };
