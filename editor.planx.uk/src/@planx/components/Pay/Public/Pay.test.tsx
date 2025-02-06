@@ -1,6 +1,7 @@
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { screen } from "@testing-library/react";
+import { logger } from "airbrake";
 import { FullStore, Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { act } from "react-dom/test-utils";
@@ -22,7 +23,7 @@ vi.spyOn(ReactNavi, "useCurrentRoute").mockImplementation(
 );
 
 vi.mock("lib/featureFlags", () => ({
-  hasFeatureFlag: vi.fn(),
+  hasFeatureFlag: vi.fn().mockResolvedValue(true),
 }));
 
 const resumeButtonText = "Resume an application you have already started";
@@ -50,6 +51,26 @@ const flowWithZeroFee: Store.Flow = {
     data: {
       fn: "application.fee.payable",
       val: "0",
+    },
+  },
+  pay: {
+    type: TYPES.Pay,
+    data: {
+      fn: "application.fee.payable",
+    },
+  },
+};
+
+const flowWithNegativeFee: Store.Flow = {
+  _root: {
+    edges: ["setValue", "pay"],
+  },
+  setValue: {
+    type: TYPES.SetValue,
+    edges: ["pay"],
+    data: {
+      fn: "application.fee.payable",
+      val: "-12",
     },
   },
   pay: {
@@ -112,12 +133,54 @@ describe("Pay component when fee is undefined or £0", () => {
     expect(screen.queryByText("Continue")).not.toBeInTheDocument();
   });
 
-  it("Skips pay if fee = 0", () => {
+  it("Allows the user to view a fee breakdown and continue if the fee is zero", async () => {
     const handleSubmit = vi.fn();
 
     setState({ flow: flowWithZeroFee, breadcrumbs: breadcrumbs });
     expect(getState().computePassport()).toEqual({
       data: { "application.fee.payable": ["0"] },
+    });
+
+    const { getByTestId, user, getByRole } = setup(
+      <Pay
+        title="Pay for your application"
+        fn="application.fee.payable"
+        handleSubmit={handleSubmit}
+        govPayMetadata={[]}
+      />,
+    );
+
+    // Node is not auto-answered
+    expect(handleSubmit).not.toHaveBeenCalled();
+
+    // Fee breakdown displayed
+    expect(getByTestId("fee-breakdown-table")).toBeVisible();
+
+    // User can continue
+    await user.click(getByRole("button", { name: "Continue" }));
+    expect(handleSubmit).toHaveBeenCalled();
+  });
+
+  it("Displays an error if fee is negative", () => {
+    const handleSubmit = vi.fn();
+    const loggerSpy = vi.spyOn(logger, "notify");
+
+    const negativeFeeBreadcrumbs: Breadcrumbs = {
+      setValue: {
+        auto: true,
+        data: {
+          "application.fee.payable": ["-12"],
+        },
+      },
+    };
+
+    setState({
+      flow: flowWithNegativeFee,
+      breadcrumbs: negativeFeeBreadcrumbs,
+    });
+
+    expect(getState().computePassport()).toEqual({
+      data: { "application.fee.payable": ["-12"] },
     });
 
     setup(
@@ -129,8 +192,15 @@ describe("Pay component when fee is undefined or £0", () => {
       />,
     );
 
-    // handleSubmit is called to auto-answer Pay (aka "skip" in card sequence)
-    expect(handleSubmit).toHaveBeenCalled();
+    expect(handleSubmit).not.toHaveBeenCalled();
+    expect(
+      screen.getByText("We are unable to calculate your fee right now"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
+    
+    expect(loggerSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/Negative fee calculated/),
+    );
   });
 });
 

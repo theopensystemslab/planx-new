@@ -29,8 +29,7 @@ const BoldTableRow = styled(TableRow)(() => ({
 
 const VAT_RATE = 0.2;
 
-const DESCRIPTION =
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+type FeeBreakdownSection = React.FC<IFeeBreakdown>;
 
 const Header = () => (
   <TableHead>
@@ -41,66 +40,64 @@ const Header = () => (
   </TableHead>
 );
 
-const ApplicationFee: React.FC<{ amount: number }> = ({ amount }) => (
+const ApplicationFee: FeeBreakdownSection = ({ amount }) => (
   <TableRow>
     <TableCell>Application fee</TableCell>
     <TableCell align="right">
-      {formattedPriceWithCurrencySymbol(amount)}
+      {formattedPriceWithCurrencySymbol(amount.calculated)}
     </TableCell>
   </TableRow>
 );
 
-const Reductions: React.FC<{ amount?: number, reductions: string[] }> = ({ amount, reductions }) => {
-  if (!amount) return null;
+const Reductions: FeeBreakdownSection = ({ amount, reductions }) => {
+  if (!amount.reduction) return null;
 
   return (
     <>
-    <TableRow>
-      <TableCell>Reductions</TableCell>
-      <TableCell align="right">
-        {formattedPriceWithCurrencySymbol(-amount)}
-      </TableCell>
-    </TableRow>
-    {
-      reductions.map((reduction) => (
+      <TableRow>
+        <TableCell>Reductions</TableCell>
+        <TableCell align="right">
+          {formattedPriceWithCurrencySymbol(-amount.reduction)}
+        </TableCell>
+      </TableRow>
+      {reductions.map((reduction) => (
         <TableRow>
           <TableCell colSpan={2}>
             <Box sx={{ pl: 2, color: "grey" }}>{reduction}</Box>
           </TableCell>
         </TableRow>
-      ))
-    }
+      ))}
     </>
   );
 };
 
-// TODO: This won't show as if a fee is 0, we hide the whole Pay component from the user
-const Exemptions: React.FC<{ amount: number, exemptions: string[] }> = ({ amount, exemptions }) => {
-  if (!exemptions.length) return null;
+/* TODO: Parse exemption descriptions from schema */
+const Exemptions: FeeBreakdownSection = ({ exemptions, amount }) => {
+  if (!amount.exemption) return null;
 
   return (
     <>
-    <TableRow>
-      <TableCell>Exemptions</TableCell>
-      <TableCell align="right">
-        {formattedPriceWithCurrencySymbol(-amount)}
-      </TableCell>
-    </TableRow>
-    {
-        exemptions.map((exemption) => (
+      <TableRow>
+        <TableCell>Exemptions</TableCell>
+        <TableCell align="right">
+          {formattedPriceWithCurrencySymbol(-amount.exemption)}
+        </TableCell>
+      </TableRow>
+      {exemptions.map((exemption) => (
         <TableRow>
           <TableCell colSpan={2}>
-            <Box sx={{ pl: 2, color: "grey" }}>{exemption}</Box>
+            <Box sx={{ pl: 2, color: "grey", textTransform: "capitalize" }}>
+              {exemption}
+            </Box>
           </TableCell>
         </TableRow>
-      ))
-    }
+      ))}
     </>
   );
 };
 
-const VAT: React.FC<{ amount?: number }> = ({ amount }) => {
-  if (!amount) return null;
+const VAT: FeeBreakdownSection = ({ amount }) => {
+  if (!amount.vat) return null;
 
   return (
     <TableRow>
@@ -108,48 +105,40 @@ const VAT: React.FC<{ amount?: number }> = ({ amount }) => {
         VAT_RATE * 100
       }%)`}</TableCell>
       <TableCell variant="footer" align="right">
-        {formattedPriceWithCurrencySymbol(amount)}
+        {formattedPriceWithCurrencySymbol(amount.vat)}
       </TableCell>
     </TableRow>
   );
 };
 
-const Total: React.FC<{ amount: number }> = ({ amount }) => (
+const Total: FeeBreakdownSection = ({ amount }) => (
   <BoldTableRow>
     <TableCell>Total</TableCell>
     <TableCell align="right">
-      {formattedPriceWithCurrencySymbol(amount)}
+      {formattedPriceWithCurrencySymbol(amount.payable)}
     </TableCell>
   </BoldTableRow>
 );
 
-export const FeeBreakdown: React.FC<{ inviteToPayFeeBreakdown?: IFeeBreakdown }> = ({ inviteToPayFeeBreakdown }) => {
+export const FeeBreakdown: React.FC<{
+  inviteToPayFeeBreakdown?: IFeeBreakdown;
+}> = ({ inviteToPayFeeBreakdown }) => {
   const passportFeeBreakdown = useFeeBreakdown();
   const breakdown = passportFeeBreakdown || inviteToPayFeeBreakdown;
   if (!breakdown) return null;
 
-  const { amount, reductions, exemptions } = breakdown;
-
   return (
-    <Box mt={3}>
-      <Typography variant="h3" mb={1}>
-        Fee
-      </Typography>
-      <Typography variant="body1" mb={2}>
-        {DESCRIPTION}
-      </Typography>
-      <TableContainer>
-        <StyledTable data-testid="fee-breakdown-table">
-          <Header />
-          <TableBody>
-            <ApplicationFee amount={amount.calculated} />
-            <Reductions amount={amount.reduction} reductions={reductions}/>
-            <Exemptions amount={amount.payable} exemptions={exemptions}/>
-            <Total amount={amount.payable} />
-            <VAT amount={amount.vat} />
-          </TableBody>
-        </StyledTable>
-      </TableContainer>
-    </Box>
+    <TableContainer sx={{ mt: 3 }}>
+      <StyledTable data-testid="fee-breakdown-table">
+        <Header />
+        <TableBody>
+          <ApplicationFee {...breakdown} />
+          <Reductions {...breakdown} />
+          <Exemptions {...breakdown} />
+          <Total {...breakdown} />
+          <VAT {...breakdown} />
+        </TableBody>
+      </StyledTable>
+    </TableContainer>
   );
 };
