@@ -141,6 +141,12 @@ export const Filters = <T extends object>({
     }
   }, []);
 
+  useEffect(() => {
+    if (values.filters) {
+      handleSubmit();
+    }
+  }, [handleSubmit, values.filters]);
+
   const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
     const newObject = {
       ...values.filters,
