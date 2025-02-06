@@ -542,6 +542,18 @@ const Team: React.FC = () => {
   const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
+  const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const diffFlows =
+      searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
+    setMatchingflows(diffFlows);
+  }, [searchedFlows, filteredFlows]);
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -607,6 +619,7 @@ const Team: React.FC = () => {
       );
       setFlows(sortedFlows);
       setFilteredFlows(sortedFlows);
+      setSearchedFlows(sortedFlows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -646,7 +659,7 @@ const Team: React.FC = () => {
           {hasFeatureFlag("SORT_FLOWS") && flows && (
             <SearchBox<FlowSummary>
               records={flows}
-              setRecords={setFilteredFlows}
+              setRecords={setSearchedFlows}
               searchKey={["name", "slug"]}
             />
           )}
@@ -704,9 +717,9 @@ const Team: React.FC = () => {
             </Box>
           )}
         </Box>
-        {filteredFlows && flows && (
+        {matchingFlows && flows && (
           <DashboardList>
-            {filteredFlows.map((flow) => (
+            {matchingFlows.map((flow) => (
               <FlowCard
                 flow={flow}
                 flows={flows}
