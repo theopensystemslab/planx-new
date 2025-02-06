@@ -116,6 +116,7 @@ export interface AdminPanelData {
   primaryColour?: string;
   linkColour?: string;
   actionColour?: string;
+  liveFlows: string[];
 }
 
 export interface Operation {

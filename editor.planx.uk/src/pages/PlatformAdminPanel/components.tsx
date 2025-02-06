@@ -34,12 +34,20 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
     fetcher
   );
 
-  const rows: GridRowsProp = [{ id: 1, col1: "Hello", col2: "World" }];
+  const rows: GridRowsProp = [{ id: 1, favicon: "Hello", subdomain: "World" }];
+
+  const serviceTableRows: GridRowsProp = Array.from(
+    { length: data.liveFlows && data.liveFlows.length < 10 ? data.liveFlows.length : 10 },
+    (_, index) => ({
+      id: index,
+      liveServices: data.liveFlows ? data?.liveFlows[index] : null,
+    })
+  );
 
   const columns: Record<string, GridColDef[]> = {
     customisations: [
       {
-        field: "col1",
+        field: "logo",
         headerName: "Logo",
         width: 150,
         renderCell: (_params) => {
@@ -47,16 +55,15 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         },
       },
       {
-        field: "col2",
+        field: "favicon",
         headerName: "Favicon",
         width: 150,
         renderCell: (_params) => {
           return data.favicon ? <Configured /> : <NotConfigured />;
         },
       },
-
       {
-        field: "col5",
+        field: "subdomain",
         headerName: "Subdomain",
         width: 150,
         renderCell: (_params) => {
@@ -64,9 +71,10 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         },
       },
     ],
+    flows: [{ field: "liveServices", headerName: "Live services", width: 650 }],
     integrations: [
       {
-        field: "col3",
+        field: "planningConstraints",
         headerName: "Planning constraints",
         width: 150,
         renderCell: (_params) => {
@@ -74,7 +82,7 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         },
       },
       {
-        field: "col4",
+        field: "article4s",
         headerName: "Article 4s (API)",
         width: 150,
         renderCell: (_params) => {
@@ -85,9 +93,8 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
           );
         },
       },
-
       {
-        field: "col6",
+        field: "govPay",
         headerName: "GOV.UK Pay",
         width: 150,
         renderCell: (_params) => {
@@ -95,7 +102,7 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         },
       },
       {
-        field: "col7",
+        field: "sendToEmail",
         headerName: "Send to email",
         width: 150,
         renderCell: (_params) => {
@@ -103,7 +110,7 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         },
       },
       {
-        field: "col8",
+        field: "bops",
         headerName: "BOPS",
         width: 150,
         renderCell: (_params) => {
@@ -111,7 +118,7 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         },
       },
       {
-        field: "col9",
+        field: "powerAutomate",
         headerName: "Power automate",
         width: 150,
         renderCell: (_params) => {
@@ -184,6 +191,17 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         </Grid>
       </AccordionDetails>
       <Typography mx={3} variant="h4" component="h3">
+        {capitalize(environment)} integrations
+      </Typography>
+      <div style={{ width: "100%" }}>
+        <DataGrid
+          sx={{ margin: 3 }}
+          rows={rows}
+          columns={columns.integrations}
+          hideFooter
+        />
+      </div>
+      <Typography mx={3} variant="h4" component="h3">
         Customisations
       </Typography>
       <div style={{ width: "100%" }}>
@@ -195,13 +213,13 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         />
       </div>
       <Typography mx={3} variant="h4" component="h3">
-        {capitalize(environment)} integrations
+        Services
       </Typography>
       <div style={{ width: "100%" }}>
         <DataGrid
           sx={{ margin: 3 }}
-          rows={rows}
-          columns={columns.integrations}
+          rows={serviceTableRows}
+          columns={columns.flows}
           hideFooter
         />
       </div>

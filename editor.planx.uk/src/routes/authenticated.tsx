@@ -98,6 +98,7 @@ const editorRoutes = compose(
                 powerAutomateEnabled: power_automate_enabled
                 sendToEmailAddress: send_to_email_address
                 bopsSubmissionURL: bops_submission_url
+                liveFlows: live_flows
                 logo
                 favicon
                 primaryColour: primary_colour
