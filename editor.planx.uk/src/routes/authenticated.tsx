@@ -95,6 +95,7 @@ const editorRoutes = compose(
                 article4sEnabled: article_4s_enabled
                 govnotifyPersonalisation: govnotify_personalisation
                 govpayEnabled: govpay_enabled
+                powerAutomateEnabled: power_automate_enabled
                 sendToEmailAddress: send_to_email_address
                 bopsSubmissionURL: bops_submission_url
                 logo

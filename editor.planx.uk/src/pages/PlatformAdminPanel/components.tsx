@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import { SummaryListTable } from "@planx/components/shared/Preview/SummaryList";
+import capitalize from "lodash/capitalize";
 import React from "react";
 import useSWR from "swr";
 import { AdminPanelData } from "types";
@@ -23,6 +24,7 @@ const NotConfigured: React.FC = () => <Close color="error" fontSize="small" />;
 const Configured: React.FC = () => <Done color="success" fontSize="small" />;
 
 export const TeamData: React.FC<TeamData> = ({ data }) => {
+  const environment = `${import.meta.env.VITE_APP_ENV}`;
   const a4Endpoint = `${import.meta.env.VITE_APP_API_URL}/gis/${
     data.slug
   }/article4-schema`;
@@ -108,6 +110,14 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
           return data.bopsSubmissionURL ? <Configured /> : <NotConfigured />;
         },
       },
+      {
+        field: "col9",
+        headerName: "Power automate",
+        width: 150,
+        renderCell: (_params) => {
+          return data.powerAutomateEnabled ? <Configured /> : <NotConfigured />;
+        },
+      },
     ],
   };
 
@@ -185,7 +195,7 @@ export const TeamData: React.FC<TeamData> = ({ data }) => {
         />
       </div>
       <Typography mx={3} variant="h4" component="h3">
-        Integrations
+        {capitalize(environment)} integrations
       </Typography>
       <div style={{ width: "100%" }}>
         <DataGrid

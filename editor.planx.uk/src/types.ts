@@ -108,6 +108,7 @@ export interface AdminPanelData {
   article4sEnabled: string;
   govnotifyPersonalisation?: TeamContactSettings;
   govpayEnabled: boolean;
+  powerAutomateEnabled: boolean;
   sendToEmailAddress?: string;
   bopsSubmissionURL?: string;
   logo?: string;

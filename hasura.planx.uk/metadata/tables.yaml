@@ -2593,18 +2593,19 @@
     - role: platformAdmin
       permission:
         columns:
-          - govpay_enabled
-          - planning_data_enabled
-          - id
-          - govnotify_personalisation
           - action_colour
           - article_4s_enabled
           - bops_submission_url
           - favicon
+          - govnotify_personalisation
+          - govpay_enabled
           - homepage
+          - id
           - link_colour
           - logo
           - name
+          - planning_data_enabled
+          - power_automate_enabled
           - primary_colour
           - reference_code
           - send_to_email_address
