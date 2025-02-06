@@ -161,11 +161,6 @@ const Team: React.FC = () => {
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
-      displayName: "Name",
-      fieldName: "name",
-      directionNames: { asc: "A - Z", desc: "Z - A" },
-    },
-    {
       displayName: "Last updated",
       fieldName: "updatedAt",
       directionNames: { asc: "Oldest first", desc: "Newest first" },
@@ -174,6 +169,11 @@ const Team: React.FC = () => {
       displayName: "Last published",
       fieldName: `publishedFlows.0.publishedAt`,
       directionNames: { asc: "Oldest first", desc: "Newest first" },
+    },
+    {
+      displayName: "Name",
+      fieldName: "name",
+      directionNames: { asc: "A - Z", desc: "Z - A" },
     },
   ];
 
