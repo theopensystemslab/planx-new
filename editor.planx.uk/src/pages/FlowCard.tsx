@@ -13,6 +13,8 @@ import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
+import FlowTag from "ui/editor/FlowTag/FlowTag";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import { ArchiveDialog } from "./Team/components/ArchiveDialog";
 
 export const Card = styled("li")(({ theme }) => ({
@@ -115,6 +117,24 @@ const FlowCard: React.FC<FlowCardProps> = ({
     });
   };
 
+  const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
+
+  const statusVariant =
+    flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+
+  const displayTags = [
+    {
+      type: FlowTagType.Status,
+      displayName: statusVariant,
+      shouldAddTag: true,
+    },
+    {
+      type: FlowTagType.ServiceType,
+      displayName: "Submission",
+      shouldAddTag: isSubmissionService,
+    },
+  ];
+
   return (
     <>
        {isArchiveDialogOpen && (
@@ -141,6 +161,20 @@ const FlowCard: React.FC<FlowCardProps> = ({
                 flow.operations[0]?.actor,
               )}
             </LinkSubText>
+          </Box>
+          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            {displayTags.map(
+              (tag) =>
+                tag.shouldAddTag && (
+                  <FlowTag
+                    key={`${tag.displayName}-flowtag`}
+                    tagType={tag.type}
+                    statusVariant={statusVariant}
+                  >
+                    {tag.displayName}
+                  </FlowTag>
+                ),
+            )}
           </Box>
           <DashboardLink
             aria-label={flow.name}
