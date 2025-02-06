@@ -12,7 +12,6 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
-import FlowTag, { FlowTagType, StatusVariant } from "ui/editor/FlowTag";
 import { slugify } from "utils";
 
 import { client } from "../lib/graphql";
@@ -20,6 +19,8 @@ import SimpleMenu from "../ui/editor/SimpleMenu";
 import { useStore } from "./FlowEditor/lib/store";
 import { FlowSummary } from "./FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "./FlowEditor/utils";
+import FlowTag from "ui/editor/FlowTag/FlowTag";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
