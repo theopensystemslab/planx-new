@@ -140,10 +140,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
         refreshFlows();
       });
   };
-  const handleMove = (newTeam: string) => {
+  const handleMove = (newTeam: string, flowName: string) => {
     useStore
       .getState()
-      .moveFlow(flow.id, newTeam)
+      .moveFlow(flow.id, newTeam, flowName)
       .then(() => {
         refreshFlows();
       });
@@ -182,11 +182,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 onClick: async () => {
                   const newName = prompt("New name", flow.name);
                   if (newName && newName !== flow.name) {
-                    const newSlug = slugify(newName);
-                    const duplicateFlowName = flows?.find(
-                      (flow: any) => flow.slug === newSlug,
-                    );
-                    if (!duplicateFlowName) {
+                    const uniqueFlow = getUniqueFlow(newName, flows);
+                    if (uniqueFlow) {
                       await client.mutate({
                         mutation: gql`
                           mutation UpdateFlowSlug(
@@ -209,16 +206,12 @@ const FlowItem: React.FC<FlowItemProps> = ({
                         variables: {
                           teamId: teamId,
                           slug: flow.slug,
-                          newSlug: newSlug,
-                          newName: newName,
+                          newSlug: uniqueFlow.slug,
+                          newName: uniqueFlow.name,
                         },
                       });
 
                       refreshFlows();
-                    } else if (duplicateFlowName) {
-                      alert(
-                        `The flow "${newName}" already exists. Enter a unique flow name to continue`,
-                      );
                     }
                   }
                 },
@@ -233,14 +226,16 @@ const FlowItem: React.FC<FlowItemProps> = ({
               {
                 label: "Move",
                 onClick: () => {
-                  const newTeam = prompt("New team");
+                  const newTeam = prompt(
+                    "Enter the destination team's slug. A slug is the URL name of a team, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
+                  );
                   if (newTeam) {
                     if (slugify(newTeam) === teamSlug) {
                       alert(
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(slugify(newTeam));
+                      handleMove(slugify(newTeam), flow.name);
                     }
                   }
                 },
@@ -287,18 +282,12 @@ const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
     const newFlowName = prompt("Service name");
     if (!newFlowName) return;
 
-    const newFlowSlug = slugify(newFlowName);
-    const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
+    const uniqueFlow = getUniqueFlow(newFlowName, flows);
 
-    if (duplicateFlowName) {
-      alert(
-        `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
-      );
-      return;
+    if (uniqueFlow) {
+      const newId = await createFlow(teamId, uniqueFlow.slug, uniqueFlow.name);
+      navigate(`/${teamSlug}/${newId}`);
     }
-
-    const newId = await createFlow(teamId, newFlowSlug, newFlowName);
-    navigate(`/${teamSlug}/${newId}`);
   };
 
   return <AddButton onClick={addFlow}>Add a new service</AddButton>;
@@ -483,3 +472,21 @@ const Team: React.FC = () => {
 };
 
 export default Team;
+
+const getUniqueFlow = (
+  name: string,
+  flows: FlowSummary[],
+): { slug: string; name: string } | undefined => {
+  const newFlowSlug = slugify(name);
+  const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
+
+  if (duplicateFlowName) {
+    const updatedName = prompt(
+      `A service already exists with the name '${name}', enter another name`,
+      name,
+    );
+    if (!updatedName) return;
+    return getUniqueFlow(updatedName, flows);
+  }
+  return { slug: newFlowSlug, name: name };
+};
