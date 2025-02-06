@@ -20,7 +20,6 @@ import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import InputLabel from "ui/public/InputLabel";
 
-import SimpleMenu from "../../ui/editor/SimpleMenu";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "../FlowEditor/utils";
