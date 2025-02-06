@@ -67,9 +67,34 @@ export const Filters = <T extends object>({
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  const { values, setFieldValue } = useFormik<{ filters: Filters<T> | null }>({
+  const { values, setFieldValue, handleSubmit } = useFormik<{
+    filters: Filters<T> | null;
+  }>({
     initialValues: { filters: null },
-    onSubmit: () => {},
+    onSubmit: ({ filters }) => {
+      if (!filters && records) {
+        clearSearchParams<T>(route.url.search, optionsToFilter, navigation);
+        setFilteredRecords(records);
+      }
+      if (filters) {
+        addToSearchParams<T>(
+          filters,
+          route.url.search,
+          optionsToFilter,
+          navigation,
+        );
+        const filteredRecords = records.filter((record: T) => {
+          return optionsToFilter.every((value: FilterOptions<T>) => {
+            const valueToFilter = get(filters, value.optionKey);
+
+            return valueToFilter
+              ? value.validationFn(record, valueToFilter)
+              : true;
+          });
+        });
+        setFilteredRecords(filteredRecords);
+      }
+    },
   });
 
   const findFiltersFromSearchParams = ([displayName, optionValue]: [
@@ -116,40 +141,6 @@ export const Filters = <T extends object>({
     }
   }, []);
 
-  useEffect(() => {
-    if (!values.filters && records) {
-      setFilteredRecords(records);
-    } else {
-      const filteredRecords = records.filter((record: T) => {
-        return optionsToFilter.every((value: FilterOptions<T>) => {
-          const valueToFilter = get(values.filters, value.optionKey);
-
-          return valueToFilter
-            ? value.validationFn(record, valueToFilter)
-            : true;
-        });
-      });
-      setFilteredRecords(filteredRecords);
-    }
-  }, [values.filters, setFilteredRecords, records, optionsToFilter]);
-
-  useEffect(() => {
-    if (values.filters) {
-      return addToSearchParams<T>(
-        values.filters,
-        route.url.search,
-        optionsToFilter,
-        navigation,
-      );
-    } else {
-      return clearSearchParams<T>(
-        route.url.search,
-        optionsToFilter,
-        navigation,
-      );
-    }
-  }, [navigation, optionsToFilter, route.url.search, values.filters]);
-
   const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
     const newObject = {
       ...values.filters,
@@ -159,6 +150,8 @@ export const Filters = <T extends object>({
     get(values.filters, filterKey) === filterValue
       ? removeFilter(filterKey)
       : setFieldValue("filters", newObject);
+
+    handleSubmit();
   };
 
   const removeFilter = (targetFilter: FilterKey<T>) => {
@@ -197,6 +190,7 @@ export const Filters = <T extends object>({
                       (keys) => keys === value,
                     ) as FilterKey<T>;
                     removeFilter(targetKey);
+                    handleSubmit();
                   }}
                 />
               );

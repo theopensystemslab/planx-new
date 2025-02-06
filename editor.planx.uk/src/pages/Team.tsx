@@ -187,7 +187,6 @@ const Team: React.FC = () => {
     _value,
   ) => flow.publishedFlows[0]?.hasSendComponent;
 
-  // validation can be added when we have statutory data coming through
   const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
     flow,
     _value,
