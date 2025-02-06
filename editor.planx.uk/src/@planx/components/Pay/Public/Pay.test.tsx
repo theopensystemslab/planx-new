@@ -197,7 +197,7 @@ describe("Pay component when fee is undefined or £0", () => {
       screen.getByText("We are unable to calculate your fee right now"),
     ).toBeInTheDocument();
     expect(screen.queryByText("Continue")).not.toBeInTheDocument();
-    
+
     expect(loggerSpy).toHaveBeenCalledWith(
       expect.stringMatching(/Negative fee calculated/),
     );
