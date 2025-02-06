@@ -50,7 +50,7 @@ export const SortControl = <T extends object>({
   const [selectedSort, setSelectedSort] = useState<SortableFields<T>>(
     sortOptions[0],
   );
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
   const navigation = useNavigation();
   const route = useCurrentRoute();
