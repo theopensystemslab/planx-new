@@ -61,7 +61,7 @@
         "applicant.email": "benjamin+itp-payee@opensystemslab.io",
         "property.region": ["London"],
         "application.type": ["ldc.proposed"],
-        "proposal.siteArea": 21.6,
+        "proposal.site.area": 21.6,
         "uniform.isRelated": ["false"],
         "uniform.siteVisit": ["true"],
         "_contact.applicant": {
@@ -123,7 +123,7 @@
         "uniform.proposedUseStatus": ["permanent"],
         "applicant.sameAddress.form": ["Yes"],
         "application.fee.calculated": 117,
-        "proposal.siteArea.hectares": 0.00216,
+        "proposal.site.area.hectares": 0.00216,
         "proposal.changeNumberOfHomes": ["other"],
         "application.basisOfLawfulness": ["permittedDevelopment"],
         "application.preAppAdvice.form": ["No"],
@@ -813,7 +813,7 @@
       "wMA7jr45yt": {
         "auto": false,
         "data": {
-          "proposal.siteArea": 21.6,
+          "proposal.site.area": 21.6,
           "proposal.site": {
             "type": "Feature",
             "geometry": {
@@ -830,7 +830,7 @@
             },
             "properties": null
           },
-          "proposal.siteArea.hectares": 0.00216
+          "proposal.site.area.hectares": 0.00216
         }
       },
       "wPBtMEpnx8": {
