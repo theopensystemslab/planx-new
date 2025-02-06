@@ -227,7 +227,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 label: "Move",
                 onClick: () => {
                   const newTeam = prompt(
-                    "Add the new team's slug. A slug is a way to represent a team name, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
+                    "Enter the destination team's slug. A slug is the URL name of a team, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
                   );
                   if (newTeam) {
                     if (slugify(newTeam) === teamSlug) {
