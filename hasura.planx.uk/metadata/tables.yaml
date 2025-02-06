@@ -335,6 +335,7 @@
           - uprn
           - user_comment
           - user_context
+          - service_name
         filter:
           team:
             flows:
@@ -367,6 +368,7 @@
           - user_comment
           - user_context
           - created_at
+          - service_name
         filter: {}
       comment: ""
     - role: teamEditor
@@ -395,6 +397,7 @@
           - user_comment
           - user_context
           - created_at
+          - service_name
         filter:
           team:
             members:
