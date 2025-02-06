@@ -156,8 +156,6 @@ export const Filters = <T extends object>({
     get(values.filters, filterKey) === filterValue
       ? removeFilter(filterKey)
       : setFieldValue("filters", newObject);
-
-    handleSubmit();
   };
 
   const removeFilter = (targetFilter: FilterKey<T>) => {
@@ -196,7 +194,6 @@ export const Filters = <T extends object>({
                       (keys) => keys === value,
                     ) as FilterKey<T>;
                     removeFilter(targetKey);
-                    handleSubmit();
                   }}
                 />
               );
