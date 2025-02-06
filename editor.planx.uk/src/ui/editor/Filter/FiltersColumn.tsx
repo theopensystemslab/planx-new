@@ -1,15 +1,10 @@
 import Box from "@mui/material/Box";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { capitalize, get } from "lodash";
 import React from "react";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
 import Filters, { FilterKey, FilterValues } from "./Filter";
-
-const Column = styled(Box)(() => ({
-  flexBasis: "20%",
-}));
 
 interface FiltersColumnProps<T> {
   title: string;
@@ -23,7 +18,7 @@ export const FiltersColumn = <T extends object>(
   props: FiltersColumnProps<T>,
 ) => {
   return (
-    <Column>
+    <Box>
       <Typography component={"legend"} variant="h5" pb={0.5}>
         {props.title}
       </Typography>
@@ -37,6 +32,6 @@ export const FiltersColumn = <T extends object>(
           variant="compact"
         />
       ))}
-    </Column>
+    </Box>
   );
 };

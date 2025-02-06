@@ -207,6 +207,7 @@ export const Filters = <T extends object>({
               <fieldset
                 key={option.displayName}
                 aria-describedby={`${option.displayName}-description`}
+                style={{ flexBasis: "20%" }}
               >
                 <div
                   key={`${option.displayName}-description`}
