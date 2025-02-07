@@ -237,7 +237,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const teamHasFlows = !isEmpty(filteredFlows) && !isEmpty(flows);
+  const teamHasFlows = !isEmpty(flows);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
 
   return (
