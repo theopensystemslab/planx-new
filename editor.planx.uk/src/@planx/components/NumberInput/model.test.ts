@@ -14,11 +14,11 @@ describe("validation", () => {
 
     it("validates optional fields with a value", async () => {
       await expect(() =>
-        validationSchema.validate("not a number")
+        validationSchema.validate("not a number"),
       ).rejects.toThrow(/Enter a positive number/);
 
       await expect(() => validationSchema.validate("12.34")).rejects.toThrow(
-        /Enter a whole number/
+        /Enter a whole number/,
       );
     });
   });
