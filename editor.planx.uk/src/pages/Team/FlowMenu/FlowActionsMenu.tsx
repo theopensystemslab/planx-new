@@ -3,10 +3,10 @@ import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
-import { copyFlow } from "./MenuComponents/Copy";
-import { deleteFlow } from "./MenuComponents/Delete";
-import { moveFlow } from "./MenuComponents/Move";
-import { renameFlow } from "./MenuComponents/Rename";
+import { getCopyFlowConfig } from "./MenuActionsConfigs/copyFlow";
+import { getDeleteFlowConfig } from "./MenuActionsConfigs/deleteFlow";
+import { getMoveFlowConfig } from "./MenuActionsConfigs/moveFlow";
+import { getRenameFlowConfig } from "./MenuActionsConfigs/renameFlow";
 
 const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   display: "flex",
@@ -20,7 +20,7 @@ interface FlowMenuProps {
   refreshFlows: () => void;
 }
 
-export const FlowMenu = ({
+export const FlowActionsMenu = ({
   flow,
   flows,
   setDeleting,
@@ -29,10 +29,10 @@ export const FlowMenu = ({
   return (
     <StyledSimpleMenu
       items={[
-        renameFlow(flow, flows, refreshFlows),
-        copyFlow(flow, refreshFlows),
-        moveFlow(flow, refreshFlows),
-        deleteFlow(setDeleting),
+        getRenameFlowConfig(flow.name, flow.slug, flows, refreshFlows),
+        getCopyFlowConfig(flow.id, refreshFlows),
+        getMoveFlowConfig(flow.id, flow.name, refreshFlows),
+        getDeleteFlowConfig(setDeleting),
       ]}
     />
   );

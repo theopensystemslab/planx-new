@@ -1,4 +1,4 @@
-export const deleteFlow = (
+export const getDeleteFlowConfig = (
   setDeleting: (value: React.SetStateAction<boolean>) => void,
 ) => {
   return {

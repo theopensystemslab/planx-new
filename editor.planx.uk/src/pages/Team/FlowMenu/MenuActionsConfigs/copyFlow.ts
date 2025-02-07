@@ -1,11 +1,14 @@
 import { useStore } from "pages/FlowEditor/lib/store";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 
-export const copyFlow = (flow: FlowSummary, refreshFlows: () => void) => {
+export const getCopyFlowConfig = (
+  flowId: FlowSummary["id"],
+  refreshFlows: () => void,
+) => {
   const { copyFlow } = useStore.getState();
 
   const handleCopy = () => {
-    copyFlow(flow.id).then(() => {
+    copyFlow(flowId).then(() => {
       refreshFlows();
     });
   };

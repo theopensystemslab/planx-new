@@ -23,7 +23,7 @@ import InputLabel from "ui/public/InputLabel";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "../FlowEditor/utils";
-import { FlowMenu } from "./FlowMenu/FlowMenu";
+import { FlowActionsMenu } from "./FlowMenu/FlowActionsMenu";
 import { getUniqueFlow } from "./FlowMenu/utils";
 
 const DashboardList = styled("ul")(({ theme }) => ({
@@ -153,7 +153,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
           </LinkSubText>
         </DashboardLink>
         {useStore.getState().canUserEditTeam(teamSlug) && (
-          <FlowMenu
+          <FlowActionsMenu
             flow={flow}
             flows={flows}
             setDeleting={setDeleting}

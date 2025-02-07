@@ -5,8 +5,9 @@ import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 
 import { getUniqueFlow } from "../utils";
 
-export const renameFlow = (
-  flow: FlowSummary,
+export const getRenameFlowConfig = (
+  flowName: string,
+  flowSlug: string,
   flows: FlowSummary[],
   refreshFlows: () => void,
 ) => {
@@ -14,8 +15,8 @@ export const renameFlow = (
 
   return {
     onClick: async () => {
-      const newName = prompt("New name", flow.name);
-      if (newName && newName !== flow.name) {
+      const newName = prompt("New name", flowName);
+      if (newName && newName !== flowName) {
         const uniqueFlow = getUniqueFlow(newName, flows);
         if (uniqueFlow) {
           await client.mutate({
@@ -38,8 +39,8 @@ export const renameFlow = (
               }
             `,
             variables: {
-              teamId: teamId,
-              slug: flow.slug,
+              teamId,
+              slug: flowSlug,
               newSlug: uniqueFlow.slug,
               newName: uniqueFlow.name,
             },

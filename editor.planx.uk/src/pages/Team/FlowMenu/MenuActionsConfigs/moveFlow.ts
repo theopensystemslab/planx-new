@@ -2,11 +2,15 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { slugify } from "utils";
 
-export const moveFlow = (flow: FlowSummary, refreshFlows: () => void) => {
+export const getMoveFlowConfig = (
+  flowId: FlowSummary["id"],
+  flowName: FlowSummary["name"],
+  refreshFlows: () => void,
+) => {
   const { moveFlow, teamSlug } = useStore.getState();
 
-  const handleMove = (newTeam: string, flowName: string) => {
-    moveFlow(flow.id, newTeam, flowName).then(() => {
+  const handleMove = (newTeam: string) => {
+    moveFlow(flowId, newTeam, flowName).then(() => {
       refreshFlows();
     });
   };
@@ -21,7 +25,7 @@ export const moveFlow = (flow: FlowSummary, refreshFlows: () => void) => {
         if (slugify(newTeam) === teamSlug) {
           alert(`This flow already belongs to ${teamSlug}, skipping move`);
         } else {
-          handleMove(slugify(newTeam), flow.name);
+          handleMove(slugify(newTeam));
         }
       }
     },
