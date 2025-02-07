@@ -592,6 +592,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -657,6 +658,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -679,6 +681,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -714,6 +717,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -734,6 +738,7 @@
           - creator_id
           - data
           - id
+          - is_template
           - name
           - settings
           - slug
@@ -755,6 +760,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -837,6 +843,7 @@
         columns:
           - data
           - description
+          - is_template
           - limitations
           - name
           - settings
