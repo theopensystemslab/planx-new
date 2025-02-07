@@ -20,7 +20,7 @@ export async function downloadApplicationFiles(
     const { teamSettings } = await getTeamEmailSettings(
       req.query.localAuthority as string,
     );
-    const decodedEmail = decodeURIComponent(req.query.email as string)
+    const decodedEmail = decodeURIComponent(req.query.email as string);
     if (teamSettings.submissionEmail !== decodedEmail) {
       return next({
         status: 403,
