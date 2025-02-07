@@ -61,12 +61,6 @@ const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
     const newFlowName = prompt("Service name");
     if (!newFlowName) return;
 
-    if(!flows){
-      const newId = await createFlow(teamId, slugify(newFlowName), newFlowName);
-      navigate(`/${teamSlug}/${newId}`);
-      return
-    }    
-
     const uniqueFlow = getUniqueFlow(newFlowName, flows);
 
     if (uniqueFlow) {
@@ -359,7 +353,7 @@ export default Team;
 
 const getUniqueFlow = (
   name: string,
-  flows: FlowSummary[],
+  flows: FlowSummary[] | null,
 ): { slug: string; name: string } | undefined => {
   const newFlowSlug = slugify(name);
   const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
