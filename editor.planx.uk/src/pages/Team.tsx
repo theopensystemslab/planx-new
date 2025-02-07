@@ -40,7 +40,7 @@ const DashboardList = styled("ul")(({ theme }) => ({
 }));
 
 const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
-  <DashboardList sx={{ paddingTop: 0 }}>
+  <DashboardList sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
@@ -266,7 +266,7 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          {hasFeatureFlag("SORT_FLOWS") && flows && (
+          {teamHasFlows && hasFeatureFlag("SORT_FLOWS") && flows && (
             <SearchBox<FlowSummary>
               records={flows}
               setRecords={setSearchedFlows}
@@ -274,74 +274,78 @@ const Team: React.FC = () => {
             />
           )}
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-          }}
-        >
-          {showAddFlowButton && hasFeatureFlag("TEMPLATES") && (
-            <StartFromTemplateButton />
-          )}
-        </Box>
-        <Box>
-          {filteredFlows && flows && (
-            <Filters<FlowSummary>
-              records={flows}
-              setFilteredRecords={setFilteredFlows}
-              filterOptions={filterOptions}
-            />
-          )}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            <Typography variant="h3" component="h2">
-              Showing X services
-            </Typography>
-          </Box>
-          {hasFeatureFlag("SORT_FLOWS") && flows && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Typography variant="body2">
-                <strong>Sort by</strong>
-              </Typography>
-              <SortControl<FlowSummary>
-                records={flows}
-                setRecords={setFlows}
-                sortOptions={sortOptions}
-              />
+        {teamHasFlows && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+              }}
+            >
+              {showAddFlowButton && hasFeatureFlag("TEMPLATES") && (
+                <StartFromTemplateButton />
+              )}
             </Box>
-          )}
-        </Box>
-        {matchingFlows && flows && (
-          <DashboardList>
-            {matchingFlows.map((flow) => (
-              <FlowCard
-                flow={flow}
-                flows={flows}
-                key={flow.slug}
-                teamId={teamId}
-                teamSlug={slug}
-                refreshFlows={() => {
-                  fetchFlows();
+            <Box>
+              {filteredFlows && flows && (
+                <Filters<FlowSummary>
+                  records={flows}
+                  setFilteredRecords={setFilteredFlows}
+                  filterOptions={filterOptions}
+                />
+              )}
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: 2,
                 }}
-              />
-            ))}
-          </DashboardList>
+              >
+                <Typography variant="h3" component="h2">
+                  Showing X services
+                </Typography>
+              </Box>
+              {hasFeatureFlag("SORT_FLOWS") && flows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={flows}
+                    setRecords={setFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
+            </Box>
+            {matchingFlows && flows && (
+              <DashboardList>
+                {matchingFlows.map((flow) => (
+                  <FlowCard
+                    flow={flow}
+                    flows={flows}
+                    key={flow.slug}
+                    teamId={teamId}
+                    teamSlug={slug}
+                    refreshFlows={() => {
+                      fetchFlows();
+                    }}
+                  />
+                ))}
+              </DashboardList>
+            )}
+          </>
         )}
         {flows && !flows.length && <GetStarted flows={flows} />}
       </Container>
