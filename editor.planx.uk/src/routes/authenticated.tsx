@@ -119,35 +119,23 @@ const editorRoutes = compose(
     "/resources": route(() => {
       return {
         title: makeTitle("Resources"),
-        view: <NotionEmbed page="resources" title="PlanX Resources" />,
+        view: <NotionEmbed page="resources" title="Resources" />,
       };
     }),
 
-    // "/onboarding": route(() => {
-    //   return {
-    //     title: makeTitle("Onboarding"),
-    //     view: (
-    //       <iframe
-    //         title="notion"
-    //         src="https://www.notioniframe.com/notion/1fjdisq3i73"
-    //         style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
-    //       />
-    //     ),
-    //   };
-    // }),
+    "/onboarding": route(() => {
+      return {
+        title: makeTitle("Onboarding"),
+        view: <NotionEmbed page="onboarding" title="Onboarding" />,
+      };
+    }),
 
-    // "/tutorials": route(() => {
-    //   return {
-    //     title: makeTitle("Tutorials"),
-    //     view: (
-    //       <iframe
-    //         title="notion"
-    //         src="https://www.notioniframe.com/notion/1wf4jidsdbv"
-    //         style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
-    //       />
-    //     ),
-    //   };
-    // }),
+    "/tutorials": route(() => {
+      return {
+        title: makeTitle("Tutorials"),
+        view: <NotionEmbed page="tutorials" title="Tutorials" />,
+      };
+    }),
 
     "/:team": lazy(() => import("./team")),
   }),
