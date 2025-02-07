@@ -156,7 +156,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const handleMove = (newTeam: string) => {
     useStore
       .getState()
-      .moveFlow(flow.id, newTeam)
+      .moveFlow(flow.id, newTeam, flow.name)
       .then(() => {
         refreshFlows();
       });
