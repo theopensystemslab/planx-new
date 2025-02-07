@@ -55,16 +55,16 @@ interface FeedbackResponse {
     };
     createdAt: string;
     feedbackType: string;
-    feedbackScore: string;
-    feedbackStatus: string;
+    feedbackScore: string | null;
+    feedbackStatus: string | null;
     userDevice: Record<string, string>;
-    userContext: string;
+    userContext: string | null;
     userComment: string;
-    userBreadcrumb: Breadcrumbs;
-    userPassport: Passport["data"];
-    nodeId: Node["id"];
-    nodeType: Node["type"];
-    nodeData: Node["data"];
+    userBreadcrumb: Breadcrumbs | null;
+    userPassport: Passport["data"] | null;
+    nodeId: Node["id"] | null;
+    nodeType: Node["type"] | null;
+    nodeData: Node["data"] | null;
   };
 }
 
