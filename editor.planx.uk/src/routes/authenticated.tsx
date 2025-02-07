@@ -10,6 +10,7 @@ import {
 } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
@@ -118,13 +119,7 @@ const editorRoutes = compose(
     "/resources": route(() => {
       return {
         title: makeTitle("Resources"),
-        view: (
-          <iframe
-            title="notion"
-            src="https://www.notioniframe.com/notion/22ankohkzhk"
-            style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
-          />
-        ),
+        view: <NotionEmbed page="resources" title="PlanX Resources" />,
       };
     }),
 
