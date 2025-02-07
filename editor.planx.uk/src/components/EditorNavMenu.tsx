@@ -165,6 +165,12 @@ function EditorNavMenu() {
       route: `/${teamSlug}/members`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
+    {
+      title: "Feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/feedback`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
   ];
 
   const flowLayoutRoutesMain: Route[] = [
@@ -190,12 +196,6 @@ function EditorNavMenu() {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: "Feedback",
-      Icon: RateReviewIcon,
-      route: `/${teamSlug}/${flowSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
