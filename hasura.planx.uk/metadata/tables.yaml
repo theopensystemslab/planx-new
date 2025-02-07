@@ -283,8 +283,20 @@
     - role: api
       permission:
         columns:
-          - created_at
+          - feedback_score
           - id
+          - team_id
+          - device
+          - user_data
+          - feedback_type
+          - node_id
+          - created_at
+          - flow_id
+          - node_data
+          - node_type
+          - status
+          - user_comment
+          - user_context
         filter: {}
       comment: ""
   delete_permissions:
