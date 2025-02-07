@@ -10,6 +10,7 @@ import {
 } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
@@ -114,6 +115,39 @@ const editorRoutes = compose(
         };
       });
     }),
+
+    "/resources": route(() => {
+      return {
+        title: makeTitle("Resources"),
+        view: <NotionEmbed page="resources" title="PlanX Resources" />,
+      };
+    }),
+
+    // "/onboarding": route(() => {
+    //   return {
+    //     title: makeTitle("Onboarding"),
+    //     view: (
+    //       <iframe
+    //         title="notion"
+    //         src="https://www.notioniframe.com/notion/1fjdisq3i73"
+    //         style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
+    //       />
+    //     ),
+    //   };
+    // }),
+
+    // "/tutorials": route(() => {
+    //   return {
+    //     title: makeTitle("Tutorials"),
+    //     view: (
+    //       <iframe
+    //         title="notion"
+    //         src="https://www.notioniframe.com/notion/1wf4jidsdbv"
+    //         style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
+    //       />
+    //     ),
+    //   };
+    // }),
 
     "/:team": lazy(() => import("./team")),
   }),
