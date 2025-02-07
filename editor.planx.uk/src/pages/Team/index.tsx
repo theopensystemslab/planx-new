@@ -333,7 +333,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const { data: templateData } = useQuery<{ flows: TemplateOverview[] }>(gql`
+  const { data: templates } = useQuery<{ flows: TemplateOverview[] }>(gql`
     query GetTemplates {
       flows(where: { is_template: { _eq: true } }) {
         id
@@ -347,8 +347,8 @@ const Team: React.FC = () => {
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
   const showAddTemplateButton =
     showAddFlowButton &&
-    templateData &&
-    Boolean(templateData?.flows.length) &&
+    templates &&
+    Boolean(templates?.flows.length) &&
     hasFeatureFlag("TEMPLATES");
 
   return (
@@ -383,7 +383,7 @@ const Team: React.FC = () => {
         >
           {showAddFlowButton && <AddFlowButton flows={flows} />}
           {showAddTemplateButton && (
-            <StartFromTemplateButton templates={templateData.flows} />
+            <StartFromTemplateButton templates={templates.flows} />
           )}
         </Box>
       </Box>
