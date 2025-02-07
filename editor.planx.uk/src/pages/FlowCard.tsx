@@ -93,13 +93,16 @@ const FlowCard: React.FC<FlowCardProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState<boolean>(false);
-  const [archiveFlow, copyFlow, moveFlow, canUserEditTeam] = useStore((state) => [
-    state.archiveFlow,
-    state.copyFlow,
-    state.moveFlow,
-    state.canUserEditTeam
-  ]);
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
+    useState<boolean>(false);
+  const [archiveFlow, copyFlow, moveFlow, canUserEditTeam] = useStore(
+    (state) => [
+      state.archiveFlow,
+      state.copyFlow,
+      state.moveFlow,
+      state.canUserEditTeam,
+    ],
+  );
 
   const handleArchive = () => {
     archiveFlow(flow.id).then(() => {
@@ -111,8 +114,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
       refreshFlows();
     });
   };
-  const handleMove = (newTeam: string, flowName: string) => {
-    moveFlow(flow.id, newTeam, flowName).then(() => {
+  const handleMove = (newTeam: string) => {
+    moveFlow(flow.id, newTeam, flow.name).then(() => {
       refreshFlows();
     });
   };
@@ -137,7 +140,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   return (
     <>
-       {isArchiveDialogOpen && (
+      {isArchiveDialogOpen && (
         <ArchiveDialog
           title="Archive service"
           open={isArchiveDialogOpen}
@@ -247,7 +250,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(slugify(newTeam), flow.name);
+                      handleMove(slugify(newTeam));
                     }
                   }
                 },
