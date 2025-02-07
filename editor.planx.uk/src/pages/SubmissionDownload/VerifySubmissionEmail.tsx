@@ -94,7 +94,6 @@ export const VerifySubmissionEmail = ({
                   title="Verify your submission email address"
                   description="We will use this to confirm that you have access to the submission email inbox that is set up for your team. Entering the correct email address will start the file download automatically."
                 />
-
                 <InputRow>
                   <InputLabel
                     label={"Submission email address"}

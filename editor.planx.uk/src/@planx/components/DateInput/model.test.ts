@@ -1,4 +1,9 @@
-import { dateInputValidationSchema, dateSchema, paddedDate, parseDate } from "./model";
+import {
+  dateInputValidationSchema,
+  dateSchema,
+  paddedDate,
+  parseDate,
+} from "./model";
 
 describe("parseDate helper function", () => {
   it("returns a day value", () => {
@@ -43,12 +48,8 @@ describe("parseDate helper function", () => {
 
 describe("dateSchema", () => {
   test("basic validation", async () => {
-    expect(await dateSchema().isValid("2021-03-23")).toBe(
-      true,
-    );
-    expect(await dateSchema().isValid("2021-23-03")).toBe(
-      false,
-    );
+    expect(await dateSchema().isValid("2021-03-23")).toBe(true);
+    expect(await dateSchema().isValid("2021-23-03")).toBe(false);
   });
 
   const validate = async (date?: string) =>
@@ -107,7 +108,7 @@ describe("dateInputValidationSchema", () => {
           max: "1999-12-31",
         },
         required: true,
-      }).isValid("1995-06-15")
+      }).isValid("1995-06-15"),
     ).toBe(true);
     expect(
       await dateInputValidationSchema({

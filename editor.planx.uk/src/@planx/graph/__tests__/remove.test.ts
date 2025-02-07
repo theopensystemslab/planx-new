@@ -44,7 +44,7 @@ test("final node with id", () => {
     d: {},
   });
   // The `_root` node is never fully deleted, rather just "emptied out"
-  expect(graph).toEqual({ "_root": { edges: [] } });
+  expect(graph).toEqual({ _root: { edges: [] } });
   expect(ops).toEqual([
     { ld: "a", p: ["_root", "edges", 0] },
     { od: {}, p: ["b"] },
