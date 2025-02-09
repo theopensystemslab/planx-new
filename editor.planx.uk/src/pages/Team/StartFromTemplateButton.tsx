@@ -1,4 +1,3 @@
-import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -7,28 +6,32 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
+import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 
-export interface TemplateOverview {
+export interface TemplateOption {
   name: string;
   slug: string;
   id: string;
 }
 
 export const StartFromTemplateButton: React.FC<{
-  templates: TemplateOverview[];
+  templates: TemplateOption[];
 }> = ({ templates }) => {
+  const { navigate } = useNavigation();
+  const { teamId, teamSlug, createFlowFromTemplate } = useStore();
+
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const formik = useFormik<{ templateId: string }>({
     initialValues: { templateId: templates[0].id },
-    onSubmit: ({ templateId }) => {
-      console.log(
-        `POST to /flows/create-from-template/${templateId}, then redirect`,
-      );
+    onSubmit: async ({ templateId }) => {
+      const { slug } = await createFlowFromTemplate(templateId, teamId);
+      navigate(`/${teamSlug}/${slug}`);
     },
     validateOnBlur: false,
     validateOnChange: false,

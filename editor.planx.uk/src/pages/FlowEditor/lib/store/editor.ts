@@ -170,8 +170,8 @@ export interface EditorStore extends Store.Store {
   ) => Promise<string>;
   createFlowFromTemplate: (
     templateId: string,
-    teamId: string,
-  ) => Promise<object>;
+    teamId: number,
+  ) => Promise<{ message: string; id: string; slug: string; }>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
