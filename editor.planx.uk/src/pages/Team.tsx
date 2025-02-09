@@ -266,7 +266,7 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          {teamHasFlows && hasFeatureFlag("SORT_FLOWS") && flows && (
+          {teamHasFlows && hasFeatureFlag("SORT_FLOWS") && (
             <SearchBox<FlowSummary>
               records={flows}
               setRecords={setSearchedFlows}
