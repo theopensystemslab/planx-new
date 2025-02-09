@@ -424,6 +424,28 @@
     schema: public
   is_enum: true
 - table:
+    name: flow_change_logs
+    schema: public
+  object_relationships:
+    - name: actor
+      using:
+        manual_configuration:
+          column_mapping:
+            actor_id: id
+          insertion_order: null
+          remote_table:
+            name: users
+            schema: public
+    - name: flow
+      using:
+        manual_configuration:
+          column_mapping:
+            flow_id: id
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
+- table:
     name: flow_document_templates
     schema: public
   object_relationships:
@@ -470,6 +492,15 @@
             name: flows
             schema: public
   array_relationships:
+    - name: change_logs
+      using:
+        manual_configuration:
+          column_mapping:
+            id: flow_id
+          insertion_order: null
+          remote_table:
+            name: flow_change_logs
+            schema: public
     - name: document_templates
       using:
         foreign_key_constraint_on:
@@ -592,6 +623,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -657,6 +689,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -679,6 +712,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -714,6 +748,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -734,6 +769,7 @@
           - creator_id
           - data
           - id
+          - is_template
           - name
           - settings
           - slug
@@ -755,6 +791,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -837,6 +874,7 @@
         columns:
           - data
           - description
+          - is_template
           - limitations
           - name
           - settings
