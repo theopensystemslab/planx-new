@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useEffect, useState } from "react";
 
-export const ShowingServicesTitle = ({
+export const ShowingServicesHeader = ({
   matchedFlows,
 }: {
   matchedFlows: FlowSummary[] | null;
