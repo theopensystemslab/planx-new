@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
@@ -9,7 +9,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -17,16 +16,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AddButton } from "ui/editor/AddButton";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import InputLabel from "ui/public/InputLabel";
 import { slugify } from "utils";
 
-import { client } from "../lib/graphql";
-import SimpleMenu from "../ui/editor/SimpleMenu";
-import { useStore } from "./FlowEditor/lib/store";
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "./FlowEditor/utils";
+import { client } from "../../lib/graphql";
+import SimpleMenu from "../../ui/editor/SimpleMenu";
+import { useStore } from "../FlowEditor/lib/store";
+import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import { formatLastEditMessage } from "../FlowEditor/utils";
+import {
+  StartFromTemplateButton,
+  TemplateOverview,
+} from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(0, 0, 3),
@@ -293,78 +294,6 @@ const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
   return <AddButton onClick={addFlow}>Add a new service</AddButton>;
 };
 
-const StartFromTemplateButton: React.FC<{}> = () => {
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
-  // TODO fetch flows marked as "source templates"
-  const mockTemplateOptions = [
-    {
-      id: "123-456",
-      name: "Apply for planning permission",
-      slug: "apply-for-planning-permission",
-    },
-    {
-      id: "789-123",
-      name: "Apply for a lawful development certificate",
-      slug: "apply-for-a-lawful-development-certificate",
-    },
-  ];
-
-  return (
-    <Box mt={1}>
-      <AddButton onClick={() => setDialogOpen(true)}>
-        Start from a template
-      </AddButton>
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        maxWidth="md"
-      >
-        <DialogTitle variant="h3" component="h1">
-          {`Start from a template`}
-        </DialogTitle>
-        <DialogContent>
-          {`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dictum interdum tellus laoreet faucibus. Aliquam ultricies vitae nunc non efficitur. Mauris leo nulla, luctus sit amet ullamcorper a, porta at mauris. Integer nec elit a magna dapibus bibendum.`}
-          <Box mt={2}>
-            <InputLabel
-              label="Available templates"
-              id={`select-label-templates`}
-            >
-              <SelectInput
-                bordered
-                required={true}
-                title={"Available templates"}
-                labelId={`select-label-templates`}
-                value={mockTemplateOptions[0].slug}
-                onChange={() => console.log("TODO formik?")}
-                name={"templates"}
-              >
-                {mockTemplateOptions.map((option) => (
-                  <MenuItem key={option.id} value={option.slug}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </SelectInput>
-            </InputLabel>
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ paddingX: 2 }}>
-          <Button onClick={() => setDialogOpen(false)}>BACK</Button>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => console.log("TODO create template")}
-          >
-            CREATE TEMPLATE
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
-};
-
 const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
@@ -404,8 +333,23 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
+  const { data: templates } = useQuery<{ flows: TemplateOverview[] }>(gql`
+    query GetTemplates {
+      flows(where: { is_template: { _eq: true } }) {
+        id
+        slug
+        name
+      }
+    }
+  `);
+
   const teamHasFlows = flows && Boolean(flows.length);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const showAddTemplateButton =
+    showAddFlowButton &&
+    templates &&
+    Boolean(templates?.flows.length) &&
+    hasFeatureFlag("TEMPLATES");
 
   return (
     <Container maxWidth="formWrap">
@@ -438,8 +382,8 @@ const Team: React.FC = () => {
           }}
         >
           {showAddFlowButton && <AddFlowButton flows={flows} />}
-          {showAddFlowButton && hasFeatureFlag("TEMPLATES") && (
-            <StartFromTemplateButton />
+          {showAddTemplateButton && (
+            <StartFromTemplateButton templates={templates.flows} />
           )}
         </Box>
       </Box>
