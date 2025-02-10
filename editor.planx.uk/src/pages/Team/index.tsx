@@ -80,7 +80,7 @@ const Team: React.FC = () => {
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
       displayName: "Name",
-      fieldName: "name",
+      fieldName: "slug",
       directionNames: { asc: "A - Z", desc: "Z - A" },
     },
     {
@@ -175,32 +175,32 @@ const Team: React.FC = () => {
             <StartFromTemplateButton templates={templates.flows} />
           )}
         </Box>
-     
-      {hasFeatureFlag("SORT_FLOWS") && flows && (
-        <SortControl<FlowSummary>
-          records={flows}
-          setRecords={setFlows}
-          sortOptions={sortOptions}
-        />
-      )}
-      {teamHasFlows  && (
-        <DashboardList>
-          {flows?.map((flow) => (
-            <FlowCard
-              flow={flow}
-              flows={flows}
-              key={flow.slug}
-              teamId={teamId}
-              teamSlug={slug}
-              refreshFlows={() => {
-                fetchFlows();
-              }}
-            />
-          ))}
-        </DashboardList>
-      )}
-      {flows && !flows.length && <GetStarted flows={flows} />}
-    </Container>
+
+        {hasFeatureFlag("SORT_FLOWS") && flows && (
+          <SortControl<FlowSummary>
+            records={flows}
+            setRecords={setFlows}
+            sortOptions={sortOptions}
+          />
+        )}
+        {teamHasFlows && (
+          <DashboardList>
+            {flows?.map((flow) => (
+              <FlowCard
+                flow={flow}
+                flows={flows}
+                key={flow.slug}
+                teamId={teamId}
+                teamSlug={slug}
+                refreshFlows={() => {
+                  fetchFlows();
+                }}
+              />
+            ))}
+          </DashboardList>
+        )}
+        {flows && !flows.length && <GetStarted flows={flows} />}
+      </Container>
     </Box>
   );
 };
