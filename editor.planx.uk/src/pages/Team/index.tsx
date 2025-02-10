@@ -93,7 +93,7 @@ const Team: React.FC = () => {
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
       displayName: "Name",
-      fieldName: "name",
+      fieldName: "slug",
       directionNames: { asc: "A - Z", desc: "Z - A" },
     },
     {
