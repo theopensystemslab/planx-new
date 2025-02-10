@@ -7,7 +7,15 @@ export async function getDashboard(
 ): Promise<GetDashboardResponse> {
   try {
     const response = await $metabase.get(`/api/dashboard/${dashboardId}`);
-    return response.data;
+
+    const transformedDashboard = {
+      id: response.data.id,
+      name: response.data.name,
+      collectionId: response.data.collection_id,
+      parameters: response.data.parameters,
+    };
+
+    return transformedDashboard;
   } catch (error) {
     throw new ServerError({
       message: `Error in getDashboard: ${error}`,
