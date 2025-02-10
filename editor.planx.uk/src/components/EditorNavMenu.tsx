@@ -147,18 +147,18 @@ function EditorNavMenu() {
       route: "resources",
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
     },
-    // {
-    //   title: "Onboarding",
-    //   Icon: AssignmentTurnedInIcon,
-    //   route: "onboarding",
-    //   accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
-    // },
-    // {
-    //   title: "Tutorials",
-    //   Icon: SchoolIcon,
-    //   route: "tutorials",
-    //   accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
-    // },
+    {
+      title: "Onboarding",
+      Icon: AssignmentTurnedInIcon,
+      route: "onboarding",
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+    },
+    {
+      title: "Tutorials",
+      Icon: SchoolIcon,
+      route: "tutorials",
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+    },
   ];
 
   const teamLayoutRoutes: Route[] = [
