@@ -30,8 +30,8 @@ export const StartFromTemplateButton: React.FC<{
   const formik = useFormik<{ templateId: string }>({
     initialValues: { templateId: templates[0].id },
     onSubmit: async ({ templateId }) => {
-      const { slug } = await createFlowFromTemplate(templateId, teamId);
-      navigate(`/${teamSlug}/${slug}`);
+      const response = await createFlowFromTemplate(templateId, teamId);
+      if (response.data?.slug) navigate(`/${teamSlug}/${response.data.slug}`);
     },
     validateOnBlur: false,
     validateOnChange: false,
