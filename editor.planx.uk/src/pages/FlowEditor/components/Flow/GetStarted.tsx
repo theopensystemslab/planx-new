@@ -8,7 +8,7 @@ import { Link } from "react-navi";
 const Root = styled(Box)(({ theme }) => ({
   display: "flex",
   gap: theme.spacing(1),
-  width: "266px",
+  width: "300px",
   padding: theme.spacing(2),
   background: theme.palette.background.paper,
   border: `1px solid ${theme.palette.border.main}`,
@@ -31,7 +31,7 @@ export const GetStarted: React.FC = () => (
     <SchoolIcon />
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Typography variant="body1">
-        <strong>New to Plan✕?</strong>
+        <strong>Starting a new service?</strong>
       </Typography>
       <Typography variant="body2">
         Visit the <Link href="../../tutorials">guides and tutorials</Link> to
