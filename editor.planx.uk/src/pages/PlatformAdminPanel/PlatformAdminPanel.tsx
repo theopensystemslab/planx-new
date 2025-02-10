@@ -1,5 +1,6 @@
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -14,97 +15,109 @@ const NotConfigured: React.FC = () => <Close color="error" fontSize="small" />;
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
-  // console.log({ adminPanelData });
+  const baseColDef: Partial<GridColDef> = {
+    width: 150,
+  };
 
   const columns: GridColDef[] = [
     {
+      ...baseColDef,
       field: "name",
       headerName: "Team",
-      width: 150,
     },
     {
+      ...baseColDef,
       field: "referenceCode",
       headerName: "Reference code",
-      width: 150,
     },
 
     {
+      ...baseColDef,
       field: "liveFlows",
       headerName: "Live services",
-      width: 350,
+      width: 450,
       renderCell: (_params) => {
-        return _params.value && _params.value.join(", ");
+        return (
+          <Box>
+            {_params.value?.map((flowName: string, index: number) => {
+              return (
+                <Typography py={0.3} variant="body2" key={index}>
+                  {flowName}
+                </Typography>
+              );
+            })}
+          </Box>
+        );
       },
     },
     {
+      ...baseColDef,
       field: "planningDataEnabled",
       headerName: "Planning constraints",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
     {
+      ...baseColDef,
       field: "govpayEnabled",
       headerName: "GOV.UK Pay",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
-    // Gov Notify
-    // {
-    //   field: "govpayEnabled",
-    //   headerName: "GOV.UK Pay",
-    //   width: 150,
-    //   renderCell: (_params) => {
-    //     return _params.value ? <Configured /> : <NotConfigured />;
-    //   },
-    // },
     {
+      ...baseColDef,
+      field: "govnotifyPersonalisation",
+      headerName: "GOV.UK Notify",
+      renderCell: (_params) => {
+        return _params.value?.helpEmail ? <Configured /> : <NotConfigured />;
+      },
+    },
+    {
+      ...baseColDef,
       field: "sendToEmailAddress",
       headerName: "Send to email",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
     {
+      ...baseColDef,
       field: "bopsSubmissionURL",
       headerName: "BOPS",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
     {
+      ...baseColDef,
       field: "powerAutomateEnabled",
       headerName: "Power automate",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
     {
+      ...baseColDef,
       field: "subdomain",
       headerName: "Subdomain",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
     {
+      ...baseColDef,
       field: "logo",
       headerName: "Logo",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
     },
     {
+      ...baseColDef,
       field: "favicon",
       headerName: "Favicon",
-      width: 150,
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
       },
@@ -124,12 +137,16 @@ export const PlatformAdminPanel = () => {
         </Typography>
       </SettingsSection>
       <SettingsSection>
-        {/* {adminPanelData?.map((team) => <TeamData key={team.id} data={team} />)} */}
         <DataGrid
-          sx={{ margin: 3 }}
           rows={adminPanelData}
           columns={columns}
-          hideFooter
+          getRowHeight={() => "auto"}
+          sx={{
+            ".MuiDataGrid-cell": {
+              padding: "10px",
+              display: "flex",
+            },
+          }}
         />
       </SettingsSection>
     </Container>
