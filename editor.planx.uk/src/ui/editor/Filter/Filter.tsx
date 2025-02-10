@@ -45,7 +45,7 @@ interface FiltersProps<T> {
   /** An array of objects to define how to filter the records - the FilterOptions type has more information */
   filterOptions: FilterOptions<T>[];
   /** Optional prop for clearing filters from a parent component */
-  clearFilters: boolean;
+  clearFilters?: number;
 }
 
 /**
@@ -62,7 +62,7 @@ export const Filters = <T extends object>({
   records,
   setFilteredRecords,
   filterOptions,
-  clearFilters = false,
+  clearFilters,
 }: FiltersProps<T>) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [optionsToFilter] = useState(filterOptions);

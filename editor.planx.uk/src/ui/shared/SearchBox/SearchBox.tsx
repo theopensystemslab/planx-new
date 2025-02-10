@@ -18,14 +18,14 @@ interface SearchBoxProps<T> {
   records: T[] | null;
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   searchKey: FuseOptionKey<T>[];
-  clearSearch: boolean;
+  clearSearch?: number;
 }
 
 export const SearchBox = <T extends object>({
   records,
   setRecords,
   searchKey,
-  clearSearch = false,
+  clearSearch,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
@@ -35,9 +35,6 @@ export const SearchBox = <T extends object>({
   const { submitForm, setFieldValue, values, resetForm } = useFormik({
     initialValues: { pattern: "" },
     onSubmit: ({ pattern }) => {
-      if (clearSearch === true) {
-        setRecords(records);
-      }
       setIsSearching(true);
       debouncedSearch(pattern);
     },
@@ -71,9 +68,10 @@ export const SearchBox = <T extends object>({
   useEffect(() => {
     if (clearSearch) {
       resetForm();
+      setRecords(records);
       submitForm();
     }
-  }, [clearSearch, resetForm, submitForm]);
+  }, [clearSearch, resetForm, setRecords, records, submitForm]);
 
   return (
     <Box maxWidth={360}>
