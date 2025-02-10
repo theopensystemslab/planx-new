@@ -119,6 +119,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
   const labelMap: Record<string, string> = {
     userComment: item.type === "issue" ? "What went wrong?" : "User comment",
     address: "Property address",
+    flowName: "Service",
     projectType: "Project type",
     where: "Where",
     browserPlatform: "Browser / device",
@@ -154,6 +155,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         <TableCell>
           {format(new Date(item.createdAt), "dd/MM/yy hh:mm:ss")}
         </TableCell>
+        <TableCell>{item.flowName}</TableCell>
         <TableCell>{feedbackScore}</TableCell>
         <TableCell>{commentSummary}</TableCell>
         <TableCell sx={{ textAlign: "right" }}>
@@ -167,7 +169,7 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ padding: 0, border: "none" }} colSpan={5}>
+        <TableCell sx={{ padding: 0, border: "none" }} colSpan={6}>
           <Collapse
             in={open}
             timeout="auto"

@@ -5,7 +5,7 @@ import {
 import ListItem from "@mui/material/ListItem";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import AutocompleteInput from "ui/shared/AutocompleteInput";
+import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import InputRow from "ui/shared/InputRow";
 
 interface Props {
@@ -81,6 +81,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           return formattedOption;
         }}
         renderOption={renderOptions}
+        useDataFieldInput={true}
         freeSolo
         selectOnFocus
         clearOnEscape

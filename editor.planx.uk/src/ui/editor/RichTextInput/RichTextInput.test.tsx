@@ -27,6 +27,7 @@ test("modifyDeep helper", () => {
     d: [1, 3, 3, 5],
   });
 });
+
 describe("input validation", () => {
   it("does not display an error if the text '(opens in a new tab)' is wrapped in an anchor element", async () => {
     setup(
@@ -53,5 +54,38 @@ describe("input validation", () => {
     expect(
       screen.getByText('Links must wrap the text "(opens in a new tab)"'),
     ).toBeVisible();
+  });
+
+  it("displays an error if the policy legislation link contains '/made'", async () => {
+    const { user } = setup(
+      <RichTextInput
+        value={
+          '<p><a href="https://www.legislation.gov.uk/ukpga/2023/36/section/3/made">Link to policy</a></p>'
+        }
+      />,
+    );
+
+    const errorIcon = screen.getByTestId("ErrorIcon");
+    expect(errorIcon).toBeVisible();
+
+    await user.click(errorIcon);
+    expect(
+      screen.getByText(
+        'Legislative policy links should not end in "/made" as these can be out of date.',
+      ),
+    ).toBeVisible();
+  });
+
+  it("does not display an error if the policy legislation link does not contain '/made'", async () => {
+    setup(
+      <RichTextInput
+        value={
+          '<p><a href="https://www.legislation.gov.uk/ukpga/2023/36/section/3">Link to policy</a></p>'
+        }
+      />,
+    );
+
+    const errorIcon = screen.queryByTestId("ErrorIcon");
+    expect(errorIcon).not.toBeInTheDocument();
   });
 });

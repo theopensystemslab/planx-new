@@ -10,9 +10,9 @@ export const TAG_DISPLAY_VALUES: Record<
   NodeTag,
   { color: keyof Palette["nodeTag"]; displayName: string; editableBy?: Role[] }
 > = {
-  placeholder: {
+  customisation: {
     color: "blocking",
-    displayName: "Placeholder",
+    displayName: "Customisation",
     editableBy: ["platformAdmin"],
   },
   toReview: {

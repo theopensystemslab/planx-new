@@ -31,7 +31,30 @@ import {
   validateAndDiffFlowController,
   validateAndDiffSchema,
 } from "./validate/controller.js";
+import {
+  createFlowController,
+  createFlowSchema,
+} from "./createFlow/controller.js";
+import {
+  createFlowFromTemplateController,
+  createFlowFromTemplateSchema,
+} from "./createFlowFromTemplate/controller.js";
+
 const router = Router();
+
+router.post(
+  "/flows/create",
+  useTeamEditorAuth,
+  validate(createFlowSchema),
+  createFlowController,
+);
+
+router.post(
+  "/flows/create-from-template/:templateId",
+  useTeamEditorAuth,
+  validate(createFlowFromTemplateSchema),
+  createFlowFromTemplateController,
+);
 
 router.post(
   "/flows/:flowId/copy",

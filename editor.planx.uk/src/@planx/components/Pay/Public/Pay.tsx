@@ -7,21 +7,15 @@ import { PublicProps } from "@planx/components/shared/types";
 import { logger } from "airbrake";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
-import { setLocalFlow } from "lib/local.new";
+import { saveSession } from "lib/local.new";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
-import type { Session } from "types";
 
 import { makeData } from "../../shared/utils";
-import {
-  createPayload,
-  getDefaultContent,
-  GOV_UK_PAY_URL,
-  Pay,
-  toDecimal,
-} from "../model";
+import { createPayload, getDefaultContent, Pay, toDecimal } from "../model";
 import Confirm from "./Confirm";
+import { getGovUkPayUrlForTeam } from "./utils";
 
 export default Component;
 export type Props = PublicProps<Pay>;
@@ -34,7 +28,8 @@ type ComponentState =
   | { status: "retry" }
   | { status: "success"; displayText?: string }
   | { status: "unsupported_team" }
-  | { status: "undefined_fee" };
+  | { status: "undefined_fee" }
+  | { status: "zero_fee" };
 
 enum Action {
   NoFeeFound,
@@ -45,6 +40,7 @@ enum Action {
   StartNewPaymentError,
   ResumePayment,
   Success,
+  ZeroFee,
 }
 
 export const PAY_API_ERROR_UNSUPPORTED_TEAM = "GOV.UK Pay is not enabled for";
@@ -103,6 +99,8 @@ function Component(props: Props) {
         };
       case Action.Success:
         return { status: "success", displayText: "Payment Successful" };
+      case Action.ZeroFee:
+        return { status: "zero_fee" };
     }
   };
 
@@ -118,9 +116,18 @@ function Component(props: Props) {
   const showPayOptions = props.allowInviteToPay && !props.hidePay;
 
   useEffect(() => {
-    // Auto-skip component when fee=0
-    if (fee <= 0) {
-      return props.handleSubmit && props.handleSubmit({ auto: true });
+    // Skip component when fee is negative
+    // Log error silently - this was likely a content error that should be addressed
+    if (fee < 0) {
+      dispatch(Action.NoFeeFound);
+      logger.notify(`Negative fee calculated for session ${sessionId}`);
+      return;
+    }
+
+    // Do not contact GovPay at all if fee is 0, just show UI
+    if (fee === 0) {
+      dispatch(Action.ZeroFee);
+      return;
     }
 
     // If props.fn is undefined, display & log an error
@@ -272,25 +279,30 @@ function Component(props: Props) {
       });
   };
 
+  const continueWithoutPaying = () => {
+    props.handleSubmit && props.handleSubmit({ auto: false });
+  };
+
+  const onConfirm = () => {
+    const shouldContinueWithoutPaying =
+      fee === 0 || props.hidePay || state.status === "unsupported_team";
+
+    if (shouldContinueWithoutPaying) continueWithoutPaying();
+    if (state.status === "init") startNewPayment();
+    if (state.status === "retry") resumeExistingPayment();
+  };
+
   return (
     <>
       {state.status === "init" ||
       state.status === "retry" ||
       state.status === "unsupported_team" ||
-      state.status === "undefined_fee" ? (
+      state.status === "undefined_fee" ||
+      state.status === "zero_fee" ? (
         <Confirm
           {...props}
           fee={fee}
-          onConfirm={() => {
-            if (props.hidePay || state.status === "unsupported_team") {
-              // Show "Continue" button to proceed
-              props.handleSubmit && props.handleSubmit({ auto: false });
-            } else if (state.status === "init") {
-              startNewPayment();
-            } else if (state.status === "retry") {
-              resumeExistingPayment();
-            }
-          }}
+          onConfirm={onConfirm}
           buttonTitle={
             state.status === "init"
               ? "Pay now using GOV.UK Pay"
@@ -313,27 +325,4 @@ function Component(props: Props) {
       )}
     </>
   );
-}
-
-async function saveSession(session: Session) {
-  await setLocalFlow(session.sessionId, session);
-}
-
-function getGovUkPayUrlForTeam({
-  sessionId,
-  flowId,
-  teamSlug,
-  paymentId,
-}: {
-  sessionId: string;
-  flowId: string;
-  teamSlug: string;
-  paymentId?: string;
-}): string {
-  const baseURL = `${GOV_UK_PAY_URL}/${teamSlug}`;
-  const queryString = `?sessionId=${sessionId}&flowId=${flowId}`;
-  if (paymentId) {
-    return `${baseURL}/${paymentId}${queryString}`;
-  }
-  return `${baseURL}${queryString}`;
 }

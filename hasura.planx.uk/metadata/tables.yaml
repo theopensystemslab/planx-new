@@ -283,8 +283,20 @@
     - role: api
       permission:
         columns:
-          - created_at
+          - feedback_score
           - id
+          - team_id
+          - device
+          - user_data
+          - feedback_type
+          - node_id
+          - created_at
+          - flow_id
+          - node_data
+          - node_type
+          - status
+          - user_comment
+          - user_context
         filter: {}
       comment: ""
   delete_permissions:
@@ -335,6 +347,7 @@
           - uprn
           - user_comment
           - user_context
+          - service_name
         filter:
           team:
             flows:
@@ -367,6 +380,7 @@
           - user_comment
           - user_context
           - created_at
+          - service_name
         filter: {}
       comment: ""
     - role: teamEditor
@@ -395,6 +409,7 @@
           - user_comment
           - user_context
           - created_at
+          - service_name
         filter:
           team:
             members:
@@ -520,6 +535,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -551,6 +567,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -575,12 +592,14 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -617,6 +636,7 @@
           - slug
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         validate_input:
@@ -638,6 +658,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -660,6 +681,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -695,6 +717,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -715,6 +738,7 @@
           - creator_id
           - data
           - id
+          - is_template
           - name
           - settings
           - slug
@@ -736,6 +760,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -818,6 +843,7 @@
         columns:
           - data
           - description
+          - is_template
           - limitations
           - name
           - settings

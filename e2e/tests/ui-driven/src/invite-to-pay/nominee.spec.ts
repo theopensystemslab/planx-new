@@ -64,9 +64,6 @@ test.describe("Nominee journey @regression", async () => {
       "Add a verandah or deck and changes to internal walls or layout";
     await expect(page.getByText(formattedProjectType)).toBeVisible();
 
-    await expect(
-      page.getByRole("heading", { name: "Fee", level: 3 }),
-    ).toBeVisible();
     await expect(page.getByTestId("fee-breakdown-table")).toBeVisible();
 
     const payButton = page.getByRole("button", {

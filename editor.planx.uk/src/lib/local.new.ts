@@ -28,3 +28,7 @@ export const setLocalFlow = async (sessionId: string, session: Session) => {
 export const clearLocalFlow = async (sessionId: string) => {
   await lowcalStorage.removeItem(`session:${sessionId}`);
 };
+
+export const saveSession = async (session: Session) => {
+  await setLocalFlow(session.sessionId, session);
+};

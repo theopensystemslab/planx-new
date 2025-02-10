@@ -28,6 +28,7 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
+import { slugify } from "utils";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -167,6 +168,10 @@ export interface EditorStore extends Store.Store {
     newSlug: string,
     newName: string,
   ) => Promise<string>;
+  createFlowFromTemplate: (
+    templateId: string,
+    teamId: string,
+  ) => Promise<object>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
@@ -177,7 +182,11 @@ export interface EditorStore extends Store.Store {
   setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
-  moveFlow: (flowId: string, teamSlug: string) => Promise<any>;
+  moveFlow: (
+    flowId: string,
+    teamSlug: string,
+    flowName: string,
+  ) => Promise<any>;
   moveNode: (
     id: NodeId,
     parent?: NodeId,
@@ -297,59 +306,43 @@ export const editorStore: StateCreator<
   },
 
   createFlow: async (teamId, newSlug, newName) => {
-    let response = (await client.mutate({
-      mutation: gql`
-        mutation CreateFlow(
-          $data: jsonb
-          $slug: String
-          $teamId: Int
-          $name: String
-        ) {
-          insert_flows_one(
-            object: { slug: $slug, team_id: $teamId, version: 1, name: $name }
-          ) {
-            id
-            data
-          }
-        }
-      `,
-      variables: {
-        name: newName,
+    const token = get().jwt;
+
+    await axios.post(
+      `${import.meta.env.VITE_APP_API_URL}/flows/create`,
+      {
+        teamId: teamId,
         slug: newSlug,
-        teamId,
+        name: newName,
       },
-    })) as any;
-
-    const { id } = response.data.insert_flows_one;
-
-    response = await client.mutate({
-      mutation: gql`
-        mutation InsertOperation($flow_id: uuid, $data: jsonb) {
-          insert_operations_one(
-            object: { flow_id: $flow_id, data: $data, version: 1 }
-          ) {
-            id
-          }
-        }
-      `,
-      variables: {
-        flow_id: id,
-        data: {
-          m: { ts: 1592485241858 },
-          v: 0,
-          seq: 1,
-          src: "143711878a0ab64c35c32c6055358f5e",
-          create: {
-            data: { [ROOT_NODE_KEY]: { edges: [] } },
-            type: "http://sharejs.org/types/JSONv0",
-          },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
       },
-    });
-
-    response = await get().publishFlow(id, "Created flow");
+    );
 
     return newSlug;
+  },
+
+  createFlowFromTemplate: async (templateId, teamId) => {
+    const token = get().jwt;
+
+    const response = await axios.post(
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/flows/create-from-template/${templateId}`,
+      {
+        teamId: teamId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return response;
   },
 
   deleteFlow: async (teamId, flowSlug) => {
@@ -485,7 +478,7 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  moveFlow(flowId: string, teamSlug: string) {
+  moveFlow(flowId: string, teamSlug: string, flowName: string) {
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
       alert(
@@ -507,11 +500,18 @@ export const editorStore: StateCreator<
         },
       )
       .then((res) => alert(res?.data?.message))
-      .catch(() =>
-        alert(
-          "Failed to move this flow. Make sure you're entering a valid team name and try again",
-        ),
-      );
+      .catch(({ response }) => {
+        const { data } = response;
+        if (data.error.toLowerCase().includes("uniqueness violation")) {
+          alert(
+            `Failed to move this flow. ${teamSlug} already has a flow with name '${flowName}'. Rename the flow and try again`,
+          );
+        } else {
+          alert(
+            "Failed to move this flow. Make sure you're entering a valid team name and try again",
+          );
+        }
+      });
   },
 
   moveNode(

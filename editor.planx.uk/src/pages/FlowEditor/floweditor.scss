@@ -122,7 +122,7 @@ $fontMonospace: "Source Code Pro", monospace;
   &.isClone > div {
     margin-top: 3px;
     position: relative;
-    ::before {
+    a::before {
       content: "";
       position: absolute;
       left: -4px;
@@ -133,6 +133,12 @@ $fontMonospace: "Source Code Pro", monospace;
       border: $nodeBorderWidth dashed $nodeBorder;
       z-index: -1;
     }
+  }
+
+  // Increase offset of clone styling when visit styling is also applied
+  &.isClone.wasVisited a::before {
+    left: -8px;
+    top: -8px;
   }
 
   &.hasFailed {

@@ -2,7 +2,7 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const UnoccupiedBuildingsCIL: Schema = {
-  type: "Building not meant for occupation or temporarily permitted",
+  type: "Building",
   fields: [
     {
       type: "text",
@@ -15,7 +15,7 @@ export const UnoccupiedBuildingsCIL: Schema = {
     {
       type: "number",
       data: {
-        title: "How much of its floorspace will be retained?",
+        title: "How much floorspace will be retained?",
         units: "m²",
         fn: "area.retained",
         allowNegatives: false,
@@ -33,7 +33,7 @@ export const UnoccupiedBuildingsCIL: Schema = {
     {
       type: "number",
       data: {
-        title: "How much of its floorspace will be lost?",
+        title: "How much floorspace will be lost?",
         units: "m²",
         fn: "area.loss",
         allowNegatives: false,

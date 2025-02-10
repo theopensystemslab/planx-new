@@ -22,6 +22,7 @@ export const addUserToTeam = async (userId: number, teamId: number) => {
 };
 
 export const cleanup = async () => {
+  await $admin.flow._destroyPublishedAll();
   await $admin.flow._destroyAll();
   await $admin.team._destroyAll();
   await $admin.user._destroyAll();

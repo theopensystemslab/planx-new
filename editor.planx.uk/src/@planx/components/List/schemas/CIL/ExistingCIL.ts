@@ -2,7 +2,7 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const ExistingBuildingsCIL: Schema = {
-  type: "Existing building or part of building",
+  type: "Building or part of building",
   fields: [
     {
       type: "text",
@@ -15,7 +15,7 @@ export const ExistingBuildingsCIL: Schema = {
     {
       type: "number",
       data: {
-        title: "How much of its floorspace will be retained?",
+        title: "How much floorspace will be retained?",
         units: "m²",
         fn: "area.retained",
         allowNegatives: false,
@@ -33,7 +33,7 @@ export const ExistingBuildingsCIL: Schema = {
     {
       type: "number",
       data: {
-        title: "How much of its floorspace will be lost?",
+        title: "How much floorspace will be lost?",
         units: "m²",
         fn: "area.loss",
         allowNegatives: false,
@@ -52,12 +52,22 @@ export const ExistingBuildingsCIL: Schema = {
       },
     },
     {
-      type: "text",
+      type: "question",
       data: {
-        title: "When was it last occupied for its lawful use?",
-        description: "Please enter a date or whether it is still in use.",
+        title: "Is the building or part currently occupied?",
+        fn: "stillInUse",
+        options: [
+          { id: "true", data: { text: "Yes", val: "true" } },
+          { id: "false", data: { text: "No", val: "false" } },
+        ],
+      },
+    },
+    {
+      type: "date",
+      required: false,
+      data: {
+        title: "If not currently occupied, enter the date it was last occupied",
         fn: "lastOccupation",
-        type: TextInputType.Short,
       },
     },
   ],

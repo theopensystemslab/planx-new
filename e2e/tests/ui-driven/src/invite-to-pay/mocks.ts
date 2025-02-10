@@ -24,6 +24,7 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
       payable: 123.45,
       vat: 0,
       reduction: 0,
+      exemption: 0,
     },
     reductions: [],
     exemptions: [],
