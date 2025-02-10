@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -84,12 +85,22 @@ const Team: React.FC = () => {
   const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [triggerClearFiltersAndSearch, setTriggerClearFiltersAndSearch] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const diffFlows =
       searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
     setMatchingflows(diffFlows);
-  }, [searchedFlows, filteredFlows]);
+    if (diffFlows?.length === flows?.length && triggerClearFiltersAndSearch) {
+      setTriggerClearFiltersAndSearch(false);
+    }
+  }, [
+    searchedFlows,
+    filteredFlows,
+    flows?.length,
+    triggerClearFiltersAndSearch,
+  ]);
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -212,6 +223,7 @@ const Team: React.FC = () => {
               records={flows}
               setRecords={setSearchedFlows}
               searchKey={["name", "slug"]}
+              clearSearch={triggerClearFiltersAndSearch}
             />
           )}
         </Box>
@@ -234,6 +246,7 @@ const Team: React.FC = () => {
                   records={flows}
                   setFilteredRecords={setFilteredFlows}
                   filterOptions={filterOptions}
+                  clearFilters={triggerClearFiltersAndSearch}
                 />
               )}
             </Box>
@@ -245,11 +258,24 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              {teamHasFlows && (
-                <ShowingServicesHeader
-                  matchedFlowsCount={matchingFlows?.length || 0}
-                />
-              )}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <Typography variant="h3" component="h2">
+                  Showing X services
+                </Typography>
+                <Button
+                  onClick={() => setTriggerClearFiltersAndSearch(true)}
+                  variant="link"
+                >
+                  Clear filters
+                </Button>
+              </Box>
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body2">

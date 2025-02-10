@@ -44,6 +44,8 @@ interface FiltersProps<T> {
   setFilteredRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   /** An array of objects to define how to filter the records - the FilterOptions type has more information */
   filterOptions: FilterOptions<T>[];
+  /** Optional prop for clearing filters from a parent component */
+  clearFilters: boolean;
 }
 
 /**
@@ -60,6 +62,7 @@ export const Filters = <T extends object>({
   records,
   setFilteredRecords,
   filterOptions,
+  clearFilters = false,
 }: FiltersProps<T>) => {
   const [expanded, setExpanded] = useState<boolean>(false);
   const [optionsToFilter] = useState(filterOptions);
@@ -67,7 +70,7 @@ export const Filters = <T extends object>({
   const navigation = useNavigation();
   const route = useCurrentRoute();
 
-  const { values, setFieldValue, handleSubmit } = useFormik<{
+  const { values, setFieldValue, submitForm, resetForm } = useFormik<{
     filters: Filters<T> | null;
   }>({
     initialValues: { filters: null },
@@ -143,9 +146,16 @@ export const Filters = <T extends object>({
 
   useEffect(() => {
     if (values.filters) {
-      handleSubmit();
+      submitForm();
     }
-  }, [handleSubmit, values.filters]);
+  }, [submitForm, values.filters]);
+
+  useEffect(() => {
+    if (clearFilters) {
+      resetForm();
+      submitForm();
+    }
+  }, [clearFilters, resetForm, submitForm]);
 
   const handleChange = (filterKey: FilterKey<T>, filterValue: FilterValues) => {
     const newObject = {
