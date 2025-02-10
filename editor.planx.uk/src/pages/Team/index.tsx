@@ -258,24 +258,11 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <Typography variant="h3" component="h2">
-                  Showing X services
-                </Typography>
-                <Button
-                  onClick={() => setTriggerClearFiltersAndSearch(true)}
-                  variant="link"
-                >
-                  Clear filters
-                </Button>
-              </Box>
+              {teamHasFlows && (
+                <ShowingServicesHeader
+                  matchedFlowsCount={matchingFlows?.length || 0}
+                />
+              )}
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body2">
