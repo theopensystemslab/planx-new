@@ -805,14 +805,12 @@
           - updated_at
           - version
         filter:
-          deleted_at:
-            _is_null: true
-        check:
           _and:
+            - is_template:
+                _eq: false
             - deleted_at:
-                _is_null: false
-            - templated_from:
                 _is_null: true
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
@@ -842,19 +840,15 @@
           - version
         filter:
           _and:
-            - _and:
-                - team_id:
-                    _eq: 32
-                - creator_id:
-                    _eq: x-hasura-user-id
+            - team_id:
+                _eq: 32
+            - creator_id:
+                _eq: x-hasura-user-id
             - deleted_at:
                 _is_null: true
-        check:
-          _and:
-            - deleted_at:
-                _is_null: false
-            - templated_from:
-                _is_null: true
+            - is_template:
+                _eq: false
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
@@ -882,12 +876,7 @@
         filter:
           deleted_at:
             _is_null: true
-        check:
-          _and:
-            - deleted_at:
-                _is_null: false
-            - templated_from:
-                _is_null: true
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
@@ -921,12 +910,9 @@
                         _eq: teamEditor
             - deleted_at:
                 _is_null: true
-        check:
-          _and:
-            - deleted_at:
-                _is_null: false
-            - templated_from:
-                _is_null: true
+            - is_template:
+                _eq: false
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
