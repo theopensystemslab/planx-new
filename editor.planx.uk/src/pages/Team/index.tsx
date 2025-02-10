@@ -259,9 +259,24 @@ const Team: React.FC = () => {
               }}
             >
               {teamHasFlows && (
-                <ShowingServicesHeader
-                  matchedFlowsCount={matchingFlows?.length || 0}
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <ShowingServicesHeader
+                    matchedFlowsCount={matchingFlows?.length || 0}
+                  />
+                  <Button
+                    onClick={() => setTriggerClearFiltersAndSearch(true)}
+                    variant="link"
+                  >
+                    Clear filters
+                  </Button>
+                </Box>
               )}
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
