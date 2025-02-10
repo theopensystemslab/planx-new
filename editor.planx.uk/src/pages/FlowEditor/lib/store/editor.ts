@@ -211,6 +211,7 @@ export interface EditorStore extends Store.Store {
   }) => void;
   getURLForNode: (nodeId: string) => string;
   getFlowSchema: () => { nodes?: string[]; options?: string[] } | undefined;
+  addChangeLogComment: (flowId: string, actorId: number, comment: string) => Promise<object>;
 }
 
 export const editorStore: StateCreator<
@@ -658,5 +659,25 @@ export const editorStore: StateCreator<
       nodes: Array.from(nodes).sort(),
       options: Array.from(options).sort(),
     };
+  },
+
+  addChangeLogComment: async (flowId, actorId, comment) => {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation InsertFlowChangeLog($flowId: uuid!, $actorId: Int!, $comment: String!) {
+          insert_flow_change_logs_one(
+            object: { flow_id: $flowId, actor_id: $actorId, comment: $comment }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        flowId,
+        actorId,
+        comment
+      },
+    });
+    return response;
   },
 });

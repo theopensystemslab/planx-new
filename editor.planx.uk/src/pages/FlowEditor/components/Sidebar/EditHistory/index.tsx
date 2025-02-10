@@ -10,11 +10,12 @@ import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
 const EditHistory = () => {
-  const [flowId, canUserEditTeam, teamSlug] = useStore(
+  const [flowId, canUserEditTeam, teamSlug, user] = useStore(
     (state) => [
       state.id,
       state.canUserEditTeam,
       state.teamSlug,
+      state.getUser(),
     ],
   );
 
@@ -65,7 +66,7 @@ const EditHistory = () => {
 
   return (
     <Box>
-      {canUserEditTeam(teamSlug) && <AddCommentDialog />}
+      {user?.id && canUserEditTeam(teamSlug) && <AddCommentDialog flowId={flowId} actorId={user.id} />}
       <EditHistoryTimeline operations={data?.operations} />
       {data?.operations.length === 15 && (
         <>
