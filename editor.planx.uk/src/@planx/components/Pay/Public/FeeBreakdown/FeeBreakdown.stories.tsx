@@ -86,7 +86,8 @@ export const WithExemptions: Story = {
   parameters: {
     docs: {
       description: {
-        story: "A fee breakdown with an exemption - this sets the fee to £0",
+        story:
+          "A fee breakdown with an exemption - this sets the payable fee to £0",
       },
     },
   },
