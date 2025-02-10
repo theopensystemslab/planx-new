@@ -16,6 +16,7 @@ import { slugify } from "utils";
 import FlowCard, { Card, CardContent } from "../FlowCard";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import { ShowingServicesTitle } from "./components/ShowingServicesTitle";
 import {
   StartFromTemplateButton,
   TemplateOverview,
@@ -244,18 +245,7 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <Typography variant="h3" component="h2">
-                  Showing X services
-                </Typography>
-              </Box>
+              <ShowingServicesTitle matchedFlows={matchingFlows} />
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body2">
