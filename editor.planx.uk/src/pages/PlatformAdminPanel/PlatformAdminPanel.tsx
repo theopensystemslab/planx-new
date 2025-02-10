@@ -1,7 +1,12 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { AdminPanelData } from "types";
@@ -17,6 +22,12 @@ export const PlatformAdminPanel = () => {
 
   const baseColDef: Partial<GridColDef> = {
     width: 150,
+  };
+
+  const renderIsItemConfigured = (
+    _params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
+  ) => {
+    return _params.value ? <Configured /> : <NotConfigured />;
   };
 
   const columns: GridColDef[] = [
@@ -54,9 +65,7 @@ export const PlatformAdminPanel = () => {
       ...baseColDef,
       field: "planningDataEnabled",
       headerName: "Planning constraints",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
@@ -70,9 +79,7 @@ export const PlatformAdminPanel = () => {
       ...baseColDef,
       field: "govpayEnabled",
       headerName: "GOV.UK Pay",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
@@ -86,49 +93,37 @@ export const PlatformAdminPanel = () => {
       ...baseColDef,
       field: "sendToEmailAddress",
       headerName: "Send to email",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
       field: "bopsSubmissionURL",
       headerName: "BOPS",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
       field: "powerAutomateEnabled",
       headerName: "Power automate",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
       field: "subdomain",
       headerName: "Subdomain",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
       field: "logo",
       headerName: "Logo",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
     {
       ...baseColDef,
       field: "favicon",
       headerName: "Favicon",
-      renderCell: (_params) => {
-        return _params.value ? <Configured /> : <NotConfigured />;
-      },
+      renderCell: renderIsItemConfigured,
     },
   ];
 
