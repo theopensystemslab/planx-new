@@ -12,15 +12,15 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
-import { slugify } from "utils";
-
-import { client } from "../lib/graphql";
-import SimpleMenu from "../ui/editor/SimpleMenu";
-import { useStore } from "./FlowEditor/lib/store";
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "./FlowEditor/utils";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { slugify } from "utils";
+
+import { client } from "../../../lib/graphql";
+import SimpleMenu from "../../../ui/editor/SimpleMenu";
+import { useStore } from "../../FlowEditor/lib/store";
+import { FlowSummary } from "../../FlowEditor/lib/store/editor";
+import { formatLastEditMessage } from "../../FlowEditor/utils";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -163,6 +163,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
   };
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
+  const isStatutoryApplicationType =
+    flow.publishedFlows?.[0]?.isStatutoryApplicationType;
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
@@ -177,6 +179,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
       type: FlowTagType.ServiceType,
       displayName: "Submission",
       shouldAddTag: isSubmissionService,
+    },
+    {
+      type: FlowTagType.ApplicationType,
+      displayName: "Statutory",
+      shouldAddTag: isStatutoryApplicationType,
     },
   ];
 
