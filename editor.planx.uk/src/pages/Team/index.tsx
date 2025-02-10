@@ -1,6 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -259,24 +258,12 @@ const Team: React.FC = () => {
               }}
             >
               {teamHasFlows && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
-                  <ShowingServicesHeader
-                    matchedFlowsCount={matchingFlows?.length || 0}
-                  />
-                  <Button
-                    onClick={() => setTriggerClearFiltersAndSearch(true)}
-                    variant="link"
-                  >
-                    Clear filters
-                  </Button>
-                </Box>
+                <ShowingServicesHeader
+                  matchedFlowsCount={matchingFlows?.length || 0}
+                  setTriggerClearFiltersAndSearch={
+                    setTriggerClearFiltersAndSearch
+                  }
+                />
               )}
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
