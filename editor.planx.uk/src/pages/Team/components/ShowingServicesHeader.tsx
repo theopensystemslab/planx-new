@@ -1,23 +1,16 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { useEffect, useState } from "react";
 
 export const ShowingServicesHeader = ({
-  matchedFlows,
+  matchedFlowsCount,
 }: {
-  matchedFlows: FlowSummary[] | null;
+  matchedFlowsCount: number;
 }) => {
-  const [numberOfFlows, setNumberOfFlows] = useState(matchedFlows?.length || 0);
-
-  useEffect(() => {
-    setNumberOfFlows(matchedFlows?.length || 0);
-  }, [matchedFlows]);
-
   const showingServicesMessage =
-    numberOfFlows !== 1
-      ? `Showing ${numberOfFlows} services`
-      : `Showing ${numberOfFlows} service`;
+    matchedFlowsCount !== 1
+      ? `Showing ${matchedFlowsCount} services`
+      : `Showing ${matchedFlowsCount} service`;
 
   return (
     <Box
