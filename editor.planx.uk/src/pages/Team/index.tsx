@@ -13,9 +13,10 @@ import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
-import FlowCard, { Card, CardContent } from "../FlowCard";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import FlowCard, { Card, CardContent } from "./components/FlowCard";
+import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import {
   StartFromTemplateButton,
   TemplateOption,
@@ -244,18 +245,11 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <Typography variant="h3" component="h2">
-                  Showing X services
-                </Typography>
-              </Box>
+              {teamHasFlows && (
+                <ShowingServicesHeader
+                  matchedFlowsCount={matchingFlows?.length || 0}
+                />
+              )}
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Typography variant="body2">
