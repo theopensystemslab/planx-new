@@ -1,19 +1,19 @@
-import Close from "@mui/icons-material/Close";
-import Done from "@mui/icons-material/Done";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
 
-const Configured: React.FC = () => <Done color="success" fontSize="small" />;
-
-const NotConfigured: React.FC = () => <Close color="error" fontSize="small" />;
+import { Article4Status } from "./components/Article4Status";
+import { Configured, NotConfigured } from "./components/icons";
 
 export const PlatformAdminPanel = () => {
-  const adminPanelData = useStore((state) => state.adminPanelData);
+  const adminPanelData: AdminPanelData[] | undefined = useStore(
+    (state) => state.adminPanelData,
+  );
 
   const baseColDef: Partial<GridColDef> = {
     width: 150,
@@ -56,6 +56,14 @@ export const PlatformAdminPanel = () => {
       headerName: "Planning constraints",
       renderCell: (_params) => {
         return _params.value ? <Configured /> : <NotConfigured />;
+      },
+    },
+    {
+      ...baseColDef,
+      field: "article4sEnabled",
+      headerName: "Article 4s (API)",
+      renderCell: (_params) => {
+        return <Article4Status teamSlug={_params.row.slug} />;
       },
     },
     {
