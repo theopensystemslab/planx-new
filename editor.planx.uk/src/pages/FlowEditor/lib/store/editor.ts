@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
-  ComponentType as TYPES,
   flatFlags,
   FlowGraph,
   FlowStatus,
   NodeId,
   OrderedFlow,
+  ComponentType as TYPES,
 } from "@opensystemslab/planx-core/types";
 import {
   add,
@@ -19,7 +19,7 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
@@ -28,13 +28,12 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
-import { slugify } from "utils";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { type Store } from ".";
 import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getConnection } from "./../sharedb";
-import { type Store } from ".";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
 
@@ -170,8 +169,8 @@ export interface EditorStore extends Store.Store {
   ) => Promise<string>;
   createFlowFromTemplate: (
     templateId: string,
-    teamId: string,
-  ) => Promise<object>;
+    teamId: number,
+  ) => Promise<AxiosResponse>;
   deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
