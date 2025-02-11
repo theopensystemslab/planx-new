@@ -1,4 +1,4 @@
-  import Box, { BoxProps } from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { borderedFocusStyle } from "theme";
@@ -19,7 +19,7 @@ const Root = styled(Box, {
     backgroundColor: theme.palette.common.white,
     "&:focus-within": {
       ...borderedFocusStyle,
-      background: "inherit",
+      background: theme.palette.common.white,
     },
     ...(disabled && {
       border: `2px solid ${theme.palette.grey[400]}`,
