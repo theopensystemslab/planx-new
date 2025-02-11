@@ -7,7 +7,7 @@ const createFlowFromTemplate = async (
   // Fetch the source template data
   const sourceTemplate = await getFlowData(templateId);
 
-  const newSlug = sourceTemplate.name + "-template";
+  const newSlug = sourceTemplate.slug + "-template";
   const newName = sourceTemplate.name + " (template)";
 
   // Create the new templated flow, including an associated operation and initial publish, and templated_from reference to the source templateId

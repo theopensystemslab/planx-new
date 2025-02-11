@@ -26,7 +26,7 @@ import { FlowSummary } from "../FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "../FlowEditor/utils";
 import {
   StartFromTemplateButton,
-  TemplateOverview,
+  TemplateOption,
 } from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
@@ -333,7 +333,7 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const { data: templates } = useQuery<{ flows: TemplateOverview[] }>(gql`
+  const { data: templates } = useQuery<{ flows: TemplateOption[] }>(gql`
     query GetTemplates {
       flows(where: { is_template: { _eq: true } }) {
         id
