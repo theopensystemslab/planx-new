@@ -262,7 +262,7 @@ export async function updateFlow(client, flowId: UUID): Promise<UUID> {
   const { update_flows_by_pk: response } = await client.request(
     gql`
       mutation updateFlow($flowId: uuid!) {
-        result: update_flows_by_pk(
+        update_flows_by_pk(
           pk_columns: { id: $flowId }
           _set: { slug: "new-slug", name: "new Name" }
         ) {

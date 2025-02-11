@@ -1,4 +1,9 @@
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import { Issuer } from "openid-client";
+import type { IssuerMetadata } from "openid-client";
 import type { Authenticator } from "passport";
 import passport from "passport";
 
@@ -14,7 +19,29 @@ export default async (): Promise<Authenticator> => {
   const customPassport = new passport.Passport();
 
   // instantiate Microsoft OIDC client, and use it to build the related strategy
-  const microsoftIssuer = await Issuer.discover(MICROSOFT_OPENID_CONFIG_URL);
+  // we also keep said config as a fixture to enable offline local development
+  let microsoftIssuer;
+  if (
+    process.env.APP_ENVIRONMENT == "development" &&
+    process.env.DEVELOP_OFFLINE
+  ) {
+    console.info(
+      "Working offline: using saved Microsoft OIDC configuration in auth/fixtures",
+    );
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const fixturePath = path.resolve(
+      __dirname,
+      "fixtures",
+      "microsoft-openid-configuration.json",
+    );
+    const microsoftIssuerConfig: IssuerMetadata = JSON.parse(
+      fs.readFileSync(fixturePath, "utf-8"),
+    );
+    microsoftIssuer = new Issuer(microsoftIssuerConfig);
+  } else {
+    microsoftIssuer = await Issuer.discover(MICROSOFT_OPENID_CONFIG_URL);
+  }
   console.debug("Discovered issuer %s", microsoftIssuer.issuer);
   const microsoftOidcClient = new microsoftIssuer.Client(
     getMicrosoftClientConfig(),
