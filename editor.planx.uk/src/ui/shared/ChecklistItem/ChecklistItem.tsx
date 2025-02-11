@@ -6,7 +6,8 @@ import * as React from "react";
 import Checkbox from "../Checkbox/Checkbox";
 
 const Root = styled(Box)(({ theme }) => ({
-  width: "100%",
+  width: "auto",
+  justifySelf: "flex-start",
   marginTop: theme.spacing(1),
   marginBottom: theme.spacing(1),
   display: "flex",
