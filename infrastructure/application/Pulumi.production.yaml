@@ -34,6 +34,8 @@ config:
     secure: AAABAL5G2cNl6XIQA0vcP6El4Us7Vk8Cz9JViRon25crc8MC0ix4ox2mE+XawsxYbLRwGfaRIJo=
   application:file-api-key-tewkesbury:
     secure: AAABAA1cz4BbfrTaXhcERQD0MaMSky0fC6ej9/N0n1IBB2w4iBd3S2hNi0T39VEiAB6CNouB+yElaoR7ZWg1xaIIJX2K6TGl
+  application:skip-rate-limit-secret:
+    secure: AAABADPv0Fp55IK8xL0Kxx/Kq2sFeRIgbKn0sgHBFhTsWh09kV3/OyG0d/wkE3zm+15zbud0GR4TSl4z//MV5XgxLWDhJgGJ
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAN5E+De3A3HtpLVaSNTDwk9Uz4r2d5g8SIRVbNOd2fj3eU+lGJXjVbEAnxezr14hwabbfwW2ptjcFzqkhG7OmQ==

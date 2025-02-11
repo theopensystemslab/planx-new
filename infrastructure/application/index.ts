@@ -393,6 +393,10 @@ export = async () => {
             value: config.requireSecret("file-api-key-tewkesbury"),
           },
           {
+            name: "SKIP_RATE_LIMIT_SECRET",
+            value: config.requireSecret("skip-rate-limit-secret"),
+          },
+          {
             name: "GOOGLE_CLIENT_ID",
             value: config.require("google-client-id"),
           },

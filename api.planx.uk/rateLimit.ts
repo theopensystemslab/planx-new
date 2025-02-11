@@ -7,6 +7,12 @@ const apiLimiter = rateLimit({
   max: 250,
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req: Request, _res: Response) => {
+    // add a mechanism (guarded by a secret) for skipping rate limit when load testing
+    return (
+      req.get("X-Skip-Rate-Limit-Secret") === process.env.SKIP_RATE_LIMIT_SECRET
+    );
+  },
 });
 
 const HASURA_ONLY_SEND_EMAIL_TEMPLATES = ["reminder", "expiry"];

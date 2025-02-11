@@ -23,7 +23,7 @@ function useMinio() {
     // Points to Minio
     return {
       endpoint: `http://minio:${process.env.MINIO_PORT}`,
-      s3ForcePathStyle: true,
+      forcePathStyle: true,
       signatureVersion: "v4",
     };
   }
