@@ -18,21 +18,24 @@ interface SearchBoxProps<T> {
   records: T[] | null;
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   searchKey: FuseOptionKey<T>[];
+  clearSearch?: boolean;
 }
 
 export const SearchBox = <T extends object>({
   records,
   setRecords,
   searchKey,
+  clearSearch = false,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
 
   const searchKeys = useMemo(() => searchKey, []);
 
-  const formik = useFormik({
+  const { submitForm, setFieldValue, values, resetForm } = useFormik({
     initialValues: { pattern: "" },
     onSubmit: ({ pattern }) => {
+      if (clearSearch) return setRecords(records);
       setIsSearching(true);
       debouncedSearch(pattern);
     },
@@ -63,6 +66,13 @@ export const SearchBox = <T extends object>({
     }
   }, [results, setRecords, searchedTerm, records]);
 
+  useEffect(() => {
+    if (clearSearch) {
+      resetForm();
+      submitForm();
+    }
+  }, [clearSearch, resetForm, submitForm]);
+
   return (
     <Box maxWidth={360}>
       <InputRow>
@@ -77,18 +87,18 @@ export const SearchBox = <T extends object>({
               }}
               name="search"
               id="search"
-              value={formik.values.pattern}
+              value={values.pattern}
               onChange={(e) => {
-                formik.setFieldValue("pattern", e.target.value);
-                formik.submitForm();
+                setFieldValue("pattern", e.target.value);
+                submitForm();
               }}
             />
             {searchedTerm && !isSearching && (
               <IconButton
                 aria-label="clear search"
                 onClick={() => {
-                  formik.setFieldValue("pattern", "");
-                  formik.submitForm();
+                  setFieldValue("pattern", "");
+                  submitForm();
                 }}
                 size="small"
                 sx={{
@@ -107,8 +117,8 @@ export const SearchBox = <T extends object>({
               <IconButton
                 aria-label="clear search"
                 onClick={() => {
-                  formik.setFieldValue("pattern", "");
-                  formik.submitForm();
+                  setFieldValue("pattern", "");
+                  submitForm();
                 }}
                 size="small"
                 sx={{
