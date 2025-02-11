@@ -1,8 +1,10 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import {
   DataGrid,
+  gridClasses,
   GridColDef,
   GridRenderCellParams,
   GridTreeNodeWithRender,
@@ -171,6 +173,9 @@ export const PlatformAdminPanel = () => {
               rows={filteredPanelData}
               columns={columns}
               getRowHeight={() => "auto"}
+              getRowClassName={(params) =>
+                params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
+              }
               sx={{
                 ".MuiDataGrid-cell": {
                   padding: "10px",
@@ -178,6 +183,23 @@ export const PlatformAdminPanel = () => {
                 },
                 ".MuiDataGrid-columnHeaderTitle": {
                   fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                },
+
+                [`& .${gridClasses.row}.odd`]: {
+                  backgroundColor: (theme) => theme.palette.background.paper,
+                  "&.Mui-selected": {
+                    backgroundColor: (theme) =>
+                      alpha(theme.palette.primary.main, 0.05),
+                  },
+                },
+                [`& .${gridClasses.row}.even, & .${gridClasses.row}.odd`]: {
+                  "&:hover": {
+                    backgroundColor: (theme) =>
+                      alpha(theme.palette.primary.main, 0.15),
+                    "@media (hover: none)": {
+                      backgroundColor: "transparent",
+                    },
+                  },
                 },
               }}
             />
