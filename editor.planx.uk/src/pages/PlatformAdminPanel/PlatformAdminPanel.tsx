@@ -40,9 +40,9 @@ export const PlatformAdminPanel = () => {
   };
 
   const renderIsItemConfigured = (
-    _params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
+    params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
   ) => {
-    return _params.value ? <Configured /> : <NotConfigured />;
+    return params.value ? <Configured /> : <NotConfigured />;
   };
 
   const columns: GridColDef[] = [
@@ -62,12 +62,22 @@ export const PlatformAdminPanel = () => {
       field: "liveFlows",
       headerName: "Live services",
       width: 450,
-      renderCell: (_params) => {
+      renderCell: (params) => {
         return (
-          <Box>
-            {_params.value?.map((flowName: string, index: number) => {
+          <Box
+            component={"ol"}
+            padding={0}
+            margin={0}
+            sx={{ listStyleType: "none" }}
+          >
+            {params.value?.map((flowName: string, index: number) => {
               return (
-                <Typography py={0.3} variant="body2" key={index}>
+                <Typography
+                  py={0.4}
+                  variant="body2"
+                  key={index}
+                  component={"li"}
+                >
                   {flowName}
                 </Typography>
               );
@@ -86,8 +96,8 @@ export const PlatformAdminPanel = () => {
       ...baseColDef,
       field: "article4sEnabled",
       headerName: "Article 4s (API)",
-      renderCell: (_params) => {
-        return <Article4Status teamSlug={_params.row.slug} />;
+      renderCell: (params) => {
+        return <Article4Status teamSlug={params.row.slug} />;
       },
     },
     {
@@ -100,8 +110,8 @@ export const PlatformAdminPanel = () => {
       ...baseColDef,
       field: "govnotifyPersonalisation",
       headerName: "GOV.UK Notify",
-      renderCell: (_params) => {
-        return _params.value?.helpEmail ? <Configured /> : <NotConfigured />;
+      renderCell: (params) => {
+        return params.value?.helpEmail ? <Configured /> : <NotConfigured />;
       },
     },
     {
