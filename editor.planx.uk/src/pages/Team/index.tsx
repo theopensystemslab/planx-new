@@ -38,7 +38,7 @@ const DashboardList = styled("ul")(({ theme }) => ({
 }));
 
 const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
-  <DashboardList sx={{ paddingTop: 0 }}>
+  <DashboardList sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
@@ -93,11 +93,6 @@ const Team: React.FC = () => {
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
-      displayName: "Name",
-      fieldName: "slug",
-      directionNames: { asc: "A - Z", desc: "Z - A" },
-    },
-    {
       displayName: "Last updated",
       fieldName: "updatedAt",
       directionNames: { asc: "Oldest first", desc: "Newest first" },
@@ -106,6 +101,11 @@ const Team: React.FC = () => {
       displayName: "Last published",
       fieldName: `publishedFlows.0.publishedAt`,
       directionNames: { asc: "Oldest first", desc: "Newest first" },
+    },
+    {
+      displayName: "Name",
+      fieldName: "slug",
+      directionNames: { asc: "A - Z", desc: "Z - A" },
     },
   ];
 
