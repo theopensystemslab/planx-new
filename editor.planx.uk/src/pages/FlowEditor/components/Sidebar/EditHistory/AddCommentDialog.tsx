@@ -21,9 +21,10 @@ export const AddCommentDialog = ({ flowId, actorId }: AddCommentDialogProps) => 
   
   const formik = useFormik<{ comment: string }>({
     initialValues: { comment: "" },
-    onSubmit: async ({ comment }) => {
-      await useStore.getState().addChangeLogComment(flowId, actorId, comment);
+    onSubmit: async (values, { resetForm }) => {
+      await useStore.getState().addChangeLogComment(flowId, actorId, values.comment);
       setDialogOpen(false);
+      resetForm({ values });
     },
     validateOnBlur: false,
     validateOnChange: false,

@@ -78,7 +78,7 @@ export const EditHistoryTimeline = ({ data = [] }: EditHistoryTimelineProps) => 
       }}
     >
       {data?.map((op: HistoryItem, i: number) => (
-        <TimelineItem key={op.id}>
+        <TimelineItem key={`${op.type}-${op.id}`}>
           <TimelineSeparator>
             <TimelineDot
               sx={{
