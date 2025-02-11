@@ -87,7 +87,7 @@ export const SortControl = <T extends object>({
     const sortNewFlows = orderBy(records, fieldName, sortDirection);
     setRecords(sortNewFlows);
     updateSortParam(selectedDisplaySlug);
-  }, [selectedSort, sortDirection]);
+  }, [selectedSort, sortDirection, records]);
 
   return (
     <Box display={"flex"} gap={1}>

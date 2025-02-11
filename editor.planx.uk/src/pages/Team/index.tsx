@@ -89,6 +89,10 @@ const Team: React.FC = () => {
     null,
   );
   const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
+  const [sortedFlows, setSortedFlows] = useState<FlowSummary[] | null>(null);
+
+
+  const route = useCurrentRoute();
 
   useEffect(() => {
     const diffFlows =
@@ -204,40 +208,44 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <ShowingServicesHeader
-                  matchedFlowsCount={matchingFlows?.length || 0}
-                />
-                {flowsHaveBeenFiltered && (
-                  <Button
-                    onClick={() => setShouldClearFilters(true)}
-                    variant="link"
-                  >
-                    Clear filters
-                  </Button>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <ShowingServicesHeader
+                    matchedFlowsCount={matchingFlows?.length || 0}
+                  />
+                  {flowsHaveBeenFiltered && (
+                    <Button
+                      onClick={() => setShouldClearFilters(true)}
+                      variant="link"
+                    >
+                      Clear filters
+                    </Button>
+                  )}
+                </Box>
+              {hasFeatureFlag("SORT_FLOWS") &&
+                teamHasFlows &&
+                matchingFlows && (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                    <Typography variant="body2">
+                      <strong>Sort by</strong>
+                    </Typography>
+                    <SortControl<FlowSummary>
+                      records={matchingFlows}
+                      setRecords={setSortedFlows}
+                      sortOptions={sortOptions}
+                    />
+                  </Box>
                 )}
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                <Typography variant="body2">
-                  <strong>Sort by</strong>
-                </Typography>
-                <SortControl<FlowSummary>
-                  records={flows}
-                  setRecords={setFlows}
-                  sortOptions={sortOptions}
-                />
-              </Box>
             </Box>
-            {matchingFlows && teamHasFlows && (
+            {sortedFlows && (
               <DashboardList>
-                {matchingFlows.map((flow) => (
+                {sortedFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
                     flows={flows}
