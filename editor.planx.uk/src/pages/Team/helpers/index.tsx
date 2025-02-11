@@ -14,14 +14,15 @@ import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
-import { useStore } from "../FlowEditor/lib/store";
-import { FlowSummary } from "../FlowEditor/lib/store/editor";
-import FlowCard, { Card, CardContent } from "./components/FlowCard";
-import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
+import { useStore } from "../../FlowEditor/lib/store";
+import { FlowSummary } from "../../FlowEditor/lib/store/editor";
+import FlowCard, { Card, CardContent } from "../components/FlowCard";
+import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
+import { filterOptions, sortOptions } from "../sortAndFilterOptions";
 import {
   StartFromTemplateButton,
   TemplateOption,
-} from "./StartFromTemplateButton";
+} from "../StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(3, 0),
@@ -96,60 +97,6 @@ const Team: React.FC = () => {
     }
   }, [searchedFlows, filteredFlows, shouldClearFilters]);
 
-  const sortOptions: SortableFields<FlowSummary>[] = [
-    {
-      displayName: "Last updated",
-      fieldName: "updatedAt",
-      directionNames: { asc: "Oldest first", desc: "Newest first" },
-    },
-    {
-      displayName: "Last published",
-      fieldName: `publishedFlows.0.publishedAt`,
-      directionNames: { asc: "Oldest first", desc: "Newest first" },
-    },
-    {
-      displayName: "Name",
-      fieldName: "slug",
-      directionNames: { asc: "A - Z", desc: "Z - A" },
-    },
-  ];
-
-  const checkFlowStatus: FilterOptions<FlowSummary>["validationFn"] = (
-    flow,
-    value,
-  ) => flow.status === value;
-
-  const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
-    flow,
-    _value,
-  ) => flow.publishedFlows[0]?.hasSendComponent;
-
-  const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
-    flow,
-    _value,
-  ) => flow.publishedFlows[0]?.isStatutoryApplicationType;
-
-  const filterOptions: FilterOptions<FlowSummary>[] = [
-    {
-      displayName: "Online status",
-      optionKey: "status",
-      optionValue: ["online", "offline"],
-      validationFn: checkFlowStatus,
-    },
-    {
-      displayName: "Service type",
-      optionKey: `publishedFlows.0.hasSendComponent`,
-      optionValue: ["submission"],
-      validationFn: checkFlowServiceType,
-    },
-    {
-      displayName: "Application type",
-      optionKey: `name`,
-      optionValue: ["statutory"],
-      validationFn: checkFlowApplicationType,
-    },
-  ];
-
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
@@ -213,7 +160,7 @@ const Team: React.FC = () => {
             </Typography>
             {showAddFlowButton && <AddFlowButton flows={flows} />}
           </Box>
-          {teamHasFlows && hasFeatureFlag("SORT_FLOWS") && (
+          {teamHasFlows && (
             <SearchBox<FlowSummary>
               records={flows}
               setRecords={setSearchedFlows}
@@ -236,14 +183,12 @@ const Team: React.FC = () => {
               )}
             </Box>
             <Box>
-              {flows && (
-                <Filters<FlowSummary>
-                  records={flows}
-                  setFilteredRecords={setFilteredFlows}
-                  filterOptions={filterOptions}
-                  clearFilters={shouldClearFilters}
-                />
-              )}
+              <Filters<FlowSummary>
+                records={flows}
+                setFilteredRecords={setFilteredFlows}
+                filterOptions={filterOptions}
+                clearFilters={shouldClearFilters}
+              />
             </Box>
             <Box
               sx={{
@@ -253,40 +198,36 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-              {teamHasFlows && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
-                  <ShowingServicesHeader
-                    matchedFlowsCount={matchingFlows?.length || 0}
-                  />
-                  {flowsHaveBeenFiltered && (
-                    <Button
-                      onClick={() => setShouldClearFilters(true)}
-                      variant="link"
-                    >
-                      Clear filters
-                    </Button>
-                  )}
-                </Box>
-              )}
-              {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body2">
-                    <strong>Sort by</strong>
-                  </Typography>
-                  <SortControl<FlowSummary>
-                    records={flows}
-                    setRecords={setFlows}
-                    sortOptions={sortOptions}
-                  />
-                </Box>
-              )}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <ShowingServicesHeader
+                  matchedFlowsCount={matchingFlows?.length || 0}
+                />
+                {flowsHaveBeenFiltered && (
+                  <Button
+                    onClick={() => setShouldClearFilters(true)}
+                    variant="link"
+                  >
+                    Clear filters
+                  </Button>
+                )}
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                <Typography variant="body2">
+                  <strong>Sort by</strong>
+                </Typography>
+                <SortControl<FlowSummary>
+                  records={flows}
+                  setRecords={setFlows}
+                  sortOptions={sortOptions}
+                />
+              </Box>
             </Box>
             {matchingFlows && teamHasFlows && (
               <DashboardList>
