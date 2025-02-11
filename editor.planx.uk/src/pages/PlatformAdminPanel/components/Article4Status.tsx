@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 
-import { Configured, NotConfigured } from "../../../ui/shared/DataTable/icons";
+import { False, True } from "../../../ui/shared/DataTable/components/icons";
 
 export const Article4Status = ({ teamSlug }: { teamSlug: string }) => {
   const a4Endpoint = `${
@@ -12,5 +12,5 @@ export const Article4Status = ({ teamSlug }: { teamSlug: string }) => {
     () => (teamSlug ? a4Endpoint : null),
     fetcher,
   );
-  return !isValidating && a4Check?.status ? <Configured /> : <NotConfigured />;
+  return !isValidating && a4Check?.status ? <True /> : <False />;
 };

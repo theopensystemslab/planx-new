@@ -4,13 +4,13 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
-import {
-  ColumnConfig,
-  ColumnType,
-  DataTable,
-} from "ui/shared/DataTable/DataTable";
+import { DataTable } from "ui/shared/DataTable/DataTable";
+import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
 
-import { Configured, NotConfigured } from "../../ui/shared/DataTable/icons";
+import {
+  False as NotConfigured,
+  True as Configured,
+} from "../../ui/shared/DataTable/components/icons";
 import { Article4Status } from "./components/Article4Status";
 
 export const PlatformAdminPanel = () => {

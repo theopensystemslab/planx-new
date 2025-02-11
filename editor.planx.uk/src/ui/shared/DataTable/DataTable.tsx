@@ -1,46 +1,15 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridTreeNodeWithRender,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React from "react";
 
-import { Configured, NotConfigured } from "./icons";
-
-export const ColumnType = {
-  BOOLEAN: "boolean",
-  ARRAY: "array",
-  CUSTOM: "custom",
-} as const;
-
-type ObjectValues<T> = T[keyof T];
-
-type RenderCellParams = GridRenderCellParams<
-  any,
-  any,
-  any,
-  GridTreeNodeWithRender
->;
-
-export type ColumnRenderType = ObjectValues<typeof ColumnType>;
-
-export type ColumnConfig = {
-  field: string;
-  headerName: string;
-  type?: ColumnRenderType;
-  width?: number;
-  customComponent?:
-    | ((params: RenderCellParams) => JSX.Element | undefined)
-    | undefined;
-};
-
-interface DataGridProps {
-  rows: readonly any[] | undefined;
-  columns: Array<ColumnConfig>;
-}
+import { False, True } from "./components/icons";
+import {
+  ColumnConfig,
+  ColumnType,
+  DataGridProps,
+  RenderCellParams,
+} from "./types";
 
 export const DataTable = ({ rows, columns }: DataGridProps) => {
   const baseColDef: Partial<GridColDef> = {
@@ -49,7 +18,7 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
 
   const componentRegistry = {
     [ColumnType.BOOLEAN]: (params: RenderCellParams) =>
-      params.value ? <Configured /> : <NotConfigured />,
+      params.value ? <True /> : <False />,
     [ColumnType.ARRAY]: (params: RenderCellParams) => (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
         {params.value.map((item: string, index: number) => (
