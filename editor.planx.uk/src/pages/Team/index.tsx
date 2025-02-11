@@ -9,7 +9,6 @@ import { isEmpty, orderBy } from "lodash";
 import { Route } from "navi";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
-import { Paths } from "type-fest";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -103,8 +102,6 @@ const Team: React.FC = () => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
       setFlows(flows);
-      setFilteredFlows(flows);
-      setSearchedFlows(flows);
     });
   }, [teamId, setFlows, getFlows]);
 

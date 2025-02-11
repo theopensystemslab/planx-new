@@ -140,6 +140,7 @@ export const Filters = <T extends object>({
 
     if (!values.filters) {
       parseStateFromURL();
+      setFilteredRecords(records);
     }
   }, []);
 
