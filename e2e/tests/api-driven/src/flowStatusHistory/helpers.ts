@@ -13,8 +13,9 @@ export const setup = async () => {
 };
 
 export const cleanup = async () => {
-  await $admin.user._destroyAll();
+  await $admin.flow._destroyPublishedAll();
   await $admin.flow._destroyAll();
+  await $admin.user._destroyAll();
   await $admin.team._destroyAll();
 };
 

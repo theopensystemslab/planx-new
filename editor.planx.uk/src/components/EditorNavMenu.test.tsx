@@ -37,12 +37,12 @@ describe("globalLayoutRoutes", () => {
     } as ReturnType<typeof mockNavi.useCurrentRoute>);
   });
 
-  it("does not display for teamEditors", () => {
+  it("displays for teamEditors", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamEditor");
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    expect(menuItems).toHaveLength(4);
   });
 
   it("displays for platformAdmins", () => {
@@ -50,7 +50,7 @@ describe("globalLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(3);
+    expect(menuItems).toHaveLength(6);
     expect(within(menuItems[0]).getByText("Select a team")).toBeInTheDocument();
   });
 });
@@ -76,7 +76,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(4);
+    expect(menuItems).toHaveLength(5);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
   });
 
@@ -85,7 +85,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(4);
+    expect(menuItems).toHaveLength(5);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
   });
 });
@@ -112,7 +112,7 @@ describe("flowLayoutRoutes", () => {
 
     const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions log")).toBeInTheDocument();
   });
 
@@ -121,7 +121,7 @@ describe("flowLayoutRoutes", () => {
 
     const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(5);
     expect(getByLabelText("Submissions log")).toBeInTheDocument();
   });
 });

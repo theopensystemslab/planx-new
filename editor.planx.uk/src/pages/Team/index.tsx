@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
@@ -9,7 +9,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -17,16 +16,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useNavigation } from "react-navi";
 import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AddButton } from "ui/editor/AddButton";
-import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
-import InputLabel from "ui/public/InputLabel";
 import { slugify } from "utils";
 
-import { client } from "../lib/graphql";
-import SimpleMenu from "../ui/editor/SimpleMenu";
-import { useStore } from "./FlowEditor/lib/store";
-import { FlowSummary } from "./FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "./FlowEditor/utils";
+import { client } from "../../lib/graphql";
+import SimpleMenu from "../../ui/editor/SimpleMenu";
+import { useStore } from "../FlowEditor/lib/store";
+import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import { formatLastEditMessage } from "../FlowEditor/utils";
+import {
+  StartFromTemplateButton,
+  TemplateOption,
+} from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(0, 0, 3),
@@ -140,10 +141,10 @@ const FlowItem: React.FC<FlowItemProps> = ({
         refreshFlows();
       });
   };
-  const handleMove = (newTeam: string) => {
+  const handleMove = (newTeam: string, flowName: string) => {
     useStore
       .getState()
-      .moveFlow(flow.id, newTeam)
+      .moveFlow(flow.id, newTeam, flowName)
       .then(() => {
         refreshFlows();
       });
@@ -182,11 +183,8 @@ const FlowItem: React.FC<FlowItemProps> = ({
                 onClick: async () => {
                   const newName = prompt("New name", flow.name);
                   if (newName && newName !== flow.name) {
-                    const newSlug = slugify(newName);
-                    const duplicateFlowName = flows?.find(
-                      (flow: any) => flow.slug === newSlug,
-                    );
-                    if (!duplicateFlowName) {
+                    const uniqueFlow = getUniqueFlow(newName, flows);
+                    if (uniqueFlow) {
                       await client.mutate({
                         mutation: gql`
                           mutation UpdateFlowSlug(
@@ -209,16 +207,12 @@ const FlowItem: React.FC<FlowItemProps> = ({
                         variables: {
                           teamId: teamId,
                           slug: flow.slug,
-                          newSlug: newSlug,
-                          newName: newName,
+                          newSlug: uniqueFlow.slug,
+                          newName: uniqueFlow.name,
                         },
                       });
 
                       refreshFlows();
-                    } else if (duplicateFlowName) {
-                      alert(
-                        `The flow "${newName}" already exists. Enter a unique flow name to continue`,
-                      );
                     }
                   }
                 },
@@ -233,14 +227,16 @@ const FlowItem: React.FC<FlowItemProps> = ({
               {
                 label: "Move",
                 onClick: () => {
-                  const newTeam = prompt("New team");
+                  const newTeam = prompt(
+                    "Enter the destination team's slug. A slug is the URL name of a team, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
+                  );
                   if (newTeam) {
                     if (slugify(newTeam) === teamSlug) {
                       alert(
                         `This flow already belongs to ${teamSlug}, skipping move`,
                       );
                     } else {
-                      handleMove(slugify(newTeam));
+                      handleMove(slugify(newTeam), flow.name);
                     }
                   }
                 },
@@ -287,93 +283,15 @@ const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
     const newFlowName = prompt("Service name");
     if (!newFlowName) return;
 
-    const newFlowSlug = slugify(newFlowName);
-    const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
+    const uniqueFlow = getUniqueFlow(newFlowName, flows);
 
-    if (duplicateFlowName) {
-      alert(
-        `The flow "${newFlowName}" already exists. Enter a unique flow name to continue`,
-      );
-      return;
+    if (uniqueFlow) {
+      const newId = await createFlow(teamId, uniqueFlow.slug, uniqueFlow.name);
+      navigate(`/${teamSlug}/${newId}`);
     }
-
-    const newId = await createFlow(teamId, newFlowSlug, newFlowName);
-    navigate(`/${teamSlug}/${newId}`);
   };
 
   return <AddButton onClick={addFlow}>Add a new service</AddButton>;
-};
-
-const StartFromTemplateButton: React.FC<{}> = () => {
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
-  // TODO fetch flows marked as "source templates"
-  const mockTemplateOptions = [
-    {
-      id: "123-456",
-      name: "Apply for planning permission",
-      slug: "apply-for-planning-permission",
-    },
-    {
-      id: "789-123",
-      name: "Apply for a lawful development certificate",
-      slug: "apply-for-a-lawful-development-certificate",
-    },
-  ];
-
-  return (
-    <Box mt={1}>
-      <AddButton onClick={() => setDialogOpen(true)}>
-        Start from a template
-      </AddButton>
-      <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        maxWidth="md"
-      >
-        <DialogTitle variant="h3" component="h1">
-          {`Start from a template`}
-        </DialogTitle>
-        <DialogContent>
-          {`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dictum interdum tellus laoreet faucibus. Aliquam ultricies vitae nunc non efficitur. Mauris leo nulla, luctus sit amet ullamcorper a, porta at mauris. Integer nec elit a magna dapibus bibendum.`}
-          <Box mt={2}>
-            <InputLabel
-              label="Available templates"
-              id={`select-label-templates`}
-            >
-              <SelectInput
-                bordered
-                required={true}
-                title={"Available templates"}
-                labelId={`select-label-templates`}
-                value={mockTemplateOptions[0].slug}
-                onChange={() => console.log("TODO formik?")}
-                name={"templates"}
-              >
-                {mockTemplateOptions.map((option) => (
-                  <MenuItem key={option.id} value={option.slug}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </SelectInput>
-            </InputLabel>
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ paddingX: 2 }}>
-          <Button onClick={() => setDialogOpen(false)}>BACK</Button>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => console.log("TODO create template")}
-          >
-            CREATE TEMPLATE
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
 };
 
 const Team: React.FC = () => {
@@ -415,8 +333,23 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
+  const { data: templates } = useQuery<{ flows: TemplateOption[] }>(gql`
+    query GetTemplates {
+      flows(where: { is_template: { _eq: true } }) {
+        id
+        slug
+        name
+      }
+    }
+  `);
+
   const teamHasFlows = flows && Boolean(flows.length);
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const showAddTemplateButton =
+    showAddFlowButton &&
+    templates &&
+    Boolean(templates?.flows.length) &&
+    hasFeatureFlag("TEMPLATES");
 
   return (
     <Container maxWidth="formWrap">
@@ -449,8 +382,8 @@ const Team: React.FC = () => {
           }}
         >
           {showAddFlowButton && <AddFlowButton flows={flows} />}
-          {showAddFlowButton && hasFeatureFlag("TEMPLATES") && (
-            <StartFromTemplateButton />
+          {showAddTemplateButton && (
+            <StartFromTemplateButton templates={templates.flows} />
           )}
         </Box>
       </Box>
@@ -483,3 +416,21 @@ const Team: React.FC = () => {
 };
 
 export default Team;
+
+const getUniqueFlow = (
+  name: string,
+  flows: FlowSummary[],
+): { slug: string; name: string } | undefined => {
+  const newFlowSlug = slugify(name);
+  const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
+
+  if (duplicateFlowName) {
+    const updatedName = prompt(
+      `A service already exists with the name '${name}', enter another name`,
+      name,
+    );
+    if (!updatedName) return;
+    return getUniqueFlow(updatedName, flows);
+  }
+  return { slug: newFlowSlug, name: name };
+};

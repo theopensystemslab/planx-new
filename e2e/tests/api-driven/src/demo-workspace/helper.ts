@@ -20,6 +20,7 @@ export type DataTableRecord = Record<string, string>;
 export type DataTableArray = Record<string, string>[];
 
 export const cleanup = async () => {
+  await $admin.flow._destroyPublishedAll();
   await $admin.flow._destroyAll();
   await $admin.team._destroyAll();
   await $admin.user._destroyAll();

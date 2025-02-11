@@ -1,11 +1,14 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import Info from "@mui/icons-material/Info";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import PaletteIcon from "@mui/icons-material/Palette";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import SchoolIcon from "@mui/icons-material/School";
 import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -138,6 +141,24 @@ function EditorNavMenu() {
       route: "admin-panel",
       accessibleBy: ["platformAdmin"],
     },
+    {
+      title: "Resources",
+      Icon: MenuBookIcon,
+      route: "resources",
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+    },
+    {
+      title: "Onboarding",
+      Icon: AssignmentTurnedInIcon,
+      route: "onboarding",
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+    },
+    {
+      title: "Tutorials",
+      Icon: SchoolIcon,
+      route: "tutorials",
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+    },
   ];
 
   const teamLayoutRoutes: Route[] = [
@@ -165,6 +186,12 @@ function EditorNavMenu() {
       route: `/${teamSlug}/members`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
+    {
+      title: "Feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/feedback`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
   ];
 
   const flowLayoutRoutesMain: Route[] = [
@@ -190,12 +217,6 @@ function EditorNavMenu() {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions-log`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-    },
-    {
-      title: "Feedback",
-      Icon: RateReviewIcon,
-      route: `/${teamSlug}/${flowSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];

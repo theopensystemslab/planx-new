@@ -53,21 +53,23 @@ describe("Checklist Component for a Platform Admin", () => {
     expect(optionTexts).toEqual(expect.arrayContaining(tagDisplayNames));
   });
 
-  it("renders all tags with Placeholder selected as a button", async () => {
+  it("renders all tags with Customisation selected as a button", async () => {
     const { queryByTestId, queryByRole } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent
           text=""
-          node={{ data: { text: "", tags: ["placeholder"] } }}
+          node={{ data: { text: "", tags: ["customisation"] } }}
         />
       </DndProvider>,
     );
 
-    const placeholderChip = queryByTestId("placeholder-chip");
-    const placeholderButton = queryByRole("button", { name: /placeholder/i });
+    const customisationChip = queryByTestId("customisation-chip");
+    const customisationButton = queryByRole("button", {
+      name: /customisation/i,
+    });
 
-    expect(placeholderChip).toBeInTheDocument();
-    expect(placeholderButton).toBeInTheDocument();
+    expect(customisationChip).toBeInTheDocument();
+    expect(customisationButton).toBeInTheDocument();
   });
 });
 
@@ -83,7 +85,7 @@ describe("Checklist Component for a non Platform Admin", () => {
     ),
   );
 
-  it("renders all tags except Placeholder with none selected", async () => {
+  it("renders all tags except Customisation with none selected", async () => {
     const { getByRole, user } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent text="" />
@@ -97,23 +99,25 @@ describe("Checklist Component for a non Platform Admin", () => {
     const options = within(optionsList).getAllByRole("option");
     const optionTexts = options.map((option) => option.textContent);
 
-    expect(optionTexts).not.toContain(/placeholder/i);
+    expect(optionTexts).not.toContain(/customisation/i);
   });
 
-  it("renders all tags with static Placeholder selected", async () => {
+  it("renders all tags with static Customisation selected", async () => {
     const { getByTestId, queryByRole } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent
           text=""
-          node={{ data: { text: "", tags: ["placeholder"] } }}
+          node={{ data: { text: "", tags: ["customisation"] } }}
         />
       </DndProvider>,
     );
 
-    const placeholderChip = getByTestId("placeholder-chip");
-    const placeholderButton = queryByRole("button", { name: /placeholder/i });
+    const customisationChip = getByTestId("customisation-chip");
+    const customisationButton = queryByRole("button", {
+      name: /customisation/i,
+    });
 
-    expect(placeholderChip).toBeInTheDocument();
-    expect(placeholderButton).not.toBeInTheDocument();
+    expect(customisationChip).toBeInTheDocument();
+    expect(customisationButton).not.toBeInTheDocument();
   });
 });

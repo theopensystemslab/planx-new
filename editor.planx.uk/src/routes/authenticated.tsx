@@ -10,6 +10,7 @@ import {
 } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
@@ -115,6 +116,27 @@ const editorRoutes = compose(
           view: <PlatformAdminPanel />,
         };
       });
+    }),
+
+    "/resources": route(() => {
+      return {
+        title: makeTitle("Resources"),
+        view: <NotionEmbed page="resources" title="Resources" />,
+      };
+    }),
+
+    "/onboarding": route(() => {
+      return {
+        title: makeTitle("Onboarding"),
+        view: <NotionEmbed page="onboarding" title="Onboarding" />,
+      };
+    }),
+
+    "/tutorials": route(() => {
+      return {
+        title: makeTitle("Tutorials"),
+        view: <NotionEmbed page="tutorials" title="Tutorials" />,
+      };
     }),
 
     "/:team": lazy(() => import("./team")),

@@ -94,6 +94,7 @@ export async function setUpTestContext(
 }
 
 export async function tearDownTestContext() {
+  await $admin.flow._destroyPublishedAll();
   await $admin.flow._destroyAll();
   await $admin.user._destroyAll();
   await $admin.team._destroyAll();

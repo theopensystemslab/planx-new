@@ -16,7 +16,10 @@ const Root = styled(Box, {
     borderColor: theme.palette.text.primary,
     border: "2px solid",
     backgroundColor: theme.palette.common.white,
-    "&:focus-within": borderedFocusStyle,
+    "&:focus-within": {
+      ...borderedFocusStyle,
+      background: "inherit",
+    },
     ...(disabled && {
       border: `2px solid ${theme.palette.grey[400]}`,
       backgroundColor: theme.palette.grey[400],

@@ -86,8 +86,6 @@ const routes = compose(
       return import("./flow");
     }),
 
-    "/:flow/feedback": setFlowAndLazyLoad(() => import("./feedback")),
-
     "/:flow/about": setFlowAndLazyLoad(() => import("./readMePage")),
 
     "/:flow/service": setFlowAndLazyLoad(() => import("./serviceSettings")),
@@ -105,6 +103,7 @@ const routes = compose(
         view: DesignSettings,
       })),
     ),
+    "/feedback": lazy(() => import("./feedback")),
     "/general-settings": compose(
       route(async (req) => ({
         title: makeTitle(

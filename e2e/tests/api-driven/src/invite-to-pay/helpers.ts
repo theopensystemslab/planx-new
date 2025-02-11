@@ -139,7 +139,6 @@ export async function cleanup({
   teamId,
   userId,
   flowId,
-  publishedFlowId,
   sessionId,
   paymentRequestId,
 }: CustomWorld) {
@@ -150,10 +149,8 @@ export async function cleanup({
     await $admin.application._destroyAll(sessionId);
     await $admin.session._destroy(sessionId);
   }
-  if (publishedFlowId) {
-    await $admin.flow._destroyPublished(publishedFlowId);
-  }
   if (flowId) {
+    await $admin.flow._destroyPublishedAll();
     await $admin.flow._destroy(flowId);
   }
   if (userId) {

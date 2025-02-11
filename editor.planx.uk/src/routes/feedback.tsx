@@ -22,57 +22,55 @@ export interface Feedback {
   createdAt: string;
   address: string | null;
   feedbackScore: number;
+  flowName: string;
 }
 
 const feedbackRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
-    flow: req.params.flow.split(",")[0],
   })),
 
   mount({
     "/": route(async (req) => {
-      const { team: teamSlug, flow: flowSlug } = req.params;
+      const { team: teamSlug } = req.params;
 
       const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
       if (!isAuthorised)
         throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`
+          `User does not have access to ${req.originalUrl}`,
         );
 
       const {
         data: { feedback },
       } = await client.query<{ feedback: Feedback[] }>({
         query: gql`
-          query GetFeedbackForFlow($teamSlug: String!, $flowSlug: String!) {
+          query GetFeedbackForTeam($teamSlug: String!) {
             feedback: feedback_summary(
               order_by: { created_at: asc }
-              where: {
-                team_slug: { _eq: $teamSlug }
-                service_slug: { _eq: $flowSlug }
-              }
+              where: { team_slug: { _eq: $teamSlug } }
             ) {
+              address
+              createdAt: created_at
+              feedbackScore: feedback_score
+              flowName: service_name
               id: feedback_id
-              type: feedback_type
               nodeTitle: node_title
               nodeType: node_type
+              type: feedback_type
               userComment: user_comment
               userContext: user_context
-              feedbackScore: feedback_score
-              createdAt: created_at
-              address
             }
           }
         `,
-        variables: { teamSlug, flowSlug },
+        variables: { teamSlug },
       });
 
       return {
-        title: makeTitle("Flow Feedback"),
+        title: makeTitle("Team Feedback"),
         view: <FeedbackLog feedback={feedback} />,
       };
     }),
-  })
+  }),
 );
 
 export default feedbackRoutes;
