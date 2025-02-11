@@ -180,6 +180,7 @@ const Team: React.FC = () => {
 
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const flowsHaveBeenFiltered = matchingFlows?.length !== flows?.length;
   const showAddTemplateButton =
     showAddFlowButton &&
     templates &&
@@ -264,12 +265,14 @@ const Team: React.FC = () => {
                   <ShowingServicesHeader
                     matchedFlowsCount={matchingFlows?.length || 0}
                   />
-                  <Button
-                    onClick={() => setShouldClearFilters(true)}
-                    variant="link"
-                  >
-                    Clear filters
-                  </Button>
+                  {flowsHaveBeenFiltered && (
+                    <Button
+                      onClick={() => setShouldClearFilters(true)}
+                      variant="link"
+                    >
+                      Clear filters
+                    </Button>
+                  )}
                 </Box>
               )}
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
