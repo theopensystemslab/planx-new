@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { compose, lazy, map, mount, route, withData, withView } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
-import Team from "pages/Team/helpers";
+import Team from "pages/Team";
 import React from "react";
 
 import { client } from "../lib/graphql";

@@ -14,15 +14,15 @@ import { SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
-import { useStore } from "../../FlowEditor/lib/store";
-import { FlowSummary } from "../../FlowEditor/lib/store/editor";
-import FlowCard, { Card, CardContent } from "../components/FlowCard";
-import { ShowingServicesHeader } from "../components/ShowingServicesHeader";
-import { filterOptions, sortOptions } from "../sortAndFilterOptions";
+import { useStore } from "../FlowEditor/lib/store";
+import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import FlowCard, { Card, CardContent } from "./components/FlowCard";
+import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
+import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 import {
   StartFromTemplateButton,
   TemplateOption,
-} from "../StartFromTemplateButton";
+} from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(3, 0),
