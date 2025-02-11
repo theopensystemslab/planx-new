@@ -34,7 +34,7 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
     },
   };
 
-  const renderCell2 = (
+  const renderCellComponentByType = (
     params: RenderCellParams,
     column: ColumnConfig,
   ): JSX.Element | undefined => {
@@ -43,15 +43,17 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
     return ComponentRenderer(params, column);
   };
 
-  const dataColumns = columns.map((column) => {
+  const dataColumns = columns.map((column, index) => {
     const { field, headerName, type } = column;
     return {
       ...baseColDef,
+      hideable: index === 0 ? false : true, // at least one column should remain
       field,
       headerName,
       width: column.width || baseColDef.width,
       renderCell: type
-        ? (params: RenderCellParams) => renderCell2(params, column)
+        ? (params: RenderCellParams) =>
+            renderCellComponentByType(params, column)
         : undefined,
     };
   });
