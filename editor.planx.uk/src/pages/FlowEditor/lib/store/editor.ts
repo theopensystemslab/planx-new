@@ -169,8 +169,8 @@ export interface EditorStore extends Store.Store {
   ) => Promise<string>;
   createFlowFromTemplate: (
     templateId: string,
-    teamId: string,
-  ) => Promise<object>;
+    teamId: number,
+  ) => Promise<AxiosResponse>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
