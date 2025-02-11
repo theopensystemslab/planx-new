@@ -9,6 +9,7 @@ import {
 } from "@mui/x-data-grid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
 
@@ -18,6 +19,20 @@ import { Configured, NotConfigured } from "./components/icons";
 export const PlatformAdminPanel = () => {
   const adminPanelData: AdminPanelData[] | undefined = useStore(
     (state) => state.adminPanelData,
+  );
+
+  const teamsToFilterOut = [
+    "WikiHouse",
+    "PlanX",
+    "Open Systems Lab",
+    "Testing",
+    "Open Digital Planning",
+    "Environment Agency",
+    "Templates",
+  ];
+
+  const filteredPanelData = adminPanelData?.filter(
+    (team) => !teamsToFilterOut.includes(team.name),
   );
 
   const baseColDef: Partial<GridColDef> = {
@@ -140,17 +155,24 @@ export const PlatformAdminPanel = () => {
         </Typography>
       </SettingsSection>
       <SettingsSection>
-        <DataGrid
-          rows={adminPanelData}
-          columns={columns}
-          getRowHeight={() => "auto"}
-          sx={{
-            ".MuiDataGrid-cell": {
-              padding: "10px",
-              display: "flex",
-            },
-          }}
-        />
+        <Box sx={{ height: "100vh", flex: 1, position: "relative" }}>
+          <Box sx={{ inset: 0, position: "absolute" }}>
+            <DataGrid
+              rows={filteredPanelData}
+              columns={columns}
+              getRowHeight={() => "auto"}
+              sx={{
+                ".MuiDataGrid-cell": {
+                  padding: "10px",
+                  display: "flex",
+                },
+                ".MuiDataGrid-columnHeaderTitle": {
+                  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+                },
+              }}
+            />
+          </Box>
+        </Box>
       </SettingsSection>
     </Container>
   );
