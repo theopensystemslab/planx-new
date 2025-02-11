@@ -5,9 +5,11 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { isEmpty } from "lodash";
+import { isEmpty, orderBy } from "lodash";
+import { Route } from "navi";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigation } from "react-navi";
+import { useCurrentRoute, useNavigation } from "react-navi";
+import { Paths } from "type-fest";
 import { AddButton } from "ui/editor/AddButton";
 import { SortableFields, SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -100,13 +102,9 @@ const Team: React.FC = () => {
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      const sortedFlows = flows.toSorted((a, b) =>
-        b.operations[0]["createdAt"].localeCompare(
-          a.operations[0]["createdAt"],
-        ),
-      );
-      setFlows(sortedFlows);
-      setFilteredFlows(sortedFlows);
+      setFlows(flows);
+      setFilteredFlows(flows);
+      setSearchedFlows(flows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -270,4 +268,23 @@ const getUniqueFlow = (
     return getUniqueFlow(updatedName, flows);
   }
   return { slug: newFlowSlug, name: name };
+};
+
+const getSortParams = <T extends object>(
+  route: Route<any>,
+  sortOptions: SortableFields<T>[],
+): {
+  fieldName: SortableFields<T>["fieldName"];
+  sortDirection: "asc" | "desc";
+} => {
+  const { sort, sortDirection: sortDirectionParam } = route.url.query;
+  const sortObject = sortOptions.find(
+    (option) => slugify(option.displayName) === sort,
+  );
+  const sortDirection =
+    sortDirectionParam === "asc" || sortDirectionParam === "desc"
+      ? sortDirectionParam
+      : "desc";
+  if (sortObject) return { fieldName: sortObject.fieldName, sortDirection };
+  return { fieldName: sortOptions[0].fieldName, sortDirection };
 };

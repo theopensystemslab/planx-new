@@ -47,13 +47,20 @@ export const SortControl = <T extends object>({
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   sortOptions: SortableFields<T>[];
 }) => {
+  const route = useCurrentRoute();
+  const initialSortDirectionParam =
+    route.url.query.sortDirection === "asc" ||
+    route.url.query.sortDirection === "desc"
+      ? route.url.query.sortDirection
+      : "asc";
   const [selectedSort, setSelectedSort] = useState<SortableFields<T>>(
     sortOptions[0],
   );
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [sortDirection, setSortDirection] = useState<SortDirection>(
+    initialSortDirectionParam,
+  );
 
   const navigation = useNavigation();
-  const route = useCurrentRoute();
   const selectedDisplaySlug = slugify(selectedSort.displayName);
 
   const sortOptionsMap = useMemo(() => {
