@@ -6,11 +6,12 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
-import { Route } from "navi";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
-import { SortableFields, SortControl } from "ui/editor/SortControl";
+import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
+import { SortableFields, SortControl } from "ui/editor/SortControl/SortControl";
+import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import Filters from "ui/editor/Filter/Filter";
 import { slugify } from "utils";
@@ -92,7 +93,18 @@ const Team: React.FC = () => {
   useEffect(() => {
     const diffFlows =
       searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
+
+    if (matchingFlows === null) {
+      const {
+        sortObject: { fieldName },
+        sortDirection,
+      } = getSortParams<FlowSummary>(route, sortOptions);
+      const sortedFlows = orderBy(diffFlows, fieldName, sortDirection);
+      setMatchingflows(sortedFlows);
+    }
+
     setMatchingflows(diffFlows);
+
     if (shouldClearFilters) {
       setShouldClearFilters(false);
     }
@@ -265,23 +277,4 @@ const getUniqueFlow = (
     return getUniqueFlow(updatedName, flows);
   }
   return { slug: newFlowSlug, name: name };
-};
-
-const getSortParams = <T extends object>(
-  route: Route<any>,
-  sortOptions: SortableFields<T>[],
-): {
-  fieldName: SortableFields<T>["fieldName"];
-  sortDirection: "asc" | "desc";
-} => {
-  const { sort, sortDirection: sortDirectionParam } = route.url.query;
-  const sortObject = sortOptions.find(
-    (option) => slugify(option.displayName) === sort,
-  );
-  const sortDirection =
-    sortDirectionParam === "asc" || sortDirectionParam === "desc"
-      ? sortDirectionParam
-      : "desc";
-  if (sortObject) return { fieldName: sortObject.fieldName, sortDirection };
-  return { fieldName: sortOptions[0].fieldName, sortDirection };
 };

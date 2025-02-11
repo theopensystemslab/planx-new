@@ -7,7 +7,8 @@ import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
-import SelectInput from "./SelectInput/SelectInput";
+import SelectInput from "../SelectInput/SelectInput";
+import { getSortParams } from "./utils";
 
 type SortDirection = "asc" | "desc";
 
@@ -48,17 +49,14 @@ export const SortControl = <T extends object>({
   sortOptions: SortableFields<T>[];
 }) => {
   const route = useCurrentRoute();
-  const initialSortDirectionParam =
-    route.url.query.sortDirection === "asc" ||
-    route.url.query.sortDirection === "desc"
-      ? route.url.query.sortDirection
-      : "asc";
-  const [selectedSort, setSelectedSort] = useState<SortableFields<T>>(
-    sortOptions[0],
-  );
-  const [sortDirection, setSortDirection] = useState<SortDirection>(
-    initialSortDirectionParam,
-  );
+
+  const { sortObject: initialSortObject, sortDirection: initialSortDirection } =
+    getSortParams(route, sortOptions);
+
+  const [selectedSort, setSelectedSort] =
+    useState<SortableFields<T>>(initialSortObject);
+  const [sortDirection, setSortDirection] =
+    useState<SortDirection>(initialSortDirection);
 
   const navigation = useNavigation();
   const selectedDisplaySlug = slugify(selectedSort.displayName);
@@ -83,21 +81,6 @@ export const SortControl = <T extends object>({
       },
     );
   };
-
-  const parseStateFromURL = () => {
-    const { sort: sortParam, sortDirection: sortDirectionParam } =
-      route.url.query;
-    const matchingSortOption = sortOptionsMap[sortParam];
-    if (!matchingSortOption) return;
-    setSelectedSort(matchingSortOption[0]);
-    if (sortDirectionParam === "asc" || sortDirectionParam === "desc") {
-      setSortDirection(sortDirection);
-    }
-  };
-
-  useEffect(() => {
-    parseStateFromURL();
-  }, []);
 
   useEffect(() => {
     const { fieldName } = selectedSort;
