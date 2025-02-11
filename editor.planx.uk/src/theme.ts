@@ -2,6 +2,7 @@ import "themeOverrides.d.ts";
 
 import { radioClasses } from "@mui/material/Radio";
 import {
+  alpha,
   createTheme,
   darken,
   lighten,
@@ -15,6 +16,7 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { deepmerge } from "@mui/utils";
+import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
@@ -683,7 +685,32 @@ const getThemeOptions = ({
       MuiDataGrid: {
         styleOverrides: {
           root: {
-            margin: 1
+            margin: 1,
+            ".MuiDataGrid-cell": {
+              padding: "10px",
+              display: "flex",
+              "&:focus": {
+                outline: "none",
+              },
+            },
+            ".MuiDataGrid-columnHeaderTitle": {
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            },
+
+            [`& .${gridClasses.row}.odd`]: {
+              backgroundColor: palette.background.paper,
+              "&.Mui-selected": {
+                backgroundColor: alpha(palette.primary.main, 0.05),
+              },
+            },
+            [`& .${gridClasses.row}.even, & .${gridClasses.row}.odd`]: {
+              "&:hover": {
+                backgroundColor: alpha(palette.primary.main, 0.1),
+                "@media (hover: none)": {
+                  backgroundColor: "transparent",
+                },
+              },
+            },
           },
         },
       },
@@ -701,7 +728,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  }
+  },
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });
