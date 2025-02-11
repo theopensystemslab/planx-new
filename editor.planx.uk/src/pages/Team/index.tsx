@@ -1,5 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -84,12 +85,16 @@ const Team: React.FC = () => {
   const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
 
   useEffect(() => {
     const diffFlows =
       searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
     setMatchingflows(diffFlows);
-  }, [searchedFlows, filteredFlows]);
+    if (shouldClearFilters) {
+      setShouldClearFilters(false);
+    }
+  }, [searchedFlows, filteredFlows, shouldClearFilters]);
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -175,6 +180,7 @@ const Team: React.FC = () => {
 
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const flowsHaveBeenFiltered = matchingFlows?.length !== flows?.length;
   const showAddTemplateButton =
     showAddFlowButton &&
     templates &&
@@ -212,6 +218,7 @@ const Team: React.FC = () => {
               records={flows}
               setRecords={setSearchedFlows}
               searchKey={["name", "slug"]}
+              clearSearch={shouldClearFilters}
             />
           )}
         </Box>
@@ -234,6 +241,7 @@ const Team: React.FC = () => {
                   records={flows}
                   setFilteredRecords={setFilteredFlows}
                   filterOptions={filterOptions}
+                  clearFilters={shouldClearFilters}
                 />
               )}
             </Box>
@@ -246,9 +254,26 @@ const Team: React.FC = () => {
               }}
             >
               {teamHasFlows && (
-                <ShowingServicesHeader
-                  matchedFlowsCount={matchingFlows?.length || 0}
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    gap: 2,
+                  }}
+                >
+                  <ShowingServicesHeader
+                    matchedFlowsCount={matchingFlows?.length || 0}
+                  />
+                  {flowsHaveBeenFiltered && (
+                    <Button
+                      onClick={() => setShouldClearFilters(true)}
+                      variant="link"
+                    >
+                      Clear filters
+                    </Button>
+                  )}
+                </Box>
               )}
               {hasFeatureFlag("SORT_FLOWS") && teamHasFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
