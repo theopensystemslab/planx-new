@@ -696,19 +696,13 @@ const getThemeOptions = ({
             ".MuiDataGrid-columnHeaderTitle": {
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
             },
-
+            ".MuiDataGrid-row:hover": {
+              backgroundColor: "transparent",
+            },
             [`& .${gridClasses.row}.odd`]: {
               backgroundColor: palette.background.paper,
               "&.Mui-selected": {
                 backgroundColor: alpha(palette.primary.main, 0.05),
-              },
-            },
-            [`& .${gridClasses.row}.even, & .${gridClasses.row}.odd`]: {
-              "&:hover": {
-                backgroundColor: alpha(palette.primary.main, 0.1),
-                "@media (hover: none)": {
-                  backgroundColor: "transparent",
-                },
               },
             },
           },
