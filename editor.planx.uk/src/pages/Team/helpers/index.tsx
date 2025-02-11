@@ -9,8 +9,8 @@ import { isEmpty } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
-import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
-import { SortableFields, SortControl } from "ui/editor/SortControl";
+import Filters from "ui/editor/Filter/Filter";
+import { SortControl } from "ui/editor/SortControl";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
