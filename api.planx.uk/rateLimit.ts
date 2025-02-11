@@ -8,17 +8,10 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req: Request, _res: Response) => {
-    // add a mechanism for skipping rate limit when load testing (on local or staging only)
-    if (process.env.APP_ENVIRONMENT == "production") return false;
-    const rateLimitHeader = req.get("X-Skip-Rate-Limit-Secret");
-    const SKIP_RATE_LIMIT_SECRET = process.env?.SKIP_RATE_LIMIT_SECRET;
-    if (
-      rateLimitHeader &&
-      SKIP_RATE_LIMIT_SECRET &&
-      rateLimitHeader === SKIP_RATE_LIMIT_SECRET
-    )
-      return true;
-    return false;
+    // add a mechanism (guarded by a secret) for skipping rate limit when load testing
+    return (
+      req.get("X-Skip-Rate-Limit-Secret") === process.env.SKIP_RATE_LIMIT_SECRET
+    );
   },
 });
 
