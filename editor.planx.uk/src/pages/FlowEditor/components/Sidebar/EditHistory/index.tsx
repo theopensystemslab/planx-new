@@ -9,6 +9,17 @@ import { Operation } from "types";
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
+export interface HistoryItem {
+  id: number;
+  type: "operation" | "comment" | "publish";
+  createdAt: string;
+  actorId: number;
+  firstName: string;
+  lastName: string;
+  data: Operation["data"] | null;
+  comment: string | null;
+}
+
 const EditHistory = () => {
   const [flowId, canUserEditTeam, teamSlug, user] = useStore(
     (state) => [
@@ -19,22 +30,22 @@ const EditHistory = () => {
     ],
   );
 
-  const { data, loading, error } = useSubscription<{ operations: Operation[] }>(
+  const { data, loading, error } = useSubscription<{ history: HistoryItem[] }>(
     gql`
-      subscription GetRecentOperations($flow_id: uuid = "") {
-        operations(
-          limit: 15
+      subscription GetFlowHistory($flow_id: uuid = "") {
+        history: flow_history (
+          limit: 30
           where: { flow_id: { _eq: $flow_id } }
           order_by: { created_at: desc }
         ) {
           id
+          type
           createdAt: created_at
-          actor {
-            id
-            firstName: first_name
-            lastName: last_name
-          }
+          actorId: actor_id
+          firstName: first_name
+          lastName: last_name
           data(path: "op")
+          comment
         }
       }
     `,
@@ -51,7 +62,7 @@ const EditHistory = () => {
   }
 
   // Handle missing operations (e.g. non-production data)
-  if (!loading && !data?.operations) return null;
+  if (!loading && !data?.history) return null;
 
   if (loading && !data) {
     return (
@@ -67,12 +78,12 @@ const EditHistory = () => {
   return (
     <Box>
       {user?.id && canUserEditTeam(teamSlug) && <AddCommentDialog flowId={flowId} actorId={user.id} />}
-      <EditHistoryTimeline operations={data?.operations} />
-      {data?.operations.length === 15 && (
+      <EditHistoryTimeline data={data?.history} />
+      {data?.history.length === 30 && (
         <>
           <Divider />
           <Typography variant="body2" mt={2} color="GrayText">
-            {`History shows the last 15 edits made to this service. If you have questions about restoring to an earlier point in time, please contact a PlanX developer.`}
+            {`History shows the last 30 edits made to this service within the last 3 months. If you have questions about restoring to an earlier point in time, please contact a PlanX developer.`}
           </Typography>
         </>
       )}

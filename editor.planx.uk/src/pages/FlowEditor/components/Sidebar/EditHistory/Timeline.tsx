@@ -13,11 +13,13 @@ import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { formatOps } from "@planx/graph";
 import { OT } from "@planx/graph/types";
+import capitalize from "lodash/capitalize";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { Operation } from "types";
+import { HistoryItem } from ".";
 
 const EditHistoryListItem = styled("li")(() => ({
   listStyleType: "square",
@@ -26,10 +28,10 @@ const EditHistoryListItem = styled("li")(() => ({
 }));
 
 interface EditHistoryTimelineProps {
-  operations?: Operation[];
+  data?: HistoryItem[];
 }
 
-export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProps) => {
+export const EditHistoryTimeline = ({ data = [] }: EditHistoryTimelineProps) => {
   // A single operation (timeline list item) may contain many individual edits
   //  If greater than OPS_TO_DISPLAY, truncate and expand to display all
   const OPS_TO_DISPLAY = 5;
@@ -49,11 +51,11 @@ export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProp
 
   const handleUndo = (i: number) => {
     // Get all operations _since_ & including the selected one
-    const operationsToUndo = operations.slice(0, i + 1);
+    const operationsToUndo = data.slice(0, i + 1);
 
     // Make a flattened list, with the latest operations first
     const operationsData: Array<OT.Op[]> = [];
-    operationsToUndo?.map((op) => operationsData.unshift(op?.data));
+    operationsToUndo?.filter((op) => op.type === "operation" && op.data)?.map((op) => operationsData.unshift(op.data as Operation["data"]));
     const flattenedOperationsData: OT.Op[] = operationsData?.flat(1);
 
     // Undo all
@@ -75,7 +77,7 @@ export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProp
         },
       }}
     >
-      {operations?.map((op: Operation, i: number) => (
+      {data?.map((op: HistoryItem, i: number) => (
         <TimelineItem key={op.id}>
           <TimelineSeparator>
             <TimelineDot
@@ -86,7 +88,7 @@ export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProp
                     : theme.palette.grey[900],
               }}
             />
-            {i < operations?.length - 1 && (
+            {i < data?.length - 1 && (
               <TimelineConnector
                 sx={{
                   bgcolor: (theme) =>
@@ -121,8 +123,8 @@ export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProp
                   color={inUndoScope(i) ? "GrayText" : "inherit"}
                   py={0.33}
                 >
-                  {`${op.actor
-                    ? `${op.actor?.firstName} ${op.actor?.lastName}`
+                  {`${op.actorId
+                    ? `${op.firstName} ${op.lastName}`
                     : `Created flow`
                     }`}
                 </Typography>
@@ -135,7 +137,7 @@ export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProp
                   {formatLastEditDate(op.createdAt)}
                 </Typography>
               </Box>
-              {i > 0 && op.actor && canUserEditTeam(teamSlug) && (
+              {i > 0 && op.type === "operation" && op.actorId && canUserEditTeam(teamSlug) && (
                 <Tooltip title="Restore to this point" placement="left">
                   <IconButton
                     aria-label="Restore to this point"
@@ -198,6 +200,13 @@ export const EditHistoryTimeline = ({ operations = [] }: EditHistoryTimelineProp
                       </Typography>
                     </SimpleExpand>
                   )}
+              </Box>
+            )}
+            {op.comment && (
+              <Box bgcolor={inUndoScope(i) ? "#F0F3F6" : "#0B0C0C" } sx={{ borderRadius: "8px" }}>
+                <Typography variant="body2" color={inUndoScope(i) ? "GrayText" : "#fff"} padding={2}>
+                  {`[${capitalize(op.type)}ed] ${op.comment}`}
+                </Typography>
               </Box>
             )}
           </TimelineContent>

@@ -533,6 +533,52 @@
           - flow_id
         filter: {}
 - table:
+    name: flow_history
+    schema: public
+  select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - id
+          - actor_id
+          - data
+          - comment
+          - first_name
+          - last_name
+          - type
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - actor_id
+          - data
+          - comment
+          - first_name
+          - last_name
+          - type
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+          - actor_id
+          - data
+          - comment
+          - first_name
+          - last_name
+          - type
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+- table:
     name: flow_status_enum
     schema: public
   is_enum: true
