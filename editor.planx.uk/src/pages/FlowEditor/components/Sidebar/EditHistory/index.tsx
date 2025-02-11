@@ -34,7 +34,7 @@ const EditHistory = () => {
     gql`
       subscription GetFlowHistory($flow_id: uuid = "") {
         history: flow_history (
-          limit: 30
+          limit: 50
           where: { flow_id: { _eq: $flow_id } }
           order_by: { created_at: desc }
         ) {
@@ -83,7 +83,7 @@ const EditHistory = () => {
         <>
           <Divider />
           <Typography variant="body2" mt={2} color="GrayText">
-            {`History shows the last 30 edits made to this service within the last 3 months. If you have questions about restoring to an earlier point in time, please contact a PlanX developer.`}
+            {`History shows the last 50 edits made to this service within the last six months. If you have questions about restoring to an earlier point in time, please contact a PlanX developer.`}
           </Typography>
         </>
       )}
