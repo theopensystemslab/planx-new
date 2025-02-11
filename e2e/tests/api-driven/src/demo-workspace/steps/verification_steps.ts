@@ -83,18 +83,20 @@ Then<CustomWorld>("I should be able to see a flow", async function (this) {
   );
 });
 
-Then<CustomWorld>(
-  "I should be able to {string} the flow",
-  async function (this, action) {
-    const demoFlow = await getFlowBySlug(this.demoClient, this.demoFlowSlug);
-    const hasSucceeded =
-      (await action) === "update"
-        ? updateFlow(this.demoClient, demoFlow.id)
-        : deleteFlow(this.demoClient, demoFlow.id);
+Then<CustomWorld>("I should be able to update the flow", async function (this) {
+  const demoFlow = await getFlowBySlug(this.demoClient, this.demoFlowSlug);
+  this.demoFlowId = demoFlow.id;
 
-    assert.ok(hasSucceeded, `Cannot ${action} the flow `);
-  },
-);
+  const hasSucceeded = await updateFlow(this.demoClient, this.demoFlowId);
+
+  assert.ok(hasSucceeded, `Cannot update the flow `);
+});
+
+Then<CustomWorld>("I should be able to delete the flow", async function (this) {
+  const hasSucceeded = await deleteFlow(this.demoClient, this.demoFlowId);
+
+  assert.ok(hasSucceeded, `Cannot delete the flow `);
+});
 
 Then<CustomWorld>(
   "I should not have access to modify the flow",

@@ -14,6 +14,7 @@ import { $admin, getClient } from "../../client.js";
 import { strict as assert } from "node:assert";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Team, User } from "@opensystemslab/planx-core/types";
+import { UUID } from "crypto";
 
 export class CustomWorld extends World {
   demoClient!: CoreDomainClient["client"];
@@ -22,6 +23,7 @@ export class CustomWorld extends World {
   otherTeam!: DataTableRecord;
   insertFlowTeamId!: number;
   demoFlowSlug!: string;
+  demoFlowId!: UUID;
   adminFlowSlug!: string;
   demoTeamsArray!: Team[];
   currentTeamId!: number;
