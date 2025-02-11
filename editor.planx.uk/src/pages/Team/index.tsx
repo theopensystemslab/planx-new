@@ -85,13 +85,16 @@ const Team: React.FC = () => {
   const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
     null,
   );
-  const [clearTrigger, setClearTrigger] = useState<number>(0);
+  const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
 
   useEffect(() => {
     const diffFlows =
       searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
     setMatchingflows(diffFlows);
-  }, [searchedFlows, filteredFlows]);
+    if (shouldClearFilters) {
+      setShouldClearFilters(false);
+    }
+  }, [searchedFlows, filteredFlows, shouldClearFilters]);
 
   const sortOptions: SortableFields<FlowSummary>[] = [
     {
@@ -214,7 +217,7 @@ const Team: React.FC = () => {
               records={flows}
               setRecords={setSearchedFlows}
               searchKey={["name", "slug"]}
-              clearSearch={clearTrigger}
+              clearSearch={shouldClearFilters}
             />
           )}
         </Box>
@@ -237,7 +240,7 @@ const Team: React.FC = () => {
                   records={flows}
                   setFilteredRecords={setFilteredFlows}
                   filterOptions={filterOptions}
-                  clearFilters={clearTrigger}
+                  clearFilters={shouldClearFilters}
                 />
               )}
             </Box>
@@ -262,7 +265,7 @@ const Team: React.FC = () => {
                     matchedFlowsCount={matchingFlows?.length || 0}
                   />
                   <Button
-                    onClick={() => setClearTrigger((prevId) => prevId + 1)}
+                    onClick={() => setShouldClearFilters(true)}
                     variant="link"
                   >
                     Clear filters

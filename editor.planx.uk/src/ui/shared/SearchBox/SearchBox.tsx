@@ -18,14 +18,14 @@ interface SearchBoxProps<T> {
   records: T[] | null;
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   searchKey: FuseOptionKey<T>[];
-  clearSearch?: number;
+  clearSearch?: boolean;
 }
 
 export const SearchBox = <T extends object>({
   records,
   setRecords,
   searchKey,
-  clearSearch,
+  clearSearch = false,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
