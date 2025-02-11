@@ -35,6 +35,7 @@ export const SearchBox = <T extends object>({
   const { submitForm, setFieldValue, values, resetForm } = useFormik({
     initialValues: { pattern: "" },
     onSubmit: ({ pattern }) => {
+      if (clearSearch) return setRecords(records);
       setIsSearching(true);
       debouncedSearch(pattern);
     },
@@ -68,10 +69,9 @@ export const SearchBox = <T extends object>({
   useEffect(() => {
     if (clearSearch) {
       resetForm();
-      setRecords(records);
       submitForm();
     }
-  }, [clearSearch, resetForm, setRecords, records, submitForm]);
+  }, [clearSearch, resetForm, submitForm]);
 
   return (
     <Box maxWidth={360}>
