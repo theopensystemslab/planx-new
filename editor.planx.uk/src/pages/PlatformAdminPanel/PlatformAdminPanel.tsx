@@ -1,19 +1,17 @@
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridTreeNodeWithRender,
-} from "@mui/x-data-grid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
-import { DataTable } from "ui/shared/DataTable/DataTable";
+import {
+  ColumnConfig,
+  ColumnType,
+  DataTable,
+} from "ui/shared/DataTable/DataTable";
 
+import { Configured, NotConfigured } from "../../ui/shared/DataTable/icons";
 import { Article4Status } from "./components/Article4Status";
-import { Configured, NotConfigured } from "./components/icons";
 
 export const PlatformAdminPanel = () => {
   const adminPanelData: AdminPanelData[] | undefined = useStore(
@@ -34,13 +32,7 @@ export const PlatformAdminPanel = () => {
     (team) => !teamsToFilterOut.includes(team.name),
   );
 
-  const renderIsItemConfigured = (
-    params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
-  ) => {
-    return params.value ? <Configured /> : <NotConfigured />;
-  };
-
-  const columns: GridColDef[] = [
+  const columns: ColumnConfig[] = [
     {
       field: "name",
       headerName: "Team",
@@ -54,83 +46,63 @@ export const PlatformAdminPanel = () => {
       field: "liveFlows",
       headerName: "Live services",
       width: 450,
-      renderCell: (params) => {
-        return (
-          <Box
-            component={"ol"}
-            padding={0}
-            margin={0}
-            sx={{ listStyleType: "none" }}
-          >
-            {params.value?.map((flowName: string, index: number) => {
-              return (
-                <Typography
-                  py={0.4}
-                  variant="body2"
-                  key={index}
-                  component={"li"}
-                >
-                  {flowName}
-                </Typography>
-              );
-            })}
-          </Box>
-        );
-      },
+      type: ColumnType.ARRAY,
     },
     {
       field: "planningDataEnabled",
       headerName: "Planning constraints",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "article4sEnabled",
       headerName: "Article 4s (API)",
-      renderCell: (params) => {
+      type: ColumnType.CUSTOM,
+      customComponent: (params) => {
         return <Article4Status teamSlug={params.row.slug} />;
       },
     },
     {
       field: "govpayEnabled",
       headerName: "GOV.UK Pay",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "govnotifyPersonalisation",
       headerName: "GOV.UK Notify",
-      renderCell: (params) => {
+      type: ColumnType.CUSTOM,
+      customComponent: (params) => {
         return params.value?.helpEmail ? <Configured /> : <NotConfigured />;
       },
     },
     {
       field: "sendToEmailAddress",
       headerName: "Send to email",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "bopsSubmissionURL",
       headerName: "BOPS",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "powerAutomateEnabled",
       headerName: "Power automate",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "subdomain",
       headerName: "Subdomain",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "logo",
       headerName: "Logo",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
     {
       field: "favicon",
       headerName: "Favicon",
-      renderCell: renderIsItemConfigured,
+      type: ColumnType.BOOLEAN,
     },
   ];
 

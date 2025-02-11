@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 
-import { Configured, NotConfigured } from "./icons";
+import { Configured, NotConfigured } from "../../../ui/shared/DataTable/icons";
 
 export const Article4Status = ({ teamSlug }: { teamSlug: string }) => {
   const a4Endpoint = `${
