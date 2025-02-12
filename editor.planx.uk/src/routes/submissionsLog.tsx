@@ -6,17 +6,19 @@ import { makeTitle } from "./utils";
 const submissionsLogRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
-    flow: req.params.flow.split(",")[0],
+    // flow: req.params.flow.split(",")[0],
   })),
 
   mount({
     "/": compose(
-      route(async (req) => ({
-        title: makeTitle(
-          [req.params.team, req.params.flow, "submissions-log"].join("/"),
-        ),
-        view: Submissions,
-      })),
+      route(async (req) => {
+        const { team: teamSlug } = req.params;
+
+        return {
+          title: makeTitle([teamSlug, "submissions-log"].join("/")),
+          view: Submissions,
+        };
+      }),
     ),
   }),
 );

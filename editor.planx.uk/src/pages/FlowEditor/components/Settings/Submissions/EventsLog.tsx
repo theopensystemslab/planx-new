@@ -81,8 +81,8 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 350 }}>
               <strong>Session ID</strong>
             </TableCell>
-            <TableCell sx={{ width: 50 }}></TableCell>
-            <TableCell sx={{ width: 50 }}></TableCell>
+            <TableCell sx={{ width: 50 }} />
+            <TableCell sx={{ width: 50 }} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -195,25 +195,21 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
 };
 
 const FormattedResponse: React.FC<Submission> = (submission) => {
-  if (submission.eventType === "Pay") {
-    return (
-      <Response component="pre">
-        {JSON.stringify(submission.response, null, 2)}
-      </Response>
-    );
-  } else {
-    return (
-      <Response component="pre">
-        {submission.status === "Success"
-          ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
-          : JSON.stringify(
-              JSON.parse(submission.response?.data?.message),
-              null,
-              2,
-            )}
-      </Response>
-    );
-  }
+  return submission.eventType === "Pay" ? (
+    <Response component="pre">
+      {JSON.stringify(submission.response, null, 2)}
+    </Response>
+  ) : (
+    <Response component="pre">
+      {submission.status === "Success"
+        ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
+        : JSON.stringify(
+            JSON.parse(submission.response?.data?.message),
+            null,
+            2,
+          )}
+    </Response>
+  );
 };
 
 export default EventsLog;
