@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { SortableFields } from "./SortControl";
 
-const RouteQuerySchema = z.object({
+const routeQuerySchema = z.object({
   sort: z.string(),
   sortDirection: z.enum(["asc", "desc"]),
 });
@@ -16,7 +16,7 @@ export const getSortParams = <T extends object>(
   sortObject: SortableFields<T>;
   sortDirection: "asc" | "desc";
 } => {
-  const validSortUrl = RouteQuerySchema.safeParse(routeQueryParams);
+  const validSortUrl = routeQuerySchema.safeParse(routeQueryParams);
   if (validSortUrl.success) {
     const sortObject = sortOptions.find(
       (option) => slugify(option.displayName) === validSortUrl.data.sort,
