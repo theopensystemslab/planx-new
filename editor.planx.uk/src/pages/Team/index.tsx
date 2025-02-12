@@ -5,12 +5,13 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
-import { isEmpty } from "lodash";
+import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigation } from "react-navi";
+import { useCurrentRoute, useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import Filters from "ui/editor/Filter/Filter";
-import { SortControl } from "ui/editor/SortControl";
+import { SortControl } from "ui/editor/SortControl/SortControl";
+import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
@@ -76,7 +77,9 @@ const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
+
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+
   const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
     null,
   );
@@ -86,12 +89,28 @@ const Team: React.FC = () => {
   const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
     null,
   );
+  const [sortedFlows, setSortedFlows] = useState<FlowSummary[] | null>(null);
+
   const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
+
+  const route = useCurrentRoute();
 
   useEffect(() => {
     const diffFlows =
       searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
+
+    // Sort the array at the start using the query params
+    if (matchingFlows === null) {
+      const {
+        sortObject: { fieldName },
+        sortDirection,
+      } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+      const sortedFlows = orderBy(diffFlows, fieldName, sortDirection);
+      setMatchingflows(sortedFlows);
+    }
+
     setMatchingflows(diffFlows);
+
     if (shouldClearFilters) {
       setShouldClearFilters(false);
     }
@@ -100,14 +119,7 @@ const Team: React.FC = () => {
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      const sortedFlows = flows.toSorted((a, b) =>
-        b.operations[0]["createdAt"].localeCompare(
-          a.operations[0]["createdAt"],
-        ),
-      );
-      setFlows(sortedFlows);
-      setFilteredFlows(sortedFlows);
-      setSearchedFlows(sortedFlows);
+      setFlows(flows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -218,20 +230,22 @@ const Team: React.FC = () => {
                   </Button>
                 )}
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                <Typography variant="body2">
-                  <strong>Sort by</strong>
-                </Typography>
-                <SortControl<FlowSummary>
-                  records={flows}
-                  setRecords={setFlows}
-                  sortOptions={sortOptions}
-                />
-              </Box>
+              {teamHasFlows && matchingFlows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={matchingFlows}
+                    setRecords={setSortedFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
             </Box>
-            {matchingFlows && teamHasFlows && (
+            {sortedFlows && (
               <DashboardList>
-                {matchingFlows.map((flow) => (
+                {sortedFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
                     flows={flows}

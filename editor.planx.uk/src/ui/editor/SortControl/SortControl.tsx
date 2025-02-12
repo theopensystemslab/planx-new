@@ -7,7 +7,8 @@ import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
-import SelectInput from "./SelectInput/SelectInput";
+import SelectInput from "../SelectInput/SelectInput";
+import { getSortParams } from "./utils";
 
 type SortDirection = "asc" | "desc";
 
@@ -47,13 +48,17 @@ export const SortControl = <T extends object>({
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   sortOptions: SortableFields<T>[];
 }) => {
-  const [selectedSort, setSelectedSort] = useState<SortableFields<T>>(
-    sortOptions[0],
-  );
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const route = useCurrentRoute();
+
+  const { sortObject: initialSortObject, sortDirection: initialSortDirection } =
+    getSortParams(route.url.query, sortOptions);
+
+  const [selectedSort, setSelectedSort] =
+    useState<SortableFields<T>>(initialSortObject);
+  const [sortDirection, setSortDirection] =
+    useState<SortDirection>(initialSortDirection);
 
   const navigation = useNavigation();
-  const route = useCurrentRoute();
   const selectedDisplaySlug = slugify(selectedSort.displayName);
 
   const sortOptionsMap = useMemo(() => {
@@ -77,27 +82,12 @@ export const SortControl = <T extends object>({
     );
   };
 
-  const parseStateFromURL = () => {
-    const { sort: sortParam, sortDirection: sortDirectionParam } =
-      route.url.query;
-    const matchingSortOption = sortOptionsMap[sortParam];
-    if (!matchingSortOption) return;
-    setSelectedSort(matchingSortOption[0]);
-    if (sortDirectionParam === "asc" || sortDirectionParam === "desc") {
-      setSortDirection(sortDirection);
-    }
-  };
-
-  useEffect(() => {
-    parseStateFromURL();
-  }, []);
-
   useEffect(() => {
     const { fieldName } = selectedSort;
     const sortNewFlows = orderBy(records, fieldName, sortDirection);
     setRecords(sortNewFlows);
     updateSortParam(selectedDisplaySlug);
-  }, [selectedSort, sortDirection]);
+  }, [selectedSort, sortDirection, records]);
 
   return (
     <Box display={"flex"} gap={1}>
