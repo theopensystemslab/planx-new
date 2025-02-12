@@ -1,5 +1,4 @@
 import { within } from "@testing-library/react";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
