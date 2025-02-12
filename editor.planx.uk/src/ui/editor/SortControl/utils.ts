@@ -1,4 +1,4 @@
-import { Route } from "navi";
+import { Params } from "navi";
 import { slugify } from "utils";
 import { z } from "zod";
 
@@ -10,13 +10,13 @@ const RouteQuerySchema = z.object({
 });
 
 export const getSortParams = <T extends object>(
-  route: Route<any>,
+  routeQueryParams: Params,
   sortOptions: SortableFields<T>[],
 ): {
   sortObject: SortableFields<T>;
   sortDirection: "asc" | "desc";
 } => {
-  const validSortUrl = RouteQuerySchema.safeParse(route.url.query);
+  const validSortUrl = RouteQuerySchema.safeParse(routeQueryParams);
   if (validSortUrl.success) {
     const sortObject = sortOptions.find(
       (option) => slugify(option.displayName) === validSortUrl.data.sort,

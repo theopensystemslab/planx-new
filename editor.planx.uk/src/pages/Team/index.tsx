@@ -78,7 +78,9 @@ const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
+
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+
   const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
     null,
   );
@@ -88,9 +90,9 @@ const Team: React.FC = () => {
   const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
     null,
   );
-  const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
   const [sortedFlows, setSortedFlows] = useState<FlowSummary[] | null>(null);
 
+  const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
 
   const route = useCurrentRoute();
 
@@ -98,11 +100,12 @@ const Team: React.FC = () => {
     const diffFlows =
       searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
 
+    // Sort the array at the start using the query params
     if (matchingFlows === null) {
       const {
         sortObject: { fieldName },
         sortDirection,
-      } = getSortParams<FlowSummary>(route, sortOptions);
+      } = getSortParams<FlowSummary>(route.url.query, sortOptions);
       const sortedFlows = orderBy(diffFlows, fieldName, sortDirection);
       setMatchingflows(sortedFlows);
     }

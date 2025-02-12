@@ -51,7 +51,7 @@ export const SortControl = <T extends object>({
   const route = useCurrentRoute();
 
   const { sortObject: initialSortObject, sortDirection: initialSortDirection } =
-    getSortParams(route, sortOptions);
+    getSortParams(route.url.query, sortOptions);
 
   const [selectedSort, setSelectedSort] =
     useState<SortableFields<T>>(initialSortObject);
