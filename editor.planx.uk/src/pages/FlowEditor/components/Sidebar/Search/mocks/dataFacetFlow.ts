@@ -257,59 +257,6 @@ export const mockListRootResult: SearchResult<IndexedNode> = {
           },
           {
             data: {
-              fn: "justification",
-              type: "short",
-              title: "Justification",
-            },
-            type: "text",
-          },
-          {
-            data: {
-              fn: "urgency",
-              title: "Urgency",
-              options: [
-                {
-                  id: "low",
-                  data: {
-                    val: "low",
-                    text: "Low",
-                  },
-                },
-                {
-                  id: "moderate",
-                  data: {
-                    val: "moderate",
-                    text: "Moderate",
-                  },
-                },
-                {
-                  id: "high",
-                  data: {
-                    val: "high",
-                    text: "High",
-                  },
-                },
-                {
-                  id: "urgent",
-                  data: {
-                    val: "urgent",
-                    text: "Urgent",
-                  },
-                },
-              ],
-            },
-            type: "question",
-          },
-          {
-            data: {
-              fn: "completionDate",
-              title: "Expected completion date",
-              description: "For example, 16 04 2027",
-            },
-            type: "date",
-          },
-          {
-            data: {
               fn: "features",
               title: "Where is it? Plot as many as apply",
               mapOptions: {
