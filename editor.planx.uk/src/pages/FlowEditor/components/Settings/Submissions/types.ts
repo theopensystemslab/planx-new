@@ -1,5 +1,3 @@
-import { Submission } from "./types";
-
 export interface Submission {
   sessionId: string;
   eventId: string;

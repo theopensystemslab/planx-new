@@ -24,8 +24,6 @@ const submissionsLogRoutes = compose(
       route(async (req) => {
         const { team: teamSlug, flow: flowSlug } = req.params;
 
-        console.log("flow slug in route", flowSlug);
-
         return {
           title: makeTitle([teamSlug, "submissions-log", flowSlug].join("/")),
           view: <Submissions flowSlug={flowSlug} />,
