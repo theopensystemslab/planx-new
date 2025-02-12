@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 
 import { DataTable } from "./DataTable";
+import { mockTeams } from "./mockTeams";
 import { ColumnType } from "./types";
 
 const meta = {
@@ -14,67 +15,7 @@ export default meta;
 
 export const Basic = {
   args: {
-    rows: [
-      {
-        id: 1,
-        name: "Barking and Dagenham",
-        referenceCode: "BDD",
-        liveFlows: [
-          "Find out if you need planning permission",
-          "Apply for prior approval",
-          "Barking draft 2",
-        ],
-        planningDataEnabled: false,
-        govpayEnabled: true,
-        logo: true,
-      },
-      {
-        id: 2,
-        name: "Doncaster",
-        referenceCode: "DON",
-        liveFlows: [
-          "Notify completion of planning application",
-          "Find out if you need planning permission",
-          "Apply for prior approval",
-          "Apply for service declarations",
-          "Article4",
-        ],
-        planningDataEnabled: true,
-        govpayEnabled: true,
-        logo: true,
-      },
-      {
-        id: 3,
-        name: "Newcastle",
-        referenceCode: "NCL",
-        liveFlows: [
-          "Confirmation pages",
-          "Find out if you need planning permission",
-          "Listed building pre application advice",
-          "Apply for prior approval",
-          "Apply for service declarations",
-          "Article4",
-          "Apply for a lawful development certificate",
-        ],
-        planningDataEnabled: false,
-        govpayEnabled: false,
-        logo: true,
-      },
-      {
-        id: 4,
-        name: "Tewkesbury",
-        referenceCode: "TWK",
-        liveFlows: [
-          "Listed building pre application advice",
-          "Apply for service declarations",
-          "Article4",
-          "Apply for a lawful development certificate",
-        ],
-        planningDataEnabled: false,
-        govpayEnabled: true,
-        logo: false,
-      },
-    ],
+    rows: mockTeams,
     columns: [
       {
         field: "name",
