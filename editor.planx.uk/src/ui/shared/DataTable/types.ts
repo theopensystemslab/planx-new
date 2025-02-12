@@ -1,4 +1,8 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridTreeNodeWithRender,
+} from "@mui/x-data-grid";
 
 export const ColumnType = {
   BOOLEAN: "boolean",
@@ -24,6 +28,7 @@ export type ColumnConfig = {
   customComponent?:
     | ((params: RenderCellParams) => JSX.Element | undefined)
     | undefined;
+  columnOptions?: Omit<GridColDef, "headerName" | "field" | "type">;
 };
 export interface DataGridProps {
   rows: readonly any[] | undefined;

@@ -55,6 +55,7 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
         ? (params: RenderCellParams) =>
             renderCellComponentByType(params, column)
         : undefined,
+      ...column.columnOptions,
     };
   });
 
