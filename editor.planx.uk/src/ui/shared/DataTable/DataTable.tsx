@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+// eslint-disable-next-line no-restricted-imports
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React from "react";
 
