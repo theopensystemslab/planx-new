@@ -69,6 +69,9 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
       <Table stickyHeader sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow sx={{ "& > *": { borderBottomColor: "black !important" } }}>
+            <TableCell sx={{ width: 130 }}>
+              <strong>Flow name</strong>
+            </TableCell>
             <TableCell sx={{ width: 250 }}>
               <strong>Event</strong>
             </TableCell>
@@ -119,6 +122,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell>{submission.flowName}</TableCell>
         <TableCell>
           <Box
             sx={{

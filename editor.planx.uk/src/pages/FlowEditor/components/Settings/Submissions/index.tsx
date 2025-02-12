@@ -34,6 +34,7 @@ export interface Submission {
   retry: boolean;
   response: Record<string, any>;
   createdAt: string;
+  flowName: string;
 }
 
 export interface GetSubmissionsResponse {
@@ -60,6 +61,7 @@ const Submissions: React.FC = () => {
           retry: retry
           response: response
           createdAt: created_at
+          flowName: flow_name
         }
       }
     `,
@@ -72,15 +74,15 @@ const Submissions: React.FC = () => {
   const submissions = useMemo(() => data?.submissions || [], [data]);
 
   return (
-    <Container maxWidth="contentWrap">
+    <Container>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Submissions
         </Typography>
         <Typography variant="body1">
           Feed of payment and submission events for services in this team.
-          Successful submission events within the last 28 days are availabe to
-          download to team editors.
+          Successful submission events from within the last 28 days are
+          available to be downloaded by team editors.
         </Typography>
       </SettingsSection>
       <SettingsSection>
