@@ -136,6 +136,15 @@ const FlowCard: React.FC<FlowCardProps> = ({
 }) => {
   const [deleting, setDeleting] = React.useState(false);
 
+  const handleDelete = () => {
+    useStore
+      .getState()
+      .deleteFlow(teamId, flow.slug)
+      .then(() => {
+        setDeleting(false);
+        refreshFlows();
+      });
+  };
   const handleCopy = () => {
     useStore
       .getState()
@@ -188,7 +197,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
           onClose={() => {
             setDeleting(false);
           }}
-          onConfirm={() => {}}
+          onConfirm={handleDelete}
           submitLabel="Delete Service"
         />
       )}
