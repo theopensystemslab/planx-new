@@ -7,7 +7,7 @@ import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize";
-import React, { useState } from "react";
+import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import InputGroup from "ui/editor/InputGroup";
@@ -53,8 +53,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
   const toast = useToast();
 
   const hasExternalPortals = Boolean(Object.keys(externalPortals).length);
-
-  const [showExternalPortals, setShowExternalPortals] = useState(false);
 
   const formik = useFormik<ReadMePageForm>({
     initialValues: {
