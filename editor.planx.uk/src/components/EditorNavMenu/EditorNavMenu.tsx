@@ -114,6 +114,12 @@ function EditorNavMenu() {
       route: `/${teamSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
+    {
+      title: "Submissions log",
+      Icon: FactCheckIcon,
+      route: `/${teamSlug}/submissions-log`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
   ];
 
   const flowLayoutRoutesMain: Route[] = [
