@@ -58,9 +58,11 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           Submissions
         </Typography>
         <Typography variant="body1">
-          Feed of payment and submission events for services in this team.
+          {`Feed of payment and submission events for ${
+            flowSlug ? "this service" : "services in this team"
+          }.
           Successful submission events from within the last 28 days are
-          available to be downloaded by team editors.
+          available to be downloaded by team editors.`}
         </Typography>
       </SettingsSection>
       <SettingsSection>
@@ -68,6 +70,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           submissions={filteredSubmissions}
           loading={loading}
           error={error}
+          filterByFlow={Boolean(flowSlug)}
         />
       </SettingsSection>
     </Container>

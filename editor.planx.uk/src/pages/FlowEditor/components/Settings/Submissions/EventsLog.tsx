@@ -24,7 +24,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { GetSubmissionsResponse, Submission } from "./types";
+import { EventsLogProps, Submission } from "./types";
 
 const Response = styled(Box)(() => ({
   fontSize: "1em",
@@ -43,10 +43,11 @@ const Feed = styled(TableContainer)(() => ({
   readingOrder: "flex-visual",
 }));
 
-const EventsLog: React.FC<GetSubmissionsResponse> = ({
+const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
   loading,
   error,
+  filterByFlow,
 }) => {
   if (loading)
     return (
@@ -60,7 +61,9 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
     return (
       <ErrorSummary
         format="info"
-        heading="No payments or submissions found for this service"
+        heading={`No payments or submissions found for this ${
+          filterByFlow ? "service" : "team"
+        }`}
         message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
       />
     );

@@ -27,10 +27,11 @@ export interface Submission {
   createdAt: string;
   flowName: string;
 }
-export interface GetSubmissionsResponse {
+export interface EventsLogProps {
   submissions: Submission[];
   loading: boolean;
   error: Error | undefined;
+  filterByFlow?: boolean;
 }
 export interface SubmissionsProps {
   flowSlug?: string;
