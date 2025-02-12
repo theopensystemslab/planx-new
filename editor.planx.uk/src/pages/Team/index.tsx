@@ -230,20 +230,18 @@ const Team: React.FC = () => {
                   </Button>
                 )}
               </Box>
-              {hasFeatureFlag("SORT_FLOWS") &&
-                teamHasFlows &&
-                matchingFlows && (
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                    <Typography variant="body2">
-                      <strong>Sort by</strong>
-                    </Typography>
-                    <SortControl<FlowSummary>
-                      records={matchingFlows}
-                      setRecords={setSortedFlows}
-                      sortOptions={sortOptions}
-                    />
-                  </Box>
-                )}
+              {teamHasFlows && matchingFlows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={matchingFlows}
+                    setRecords={setSortedFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
             </Box>
             {sortedFlows && (
               <DashboardList>
