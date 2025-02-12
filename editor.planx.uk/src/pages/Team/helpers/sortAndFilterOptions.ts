@@ -1,6 +1,6 @@
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { FilterOptions } from "ui/editor/Filter/Filter";
-import { SortableFields } from "ui/editor/SortControl";
+import { SortableFields } from "ui/editor/SortControl/SortControl";
 
 export const sortOptions: SortableFields<FlowSummary>[] = [
   {
