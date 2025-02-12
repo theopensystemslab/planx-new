@@ -9,11 +9,10 @@ import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
-import Filters, { FilterOptions } from "ui/editor/Filter/Filter";
-import { SortableFields, SortControl } from "ui/editor/SortControl/SortControl";
+import Filters from "ui/editor/Filter/Filter";
+import { SortControl } from "ui/editor/SortControl/SortControl";
 import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
-import Filters from "ui/editor/Filter/Filter";
 import { slugify } from "utils";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -211,26 +210,26 @@ const Team: React.FC = () => {
                 gap: 2,
               }}
             >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: 2,
-                  }}
-                >
-                  <ShowingServicesHeader
-                    matchedFlowsCount={matchingFlows?.length || 0}
-                  />
-                  {flowsHaveBeenFiltered && (
-                    <Button
-                      onClick={() => setShouldClearFilters(true)}
-                      variant="link"
-                    >
-                      Clear filters
-                    </Button>
-                  )}
-                </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <ShowingServicesHeader
+                  matchedFlowsCount={matchingFlows?.length || 0}
+                />
+                {flowsHaveBeenFiltered && (
+                  <Button
+                    onClick={() => setShouldClearFilters(true)}
+                    variant="link"
+                  >
+                    Clear filters
+                  </Button>
+                )}
+              </Box>
               {hasFeatureFlag("SORT_FLOWS") &&
                 teamHasFlows &&
                 matchingFlows && (
