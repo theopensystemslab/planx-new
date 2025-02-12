@@ -4,23 +4,14 @@ import React from "react";
 
 import { makeTitle } from "./utils";
 
-const submissionsLogRoutes = compose(
+const flowSubmissionsLogRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
+    flow: req.params.flow.split(",")[0],
   })),
 
   mount({
     "/": compose(
-      route(async (req) => {
-        const { team: teamSlug } = req.params;
-
-        return {
-          title: makeTitle([teamSlug, "submissions-log"].join("/")),
-          view: Submissions,
-        };
-      }),
-    ),
-    "/:flow": compose(
       route(async (req) => {
         const { team: teamSlug, flow: flowSlug } = req.params;
 
@@ -33,4 +24,4 @@ const submissionsLogRoutes = compose(
   }),
 );
 
-export default submissionsLogRoutes;
+export default flowSubmissionsLogRoutes;
