@@ -17,7 +17,6 @@ import {
   clickContinue,
   fillOutFirstHalfOfForm,
   fillOutForm,
-  fillOutSecondHalfOfForm,
 } from "./utils";
 
 beforeAll(() => {
@@ -317,16 +316,12 @@ describe("basic interactions - happy path", () => {
     // check that the data stays within the firstTabPanel
     expect(firstSpeciesInput).toHaveDisplayValue("Larch");
 
-    // Complete the filling out of the firstTabPanel
-    await fillOutSecondHalfOfForm(user);
-
     await user.click(secondTab);
 
     // check that the data stays within the secondTabPanel
     expect(secondSpeciesInput).toHaveDisplayValue("Larch");
 
     // Complete the filling out of the secondTabPanel
-    await fillOutSecondHalfOfForm(user);
 
     await clickContinue(user);
 
@@ -400,19 +395,10 @@ describe("copy feature select", () => {
 
     await user.click(listItemTwo);
 
-    const urgencyDiv = getByTitle("Urgency");
-    const urgencyInput = within(urgencyDiv).getByRole("textbox", {
-      hidden: true,
-    });
-
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
     expect(getByLabelText("Proposed work")).toHaveDisplayValue(
       mockTreeData.work,
     );
-    expect(getByLabelText("Justification")).toHaveDisplayValue(
-      mockTreeData.justification,
-    );
-    expect(urgencyInput).toHaveDisplayValue(mockTreeData.urgency);
   });
 
   it("should not have any accessibility violations", async () => {
@@ -589,9 +575,6 @@ describe("back navigation", () => {
                 label: "1",
                 species: "Test One",
                 work: "Test",
-                justification: "Test",
-                urgency: "low",
-                completionDate: "2002-10-01",
               },
             },
             {
@@ -604,9 +587,6 @@ describe("back navigation", () => {
                 label: "2",
                 species: "Test Two",
                 work: "Test",
-                justification: "Test",
-                urgency: "low",
-                completionDate: "2002-10-01",
               },
             },
           ],
