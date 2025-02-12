@@ -1,12 +1,12 @@
 import { compose, mount, route, withData } from "navi";
 import Submissions from "pages/FlowEditor/components/Settings/Submissions";
+import React from "react";
 
 import { makeTitle } from "./utils";
 
 const submissionsLogRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
-    // flow: req.params.flow.split(",")[0],
   })),
 
   mount({
@@ -17,6 +17,18 @@ const submissionsLogRoutes = compose(
         return {
           title: makeTitle([teamSlug, "submissions-log"].join("/")),
           view: Submissions,
+        };
+      }),
+    ),
+    "/:flow": compose(
+      route(async (req) => {
+        const { team: teamSlug, flow: flowSlug } = req.params;
+
+        console.log("flow slug in route", flowSlug);
+
+        return {
+          title: makeTitle([teamSlug, "submissions-log", flowSlug].join("/")),
+          view: <Submissions flowSlug={flowSlug} />,
         };
       }),
     ),

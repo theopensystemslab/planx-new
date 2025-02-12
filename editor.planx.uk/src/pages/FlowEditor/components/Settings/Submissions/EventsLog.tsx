@@ -24,7 +24,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { GetSubmissionsResponse, Submission } from ".";
+import { GetSubmissionsResponse, Submission } from "./types";
 
 const Response = styled(Box)(() => ({
   fontSize: "1em",

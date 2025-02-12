@@ -6,44 +6,9 @@ import SettingsSection from "ui/editor/SettingsSection";
 
 import { useStore } from "../../../lib/store";
 import EventsLog from "./EventsLog";
+import { Submission, SubmissionsProps } from "./types";
 
-export interface Submission {
-  sessionId: string;
-  eventId: string;
-  eventType:
-    | "Pay"
-    | "Submit to BOPS"
-    | "Submit to Uniform"
-    | "Send to email"
-    | "Upload to AWS S3";
-  status?:
-    | "Success"
-    | "Failed (500)" // Hasura scheduled event status codes
-    | "Failed (502)"
-    | "Failed (503)"
-    | "Failed (504)"
-    | "Failed (400)"
-    | "Failed (401)"
-    | "Started" // Payment status enum codes (excluding "Created")
-    | "Submitted"
-    | "Capturable"
-    | "Failed"
-    | "Cancelled"
-    | "Error"
-    | "Unknown";
-  retry: boolean;
-  response: Record<string, any>;
-  createdAt: string;
-  flowName: string;
-}
-
-export interface GetSubmissionsResponse {
-  submissions: Submission[];
-  loading: boolean;
-  error: Error | undefined;
-}
-
-const Submissions: React.FC = () => {
+const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
   // submission_services_log view is already filtered for events >= Jan 1 2024
@@ -73,6 +38,19 @@ const Submissions: React.FC = () => {
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
 
+  const getFlowNameFromSlug = (slug: string) => {
+    return slug.replace(/-/g, " ");
+  };
+
+  const flowName = flowSlug && getFlowNameFromSlug(flowSlug);
+
+  // filter by flow if flowSlug prop is passed from route params
+  const filteredSubmissions = submissions.filter(
+    (submission) =>
+      !flowSlug ||
+      submission.flowName.toLowerCase() === flowName?.toLowerCase(),
+  );
+
   return (
     <Container>
       <SettingsSection>
@@ -86,7 +64,11 @@ const Submissions: React.FC = () => {
         </Typography>
       </SettingsSection>
       <SettingsSection>
-        <EventsLog submissions={submissions} loading={loading} error={error} />
+        <EventsLog
+          submissions={filteredSubmissions}
+          loading={loading}
+          error={error}
+        />
       </SettingsSection>
     </Container>
   );

@@ -144,7 +144,7 @@ function EditorNavMenu() {
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/${flowSlug}/submissions-log`,
+      route: `/${teamSlug}/submissions-log/${flowSlug}`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
