@@ -3,9 +3,10 @@ import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 export const ColumnType = {
   BOOLEAN: "boolean",
   ARRAY: "array",
-  CUSTOM: "custom",
 } as const;
+
 type ObjectValues<T> = T[keyof T];
+
 export type RenderCellParams = GridRenderCellParams<
   any,
   any,

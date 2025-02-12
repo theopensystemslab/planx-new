@@ -56,7 +56,7 @@ export const PlatformAdminPanel = () => {
     {
       field: "article4sEnabled",
       headerName: "Article 4s (API)",
-      type: ColumnType.CUSTOM,
+      type: ColumnType.BOOLEAN,
       customComponent: (params) => {
         return <Article4Status teamSlug={params.row.slug} />;
       },
@@ -69,7 +69,7 @@ export const PlatformAdminPanel = () => {
     {
       field: "govnotifyPersonalisation",
       headerName: "GOV.UK Notify",
-      type: ColumnType.CUSTOM,
+      type: ColumnType.BOOLEAN,
       customComponent: (params) => {
         return params.value?.helpEmail ? <Configured /> : <NotConfigured />;
       },

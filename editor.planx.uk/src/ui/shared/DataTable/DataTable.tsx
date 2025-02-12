@@ -17,21 +17,16 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
   };
 
   const componentRegistry = {
-    [ColumnType.BOOLEAN]: (params: RenderCellParams) =>
-      params.value ? <True /> : <False />,
-    [ColumnType.ARRAY]: (params: RenderCellParams) => (
+    [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
+    [ColumnType.ARRAY]: (value: string[]) => (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
-        {params.value.map((item: string, index: number) => (
+        {value.map((item: string, index: number) => (
           <Typography py={0.4} variant="body2" key={index} component="li">
             {item}
           </Typography>
         ))}
       </Box>
     ),
-    [ColumnType.CUSTOM]: (params: RenderCellParams, column: ColumnConfig) => {
-      if (!column.customComponent) return undefined;
-      return column.customComponent(params);
-    },
   };
 
   const renderCellComponentByType = (
@@ -39,19 +34,23 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
     column: ColumnConfig,
   ): JSX.Element | undefined => {
     if (!column.type) return undefined;
+    if (column.customComponent) {
+      return column.customComponent(params);
+    }
     const ComponentRenderer = componentRegistry[column.type];
-    return ComponentRenderer(params, column);
+    return ComponentRenderer(params.value);
   };
 
-  const dataColumns = columns.map((column, index) => {
-    const { field, headerName, type } = column;
+  const dataColumns: GridColDef[] = columns.map((column, index) => {
+    const { field, headerName } = column;
     return {
       ...baseColDef,
       hideable: index === 0 ? false : true, // at least one column should remain
       field,
+      type: column.type === ColumnType.BOOLEAN ? "boolean" : undefined,
       headerName,
       width: column.width || baseColDef.width,
-      renderCell: type
+      renderCell: column.type
         ? (params: RenderCellParams) =>
             renderCellComponentByType(params, column)
         : undefined,
