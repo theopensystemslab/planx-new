@@ -1,4 +1,5 @@
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
@@ -10,6 +11,8 @@ export interface InternalNotesProps {
   value?: string;
   onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
 }
+
+const teamSlug = window.location.pathname.split("/")[1];
 
 export const InternalNotes: React.FC<InternalNotesProps> = ({
   name,
@@ -28,6 +31,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             multiline
             placeholder="Internal notes"
             rows={3}
+            disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           />
         </InputRow>
       </ModalSectionContent>

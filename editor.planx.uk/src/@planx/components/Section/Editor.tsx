@@ -1,6 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -13,6 +14,8 @@ import { ICONS } from "../shared/icons";
 import { parseSection, Section } from "./model";
 
 type Props = EditorProps<TYPES.Section, Section>;
+
+const teamSlug = window.location.pathname.split("/")[1];
 
 export default SectionComponent;
 
@@ -39,6 +42,7 @@ function SectionComponent(props: Props) {
               placeholder="Title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
             />
           </InputRow>
           <InputRow>
@@ -47,6 +51,7 @@ function SectionComponent(props: Props) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
             />
           </InputRow>
         </ModalSectionContent>

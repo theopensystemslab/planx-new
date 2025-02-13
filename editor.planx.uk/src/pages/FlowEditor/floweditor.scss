@@ -3,6 +3,8 @@ $nodeBorder: $black;
 $optionBorder: #b1b4b6;
 $hangerBackground: #f2f2f2;
 $focus: #ffdd00;
+$lockedBackground: #eeeeee;
+$lockedBorder: #b0b0b0;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -42,6 +44,10 @@ $fontMonospace: "Source Code Pro", monospace;
   flex: 1;
   overflow: auto;
   padding: $editorPadding;
+
+  &.flow-locked {
+    background: $lockedBackground;
+  }
 
   ol,
   li {
@@ -164,6 +170,11 @@ $fontMonospace: "Source Code Pro", monospace;
     padding: 6px 12px;
     overflow-wrap: break-word;
     word-break: break-word;
+
+    .flow-locked & {
+      background: $lockedBackground;
+      border-color: $lockedBorder;
+    }
 
     * {
       pointer-events: none;
@@ -339,6 +350,9 @@ $fontMonospace: "Source Code Pro", monospace;
     background: $black;
     color: white;
     border: none;
+    .flow-locked & {
+      background: #555;
+    }
   }
   &.breadcrumb {
     background-image: $pixel;
@@ -415,6 +429,9 @@ $fontMonospace: "Source Code Pro", monospace;
       background: #fffdb0 !important;
       position: relative;
       padding-right: 20px;
+      .flow-locked & {
+        background: #f5f4d2 !important;
+      }
     }
     // Triangle shapes to simulate paper fold on sticky note
     &:not(.isClone) a {
@@ -427,6 +444,9 @@ $fontMonospace: "Source Code Pro", monospace;
         height: 0;
         border-bottom: 12px solid #fff;
         border-left: 12px solid transparent;
+        .flow-locked & {
+          border-bottom-color: $lockedBackground;
+        }
       }
       &::after {
         content: "";
