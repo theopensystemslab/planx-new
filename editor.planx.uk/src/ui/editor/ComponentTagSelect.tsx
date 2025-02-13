@@ -30,6 +30,7 @@ const renderOption: AutocompleteProps<
   "div"
 >["renderOption"] = (props, tag, state) => {
   if (TAG_DISPLAY_VALUES[tag].editableBy?.some(skipTag)) return null;
+
   return (
     <RenderOptionCheckbox
       listProps={props}

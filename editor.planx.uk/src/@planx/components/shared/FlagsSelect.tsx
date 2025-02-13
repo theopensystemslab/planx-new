@@ -25,6 +25,9 @@ const renderOptions: AutocompleteProps<
     listProps={props}
     displayName={flag.text}
     state={state}
+    checkboxProps={{
+      sx: { backgroundColor: flag.bgColor },
+    }}
   />
 );
 
