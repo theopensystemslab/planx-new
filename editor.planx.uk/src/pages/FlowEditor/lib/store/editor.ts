@@ -232,9 +232,7 @@ export const editorStore: StateCreator<
   archiveFlow: (flowId, teamSlug) => {
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
-      alert(
-        `You do not have permission to archive this flow from ${teamSlug}, try again`,
-      );
+      alert(`You do not have permission to archive this flow from ${teamSlug}`);
       return Promise.resolve();
     }
 

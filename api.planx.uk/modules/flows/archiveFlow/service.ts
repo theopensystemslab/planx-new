@@ -2,14 +2,7 @@ import { gql } from "graphql-request";
 import { getClient } from "../../../client/index.js";
 import type { FlowId } from "@opensystemslab/planx-core/types";
 
-export const archiveFlow = async (flowId: FlowId, teamSlug: string) => {
-  const $client = getClient();
-  const team = await $client.team.getBySlug(teamSlug);
-  if (!team)
-    throw Error(
-      `Unable to find a team matching slug ${teamSlug}, exiting move`,
-    );
-
+export const archiveFlow = async (flowId: FlowId) => {
   const response = await updateDeleteAt(flowId);
   return response
 };
@@ -26,7 +19,7 @@ const updateDeleteAt = async (
   const { client: $client } = getClient();
   const { flow } = await $client.request<{flow:UpdateFlow}>(
     gql`
-      mutation ArchiveFlow($id: uuid!, $team_id: Int!) {
+      mutation ArchiveFlow($id: uuid!) {
         flow: update_flows_by_pk(
           pk_columns: { id: $id }
           _set: { deleted_at: "now()" }

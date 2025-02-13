@@ -10,7 +10,6 @@ interface ArchiveFlowResponse {
 export const archiveFlowSchema = z.object({
   params: z.object({
     flowId: z.string(),
-    teamSlug: z.string(),
   }),
 });
 
@@ -25,11 +24,11 @@ export const archiveFlowController: ArchiveFlowController = async (
   next,
 ) => {
   try {
-    const { flowId, teamSlug } = res.locals.parsedReq.params;
-    const {name: flowName} = await archiveFlow(flowId, teamSlug);
+    const { flowId } = res.locals.parsedReq.params;
+    const {name: flowName} = await archiveFlow(flowId);
 
     res.status(200).send({
-      message: `Successfully archived ${flowName} with id ${flowId} from ${teamSlug}`,
+      message: `Successfully archived ${flowName} with id ${flowId}`,
     });
   } catch (error) {
     return next(new ServerError({ message: `Failed to archive flow: ${error}` }));
