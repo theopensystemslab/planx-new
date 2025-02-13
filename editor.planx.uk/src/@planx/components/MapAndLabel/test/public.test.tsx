@@ -396,7 +396,7 @@ describe("copy feature select", () => {
     await user.click(listItemTwo);
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
-    expect(getByLabelText("Proposed work")).toHaveDisplayValue(
+    expect(getByLabelText("Proposed work (optional)")).toHaveDisplayValue(
       mockTreeData.work,
     );
   });
