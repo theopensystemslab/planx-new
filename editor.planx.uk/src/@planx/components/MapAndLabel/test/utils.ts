@@ -59,7 +59,7 @@ export const checkErrorMessagesEmpty = async () => {
 export const checkErrorMessagesPopulated = async () => {
   const errorMessages = screen.getAllByTestId(/error-message-input/);
 
-  expect(errorMessages).toHaveLength(4);
+  expect(errorMessages).toHaveLength(2);
 
   errorMessages.forEach((message) => {
     expect(message).not.toBeEmptyDOMElement();
