@@ -1,6 +1,6 @@
 export type TreeData = {
   species: string;
-  work: string;
+  work?: string;
   label: string;
 };
 
