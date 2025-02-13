@@ -44,3 +44,7 @@ Some workloads may require authentication, e.g. `test_api.py`. To get this worki
 The API load testing script requires some files to work with, which are in `/samples`. Care should be taken to make sure anything added there is in the public domain.
 
 For example, I used [Unsplash](https://unsplash.com/s/photos/tree?license=free) to search for an image with a ['free' license](https://unsplash.com/license), and printed a page from the [WikiHouse](https://www.wikihouse.cc/) site as a PDF.
+
+### File scanning
+
+We automatically scan file uploads via [Scanii](https://scanii.com/). In order to ensure we don't use our credits scanning files during load testing, please disable the staging API key via the Scanii web console before commencing any testing.

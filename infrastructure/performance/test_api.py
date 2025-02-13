@@ -52,6 +52,7 @@ class APIWorkload(OpenWorkloadBase):
   wait_time = constant_pacing(TASK_INVOCATION_RATE_SECONDS)
   host = get_target_host(HOST_BY_ENV)
 
+  # Please ensure that the Scannii API key for this environment is disabled prior to running this task
   @task
   def upload_public_file(self) -> None:
     # it is essentially free to upload files to S3, and also free to delete them
