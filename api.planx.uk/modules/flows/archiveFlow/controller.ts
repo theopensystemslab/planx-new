@@ -5,7 +5,6 @@ import { archiveFlow } from "./service.js";
 
 interface ArchiveFlowResponse {
   message: string;
-  flowName: string;
 }
 
 export const archiveFlowSchema = z.object({
@@ -30,10 +29,9 @@ export const archiveFlowController: ArchiveFlowController = async (
     const {name: flowName} = await archiveFlow(flowId, teamSlug);
 
     res.status(200).send({
-      message: `Successfully archived flow with id ${flowId} from ${teamSlug}`,
-      flowName: flowName
+      message: `Successfully archived ${flowName} with id ${flowId} from ${teamSlug}`,
     });
   } catch (error) {
-    return next(new ServerError({ message: `Failed to move flow: ${error}` }));
+    return next(new ServerError({ message: `Failed to archive flow: ${error}` }));
   }
 };
