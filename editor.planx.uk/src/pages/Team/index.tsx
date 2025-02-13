@@ -24,6 +24,7 @@ import SimpleMenu from "../../ui/editor/SimpleMenu";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
 import { formatLastEditMessage } from "../FlowEditor/utils";
+import { ArchiveDialog } from "./components/ArchiveDialog";
 import {
   StartFromTemplateButton,
   TemplateOption,
@@ -123,6 +124,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
+  const [isArchiving, setIsArchiving] = useState<boolean>(false);
   const handleArchive = () => {
     useStore
       .getState()
@@ -150,6 +152,18 @@ const FlowItem: React.FC<FlowItemProps> = ({
 
   return (
     <>
+      {isArchiving && (
+        <ArchiveDialog
+          title="Archive service"
+          open={isArchiving}
+          content={`Archiving this service will remove it from PlanX. Services can be restored by an admin`}
+          onClose={() => {
+            setIsArchiving(false);
+          }}
+          onConfirm={handleArchive}
+          submitLabel="Archive Service"
+        />
+      )}
       <DashboardListItem>
         <DashboardLink href={`./${flow.slug}`} prefetch={false}>
           <Typography variant="h4" component="h2">
@@ -229,9 +243,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
               },
               {
                 label: "Archive",
-                onClick: () => {
-                  handleArchive();
-                },
+                onClick: () => setIsArchiving(true),
               },
             ]}
           />
