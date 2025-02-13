@@ -46,6 +46,12 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   [`& .${autocompleteClasses.endAdornment}`]: {
     top: "unset",
   },
+  "& button.Mui-disabled > svg": {
+    color: theme.palette.text.disabled,
+  },
+  "& input": {
+    backgroundColor: "transparent",
+  },
   "&:focus-within": {
     "& svg": {
       color: "black",
