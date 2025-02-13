@@ -87,7 +87,7 @@ export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
             value={value}
             renderOption={renderOption}
             renderTags={renderTags}
-            disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+            // disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           />
         </InputRow>
       </ModalSectionContent>
