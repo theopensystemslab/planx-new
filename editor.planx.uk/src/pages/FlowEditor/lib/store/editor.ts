@@ -158,6 +158,7 @@ export interface FlowSummary {
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
+  archiveFlow: (flowId: string, teamSlug: string) => Promise<any>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
@@ -226,6 +227,30 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
+  },
+
+  archiveFlow: (flowId, teamSlug) => {
+    const valid = get().canUserEditTeam(teamSlug);
+    if (!valid) {
+      alert(
+        `You do not have permission to archive this flow from ${teamSlug}, try again`,
+      );
+      return Promise.resolve();
+    }
+
+    const token = get().jwt;
+
+    return axios
+      .post(
+        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/archive`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then((res) => alert(res?.data?.message));
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {

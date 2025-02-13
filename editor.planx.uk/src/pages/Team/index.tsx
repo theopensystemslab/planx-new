@@ -123,6 +123,14 @@ const FlowItem: React.FC<FlowItemProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
+  const handleArchive = () => {
+    useStore
+      .getState()
+      .archiveFlow(flow.id, teamSlug)
+      .then(() => {
+        refreshFlows();
+      });
+  };
   const handleCopy = () => {
     useStore
       .getState()
@@ -217,6 +225,12 @@ const FlowItem: React.FC<FlowItemProps> = ({
                       handleMove(slugify(newTeam), flow.name);
                     }
                   }
+                },
+              },
+              {
+                label: "Archive",
+                onClick: () => {
+                  handleArchive();
                 },
               },
             ]}
