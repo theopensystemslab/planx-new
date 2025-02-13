@@ -90,7 +90,7 @@ describe("Basic UI", () => {
 
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
-  it("shows all fields are required", async () => {
+  it("shows errors for all required fields", async () => {
     const { getByTestId, user, queryByRole, getAllByTestId } = setup(
       <MapAndLabel {...props} />,
     );
@@ -107,15 +107,9 @@ describe("validation and error handling", () => {
     // check input is empty
     expect(firstSpeciesInput).toHaveDisplayValue("");
 
+    // cannot continue if required fields are empty, errors are triggered
     await clickContinue(user);
-
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    expect(errorMessages).toHaveLength(4);
-
-    errorMessages.forEach((message) => {
-      expect(message).not.toBeEmptyDOMElement();
-    });
+    await checkErrorMessagesPopulated();
   });
 
   it("should show all fields are required, for all feature tabs", async () => {
