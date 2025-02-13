@@ -25,12 +25,14 @@ export const archiveFlowController: ArchiveFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-    const {name: flowName} = await archiveFlow(flowId);
+    const { name: flowName } = await archiveFlow(flowId);
 
     res.status(200).send({
       message: `Successfully archived ${flowName} with id ${flowId}`,
     });
   } catch (error) {
-    return next(new ServerError({ message: `Failed to archive flow: ${error}` }));
+    return next(
+      new ServerError({ message: `Failed to archive flow: ${error}` }),
+    );
   }
 };

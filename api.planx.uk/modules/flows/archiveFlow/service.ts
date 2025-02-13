@@ -4,20 +4,18 @@ import type { FlowId } from "@opensystemslab/planx-core/types";
 
 export const archiveFlow = async (flowId: FlowId) => {
   const response = await updateDeleteAt(flowId);
-  return response
+  return response;
 };
 
 interface UpdateFlow {
-  name:string
-  id: FlowId
+  name: string;
+  id: FlowId;
 }
 
-const updateDeleteAt = async (
-  flowId: FlowId,
-): Promise<UpdateFlow> => {
-  Date.now()
+const updateDeleteAt = async (flowId: FlowId): Promise<UpdateFlow> => {
+  Date.now();
   const { client: $client } = getClient();
-  const { flow } = await $client.request<{flow:UpdateFlow}>(
+  const { flow } = await $client.request<{ flow: UpdateFlow }>(
     gql`
       mutation ArchiveFlow($id: uuid!) {
         flow: update_flows_by_pk(

@@ -30,15 +30,18 @@ beforeEach(() => {
 });
 
 test.todo("returns an error if authorization headers are not set", async () => {
-  return
+  return;
 });
 
-test.todo("returns an error if the user does not have the 'teamEditor' role", async () => {
-  return
-});
+test.todo(
+  "returns an error if the user does not have the 'teamEditor' role",
+  async () => {
+    return;
+  },
+);
 
 test.todo("archives a flow", async () => {
-return
+  return;
 });
 
 test.todo("returns an error when the service errors", async () => {
@@ -57,5 +60,5 @@ test.todo("returns an error when the service errors", async () => {
       },
     ],
   });
-return
+  return;
 });

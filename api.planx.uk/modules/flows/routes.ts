@@ -39,7 +39,10 @@ import {
   createFlowFromTemplateController,
   createFlowFromTemplateSchema,
 } from "./createFlowFromTemplate/controller.js";
-import { archiveFlowController, archiveFlowSchema } from "./archiveFlow/controller.js";
+import {
+  archiveFlowController,
+  archiveFlowSchema,
+} from "./archiveFlow/controller.js";
 
 const router = Router();
 
