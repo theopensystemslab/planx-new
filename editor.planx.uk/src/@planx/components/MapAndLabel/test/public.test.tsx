@@ -1,6 +1,6 @@
 import { MyMap } from "@opensystemslab/map";
 import { Presentational as MapAndLabel } from "@planx/components/MapAndLabel/Public";
-import { queryByLabelText, waitFor, within } from "@testing-library/react";
+import { waitFor, within } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -374,8 +374,9 @@ describe("copy feature select", () => {
   });
 
   it("copies all data from one feature to another", async () => {
-    const { getByTitle, user, getByLabelText, queryByLabelText, getByRole } =
-      setup(<MapAndLabel {...props} />);
+    const { getByTitle, user, getByLabelText, getByRole } = setup(
+      <MapAndLabel {...props} />,
+    );
     addMultipleFeatures([point1, point2]);
     const tabOne = getByRole("tab", { name: /Tree 1/ });
 
@@ -395,7 +396,7 @@ describe("copy feature select", () => {
     await user.click(listItemTwo);
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
-    expect(queryByLabelText("Proposed work (optional)")).toHaveDisplayValue(
+    expect(getByLabelText("Proposed work (optional)")).toHaveDisplayValue(
       mockTreeData.work,
     );
   });
