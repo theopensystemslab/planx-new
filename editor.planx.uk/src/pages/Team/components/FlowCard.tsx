@@ -33,7 +33,7 @@ export const CardContent = styled(Box)(({ theme }) => ({
   height: "100%",
   textDecoration: "none",
   color: "currentColor",
-  padding: theme.spacing(2),
+  padding: theme.spacing(2, 2, 1),
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
@@ -185,6 +185,16 @@ const FlowCard: React.FC<FlowCardProps> = ({
                 ),
             )}
           </Box>
+          {flow.summary && (
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+            >
+              {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
+              <Link href={`./${flow.slug}/about`}>read more</Link>
+            </Typography>
+          )}
           <DashboardLink
             aria-label={flow.name}
             href={`./${flow.slug}`}
