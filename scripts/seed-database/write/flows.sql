@@ -18,7 +18,7 @@ CREATE TEMPORARY TABLE sync_flows (
   summary varchar(120),
   limitations text,
   is_template boolean,
-  deleted_at boolean
+  deleted_at timestamptz
   );
 \copy sync_flows FROM '/tmp/flows.csv' WITH (FORMAT csv, DELIMITER ';');
 
