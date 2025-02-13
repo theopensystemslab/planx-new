@@ -1,6 +1,6 @@
 ## BASE ##
 # 22.10.0 = LTS
-FROM node:22.10.0-alpine as base
+FROM node:22.10.0-alpine AS base
 
 # Setup Git - required for fetching git dependencies (planx-core)
 RUN apk add --no-cache git 
@@ -21,7 +21,7 @@ RUN pnpm install --recursive --prefer-offline
 RUN pnpm build
 RUN pnpm prune --production
 
-FROM node:22.10.0-alpine as production
+FROM node:22.10.0-alpine AS production
 WORKDIR /api
 
 ## PRODUCTION ##
@@ -32,7 +32,7 @@ COPY --from=base /api/node_modules ./node_modules
 CMD ["npm", "start"]
 
 ## DEVELOPMENT ##
-FROM base as development
+FROM base AS development
 ENV NODE_ENV development
 RUN pnpm install
 CMD ["pnpm", "dev"]
