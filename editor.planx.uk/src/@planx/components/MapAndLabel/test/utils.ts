@@ -35,7 +35,7 @@ export const addMultipleFeatures = (
 export const fillOutFirstHalfOfForm = async (user: UserEvent) => {
   const speciesInput = screen.getByLabelText("Species");
   await user.type(speciesInput, mockTreeData.species);
-  const workInput = screen.getByLabelText("Proposed work");
+  const workInput = screen.getByLabelText("Proposed work (optional)");
   await user.type(workInput, mockTreeData.work);
 };
 
