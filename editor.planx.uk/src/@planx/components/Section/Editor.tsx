@@ -1,7 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
