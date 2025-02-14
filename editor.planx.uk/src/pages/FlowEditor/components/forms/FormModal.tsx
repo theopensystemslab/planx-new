@@ -124,10 +124,6 @@ const containsMadeLink = (data: Record<string, unknown>): boolean => {
   });
 };
 
-const canUserEditNode = (teamSlug: string) => {
-  return useStore.getState().canUserEditTeam(teamSlug);
-};
-
 const FormModal: React.FC<{
   type: string;
   handleDelete?: () => void;
@@ -148,9 +144,11 @@ const FormModal: React.FC<{
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-  const userCanEdit = canUserEditNode(teamSlug);
+  const teamSlug = useStore.getState().getTeam().slug;
+  const canUserEditNode = (teamSlug: string) => {
+    return useStore.getState().canUserEditTeam(teamSlug);
+  };
+  const disabled = !canUserEditNode(teamSlug);
 
   const toast = useToast();
 
@@ -192,7 +190,7 @@ const FormModal: React.FC<{
             {...node?.data}
             {...extraProps}
             id={id}
-            disabled={!userCanEdit}
+            disabled={disabled}
             handleSubmit={(
               data: any,
               children: Array<any> | undefined = undefined,
@@ -242,7 +240,7 @@ const FormModal: React.FC<{
                   handleDelete();
                   navigate(rootFlowPath(true));
                 }}
-                disabled={!userCanEdit}
+                disabled={disabled}
               >
                 delete
               </Button>
@@ -257,7 +255,7 @@ const FormModal: React.FC<{
                   makeUnique(id, parent);
                   navigate(rootFlowPath(true));
                 }}
-                disabled={!userCanEdit}
+                disabled={disabled}
               >
                 make unique
               </Button>
@@ -271,7 +269,7 @@ const FormModal: React.FC<{
               variant="contained"
               color="primary"
               form="modal"
-              disabled={!userCanEdit}
+              disabled={disabled}
             >
               {handleDelete ? `Update ${type}` : `Create ${type}`}
             </Button>
