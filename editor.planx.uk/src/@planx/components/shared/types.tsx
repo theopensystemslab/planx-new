@@ -6,6 +6,7 @@ export interface EditorProps<Type, Data> {
   id?: string;
   handleSubmit?: (data: { type: Type; data: Data }) => void;
   node?: any;
+  disabled?: boolean;
 }
 
 export type PublicProps<Data> = Data & {

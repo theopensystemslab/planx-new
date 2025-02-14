@@ -14,6 +14,7 @@ interface Props {
   name?: string;
   variant?: "editorPage" | "editorModal";
   capitalize?: boolean;
+  disabled?: boolean;
 }
 
 export const Switch: React.FC<Props> = ({
@@ -23,6 +24,7 @@ export const Switch: React.FC<Props> = ({
   name,
   variant = "editorModal",
   capitalize = false,
+  disabled = false,
 }) => (
   <Box>
     <FormControlLabel
@@ -31,6 +33,7 @@ export const Switch: React.FC<Props> = ({
           checked={checked}
           onChange={onChange}
           sx={{ pointerEvents: "auto" }}
+          disabled={disabled}
         />
       }
       name={name}
