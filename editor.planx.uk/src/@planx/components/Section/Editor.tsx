@@ -15,8 +15,6 @@ import { parseSection, Section } from "./model";
 
 type Props = EditorProps<TYPES.Section, Section>;
 
-const teamSlug = window.location.pathname.split("/")[1];
-
 export default SectionComponent;
 
 function SectionComponent(props: Props) {
@@ -42,7 +40,7 @@ function SectionComponent(props: Props) {
               placeholder="Title"
               value={formik.values.title}
               onChange={formik.handleChange}
-              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -51,12 +49,16 @@ function SectionComponent(props: Props) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
-              disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 }
