@@ -11,6 +11,7 @@ interface Props<T extends BaseNodeData> {
   showMoreInformation?: boolean;
   showInternalNotes?: boolean;
   showTags?: boolean;
+  disabled?: boolean;
 }
 
 export const ModalFooter = <T extends BaseNodeData>({
@@ -18,6 +19,7 @@ export const ModalFooter = <T extends BaseNodeData>({
   showMoreInformation = true,
   showInternalNotes = true,
   showTags = true,
+  disabled = false,
 }: Props<T>) => (
   <>
     {showMoreInformation && (
@@ -27,6 +29,7 @@ export const ModalFooter = <T extends BaseNodeData>({
         howMeasured={formik.values.howMeasured}
         policyRef={formik.values.policyRef}
         info={formik.values.info}
+        disabled={disabled}
       />
     )}
     {showInternalNotes && (
@@ -34,6 +37,7 @@ export const ModalFooter = <T extends BaseNodeData>({
         name="notes"
         onChange={formik.handleChange}
         value={formik.values.notes}
+        disabled={disabled}
       />
     )}
     {showTags && (
