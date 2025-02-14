@@ -585,6 +585,11 @@ const getThemeOptions = ({
                 opacity: 0,
               },
             },
+            "& .MuiSwitch-switchBase.Mui-disabled": {
+              "& + .MuiSwitch-track": {
+                background: palette.text.disabled,
+              },
+            },
           },
         },
       },
