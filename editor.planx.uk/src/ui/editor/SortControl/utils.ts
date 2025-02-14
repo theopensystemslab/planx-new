@@ -26,5 +26,5 @@ export const getSortParams = <T extends object>(
       return { sortObject, sortDirection: validSortUrl.data.sortDirection };
   }
 
-  return { sortObject: sortOptions[0], sortDirection: "asc" };
+  return { sortObject: sortOptions[0], sortDirection: "desc" };
 };
