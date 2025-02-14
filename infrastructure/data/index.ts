@@ -12,9 +12,9 @@ const networking = new pulumi.StackReference(`planx/networking/${env}`);
 
 const db = new aws.rds.Instance("app", {
   engine: "postgres",
-  // Available versions:
-  // $ aws rds describe-db-engine-versions --default-only --engine postgres
-  engineVersion: "17.3",
+  // AWS restricts the maximum upgrade leap, see available versions:
+  // $ aws rds describe-db-engine-versions --engine postgres  --engine-version your-version --query "DBEngineVersions[*].ValidUpgradeTarget[*].{EngineVersion:EngineVersion}" --output text
+  engineVersion: "12.22",
   // Available instance types: https://aws.amazon.com/rds/instance-types/
   instanceClass: env === "production" ? "db.t3.medium" : "db.t3.small",
   allocatedStorage: env === "production" ? 100 : 20,
@@ -27,7 +27,7 @@ const db = new aws.rds.Instance("app", {
   skipFinalSnapshot: true,
   publiclyAccessible: true,
   storageEncrypted: true,
-  backupRetentionPeriod: env === "production" ? 35 : 0,
+  backupRetentionPeriod: env === "production" ? 35 : 1,
   applyImmediately: true,
 });
 export const dbRootUrl = pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
