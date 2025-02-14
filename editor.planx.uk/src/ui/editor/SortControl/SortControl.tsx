@@ -67,27 +67,30 @@ export const SortControl = <T extends object>({
     );
   }, [sortOptions]);
 
-  const updateSortParam = (sortOption: string) => {
-    const searchParams = new URLSearchParams();
-    searchParams.set("sort", sortOption);
-    searchParams.set("sortDirection", sortDirection);
-    navigation.navigate(
-      {
-        pathname: window.location.pathname,
-        search: `?${searchParams.toString()}`,
-      },
-      {
-        replace: true,
-      },
-    );
-  };
+  useEffect(() => {
+    const updateSortParam = (sortOption: string) => {
+      const searchParams = new URLSearchParams(route.url.search);
+      searchParams.set("sort", sortOption);
+      searchParams.set("sortDirection", sortDirection);
+      navigation.navigate(
+        {
+          pathname: window.location.pathname,
+          search: `?${searchParams.toString()}`,
+        },
+        {
+          replace: true,
+        },
+      );
+    };
+
+    updateSortParam(selectedDisplaySlug);
+  }, [navigation, route.url.search, selectedDisplaySlug, sortDirection]);
 
   useEffect(() => {
     const { fieldName } = selectedSort;
     const sortNewFlows = orderBy(records, fieldName, sortDirection);
     setRecords(sortNewFlows);
-    updateSortParam(selectedDisplaySlug);
-  }, [selectedSort, sortDirection, records]);
+  }, [selectedSort, sortDirection, records, setRecords]);
 
   return (
     <Box display={"flex"} gap={1}>
