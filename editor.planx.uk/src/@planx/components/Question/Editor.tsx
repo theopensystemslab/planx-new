@@ -35,6 +35,7 @@ interface Props {
   };
   options?: Option[];
   handleSubmit?: Function;
+  disabled?: boolean;
 }
 
 export const Question: React.FC<Props> = (props) => {
@@ -102,6 +103,7 @@ export const Question: React.FC<Props> = (props) => {
                 placeholder="Text"
                 onChange={formik.handleChange}
                 inputRef={focusRef}
+                disabled={props.disabled}
               />
               <ImgInput
                 img={formik.values.img}
@@ -116,6 +118,7 @@ export const Question: React.FC<Props> = (props) => {
                 value={formik.values.description}
                 placeholder="Description"
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>
@@ -135,6 +138,7 @@ export const Question: React.FC<Props> = (props) => {
                   )
                 }
                 label="Always put to user (forgo automation)"
+                disabled={props.disabled}
               />
             </InputRow>
           </InputGroup>
@@ -142,6 +146,7 @@ export const Question: React.FC<Props> = (props) => {
         <ModalSectionContent subtitle="Options">
           <ListManager
             values={formik.values.options}
+            disabled={props.disabled}
             onChange={(newOptions) => {
               formik.setFieldValue("options", newOptions);
             }}
@@ -172,11 +177,13 @@ export const Question: React.FC<Props> = (props) => {
         howMeasured={formik.values.howMeasured}
         policyRef={formik.values.policyRef}
         info={formik.values.info}
+        disabled={props.disabled}
       />
       <InternalNotes
         name="notes"
         onChange={formik.handleChange}
         value={formik.values.notes}
+        disabled={props.disabled}
       />
       <ComponentTagSelect
         value={formik.values.tags}
