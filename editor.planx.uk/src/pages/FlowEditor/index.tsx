@@ -51,7 +51,7 @@ const FlowEditor = () => {
     (state) => state.isTestEnvBannerVisible,
   );
 
-  const teamSlug = window.location.pathname.split("/")[1];
+  const teamSlug = useStore.getState().getTeam().slug;
   const lockedFlow = !useStore.getState().canUserEditTeam(teamSlug);
 
   return (
