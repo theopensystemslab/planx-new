@@ -28,8 +28,8 @@ export async function createNewDashboard({
 
     await updateFilter({
       dashboardId: copiedDashboardId,
-      filter: filter,
-      value: value,
+      filter,
+      value,
     });
     const publicLink = await generatePublicLink(copiedDashboardId);
     return publicLink;
