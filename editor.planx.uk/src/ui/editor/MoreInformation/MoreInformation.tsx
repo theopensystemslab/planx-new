@@ -14,6 +14,7 @@ export const MoreInformation = ({
   howMeasured,
   policyRef,
   info,
+  disabled = false,
 }: MoreInformationProps) => {
   return (
     <ModalSection>
@@ -25,6 +26,7 @@ export const MoreInformation = ({
               name="info"
               value={info}
               onChange={changeField}
+              disabled={disabled}
             />
           </InputLabel>
           <InputLabel label="Policy source">
@@ -33,6 +35,7 @@ export const MoreInformation = ({
               name="policyRef"
               value={policyRef}
               onChange={changeField}
+              disabled={disabled}
             />
           </InputLabel>
           <InputLabel label="How it is defined?" htmlFor="howMeasured">
@@ -42,6 +45,7 @@ export const MoreInformation = ({
                 name="howMeasured"
                 value={howMeasured}
                 onChange={changeField}
+                disabled={disabled}
               />
               <ImgInput
                 img={definitionImg}
@@ -50,6 +54,7 @@ export const MoreInformation = ({
                     target: { name: "definitionImg", value: newUrl },
                   });
                 }}
+                disabled={disabled}
               />
             </InputRow>
           </InputLabel>
