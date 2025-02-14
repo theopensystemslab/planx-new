@@ -21,9 +21,10 @@ import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props {
   formik: FormikHookReturn;
+  disabled?: boolean;
 }
 
-export const GroupedOptions = ({ formik }: Props) => {
+export const GroupedOptions = ({ formik, disabled }: Props) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
@@ -47,6 +48,7 @@ export const GroupedOptions = ({ formik }: Props) => {
                   value={groupedOption.title}
                   placeholder="Section Title"
                   onChange={formik.handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
               <Box flex={0}>
