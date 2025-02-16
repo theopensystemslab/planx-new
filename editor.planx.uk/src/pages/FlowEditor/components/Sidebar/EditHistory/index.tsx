@@ -9,15 +9,32 @@ import { Operation } from "types";
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
-export interface HistoryItem {
-  id: number;
-  type: "operation" | "comment" | "publish";
+export type HistoryItem = OperationHistoryItem | CommentHistoryItem | PublishHistoryItem;
+
+interface BaseHistoryItem {
+  id: number
   createdAt: string;
-  actorId: number;
+  actorId: number | undefined;
   firstName: string;
   lastName: string;
-  data: Operation["data"] | null;
-  comment: string | null;
+}
+
+export interface OperationHistoryItem extends BaseHistoryItem {
+  type: "operation";
+  data: Operation["data"];
+  comment: null;
+}
+
+export interface CommentHistoryItem extends BaseHistoryItem {
+  type: "comment";
+  data: null;
+  comment: string;
+}
+
+export interface PublishHistoryItem extends BaseHistoryItem {
+  type: "publish";
+  data: null;
+  comment: string | null; // @todo require input in future publish modal changes
 }
 
 const EditHistory = () => {
@@ -61,9 +78,6 @@ const EditHistory = () => {
     return null;
   }
 
-  // Handle missing operations (e.g. non-production data)
-  if (!loading && !data?.history) return null;
-
   if (loading && !data) {
     return (
       <Box>
@@ -75,15 +89,18 @@ const EditHistory = () => {
     );
   }
 
+  // Handle missing operations (e.g. non-production data)
+  if (!loading && !data?.history) return null;
+
   return (
     <Box>
       {user?.id && canUserEditTeam(teamSlug) && <AddCommentDialog flowId={flowId} actorId={user.id} />}
-      <EditHistoryTimeline data={data?.history} />
+      {data?.history && <EditHistoryTimeline events={data.history} />}
       {data?.history.length === 30 && (
         <>
           <Divider />
           <Typography variant="body2" mt={2} color="GrayText">
-            {`History shows the last 50 edits made to this service within the last six months. If you have questions about restoring to an earlier point in time, please contact a PlanX developer.`}
+            {`History shows the last 50 edits made to this service within the last six months. If you have questions about restoring to an earlier point in time, please contact a developer.`}
           </Typography>
         </>
       )}

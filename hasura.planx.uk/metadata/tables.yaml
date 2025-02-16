@@ -424,7 +424,7 @@
     schema: public
   is_enum: true
 - table:
-    name: flow_change_logs
+    name: flow_comments
     schema: public
   object_relationships:
     - name: actor
@@ -511,6 +511,30 @@
           - created_at
           - flow_id
         filter: {}
+      comment: ""
+  delete_permissions:
+    - role: demoUser
+      permission:
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+      comment: ""
+    - role: platformAdmin
+      permission:
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        filter:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
       comment: ""
 - table:
     name: flow_document_templates
@@ -605,14 +629,14 @@
             name: flows
             schema: public
   array_relationships:
-    - name: change_logs
+    - name: comments
       using:
         manual_configuration:
           column_mapping:
             id: flow_id
           insertion_order: null
           remote_table:
-            name: flow_change_logs
+            name: flow_comments
             schema: public
     - name: document_templates
       using:

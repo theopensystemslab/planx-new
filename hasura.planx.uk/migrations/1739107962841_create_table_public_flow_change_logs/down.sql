@@ -1,1 +1,1 @@
-DROP TABLE "public"."flow_change_logs" CASCADE;
+DROP TABLE "public"."flow_comments" CASCADE;

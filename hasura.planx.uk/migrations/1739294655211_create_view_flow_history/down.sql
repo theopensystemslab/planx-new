@@ -1,1 +1,1 @@
-DROP VIEW IF EXISTS "public"."flow_history";
+DROP VIEW IF EXISTS "public"."flow_comments";

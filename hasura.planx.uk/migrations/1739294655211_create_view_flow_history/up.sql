@@ -19,7 +19,7 @@ UNION
         null AS data,
         comment,
         actor_id
-    FROM flow_change_logs
+    FROM flow_comments
     WHERE created_at > CURRENT_DATE - INTERVAL '6 months'
 UNION
     SELECT
