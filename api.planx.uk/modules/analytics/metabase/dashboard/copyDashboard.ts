@@ -1,14 +1,21 @@
-import type { CopyDashboardParams, GetDashboardResponse } from "./types.js";
+import type {
+  CopyDashboardParams,
+  GetDashboardResponse,
+  MetabaseCopyDashboardParams,
+} from "./types.js";
 import { $metabase } from "../shared/client.js";
-import { toMetabaseParams } from "./types.js";
 
 export async function copyDashboard(
   params: CopyDashboardParams,
 ): Promise<GetDashboardResponse["id"]> {
-  const metabaseParams = toMetabaseParams(params);
+  const copyDashboardParams: MetabaseCopyDashboardParams = {
+    name: params.name,
+    description: params.description,
+    collection_id: params.collectionId,
+  };
   const response = await $metabase.post(
     `/api/dashboard/${params.templateId}/copy`,
-    metabaseParams,
+    copyDashboardParams,
   );
   return response.data.id;
 }

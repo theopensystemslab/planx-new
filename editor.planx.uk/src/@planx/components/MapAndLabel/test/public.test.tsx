@@ -8,7 +8,7 @@ import { axe } from "vitest-axe";
 
 import { mockTreeData } from "./mocks/GenericValues";
 import { mockFeaturePointObj, point1, point2, point3 } from "./mocks/geojson";
-import { props } from "./mocks/Trees";
+import { props } from "./mocks/SketchPlanCA";
 import {
   addFeaturesToMap,
   addMultipleFeatures,
@@ -17,7 +17,6 @@ import {
   clickContinue,
   fillOutFirstHalfOfForm,
   fillOutForm,
-  fillOutSecondHalfOfForm,
 } from "./utils";
 
 beforeAll(() => {
@@ -91,7 +90,7 @@ describe("Basic UI", () => {
 
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
-  it("shows all fields are required", async () => {
+  it("shows errors for all required fields", async () => {
     const { getByTestId, user, queryByRole, getAllByTestId } = setup(
       <MapAndLabel {...props} />,
     );
@@ -108,15 +107,9 @@ describe("validation and error handling", () => {
     // check input is empty
     expect(firstSpeciesInput).toHaveDisplayValue("");
 
+    // cannot continue if required fields are empty, errors are triggered
     await clickContinue(user);
-
-    const errorMessages = getAllByTestId(/error-message-input/);
-
-    expect(errorMessages).toHaveLength(4);
-
-    errorMessages.forEach((message) => {
-      expect(message).not.toBeEmptyDOMElement();
-    });
+    await checkErrorMessagesPopulated();
   });
 
   it("should show all fields are required, for all feature tabs", async () => {
@@ -317,16 +310,12 @@ describe("basic interactions - happy path", () => {
     // check that the data stays within the firstTabPanel
     expect(firstSpeciesInput).toHaveDisplayValue("Larch");
 
-    // Complete the filling out of the firstTabPanel
-    await fillOutSecondHalfOfForm(user);
-
     await user.click(secondTab);
 
     // check that the data stays within the secondTabPanel
     expect(secondSpeciesInput).toHaveDisplayValue("Larch");
 
     // Complete the filling out of the secondTabPanel
-    await fillOutSecondHalfOfForm(user);
 
     await clickContinue(user);
 
@@ -400,19 +389,10 @@ describe("copy feature select", () => {
 
     await user.click(listItemTwo);
 
-    const urgencyDiv = getByTitle("Urgency");
-    const urgencyInput = within(urgencyDiv).getByRole("textbox", {
-      hidden: true,
-    });
-
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
-    expect(getByLabelText("Proposed work")).toHaveDisplayValue(
+    expect(getByLabelText("Proposed work (optional)")).toHaveDisplayValue(
       mockTreeData.work,
     );
-    expect(getByLabelText("Justification")).toHaveDisplayValue(
-      mockTreeData.justification,
-    );
-    expect(urgencyInput).toHaveDisplayValue(mockTreeData.urgency);
   });
 
   it("should not have any accessibility violations", async () => {
@@ -589,9 +569,6 @@ describe("back navigation", () => {
                 label: "1",
                 species: "Test One",
                 work: "Test",
-                justification: "Test",
-                urgency: "low",
-                completionDate: "2002-10-01",
               },
             },
             {
@@ -604,9 +581,6 @@ describe("back navigation", () => {
                 label: "2",
                 species: "Test Two",
                 work: "Test",
-                justification: "Test",
-                urgency: "low",
-                completionDate: "2002-10-01",
               },
             },
           ],

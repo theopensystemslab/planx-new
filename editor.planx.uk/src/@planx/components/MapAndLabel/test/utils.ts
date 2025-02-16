@@ -35,22 +35,12 @@ export const addMultipleFeatures = (
 export const fillOutFirstHalfOfForm = async (user: UserEvent) => {
   const speciesInput = screen.getByLabelText("Species");
   await user.type(speciesInput, mockTreeData.species);
-  const workInput = screen.getByLabelText("Proposed work");
+  const workInput = screen.getByLabelText("Proposed work (optional)");
   await user.type(workInput, mockTreeData.work);
-};
-
-export const fillOutSecondHalfOfForm = async (user: UserEvent) => {
-  const justificationInput = screen.getByLabelText("Justification");
-  await user.type(justificationInput, mockTreeData.justification);
-  const urgencyDiv = screen.getByTitle("Urgency");
-  const urgencySelect = within(urgencyDiv).getByRole("combobox");
-  await user.click(urgencySelect);
-  await user.click(screen.getByRole("option", { name: /low/i }));
 };
 
 export const fillOutForm = async (user: UserEvent) => {
   await fillOutFirstHalfOfForm(user);
-  await fillOutSecondHalfOfForm(user);
 };
 
 export const clickContinue = async (user: UserEvent) => {
@@ -68,10 +58,5 @@ export const checkErrorMessagesEmpty = async () => {
 
 export const checkErrorMessagesPopulated = async () => {
   const errorMessages = screen.getAllByTestId(/error-message-input/);
-
-  expect(errorMessages).toHaveLength(4);
-
-  errorMessages.forEach((message) => {
-    expect(message).not.toBeEmptyDOMElement();
-  });
+  expect(errorMessages).toHaveLength(2);
 };

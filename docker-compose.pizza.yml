@@ -1,5 +1,3 @@
-version: "3.8"
-
 # Pizzas use [caddy-gen](https://hub.docker.com/r/wemakeservices/caddy-gen) as a reverse proxy
 # the "virtual.*" labels configure mapping rules
 

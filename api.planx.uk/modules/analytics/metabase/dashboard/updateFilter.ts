@@ -4,8 +4,8 @@ import type {
   UpdateFilterResponse,
   FilterParam,
   UpdatedFilterResponse,
-  GetFilterResponse,
 } from "./types.js";
+import { getDashboard } from "./getDashboard.js";
 
 function populateUpdatedFilterResponse(
   param: FilterParam,
@@ -35,13 +35,11 @@ export async function updateFilter(
   params: UpdateFilterParams,
 ): Promise<UpdateFilterResponse> {
   // Get existing dashboard data
-  const response = await $metabase.get<GetFilterResponse>(
-    `/api/dashboard/${params.dashboardId}`,
-  );
+  const response = await getDashboard(params.dashboardId);
 
   // Update filter default value parameter
   let updatedFilter: string | undefined;
-  const updatedParameters = response.data.parameters.map((param) => {
+  const updatedParameters = response.parameters.map((param) => {
     const result = populateUpdatedFilterResponse(
       param,
       params.filter,
@@ -51,6 +49,7 @@ export async function updateFilter(
     if (result.updatedValue) {
       updatedFilter = result.updatedValue;
     }
+
     return result.parameter;
   });
 

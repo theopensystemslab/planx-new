@@ -37,6 +37,7 @@ describe("flows and operations", () => {
       expect(i.mutations).toContain("delete_operations");
     });
   });
+
   describe("platformAdmin", () => {
     let i;
     beforeAll(async () => {
@@ -67,9 +68,9 @@ describe("flows and operations", () => {
       expect(i.mutations).not.toContain("delete_operations");
     });
 
-    test("can delete flows", () => {
-      expect(i.mutations).toContain("delete_flows_by_pk");
-      expect(i.mutations).toContain("delete_flows");
+    test("cannot delete flows", () => {
+      expect(i.mutations).not.toContain("delete_flows_by_pk");
+      expect(i.mutations).not.toContain("delete_flows");
     });
 
     test("can query published flows", () => {
@@ -114,9 +115,9 @@ describe("flows and operations", () => {
       expect(i.mutations).toContain("insert_operations");
     });
 
-    test("can delete flows", () => {
-      expect(i.mutations).toContain("delete_flows_by_pk");
-      expect(i.mutations).toContain("delete_flows");
+    test("cannot delete flows", () => {
+      expect(i.mutations).not.toContain("delete_flows_by_pk");
+      expect(i.mutations).not.toContain("delete_flows");
     });
 
     test("cannot delete operations", () => {
@@ -166,9 +167,9 @@ describe("flows and operations", () => {
       expect(i.mutations).toContain("insert_operations");
     });
 
-    test("can delete flows", () => {
-      expect(i.mutations).toContain("delete_flows_by_pk");
-      expect(i.mutations).toContain("delete_flows");
+    test("cannot delete flows", () => {
+      expect(i.mutations).not.toContain("delete_flows_by_pk");
+      expect(i.mutations).not.toContain("delete_flows");
     });
 
     test("cannot delete operations", () => {
