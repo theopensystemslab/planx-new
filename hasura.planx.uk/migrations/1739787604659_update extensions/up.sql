@@ -1,0 +1,4 @@
+SELECT PostGIS_Extensions_Upgrade();
+ALTER EXTENSION pgcrypto UPDATE;
+ALTER EXTENSION plpgsql UPDATE;
+ALTER EXTENSION fuzzystrmatch UPDATE;
