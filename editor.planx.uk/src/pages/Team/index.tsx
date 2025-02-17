@@ -2,13 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import Edit from "@mui/icons-material/Edit";
 import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
@@ -73,42 +67,6 @@ const LinkSubText = styled(Box)(({ theme }) => ({
   paddingTop: "0.5em",
 }));
 
-const Confirm = ({
-  title,
-  content,
-  submitLabel,
-  open,
-  onClose,
-  onConfirm,
-}: {
-  title: string;
-  content: string;
-  submitLabel: string;
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-}) => (
-  <Dialog
-    open={open}
-    onClose={() => {
-      onClose();
-    }}
-  >
-    <DialogTitle>{title}</DialogTitle>
-    <DialogContent>
-      <DialogContentText>{content}</DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={onClose} color="primary">
-        Cancel
-      </Button>
-      <Button onClick={onConfirm} color="primary">
-        {submitLabel}
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
-
 interface FlowItemProps {
   flow: FlowSummary;
   flows: FlowSummary[];
@@ -125,29 +83,26 @@ const FlowItem: React.FC<FlowItemProps> = ({
   refreshFlows,
 }) => {
   const [isArchiving, setIsArchiving] = useState<boolean>(false);
+  const [archiveFlow, copyFlow, moveFlow] = useStore((state) => [
+    state.archiveFlow,
+    state.copyFlow,
+    state.moveFlow,
+  ]);
+
   const handleArchive = () => {
-    useStore
-      .getState()
-      .archiveFlow(flow.id, teamSlug)
-      .then(() => {
-        refreshFlows();
-      });
+    archiveFlow(flow.id, teamSlug).then(() => {
+      refreshFlows();
+    });
   };
   const handleCopy = () => {
-    useStore
-      .getState()
-      .copyFlow(flow.id)
-      .then(() => {
-        refreshFlows();
-      });
+    copyFlow(flow.id).then(() => {
+      refreshFlows();
+    });
   };
   const handleMove = (newTeam: string, flowName: string) => {
-    useStore
-      .getState()
-      .moveFlow(flow.id, newTeam, flowName)
-      .then(() => {
-        refreshFlows();
-      });
+    moveFlow(flow.id, newTeam, flowName).then(() => {
+      refreshFlows();
+    });
   };
 
   return (
