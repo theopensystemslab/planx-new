@@ -123,9 +123,7 @@ export const dateInputValidationSchema = ({
   dateSchema()
     .when([], {
       is: () => required,
-      then: dateSchema().required(
-        "Enter a valid date in DD.MM.YYYY format"
-      ),
+      then: dateSchema().required("Enter a valid date in DD.MM.YYYY format"),
       otherwise: dateSchema().notRequired(),
     })
     .test({
