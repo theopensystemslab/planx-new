@@ -1,5 +1,4 @@
 import { within } from "@testing-library/react";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
@@ -76,7 +75,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(5);
+    expect(menuItems).toHaveLength(6);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
   });
 
@@ -85,7 +84,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(5);
+    expect(menuItems).toHaveLength(6);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
   });
 });
