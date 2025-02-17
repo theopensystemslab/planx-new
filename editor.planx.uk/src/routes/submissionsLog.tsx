@@ -4,10 +4,9 @@ import React from "react";
 
 import { makeTitle } from "./utils";
 
-const flowSubmissionsLogRoutes = compose(
+const submissionsLogRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
-    flow: req.params.flow.split(",")[0],
   })),
 
   mount({
@@ -24,4 +23,4 @@ const flowSubmissionsLogRoutes = compose(
   }),
 );
 
-export default flowSubmissionsLogRoutes;
+export default submissionsLogRoutes;
