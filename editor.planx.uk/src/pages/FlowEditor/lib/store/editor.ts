@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { FetchResult, gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType as TYPES,
@@ -7,6 +7,7 @@ import {
   FlowStatus,
   NodeId,
   OrderedFlow,
+  FlowId,
 } from "@opensystemslab/planx-core/types";
 import {
   add,
@@ -158,7 +159,10 @@ export interface FlowSummary {
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
-  archiveFlow: (flowId: string, teamSlug: string) => Promise<any>;
+  archiveFlow: (
+    flowId: string,
+    teamSlug: string,
+  ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
@@ -229,26 +233,37 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  archiveFlow: (flowId, teamSlug) => {
+  archiveFlow: async (flowId, teamSlug) => {
     const valid = get().canUserEditTeam(teamSlug);
     if (!valid) {
       alert(`You do not have permission to archive this flow from ${teamSlug}`);
       return Promise.resolve();
     }
 
-    const token = get().jwt;
+    const { data } = await client.mutate<{
+      flow: { id: string; name: string };
+    }>({
+      mutation: gql`
+        mutation updateFlow($id: uuid!) {
+          flow: update_flows_by_pk(
+            pk_columns: { id: $id }
+            _set: { deleted_at: "now()" }
+          ) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
 
-    return axios
-      .post(
-        `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/archive`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((res) => alert(res?.data?.message));
+    if (!data)
+      return alert(
+        `We are unable to archive this flow, refesh and try again or contact an admin`,
+      );
+    return data?.flow;
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {

@@ -82,7 +82,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
   teamSlug,
   refreshFlows,
 }) => {
-  const [isArchiving, setIsArchiving] = useState<boolean>(false);
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState<boolean>(false);
   const [archiveFlow, copyFlow, moveFlow] = useStore((state) => [
     state.archiveFlow,
     state.copyFlow,
@@ -107,13 +107,13 @@ const FlowItem: React.FC<FlowItemProps> = ({
 
   return (
     <>
-      {isArchiving && (
+      {isArchiveDialogOpen && (
         <ArchiveDialog
           title="Archive service"
-          open={isArchiving}
+          open={isArchiveDialogOpen}
           content={`Archiving this service will remove it from PlanX. Services can be restored by an admin`}
           onClose={() => {
-            setIsArchiving(false);
+            setIsArchiveDialogOpen(false);
           }}
           onConfirm={handleArchive}
           submitLabel="Archive Service"
@@ -198,7 +198,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
               },
               {
                 label: "Archive",
-                onClick: () => setIsArchiving(true),
+                onClick: () => setIsArchiveDialogOpen(true),
               },
             ]}
           />
