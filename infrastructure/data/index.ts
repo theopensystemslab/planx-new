@@ -10,6 +10,20 @@ const DB_ROOT_USERNAME = "dbuser";
 const env = pulumi.getStack();
 const networking = new pulumi.StackReference(`planx/networking/${env}`);
 
+// ShareDB does not use SSL - from Postgres 16 onwards this is forced on my default
+// Create a parameter group which turns this setting off
+const parameterGroup = new aws.rds.ParameterGroup("parameterGroup", {
+  name: "postgres16-force-ssl-off",
+  family: "postgres16",
+  parameters: [
+    {
+      applyMethod: "immediate",
+      name: "rds.force_ssl",
+      value: "0",
+    },
+  ],
+});
+
 const db = new aws.rds.Instance("app", {
   engine: "postgres",
   // AWS restricts the maximum upgrade leap, see available versions:
@@ -29,6 +43,7 @@ const db = new aws.rds.Instance("app", {
   storageEncrypted: true,
   backupRetentionPeriod: env === "production" ? 35 : 1,
   applyImmediately: true,
+  parameterGroupName: parameterGroup.name,
 });
 export const dbRootUrl = pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
   "db-password"
