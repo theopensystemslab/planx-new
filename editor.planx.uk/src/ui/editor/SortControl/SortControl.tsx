@@ -8,7 +8,7 @@ import { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import SelectInput from "../SelectInput/SelectInput";
-import { getSortParams } from "./utils";
+import { getSortParams, sortNullToBottom } from "./utils";
 
 type SortDirection = "asc" | "desc";
 
@@ -88,7 +88,7 @@ export const SortControl = <T extends object>({
 
   useEffect(() => {
     const { fieldName } = selectedSort;
-    const sortNewFlows = orderBy(records, fieldName, sortDirection);
+    const sortNewFlows = orderBy(records,fieldName, sortDirection).sort((a:T,b:T) => sortNullToBottom(a,b, fieldName))
     setRecords(sortNewFlows);
   }, [selectedSort, sortDirection, records, setRecords]);
 
