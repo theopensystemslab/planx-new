@@ -1,4 +1,4 @@
-CREATE TABLE "public"."flow_customisations" (
+CREATE TABLE "public"."templated_flow_edits" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "flow_id" uuid NOT NULL,
   "node_id" text NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE "public"."flow_customisations" (
   UNIQUE ("node_id", "flow_id", "key")
 );
 
-COMMENT ON TABLE "public"."flow_customisations" IS E'Changes made to a templated flow\'s customisable nodes. These customisations are reconciled with the source template to generate a customised flow.';
+COMMENT ON TABLE "public"."templated_flow_edits" IS E'Changes made to a templated flow\'s customisable nodes. These customisations are reconciled with the source template to generate a customised flow.';
 
 CREATE OR REPLACE FUNCTION "public"."set_current_timestamp_updated_at"()
 RETURNS TRIGGER AS $$
@@ -23,10 +23,10 @@ BEGIN
   RETURN _new;
 END;
 $$ LANGUAGE plpgsql;
-CREATE TRIGGER "set_public_flow_customisations_updated_at"
-BEFORE UPDATE ON "public"."flow_customisations"
+CREATE TRIGGER "set_public_templated_flow_edits_updated_at"
+BEFORE UPDATE ON "public"."templated_flow_edits"
 FOR EACH ROW
 EXECUTE PROCEDURE "public"."set_current_timestamp_updated_at"();
-COMMENT ON TRIGGER "set_public_flow_customisations_updated_at" ON "public"."flow_customisations"
+COMMENT ON TRIGGER "set_public_templated_flow_edits_updated_at" ON "public"."templated_flow_edits"
 IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE EXTENSION IF NOT EXISTS pgcrypto;

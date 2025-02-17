@@ -537,7 +537,7 @@
                       _eq: teamEditor
       comment: ""
 - table:
-    name: flow_customisations
+    name: templated_flow_edits
     schema: public
   object_relationships:
     - name: flow
@@ -590,7 +590,7 @@
           - updated_at
           - flow_id
           - id
-      comment: teamEditors can only insert customisations for flows which they can edit
+      comment: teamEditors can only insert nodes for templated flows which they can edit
   select_permissions:
     - role: demoUser
       permission:
