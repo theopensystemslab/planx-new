@@ -2,11 +2,10 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
-
-import { AdminPanelData } from "/Users/jo/Code/planx-new/editor.planx.uk/src/types";
 
 import {
   False as NotConfigured,
