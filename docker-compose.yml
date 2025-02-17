@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
   postgres:
-    image: postgis/postgis:12-3.0-alpine
+    image: postgis/postgis:16-3.5-alpine
     restart: unless-stopped
     ports:
       - ${PG_PORT}:5432
@@ -156,6 +154,7 @@ services:
       ORDNANCE_SURVEY_API_KEY: ${ORDNANCE_SURVEY_API_KEY}
       PORT: ${API_PORT}
       SESSION_SECRET: ${SESSION_SECRET}
+      SKIP_RATE_LIMIT_SECRET: ${SKIP_RATE_LIMIT_SECRET}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
       UNIFORM_SUBMISSION_URL: ${UNIFORM_SUBMISSION_URL}
       UNIFORM_TOKEN_URL: ${UNIFORM_TOKEN_URL}

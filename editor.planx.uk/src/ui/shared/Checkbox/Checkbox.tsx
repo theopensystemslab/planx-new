@@ -9,6 +9,7 @@ const Root = styled(Box, {
 })<BoxProps & { disabled?: boolean; variant?: "default" | "compact" }>(
   ({ theme, disabled, variant }) => ({
     display: "inline-flex",
+    alignSelf: "flex-start",
     flexShrink: 0,
     position: "relative",
     width: 40,
@@ -25,6 +26,7 @@ const Root = styled(Box, {
       backgroundColor: theme.palette.grey[400],
     }),
     ...(variant === "compact" && {
+      alignSelf: "center",
       width: 24,
       height: 24,
     }),

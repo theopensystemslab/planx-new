@@ -17,7 +17,8 @@ CREATE TEMPORARY TABLE sync_flows (
   templated_from uuid,
   summary varchar(120),
   limitations text,
-  is_template boolean
+  is_template boolean,
+  deleted_at timestamptz
   );
 \copy sync_flows FROM '/tmp/flows.csv' WITH (FORMAT csv, DELIMITER ';');
 
@@ -37,7 +38,8 @@ INSERT INTO flows (
   templated_from,
   summary,
   limitations,
-  is_template
+  is_template,
+  deleted_at
 )
 SELECT
   id,
@@ -55,7 +57,8 @@ SELECT
   templated_from,
   summary,
   limitations,
-  is_template
+  is_template,
+  deleted_at
 FROM sync_flows
 ON CONFLICT (id) DO UPDATE
 SET
@@ -73,7 +76,8 @@ SET
   templated_from = EXCLUDED.templated_from,
   summary = EXCLUDED.summary,
   limitations = EXCLUDED.limitations,
-  is_template = EXCLUDED.is_template;
+  is_template = EXCLUDED.is_template,
+  deleted_at = EXCLUDED.deleted_at;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
 UPDATE flows SET version = 1;

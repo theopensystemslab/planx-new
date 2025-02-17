@@ -670,7 +670,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
     - role: demoUser
       permission:
@@ -694,19 +696,22 @@
         computed_fields:
           - data_merged
         filter:
-          _or:
-            - _and:
-                - creator_id:
-                    _eq: x-hasura-user-id
+          _and:
+            - _or:
+                - _and:
+                    - creator_id:
+                        _eq: x-hasura-user-id
+                    - team:
+                        id:
+                          _eq: 32
                 - team:
                     id:
-                      _eq: 32
-            - team:
-                id:
-                  _in:
-                    - 1
-                    - 29
-                    - 30
+                      _in:
+                        - 1
+                        - 29
+                        - 30
+            - deleted_at:
+                _is_null: true
       comment: 'For the demo user, we want to ensure they can only see their own flows, and flows from the Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
     - role: platformAdmin
       permission:
@@ -729,7 +734,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
     - role: public
       permission:
@@ -748,7 +755,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
       comment: ""
     - role: teamEditor
@@ -772,7 +781,9 @@
           - version
         computed_fields:
           - data_merged
-        filter: {}
+        filter:
+          deleted_at:
+            _is_null: true
         allow_aggregations: true
   update_permissions:
     - role: api
@@ -793,7 +804,12 @@
           - team_id
           - updated_at
           - version
-        filter: {}
+        filter:
+          _and:
+            - is_template:
+                _eq: false
+            - deleted_at:
+                _is_null: true
         check: {}
         validate_input:
           definition:
@@ -811,6 +827,7 @@
           - created_at
           - creator_id
           - data
+          - deleted_at
           - description
           - id
           - limitations
@@ -827,7 +844,11 @@
                 _eq: 32
             - creator_id:
                 _eq: x-hasura-user-id
-        check: null
+            - deleted_at:
+                _is_null: true
+            - is_template:
+                _eq: false
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
@@ -842,6 +863,7 @@
       permission:
         columns:
           - data
+          - deleted_at
           - description
           - is_template
           - limitations
@@ -851,8 +873,10 @@
           - status
           - summary
           - team_id
-        filter: {}
-        check: null
+        filter:
+          deleted_at:
+            _is_null: true
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
@@ -866,6 +890,7 @@
       permission:
         columns:
           - data
+          - deleted_at
           - description
           - limitations
           - name
@@ -875,14 +900,19 @@
           - summary
           - team_id
         filter:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
-        check: null
+          _and:
+            - team:
+                members:
+                  _and:
+                    - user_id:
+                        _eq: x-hasura-user-id
+                    - role:
+                        _eq: teamEditor
+            - deleted_at:
+                _is_null: true
+            - is_template:
+                _eq: false
+        check: {}
         validate_input:
           definition:
             forward_client_headers: false
@@ -892,29 +922,6 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
-  delete_permissions:
-    - role: demoUser
-      permission:
-        filter:
-          _and:
-            - team_id:
-                _eq: 32
-            - creator_id:
-                _eq: x-hasura-user-id
-      comment: ""
-    - role: platformAdmin
-      permission:
-        filter: {}
-    - role: teamEditor
-      permission:
-        filter:
-          team:
-            members:
-              _and:
-                - user_id:
-                    _eq: x-hasura-user-id
-                - role:
-                    _eq: teamEditor
 - table:
     name: global_settings
     schema: public
@@ -1886,15 +1893,16 @@
     - role: demoUser
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter:
           team:
             flows:
@@ -1904,29 +1912,31 @@
     - role: platformAdmin
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter:
           team:
             members:

@@ -24,7 +24,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { GetSubmissionsResponse, Submission } from ".";
+import { EventsLogProps, Submission } from "./types";
 
 const Response = styled(Box)(() => ({
   fontSize: "1em",
@@ -43,10 +43,11 @@ const Feed = styled(TableContainer)(() => ({
   readingOrder: "flex-visual",
 }));
 
-const EventsLog: React.FC<GetSubmissionsResponse> = ({
+const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
   loading,
   error,
+  filterByFlow,
 }) => {
   if (loading)
     return (
@@ -60,7 +61,9 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
     return (
       <ErrorSummary
         format="info"
-        heading="No payments or submissions found for this service"
+        heading={`No payments or submissions found for this ${
+          filterByFlow ? "service" : "team"
+        }`}
         message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
       />
     );
@@ -69,6 +72,9 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
       <Table stickyHeader sx={{ tableLayout: "fixed" }}>
         <TableHead>
           <TableRow sx={{ "& > *": { borderBottomColor: "black !important" } }}>
+            <TableCell sx={{ width: 130 }}>
+              <strong>Flow name</strong>
+            </TableCell>
             <TableCell sx={{ width: 250 }}>
               <strong>Event</strong>
             </TableCell>
@@ -81,8 +87,8 @@ const EventsLog: React.FC<GetSubmissionsResponse> = ({
             <TableCell sx={{ width: 350 }}>
               <strong>Session ID</strong>
             </TableCell>
-            <TableCell sx={{ width: 50 }}></TableCell>
-            <TableCell sx={{ width: 50 }}></TableCell>
+            <TableCell sx={{ width: 50 }} />
+            <TableCell sx={{ width: 50 }} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -119,6 +125,7 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell>{submission.flowName}</TableCell>
         <TableCell>
           <Box
             sx={{
@@ -195,25 +202,21 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
 };
 
 const FormattedResponse: React.FC<Submission> = (submission) => {
-  if (submission.eventType === "Pay") {
-    return (
-      <Response component="pre">
-        {JSON.stringify(submission.response, null, 2)}
-      </Response>
-    );
-  } else {
-    return (
-      <Response component="pre">
-        {submission.status === "Success"
-          ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
-          : JSON.stringify(
-              JSON.parse(submission.response?.data?.message),
-              null,
-              2,
-            )}
-      </Response>
-    );
-  }
+  return submission.eventType === "Pay" ? (
+    <Response component="pre">
+      {JSON.stringify(submission.response, null, 2)}
+    </Response>
+  ) : (
+    <Response component="pre">
+      {submission.status === "Success"
+        ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
+        : JSON.stringify(
+            JSON.parse(submission.response?.data?.message),
+            null,
+            2,
+          )}
+    </Response>
+  );
 };
 
 export default EventsLog;

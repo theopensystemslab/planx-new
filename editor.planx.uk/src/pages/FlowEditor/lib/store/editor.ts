@@ -171,7 +171,6 @@ export interface EditorStore extends Store.Store {
     templateId: string,
     teamId: number,
   ) => Promise<AxiosResponse>;
-  deleteFlow: (teamId: number, flowSlug: string) => Promise<object>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
@@ -341,25 +340,6 @@ export const editorStore: StateCreator<
       },
     );
 
-    return response;
-  },
-
-  deleteFlow: async (teamId, flowSlug) => {
-    const response = await client.mutate({
-      mutation: gql`
-        mutation DeleteFlow($team_id: Int, $flow_slug: String) {
-          delete_flows(
-            where: { team_id: { _eq: $team_id }, slug: { _eq: $flow_slug } }
-          ) {
-            affected_rows
-          }
-        }
-      `,
-      variables: {
-        flow_slug: flowSlug,
-        team_id: teamId,
-      },
-    });
     return response;
   },
 

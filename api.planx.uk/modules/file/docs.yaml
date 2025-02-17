@@ -4,7 +4,7 @@ info:
   version: 0.1.0
 tags:
   - name: file
-    description: Endpoints for uploading and downloading files
+    description: Endpoints for uploading, downloading and deleting files
 components:
   parameters:
     fileKey:
@@ -84,6 +84,18 @@ paths:
           $ref: "#/components/responses/DownloadFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
+    delete:
+      tags: ["file"]
+      parameters:
+        - $ref: "#/components/parameters/fileKey"
+        - $ref: "#/components/parameters/fileName"
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          $ref: "#/components/responses/UploadFile"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
   /file/private/{fileKey}/{fileName}:
     get:
       tags: ["file"]
@@ -93,7 +105,7 @@ paths:
       security:
         - fileAPIKeyAuth: []
       responses:
-        "200":
-          $ref: "#/components/responses/DownloadFile"
+        "204":
+          description: Successful deletion
         "500":
           $ref: "#/components/responses/ErrorMessage"

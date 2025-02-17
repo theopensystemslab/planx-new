@@ -1,10 +1,8 @@
-# Performance
-
-## Load testing with Locust
+# Load testing with Locust
 
 This directory contains Python scripts for load testing using [Locust](https://locust.io/) ([docs](https://docs.locust.io/en/stable/)).
 
-### Setup
+## Setup
 
 We use `uv` to manage dependencies for this project. If you aren't already familiar with this Python project manager, [get set up](https://docs.astral.sh/uv/).
 
@@ -12,7 +10,7 @@ Then:
 - run `uv sync` (`pyproject.toml` and `uv.lock` together completely determine the setup)
 - run `source .venv/bin/activate` to [activate the virtual environment](https://docs.astral.sh/uv/pip/environments/#using-a-virtual-environment)
 
-### Usage
+## Usage
 
 The `run_locust.sh` script is intended to encode some sensible assumptions and do some of the heavy lifting to make it very easy to run load tests.
 
@@ -26,13 +24,27 @@ As an example, the following command will simulate 500 users hitting PlanX stagi
 
 Then find the Locust GUI at `http://localhost:8089/`.
 
-### Development
+## Development
 
 The `OpenWorkloadBase` class in `base_workload.py` provides a base class which all the `test_*.py` scripts inherit from. Any new workload should follow the same pattern.
 
-Also note that this project using [ruff](https://docs.astral.sh/ruff/) for linting and formatting. So before pushing up changes (and with the venv activated), run the following:
+Also note that this project uses [ruff](https://docs.astral.sh/ruff/) for linting and formatting. So before pushing up changes (and with the venv activated), run the following:
 
 ```
 ruff check
 ruff format
 ```
+
+### Auth
+
+Some workloads may require authentication, e.g. `test_api.py`. To get this working, just log in to any environment, grab the JWT and export it in your shell as an `AUTH_TOKEN` environment variable. The same script will only be able to load test staging in a serious fashion if it is also supplied with `SKIP_RATE_LIMIT_SECRET`, which should be in your `.env` file at root of project.
+
+### Samples
+
+The API load testing script requires some files to work with, which are in `/samples`. Care should be taken to make sure anything added there is in the public domain.
+
+For example, I used [Unsplash](https://unsplash.com/s/photos/tree?license=free) to search for an image with a ['free' license](https://unsplash.com/license), and printed a page from the [WikiHouse](https://www.wikihouse.cc/) site as a PDF.
+
+### File scanning
+
+We automatically scan file uploads via [Scanii](https://scanii.com/). In order to ensure we don't use our credits scanning files during load testing, please disable the staging API key via the Scanii web console before commencing any testing.
