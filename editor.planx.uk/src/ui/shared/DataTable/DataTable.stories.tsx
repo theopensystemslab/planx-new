@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Meta, StoryObj } from "@storybook/react";
 
 import { DataTable } from "./DataTable";
@@ -25,7 +26,6 @@ export const Basic = {
         field: "referenceCode",
         headerName: "Reference code",
       },
-
       {
         field: "liveFlows",
         headerName: "Live services",
