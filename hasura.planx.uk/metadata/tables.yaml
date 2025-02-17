@@ -2061,15 +2061,16 @@
     - role: demoUser
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter:
           team:
             flows:
@@ -2079,29 +2080,31 @@
     - role: platformAdmin
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter:
           team:
             members:
@@ -2794,18 +2797,20 @@
     - role: platformAdmin
       permission:
         columns:
-          - govpay_enabled
-          - planning_data_enabled
-          - id
-          - govnotify_personalisation
           - action_colour
           - article_4s_enabled
           - bops_submission_url
           - favicon
+          - govnotify_personalisation
+          - govpay_enabled
           - homepage
+          - id
           - link_colour
+          - live_flows
           - logo
           - name
+          - planning_data_enabled
+          - power_automate_enabled
           - primary_colour
           - reference_code
           - send_to_email_address

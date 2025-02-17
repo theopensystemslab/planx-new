@@ -487,7 +487,7 @@ const EditorToolbar: React.FC<{
             <RightBox>
               {user && (
                 <ProfileSection disableGutters>
-                  <Box mr={1}></Box>
+                  <Box mr={1} />
                   <IconButton
                     edge="end"
                     color="inherit"
@@ -597,7 +597,7 @@ const Header: React.FC = () => {
         "@media print": { backgroundColor: "white", color: "black" },
       }}
     >
-      <Toolbar headerRef={headerRef}></Toolbar>
+      <Toolbar headerRef={headerRef} />
     </Root>
   );
 };

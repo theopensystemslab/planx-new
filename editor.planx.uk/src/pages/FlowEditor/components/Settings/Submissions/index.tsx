@@ -6,51 +6,17 @@ import SettingsSection from "ui/editor/SettingsSection";
 
 import { useStore } from "../../../lib/store";
 import EventsLog from "./EventsLog";
+import { Submission, SubmissionsProps } from "./types";
 
-export interface Submission {
-  sessionId: string;
-  eventId: string;
-  eventType:
-    | "Pay"
-    | "Submit to BOPS"
-    | "Submit to Uniform"
-    | "Send to email"
-    | "Upload to AWS S3";
-  status?:
-    | "Success"
-    | "Failed (500)" // Hasura scheduled event status codes
-    | "Failed (502)"
-    | "Failed (503)"
-    | "Failed (504)"
-    | "Failed (400)"
-    | "Failed (401)"
-    | "Started" // Payment status enum codes (excluding "Created")
-    | "Submitted"
-    | "Capturable"
-    | "Failed"
-    | "Cancelled"
-    | "Error"
-    | "Unknown";
-  retry: boolean;
-  response: Record<string, any>;
-  createdAt: string;
-}
-
-export interface GetSubmissionsResponse {
-  submissions: Submission[];
-  loading: boolean;
-  error: Error | undefined;
-}
-
-const Submissions: React.FC = () => {
-  const flowId = useStore((state) => state.id);
+const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
+  const [teamId] = useStore((state) => [state.teamId]);
 
   // submission_services_log view is already filtered for events >= Jan 1 2024
   const { data, loading, error } = useQuery<{ submissions: Submission[] }>(
     gql`
-      query GetSubmissions($flow_id: uuid!) {
+      query GetSubmissions($team_id: Int!) {
         submissions: submission_services_log(
-          where: { flow_id: { _eq: $flow_id } }
+          where: { team_id: { _eq: $team_id } }
           order_by: { created_at: asc }
         ) {
           sessionId: session_id
@@ -60,31 +26,52 @@ const Submissions: React.FC = () => {
           retry: retry
           response: response
           createdAt: created_at
+          flowName: flow_name
         }
       }
     `,
     {
-      variables: { flow_id: flowId },
-      skip: !flowId,
+      variables: { team_id: teamId },
+      skip: !teamId,
     },
   );
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
 
+  const getFlowNameFromSlug = (slug: string) => {
+    return slug.replace(/-/g, " ");
+  };
+
+  const flowName = flowSlug && getFlowNameFromSlug(flowSlug);
+
+  // filter by flow if flowSlug prop is passed from route params
+  const filteredSubmissions = submissions.filter(
+    (submission) =>
+      !flowSlug ||
+      submission.flowName.toLowerCase() === flowName?.toLowerCase(),
+  );
+
   return (
-    <Container maxWidth="contentWrap">
+    <Container>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Submissions
         </Typography>
         <Typography variant="body1">
-          Feed of payment and submission events for this service. Successful
-          submission events within the last 28 days are availabe to download to
-          team editors.
+          {`Feed of payment and submission events for ${
+            flowSlug ? "this service" : "services in this team"
+          }.
+          Successful submission events from within the last 28 days are
+          available to be downloaded by team editors.`}
         </Typography>
       </SettingsSection>
       <SettingsSection>
-        <EventsLog submissions={submissions} loading={loading} error={error} />
+        <EventsLog
+          submissions={filteredSubmissions}
+          loading={loading}
+          error={error}
+          filterByFlow={Boolean(flowSlug)}
+        />
       </SettingsSection>
     </Container>
   );

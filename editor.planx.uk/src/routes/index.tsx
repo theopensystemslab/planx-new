@@ -3,8 +3,8 @@ import { loadingView } from "pages/layout/LoadingLayout";
 import * as React from "react";
 
 import { client } from "../lib/graphql";
-import ErrorPage from "../pages/ErrorPage";
-import Login from "../pages/Login";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import Login from "../pages/Login/Login";
 import { isPreviewOnlyDomain, makeTitle } from "./utils";
 
 type RoutingContext = {

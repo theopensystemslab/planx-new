@@ -2,6 +2,7 @@ import "themeOverrides.d.ts";
 
 import { radioClasses } from "@mui/material/Radio";
 import {
+  alpha,
   createTheme,
   darken,
   lighten,
@@ -15,6 +16,8 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { deepmerge } from "@mui/utils";
+import { gridClasses } from "@mui/x-data-grid";
+import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
@@ -676,6 +679,32 @@ const getThemeOptions = ({
             fontSize: "0.8em",
             borderRadius: 0,
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
+        },
+      },
+      MuiDataGrid: {
+        styleOverrides: {
+          root: {
+            margin: 1,
+            [`& .${gridClasses.cell}`]: {
+              padding: "10px",
+              display: "flex",
+              "&:focus": {
+                outline: "none",
+              },
+            },
+            [`& .${gridClasses.columnHeaderTitle}`]: {
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            },
+            ".MuiDataGrid-row:hover": {
+              backgroundColor: "transparent",
+            },
+            [`& .${gridClasses.row}.odd`]: {
+              backgroundColor: palette.background.paper,
+              "&.Mui-selected": {
+                backgroundColor: alpha(palette.primary.main, 0.05),
+              },
+            },
           },
         },
       },
