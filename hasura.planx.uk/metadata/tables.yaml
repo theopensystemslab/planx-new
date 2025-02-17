@@ -551,8 +551,7 @@
             team_id:
               _eq: 32
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -563,8 +562,7 @@
       permission:
         check: {}
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -583,8 +581,7 @@
                   - role:
                       _eq: teamEditor
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -595,8 +592,7 @@
     - role: demoUser
       permission:
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -610,8 +606,7 @@
     - role: platformAdmin
       permission:
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -622,8 +617,7 @@
     - role: teamEditor
       permission:
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -635,8 +629,7 @@
     - role: demoUser
       permission:
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -651,8 +644,7 @@
     - role: platformAdmin
       permission:
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at
@@ -664,8 +656,7 @@
     - role: teamEditor
       permission:
         columns:
-          - value
-          - key
+          - node_data
           - node_id
           - created_at
           - updated_at

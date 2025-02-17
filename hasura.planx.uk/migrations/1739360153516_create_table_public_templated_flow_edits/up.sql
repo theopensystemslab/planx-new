@@ -2,13 +2,12 @@ CREATE TABLE "public"."templated_flow_edits" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "flow_id" uuid NOT NULL,
   "node_id" text NOT NULL,
-  "key" text NOT NULL,
-  "value" jsonb NOT NULL,
+  "node_data" jsonb NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT now(),
   "updated_at" timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY ("id"),
   FOREIGN KEY ("flow_id") REFERENCES "public"."flows"("id") ON UPDATE restrict ON DELETE cascade,
-  UNIQUE ("node_id", "flow_id", "key")
+  UNIQUE ("node_id", "flow_id")
 );
 
 COMMENT ON TABLE "public"."templated_flow_edits" IS E'Changes made to a templated flow\'s customisable nodes. These customisations are reconciled with the source template to generate a customised flow.';
