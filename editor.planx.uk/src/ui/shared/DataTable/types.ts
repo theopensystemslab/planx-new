@@ -20,8 +20,8 @@ export type RenderCellParams = GridRenderCellParams<
 
 export type ColumnRenderType = ObjectValues<typeof ColumnType>;
 
-export type ColumnConfig = {
-  field: string;
+export type ColumnConfig<T> = {
+  field: keyof T;
   headerName: string;
   type?: ColumnRenderType;
   width?: number;
@@ -30,7 +30,7 @@ export type ColumnConfig = {
     | undefined;
   columnOptions?: Omit<GridColDef, "headerName" | "field" | "type">;
 };
-export interface DataGridProps {
-  rows: readonly any[] | undefined;
-  columns: Array<ColumnConfig>;
+export interface DataGridProps<T> {
+  rows: readonly T[] | undefined;
+  columns: Array<ColumnConfig<T>>;
 }

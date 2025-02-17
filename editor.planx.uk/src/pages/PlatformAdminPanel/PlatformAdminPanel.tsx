@@ -31,7 +31,7 @@ export const PlatformAdminPanel = () => {
 
   const filteredPanelData = adminPanelData?.filter(isCouncilTeam);
 
-  const columns: ColumnConfig[] = [
+  const columns: ColumnConfig<AdminPanelData>[] = [
     {
       field: "name",
       headerName: "Team",
@@ -103,6 +103,11 @@ export const PlatformAdminPanel = () => {
       headerName: "Favicon",
       type: ColumnType.BOOLEAN,
     },
+    // {
+    //   field: "someIncorrectKey", // TS error - invalid key
+    //   headerName: "Test",
+    //   type: ColumnType.BOOLEAN,
+    // },
   ];
 
   return (
