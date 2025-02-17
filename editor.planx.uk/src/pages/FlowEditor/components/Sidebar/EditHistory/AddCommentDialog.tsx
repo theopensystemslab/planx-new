@@ -57,6 +57,7 @@ export const AddCommentDialog = ({ flowId, actorId }: AddCommentDialogProps) => 
                 bordered
                 multiline={true}
                 rows={3}
+                autoFocus
               />
             </InputLabel>
           </Box>

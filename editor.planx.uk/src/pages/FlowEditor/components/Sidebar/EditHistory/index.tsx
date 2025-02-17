@@ -96,7 +96,7 @@ const EditHistory = () => {
     <Box>
       {user?.id && canUserEditTeam(teamSlug) && <AddCommentDialog flowId={flowId} actorId={user.id} />}
       {data?.history && <EditHistoryTimeline events={data.history} />}
-      {data?.history.length === 30 && (
+      {data?.history.length === 50 && (
         <>
           <Divider />
           <Typography variant="body2" mt={2} color="GrayText">

@@ -52,8 +52,8 @@ export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) =
     undoOperation(flattenedOperationsData);
 
     // Also delete each comment in the undo scope
-    commentsToDelete.forEach((comment) => {
-      deleteFlowComment(comment.id);
+    commentsToDelete.forEach(async (comment) => {
+      await deleteFlowComment(comment.id);
     });
   };
 

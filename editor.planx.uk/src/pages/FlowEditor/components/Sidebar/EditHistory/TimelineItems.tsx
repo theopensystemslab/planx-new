@@ -97,7 +97,7 @@ interface CommentTimelineItemProps {
 }
 
 export const CommentTimelineItem = ({ event, i, inUndoScope }: CommentTimelineItemProps) => (
-  <Box bgcolor={(theme) => inUndoScope(i) ? "#F0F3F6" : theme.palette.grey[400]} sx={{ borderRadius: "8px" }}>
+  <Box bgcolor={(theme) => inUndoScope(i) ? theme.palette.grey[100] : theme.palette.grey[400]} sx={{ borderRadius: "8px" }}>
     <Typography variant="body2" color={inUndoScope(i) ? "GrayText" : "inherit"} padding={2}>
       {`[Commented] ${event.comment}`}
     </Typography>
