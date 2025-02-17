@@ -2,10 +2,11 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
+
+import { AdminPanelData } from "/Users/jo/Code/planx-new/editor.planx.uk/src/types";
 
 import {
   False as NotConfigured,
@@ -13,12 +14,8 @@ import {
 } from "../../ui/shared/DataTable/components/icons";
 import { Article4Status } from "./components/Article4Status";
 
-export const PlatformAdminPanel = () => {
-  const adminPanelData: AdminPanelData[] | undefined = useStore(
-    (state) => state.adminPanelData,
-  );
-
-  const teamsToFilterOut = [
+const isCouncilTeam = () => {
+  const internalTeamNames = [
     "WikiHouse",
     "PlanX",
     "Open Systems Lab",
@@ -27,10 +24,13 @@ export const PlatformAdminPanel = () => {
     "Environment Agency",
     "Templates",
   ];
+  return (team: AdminPanelData) => !internalTeamNames.includes(team.name);
+};
 
-  const filteredPanelData = adminPanelData?.filter(
-    (team) => !teamsToFilterOut.includes(team.name),
-  );
+export const PlatformAdminPanel = () => {
+  const adminPanelData = useStore((state) => state.adminPanelData);
+
+  const filteredPanelData = adminPanelData?.filter(isCouncilTeam);
 
   const columns: ColumnConfig[] = [
     {
