@@ -13,6 +13,7 @@ import Input from "../Input/Input";
 import InputRow from "../InputRow";
 import InputRowItem from "../InputRowItem";
 import InputRowLabel from "../InputRowLabel";
+import { formatSearchPattern } from "./utils";
 
 interface SearchBoxProps<T> {
   records: T[] | null;
@@ -35,9 +36,10 @@ export const SearchBox = <T extends object>({
   const { submitForm, setFieldValue, values, resetForm } = useFormik({
     initialValues: { pattern: "" },
     onSubmit: ({ pattern }) => {
-      if (clearSearch) return setRecords(records);
+      if (clearSearch || !pattern) return setRecords(records);
+      const formattedPattern = formatSearchPattern(pattern)
       setIsSearching(true);
-      debouncedSearch(pattern);
+      debouncedSearch(formattedPattern);
     },
   });
 
@@ -98,7 +100,8 @@ export const SearchBox = <T extends object>({
                 aria-label="clear search"
                 onClick={() => {
                   setFieldValue("pattern", "");
-                  submitForm();
+                  resetForm()
+                  submitForm()
                 }}
                 size="small"
                 sx={{
