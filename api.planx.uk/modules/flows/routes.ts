@@ -39,10 +39,6 @@ import {
   createFlowFromTemplateController,
   createFlowFromTemplateSchema,
 } from "./createFlowFromTemplate/controller.js";
-import {
-  archiveFlowController,
-  archiveFlowSchema,
-} from "./archiveFlow/controller.js";
 
 const router = Router();
 
@@ -58,13 +54,6 @@ router.post(
   useTeamEditorAuth,
   validate(createFlowFromTemplateSchema),
   createFlowFromTemplateController,
-);
-
-router.post(
-  "/flows/:flowId/archive",
-  useTeamEditorAuth,
-  validate(archiveFlowSchema),
-  archiveFlowController,
 );
 
 router.post(
