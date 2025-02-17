@@ -686,14 +686,14 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             margin: 1,
-            ".MuiDataGrid-cell": {
+            [`& .${gridClasses.cell}`]: {
               padding: "10px",
               display: "flex",
               "&:focus": {
                 outline: "none",
               },
             },
-            ".MuiDataGrid-columnHeaderTitle": {
+            [`& .${gridClasses.columnHeaderTitle}`]: {
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
             },
             ".MuiDataGrid-row:hover": {

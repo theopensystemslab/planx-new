@@ -21,7 +21,7 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
     [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
     [ColumnType.ARRAY]: (value: string[]) => (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
-        {value.map((item: string, index: number) => (
+        {value?.map((item: string, index: number) => (
           <Typography py={0.4} variant="body2" key={index} component="li">
             {item}
           </Typography>
