@@ -3,19 +3,18 @@ import { getClient } from "../../../client/index.js";
 import type { FlowId } from "@opensystemslab/planx-core/types";
 
 export const archiveFlow = async (flowId: FlowId) => {
-  const response = await updateDeleteAt(flowId);
-  return response;
+  const archivedFlow = await markFlowAsArchived(flowId);
+  return archivedFlow;
 };
 
-interface UpdateFlow {
+interface ArchivedFlow {
   name: string;
   id: FlowId;
 }
 
-const updateDeleteAt = async (flowId: FlowId): Promise<UpdateFlow> => {
-  Date.now();
+const markFlowAsArchived = async (flowId: FlowId): Promise<ArchivedFlow> => {
   const { client: $client } = getClient();
-  const { flow } = await $client.request<{ flow: UpdateFlow }>(
+  const { flow } = await $client.request<{ flow: ArchivedFlow }>(
     gql`
       mutation ArchiveFlow($id: uuid!) {
         flow: update_flows_by_pk(
