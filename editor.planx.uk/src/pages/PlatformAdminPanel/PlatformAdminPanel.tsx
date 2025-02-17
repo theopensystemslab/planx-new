@@ -31,7 +31,7 @@ export const PlatformAdminPanel = () => {
 
   const filteredPanelData = adminPanelData?.filter(isCouncilTeam);
 
-  const columns: ColumnConfig[] = [
+  const columns: ColumnConfig<AdminPanelData>[] = [
     {
       field: "name",
       headerName: "Team",

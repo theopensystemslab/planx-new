@@ -12,7 +12,7 @@ import {
   RenderCellParams,
 } from "./types";
 
-export const DataTable = ({ rows, columns }: DataGridProps) => {
+export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   const baseColDef: Partial<GridColDef> = {
     width: 150,
   };
@@ -32,7 +32,7 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
 
   const renderCellComponentByType = (
     params: RenderCellParams,
-    column: ColumnConfig,
+    column: ColumnConfig<T>,
   ): JSX.Element | undefined => {
     if (!column.type) return undefined;
     if (column.customComponent) {
@@ -47,7 +47,7 @@ export const DataTable = ({ rows, columns }: DataGridProps) => {
     return {
       ...baseColDef,
       hideable: index === 0 ? false : true, // at least one column should remain
-      field,
+      field: field as string,
       type: column.type === ColumnType.BOOLEAN ? "boolean" : undefined,
       headerName,
       width: column.width || baseColDef.width,
