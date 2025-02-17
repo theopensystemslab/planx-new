@@ -83,14 +83,15 @@ const FlowItem: React.FC<FlowItemProps> = ({
   refreshFlows,
 }) => {
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState<boolean>(false);
-  const [archiveFlow, copyFlow, moveFlow] = useStore((state) => [
+  const [archiveFlow, copyFlow, moveFlow, canUserEditTeam] = useStore((state) => [
     state.archiveFlow,
     state.copyFlow,
     state.moveFlow,
+    state.canUserEditTeam
   ]);
 
   const handleArchive = () => {
-    archiveFlow(flow.id, teamSlug).then(() => {
+    archiveFlow(flow.id).then(() => {
       refreshFlows();
     });
   };
@@ -131,7 +132,7 @@ const FlowItem: React.FC<FlowItemProps> = ({
             )}
           </LinkSubText>
         </DashboardLink>
-        {useStore.getState().canUserEditTeam(teamSlug) && (
+        {canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[
               {

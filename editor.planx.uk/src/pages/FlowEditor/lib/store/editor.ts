@@ -159,10 +159,7 @@ export interface FlowSummary {
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
-  archiveFlow: (
-    flowId: string,
-    teamSlug: string,
-  ) => Promise<{ id: string; name: string } | void>;
+  archiveFlow: (flowId: string) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
@@ -233,13 +230,7 @@ export const editorStore: StateCreator<
     send(ops);
   },
 
-  archiveFlow: async (flowId, teamSlug) => {
-    const valid = get().canUserEditTeam(teamSlug);
-    if (!valid) {
-      alert(`You do not have permission to archive this flow from ${teamSlug}`);
-      return Promise.resolve();
-    }
-
+  archiveFlow: async (flowId) => {
     const { data } = await client.mutate<{
       flow: { id: string; name: string };
     }>({
