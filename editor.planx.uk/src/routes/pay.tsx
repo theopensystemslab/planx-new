@@ -12,7 +12,7 @@ import {
   withData,
   withView,
 } from "navi";
-import ErrorPage from "pages/ErrorPage";
+import ErrorPage from "pages/ErrorPage/ErrorPage";
 import InviteToPay from "pages/Pay/InviteToPay";
 import MakePayment from "pages/Pay/MakePayment";
 import React from "react";

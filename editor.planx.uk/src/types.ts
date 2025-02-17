@@ -108,6 +108,7 @@ export interface AdminPanelData {
   article4sEnabled: string;
   govnotifyPersonalisation?: TeamContactSettings;
   govpayEnabled: boolean;
+  powerAutomateEnabled: boolean;
   sendToEmailAddress?: string;
   bopsSubmissionURL?: string;
   logo?: string;
@@ -115,6 +116,7 @@ export interface AdminPanelData {
   primaryColour?: string;
   linkColour?: string;
   actionColour?: string;
+  liveFlows: string[];
 }
 
 export interface Operation {

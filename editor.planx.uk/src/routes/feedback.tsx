@@ -37,7 +37,7 @@ const feedbackRoutes = compose(
       const isAuthorised = useStore.getState().canUserEditTeam(teamSlug);
       if (!isAuthorised)
         throw new NotFoundError(
-          `User does not have access to ${req.originalUrl}`
+          `User does not have access to ${req.originalUrl}`,
         );
 
       const {
@@ -47,9 +47,7 @@ const feedbackRoutes = compose(
           query GetFeedbackForTeam($teamSlug: String!) {
             feedback: feedback_summary(
               order_by: { created_at: asc }
-              where: {
-                team_slug: { _eq: $teamSlug }
-              }
+              where: { team_slug: { _eq: $teamSlug } }
             ) {
               address
               createdAt: created_at
@@ -72,7 +70,7 @@ const feedbackRoutes = compose(
         view: <FeedbackLog feedback={feedback} />,
       };
     }),
-  })
+  }),
 );
 
 export default feedbackRoutes;

@@ -33,6 +33,11 @@
             "message": "See https://github.com/theopensystemslab/planx-new/pull/140"
           },
           {
+            "name": "@mui/x-data-grid",
+            "importNames": ["DataGrid"],
+            "message": "Please import DataTable from ui/shared/DataTable instead"
+          },
+          {
             "name": "jest-axe",
             "message": "Please import axe-helper instead"
           },

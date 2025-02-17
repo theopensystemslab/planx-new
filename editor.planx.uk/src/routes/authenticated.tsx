@@ -14,7 +14,7 @@ import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
-import AdminPanelView from "../pages/PlatformAdminPanel";
+import { PlatformAdminPanel } from "../pages/PlatformAdminPanel/PlatformAdminPanel";
 import Teams from "../pages/Teams";
 import { makeTitle } from "./utils";
 import { authenticatedView } from "./views/authenticated";
@@ -96,8 +96,10 @@ const editorRoutes = compose(
                 article4sEnabled: article_4s_enabled
                 govnotifyPersonalisation: govnotify_personalisation
                 govpayEnabled: govpay_enabled
+                powerAutomateEnabled: power_automate_enabled
                 sendToEmailAddress: send_to_email_address
                 bopsSubmissionURL: bops_submission_url
+                liveFlows: live_flows
                 logo
                 favicon
                 primaryColour: primary_colour
@@ -111,7 +113,7 @@ const editorRoutes = compose(
 
         return {
           title: makeTitle("Platform admin panel"),
-          view: <AdminPanelView />,
+          view: <PlatformAdminPanel />,
         };
       });
     }),
