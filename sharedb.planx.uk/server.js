@@ -11,13 +11,10 @@ const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
 assert(JWT_SECRET);
 assert(PG_URL);
 
-const isLiveEnv = 
-  ["production", "staging"].includes(process.env.APP_ENVIRONMENT || "");
-
 const sharedb = new ShareDB({
   db: new PostgresDB({
     connectionString: PG_URL,
-    ssl: isLiveEnv
+    ssl: false,
   }),
 });
 
