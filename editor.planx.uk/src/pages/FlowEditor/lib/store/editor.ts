@@ -209,6 +209,8 @@ export interface EditorStore extends Store.Store {
   }) => void;
   getURLForNode: (nodeId: string) => string;
   getFlowSchema: () => { nodes?: string[]; options?: string[] } | undefined;
+  addFlowComment: (flowId: string, actorId: number, comment: string) => Promise<object>;
+  deleteFlowComment: (commentId: number) => Promise<object>;
 }
 
 export const editorStore: StateCreator<
@@ -637,5 +639,41 @@ export const editorStore: StateCreator<
       nodes: Array.from(nodes).sort(),
       options: Array.from(options).sort(),
     };
+  },
+
+  addFlowComment: async (flowId, actorId, comment) => {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation InsertFlowComment($flowId: uuid!, $actorId: Int!, $comment: String!) {
+          insert_flow_comments_one(
+            object: { flow_id: $flowId, actor_id: $actorId, comment: $comment }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        flowId,
+        actorId,
+        comment
+      },
+    });
+    return response;
+  },
+
+  deleteFlowComment: async (commentId) => {
+    const response = await client.mutate({
+      mutation: gql`
+        mutation DeleteFlowComment($id: Int!) {
+          delete_flow_comments_by_pk(id: $id) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: commentId
+      },
+    });
+    return response;
   },
 });
