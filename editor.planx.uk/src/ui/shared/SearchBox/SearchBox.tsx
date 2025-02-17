@@ -72,6 +72,7 @@ export const SearchBox = <T extends object>({
     if (clearSearch) {
       resetForm();
       submitForm();
+      setSearchedTerm(undefined)
     }
   }, [clearSearch, resetForm, submitForm]);
 
