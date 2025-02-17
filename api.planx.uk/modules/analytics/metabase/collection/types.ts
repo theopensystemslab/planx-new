@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import type { ApiResponse } from "../shared/types.js";
 
-/** Interface for incoming request, in camelCase */
+/** Interface for incoming request */
 export interface NewCollectionParams {
   slug: string;
   description?: string;
@@ -10,9 +10,15 @@ export interface NewCollectionParams {
   parentId?: number;
 }
 
-/** Interface for request after transforming to snake case (Metabase takes snake while PlanX API takes camel) */
-export type MetabaseCollectionParams = Omit<NewCollectionParams, "slug"> & {
+/** We use a name and not slug here so that the eventual dashboard name is in title case */
+export type CreateCollectionParams = Omit<NewCollectionParams, "slug"> & {
   name: string;
+};
+
+export type MetabaseCreateCollectionParams = {
+  name: string;
+  description?: string;
+  parent_id?: number;
 };
 
 /** TODO: when running on production, turn below comment back into code
@@ -42,6 +48,7 @@ export interface NewCollectionResponse {
 }
 
 export interface GetCollectionResponse {
+  name: string;
   id: number;
   slug: string;
   parentId: number;

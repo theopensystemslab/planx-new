@@ -2,11 +2,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize";
-import React, { useState } from "react";
+import React from "react";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import InputGroup from "ui/editor/InputGroup";
@@ -17,7 +18,6 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { Switch } from "ui/shared/Switch";
 import { object, string } from "yup";
 
 import { ExternalPortals } from "../components/Sidebar/Search/ExternalPortalList/ExternalPortals";
@@ -53,8 +53,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
   const toast = useToast();
 
   const hasExternalPortals = Boolean(Object.keys(externalPortals).length);
-
-  const [showExternalPortals, setShowExternalPortals] = useState(false);
 
   const formik = useFormik<ReadMePageForm>({
     initialValues: {
@@ -237,25 +235,27 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
         </form>
       </SettingsSection>
       <Box pt={2}>
-        <Switch
-          label={"Show external portals"}
-          name={"service.status"}
-          variant="editorPage"
-          checked={showExternalPortals}
-          onChange={() => setShowExternalPortals(!showExternalPortals)}
-        />
-        {showExternalPortals &&
-          (hasExternalPortals ? (
-            <Box pt={2} data-testid="searchExternalPortalList">
-              <InputLegend>External Portals</InputLegend>
-              <Typography variant="body1" my={2}>
-                Your service contains the following external portals:
-              </Typography>
-              <ExternalPortals externalPortals={externalPortals} />
-            </Box>
-          ) : (
-            <Typography>This service has no external portals.</Typography>
-          ))}
+        <SimpleExpand
+          buttonText={{
+            open: "Show external portals",
+            closed: "Hide external portals",
+          }}
+          id="externalPortalsToggle"
+        >
+          <Box py={2}>
+            {hasExternalPortals ? (
+              <Box data-testid="searchExternalPortalList">
+                <InputLegend>External Portals</InputLegend>
+                <Typography variant="body1" my={2}>
+                  Your service contains the following external portals:
+                </Typography>
+                <ExternalPortals externalPortals={externalPortals} />
+              </Box>
+            ) : (
+              <Typography>This service has no external portals.</Typography>
+            )}
+          </Box>
+        </SimpleExpand>
       </Box>
     </Container>
   );

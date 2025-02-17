@@ -13,7 +13,8 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { formattedPriceWithCurrencySymbol } from "../../model";
 import { useFeeBreakdown } from "./useFeeBreakdown";
 
-const StyledTable = styled(Table)(() => ({
+const StyledTable = styled(Table)(({ theme }) => ({
+  maxWidth: theme.breakpoints.values.formWrap,
   [`& .${tableCellClasses.root}`]: {
     paddingLeft: 0,
     paddingRight: 0,
