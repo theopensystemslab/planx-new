@@ -563,6 +563,7 @@ export = async () => {
             name: "PG_URL",
             value: config.requireSecret("db-url"),
           },
+          { name: "APP_ENVIRONMENT", value: env },
         ],
       },
     },
