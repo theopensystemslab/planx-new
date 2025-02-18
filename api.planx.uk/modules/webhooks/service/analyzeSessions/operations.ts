@@ -28,13 +28,13 @@ const ALLOW_LIST = [
   "planningConstraints.action",
   "property.constraints.planning",
   "property.type",
+  "property.type.userProvided",
   "propertyInformation.action",
   "proposal.projectType",
   "rab.exitReason",
   "service.type",
   "usedFOIYNPP",
   "user.role",
-  "property.type.userProvided",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [
