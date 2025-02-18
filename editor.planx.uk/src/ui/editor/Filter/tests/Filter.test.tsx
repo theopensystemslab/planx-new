@@ -46,9 +46,11 @@ const setupFilterEnvironment = () => {
 describe("the use and return of the Filter component", () => {
   it("renders a filter accordion", async () => {
     const { user } = setupFilterEnvironment();
-    const filtersHeader = screen.getByText("Show filters");
-    expect(filtersHeader).toBeVisible();
-    await user.click(filtersHeader);
+
+    const showFiltersHeader = screen.getByText("Show filters");
+    expect(showFiltersHeader).toBeVisible();
+
+    await user.click(showFiltersHeader);
     const hideFiltersHeader = screen.getByText("Hide filters");
 
     expect(hideFiltersHeader).toBeVisible();
@@ -83,14 +85,21 @@ describe("the use and return of the Filter component", () => {
 
     await openFilterAccordion(screen, user);
 
-    const selectedCheckbox = screen.getByRole("checkbox", { name: "Online" });
-    await user.click(selectedCheckbox);
-
+    await user.click(screen.getByRole("checkbox", { name: "Online" }));
     const filterOnlineChip = screen.getByRole("button", { name: "Online" });
+
+    // when you select a filter, a clickable chip should appear for the option
     expect(filterOnlineChip).toBeVisible();
 
-    await user.click(selectedCheckbox);
+    await user.click(screen.getByRole("checkbox", { name: "Offline" }));
+    const filterOfflineChip = screen.getByRole("button", { name: "Offline" });
+
+    // when we change the filter value, the chip changes
+    expect(filterOfflineChip).toBeVisible();
     expect(filterOnlineChip).not.toBeVisible();
+
+    await user.click(screen.getByRole("checkbox", { name: "Offline" }));
+    expect(filterOfflineChip).not.toBeVisible();
   });
 
   it("filters the records by a single option", async () => {
@@ -134,6 +143,9 @@ describe("the use and return of the Filter component", () => {
         status: "offline",
       },
     ]);
+
+    // when we delect our filter, it should return to the array
+    // we passed into the prop 'records'
 
     await deselectCheckbox(screen, user, "Offline");
     expect(mockSetFilteredRecords).toHaveBeenCalledWith(mockRecords);
