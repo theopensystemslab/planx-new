@@ -12,7 +12,7 @@ import {
 import React from "react";
 import { screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { openFilterAccordion } from "./helpers";
+import { openFilterAccordion, selectCheckbox } from "./helpers";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
@@ -89,7 +89,17 @@ describe("the use and return of the Filter component", () => {
     expect(filterOnlineChip).not.toBeVisible();
   });
 
-  test.todo("filters the records by the options which are checked");
+  it("filters the records by the options which are checked", async () => {
+    const { user } = setupFilterEnvironment();
 
-  test.todo("sets the new records using the results of the filter");
+    await openFilterAccordion(screen, user);
+    await selectCheckbox(screen, user, "Online")
+
+    expect(mockSetFilteredRecords).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ status: "online" }),
+        ])
+      );
+  });
+
 });
