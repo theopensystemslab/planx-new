@@ -1,5 +1,5 @@
 import type { User } from "@opensystemslab/planx-core/types";
-import { checkUserCanAccessEnv } from "./service.js";
+import { checkUserCanAccessEnv } from "./utils.js";
 
 const mockIsStagingOnly = vi.fn();
 

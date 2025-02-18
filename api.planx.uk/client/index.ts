@@ -1,7 +1,7 @@
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { userContext } from "../modules/auth/middleware.js";
 import { ServerError } from "../errors/index.js";
-import { buildJWTForAPIRole } from "../modules/auth/service.js";
+import { buildJWTForAPIRole } from "../modules/auth/service/jwt.js";
 
 /**
  * Connects to Hasura using the "api" role

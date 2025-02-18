@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
-import { $api } from "../../client/index.js";
+import { $api } from "../../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
-import type { HasuraClaims, JWTData } from "./types.js";
+import type { HasuraClaims, JWTData } from "../types.js";
+import { checkUserCanAccessEnv, getAllowedRolesForUser } from "./utils.js";
 
 export const buildUserJWT = async (
   email: string,
@@ -39,21 +40,6 @@ const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({
 });
 
 /**
- * Get all possible roles for this user
- * Requests made outside this scope will not be authorised by Hasura
- */
-const getAllowedRolesForUser = (user: User): Role[] => {
-  const teamRoles = user.teams.map((teamRole) => teamRole.role);
-  const allowedRoles: Role[] = [
-    "public", // Allow public access
-    ...teamRoles, // User specific roles
-  ];
-  if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
-
-  return [...new Set(allowedRoles)];
-};
-
-/**
  * The default role is used for all requests
  * Can be overwritten on a per-request basis in the client using the x-hasura-role header
  * set to a role in the x-hasura-allowed-roles list
@@ -70,21 +56,4 @@ const getDefaultRoleForUser = (user: User): Role => {
   if (isTeamViewer) return "teamViewer";
 
   return "demoUser";
-};
-
-export const checkUserCanAccessEnv = async (
-  user: User,
-  env?: string,
-): Promise<boolean> => {
-  // All users can access non-production environments
-  const isProduction = env === "production";
-  if (!isProduction) return true;
-
-  const isDemoUser = getAllowedRolesForUser(user).includes("demoUser");
-  if (isDemoUser) return false;
-
-  const isStagingOnlyUser = await $api.user.isStagingOnly(user.email);
-  if (isStagingOnlyUser) return false;
-
-  return true;
 };
