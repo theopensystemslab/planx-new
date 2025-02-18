@@ -13,9 +13,9 @@ import React from "react";
 import { screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
 import {
-  deselectCheckbox,
-  openFilterAccordion,
-  selectCheckbox,
+  addFilter,
+  expandFilterAccordion,
+  removeFilter,
 } from "./helpers";
 
 vi.mock("react-navi", () => ({
@@ -29,7 +29,7 @@ vi.mock("react-navi", () => ({
   }),
 }));
 
-const setupFilterEnvironment = () => {
+const setupTestEnvironment = () => {
   const filterEnvironment = setup(
     <DndProvider backend={HTML5Backend}>
       <Filters<MockRecordType>
@@ -43,70 +43,73 @@ const setupFilterEnvironment = () => {
   return filterEnvironment;
 };
 
-describe("the use and return of the Filter component", () => {
-  it("renders a filter accordion", async () => {
-    const { user } = setupFilterEnvironment();
+describe("the UI interactions of the Filter component", () => {
+  it("toggles visibility when the filter accordion is clicked", async () => {
+    const { user } = setupTestEnvironment();
 
     const showFiltersHeader = screen.getByText("Show filters");
     expect(showFiltersHeader).toBeVisible();
 
     await user.click(showFiltersHeader);
-    const hideFiltersHeader = screen.getByText("Hide filters");
-
-    expect(hideFiltersHeader).toBeVisible();
+    expect(screen.getByText("Hide filters")).toBeVisible();
   });
 
-  it("renders filter options", async () => {
-    const { user } = setupFilterEnvironment();
+  it("display the filter options when the accordion is open", async () => {
+    const { user } = setupTestEnvironment();
 
-    let filterStatusOption = screen.getByText("Online status");
-    let filterNameOption = screen.getByText("Name");
+    const filterStatusOption = screen.getByText("Online status");
+    const filterNameOption = screen.getByText("Name");
 
     expect(filterStatusOption).not.toBeVisible();
     expect(filterNameOption).not.toBeVisible();
 
-    await openFilterAccordion(screen, user);
-
-    filterStatusOption = screen.getByText("Online status");
-    filterNameOption = screen.getByText("Name");
+    await expandFilterAccordion(screen, user);
 
     expect(filterStatusOption).toBeVisible();
     expect(filterNameOption).toBeVisible();
   });
 
   it("should not have any accessibility violations on initial render", async () => {
-    const { container } = setupFilterEnvironment();
+    const { container } = setupTestEnvironment();
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+})
 
-  it("adds or removes a chip when a filter is clicked", async () => {
-    const { user } = setupFilterEnvironment();
+  describe("Filter functionality", () => {
+  it("manages filter chips correctly when selecting filters", async () => {
+    const { user } = setupTestEnvironment();
 
-    await openFilterAccordion(screen, user);
+    await expandFilterAccordion(screen, user);
 
     await user.click(screen.getByRole("checkbox", { name: "Online" }));
-    const filterOnlineChip = screen.getByRole("button", { name: "Online" });
+    const onlineChip = screen.getByRole("button", { name: "Online" });
 
     // when you select a filter, a clickable chip should appear for the option
-    expect(filterOnlineChip).toBeVisible();
+    expect(onlineChip).toBeVisible();
 
+    // change filter to it's other optionValue
     await user.click(screen.getByRole("checkbox", { name: "Offline" }));
-    const filterOfflineChip = screen.getByRole("button", { name: "Offline" });
 
-    // when we change the filter value, the chip changes
-    expect(filterOfflineChip).toBeVisible();
-    expect(filterOnlineChip).not.toBeVisible();
+    // check it has been selected
+    const offlineChip = screen.getByRole("button", { name: "Offline" });
+    expect(offlineChip).toBeVisible();
+    
+    // check previous filter has been deselected
+    expect(screen.queryByRole("button", { name: "Online" })).not.toBeInTheDocument()
 
+    // click selected filter
     await user.click(screen.getByRole("checkbox", { name: "Offline" }));
-    expect(filterOfflineChip).not.toBeVisible();
+
+    // check filter is deselected
+    expect(screen.queryByRole("button", { name: "Offline" })).not.toBeInTheDocument()
   });
 
-  it("filters the records by a single option", async () => {
-    const { user } = setupFilterEnvironment();
+  it("filters the records using a single option", async () => {
+    const { user } = setupTestEnvironment();
 
-    await openFilterAccordion(screen, user);
-    await selectCheckbox(screen, user, "Offline");
+    await expandFilterAccordion(screen, user);
+    await addFilter(screen, user, "Offline");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -116,12 +119,12 @@ describe("the use and return of the Filter component", () => {
     ]);
   });
 
-  it("filters the records multiple options", async () => {
-    const { user } = setupFilterEnvironment();
+  it("filters the records using multiple options", async () => {
+    const { user } = setupTestEnvironment();
 
-    await openFilterAccordion(screen, user);
-    await selectCheckbox(screen, user, "Online");
-    await selectCheckbox(screen, user, "Online-1");
+    await expandFilterAccordion(screen, user);
+    await addFilter(screen, user, "Online");
+    await addFilter(screen, user, "Online-1");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -132,10 +135,10 @@ describe("the use and return of the Filter component", () => {
   });
 
   it("returns to mockRecords when all filters unchecked", async () => {
-    const { user } = setupFilterEnvironment();
+    const { user } = setupTestEnvironment();
 
-    await openFilterAccordion(screen, user);
-    await selectCheckbox(screen, user, "Offline");
+    await expandFilterAccordion(screen, user);
+    await addFilter(screen, user, "Offline");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -144,10 +147,8 @@ describe("the use and return of the Filter component", () => {
       },
     ]);
 
-    // when we delect our filter, it should return to the array
-    // we passed into the prop 'records'
-
-    await deselectCheckbox(screen, user, "Offline");
+    // when we remove our filter, it should return to the array we passed into the prop 'records'
+    await removeFilter(screen, user, "Offline");
     expect(mockSetFilteredRecords).toHaveBeenCalledWith(mockRecords);
   });
 });
