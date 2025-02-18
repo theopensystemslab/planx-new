@@ -5,7 +5,6 @@ import { SearchBox } from "../SearchBox";
 import { MockRecords, mockRecords, mockSetRecords } from "./mocks";
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
-import { exp } from "mathjs";
 import { axe } from "vitest-axe";
 
 const setupTestEnvironment = (searchKeys: string[]) =>
