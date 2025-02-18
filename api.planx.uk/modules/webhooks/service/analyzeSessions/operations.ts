@@ -34,6 +34,7 @@ const ALLOW_LIST = [
   "service.type",
   "usedFOIYNPP",
   "user.role",
+  "property.type.userProvided",
 ];
 
 export const getAnalyzeSessionOperations = (): Operation[] => [
