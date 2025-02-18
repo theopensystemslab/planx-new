@@ -1,4 +1,4 @@
-import { FetchResult, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { getPathForNode, sortFlow } from "@opensystemslab/planx-core";
 import {
   ComponentType as TYPES,
@@ -7,7 +7,6 @@ import {
   FlowStatus,
   NodeId,
   OrderedFlow,
-  FlowId,
 } from "@opensystemslab/planx-core/types";
 import {
   add,
