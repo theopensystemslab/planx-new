@@ -64,6 +64,7 @@ export const ALLOW_LIST = [
   "service.type",
   "usedFOIYNPP",
   "user.role",
+  "property.type.userProvided",
 ] as const;
 
 let lastVisibleNodeAnalyticsLogId: number | undefined = undefined;

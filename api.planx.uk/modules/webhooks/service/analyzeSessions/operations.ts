@@ -28,6 +28,7 @@ const ALLOW_LIST = [
   "planningConstraints.action",
   "property.constraints.planning",
   "property.type",
+  "property.type.userProvided",
   "propertyInformation.action",
   "proposal.projectType",
   "rab.exitReason",
