@@ -12,8 +12,7 @@ import {
 import React from "react";
 import { screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { openFilterAccordion, selectCheckbox } from "./helpers";
-import { capitalize, filter } from "lodash";
+import { openFilterAccordion } from "./helpers";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
@@ -60,7 +59,7 @@ describe("the use and return of the Filter component", () => {
     expect(filterStatusOption).not.toBeVisible();
     expect(filterNameOption).not.toBeVisible();
 
-    await openFilterAccordion(screen, user)
+    await openFilterAccordion(screen, user);
 
     filterStatusOption = screen.getByText("Online status");
     filterNameOption = screen.getByText("Name");
@@ -68,7 +67,7 @@ describe("the use and return of the Filter component", () => {
     expect(filterStatusOption).toBeVisible();
     expect(filterNameOption).toBeVisible();
   });
-  
+
   it("should not have any accessibility violations on initial render", async () => {
     const { container } = setupFilterEnvironment();
     const results = await axe(container);
@@ -76,18 +75,18 @@ describe("the use and return of the Filter component", () => {
   });
 
   it("adds or removes a chip when a filter is clicked", async () => {
-    const {user} = setupFilterEnvironment()
+    const { user } = setupFilterEnvironment();
 
-    await openFilterAccordion(screen, user)
+    await openFilterAccordion(screen, user);
 
-    const selectedCheckbox = screen.getByRole('checkbox', { name: "Online" })
-    await user.click(selectedCheckbox)
+    const selectedCheckbox = screen.getByRole("checkbox", { name: "Online" });
+    await user.click(selectedCheckbox);
 
-    const filterOnlineChip = screen.getByRole('button', { name: "Online" })
-    expect(filterOnlineChip).toBeVisible()
+    const filterOnlineChip = screen.getByRole("button", { name: "Online" });
+    expect(filterOnlineChip).toBeVisible();
 
-    await user.click(selectedCheckbox)
-    expect(filterOnlineChip).not.toBeVisible()
+    await user.click(selectedCheckbox);
+    expect(filterOnlineChip).not.toBeVisible();
   });
 
   test.todo("filters the records by the options which are checked");
