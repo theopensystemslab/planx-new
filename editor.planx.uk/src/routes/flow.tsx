@@ -120,9 +120,11 @@ const editNode = validateNodeRoute(
 
     // Temp guard to handle non-migrated tags
     // TODO: Migrate "placeholder" tags to "customisation"
-    node.data.tags = node.data.tags?.map((tag: string) =>
-      tag === "placeholder" ? "customisation" : tag,
-    );
+    if (node.data.tags) {
+      node.data.tags = node.data.tags?.map((tag: string) =>
+        tag === "placeholder" ? "customisation" : tag,
+      );
+    }
 
     const extraProps = {} as any;
 
