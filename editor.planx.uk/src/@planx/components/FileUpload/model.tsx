@@ -26,7 +26,7 @@ export const slotsSchema = array()
   .required()
   .test({
     name: "nonUploading",
-    message: "Upload at least one file",
+    message: "Please wait for upload to complete",
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
