@@ -7,24 +7,26 @@ import { False, True } from "./components/cellIcons";
 import { CustomSingleSelectInput } from "./components/CustomSingleSelectInput";
 import { ColumnRenderType, ColumnType } from "./types";
 
-export const createFilterOperator = (columnValueOptions: ValueOptions[]) => ({
-  value: "contains",
-  getApplyFilterFn: (filterItem: Record<string, any>) => {
-    if (!filterItem?.value) return null;
+export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
+  {
+    value: "contains",
+    getApplyFilterFn: (filterItem: Record<string, any>) => {
+      if (!filterItem?.value) return null;
 
-    return (value: string[]) => {
-      return value?.some((item) =>
-        String(item)
-          .toLowerCase()
-          .includes(String(filterItem.value).toLowerCase()),
-      );
-    };
+      return (value: string[]) => {
+        return value?.some((item) =>
+          String(item)
+            .toLowerCase()
+            .includes(String(filterItem.value).toLowerCase()),
+        );
+      };
+    },
+    InputComponent: CustomSingleSelectInput,
+    InputComponentProps: {
+      valueOptions: columnValueOptions,
+    },
   },
-  InputComponent: CustomSingleSelectInput,
-  InputComponentProps: {
-    valueOptions: columnValueOptions,
-  },
-});
+];
 
 export const componentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
