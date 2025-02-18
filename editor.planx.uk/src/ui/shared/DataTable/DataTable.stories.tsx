@@ -14,6 +14,10 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
+const liveFlowValueOptions = [
+  ...new Set(mockTeams.flatMap((teamData) => teamData.liveFlows)),
+];
+
 export const Basic = {
   args: {
     rows: mockTeams,
@@ -31,6 +35,9 @@ export const Basic = {
         headerName: "Live services",
         width: 450,
         type: ColumnType.ARRAY,
+        columnOptions: {
+          valueOptions: liveFlowValueOptions,
+        },
       },
       {
         field: "planningDataEnabled",

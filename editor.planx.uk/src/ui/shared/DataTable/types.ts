@@ -1,6 +1,7 @@
 import {
   GridColDef,
   GridRenderCellParams,
+  GridSingleSelectColDef,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
 
@@ -28,7 +29,8 @@ export type ColumnConfig<T> = {
   customComponent?:
     | ((params: RenderCellParams) => JSX.Element | undefined)
     | undefined;
-  columnOptions?: Omit<GridColDef, "headerName" | "field" | "type">;
+  columnOptions?: Omit<GridColDef, "headerName" | "field" | "type"> &
+    GridSingleSelectColDef;
 };
 export interface DataGridProps<T> {
   rows: readonly T[] | undefined;
