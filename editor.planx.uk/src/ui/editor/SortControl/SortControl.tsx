@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
-import { orderBy } from "lodash";
+import get from "lodash/get";
+import orderBy from "lodash/orderBy";
 import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
@@ -88,8 +89,8 @@ export const SortControl = <T extends object>({
 
   useEffect(() => {
     const { fieldName } = selectedSort;
-    const sortNewFlows = orderBy(records, fieldName, sortDirection);
-    setRecords(sortNewFlows);
+    const sortedFlowsNullsLast = orderBy(records,[(flow) => get(flow, fieldName) || ""], sortDirection)
+    setRecords(sortedFlowsNullsLast);
   }, [selectedSort, sortDirection, records, setRecords]);
 
   return (
