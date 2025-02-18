@@ -158,6 +158,7 @@ export interface FlowSummary {
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
+  archiveFlow: (flowId: string) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => void;
   copyFlow: (flowId: string) => Promise<any>;
@@ -228,6 +229,33 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
+  },
+
+  archiveFlow: async (flowId) => {
+    const { data } = await client.mutate<{
+      flow: { id: string; name: string };
+    }>({
+      mutation: gql`
+        mutation updateFlow($id: uuid!) {
+          flow: update_flows_by_pk(
+            pk_columns: { id: $id }
+            _set: { deleted_at: "now()" }
+          ) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        id: flowId,
+      },
+    });
+
+    if (!data)
+      return alert(
+        `We are unable to archive this flow, refesh and try again or contact an admin`,
+      );
+    return data?.flow;
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
