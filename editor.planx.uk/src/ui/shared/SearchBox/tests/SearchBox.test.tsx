@@ -4,6 +4,9 @@ import { setup } from "testUtils";
 import { SearchBox } from "../SearchBox";
 import { MockRecords, mockRecords, mockSetRecords } from "./mocks";
 import React from "react";
+import { screen, waitFor } from "@testing-library/react";
+import { exp } from "mathjs";
+import { axe } from "vitest-axe";
 
 const setupTestEnvironment = (searchKeys: string[]) =>
   setup(
@@ -17,12 +20,42 @@ const setupTestEnvironment = (searchKeys: string[]) =>
   );
 
 describe("the UI interactions of the SearchBox", () => {
-  test.todo("Render a search box");
-  test.todo("A loading spinner appears when typing");
+  it("Renders a search box", () => {
+    setupTestEnvironment(["slug"]);
+    expect(screen.getByText("Search")).toBeVisible();
+    expect(screen.getByRole("textbox")).toBeVisible();
+  });
+  it("shows a loading spinner when typing", async () => {
+    const { user } = setupTestEnvironment(["slug"]);
+    const searchBox = screen.getByRole("textbox");
 
-  test.todo("A clear icon button appears when finished typing");
+    user.type(searchBox, "search");
+    await waitFor(() => {
+      const searchSpinner = screen.queryByRole("button", {
+        name: "currently searching",
+      });
+      expect(searchSpinner).toBeVisible();
+    });
+  });
 
-  test.todo("does not contain accessibility violations");
+  it("shows a clear icon button when finished typing", async () => {
+    const { user } = setupTestEnvironment(["slug"]);
+    const searchBox = screen.getByRole("textbox");
+
+    user.type(searchBox, "search");
+    await waitFor(() => {
+      const clearSpinner = screen.queryByRole("button", {
+        name: "clear search",
+      });
+      expect(clearSpinner).toBeVisible();
+    });
+  });
+
+  it("does not contain accessibility violations", async () => {
+    const { container } = setupTestEnvironment(["slug"]);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
 });
 
 describe("the search functionality", () => {
