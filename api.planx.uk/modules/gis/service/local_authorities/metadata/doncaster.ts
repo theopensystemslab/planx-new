@@ -14,8 +14,8 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "articleFour.doncaster.hmo": "Article 4 (HMO) Boundary", // https://www.planning.data.gov.uk/entity/6100030/
-      "articleFour.doncaster.demolition": "Article 4 (DSA) Boundary", // https://www.planning.data.gov.uk/entity/6100031/
+      "articleFour.doncaster.hmo": "AR4HMO",
+      "articleFour.doncaster.demolition": "AR4DSA",
     },
   },
 };
