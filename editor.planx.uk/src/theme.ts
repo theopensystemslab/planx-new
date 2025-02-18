@@ -503,7 +503,7 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             "&.Mui-disabled": {
-              backgroundColor: palette.grey[200],
+              backgroundColor: palette.background.disabled,
             },
           },
         },
@@ -512,7 +512,7 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             "&.Mui-disabled": {
-              backgroundColor: palette.grey[200],
+              backgroundColor: palette.background.disabled,
             },
           },
           icon: {

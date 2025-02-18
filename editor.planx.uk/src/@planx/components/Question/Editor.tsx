@@ -188,6 +188,7 @@ export const Question: React.FC<Props> = (props) => {
       <ComponentTagSelect
         value={formik.values.tags}
         onChange={(value) => formik.setFieldValue("tags", value)}
+        disabled={props.disabled}
       />
     </form>
   );
