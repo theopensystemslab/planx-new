@@ -12,11 +12,7 @@ import {
 import React from "react";
 import { screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import {
-  addFilter,
-  expandFilterAccordion,
-  removeFilter,
-} from "./helpers";
+import { addFilter, expandFilterAccordion, removeFilter } from "./helpers";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
@@ -74,9 +70,9 @@ describe("the UI interactions of the Filter component", () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
-})
+});
 
-  describe("Filter functionality", () => {
+describe("Filter functionality", () => {
   it("manages filter chips correctly when selecting filters", async () => {
     const { user } = setupTestEnvironment();
 
@@ -94,15 +90,19 @@ describe("the UI interactions of the Filter component", () => {
     // check it has been selected
     const offlineChip = screen.getByRole("button", { name: "Offline" });
     expect(offlineChip).toBeVisible();
-    
+
     // check previous filter has been deselected
-    expect(screen.queryByRole("button", { name: "Online" })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole("button", { name: "Online" }),
+    ).not.toBeInTheDocument();
 
     // click selected filter
     await user.click(screen.getByRole("checkbox", { name: "Offline" }));
 
     // check filter is deselected
-    expect(screen.queryByRole("button", { name: "Offline" })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole("button", { name: "Offline" }),
+    ).not.toBeInTheDocument();
   });
 
   it("filters the records using a single option", async () => {
@@ -124,11 +124,11 @@ describe("the UI interactions of the Filter component", () => {
 
     await expandFilterAccordion(screen, user);
     await addFilter(screen, user, "Online");
-    await addFilter(screen, user, "Online-1");
+    await addFilter(screen, user, "Online-mock-2");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
-        name: "online-1",
+        name: "online-mock-2",
         status: "online",
       },
     ]);
