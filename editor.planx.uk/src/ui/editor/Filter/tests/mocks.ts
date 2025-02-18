@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { FilterOptions, FilterValues } from "../Filter";
+import { FilterOptions } from "../Filter";
 
 export type MockRecordType = {
   name: string;
