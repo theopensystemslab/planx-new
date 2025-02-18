@@ -50,6 +50,21 @@ describe("the UI interactions of the SearchBox", () => {
     });
   });
 
+  it("removes the clear icon button when search term is cleared", async () => {
+    const { user } = setupTestEnvironment(["slug"]);
+    const searchBox = screen.getByRole("textbox");
+
+    await user.type(searchBox, "search");
+
+    await user.clear(searchBox);
+    await waitFor(() => {
+      const clearSpinner = screen.queryByRole("button", {
+        name: "clear search",
+      });
+      expect(clearSpinner).not.toBeInTheDocument();
+    });
+  });
+
   it("does not contain accessibility violations", async () => {
     const { container } = setupTestEnvironment(["slug"]);
     const results = await axe(container);
