@@ -40,7 +40,7 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
   > Variables should be added in alphabetical order and relate to a passport variable
 
 ### Step 2 - Adding variables to Hasura Views
-  Run Hasura locally and in the console, go to the tble that you want to modify. In the 'Modify' tab, edit the SQL.
+  Run Hasura locally and in the console, go to the table that you want to modify. In the 'Modify' tab, edit the SQL.
 
   For this part, you will need to pull the variable out of the passport jsonb in the SQL script and put them into two database views,`analytics_summary` and `submission_services_summary`. Examples can be found already in the current view script for how to do this.
 
