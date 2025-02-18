@@ -57,3 +57,28 @@ const getDefaultRoleForUser = (user: User): Role => {
 
   return "demoUser";
 };
+
+/**
+ * Extracts the expiration timestamp from a JWT token
+ */
+export const getJWTExpiration = (token: string): Date => {
+  try {
+    const decoded = jwt.decode(token, { complete: true });
+
+    if (!decoded || typeof decoded === "string" || !decoded.payload) {
+      throw new Error("Invalid JWT format");
+    }
+
+    const payload = decoded.payload;
+
+    if (typeof payload === "string" || !payload?.exp) {
+      throw new Error("Expiry date missing from JWT");
+    }
+
+    return new Date(payload.exp * 1000);
+  } catch (error) {
+    throw new Error(
+      `Failed to decode JWT: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
+};

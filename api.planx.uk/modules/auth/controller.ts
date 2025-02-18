@@ -1,5 +1,6 @@
 import type { CookieOptions, RequestHandler, Response } from "express";
 import type { Request } from "express-jwt";
+import { revokeToken } from "./service/revokeToken.js";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
@@ -70,3 +71,10 @@ function setJWTSearchParams(returnTo: string, res: Response, req: Request) {
   url.searchParams.set("jwt", req.user!.jwt);
   res.redirect(url.href);
 }
+
+export const logout: RequestHandler = async (req, res) => {
+  await revokeToken(req.user!.jwt);
+
+  const logoutPage = new URL("/logout", process.env.EDITOR_URL_EXT!).toString();
+  res.redirect(logoutPage);
+};
