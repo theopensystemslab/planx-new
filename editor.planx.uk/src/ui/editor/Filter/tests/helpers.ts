@@ -2,22 +2,15 @@ import { Screen } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { expect } from "vitest";
 
-export const openFilterAccordion = async (screen: Screen, user: UserEvent) => {
+export const expandFilterAccordion = async (screen: Screen, user: UserEvent) => {
   const showAccordionTitle = screen.getByText("Show filters");
   await user.click(showAccordionTitle);
 
   const hideAccordionTitle = screen.getByText("Hide filters");
   expect(hideAccordionTitle).toBeVisible();
 };
-export const closeFilterAccordion = async (screen: Screen, user: UserEvent) => {
-  const hideAccordionTitle = screen.getByText("Hide filters");
-  await user.click(hideAccordionTitle);
 
-  const showAccordionTitle = screen.getByText("Show filters");
-  expect(showAccordionTitle).toBeVisible();
-};
-
-export const selectCheckbox = async (
+export const addFilter = async (
   screen: Screen,
   user: UserEvent,
   name: string,
@@ -28,7 +21,7 @@ export const selectCheckbox = async (
   expect(filterChip).toBeVisible();
 };
 
-export const deselectCheckbox = async (
+export const removeFilter = async (
   screen: Screen,
   user: UserEvent,
   name: string,
@@ -36,5 +29,5 @@ export const deselectCheckbox = async (
   const checkbox = screen.getByRole("checkbox", { name: name });
   await user.click(checkbox);
   const filterChip = screen.queryByRole("button", { name: name });
-  expect(filterChip).toBeNull();
+  expect(filterChip).not.toBeInTheDocument();
 };
