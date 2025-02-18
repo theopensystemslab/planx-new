@@ -40,6 +40,7 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
   > Variables should be added in alphabetical order and relate to a passport variable
 
 ### Step 2 - Adding variables to Hasura Views
+  Run Hasura locally and in the console, go to the table that you want to modify. In the 'Modify' tab, edit the SQL.
 
   For this part, you will need to pull the variable out of the passport jsonb in the SQL script and put them into two database views,`analytics_summary` and `submission_services_summary`. Examples can be found already in the current view script for how to do this.
 
@@ -92,6 +93,8 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
 
   The values here are being pulled from the table `lowcal_sessions.allow_list_answers` or `analytics_logs.allow_list_answers`
 
+  Make your changes in SQL and uncheck 'This is a migration' so you can check that the query runs successfully before generating one. Once it works, run it again as a migration. This should generate new migration files in `hasura.planx.uk/migrations`.
+
   > [!IMPORTANT] 
   > At the end of your SQL script after the view creation/replacement, it is important to add another line which ensures the new variable is read by Metabase
 
@@ -102,13 +105,15 @@ In these docs I will run through the steps for adding a new variable to `ALLOW_L
 GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
 GRANT SELECT ON "public"."submission_services_summary" TO metabase_read_only;
 ```
-
+In the down file, un-comment the lines and preserve the original query (this is so that changes can be reverted if need be).
 
   🎊🎉🎈 Now your new variable is ready for testing 🎈🎉🎊
 
 ### Step 3 - Testing your new `ALLOW_LIST` variable
 
   Now you can begin testing your a service where your new passport variable is set, and as it is populated in the passport, it should come through to your new view.column. 
+
+  With both Hasura and the Editor running locally, choose a relevant service and "Open published service" (making sure that you use the normal link and not the one with analytics turned off). Go through a user journey that should create analytics with your expected values. Check that the table is populated as expected in Hasura.
 
   Key to ensure that it is coming through in the right format, and with the expected value. A typical issue may be that it comes through as something like `['your value']` which will be read as `jsonb` by metabase and only allow boolean based filtering when creating dashboards, *does it exist or not*
 
