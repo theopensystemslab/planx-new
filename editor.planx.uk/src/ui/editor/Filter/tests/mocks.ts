@@ -8,28 +8,16 @@ export type MockRecordType = {
 
 export const mockRecords: MockRecordType[] = [
   {
-    name: "offline-1",
+    name: "offline-mock",
     status: "offline",
+  },
+  {
+    name: "online-mock",
+    status: "online",
   },
   {
     name: "online-1",
     status: "online",
-  },
-  {
-    name: "oneline-2",
-    status: "online",
-  },
-  {
-    name: "offline-2",
-    status: "offline",
-  },
-  {
-    name: "online-3",
-    status: "online",
-  },
-  {
-    name: "offline-3",
-    status: "offline",
   },
 ];
 

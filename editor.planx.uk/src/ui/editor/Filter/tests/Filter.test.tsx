@@ -89,17 +89,39 @@ describe("the use and return of the Filter component", () => {
     expect(filterOnlineChip).not.toBeVisible();
   });
 
-  it("filters the records by the options which are checked", async () => {
+  it("filters the records by a single option", async () => {
     const { user } = setupFilterEnvironment();
 
     await openFilterAccordion(screen, user);
-    await selectCheckbox(screen, user, "Online")
+    await selectCheckbox(screen, user, "Offline");
 
-    expect(mockSetFilteredRecords).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          expect.objectContaining({ status: "online" }),
-        ])
-      );
+    expect(mockSetFilteredRecords).toHaveBeenCalledWith([  {
+        name: "offline-mock",
+        status: "offline",
+      }, ]);
   });
 
+  it("filters the records multiple options", async () => {
+    const { user } = setupFilterEnvironment();
+
+    await openFilterAccordion(screen, user);
+    await selectCheckbox(screen, user, "Online");
+    await selectCheckbox(screen, user, "Online-1");
+
+    expect(mockSetFilteredRecords).not.toHaveBeenCalledWith([
+      {
+        name: "online-mock",
+        status: "online",
+      },
+    ]);
+
+    expect(mockSetFilteredRecords).toHaveBeenCalledWith([
+      {
+        name: "online-1",
+        status: "online",
+      },
+    ]);
+
+    screen.logTestingPlaygroundURL();
+  });
 });
