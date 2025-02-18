@@ -36,7 +36,6 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   [`& .${outlinedInputClasses.root}, input`]: {
     cursor: "pointer",
     // TODO extract as `format="data"` prop more like `Input` ?
-    backgroundColor: theme.palette.background.default,
   },
   "& .MuiInputBase-root.Mui-disabled input": {
     background: "transparent",
