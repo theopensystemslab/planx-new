@@ -12,7 +12,11 @@ import {
 import React from "react";
 import { screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { openFilterAccordion, selectCheckbox } from "./helpers";
+import {
+  deselectCheckbox,
+  openFilterAccordion,
+  selectCheckbox,
+} from "./helpers";
 
 vi.mock("react-navi", () => ({
   useNavigation: () => ({
@@ -95,10 +99,12 @@ describe("the use and return of the Filter component", () => {
     await openFilterAccordion(screen, user);
     await selectCheckbox(screen, user, "Offline");
 
-    expect(mockSetFilteredRecords).toHaveBeenCalledWith([  {
+    expect(mockSetFilteredRecords).toHaveBeenCalledWith([
+      {
         name: "offline-mock",
         status: "offline",
-      }, ]);
+      },
+    ]);
   });
 
   it("filters the records multiple options", async () => {
@@ -108,20 +114,28 @@ describe("the use and return of the Filter component", () => {
     await selectCheckbox(screen, user, "Online");
     await selectCheckbox(screen, user, "Online-1");
 
-    expect(mockSetFilteredRecords).not.toHaveBeenCalledWith([
-      {
-        name: "online-mock",
-        status: "online",
-      },
-    ]);
-
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
         name: "online-1",
         status: "online",
       },
     ]);
+  });
 
-    screen.logTestingPlaygroundURL();
+  it("returns to mockRecords when all filters unchecked", async () => {
+    const { user } = setupFilterEnvironment();
+
+    await openFilterAccordion(screen, user);
+    await selectCheckbox(screen, user, "Offline");
+
+    expect(mockSetFilteredRecords).toHaveBeenCalledWith([
+      {
+        name: "offline-mock",
+        status: "offline",
+      },
+    ]);
+
+    await deselectCheckbox(screen, user, "Offline");
+    expect(mockSetFilteredRecords).toHaveBeenCalledWith(mockRecords);
   });
 });
