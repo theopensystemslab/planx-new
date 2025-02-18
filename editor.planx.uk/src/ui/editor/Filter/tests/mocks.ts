@@ -16,7 +16,11 @@ export const mockRecords: MockRecordType[] = [
     status: "online",
   },
   {
-    name: "online-1",
+    name: "online-mock-2",
+    status: "online",
+  },
+  {
+    name: "offline-mock-2",
     status: "online",
   },
 ];
@@ -36,7 +40,7 @@ export const mockFilterOptions: FilterOptions<MockRecordType>[] = [
   {
     displayName: "Name",
     optionKey: "name",
-    optionValue: ["online-1", "offline-1"],
+    optionValue: ["online-mock-2", "offline-mock-2"],
     validationFn: (option: MockRecordType, value: string | undefined) =>
       option.name === value,
   },
