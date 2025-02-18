@@ -124,7 +124,7 @@ export const PlatformAdminPanel = () => {
         </Typography>
       </SettingsSection>
       <SettingsSection>
-        <DataTable rows={filteredPanelData} columns={columns} />
+        <DataTable rows={filteredPanelData} columns={columns} customFilter />
       </SettingsSection>
     </Container>
   );

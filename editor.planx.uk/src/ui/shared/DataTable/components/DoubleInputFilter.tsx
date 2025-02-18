@@ -1,9 +1,8 @@
-// import SyncIcon from "@mui/icons-material/Sync";
 import Box from "@mui/material/Box";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import React, { useEffect, useState } from "react";
 
-export const CustomSingleSelectInput = (
+export const DoubleInputFilter = (
   props: Record<string, any>,
 ): React.JSX.Element | null => {
   const { item, applyValue, type, focusElementRef, valueOptions } = props;

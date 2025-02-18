@@ -4,7 +4,8 @@ import { ValueOptions } from "@mui/x-data-grid";
 import React from "react";
 
 import { False, True } from "./components/cellIcons";
-import { CustomSingleSelectInput } from "./components/CustomSingleSelectInput";
+import { DoubleInputFilter } from "./components/DoubleInputFilter";
+import { SingleInputFilter } from "./components/SingleInputFilter";
 import { ColumnRenderType, ColumnType } from "./types";
 
 const isValidFilterInput = (filterItem: Record<string, any>): boolean => {
@@ -19,30 +20,51 @@ const containsItem = (item: string, value: string) => {
   return item.toLowerCase().includes(value.toLowerCase());
 };
 
-export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
+export const createFilterOperator = (
+  columnValueOptions: ValueOptions[],
+  filteringOne: boolean,
+) => [
   {
     value: "contains",
     getApplyFilterFn: (filterItem: Record<string, any>) => {
-      if (!isValidFilterInput(filterItem)) {
-        return null;
+      if (filteringOne) {
+        return getSingleFilterFn(filterItem);
       }
-
-      const [firstValue, secondValue] = filterItem.value;
-
-      return (value: string[]): boolean => {
-        return value?.some(
-          (item) =>
-            containsItem(item, firstValue) ||
-            value?.some((item) => containsItem(item, secondValue)),
-        );
-      };
+      return getDoubleFilterFn(filterItem);
     },
-    InputComponent: CustomSingleSelectInput,
+    InputComponent: filteringOne ? SingleInputFilter : DoubleInputFilter,
     InputComponentProps: {
       valueOptions: columnValueOptions,
     },
   },
 ];
+
+const getSingleFilterFn = (filterItem: Record<string, any>) => {
+  if (!filterItem?.value) return null;
+
+  return (value: string[]) => {
+    return value?.some((item) =>
+      String(item)
+        .toLowerCase()
+        .includes(String(filterItem.value).toLowerCase()),
+    );
+  };
+};
+
+const getDoubleFilterFn = (filterItem: Record<string, any>) => {
+  if (!isValidFilterInput(filterItem)) {
+    return null;
+  }
+  const [firstValue, secondValue] = filterItem.value;
+
+  return (value: string[]): boolean => {
+    return value?.some(
+      (item) =>
+        containsItem(item, firstValue) ||
+        value?.some((item) => containsItem(item, secondValue)),
+    );
+  };
+};
 
 export const componentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
