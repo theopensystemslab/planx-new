@@ -118,7 +118,7 @@ export const SearchBox = <T extends object>({
             )}
             {isSearching && (
               <IconButton
-                aria-label="currently searching"
+                aria-label="is searching"
                 onClick={() => {
                   setFieldValue("pattern", "");
                   submitForm();
