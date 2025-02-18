@@ -22,6 +22,7 @@ import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
+import { switchClasses } from "ui/shared/Switch";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
@@ -536,24 +537,23 @@ const getThemeOptions = ({
             padding: "8px",
             left: "-8px",
             marginRight: "-4px",
-            "& .MuiSwitch-switchBase": {
+            [`& .${switchClasses.switchBase}`]: {
               padding: "11px",
               borderRadius: "50%",
-              color: "rgb(255, 106, 0)",
-              "&.Mui-checked": {
+              [`&.${switchClasses.checked}`]: {
                 transform: "translateX(32px)",
               },
             },
-            "& .MuiSwitch-thumb": {
+            [`& .${switchClasses.thumb}`]: {
               background: palette.common.white,
               width: "22px",
               height: "22px",
             },
-            "& .MuiSwitch-track": {
+            [`& .${switchClasses.track}`]: {
               background: palette.background.dark,
               borderRadius: "20px",
               position: "relative",
-              opacity: "1 !important",
+              opacity: 1,
               "&::before, &::after": {
                 display: "inline-block",
                 position: "absolute",
@@ -575,19 +575,21 @@ const getThemeOptions = ({
                 right: "4px",
               },
             },
-            "& .MuiSwitch-switchBase.Mui-checked": {
-              "& + .MuiSwitch-track": {
+            [`& .${switchClasses.switchBase}.${switchClasses.checked}`]: {
+              [`& + .${switchClasses.track}`]: {
                 background: palette.success.dark,
-              },
-              "& + .MuiSwitch-track::before": {
                 opacity: 1,
-              },
-              "& + .MuiSwitch-track::after": {
-                opacity: 0,
+                "&::before": {
+                  opacity: 1,
+                },
+                "&::after": {
+                  opacity: 0,
+                },
               },
             },
-            "& .MuiSwitch-switchBase.Mui-disabled": {
-              "& + .MuiSwitch-track": {
+            [`& .${switchClasses.switchBase}.${switchClasses.disabled}`]: {
+              [`& + .${switchClasses.track}`]: {
+                opacity: 1,
                 background: palette.text.disabled,
               },
             },
