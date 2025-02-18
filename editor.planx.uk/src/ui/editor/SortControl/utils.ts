@@ -3,8 +3,6 @@ import { slugify } from "utils";
 import { z } from "zod";
 
 import { SortableFields } from "./SortControl";
-import { get } from "lodash";
-import { Paths } from "type-fest";
 
 const routeQuerySchema = z.object({
   sort: z.string(),
@@ -30,16 +28,3 @@ export const getSortParams = <T extends object>(
 
   return { sortObject: sortOptions[0], sortDirection: "desc" };
 };
-
-
-export const sortNullToBottom =<T extends object> (a: T,b: T, fieldName:Paths<T>)=>{
-  const aValue = get(a, fieldName);
-  const bValue = get(b, fieldName);
-  
-  if (!aValue && !bValue) return 0;
-  if (!aValue) return 1;
-  if (!bValue) return -1;
-  
-  // For non-null values, maintain their relative order
-  return 0;
-}
