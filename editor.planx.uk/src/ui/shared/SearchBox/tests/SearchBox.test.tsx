@@ -6,6 +6,8 @@ import { MockRecords, mockRecords, mockSetRecords } from "./mocks";
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import { axe } from "vitest-axe";
+import { it } from "vitest";
+import { checkForSearchResults, waitForClearSearchIcon } from "./helpers";
 
 const setupTestEnvironment = (searchKeys: string[]) =>
   setup(
@@ -31,7 +33,7 @@ describe("the UI interactions of the SearchBox", () => {
     user.type(searchBox, "search");
     await waitFor(() => {
       const searchSpinner = screen.queryByRole("button", {
-        name: "currently searching",
+        name: "is searching",
       });
       expect(searchSpinner).toBeVisible();
     });
@@ -43,10 +45,10 @@ describe("the UI interactions of the SearchBox", () => {
 
     user.type(searchBox, "search");
     await waitFor(() => {
-      const clearSpinner = screen.queryByRole("button", {
+      const clearIcon = screen.queryByRole("button", {
         name: "clear search",
       });
-      expect(clearSpinner).toBeVisible();
+      expect(clearIcon).toBeVisible();
     });
   });
 
@@ -55,13 +57,14 @@ describe("the UI interactions of the SearchBox", () => {
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, "search");
+    await checkForSearchResults();
 
     await user.clear(searchBox);
     await waitFor(() => {
-      const clearSpinner = screen.queryByRole("button", {
+      const clearIcon = screen.queryByRole("button", {
         name: "clear search",
       });
-      expect(clearSpinner).not.toBeInTheDocument();
+      expect(clearIcon).not.toBeInTheDocument();
     });
   });
 
@@ -73,8 +76,63 @@ describe("the UI interactions of the SearchBox", () => {
 });
 
 describe("the search functionality", () => {
-  test.todo("records can be searched based on a word");
-  test.todo("records are reset when a search term is cleared");
+  it("searchs records and returns the results when on a word is typed", async () => {
+    const { user } = setupTestEnvironment(["slug"]);
+    const searchBox = screen.getByRole("textbox");
 
-  test.todo("records are refiltered when the search term is changed");
+    await user.type(searchBox, "search");
+    await checkForSearchResults();
+
+    await waitForClearSearchIcon(screen);
+
+    expect(mockSetRecords).toHaveBeenLastCalledWith([
+      {
+        name: "Search for me",
+        slug: "search-for-me",
+      },
+      {
+        name: "Do not search for me",
+        slug: "do-not-search-for-me",
+      },
+    ]);
+  });
+  it("sets the results back to records when a search term is deleted", async () => {
+    const { user } = setupTestEnvironment(["slug"]);
+    const searchBox = screen.getByRole("textbox");
+
+    await user.type(searchBox, "search");
+
+    await waitForClearSearchIcon(screen);
+    await checkForSearchResults();
+
+    await user.clear(searchBox);
+
+    await waitFor(() => {
+      const clearIcon = screen.queryByRole("button", {
+        name: "clear search",
+      });
+      const searchingSpinner = screen.queryByRole("button", {
+        name: "is searching",
+      });
+      expect(clearIcon).not.toBeInTheDocument();
+      expect(searchingSpinner).not.toBeInTheDocument();
+    });
+
+    screen.logTestingPlaygroundURL();
+
+    expect(mockSetRecords).toHaveBeenLastCalledWith(mockRecords);
+  });
+
+  it("refilters results when the search term is changed", async () => {
+    const { user } = setupTestEnvironment(["slug"]);
+    const searchBox = screen.getByRole("textbox");
+
+    await user.type(searchBox, "unique");
+
+    await waitForClearSearchIcon(screen);
+
+    expect(mockSetRecords).toHaveBeenLastCalledWith([
+      { name: "Unique name", slug: "unique-name" },
+    ]);
+  });
 });
