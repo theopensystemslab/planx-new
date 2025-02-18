@@ -3,7 +3,10 @@ import FormControlLabel, {
   formControlLabelClasses,
 } from "@mui/material/FormControlLabel";
 // eslint-disable-next-line no-restricted-imports
-import MuiSwitch, { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
+import MuiSwitch, {
+  switchClasses,
+  SwitchProps as MuiSwitchProps,
+} from "@mui/material/Switch";
 import React from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
 
@@ -16,6 +19,8 @@ interface Props {
   capitalize?: boolean;
   disabled?: boolean;
 }
+
+export { switchClasses };
 
 export const Switch: React.FC<Props> = ({
   checked,
