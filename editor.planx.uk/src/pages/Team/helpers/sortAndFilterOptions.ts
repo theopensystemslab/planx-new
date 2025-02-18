@@ -4,7 +4,7 @@ import { SortableFields } from "ui/editor/SortControl/SortControl";
 
 export const sortOptions: SortableFields<FlowSummary>[] = [
   {
-    displayName: "Last updated",
+    displayName: "Last edited",
     fieldName: "updatedAt",
     directionNames: { asc: "Oldest first", desc: "Newest first" },
   },
