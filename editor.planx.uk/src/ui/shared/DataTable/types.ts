@@ -30,7 +30,7 @@ export type ColumnConfig<T> = {
     | ((params: RenderCellParams) => JSX.Element | undefined)
     | undefined;
   columnOptions?: Omit<GridColDef, "headerName" | "field" | "type"> &
-    GridSingleSelectColDef;
+    Omit<GridSingleSelectColDef, "editable" | "type" | "field">;
 };
 export interface DataGridProps<T> {
   rows: readonly T[] | undefined;

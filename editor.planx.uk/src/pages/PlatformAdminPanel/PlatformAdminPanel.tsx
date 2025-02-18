@@ -34,7 +34,6 @@ export const PlatformAdminPanel = () => {
   const liveFlowValueOptions = [
     ...new Set(filteredPanelData?.flatMap((teamData) => teamData.liveFlows)),
   ];
-  console.log;
 
   const columns: ColumnConfig<AdminPanelData>[] = [
     {
