@@ -1921,6 +1921,32 @@
       permission:
         filter: {}
 - table:
+    name: revoked_tokens
+    schema: public
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - expires_at
+          - revoked_at
+          - token_digest
+      comment: ""
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - expires_at
+          - revoked_at
+          - token_digest
+        filter: {}
+      comment: ""
+  delete_permissions:
+    - role: api
+      permission:
+        filter: {}
+      comment: ""
+- table:
     name: s3_applications
     schema: public
   insert_permissions:
