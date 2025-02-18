@@ -27,3 +27,14 @@ export const selectCheckbox = async (
   const filterChip = screen.getByRole("button", { name: name });
   expect(filterChip).toBeVisible();
 };
+
+export const deselectCheckbox = async (
+  screen: Screen,
+  user: UserEvent,
+  name: string,
+) => {
+  const checkbox = screen.getByRole("checkbox", { name: name });
+  await user.click(checkbox);
+  const filterChip = screen.queryByRole("button", { name: name });
+  expect(filterChip).toBeNull();
+};
