@@ -29,7 +29,7 @@ const isCouncilTeam = () => {
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
-  const filteredPanelData = adminPanelData?.filter(isCouncilTeam);
+  const filteredPanelData = adminPanelData?.filter(isCouncilTeam());
 
   const liveFlowValueOptions = [
     ...new Set(filteredPanelData?.flatMap((teamData) => teamData.liveFlows)),
