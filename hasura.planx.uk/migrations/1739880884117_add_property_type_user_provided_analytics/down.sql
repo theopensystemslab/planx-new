@@ -51,8 +51,7 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
     ((al.allow_list_answers -> 'application.type'::text) ->> 0) AS application_type,
     (((al.allow_list_answers -> '_feedback'::text) ->> 'feedbackScore'::text))::integer AS feedback_score,
     ((al.allow_list_answers -> 'applicant.researchOptIn'::text) ->> 0) AS applicant_research_opt_in,
-    al.has_clicked_save,
-    (((al.allow_list_answers -> 'property.type.userProvided'::text) -> 0))::text AS property_type_user_provided
+    al.has_clicked_save
    FROM (((analytics a
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
      LEFT JOIN flows f ON ((a.flow_id = f.id)))

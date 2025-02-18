@@ -88,7 +88,7 @@ CREATE OR REPLACE VIEW "public"."submission_services_summary" AS
     ((ls.allow_list_answers -> 'application.type'::text) ->> 0) AS application_type,
     (((ls.allow_list_answers -> '_feedback'::text) ->> 'feedbackScore'::text))::integer AS feedback_score,
     ((ls.allow_list_answers -> 'applicant.researchOptIn'::text) ->> 0) AS applicant_research_opt_in,
-    (((ls.allow_list_answers -> 'property.type.userProvided'::text) -> 0))::text AS property_type_user_provided
+    (ls.allow_list_answers -> 'property.type.userProvided'::text)::text AS property_type_user_provided
    FROM (((((((((lowcal_sessions ls
      LEFT JOIN flows f ON ((f.id = ls.flow_id)))
      LEFT JOIN teams t ON ((t.id = f.team_id)))
