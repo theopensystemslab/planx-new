@@ -7,11 +7,12 @@ export const CustomSingleSelectInput = (
 ): React.JSX.Element | null => {
   const { item, applyValue, type, focusElementRef, valueOptions } = props;
 
+  const muiFormLabelClasses =
+    "MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled   css-pl6ypn-MuiFormLabel-root-MuiInputLabel-root";
+
   return (
     <>
-      <FormLabel className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-standard MuiFormLabel-colorPrimary MuiFormLabel-filled   css-pl6ypn-MuiFormLabel-root-MuiInputLabel-root">
-        Service name
-      </FormLabel>
+      <FormLabel className={muiFormLabelClasses}>Service name</FormLabel>
       <TextField
         sx={{ marginTop: "-10px" }}
         id={`contains-input-${item.id}`}

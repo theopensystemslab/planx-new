@@ -12,6 +12,7 @@ import {
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
 import { Article4Status } from "./components/Article4Status";
+import { getFlowNamesForFilter } from "./getFlowNamesForFilter";
 
 const isCouncilTeam = () => {
   const internalTeamNames = [
@@ -31,9 +32,7 @@ export const PlatformAdminPanel = () => {
 
   const filteredPanelData = adminPanelData?.filter(isCouncilTeam());
 
-  const liveFlowValueOptions = [
-    ...new Set(filteredPanelData?.flatMap((teamData) => teamData.liveFlows)),
-  ];
+  const liveFlowValueOptions = getFlowNamesForFilter(filteredPanelData!);
 
   const columns: ColumnConfig<AdminPanelData>[] = [
     {

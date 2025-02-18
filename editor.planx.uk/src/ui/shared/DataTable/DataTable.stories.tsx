@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Meta, StoryObj } from "@storybook/react";
+import { getFlowNamesForFilter } from "pages/PlatformAdminPanel/getFlowNamesForFilter";
 
 import { DataTable } from "./DataTable";
 import { mockTeams } from "./mockTeams";
@@ -14,9 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-const liveFlowValueOptions = [
-  ...new Set(mockTeams.flatMap((teamData) => teamData.liveFlows)),
-];
+const liveFlowValueOptions = getFlowNamesForFilter(mockTeams);
 
 export const Basic = {
   args: {
