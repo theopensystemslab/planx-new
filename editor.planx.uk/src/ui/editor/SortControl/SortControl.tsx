@@ -1,14 +1,15 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
-import { get, orderBy } from "lodash";
+import get from "lodash/get";
+import orderBy from "lodash/orderBy";
 import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import SelectInput from "../SelectInput/SelectInput";
-import { getSortParams, sortNullToBottom } from "./utils";
+import { getSortParams } from "./utils";
 
 type SortDirection = "asc" | "desc";
 
