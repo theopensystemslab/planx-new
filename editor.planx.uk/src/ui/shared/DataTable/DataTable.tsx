@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-imports */
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import {
   DataGrid,
   GridColDef,
@@ -9,43 +8,21 @@ import {
 } from "@mui/x-data-grid";
 import React from "react";
 
-import { False, True } from "./components/cellIcons";
-import { CustomSingleSelectInput } from "./components/CustomSingleSelectInput";
 import {
   ColumnConfig,
-  ColumnRenderType,
   ColumnType,
   DataGridProps,
   RenderCellParams,
 } from "./types";
+import {
+  componentRegistry,
+  createFilterOperator,
+  getColumnType,
+} from "./utils";
 
 export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   const baseColDef: Partial<GridColDef> = {
     width: 150,
-  };
-
-  const componentRegistry = {
-    [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-    [ColumnType.ARRAY]: (value: string[]) => (
-      <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
-        {value?.map((item: string, index: number) => (
-          <Typography py={0.4} variant="body2" key={index} component="li">
-            {item}
-          </Typography>
-        ))}
-      </Box>
-    ),
-  };
-
-  const getColumnType = (columnType?: ColumnRenderType) => {
-    switch (columnType) {
-      case ColumnType.BOOLEAN:
-        return "boolean";
-      case ColumnType.ARRAY:
-        return "singleSelect";
-      default:
-        return undefined;
-    }
   };
 
   const renderCellComponentByType = (
@@ -86,27 +63,11 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       width: column.width || baseColDef.width,
       valueOptions:
         column.type === ColumnType.ARRAY ? columnValueOptions : undefined,
-      filterOperators: column.type === ColumnType.ARRAY &&
+      filterOperators:
+        column.type === ColumnType.ARRAY &&
         columnValueOptions &&
-        columnValueOptions.length > 0 && [
-          {
-            value: "contains",
-            getApplyFilterFn: (filterItem: Record<string, any>) => {
-              if (!filterItem?.value) return null;
-              return (value: string[]) => {
-                return value?.some((item) =>
-                  String(item)
-                    .toLowerCase()
-                    .includes(String(filterItem.value).toLowerCase()),
-                );
-              };
-            },
-            InputComponent: CustomSingleSelectInput,
-            InputComponentProps: {
-              valueOptions: columnValueOptions,
-            },
-          },
-        ],
+        columnValueOptions.length > 0 &&
+        createFilterOperator(columnValueOptions),
       renderCell: column.type
         ? (params: RenderCellParams) =>
             renderCellComponentByType(params, column)
