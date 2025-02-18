@@ -14,8 +14,8 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
   articleFour: {
     // Planx granular values link to Digital Land entity.reference
     records: {
-      "articleFour.doncaster.hmo": "Article 4 (HMO) Boundary - Came into force 14 October 2019",
-      "articleFour.doncaster.demolition": "Article 4 (DSA) Boundary - Came into force 25 July 2024",
+      "articleFour.doncaster.hmo": "AR4HMO",
+      "articleFour.doncaster.demolition": "AR4DSA",
     },
   },
 };
