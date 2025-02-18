@@ -24,6 +24,6 @@ export const selectCheckbox = async (
 ) => {
   const checkbox = screen.getByRole("checkbox", { name: name });
   await user.click(checkbox);
-    const filterChip = screen.getByRole("button", { name: name });
-    expect(filterChip).toBeVisible();
+  const filterChip = screen.getByRole("button", { name: name });
+  expect(filterChip).toBeVisible();
 };
