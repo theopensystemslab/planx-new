@@ -13,7 +13,6 @@ import Input from "../Input/Input";
 import InputRow from "../InputRow";
 import InputRowItem from "../InputRowItem";
 import InputRowLabel from "../InputRowLabel";
-import { formatSearchPattern } from "./utils";
 
 interface SearchBoxProps<T> {
   records: T[] | null;
@@ -37,15 +36,15 @@ export const SearchBox = <T extends object>({
     initialValues: { pattern: "" },
     onSubmit: ({ pattern }) => {
       if (clearSearch) return setRecords(records)
-      const formattedPattern = formatSearchPattern(pattern)
       setIsSearching(true);
-      debouncedSearch(formattedPattern);
+      debouncedSearch(pattern);
     },
   });
 
   const { results, search } = useSearch({
     list: records || [],
     keys: searchKeys,
+    searchType:"word-match"
   });
 
   const debouncedSearch = useMemo(
