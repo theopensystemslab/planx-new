@@ -22,10 +22,6 @@ import {
 } from "./utils";
 
 export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
-  const baseColDef: Partial<GridColDef> = {
-    width: 150,
-  };
-
   const renderCellComponentByType = (
     params: RenderCellParams,
     column: ColumnConfig<T>,
@@ -55,26 +51,37 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       getValueOptions(column.columnOptions?.valueOptions);
 
     const { field, headerName } = column;
-    return {
-      ...baseColDef,
+
+    const baseColDef: Partial<GridColDef> = {
+      width: 150,
       hideable: index === 0 ? false : true, // at least one column should remain
       field: field as string,
       type: getColumnType(column.type),
       headerName,
-      width: column.width || baseColDef.width,
-      valueOptions:
-        column.type === ColumnType.ARRAY ? columnValueOptions : undefined,
-      filterOperators:
-        column.type === ColumnType.ARRAY &&
-        columnValueOptions &&
-        columnValueOptions.length > 0 &&
-        createFilterOperator(columnValueOptions),
       renderCell: column.type
         ? (params: RenderCellParams) =>
             renderCellComponentByType(params, column)
         : undefined,
-      ...column.columnOptions,
     };
+
+    return column.type === ColumnType.ARRAY
+      ? {
+          ...baseColDef,
+          width: column.width || baseColDef.width,
+          valueOptions:
+            column.type === ColumnType.ARRAY ? columnValueOptions : undefined,
+          filterOperators:
+            columnValueOptions &&
+            columnValueOptions.length > 0 &&
+            createFilterOperator(columnValueOptions),
+          ...column.columnOptions,
+        }
+      : {
+          ...baseColDef,
+          width: column.width || baseColDef.width,
+          valueOptions: undefined,
+          ...column.columnOptions,
+        };
   }) as GridColDef[];
 
   return (
