@@ -40,14 +40,14 @@ function Component(props: any) {
         props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
       }
     },
-    validate: () => { },
+    validate: () => {},
   });
 
   // Rather than default to generic `useStore().getFlowSchema()`
   //   File Upload components can specifically suggest based on ODP Schema enum options
-  let schema = getValidSchemaValues("FileType") || [];
+  const schema = getValidSchemaValues("FileType") || [];
   // // Additionally ensure that existing initial values are supported & pre-populated on load
-  if (formik.initialValues?.fn && !schema?.includes(formik.initialValues.fn)) 
+  if (formik.initialValues?.fn && !schema?.includes(formik.initialValues.fn))
     schema.push(formik.initialValues.fn);
 
   return (
@@ -62,6 +62,7 @@ function Component(props: any) {
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -70,6 +71,7 @@ function Component(props: any) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <DataFieldAutocomplete
@@ -77,10 +79,11 @@ function Component(props: any) {
             schema={schema}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }
