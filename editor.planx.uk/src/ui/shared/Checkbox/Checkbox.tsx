@@ -22,8 +22,9 @@ const Root = styled(Box, {
       background: theme.palette.common.white,
     },
     ...(disabled && {
-      border: `2px solid ${theme.palette.grey[400]}`,
-      backgroundColor: theme.palette.grey[400],
+      border: `2px solid ${theme.palette.text.disabled}`,
+      backgroundColor: theme.palette.background.disabled,
+      pointerEvents: "none",
     }),
     ...(variant === "compact" && {
       alignSelf: "center",
@@ -67,6 +68,7 @@ const Icon = styled("span", {
   top: "42%",
   transform: "translate(-50%, -50%) rotate(45deg)",
   cursor: "pointer",
+  pointerEvents: "none",
   ...(variant === "compact" && {
     height: 12,
     width: 7,
@@ -75,13 +77,7 @@ const Icon = styled("span", {
     top: "44%",
   }),
   ...(disabled && {
-    borderBottom: "5px solid",
-    borderRight: "5px solid",
-    borderColor: theme.palette.common.white,
-    ...(variant === "compact" && {
-      borderBottom: "3px solid",
-      borderRight: "3px solid",
-    }),
+    borderColor: theme.palette.text.disabled,
   }),
 }));
 
@@ -91,6 +87,7 @@ export interface Props {
   onChange?: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   variant?: "default" | "compact";
+  disabled?: boolean;
 }
 
 export default function Checkbox({
@@ -99,6 +96,7 @@ export default function Checkbox({
   onChange,
   inputProps,
   variant = "default",
+  disabled,
 }: Props): FCReturn {
   const handleChange = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
@@ -106,11 +104,7 @@ export default function Checkbox({
   };
 
   return (
-    <Root
-      onClick={handleChange}
-      disabled={inputProps?.disabled}
-      variant={variant}
-    >
+    <Root onClick={handleChange} disabled={disabled} variant={variant}>
       <Input
         defaultChecked={checked}
         type="checkbox"
@@ -118,12 +112,9 @@ export default function Checkbox({
         data-testid={id}
         {...inputProps}
         variant={variant}
+        disabled={disabled}
       />
-      <Icon
-        checked={checked}
-        disabled={inputProps?.disabled}
-        variant={variant}
-      />
+      <Icon checked={checked} disabled={disabled} variant={variant} />
     </Root>
   );
 }
