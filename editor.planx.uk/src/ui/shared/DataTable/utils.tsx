@@ -33,7 +33,7 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         }
 
         return value.some((item) =>
-          filterItem.value.some((filterValue) =>
+          filterItem.value.some((filterValue: any) =>
             containsItem(item, filterValue),
           ),
         );

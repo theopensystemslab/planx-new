@@ -54,7 +54,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
 })) as typeof Autocomplete;
 
 // export function SelectMultiple2<T>(props: Props<T>) {
-export function SelectMultiple2(props) {
+export function SelectMultiple2(props: any) {
   // MUI doesn't pass the Autocomplete value along to the TextField automatically
   const isSelectEmpty = !props.value?.length;
   const placeholder = isSelectEmpty ? props.placeholder : undefined;
