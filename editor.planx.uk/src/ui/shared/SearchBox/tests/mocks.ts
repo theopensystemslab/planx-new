@@ -22,7 +22,7 @@ export const mockRecords: MockRecords[] = [
 export const mockFirstSearchTerm = "mock";
 
 /** This term should return the last record */
-export const mockSecondSearchTerm = "unique";
+export const mockSecondSearchTerm = "Unique";
 
 export const mockSetRecords = vi.fn() as React.Dispatch<
   React.SetStateAction<MockRecords[] | null>
