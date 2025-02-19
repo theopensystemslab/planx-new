@@ -47,6 +47,7 @@ function PageComponent(props: Props) {
               placeholder="Title"
               onChange={formik.handleChange}
               required
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -55,12 +56,14 @@ function PageComponent(props: Props) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <DataFieldAutocomplete
             required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
           <InputRow>
             <InputRowLabel>Schema</InputRowLabel>
@@ -76,6 +79,7 @@ function PageComponent(props: Props) {
                     )?.schema,
                   );
                 }}
+                disabled={props.disabled}
               >
                 {PAGE_SCHEMAS.map(({ name }) => (
                   <MenuItem key={name} value={name}>
@@ -87,7 +91,7 @@ function PageComponent(props: Props) {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }
