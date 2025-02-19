@@ -197,13 +197,6 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
-  // Temporarily style as "can edit"
-  &.type-DrawBoundary > div > a {
-    border-width: 2px;
-    border-color: $nodeBorder;
-    background: white;
-  }
-
   &.type-SetValue > div > a {
     background: #f0f0f0;
     font-family: $fontMonospace;
