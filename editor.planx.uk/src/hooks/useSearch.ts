@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 interface UseSearchProps<T extends object> {
   list: T[];
   keys: Array<FuseOptionKey<T>>;
-  searchType?: "word-match" | "letter-match"
+  searchType?: "include-match" | "fuzzy-match";
 }
 
 export interface SearchResult<T extends object> {
@@ -25,7 +25,7 @@ export type SearchResults<T extends object> = SearchResult<T>[];
 export const useSearch = <T extends object>({
   list,
   keys,
-  searchType = "letter-match"
+  searchType = "fuzzy-match",
 }: UseSearchProps<T>) => {
   const [pattern, setPattern] = useState("");
   const [results, setResults] = useState<SearchResults<T>>([]);
@@ -47,7 +47,10 @@ export const useSearch = <T extends object>({
   );
 
   useEffect(() => {
-    const fuseResults = searchType === "word-match" ? fuse.search(formatSearchPattern(pattern)) : fuse.search(pattern)
+    const fuseResults =
+      searchType === "include-match"
+        ? fuse.search(formatSearchPattern(pattern))
+        : fuse.search(pattern);
     setResults(
       fuseResults.map((result) => {
         // Required type narrowing for FuseResult
@@ -68,15 +71,14 @@ export const useSearch = <T extends object>({
   return { results, search: setPattern };
 };
 
-const formatSearchPattern = (pattern: string) => {
+const formatSearchPattern = (fuzzyMatchPattern: string) => {
+  const words: string[] = fuzzyMatchPattern.split(" ").filter(Boolean);
 
-  // split pattern by words and remove empty spaces
-  const patternArray = pattern.split(" ").filter(Boolean)
+  // Docs: https://www.fusejs.io/examples.html#extended-search
+  const includeCharacter = "'";
+  const includeMatchPattern = words
+    .map((word) => `${includeCharacter}${word}`)
+    .join(" ");
 
-  // In FuseJS extended search the character: ' 
-  // is used for the include-match search option
-  // so it will include this whole word in matching
-  const formattedPattern = `'${patternArray.join(" '")}`
-
-  return formattedPattern
-}
+  return includeMatchPattern;
+};
