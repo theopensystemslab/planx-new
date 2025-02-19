@@ -20,11 +20,13 @@ export interface Props {
   id?: string;
   handleSubmit?: (data: { type: TYPES.Notice; data: Notice }) => void;
   node?: any;
+  disabled?: boolean;
 }
 
 export interface NoticeEditorProps {
   value: Notice;
   onChange: (newValue: Notice) => void;
+  disabled?: boolean;
 }
 
 const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
@@ -43,6 +45,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
                   title: ev.target.value,
                 });
               }}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -55,6 +58,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
                   description: ev.target.value,
                 });
               }}
+              disabled={props.disabled}
             />
           </InputRow>
           <ColorPicker
@@ -67,6 +71,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
                 color,
               });
             }}
+            disabled={props.disabled}
           />
           <InputRow>
             <Switch
@@ -78,6 +83,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
                 })
               }
               label="Reset to start of service"
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
@@ -93,6 +99,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
         howMeasured={props.value.howMeasured}
         policyRef={props.value.policyRef}
         info={props.value.info}
+        disabled={props.disabled}
       />
       <InternalNotes
         name="notes"
@@ -103,6 +110,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
           });
         }}
         value={props.value.notes}
+        disabled={props.disabled}
       />
       <ComponentTagSelect
         onChange={(value) =>
@@ -112,6 +120,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
           })
         }
         value={props.value.tags}
+        disabled={props.disabled}
       />
     </>
   );
@@ -136,6 +145,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
         onChange={(notice) => {
           formik.setFieldValue("notice", notice);
         }}
+        disabled={props.disabled}
       />
     </form>
   );
