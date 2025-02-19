@@ -2,13 +2,17 @@ import crypto from "crypto";
 import assert from "assert";
 import { ServerError } from "../../errors/index.js";
 import type { Template } from "../../lib/notify/index.js";
-import { expressjwt } from "express-jwt";
+import { expressjwt, type IsRevoked } from "express-jwt";
 import { generators } from "openid-client";
 import type { Authenticator } from "passport";
 import type { RequestHandler } from "http-proxy-middleware";
 import type { Role } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
 import type { CookieOptions, Request } from "express";
+import {
+  createTokenDigest,
+  isTokenRevoked,
+} from "./service/logout/revokeToken.js";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -132,6 +136,13 @@ export const getToken = (req: Request) =>
   req.headers.authorization?.match(/^Bearer (\S+)$/)?.[1] ??
   req.query?.token;
 
+const isRevoked: IsRevoked = async (req) => {
+  const jwt = getToken(req);
+  const tokenDigest = createTokenDigest(jwt);
+  const isRevoked = await isTokenRevoked(tokenDigest);
+  return isRevoked;
+};
+
 // XXX: Currently not checking for JWT and including req.user in every
 //      express endpoint because authentication also uses req.user. More info:
 //      https://github.com/theopensystemslab/planx-new/pull/555#issue-684435760
@@ -142,6 +153,7 @@ export const useJWT = expressjwt({
   credentialsRequired: true,
   requestProperty: "user",
   getToken: getToken,
+  isRevoked,
 });
 
 export const getGoogleAuthHandler = (

@@ -20,12 +20,12 @@ export const revokeToken = async (jwt: string): Promise<void> => {
   await trackRevokedToken(tokenDigest, expiresAt);
 };
 
-const createTokenDigest = (jwt: string) => {
+export const createTokenDigest = (jwt: string) => {
   const tokenDigest = createHash("sha256").update(jwt).digest("hex");
   return tokenDigest;
 };
 
-const isTokenRevoked = async (tokenDigest: string): Promise<boolean> => {
+export const isTokenRevoked = async (tokenDigest: string): Promise<boolean> => {
   try {
     const { revokedToken } = await $api.client.request<IsRevokedQuery>(
       gql`
