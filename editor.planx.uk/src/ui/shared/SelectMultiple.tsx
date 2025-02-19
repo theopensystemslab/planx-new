@@ -16,12 +16,12 @@ const PopupIcon = (
   />
 );
 
-type RequiredAutocompleteProps<T> = Pick<
+export type RequiredAutocompleteProps<T> = Pick<
   AutocompleteProps<T, true, true, false, "div">,
   "options" | "onChange"
 >;
 
-type OptionalAutocompleteProps<T> = Partial<
+export type OptionalAutocompleteProps<T> = Partial<
   Omit<AutocompleteProps<T, true, true, false, "div">, "multiple">
 >;
 
@@ -39,7 +39,7 @@ type WithPlaceholder<T> = {
 
 type Props<T> = WithLabel<T> | WithPlaceholder<T>;
 
-const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   "& > div > label": {
     paddingRight: theme.spacing(3),
   },

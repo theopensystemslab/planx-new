@@ -3,8 +3,8 @@ import Typography from "@mui/material/Typography";
 import { ValueOptions } from "@mui/x-data-grid";
 import React from "react";
 
-import { SelectMultiple2 } from "../SelectMultiple2";
 import { False, True } from "./components/cellIcons";
+import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
 import { ColumnRenderType, ColumnType } from "./types";
 
 const isValidFilterInput = (filterItem: Record<string, any>): boolean => {
@@ -27,19 +27,19 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         return null;
       }
 
-      return (value: string[]): boolean => {
-        if (!value?.length) {
+      return (arrayOfValues: string[]): boolean => {
+        if (!arrayOfValues?.length) {
           return false;
         }
 
-        return value.some((item) =>
+        return arrayOfValues.some((arrayItem) =>
           filterItem.value.some((filterValue: any) =>
-            containsItem(item, filterValue),
+            containsItem(arrayItem, filterValue),
           ),
         );
       };
     },
-    InputComponent: SelectMultiple2,
+    InputComponent: MultipleOptionSelectFilter,
     InputComponentProps: {
       options: columnValueOptions,
     },
