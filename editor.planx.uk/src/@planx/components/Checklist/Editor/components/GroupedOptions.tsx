@@ -76,6 +76,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
                     newOptions,
                   );
                 }}
+                disabled={disabled}
                 newValue={() => ({
                   id: "",
                   data: {
@@ -126,6 +127,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
       <Box mt={1}>
         <Button
           size="large"
+          disabled={disabled}
           onClick={() => {
             formik.setFieldValue(`groupedOptions`, [
               ...nonExclusiveOptionGroups,
