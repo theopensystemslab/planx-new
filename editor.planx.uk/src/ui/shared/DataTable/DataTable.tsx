@@ -7,7 +7,7 @@ import {
   GridValueOptionsParams,
   ValueOptions,
 } from "@mui/x-data-grid";
-import React from "react";
+import React, { useState } from "react";
 
 import {
   ColumnConfig,
@@ -25,14 +25,17 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
     column: ColumnConfig<T>,
+    filterValue?: any,
   ): JSX.Element | undefined => {
     if (!column.type) return undefined;
     if (column.customComponent) {
       return column.customComponent(params);
     }
     const ComponentRenderer = componentRegistry[column.type];
-    return ComponentRenderer(params.value);
+    return ComponentRenderer(params.value, filterValue);
   };
+
+  const [filterValue, setFilterValue] = useState("");
 
   const dataColumns: GridColDef[] = columns.map((column, index) => {
     const getValueOptions = (
@@ -60,7 +63,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       headerName,
       renderCell: column.type
         ? (params: RenderCellParams) =>
-            renderCellComponentByType(params, column)
+            renderCellComponentByType(params, column, filterValue)
         : undefined,
     };
 
@@ -68,8 +71,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       ? {
           ...baseColDef,
           width: column.width || baseColDef.width,
-          valueOptions:
-            column.type === ColumnType.ARRAY ? columnValueOptions : undefined,
+          valueOptions: columnValueOptions,
           filterOperators:
             columnValueOptions &&
             columnValueOptions.length > 0 &&
@@ -84,12 +86,17 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
         };
   }) as GridColDef[];
 
+  const handleFilterChange = (params: any) => {
+    setFilterValue(params.items[0]?.value ?? "");
+  };
+
   return (
     <Box sx={{ height: "100vh", flex: 1, position: "relative" }}>
       <Box sx={{ inset: 0, position: "absolute" }}>
         <DataGrid
           rows={rows}
           columns={dataColumns}
+          onFilterModelChange={handleFilterChange}
           getRowHeight={() => "auto"}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"

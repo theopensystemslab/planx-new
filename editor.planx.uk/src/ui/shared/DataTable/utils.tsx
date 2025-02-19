@@ -48,11 +48,11 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
 
 export const componentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-  [ColumnType.ARRAY]: (value: string[]) => (
+  [ColumnType.ARRAY]: (value: string[], filterValue?: any) => (
     <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
       {value?.map((item: string, index: number) => (
         <Typography py={0.4} variant="body2" key={index} component="li">
-          {item}
+          {filterValue.includes(item) ? <strong>{item}</strong> : item}
         </Typography>
       ))}
     </Box>
