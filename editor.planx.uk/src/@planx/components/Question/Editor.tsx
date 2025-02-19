@@ -110,6 +110,7 @@ export const Question: React.FC<Props> = (props) => {
                 onChange={(newUrl) => {
                   formik.setFieldValue("img", newUrl);
                 }}
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -126,6 +127,7 @@ export const Question: React.FC<Props> = (props) => {
                 schema={schema?.nodes}
                 value={formik.values.fn}
                 onChange={(value) => formik.setFieldValue("fn", value)}
+                disabled={props.disabled}
               />
             </ErrorWrapper>
             <InputRow>
