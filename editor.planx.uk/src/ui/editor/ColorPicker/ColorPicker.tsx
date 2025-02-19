@@ -12,6 +12,7 @@ export interface Props {
   color?: string;
   errorMessage?: string;
   onChange?: (newColor: string) => void;
+  disabled?: boolean;
 }
 
 interface RootProps extends BoxProps {
@@ -61,7 +62,7 @@ const Popover = styled(Box)(() => ({
 
 const StyledButtonBase = styled(ButtonBase, {
   shouldForwardProp: (prop) => prop !== "show",
-})<ButtonBaseProps & { show: boolean }>(({ theme, show }) => ({
+})<ButtonBaseProps & { show: boolean }>(({ theme, show, disabled }) => ({
   fontFamily: "inherit",
   fontSize: 15,
   position: "relative",
@@ -70,7 +71,10 @@ const StyledButtonBase = styled(ButtonBase, {
   textAlign: "left",
   padding: theme.spacing(1),
   whiteSpace: "nowrap",
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: disabled
+    ? theme.palette.background.disabled
+    : theme.palette.common.white,
+  color: disabled ? theme.palette.text.disabled : theme.palette.text.primary,
   border: `1px solid ${theme.palette.border.main}`,
   ...(show && {
     color: theme.palette.primary.dark,
@@ -110,7 +114,12 @@ export default function ColorPicker(props: Props): FCReturn {
             {props.label}
           </Typography>
         )}
-        <StyledButtonBase show={show} onClick={handleClick} disableRipple>
+        <StyledButtonBase
+          show={show}
+          onClick={handleClick}
+          disableRipple
+          disabled={props.disabled}
+        >
           <Swatch sx={{ backgroundColor: props.color }} className="swatch" />
           {props.color}
         </StyledButtonBase>
