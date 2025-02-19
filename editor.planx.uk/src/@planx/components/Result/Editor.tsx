@@ -29,6 +29,7 @@ const FlagEditor: React.FC<{
   flag: Flag;
   existingOverrides?: FlagDisplayText;
   onChange: (newValues: any) => any;
+  disabled?: boolean;
 }> = (props) => {
   const { flag, existingOverrides } = props;
 
@@ -46,6 +47,7 @@ const FlagEditor: React.FC<{
             onChange={(ev) =>
               props.onChange({ ...existingOverrides, heading: ev.target.value })
             }
+            disabled={props.disabled}
           />
         </InputLabel>
         <InputLabel label="Description">
@@ -58,6 +60,7 @@ const FlagEditor: React.FC<{
                 description: ev.target.value,
               })
             }
+            disabled={props.disabled}
           />
         </InputLabel>
       </Box>
@@ -97,6 +100,7 @@ const ResultComponent: React.FC<Props> = (props) => {
               value={formik.values.flagSet}
               onChange={formik.handleChange}
               required
+              disabled={props.disabled}
             >
               {Object.keys(flags).map((flagSet) => (
                 <option key={flagSet} value={flagSet}>
@@ -131,6 +135,7 @@ const ResultComponent: React.FC<Props> = (props) => {
                         ...{ [flag.value]: newValues },
                       });
                     }}
+                    disabled={props.disabled}
                   />
                 );
               })}
