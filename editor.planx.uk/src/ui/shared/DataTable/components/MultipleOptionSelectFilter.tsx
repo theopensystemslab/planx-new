@@ -16,6 +16,8 @@ type Props<T> = RequiredAutocompleteProps<T> &
 export function MultipleOptionSelectFilter<T>(props: Props<T>) {
   const { item, applyValue } = props;
 
+  const [chipData, setChipData] = React.useState(item.value);
+
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete
@@ -40,11 +42,21 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
         ChipProps={{
           variant: "uploadedFileTag",
           size: "small",
-          sx: { pointerEvents: "none" },
-          onDelete: undefined,
+          onDelete: (event) => {
+            const element = event.currentTarget;
+            const chipIndex = Number(
+              element.parentElement.getAttribute("data-tag-index"),
+            );
+            setChipData((prev: any[]) => {
+              prev.splice(chipIndex, 1);
+            });
+            applyValue({ ...item, chipData });
+            setChipData(item.value);
+          },
         }}
         {...props}
-        onChange={(_event, value) => {
+        onChange={(_e, value) => {
+          setChipData(value);
           return applyValue({ ...item, value });
         }}
         value={item.value}
