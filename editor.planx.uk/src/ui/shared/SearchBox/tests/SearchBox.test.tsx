@@ -103,7 +103,7 @@ describe("the search functionality", () => {
     ]);
   });
   it("sets the results back to records when a search term is deleted", async () => {
-    const { user } = setupTestEnvironment(["slug"]);
+    const { user } = setupTestEnvironment(["slug", "name"]);
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockFirstSearchTerm);
@@ -128,7 +128,7 @@ describe("the search functionality", () => {
   });
 
   it("refilters results when the search term is changed", async () => {
-    const { user } = setupTestEnvironment(["slug"]);
+    const { user } = setupTestEnvironment(["slug", "name"]);
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockSecondSearchTerm);
