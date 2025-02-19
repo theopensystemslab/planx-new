@@ -2,6 +2,7 @@ import {
   BaseOptionsEditor,
   BaseOptionsEditorProps,
 } from "@planx/components/shared/BaseOptionsEditor";
+import { props } from "ramda";
 import React from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
@@ -11,6 +12,7 @@ export type ChecklistOptionsEditorProps = BaseOptionsEditorProps & {
   groups?: Array<string>;
   onMoveToGroup?: (itemIndex: number, groupIndex: number) => void;
   showValueField?: boolean;
+  disabled?: boolean;
 };
 
 const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
@@ -21,6 +23,7 @@ const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
   groups,
   onMoveToGroup,
   index,
+  disabled,
 }) => {
   return (
     <BaseOptionsEditor
@@ -28,6 +31,7 @@ const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
       schema={schema}
       onChange={onChange}
       showValueField={showValueField}
+      disabled={disabled}
     >
       {typeof index !== "undefined" && groups && onMoveToGroup && (
         <SimpleMenu
