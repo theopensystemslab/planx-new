@@ -44,6 +44,7 @@ export const SearchBox = <T extends object>({
   const { results, search } = useSearch({
     list: records || [],
     keys: searchKeys,
+    searchType: "include-match",
   });
 
   const debouncedSearch = useMemo(
@@ -97,7 +98,8 @@ export const SearchBox = <T extends object>({
               <IconButton
                 aria-label="clear search"
                 onClick={() => {
-                  setFieldValue("pattern", "");
+                  setSearchedTerm("");
+                  resetForm();
                   submitForm();
                 }}
                 size="small"
