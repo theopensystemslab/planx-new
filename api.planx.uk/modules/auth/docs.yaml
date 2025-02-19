@@ -28,6 +28,8 @@ paths:
       responses:
         "200":
           description: OK
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
   /auth/google:
     get:
       summary: Authenticate via Google SSO
