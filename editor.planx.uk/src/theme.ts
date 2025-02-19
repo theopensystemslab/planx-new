@@ -651,6 +651,12 @@ const getThemeOptions = ({
               outlineOffset: "1px",
               boxShadow: `0 0 0 4px ${palette.action.focus}`,
             },
+            [`&.${radioClasses.disabled}::before`]: {
+              borderColor: palette.text.disabled,
+            },
+            [`&.${radioClasses.disabled}::after`]: {
+              color: palette.text.disabled,
+            },
           },
         },
         variants: [
