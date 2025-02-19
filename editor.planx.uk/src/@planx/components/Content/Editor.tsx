@@ -35,6 +35,7 @@ const ContentComponent: React.FC<Props> = (props) => {
               name="content"
               value={formik.values.content}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <ColorPicker
@@ -44,10 +45,11 @@ const ContentComponent: React.FC<Props> = (props) => {
             onChange={(color) => {
               formik.setFieldValue("color", color);
             }}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };
