@@ -25,9 +25,13 @@ export type FormikGovPayMetadata =
   | string
   | undefined;
 
-function GovPayMetadataEditor(props: ListManagerEditorProps<GovPayMetadata>) {
+function GovPayMetadataEditor(
+  props: ListManagerEditorProps<GovPayMetadata> & {
+    isFieldDisabled: (key: string, index: number) => boolean;
+  },
+) {
   const { key: currKey, value: currVal } = props.value;
-  const isDisabled = isFieldDisabled(currKey, props.index);
+  const isDisabled = props.isFieldDisabled(currKey, props.index);
   const { errors, touched } = useFormikContext<Pay>();
   const error = parseError(
     errors.govPayMetadata as FormikGovPayMetadata,
@@ -130,12 +134,16 @@ export const GovPayMetadataSection: React.FC = () => {
               onChange={(metadata) => {
                 setFieldValue("govPayMetadata", metadata);
               }}
-              Editor={GovPayMetadataEditor}
+              Editor={(editorProps) => (
+                <GovPayMetadataEditor
+                  {...editorProps}
+                  isFieldDisabled={(key, index) => isFieldDisabled(key, index)}
+                />
+              )}
               newValue={() => {
                 setTouched({});
                 return { key: "", value: "" };
               }}
-              isFieldDisabled={({ key }, index) => isFieldDisabled(key, index)}
             />
           </>
         </ErrorWrapper>
