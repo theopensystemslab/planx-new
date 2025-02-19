@@ -12,7 +12,7 @@ const mockUser: User = {
   teams: [],
 };
 
-vi.mock("../../client", () => {
+vi.mock("../../../client", () => {
   return {
     $api: {
       user: {

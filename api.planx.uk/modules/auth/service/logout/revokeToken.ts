@@ -27,7 +27,7 @@ const createTokenDigest = (jwt: string) => {
   return tokenDigest;
 };
 
-const isTokenRevoked = async (tokenDigest: string) => {
+const isTokenRevoked = async (tokenDigest: string): Promise<boolean> => {
   try {
     const { revokedToken } = await $api.client.request<IsRevokedQuery>(
       gql`
@@ -41,41 +41,48 @@ const isTokenRevoked = async (tokenDigest: string) => {
         token_digest: tokenDigest,
       },
     );
-    return revokedToken;
+
+    return Boolean(revokedToken?.revokedAt);
   } catch (error) {
     throw new ServerError({
-      message: `Failed to check if token is already revoked. GraphQL error: ${error}`,
+      message: "Failed to check if token is already revoked",
     });
   }
 };
 
-const trackRevokedToken = async (tokenDigest: string, expiresAt: Date) => {
+const trackRevokedToken = async (
+  tokenDigest: string,
+  expiresAt: Date,
+): Promise<boolean> => {
   try {
-    await $api.client.request<RevokeTokenMutation>(
-      gql`
-        mutation RevokeToken(
-          $token_digest: String!
-          $expires_at: timestamptz!
-        ) {
-          insertRevokedTokensOne: insert_revoked_tokens_one(
-            object: {
-              expires_at: $expires_at
-              revoked_at: "now()"
-              token_digest: $token_digest
-            }
+    const { insertRevokedTokensOne } =
+      await $api.client.request<RevokeTokenMutation>(
+        gql`
+          mutation RevokeToken(
+            $token_digest: String!
+            $expires_at: timestamptz!
           ) {
-            revokedAt: revoked_at
+            insertRevokedTokensOne: insert_revoked_tokens_one(
+              object: {
+                expires_at: $expires_at
+                revoked_at: "now()"
+                token_digest: $token_digest
+              }
+            ) {
+              revokedAt: revoked_at
+            }
           }
-        }
-      `,
-      {
-        expires_at: expiresAt,
-        token_digest: tokenDigest,
-      },
-    );
+        `,
+        {
+          expires_at: expiresAt,
+          token_digest: tokenDigest,
+        },
+      );
+
+    return Boolean(insertRevokedTokensOne?.revokedAt);
   } catch (error) {
     throw new ServerError({
-      message: `Failed to add token to revoked list. GraphQL error: ${error}`,
+      message: "Failed to add token to revoked list",
     });
   }
 };
