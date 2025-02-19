@@ -5,7 +5,6 @@ export const metabaseCollectionsController: NewCollectionRequestHandler =
   async (_req, res) => {
     try {
       const params = {
-        ...res.locals.parsedReq.params,
         ...res.locals.parsedReq.body,
       };
       const collection = await createTeamCollection(params);
