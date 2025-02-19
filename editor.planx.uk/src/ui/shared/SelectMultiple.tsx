@@ -67,6 +67,7 @@ export function SelectMultiple<T>(props: Props<T>) {
         disableClearable
         disableCloseOnSelect
         multiple
+        disabled={props.disabled}
         popupIcon={PopupIcon}
         renderInput={(params) => (
           <StyledTextField
@@ -77,6 +78,7 @@ export function SelectMultiple<T>(props: Props<T>) {
             }}
             label={props.label}
             placeholder={placeholder}
+            disabled={props.disabled}
           />
         )}
         ChipProps={{
