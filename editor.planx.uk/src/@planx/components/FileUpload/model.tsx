@@ -25,8 +25,16 @@ export interface FileUploadSlot {
 export const slotsSchema = array()
   .required()
   .test({
-    name: "nonUploading",
+    name: "minFileUploaded",
     message: "Upload at least one file",
+    test: (slots?: Array<FileUploadSlot>) => {
+      const isAtLeastOneFileUploaded = slots && slots.length > 0;
+      return Boolean(isAtLeastOneFileUploaded);
+    },
+  })
+  .test({
+    name: "nonUploading",
+    message: "Please wait for upload to complete",
     test: (slots?: Array<FileUploadSlot>) => {
       return Boolean(
         slots &&
