@@ -148,6 +148,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
           grouped
           exclusiveOptions={exclusiveOptions[0]?.children}
           nonExclusiveOptions={nonExclusiveOptionGroups}
+          disabled={disabled}
         />
       ) : (
         <></>

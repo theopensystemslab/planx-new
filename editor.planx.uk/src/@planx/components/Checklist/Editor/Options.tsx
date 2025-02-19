@@ -11,7 +11,10 @@ import { ExclusiveOrOptionManager } from "./components/ExclusiveOrOptionManager"
 import { GroupedOptions } from "./components/GroupedOptions";
 import ChecklistOptionsEditor from "./components/OptionsEditor";
 
-export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
+export const Options: React.FC<{
+  formik: FormikHookReturn;
+  disabled?: boolean;
+}> = ({ formik, disabled }) => {
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
     formik.values.options,
     (option) => option.data.exclusive,
@@ -24,7 +27,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
-        <GroupedOptions formik={formik} />
+        <GroupedOptions formik={formik} disabled={disabled} />
       ) : (
         <>
           <ListManager
@@ -37,6 +40,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
 
               formik.setFieldValue("options", newCombinedOptions);
             }}
+            disabled={disabled}
             newValueLabel="add new option"
             newValue={() => ({
               id: "",
@@ -62,6 +66,7 @@ export const Options: React.FC<{ formik: FormikHookReturn }> = ({ formik }) => {
               formik={formik}
               exclusiveOptions={exclusiveOptions}
               nonExclusiveOptions={nonExclusiveOptions}
+              disabled={disabled}
             />
           ) : (
             <></>
