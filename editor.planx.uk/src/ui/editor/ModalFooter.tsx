@@ -44,6 +44,7 @@ export const ModalFooter = <T extends BaseNodeData>({
       <ComponentTagSelect
         value={formik.values.tags}
         onChange={(value) => formik.setFieldValue("tags", value)}
+        disabled={disabled}
       />
     )}
   </>

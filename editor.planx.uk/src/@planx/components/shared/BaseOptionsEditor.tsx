@@ -83,6 +83,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
         key={`${props.value.id}-data-field-autocomplete`}
         schema={props.schema}
         value={props.value.data.val}
+        disabled={props.disabled}
         onChange={(targetValue) => {
           props.onChange({
             ...props.value,
@@ -96,6 +97,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
     )}
     <FlagsSelect
       value={props.value.data.flags}
+      disabled={props.disabled}
       onChange={(ev) => {
         props.onChange({
           ...props.value,
