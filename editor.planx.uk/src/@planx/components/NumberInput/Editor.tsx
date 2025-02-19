@@ -44,6 +44,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -52,11 +53,13 @@ export default function NumberInputComponent(props: Props): FCReturn {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <DataFieldAutocomplete
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
           <InputRow>
             <InputRowLabel>units</InputRowLabel>
@@ -66,6 +69,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
                 value={formik.values.units}
                 placeholder="eg square metres"
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRowItem>
           </InputRow>
@@ -79,6 +83,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
                 )
               }
               label="Allow negative numbers to be input"
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -88,11 +93,12 @@ export default function NumberInputComponent(props: Props): FCReturn {
                 formik.setFieldValue("isInteger", !formik.values.isInteger)
               }
               label="Only allow whole numbers"
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }
