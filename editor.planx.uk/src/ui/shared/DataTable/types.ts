@@ -35,5 +35,4 @@ export type ColumnConfig<T> = {
 export interface DataGridProps<T> {
   rows: readonly T[] | undefined;
   columns: Array<ColumnConfig<T>>;
-  customFilter?: true;
 }

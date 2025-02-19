@@ -1,18 +1,13 @@
 /* eslint-disable no-restricted-imports */
-import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import {
   DataGrid,
   GridColDef,
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
-  GridToolbarExport,
-  GridToolbarFilterButton,
+  GridToolbar,
   GridValueOptionsParams,
   ValueOptions,
 } from "@mui/x-data-grid";
-import React, { useState } from "react";
+import React from "react";
 
 import {
   ColumnConfig,
@@ -26,29 +21,9 @@ import {
   getColumnType,
 } from "./utils";
 
-export const DataTable = <T,>({
-  rows,
-  columns,
-  customFilter,
-}: DataGridProps<T>) => {
+export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   const baseColDef: Partial<GridColDef> = {
     width: 150,
-  };
-
-  const [filteringOne, setFilteringOne] = useState(true);
-
-  const CustomToolbar = () => {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <Button size="small" onClick={() => setFilteringOne(!filteringOne)}>
-          {filteringOne ? "Filter 2" : "Filter 1"}
-        </Button>
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
   };
 
   const renderCellComponentByType = (
@@ -93,7 +68,7 @@ export const DataTable = <T,>({
         column.type === ColumnType.ARRAY &&
         columnValueOptions &&
         columnValueOptions.length > 0 &&
-        createFilterOperator(columnValueOptions, filteringOne),
+        createFilterOperator(columnValueOptions),
       renderCell: column.type
         ? (params: RenderCellParams) =>
             renderCellComponentByType(params, column)
@@ -112,11 +87,9 @@ export const DataTable = <T,>({
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
-          slots={
-            customFilter && {
-              toolbar: CustomToolbar,
-            }
-          }
+          slots={{
+            toolbar: GridToolbar,
+          }}
         />
       </Box>
     </Box>
