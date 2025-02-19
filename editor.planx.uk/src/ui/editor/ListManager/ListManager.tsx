@@ -122,7 +122,7 @@ export default function ListManager<T, EditorExtraProps>(
                         <IconButton
                           disableRipple
                           {...(props.noDragAndDrop
-                            ? { disabled: true || disabled }
+                            ? {}
                             : provided.dragHandleProps)}
                           aria-label="Drag"
                           size="large"
