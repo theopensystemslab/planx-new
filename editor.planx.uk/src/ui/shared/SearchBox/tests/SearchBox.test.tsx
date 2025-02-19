@@ -2,12 +2,18 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
 import { SearchBox } from "../SearchBox";
-import { MockRecords, mockRecords, mockSetRecords } from "./mocks";
+import {
+  mockFirstSearchTerm,
+  MockRecords,
+  mockRecords,
+  mockSecondSearchTerm,
+  mockSetRecords,
+} from "./mocks";
 import React from "react";
 import { screen, waitFor } from "@testing-library/react";
 import { axe } from "vitest-axe";
 import { it } from "vitest";
-import { checkForSearchResults, waitForClearSearchIcon } from "./helpers";
+import { checkForFirstSearchResults, waitForClearSearchIcon } from "./helpers";
 
 const setupTestEnvironment = (searchKeys: string[]) =>
   setup(
@@ -30,7 +36,7 @@ describe("the UI interactions of the SearchBox", () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
-    user.type(searchBox, "search");
+    user.type(searchBox, mockFirstSearchTerm);
     await waitFor(() => {
       const searchSpinner = screen.queryByRole("button", {
         name: "is searching",
@@ -43,7 +49,7 @@ describe("the UI interactions of the SearchBox", () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
-    user.type(searchBox, "search");
+    user.type(searchBox, mockFirstSearchTerm);
     await waitFor(() => {
       const clearIcon = screen.queryByRole("button", {
         name: "clear search",
@@ -56,8 +62,8 @@ describe("the UI interactions of the SearchBox", () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
-    await user.type(searchBox, "search");
-    await checkForSearchResults();
+    await user.type(searchBox, mockFirstSearchTerm);
+    await checkForFirstSearchResults();
 
     await user.clear(searchBox);
     await waitFor(() => {
@@ -80,19 +86,19 @@ describe("the search functionality", () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
-    await user.type(searchBox, "search");
-    await checkForSearchResults();
+    await user.type(searchBox, mockFirstSearchTerm);
+    await checkForFirstSearchResults();
 
     await waitForClearSearchIcon(screen);
 
     expect(mockSetRecords).toHaveBeenLastCalledWith([
       {
-        name: "Search for me",
-        slug: "search-for-me",
+        name: "Mock result one",
+        slug: "mock-result-one",
       },
       {
-        name: "Do not search for me",
-        slug: "do-not-search-for-me",
+        name: "Mock result two",
+        slug: "mock-result-two",
       },
     ]);
   });
@@ -100,10 +106,10 @@ describe("the search functionality", () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
-    await user.type(searchBox, "search");
+    await user.type(searchBox, mockFirstSearchTerm);
 
     await waitForClearSearchIcon(screen);
-    await checkForSearchResults();
+    await checkForFirstSearchResults();
 
     await user.clear(searchBox);
 
@@ -118,8 +124,6 @@ describe("the search functionality", () => {
       expect(searchingSpinner).not.toBeInTheDocument();
     });
 
-    screen.logTestingPlaygroundURL();
-
     expect(mockSetRecords).toHaveBeenLastCalledWith(mockRecords);
   });
 
@@ -127,7 +131,7 @@ describe("the search functionality", () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
 
-    await user.type(searchBox, "unique");
+    await user.type(searchBox, mockSecondSearchTerm);
 
     await waitForClearSearchIcon(screen);
 
