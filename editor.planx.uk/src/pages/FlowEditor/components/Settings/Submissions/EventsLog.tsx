@@ -8,11 +8,8 @@ import Chip from "@mui/material/Chip";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -22,6 +19,8 @@ import { addDays, format, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
+import { DataTable } from "ui/shared/DataTable/DataTable";
+import { ColumnConfig } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { EventsLogProps, Submission } from "./types";
@@ -67,37 +66,71 @@ const EventsLog: React.FC<EventsLogProps> = ({
         message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
       />
     );
+
+  // console.log({ submissions });
+
+  const rowData = submissions.map((submission) => ({
+    ...submission,
+    id: submission.eventId,
+  }));
+
+  //   [
+  //     {
+  //         "__typename": "submission_services_log",
+  //         "sessionId": "6981b241-3883-4d60-a973-5e693c021810",
+  //         "eventId": "f34636cb-651e-4de1-a0e2-d09586cabf02",
+  //         "eventType": "Send to email",
+  //         "status": "Success",
+  //         "retry": false,
+  //         "response": {
+  //         },
+  //         "createdAt": "2025-02-20T16:46:14.529048+00:00",
+  //         "flowName": "jo"
+  //     }
+  // ]
+
+  const columns: ColumnConfig<Submission>[] = [
+    { field: "flowName", headerName: "Flow name" },
+    { field: "eventType", headerName: "Event" },
+    { field: "status", headerName: "Status" },
+    { field: "createdAt", headerName: "Date" },
+    { field: "sessionId", headerName: "Session ID" },
+    { field: "response", headerName: "Response" },
+  ];
+
   return (
-    <Feed>
-      <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-        <TableHead>
-          <TableRow sx={{ "& > *": { borderBottomColor: "black !important" } }}>
-            <TableCell sx={{ width: 130 }}>
-              <strong>Flow name</strong>
-            </TableCell>
-            <TableCell sx={{ width: 250 }}>
-              <strong>Event</strong>
-            </TableCell>
-            <TableCell sx={{ width: 130 }}>
-              <strong>Status</strong>
-            </TableCell>
-            <TableCell sx={{ width: 120 }}>
-              <strong>Date</strong>
-            </TableCell>
-            <TableCell sx={{ width: 350 }}>
-              <strong>Session ID</strong>
-            </TableCell>
-            <TableCell sx={{ width: 50 }} />
-            <TableCell sx={{ width: 50 }} />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {submissions.map((submission, i) => (
-            <CollapsibleRow {...submission} key={i} />
-          ))}
-        </TableBody>
-      </Table>
-    </Feed>
+    // <Box></Box>
+    // <Feed>
+    //   <Table stickyHeader sx={{ tableLayout: "fixed" }}>
+    //     <TableHead>
+    //       <TableRow sx={{ "& > *": { borderBottomColor: "black !important" } }}>
+    //         <TableCell sx={{ width: 130 }}>
+    //           <strong>Flow name</strong>
+    //         </TableCell>
+    //         <TableCell sx={{ width: 250 }}>
+    //           <strong>Event</strong>
+    //         </TableCell>
+    //         <TableCell sx={{ width: 130 }}>
+    //           <strong>Status</strong>
+    //         </TableCell>
+    //         <TableCell sx={{ width: 120 }}>
+    //           <strong>Date</strong>
+    //         </TableCell>
+    //         <TableCell sx={{ width: 350 }}>
+    //           <strong>Session ID</strong>
+    //         </TableCell>
+    //         <TableCell sx={{ width: 50 }} />
+    //         <TableCell sx={{ width: 50 }} />
+    //       </TableRow>
+    //     </TableHead>
+    //     <TableBody>
+    //       {submissions.map((submission, i) => (
+    //         <CollapsibleRow {...submission} key={i} />
+    //       ))}
+    //     </TableBody>
+    //   </Table>
+    // </Feed>
+    <DataTable columns={columns} rows={rowData} />
   );
 };
 
