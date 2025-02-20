@@ -20,8 +20,8 @@ const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
 };
 
 const containsItem = (item: string, value: Pick<GridFilterItem, "value">) => {
-  if (value instanceof String) {
-    return item.toLowerCase().includes(value.toLowerCase());
+  if (typeof value === "string") {
+    return item.toLowerCase().includes((value as string).toLowerCase());
   }
 };
 

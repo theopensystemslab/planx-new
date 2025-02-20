@@ -1,5 +1,6 @@
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
+import { GridFilterFormProps } from "@mui/x-data-grid";
 import React from "react";
 import {
   OptionalAutocompleteProps,
@@ -8,10 +9,8 @@ import {
 } from "ui/shared/SelectMultiple";
 
 type Props<T> = RequiredAutocompleteProps<T> &
-  OptionalAutocompleteProps<T> & {
-    item: Record<string, any>;
-    applyValue: (args: any) => any;
-  };
+  OptionalAutocompleteProps<T> &
+  GridFilterFormProps & { applyValue: (args: Record<string, any>) => void };
 
 export function MultipleOptionSelectFilter<T>(props: Props<T>) {
   const { item, applyValue } = props;
@@ -47,14 +46,14 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
             const chipIndex = Number(
               element.parentElement.getAttribute("data-tag-index"),
             );
-            setChipData((prev: any[]) => {
+            setChipData((prev: string[]) => {
               prev.splice(chipIndex, 1);
             });
             applyValue({ ...item, chipData });
             setChipData(item.value);
           },
         }}
-        {...props}
+        options={props.options}
         onChange={(_e, value) => {
           setChipData(value);
           return applyValue({ ...item, value });
