@@ -49,7 +49,7 @@ function EditorNavMenu() {
       title: "Select a team",
       Icon: FormatListBulletedIcon,
       route: "/",
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
     {
       title: "Global settings",
@@ -67,19 +67,19 @@ function EditorNavMenu() {
       title: "Resources",
       Icon: MenuBookIcon,
       route: "resources",
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
     {
       title: "Onboarding",
       Icon: AssignmentTurnedInIcon,
       route: "onboarding",
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
     {
       title: "Tutorials",
       Icon: SchoolIcon,
       route: "tutorials",
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
   ];
 
@@ -88,7 +88,7 @@ function EditorNavMenu() {
       title: "Services",
       Icon: FormatListBulletedIcon,
       route: `/${teamSlug}`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
     {
       title: "Settings",
@@ -127,13 +127,13 @@ function EditorNavMenu() {
       title: "Editor",
       Icon: EditorIcon,
       route: `/${teamSlug}/${flowSlug}`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
     {
       title: "About this service",
       Icon: Info,
       route: `/${teamSlug}/${flowSlug}/about`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "teamViewer"],
+      accessibleBy: "*",
     },
     {
       title: "Service settings",
@@ -200,9 +200,15 @@ function EditorNavMenu() {
 
   const { routes, compact } = getRoutesForUrl(url.href);
 
-  const visibleRoutes = routes.filter(
-    ({ accessibleBy }) => role && accessibleBy.includes(role),
-  );
+  const isRouteAccessible = ({ accessibleBy }: Route) => {
+    const accessibleByAll = accessibleBy === "*";
+    if (accessibleByAll) return true;
+
+    const accessibleByCurrentUserRole = role && accessibleBy.includes(role);
+    return accessibleByCurrentUserRole;
+  };
+
+  const visibleRoutes = routes.filter(isRouteAccessible);
 
   // Hide menu if the user does not have a selection of items
   if (visibleRoutes.length < 2) return null;
