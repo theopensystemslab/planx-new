@@ -3,9 +3,8 @@ import Box from "@mui/material/Box";
 import {
   DataGrid,
   GridColDef,
+  GridFilterModel,
   GridToolbar,
-  GridValueOptionsParams,
-  ValueOptions,
 } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
@@ -19,36 +18,26 @@ import {
   componentRegistry,
   createFilterOperator,
   getColumnType,
+  getValueOptions,
 } from "./utils";
 
 export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
     column: ColumnConfig<T>,
-    filterValue?: any,
+    filterValues?: string[],
   ): JSX.Element | undefined => {
     if (!column.type) return undefined;
     if (column.customComponent) {
       return column.customComponent(params);
     }
     const ComponentRenderer = componentRegistry[column.type];
-    return ComponentRenderer(params.value, filterValue);
+    return ComponentRenderer(params.value, filterValues);
   };
 
-  const [filterValue, setFilterValue] = useState("");
+  const [filterValues, setFilterValues] = useState<string[]>([]);
 
   const dataColumns: GridColDef[] = columns.map((column, index) => {
-    const getValueOptions = (
-      options:
-        | ValueOptions[]
-        | ((params: GridValueOptionsParams<any>) => ValueOptions[]),
-    ): ValueOptions[] | undefined => {
-      if (Array.isArray(options)) {
-        return options.filter((val) => val !== null);
-      }
-      return undefined;
-    };
-
     const columnValueOptions =
       column.columnOptions?.valueOptions &&
       getValueOptions(column.columnOptions?.valueOptions);
@@ -63,7 +52,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       headerName,
       renderCell: column.type
         ? (params: RenderCellParams) =>
-            renderCellComponentByType(params, column, filterValue)
+            renderCellComponentByType(params, column, filterValues)
         : undefined,
     };
 
@@ -86,8 +75,8 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
         };
   }) as GridColDef[];
 
-  const handleFilterChange = (params: any) => {
-    setFilterValue(params.items[0]?.value ?? "");
+  const handleFilterChange = (model: GridFilterModel) => {
+    setFilterValues(model.items[0]?.value ?? "");
   };
 
   return (

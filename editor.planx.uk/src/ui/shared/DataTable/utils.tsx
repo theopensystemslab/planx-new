@@ -1,13 +1,17 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { ValueOptions } from "@mui/x-data-grid";
+import {
+  GridFilterItem,
+  GridValueOptionsParams,
+  ValueOptions,
+} from "@mui/x-data-grid";
 import React from "react";
 
 import { False, True } from "./components/cellIcons";
 import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
 import { ColumnRenderType, ColumnType } from "./types";
 
-const isValidFilterInput = (filterItem: Record<string, any>): boolean => {
+const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   return (
     Array.isArray(filterItem.value) &&
     filterItem.value.length > 0 &&
@@ -15,14 +19,16 @@ const isValidFilterInput = (filterItem: Record<string, any>): boolean => {
   );
 };
 
-const containsItem = (item: string, value: string) => {
-  return item.toLowerCase().includes(value.toLowerCase());
+const containsItem = (item: string, value: Pick<GridFilterItem, "value">) => {
+  if (value instanceof String) {
+    return item.toLowerCase().includes(value.toLowerCase());
+  }
 };
 
 export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
   {
     value: "contains",
-    getApplyFilterFn: (filterItem: Record<string, any>) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!isValidFilterInput(filterItem)) {
         return null;
       }
@@ -33,7 +39,7 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         }
 
         return arrayOfValues.some((arrayItem) =>
-          filterItem.value.some((filterValue: any) =>
+          filterItem.value.some((filterValue: Pick<GridFilterItem, "value">) =>
             containsItem(arrayItem, filterValue),
           ),
         );
@@ -46,13 +52,24 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
   },
 ];
 
+export const getValueOptions = (
+  options:
+    | ValueOptions[]
+    | ((params: GridValueOptionsParams<any>) => ValueOptions[]),
+): ValueOptions[] | undefined => {
+  if (Array.isArray(options)) {
+    return options.filter((val) => val !== null);
+  }
+  return undefined;
+};
+
 export const componentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-  [ColumnType.ARRAY]: (value: string[], filterValue?: any) => (
+  [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => (
     <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
       {value?.map((item: string, index: number) => (
         <Typography py={0.4} variant="body2" key={index} component="li">
-          {filterValue.includes(item) ? <strong>{item}</strong> : item}
+          {filterValues?.includes(item) ? <strong>{item}</strong> : item}
         </Typography>
       ))}
     </Box>
