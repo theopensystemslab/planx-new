@@ -8,21 +8,21 @@ export type MockRecords = {
 
 export const mockRecords: MockRecords[] = [
   {
-    name: "Mock result one",
-    slug: "mock-result-one",
+    name: "Apply for a certificate",
+    slug: "apply-for-a-ceritifcate",
   },
   {
-    name: "Mock result two",
-    slug: "mock-result-two",
+    name: "Apply for an article 4 direction",
+    slug: "apply-for-an-article-4-direction",
   },
-  { name: "Unique name", slug: "unique-name" },
+  { name: "Application for something", slug: "application-for-something" },
 ];
 
 /** This term should return the first two records */
-export const mockFirstSearchTerm = "mock";
+export const mockFirstSearchTerm = "apply";
 
 /** This term should return the last record */
-export const mockSecondSearchTerm = "Unique";
+export const mockSecondSearchTerm = "something";
 
 export const mockSetRecords = vi.fn() as React.Dispatch<
   React.SetStateAction<MockRecords[] | null>

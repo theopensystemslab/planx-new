@@ -1,4 +1,5 @@
 import { Screen, waitFor } from "@testing-library/react";
+
 import { mockSetRecords } from "./mocks";
 
 /**
@@ -33,14 +34,14 @@ export const waitForClearSearchIcon = async (screen: Screen) => {
  * we would expect these results from the mocks
  */
 export const checkForFirstSearchResults = async () => {
-  expect(mockSetRecords).toHaveBeenCalledWith([
+  expect(mockSetRecords).toHaveBeenLastCalledWith([
     {
-      name: "Mock result one",
-      slug: "mock-result-one",
+      name: "Apply for a certificate",
+      slug: "apply-for-a-ceritifcate",
     },
     {
-      name: "Mock result two",
-      slug: "mock-result-two",
+      name: "Apply for an article 4 direction",
+      slug: "apply-for-an-article-4-direction",
     },
   ]);
 };
