@@ -180,6 +180,8 @@ export interface EditorStore extends Store.Store {
   lastPublishedDate: string;
   setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
+  isTemplate: boolean;
+  isTemplatedFrom: boolean;
   makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (
     flowId: string,
@@ -210,7 +212,11 @@ export interface EditorStore extends Store.Store {
   }) => void;
   getURLForNode: (nodeId: string) => string;
   getFlowSchema: () => { nodes?: string[]; options?: string[] } | undefined;
-  addFlowComment: (flowId: string, actorId: number, comment: string) => Promise<object>;
+  addFlowComment: (
+    flowId: string,
+    actorId: number,
+    comment: string,
+  ) => Promise<object>;
   deleteFlowComment: (commentId: number) => Promise<object>;
 }
 
@@ -370,6 +376,8 @@ export const editorStore: StateCreator<
       },
     );
 
+    set({ isTemplatedFrom: true });
+
     return response;
   },
 
@@ -481,6 +489,10 @@ export const editorStore: StateCreator<
   },
 
   isFlowPublished: false,
+
+  isTemplate: false,
+
+  isTemplatedFrom: false,
 
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
@@ -672,7 +684,11 @@ export const editorStore: StateCreator<
   addFlowComment: async (flowId, actorId, comment) => {
     const response = await client.mutate({
       mutation: gql`
-        mutation InsertFlowComment($flowId: uuid!, $actorId: Int!, $comment: String!) {
+        mutation InsertFlowComment(
+          $flowId: uuid!
+          $actorId: Int!
+          $comment: String!
+        ) {
           insert_flow_comments_one(
             object: { flow_id: $flowId, actor_id: $actorId, comment: $comment }
           ) {
@@ -683,7 +699,7 @@ export const editorStore: StateCreator<
       variables: {
         flowId,
         actorId,
-        comment
+        comment,
       },
     });
     return response;
@@ -699,7 +715,7 @@ export const editorStore: StateCreator<
         }
       `,
       variables: {
-        id: commentId
+        id: commentId,
       },
     });
     return response;
