@@ -25,14 +25,18 @@ export type FormikGovPayMetadata =
   | string
   | undefined;
 
+interface GovPayMetadataSectionProps {
+  disabled?: boolean;
+}
+
 function GovPayMetadataEditor(
   props: ListManagerEditorProps<GovPayMetadata> & {
     isFieldDisabled: (key: string, index: number) => boolean;
   },
 ) {
   const { key: currKey, value: currVal } = props.value;
-  const isDisabled = props.isFieldDisabled(currKey, props.index);
   const { errors, touched } = useFormikContext<Pay>();
+
   const error = parseError(
     errors.govPayMetadata as FormikGovPayMetadata,
     props.index,
@@ -48,7 +52,7 @@ function GovPayMetadataEditor(
         <InputRow>
           <Input
             aria-labelledby="key-label"
-            disabled={isDisabled}
+            disabled={props.isFieldDisabled(currKey, props.index)}
             value={currKey}
             onChange={({ target: { value: newKey } }) =>
               props.onChange({ key: newKey, value: currVal })
@@ -58,7 +62,7 @@ function GovPayMetadataEditor(
           <Input
             format={currVal.toString().startsWith("@") ? "data" : undefined}
             aria-labelledby="value-label"
-            disabled={isDisabled}
+            disabled={props.isFieldDisabled(currKey, props.index)}
             value={currVal}
             onChange={({ target: { value: newVal } }) =>
               props.onChange({ key: currKey, value: newVal })
@@ -71,7 +75,7 @@ function GovPayMetadataEditor(
   );
 }
 
-export const GovPayMetadataSection: React.FC = () => {
+export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({ disabled }) => {
   const { errors, setFieldValue, setTouched, touched, values } =
     useFormikContext<Pay>();
 
@@ -137,13 +141,14 @@ export const GovPayMetadataSection: React.FC = () => {
               Editor={(editorProps) => (
                 <GovPayMetadataEditor
                   {...editorProps}
-                  isFieldDisabled={(key, index) => isFieldDisabled(key, index)}
+                  isFieldDisabled={(key, index) => disabled || isFieldDisabled(key, index)}
                 />
               )}
               newValue={() => {
                 setTouched({});
                 return { key: "", value: "" };
               }}
+              disabled={disabled}
             />
           </>
         </ErrorWrapper>
