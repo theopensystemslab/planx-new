@@ -686,12 +686,19 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             margin: 1,
+            border: "none",
+            ".MuiDataGrid-row--borderBottom .MuiDataGrid-columnHeader": {
+              borderColor: "black",
+            },
             [`& .${gridClasses.cell}`]: {
               padding: "10px",
               display: "flex",
               "&:focus": {
                 outline: "none",
               },
+            },
+            ".MuiDataGrid-columnSeparator": {
+              visibility: "hidden",
             },
             [`& .${gridClasses.columnHeaderTitle}`]: {
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
