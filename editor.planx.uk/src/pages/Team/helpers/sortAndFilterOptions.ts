@@ -30,11 +30,6 @@ const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   _value,
 ) => flow.publishedFlows[0]?.hasSendComponent;
 
-const checkFlowApplicationType: FilterOptions<FlowSummary>["validationFn"] = (
-  flow,
-  _value,
-) => flow.publishedFlows[0]?.isStatutoryApplicationType;
-
 export const filterOptions: FilterOptions<FlowSummary>[] = [
   {
     displayName: "Online status",
@@ -47,11 +42,5 @@ export const filterOptions: FilterOptions<FlowSummary>[] = [
     optionKey: `publishedFlows.0.hasSendComponent`,
     optionValue: ["submission"],
     validationFn: checkFlowServiceType,
-  },
-  {
-    displayName: "Application type",
-    optionKey: `name`,
-    optionValue: ["statutory"],
-    validationFn: checkFlowApplicationType,
   },
 ];
