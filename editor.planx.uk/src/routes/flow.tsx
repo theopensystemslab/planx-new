@@ -118,14 +118,6 @@ const editNode = validateNodeRoute(
       [key: string]: any;
     };
 
-    // Temp guard to handle non-migrated tags
-    // TODO: Migrate "placeholder" tags to "customisation"
-    if (node.data.tags) {
-      node.data.tags = node.data.tags?.map((tag: string) =>
-        tag === "placeholder" ? "customisation" : tag,
-      );
-    }
-
     const extraProps = {} as any;
 
     if (node.type === TYPES.ExternalPortal)
