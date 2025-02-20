@@ -3,6 +3,7 @@ import { $api } from "../../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
 import type { HasuraClaims, JWTData } from "../types.js";
 import { checkUserCanAccessEnv, getAllowedRolesForUser } from "./utils.js";
+import { fromUnixTime } from "date-fns";
 
 export const buildUserJWT = async (
   email: string,
@@ -75,7 +76,8 @@ export const getJWTExpiration = (token: string): Date => {
       throw new Error("Expiry date missing from JWT");
     }
 
-    return new Date(payload.exp * 1000);
+    const expiry = fromUnixTime(payload.exp);
+    return expiry;
   } catch (error) {
     throw new Error(
       `Failed to decode JWT: ${error instanceof Error ? error.message : "Unknown error"}`,
