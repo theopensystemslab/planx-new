@@ -28,7 +28,7 @@ const db = new aws.rds.Instance("app", {
   engine: "postgres",
   // AWS restricts the maximum upgrade leap, see available versions:
   // $ aws rds describe-db-engine-versions --engine postgres  --engine-version your-version --query "DBEngineVersions[*].ValidUpgradeTarget[*].{EngineVersion:EngineVersion}" --output text
-  engineVersion: "16.3",
+  engineVersion: "16.7",
   // Available instance types: https://aws.amazon.com/rds/instance-types/
   instanceClass: env === "production" ? "db.t3.medium" : "db.t3.small",
   allocatedStorage: env === "production" ? 100 : 20,
@@ -44,6 +44,7 @@ const db = new aws.rds.Instance("app", {
   backupRetentionPeriod: env === "production" ? 35 : 1,
   applyImmediately: true,
   parameterGroupName: parameterGroup.name,
+  maintenanceWindow: "Mon:00:00-Mon:03:00",
 });
 export const dbRootUrl = pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
   "db-password"
