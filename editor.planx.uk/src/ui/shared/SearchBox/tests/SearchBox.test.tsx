@@ -1,7 +1,13 @@
+import { screen, waitFor } from "@testing-library/react";
+import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
+import { it } from "vitest";
+import { axe } from "vitest-axe";
+
 import { SearchBox } from "../SearchBox";
+import { checkForFirstSearchResults, waitForClearSearchIcon } from "./helpers";
 import {
   mockFirstSearchTerm,
   MockRecords,
@@ -9,11 +15,6 @@ import {
   mockSecondSearchTerm,
   mockSetRecords,
 } from "./mocks";
-import React from "react";
-import { screen, waitFor } from "@testing-library/react";
-import { axe } from "vitest-axe";
-import { it } from "vitest";
-import { checkForFirstSearchResults, waitForClearSearchIcon } from "./helpers";
 
 const setupTestEnvironment = (searchKeys: string[]) =>
   setup(
@@ -63,6 +64,8 @@ describe("the UI interactions of the SearchBox", () => {
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockFirstSearchTerm);
+    await waitForClearSearchIcon(screen);
+
     await checkForFirstSearchResults();
 
     await user.clear(searchBox);
@@ -87,18 +90,16 @@ describe("the search functionality", () => {
     const searchBox = screen.getByRole("textbox");
 
     await user.type(searchBox, mockFirstSearchTerm);
-    await checkForFirstSearchResults();
-
     await waitForClearSearchIcon(screen);
 
     expect(mockSetRecords).toHaveBeenLastCalledWith([
       {
-        name: "Mock result one",
-        slug: "mock-result-one",
+        name: "Apply for a certificate",
+        slug: "apply-for-a-ceritifcate",
       },
       {
-        name: "Mock result two",
-        slug: "mock-result-two",
+        name: "Apply for an article 4 direction",
+        slug: "apply-for-an-article-4-direction",
       },
     ]);
   });
@@ -136,7 +137,7 @@ describe("the search functionality", () => {
     await waitForClearSearchIcon(screen);
 
     expect(mockSetRecords).toHaveBeenLastCalledWith([
-      { name: "Unique name", slug: "unique-name" },
+      { name: "Application for something", slug: "application-for-something" },
     ]);
   });
 });
