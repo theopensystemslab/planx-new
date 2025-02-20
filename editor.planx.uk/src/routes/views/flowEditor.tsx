@@ -8,15 +8,19 @@ import { client } from "../../lib/graphql";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
-  id: string,
+  id: string;
   flowAnalyticsLink: string;
+  templatedFrom: string;
+  isTemplate: boolean;
   isFlowPublished: boolean;
 }
 
 interface GetFlowEditorData {
   flows: {
-    id: string,
+    id: string;
     flowAnalyticsLink: string;
+    templatedFrom: string;
+    isTemplate: boolean;
     publishedFlowsAggregate: {
       aggregate: {
         count: number;
@@ -40,6 +44,8 @@ export const getFlowEditorData = async (
         ) {
           id
           flowAnalyticsLink: analytics_link
+          templatedFrom: templated_from
+          isTemplate: is_template
           publishedFlowsAggregate: published_flows_aggregate {
             aggregate {
               count
@@ -60,6 +66,8 @@ export const getFlowEditorData = async (
   const flowEditorData: FlowEditorData = {
     id: flow.id,
     flowAnalyticsLink: flow.flowAnalyticsLink,
+    templatedFrom: flow.templatedFrom,
+    isTemplate: flow.isTemplate,
     isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
   };
 
@@ -71,11 +79,15 @@ export const getFlowEditorData = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
-  const { id, flowAnalyticsLink, isFlowPublished } = await getFlowEditorData(
-    flow,
-    req.params.team,
-  );
-  useStore.setState({ id, flowAnalyticsLink, isFlowPublished });
+  const { id, flowAnalyticsLink, isFlowPublished, isTemplate, templatedFrom } =
+    await getFlowEditorData(flow, req.params.team);
+  useStore.setState({
+    id,
+    flowAnalyticsLink,
+    isFlowPublished,
+    isTemplate,
+    isTemplatedFrom: Boolean(templatedFrom),
+  });
 
   return (
     <FlowEditorLayout>
