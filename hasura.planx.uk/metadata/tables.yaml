@@ -834,6 +834,7 @@
           - status
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:
@@ -921,6 +922,7 @@
           - slug
           - status
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:

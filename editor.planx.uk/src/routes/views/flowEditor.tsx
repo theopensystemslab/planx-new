@@ -81,6 +81,7 @@ export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
   const { id, flowAnalyticsLink, isFlowPublished, isTemplate, templatedFrom } =
     await getFlowEditorData(flow, req.params.team);
+
   useStore.setState({
     id,
     flowAnalyticsLink,
