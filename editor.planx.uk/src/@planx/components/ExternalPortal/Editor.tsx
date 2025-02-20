@@ -52,7 +52,8 @@ const ExternalPortalForm: React.FC<{
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
-}> = ({ handleSubmit, flowId, flows = [], tags = [], notes = "" }) => {
+  disabled?: boolean;
+}> = ({ handleSubmit, flowId, flows = [], tags = [], notes = "", disabled = false }) => {
   const portalSchema = Yup.object().shape({
     flowId: Yup.string().required("Add a flow to submit"),
   });
@@ -141,11 +142,12 @@ const ExternalPortalForm: React.FC<{
               handleHomeEndKeys
               autoHighlight
               forcePopupIcon={true}
+              disabled={disabled}
             />
           </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter formik={formik} showMoreInformation={false} disabled={disabled} />
     </form>
   );
 };
