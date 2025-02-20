@@ -77,7 +77,7 @@ export const SearchBox = <T extends object>({
   return (
     <Box maxWidth={360}>
       <InputRow>
-        <InputRowLabel>
+        <InputRowLabel inputProps={{ htmlFor: "search" }}>
           <strong>Search</strong>
         </InputRowLabel>
         <InputRowItem>
@@ -96,6 +96,7 @@ export const SearchBox = <T extends object>({
             />
             {searchedTerm && !isSearching && (
               <IconButton
+                id="clear-search"
                 aria-label="clear search"
                 onClick={() => {
                   setSearchedTerm("");
@@ -117,7 +118,7 @@ export const SearchBox = <T extends object>({
             )}
             {isSearching && (
               <IconButton
-                aria-label="clear search"
+                aria-label="is searching"
                 onClick={() => {
                   setFieldValue("pattern", "");
                   submitForm();
