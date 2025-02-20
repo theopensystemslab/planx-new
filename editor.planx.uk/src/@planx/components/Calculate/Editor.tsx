@@ -125,6 +125,7 @@ export default function Component(props: Props) {
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
@@ -133,18 +134,20 @@ export default function Component(props: Props) {
             required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
           <InputRow>
-            <Switch
-              checked={formik.values.formatOutputForAutomations}
-              onChange={() =>
-                formik.setFieldValue(
-                  "formatOutputForAutomations",
-                  !formik.values.formatOutputForAutomations,
-                )
-              }
-              label="Format the output to automate a future Question or Checklist only"
-            />
+          <Switch            
+            checked={formik.values.formatOutputForAutomations}
+            onChange={() =>
+              formik.setFieldValue(
+                "formatOutputForAutomations",
+                !formik.values.formatOutputForAutomations
+              )
+            }
+            label="Format the output to automate a future Question or Checklist only"
+            disabled={props.disabled}
+          />
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
@@ -156,6 +159,7 @@ export default function Component(props: Props) {
               value={formik.values.formula}
               onChange={formik.handleChange}
               errorMessage={formik.errors.formula}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
@@ -172,6 +176,7 @@ export default function Component(props: Props) {
                     onChange={formik.handleChange}
                     placeholder={"insert default value"}
                     required
+                    disabled={props.disabled}
                   />
                 </InputRow>
               </InputGroup>
@@ -191,6 +196,7 @@ export default function Component(props: Props) {
                     value={formik.values.samples[variable]}
                     onChange={formik.handleChange}
                     placeholder="empty"
+                    disabled={props.disabled}
                   />
                 </InputRow>
               ))}
@@ -205,7 +211,7 @@ export default function Component(props: Props) {
           </p>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }
