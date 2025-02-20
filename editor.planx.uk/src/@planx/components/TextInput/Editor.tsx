@@ -48,6 +48,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -56,11 +57,13 @@ const TextInputComponent: React.FC<Props> = (props) => {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <DataFieldAutocomplete
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
         <ModalSectionContent title="Input style">
@@ -81,13 +84,14 @@ const TextInputComponent: React.FC<Props> = (props) => {
                   variant="compact"
                   value={type.id}
                   onChange={handleRadioChange}
+                  disabled={props.disabled}
                 />
               ))}
             </RadioGroup>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };
