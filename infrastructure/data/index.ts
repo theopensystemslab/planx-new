@@ -44,6 +44,7 @@ const db = new aws.rds.Instance("app", {
   backupRetentionPeriod: env === "production" ? 35 : 1,
   applyImmediately: true,
   parameterGroupName: parameterGroup.name,
+  maintenanceWindow: "Mon:00:00-Mon:03:00",
 });
 export const dbRootUrl = pulumi.interpolate`postgres://${DB_ROOT_USERNAME}:${config.require(
   "db-password"
