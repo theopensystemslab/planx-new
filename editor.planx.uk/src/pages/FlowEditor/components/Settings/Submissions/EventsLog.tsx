@@ -9,7 +9,6 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -20,7 +19,7 @@ import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig } from "ui/shared/DataTable/types";
+import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { EventsLogProps, Submission } from "./types";
@@ -31,15 +30,6 @@ const Response = styled(Box)(() => ({
   maxWidth: "contentWrap",
   overflowWrap: "break-word",
   whiteSpace: "pre-wrap",
-}));
-
-// Style the table container like an event feed with bottom-anchored scroll
-const Feed = styled(TableContainer)(() => ({
-  maxHeight: "60vh",
-  overflow: "auto",
-  display: "flex",
-  flexDirection: "column-reverse",
-  readingOrder: "flex-visual",
 }));
 
 const EventsLog: React.FC<EventsLogProps> = ({
@@ -91,47 +81,45 @@ const EventsLog: React.FC<EventsLogProps> = ({
 
   const columns: ColumnConfig<Submission>[] = [
     { field: "flowName", headerName: "Flow name" },
-    { field: "eventType", headerName: "Event" },
-    { field: "status", headerName: "Status" },
+    {
+      field: "eventType",
+      headerName: "Event",
+      width: 250,
+      type: ColumnType.BOOLEAN,
+      customComponent: (params) => {
+        return (
+          <>
+            {params.value === "Pay" ? <Payment /> : <Send />}
+            <Typography variant="body2" ml={1}>
+              {params.value} {params.row.retry && ` [Retry]`}
+            </Typography>
+          </>
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      type: ColumnType.BOOLEAN, // might need string? and read value
+      customComponent: (params) => {
+        return params.value === "Success" ? (
+          <Chip label="Success" size="small" color="success" />
+        ) : (
+          <Chip label={params.value} size="small" color="error" />
+        );
+      },
+    },
     { field: "createdAt", headerName: "Date" },
-    { field: "sessionId", headerName: "Session ID" },
-    { field: "response", headerName: "Response" },
+    { field: "sessionId", headerName: "Session ID", width: 350 },
+    {
+      field: "response",
+      headerName: "Response",
+      type: ColumnType.BOOLEAN,
+      customComponent: (params) => <FormattedResponse {...params.row} />,
+    },
   ];
 
-  return (
-    // <Box></Box>
-    // <Feed>
-    //   <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-    //     <TableHead>
-    //       <TableRow sx={{ "& > *": { borderBottomColor: "black !important" } }}>
-    //         <TableCell sx={{ width: 130 }}>
-    //           <strong>Flow name</strong>
-    //         </TableCell>
-    //         <TableCell sx={{ width: 250 }}>
-    //           <strong>Event</strong>
-    //         </TableCell>
-    //         <TableCell sx={{ width: 130 }}>
-    //           <strong>Status</strong>
-    //         </TableCell>
-    //         <TableCell sx={{ width: 120 }}>
-    //           <strong>Date</strong>
-    //         </TableCell>
-    //         <TableCell sx={{ width: 350 }}>
-    //           <strong>Session ID</strong>
-    //         </TableCell>
-    //         <TableCell sx={{ width: 50 }} />
-    //         <TableCell sx={{ width: 50 }} />
-    //       </TableRow>
-    //     </TableHead>
-    //     <TableBody>
-    //       {submissions.map((submission, i) => (
-    //         <CollapsibleRow {...submission} key={i} />
-    //       ))}
-    //     </TableBody>
-    //   </Table>
-    // </Feed>
-    <DataTable columns={columns} rows={rowData} />
-  );
+  return <DataTable columns={columns} rows={rowData} />;
 };
 
 const CollapsibleRow: React.FC<Submission> = (submission) => {
@@ -158,32 +146,9 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>{submission.flowName}</TableCell>
-        <TableCell>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            {submission.eventType === "Pay" ? <Payment /> : <Send />}
-            <Typography variant="body2" ml={1}>
-              {submission.eventType} {submission.retry && ` [Retry]`}
-            </Typography>
-          </Box>
-        </TableCell>
-        <TableCell>
-          {submission.status === "Success" ? (
-            <Chip label="Success" size="small" color="success" />
-          ) : (
-            <Chip label={submission.status} size="small" color="error" />
-          )}
-        </TableCell>
         <TableCell>
           {format(new Date(submission.createdAt), "dd/MM/yy hh:mm:ss")}
         </TableCell>
-        <TableCell>{submission.sessionId}</TableCell>
         <TableCell>
           {showDownloadButton && (
             <Tooltip title="Download application data">
