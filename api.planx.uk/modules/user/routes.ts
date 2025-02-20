@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { useLoginAuth } from "../auth/middleware.js";
+import { useLoggedInUserAuth } from "../auth/middleware.js";
 import { getLoggedInUserDetails } from "./controller.js";
 
 const router = Router();
 
-router.get("/user/me", useLoginAuth, getLoggedInUserDetails);
+router.get("/user/me", useLoggedInUserAuth, getLoggedInUserDetails);
 
 export default router;

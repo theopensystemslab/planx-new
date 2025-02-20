@@ -282,7 +282,7 @@ export const usePlatformAdminAuth = useRoleAuth(["platformAdmin"]);
 /**
  * Allow any logged in user to access route, without checking roles
  */
-export const useLoginAuth: RequestHandler = (req, res, next) =>
+export const useLoggedInUserAuth: RequestHandler = (req, res, next) =>
   useJWT(req, res, (err) => {
     if (err) return next(err);
 
