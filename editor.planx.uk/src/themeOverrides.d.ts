@@ -89,6 +89,7 @@ declare module "@mui/material/styles/createPalette" {
     paper: string;
     dark: string;
     midGray: string;
+    disabled: string;
   }
 
   interface TypeBackgroundOptions {
@@ -96,6 +97,7 @@ declare module "@mui/material/styles/createPalette" {
     paper: string;
     dark: string;
     midGray: string;
+    disabled: string;
   }
 }
 

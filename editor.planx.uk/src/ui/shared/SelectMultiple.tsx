@@ -46,6 +46,12 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   [`& .${autocompleteClasses.endAdornment}`]: {
     top: "unset",
   },
+  "& button.Mui-disabled > svg": {
+    color: theme.palette.text.disabled,
+  },
+  "& input": {
+    backgroundColor: "transparent",
+  },
   "&:focus-within": {
     "& svg": {
       color: "black",
@@ -68,6 +74,7 @@ export function SelectMultiple<T>(props: Props<T>) {
         disableClearable
         disableCloseOnSelect
         multiple
+        disabled={props.disabled}
         popupIcon={PopupIcon}
         renderInput={(params) => (
           <StyledTextField
@@ -78,6 +85,7 @@ export function SelectMultiple<T>(props: Props<T>) {
             }}
             label={props.label}
             placeholder={placeholder}
+            disabled={props.disabled}
           />
         )}
         ChipProps={{

@@ -40,7 +40,7 @@ import {
   linkSelectionError,
 } from "./validationHelpers";
 
-const RichTextInput: FC<Props> = (props) => {
+const RichTextInput: FC<Props & { disabled?: boolean }> = (props) => {
   const stringValue = String(props.value || "");
 
   const editor = useEditor({
@@ -59,7 +59,7 @@ const RichTextInput: FC<Props> = (props) => {
       }),
     ],
     content: fromHtml(stringValue),
-    editable: Boolean(props.onChange),
+    editable: !props.disabled,
   });
 
   const [addingLink, setAddingLink] = useState<{
