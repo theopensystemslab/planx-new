@@ -38,7 +38,10 @@ const db = new aws.rds.Instance("app", {
   name: "app",
   username: DB_ROOT_USERNAME,
   password: config.require("db-password"),
-  skipFinalSnapshot: true,
+  // we should keep a snapshot in case of (potentially mistaken) deletion
+  skipFinalSnapshot: false,
+  finalSnapshotIdentifier: "final-before-deletion",
+  // snapshotIdentifier: "after-postgres-update-167",
   publiclyAccessible: true,
   storageEncrypted: true,
   backupRetentionPeriod: env === "production" ? 35 : 1,
