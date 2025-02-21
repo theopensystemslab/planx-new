@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import app from "../../../server.js";
+import type * as planxCore from "@opensystemslab/planx-core";
 import { authHeader } from "../../../tests/mockJWT.js";
 
 const endpoint = (strings: TemplateStringsArray) =>
@@ -9,12 +10,16 @@ const mockGenerateOneAppXML = vi
   .fn()
   .mockResolvedValue("<dummy:xml></dummy:xml>");
 
-vi.mock("../../../client", () => {
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const { CoreDomainClient: OriginalCoreDomainClient } =
+    await importOriginal<typeof planxCore>();
+
   return {
-    $api: {
-      export: {
-        oneAppPayload: () => mockGenerateOneAppXML(),
-      },
+    CoreDomainClient: class extends OriginalCoreDomainClient {
+      constructor() {
+        super();
+        this.export.oneAppPayload = async () => mockGenerateOneAppXML();
+      }
     },
   };
 });

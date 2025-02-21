@@ -6,6 +6,7 @@ import {
   getTestJWT,
 } from "../../tests/mockJWT.js";
 import { userContext } from "../auth/middleware.js";
+import type * as planxCore from "@opensystemslab/planx-core";
 
 const getStoreMock = vi.spyOn(userContext, "getStore");
 
@@ -27,13 +28,17 @@ const mockGetById = vi.fn().mockResolvedValue({
   ],
 });
 
-vi.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const { CoreDomainClient: OriginalCoreDomainClient } =
+    await importOriginal<typeof planxCore>();
+
   return {
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      user: {
-        getById: () => mockGetById(),
-      },
-    })),
+    CoreDomainClient: class extends OriginalCoreDomainClient {
+      constructor() {
+        super();
+        this.user.getById = () => mockGetById();
+      }
+    },
   };
 });
 

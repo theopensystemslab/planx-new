@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import app from "../../../server.js";
 import { authHeader } from "../../../tests/mockJWT.js";
+import type * as planxCore from "@opensystemslab/planx-core";
 import { expectedPlanningPermissionPayload } from "../../../tests/mocks/digitalPlanningDataMocks.js";
 
 const endpoint = (strings: TemplateStringsArray) =>
@@ -10,14 +11,18 @@ const mockGenerateDigitalPlanningApplicationPayload = vi
   .fn()
   .mockResolvedValue(expectedPlanningPermissionPayload);
 
-vi.mock("@opensystemslab/planx-core", () => {
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const { CoreDomainClient: OriginalCoreDomainClient } =
+    await importOriginal<typeof planxCore>();
+
   return {
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      export: {
-        digitalPlanningDataPayload: () =>
-          mockGenerateDigitalPlanningApplicationPayload(),
-      },
-    })),
+    CoreDomainClient: class extends OriginalCoreDomainClient {
+      constructor() {
+        super();
+        this.export.digitalPlanningDataPayload = () =>
+          mockGenerateDigitalPlanningApplicationPayload();
+      }
+    },
   };
 });
 
