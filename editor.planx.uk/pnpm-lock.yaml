@@ -46,13 +46,13 @@ dependencies:
     version: 5.15.11(@types/react@18.2.45)(react@18.2.0)
   '@mui/x-data-grid':
     specifier: ^7.25.0
-    version: 7.25.0(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@mui/material@5.15.10)(@mui/system@5.16.14)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+    version: 7.25.0(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@mui/material@5.15.10)(@mui/system@6.4.3)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
   '@opensystemslab/map':
     specifier: 1.0.0-alpha.4
     version: 1.0.0-alpha.4
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#406d00e
-    version: github.com/theopensystemslab/planx-core/406d00e(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#6cc4aa3
+    version: github.com/theopensystemslab/planx-core/6cc4aa3(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -3464,6 +3464,23 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@mui/private-theming@6.4.3(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-7x9HaNwDCeoERc4BoEWLieuzKzXu5ZrhRnEM6AUcRXUScQLvF1NFkTlP59+IJfTbEMgcGg1wWHApyoqcksrBpQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@mui/utils': 6.4.3(@types/react@18.2.45)(react@18.2.0)
+      '@types/react': 18.2.45
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
   /@mui/private-theming@6.4.3(@types/react@18.2.45)(react@18.3.1):
     resolution: {integrity: sha512-7x9HaNwDCeoERc4BoEWLieuzKzXu5ZrhRnEM6AUcRXUScQLvF1NFkTlP59+IJfTbEMgcGg1wWHApyoqcksrBpQ==}
     engines: {node: '>=14.0.0'}
@@ -3497,6 +3514,30 @@ packages:
       '@babel/runtime': 7.26.0
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.2.0)
+      '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.2.0)
+      csstype: 3.1.3
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
+  /@mui/styled-engine@6.4.3(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(react@18.2.0):
+    resolution: {integrity: sha512-OC402VfK+ra2+f12Gef8maY7Y9n7B6CZcoQ9u7mIkh/7PKwW/xH81xwX+yW+Ak1zBT3HYcVjh2X82k5cKMFGoQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@emotion/cache': 11.14.0
+      '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.2.0)
+      '@emotion/serialize': 1.3.3
+      '@emotion/sheet': 1.4.0
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.2.0)
       csstype: 3.1.3
       prop-types: 15.8.1
@@ -3550,6 +3591,36 @@ packages:
       '@mui/styled-engine': 5.16.14(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(react@18.2.0)
       '@mui/types': 7.2.21(@types/react@18.2.45)
       '@mui/utils': 5.16.14(@types/react@18.2.45)(react@18.2.0)
+      '@types/react': 18.2.45
+      clsx: 2.1.1
+      csstype: 3.1.3
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
+  /@mui/system@6.4.3(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-Q0iDwnH3+xoxQ0pqVbt8hFdzhq1g2XzzR4Y5pVcICTNtoCLJmpJS3vI4y/OIM1FHFmpfmiEC2IRIq7YcZ8nsmg==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@emotion/react': ^11.5.0
+      '@emotion/styled': ^11.3.0
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.2.0)
+      '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.2.0)
+      '@mui/private-theming': 6.4.3(@types/react@18.2.45)(react@18.2.0)
+      '@mui/styled-engine': 6.4.3(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(react@18.2.0)
+      '@mui/types': 7.2.21(@types/react@18.2.45)
+      '@mui/utils': 6.4.3(@types/react@18.2.45)(react@18.2.0)
       '@types/react': 18.2.45
       clsx: 2.1.1
       csstype: 3.1.3
@@ -3656,6 +3727,26 @@ packages:
       react-is: 19.0.0
     dev: false
 
+  /@mui/utils@6.4.3(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-jxHRHh3BqVXE9ABxDm+Tc3wlBooYz/4XPa0+4AI+iF38rV1/+btJmSUgG4shDtSWVs/I97aDn5jBCt6SF2Uq2A==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@mui/types': 7.2.21(@types/react@18.2.45)
+      '@types/prop-types': 15.7.14
+      '@types/react': 18.2.45
+      clsx: 2.1.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-is: 19.0.0
+    dev: false
+
   /@mui/utils@6.4.3(@types/react@18.2.45)(react@18.3.1):
     resolution: {integrity: sha512-jxHRHh3BqVXE9ABxDm+Tc3wlBooYz/4XPa0+4AI+iF38rV1/+btJmSUgG4shDtSWVs/I97aDn5jBCt6SF2Uq2A==}
     engines: {node: '>=14.0.0'}
@@ -3676,7 +3767,7 @@ packages:
       react-is: 19.0.0
     dev: false
 
-  /@mui/x-data-grid@7.25.0(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@mui/material@5.15.10)(@mui/system@5.16.14)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0):
+  /@mui/x-data-grid@7.25.0(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@mui/material@5.15.10)(@mui/system@6.4.3)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-e9ZLbCgnDiADFiDyXo91ucZFHEMkKBNpwpkaTq5KohzefJfMpMQjTEbJeueSfBG2G1Q1Am2TPeBqrNeReIA7RQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -3696,7 +3787,7 @@ packages:
       '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.2.0)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.2.0)
       '@mui/material': 5.15.10(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
-      '@mui/system': 5.16.14(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react@18.2.0)
+      '@mui/system': 6.4.3(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react@18.2.0)
       '@mui/utils': 5.16.14(@types/react@18.2.45)(react@18.2.0)
       '@mui/x-internals': 7.25.0(@types/react@18.2.45)(react@18.2.0)
       clsx: 2.1.1
@@ -14673,9 +14764,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/406d00e(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/406d00e}
-    id: github.com/theopensystemslab/planx-core/406d00e
+  github.com/theopensystemslab/planx-core/6cc4aa3(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6cc4aa3}
+    id: github.com/theopensystemslab/planx-core/6cc4aa3
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

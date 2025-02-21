@@ -9,8 +9,8 @@ dependencies:
     specifier: ^11.1.1
     version: 11.1.1
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#406d00e
-    version: github.com/theopensystemslab/planx-core/406d00e(@types/react@19.0.7)
+    specifier: git+https://github.com/theopensystemslab/planx-core#6cc4aa3
+    version: github.com/theopensystemslab/planx-core/6cc4aa3(@types/react@19.0.7)
   axios:
     specifier: ^1.7.4
     version: 1.7.4
@@ -2999,9 +2999,9 @@ packages:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/406d00e(@types/react@19.0.7):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/406d00e}
-    id: github.com/theopensystemslab/planx-core/406d00e
+  github.com/theopensystemslab/planx-core/6cc4aa3(@types/react@19.0.7):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/6cc4aa3}
+    id: github.com/theopensystemslab/planx-core/6cc4aa3
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
