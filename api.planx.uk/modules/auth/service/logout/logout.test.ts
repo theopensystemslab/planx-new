@@ -21,11 +21,11 @@ test("requests without a JWT will be rejected", async () => {
 test("invalid tokens will be rejected", async () => {
   await supertest(app)
     .post(ENDPOINT)
-    .set({ authorization: "Bearer INVALID JWT" })
+    .set({ authorization: "Bearer INVALID_JWT" })
     .expect(401)
     .then((res) => {
       expect(res.body).toEqual({
-        error: "No authorization token was found",
+        error: "jwt malformed",
       });
     });
 });
