@@ -15,12 +15,17 @@ components:
     NewCollection:
       type: object
       properties:
+        slug:
+          type: string
+          description: PlanX team slug
         description:
           type: string
           description: Optional description for the collection
         parentId:
           type: integer
           description: Optional ID of the parent collection
+      required:
+        - slug
 
     NewDashboard:
       type: object
@@ -70,19 +75,12 @@ paths:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
 
-  /metabase/collection/{slug}:
+  /metabase/collection:
     post:
       summary: Create new Metabase collection
       description: Creates a new collection in Metabase if it doesn't already exist
       tags:
         - metabase
-      parameters:
-        - name: slug
-          in: path
-          required: true
-          schema:
-            type: string
-          description: PlanX team slug
       requestBody:
         required: true
         content:
