@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Meta, StoryObj } from "@storybook/react";
+import { getFlowNamesForFilter } from "pages/PlatformAdminPanel/getFlowNamesForFilter";
 
 import { DataTable } from "./DataTable";
 import { mockTeams } from "./mockTeams";
@@ -13,6 +14,8 @@ const meta = {
 type Story = StoryObj<typeof meta>;
 
 export default meta;
+
+const liveFlowValueOptions = getFlowNamesForFilter(mockTeams);
 
 export const Basic = {
   args: {
@@ -31,6 +34,9 @@ export const Basic = {
         headerName: "Live services",
         width: 450,
         type: ColumnType.ARRAY,
+        columnOptions: {
+          valueOptions: liveFlowValueOptions,
+        },
       },
       {
         field: "planningDataEnabled",

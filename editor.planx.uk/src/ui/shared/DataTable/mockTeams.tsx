@@ -38,7 +38,7 @@ export const mockTeams: AdminPanelData[] = [
     liveFlows: [
       "Notify completion of planning application",
       "Find out if you need planning permission",
-      "Apply for prior approval",
+      "apply for prior approval ",
       "Apply for service declarations",
       "Article4",
     ],
