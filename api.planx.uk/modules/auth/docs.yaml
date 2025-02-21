@@ -21,6 +21,15 @@ paths:
                   error:
                     type: string
                     enum: ["User failed to authenticate"]
+  /auth/logout:
+    post:
+      summary: Log out of PlanX
+      tags: ["auth"]
+      responses:
+        "200":
+          description: OK
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
   /auth/google:
     get:
       summary: Authenticate via Google SSO

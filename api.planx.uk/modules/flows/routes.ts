@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.js";
 import {
-  useLoginAuth,
+  useLoggedInUserAuth,
   usePlatformAdminAuth,
   useTeamEditorAuth,
 } from "../auth/middleware.js";
@@ -100,7 +100,7 @@ router.post(
 
 router.get(
   "/flows/:flowId/download-schema",
-  useLoginAuth,
+  useLoggedInUserAuth,
   validate(downloadFlowSchema),
   downloadFlowSchemaController,
 );

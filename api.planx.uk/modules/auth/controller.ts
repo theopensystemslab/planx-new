@@ -1,5 +1,8 @@
 import type { CookieOptions, RequestHandler, Response } from "express";
 import type { Request } from "express-jwt";
+import { revokeToken } from "./service/logout/revokeToken.js";
+import { userContext } from "./middleware.js";
+import { ServerError } from "../../errors/serverError.js";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
   next({
@@ -70,3 +73,30 @@ function setJWTSearchParams(returnTo: string, res: Response, req: Request) {
   url.searchParams.set("jwt", req.user!.jwt);
   res.redirect(url.href);
 }
+
+/**
+ * Revokes a user's JWT on logout
+ * TODO: We check if a JWT is revoked when authenticating requests via the API and Hasura
+ */
+export const logout: RequestHandler = async (_req, res, next) => {
+  const { jwt, sub: userId } = userContext.getStore()?.user || {};
+
+  if (!jwt) {
+    return next(
+      new ServerError({
+        message: `JWT missing from logout request, no token to revoke for user ${userId}`,
+      }),
+    );
+  }
+
+  try {
+    await revokeToken(jwt);
+    return res.status(200).send();
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to logout successfully. Error: ${error}`,
+      }),
+    );
+  }
+};

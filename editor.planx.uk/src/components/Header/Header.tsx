@@ -22,6 +22,7 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import axios from "axios";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
@@ -459,14 +460,10 @@ const ServiceTitle: React.FC = () => {
 const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
   route: Route;
-}> = ({ headerRef, route }) => {
+}> = ({ headerRef }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
-  const [user] = useStore((state) => [
-    state.getUser(),
-    state.getTeam(),
-    state.canUserEditTeam,
-  ]);
+  const [user, token] = useStore((state) => [state.getUser(), state.jwt]);
 
   const handleClose = () => {
     setOpen(false);
@@ -474,6 +471,14 @@ const EditorToolbar: React.FC<{
 
   const handleMenuToggle = () => {
     setOpen(!open);
+  };
+
+  const logout = async () => {
+    const authRequestHeader = { Authorization: `Bearer ${token}` };
+    await axios.post(`${import.meta.env.VITE_APP_API_URL}/auth/logout`, null, {
+      headers: authRequestHeader,
+    });
+    navigate("/logout");
   };
 
   return (
@@ -542,7 +547,7 @@ const EditorToolbar: React.FC<{
               </ListItemIcon>
               <ListItemText>{user.email}</ListItemText>
             </MenuItem>
-            <MenuItem onClick={() => navigate("/logout")}>Log out</MenuItem>
+            <MenuItem onClick={logout}>Log out</MenuItem>
           </StyledPaper>
         </StyledPopover>
       )}

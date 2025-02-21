@@ -1,7 +1,9 @@
 import jwt from "jsonwebtoken";
-import { $api } from "../../client/index.js";
+import { $api } from "../../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
-import type { HasuraClaims, JWTData } from "./types.js";
+import type { HasuraClaims, JWTData } from "../types.js";
+import { checkUserCanAccessEnv, getAllowedRolesForUser } from "./utils.js";
+import { fromUnixTime } from "date-fns";
 
 export const buildUserJWT = async (
   email: string,
@@ -39,21 +41,6 @@ const generateHasuraClaimsForUser = (user: User): HasuraClaims => ({
 });
 
 /**
- * Get all possible roles for this user
- * Requests made outside this scope will not be authorised by Hasura
- */
-const getAllowedRolesForUser = (user: User): Role[] => {
-  const teamRoles = user.teams.map((teamRole) => teamRole.role);
-  const allowedRoles: Role[] = [
-    "public", // Allow public access
-    ...teamRoles, // User specific roles
-  ];
-  if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
-
-  return [...new Set(allowedRoles)];
-};
-
-/**
  * The default role is used for all requests
  * Can be overwritten on a per-request basis in the client using the x-hasura-role header
  * set to a role in the x-hasura-allowed-roles list
@@ -72,19 +59,28 @@ const getDefaultRoleForUser = (user: User): Role => {
   return "demoUser";
 };
 
-export const checkUserCanAccessEnv = async (
-  user: User,
-  env?: string,
-): Promise<boolean> => {
-  // All users can access non-production environments
-  const isProduction = env === "production";
-  if (!isProduction) return true;
+/**
+ * Extracts the expiration timestamp from a JWT token
+ */
+export const getJWTExpiration = (token: string): Date => {
+  try {
+    const decoded = jwt.decode(token, { complete: true });
 
-  const isDemoUser = getAllowedRolesForUser(user).includes("demoUser");
-  if (isDemoUser) return false;
+    if (!decoded || typeof decoded === "string" || !decoded.payload) {
+      throw new Error("Invalid JWT format");
+    }
 
-  const isStagingOnlyUser = await $api.user.isStagingOnly(user.email);
-  if (isStagingOnlyUser) return false;
+    const payload = decoded.payload;
 
-  return true;
+    if (typeof payload === "string" || !payload?.exp) {
+      throw new Error("Expiry date missing from JWT");
+    }
+
+    const expiry = fromUnixTime(payload.exp);
+    return expiry;
+  } catch (error) {
+    throw new Error(
+      `Failed to decode JWT: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
+  }
 };
