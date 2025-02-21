@@ -9,6 +9,7 @@ import { metabaseCollectionsController } from "./metabase/collection/controller.
 import { metabaseDashboardsController } from "./metabase/dashboard/controller.js";
 import { createTeamCollectionSchema } from "./metabase/collection/types.js";
 import { createNewDashboardSchema } from "./metabase/dashboard/types.js";
+import { useEnvGuard } from "../../shared/middleware/useEnvGuard.js";
 
 const router = Router();
 
@@ -22,6 +23,9 @@ router.post(
   validate(logAnalyticsSchema),
   logUserResumeController,
 );
+
+router.use("/metabase", useEnvGuard(["test", "staging", "production"]));
+
 router.post(
   "/metabase/collection/:slug",
   validate(createTeamCollectionSchema),
