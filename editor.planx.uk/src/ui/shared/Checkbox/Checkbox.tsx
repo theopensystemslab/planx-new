@@ -19,7 +19,7 @@ const Root = styled(Box, {
     backgroundColor: theme.palette.common.white,
     "&:focus-within": {
       ...borderedFocusStyle,
-      background: "inherit",
+      background: theme.palette.common.white,
     },
     ...(disabled && {
       border: `2px solid ${theme.palette.grey[400]}`,

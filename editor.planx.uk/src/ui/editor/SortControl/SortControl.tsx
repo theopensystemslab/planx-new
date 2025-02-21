@@ -1,14 +1,21 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
-import { get, orderBy } from "lodash";
+import { styled } from "@mui/material/styles";
+import get from "lodash/get";
+import orderBy from "lodash/orderBy";
 import React, { useEffect, useMemo, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
-import SelectInput from "./SelectInput/SelectInput";
+import SelectInput from "../SelectInput/SelectInput";
+import { getSortParams } from "./utils";
 
 type SortDirection = "asc" | "desc";
+
+const StyledSelectInput = styled(SelectInput)(() => ({
+  minWidth: "170px",
+}));
 
 export interface SortableFields<T> {
   /** displayName is a string to use in the Select */
@@ -42,13 +49,17 @@ export const SortControl = <T extends object>({
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   sortOptions: SortableFields<T>[];
 }) => {
-  const [selectedSort, setSelectedSort] = useState<SortableFields<T>>(
-    sortOptions[0],
-  );
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const route = useCurrentRoute();
+
+  const { sortObject: initialSortObject, sortDirection: initialSortDirection } =
+    getSortParams(route.url.query, sortOptions);
+
+  const [selectedSort, setSelectedSort] =
+    useState<SortableFields<T>>(initialSortObject);
+  const [sortDirection, setSortDirection] =
+    useState<SortDirection>(initialSortDirection);
 
   const navigation = useNavigation();
-  const route = useCurrentRoute();
   const selectedDisplaySlug = slugify(selectedSort.displayName);
 
   const sortOptionsMap = useMemo(() => {
@@ -57,46 +68,34 @@ export const SortControl = <T extends object>({
     );
   }, [sortOptions]);
 
-  const updateSortParam = (sortOption: string) => {
-    const searchParams = new URLSearchParams();
-    searchParams.set("sort", sortOption);
-    searchParams.set("sortDirection", sortDirection);
-    navigation.navigate(
-      {
-        pathname: window.location.pathname,
-        search: `?${searchParams.toString()}`,
-      },
-      {
-        replace: true,
-      },
-    );
-  };
-
-  const parseStateFromURL = () => {
-    const { sort: sortParam, sortDirection: sortDirectionParam } =
-      route.url.query;
-    const matchingSortOption = sortOptionsMap[sortParam];
-    if (!matchingSortOption) return;
-    setSelectedSort(matchingSortOption[0]);
-    if (sortDirectionParam === "asc" || sortDirectionParam === "desc") {
-      setSortDirection(sortDirection);
-    }
-  };
-
   useEffect(() => {
-    parseStateFromURL();
-  }, []);
+    const updateSortParam = (sortOption: string) => {
+      const searchParams = new URLSearchParams(route.url.search);
+      searchParams.set("sort", sortOption);
+      searchParams.set("sortDirection", sortDirection);
+      navigation.navigate(
+        {
+          pathname: window.location.pathname,
+          search: `?${searchParams.toString()}`,
+        },
+        {
+          replace: true,
+        },
+      );
+    };
+
+    updateSortParam(selectedDisplaySlug);
+  }, [navigation, route.url.search, selectedDisplaySlug, sortDirection]);
 
   useEffect(() => {
     const { fieldName } = selectedSort;
-    const sortNewFlows = orderBy(records, fieldName, sortDirection);
-    setRecords(sortNewFlows);
-    updateSortParam(selectedDisplaySlug);
-  }, [selectedSort, sortDirection]);
+    const sortedFlowsNullsLast = orderBy(records,[(flow) => get(flow, fieldName) || ""], sortDirection)
+    setRecords(sortedFlowsNullsLast);
+  }, [selectedSort, sortDirection, records, setRecords]);
 
   return (
-    <Box display={"flex"}>
-      <SelectInput
+    <Box display={"flex"} gap={1}>
+      <StyledSelectInput
         value={selectedDisplaySlug}
         onChange={(e) => {
           const targetKey = e.target.value as string;
@@ -110,8 +109,8 @@ export const SortControl = <T extends object>({
             {displayName}
           </MenuItem>
         ))}
-      </SelectInput>
-      <SelectInput
+      </StyledSelectInput>
+      <StyledSelectInput
         value={sortDirection}
         onChange={(e) => {
           const newDirection = e.target.value as SortDirection;
@@ -127,7 +126,7 @@ export const SortControl = <T extends object>({
         >
           {selectedSort.directionNames.desc}
         </MenuItem>
-      </SelectInput>
+      </StyledSelectInput>
     </Box>
   );
 };

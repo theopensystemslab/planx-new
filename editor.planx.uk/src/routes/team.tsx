@@ -2,11 +2,11 @@ import gql from "graphql-tag";
 import { compose, lazy, map, mount, route, withData, withView } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
+import Team from "pages/Team";
 import React from "react";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import Team from "../pages/Team";
 import { makeTitle } from "./utils";
 import { getFlowEditorData } from "./views/flowEditor";
 import { teamView } from "./views/team";
