@@ -8,7 +8,7 @@ import { useStore } from "../../../lib/store";
 import EventsLog from "./EventsLog";
 import { Submission, SubmissionsProps } from "./types";
 
-const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
+const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
   // submission_services_log view is already filtered for events >= Jan 1 2024
@@ -19,6 +19,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           where: { team_id: { _eq: $team_id } }
           order_by: { created_at: asc }
         ) {
+          flowId: flow_id
           sessionId: session_id
           eventId: event_id
           eventType: event_type
@@ -38,17 +39,9 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
 
   const submissions = useMemo(() => data?.submissions || [], [data]);
 
-  const getFlowNameFromSlug = (slug: string) => {
-    return slug.replace(/-/g, " ");
-  };
-
-  const flowName = flowSlug && getFlowNameFromSlug(flowSlug);
-
-  // filter by flow if flowSlug prop is passed from route params
+  // filter by flow if flowId prop is passed from route params
   const filteredSubmissions = submissions.filter(
-    (submission) =>
-      !flowSlug ||
-      submission.flowName.toLowerCase() === flowName?.toLowerCase(),
+    (submission) => submission.flowId === flowId
   );
 
   return (
@@ -59,7 +52,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
         </Typography>
         <Typography variant="body1">
           {`Feed of payment and submission events for ${
-            flowSlug ? "this service" : "services in this team"
+            flowId ? "this service" : "services in this team"
           }.
           Successful submission events from within the last 28 days are
           available to be downloaded by team editors.`}
@@ -70,7 +63,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           submissions={filteredSubmissions}
           loading={loading}
           error={error}
-          filterByFlow={Boolean(flowSlug)}
+          filterByFlow={Boolean(flowId)}
         />
       </SettingsSection>
     </Container>

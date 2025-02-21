@@ -24,11 +24,12 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role] = useStore((state) => [
+  const [teamSlug, flowSlug, flowAnalyticsLink, role, flowId] = useStore((state) => [
     state.teamSlug,
     state.flowSlug,
     state.flowAnalyticsLink,
     state.getUserRoleForCurrentTeam(),
+    state.id,
   ]);
 
   const isActive = (route: string) => url.href.endsWith(route);
@@ -144,7 +145,7 @@ function EditorNavMenu() {
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions-log?flow=${flowSlug}`,
+      route: `/${teamSlug}/submissions-log?flow=${flowId}`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];

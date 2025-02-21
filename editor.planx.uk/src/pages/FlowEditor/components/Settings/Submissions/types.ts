@@ -1,4 +1,5 @@
 export interface Submission {
+  flowId: string;
   sessionId: string;
   eventId: string;
   eventType:
@@ -34,5 +35,5 @@ export interface EventsLogProps {
   filterByFlow?: boolean;
 }
 export interface SubmissionsProps {
-  flowSlug?: string;
+  flowId?: string;
 }
