@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
+import { AVAILABLE_FEATURE_FLAGS, type FeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { TextContent } from "types";
@@ -18,12 +19,42 @@ import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { slugify } from "utils";
 
+
+declare global {
+  interface Window {
+    featureFlags: {
+      active: Set<string>;
+      toggle: (flag: string, autoReload?: boolean) => void;
+    };
+  }
+}
+
+const renderFeatureFlags = (flags: string[], emptyMessage: string): JSX.Element => {
+  return flags.length > 0 ? (
+    <ul>
+      {flags.map((flag: string) => (
+        <li key={flag}>
+          <Typography>window.featureFlags.toggle("{flag}")</Typography>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <Typography>{emptyMessage}</Typography>
+  );
+};
+
 function Component() {
   const [globalSettings, updateGlobalSettings] = useStore((state) => [
     state.globalSettings,
     state.updateGlobalSettings,
   ]);
   const toast = useToast();
+  const activeFlags: string[] = Array.from(window.featureFlags.active || new Set<string>()).filter(
+    (flag): flag is FeatureFlag => AVAILABLE_FEATURE_FLAGS.includes(flag as FeatureFlag)
+  );
+  const inactiveFlags: FeatureFlag[] = AVAILABLE_FEATURE_FLAGS.filter(
+    (flag) => !activeFlags.includes(flag)
+  );
 
   const formik = useFormik({
     initialValues: {
@@ -58,6 +89,17 @@ function Component() {
           <Typography variant="h2" component="h3" gutterBottom>
             Global settings
           </Typography>
+        </SettingsSection>
+        <SettingsSection background>
+          <InputGroup flowSpacing>
+            <InputLegend>Feature flags</InputLegend>
+            <SettingsDescription>
+              <Typography variant="h5" component="h4">Active feature flags:</Typography>
+              {renderFeatureFlags(activeFlags, "No active feature flags")}
+              <Typography variant="h5" component="h4">Inactive feature flags:</Typography>
+              {renderFeatureFlags(inactiveFlags, "All available feature flags are active")}
+            </SettingsDescription>
+          </InputGroup>
         </SettingsSection>
         <SettingsSection background>
           <InputGroup flowSpacing>
