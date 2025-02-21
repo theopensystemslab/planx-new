@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import app from "../../../server.js";
+import type * as planxCore from "@opensystemslab/planx-core";
 import { authHeader } from "../../../tests/mockJWT.js";
 
 const endpoint = (strings: TemplateStringsArray) =>
@@ -12,13 +13,18 @@ const mockGenerateCSVData = vi.fn().mockResolvedValue([
     metadata: {},
   },
 ]);
-vi.mock("@opensystemslab/planx-core", () => {
+
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const { CoreDomainClient: OriginalCoreDomainClient } =
+    await importOriginal<typeof planxCore>();
+
   return {
-    CoreDomainClient: vi.fn().mockImplementation(() => ({
-      export: {
-        csvData: () => mockGenerateCSVData(),
-      },
-    })),
+    CoreDomainClient: class extends OriginalCoreDomainClient {
+      constructor() {
+        super();
+        this.export.csvData = () => mockGenerateCSVData();
+      }
+    },
   };
 });
 
