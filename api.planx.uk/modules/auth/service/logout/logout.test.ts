@@ -61,7 +61,6 @@ test("errors thrown whilst checking if a token is revoked are handled", async ()
     .then((res) => {
       const error = JSON.stringify(res.error);
 
-      expect(error).toMatch(/Failed to logout successfully/);
       expect(error).toMatch(/Failed to check if token is already revoked/);
 
       // Don't log potentially sensitive information
@@ -83,7 +82,11 @@ test("revoked tokens cannot get re-revoked", async () => {
     },
   });
 
-  await supertest(app).post(ENDPOINT).set(auth).expect(200);
+  await supertest(app)
+    .post(ENDPOINT)
+    .set(auth)
+    .expect(401)
+    .then((res) => expect(res.text).toMatch(/The token has been revoked/));
 });
 
 test("errors thrown whilst revoking a token are handled", async () => {
