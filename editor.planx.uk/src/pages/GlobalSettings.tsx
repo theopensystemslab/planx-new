@@ -30,16 +30,20 @@ declare global {
 }
 
 const renderFeatureFlags = (flags: string[], emptyMessage: string): JSX.Element => {
-  return flags.length > 0 ? (
+  return (
     <ul>
-      {flags.map((flag: string) => (
-        <li key={flag}>
-          <Typography>window.featureFlags.toggle("{flag}")</Typography>
+      {flags.length > 0 ? (
+        flags.map((flag: string) => (
+          <li key={flag}>
+            <Typography>window.featureFlags.toggle("{flag}")</Typography>
+          </li>
+        ))
+      ) : (
+        <li>
+          <Typography>{emptyMessage}</Typography>
         </li>
-      ))}
+      )}
     </ul>
-  ) : (
-    <Typography>{emptyMessage}</Typography>
   );
 };
 
