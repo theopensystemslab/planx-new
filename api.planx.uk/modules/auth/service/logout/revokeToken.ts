@@ -9,17 +9,15 @@ import type { IsRevokedQuery, RevokeTokenMutation } from "./types.js";
  * Generate a digest of the JWT and add the revoked_tokens blocklist
  * Docs: https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html#no-built-in-token-revocation-by-the-user
  */
-export const revokeToken = async (jwt: string): Promise<boolean> => {
+export const revokeToken = async (jwt: string): Promise<void> => {
   const tokenDigest = createTokenDigest(jwt);
 
   // Already revoked, no action needed
   const isRevoked = await isTokenRevoked(tokenDigest);
-  if (isRevoked) return false;
+  if (isRevoked) return;
 
   const expiresAt = getJWTExpiration(jwt);
   await trackRevokedToken(tokenDigest, expiresAt);
-
-  return true;
 };
 
 const createTokenDigest = (jwt: string) => {
