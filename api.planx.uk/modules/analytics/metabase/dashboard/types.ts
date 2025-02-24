@@ -3,6 +3,7 @@ import type { ApiResponse } from "../shared/types.js";
 import { z } from "zod";
 
 export interface CreateNewDashboardParams {
+  flowId: string;
   teamName: string;
   /** Original / template Metabase Dashboard ID, it is the number that follows /dashboard/ in the URL */
   slug: string;
@@ -39,6 +40,7 @@ export type UpdateFilterParams = {
 
 export const createNewDashboardSchema = z.object({
   body: z.object({
+    flowId: z.string(),
     slug: z.string(),
     service: z.string(),
     templateId: z.coerce.number(),
