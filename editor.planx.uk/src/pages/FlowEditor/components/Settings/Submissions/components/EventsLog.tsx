@@ -1,13 +1,8 @@
 import CloudDownload from "@mui/icons-material/CloudDownload";
-import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import Payment from "@mui/icons-material/Payment";
 import Send from "@mui/icons-material/Send";
 import Chip from "@mui/material/Chip";
-import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -15,7 +10,7 @@ import ErrorFallback from "components/Error/ErrorFallback";
 import { addDays, format, isBefore } from "date-fns";
 import { DAYS_UNTIL_EXPIRY } from "lib/pay";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React from "react";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
@@ -29,6 +24,12 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
+  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
+    state.teamSlug,
+    state.canUserEditTeam,
+    state.teamSettings?.submissionEmail,
+  ]);
+
   if (loading)
     return (
       <DelayedLoadingIndicator
@@ -48,27 +49,11 @@ const EventsLog: React.FC<EventsLogProps> = ({
       />
     );
 
-  // console.log({ submissions });
-
   const rowData = submissions.map((submission) => ({
     ...submission,
     id: submission.eventId,
+    downloadSubmissionLink: undefined,
   }));
-
-  //   [
-  //     {
-  //         "__typename": "submission_services_log",
-  //         "sessionId": "6981b241-3883-4d60-a973-5e693c021810",
-  //         "eventId": "f34636cb-651e-4de1-a0e2-d09586cabf02",
-  //         "eventType": "Send to email",
-  //         "status": "Success",
-  //         "retry": false,
-  //         "response": {
-  //         },
-  //         "createdAt": "2025-02-20T16:46:14.529048+00:00",
-  //         "flowName": "jo"
-  //     }
-  // ]
 
   const columns: ColumnConfig<Submission>[] = [
     { field: "flowName", headerName: "Flow name" },
@@ -113,77 +98,54 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "response",
       headerName: "Response",
       width: 350,
-      type: ColumnType.BOOLEAN,
+      type: ColumnType.BOOLEAN, // TODO: sort this!
       customComponent: (params) => <FormattedResponse {...params.row} />,
+    },
+    {
+      field: "downloadSubmissionLink" as keyof Submission,
+      headerName: "",
+      width: 100,
+      type: ColumnType.BOOLEAN, // TODO: sort this!
+
+      customComponent: (params) => {
+        console.log("hi!!!", { params });
+
+        const submissionDataExpirationDate = addDays(
+          new Date(params.row.createdAt),
+          DAYS_UNTIL_EXPIRY,
+        );
+
+        const showDownloadButton =
+          teamSlug &&
+          canUserEditTeam(teamSlug) &&
+          submissionEmail &&
+          params.row.status === "Success" &&
+          params.row.eventType !== "Pay" &&
+          isBefore(new Date(), submissionDataExpirationDate);
+
+        const zipUrl =
+          showDownloadButton &&
+          `${import.meta.env.VITE_APP_API_URL}/download-application-files/${
+            params.row.sessionId
+          }?localAuthority=${teamSlug}&email=${submissionEmail}`;
+        return zipUrl ? (
+          <Tooltip title="Download application data">
+            <IconButton
+              aria-label="download application"
+              size="small"
+              onClick={() => window.open(zipUrl, "_blank")}
+            >
+              <CloudDownload />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <></>
+        );
+      },
     },
   ];
 
   return <DataTable columns={columns} rows={rowData} />;
-};
-
-const CollapsibleRow: React.FC<Submission> = (submission) => {
-  const [open, setOpen] = useState<boolean>(false);
-
-  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
-    state.teamSlug,
-    state.canUserEditTeam,
-    state.teamSettings?.submissionEmail,
-  ]);
-
-  // Only show an application download button if certain conditions are met
-  const submissionDataExpirationDate = addDays(
-    new Date(submission.createdAt),
-    DAYS_UNTIL_EXPIRY,
-  );
-  const showDownloadButton =
-    canUserEditTeam(teamSlug) &&
-    submission.status === "Success" &&
-    submission.eventType !== "Pay" &&
-    submissionEmail &&
-    isBefore(new Date(), submissionDataExpirationDate);
-
-  return (
-    <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          {showDownloadButton && (
-            <Tooltip title="Download application data">
-              <IconButton
-                aria-label="download application"
-                size="small"
-                onClick={() => {
-                  const zipUrl = `${
-                    import.meta.env.VITE_APP_API_URL
-                  }/download-application-files/${
-                    submission.sessionId
-                  }?localAuthority=${teamSlug}&email=${submissionEmail}`;
-                  window.open(zipUrl, "_blank");
-                }}
-              >
-                <CloudDownload />
-              </IconButton>
-            </Tooltip>
-          )}
-        </TableCell>
-      </TableRow>
-      <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
-        <TableCell sx={{ padding: 0, border: "none" }} colSpan={6}>
-          <Collapse
-            in={open}
-            timeout="auto"
-            unmountOnExit
-            sx={{
-              borderBottom: (theme) =>
-                `1px solid ${theme.palette.border.light}`,
-              padding: (theme) => theme.spacing(0, 1.5),
-            }}
-          >
-            <FormattedResponse {...submission} />
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
 };
 
 export default EventsLog;
