@@ -30,6 +30,12 @@ components:
     NewDashboard:
       type: object
       properties:
+        slug:
+          type: string
+          description: PlanX team slug
+        service:
+          type: string
+          description: Service slug
         templateId:
           type: integer
           description: ID of the template dashboard to copy from
@@ -50,6 +56,8 @@ components:
           type: string
           description: Value to set for the filter
       required:
+        - slug
+        - service
         - templateId
         - filter
         - value
