@@ -1,4 +1,4 @@
-import type { Constraint, GISResponse } from "@opensystemslab/planx-core/types";
+import { activePlanningConstraints, type Constraint, type GISResponse } from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
 
@@ -125,13 +125,13 @@ export const classifiedRoadsSearch = async (
           [PASSPORT_FN]: {
             fn: PASSPORT_FN,
             value: true,
-            text: `is on a Classified Road`,
+            text: activePlanningConstraints[PASSPORT_FN].pos,
             data: features.map((feature: any) => ({
               name: `${feature.properties["RoadName1"]} - ${feature.properties["RoadClassification"]}`,
               entity: feature.properties["GmlID"], // match Planning Data "entity" identifier for convenience when reporting inaccurate constraints
               properties: feature.properties,
             })),
-            category: "General policy",
+            category: activePlanningConstraints[PASSPORT_FN].category,
           } as RoadConstraint,
         },
       } as GISResponse);
@@ -142,8 +142,8 @@ export const classifiedRoadsSearch = async (
           [PASSPORT_FN]: {
             fn: PASSPORT_FN,
             value: false,
-            text: "is not on a Classified Road",
-            category: "General policy",
+            text: activePlanningConstraints[PASSPORT_FN].neg,
+            category: activePlanningConstraints[PASSPORT_FN].category,
           } as RoadConstraint,
         },
       } as GISResponse);
