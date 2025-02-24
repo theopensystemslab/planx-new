@@ -32,7 +32,7 @@ router.post(
   metabaseCollectionsController,
 );
 router.post(
-  "/metabase/dashboard/:slug/:service/:templateId",
+  "/metabase/dashboard",
   validate(createNewDashboardSchema),
   metabaseDashboardsController,
 );
