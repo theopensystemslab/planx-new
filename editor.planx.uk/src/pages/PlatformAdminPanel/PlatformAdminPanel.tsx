@@ -51,6 +51,7 @@ export const PlatformAdminPanel = () => {
       type: ColumnType.ARRAY,
       columnOptions: {
         valueOptions: liveFlowValueOptions,
+        sortable: false,
       },
     },
     {
