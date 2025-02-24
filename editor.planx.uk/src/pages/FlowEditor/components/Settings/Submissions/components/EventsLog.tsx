@@ -61,7 +61,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "eventType",
       headerName: "Event",
       width: 250,
-      type: ColumnType.BOOLEAN,
+      type: ColumnType.ARRAY, // bit confusing?
       customComponent: (params) => {
         return (
           <>
@@ -71,6 +71,15 @@ const EventsLog: React.FC<EventsLogProps> = ({
             </Typography>
           </>
         );
+      },
+      columnOptions: {
+        valueOptions: [
+          "Send to email",
+          "Pay",
+          "Submit to BOPS",
+          "Submit to Uniform",
+          "Upload to AWS S3",
+        ],
       },
     },
     {

@@ -17,7 +17,7 @@ import {
 import {
   columnCellComponentRegistry,
   createFilterOperator,
-  getColumnType,
+  getColumnFilterType,
   getValueOptions,
 } from "./utils";
 
@@ -48,7 +48,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       width: column.width || 150,
       hideable: index === 0 ? false : true, // at least one column should remain
       field: field as string,
-      type: getColumnType(column.type),
+      type: getColumnFilterType(column.type),
       headerName,
       renderCell: column.type
         ? (params: RenderCellParams) =>

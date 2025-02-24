@@ -5,6 +5,7 @@ import {
   GridValueOptionsParams,
   ValueOptions,
 } from "@mui/x-data-grid";
+import capitalize from "lodash/capitalize";
 import React from "react";
 
 import { False, True } from "./components/cellIcons";
@@ -33,16 +34,23 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         return null;
       }
 
-      return (arrayOfValues: string[]): boolean => {
-        if (!arrayOfValues?.length) {
+      // return a function that is applied to all the rows in turn
+      return (currentRowValue: string[]): boolean => {
+        if (!currentRowValue?.length) {
           return false;
         }
 
-        return arrayOfValues.some((arrayItem) =>
-          filterItem.value.some((filterValue: Pick<GridFilterItem, "value">) =>
-            containsItem(arrayItem, filterValue),
-          ),
-        );
+        return Array.isArray(currentRowValue)
+          ? currentRowValue.some((arrayItem) =>
+              filterItem.value.some(
+                (filterValue: Pick<GridFilterItem, "value">) =>
+                  containsItem(arrayItem, filterValue),
+              ),
+            )
+          : filterItem.value.some(
+              (filterValue: Pick<GridFilterItem, "value">) =>
+                containsItem(currentRowValue, filterValue),
+            );
       };
     },
     InputComponent: MultipleOptionSelectFilter,
@@ -65,18 +73,24 @@ export const getValueOptions = (
 
 export const columnCellComponentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-  [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => (
-    <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
-      {value?.map((item: string, index: number) => (
-        <Typography py={0.4} variant="body2" key={index} component="li">
-          {filterValues?.includes(item) ? <strong>{item}</strong> : item}
-        </Typography>
-      ))}
-    </Box>
-  ),
+  [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => {
+    return (
+      <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
+        {value?.map((item: string, index: number) => (
+          <Typography py={0.4} variant="body2" key={index} component="li">
+            {filterValues?.includes(capitalize(item)) ? (
+              <strong>{item}</strong>
+            ) : (
+              item
+            )}
+          </Typography>
+        ))}
+      </Box>
+    );
+  },
 };
 
-export const getColumnType = (columnType?: ColumnRenderType) => {
+export const getColumnFilterType = (columnType?: ColumnRenderType) => {
   switch (columnType) {
     case ColumnType.BOOLEAN:
       return "boolean";
