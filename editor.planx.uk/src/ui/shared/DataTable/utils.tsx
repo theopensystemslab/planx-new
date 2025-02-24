@@ -63,7 +63,7 @@ export const getValueOptions = (
   return undefined;
 };
 
-export const componentRegistry = {
+export const columnCellComponentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
   [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => (
     <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>

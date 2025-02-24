@@ -15,7 +15,7 @@ import {
   RenderCellParams,
 } from "./types";
 import {
-  componentRegistry,
+  columnCellComponentRegistry,
   createFilterOperator,
   getColumnType,
   getValueOptions,
@@ -31,7 +31,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
     if (column.customComponent) {
       return column.customComponent(params);
     }
-    const ComponentRenderer = componentRegistry[column.type];
+    const ComponentRenderer = columnCellComponentRegistry[column.type];
     return ComponentRenderer(params.value, filterValues);
   };
 
