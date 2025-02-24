@@ -4,7 +4,7 @@ import useSWR from "swr";
 import {
   False as NotConfigured,
   True as Configured,
-} from "../../../ui/shared/DataTable/components/icons";
+} from "../../../ui/shared/DataTable/components/cellIcons";
 
 export const Article4Status = ({ teamSlug }: { teamSlug: string }) => {
   const a4Endpoint = `${

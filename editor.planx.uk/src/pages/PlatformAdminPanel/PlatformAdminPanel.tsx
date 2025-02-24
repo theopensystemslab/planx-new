@@ -10,8 +10,9 @@ import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
 import {
   False as NotConfigured,
   True as Configured,
-} from "../../ui/shared/DataTable/components/icons";
+} from "../../ui/shared/DataTable/components/cellIcons";
 import { Article4Status } from "./components/Article4Status";
+import { getFlowNamesForFilter } from "./getFlowNamesForFilter";
 
 const isCouncilTeam = () => {
   const internalTeamNames = [
@@ -29,7 +30,9 @@ const isCouncilTeam = () => {
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
-  const filteredPanelData = adminPanelData?.filter(isCouncilTeam);
+  const filteredPanelData = adminPanelData?.filter(isCouncilTeam());
+
+  const liveFlowValueOptions = getFlowNamesForFilter(filteredPanelData!);
 
   const columns: ColumnConfig<AdminPanelData>[] = [
     {
@@ -46,6 +49,10 @@ export const PlatformAdminPanel = () => {
       headerName: "Live services",
       width: 450,
       type: ColumnType.ARRAY,
+      columnOptions: {
+        valueOptions: liveFlowValueOptions,
+        sortable: false,
+      },
     },
     {
       field: "planningDataEnabled",
