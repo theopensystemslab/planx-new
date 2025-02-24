@@ -68,7 +68,6 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
         }
       : {
           ...baseColDef,
-          width: column.width || baseColDef.width,
           valueOptions: undefined,
           ...column.columnOptions,
         };
