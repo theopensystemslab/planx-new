@@ -2,6 +2,7 @@ import { copyDashboard } from "./copyDashboard.js";
 import { getDashboard } from "./getDashboard.js";
 import { updateFilter } from "./updateFilter.js";
 import { generatePublicLink } from "./generatePublicLink.js";
+import { updatePublicAnalyticsLink } from "./updatePublicAnalyticsLink.js";
 import type { CreateNewDashboardParams } from "./types.js";
 import { ServerError } from "../../../../errors/serverError.js";
 import { findDashboardTemplate } from "./findDashboardTemplate.js";
@@ -10,6 +11,7 @@ import { findDashboardTemplate } from "./findDashboardTemplate.js";
  * @returns The dashboard name (the Metabase API performs GETs with the dashboard ID, so we have to have that locally already--no need to return it here)
  */
 export async function createNewDashboard({
+  flowId,
   teamName,
   slug,
   description,
@@ -35,8 +37,9 @@ export async function createNewDashboard({
         filter,
         value,
       });
+
       const publicLink = await generatePublicLink(copiedDashboardId);
-      return publicLink;
+      await updatePublicAnalyticsLink(flowId, publicLink);
     }
     return;
   } catch (error) {
