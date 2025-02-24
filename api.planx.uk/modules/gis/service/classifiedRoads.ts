@@ -1,4 +1,8 @@
-import { activePlanningConstraints, type Constraint, type GISResponse } from "@opensystemslab/planx-core/types";
+import {
+  activePlanningConstraints,
+  type Constraint,
+  type GISResponse,
+} from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
 

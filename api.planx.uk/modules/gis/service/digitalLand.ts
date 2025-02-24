@@ -75,7 +75,10 @@ async function go(
   // get active planning constraints sourced from "Planning Data" only
   const activePlanningConstraintsCopy = activePlanningConstraints;
   delete activePlanningConstraintsCopy["roads.classified"];
-  const baseSchema = activePlanningConstraintsCopy as Record<string, DigitalLandConstraint>;
+  const baseSchema = activePlanningConstraintsCopy as Record<
+    string,
+    DigitalLandConstraint
+  >;
 
   // generate list of digital land datasets we should query and their associated passport values
   const activeDatasets: string[] = [];
