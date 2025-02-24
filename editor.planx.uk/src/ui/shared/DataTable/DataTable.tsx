@@ -63,13 +63,6 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
     <Box sx={{ height: "100vh", flex: 1, position: "relative" }}>
       <Box sx={{ inset: 0, position: "absolute" }}>
         <DataGrid
-          // initialState={{
-          //   columns: {
-          //     columnVisibilityModel: {
-          //       response: false
-          //     }
-          //   }
-          // }}
           rows={rows}
           columns={dataColumns}
           getRowHeight={() => "auto"}

@@ -108,8 +108,6 @@ const EventsLog: React.FC<EventsLogProps> = ({
       type: ColumnType.BOOLEAN, // TODO: sort this!
 
       customComponent: (params) => {
-        console.log("hi!!!", { params });
-
         const submissionDataExpirationDate = addDays(
           new Date(params.row.createdAt),
           DAYS_UNTIL_EXPIRY,
