@@ -41,7 +41,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
 
   // filter by flow if flowId prop is passed from route params
   const filteredSubmissions = submissions.filter(
-    (submission) => submission.flowId === flowId
+    (submission) => !flowId || submission.flowId === flowId,
   );
 
   return (
