@@ -696,6 +696,7 @@ const getThemeOptions = ({
               "&:focus": {
                 outline: "none",
               },
+              alignItems: "center",
             },
             ".MuiDataGrid-columnSeparator": {
               visibility: "hidden",

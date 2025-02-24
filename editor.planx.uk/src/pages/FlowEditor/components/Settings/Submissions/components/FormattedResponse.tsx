@@ -4,12 +4,14 @@ import React from "react";
 
 import { Submission } from "../types";
 
-const Response = styled(Box)(() => ({
+const Response = styled(Box)(({ theme }) => ({
   fontSize: "1em",
   margin: 1,
-  maxWidth: "contentWrap",
   overflowWrap: "break-word",
   whiteSpace: "pre-wrap",
+  overflow: "auto",
+  textAlign: "start",
+  backgroundColor: theme.palette.background.paper,
 }));
 
 export const FormattedResponse: React.FC<Submission> = (submission) => {

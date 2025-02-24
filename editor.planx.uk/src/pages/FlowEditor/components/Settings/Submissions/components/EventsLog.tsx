@@ -112,6 +112,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "response",
       headerName: "Response",
+      width: 350,
       type: ColumnType.BOOLEAN,
       customComponent: (params) => <FormattedResponse {...params.row} />,
     },
@@ -163,15 +164,6 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
               </IconButton>
             </Tooltip>
           )}
-        </TableCell>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-          </IconButton>
         </TableCell>
       </TableRow>
       <TableRow sx={{ background: (theme) => theme.palette.background.paper }}>
