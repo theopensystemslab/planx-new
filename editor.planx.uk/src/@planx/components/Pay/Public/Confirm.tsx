@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 import { PaymentStatus } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import SaveResumeButton from "@planx/components/shared/Preview/SaveResumeButton";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { ApplicationPath } from "types";
@@ -244,7 +243,7 @@ export default function Confirm(props: Props) {
               />
             </Typography>
           </FormWrapper>
-          {hasFeatureFlag("FEE_BREAKDOWN") && <FeeBreakdown />}
+          <FeeBreakdown />
         </Banner>
       )}
       <Card>

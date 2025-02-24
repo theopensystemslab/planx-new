@@ -7,12 +7,19 @@ export default (passport: Authenticator): Router => {
   const router = Router();
 
   router.get("/auth/login/failed", Controller.failedLogin);
+  router.post(
+    "/auth/logout",
+    Middleware.useLoggedInUserAuth,
+    Controller.logout,
+  );
+
   router.get("/auth/google", Middleware.getGoogleAuthHandler(passport));
   router.get(
     "/auth/google/callback",
     Middleware.getGoogleCallbackAuthHandler(passport),
     Controller.handleSuccess,
   );
+
   router.get("/auth/microsoft", Middleware.getMicrosoftAuthHandler(passport));
   router.post(
     "/auth/microsoft/callback",

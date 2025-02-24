@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import app from "../../../server.js";
+import type * as planxCore from "@opensystemslab/planx-core";
 import { authHeader } from "../../../tests/mockJWT.js";
 
 const endpoint = (strings: TemplateStringsArray) =>
@@ -15,21 +16,22 @@ const mockGenerateHTMLData = vi.fn().mockResolvedValue({
   ],
   redactedResponses: [],
 });
-vi.mock("../../../client", () => {
+
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const { CoreDomainClient: OriginalCoreDomainClient } =
+    await importOriginal<typeof planxCore>();
+
   return {
-    $api: {
-      export: {
-        csvData: () => mockGenerateHTMLData(),
-      },
+    CoreDomainClient: class extends OriginalCoreDomainClient {
+      constructor() {
+        super();
+        this.export.csvData = () => mockGenerateHTMLData();
+      }
     },
   };
 });
 
 describe("HTML data admin endpoint", () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("requires a user to be logged in", () => {
     return supertest(app)
       .get(endpoint`123`)

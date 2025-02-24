@@ -1,234 +1,60 @@
 import { gql, useQuery } from "@apollo/client";
-import Edit from "@mui/icons-material/Edit";
-import Visibility from "@mui/icons-material/Visibility";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
+import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigation } from "react-navi";
-import { borderedFocusStyle, FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { useCurrentRoute, useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
-import { SortableFields, SortControl } from "ui/editor/SortControl";
+import Filters from "ui/editor/Filter/Filter";
+import { SortControl } from "ui/editor/SortControl/SortControl";
+import { getSortParams } from "ui/editor/SortControl/utils";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
-import { client } from "../../lib/graphql";
-import SimpleMenu from "../../ui/editor/SimpleMenu";
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "../FlowEditor/utils";
-import { ArchiveDialog } from "./components/ArchiveDialog";
+import FlowCard, { Card, CardContent } from "./components/FlowCard";
+import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
+import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 import {
   StartFromTemplateButton,
   TemplateOption,
 } from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(0, 0, 3),
-  borderBottom: "1px solid #fff",
+  padding: theme.spacing(3, 0),
   margin: 0,
-}));
-
-const DashboardListItem = styled("li")(({ theme }) => ({
-  listStyle: "none",
-  position: "relative",
-  color: theme.palette.common.white,
-  margin: theme.spacing(1, 0),
-  background: theme.palette.text.primary,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "stretch",
-  borderRadius: "2px",
-}));
-
-const DashboardLink = styled(Link)(({ theme }) => ({
-  display: "block",
-  fontSize: theme.typography.h4.fontSize,
-  textDecoration: "none",
-  color: "currentColor",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  padding: theme.spacing(2),
-  margin: 0,
-  width: "100%",
-  "&:focus-within": {
-    ...borderedFocusStyle,
+  display: "grid",
+  gridAutoRows: "1fr",
+  gridTemplateColumns: "repeat(1, 1fr)",
+  gridGap: theme.spacing(2),
+  [theme.breakpoints.up("md")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
+  },
+  [theme.breakpoints.up("lg")]: {
+    gridTemplateColumns: "repeat(3, 1fr)",
   },
 }));
 
-const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
-  display: "flex",
-  borderLeft: `1px solid ${theme.palette.border.main}`,
-}));
-
-const LinkSubText = styled(Box)(({ theme }) => ({
-  color: theme.palette.grey[400],
-  fontWeight: "normal",
-  paddingTop: "0.5em",
-}));
-
-interface FlowItemProps {
-  flow: FlowSummary;
-  flows: FlowSummary[];
-  teamId: number;
-  teamSlug: string;
-  refreshFlows: () => void;
-}
-
-const FlowItem: React.FC<FlowItemProps> = ({
-  flow,
-  flows,
-  teamId,
-  teamSlug,
-  refreshFlows,
-}) => {
-  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState<boolean>(false);
-  const [archiveFlow, copyFlow, moveFlow, canUserEditTeam] = useStore((state) => [
-    state.archiveFlow,
-    state.copyFlow,
-    state.moveFlow,
-    state.canUserEditTeam
-  ]);
-
-  const handleArchive = () => {
-    archiveFlow(flow.id).then(() => {
-      refreshFlows();
-    });
-  };
-  const handleCopy = () => {
-    copyFlow(flow.id).then(() => {
-      refreshFlows();
-    });
-  };
-  const handleMove = (newTeam: string, flowName: string) => {
-    moveFlow(flow.id, newTeam, flowName).then(() => {
-      refreshFlows();
-    });
-  };
-
-  return (
-    <>
-      {isArchiveDialogOpen && (
-        <ArchiveDialog
-          title="Archive service"
-          open={isArchiveDialogOpen}
-          content={`Archiving this service will remove it from PlanX. Services can be restored by an admin`}
-          onClose={() => {
-            setIsArchiveDialogOpen(false);
-          }}
-          onConfirm={handleArchive}
-          submitLabel="Archive Service"
-        />
-      )}
-      <DashboardListItem>
-        <DashboardLink href={`./${flow.slug}`} prefetch={false}>
-          <Typography variant="h4" component="h2">
-            {flow.name}
-          </Typography>
-          <LinkSubText>
-            {formatLastEditMessage(
-              flow.operations[0].createdAt,
-              flow.operations[0]?.actor,
-            )}
-          </LinkSubText>
-        </DashboardLink>
-        {canUserEditTeam(teamSlug) && (
-          <StyledSimpleMenu
-            items={[
-              {
-                onClick: async () => {
-                  const newName = prompt("New name", flow.name);
-                  if (newName && newName !== flow.name) {
-                    const uniqueFlow = getUniqueFlow(newName, flows);
-                    if (uniqueFlow) {
-                      await client.mutate({
-                        mutation: gql`
-                          mutation UpdateFlowSlug(
-                            $teamId: Int
-                            $slug: String
-                            $newSlug: String
-                            $newName: String
-                          ) {
-                            update_flows(
-                              where: {
-                                team: { id: { _eq: $teamId } }
-                                slug: { _eq: $slug }
-                              }
-                              _set: { slug: $newSlug, name: $newName }
-                            ) {
-                              affected_rows
-                            }
-                          }
-                        `,
-                        variables: {
-                          teamId: teamId,
-                          slug: flow.slug,
-                          newSlug: uniqueFlow.slug,
-                          newName: uniqueFlow.name,
-                        },
-                      });
-
-                      refreshFlows();
-                    }
-                  }
-                },
-                label: "Rename",
-              },
-              {
-                label: "Copy",
-                onClick: () => {
-                  handleCopy();
-                },
-              },
-              {
-                label: "Move",
-                onClick: () => {
-                  const newTeam = prompt(
-                    "Enter the destination team's slug. A slug is the URL name of a team, for example 'Barking & Dagenham' would be 'barking-and-dagenham'. ",
-                  );
-                  if (newTeam) {
-                    if (slugify(newTeam) === teamSlug) {
-                      alert(
-                        `This flow already belongs to ${teamSlug}, skipping move`,
-                      );
-                    } else {
-                      handleMove(slugify(newTeam), flow.name);
-                    }
-                  }
-                },
-              },
-              {
-                label: "Archive",
-                onClick: () => setIsArchiveDialogOpen(true),
-              },
-            ]}
-          />
-        )}
-      </DashboardListItem>
-    </>
-  );
-};
-
-const GetStarted: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => (
-  <Box
-    sx={(theme) => ({
-      mt: 4,
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: "8px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-      padding: 2,
-    })}
-  >
-    <Typography variant="h3">No services found</Typography>
-    <Typography>Get started by creating your first service</Typography>
-    <AddFlowButton flows={flows} />
-  </Box>
+const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
+  <DashboardList sx={{ paddingTop: 2 }}>
+    <Card>
+      <CardContent>
+        <Typography variant="h3">No services found</Typography>
+        <Typography>Get started by creating your first service</Typography>
+        <AddFlowButton flows={flows} />
+      </CardContent>
+    </Card>
+  </DashboardList>
 );
 
-const AddFlowButton: React.FC<{ flows: FlowSummary[] }> = ({ flows }) => {
+const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
+  flows,
+}) => {
   const { navigate } = useNavigation();
   const { teamId, createFlow, teamSlug } = useStore();
 
@@ -251,34 +77,49 @@ const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
     (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
   );
+
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
 
-  const sortOptions: SortableFields<FlowSummary>[] = [
-    {
-      displayName: "Name",
-      fieldName: "name",
-      directionNames: { asc: "A - Z", desc: "Z - A" },
-    },
-    {
-      displayName: "Last updated",
-      fieldName: "updatedAt",
-      directionNames: { asc: "Oldest first", desc: "Newest first" },
-    },
-    {
-      displayName: "Last published",
-      fieldName: `publishedFlows.0.publishedAt`,
-      directionNames: { asc: "Oldest first", desc: "Newest first" },
-    },
-  ];
+  const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
+  const [searchedFlows, setSearchedFlows] = useState<FlowSummary[] | null>(
+    null,
+  );
+  const [matchingFlows, setMatchingflows] = useState<FlowSummary[] | null>(
+    null,
+  );
+  const [sortedFlows, setSortedFlows] = useState<FlowSummary[] | null>(null);
+
+  const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
+
+  const route = useCurrentRoute();
+
+  useEffect(() => {
+    const diffFlows =
+      searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
+
+    // Sort the array at the start using the query params
+    if (matchingFlows === null) {
+      const {
+        sortObject: { fieldName },
+        sortDirection,
+      } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+      const sortedFlows = orderBy(diffFlows, fieldName, sortDirection);
+      setMatchingflows(sortedFlows);
+    }
+
+    setMatchingflows(diffFlows);
+
+    if (shouldClearFilters) {
+      setShouldClearFilters(false);
+    }
+  }, [searchedFlows, filteredFlows, shouldClearFilters]);
+
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
       // Copy the array and sort by most recently edited desc using last associated operation.createdAt, not flow.updatedAt
-      const sortedFlows = flows.toSorted((a, b) =>
-        b.operations[0]["createdAt"].localeCompare(
-          a.operations[0]["createdAt"],
-        ),
-      );
-      setFlows(sortedFlows);
+      setFlows(flows);
     });
   }, [teamId, setFlows, getFlows]);
 
@@ -296,8 +137,9 @@ const Team: React.FC = () => {
     }
   `);
 
-  const teamHasFlows = flows && Boolean(flows.length);
+  const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
+  const flowsHaveBeenFiltered = matchingFlows?.length !== flows?.length;
   const showAddTemplateButton =
     showAddFlowButton &&
     templates &&
@@ -305,66 +147,123 @@ const Team: React.FC = () => {
     hasFeatureFlag("TEMPLATES");
 
   return (
-    <Container maxWidth="formWrap">
-      <Box
-        pb={1}
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <Box bgcolor={"background.paper"} flexGrow={1}>
+      <Container maxWidth="lg">
         <Box
+          pb={1}
           sx={{
             display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: { xs: "column", contentWrap: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", contentWrap: "center" },
+            gap: 2,
           }}
         >
-          <Typography variant="h2" component="h1" pr={1}>
-            Services
-          </Typography>
-          {canUserEditTeam(slug) ? <Edit /> : <Visibility />}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-end",
-          }}
-        >
-          {showAddFlowButton && <AddFlowButton flows={flows} />}
-          {showAddTemplateButton && (
-            <StartFromTemplateButton templates={templates.flows} />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography variant="h2" component="h1" pr={1}>
+              Services
+            </Typography>
+            {showAddFlowButton && <AddFlowButton flows={flows} />}
+          </Box>
+          {teamHasFlows && (
+            <SearchBox<FlowSummary>
+              records={flows}
+              setRecords={setSearchedFlows}
+              searchKey={["name", "slug"]}
+              clearSearch={shouldClearFilters}
+            />
           )}
         </Box>
-      </Box>
-      {hasFeatureFlag("SORT_FLOWS") && flows && (
-        <SortControl<FlowSummary>
-          records={flows}
-          setRecords={setFlows}
-          sortOptions={sortOptions}
-        />
-      )}
-      {teamHasFlows && (
-        <DashboardList>
-          {flows.map((flow) => (
-            <FlowItem
-              flow={flow}
-              flows={flows}
-              key={flow.slug}
-              teamId={teamId}
-              teamSlug={slug}
-              refreshFlows={() => {
-                fetchFlows();
+        {teamHasFlows && (
+          <>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
               }}
-            />
-          ))}
-        </DashboardList>
-      )}
-      {flows && !flows.length && <GetStarted flows={flows} />}
-    </Container>
+            >
+              {showAddTemplateButton && (
+                <StartFromTemplateButton templates={templates?.flows} />
+              )}
+            </Box>
+            <Box>
+              <Filters<FlowSummary>
+                records={flows}
+                setFilteredRecords={setFilteredFlows}
+                filterOptions={filterOptions}
+                clearFilters={shouldClearFilters}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: 2,
+                }}
+              >
+                <ShowingServicesHeader
+                  matchedFlowsCount={matchingFlows?.length || 0}
+                />
+                {flowsHaveBeenFiltered && (
+                  <Button
+                    onClick={() => setShouldClearFilters(true)}
+                    variant="link"
+                  >
+                    Clear filters
+                  </Button>
+                )}
+              </Box>
+              {teamHasFlows && matchingFlows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={matchingFlows}
+                    setRecords={setSortedFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
+            </Box>
+            {sortedFlows && (
+              <DashboardList>
+                {sortedFlows.map((flow) => (
+                  <FlowCard
+                    flow={flow}
+                    flows={flows}
+                    key={flow.slug}
+                    teamId={teamId}
+                    teamSlug={slug}
+                    refreshFlows={() => {
+                      fetchFlows();
+                    }}
+                  />
+                ))}
+              </DashboardList>
+            )}
+          </>
+        )}
+        {flows && !flows.length && <GetStarted flows={flows} />}
+      </Container>
+    </Box>
   );
 };
 
@@ -372,7 +271,7 @@ export default Team;
 
 const getUniqueFlow = (
   name: string,
-  flows: FlowSummary[],
+  flows: FlowSummary[] | null,
 ): { slug: string; name: string } | undefined => {
   const newFlowSlug = slugify(name);
   const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);

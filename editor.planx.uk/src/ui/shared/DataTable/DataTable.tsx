@@ -1,6 +1,11 @@
+/* eslint-disable no-restricted-imports */
 import Box from "@mui/material/Box";
-// eslint-disable-next-line no-restricted-imports
-import { DataGrid, GridColDef, GridFilterModel } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridFilterModel,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import React, { useState } from "react";
 
 import {
@@ -97,6 +102,9 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
+          slots={{
+            toolbar: GridToolbar,
+          }}
         />
       </Box>
     </Box>

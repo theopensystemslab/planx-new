@@ -7,7 +7,8 @@ import {
 } from "@mui/x-data-grid";
 import React from "react";
 
-import { False, True } from "./components/icons";
+import { False, True } from "./components/cellIcons";
+import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
 import { ColumnRenderType, ColumnType } from "./types";
 
 const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
@@ -44,7 +45,7 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         );
       };
     },
-    // InputComponent: MultipleOptionSelectFilter,
+    InputComponent: MultipleOptionSelectFilter,
     InputComponentProps: {
       options: columnValueOptions,
     },

@@ -64,97 +64,97 @@ beforeEach(() => {
 
 const auth = authHeader({ role: "teamEditor" });
 
-it("returns an error if authorization headers are not set", async () => {
-  const validBody = {
-    insert: false,
-    replaceValue: "T3ST1",
-  };
+describe("authentication and error handling", () => {
+  it("returns an error if authorization headers are not set", async () => {
+    const validBody = {
+      insert: false,
+      replaceValue: "T3ST1",
+    };
 
-  await supertest(app)
-    .post("/flows/1/copy")
-    .send(validBody)
-    .expect(401)
-    .then((res) => {
-      expect(res.body).toEqual({
-        error: "No authorization token was found",
+    await supertest(app)
+      .post("/flows/1/copy")
+      .send(validBody)
+      .expect(401)
+      .then((res) => {
+        expect(res.body).toEqual({
+          error: "No authorization token was found",
+        });
       });
-    });
-});
-
-it("returns an error if the user does not have the correct role", async () => {
-  const validBody = {
-    insert: false,
-    replaceValue: "T3ST1",
-  };
-
-  await supertest(app)
-    .post("/flows/1/copy")
-    .send(validBody)
-    .set(authHeader({ role: "teamViewer" }))
-    .expect(403);
-});
-
-it("returns an error if required replacement characters are not provided in the request body", async () => {
-  const invalidBody = {
-    insert: false,
-  };
-
-  await supertest(app)
-    .post("/flows/1/copy")
-    .send(invalidBody)
-    .set(auth)
-    .expect(400)
-    .then((res) => {
-      expect(res.body).toHaveProperty("issues");
-      expect(res.body).toHaveProperty("name", "ZodError");
-    });
-});
-
-it("returns an error if the operation to insert a new flow fails", async () => {
-  queryMock.reset();
-
-  const body = {
-    insert: true,
-    replaceValue: "T3ST1",
-  };
-
-  queryMock.mockQuery({
-    name: "GetFlowData",
-    matchOnVariables: false,
-    data: {
-      flow: {
-        data: mockFlowData,
-      },
-    },
   });
 
-  queryMock.mockQuery({
-    name: "InsertFlow",
-    matchOnVariables: false,
-    data: {
-      flow: {
-        id: 2,
-      },
-    },
-    graphqlErrors: [
-      {
-        message: "Something went wrong",
-      },
-    ],
-    variables: {
-      id: "3",
-    },
+  it("returns an error if the user does not have the correct role", async () => {
+    const validBody = {
+      insert: false,
+      replaceValue: "T3ST1",
+    };
+
+    await supertest(app)
+      .post("/flows/1/copy")
+      .send(validBody)
+      .set(authHeader({ role: "teamViewer" }))
+      .expect(403);
   });
 
-  await supertest(app)
-    .post("/flows/3/copy")
-    .send(body)
-    .set(auth)
-    .expect(500)
-    .then((res) => {
-      expect(res.body.error).toMatch(/failed to insert flow/);
-      expect(res.body.error).toMatch(/Please check permissions/);
+  it("returns an error if required replacement characters are not provided in the request body", async () => {
+    const invalidBody = {
+      insert: false,
+    };
+
+    await supertest(app)
+      .post("/flows/1/copy")
+      .send(invalidBody)
+      .set(auth)
+      .expect(400)
+      .then((res) => {
+        expect(res.body).toHaveProperty("issues");
+        expect(res.body).toHaveProperty("name", "ZodError");
+      });
+  });
+
+  it("returns an error if the operation to insert a new flow fails", async () => {
+    const body = {
+      insert: true,
+      replaceValue: "T3ST1",
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: mockFlowData,
+        },
+      },
     });
+
+    queryMock.mockQuery({
+      name: "InsertFlow",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          id: 2,
+        },
+      },
+      graphqlErrors: [
+        {
+          message: "Something went wrong",
+        },
+      ],
+      variables: {
+        id: "3",
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/3/copy")
+      .send(body)
+      .set(auth)
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/failed to insert flow/);
+        expect(res.body.error).toMatch(/Please check permissions/);
+      });
+  });
 });
 
 it("returns copied unique flow data without inserting a new record", async () => {

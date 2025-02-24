@@ -136,6 +136,7 @@ interface PublishFlowResponse {
 export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
+  isStatutoryApplicationType: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -152,6 +153,7 @@ export interface FlowSummary {
   slug: string;
   status: FlowStatus;
   updatedAt: string;
+  summary: string;
   operations: FlowSummaryOperations[];
   publishedFlows: PublishedFlowSummary[];
 }
@@ -407,6 +409,7 @@ export const editorStore: StateCreator<
             name
             slug
             status
+            summary
             updatedAt: updated_at
             operations(limit: 1, order_by: { created_at: desc }) {
               createdAt: created_at
@@ -421,6 +424,7 @@ export const editorStore: StateCreator<
             ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
+              isStatutoryApplicationType: is_statutory_application_type
             }
           }
         }
