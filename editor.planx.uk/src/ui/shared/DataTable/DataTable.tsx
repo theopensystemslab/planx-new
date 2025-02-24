@@ -74,7 +74,21 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   }) as GridColDef[];
 
   const handleFilterChange = (model: GridFilterModel) => {
-    setFilterValues(model.items[0]?.value ?? "");
+    const item = model.items[0];
+    if (!item || !item.value) {
+      setFilterValues([]);
+      return;
+    }
+
+    // Only set filterValues for ARRAY columns
+    const column = columns.find((col) => col.field === item.field);
+    if (column?.type === ColumnType.ARRAY) {
+      setFilterValues(
+        Array.isArray(item.value) ? item.value : [String(item.value)],
+      );
+    } else {
+      setFilterValues([]);
+    }
   };
 
   return (
