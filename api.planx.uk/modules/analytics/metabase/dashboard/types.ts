@@ -38,12 +38,10 @@ export type UpdateFilterParams = {
 };
 
 export const createNewDashboardSchema = z.object({
-  params: z.object({
+  body: z.object({
     slug: z.string(),
     service: z.string(),
     templateId: z.coerce.number(),
-  }),
-  body: z.object({
     teamName: z.string(),
     description: z.string().optional(),
     collectionId: z.coerce.number(),
