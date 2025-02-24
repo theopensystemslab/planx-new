@@ -25,7 +25,7 @@ export type MetabaseCreateCollectionParams = {
  * the Metabase collection ID is for the "Council" collection
  * see https://github.com/theopensystemslab/planx-new/pull/4072#discussion_r1892631692
  **/
-const COUNCILS_COLLECTION_ID = 58;
+const COUNCILS_COLLECTION_ID = 78;
 
 export const createTeamCollectionSchema = z.object({
   body: z.object({
