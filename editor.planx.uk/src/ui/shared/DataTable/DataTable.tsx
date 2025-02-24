@@ -45,7 +45,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
     const { field, headerName } = column;
 
     const baseColDef: Partial<GridColDef> = {
-      width: 150,
+      width: column.width || 150,
       hideable: index === 0 ? false : true, // at least one column should remain
       field: field as string,
       type: getColumnType(column.type),
@@ -59,7 +59,6 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
     return column.type === ColumnType.ARRAY
       ? {
           ...baseColDef,
-          width: column.width || baseColDef.width,
           valueOptions: columnValueOptions,
           filterOperators:
             columnValueOptions &&
