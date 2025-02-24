@@ -3,11 +3,9 @@ import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
 import Payment from "@mui/icons-material/Payment";
 import Send from "@mui/icons-material/Send";
-import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
@@ -22,15 +20,8 @@ import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { EventsLogProps, Submission } from "./types";
-
-const Response = styled(Box)(() => ({
-  fontSize: "1em",
-  margin: 1,
-  maxWidth: "contentWrap",
-  overflowWrap: "break-word",
-  whiteSpace: "pre-wrap",
-}));
+import { EventsLogProps, Submission } from "../types";
+import { FormattedResponse } from "./FormattedResponse";
 
 const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
@@ -109,7 +100,14 @@ const EventsLog: React.FC<EventsLogProps> = ({
         );
       },
     },
-    { field: "createdAt", headerName: "Date" },
+    {
+      field: "createdAt",
+      headerName: "Date",
+      columnOptions: {
+        valueFormatter: (params) =>
+          format(new Date(params), "dd/MM/yy hh:mm:ss"),
+      },
+    },
     { field: "sessionId", headerName: "Session ID", width: 350 },
     {
       field: "response",
@@ -146,9 +144,6 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
   return (
     <React.Fragment key={`${submission.eventId}-${submission.createdAt}`}>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          {format(new Date(submission.createdAt), "dd/MM/yy hh:mm:ss")}
-        </TableCell>
         <TableCell>
           {showDownloadButton && (
             <Tooltip title="Download application data">
@@ -196,24 +191,6 @@ const CollapsibleRow: React.FC<Submission> = (submission) => {
         </TableCell>
       </TableRow>
     </React.Fragment>
-  );
-};
-
-const FormattedResponse: React.FC<Submission> = (submission) => {
-  return submission.eventType === "Pay" ? (
-    <Response component="pre">
-      {JSON.stringify(submission.response, null, 2)}
-    </Response>
-  ) : (
-    <Response component="pre">
-      {submission.status === "Success"
-        ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
-        : JSON.stringify(
-            JSON.parse(submission.response?.data?.message),
-            null,
-            2,
-          )}
-    </Response>
   );
 };
 
