@@ -100,6 +100,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
       width: 350,
       type: ColumnType.BOOLEAN, // TODO: sort this!
       customComponent: (params) => <FormattedResponse {...params.row} />,
+      columnOptions: {
+        sortable: false,
+      },
     },
     {
       field: "downloadSubmissionLink" as keyof Submission,
