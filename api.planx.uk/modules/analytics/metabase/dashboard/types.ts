@@ -5,7 +5,7 @@ import { z } from "zod";
 export interface CreateNewDashboardParams {
   teamName: string;
   /** Original / template Metabase Dashboard ID, it is the number that follows /dashboard/ in the URL */
-  templateId: number;
+  slug: string;
   /** Optional text to be displayed as the dashboard description */
   description?: string;
   /** Number for the copied dashboard's parent collection */
