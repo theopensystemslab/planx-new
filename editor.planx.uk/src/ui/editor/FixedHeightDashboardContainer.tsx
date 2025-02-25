@@ -6,11 +6,12 @@ import React, { ReactNode } from "react";
 
 interface FixedHeightDashboardContainerProps {
   children: ReactNode;
+  bgColor?: string;
 }
 
 const FixedHeightDashboardContainer: React.FC<
   FixedHeightDashboardContainerProps
-> = ({ children, ...props }) => {
+> = ({ children, bgColor, ...props }) => {
   const isTestEnvBannerVisible = useStore(
     (state) => state.isTestEnvBannerVisible,
   );
@@ -26,6 +27,7 @@ const FixedHeightDashboardContainer: React.FC<
         height: containerHeight,
         display: "flex",
         flexDirection: "column",
+        backgroundColor: bgColor,
       }}
       {...props}
     >

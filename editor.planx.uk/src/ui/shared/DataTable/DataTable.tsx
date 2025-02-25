@@ -92,7 +92,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
   };
 
   return (
-    <Box sx={{ mt: 2, height: "100%", position: "relative" }}>
+    <Box sx={{ mt: 1, height: "100%", position: "relative" }}>
       <Box sx={{ inset: 0, position: "absolute" }}>
         <DataGrid
           rows={rows}
