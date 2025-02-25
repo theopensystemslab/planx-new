@@ -13,7 +13,7 @@ const FixedHeightDashboardContainer: React.FC<
 > = ({ children, ...props }) => {
   const isTestEnvBannerVisible = useStore(
     (state) => state.isTestEnvBannerVisible,
-  ); // Retrieve from the store
+  );
 
   const containerHeight = isTestEnvBannerVisible
     ? `calc(100vh - ${HEADER_HEIGHT_EDITOR * 2}px)`
