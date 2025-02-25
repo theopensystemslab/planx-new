@@ -164,7 +164,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
               flexDirection: { xs: "column", contentWrap: "row" },
               justifyContent: "space-between",
               alignItems: { xs: "center", contentWrap: "center" },
-              gap: 6,
+              gap: 2,
             }}
           >
             <Typography
@@ -181,6 +181,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
               setRecords={setSearchedTeams}
               searchKey={["slug"]}
               clearSearch={clearSearch}
+              hideLabel={true}
             />
           </Box>
 

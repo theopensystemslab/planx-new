@@ -20,6 +20,7 @@ interface SearchBoxProps<T> {
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   searchKey: FuseOptionKey<T>[];
   clearSearch?: boolean;
+  hideLabel?: boolean;
 }
 
 export const SearchBox = <T extends object>({
@@ -27,6 +28,7 @@ export const SearchBox = <T extends object>({
   setRecords,
   searchKey,
   clearSearch = false,
+  hideLabel = false,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
@@ -78,7 +80,7 @@ export const SearchBox = <T extends object>({
   return (
     <Box maxWidth={360}>
       <InputRow>
-        <InputRowLabel inputProps={{ htmlFor: "search" }}>
+        <InputRowLabel inputProps={{ htmlFor: "search", hidden: hideLabel }}>
           <strong>Search</strong>
         </InputRowLabel>
         <InputRowItem>
