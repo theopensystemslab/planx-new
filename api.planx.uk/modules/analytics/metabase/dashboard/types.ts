@@ -4,17 +4,8 @@ import { z } from "zod";
 
 export interface CreateNewDashboardParams {
   flowId: string;
-  teamName: string;
-  /** Original / template Metabase Dashboard ID, it is the number that follows /dashboard/ in the URL */
-  slug: string;
-  /** Optional text to be displayed as the dashboard description */
-  description?: string;
-  /** Number for the copied dashboard's parent collection */
-  collectionId: number;
-  /** A filter that should be automatically set, eg `Team slug` */
-  filter: string;
-  /** Default filter value, eg `council-name` */
-  value: string;
+  teamId: number;
+  serviceSlug: string;
 }
 
 /* We don't want users to be able to deep copy templates / dashboards because it will wreak Metabase havoc. This is why there is no isDeepCopy option here */
@@ -41,15 +32,8 @@ export type UpdateFilterParams = {
 export const createNewDashboardSchema = z.object({
   body: z.object({
     flowId: z.string(),
-    slug: z.string(),
-    service: z.string(),
-    templateId: z.coerce.number(),
-    teamName: z.string(),
-    description: z.string().optional(),
-    collectionId: z.coerce.number(),
-    collectionPosition: z.coerce.number().nullable().optional(),
-    filter: z.string(),
-    value: z.string(),
+    teamId: z.number(),
+    serviceSlug: z.string(),
   }),
 });
 
