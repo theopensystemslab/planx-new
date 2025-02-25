@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
@@ -6,7 +7,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
 import navigation from "lib/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
@@ -58,6 +59,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
   ]);
 
   const [searchedTeams, setSearchedTeams] = useState<Team[] | null>(null);
+  const [clearSearch, setClearSearch] = useState<boolean>(false);
 
   const viewOnlyTeams = useMemo(
     () => teams.filter((team) => !canUserEditTeam(team.slug)),
@@ -67,6 +69,12 @@ const Teams: React.FC<Props> = ({ teams }) => {
   const editableTeams: Team[] = teams.filter((team) =>
     canUserEditTeam(team.slug),
   );
+
+  useEffect(() => {
+    if (searchedTeams === viewOnlyTeams && clearSearch) {
+      setClearSearch(false);
+    }
+  }, [clearSearch, searchedTeams, viewOnlyTeams]);
 
   const renderTeams = (teamsToRender: Array<Team>) =>
     teamsToRender.map((team) => {
@@ -86,7 +94,10 @@ const Teams: React.FC<Props> = ({ teams }) => {
     <Card>
       <CardContent>
         <Typography variant="h3">No results</Typography>
-        <Typography>Check your search term and try again </Typography>
+        <Typography pt={1}>Check your search term and try again</Typography>
+        <Button variant="link" onClick={() => setClearSearch(true)}>
+          Clear search
+        </Button>
       </CardContent>
     </Card>
   );
@@ -169,6 +180,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
               records={viewOnlyTeams}
               setRecords={setSearchedTeams}
               searchKey={["slug"]}
+              clearSearch={clearSearch}
             />
           </Box>
 
