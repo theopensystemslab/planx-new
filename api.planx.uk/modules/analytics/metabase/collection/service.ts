@@ -1,6 +1,6 @@
 import { updateMetabaseId } from "./updateMetabaseId.js";
 import type { NewCollectionParams } from "./types.js";
-import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
+import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
 export async function createTeamCollection({

@@ -4,7 +4,7 @@ import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
-import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
+import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
 describe("createTeamCollection", () => {
