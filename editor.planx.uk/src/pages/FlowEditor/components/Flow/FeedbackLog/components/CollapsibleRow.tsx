@@ -1,25 +1,17 @@
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
-import LightbulbIcon from "@mui/icons-material/Lightbulb";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import RuleIcon from "@mui/icons-material/Rule";
-import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { format } from "date-fns";
 import { client } from "lib/graphql";
 import React, { useState } from "react";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { GET_FEEDBACK_BY_ID_QUERY } from "../queries/getFeedbackById";
 import { DetailedFeedback, StyledSummaryListTable } from "../styled";
-import { CollapsibleRowProps, FeedbackType, FeedbackTypeIcon } from "../types";
+import { CollapsibleRowProps } from "../types";
 
 const getDetailedFeedback = async (feedbackId: number) => {
   const {
@@ -52,37 +44,11 @@ const getDetailedFeedback = async (feedbackId: number) => {
   };
 };
 
-const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
-  switch (type) {
-    case "issue":
-      return { icon: <WarningIcon />, title: "Issue" };
-    case "idea":
-      return { icon: <LightbulbIcon />, title: "Idea" };
-    case "comment":
-      return { icon: <MoreHorizIcon />, title: "Comment" };
-    case "helpful":
-      return {
-        icon: <CheckCircleIcon color="success" />,
-        title: "Helpful (help text)",
-      };
-    case "unhelpful":
-      return {
-        icon: <CancelIcon color="error" />,
-        title: "Unhelpful (help text)",
-      };
-    case "component":
-      return { icon: <RateReviewIcon />, title: "User satisfaction" };
-    default:
-      return { icon: <RuleIcon />, title: "Inaccuracy" };
-  }
-};
-
 export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
   const [open, setOpen] = useState<boolean>(false);
   const [detailedFeedback, setDetailedFeedback] = useState<
     Record<string, any> | undefined
   >(undefined);
-  const { icon, title } = feedbackTypeIcon(item.type);
 
   const toggleDetailedFeedback = async () => {
     setOpen(!open);
@@ -91,18 +57,6 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
       setDetailedFeedback(fetchedData);
     }
   };
-
-  const generateCommentSummary = (userComment: string | null) => {
-    if (!userComment) return "No comment";
-
-    const COMMENT_LENGTH = 50;
-    const shouldBeSummarised = userComment.length > COMMENT_LENGTH;
-    if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`;
-
-    return userComment;
-  };
-
-  const commentSummary = generateCommentSummary(item.userComment);
 
   const filteredFeedbackItems = (() => {
     switch (item.type) {
@@ -127,16 +81,6 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
     userContext: "What were you doing?",
   };
 
-  const EmojiRating: Record<number, string> = {
-    1: "Terrible",
-    2: "Poor",
-    3: "Neutral",
-    4: "Good",
-    5: "Excellent",
-  };
-
-  const feedbackScore = EmojiRating[item.feedbackScore];
-
   const renderContent = (key: string, value: any) => {
     if (key === "combinedHelp" && value) {
       return <ReactMarkdownOrHtml source={value} openLinksOnNewTab />;
@@ -147,17 +91,6 @@ export const CollapsibleRow: React.FC<CollapsibleRowProps> = (item) => {
   return (
     <React.Fragment>
       <TableRow key={item.id}>
-        <TableCell>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {icon} {title}
-          </Box>
-        </TableCell>
-        <TableCell>
-          {format(new Date(item.createdAt), "dd/MM/yy hh:mm:ss")}
-        </TableCell>
-        <TableCell>{item.flowName}</TableCell>
-        <TableCell>{feedbackScore}</TableCell>
-        <TableCell>{commentSummary}</TableCell>
         <TableCell sx={{ textAlign: "right" }}>
           <IconButton
             aria-label="expand row"
