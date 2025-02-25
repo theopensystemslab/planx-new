@@ -14,7 +14,6 @@ import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
 
-
 interface TeamTheme {
   slug: string;
   primaryColour: string;
@@ -56,13 +55,11 @@ const Teams: React.FC<Props> = ({ teams }) => {
     state.createTeam,
   ]);
 
-  const editableTeams: Team[] = [];
-  const viewOnlyTeams: Team[] = [];
-
-  teams.forEach((team) =>
-    canUserEditTeam(team.slug)
-      ? editableTeams.push(team)
-      : viewOnlyTeams.push(team),
+  const editableTeams: Team[] = teams.filter((team) =>
+    canUserEditTeam(team.slug),
+  );
+  const viewOnlyTeams: Team[] = teams.filter(
+    (team) => !canUserEditTeam(team.slug),
   );
 
   const renderTeams = (teamsToRender: Array<Team>) =>
