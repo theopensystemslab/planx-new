@@ -96,11 +96,6 @@ const Teams: React.FC<Props> = ({ teams }) => {
         <Typography variant="h2" component="h1">
           Select a team
         </Typography>
-        <SearchBox
-          records={viewOnlyTeams}
-          setRecords={setSearchedTeams}
-          searchKey={["slug"]}
-        />
         <Permission.IsPlatformAdmin>
           <AddButton
             onClick={async () => {
@@ -140,9 +135,26 @@ const Teams: React.FC<Props> = ({ teams }) => {
 
       {viewOnlyTeams.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" mt={4} mb={2}>
-            Other teams (view only)
-          </Typography>
+          <Box
+            pb={1}
+            mt={4}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", contentWrap: "row" },
+              justifyContent: "space-between",
+              alignItems: { xs: "center", contentWrap: "center" },
+              gap: 2,
+            }}
+          >
+            <Typography variant="h3" component="h2" mt={2} mb={2}>
+              Other teams (view only)
+            </Typography>
+            <SearchBox
+              records={viewOnlyTeams}
+              setRecords={setSearchedTeams}
+              searchKey={["slug"]}
+            />
+          </Box>
           {searchedTeams
             ? renderTeams(searchedTeams)
             : renderTeams(viewOnlyTeams)}
