@@ -5,11 +5,12 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
 import navigation from "lib/navigation";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
@@ -55,11 +56,15 @@ const Teams: React.FC<Props> = ({ teams }) => {
     state.createTeam,
   ]);
 
+  const [searchedTeams, setSearchedTeams] = useState<Team[] | null>(null);
+
+  const viewOnlyTeams = useMemo(
+    () => teams.filter((team) => !canUserEditTeam(team.slug)),
+    [canUserEditTeam, teams],
+  );
+
   const editableTeams: Team[] = teams.filter((team) =>
     canUserEditTeam(team.slug),
-  );
-  const viewOnlyTeams: Team[] = teams.filter(
-    (team) => !canUserEditTeam(team.slug),
   );
 
   const renderTeams = (teamsToRender: Array<Team>) =>
@@ -75,6 +80,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
         </StyledLink>
       );
     });
+
   return (
     <Container maxWidth="formWrap">
       <Box
@@ -90,6 +96,11 @@ const Teams: React.FC<Props> = ({ teams }) => {
         <Typography variant="h2" component="h1">
           Select a team
         </Typography>
+        <SearchBox
+          records={viewOnlyTeams}
+          setRecords={setSearchedTeams}
+          searchKey={["slug"]}
+        />
         <Permission.IsPlatformAdmin>
           <AddButton
             onClick={async () => {
@@ -132,7 +143,9 @@ const Teams: React.FC<Props> = ({ teams }) => {
           <Typography variant="h3" component="h2" mt={4} mb={2}>
             Other teams (view only)
           </Typography>
-          {renderTeams(viewOnlyTeams)}
+          {searchedTeams
+            ? renderTeams(searchedTeams)
+            : renderTeams(viewOnlyTeams)}
         </>
       )}
     </Container>
