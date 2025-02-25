@@ -1,4 +1,5 @@
 import ClearIcon from "@mui/icons-material/Clear";
+import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -93,6 +94,7 @@ export const SearchBox = <T extends object>({
                 setFieldValue("pattern", e.target.value);
                 submitForm();
               }}
+              startAdornment={<Search sx={{ ml: -0.5, mr: 0.5 }} />}
             />
             {searchedTerm && !isSearching && (
               <IconButton
