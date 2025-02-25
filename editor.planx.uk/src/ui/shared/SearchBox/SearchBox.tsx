@@ -80,8 +80,14 @@ export const SearchBox = <T extends object>({
   return (
     <Box maxWidth={360}>
       <InputRow>
-        <InputRowLabel inputProps={{ htmlFor: "search", hidden: hideLabel }}>
-          <strong>Search</strong>
+        <InputRowLabel
+          inputProps={{
+            id: "search-label",
+            htmlFor: "search",
+            hidden: hideLabel,
+          }}
+        >
+          <strong aria-hidden>Search</strong>
         </InputRowLabel>
         <InputRowItem>
           <Box sx={{ position: "relative" }}>
@@ -91,6 +97,7 @@ export const SearchBox = <T extends object>({
               }}
               name="search"
               id="search"
+              aria-describedby="search-label"
               value={values.pattern}
               onChange={(e) => {
                 setFieldValue("pattern", e.target.value);
