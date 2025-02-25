@@ -1,16 +1,12 @@
-import Container from "@mui/material/Container";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import React from "react";
+import { Feedback } from "routes/feedback";
+import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
+import { DataTable } from "ui/shared/DataTable/DataTable";
+import { ColumnConfig } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { CollapsibleRow } from "./components/CollapsibleRow";
-import { Feed } from "./styled";
 import { FeedbackLogProps } from "./types";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
@@ -22,8 +18,30 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     "browserPlatform",
   ];
 
+  // {
+  //   "__typename": "feedback_summary",
+  //   "address": null,
+  //   "createdAt": "2025-02-25T15:44:18.168052+00:00",
+  //   "feedbackScore": null,
+  //   "flowName": "Apply for planning permission",
+  //   "id": 1,
+  //   "nodeTitle": null,
+  //   "nodeType": null,
+  //   "type": "issue",
+  //   "userComment": "Hated it",
+  //   "userContext": "Reading"
+  // }
+
+  const columns: ColumnConfig<Feedback>[] = [
+    { field: "type", headerName: "Type" },
+    { field: "createdAt", headerName: "Date" },
+    { field: "flowName", headerName: "Service", width: 200 },
+    { field: "feedbackScore", headerName: "Rating" },
+    { field: "userComment", headerName: "Comment", width: 340 },
+  ];
+
   return (
-    <Container maxWidth="contentWrap">
+    <FixedHeightDashboardContainer>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Feedback log
@@ -40,43 +58,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
             message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
           />
         ) : (
-          <Feed>
-            <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                <TableRow
-                  sx={{ "& > *": { borderBottomColor: "black !important" } }}
-                >
-                  <TableCell sx={{ width: 160 }}>
-                    <strong>Type</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <strong>Date</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <strong>Service</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 140 }}>
-                    <strong>Rating</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 340 }}>
-                    <strong>Comment</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 60 }} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {feedback.map((item) => (
-                  <CollapsibleRow
-                    key={item.id}
-                    {...item}
-                    displayFeedbackItems={displayFeedbackItems}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </Feed>
+          <DataTable rows={feedback} columns={columns} />
         )}
       </SettingsSection>
-    </Container>
+    </FixedHeightDashboardContainer>
   );
 };
