@@ -73,6 +73,7 @@ export const getValueOptions = (
 
 export const columnCellComponentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
+  [ColumnType.DATE]: () => undefined, // use default MUI data grid behaviour
   [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => {
     return (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
@@ -94,6 +95,8 @@ export const getColumnFilterType = (columnType?: ColumnRenderType) => {
   switch (columnType) {
     case ColumnType.BOOLEAN:
       return "boolean";
+    case ColumnType.DATE:
+      return "date";
     case ColumnType.ARRAY:
       return "singleSelect";
     default:

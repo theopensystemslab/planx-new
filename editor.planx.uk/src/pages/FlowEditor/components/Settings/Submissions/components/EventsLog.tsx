@@ -85,13 +85,31 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "status",
       headerName: "Status",
-      type: ColumnType.BOOLEAN, // might need string? and read value
+      type: ColumnType.ARRAY, // bit confusing?
       customComponent: (params) => {
         return params.value === "Success" ? (
           <Chip label="Success" size="small" color="success" />
         ) : (
           <Chip label={params.value} size="small" color="error" />
         );
+      },
+      columnOptions: {
+        valueOptions: [
+          "Success",
+          "Failed (500)",
+          "Failed (502)",
+          "Failed (503)",
+          "Failed (504)",
+          "Failed (400)",
+          "Failed (401)",
+          "Started",
+          "Submitted",
+          "Capturable",
+          "Failed",
+          "Cancelled",
+          "Error",
+          "Unknown",
+        ],
       },
     },
     {
@@ -101,6 +119,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
         valueFormatter: (params) =>
           format(new Date(params), "dd/MM/yy hh:mm:ss"),
       },
+      type: ColumnType.DATE,
     },
     { field: "sessionId", headerName: "Session ID", width: 350 },
     {
