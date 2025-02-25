@@ -33,6 +33,7 @@ describe("the UI interactions of the SearchBox", () => {
     expect(screen.getByText("Search")).toBeVisible();
     expect(screen.getByRole("textbox")).toBeVisible();
   });
+
   it("shows a loading spinner when typing", async () => {
     const { user } = setupTestEnvironment(["slug"]);
     const searchBox = screen.getByRole("textbox");
@@ -103,6 +104,7 @@ describe("the search functionality", () => {
       },
     ]);
   });
+
   it("sets the results back to records when a search term is deleted", async () => {
     const { user } = setupTestEnvironment(["slug", "name"]);
     const searchBox = screen.getByRole("textbox");
