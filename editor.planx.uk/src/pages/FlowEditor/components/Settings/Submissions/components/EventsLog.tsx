@@ -26,10 +26,6 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
-  const defaultContainsOperator = getGridStringOperators().find(
-    (op) => op.value === "contains",
-  );
-
   const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
     state.teamSlug,
     state.canUserEditTeam,
@@ -60,6 +56,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
     id: submission.eventId,
     downloadSubmissionLink: undefined,
   }));
+
+  const defaultStringFilterOperator = getGridStringOperators().find(
+    (op) => op.value === "contains",
+  );
 
   const columns: ColumnConfig<Submission>[] = [
     { field: "flowName", headerName: "Flow name" },
@@ -152,8 +152,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
                 );
               };
             },
-            InputComponent: defaultContainsOperator?.InputComponent,
-            InputComponentProps: defaultContainsOperator?.InputComponentProps,
+            InputComponent: defaultStringFilterOperator?.InputComponent,
+            InputComponentProps:
+              defaultStringFilterOperator?.InputComponentProps,
           },
         ],
       },
@@ -162,8 +163,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "downloadSubmissionLink" as keyof Submission,
       headerName: "",
       width: 100,
-      type: ColumnType.BOOLEAN, // TODO: sort this!
-
+      type: ColumnType.CUSTOM,
       customComponent: (params) => {
         const submissionDataExpirationDate = addDays(
           new Date(params.row.createdAt),
@@ -196,6 +196,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
         ) : (
           <></>
         );
+      },
+      columnOptions: {
+        filterable: false,
+        sortable: false,
       },
     },
   ];
