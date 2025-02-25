@@ -1,8 +1,8 @@
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { AdminPanelData } from "types";
+import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
@@ -10,8 +10,9 @@ import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
 import {
   False as NotConfigured,
   True as Configured,
-} from "../../ui/shared/DataTable/components/icons";
+} from "../../ui/shared/DataTable/components/cellIcons";
 import { Article4Status } from "./components/Article4Status";
+import { getFlowNamesForFilter } from "./getFlowNamesForFilter";
 
 const isCouncilTeam = () => {
   const internalTeamNames = [
@@ -29,7 +30,9 @@ const isCouncilTeam = () => {
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
-  const filteredPanelData = adminPanelData?.filter(isCouncilTeam);
+  const filteredPanelData = adminPanelData?.filter(isCouncilTeam());
+
+  const liveFlowValueOptions = getFlowNamesForFilter(filteredPanelData!);
 
   const columns: ColumnConfig<AdminPanelData>[] = [
     {
@@ -46,6 +49,10 @@ export const PlatformAdminPanel = () => {
       headerName: "Live services",
       width: 450,
       type: ColumnType.ARRAY,
+      columnOptions: {
+        valueOptions: liveFlowValueOptions,
+        sortable: false,
+      },
     },
     {
       field: "planningDataEnabled",
@@ -106,7 +113,7 @@ export const PlatformAdminPanel = () => {
   ];
 
   return (
-    <Container maxWidth={false}>
+    <FixedHeightDashboardContainer>
       <SettingsSection>
         <Typography variant="h2" component="h1" gutterBottom>
           Platform admin panel
@@ -117,9 +124,7 @@ export const PlatformAdminPanel = () => {
           {` environment.`}
         </Typography>
       </SettingsSection>
-      <SettingsSection>
-        <DataTable rows={filteredPanelData} columns={columns} />
-      </SettingsSection>
-    </Container>
+      <DataTable rows={filteredPanelData} columns={columns} />
+    </FixedHeightDashboardContainer>
   );
 };

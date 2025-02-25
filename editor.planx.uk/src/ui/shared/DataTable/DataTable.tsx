@@ -1,74 +1,110 @@
+/* eslint-disable no-restricted-imports */
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-// eslint-disable-next-line no-restricted-imports
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import React from "react";
+import {
+  DataGrid,
+  GridColDef,
+  GridFilterModel,
+  GridToolbar,
+} from "@mui/x-data-grid";
+import React, { useState } from "react";
 
-import { False, True } from "./components/icons";
 import {
   ColumnConfig,
   ColumnType,
   DataGridProps,
   RenderCellParams,
 } from "./types";
+import {
+  columnCellComponentRegistry,
+  createFilterOperator,
+  getColumnType,
+  getValueOptions,
+} from "./utils";
 
 export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
-  const baseColDef: Partial<GridColDef> = {
-    width: 150,
-  };
-
-  const componentRegistry = {
-    [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-    [ColumnType.ARRAY]: (value: string[]) => (
-      <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
-        {value?.map((item: string, index: number) => (
-          <Typography py={0.4} variant="body2" key={index} component="li">
-            {item}
-          </Typography>
-        ))}
-      </Box>
-    ),
-  };
-
   const renderCellComponentByType = (
     params: RenderCellParams,
     column: ColumnConfig<T>,
+    filterValues?: string[],
   ): JSX.Element | undefined => {
     if (!column.type) return undefined;
     if (column.customComponent) {
       return column.customComponent(params);
     }
-    const ComponentRenderer = componentRegistry[column.type];
-    return ComponentRenderer(params.value);
+    const ComponentRenderer = columnCellComponentRegistry[column.type];
+    return ComponentRenderer(params.value, filterValues);
   };
 
+  const [filterValues, setFilterValues] = useState<string[]>([]);
+
   const dataColumns: GridColDef[] = columns.map((column, index) => {
+    const columnValueOptions =
+      column.columnOptions?.valueOptions &&
+      getValueOptions(column.columnOptions?.valueOptions);
+
     const { field, headerName } = column;
-    return {
-      ...baseColDef,
+
+    const baseColDef: Partial<GridColDef> = {
+      width: column.width || 150,
       hideable: index === 0 ? false : true, // at least one column should remain
       field: field as string,
-      type: column.type === ColumnType.BOOLEAN ? "boolean" : undefined,
+      type: getColumnType(column.type),
       headerName,
-      width: column.width || baseColDef.width,
       renderCell: column.type
         ? (params: RenderCellParams) =>
-            renderCellComponentByType(params, column)
+            renderCellComponentByType(params, column, filterValues)
         : undefined,
-      ...column.columnOptions,
     };
-  });
+
+    return column.type === ColumnType.ARRAY
+      ? {
+          ...baseColDef,
+          valueOptions: columnValueOptions,
+          filterOperators:
+            columnValueOptions &&
+            columnValueOptions.length > 0 &&
+            createFilterOperator(columnValueOptions),
+          ...column.columnOptions,
+        }
+      : {
+          ...baseColDef,
+          valueOptions: undefined,
+          ...column.columnOptions,
+        };
+  }) as GridColDef[];
+
+  const handleFilterChange = (model: GridFilterModel) => {
+    const item = model.items[0];
+    if (!item || !item.value) {
+      setFilterValues([]);
+      return;
+    }
+
+    // Only set filterValues for ARRAY columns
+    const column = columns.find((col) => col.field === item.field);
+    if (column?.type === ColumnType.ARRAY) {
+      setFilterValues(
+        Array.isArray(item.value) ? item.value : [String(item.value)],
+      );
+    } else {
+      setFilterValues([]);
+    }
+  };
 
   return (
-    <Box sx={{ height: "100vh", flex: 1, position: "relative" }}>
+    <Box sx={{ mt: 2, height: "100%", position: "relative" }}>
       <Box sx={{ inset: 0, position: "absolute" }}>
         <DataGrid
           rows={rows}
           columns={dataColumns}
+          onFilterModelChange={handleFilterChange}
           getRowHeight={() => "auto"}
           getRowClassName={(params) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
+          slots={{
+            toolbar: GridToolbar,
+          }}
         />
       </Box>
     </Box>
