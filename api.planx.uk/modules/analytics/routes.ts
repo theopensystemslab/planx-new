@@ -27,7 +27,7 @@ router.post(
 router.use("/metabase", useEnvGuard(["test", "staging", "production"]));
 
 router.post(
-  "/metabase/collection/:slug",
+  "/metabase/collection",
   validate(createTeamCollectionSchema),
   metabaseCollectionsController,
 );

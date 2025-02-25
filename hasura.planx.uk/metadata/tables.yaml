@@ -2821,6 +2821,26 @@
           - slug
         filter: {}
         check: null
+  event_triggers:
+    - name: setup_metabase_collection
+      definition:
+        enable_manual: false
+        insert:
+          columns: '*'
+      retry_conf:
+        interval_sec: 10
+        num_retries: 0
+        timeout_sec: 60
+      webhook: '{{HASURA_PLANX_API_URL}}/metabase/collection/'
+      headers:
+        - name: authorization
+          value_from_env: HASURA_PLANX_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}},\r\n  \"description\": \"Collection for {{$body.event.data.new.name}}\",\r\n  \"parentId\": 58\r\n}"
+        template_engine: Kriti
+        version: 2
 - table:
     name: teams_summary
     schema: public
