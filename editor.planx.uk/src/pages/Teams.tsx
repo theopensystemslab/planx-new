@@ -179,7 +179,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
             <SearchBox
               records={viewOnlyTeams}
               setRecords={setSearchedTeams}
-              searchKey={["slug"]}
+              searchKey={["slug", "name"]}
               clearSearch={clearSearch}
               hideLabel={true}
             />
