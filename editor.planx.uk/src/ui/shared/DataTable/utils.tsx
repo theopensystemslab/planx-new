@@ -20,10 +20,14 @@ const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   );
 };
 
-const containsItem = (item: string, value: Pick<GridFilterItem, "value">) => {
+export const containsItem = (
+  item: string,
+  value: Pick<GridFilterItem, "value">,
+): boolean => {
   if (typeof value === "string") {
     return item.toLowerCase().includes((value as string).toLowerCase());
   }
+  return false;
 };
 
 export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
@@ -74,6 +78,7 @@ export const getValueOptions = (
 export const columnCellComponentRegistry = {
   [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
   [ColumnType.DATE]: () => undefined, // use default MUI data grid behaviour
+  [ColumnType.CUSTOM]: () => undefined,
   [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => {
     return (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
@@ -99,6 +104,8 @@ export const getColumnFilterType = (columnType?: ColumnRenderType) => {
       return "date";
     case ColumnType.ARRAY:
       return "singleSelect";
+    case ColumnType.CUSTOM:
+      return undefined;
     default:
       return undefined;
   }

@@ -9,6 +9,7 @@ export const ColumnType = {
   BOOLEAN: "boolean",
   ARRAY: "array",
   DATE: "date",
+  CUSTOM: "custom",
 } as const;
 
 type ObjectValues<T> = T[keyof T];

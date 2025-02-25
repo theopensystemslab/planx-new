@@ -5,6 +5,7 @@ import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { addDays, format, isBefore } from "date-fns";
@@ -13,6 +14,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
+import { containsItem } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { EventsLogProps, Submission } from "../types";
@@ -24,6 +26,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
+  const defaultContainsOperator = getGridStringOperators().find(
+    (op) => op.value === "contains",
+  );
+
   const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
     state.teamSlug,
     state.canUserEditTeam,
@@ -126,10 +132,30 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "response",
       headerName: "Response",
       width: 350,
-      type: ColumnType.BOOLEAN, // TODO: sort this!
+      type: ColumnType.CUSTOM,
       customComponent: (params) => <FormattedResponse {...params.row} />,
       columnOptions: {
         sortable: false,
+        filterOperators: [
+          {
+            value: "contains",
+            getApplyFilterFn: (filterItem: GridFilterItem) => {
+              // return a function that is applied to all the rows in turn
+              return (currentRowValue: Record<any, any>): boolean => {
+                if (!currentRowValue?.data?.body) {
+                  return false;
+                }
+
+                return containsItem(
+                  currentRowValue.data.body,
+                  filterItem.value,
+                );
+              };
+            },
+            InputComponent: defaultContainsOperator?.InputComponent,
+            InputComponentProps: defaultContainsOperator?.InputComponentProps,
+          },
+        ],
       },
     },
     {
