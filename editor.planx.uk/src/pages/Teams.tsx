@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -81,6 +82,15 @@ const Teams: React.FC<Props> = ({ teams }) => {
       );
     });
 
+  const noResultsCard = (
+    <Card>
+      <CardContent>
+        <Typography variant="h3">No results</Typography>
+        <Typography>Check your search term and try again </Typography>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Container maxWidth="formWrap">
       <Box
@@ -143,10 +153,16 @@ const Teams: React.FC<Props> = ({ teams }) => {
               flexDirection: { xs: "column", contentWrap: "row" },
               justifyContent: "space-between",
               alignItems: { xs: "center", contentWrap: "center" },
-              gap: 2,
+              gap: 6,
             }}
           >
-            <Typography variant="h3" component="h2" mt={2} mb={2}>
+            <Typography
+              variant="h3"
+              component="h2"
+              mt={2}
+              mb={2}
+              sx={{ textWrap: "nowrap" }}
+            >
               Other teams (view only)
             </Typography>
             <SearchBox
@@ -155,9 +171,8 @@ const Teams: React.FC<Props> = ({ teams }) => {
               searchKey={["slug"]}
             />
           </Box>
-          {searchedTeams
-            ? renderTeams(searchedTeams)
-            : renderTeams(viewOnlyTeams)}
+
+          {searchedTeams?.length ? renderTeams(searchedTeams) : noResultsCard}
         </>
       )}
     </Container>
