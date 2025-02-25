@@ -1,8 +1,8 @@
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { AdminPanelData } from "types";
+import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
@@ -113,7 +113,7 @@ export const PlatformAdminPanel = () => {
   ];
 
   return (
-    <Container maxWidth={false}>
+    <FixedHeightDashboardContainer>
       <SettingsSection>
         <Typography variant="h2" component="h1" gutterBottom>
           Platform admin panel
@@ -124,9 +124,7 @@ export const PlatformAdminPanel = () => {
           {` environment.`}
         </Typography>
       </SettingsSection>
-      <SettingsSection>
-        <DataTable rows={filteredPanelData} columns={columns} />
-      </SettingsSection>
-    </Container>
+      <DataTable rows={filteredPanelData} columns={columns} />
+    </FixedHeightDashboardContainer>
   );
 };
