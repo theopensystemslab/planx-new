@@ -308,7 +308,6 @@ export const mockSubmissions = [
     flowName: "jo",
   },
   {
-    __typename: "submission_services_log",
     flowId: "b71f7a77-f06e-4dba-adf4-482286436c12",
     sessionId: "6981b241-3883-4d60-a973-5e693c021818",
     eventId: "g34636cb-651e-9de1-a0e2-d09586cabf02",

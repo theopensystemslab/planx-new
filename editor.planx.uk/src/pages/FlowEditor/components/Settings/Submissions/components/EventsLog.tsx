@@ -1,21 +1,19 @@
-import Payment from "@mui/icons-material/Payment";
-import Send from "@mui/icons-material/Send";
-import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
 import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { format } from "date-fns";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { containsItem } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
+import { submissionStatusOptions } from "../submissionFilterOptions";
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { FormattedResponse } from "./FormattedResponse";
+import { StatusChip } from "./StatusChip";
+import { SubmissionEvent } from "./SubmissionEvent";
 
 const EventsLog: React.FC<EventsLogProps> = ({
   submissions,
@@ -23,12 +21,6 @@ const EventsLog: React.FC<EventsLogProps> = ({
   error,
   filterByFlow,
 }) => {
-  const [teamSlug, canUserEditTeam, submissionEmail] = useStore((state) => [
-    state.teamSlug,
-    state.canUserEditTeam,
-    state.teamSettings?.submissionEmail,
-  ]);
-
   if (loading)
     return (
       <DelayedLoadingIndicator
@@ -65,54 +57,18 @@ const EventsLog: React.FC<EventsLogProps> = ({
       headerName: "Event",
       width: 250,
       type: ColumnFilterType.ARRAY,
-      customComponent: (params) => {
-        return (
-          <>
-            {params.value === "Pay" ? <Payment /> : <Send />}
-            <Typography variant="body2" ml={1}>
-              {params.value} {params.row.retry && ` [Retry]`}
-            </Typography>
-          </>
-        );
-      },
+      customComponent: SubmissionEvent,
       columnOptions: {
-        valueOptions: [
-          "Send to email",
-          "Pay",
-          "Submit to BOPS",
-          "Submit to Uniform",
-          "Upload to AWS S3",
-        ],
+        valueOptions: submissionStatusOptions,
       },
     },
     {
       field: "status",
       headerName: "Status",
       type: ColumnFilterType.ARRAY,
-      customComponent: (params) => {
-        return params.value === "Success" ? (
-          <Chip label="Success" size="small" color="success" />
-        ) : (
-          <Chip label={params.value} size="small" color="error" />
-        );
-      },
+      customComponent: StatusChip,
       columnOptions: {
-        valueOptions: [
-          "Success",
-          "Failed (500)",
-          "Failed (502)",
-          "Failed (503)",
-          "Failed (504)",
-          "Failed (400)",
-          "Failed (401)",
-          "Started",
-          "Submitted",
-          "Capturable",
-          "Failed",
-          "Cancelled",
-          "Error",
-          "Unknown",
-        ],
+        valueOptions: submissionStatusOptions,
       },
     },
     {
