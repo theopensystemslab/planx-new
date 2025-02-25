@@ -10,7 +10,7 @@ import React from "react";
 
 import { False, True } from "./components/cellIcons";
 import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
-import { ColumnRenderType, ColumnType } from "./types";
+import { ColumnFilterType, ColumnRenderType } from "./types";
 
 const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   return (
@@ -76,10 +76,11 @@ export const getValueOptions = (
 };
 
 export const columnCellComponentRegistry = {
-  [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-  [ColumnType.DATE]: () => undefined, // use default MUI data grid behaviour
-  [ColumnType.CUSTOM]: () => undefined,
-  [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => {
+  [ColumnFilterType.BOOLEAN]: (value: boolean) =>
+    value ? <True /> : <False />,
+  [ColumnFilterType.DATE]: () => undefined, // use default MUI data grid behaviour
+  [ColumnFilterType.CUSTOM]: () => undefined,
+  [ColumnFilterType.ARRAY]: (value: string[], filterValues?: string[]) => {
     return (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
         {value?.map((item: string, index: number) => (
@@ -98,13 +99,13 @@ export const columnCellComponentRegistry = {
 
 export const getColumnFilterType = (columnType?: ColumnRenderType) => {
   switch (columnType) {
-    case ColumnType.BOOLEAN:
+    case ColumnFilterType.BOOLEAN:
       return "boolean";
-    case ColumnType.DATE:
+    case ColumnFilterType.DATE:
       return "date";
-    case ColumnType.ARRAY:
+    case ColumnFilterType.ARRAY:
       return "singleSelect";
-    case ColumnType.CUSTOM:
+    case ColumnFilterType.CUSTOM:
       return undefined;
     default:
       return undefined;

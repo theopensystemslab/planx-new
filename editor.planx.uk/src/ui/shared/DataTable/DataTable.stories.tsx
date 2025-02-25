@@ -4,7 +4,7 @@ import { getFlowNamesForFilter } from "pages/PlatformAdminPanel/getFlowNamesForF
 
 import { DataTable } from "./DataTable";
 import { mockTeams } from "./mockTeams";
-import { ColumnType } from "./types";
+import { ColumnFilterType } from "./types";
 
 const meta = {
   title: "Design System/Atoms/Data table",
@@ -33,7 +33,7 @@ export const Basic = {
         field: "liveFlows",
         headerName: "Live services",
         width: 450,
-        type: ColumnType.ARRAY,
+        type: ColumnFilterType.ARRAY,
         columnOptions: {
           valueOptions: liveFlowValueOptions,
         },
@@ -41,17 +41,17 @@ export const Basic = {
       {
         field: "planningDataEnabled",
         headerName: "Planning constraints",
-        type: ColumnType.BOOLEAN,
+        type: ColumnFilterType.BOOLEAN,
       },
       {
         field: "govpayEnabled",
         headerName: "GOV.UK Pay",
-        type: ColumnType.BOOLEAN,
+        type: ColumnFilterType.BOOLEAN,
       },
       {
         field: "logo",
         headerName: "Logo",
-        type: ColumnType.BOOLEAN,
+        type: ColumnFilterType.BOOLEAN,
       },
     ],
   },

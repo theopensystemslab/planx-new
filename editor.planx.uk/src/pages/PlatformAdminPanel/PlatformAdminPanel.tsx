@@ -5,7 +5,7 @@ import React from "react";
 import { AdminPanelData } from "types";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
+import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 
 import {
   False as NotConfigured,
@@ -48,7 +48,7 @@ export const PlatformAdminPanel = () => {
       field: "liveFlows",
       headerName: "Live services",
       width: 450,
-      type: ColumnType.ARRAY,
+      type: ColumnFilterType.ARRAY,
       columnOptions: {
         valueOptions: liveFlowValueOptions,
         sortable: false,
@@ -57,12 +57,12 @@ export const PlatformAdminPanel = () => {
     {
       field: "planningDataEnabled",
       headerName: "Planning constraints",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "article4sEnabled",
       headerName: "Article 4s (API)",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
       customComponent: (params) => {
         return <Article4Status teamSlug={params.row.slug} />;
       },
@@ -70,12 +70,12 @@ export const PlatformAdminPanel = () => {
     {
       field: "govpayEnabled",
       headerName: "GOV.UK Pay",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "govnotifyPersonalisation",
       headerName: "GOV.UK Notify",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
       customComponent: (params) => {
         return params.value?.helpEmail ? <Configured /> : <NotConfigured />;
       },
@@ -83,32 +83,32 @@ export const PlatformAdminPanel = () => {
     {
       field: "sendToEmailAddress",
       headerName: "Send to email",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "bopsSubmissionURL",
       headerName: "BOPS",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "powerAutomateEnabled",
       headerName: "Power automate",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "subdomain",
       headerName: "Subdomain",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "logo",
       headerName: "Logo",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
     {
       field: "favicon",
       headerName: "Favicon",
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
     },
   ];
 

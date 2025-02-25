@@ -1,23 +1,20 @@
-import CloudDownload from "@mui/icons-material/CloudDownload";
 import Payment from "@mui/icons-material/Payment";
 import Send from "@mui/icons-material/Send";
 import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { addDays, format, isBefore } from "date-fns";
-import { DAYS_UNTIL_EXPIRY } from "lib/pay";
+import { format } from "date-fns";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
+import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { containsItem } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { EventsLogProps, Submission } from "../types";
+import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { FormattedResponse } from "./FormattedResponse";
 
 const EventsLog: React.FC<EventsLogProps> = ({
@@ -67,7 +64,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "eventType",
       headerName: "Event",
       width: 250,
-      type: ColumnType.ARRAY, // bit confusing?
+      type: ColumnFilterType.ARRAY,
       customComponent: (params) => {
         return (
           <>
@@ -91,7 +88,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "status",
       headerName: "Status",
-      type: ColumnType.ARRAY, // bit confusing?
+      type: ColumnFilterType.ARRAY,
       customComponent: (params) => {
         return params.value === "Success" ? (
           <Chip label="Success" size="small" color="success" />
@@ -125,14 +122,14 @@ const EventsLog: React.FC<EventsLogProps> = ({
         valueFormatter: (params) =>
           format(new Date(params), "dd/MM/yy hh:mm:ss"),
       },
-      type: ColumnType.DATE,
+      type: ColumnFilterType.DATE,
     },
     { field: "sessionId", headerName: "Session ID", width: 350 },
     {
       field: "response",
       headerName: "Response",
       width: 350,
-      type: ColumnType.CUSTOM,
+      type: ColumnFilterType.CUSTOM,
       customComponent: (params) => <FormattedResponse {...params.row} />,
       columnOptions: {
         sortable: false,
@@ -163,40 +160,8 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "downloadSubmissionLink" as keyof Submission,
       headerName: "",
       width: 100,
-      type: ColumnType.CUSTOM,
-      customComponent: (params) => {
-        const submissionDataExpirationDate = addDays(
-          new Date(params.row.createdAt),
-          DAYS_UNTIL_EXPIRY,
-        );
-
-        const showDownloadButton =
-          teamSlug &&
-          canUserEditTeam(teamSlug) &&
-          submissionEmail &&
-          params.row.status === "Success" &&
-          params.row.eventType !== "Pay" &&
-          isBefore(new Date(), submissionDataExpirationDate);
-
-        const zipUrl =
-          showDownloadButton &&
-          `${import.meta.env.VITE_APP_API_URL}/download-application-files/${
-            params.row.sessionId
-          }?localAuthority=${teamSlug}&email=${submissionEmail}`;
-        return zipUrl ? (
-          <Tooltip title="Download application data">
-            <IconButton
-              aria-label="download application"
-              size="small"
-              onClick={() => window.open(zipUrl, "_blank")}
-            >
-              <CloudDownload />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <></>
-        );
-      },
+      type: ColumnFilterType.CUSTOM,
+      customComponent: DownloadSubmissionButton,
       columnOptions: {
         filterable: false,
         sortable: false,
