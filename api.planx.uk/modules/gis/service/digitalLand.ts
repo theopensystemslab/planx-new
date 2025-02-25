@@ -1,12 +1,13 @@
-import type {
-  Constraint,
-  GISResponse,
-  Metadata,
+import {
+  activePlanningConstraints,
+  type Constraint,
+  type DigitalLandConstraint,
+  type GISResponse,
+  type Metadata,
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import fetch from "isomorphic-fetch";
 import { addDesignatedVariable } from "./helpers.js";
-import { baseSchema } from "./local_authorities/metadata/base.js";
 import { $api } from "../../../client/index.js";
 
 import * as barkingAndDagenham from "./local_authorities/metadata/barkingAndDagenham.js";
@@ -71,6 +72,14 @@ async function go(
   geom: string,
   extras: Record<string, string>,
 ): Promise<GISResponse> {
+  // get active planning constraints sourced from "Planning Data" only
+  const activePlanningConstraintsCopy = activePlanningConstraints;
+  delete activePlanningConstraintsCopy["roads.classified"];
+  const baseSchema = activePlanningConstraintsCopy as Record<
+    string,
+    DigitalLandConstraint
+  >;
+
   // generate list of digital land datasets we should query and their associated passport values
   const activeDatasets: string[] = [];
   let activeDataValues: string[] = [];
@@ -87,12 +96,10 @@ async function go(
   } else {
     // else default to the internally maintained list of all "active" datasets
     Object.keys(baseSchema).forEach((key) => {
-      if (baseSchema[key]["active"]) {
-        activeDataValues.push(key);
-        baseSchema[key]["digital-land-datasets"]?.forEach((dataset: string) => {
-          activeDatasets.push(dataset);
-        });
-      }
+      activeDataValues = Object.keys(baseSchema);
+      baseSchema[key]["digital-land-datasets"]?.forEach((dataset: string) => {
+        activeDatasets.push(dataset);
+      });
     });
   }
 
