@@ -699,7 +699,6 @@ const getThemeOptions = ({
                 ...inputFocusStyle,
                 boxShadow: "none",
               },
-              alignItems: "center",
             },
             ".MuiDataGrid-columnSeparator": {
               visibility: "hidden",
