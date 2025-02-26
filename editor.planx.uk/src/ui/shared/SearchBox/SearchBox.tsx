@@ -87,7 +87,7 @@ export const SearchBox = <T extends object>({
             hidden: hideLabel,
           }}
         >
-          <strong aria-hidden>Search</strong>
+          <strong>Search</strong>
         </InputRowLabel>
         <InputRowItem>
           <Box sx={{ position: "relative" }}>
