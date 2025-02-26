@@ -97,7 +97,12 @@ const Team: React.FC = () => {
 
   useEffect(() => {
     const diffFlows =
-      searchedFlows?.filter((flow) => filteredFlows?.includes(flow)) || null;
+      searchedFlows?.filter(
+        (searchedFlow) =>
+          filteredFlows?.some(
+            (filteredFlow) => filteredFlow.id === searchedFlow.id,
+          ),
+      ) || null;
 
     // Sort the array at the start using the query params
     if (matchingFlows === null) {

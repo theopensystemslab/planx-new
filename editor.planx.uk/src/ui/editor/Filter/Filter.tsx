@@ -145,10 +145,10 @@ export const Filters = <T extends object>({
   }, []);
 
   useEffect(() => {
-    if (values.filters) {
+    if (values.filters && records) {
       submitForm();
     }
-  }, [submitForm, values.filters]);
+  }, [submitForm, values.filters, records]);
 
   useEffect(() => {
     if (clearFilters) {
