@@ -15,6 +15,7 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
+import { tablePaginationClasses } from "@mui/material/TablePagination";
 import { deepmerge } from "@mui/utils";
 import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
@@ -713,6 +714,9 @@ const getThemeOptions = ({
               "&.Mui-selected": {
                 backgroundColor: alpha(palette.primary.main, 0.05),
               },
+            },
+            [`& .${tablePaginationClasses.root}`]: {
+              maxHeight: "none",
             },
           },
         },

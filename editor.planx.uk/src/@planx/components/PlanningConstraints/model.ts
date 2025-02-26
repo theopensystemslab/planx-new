@@ -1,3 +1,5 @@
+import { activePlanningConstraints } from "@opensystemslab/planx-core/types";
+
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export interface PlanningConstraints extends BaseNodeData {
@@ -36,126 +38,18 @@ interface Dataset {
   entity?: number;
 }
 
-export const availableDatasets: Dataset[] = [
-  {
-    text: "Article 4 Directions",
-    val: "articleFour",
-    source: "Planning Data",
-    datasets: ["article-4-direction-area"],
-  },
-  {
-    text: "Central Activities Zones",
-    val: "articleFour.caz",
-    source: "Planning Data",
-    datasets: ["central-activities-zone"],
-  },
-  {
-    text: "Brownfields",
-    val: "brownfieldSite",
-    source: "Planning Data",
-    datasets: ["brownfield-land", "brownfield-site"],
-  },
-  {
-    text: "Areas of Outstanding Natural Beauty (AONB)",
-    val: "designated.AONB",
-    source: "Planning Data",
-    datasets: ["area-of-outstanding-natural-beauty"],
-  },
-  {
-    text: "Conservation Areas",
-    val: "designated.conservationArea",
-    source: "Planning Data",
-    datasets: ["conservation-area"],
-  },
-  {
-    text: "Green Belts",
-    val: "greenBelt",
-    source: "Planning Data",
-    datasets: ["green-belt"],
-  },
-  {
-    text: "National Parks",
-    val: "designated.nationalPark",
-    source: "Planning Data",
-    datasets: ["national-park"],
-  },
-  {
-    text: "Broads",
-    val: "designated.nationalPark.broads",
-    source: "Planning Data",
-    datasets: ["national-park"],
-    entity: 520007,
-  },
-  {
-    text: "UNESCO World Heritage Sites (WHS)",
-    val: "designated.WHS",
-    source: "Planning Data",
-    datasets: ["world-heritage-site", "world-heritage-site-buffer-zone"],
-  },
-  {
-    text: "Flood Risk Zones",
-    val: "flood",
-    source: "Planning Data",
-    datasets: ["flood-risk-zone"],
-  },
-  {
-    text: "Listed Buildings",
-    val: "listed",
-    source: "Planning Data",
-    datasets: ["listed-building", "listed-building-outline"],
-  },
-  {
-    text: "Scheduled Monuments",
-    val: "monument",
-    source: "Planning Data",
-    datasets: ["scheduled-monument"],
-  },
-  {
-    text: "Ancient Semi-Natural Woodlands (ASNW)",
-    val: "nature.ASNW",
-    source: "Planning Data",
-    datasets: ["ancient-woodland"],
-  },
-  {
-    text: "Ramsar Sites",
-    val: "nature.ramsarSite",
-    source: "Planning Data",
-    datasets: ["ramsar"],
-  },
-  {
-    text: "Special Areas of Conservation (SAC)",
-    val: "nature.SAC",
-    source: "Planning Data",
-    datasets: ["special-area-of-conservation"],
-  },
-  {
-    text: "Special Protection Areas (SPA)",
-    val: "nature.SPA",
-    source: "Planning Data",
-    datasets: ["special-protection-area"],
-  },
-  {
-    text: "Sites of Special Scientific Interest (SSSI)",
-    val: "nature.SSSI",
-    source: "Planning Data",
-    datasets: ["site-of-special-scientific-interest"],
-  },
-  {
-    text: "Historic Parks or Gardens",
-    val: "registeredPark",
-    source: "Planning Data",
-    datasets: ["park-and-garden"],
-  },
-  {
-    text: "Tree Preservation Orders (TPO) or Zones",
-    val: "tpo",
-    source: "Planning Data",
-    datasets: ["tree", "tree-preservation-order", "tree-preservation-zone"],
-  },
-  {
-    text: "Classified Roads",
-    val: "road.classified",
-    source: "Ordnance Survey",
-    datasets: ["OS Mastermap Highways"],
-  },
-];
+export const availableDatasets: Dataset[] = Object.entries(
+  activePlanningConstraints,
+).map(([dataValue, constraint]) => ({
+  text: constraint.name,
+  val: dataValue,
+  source: constraint.source,
+  datasets:
+    constraint.source === "Planning Data"
+      ? constraint["digital-land-datasets"]
+      : Array.from(constraint["os-dataset"]),
+  entity:
+    constraint.source === "Planning Data"
+      ? constraint["digital-land-entities"]?.[0]
+      : undefined,
+}));
