@@ -1,82 +1,101 @@
-import Container from "@mui/material/Container";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { format } from "date-fns";
 import React from "react";
+import { Feedback } from "routes/feedback";
+import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
+import { DataTable } from "ui/shared/DataTable/DataTable";
+import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { CollapsibleRow } from "./components/CollapsibleRow";
-import { Feed } from "./styled";
+import { OpenFeedbackModalButton } from "./components/OpenFeedbackModalButton";
 import { FeedbackLogProps } from "./types";
+import { EmojiRating, feedbackTypeIcon, generateCommentSummary } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
-  const displayFeedbackItems = [
-    "userComment",
-    "address",
-    "projectType",
-    "where",
-    "browserPlatform",
+  const columns: ColumnConfig<Feedback>[] = [
+    {
+      field: "type",
+      headerName: "Type",
+      width: 200,
+      type: ColumnFilterType.CUSTOM,
+      columnOptions: {
+        filterable: false,
+        sortable: false,
+        valueFormatter: (value) => {
+          const { title } = feedbackTypeIcon(value);
+          return title;
+        },
+      },
+      customComponent: (params) => {
+        const { icon, title } = feedbackTypeIcon(params.value);
+        return (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {icon}
+            {title}
+          </Box>
+        );
+      },
+    },
+    {
+      field: "createdAt",
+      headerName: "Date",
+      type: ColumnFilterType.DATE,
+      columnOptions: {
+        valueFormatter: (params) =>
+          format(new Date(params), "dd/MM/yy hh:mm:ss"),
+      },
+    },
+    { field: "flowName", headerName: "Service", width: 200 },
+    {
+      field: "feedbackScore",
+      headerName: "Rating",
+      columnOptions: {
+        filterable: false,
+        valueFormatter: (params) => EmojiRating[params],
+      },
+    },
+    {
+      field: "userComment",
+      headerName: "Comment",
+      width: 340,
+      columnOptions: {
+        valueFormatter: (params) => generateCommentSummary(params),
+      },
+    },
+    {
+      field: "moreInformation" as keyof Feedback,
+      headerName: "More information",
+      width: 250,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: OpenFeedbackModalButton,
+      columnOptions: {
+        filterable: false,
+        sortable: false,
+      },
+    },
   ];
 
   return (
-    <Container maxWidth="contentWrap">
+    <FixedHeightDashboardContainer bgColor="background.paper">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Feedback log
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" maxWidth="contentWrap">
           Feedback from users about this team's services.
         </Typography>
       </SettingsSection>
-      <SettingsSection>
-        {feedback.length === 0 ? (
-          <ErrorSummary
-            format="info"
-            heading="No feedback found for this team"
-            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-          />
-        ) : (
-          <Feed>
-            <Table stickyHeader sx={{ tableLayout: "fixed" }}>
-              <TableHead>
-                <TableRow
-                  sx={{ "& > *": { borderBottomColor: "black !important" } }}
-                >
-                  <TableCell sx={{ width: 160 }}>
-                    <strong>Type</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <strong>Date</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 100 }}>
-                    <strong>Service</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 140 }}>
-                    <strong>Rating</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 340 }}>
-                    <strong>Comment</strong>
-                  </TableCell>
-                  <TableCell sx={{ width: 60 }} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {feedback.map((item) => (
-                  <CollapsibleRow
-                    key={item.id}
-                    {...item}
-                    displayFeedbackItems={displayFeedbackItems}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          </Feed>
-        )}
-      </SettingsSection>
-    </Container>
+      {feedback.length === 0 ? (
+        <ErrorSummary
+          format="info"
+          heading="No feedback found for this team"
+          message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
+        />
+      ) : (
+        <DataTable rows={feedback} columns={columns} />
+      )}
+    </FixedHeightDashboardContainer>
   );
 };
