@@ -145,6 +145,12 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
+      title: "Service feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/${flowSlug}/feedback`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
+    {
       title: "Submissions log",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/submissions-log?flow=${flowId}`,
