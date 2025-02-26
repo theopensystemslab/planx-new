@@ -5,9 +5,11 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
+import { client } from "lib/graphql";
 import React from "react";
 
-import { FeedbackType, FeedbackTypeIcon } from "../types";
+import { GET_FEEDBACK_BY_ID_QUERY } from "./queries/getFeedbackById";
+import { FeedbackType, FeedbackTypeIcon } from "./types";
 
 export const generateCommentSummary = (userComment: string | null) => {
   if (!userComment) return "No comment";
@@ -50,4 +52,35 @@ export const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
     default:
       return { icon: <RuleIcon />, title: "Inaccuracy" };
   }
+};
+
+export const getDetailedFeedback = async (feedbackId: number) => {
+  const {
+    data: {
+      feedback: [detailedFeedback],
+    },
+  } = await client.query({
+    query: GET_FEEDBACK_BY_ID_QUERY,
+    variables: { feedbackId },
+  });
+
+  const combinedHelpText = [
+    detailedFeedback.helpText,
+    detailedFeedback.helpDefinition,
+    detailedFeedback.helpSources,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  const truncatedHelpText =
+    combinedHelpText.length > 65
+      ? `${combinedHelpText.slice(0, 65)}...`
+      : combinedHelpText;
+
+  return {
+    combinedHelp: truncatedHelpText,
+    ...detailedFeedback,
+    where: `${detailedFeedback.nodeType} — ${detailedFeedback.nodeTitle}`,
+    browserPlatform: `${detailedFeedback.browser} / ${detailedFeedback.platform}`,
+  };
 };

@@ -9,38 +9,17 @@ import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
+import { OpenFeedbackModalButton } from "./components/OpenFeedbackModalButton";
 import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeIcon, generateCommentSummary } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
-  const displayFeedbackItems = [
-    "userComment",
-    "address",
-    "projectType",
-    "where",
-    "browserPlatform",
-  ];
-
-  // {
-  //   "__typename": "feedback_summary",
-  //   "address": null,
-  //   "createdAt": "2025-02-25T15:44:18.168052+00:00",
-  //   "feedbackScore": null,
-  //   "flowName": "Apply for planning permission",
-  //   "id": 1,
-  //   "nodeTitle": null,
-  //   "nodeType": null,
-  //   "type": "issue",
-  //   "userComment": "Hated it",
-  //   "userContext": "Reading"
-  // }
-
   const columns: ColumnConfig<Feedback>[] = [
     {
       field: "type",
       headerName: "Type",
       width: 200,
-      type: ColumnFilterType.BOOLEAN,
+      type: ColumnFilterType.CUSTOM,
       columnOptions: {
         filterable: false,
         sortable: false,
@@ -83,6 +62,17 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 340,
       columnOptions: {
         valueFormatter: (params) => generateCommentSummary(params),
+      },
+    },
+    {
+      field: "moreInformation" as keyof Feedback,
+      headerName: "More information",
+      width: 250,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: OpenFeedbackModalButton,
+      columnOptions: {
+        filterable: false,
+        sortable: false,
       },
     },
   ];
