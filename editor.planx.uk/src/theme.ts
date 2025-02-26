@@ -696,7 +696,8 @@ const getThemeOptions = ({
               display: "flex",
               alignItems: "flex-start",
               "&:focus": {
-                outline: "none",
+                ...inputFocusStyle,
+                boxShadow: "none",
               },
               alignItems: "center",
             },
@@ -709,6 +710,9 @@ const getThemeOptions = ({
               paddingBottom: "5px",
               [`& .${buttonClasses.root}`]: {
                 background: palette.background.default,
+                "&:focus-visible": {
+                  ...focusStyle
+                },
                 // Ensure SVG icons are equal size
                 "& svg": {
                   width: "18px",
@@ -718,6 +722,12 @@ const getThemeOptions = ({
             },
             [`& .${gridClasses.columnHeader}.${gridClasses.withBorderColor}`]: {
               borderColor: palette.border.main,
+            },
+            [`& .${gridClasses.columnHeader}`]: {
+              "&:focus": {
+                ...inputFocusStyle,
+                boxShadow: "none",
+              },
             },
             [`& .${gridClasses.columnHeaderTitle}`]: {
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
