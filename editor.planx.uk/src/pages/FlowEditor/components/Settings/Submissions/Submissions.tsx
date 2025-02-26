@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
+import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 
 import { useStore } from "../../../lib/store";
 import EventsLog from "./components/EventsLog";
@@ -45,28 +46,28 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
   );
 
   return (
-    <Container>
+    <FixedHeightDashboardContainer bgColor="background.paper">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Submissions
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" maxWidth="contentWrap">
           {`Feed of payment and submission events for ${
             flowId ? "this service" : "services in this team"
-          }.
+          }.`}
+        </Typography>
+        <Typography variant="body1" maxWidth="contentWrap">
           Successful submission events from within the last 28 days are
-          available to be downloaded by team editors.`}
+          available to be downloaded by team editors.
         </Typography>
       </SettingsSection>
-      <SettingsSection>
-        <EventsLog
-          submissions={filteredSubmissions}
-          loading={loading}
-          error={error}
-          filterByFlow={Boolean(flowId)}
-        />
-      </SettingsSection>
-    </Container>
+      <EventsLog
+        submissions={filteredSubmissions}
+        loading={loading}
+        error={error}
+        filterByFlow={Boolean(flowId)}
+      />
+    </FixedHeightDashboardContainer>
   );
 };
 
