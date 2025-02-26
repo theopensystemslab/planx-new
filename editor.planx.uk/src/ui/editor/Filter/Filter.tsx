@@ -145,7 +145,7 @@ export const Filters = <T extends object>({
   }, []);
 
   useEffect(() => {
-    if (values.filters && records) {
+    if (values.filters || records) {
       submitForm();
     }
   }, [submitForm, values.filters, records]);
