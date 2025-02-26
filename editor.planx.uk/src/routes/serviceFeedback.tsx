@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { compose, mount, NotFoundError, route, withData } from "navi";
-import { FlowFeedback } from "pages/FlowEditor/components/Settings/FlowFeedback";
+import { FeedbackLog } from "pages/FlowEditor/components/Flow/FeedbackLog/FeedbackLog";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -53,8 +53,8 @@ const serviceFeedbackRoutes = compose(
       });
 
       return {
-        title: makeTitle("Service Feedback"),
-        view: <FlowFeedback feedback={feedback} />,
+        title: makeTitle("Service feedback"),
+        view: <FeedbackLog feedback={feedback} />,
       };
     }),
   }),
