@@ -150,6 +150,12 @@ function EditorNavMenu() {
       route: `/${teamSlug}/submissions-log?flow=${flowId}`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
+    {
+      title: "Service Feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/${flowSlug}/feedback`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
   ];
 
   const flowAnalyticsRoute: Route[] = flowAnalyticsLink
