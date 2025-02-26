@@ -78,26 +78,24 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   ];
 
   return (
-    <FixedHeightDashboardContainer>
+    <FixedHeightDashboardContainer bgColor="background.paper">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Feedback log
         </Typography>
-        <Typography variant="body1">
+        <Typography variant="body1" maxWidth="contentWrap">
           Feedback from users about this team's services.
         </Typography>
       </SettingsSection>
-      <SettingsSection>
-        {feedback.length === 0 ? (
-          <ErrorSummary
-            format="info"
-            heading="No feedback found for this team"
-            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-          />
-        ) : (
-          <DataTable rows={feedback} columns={columns} />
-        )}
-      </SettingsSection>
+      {feedback.length === 0 ? (
+        <ErrorSummary
+          format="info"
+          heading="No feedback found for this team"
+          message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
+        />
+      ) : (
+        <DataTable rows={feedback} columns={columns} />
+      )}
     </FixedHeightDashboardContainer>
   );
 };
