@@ -1,5 +1,6 @@
 import "themeOverrides.d.ts";
 
+import { buttonClasses } from "@mui/material/Button";
 import { radioClasses } from "@mui/material/Radio";
 import {
   alpha,
@@ -688,20 +689,41 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             margin: 1,
-            border: "none",
-            ".MuiDataGrid-row--borderBottom .MuiDataGrid-columnHeader": {
-              borderColor: "black",
-            },
+            backgroundColor: palette.background.default,
+            borderColor: palette.border.main,
             [`& .${gridClasses.cell}`]: {
               padding: "10px",
               display: "flex",
+              alignItems: "flex-start",
               "&:focus": {
-                outline: "none",
+                ...inputFocusStyle,
+                boxShadow: "none",
               },
-              alignItems: "center",
             },
-            ".MuiDataGrid-columnSeparator": {
-              visibility: "hidden",
+            [`& .${gridClasses.toolbarContainer}`]: {
+              borderBottom: `1px solid ${palette.border.main}`,
+              background: palette.background.midGray,
+              paddingBottom: "5px",
+              [`& .${buttonClasses.root}`]: {
+                background: palette.background.default,
+                "&:focus-visible": {
+                  ...focusStyle
+                },
+                // Ensure SVG icons are equal size
+                "& svg": {
+                  width: "18px",
+                  height: "18px",
+                },
+              },
+            },
+            [`& .${gridClasses.columnHeader}.${gridClasses.withBorderColor}`]: {
+              borderColor: palette.border.main,
+            },
+            [`& .${gridClasses.columnHeader}`]: {
+              "&:focus": {
+                ...inputFocusStyle,
+                boxShadow: "none",
+              },
             },
             [`& .${gridClasses.columnHeaderTitle}`]: {
               fontWeight: FONT_WEIGHT_SEMI_BOLD,
@@ -710,10 +732,15 @@ const getThemeOptions = ({
               backgroundColor: "transparent",
             },
             [`& .${gridClasses.row}.odd`]: {
-              backgroundColor: palette.background.paper,
-              "&.Mui-selected": {
-                backgroundColor: alpha(palette.primary.main, 0.05),
+              backgroundColor: lighten(palette.background.paper, 0.2),
+            },
+            [`& .${gridClasses.row}`]: {
+              "&.Mui-selected, &.Mui-selected:hover": {
+                backgroundColor: palette.info.light,
               },
+            },
+            [`& .${gridClasses.footerContainer}`]: {
+              borderColor: palette.border.main,
             },
             [`& .${tablePaginationClasses.root}`]: {
               maxHeight: "none",

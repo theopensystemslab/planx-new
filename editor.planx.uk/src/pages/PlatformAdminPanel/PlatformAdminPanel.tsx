@@ -113,7 +113,7 @@ export const PlatformAdminPanel = () => {
   ];
 
   return (
-    <FixedHeightDashboardContainer>
+    <FixedHeightDashboardContainer bgColor="background.paper">
       <SettingsSection>
         <Typography variant="h2" component="h1" gutterBottom>
           Platform admin panel
