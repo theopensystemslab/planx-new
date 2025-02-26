@@ -58,14 +58,14 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
               ...values,
               ...(groupedOptions
                 ? {
-                  categories: groupedOptions.map((group) => ({
-                    title: group.title,
-                    count: group.children.length,
-                  })),
-                }
+                    categories: groupedOptions.map((group) => ({
+                      title: group.title,
+                      count: group.children.length,
+                    })),
+                  }
                 : {
-                  categories: undefined,
-                }),
+                    categories: undefined,
+                  }),
             },
           },
           processedOptions,
@@ -88,8 +88,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           'Cannot configure exclusive "or" option alongside "all required" setting';
       }
       if (values.fn && !options?.some((option) => option.data.val)) {
-        errors.fn =
-          "At least one option must also set a data field";
+        errors.fn = "At least one option must also set a data field";
       }
       if (exclusiveOptions && exclusiveOptions.length > 1) {
         errors.options =
@@ -123,12 +122,14 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 onChange={formik.handleChange}
                 inputRef={focusRef}
                 required
+                disabled={props.disabled}
               />
               <ImgInput
                 img={formik.values.img}
                 onChange={(newUrl) => {
                   formik.setFieldValue("img", newUrl);
                 }}
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -137,12 +138,14 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 value={formik.values.description}
                 placeholder="Description"
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>
               <DataFieldAutocomplete
                 value={formik.values.fn}
                 onChange={(value) => formik.setFieldValue("fn", value)}
+                disabled={props.disabled}
               />
             </ErrorWrapper>
             <InputRow>
@@ -158,6 +161,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                   })
                 }
                 label="Expandable"
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -170,9 +174,9 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                   )
                 }
                 label="All required"
+                disabled={props.disabled}
               />
             </InputRow>
-
             <InputRow>
               <Switch
                 checked={formik.values.neverAutoAnswer}
@@ -183,15 +187,16 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                   )
                 }
                 label="Always put to user (forgo automation)"
+                disabled={props.disabled}
               />
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
         <ErrorWrapper error={formik.errors.options}>
-          <Options formik={formik} />
+          <Options formik={formik} disabled={props.disabled} />
         </ErrorWrapper>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };
