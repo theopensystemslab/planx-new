@@ -1,19 +1,21 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
 import navigation from "lib/navigation";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
 import { AddButton } from "ui/editor/AddButton";
 import Permission from "ui/editor/Permission";
+import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 import { slugify } from "utils";
 
 import { useStore } from "./FlowEditor/lib/store";
-
 
 interface TeamTheme {
   slug: string;
@@ -56,14 +58,23 @@ const Teams: React.FC<Props> = ({ teams }) => {
     state.createTeam,
   ]);
 
-  const editableTeams: Team[] = [];
-  const viewOnlyTeams: Team[] = [];
+  const [searchedTeams, setSearchedTeams] = useState<Team[] | null>(null);
+  const [clearSearch, setClearSearch] = useState<boolean>(false);
 
-  teams.forEach((team) =>
-    canUserEditTeam(team.slug)
-      ? editableTeams.push(team)
-      : viewOnlyTeams.push(team),
+  const viewOnlyTeams = useMemo(
+    () => teams.filter((team) => !canUserEditTeam(team.slug)),
+    [canUserEditTeam, teams],
   );
+
+  const editableTeams: Team[] = teams.filter((team) =>
+    canUserEditTeam(team.slug),
+  );
+
+  useEffect(() => {
+    if (searchedTeams === viewOnlyTeams && clearSearch) {
+      setClearSearch(false);
+    }
+  }, [clearSearch, searchedTeams, viewOnlyTeams]);
 
   const renderTeams = (teamsToRender: Array<Team>) =>
     teamsToRender.map((team) => {
@@ -78,6 +89,19 @@ const Teams: React.FC<Props> = ({ teams }) => {
         </StyledLink>
       );
     });
+
+  const noResultsCard = (
+    <Card>
+      <CardContent>
+        <Typography variant="h3">No results</Typography>
+        <Typography pt={1}>Check your search term and try again</Typography>
+        <Button variant="link" onClick={() => setClearSearch(true)}>
+          Clear search
+        </Button>
+      </CardContent>
+    </Card>
+  );
+
   return (
     <Container maxWidth="formWrap">
       <Box
@@ -132,10 +156,36 @@ const Teams: React.FC<Props> = ({ teams }) => {
 
       {viewOnlyTeams.length > 0 && (
         <>
-          <Typography variant="h3" component="h2" mt={4} mb={2}>
-            Other teams (view only)
-          </Typography>
-          {renderTeams(viewOnlyTeams)}
+          <Box
+            pb={1}
+            mt={4}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", contentWrap: "row" },
+              justifyContent: "space-between",
+              alignItems: { xs: "center", contentWrap: "center" },
+              gap: 2,
+            }}
+          >
+            <Typography
+              variant="h3"
+              component="h2"
+              mt={2}
+              mb={2}
+              sx={{ textWrap: "nowrap" }}
+            >
+              Other teams (view only)
+            </Typography>
+            <SearchBox
+              records={viewOnlyTeams}
+              setRecords={setSearchedTeams}
+              searchKey={["slug", "name"]}
+              clearSearch={clearSearch}
+              hideLabel={true}
+            />
+          </Box>
+
+          {searchedTeams?.length ? renderTeams(searchedTeams) : noResultsCard}
         </>
       )}
     </Container>

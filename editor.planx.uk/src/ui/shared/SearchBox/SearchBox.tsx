@@ -1,4 +1,5 @@
 import ClearIcon from "@mui/icons-material/Clear";
+import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -19,6 +20,7 @@ interface SearchBoxProps<T> {
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   searchKey: FuseOptionKey<T>[];
   clearSearch?: boolean;
+  hideLabel?: boolean;
 }
 
 export const SearchBox = <T extends object>({
@@ -26,6 +28,7 @@ export const SearchBox = <T extends object>({
   setRecords,
   searchKey,
   clearSearch = false,
+  hideLabel = false,
 }: SearchBoxProps<T>) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedTerm, setSearchedTerm] = useState<string>();
@@ -77,7 +80,13 @@ export const SearchBox = <T extends object>({
   return (
     <Box maxWidth={360}>
       <InputRow>
-        <InputRowLabel inputProps={{ htmlFor: "search" }}>
+        <InputRowLabel
+          inputProps={{
+            id: "search-label",
+            htmlFor: "search",
+            hidden: hideLabel,
+          }}
+        >
           <strong>Search</strong>
         </InputRowLabel>
         <InputRowItem>
@@ -88,11 +97,13 @@ export const SearchBox = <T extends object>({
               }}
               name="search"
               id="search"
+              aria-describedby="search-label"
               value={values.pattern}
               onChange={(e) => {
                 setFieldValue("pattern", e.target.value);
                 submitForm();
               }}
+              startAdornment={<Search sx={{ ml: -0.5, mr: 0.5 }} />}
             />
             {searchedTerm && !isSearching && (
               <IconButton
