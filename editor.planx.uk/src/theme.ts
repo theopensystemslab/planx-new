@@ -692,13 +692,22 @@ const getThemeOptions = ({
             backgroundColor: palette.background.default,
             borderColor: palette.border.main,
             [`& .${gridClasses.cell}`]: {
-              padding: "10px",
               display: "flex",
               alignItems: "flex-start",
               "&:focus": {
                 ...inputFocusStyle,
                 boxShadow: "none",
               },
+            },
+            // Set cell padding based on density setting
+            [`&.${gridClasses.root}--densityCompact .${gridClasses.cell}`]: {
+              padding: "5px 10px",
+            },
+            [`&.${gridClasses.root}--densityStandard .${gridClasses.cell}`]: {
+              padding: "10px 10px",
+            },
+            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]: {
+              padding: "20px 10px",
             },
             [`& .${gridClasses.toolbarContainer}`]: {
               borderBottom: `1px solid ${palette.border.main}`,
