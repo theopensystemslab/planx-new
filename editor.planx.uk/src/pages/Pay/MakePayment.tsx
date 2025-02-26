@@ -172,7 +172,9 @@ export default function MakePayment({
       </Container>
     );
 
-  const PaymentDetails: React.FC<{ hasFeeBreakdown: boolean}> = ({ hasFeeBreakdown }) => {
+  const PaymentDetails: React.FC<{ hasFeeBreakdown: boolean }> = ({
+    hasFeeBreakdown,
+  }) => {
     const projectType = formatRawProjectTypes(rawProjectTypes);
     const data = [
       { term: "Application type", details: flowName },
@@ -189,9 +191,9 @@ export default function MakePayment({
     if (!hasFeeBreakdown) {
       data.splice(1, 0, {
         term: "Fee",
-        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount))
+        details: formattedPriceWithCurrencySymbol(toDecimal(paymentAmount)),
       });
-    };
+    }
 
     // Handle payments completed before page load
     if (paidAt) {
@@ -225,7 +227,7 @@ export default function MakePayment({
   ) : (
     <>
       <Header />
-        <PaymentDetails hasFeeBreakdown={Boolean(feeBreakdown)}/>
+      <PaymentDetails hasFeeBreakdown={Boolean(feeBreakdown)} />
       {(currentState === States.Ready ||
         currentState === States.Reset ||
         currentState === States.ReadyToRetry) &&
@@ -257,8 +259,9 @@ async function fetchPayment({
   govPayPaymentId?: string;
 }): Promise<GovUKPayment | null> {
   if (!govPayPaymentId) return Promise.resolve(null);
-  const paymentURL = `${import.meta.env.VITE_APP_API_URL
-    }/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
+  const paymentURL = `${
+    import.meta.env.VITE_APP_API_URL
+  }/payment-request/${paymentRequestId}/payment/${govPayPaymentId}`;
   const response = await axios.get<GovUKPayment>(paymentURL);
   return response.data;
 }
@@ -267,10 +270,11 @@ async function fetchPayment({
 async function startNewPayment(
   paymentRequestId: string,
 ): Promise<GovUKPayment> {
-  const paymentURL = `${import.meta.env.VITE_APP_API_URL
-    }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
-      window.location.href,
-    )}`;
+  const paymentURL = `${
+    import.meta.env.VITE_APP_API_URL
+  }/payment-request/${paymentRequestId}/pay?returnURL=${encodeURIComponent(
+    window.location.href,
+  )}`;
   const response = await axios.post<GovUKPayment>(paymentURL);
   return response.data;
 }

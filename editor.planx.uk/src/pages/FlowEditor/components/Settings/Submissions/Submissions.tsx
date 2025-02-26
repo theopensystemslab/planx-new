@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { useStore } from "../../../lib/store";
-import EventsLog from "./EventsLog";
+import EventsLog from "./components/EventsLog";
 import { Submission, SubmissionsProps } from "./types";
 
 const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {

@@ -24,13 +24,15 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, flowId] = useStore((state) => [
-    state.teamSlug,
-    state.flowSlug,
-    state.flowAnalyticsLink,
-    state.getUserRoleForCurrentTeam(),
-    state.id,
-  ]);
+  const [teamSlug, flowSlug, flowAnalyticsLink, role, flowId] = useStore(
+    (state) => [
+      state.teamSlug,
+      state.flowSlug,
+      state.flowAnalyticsLink,
+      state.getUserRoleForCurrentTeam(),
+      state.id,
+    ],
+  );
 
   const isActive = (route: string) => url.href.endsWith(route);
 

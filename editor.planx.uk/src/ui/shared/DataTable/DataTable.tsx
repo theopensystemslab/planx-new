@@ -10,14 +10,14 @@ import React, { useState } from "react";
 
 import {
   ColumnConfig,
-  ColumnType,
+  ColumnFilterType,
   DataGridProps,
   RenderCellParams,
 } from "./types";
 import {
   columnCellComponentRegistry,
   createFilterOperator,
-  getColumnType,
+  getColumnFilterType,
   getValueOptions,
 } from "./utils";
 
@@ -48,7 +48,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
       width: column.width || 150,
       hideable: index === 0 ? false : true, // at least one column should remain
       field: field as string,
-      type: getColumnType(column.type),
+      type: getColumnFilterType(column.type),
       headerName,
       renderCell: column.type
         ? (params: RenderCellParams) =>
@@ -56,7 +56,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
         : undefined,
     };
 
-    return column.type === ColumnType.ARRAY
+    return column.type === ColumnFilterType.ARRAY
       ? {
           ...baseColDef,
           valueOptions: columnValueOptions,
@@ -82,7 +82,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
 
     // Only set filterValues for ARRAY columns
     const column = columns.find((col) => col.field === item.field);
-    if (column?.type === ColumnType.ARRAY) {
+    if (column?.type === ColumnFilterType.ARRAY) {
       setFilterValues(
         Array.isArray(item.value) ? item.value : [String(item.value)],
       );

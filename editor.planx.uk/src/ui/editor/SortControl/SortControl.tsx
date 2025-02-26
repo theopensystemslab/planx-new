@@ -89,7 +89,11 @@ export const SortControl = <T extends object>({
 
   useEffect(() => {
     const { fieldName } = selectedSort;
-    const sortedFlowsNullsLast = orderBy(records,[(flow) => get(flow, fieldName) || ""], sortDirection)
+    const sortedFlowsNullsLast = orderBy(
+      records,
+      [(flow) => get(flow, fieldName) || ""],
+      sortDirection,
+    );
     setRecords(sortedFlowsNullsLast);
   }, [selectedSort, sortDirection, records, setRecords]);
 

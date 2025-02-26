@@ -1,5 +1,5 @@
 import { compose, mount, route, withData } from "navi";
-import Submissions from "pages/FlowEditor/components/Settings/Submissions";
+import Submissions from "pages/FlowEditor/components/Settings/Submissions/Submissions";
 import React from "react";
 
 import { makeTitle } from "./utils";

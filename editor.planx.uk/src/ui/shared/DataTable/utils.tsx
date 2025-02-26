@@ -5,11 +5,12 @@ import {
   GridValueOptionsParams,
   ValueOptions,
 } from "@mui/x-data-grid";
+import capitalize from "lodash/capitalize";
 import React from "react";
 
 import { False, True } from "./components/cellIcons";
 import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
-import { ColumnRenderType, ColumnType } from "./types";
+import { ColumnFilterType, ColumnRenderType } from "./types";
 
 const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   return (
@@ -19,10 +20,14 @@ const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   );
 };
 
-const containsItem = (item: string, value: Pick<GridFilterItem, "value">) => {
+export const containsItem = (
+  item: string,
+  value: Pick<GridFilterItem, "value">,
+): boolean => {
   if (typeof value === "string") {
     return item.toLowerCase().includes((value as string).toLowerCase());
   }
+  return false;
 };
 
 export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
@@ -33,16 +38,23 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         return null;
       }
 
-      return (arrayOfValues: string[]): boolean => {
-        if (!arrayOfValues?.length) {
+      // return a function that is applied to all the rows in turn
+      return (currentRowValue: string[]): boolean => {
+        if (!currentRowValue?.length) {
           return false;
         }
 
-        return arrayOfValues.some((arrayItem) =>
-          filterItem.value.some((filterValue: Pick<GridFilterItem, "value">) =>
-            containsItem(arrayItem, filterValue),
-          ),
-        );
+        return Array.isArray(currentRowValue)
+          ? currentRowValue.some((arrayItem) =>
+              filterItem.value.some(
+                (filterValue: Pick<GridFilterItem, "value">) =>
+                  containsItem(arrayItem, filterValue),
+              ),
+            )
+          : filterItem.value.some(
+              (filterValue: Pick<GridFilterItem, "value">) =>
+                containsItem(currentRowValue, filterValue),
+            );
       };
     },
     InputComponent: MultipleOptionSelectFilter,
@@ -64,24 +76,37 @@ export const getValueOptions = (
 };
 
 export const columnCellComponentRegistry = {
-  [ColumnType.BOOLEAN]: (value: boolean) => (value ? <True /> : <False />),
-  [ColumnType.ARRAY]: (value: string[], filterValues?: string[]) => (
-    <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
-      {value?.map((item: string, index: number) => (
-        <Typography py={0.4} variant="body2" key={index} component="li">
-          {filterValues?.includes(item) ? <strong>{item}</strong> : item}
-        </Typography>
-      ))}
-    </Box>
-  ),
+  [ColumnFilterType.BOOLEAN]: (value: boolean) =>
+    value ? <True /> : <False />,
+  [ColumnFilterType.DATE]: () => undefined, // use default MUI data grid behaviour
+  [ColumnFilterType.CUSTOM]: () => undefined,
+  [ColumnFilterType.ARRAY]: (value: string[], filterValues?: string[]) => {
+    return (
+      <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
+        {value?.map((item: string, index: number) => (
+          <Typography py={0.4} variant="body2" key={index} component="li">
+            {filterValues?.includes(capitalize(item)) ? (
+              <strong>{item}</strong>
+            ) : (
+              item
+            )}
+          </Typography>
+        ))}
+      </Box>
+    );
+  },
 };
 
-export const getColumnType = (columnType?: ColumnRenderType) => {
+export const getColumnFilterType = (columnType?: ColumnRenderType) => {
   switch (columnType) {
-    case ColumnType.BOOLEAN:
+    case ColumnFilterType.BOOLEAN:
       return "boolean";
-    case ColumnType.ARRAY:
+    case ColumnFilterType.DATE:
+      return "date";
+    case ColumnFilterType.ARRAY:
       return "singleSelect";
+    case ColumnFilterType.CUSTOM:
+      return undefined;
     default:
       return undefined;
   }

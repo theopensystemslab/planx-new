@@ -5,9 +5,11 @@ import {
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
 
-export const ColumnType = {
+export const ColumnFilterType = {
   BOOLEAN: "boolean",
-  ARRAY: "array",
+  ARRAY: "array", // when the column can be filtered from a range of known values
+  DATE: "date",
+  CUSTOM: "custom",
 } as const;
 
 type ObjectValues<T> = T[keyof T];
@@ -19,7 +21,7 @@ export type RenderCellParams = GridRenderCellParams<
   GridTreeNodeWithRender
 >;
 
-export type ColumnRenderType = ObjectValues<typeof ColumnType>;
+export type ColumnRenderType = ObjectValues<typeof ColumnFilterType>;
 
 export type ColumnConfig<T> = {
   field: keyof T;
