@@ -700,9 +700,6 @@ const getThemeOptions = ({
                 boxShadow: "none",
               },
             },
-            ".MuiDataGrid-columnSeparator": {
-              visibility: "hidden",
-            },
             [`& .${gridClasses.toolbarContainer}`]: {
               borderBottom: `1px solid ${palette.border.main}`,
               background: palette.background.midGray,
@@ -736,9 +733,14 @@ const getThemeOptions = ({
             },
             [`& .${gridClasses.row}.odd`]: {
               backgroundColor: lighten(palette.background.paper, 0.2),
-              "&.Mui-selected": {
-                backgroundColor: alpha(palette.primary.main, 0.05),
+            },
+            [`& .${gridClasses.row}`]: {
+              "&.Mui-selected, &.Mui-selected:hover": {
+                backgroundColor: palette.info.light,
               },
+            },
+            [`& .${gridClasses.footerContainer}`]: {
+              borderColor: palette.border.main,
             },
             [`& .${tablePaginationClasses.root}`]: {
               maxHeight: "none",
