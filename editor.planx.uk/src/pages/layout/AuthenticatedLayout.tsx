@@ -24,14 +24,15 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",
   overflow: "hidden",
-  [`& > .${containerClasses.root}, & > div > .${containerClasses.root}`]: {
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    [theme.breakpoints.up("lg")]: {
-      paddingTop: theme.spacing(5),
-      paddingBottom: theme.spacing(5),
+  [`& > .${containerClasses.root}, & > div:not(.fixed-height-container) > .${containerClasses.root}`]:
+    {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      [theme.breakpoints.up("lg")]: {
+        paddingTop: theme.spacing(5),
+        paddingBottom: theme.spacing(5),
+      },
     },
-  },
 }));
 
 const Layout: React.FC<PropsWithChildren> = ({ children }) => {

@@ -694,6 +694,7 @@ const getThemeOptions = ({
             [`& .${gridClasses.cell}`]: {
               padding: "10px",
               display: "flex",
+              alignItems: "flex-start",
               "&:focus": {
                 outline: "none",
               },
@@ -725,7 +726,7 @@ const getThemeOptions = ({
               backgroundColor: "transparent",
             },
             [`& .${gridClasses.row}.odd`]: {
-              backgroundColor: palette.background.paper,
+              backgroundColor: lighten(palette.background.paper, 0.2),
               "&.Mui-selected": {
                 backgroundColor: alpha(palette.primary.main, 0.05),
               },
