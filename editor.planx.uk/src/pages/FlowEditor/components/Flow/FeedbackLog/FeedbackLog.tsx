@@ -6,7 +6,7 @@ import { Feedback } from "routes/feedback";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
-import { ColumnConfig, ColumnType } from "ui/shared/DataTable/types";
+import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { FeedbackLogProps } from "./types";
@@ -40,10 +40,17 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "type",
       headerName: "Type",
       width: 200,
-      type: ColumnType.BOOLEAN,
+      type: ColumnFilterType.BOOLEAN,
+      columnOptions: {
+        filterable: false,
+        sortable: false,
+        valueFormatter: (value) => {
+          const { title } = feedbackTypeIcon(value);
+          return title;
+        },
+      },
       customComponent: (params) => {
         const { icon, title } = feedbackTypeIcon(params.value);
-
         return (
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {icon}
@@ -55,6 +62,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     {
       field: "createdAt",
       headerName: "Date",
+      type: ColumnFilterType.DATE,
       columnOptions: {
         valueFormatter: (params) =>
           format(new Date(params), "dd/MM/yy hh:mm:ss"),
@@ -65,6 +73,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "feedbackScore",
       headerName: "Rating",
       columnOptions: {
+        filterable: false,
         valueFormatter: (params) => EmojiRating[params],
       },
     },
