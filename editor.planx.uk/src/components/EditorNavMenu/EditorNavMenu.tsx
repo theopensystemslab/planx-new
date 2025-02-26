@@ -151,7 +151,7 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: "Service Feedback",
+      title: "Service feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/${flowSlug}/feedback`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
