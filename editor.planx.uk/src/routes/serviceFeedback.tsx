@@ -11,6 +11,7 @@ import { makeTitle } from "./utils";
 const serviceFeedbackRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
+    flow: req.params.flow,
   })),
 
   mount({
@@ -29,7 +30,7 @@ const serviceFeedbackRoutes = compose(
         query: gql`
           query GetFeedbackForFlow($teamSlug: String!, $flowSlug: String!) {
             feedback: feedback_summary(
-              order_by: { created_at: asc }
+              order_by: { created_at: desc }
               where: {
                 team_slug: { _eq: $teamSlug }
                 _and: { service_slug: { _eq: $flowSlug } }
