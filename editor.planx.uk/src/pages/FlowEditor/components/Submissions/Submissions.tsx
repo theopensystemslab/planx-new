@@ -3,12 +3,13 @@ import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
+import { slugify } from "utils";
 
 import { useStore } from "../../lib/store";
 import EventsLog from "./components/EventsLog";
 import { Submission, SubmissionsProps } from "./types";
 
-const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
+const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
   const [teamId] = useStore((state) => [state.teamId]);
 
   // submission_services_log view is already filtered for events >= Jan 1 2024
@@ -41,7 +42,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
 
   // filter by flow if flowId prop is passed from route params
   const filteredSubmissions = submissions.filter(
-    (submission) => !flowId || submission.flowId === flowId,
+    (submission) => !flowSlug || slugify(submission.flowName) === flowSlug,
   );
 
   return (
@@ -52,7 +53,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
         </Typography>
         <Typography variant="body1" maxWidth="contentWrap">
           {`Feed of payment and submission events for ${
-            flowId ? "this service" : "services in this team"
+            flowSlug ? "this service" : "services in this team"
           }.`}
         </Typography>
         <Typography variant="body1" maxWidth="contentWrap">
@@ -64,7 +65,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowId }) => {
         submissions={filteredSubmissions}
         loading={loading}
         error={error}
-        filterByFlow={Boolean(flowId)}
+        filterByFlow={Boolean(flowSlug)}
       />
     </FixedHeightDashboardContainer>
   );

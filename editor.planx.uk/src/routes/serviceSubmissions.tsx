@@ -4,23 +4,24 @@ import React from "react";
 
 import { makeTitle } from "./utils";
 
-const submissionsLogRoutes = compose(
+const serviceSubmissionRoutes = compose(
   withData((req) => ({
     mountpath: req.mountpath,
+    flow: req.params.flow,
   })),
 
   mount({
     "/": compose(
       route(async (req) => {
-        const { team: teamSlug, flow: flowId } = req.params;
+        const { team: teamSlug, flow: flowSlug } = req.params;
 
         return {
-          title: makeTitle([teamSlug, "submissions-log"].join("/")),
-          view: <Submissions flowId={flowId} />,
+          title: makeTitle([teamSlug, flowSlug, "submissions"].join("/")),
+          view: <Submissions flowSlug={flowSlug} />,
         };
       }),
     ),
   }),
 );
 
-export default submissionsLogRoutes;
+export default serviceSubmissionRoutes;

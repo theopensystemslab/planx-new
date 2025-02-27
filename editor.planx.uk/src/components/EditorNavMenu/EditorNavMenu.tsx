@@ -120,7 +120,7 @@ function EditorNavMenu() {
     {
       title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions-log`,
+      route: `/${teamSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
@@ -145,9 +145,15 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: "Submissions log",
+      title: "Feedback",
+      Icon: RateReviewIcon,
+      route: `/${teamSlug}/${flowSlug}/feedback`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+    },
+    {
+      title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions-log?flow=${flowId}`,
+      route: `/${teamSlug}/${flowSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];

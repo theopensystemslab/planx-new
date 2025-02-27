@@ -3,6 +3,7 @@ import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import { FeedbackCategory } from "components/Feedback/types";
 import gql from "graphql-tag";
+import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -56,30 +57,14 @@ const feedbackRoutes = compose(
         query: gql`
           query GetFeedbackForTeam($teamSlug: String!) {
             feedback: feedback_summary(
-              order_by: { created_at: asc }
+              order_by: { created_at: desc }
               where: { team_slug: { _eq: $teamSlug } }
             ) {
-              address
-              createdAt: created_at
-              feedbackScore: feedback_score
-              flowName: service_name
-              id: feedback_id
-              nodeTitle: node_title
-              nodeType: node_type
-              type: feedback_type
-              userComment: user_comment
-              userContext: user_context
-              platform: device(path: "platform.type")
-              browser: device(path: "browser.name")
-              helpDefinition: help_definition
-              helpSources: help_sources
-              helpText: help_text
-              nodeData: node_data
-              nodeId: node_id
-              nodeText: node_text
-              projectType: project_type
+              ...FeedbackSummaryFields
             }
           }
+
+          ${FEEDBACK_SUMMARY_FIELDS}
         `,
         variables: { teamSlug },
       });
