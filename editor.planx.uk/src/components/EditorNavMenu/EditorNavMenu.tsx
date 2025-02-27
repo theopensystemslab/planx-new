@@ -120,7 +120,7 @@ function EditorNavMenu() {
     {
       title: "Submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions-log`,
+      route: `/${teamSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
@@ -151,9 +151,9 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: "Submissions log",
+      title: "Service submissions",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/${flowSlug}/submissions-log`,
+      route: `/${teamSlug}/${flowSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
