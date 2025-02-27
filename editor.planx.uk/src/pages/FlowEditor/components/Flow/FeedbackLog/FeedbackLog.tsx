@@ -131,7 +131,11 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
         />
       ) : (
-        <DataTable rows={feedback} columns={columns} />
+        <DataTable
+          rows={feedback}
+          columns={columns}
+          csvExportFileName={`${format(Date.now(), "yyyy-MM-dd")}-feedback`}
+        />
       )}
     </FixedHeightDashboardContainer>
   );

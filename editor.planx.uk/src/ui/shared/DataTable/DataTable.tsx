@@ -4,7 +4,11 @@ import {
   DataGrid,
   GridColDef,
   GridFilterModel,
-  GridToolbar,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+  GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
@@ -21,7 +25,11 @@ import {
   getValueOptions,
 } from "./utils";
 
-export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
+export const DataTable = <T,>({
+  rows,
+  columns,
+  csvExportFileName,
+}: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
     column: ColumnConfig<T>,
@@ -33,6 +41,21 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
     }
     const ComponentRenderer = columnCellComponentRegistry[column.type];
     return ComponentRenderer(params.value, filterValues);
+  };
+
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport
+          csvOptions={{
+            fileName: csvExportFileName,
+          }}
+        />
+      </GridToolbarContainer>
+    );
   };
 
   const [filterValues, setFilterValues] = useState<string[]>([]);
@@ -103,7 +126,7 @@ export const DataTable = <T,>({ rows, columns }: DataGridProps<T>) => {
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
           slots={{
-            toolbar: GridToolbar,
+            toolbar: CustomToolbar,
           }}
         />
       </Box>
