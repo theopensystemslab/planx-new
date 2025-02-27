@@ -16,6 +16,7 @@ export interface Props extends InputBaseProps {
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
   bordered?: boolean;
   errorMessage?: string;
+  disabled?: boolean;
 }
 export interface VariablesState {
   variables: string[];
