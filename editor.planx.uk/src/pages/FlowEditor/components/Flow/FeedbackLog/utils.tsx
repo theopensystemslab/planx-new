@@ -11,9 +11,9 @@ import { Feedback } from "routes/feedback";
 import { FeedbackType, FeedbackTypeIcon } from "./types";
 
 export const generateCommentSummary = (userComment: string | null) => {
+  const COMMENT_LENGTH = 100;
   if (!userComment) return "No comment";
 
-  const COMMENT_LENGTH = 100;
   const shouldBeSummarised = userComment.length > COMMENT_LENGTH;
   if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`;
 
@@ -54,6 +54,7 @@ export const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
 };
 
 export const getCombinedHelpText = (feedback: Feedback) => {
+  const MAX_HELP_TEXT_LENGTH = 65;
   const combinedHelpText = [
     feedback.helpText,
     feedback.helpDefinition,
@@ -64,8 +65,8 @@ export const getCombinedHelpText = (feedback: Feedback) => {
     .trim();
 
   const truncatedHelpText =
-    combinedHelpText.length > 65
-      ? `${combinedHelpText.slice(0, 65)}...</p>`
+    combinedHelpText.length > MAX_HELP_TEXT_LENGTH
+      ? `${combinedHelpText.slice(0, MAX_HELP_TEXT_LENGTH)}...</p>`
       : combinedHelpText;
 
   return { truncated: truncatedHelpText, full: combinedHelpText };
