@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
+import capitalize from "lodash/capitalize";
 import React from "react";
 import { Feedback } from "routes/feedback";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
@@ -9,7 +10,7 @@ import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { OpenFeedbackModalButton } from "./components/OpenFeedbackModalButton";
+import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeIcon, generateCommentSummary } from "./utils";
 
@@ -21,7 +22,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 200,
       type: ColumnFilterType.CUSTOM,
       columnOptions: {
-        filterable: false,
+        filterable: false, // TODO: make filterable
         sortable: false,
         valueFormatter: (value) => {
           const { title } = feedbackTypeIcon(value);
@@ -52,7 +53,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "feedbackScore",
       headerName: "Rating",
       columnOptions: {
-        filterable: false,
+        filterable: false, // TODO: make filterable
         valueFormatter: (params) => EmojiRating[params],
       },
     },
@@ -65,14 +66,50 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       },
     },
     {
-      field: "moreInformation" as keyof Feedback,
-      headerName: "More information",
-      width: 250,
+      field: "address",
+      headerName: "Property address",
+      width: 200,
+    },
+    {
+      field: "projectType",
+      headerName: "Project type",
+    },
+    {
+      field: "nodeType",
+      headerName: "Where",
+      width: 280,
       type: ColumnFilterType.CUSTOM,
-      customComponent: OpenFeedbackModalButton,
+      customComponent: (params) => (
+        <>{`${params.value} - ${params.row.nodeTitle}`}</>
+      ),
       columnOptions: {
-        filterable: false,
-        sortable: false,
+        filterable: false, // TODO: make filterable
+      },
+    },
+    {
+      field: "userContext",
+      headerName: "What were you doing?",
+      width: 280,
+    },
+    {
+      field: "helpText",
+      headerName: "Help text (more information)",
+      width: 280,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: ExpandableHelpText,
+      columnOptions: {
+        filterable: false, // TODO: make filterable
+      },
+    },
+    {
+      field: "browser",
+      headerName: "Browser",
+    },
+    {
+      field: "platform",
+      headerName: "Device",
+      columnOptions: {
+        valueFormatter: (params) => capitalize(params),
       },
     },
   ];

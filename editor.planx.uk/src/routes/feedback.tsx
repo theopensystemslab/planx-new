@@ -1,3 +1,4 @@
+import type { Node } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import { FeedbackCategory } from "components/Feedback/types";
@@ -23,6 +24,15 @@ export interface Feedback {
   address: string | null;
   feedbackScore: number;
   flowName: string;
+  platform: string;
+  browser: string;
+  helpDefinition: string | null;
+  helpSources: string | null;
+  helpText: string | null;
+  nodeData: Node["data"] | null;
+  nodeId: string | null;
+  nodeText: string | null;
+  projectType: string | null;
 }
 
 const feedbackRoutes = compose(
@@ -59,6 +69,15 @@ const feedbackRoutes = compose(
               type: feedback_type
               userComment: user_comment
               userContext: user_context
+              platform: device(path: "platform.type")
+              browser: device(path: "browser.name")
+              helpDefinition: help_definition
+              helpSources: help_sources
+              helpText: help_text
+              nodeData: node_data
+              nodeId: node_id
+              nodeText: node_text
+              projectType: project_type
             }
           }
         `,

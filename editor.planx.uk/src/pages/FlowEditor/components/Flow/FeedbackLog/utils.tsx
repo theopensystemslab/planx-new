@@ -5,16 +5,15 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
-import { client } from "lib/graphql";
 import React from "react";
+import { Feedback } from "routes/feedback";
 
-import { GET_FEEDBACK_BY_ID_QUERY } from "./queries/getFeedbackById";
 import { FeedbackType, FeedbackTypeIcon } from "./types";
 
 export const generateCommentSummary = (userComment: string | null) => {
   if (!userComment) return "No comment";
 
-  const COMMENT_LENGTH = 50;
+  const COMMENT_LENGTH = 100;
   const shouldBeSummarised = userComment.length > COMMENT_LENGTH;
   if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`;
 
@@ -54,33 +53,20 @@ export const feedbackTypeIcon = (type: FeedbackType): FeedbackTypeIcon => {
   }
 };
 
-export const getDetailedFeedback = async (feedbackId: number) => {
-  const {
-    data: {
-      feedback: [detailedFeedback],
-    },
-  } = await client.query({
-    query: GET_FEEDBACK_BY_ID_QUERY,
-    variables: { feedbackId },
-  });
-
+export const getCombinedHelpText = (feedback: Feedback) => {
   const combinedHelpText = [
-    detailedFeedback.helpText,
-    detailedFeedback.helpDefinition,
-    detailedFeedback.helpSources,
+    feedback.helpText,
+    feedback.helpDefinition,
+    feedback.helpSources,
   ]
     .filter(Boolean)
     .join(" ")
     .trim();
+
   const truncatedHelpText =
     combinedHelpText.length > 65
-      ? `${combinedHelpText.slice(0, 65)}...`
+      ? `${combinedHelpText.slice(0, 65)}...</p>`
       : combinedHelpText;
 
-  return {
-    combinedHelp: truncatedHelpText,
-    ...detailedFeedback,
-    where: `${detailedFeedback.nodeType} — ${detailedFeedback.nodeTitle}`,
-    browserPlatform: `${detailedFeedback.browser} / ${detailedFeedback.platform}`,
-  };
+  return { truncated: truncatedHelpText, full: combinedHelpText };
 };
