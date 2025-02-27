@@ -112,8 +112,8 @@ describe("flowLayoutRoutes", () => {
     const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(6);
-    expect(getByLabelText("Submissions log")).toBeInTheDocument();
-    expect(getByLabelText("Service feedback")).toBeInTheDocument();
+    expect(getByLabelText("Submissions")).toBeInTheDocument();
+    expect(getByLabelText("Feedback")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", () => {
@@ -122,8 +122,8 @@ describe("flowLayoutRoutes", () => {
     const { getAllByRole, getByLabelText } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(6);
-    expect(getByLabelText("Submissions log")).toBeInTheDocument();
-    expect(getByLabelText("Service feedback")).toBeInTheDocument();
+    expect(getByLabelText("Submissions")).toBeInTheDocument();
+    expect(getByLabelText("Deedback")).toBeInTheDocument();
   });
 });
 
@@ -196,11 +196,11 @@ describe("layout", () => {
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip  present
-    expect(getByLabelText("Submissions log")).toBeInTheDocument();
+    expect(getByLabelText("Submissions")).toBeInTheDocument();
 
     // Full text present
     expect(
-      within(menuItems[0]).queryByText("Submissions log"),
+      within(menuItems[0]).queryByText("Submissions"),
     ).not.toBeInTheDocument();
   });
 });
