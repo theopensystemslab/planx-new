@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import { FeedbackLog } from "pages/FlowEditor/components/Flow/FeedbackLog/FeedbackLog";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -6,7 +7,6 @@ import React from "react";
 
 import { client } from "../lib/graphql";
 import { Feedback } from "./feedback";
-import { FEEDBACK_SUMMARY_FIELDS } from "./queryFragments";
 import { makeTitle } from "./utils";
 
 const serviceFeedbackRoutes = compose(
