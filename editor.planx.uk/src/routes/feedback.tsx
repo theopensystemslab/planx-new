@@ -4,7 +4,7 @@ import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback
 import { FeedbackCategory } from "components/Feedback/types";
 import gql from "graphql-tag";
 import { compose, mount, NotFoundError, route, withData } from "navi";
-import { FeedbackLog } from "pages/FlowEditor/components/Flow/FeedbackLog/FeedbackLog";
+import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 

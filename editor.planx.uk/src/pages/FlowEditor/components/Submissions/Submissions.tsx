@@ -1,11 +1,10 @@
 import { gql, useQuery } from "@apollo/client";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
-import SettingsSection from "ui/editor/SettingsSection";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
+import SettingsSection from "ui/editor/SettingsSection";
 
-import { useStore } from "../../../lib/store";
+import { useStore } from "../../lib/store";
 import EventsLog from "./components/EventsLog";
 import { Submission, SubmissionsProps } from "./types";
 
