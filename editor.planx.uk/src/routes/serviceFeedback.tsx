@@ -6,6 +6,7 @@ import React from "react";
 
 import { client } from "../lib/graphql";
 import { Feedback } from "./feedback";
+import { FEEDBACK_SUMMARY_FIELDS } from "./queryFragments";
 import { makeTitle } from "./utils";
 
 const serviceFeedbackRoutes = compose(
@@ -28,6 +29,7 @@ const serviceFeedbackRoutes = compose(
         data: { feedback },
       } = await client.query<{ feedback: Feedback[] }>({
         query: gql`
+          ${FEEDBACK_SUMMARY_FIELDS}
           query GetFeedbackForFlow($teamSlug: String!, $flowSlug: String!) {
             feedback: feedback_summary(
               order_by: { created_at: desc }
@@ -36,16 +38,7 @@ const serviceFeedbackRoutes = compose(
                 _and: { service_slug: { _eq: $flowSlug } }
               }
             ) {
-              address
-              createdAt: created_at
-              feedbackScore: feedback_score
-              flowName: service_name
-              id: feedback_id
-              nodeTitle: node_title
-              nodeType: node_type
-              type: feedback_type
-              userComment: user_comment
-              userContext: user_context
+              ...FeedbackSummaryFields
             }
           }
         `,

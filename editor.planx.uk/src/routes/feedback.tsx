@@ -9,6 +9,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { client } from "../lib/graphql";
+import { FEEDBACK_SUMMARY_FIELDS } from "./queryFragments";
 import { makeTitle } from "./utils";
 
 type FeedbackType = Sentiment & FeedbackCategory;
@@ -54,9 +55,11 @@ const feedbackRoutes = compose(
         data: { feedback },
       } = await client.query<{ feedback: Feedback[] }>({
         query: gql`
+          ${FEEDBACK_SUMMARY_FIELDS}
+
           query GetFeedbackForTeam($teamSlug: String!) {
             feedback: feedback_summary(
-              order_by: { created_at: asc }
+              order_by: { created_at: desc }
               where: { team_slug: { _eq: $teamSlug } }
             ) {
               address
