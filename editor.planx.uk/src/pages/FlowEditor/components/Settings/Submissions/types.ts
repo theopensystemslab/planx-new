@@ -35,5 +35,5 @@ export interface EventsLogProps {
   filterByFlow?: boolean;
 }
 export interface SubmissionsProps {
-  flowId?: string;
+  flowSlug?: string;
 }

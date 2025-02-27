@@ -12,11 +12,11 @@ const submissionsLogRoutes = compose(
   mount({
     "/": compose(
       route(async (req) => {
-        const { team: teamSlug, flow: flowId } = req.params;
+        const { team: teamSlug } = req.params;
 
         return {
-          title: makeTitle([teamSlug, "submissions-log"].join("/")),
-          view: <Submissions flowId={flowId} />,
+          title: makeTitle([teamSlug, "submissions"].join("/")),
+          view: <Submissions />,
         };
       }),
     ),

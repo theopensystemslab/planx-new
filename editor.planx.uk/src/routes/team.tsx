@@ -90,7 +90,13 @@ const routes = compose(
 
     "/:flow/service": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
-    "/submissions-log": lazy(() => import("./submissionsLog")),
+    "/:flow/feedback": setFlowAndLazyLoad(() => import("./serviceFeedback")),
+
+    "/:flow/submissions": setFlowAndLazyLoad(
+      () => import("./serviceSubmissions"),
+    ),
+
+    "/submissions": lazy(() => import("./submissions")),
 
     "/members": lazy(() => import("./teamMembers")),
     "/design": compose(
