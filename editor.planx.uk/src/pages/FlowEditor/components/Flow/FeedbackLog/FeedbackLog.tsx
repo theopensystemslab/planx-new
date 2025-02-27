@@ -12,7 +12,12 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { FeedbackLogProps } from "./types";
-import { EmojiRating, feedbackTypeIcon, generateCommentSummary } from "./utils";
+import {
+  EmojiRating,
+  feedbackTypeIcon,
+  generateCommentSummary,
+  stripHTMLTags,
+} from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const columns: ColumnConfig<Feedback>[] = [
@@ -99,6 +104,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       customComponent: ExpandableHelpText,
       columnOptions: {
         filterable: false, // TODO: make filterable
+        valueFormatter: (params) => stripHTMLTags(params),
       },
     },
     {

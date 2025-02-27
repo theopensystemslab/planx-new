@@ -70,3 +70,5 @@ export const getCombinedHelpText = (feedback: Feedback) => {
 
   return { truncated: truncatedHelpText, full: combinedHelpText };
 };
+
+export const stripHTMLTags = (str: string) => str?.replace(/<[^>]*>/g, "");
