@@ -113,5 +113,14 @@ export const FEEDBACK_SUMMARY_FIELDS = gql`
     type: feedback_type
     userComment: user_comment
     userContext: user_context
+    platform: device(path: "platform.type")
+    browser: device(path: "browser.name")
+    helpDefinition: help_definition
+    helpSources: help_sources
+    helpText: help_text
+    nodeData: node_data
+    nodeId: node_id
+    nodeText: node_text
+    projectType: project_type
   }
 `;
