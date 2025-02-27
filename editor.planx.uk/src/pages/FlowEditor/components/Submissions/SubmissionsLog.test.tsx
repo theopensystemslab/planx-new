@@ -6,7 +6,7 @@ import { it } from "vitest";
 import EventsLog from "./components/EventsLog";
 import { mockSubmissions } from "./mockSubmissions";
 
-describe("When the feedback log renders", () => {
+describe("When the submissions log renders", () => {
   it("shows the expected headers and rows without an error", () => {
     setup(
       <EventsLog
