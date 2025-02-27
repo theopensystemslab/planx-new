@@ -23,7 +23,7 @@ export interface Feedback {
   userContext: string | null;
   createdAt: string;
   address: string | null;
-  feedbackScore: number;
+  feedbackScore: number | null;
   flowName: string;
   platform: string;
   browser: string;
