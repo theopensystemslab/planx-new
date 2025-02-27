@@ -123,7 +123,7 @@ describe("flowLayoutRoutes", () => {
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(6);
     expect(getByLabelText("Submissions")).toBeInTheDocument();
-    expect(getByLabelText("Deedback")).toBeInTheDocument();
+    expect(getByLabelText("Feedback")).toBeInTheDocument();
   });
 });
 
