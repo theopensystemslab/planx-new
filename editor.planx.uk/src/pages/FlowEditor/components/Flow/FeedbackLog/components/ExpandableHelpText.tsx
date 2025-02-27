@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { GridCellParams } from "@mui/x-data-grid";
-import React, { useState } from "react";
+import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import React from "react";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import { getCombinedHelpText } from "../utils";
@@ -11,20 +11,20 @@ export const ExpandableHelpText = (props: GridCellParams) => {
 
   const { truncated: truncatedHelpText, full: fullHelpText } =
     getCombinedHelpText(row);
-  const [expandedHelpText, setExpandedHelpText] = useState<boolean>(false);
   return (
     <Box>
-      <ReactMarkdownOrHtml
-        source={expandedHelpText ? fullHelpText : truncatedHelpText}
-      />
+      <ReactMarkdownOrHtml source={truncatedHelpText} />
+
       {fullHelpText && (
-        <Button
-          onClick={() => {
-            setExpandedHelpText(!expandedHelpText);
+        <SimpleExpand
+          id="expanded-help-text"
+          buttonText={{
+            open: "See full text",
+            closed: "Hide full text",
           }}
         >
-          {expandedHelpText ? "Close" : "Expand"}
-        </Button>
+          <ReactMarkdownOrHtml source={fullHelpText} />
+        </SimpleExpand>
       )}
     </Box>
   );
