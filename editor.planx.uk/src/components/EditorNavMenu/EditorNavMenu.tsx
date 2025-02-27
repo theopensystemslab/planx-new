@@ -153,7 +153,7 @@ function EditorNavMenu() {
     {
       title: "Submissions log",
       Icon: FactCheckIcon,
-      route: `/${teamSlug}/submissions-log?flow=${flowId}`,
+      route: `/${teamSlug}/${flowSlug}/submissions-log`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
   ];
