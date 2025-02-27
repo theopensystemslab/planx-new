@@ -15,7 +15,7 @@ const submissionsLogRoutes = compose(
         const { team: teamSlug } = req.params;
 
         return {
-          title: makeTitle([teamSlug, "submissions-log"].join("/")),
+          title: makeTitle([teamSlug, "submissions"].join("/")),
           view: <Submissions />,
         };
       }),
