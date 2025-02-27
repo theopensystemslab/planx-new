@@ -39,6 +39,7 @@ const db = new aws.rds.Instance("app", {
   username: DB_ROOT_USERNAME,
   password: config.require("db-password"),
   skipFinalSnapshot: true,
+  snapshotIdentifier: "after-postgres-update-167",
   publiclyAccessible: true,
   storageEncrypted: true,
   backupRetentionPeriod: env === "production" ? 35 : 1,
