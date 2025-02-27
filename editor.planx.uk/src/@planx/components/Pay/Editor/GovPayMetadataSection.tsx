@@ -32,6 +32,7 @@ interface GovPayMetadataSectionProps {
 function GovPayMetadataEditor(
   props: ListManagerEditorProps<GovPayMetadata> & {
     isFieldDisabled: (key: string, index: number) => boolean;
+    disabled?: boolean;
   },
 ) {
   const { key: currKey, value: currVal } = props.value;
@@ -52,7 +53,9 @@ function GovPayMetadataEditor(
         <InputRow>
           <Input
             aria-labelledby="key-label"
-            disabled={props.isFieldDisabled(currKey, props.index)}
+            disabled={
+              props.disabled || props.isFieldDisabled(currKey, props.index)
+            }
             value={currKey}
             onChange={({ target: { value: newKey } }) =>
               props.onChange({ key: newKey, value: currVal })
@@ -62,7 +65,9 @@ function GovPayMetadataEditor(
           <Input
             format={currVal.toString().startsWith("@") ? "data" : undefined}
             aria-labelledby="value-label"
-            disabled={props.isFieldDisabled(currKey, props.index)}
+            disabled={
+              props.disabled || props.isFieldDisabled(currKey, props.index)
+            }
             value={currVal}
             onChange={({ target: { value: newVal } }) =>
               props.onChange({ key: currKey, value: newVal })
@@ -75,7 +80,9 @@ function GovPayMetadataEditor(
   );
 }
 
-export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({ disabled }) => {
+export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
+  disabled,
+}) => {
   const { errors, setFieldValue, setTouched, touched, values } =
     useFormikContext<Pay>();
 
@@ -141,13 +148,16 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({ di
               Editor={(editorProps) => (
                 <GovPayMetadataEditor
                   {...editorProps}
-                  isFieldDisabled={(key, index) => disabled || isFieldDisabled(key, index)}
+                  isFieldDisabled={(key, index) =>
+                    disabled || isFieldDisabled(key, index)
+                  }
                 />
               )}
               newValue={() => {
                 setTouched({});
                 return { key: "", value: "" };
               }}
+              isFieldDisabled={({ key }, index) => isFieldDisabled(key, index)}
               disabled={disabled}
             />
           </>

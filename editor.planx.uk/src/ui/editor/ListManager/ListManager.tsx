@@ -32,6 +32,7 @@ export interface Props<T, EditorExtraProps = {}> {
   Editor: React.FC<EditorProps<T> & (EditorExtraProps | {})>;
   editorExtraProps?: EditorExtraProps;
   noDragAndDrop?: boolean;
+  isFieldDisabled?: (item: T, index: number) => boolean;
   maxItems?: number;
   disabled?: boolean;
 }
@@ -72,7 +73,7 @@ export default function ListManager<T, EditorExtraProps>(
                   }}
                   aria-label="Delete"
                   size="large"
-                  disabled={disabled}
+                  disabled={disabled || props?.isFieldDisabled?.(item, index)}
                 >
                   <Delete />
                 </IconButton>
@@ -122,7 +123,7 @@ export default function ListManager<T, EditorExtraProps>(
                         <IconButton
                           disableRipple
                           {...(props.noDragAndDrop
-                            ? {}
+                            ? { disabled: true }
                             : provided.dragHandleProps)}
                           aria-label="Drag"
                           size="large"
@@ -137,7 +138,9 @@ export default function ListManager<T, EditorExtraProps>(
                         onChange={(newItem) => {
                           props.onChange(setAt(index, newItem, props.values));
                         }}
-                        disabled={disabled}
+                        disabled={
+                          disabled || props?.isFieldDisabled?.(item, index)
+                        }
                         {...(props.editorExtraProps || {})}
                       />
                       <Box>
@@ -147,7 +150,9 @@ export default function ListManager<T, EditorExtraProps>(
                           }}
                           aria-label="Delete"
                           size="large"
-                          disabled={disabled}
+                          disabled={
+                            disabled || props?.isFieldDisabled?.(item, index)
+                          }
                         >
                           <Delete />
                         </IconButton>
