@@ -6,6 +6,7 @@ import { mockTeams } from "ui/shared/DataTable/mockTeams";
 import { it } from "vitest";
 
 import { PlatformAdminPanel } from "./PlatformAdminPanel";
+import { internalTeamNames } from "./utils";
 
 const { getState, setState } = useStore;
 
@@ -21,7 +22,7 @@ describe("Platform admin panel", () => {
     act(() => setState(initialState));
   });
 
-  it("renders without an error", () => {
+  it("renders expected headers and rows without an error", () => {
     setup(<PlatformAdminPanel />);
     const headers = [
       "Team",
@@ -52,9 +53,13 @@ describe("Platform admin panel", () => {
     ).toHaveLength(2); // Two teams in the mock data have an LDC flow
   });
 
-  it.todo("does not show rows for internal teams");
+  it("does not show rows for internal teams", () => {
+    setup(<PlatformAdminPanel />);
 
-  it.todo("is only viewable with the correct role");
+    internalTeamNames.map((internalTeam) =>
+      expect(screen.queryByText(internalTeam)).not.toBeInTheDocument(),
+    );
+  });
 
   it("renders a tick / cross for boolean values", () => {
     const { container } = setup(<PlatformAdminPanel />);
