@@ -55,8 +55,6 @@ const feedbackRoutes = compose(
         data: { feedback },
       } = await client.query<{ feedback: Feedback[] }>({
         query: gql`
-          ${FEEDBACK_SUMMARY_FIELDS}
-
           query GetFeedbackForTeam($teamSlug: String!) {
             feedback: feedback_summary(
               order_by: { created_at: desc }
@@ -83,6 +81,8 @@ const feedbackRoutes = compose(
               projectType: project_type
             }
           }
+
+          ${FEEDBACK_SUMMARY_FIELDS}
         `,
         variables: { teamSlug },
       });
