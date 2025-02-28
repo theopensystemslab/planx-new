@@ -117,7 +117,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
     {
       field: "downloadSubmissionLink" as keyof Submission,
-      headerName: "",
+      headerName: "Download",
       width: 100,
       type: ColumnFilterType.CUSTOM,
       customComponent: DownloadSubmissionButton,
