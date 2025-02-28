@@ -8,7 +8,10 @@ import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { containsItem } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { submissionStatusOptions } from "../submissionFilterOptions";
+import {
+  submissionEventTypes,
+  submissionStatusOptions,
+} from "../submissionFilterOptions";
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { FormattedResponse } from "./FormattedResponse";
@@ -59,7 +62,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       type: ColumnFilterType.ARRAY,
       customComponent: SubmissionEvent,
       columnOptions: {
-        valueOptions: submissionStatusOptions,
+        valueOptions: submissionEventTypes,
       },
     },
     {
