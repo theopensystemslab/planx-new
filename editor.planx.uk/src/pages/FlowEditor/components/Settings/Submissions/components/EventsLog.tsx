@@ -54,11 +54,17 @@ const EventsLog: React.FC<EventsLogProps> = ({
   );
 
   const columns: ColumnConfig<Submission>[] = [
-    { field: "flowName", headerName: "Service" },
+    {
+      field: "flowName",
+      headerName: "Service",
+      width: 250,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: (params) => <strong>{`${params.value}`}</strong>,
+    },
     {
       field: "eventType",
       headerName: "Event",
-      width: 250,
+      width: 230,
       type: ColumnFilterType.ARRAY,
       customComponent: SubmissionEvent,
       columnOptions: {
@@ -68,6 +74,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "status",
       headerName: "Status",
+      width: 125,
       type: ColumnFilterType.ARRAY,
       customComponent: StatusChip,
       columnOptions: {
@@ -77,17 +84,18 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "createdAt",
       headerName: "Date",
+      width: 125,
       columnOptions: {
         valueFormatter: (params) =>
           format(new Date(params), "dd/MM/yy hh:mm:ss"),
       },
       type: ColumnFilterType.DATE,
     },
-    { field: "sessionId", headerName: "Session ID", width: 350 },
+    { field: "sessionId", headerName: "Session ID", width: 200 },
     {
       field: "response",
       headerName: "Response",
-      width: 350,
+      width: 450,
       type: ColumnFilterType.CUSTOM,
       customComponent: (params) => <FormattedResponse {...params.row} />,
       columnOptions: {
@@ -117,7 +125,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
     {
       field: "downloadSubmissionLink" as keyof Submission,
-      headerName: "",
+      headerName: "Download",
       width: 100,
       type: ColumnFilterType.CUSTOM,
       customComponent: DownloadSubmissionButton,
