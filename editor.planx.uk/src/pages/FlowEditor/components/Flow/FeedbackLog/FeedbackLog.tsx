@@ -21,6 +21,7 @@ import {
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const columns: ColumnConfig<Feedback>[] = [
+    { field: "flowName", headerName: "Service", width: 200 },
     {
       field: "type",
       headerName: "Type",
@@ -53,7 +54,6 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           format(new Date(params), "dd/MM/yy hh:mm:ss"),
       },
     },
-    { field: "flowName", headerName: "Service", width: 200 },
     {
       field: "feedbackScore",
       headerName: "Rating",
