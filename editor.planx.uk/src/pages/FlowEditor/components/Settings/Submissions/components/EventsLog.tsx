@@ -51,7 +51,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
   );
 
   const columns: ColumnConfig<Submission>[] = [
-    { field: "flowName", headerName: "Flow name" },
+    { field: "flowName", headerName: "Service" },
     {
       field: "eventType",
       headerName: "Event",
