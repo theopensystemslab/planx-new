@@ -9,8 +9,6 @@ config:
     secure: AAABAMwwPy7/bMKC+iEonzpc0HrzblNfFBXBi60LiSTcoF1KxQkd+vkEUfBfhY96Tx4Nf8/JML6EBhtesIjoGN+r4Y1EcpW+thJoJa/g3Ssv4Dc=
   application:db-password:
     secure: AAABAKd+etETq8AV5V3Xrl5X2H+rYtSw91GDBSwFyjT/HLJT9sOLNR296GTxrHkNQ8BxSOq4rxrlMHIt0lL/DQ==
-  application:db-url:
-    secure: AAABAIsgd8oJwUggSndLa/+RU+LuzCUjbAG0VCrI/ylnJpXHSB5uRGMWc6laV93IuAr8TPV25nk45avXrURCdDYtjxhr9/ElzdZpp/Yx5oJuqnDd74Ijqd17mz5YpkdRMkoB4SZPF2xxgnltSWn02i2hRqBb4mYaxrINPCbz5ehmmUFiC5QgV4O4xju3ZyrQjGfSuA==
   application:encryption-key:
     secure: AAABAFTW2eRwQnXJq/IboPWtStOWXiF9WcsUKEiuosmp7TLZt52uKE3L+NrEGgsThOl3NkvFW2HhFa2XL6aB5w==
   application:file-api-key:
@@ -60,8 +58,6 @@ config:
     secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
-  application:mb-db-connection-uri:
-    secure: AAABAHA4NTOerqNcfoJVJ/erFiPHwUIMR1sZB4twe3VxeGa+OsSSC7hU3jO7sh7GKq7qL79rsRtSfZZJI9kwnKTPVjdqPYD8IR4SYKMwAB/WjHCYLHu6m7NSntd1IWnLeS96nX8FiUERnNd5Ht3PlVpY88N+07YY/aG0Y5cslMonzNzLDCF6mLSi5Q5bZQl8RZ7RaI1r
   application:metabase-api-key:
     secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==
   application:metabase-encryption-secret-key:
