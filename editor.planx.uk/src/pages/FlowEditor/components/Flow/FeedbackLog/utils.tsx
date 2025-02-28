@@ -23,19 +23,19 @@ export const EmojiRating: Record<number, string> = {
 export const feedbackTypeText = (type: FeedbackType) => {
   switch (type) {
     case "issue":
-      return { title: "Issue" };
+      return "Issue";
     case "idea":
-      return { title: "Idea" };
+      return "Idea";
     case "comment":
-      return { title: "Comment" };
+      return "Comment";
     case "helpful":
-      return { title: "Helpful (help text)" };
+      return "Helpful (help text)";
     case "unhelpful":
-      return { title: "Unhelpful (help text)" };
+      return "Unhelpful (help text)";
     case "component":
-      return { title: "User satisfaction" };
+      return "User satisfaction";
     default:
-      return { title: "Inaccuracy" };
+      return "Inaccuracy";
   }
 };
 
