@@ -21,7 +21,13 @@ import {
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const columns: ColumnConfig<Feedback>[] = [
-    { field: "flowName", headerName: "Service", width: 200 },
+    {
+      field: "flowName",
+      headerName: "Service",
+      width: 250,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: (params) => <strong>{`${params.value}`}</strong>,
+    },
     {
       field: "type",
       headerName: "Type",
@@ -43,6 +49,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     {
       field: "createdAt",
       headerName: "Date",
+      width: 125,
       type: ColumnFilterType.DATE,
       columnOptions: {
         valueFormatter: (params) =>
@@ -52,6 +59,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     {
       field: "feedbackScore",
       headerName: "Rating",
+      width: 125,
       columnOptions: {
         filterable: false, // TODO: make filterable
         valueFormatter: (params) => EmojiRating[params],
@@ -105,10 +113,12 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     {
       field: "browser",
       headerName: "Browser",
+      width: 125,
     },
     {
       field: "platform",
       headerName: "Device",
+      width: 125,
       columnOptions: {
         valueFormatter: (params) => capitalize(params),
       },
