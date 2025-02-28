@@ -16,7 +16,8 @@ export const createHasuraService = async ({
   vpc,
   cluster,
   repo,
-  CUSTOM_DOMAINS, 
+  dbUrl,
+  CUSTOM_DOMAINS,
   stacks: {
     networking, certificates, data,
   },
@@ -135,10 +136,7 @@ export const createHasuraService = async ({
               )}" }`,
             },
             { name: "HASURA_GRAPHQL_UNAUTHORIZED_ROLE", value: "public" },
-            {
-              name: "HASURA_GRAPHQL_DATABASE_URL",
-              value: config.requireSecret("db-url"),
-            },
+            { name: "HASURA_GRAPHQL_DATABASE_URL", value: dbUrl },
             {
               name: "HASURA_PLANX_API_URL",
               value: `https://api.${DOMAIN}`,
