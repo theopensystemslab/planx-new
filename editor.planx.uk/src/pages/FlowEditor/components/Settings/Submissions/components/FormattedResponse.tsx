@@ -14,6 +14,14 @@ const Response = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+const safeJsonParse = (str: string) => {
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    return { error: "Invalid JSON" };
+  }
+};
+
 export const FormattedResponse: React.FC<Submission> = (submission) => {
   return submission.eventType === "Pay" ? (
     <Response component="pre">
@@ -22,9 +30,13 @@ export const FormattedResponse: React.FC<Submission> = (submission) => {
   ) : (
     <Response component="pre">
       {submission.status === "Success"
-        ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
+        ? JSON.stringify(
+            safeJsonParse(submission.response?.data?.body),
+            null,
+            2,
+          )
         : JSON.stringify(
-            JSON.parse(submission.response?.data?.message),
+            safeJsonParse(submission.response?.data?.message),
             null,
             2,
           )}
