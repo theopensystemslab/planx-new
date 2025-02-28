@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
