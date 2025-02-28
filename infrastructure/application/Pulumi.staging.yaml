@@ -6,7 +6,7 @@ config:
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
   application:db-host:
-    secure: AAABANgnZHJlsCzbsGz1dXhEb2zQzEOM6wQd+AnqQKvn54W/eNcf6NWtlFUpTvVmd/9IhLzl7TSHowXKq8EGjeTnaBDsnefFq9wNGAft76dmYCU=
+    secure: AAABAMwwPy7/bMKC+iEonzpc0HrzblNfFBXBi60LiSTcoF1KxQkd+vkEUfBfhY96Tx4Nf8/JML6EBhtesIjoGN+r4Y1EcpW+thJoJa/g3Ssv4Dc=
   application:db-password:
     secure: AAABAKd+etETq8AV5V3Xrl5X2H+rYtSw91GDBSwFyjT/HLJT9sOLNR296GTxrHkNQ8BxSOq4rxrlMHIt0lL/DQ==
   application:db-url:
@@ -61,7 +61,7 @@ config:
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
   application:mb-db-connection-uri:
-    secure: AAABAJowah1iT5v6cgduzhTzJxcFLVRW1/nfh80aL0+IxD9MlCABab5L/rKxMeVN+wdxU7XyyXbRwXcShYKpQtLWBCD+yaFiIJgXgbdsfMnd2IEZxwWZu5GwAGbo2zY/fHOsS/mq1F5pysSliEJubFz8EIpOHQFykXXgUFtNy+NmL5GIiex+Zz5MJKSEFBQkyRrkcOEz
+    secure: AAABAHA4NTOerqNcfoJVJ/erFiPHwUIMR1sZB4twe3VxeGa+OsSSC7hU3jO7sh7GKq7qL79rsRtSfZZJI9kwnKTPVjdqPYD8IR4SYKMwAB/WjHCYLHu6m7NSntd1IWnLeS96nX8FiUERnNd5Ht3PlVpY88N+07YY/aG0Y5cslMonzNzLDCF6mLSi5Q5bZQl8RZ7RaI1r
   application:metabase-api-key:
     secure: AAABAFf+hW09AWupsY6adrPAJHCkrTMeRX7/gaUHLYXi3QS77MVelPp9K0L4zyUL8u7zDanjuE9G/bfIlcVXLwiLLKAJkt5to9knKJqTXg==
   application:metabase-encryption-secret-key:
