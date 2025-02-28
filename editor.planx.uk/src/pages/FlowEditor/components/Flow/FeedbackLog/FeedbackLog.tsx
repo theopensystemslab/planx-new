@@ -14,7 +14,7 @@ import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { FeedbackLogProps } from "./types";
 import {
   EmojiRating,
-  feedbackTypeIcon,
+  feedbackTypeText,
   generateCommentSummary,
   stripHTMLTags,
 } from "./utils";
@@ -31,18 +31,13 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
         filterable: false, // TODO: make filterable
         sortable: false,
         valueFormatter: (value) => {
-          const { title } = feedbackTypeIcon(value);
+          const { title } = feedbackTypeText(value);
           return title;
         },
       },
       customComponent: (params) => {
-        const { icon, title } = feedbackTypeIcon(params.value);
-        return (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {icon}
-            {title}
-          </Box>
-        );
+        const { title } = feedbackTypeText(params.value);
+        return <>{title}</>;
       },
     },
     {
