@@ -14,17 +14,18 @@ import { findDashboardTemplate } from "./findDashboardTemplate.js";
 export async function createNewDashboard({
   flowId,
   teamId,
-  serviceSlug
+  serviceSlug,
 }: CreateNewDashboardParams): Promise<string | undefined> {
   try {
-    const { teamName, teamSlug } = await getTeamNameAndSlug(teamId)
+    const { teamName, teamSlug } = await getTeamNameAndSlug(teamId);
     const templateId = await findDashboardTemplate(serviceSlug);
 
     if (typeof templateId === "number") {
       const template = await getDashboard(templateId);
       const newName = template.name.replace("Template", teamName);
-      const collectionId = (await getTeamIdAndMetabaseId(teamSlug)).metabaseId as number;
-      
+      const collectionId = (await getTeamIdAndMetabaseId(teamSlug))
+        .metabaseId as number;
+
       const copiedDashboardId = await copyDashboard({
         name: newName,
         templateId,
@@ -32,7 +33,11 @@ export async function createNewDashboard({
         collectionId,
       });
 
-      const publicLink = await generatePublicLinkWithFilters(copiedDashboardId, serviceSlug, teamSlug);
+      const publicLink = await generatePublicLinkWithFilters(
+        copiedDashboardId,
+        serviceSlug,
+        teamSlug,
+      );
       await updatePublicAnalyticsLink(flowId, publicLink);
     }
     return;
