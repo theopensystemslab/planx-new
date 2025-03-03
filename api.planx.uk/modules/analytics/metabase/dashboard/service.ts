@@ -2,8 +2,7 @@ import { getTeamNameAndSlug } from "./getTeamNameAndSlug.js";
 import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { copyDashboard } from "./copyDashboard.js";
 import { getDashboard } from "./getDashboard.js";
-import { updateFilter } from "./updateFilter.js";
-import { generatePublicLink } from "./generatePublicLink.js";
+import { generatePublicLinkWithFilters } from "./generatePublicLinkWithFilters.js";
 import { updatePublicAnalyticsLink } from "./updatePublicAnalyticsLink.js";
 import type { CreateNewDashboardParams } from "./types.js";
 import { ServerError } from "../../../../errors/serverError.js";
@@ -33,20 +32,7 @@ export async function createNewDashboard({
         collectionId,
       });
 
-      // all dashboard templates have team-slug and service-slug filters
-      await updateFilter({
-        dashboardId: copiedDashboardId,
-        filter: "Team slug",
-        value: teamSlug,
-      });
-
-      await updateFilter({
-        dashboardId: copiedDashboardId,
-        filter: "Service slug",
-        value: serviceSlug,
-      });
-
-      const publicLink = await generatePublicLink(copiedDashboardId);
+      const publicLink = await generatePublicLinkWithFilters(copiedDashboardId, serviceSlug, teamSlug);
       await updatePublicAnalyticsLink(flowId, publicLink);
     }
     return;
