@@ -24,7 +24,7 @@ router.post(
   logUserResumeController,
 );
 
-router.use("/metabase", useEnvGuard(["test", "staging", "production"]));
+router.use("/metabase", useEnvGuard(["test", "development", "staging", "production"]));
 
 router.post(
   "/metabase/collection",
