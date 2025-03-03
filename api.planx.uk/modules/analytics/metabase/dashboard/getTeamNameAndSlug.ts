@@ -16,8 +16,8 @@ export const getTeamNameAndSlug = async (id: number) => {
         query GetTeamNameAndSlug($id: Int!) {
           teams(where: { id: { _eq: $id } }) {
             id
-            name
-            slug
+            teamName: name
+            teamSlug: slug
           }
         }
       `,
