@@ -473,6 +473,119 @@
     schema: public
   is_enum: true
 - table:
+    name: flow_comments
+    schema: public
+  object_relationships:
+    - name: actor
+      using:
+        manual_configuration:
+          column_mapping:
+            actor_id: id
+          insertion_order: null
+          remote_table:
+            name: users
+            schema: public
+    - name: flow
+      using:
+        manual_configuration:
+          column_mapping:
+            flow_id: id
+          insertion_order: null
+          remote_table:
+            name: flows
+            schema: public
+  insert_permissions:
+    - role: demoUser
+      permission:
+        check:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+        columns:
+          - actor_id
+          - comment
+          - flow_id
+      comment: ""
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - actor_id
+          - comment
+          - flow_id
+      comment: ""
+    - role: teamEditor
+      permission:
+        check:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        columns:
+          - actor_id
+          - comment
+          - flow_id
+      comment: ""
+  select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - actor_id
+          - id
+          - comment
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - actor_id
+          - id
+          - comment
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - actor_id
+          - id
+          - comment
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+  delete_permissions:
+    - role: demoUser
+      permission:
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+      comment: ""
+    - role: platformAdmin
+      permission:
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        filter:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+      comment: ""
+- table:
     name: flow_document_templates
     schema: public
   object_relationships:
@@ -492,6 +605,52 @@
           - document_template
           - flow_id
         filter: {}
+- table:
+    name: flow_history
+    schema: public
+  select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - id
+          - actor_id
+          - data
+          - comment
+          - first_name
+          - last_name
+          - type
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+          - actor_id
+          - data
+          - comment
+          - first_name
+          - last_name
+          - type
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+          - actor_id
+          - data
+          - comment
+          - first_name
+          - last_name
+          - type
+          - created_at
+          - flow_id
+        filter: {}
+      comment: ""
 - table:
     name: flow_status_enum
     schema: public
@@ -519,6 +678,15 @@
             name: flows
             schema: public
   array_relationships:
+    - name: comments
+      using:
+        manual_configuration:
+          column_mapping:
+            id: flow_id
+          insertion_order: null
+          remote_table:
+            name: flow_comments
+            schema: public
     - name: document_templates
       using:
         foreign_key_constraint_on:
@@ -572,6 +740,7 @@
         set:
           creator_id: x-hasura-user-id
         columns:
+          - analytics_link
           - copied_from
           - created_at
           - creator_id
@@ -716,6 +885,7 @@
           - status
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:
@@ -742,6 +912,7 @@
           - status
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:
@@ -782,6 +953,7 @@
           - status
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:
@@ -804,6 +976,7 @@
           - slug
           - status
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:
@@ -831,6 +1004,7 @@
           - status
           - summary
           - team_id
+          - templated_from
           - updated_at
           - version
         computed_fields:
@@ -844,6 +1018,7 @@
       permission:
         columns:
           - can_create_from_copy
+          - analytics_link
           - copied_from
           - created_at
           - creator_id
@@ -1034,7 +1209,7 @@
         interval_sec: 10
         num_retries: 0
         timeout_sec: 60
-      webhook: '{{HASURA_PLANX_API_URL}}/metabase/collection'
+      webhook: '{{HASURA_PLANX_API_URL}}/metabase/dashboard'
       headers:
         - name: authorization
           value: '{{HASURA_PLANX_API_KEY}}'
@@ -1043,8 +1218,9 @@
           action: transform
           template: |-
             {
-              "slug": {{$body.event.data.new.slug}},
-              "flowId": {{$body.event.data.new.id}}
+              "serviceSlug": {{$body.event.data.new.slug}},
+              "flowId": {{$body.event.data.new.id}},
+              "teamId": {{$body.event.data.new.team_id}}
             }
         template_engine: Kriti
         version: 2
@@ -1879,6 +2055,32 @@
       permission:
         filter: {}
 - table:
+    name: revoked_tokens
+    schema: public
+  insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - expires_at
+          - revoked_at
+          - token_digest
+      comment: ""
+  select_permissions:
+    - role: api
+      permission:
+        columns:
+          - expires_at
+          - revoked_at
+          - token_digest
+        filter: {}
+      comment: ""
+  delete_permissions:
+    - role: api
+      permission:
+        filter: {}
+      comment: ""
+- table:
     name: s3_applications
     schema: public
   insert_permissions:
@@ -2019,15 +2221,16 @@
     - role: demoUser
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter:
           team:
             flows:
@@ -2037,29 +2240,31 @@
     - role: platformAdmin
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - retry
-          - team_id
-          - response
+          - created_at
           - event_id
           - event_type
-          - status
-          - created_at
           - flow_id
+          - flow_name
+          - response
+          - retry
           - session_id
+          - status
+          - team_id
         filter:
           team:
             members:
@@ -2811,20 +3016,21 @@
     - role: platformAdmin
       permission:
         columns:
-          - govpay_enabled
-          - planning_data_enabled
-          - id
-          - govnotify_personalisation
           - action_colour
           - article_4s_enabled
           - bops_submission_url
           - favicon
+          - govnotify_personalisation
+          - govpay_enabled
           - homepage
           - id
           - is_trial
           - link_colour
+          - live_flows
           - logo
           - name
+          - planning_data_enabled
+          - power_automate_enabled
           - primary_colour
           - reference_code
           - send_to_email_address
@@ -3035,6 +3241,148 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+      comment: teamEditors can only update customisations for flows which they can edit
+  delete_permissions:
+    - role: platformAdmin
+      permission:
+        filter: {}
+      comment: ""
+- table:
+    name: templated_flow_edits
+    schema: public
+  object_relationships:
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
+  insert_permissions:
+    - role: demoUser
+      permission:
+        check:
+          flow:
+            team_id:
+              _eq: 32
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: Demo users can only insert records for flows from the demo team (teamId = 32)
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: ""
+    - role: teamEditor
+      permission:
+        check:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: teamEditors can only insert nodes for templated flows which they can edit
+  select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+      comment: Demo users can only view records associated with flows they have created
+    - role: platformAdmin
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+        check: null
+      comment: Demo users can only update records associated with flows they have created
+    - role: platformAdmin
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+        check: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        check: null
       comment: teamEditors can only update customisations for flows which they can edit
   delete_permissions:
     - role: platformAdmin
