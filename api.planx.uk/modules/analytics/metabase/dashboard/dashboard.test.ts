@@ -88,8 +88,8 @@ describe("Dashboard Operations", () => {
     test("generates public link", async () => {
       const dashboardId = 8;
       const testUuid = 1111111;
-      const teamSlug = "council-slug"
-      const serviceSlug = "find-out-if"
+      const teamSlug = "council-slug";
+      const serviceSlug = "find-out-if";
 
       nock(BASE_URL!)
         .post(`/api/dashboard/${dashboardId}/public_link`)
@@ -97,8 +97,14 @@ describe("Dashboard Operations", () => {
           uuid: testUuid,
         });
 
-      const link = await generatePublicLinkWithFilters(dashboardId, serviceSlug, teamSlug);
-      expect(link).toBe(`${BASE_URL}/public/dashboard/${testUuid}?service_slug=${serviceSlug}&team_slug=${teamSlug}`);
+      const link = await generatePublicLinkWithFilters(
+        dashboardId,
+        serviceSlug,
+        teamSlug,
+      );
+      expect(link).toBe(
+        `${BASE_URL}/public/dashboard/${testUuid}?service_slug=${serviceSlug}&team_slug=${teamSlug}`,
+      );
     });
   });
 });

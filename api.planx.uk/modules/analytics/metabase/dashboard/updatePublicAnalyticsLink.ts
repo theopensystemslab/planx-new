@@ -22,8 +22,8 @@ export const updatePublicAnalyticsLink = async (
             _set: { analytics_link: $publicLink }
           ) {
             affected_rows
-            }
           }
+        }
       `,
       {
         id: flowId,
