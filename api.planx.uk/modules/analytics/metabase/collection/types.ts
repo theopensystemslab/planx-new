@@ -21,7 +21,7 @@ export type MetabaseCreateCollectionParams = {
   parent_id?: number;
 };
 
-/** 
+/**
  * the Metabase collection ID is for the "Council" collection
  * see https://github.com/theopensystemslab/planx-new/pull/4072#discussion_r1892631692
  **/

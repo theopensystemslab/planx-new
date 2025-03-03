@@ -1,6 +1,10 @@
 import { $metabase } from "../shared/client.js";
 
-export async function generatePublicLinkWithFilters(dashboardId: number, serviceSlug: string, teamSlug: string): Promise<string> {
+export async function generatePublicLinkWithFilters(
+  dashboardId: number,
+  serviceSlug: string,
+  teamSlug: string,
+): Promise<string> {
   const response = await $metabase.post(
     `/api/dashboard/${dashboardId}/public_link`,
   );
