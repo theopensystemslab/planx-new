@@ -35,7 +35,7 @@ export async function findDashboardTemplate(
   for (const service of includedServices) {
     for (const serviceSlug of service.slugs) {
       if (slug.includes(serviceSlug)) {
-        return service.template;
+        return await service.template;
       }
     }
   }
