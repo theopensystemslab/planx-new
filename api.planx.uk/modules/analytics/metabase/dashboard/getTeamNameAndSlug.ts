@@ -22,7 +22,7 @@ export const getTeamNameAndSlug = async (id: number) => {
         }
       `,
       {
-        id
+        id,
       },
     );
 
