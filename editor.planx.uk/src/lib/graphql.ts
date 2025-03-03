@@ -73,6 +73,9 @@ const authWsLink = new WebSocketLink({
         },
       };
     },
+    connectionCallback: (error) => {
+      if (error) handleExpiredJWTErrors();
+    },
   },
 });
 
