@@ -16,17 +16,14 @@ export const updatePublicAnalyticsLink = async (
   try {
     const response = await $api.client.request<UpdatePublicAnalyticsLink>(
       gql`
-        mutation UpdatePublicAnalyticsLink($id: String!, $publicLink: String!) {
+        mutation UpdatePublicAnalyticsLink($id: uuid!, $publicLink: String!) {
           update_flows(
             where: { id: { _eq: $id } }
             _set: { analytics_link: $publicLink }
           ) {
-            returning {
-              id
-              analytics_link
+            affected_rows
             }
           }
-        }
       `,
       {
         id: flowId,
