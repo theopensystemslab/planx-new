@@ -8,7 +8,6 @@ interface UpdatePublicAnalyticsLink {
   };
 }
 
-/** Updates column `analytics_link` in the Planx DB `flows` table */
 export const updatePublicAnalyticsLink = async (
   flowId: string,
   publicLink: string,
