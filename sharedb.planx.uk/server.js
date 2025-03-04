@@ -93,6 +93,7 @@ const wss = new Server({
             cb(false, 401, "Unauthorized");
           } else {
             console.log({ newConnection: decoded });
+            info.req.authToken = token;
             info.req.uId = decoded;
             cb(true);
           }
