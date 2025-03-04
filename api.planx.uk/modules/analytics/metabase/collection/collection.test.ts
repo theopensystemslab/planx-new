@@ -236,11 +236,7 @@ describe("edge cases", () => {
     vi.spyOn($api.client, "request").mockRejectedValue(
       new Error("Invalid slug"),
     );
-    await expect(
-      createTeamCollection({
-        slug: "",
-      }),
-    ).rejects.toThrow();
+    await expect(createTeamCollection("")).rejects.toThrow();
   });
 
   test("handles name with special characters", async () => {
@@ -279,10 +275,6 @@ describe("edge cases", () => {
     vi.spyOn($api.client, "request").mockRejectedValue(
       new Error("Slug too long"),
     );
-    await expect(
-      createTeamCollection({
-        slug: longSlug,
-      }),
-    ).rejects.toThrow();
+    await expect(createTeamCollection(longSlug)).rejects.toThrow();
   });
 });
