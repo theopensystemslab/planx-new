@@ -1,5 +1,6 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
+import { rootFlowPath } from "routes/utils";
 
 import { useStore } from "../../lib/store";
 import EndPoint from "./components/EndPoint";
@@ -25,7 +26,9 @@ const Flow = ({ breadcrumbs = [] }: any) => {
     href: `${window.location.pathname.split(id)[0]}${id}`,
   }));
 
-  const showGetStarted = !childNodes.length;
+  const [_rootPath, ...portals] = rootFlowPath(true).split(",");
+  const isFlowRoot = !portals.length;
+  const showGetStarted = isFlowRoot && !childNodes.length;
 
   return (
     <>
