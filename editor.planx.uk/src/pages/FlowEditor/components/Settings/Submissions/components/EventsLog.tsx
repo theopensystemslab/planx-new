@@ -1,11 +1,10 @@
 import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { format } from "date-fns";
 import React from "react";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
-import { containsItem } from "ui/shared/DataTable/utils";
+import { containsItem, dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import {
@@ -86,8 +85,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       headerName: "Date",
       width: 125,
       columnOptions: {
-        valueFormatter: (params) =>
-          format(new Date(params), "dd/MM/yy hh:mm:ss"),
+        valueFormatter: dateFormatter
       },
       type: ColumnFilterType.DATE,
     },
