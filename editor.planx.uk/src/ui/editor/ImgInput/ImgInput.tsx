@@ -5,7 +5,6 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useMemo, useState } from "react";
 
 import PublicFileUploadButton, {
@@ -41,11 +40,13 @@ export default function ImgInput({
   onChange,
   acceptedFileTypes,
   backgroundColor,
+  disabled = false,
 }: {
   img?: string;
   onChange?: (newUrl?: string) => void;
   acceptedFileTypes?: AcceptedFileTypes;
   backgroundColor?: string;
+  disabled?: boolean;
 }): FCReturn {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -53,9 +54,6 @@ export default function ImgInput({
   const menuId = useMemo(() => {
     return `menu-${Math.floor(Math.random() * 1000000)}`;
   }, []);
-
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
 
   const handleRemove = () => {
     onChange && onChange(undefined);
@@ -87,10 +85,7 @@ export default function ImgInput({
         <MenuItem component="a" href={img} target="_blank">
           View
         </MenuItem>
-        <MenuItem
-          onClick={handleRemove}
-          disabled={!useStore.getState().canUserEditTeam(teamSlug)}
-        >
+        <MenuItem onClick={handleRemove} disabled={disabled}>
           Remove
         </MenuItem>
       </Menu>
@@ -105,14 +100,14 @@ export default function ImgInput({
       </ImageWrapper>
     </ImageUploadContainer>
   ) : (
-    <Tooltip title="Drop file here">
+    <Tooltip title="Drop file here" disableHoverListener={disabled}>
       <ImageUploadContainer>
         <PublicFileUploadButton
           onChange={(newUrl) => {
             setAnchorEl(null);
             onChange && onChange(newUrl);
           }}
-          disabled={!useStore.getState().canUserEditTeam(teamSlug)}
+          disabled={disabled}
           acceptedFileTypes={acceptedFileTypes}
         />
       </ImageUploadContainer>

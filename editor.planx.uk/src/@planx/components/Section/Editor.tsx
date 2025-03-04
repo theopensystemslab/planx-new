@@ -39,6 +39,7 @@ function SectionComponent(props: Props) {
               placeholder="Title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -47,11 +48,16 @@ function SectionComponent(props: Props) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 }
