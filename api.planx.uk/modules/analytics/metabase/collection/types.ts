@@ -10,7 +10,7 @@ export interface NewCollectionParams {
 /** We use a name and not slug here so that the eventual dashboard name is in title case */
 export type CreateCollectionParams = {
   name: string;
-  parentId: number;
+  parentId?: number;
 };
 
 export type MetabaseCreateCollectionParams = {
@@ -21,7 +21,7 @@ export type MetabaseCreateCollectionParams = {
 export const createTeamCollectionSchema = z.object({
   body: z.object({
     slug: z.string().min(1),
-    description: z.string().optional()
+    description: z.string().optional(),
   }),
 });
 

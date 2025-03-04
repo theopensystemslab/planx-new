@@ -20,7 +20,7 @@ export async function createTeamCollection(slug: string): Promise<number> {
     const newMetabaseId = await createCollection({
       name,
       parentId: COUNCILS_COLLECTION_ID,
-      });
+    });
 
     await updateMetabaseId(teamId, newMetabaseId);
     return newMetabaseId;
