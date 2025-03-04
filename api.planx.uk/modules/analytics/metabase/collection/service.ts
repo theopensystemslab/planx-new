@@ -3,11 +3,13 @@ import type { NewCollectionParams } from "./types.js";
 import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
-export async function createTeamCollection({
-  slug,
-  parentId,
-  description,
-}: NewCollectionParams): Promise<number> {
+/**
+ * the Metabase collection ID is for the "Council" collection
+ * see https://github.com/theopensystemslab/planx-new/pull/4072#discussion_r1892631692
+ **/
+const COUNCILS_COLLECTION_ID = 78;
+
+export async function createTeamCollection(slug: string): Promise<number> {
   try {
     const { metabaseId, name, id: teamId } = await getTeamIdAndMetabaseId(slug);
 
@@ -17,9 +19,8 @@ export async function createTeamCollection({
 
     const newMetabaseId = await createCollection({
       name,
-      parentId,
-      description,
-    });
+      parentId: COUNCILS_COLLECTION_ID,
+      });
 
     await updateMetabaseId(teamId, newMetabaseId);
     return newMetabaseId;
