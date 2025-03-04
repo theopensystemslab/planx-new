@@ -2981,7 +2981,7 @@
       request_transform:
         body:
           action: transform
-          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}},\r\n  \"description\": \"Collection for {{$body.event.data.new.name}}\",\r\n  \"parentId\": 58\r\n}"
+          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}}\r\n}"
         template_engine: Kriti
         version: 2
 - table:
