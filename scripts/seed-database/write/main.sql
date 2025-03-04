@@ -11,3 +11,4 @@
 
 -- Optional tables
 -- \include write/feedback.sql
+\include write/analytics_analytics_logs.sql
