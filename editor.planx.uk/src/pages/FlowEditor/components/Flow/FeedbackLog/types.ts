@@ -9,10 +9,6 @@ export type FeedbackType =
   | "unhelpful"
   | "component";
 
-export interface FeedbackTypeIcon {
-  icon: React.ReactElement;
-  title: Capitalize<string>;
-}
 export interface CollapsibleRowProps extends Feedback {
   displayFeedbackItems: string[];
 }
