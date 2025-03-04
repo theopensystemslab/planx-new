@@ -8,6 +8,11 @@ export async function generatePublicLinkWithFilters(
   const response = await $metabase.post(
     `/api/dashboard/${dashboardId}/public_link`,
   );
-  const url = `${process.env.METABASE_URL_EXT}/public/dashboard/${response.data.uuid}?service_slug=${serviceSlug}&team_slug=${teamSlug}`;
+  const filterParams = {
+    service_slug: serviceSlug,
+    team_slug: teamSlug,
+  };
+
+  const url = `${process.env.METABASE_URL_EXT}/public/dashboard/${response.data.uuid}?${new URLSearchParams(filterParams)}`;
   return url;
 }
