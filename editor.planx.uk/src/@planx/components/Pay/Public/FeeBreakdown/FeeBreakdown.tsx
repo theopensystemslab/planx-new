@@ -125,8 +125,7 @@ const Total: FeeBreakdownSection = ({ amount }) => (
 export const FeeBreakdown: React.FC<{
   inviteToPayFeeBreakdown?: IFeeBreakdown;
 }> = ({ inviteToPayFeeBreakdown }) => {
-  const passportFeeBreakdown = useFeeBreakdown();
-  const breakdown = passportFeeBreakdown || inviteToPayFeeBreakdown;
+  const breakdown = useFeeBreakdown(inviteToPayFeeBreakdown);
   if (!breakdown) return null;
 
   return (
