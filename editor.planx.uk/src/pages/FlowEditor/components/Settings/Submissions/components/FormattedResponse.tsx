@@ -14,20 +14,21 @@ const Response = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+
 export const FormattedResponse: React.FC<Submission> = (submission) => {
-  return submission.eventType === "Pay" ? (
+  const getResponse = ({ eventType, status, response }: Submission) => {
+    if (eventType === "Pay") return response;
+    if (status === "Success") return response?.data?.body;
+
+    return response.data;
+  }
+
+  const response = getResponse(submission);
+  const formattedResponse = JSON.stringify(response, null, 2);
+
+  return (
     <Response component="pre">
-      {JSON.stringify(submission.response, null, 2)}
-    </Response>
-  ) : (
-    <Response component="pre">
-      {submission.status === "Success"
-        ? JSON.stringify(JSON.parse(submission.response?.data?.body), null, 2)
-        : JSON.stringify(
-            JSON.parse(submission.response?.data?.message),
-            null,
-            2,
-          )}
+      {formattedResponse}
     </Response>
   );
 };
