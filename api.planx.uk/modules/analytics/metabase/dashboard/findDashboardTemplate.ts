@@ -5,18 +5,19 @@ const DASHBOARD_IDS = {
     FOIYNPP: 73,
     LDC: 124,
     preApp: 120,
-    RAB: 129
+    RAB: 129,
   },
   staging: {
     AFPP: 185,
     FOIYNPP: 184,
     LDC: 178,
     preApp: 120,
-    RAB: 183
-  }
+    RAB: 183,
+  },
 } as const;
 
-const environment = process.env.NODE_ENV === 'production' ? 'production' : 'staging';
+const environment =
+  process.env.NODE_ENV === "production" ? "production" : "staging";
 
 const AFPP = {
   template: DASHBOARD_IDS[environment].AFPP,

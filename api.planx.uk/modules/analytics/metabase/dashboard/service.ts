@@ -19,12 +19,12 @@ export async function createNewDashboard({
   try {
     const { teamName, teamSlug } = await getTeamNameAndSlug(teamId);
     const templateId = await findDashboardTemplate(serviceSlug);
-    
-    if (!templateId) return
+
+    if (!templateId) return;
 
     const template = await getDashboard(templateId);
     const newName = template.name.replace("Template", teamName);
-    const teamData = await getTeamIdAndMetabaseId(teamSlug)
+    const teamData = await getTeamIdAndMetabaseId(teamSlug);
     if (!teamData.metabaseId) {
       throw new Error(`No Metabase ID found for team ${teamSlug}`);
     }
@@ -44,7 +44,6 @@ export async function createNewDashboard({
 
     await updatePublicAnalyticsLink(flowId, publicLink);
     return;
-    
   } catch (error) {
     throw new ServerError({
       message: `Error in createNewDashboard: ${error}`,
