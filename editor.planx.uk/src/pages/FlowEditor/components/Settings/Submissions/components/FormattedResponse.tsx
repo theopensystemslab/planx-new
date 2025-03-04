@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { Submission } from "../types";
 
@@ -14,6 +16,7 @@ const Response = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
 }));
 
+const InvalidJSONError = () => <Typography>Error parsing response</Typography>
 
 export const FormattedResponse: React.FC<Submission> = (submission) => {
   const getResponse = ({ eventType, status, response }: Submission) => {
@@ -24,11 +27,12 @@ export const FormattedResponse: React.FC<Submission> = (submission) => {
   }
 
   const response = getResponse(submission);
-  const formattedResponse = JSON.stringify(response, null, 2);
-
+  
   return (
     <Response component="pre">
-      {formattedResponse}
+      <ErrorBoundary FallbackComponent={InvalidJSONError}>
+        {JSON.stringify(response, null, 2)}
+      </ErrorBoundary>
     </Response>
   );
 };

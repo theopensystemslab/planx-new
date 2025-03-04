@@ -3,6 +3,7 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import ErrorFallback from "components/Error/ErrorFallback";
 import { format } from "date-fns";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { containsItem } from "ui/shared/DataTable/utils";
@@ -136,7 +137,11 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
   ];
 
-  return <DataTable columns={columns} rows={rowData} />;
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <DataTable columns={columns} rows={rowData} />
+    </ErrorBoundary>
+  )
 };
 
 export default EventsLog;
