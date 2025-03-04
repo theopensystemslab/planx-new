@@ -26,7 +26,7 @@ router.post(
 
 router.use(
   "/metabase",
-  useEnvGuard(["test", "development", "staging", "production"]),
+  useEnvGuard(["test", "staging", "production"]), // "development" is removed to avoid Metabase staging noise, but when working on Metabase features locally it's useful to include it in the allow list (to hook local Hasura / editor up with Metabase staging)
 );
 
 router.post(
