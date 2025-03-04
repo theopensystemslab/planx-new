@@ -7,6 +7,7 @@ import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContain
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
+import { dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
@@ -51,8 +52,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 125,
       type: ColumnFilterType.DATE,
       columnOptions: {
-        valueFormatter: (params) =>
-          format(new Date(params), "dd/MM/yy hh:mm:ss"),
+        valueFormatter: dateFormatter
       },
     },
     {
