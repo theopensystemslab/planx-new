@@ -7,6 +7,8 @@ import { updateMetabaseId } from "./updateMetabaseId.js";
 import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
+process.env.NODE_ENV = "test";
+
 describe("createTeamCollection", () => {
   beforeEach(() => {
     nock.cleanAll();
@@ -65,24 +67,24 @@ describe("createTeamCollection", () => {
     metabaseMock
       .post("/api/collection/", {
         name: testName,
-        parent_id: 100,
+        parent_id: 78,
       })
       .reply(200, {
         id: 123,
         name: testName,
-        parent_id: 100,
+        parent_id: 78,
       });
 
     // Mock GET request for verifying the new collection
     metabaseMock.get("/api/collection/123").reply(200, {
       id: 123,
       name: testName,
-      parent_id: 100,
+      parent_id: 78,
     });
 
     const collectionId = await createCollection({
       name: testName,
-      parentId: 100,
+      parentId: 78,
     });
 
     // Check the ID is returned correctly
@@ -90,7 +92,7 @@ describe("createTeamCollection", () => {
 
     // Verify the collection details using the service function
     const collection = await getCollection(collectionId);
-    expect(collection.parentId).toBe(100);
+    expect(collection.parentId).toBe(78);
     expect(metabaseMock.isDone()).toBe(true);
   });
 
