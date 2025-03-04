@@ -1,27 +1,44 @@
+// The template IDs across Metabase staging and production are different, so we need to store and be able to access both depending on the environment
+const DASHBOARD_IDS = {
+  production: {
+    AFPP: 102,
+    FOIYNPP: 73,
+    LDC: 124,
+    preApp: 120,
+    RAB: 129
+  },
+  staging: {
+    AFPP: 185,
+    FOIYNPP: 184,
+    LDC: 178,
+    preApp: 120,
+    RAB: 183
+  }
+} as const;
+
+const environment = process.env.NODE_ENV === 'production' ? 'production' : 'staging';
+
 const AFPP = {
-  template: 102,
+  template: DASHBOARD_IDS[environment].AFPP,
   slugs: ["apply-for-planning-permission"],
 };
 const FOIYNPP = {
-  template: 73,
+  template: DASHBOARD_IDS[environment].FOIYNPP,
   slugs: [
     "check-if-you-need-planning-permission",
     "find-out-if-you-need-planning-permission",
   ],
 };
-
 const LDC = {
-  template: 124,
+  template: DASHBOARD_IDS[environment].LDC,
   slugs: ["apply-for-a-lawful-development-certificate"],
 };
-
 const preApp = {
-  template: 120,
+  template: DASHBOARD_IDS[environment].preApp,
   slugs: ["pre-application"],
 };
-
 const RAB = {
-  template: 129,
+  template: DASHBOARD_IDS[environment].RAB,
   slugs: ["report-a-planning-breach"],
 };
 
