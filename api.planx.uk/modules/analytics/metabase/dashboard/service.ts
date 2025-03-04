@@ -23,13 +23,15 @@ export async function createNewDashboard({
     if (typeof templateId === "number") {
       const template = await getDashboard(templateId);
       const newName = template.name.replace("Template", teamName);
-      const collectionId = (await getTeamIdAndMetabaseId(teamSlug))
-        .metabaseId as number;
+      const teamData = await getTeamIdAndMetabaseId(teamSlug)
+      if (!teamData.metabaseId) {
+        throw new Error(`No Metabase ID found for team ${teamSlug}`);
+      }
+      const collectionId = teamData.metabaseId;
 
       const copiedDashboardId = await copyDashboard({
         name: newName,
         templateId,
-        // description,
         collectionId,
       });
 
