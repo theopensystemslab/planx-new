@@ -19,30 +19,32 @@ export async function createNewDashboard({
   try {
     const { teamName, teamSlug } = await getTeamNameAndSlug(teamId);
     const templateId = await findDashboardTemplate(serviceSlug);
+    
+    if (!templateId) return
 
-    if (typeof templateId === "number") {
-      const template = await getDashboard(templateId);
-      const newName = template.name.replace("Template", teamName);
-      const teamData = await getTeamIdAndMetabaseId(teamSlug)
-      if (!teamData.metabaseId) {
-        throw new Error(`No Metabase ID found for team ${teamSlug}`);
-      }
-      const collectionId = teamData.metabaseId;
-
-      const copiedDashboardId = await copyDashboard({
-        name: newName,
-        templateId,
-        collectionId,
-      });
-
-      const publicLink = await generatePublicLinkWithFilters(
-        copiedDashboardId,
-        serviceSlug,
-        teamSlug,
-      );
-      await updatePublicAnalyticsLink(flowId, publicLink);
+    const template = await getDashboard(templateId);
+    const newName = template.name.replace("Template", teamName);
+    const teamData = await getTeamIdAndMetabaseId(teamSlug)
+    if (!teamData.metabaseId) {
+      throw new Error(`No Metabase ID found for team ${teamSlug}`);
     }
+    const collectionId = teamData.metabaseId;
+
+    const copiedDashboardId = await copyDashboard({
+      name: newName,
+      templateId,
+      collectionId,
+    });
+
+    const publicLink = await generatePublicLinkWithFilters(
+      copiedDashboardId,
+      serviceSlug,
+      teamSlug,
+    );
+
+    await updatePublicAnalyticsLink(flowId, publicLink);
     return;
+    
   } catch (error) {
     throw new ServerError({
       message: `Error in createNewDashboard: ${error}`,
