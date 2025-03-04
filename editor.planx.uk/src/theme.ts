@@ -3,7 +3,6 @@ import "themeOverrides.d.ts";
 import { buttonClasses } from "@mui/material/Button";
 import { radioClasses } from "@mui/material/Radio";
 import {
-  alpha,
   createTheme,
   darken,
   lighten,
@@ -39,9 +38,9 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   background: {
     default: "#FFFFFF",
-    paper: "#F9F8F8",
-    dark: "#2c2c2c",
-    midGray: "#e3e3e3",
+    paper: "#FAF8F7",
+    dark: "#2D2C2C",
+    midGray: "#E4E3E2",
   },
   secondary: {
     main: "#F3F2F1",
@@ -78,9 +77,9 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     light: "#EBF4FD",
   },
   border: {
-    main: "#B1B4B6",
+    main: "#B3B4B6",
     input: "#0B0C0C",
-    light: "#E0E0E0",
+    light: "#E1E0DF",
   },
   nodeTag: {
     error: "#FFA8A1",
@@ -539,7 +538,6 @@ const getThemeOptions = ({
             "& .MuiSwitch-switchBase": {
               padding: "11px",
               borderRadius: "50%",
-              color: "rgb(255, 106, 0)",
               "&.Mui-checked": {
                 transform: "translateX(32px)",
               },
@@ -616,7 +614,7 @@ const getThemeOptions = ({
               color: palette.text.primary,
               border: "2px solid currentcolor",
               borderRadius: "50%",
-              backgroundColor: "#FFF",
+              backgroundColor: palette.background.default,
             },
             "&::after": {
               // Styles for radio icon dot
@@ -674,10 +672,10 @@ const getThemeOptions = ({
         },
         styleOverrides: {
           arrow: {
-            color: "#2c2c2c",
+            color: palette.background.dark,
           },
           tooltip: {
-            backgroundColor: "#2c2c2c",
+            backgroundColor: palette.background.dark,
             left: "-5px",
             fontSize: "0.8em",
             borderRadius: 0,
@@ -706,9 +704,10 @@ const getThemeOptions = ({
             [`&.${gridClasses.root}--densityStandard .${gridClasses.cell}`]: {
               padding: "10px 10px",
             },
-            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]: {
-              padding: "20px 10px",
-            },
+            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]:
+              {
+                padding: "20px 10px",
+              },
             [`& .${gridClasses.toolbarContainer}`]: {
               borderBottom: `1px solid ${palette.border.main}`,
               background: palette.background.midGray,
@@ -716,7 +715,7 @@ const getThemeOptions = ({
               [`& .${buttonClasses.root}`]: {
                 background: palette.background.default,
                 "&:focus-visible": {
-                  ...focusStyle
+                  ...focusStyle,
                 },
                 // Ensure SVG icons are equal size
                 "& svg": {
