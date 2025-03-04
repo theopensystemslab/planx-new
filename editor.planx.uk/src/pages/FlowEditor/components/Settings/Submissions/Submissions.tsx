@@ -19,7 +19,7 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
       query GetSubmissions($team_id: Int!) {
         submissions: submission_services_log(
           where: { team_id: { _eq: $team_id } }
-          order_by: { created_at: asc }
+          order_by: { created_at: desc }
         ) {
           flowId: flow_id
           sessionId: session_id
