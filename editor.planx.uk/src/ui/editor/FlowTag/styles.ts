@@ -29,7 +29,7 @@ export const Root = styled(Box, {
       background:
         statusVariant === StatusVariant.Online
           ? theme.palette.success.main
-          : theme.palette.flowTag.lightOff,
+          : theme.palette.action.disabled,
     },
   }),
   ...(tagType === FlowTagType.ApplicationType && {
