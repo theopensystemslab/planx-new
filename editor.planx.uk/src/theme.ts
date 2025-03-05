@@ -41,10 +41,10 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     default: "#FFFFFF",
     paper: "#F9F8F8",
     dark: "#2c2c2c",
-    midGray: "#e3e3e3",
   },
   secondary: {
     main: "#F3F2F1",
+    dark: "#e3e3e3",
   },
   text: {
     primary: "#0B0C0C",
@@ -91,7 +91,6 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   flowTag: {
     online: "#D6FFD7",
     offline: "#EAEAEA",
-    lightOff: "#a1a1a1",
     applicationType: "#D6EFFF",
     serviceType: "#FFEABE",
   },
@@ -674,10 +673,10 @@ const getThemeOptions = ({
         },
         styleOverrides: {
           arrow: {
-            color: "#2c2c2c",
+            color: palette.secondary.dark,
           },
           tooltip: {
-            backgroundColor: "#2c2c2c",
+            backgroundColor: palette.secondary.dark,
             left: "-5px",
             fontSize: "0.8em",
             borderRadius: 0,
@@ -706,17 +705,18 @@ const getThemeOptions = ({
             [`&.${gridClasses.root}--densityStandard .${gridClasses.cell}`]: {
               padding: "10px 10px",
             },
-            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]: {
-              padding: "20px 10px",
-            },
+            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]:
+              {
+                padding: "20px 10px",
+              },
             [`& .${gridClasses.toolbarContainer}`]: {
               borderBottom: `1px solid ${palette.border.main}`,
-              background: palette.background.midGray,
+              background: palette.secondary.dark,
               paddingBottom: "5px",
               [`& .${buttonClasses.root}`]: {
                 background: palette.background.default,
                 "&:focus-visible": {
-                  ...focusStyle
+                  ...focusStyle,
                 },
                 // Ensure SVG icons are equal size
                 "& svg": {

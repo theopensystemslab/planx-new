@@ -40,7 +40,6 @@ declare module "@mui/material/styles/createPalette" {
     flowTag: {
       online: string;
       offline: string;
-      lightOff: string;
       applicationType: string;
       serviceType: string;
     };
@@ -64,7 +63,6 @@ declare module "@mui/material/styles/createPalette" {
     flowTag?: {
       online: string;
       offline: string;
-      lightOff: string;
       applicationType: string;
       serviceType: string;
     };
@@ -88,14 +86,12 @@ declare module "@mui/material/styles/createPalette" {
     main: string;
     paper: string;
     dark: string;
-    midGray: string;
   }
 
   interface TypeBackgroundOptions {
     main: string;
     paper: string;
     dark: string;
-    midGray: string;
   }
 }
 

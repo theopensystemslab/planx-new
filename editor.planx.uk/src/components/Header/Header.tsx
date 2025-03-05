@@ -590,17 +590,18 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
 
 const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
-  const theme = useStore((state) => state.teamTheme);
+  const teamTheme = useStore((state) => state.teamTheme);
   return (
     <Root
       position="static"
       elevation={0}
       color="transparent"
       ref={headerRef}
-      sx={{
-        backgroundColor: theme?.primaryColour || "#2c2c2c",
+      sx={(theme) => ({
+        backgroundColor:
+          teamTheme?.primaryColour || theme.palette.background.dark,
         "@media print": { backgroundColor: "white", color: "black" },
-      }}
+      })}
     >
       <Toolbar headerRef={headerRef} />
     </Root>
