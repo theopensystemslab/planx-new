@@ -673,10 +673,10 @@ const getThemeOptions = ({
         },
         styleOverrides: {
           arrow: {
-            color: palette.secondary.dark,
+            color: palette.background.dark,
           },
           tooltip: {
-            backgroundColor: palette.secondary.dark,
+            backgroundColor: palette.background.dark,
             left: "-5px",
             fontSize: "0.8em",
             borderRadius: 0,
