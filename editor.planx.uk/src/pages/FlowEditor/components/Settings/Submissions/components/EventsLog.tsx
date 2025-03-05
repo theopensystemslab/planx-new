@@ -44,9 +44,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
       />
     );
 
-  const rowData = submissions.map((submission) => ({
+  const rowData = submissions.map((submission, index) => ({
     ...submission,
-    id: submission.eventId,
+    id: `${submission.eventId}-${index}`,
     downloadSubmissionLink: undefined,
   }));
 
@@ -141,7 +141,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <DataTable columns={columns} rows={rowData} />
     </ErrorBoundary>
-  )
+  );
 };
 
 export default EventsLog;
