@@ -63,7 +63,7 @@ const calculateNewValues: CalculateNewValues = ({
 
     case "removeOne": {
       // Strings should be preserved as strings
-      if (typeof rawPrevious === "string" && rawPrevious !== current && previous.length === 1) {
+      if (typeof rawPrevious === "string" && previous[0] !== current) {
         return previous[0];
       }
       
