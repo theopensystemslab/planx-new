@@ -2,16 +2,6 @@ import { Feedback } from "routes/feedback";
 
 import { FeedbackType } from "./types";
 
-export const generateCommentSummary = (userComment: string | null) => {
-  const COMMENT_LENGTH = 100;
-  if (!userComment) return "No comment";
-
-  const shouldBeSummarised = userComment.length > COMMENT_LENGTH;
-  if (shouldBeSummarised) return `${userComment.slice(0, COMMENT_LENGTH)}...`;
-
-  return userComment;
-};
-
 export const EmojiRating: Record<number, string> = {
   1: "Terrible",
   2: "Poor",
