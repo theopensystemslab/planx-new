@@ -35,10 +35,8 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 200,
       type: ColumnFilterType.ARRAY,
       columnOptions: {
-        valueOptions: feedbackTypeOptions.map((option) => ({
-          value: option.value,
-          label: option.label,
-        })),
+        valueOptions: feedbackTypeOptions,
+        filterable: true,
       },
       customComponent: (params) => <>{feedbackTypeText(params.value)}</>,
     },
@@ -48,7 +46,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 125,
       type: ColumnFilterType.DATE,
       columnOptions: {
-        valueFormatter: dateFormatter
+        valueFormatter: dateFormatter,
       },
     },
     {

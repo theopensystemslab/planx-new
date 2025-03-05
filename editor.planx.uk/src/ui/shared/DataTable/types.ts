@@ -7,7 +7,7 @@ import {
 
 export const ColumnFilterType = {
   BOOLEAN: "boolean",
-  ARRAY: "array", // when the column can be filtered from a range of known values
+  ARRAY: "singleSelect", // when the column can be filtered from a range of known values
   DATE: "date",
   CUSTOM: "custom",
 } as const;
@@ -34,6 +34,7 @@ export type ColumnConfig<T> = {
   columnOptions?: Omit<GridColDef, "headerName" | "field" | "type"> &
     Omit<GridSingleSelectColDef, "editable" | "type" | "field">;
 };
+
 export interface DataGridProps<T> {
   rows: readonly T[] | undefined;
   columns: Array<ColumnConfig<T>>;

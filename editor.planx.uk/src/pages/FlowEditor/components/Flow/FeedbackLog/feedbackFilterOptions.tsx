@@ -20,5 +20,3 @@ export const feedbackTypeOptions: FeedbackTypeOption[] = (
   value: type,
   label: feedbackTypeText(type),
 }));
-
-console.log("Feedback type options: ", feedbackTypeOptions);
