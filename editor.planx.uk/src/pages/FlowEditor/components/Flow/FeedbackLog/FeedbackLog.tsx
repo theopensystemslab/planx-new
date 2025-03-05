@@ -12,12 +12,7 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { FeedbackLogProps } from "./types";
-import {
-  EmojiRating,
-  feedbackTypeText,
-  generateCommentSummary,
-  stripHTMLTags,
-} from "./utils";
+import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const columns: ColumnConfig<Feedback>[] = [
@@ -52,7 +47,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 125,
       type: ColumnFilterType.DATE,
       columnOptions: {
-        valueFormatter: dateFormatter
+        valueFormatter: dateFormatter,
       },
     },
     {
@@ -68,9 +63,6 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "userComment",
       headerName: "Comment",
       width: 340,
-      columnOptions: {
-        valueFormatter: (params) => generateCommentSummary(params),
-      },
     },
     {
       field: "address",
