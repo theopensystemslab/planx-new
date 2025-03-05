@@ -38,6 +38,8 @@ export const PlatformAdminPanel = () => {
     {
       field: "name",
       headerName: "Team",
+      type: ColumnFilterType.CUSTOM,
+      customComponent: (params) => <strong>{`${params.value}`}</strong>,
     },
     {
       field: "referenceCode",
