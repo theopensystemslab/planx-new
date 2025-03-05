@@ -2,6 +2,7 @@ import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { containsItem, dateFormatter } from "ui/shared/DataTable/utils";
@@ -42,9 +43,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
       />
     );
 
-  const rowData = submissions.map((submission) => ({
+  const rowData = submissions.map((submission, index) => ({
     ...submission,
-    id: submission.eventId,
+    id: `${submission.eventId}-${index}`,
     downloadSubmissionLink: undefined,
   }));
 
@@ -134,7 +135,11 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
   ];
 
-  return <DataTable columns={columns} rows={rowData} />;
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <DataTable columns={columns} rows={rowData} />
+    </ErrorBoundary>
+  );
 };
 
 export default EventsLog;

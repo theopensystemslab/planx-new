@@ -1,9 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React, { useMemo } from "react";
-import SettingsSection from "ui/editor/SettingsSection";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
+import SettingsSection from "ui/editor/SettingsSection";
 import { slugify } from "utils";
 
 import { useStore } from "../../../lib/store";
