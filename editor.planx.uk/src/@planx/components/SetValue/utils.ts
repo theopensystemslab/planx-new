@@ -33,6 +33,7 @@ export const handleSetValue: HandleSetValue = ({
   const newValues = calculateNewValues({
     nodeData,
     previous,
+    rawPrevious: previousValues,
   });
 
   if (newValues) {
@@ -48,20 +49,27 @@ export const handleSetValue: HandleSetValue = ({
 type CalculateNewValues = (params: {
   nodeData: SetValue;
   previous: string[];
+  rawPrevious: PreviousValues;
 }) => string | string[] | undefined;
 
 const calculateNewValues: CalculateNewValues = ({
   nodeData: { operation, val: current },
   previous,
+  rawPrevious,
 }) => {
   switch (operation) {
     case "replace":
       return [current];
 
     case "removeOne": {
-      // Do not convert output from string to string[] if operation not possible
-      if (previous.length === 1 && previous[0] !== current) {
+      // Strings should be preserved as strings
+      if (typeof rawPrevious === "string" && previous[0] !== current) {
         return previous[0];
+      }
+      
+      // Single item arrays should be preserved as arrays
+      if (previous.length === 1 && previous[0] !== current) {
+        return previous;
       }
 
       const removeCurrent = (val: string) => val !== current;
