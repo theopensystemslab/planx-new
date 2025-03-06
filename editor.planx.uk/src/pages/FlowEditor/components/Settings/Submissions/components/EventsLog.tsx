@@ -15,6 +15,7 @@ import {
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
 import { FormattedResponse } from "./FormattedResponse";
+import { OpenModalButton } from "./OpenModalButton";
 import { StatusChip } from "./StatusChip";
 import { SubmissionEvent } from "./SubmissionEvent";
 
@@ -86,7 +87,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       headerName: "Date",
       width: 125,
       columnOptions: {
-        valueFormatter: dateFormatter
+        valueFormatter: dateFormatter,
       },
       type: ColumnFilterType.DATE,
     },
@@ -94,9 +95,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "response",
       headerName: "Response",
-      width: 450,
+      width: 100,
       type: ColumnFilterType.CUSTOM,
-      customComponent: (params) => <FormattedResponse {...params.row} />,
+      customComponent: OpenModalButton,
       columnOptions: {
         sortable: false,
         filterOperators: [
