@@ -36,10 +36,10 @@ export interface LocalAuthorityMetadata {
   };
 }
 
-/** 
- * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug 
+/**
+ * When a team publishes their granular Article 4 data, add them to this list. Key must match team slug
  * The database column team_setting.has_article4_schema also needs to be updated via the Hasura console
-*/
+ */
 export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   "barking-and-dagenham": barkingAndDagenham,
   barnet,
