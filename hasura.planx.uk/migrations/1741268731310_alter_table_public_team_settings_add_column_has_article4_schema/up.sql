@@ -27,7 +27,7 @@ WHERE team_id IN (
   )
 );
 
--- Drop view to to change of column type article_4s_enabled from text to boolean
+-- Drop view due to change of column type article_4s_enabled from text to boolean
 DROP VIEW "public"."teams_summary";
 
 CREATE
