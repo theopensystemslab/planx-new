@@ -11,6 +11,7 @@ import { dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
+import { feedbackTypeOptions } from "./feedbackFilterOptions";
 import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
@@ -27,19 +28,12 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "type",
       headerName: "Type",
       width: 200,
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.ARRAY,
       columnOptions: {
-        filterable: false, // TODO: make filterable
-        sortable: false,
-        valueFormatter: (value) => {
-          const { title } = feedbackTypeText(value);
-          return title;
-        },
+        valueOptions: feedbackTypeOptions,
+        filterable: true,
       },
-      customComponent: (params) => {
-        const { title } = feedbackTypeText(params.value);
-        return <>{title}</>;
-      },
+      customComponent: (params) => <>{feedbackTypeText(params.value)}</>,
     },
     {
       field: "createdAt",
