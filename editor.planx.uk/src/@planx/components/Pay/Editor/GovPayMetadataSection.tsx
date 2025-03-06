@@ -6,6 +6,7 @@ import { GovPayMetadata } from "@opensystemslab/planx-core/types";
 import { Pay } from "@planx/components/Pay/model";
 import { useFormikContext } from "formik";
 import React from "react";
+import { useCallback } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager/ListManager";
@@ -86,6 +87,19 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
   const { errors, setFieldValue, setTouched, touched, values } =
     useFormikContext<Pay>();
 
+  const EditorComponent = useCallback(
+    (editorProps: ListManagerEditorProps<GovPayMetadata>) => (
+      <GovPayMetadataEditor
+        {...editorProps}
+        isFieldDisabled={(key, index) =>
+          disabled || isFieldDisabled(key, index)
+        }
+        disabled={disabled}
+      />
+    ),
+    [disabled],
+  );
+
   return (
     <ModalSection>
       <ModalSectionContent title="GOV.UK Pay metadata" Icon={DataObjectIcon}>
@@ -145,14 +159,7 @@ export const GovPayMetadataSection: React.FC<GovPayMetadataSectionProps> = ({
               onChange={(metadata) => {
                 setFieldValue("govPayMetadata", metadata);
               }}
-              Editor={(editorProps) => (
-                <GovPayMetadataEditor
-                  {...editorProps}
-                  isFieldDisabled={(key, index) =>
-                    disabled || isFieldDisabled(key, index)
-                  }
-                />
-              )}
+              Editor={EditorComponent}
               newValue={() => {
                 setTouched({});
                 return { key: "", value: "" };
