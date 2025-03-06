@@ -9,6 +9,7 @@ export async function createCollection(
 ): Promise<number> {
   const metabaseCreateCollectionParams: MetabaseCreateCollectionParams = {
     name: params.name,
+    parent_id: params.parentId,
   };
 
   const response = await $metabase.post(
