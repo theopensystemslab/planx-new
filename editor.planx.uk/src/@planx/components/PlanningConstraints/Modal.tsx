@@ -192,15 +192,17 @@ export const OverrideEntitiesModal = ({
                   <legend style={visuallyHidden}>{title}</legend>
                   {Boolean(entities?.length) &&
                     entities?.map((e) => (
-                      <ChecklistItem
-                        key={`${e.entity}`}
-                        id={`entity-checkbox-${e.entity}`}
-                        label={formatEntityName(e, metadata)}
-                        checked={
-                          checkedOptions?.includes(`${e.entity}`) || false
-                        }
-                        onChange={changeCheckbox(`${e.entity}`)}
-                      />
+                      <Grid item xs={12}>
+                        <ChecklistItem
+                          key={`${e.entity}`}
+                          id={`entity-checkbox-${e.entity}`}
+                          label={formatEntityName(e, metadata)}
+                          checked={
+                            checkedOptions?.includes(`${e.entity}`) || false
+                          }
+                          onChange={changeCheckbox(`${e.entity}`)}
+                        />
+                      </Grid>
                     ))}
                 </Grid>
               </ErrorWrapper>
