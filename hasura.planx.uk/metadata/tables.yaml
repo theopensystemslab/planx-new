@@ -2441,6 +2441,7 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
@@ -2459,6 +2460,7 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
@@ -2472,19 +2474,20 @@
     - role: demoUser
       permission:
         columns:
-          - id
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
-          - homepage
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
-          - email_reply_to_id
-          - team_id
-          - boundary_bbox
-          - submission_email
+          - homepage
+          - id
           - reference_code
-          - boundary_url
+          - submission_email
+          - team_id
         filter: {}
       comment: ""
     - role: platformAdmin
@@ -2495,6 +2498,7 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
@@ -2513,6 +2517,7 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
@@ -2530,6 +2535,7 @@
           - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
@@ -2544,19 +2550,20 @@
     - role: platformAdmin
       permission:
         columns:
-          - id
+          - boundary_bbox
+          - boundary_url
+          - email_reply_to_id
           - external_planning_site_name
           - external_planning_site_url
-          - homepage
+          - has_article4_schema
           - help_email
           - help_opening_hours
           - help_phone
-          - email_reply_to_id
-          - team_id
-          - boundary_bbox
-          - submission_email
+          - homepage
+          - id
           - reference_code
-          - boundary_url
+          - submission_email
+          - team_id
         filter: {}
         check: null
       comment: ""
