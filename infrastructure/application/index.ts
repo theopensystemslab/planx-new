@@ -120,7 +120,7 @@ export = async () => {
   });
 
   const DB_ROOT_USERNAME = "dbuser";
-  const dbHost = String(config.requireSecret("db-host"))
+  const dbHost = config.requireSecret("db-host")
   const dbRootPassword = config.requireSecret("db-password");
   // ----------------------- Metabase
   const provider = new postgres.Provider("metabase", {
@@ -197,7 +197,9 @@ export = async () => {
     domain: DOMAIN,
   });
   
-  const metabaseDbUrl = getPostgresDbUrl("metabase", String(metabasePgPassword), dbHost, DEFAULT_POSTGRES_PORT, "metabase");
+  // since our secrets here are of the type Output<string>, we have to use Pulumi methods to to access them as strings
+  const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
+    getPostgresDbUrl("metabase", metabasePgPassword, dbHost, DEFAULT_POSTGRES_PORT, "metabase"))
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -252,7 +254,9 @@ export = async () => {
 
   // ----------------------- Hasura
   // we'll also pass this database URI to sharedb later on
-  const rootDbUrl = getPostgresDbUrl(DB_ROOT_USERNAME, String(dbRootPassword), dbHost);
+
+  const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
+    getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
   createHasuraService({
     vpc,
     cluster,
