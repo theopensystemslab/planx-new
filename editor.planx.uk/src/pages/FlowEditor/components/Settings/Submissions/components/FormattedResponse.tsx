@@ -1,41 +1,49 @@
+import ReactJson from "@microlink/react-json-view";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { Submission } from "../types";
-
 const Root = styled(Box)(({ theme }) => ({
-  fontSize: "1em",
-  margin: 1,
+  padding: theme.spacing(2.5, 2),
+  margin: 0,
+  width: "100%",
+  backgroundColor: theme.palette.background.dark,
+  color: theme.palette.common.white,
+  fontSize: theme.typography.body2.fontSize,
   overflowWrap: "break-word",
   whiteSpace: "pre-wrap",
-  overflow: "auto",
-  textAlign: "start",
-  backgroundColor: theme.palette.background.paper,
 }));
 
 const InvalidJSONError = () => "Error parsing response";
 
-const Response: React.FC<{ response: string }> = ({ response }) => {
-  const parsedResponse = JSON.parse(response);
-  return JSON.stringify(parsedResponse, null, 2);
-};
+interface FormattedResponseProps {
+  response: string | object | Record<string, unknown>;
+}
 
-export const FormattedResponse: React.FC<Submission> = (submission) => {
-  const getResponse = ({ eventType, status, response }: Submission) => {
-    if (eventType === "Pay") return response;
-    if (status === "Success") return response?.data?.body;
-
-    return response.data?.message;
-  };
-
-  const response = getResponse(submission);
+export const FormattedResponse: React.FC<FormattedResponseProps> = ({
+  response,
+}) => {
+  let parsedResponse;
+  try {
+    parsedResponse =
+      typeof response === "string" ? JSON.parse(response) : response ?? {};
+  } catch (error) {
+    parsedResponse = { error: "Invalid JSON format", raw: response };
+  }
 
   return (
     <Root component="pre">
       <ErrorBoundary FallbackComponent={InvalidJSONError}>
-        <Response response={response} />
+        <ReactJson
+          src={parsedResponse}
+          theme="monokai"
+          collapsed={2}
+          displayDataTypes={false}
+          indentWidth={2}
+          style={{ background: "transparent" }}
+          enableClipboard={false}
+        />
       </ErrorBoundary>
     </Root>
   );

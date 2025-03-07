@@ -14,7 +14,7 @@ import {
 } from "../submissionFilterOptions";
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
-import { FormattedResponse } from "./FormattedResponse";
+import { OpenResponseButton } from "./OpenResponseButton";
 import { StatusChip } from "./StatusChip";
 import { SubmissionEvent } from "./SubmissionEvent";
 
@@ -86,19 +86,20 @@ const EventsLog: React.FC<EventsLogProps> = ({
       headerName: "Date",
       width: 125,
       columnOptions: {
-        valueFormatter: dateFormatter
+        valueFormatter: dateFormatter,
       },
       type: ColumnFilterType.DATE,
     },
-    { field: "sessionId", headerName: "Session ID", width: 200 },
+    { field: "sessionId", headerName: "Session ID", width: 400 },
     {
       field: "response",
       headerName: "Response",
-      width: 450,
+      width: 100,
       type: ColumnFilterType.CUSTOM,
-      customComponent: (params) => <FormattedResponse {...params.row} />,
+      customComponent: OpenResponseButton,
       columnOptions: {
         sortable: false,
+        cellClassName: "MuiDataGrid-cell--textCenter",
         filterOperators: [
           {
             value: "contains",
@@ -129,6 +130,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       type: ColumnFilterType.CUSTOM,
       customComponent: DownloadSubmissionButton,
       columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
         filterable: false,
         sortable: false,
       },
