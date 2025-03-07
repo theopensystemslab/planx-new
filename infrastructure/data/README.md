@@ -116,4 +116,40 @@ pulumi:pulumi:Stack: (same)
 
 ## 2. Via the AWS console
 
+Using the AWS console to create a new db from a snapshot can save us from having to redeploy the application layer, because we can manually rename it to the same name as the original db. However, we do have to take care to configure it correctly, and to then connect the new db to our Pulumi stack (and disconnect the old one).
+
+1. In your terminal, pull down latest changes on `main` and `cd` into this directory (from project root, `cd infrastructure/data`).
+
+<!-- TODO: consider risk of using Pulumi state when some stack drift may have occurred in meantime? is it better to look at AWS console of old db? what if we accidentally deleted the old db? -->
+
+2. We'll start by backing up our existing Pulumi stack. This will provide us with a reference for the exact configuration of our stack, as provisioned in [`index.ts`](/infrastructure/data/index.ts):
+
+```
+pulumi stack export > export.json
+```
+
+<!-- TODO: test the below, figure out how to connect new db to Pulumi etc -->
+
+3. Make new db in console, referencing `export.json` as needed. Call the new db `app`.
+
+4. Import the new db into our Pulumi state:
+
+```
+pulumi import aws:rds/instance:Instance apprestored apprestored
+```
+
+5. Delete the old db from Pulumi ??
+
+First get URN:
+
+```
+pulumi stack --show-urns
+```
+
+Then use this like so:
+
+```
+pulumi state delete [old-db-urn]
+```
+
 ...
