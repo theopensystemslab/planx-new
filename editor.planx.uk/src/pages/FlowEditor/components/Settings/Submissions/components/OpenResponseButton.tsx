@@ -24,16 +24,14 @@ export const OpenResponseButton = (props: GridCellParams) => {
   const handleButtonClick = () => {
     setModalIsOpen(true);
     if (!response) {
-      let fetchedData = getResponse(row);
+      let parsedData = getResponse(row);
       try {
-        fetchedData =
-          typeof fetchedData === "string"
-            ? JSON.parse(fetchedData)
-            : fetchedData;
+        parsedData =
+          typeof parsedData === "string" ? JSON.parse(parsedData) : parsedData;
       } catch (error) {
-        fetchedData = { error: "Invalid JSON format", raw: fetchedData };
+        parsedData = { error: "Invalid JSON format", raw: parsedData };
       }
-      setResponse(fetchedData);
+      setResponse(parsedData);
     }
   };
 
