@@ -733,6 +733,10 @@ const getThemeOptions = ({
                 ...inputFocusStyle,
                 boxShadow: "none",
               },
+              // Hide right-side border for final column header
+              [`&--last .${gridClasses.columnSeparator} svg`]: {
+                visibility: "hidden",
+              },
             },
             [`& .${gridClasses.columnHeaderTitle}`]: {
               fontWeight: FONT_WEIGHT_SEMI_BOLD,

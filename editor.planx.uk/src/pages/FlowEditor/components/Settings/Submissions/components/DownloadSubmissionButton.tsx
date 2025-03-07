@@ -36,7 +36,6 @@ export const DownloadSubmissionButton = (params: RenderCellParams) => {
     <Tooltip title="Download application data">
       <IconButton
         aria-label="download application"
-        size="small"
         onClick={() => window.open(zipUrl, "_blank")}
       >
         <CloudDownload />
