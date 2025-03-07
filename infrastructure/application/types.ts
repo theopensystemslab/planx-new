@@ -5,7 +5,7 @@ export interface CreateService {
   vpc: awsx.ec2.Vpc,
   cluster: awsx.ecs.Cluster, 
   repo: awsx.ecr.Repository, 
-  dbUrl: string,
+  dbUrl: pulumi.Output<string>,
   stacks: {
     networking: pulumi.StackReference,
     certificates: pulumi.StackReference,
