@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { ReactNode } from "react";
 
-interface DataGridModalProps {
+interface DataTableModalProps {
   open: boolean;
   onClose: () => void;
   title: string;
@@ -32,7 +32,7 @@ const ModalBody = styled(Box)(({ theme }) => ({
    overflow: "auto",
 }));
 
-export const DataGridModal: React.FC<DataGridModalProps> = ({
+export const DataTableModal: React.FC<DataTableModalProps> = ({
   open,
   onClose,
   title,
