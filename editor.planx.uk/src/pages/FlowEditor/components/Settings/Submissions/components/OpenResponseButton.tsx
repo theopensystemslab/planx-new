@@ -1,11 +1,13 @@
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import { GridCellParams } from "@mui/x-data-grid";
 import React, { useState } from "react";
 
 import { Submission } from "../types";
-import { ResponseModal } from "./ResponseModal";
+import { DataGridModal } from "./DataGridModal";
+import { FormattedResponse } from "./FormattedResponse";
 
-export const OpenModalButton = (props: GridCellParams) => {
+export const OpenResponseButton = (props: GridCellParams) => {
   const { row } = props;
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [response, setResponse] = useState<Record<string, any> | null>(null);
@@ -38,11 +40,13 @@ export const OpenModalButton = (props: GridCellParams) => {
       <Button variant="text" size="small" onClick={handleButtonClick}>
         View
       </Button>
-      <ResponseModal
+      <DataGridModal
+        title="JSON response"
         open={modalIsOpen}
         onClose={() => setModalIsOpen(false)}
-        response={response}
-      />
+      >
+        {response ? <FormattedResponse response={response} /> : <CircularProgress />}
+      </DataGridModal>
     </>
   );
 };

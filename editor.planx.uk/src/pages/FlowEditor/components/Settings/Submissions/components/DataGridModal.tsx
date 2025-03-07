@@ -1,18 +1,16 @@
 import Close from "@mui/icons-material/CloseOutlined";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { ReactNode } from "react";
 
-import { FormattedResponse } from "./FormattedResponse";
-
-interface ResponseModalProps {
+interface DataGridModalProps {
   open: boolean;
   onClose: () => void;
-  response: Record<string, any> | null;
+  title: string;
+  children?: ReactNode;
 }
 
 const CloseButton = styled(IconButton)(({ theme }) => ({
@@ -21,31 +19,36 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.grey[600],
 }));
 
-export const ResponseModal: React.FC<ResponseModalProps> = ({
+const ModalHeader = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+}));
+
+const ModalBody = styled(Box)(({ theme }) => ({
+   background: theme.palette.background.paper,
+   overflow: "auto",
+}));
+
+export const DataGridModal: React.FC<DataGridModalProps> = ({
   open,
   onClose,
-  response,
+  title,
+  children,
 }) => {
   return (
     <Dialog open={open} fullWidth maxWidth="md" onClose={onClose}>
-      <Box
-        sx={{
-          padding: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h4">JSON Response</Typography>
+      <ModalHeader>
+        <Typography variant="h4">{title}</Typography>
         <CloseButton aria-label="close" onClick={onClose} size="large">
           <Close />
         </CloseButton>
-      </Box>
-      {response ? (
-        <FormattedResponse response={response} />
-      ) : (
-        <CircularProgress />
-      )}
+      </ModalHeader>
+      <ModalBody>
+        {children}
+      </ModalBody>
     </Dialog>
   );
 };

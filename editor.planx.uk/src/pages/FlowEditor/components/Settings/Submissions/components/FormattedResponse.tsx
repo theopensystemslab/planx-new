@@ -7,6 +7,7 @@ import { ErrorBoundary } from "react-error-boundary";
 const Root = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2.5, 2),
   margin: 0,
+  width: "100%",
   backgroundColor: theme.palette.background.dark,
   color: theme.palette.common.white,
   fontSize: theme.typography.body2.fontSize,
