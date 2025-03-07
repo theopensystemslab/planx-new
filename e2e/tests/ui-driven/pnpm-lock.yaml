@@ -2544,7 +2544,7 @@ packages:
     dev: false
 
   github.com/theopensystemslab/planx-core/38aec24(@types/react@19.0.7):
-    resolution: {commit: 38aec24, repo: git+ssh://git@github.com/theopensystemslab/planx-core.git, type: git}
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/38aec24}
     id: github.com/theopensystemslab/planx-core/38aec24
     name: '@opensystemslab/planx-core'
     version: 1.0.0
