@@ -691,6 +691,7 @@
         set:
           creator_id: x-hasura-user-id
         columns:
+          - analytics_link
           - copied_from
           - created_at
           - creator_id
@@ -962,6 +963,7 @@
     - role: api
       permission:
         columns:
+          - analytics_link
           - copied_from
           - created_at
           - creator_id
@@ -1095,6 +1097,31 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+  event_triggers:
+    - name: setup_metabase_dashboard
+      definition:
+        enable_manual: false
+        insert:
+          columns: '*'
+      retry_conf:
+        interval_sec: 10
+        num_retries: 0
+        timeout_sec: 60
+      webhook: '{{HASURA_PLANX_API_URL}}/metabase/dashboard'
+      headers:
+        - name: authorization
+          value: '{{HASURA_PLANX_API_KEY}}'
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "serviceSlug": {{$body.event.data.new.slug}},
+              "flowId": {{$body.event.data.new.id}},
+              "teamId": {{$body.event.data.new.team_id}}
+            }
+        template_engine: Kriti
+        version: 2
 - table:
     name: global_settings
     schema: public
@@ -2838,7 +2865,7 @@
       request_transform:
         body:
           action: transform
-          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}},\r\n  \"description\": \"Collection for {{$body.event.data.new.name}}\",\r\n  \"parentId\": 58\r\n}"
+          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}}\r\n}"
         template_engine: Kriti
         version: 2
 - table:

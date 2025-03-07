@@ -8,10 +8,7 @@ export const metabaseDashboardsController: NewDashboardHandler = async (
   next,
 ) => {
   try {
-    const params = {
-      ...res.locals.parsedReq.params,
-      ...res.locals.parsedReq.body,
-    };
+    const params = res.locals.parsedReq.body;
     const dashboard = await createNewDashboard(params);
     return res.status(201).json({ data: dashboard });
   } catch (error) {
