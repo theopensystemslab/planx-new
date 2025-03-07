@@ -41,6 +41,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
             });
           }}
           placeholder="Title"
+          disabled={props.disabled}
         />
       </InputRow>
       <InputRow>
@@ -55,6 +56,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
             });
           }}
           placeholder="Description"
+          disabled={props.disabled}
         />
       </InputRow>
       <InputRow>
@@ -69,6 +71,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Step>> = (props) => {
             });
           }}
           placeholder="url"
+          disabled={props.disabled}
         />
       </InputRow>
     </Box>
@@ -97,6 +100,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
                 placeholder="Main Title"
                 format="large"
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -105,6 +109,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
                 value={formik.values.description}
                 onChange={formik.handleChange}
                 placeholder="Main Description"
+                disabled={props.disabled}
               />
             </InputRow>
           </Box>
@@ -115,10 +120,11 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             }}
             Editor={TaskEditor}
             newValue={newStep}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };
