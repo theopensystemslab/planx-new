@@ -3,7 +3,6 @@ import "themeOverrides.d.ts";
 import { buttonClasses } from "@mui/material/Button";
 import { radioClasses } from "@mui/material/Radio";
 import {
-  alpha,
   createTheme,
   darken,
   lighten,
@@ -17,6 +16,7 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { tablePaginationClasses } from "@mui/material/TablePagination";
+import { tooltipClasses } from "@mui/material/Tooltip";
 import { deepmerge } from "@mui/utils";
 import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
@@ -677,10 +677,15 @@ const getThemeOptions = ({
           },
           tooltip: {
             backgroundColor: palette.background.dark,
-            left: "-5px",
             fontSize: "0.8em",
             borderRadius: 0,
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            [`&.${tooltipClasses.tooltipPlacementRight}`]: {
+              left: "-3px",
+            },
+            [`&.${tooltipClasses.tooltipPlacementBottom}`]: {
+              top: "-3px",
+            },
           },
         },
       },
