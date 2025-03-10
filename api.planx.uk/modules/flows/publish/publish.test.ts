@@ -41,6 +41,7 @@ beforeEach(() => {
         publishedFlows: [
           {
             data: mockFlowData,
+            createdAt: "2024-12-31",
           },
         ],
       },
@@ -126,7 +127,7 @@ describe("publish", () => {
           team: {
             slug: "testing",
           },
-          publishedFlows: [{ data: alteredFlow }],
+          publishedFlows: [{ data: alteredFlow, createdAt: "2024-12-31" }],
         },
       },
     });

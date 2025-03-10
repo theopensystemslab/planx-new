@@ -153,6 +153,7 @@ interface PublishedFlowsResponse {
     publishedFlows: {
       data: Flow["data"];
       id: number;
+      createdAt: string;
     }[];
   } | null;
 }
@@ -160,7 +161,7 @@ interface PublishedFlowsResponse {
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
   id: string,
-): Promise<Flow["data"] | undefined> => {
+): Promise<{ data: Flow["data"]; createdAt: string } | undefined> => {
   const { flow } = await $public.client.request<PublishedFlowsResponse>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
@@ -170,6 +171,7 @@ const getMostRecentPublishedFlow = async (
             order_by: { created_at: desc }
           ) {
             data
+            createdAt
           }
         }
       }
@@ -177,7 +179,7 @@ const getMostRecentPublishedFlow = async (
     { id },
   );
 
-  const mostRecent = flow?.publishedFlows?.[0]?.data;
+  const mostRecent = flow?.publishedFlows?.[0];
   return mostRecent;
 };
 
@@ -202,6 +204,47 @@ const getMostRecentPublishedFlowVersion = async (
 
   const mostRecent = flow?.publishedFlows?.[0]?.id;
   return mostRecent;
+};
+
+export interface Comment {
+  id: number;
+  actor: {
+    firstName: string;
+    lastName: string;
+  };
+  comment: string;
+  createdAt: string;
+}
+
+// Get comments in a flow's "History" since last publish
+export const getComments = async (flowId: string, lastPublishedAt?: string) => {
+  const { client: $client } = getClient();
+  const response = await $client.request<{ comments: Comment[] | [] }>(
+    gql`
+      query GetComments($flow_id: uuid!, $last_published_at: String) {
+        comments: flow_comments(
+          where: {
+            created_at: { _gt: $last_published_at }
+            flow_id: { _eq: $flow_id }
+          }
+        ) {
+          id
+          actor {
+            firstName: first_name
+            lastName: last_name
+          }
+          comment
+          createdAt: created_at
+        }
+      }
+    `,
+    {
+      flow_id: flowId,
+      last_published_at: lastPublishedAt,
+    },
+  );
+
+  return response.comments;
 };
 
 /**

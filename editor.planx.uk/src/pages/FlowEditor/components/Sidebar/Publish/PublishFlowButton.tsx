@@ -14,12 +14,9 @@ import React, { useState } from "react";
 import { useAsync } from "react-use";
 import Input from "ui/shared/Input/Input";
 
-import {
-  AlteredNode,
-  AlteredNodesSummaryContent,
-  ValidationCheck,
-  ValidationChecks,
-} from "./PublishDialog";
+import { AlteredNode } from "./AlteredNodes";
+import { AlteredNodesSummaryContent } from "./PublishDialog";
+import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
 
 export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
   previewURL,

@@ -108,6 +108,7 @@ describe("success", () => {
           publishedFlows: [
             {
               data: mockSourceTemplateFlowData,
+              createdAt: "2024-12-31",
             },
           ],
         },
