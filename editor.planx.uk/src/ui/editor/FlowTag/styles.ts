@@ -9,11 +9,11 @@ export const Root = styled(Box, {
 })<FlowTagProps>(({ theme, tagType, statusVariant }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  padding: "2px 6px",
+  padding: "2px 8px",
   display: "flex",
   alignItems: "center",
   gap: theme.spacing(0.5),
-  borderRadius: "4px",
+  borderRadius: "50px",
   textTransform: "capitalize",
   border: "1px solid rgba(0, 0, 0, 0.2)",
   ...(tagType === FlowTagType.Status && {
@@ -29,7 +29,7 @@ export const Root = styled(Box, {
       background:
         statusVariant === StatusVariant.Online
           ? theme.palette.success.main
-          : theme.palette.flowTag.lightOff,
+          : theme.palette.action.disabled,
     },
   }),
   ...(tagType === FlowTagType.ApplicationType && {

@@ -8,9 +8,14 @@ import * as pulumi from "@pulumi/pulumi";
 import * as postgres from "@pulumi/postgresql";
 import * as mime from "mime";
 import * as tldjs from "tldjs";
-import * as url from "url";
 
-import { generateTeamSecrets, generateCORSAllowList, addRedirectToCloudFlareListenerRule } from "./utils";
+import {
+  DEFAULT_POSTGRES_PORT,
+  addRedirectToCloudFlareListenerRule,
+  generateTeamSecrets,
+  generateCORSAllowList,
+  getPostgresDbUrl
+} from "./utils";
 import { createHasuraService } from "./services/hasura";
 import { CustomDomains } from "../common/teams";
 
@@ -115,13 +120,14 @@ export = async () => {
   });
 
   const DB_ROOT_USERNAME = "dbuser";
-
+  const dbHost = config.requireSecret("db-host")
+  const dbRootPassword = config.requireSecret("db-password");
   // ----------------------- Metabase
   const provider = new postgres.Provider("metabase", {
-    host: config.requireSecret("db-host"),
+    host: dbHost,
     port: 5432,
     username: DB_ROOT_USERNAME,
-    password: config.requireSecret("db-password"),
+    password: dbRootPassword,
     database: "postgres",
     superuser: false,
   });
@@ -191,6 +197,9 @@ export = async () => {
     domain: DOMAIN,
   });
   
+  // since our secrets here are of the type Output<string>, we have to use Pulumi methods to to access them as strings
+  const metabaseDbUrl = pulumi.all([dbHost, metabasePgPassword]).apply(([dbHost, metabasePgPassword]) => 
+    getPostgresDbUrl("metabase", metabasePgPassword, dbHost, DEFAULT_POSTGRES_PORT, "metabase"))
   const metabaseService = new awsx.ecs.FargateService("metabase", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -211,7 +220,7 @@ export = async () => {
           { name: "MB_DB_TYPE", value: "postgres" },
           {
             name: "MB_DB_CONNECTION_URI",
-            value: config.requireSecret("mb-db-connection-uri"),
+            value: metabaseDbUrl,
           },
           { name: "MB_JETTY_HOST", value: "0.0.0.0" },
           { name: "MB_JETTY_PORT", value: String(METABASE_PORT) },
@@ -244,10 +253,15 @@ export = async () => {
   });
 
   // ----------------------- Hasura
+  // we'll also pass this database URI to sharedb later on
+
+  const rootDbUrl = pulumi.all([dbHost, dbRootPassword]).apply(([dbHost, dbRootPassword]) => 
+    getPostgresDbUrl(DB_ROOT_USERNAME, dbRootPassword, dbHost))
   createHasuraService({
     vpc,
     cluster,
     repo,
+    dbUrl: rootDbUrl,
     CUSTOM_DOMAINS,
     stacks: {
       networking,
@@ -561,7 +575,7 @@ export = async () => {
           },
           {
             name: "PG_URL",
-            value: config.requireSecret("db-url"),
+            value: rootDbUrl,
           },
         ],
       },

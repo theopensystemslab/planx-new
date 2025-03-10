@@ -1,17 +1,20 @@
 import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { format } from "date-fns";
 import React from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
-import { containsItem } from "ui/shared/DataTable/utils";
+import { containsItem, dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
-import { submissionStatusOptions } from "../submissionFilterOptions";
+import {
+  submissionEventTypes,
+  submissionStatusOptions,
+} from "../submissionFilterOptions";
 import { EventsLogProps, Submission } from "../types";
 import { DownloadSubmissionButton } from "./DownloadSubmissionButton";
-import { FormattedResponse } from "./FormattedResponse";
+import { OpenResponseButton } from "./OpenResponseButton";
 import { StatusChip } from "./StatusChip";
 import { SubmissionEvent } from "./SubmissionEvent";
 
@@ -40,9 +43,9 @@ const EventsLog: React.FC<EventsLogProps> = ({
       />
     );
 
-  const rowData = submissions.map((submission) => ({
+  const rowData = submissions.map((submission, index) => ({
     ...submission,
-    id: submission.eventId,
+    id: `${submission.eventId}-${index}`,
     downloadSubmissionLink: undefined,
   }));
 
@@ -51,20 +54,27 @@ const EventsLog: React.FC<EventsLogProps> = ({
   );
 
   const columns: ColumnConfig<Submission>[] = [
-    { field: "flowName", headerName: "Flow name" },
+    {
+      field: "flowName",
+      headerName: "Service",
+      width: 250,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: (params) => <strong>{`${params.value}`}</strong>,
+    },
     {
       field: "eventType",
       headerName: "Event",
-      width: 250,
+      width: 230,
       type: ColumnFilterType.ARRAY,
       customComponent: SubmissionEvent,
       columnOptions: {
-        valueOptions: submissionStatusOptions,
+        valueOptions: submissionEventTypes,
       },
     },
     {
       field: "status",
       headerName: "Status",
+      width: 125,
       type: ColumnFilterType.ARRAY,
       customComponent: StatusChip,
       columnOptions: {
@@ -74,21 +84,22 @@ const EventsLog: React.FC<EventsLogProps> = ({
     {
       field: "createdAt",
       headerName: "Date",
+      width: 125,
       columnOptions: {
-        valueFormatter: (params) =>
-          format(new Date(params), "dd/MM/yy hh:mm:ss"),
+        valueFormatter: dateFormatter,
       },
       type: ColumnFilterType.DATE,
     },
-    { field: "sessionId", headerName: "Session ID", width: 350 },
+    { field: "sessionId", headerName: "Session ID", width: 400 },
     {
       field: "response",
       headerName: "Response",
-      width: 350,
+      width: 100,
       type: ColumnFilterType.CUSTOM,
-      customComponent: (params) => <FormattedResponse {...params.row} />,
+      customComponent: OpenResponseButton,
       columnOptions: {
         sortable: false,
+        cellClassName: "MuiDataGrid-cell--textCenter",
         filterOperators: [
           {
             value: "contains",
@@ -114,18 +125,23 @@ const EventsLog: React.FC<EventsLogProps> = ({
     },
     {
       field: "downloadSubmissionLink" as keyof Submission,
-      headerName: "",
+      headerName: "Download",
       width: 100,
       type: ColumnFilterType.CUSTOM,
       customComponent: DownloadSubmissionButton,
       columnOptions: {
+        cellClassName: "MuiDataGrid-cell--textCenter",
         filterable: false,
         sortable: false,
       },
     },
   ];
 
-  return <DataTable columns={columns} rows={rowData} />;
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <DataTable columns={columns} rows={rowData} />
+    </ErrorBoundary>
+  );
 };
 
 export default EventsLog;

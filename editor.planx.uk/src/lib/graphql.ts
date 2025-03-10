@@ -73,6 +73,9 @@ const authWsLink = new WebSocketLink({
         },
       };
     },
+    connectionCallback: (error) => {
+      if (error) handleExpiredJWTErrors();
+    },
   },
 });
 
@@ -164,9 +167,9 @@ export const handleExpiredJWTErrors = () => {
 
   // Fallback if case of toast not firing
   setTimeout(() => {
-    window.location.href = "/logout"
+    window.location.href = "/logout";
   }, 2_500);
-}
+};
 
 const handleValidationErrors = (operation: Operation) => {
   const user = useStore.getState().getUser();

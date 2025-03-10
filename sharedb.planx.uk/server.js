@@ -7,6 +7,9 @@ const PostgresDB = require("./sharedb-postgresql");
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 
+const ONE_MINUTE_IN_MS = 60 * 1000;
+const TOKEN_EXPIRY_CODE = 4001;
+
 const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
 assert(JWT_SECRET);
 assert(PG_URL);
@@ -90,6 +93,7 @@ const wss = new Server({
             cb(false, 401, "Unauthorized");
           } else {
             console.log({ newConnection: decoded });
+            info.req.authToken = token;
             info.req.uId = decoded;
             cb(true);
           }
@@ -103,6 +107,23 @@ const wss = new Server({
 });
 
 wss.on("connection", function (ws, req) {
+  // JWTs expire every 24hrs
+  // Check status every minute - client side will logout on expiry
+  const tokenCheckInterval = setInterval(() => {
+    try {
+      jwt.verify(req.authToken, JWT_SECRET, (err) => {
+        if (err) {
+          ws.close(TOKEN_EXPIRY_CODE, "Token expired");
+          clearInterval(tokenCheckInterval);
+        }
+      });
+    } catch (error) {
+      console.error("Token validation error:", error);
+      ws.close(TOKEN_EXPIRY_CODE, "Token validation error");
+      clearInterval(tokenCheckInterval);
+    }
+  }, ONE_MINUTE_IN_MS);
+
   const stream = new WebSocketJSONStream(ws);
   sharedb.listen(stream, req);
 });

@@ -11,7 +11,6 @@ import {
   False as NotConfigured,
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
-import { Article4Status } from "./components/Article4Status";
 import { getFlowNamesForFilter } from "./getFlowNamesForFilter";
 import { isCouncilTeam } from "./utils";
 
@@ -26,6 +25,8 @@ export const PlatformAdminPanel = () => {
     {
       field: "name",
       headerName: "Team",
+      type: ColumnFilterType.CUSTOM,
+      customComponent: (params) => <strong>{`${params.value}`}</strong>,
     },
     {
       field: "referenceCode",
@@ -49,11 +50,8 @@ export const PlatformAdminPanel = () => {
     },
     {
       field: "article4sEnabled",
-      headerName: "Article 4s (API)",
+      headerName: "Article 4s",
       type: ColumnFilterType.BOOLEAN,
-      customComponent: (params) => {
-        return <Article4Status teamSlug={params.row.slug} />;
-      },
     },
     {
       field: "govpayEnabled",

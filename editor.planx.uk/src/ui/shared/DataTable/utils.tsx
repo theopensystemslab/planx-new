@@ -5,6 +5,7 @@ import {
   GridValueOptionsParams,
   ValueOptions,
 } from "@mui/x-data-grid";
+import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
 
@@ -111,3 +112,9 @@ export const getColumnFilterType = (columnType?: ColumnRenderType) => {
       return undefined;
   }
 };
+
+/**
+ * Format date times to a standard format, e.g 31/12/25 14:40:45
+ */
+export const dateFormatter = (value: string) =>
+  format(new Date(value), "dd/MM/yy HH:mm:ss");

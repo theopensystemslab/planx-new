@@ -20,7 +20,7 @@ export const mockTeams: AdminPanelData[] = [
     actionColour: "#000000",
     homepage: undefined,
     subdomain: undefined,
-    article4sEnabled: "@todo",
+    article4sEnabled: true,
     govnotifyPersonalisation: {
       helpEmail: "example@council.co.uk",
       helpPhone: "(01234) 567890",
@@ -46,7 +46,7 @@ export const mockTeams: AdminPanelData[] = [
     govpayEnabled: true,
     logo: "https://path.to.logo.com/theopensystemslab/planx-team-logos/main/logo.svg",
     slug: "doncaster",
-    article4sEnabled: "@todo",
+    article4sEnabled: false,
     powerAutomateEnabled: false,
   },
   {
@@ -66,7 +66,7 @@ export const mockTeams: AdminPanelData[] = [
     govpayEnabled: false,
     logo: "https://path.to.logo.com/theopensystemslab/planx-team-logos/main/logo.svg",
     slug: "newcastle",
-    article4sEnabled: "@todo",
+    article4sEnabled: true,
     powerAutomateEnabled: true,
   },
   {
@@ -83,7 +83,7 @@ export const mockTeams: AdminPanelData[] = [
     govpayEnabled: true,
     logo: "https://path.to.logo.com/theopensystemslab/planx-team-logos/main/logo.svg",
     slug: "tewkesbury",
-    article4sEnabled: "@todo",
+    article4sEnabled: false,
     powerAutomateEnabled: false,
   },
 ];

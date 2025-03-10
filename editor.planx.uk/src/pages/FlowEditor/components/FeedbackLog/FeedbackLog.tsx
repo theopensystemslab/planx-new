@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
@@ -8,55 +7,47 @@ import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContain
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
+import { dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
+import { feedbackTypeOptions } from "./feedbackFilterOptions";
 import { FeedbackLogProps } from "./types";
-import {
-  EmojiRating,
-  feedbackTypeIcon,
-  generateCommentSummary,
-  stripHTMLTags,
-} from "./utils";
+import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const columns: ColumnConfig<Feedback>[] = [
     {
+      field: "flowName",
+      headerName: "Service",
+      width: 250,
+      type: ColumnFilterType.CUSTOM,
+      customComponent: (params) => <strong>{`${params.value}`}</strong>,
+    },
+    {
       field: "type",
       headerName: "Type",
       width: 200,
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.ARRAY,
       columnOptions: {
-        filterable: false, // TODO: make filterable
-        sortable: false,
-        valueFormatter: (value) => {
-          const { title } = feedbackTypeIcon(value);
-          return title;
-        },
+        valueOptions: feedbackTypeOptions,
+        filterable: true,
       },
-      customComponent: (params) => {
-        const { icon, title } = feedbackTypeIcon(params.value);
-        return (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {icon}
-            {title}
-          </Box>
-        );
-      },
+      customComponent: (params) => <>{feedbackTypeText(params.value)}</>,
     },
     {
       field: "createdAt",
       headerName: "Date",
+      width: 125,
       type: ColumnFilterType.DATE,
       columnOptions: {
-        valueFormatter: (params) =>
-          format(new Date(params), "dd/MM/yy hh:mm:ss"),
+        valueFormatter: dateFormatter,
       },
     },
-    { field: "flowName", headerName: "Service", width: 200 },
     {
       field: "feedbackScore",
       headerName: "Rating",
+      width: 125,
       columnOptions: {
         filterable: false, // TODO: make filterable
         valueFormatter: (params) => EmojiRating[params],
@@ -66,9 +57,6 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "userComment",
       headerName: "Comment",
       width: 340,
-      columnOptions: {
-        valueFormatter: (params) => generateCommentSummary(params),
-      },
     },
     {
       field: "address",
@@ -110,10 +98,12 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     {
       field: "browser",
       headerName: "Browser",
+      width: 125,
     },
     {
       field: "platform",
       headerName: "Device",
+      width: 125,
       columnOptions: {
         valueFormatter: (params) => capitalize(params),
       },

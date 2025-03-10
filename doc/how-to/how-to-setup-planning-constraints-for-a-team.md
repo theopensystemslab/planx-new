@@ -3,7 +3,7 @@
 ## Context 🖼️
 Planx queries planning.data.gov.uk to fetch data about constraints for councils participating in ODP. The ability to query constraints via the Planning Constraints component in Planx is disabled by default for new teams. This is to prevent the component displaying "false negatives" for early testers - eg saying that the site does not overlap with any constraints, when actually there isn't yet a local available data source for it to check against. The Planning Data API response shape currently looks identical for a non-overlapping constraint with available data and for one without available data. 
 
-Our /gis API sets the passport variable `articleFour` by default for _any_ entities in the `article-4-direction-area` dataset. But Article 4s are a unique case where individual entities within the _same_ dataset reflect _different_ policies. So, rather than `articleFour`, councils actually want each entity to correspond to its' own passport variable - eg `articleFour.council.something`.
+Our `/gis` API sets the passport variable `articleFour` by default for _any_ entities in the `article-4-direction-area` dataset. But Article 4s are a unique case where individual entities within the _same_ dataset reflect _different_ policies. So, rather than `articleFour`, councils actually want each entity to correspond to its' own passport variable - eg `articleFour.council.something`.
 
 ## Process ⚙️
 1. **Council** - Shares & publishes their data on planning.data.gov.uk
@@ -47,6 +47,8 @@ The dictionary of `records` should have one key/value pair per each unique granu
 The council should map their GIS identifiers themselves in the spreadsheet, but often this is partially complete or missing and simpler to quickly match against planning.data.gov.uk search results ourselves than start a communication back and forth (it's often not the same council person who knows the Article 4 rules as who understands the spatial data structure).
 
 5. **Planx** - Add an entry for this council to the `localAuthorityMetadata` variable defined at the top of `api.planx.uk/modules/gis/service/digitalLand.ts`
+   
+6. **Planx** - Toggle the database column `team_settings.has_article4_schema` to be `true` via the Hasura console. This is used by the admin panel view for platform admins.
 
 Confirm that granular A4 variables are now being returned by the /gis endpoint and written to the passport when navigating a flow.
 

@@ -27,9 +27,9 @@ export const FiltersHeader = styled(AccordionSummary)(({ theme }) => ({
   justifyContent: "space-between",
   padding: theme.spacing(1.75, 2),
   gap: theme.spacing(3),
-  background: theme.palette.background.midGray,
+  background: theme.palette.secondary.dark,
   "&:hover": {
-    background: theme.palette.background.midGray,
+    background: theme.palette.secondary.dark,
   },
   "& .MuiAccordionSummary-expandIconWrapper": {
     display: "none",
@@ -60,7 +60,7 @@ export const StyledChip = styled(Chip)(({ theme }) => ({
 }));
 
 export const FiltersBody = styled(AccordionDetails)(({ theme }) => ({
-  background: theme.palette.background.midGray,
+  background: theme.palette.secondary.dark,
   padding: 0,
 }));
 

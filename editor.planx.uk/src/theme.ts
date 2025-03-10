@@ -3,7 +3,6 @@ import "themeOverrides.d.ts";
 import { buttonClasses } from "@mui/material/Button";
 import { radioClasses } from "@mui/material/Radio";
 import {
-  alpha,
   createTheme,
   darken,
   lighten,
@@ -17,6 +16,7 @@ import createPalette, {
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { tablePaginationClasses } from "@mui/material/TablePagination";
+import { tooltipClasses } from "@mui/material/Tooltip";
 import { deepmerge } from "@mui/utils";
 import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
@@ -41,10 +41,10 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     default: "#FFFFFF",
     paper: "#F9F8F8",
     dark: "#2c2c2c",
-    midGray: "#e3e3e3",
   },
   secondary: {
     main: "#F3F2F1",
+    dark: "#e3e3e3",
   },
   text: {
     primary: "#0B0C0C",
@@ -91,7 +91,6 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   flowTag: {
     online: "#D6FFD7",
     offline: "#EAEAEA",
-    lightOff: "#a1a1a1",
     applicationType: "#D6EFFF",
     serviceType: "#FFEABE",
   },
@@ -674,14 +673,19 @@ const getThemeOptions = ({
         },
         styleOverrides: {
           arrow: {
-            color: "#2c2c2c",
+            color: palette.background.dark,
           },
           tooltip: {
-            backgroundColor: "#2c2c2c",
-            left: "-5px",
+            backgroundColor: palette.background.dark,
             fontSize: "0.8em",
             borderRadius: 0,
             fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            [`&.${tooltipClasses.tooltipPlacementRight}`]: {
+              left: "-3px",
+            },
+            [`&.${tooltipClasses.tooltipPlacementBottom}`]: {
+              top: "-3px",
+            },
           },
         },
       },
@@ -706,17 +710,18 @@ const getThemeOptions = ({
             [`&.${gridClasses.root}--densityStandard .${gridClasses.cell}`]: {
               padding: "10px 10px",
             },
-            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]: {
-              padding: "20px 10px",
-            },
+            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]:
+              {
+                padding: "20px 10px",
+              },
             [`& .${gridClasses.toolbarContainer}`]: {
               borderBottom: `1px solid ${palette.border.main}`,
-              background: palette.background.midGray,
+              background: palette.secondary.dark,
               paddingBottom: "5px",
               [`& .${buttonClasses.root}`]: {
                 background: palette.background.default,
                 "&:focus-visible": {
-                  ...focusStyle
+                  ...focusStyle,
                 },
                 // Ensure SVG icons are equal size
                 "& svg": {
@@ -732,6 +737,10 @@ const getThemeOptions = ({
               "&:focus": {
                 ...inputFocusStyle,
                 boxShadow: "none",
+              },
+              // Hide right-side border for final column header
+              [`&--last .${gridClasses.columnSeparator} svg`]: {
+                visibility: "hidden",
               },
             },
             [`& .${gridClasses.columnHeaderTitle}`]: {

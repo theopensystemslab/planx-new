@@ -162,7 +162,7 @@ export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
   archiveFlow: (flowId: string) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
-  connectTo: (id: NodeId) => void;
+  connectTo: (id: NodeId) => Promise<void>;
   copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: NodeId) => void;
   createFlow: (

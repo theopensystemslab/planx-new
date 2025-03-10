@@ -5,10 +5,11 @@ export interface CreateService {
   vpc: awsx.ec2.Vpc,
   cluster: awsx.ecs.Cluster, 
   repo: awsx.ecr.Repository, 
+  dbUrl: pulumi.Output<string>,
   stacks: {
     networking: pulumi.StackReference,
     certificates: pulumi.StackReference,
     data: pulumi.StackReference,
   },
-  CUSTOM_DOMAINS: Record<string, string>[], 
+  CUSTOM_DOMAINS: Record<string, string>[],
 };

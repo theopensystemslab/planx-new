@@ -267,8 +267,8 @@ describe("SetValue component", () => {
       // End of flow reached
       expect(getCurrentCard()?.id).toEqual("endOfService");
 
-      // Passport correctly populated - passport variable not removed as values do not match
-      expect(computePassport()?.data?.myKey).toEqual("mySecondValue");
+      // Passport correctly populated - passport variable not removed and array type preserved as values do not match
+      expect(computePassport()?.data?.myKey).toEqual(["mySecondValue"]);
     });
   });
 
