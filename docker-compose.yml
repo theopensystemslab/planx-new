@@ -87,6 +87,7 @@ services:
     environment:
       HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
       HASURA_NETWORK_LOCATION: "hasura"
+      API_NETWORK_LOCATION: http://api:${API_PORT}
     healthcheck:
       test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
       interval: 15s

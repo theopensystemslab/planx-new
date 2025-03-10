@@ -1,6 +1,6 @@
 # HASURA_PROXY_PORT - The publicly exposed port through which this service can be accessed
 # HASURA_NETWORK_LOCATION - Either "hasura" in Docker environments, or "localhost" on Fargate
-
+# API_NETWORK_LOCATION - Either "http://api:${API_PORT}" in Docker environments, or external API URL on Fargate
 
 # General options
 {
@@ -10,9 +10,7 @@
 
 # Reverse proxy for Hasura GraphQL Engine
 :{$HASURA_PROXY_PORT} {
-	reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
-
-	# Update response headers
+	# Mandated security headers
 	header {
 		# Enable HSTS
 		Strict-Transport-Security "max-age=15552000; includeSubDomains"
@@ -26,4 +24,41 @@
 		# Do not leak server information
 		-Server
 	}
+
+	@hasToken {
+		# Match requests with JWT in cookie
+		header_regexp Cookie jwt=([^;]+)
+
+		# Match requests with Bearer token in Authorization header
+		header_regexp Authorization "^Bearer (\S+)$"
+
+		# Match requests with token in query parameter
+		query token=*
+	}
+
+	handle @hasToken {
+		rewrite * /auth/validate-jwt
+
+		# Forward to validation service
+		reverse_proxy {$API_NETWORK_LOCATION} {
+			method GET
+
+			@success status 2xx
+
+			# Restore original path, then proxy original request to Hasura
+			handle_response @success {
+				rewrite * {http.request.orig_uri.path}
+				reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
+			}
+
+			handle_response {
+				respond 401 {
+					body "Unauthorized - expired or invalid token"
+				}
+			}
+		}
+	}
+
+	# Default route for requests without auth header
+	reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
 }
