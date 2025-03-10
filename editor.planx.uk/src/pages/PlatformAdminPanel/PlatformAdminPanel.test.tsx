@@ -29,7 +29,7 @@ describe("Platform admin panel", () => {
       "Reference code",
       "Live services",
       "Planning constraints",
-      "Article 4s (API)",
+      "Article 4s",
       "GOV.UK Pay",
       "GOV.UK Notify",
       "Send to email",

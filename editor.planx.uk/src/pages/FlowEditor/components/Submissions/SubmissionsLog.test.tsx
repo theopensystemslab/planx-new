@@ -16,7 +16,7 @@ describe("When the submissions log renders", () => {
       />,
     );
     const headers = [
-      "Flow name",
+      "Service",
       "Event",
       "Status",
       "Date",
@@ -32,26 +32,24 @@ describe("When the submissions log renders", () => {
     // test for a selection of row values
     expect(
       screen.getAllByRole("gridcell", { name: "Send to email" }),
-    ).toHaveLength(2); // Two submissions in the mock data are this type
+    ).toHaveLength(1); // One submission in the mock data is this type
 
     expect(
       screen.getByRole("gridcell", {
-        name: "c64eefbe-bb2d-47c8-94de-d4776e09af04",
+        name: "126ec0c4-12f2-1209-aa09-11294ec3ee12",
       }),
     ).toBeVisible();
 
     expect(
-      screen.getByRole("gridcell", {
+      screen.getAllByRole("gridcell", {
         name: "Failed (500)",
       }),
-    ).toBeVisible();
+    ).toHaveLength(2);
 
     expect(screen.getAllByRole("gridcell", { name: "Success" })).toHaveLength(
-      5,
+      1,
     );
 
-    expect(screen.getAllByText("Apply for planning permission")).toHaveLength(
-      4,
-    ); // Four submissions in the mock data are from this flow
+    expect(screen.getAllByText("Dsn impact metrics")).toHaveLength(3); // All submissions in the mock data are from this flow
   });
 });
