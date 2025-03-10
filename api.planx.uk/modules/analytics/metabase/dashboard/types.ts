@@ -6,6 +6,7 @@ export interface CreateNewDashboardParams {
   flowId: string;
   teamId: number;
   serviceSlug: string;
+  serviceName: string;
 }
 
 /* We don't want users to be able to deep copy templates / dashboards because it will wreak Metabase havoc. This is why there is no isDeepCopy option here */
@@ -34,6 +35,7 @@ export const createNewDashboardSchema = z.object({
     flowId: z.string(),
     teamId: z.number(),
     serviceSlug: z.string(),
+    serviceName: z.string(),
   }),
 });
 
