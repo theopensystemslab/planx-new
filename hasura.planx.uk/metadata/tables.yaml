@@ -1220,7 +1220,8 @@
             {
               "serviceSlug": {{$body.event.data.new.slug}},
               "flowId": {{$body.event.data.new.id}},
-              "teamId": {{$body.event.data.new.team_id}}
+              "teamId": {{$body.event.data.new.team_id}},
+              "serviceName": {{$body.event.data.new.name}}
             }
         template_engine: Kriti
         version: 2
