@@ -1,7 +1,6 @@
 import { getTeamNameAndSlug } from "./getTeamNameAndSlug.js";
 import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { copyDashboard } from "./copyDashboard.js";
-import { getDashboard } from "./getDashboard.js";
 import { generatePublicLinkWithFilters } from "./generatePublicLinkWithFilters.js";
 import { updatePublicAnalyticsLink } from "./updatePublicAnalyticsLink.js";
 import type { CreateNewDashboardParams } from "./types.js";
@@ -15,6 +14,7 @@ export async function createNewDashboard({
   flowId,
   teamId,
   serviceSlug,
+  serviceName,
 }: CreateNewDashboardParams): Promise<string | undefined> {
   try {
     const { teamName, teamSlug } = await getTeamNameAndSlug(teamId);
@@ -22,8 +22,7 @@ export async function createNewDashboard({
 
     if (!templateId) return;
 
-    const template = await getDashboard(templateId);
-    const newName = template.name.replace("Template", teamName);
+    const newName = `${teamName} - ${serviceName}`;
     const teamData = await getTeamIdAndMetabaseId(teamSlug);
     if (!teamData.metabaseId) {
       throw new Error(`No Metabase ID found for team ${teamSlug}`);
