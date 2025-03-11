@@ -1,32 +1,29 @@
 Feature: Trial Team access
 
   Background:
-    Given the following teams exist:
-      | id | name        | slug        | access_rights |
-      | 1  | Trial team  | trial-team  | trial         |
-      | 3  | Full access | full-access | full          |
-    And the following users exist:
+    Given there is a trial team and full access team:
+      | id | name        | slug        |
+      | 1  | Trial access  | trial-access  |
+      | 3  | Full access | full-access |
+    And there is one trial user and one full user:
       | id | first_name | last_name | email                |
       | 12 | Trial      | User      | trial.user@email.com |
       | 32 | Full       | User      | full.user@email.com  |
-    And users are members of teams:
+    And these users are assigned to their respective teams:
       | user_id | team_id | role       |
       | 12      | 1       | teamEditor |
-      | 32      | 3       | teamEditor |
-
-  @trial-user-permissions
-  Scenario: I can create a flow
-    When I am in my own team
-    Then I can create a flow
+      | 32      | 3       | teamEditor |        
+    And I two flows in the database for trial access and full access:
+      | creator_id  | name              | slug             | team_id |
+      | 12          | Trial Flow        | trial-flow       | 1       |
+      | 32          | Full Flow         | full-flow         | 3       |
 
   @trial-user-permissions
   Scenario: I can turn a flow online with full access
-    When I am on a flow in my team
-    And my team has full access rights
+    When a flow has been created by a user from a team with full access
     Then I should be able to update the status
 
   @trial-user-permissions
   Scenario: I cannot turn a flow online with trial access
-    When I am on a flow in my team
-    And my team has trial access rights
+    When a flow has been created by a user from a team with trial access
     Then I should not be able to update the status
