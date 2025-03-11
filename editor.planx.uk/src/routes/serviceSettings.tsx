@@ -1,5 +1,5 @@
 import { compose, mount, route, withData } from "navi";
-import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings";
+import ServiceSettings from "pages/FlowEditor/components/Settings/ServiceSettings/ServiceSettings";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 import { makeTitle } from "./utils";
