@@ -76,7 +76,7 @@ export const AlteredExternalPortalsSummary = (props: {
       <Typography variant="body2">{`This includes recently published changes in the following nested services:`}</Typography>
       <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
         {portals.map((portal) => (
-          <AlteredExternalPortalListItem {...portal} />
+          <AlteredExternalPortalListItem key={portal.flowId} {...portal} />
         ))}
       </List>
     </Box>
