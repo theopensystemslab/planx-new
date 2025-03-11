@@ -8,9 +8,7 @@
 	auto_https off
 }
 
-# Reverse proxy for Hasura GraphQL Engine
-:{$HASURA_PROXY_PORT} {
-	# Mandated security headers
+(security_headers) {
 	header {
 		# Enable HSTS
 		Strict-Transport-Security "max-age=15552000; includeSubDomains"
@@ -24,41 +22,75 @@
 		# Do not leak server information
 		-Server
 	}
+}
 
-	@hasToken {
-		# Match requests with JWT in cookie
-		header_regexp Cookie jwt=([^;]+)
+# Forward requests which require authorisation along to our REST API's JWT validation endpoint
+# This checks if the incoming JWT is revoked
+# Further validation and permissions checks still actioned by Hasura in JWT auth mode
+(validate_jwt) {
+	rewrite * /auth/validate-jwt
 
-		# Match requests with Bearer token in Authorization header
-		header_regexp Authorization "^Bearer (\S+)$"
+	# Forward to validation service
+	reverse_proxy {$API_NETWORK_LOCATION} {
+		method GET
+		header_up X-Original-URI {http.request.orig_uri.path}
 
-		# Match requests with token in query parameter
-		query token=*
-	}
+		@success status 2xx
 
-	handle @hasToken {
-		rewrite * /auth/validate-jwt
+		# Restore original path, then proxy original request to Hasura
+		handle_response @success {
+			import security_headers
+			header X-Auth-Validated true
 
-		# Forward to validation service
-		reverse_proxy {$API_NETWORK_LOCATION} {
-			method GET
+			rewrite * {http.request.orig_uri.path}
+			reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
+		}
 
-			@success status 2xx
+		handle_response {
+			import security_headers
+			header X-Auth-Validated false
 
-			# Restore original path, then proxy original request to Hasura
-			handle_response @success {
-				rewrite * {http.request.orig_uri.path}
-				reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
-			}
-
-			handle_response {
-				respond 401 {
-					body "Unauthorized - expired or invalid token"
-				}
+			respond 401 {
+				body "Unauthorized - expired or invalid token"
 			}
 		}
 	}
+}
 
-	# Default route for requests without auth header
-	reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
+# Reverse proxy for Hasura GraphQL Engine
+:{$HASURA_PROXY_PORT} {
+
+	# Validation conditions match getToken() in REST API
+	# Please see api.planx.uk/modules/auth/middleware.ts
+	@hasTokenAuth {
+		header_regexp Authorization "^Bearer (\S+)$"
+	}
+
+	@hasTokenCookie {
+		header_regexp Cookie jwt=([^;]+)
+	}
+
+	@hasTokenQuery {
+		query token=*
+	}
+
+	handle @hasTokenAuth {
+		import validate_jwt
+	}
+
+	handle @hasTokenCookie {
+		import validate_jwt
+	}
+
+	handle @hasTokenQuery {
+		import validate_jwt
+	}
+
+	# Default route for public requests
+	handle {
+		import security_headers
+		header X-Auth-Validated skip
+
+		reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
+	}
 }
