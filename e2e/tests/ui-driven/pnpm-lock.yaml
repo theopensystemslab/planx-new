@@ -9,8 +9,8 @@ dependencies:
     specifier: git+https://github.com/theopensystemslab/planx-core#edcb32c
     version: github.com/theopensystemslab/planx-core/edcb32c(@types/react@19.0.7)
   axios:
-    specifier: ^1.7.4
-    version: 1.7.4
+    specifier: ^1.8.3
+    version: 1.8.3
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
@@ -734,8 +734,8 @@ packages:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: false
 
-  /axios@1.7.4:
-    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
+  /axios@1.8.3:
+    resolution: {integrity: sha512-iP4DebzoNlP/YN2dpwCgb8zoCmhtkajzS48JvwmkSkXvPI3DHc7m+XYL5tGnSlJtR6nImXZmdCuN5aP8dh1d8A==}
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.1
