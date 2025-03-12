@@ -5,7 +5,10 @@ import FlowStatus from "./FlowStatus";
 import { FooterLinksAndLegalDisclaimer } from "./FooterLinksAndLegalDisclaimer";
 
 const ServiceSettings: React.FC = () => (
-  <Container maxWidth="formWrap">
+  <Container
+    maxWidth="formWrap"
+    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+  >
     <FlowStatus />
     <FooterLinksAndLegalDisclaimer />
   </Container>
