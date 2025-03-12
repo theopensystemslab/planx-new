@@ -8,6 +8,7 @@ export interface FlowInformation {
   description?: string;
   summary?: string;
   limitations?: string;
+  isCopiable?: boolean;
 }
 
 export interface GetFlowInformation {
