@@ -6,8 +6,8 @@ import { FooterLinksAndLegalDisclaimer } from "./FooterLinksAndLegalDisclaimer";
 
 const ServiceSettings: React.FC = () => (
   <Container maxWidth="formWrap">
-    <FooterLinksAndLegalDisclaimer />
     <FlowStatus />
+    <FooterLinksAndLegalDisclaimer />
   </Container>
 );
 

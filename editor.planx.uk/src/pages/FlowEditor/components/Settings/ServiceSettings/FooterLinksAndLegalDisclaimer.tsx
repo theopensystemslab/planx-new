@@ -112,7 +112,7 @@ export const FooterLinksAndLegalDisclaimer = () => {
     validate: () => {},
   });
   return (
-    <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
+    <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2} pt={2}>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
           Elements
