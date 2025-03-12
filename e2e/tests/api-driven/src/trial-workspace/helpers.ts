@@ -20,7 +20,7 @@ export type TeamRecord = {
   id: string | number;
   name: string;
   slug: string;
-  access_rights: "full" | "trial";
+  is_trial_team: boolean | string;
 };
 
 export type UserRecord = {
@@ -46,14 +46,14 @@ export async function createTeam(teamData: TeamRecord): Promise<number> {
             $name: String!
             $id: Int
             $slug: String!
-            $access_rights: team_access_rights_enum_enum
+            $is_trial_team: Boolean
           ) {
             insert_teams_one(
               object: {
                 id: $id
                 name: $name
                 slug: $slug
-                access_rights: $access_rights
+                is_trial_team: $is_trial_team
                 team_settings: { data: {} }
                 integrations: { data: {} }
               }
@@ -66,7 +66,7 @@ export async function createTeam(teamData: TeamRecord): Promise<number> {
           name: teamData.name,
           id: Number(teamData.id),
           slug: teamData.slug,
-          access_rights: teamData.access_rights,
+          is_trial_team: teamData.is_trial_team === "true" ? true : false,
         },
       );
     return response.insert_teams_one.id;
@@ -115,7 +115,7 @@ export async function getFlowById(client, flowId: string): Promise<string> {
       query getFlowById($flowId: uuid) {
         flows(where: { id: { _eq: $flowId } }) {
           team {
-            access_rights
+            is_trial_team
           }
         }
       }
@@ -125,7 +125,7 @@ export async function getFlowById(client, flowId: string): Promise<string> {
     },
   );
 
-  return flow.team.access_rights;
+  return flow.team.is_trial_team;
 }
 
 export async function updateFlowStatus(
@@ -144,7 +144,7 @@ export async function updateFlowStatus(
           ) {
             returning {
               team {
-                access_rights
+                is_trial_team
               }
             }
           }
@@ -155,7 +155,7 @@ export async function updateFlowStatus(
       },
     );
 
-    return returning[0].team.access_rights;
+    return returning[0].team.is_trial_team;
   } catch (error) {
     console.error("Unable to update flow status", error);
     return "error updating flow status";

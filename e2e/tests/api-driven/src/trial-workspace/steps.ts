@@ -26,7 +26,7 @@ import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 export class CustomWorld extends World {
   trialFlowId!: string;
-  fullFlowId!: string;
+  standardFlowId!: string;
   userClient!: CoreDomainClient["client"];
 }
 
@@ -39,14 +39,15 @@ After("@trial-user-permissions", async function () {
 });
 
 Given(
-  "there is a trial team and full access team:",
+  "there is a trial team and standard team:",
   async function (dataTable: DataTable) {
-    const [trialTeam, fullTeam] = dataTable.hashes() as TeamRecord[];
+    const [trialTeam, standardTeam] =
+      dataTable.hashes() as unknown as TeamRecord[];
 
     await createTeam(trialTeam);
-    await createTeam(fullTeam);
+    await createTeam(standardTeam);
 
-    const createdTeams = await checkTeamsExist([trialTeam, fullTeam]);
+    const createdTeams = await checkTeamsExist([trialTeam, standardTeam]);
 
     assert.ok(createdTeams[0], "Teams have not been added correctly");
     assert.equal(createdTeams.length, 2, "Not all teams have been added");
@@ -54,9 +55,9 @@ Given(
 );
 
 Given<CustomWorld>(
-  "there is one trial user and one full user:",
+  "there is one trial user and one standard user:",
   async function (this, dataTable: DataTable) {
-    const [trialUser, fullUser] = dataTable.hashes() as UserRecord[];
+    const [trialUser, standardUser] = dataTable.hashes() as UserRecord[];
 
     const trialUserId = await createUser({
       id: Number(trialUser.id),
@@ -71,17 +72,17 @@ Given<CustomWorld>(
       this.userClient = userClient;
     }
 
-    const fullUserId = await createUser({
-      id: Number(fullUser.id),
-      firstName: fullUser.first_name,
-      lastName: fullUser.last_name,
-      email: fullUser.email,
+    const standardUserId = await createUser({
+      id: Number(standardUser.id),
+      firstName: standardUser.first_name,
+      lastName: standardUser.last_name,
+      email: standardUser.email,
       isPlatformAdmin: false,
     });
 
     assert.ok(
-      trialUserId && fullUserId,
-      "Failed to add trial and full access users",
+      trialUserId && standardUserId,
+      "Failed to add trial and standard users",
     );
   },
 );
@@ -89,7 +90,8 @@ Given<CustomWorld>(
 Given(
   "these users are assigned to their respective teams:",
   async function (dataTable: DataTable) {
-    const [trialUser, fullUser] = dataTable.hashes() as unknown as TeamMember[];
+    const [trialUser, standardUser] =
+      dataTable.hashes() as unknown as TeamMember[];
 
     const trialTeamMember = await assignTeamMember({
       user_id: Number(trialUser.user_id),
@@ -97,23 +99,23 @@ Given(
       role: trialUser.role,
     });
 
-    const fullTeamMember = await assignTeamMember({
-      user_id: Number(fullUser.user_id),
-      team_id: Number(fullUser.team_id),
-      role: fullUser.role,
+    const standardTeamMember = await assignTeamMember({
+      user_id: Number(standardUser.user_id),
+      team_id: Number(standardUser.team_id),
+      role: standardUser.role,
     });
 
     assert.ok(
-      trialTeamMember && fullTeamMember,
+      trialTeamMember && standardTeamMember,
       "Failed to assign users to teams",
     );
   },
 );
 
 Given<CustomWorld>(
-  "I have two flows in the database for trial access and full access:",
+  "I have two flows in the database for trial access and standard access:",
   async function (this, dataTable: DataTable) {
-    const [trialFlow, fullFlow] = dataTable.hashes() as FlowRecord[];
+    const [trialFlow, standardFlow] = dataTable.hashes() as FlowRecord[];
 
     const trialFlowResponse = await $admin.flow.create({
       teamId: Number(trialFlow.team_id),
@@ -125,38 +127,42 @@ Given<CustomWorld>(
 
     this.trialFlowId = trialFlowResponse;
 
-    const fullFlowResponse = await $admin.flow.create({
-      teamId: Number(fullFlow.team_id),
-      name: fullFlow.name,
-      slug: fullFlow.slug,
-      userId: Number(fullFlow.creator_id),
+    const standardFlowResponse = await $admin.flow.create({
+      teamId: Number(standardFlow.team_id),
+      name: standardFlow.name,
+      slug: standardFlow.slug,
+      userId: Number(standardFlow.creator_id),
       data: {},
     });
 
-    this.fullFlowId = fullFlowResponse;
+    this.standardFlowId = standardFlowResponse;
 
-    assert.ok(trialFlowResponse && fullFlowResponse, "Flows not added");
+    assert.ok(trialFlowResponse && standardFlowResponse, "Flows not added");
   },
 );
 
 When<CustomWorld>(
-  "a flow has been created by a user from a team with full access",
+  "a flow has been created by a user from a team with standard access",
   async function (this) {
-    const accessRights = await getFlowById($admin.client, this.fullFlowId);
+    const isTrialTeam = await getFlowById($admin.client, this.standardFlowId);
 
-    assert.equal(accessRights, "full", "Target flow does not equal full-flow");
+    assert.equal(
+      isTrialTeam,
+      false,
+      "Target flow does not come from a standard team",
+    );
   },
 );
 
 When<CustomWorld>(
   "a flow has been created by a user from a team with trial access",
   async function (this) {
-    const accessRights = await getFlowById($admin.client, this.trialFlowId);
+    const isTrialTeam = await getFlowById($admin.client, this.trialFlowId);
 
     assert.equal(
-      accessRights,
-      "trial",
-      "Target flow does not equal trial-flow",
+      isTrialTeam,
+      true,
+      "Target flow does not come from a trial team",
     );
   },
 );
@@ -164,12 +170,12 @@ When<CustomWorld>(
 Then<CustomWorld>(
   "I should be able to update the status",
   async function (this) {
-    const accessRightsOfFlowTeam = await updateFlowStatus(
+    const isTrialTeam = await updateFlowStatus(
       $admin.client,
-      this.fullFlowId,
+      this.standardFlowId,
     );
 
-    assert.equal(accessRightsOfFlowTeam, "full", "Wrong flow updated");
+    assert.equal(isTrialTeam, false, "Wrong flow updated");
   },
 );
 
