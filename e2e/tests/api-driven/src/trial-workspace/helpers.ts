@@ -16,8 +16,67 @@ export type TeamMember = {
   role: string;
 };
 
+export type TeamRecord = {
+  id: string | number;
+  name: string;
+  slug: string;
+  access_rights: "full" | "trial";
+};
+
+export type UserRecord = {
+  id: string | number;
+  first_name: string;
+  last_name: string;
+  email: string;
+};
+
+export type FlowRecord = {
+  creator_id: string | number;
+  name: string;
+  slug: string;
+  team_id: string | number;
+};
+
+export async function createTeam(teamData: TeamRecord): Promise<number> {
+  try {
+    const response: { insert_teams_one: { id: number } } =
+      await $admin.client.request(
+        gql`
+          mutation CreateTeam(
+            $name: String!
+            $id: Int
+            $slug: String!
+            $access_rights: team_access_rights_enum_enum
+          ) {
+            insert_teams_one(
+              object: {
+                id: $id
+                name: $name
+                slug: $slug
+                access_rights: $access_rights
+                team_settings: { data: {} }
+                integrations: { data: {} }
+              }
+            ) {
+              id
+            }
+          }
+        `,
+        {
+          name: teamData.name,
+          id: Number(teamData.id),
+          slug: teamData.slug,
+          access_rights: teamData.access_rights,
+        },
+      );
+    return response.insert_teams_one.id;
+  } catch (error) {
+    return 0;
+  }
+}
+
 export async function assignTeamMember(
-  newMember: TeamMember,
+  memberData: TeamMember,
 ): Promise<string | number> {
   try {
     const response: { insert_team_members_one: { id: string } } =
@@ -36,9 +95,9 @@ export async function assignTeamMember(
           }
         `,
         {
-          userId: newMember.user_id,
-          teamId: newMember.team_id,
-          role: newMember.role,
+          userId: memberData.user_id,
+          teamId: memberData.team_id,
+          role: memberData.role,
         },
       );
     return response.insert_team_members_one.id;
@@ -53,10 +112,11 @@ export async function getFlowById(client, flowId: string): Promise<string> {
     flows: [flow],
   } = await client.request(
     gql`
-      query getFlowBySlug($flowId: uuid) {
+      query getFlowById($flowId: uuid) {
         flows(where: { id: { _eq: $flowId } }) {
-          id
-          slug
+          team {
+            access_rights
+          }
         }
       }
     `,
@@ -65,13 +125,13 @@ export async function getFlowById(client, flowId: string): Promise<string> {
     },
   );
 
-  return flow.slug;
+  return flow.team.access_rights;
 }
 
 export async function updateFlowStatus(
   client,
   flowId: string,
-): Promise<string | number> {
+): Promise<string> {
   try {
     const {
       update_flows: { returning },
@@ -84,9 +144,8 @@ export async function updateFlowStatus(
           ) {
             returning {
               team {
-                slug
+                access_rights
               }
-              status
             }
           }
         }
@@ -96,9 +155,9 @@ export async function updateFlowStatus(
       },
     );
 
-    return returning[0].team.slug;
+    return returning[0].team.access_rights;
   } catch (error) {
     console.error("Unable to update flow status", error);
-    return 0;
+    return "error updating flow status";
   }
 }
