@@ -1085,7 +1085,13 @@
                 _is_null: true
             - is_template:
                 _eq: false
-        check: {}
+        check:
+          _and:
+            - status:
+                _neq: online
+            - team:
+                access_rights:
+                  _neq: trial
         validate_input:
           definition:
             forward_client_headers: false
