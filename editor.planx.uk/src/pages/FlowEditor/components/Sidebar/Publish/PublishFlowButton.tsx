@@ -103,7 +103,7 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
   const teamSlug = window.location.pathname.split("/")[1];
 
   return (
-    <Box width="100%" mt={2}>
+    <Box width="200">
       <Box display="flex" flexDirection="column" alignItems="flex-end">
         <Button
           sx={{ width: "100%" }}
@@ -112,7 +112,7 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
           disabled={!useStore.getState().canUserEditTeam(teamSlug)}
           onClick={handleCheckForChangesToPublish}
         >
-          CHECK FOR CHANGES TO PUBLISH
+          Publish
         </Button>
         <Dialog
           open={dialogOpen}
@@ -171,9 +171,6 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
             </Button>
           </DialogActions>
         </Dialog>
-        <Box mr={0}>
-          <Typography variant="caption">{lastPublishedTitle}</Typography>
-        </Box>
       </Box>
     </Box>
   );
