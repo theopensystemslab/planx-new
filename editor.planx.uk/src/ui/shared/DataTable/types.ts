@@ -7,7 +7,7 @@ import {
 
 export const ColumnFilterType = {
   BOOLEAN: "boolean",
-  ARRAY: "singleSelect", // when the column can be filtered from a range of known values
+  ARRAY: "array", // when the column can be filtered from a range of known values
   DATE: "date",
   CUSTOM: "custom",
 } as const;
