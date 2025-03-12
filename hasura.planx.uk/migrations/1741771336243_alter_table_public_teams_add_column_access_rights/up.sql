@@ -27,32 +27,3 @@ alter table "public"."teams"
   foreign key ("access_rights")
   references "public"."team_access_rights_enum"
   ("value") on update restrict on delete restrict;
-
-/*  
-    Create a function to throw error if access_rights === 'trial' 
-    and flow.status === 'online' 
-*/
-CREATE OR REPLACE FUNCTION check_flow_status_based_on_team_access()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF EXISTS (
-    SELECT 1
-    FROM teams
-    WHERE teams.id = NEW.team_id
-    AND teams.access_rights = 'trial'
-    AND NEW.status = 'online'
-  ) THEN
-    RAISE EXCEPTION 'Trial teams cannot have online flows';
-  END IF;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-/* 
-    Add a trigger to run above function when status is updated 
-*/
-CREATE TRIGGER enforce_flow_status_based_on_team_access
-BEFORE UPDATE ON flows
-FOR EACH ROW
-WHEN (NEW.status IS DISTINCT FROM OLD.status)
-EXECUTE FUNCTION check_flow_status_based_on_team_access();
