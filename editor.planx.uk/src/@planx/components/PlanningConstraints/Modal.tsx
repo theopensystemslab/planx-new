@@ -178,38 +178,39 @@ export const OverrideEntitiesModal = ({
           </Typography>
           <Divider sx={{ marginY: 2 }} />
           <Box marginBottom={2}>
-            <InputLabel
-              label={title}
-              id={`checklist-label-inaccurate-entities`}
+            <ErrorWrapper
+              error={
+                showChecklistError ? ERROR_MESSAGES["checklist"] : undefined
+              }
+              id={`checklist-error-inaccurate-entities`}
             >
-              <ErrorWrapper
-                error={
-                  showChecklistError ? ERROR_MESSAGES["checklist"] : undefined
-                }
-                id={`checklist-error-inaccurate-entities`}
-              >
-                <Grid container component="fieldset">
-                  <legend style={visuallyHidden}>{title}</legend>
-                  {Boolean(entities?.length) &&
-                    entities?.map((e) => (
-                      <Grid item xs={12}>
-                        <ChecklistItem
-                          key={`${e.entity}`}
-                          id={`entity-checkbox-${e.entity}`}
-                          label={formatEntityName(e, metadata)}
-                          checked={
-                            checkedOptions?.includes(`${e.entity}`) || false
-                          }
-                          onChange={changeCheckbox(`${e.entity}`)}
-                        />
-                      </Grid>
-                    ))}
-                </Grid>
-              </ErrorWrapper>
-            </InputLabel>
+              <Grid container component="fieldset" sx={{ margin: 0 }}>
+                <Typography
+                  component="legend"
+                  gutterBottom
+                  id={`checklist-label-inaccurate-entities`}
+                >
+                  {title}
+                </Typography>
+                {Boolean(entities?.length) &&
+                  entities?.map((e) => (
+                    <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
+                      <ChecklistItem
+                        key={`${e.entity}`}
+                        id={`entity-checkbox-${e.entity}`}
+                        label={formatEntityName(e, metadata)}
+                        checked={
+                          checkedOptions?.includes(`${e.entity}`) || false
+                        }
+                        onChange={changeCheckbox(`${e.entity}`)}
+                      />
+                    </Grid>
+                  ))}
+              </Grid>
+            </ErrorWrapper>
           </Box>
           <Box>
-            <InputLabel label="Tell us why" htmlFor="reason">
+            <InputLabel label="Tell us why" htmlFor="input-reason">
               <ErrorWrapper
                 error={showInputError ? ERROR_MESSAGES["input"] : undefined}
                 id={`input-error-inaccurate-entities`}
@@ -220,6 +221,7 @@ export const OverrideEntitiesModal = ({
                   multiline
                   rows={2}
                   name="reason"
+                  id="input-reason"
                   type="text"
                   value={textInput}
                   onChange={(e) => changeInput(e)}
