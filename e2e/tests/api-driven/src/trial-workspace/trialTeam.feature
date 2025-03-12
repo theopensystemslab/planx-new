@@ -2,9 +2,10 @@ Feature: Trial Team access
 
   Background:
     Given there is a trial team and full access team:
-      | id | name        | slug        |
-      | 1  | Trial access  | trial-access  |
-      | 3  | Full access | full-access |
+      | id | name         | slug          | access_rights |
+      | 1  | Trial access | trial-access  | trial         |
+      | 3  | Full access  | full-access   | full          |
+
     And there is one trial user and one full user:
       | id | first_name | last_name | email                |
       | 12 | Trial      | User      | trial.user@email.com |
@@ -13,10 +14,10 @@ Feature: Trial Team access
       | user_id | team_id | role       |
       | 12      | 1       | teamEditor |
       | 32      | 3       | teamEditor |        
-    And I two flows in the database for trial access and full access:
+    And I have two flows in the database for trial access and full access:
       | creator_id  | name              | slug             | team_id |
       | 12          | Trial Flow        | trial-flow       | 1       |
-      | 32          | Full Flow         | full-flow         | 3       |
+      | 32          | Full Flow         | full-flow        | 3       |
 
   @trial-user-permissions
   Scenario: I can turn a flow online with full access

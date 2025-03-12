@@ -1,9 +1,14 @@
+import { Team } from "@opensystemslab/planx-core/types";
 import { $admin } from "./client.js";
+import { TeamRecord } from "./trial-workspace/helpers.js";
 
 // Gov.uk Notify requests testing service use smoke test email addresses
 // see https://docs.notifications.service.gov.uk/rest-api.html#smoke-testing
 export const TEST_EMAIL =
   "simulate-delivered@notifications.service.gov.uk" as const;
+
+export type DataTableRecord = Record<string, string>;
+export type DataTableArray = Record<string, string>[];
 
 export function createTeam(
   args?: Partial<Parameters<typeof $admin.team.create>[0]>,
@@ -58,3 +63,14 @@ export function safely<T extends () => ReturnType<T>>(callback: T) {
 export async function getUser(email: string) {
   return await $admin.user.getByEmail(email);
 }
+
+export const checkTeamsExist = async (
+  teamArray: DataTableArray | TeamRecord[],
+): Promise<Team[]> => {
+  const existenceArray: Team[] = [];
+  for (const team of teamArray) {
+    const teamObj = await $admin.team.getBySlug(team.slug);
+    existenceArray.push(teamObj);
+  }
+  return existenceArray;
+};
