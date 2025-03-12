@@ -25,6 +25,7 @@ export interface SettingsStore {
   setFlowStatus: (flowStatus: FlowStatus) => void;
   flowIsCopiable?: boolean;
   setFlowIsCopiable: (isCopiable: boolean) => void;
+  updateFlowIsCopiable: (isCopiable: boolean) => Promise<boolean>;
   updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
   flowSummary?: string;
   updateFlowSummary: (newSummary: string) => Promise<boolean>;
@@ -70,12 +71,12 @@ export const settingsStore: StateCreator<
 
   updateFlowIsCopiable: async (isCopiable) => {
     const { id, $client } = get();
-    // const result = await $client.flow.setStatus({
-    //   flow: { id },
-    //   status: isCopiable,
-    // });
-    // set({ flowStatus: isCopiable });
-    // return Boolean(result?.id);
+    const result = await $client.flow.setFlowVisibility({
+      flow: { id },
+      isCopiable,
+    });
+    set({ flowIsCopiable: isCopiable });
+    return Boolean(result?.id);
   },
 
   flowSummary: "",
@@ -132,6 +133,7 @@ export const settingsStore: StateCreator<
             summary
             status
             limitations
+            is_copiable
           }
         }
       `,

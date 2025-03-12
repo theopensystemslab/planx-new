@@ -826,6 +826,7 @@
           - data
           - description
           - id
+          - is_copiable
           - is_template
           - limitations
           - name
@@ -852,6 +853,7 @@
           - data
           - description
           - id
+          - is_copiable
           - is_template
           - limitations
           - name
@@ -892,6 +894,7 @@
           - data
           - description
           - id
+          - is_copiable
           - is_template
           - limitations
           - name
@@ -916,6 +919,7 @@
           - creator_id
           - data
           - id
+          - is_copiable
           - is_template
           - name
           - settings
@@ -941,6 +945,7 @@
           - data
           - description
           - id
+          - is_copiable
           - is_template
           - limitations
           - name
@@ -968,6 +973,7 @@
           - data
           - description
           - id
+          - is_copiable
           - limitations
           - name
           - settings
@@ -1038,6 +1044,7 @@
           - data
           - deleted_at
           - description
+          - is_copiable
           - is_template
           - limitations
           - name
@@ -1065,6 +1072,7 @@
           - data
           - deleted_at
           - description
+          - is_copiable
           - limitations
           - name
           - settings
