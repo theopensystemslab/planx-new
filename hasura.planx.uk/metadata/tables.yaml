@@ -1090,8 +1090,8 @@
             - status:
                 _neq: online
             - team:
-                access_rights:
-                  _neq: trial
+                is_trial_team:
+                  _neq: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -2282,10 +2282,6 @@
                     _eq: teamEditor
       comment: ""
 - table:
-    name: team_access_rights_enum
-    schema: public
-  is_enum: true
-- table:
     name: team_integrations
     schema: public
   object_relationships:
@@ -2767,10 +2763,10 @@
     - role: api
       permission:
         columns:
-          - access_rights
           - created_at
           - domain
           - id
+          - is_trial_team
           - metabase_id
           - name
           - slug
@@ -2779,10 +2775,10 @@
     - role: demoUser
       permission:
         columns:
-          - access_rights
           - created_at
           - domain
           - id
+          - is_trial_team
           - name
           - slug
           - updated_at
@@ -2797,10 +2793,10 @@
     - role: platformAdmin
       permission:
         columns:
-          - access_rights
           - created_at
           - domain
           - id
+          - is_trial_team
           - name
           - slug
           - updated_at
@@ -2808,10 +2804,10 @@
     - role: public
       permission:
         columns:
-          - access_rights
           - created_at
           - domain
           - id
+          - is_trial_team
           - name
           - slug
           - updated_at
@@ -2819,10 +2815,10 @@
     - role: teamEditor
       permission:
         columns:
-          - access_rights
           - created_at
           - domain
           - id
+          - is_trial_team
           - name
           - slug
           - updated_at
@@ -2838,8 +2834,8 @@
     - role: platformAdmin
       permission:
         columns:
-          - access_rights
           - domain
+          - is_trial_team
           - name
           - slug
         filter: {}

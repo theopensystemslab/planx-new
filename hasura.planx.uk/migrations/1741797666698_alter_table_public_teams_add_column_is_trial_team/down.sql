@@ -1,0 +1,1 @@
+alter table "public"."teams" drop column "is_trial_team";
