@@ -20,32 +20,31 @@ interface NoChangesDialogProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const NoChangesDialog = (props: NoChangesDialogProps) => {
-  const { dialogOpen, setDialogOpen } = props;
-
-  return (
-    <Dialog
-      open={dialogOpen}
-      onClose={() => setDialogOpen(false)}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-      maxWidth="md"
-    >
-      <DialogTitle variant="h3" component="h1">
-        {`Check for changes to publish`}
-      </DialogTitle>
-      <DialogContent>
-        <Typography variant="body2">{`No new changes to publish`}</Typography>
-      </DialogContent>
-      <DialogActions sx={{ paddingX: 2 }}>
-        <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
-        <Button color="primary" variant="contained" disabled={true}>
-          PUBLISH
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
+export const NoChangesDialog = ({
+  dialogOpen,
+  setDialogOpen,
+}: NoChangesDialogProps) => (
+  <Dialog
+    open={dialogOpen}
+    onClose={() => setDialogOpen(false)}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    maxWidth="md"
+  >
+    <DialogTitle variant="h3" component="h1">
+      {`Check for changes to publish`}
+    </DialogTitle>
+    <DialogContent>
+      <Typography variant="body2">{`No new changes to publish`}</Typography>
+    </DialogContent>
+    <DialogActions sx={{ paddingX: 2 }}>
+      <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
+      <Button color="primary" variant="contained" disabled={true}>
+        PUBLISH
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
 
 interface ChangesDialogProps {
   dialogOpen: boolean;

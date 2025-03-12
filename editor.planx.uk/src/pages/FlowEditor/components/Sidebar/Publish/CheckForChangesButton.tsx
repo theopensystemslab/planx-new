@@ -12,9 +12,9 @@ import { AlteredNode } from "./AlteredNodes";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 import { ValidationCheck } from "./ValidationChecks";
 
-export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
-  previewURL,
-}) => {
+export const CheckForChangesToPublishButton: React.FC<{
+  previewURL: string;
+}> = ({ previewURL }) => {
   const [
     flowId,
     publishFlow,
