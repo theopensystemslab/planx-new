@@ -2,6 +2,7 @@ import { gql } from "graphql-tag";
 import { $admin } from "../client.js";
 import { Team, User } from "@opensystemslab/planx-core/types";
 import { UUID } from "crypto";
+import { DataTableArray, DataTableRecord } from "../globalHelpers.js";
 
 export type Flow = {
   creator_id?: number;
@@ -16,25 +17,11 @@ export type TeamsAndFlows = {
 };
 export type FlowArgs = { teamId: number; slug: string; name: string };
 
-export type DataTableRecord = Record<string, string>;
-export type DataTableArray = Record<string, string>[];
-
 export const cleanup = async () => {
   await $admin.flow._destroyPublishedAll();
   await $admin.flow._destroyAll();
   await $admin.team._destroyAll();
   await $admin.user._destroyAll();
-};
-
-export const checkTeamsExist = async (
-  teamArray: DataTableArray,
-): Promise<Team[]> => {
-  const existenceArray: Team[] = [];
-  for (const team of teamArray) {
-    const teamObj = await $admin.team.getBySlug(team.slug);
-    existenceArray.push(teamObj);
-  }
-  return existenceArray;
 };
 
 export async function createTeam(newTeam: DataTableRecord): Promise<number> {

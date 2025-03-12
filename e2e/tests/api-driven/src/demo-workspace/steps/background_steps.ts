@@ -1,13 +1,10 @@
 import { After, Before, DataTable, Given, World } from "@cucumber/cucumber";
 import {
-  checkTeamsExist,
   cleanup,
   createDemoUser,
   createFlowFromArray,
   createTeamFromArray,
   createUser,
-  DataTableArray,
-  DataTableRecord,
   Flow,
 } from "../helper.js";
 import { $admin, getClient } from "../../client.js";
@@ -15,6 +12,11 @@ import { strict as assert } from "node:assert";
 import { CoreDomainClient } from "@opensystemslab/planx-core";
 import { Team, User } from "@opensystemslab/planx-core/types";
 import { UUID } from "crypto";
+import {
+  checkTeamsExist,
+  DataTableArray,
+  DataTableRecord,
+} from "../../globalHelpers.js";
 
 export class CustomWorld extends World {
   demoClient!: CoreDomainClient["client"];
