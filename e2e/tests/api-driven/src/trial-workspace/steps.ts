@@ -20,12 +20,14 @@ import {
   updateFlowStatus,
   UserRecord,
 } from "./helpers.js";
-import { $admin } from "../client.js";
+import { $admin, getClient } from "../client.js";
 import { checkTeamsExist } from "../globalHelpers.js";
+import { CoreDomainClient } from "@opensystemslab/planx-core";
 
 export class CustomWorld extends World {
   trialFlowId!: string;
   fullFlowId!: string;
+  userClient!: CoreDomainClient["client"];
 }
 
 Before("@trial-user-permissions", async function () {
@@ -51,9 +53,9 @@ Given(
   },
 );
 
-Given(
+Given<CustomWorld>(
   "there is one trial user and one full user:",
-  async function (dataTable: DataTable) {
+  async function (this, dataTable: DataTable) {
     const [trialUser, fullUser] = dataTable.hashes() as UserRecord[];
 
     const trialUserId = await createUser({
@@ -63,6 +65,11 @@ Given(
       email: trialUser.email,
       isPlatformAdmin: false,
     });
+
+    if (trialUserId) {
+      const { client: userClient } = await getClient(trialUser.email);
+      this.userClient = userClient;
+    }
 
     const fullUserId = await createUser({
       id: Number(fullUser.id),
@@ -170,7 +177,7 @@ Then<CustomWorld>(
   "I should not be able to update the status",
   async function (this) {
     const updateStatusResponse = await updateFlowStatus(
-      $admin.client,
+      this.userClient,
       this.trialFlowId,
     );
     assert.equal(
