@@ -2276,6 +2276,10 @@
                     _eq: teamEditor
       comment: ""
 - table:
+    name: team_access_rights_enum
+    schema: public
+  is_enum: true
+- table:
     name: team_integrations
     schema: public
   object_relationships:
@@ -2757,6 +2761,7 @@
     - role: api
       permission:
         columns:
+          - access_rights
           - created_at
           - domain
           - id
@@ -2768,6 +2773,7 @@
     - role: demoUser
       permission:
         columns:
+          - access_rights
           - created_at
           - domain
           - id
@@ -2785,6 +2791,7 @@
     - role: platformAdmin
       permission:
         columns:
+          - access_rights
           - created_at
           - domain
           - id
@@ -2795,6 +2802,7 @@
     - role: public
       permission:
         columns:
+          - access_rights
           - created_at
           - domain
           - id
@@ -2805,6 +2813,7 @@
     - role: teamEditor
       permission:
         columns:
+          - access_rights
           - created_at
           - domain
           - id
@@ -2823,6 +2832,7 @@
     - role: platformAdmin
       permission:
         columns:
+          - access_rights
           - domain
           - name
           - slug
