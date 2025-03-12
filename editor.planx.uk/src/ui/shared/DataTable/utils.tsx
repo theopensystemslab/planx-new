@@ -33,7 +33,7 @@ export const containsItem = (
 
 export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
   {
-    value: "contains",
+    value: "is",
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!isValidFilterInput(filterItem)) {
         return null;
@@ -116,4 +116,5 @@ export const getColumnFilterType = (columnType?: ColumnRenderType) => {
 /**
  * Format date times to a standard format, e.g 31/12/25 14:40:45
  */
-export const dateFormatter = (value: string) => format(new Date(value), "dd/MM/yy HH:mm:ss");
+export const dateFormatter = (value: string) =>
+  format(new Date(value), "dd/MM/yy HH:mm:ss");

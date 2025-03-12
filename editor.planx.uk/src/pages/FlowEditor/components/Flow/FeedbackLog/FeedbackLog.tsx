@@ -30,7 +30,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 200,
       type: ColumnFilterType.ARRAY,
       columnOptions: {
-        valueOptions: feedbackTypeOptions,
+        valueOptions: feedbackTypeOptions.map((option) => option.label),
         filterable: true,
       },
       customComponent: (params) => <>{feedbackTypeText(params.value)}</>,
