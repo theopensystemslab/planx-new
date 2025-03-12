@@ -121,11 +121,13 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
         </Typography>
       </SettingsSection>
       {feedback.length === 0 ? (
-        <ErrorSummary
-          format="info"
-          heading="No feedback found for this team"
-          message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
-        />
+        <SettingsSection>
+          <ErrorSummary
+            format="info"
+            heading="No feedback found for this team"
+            message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
+          />
+        </SettingsSection>
       ) : (
         <DataTable
           rows={feedback}

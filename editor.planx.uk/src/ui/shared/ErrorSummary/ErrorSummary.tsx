@@ -19,6 +19,7 @@ const Root = styled(Box, {
   }),
   ...(format === "info" && {
     borderColor: theme.palette.border.light,
+    background: theme.palette.background.default,
   }),
 }));
 
