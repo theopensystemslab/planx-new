@@ -3,6 +3,7 @@ import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { Link } from "react-navi";
 import { inputFocusStyle } from "theme";
@@ -104,15 +105,24 @@ const FlowCard: React.FC<FlowCardProps> = ({
     ],
   );
 
+  const toast = useToast();
+
   const handleArchive = () => {
     archiveFlow(flow.id).then(() => {
       refreshFlows();
     });
   };
-  const handleCopy = () => {
-    copyFlow(flow.id).then(() => {
-      refreshFlows();
-    });
+  const handleCopy = async () => {
+    await copyFlow(flow.id)
+      .then(() => {
+        refreshFlows();
+      })
+      .catch((err) => {
+        if (err.message === "Request failed with status code 403") {
+          toast.error(`Failed - flow copying is not permitted for this flow`);
+        }
+        console.error(err);
+      });
   };
   const handleMove = (newTeam: string) => {
     moveFlow(flow.id, newTeam, flow.name).then(() => {
