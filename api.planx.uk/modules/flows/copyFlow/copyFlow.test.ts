@@ -1,10 +1,14 @@
 import supertest from "supertest";
 
+import app from "../../../server.js";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { authHeader } from "../../../tests/mockJWT.js";
-import app from "../../../server.js";
-import type { Flow } from "../../../types.js";
 import { userContext } from "../../auth/middleware.js";
+import {
+  mockCopyFlowResponse,
+  mockCopyFlowResponseInserted,
+  mockFlowData,
+} from "./mockFlowData.js";
 
 beforeEach(() => {
   queryMock.mockQuery({
@@ -60,6 +64,16 @@ beforeEach(() => {
       },
     },
   });
+
+  queryMock.mockQuery({
+    name: "GetFlowPermissions",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        is_copiable: true,
+      },
+    },
+  });
 });
 
 const auth = authHeader({ role: "teamEditor" });
@@ -110,6 +124,35 @@ describe("authentication and error handling", () => {
         expect(res.body).toHaveProperty("name", "ZodError");
       });
   });
+
+  it(
+    "returns a 403 error if the flow is not set as copiable in the database",
+    async () => {
+      queryMock.mockQuery({
+        name: "GetFlowPermissions",
+        matchOnVariables: false,
+        data: {
+          flow: {
+            is_copiable: false,
+          },
+        },
+      });
+
+      const validBody = {
+        insert: false,
+        replaceValue: "T3ST1",
+      };
+
+      await supertest(app)
+        .post("/flows/1/copy")
+        .send(validBody)
+        .set(auth)
+        .expect(403)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Flow copying is not permitted for this flow/);
+        });
+    }
+  );
 
   it("returns an error if the operation to insert a new flow fails", async () => {
     const body = {
@@ -238,83 +281,3 @@ it("throws an error if user details are missing", async () => {
       expect(res.body.error).toMatch(/Failed to copy flow/);
     });
 });
-
-// the original flow
-const mockFlowData: Flow["data"] = {
-  _root: {
-    edges: ["rUilJQTag1", "kNX8Rej9rk"],
-  },
-  rUilJQTag1: {
-    type: 100,
-    data: {
-      text: "Copy or paste?",
-    },
-    edges: ["Yh7t91FisE", "h8DSw40zNr"],
-  },
-  Yh7t91FisE: {
-    type: 200,
-    data: {
-      text: "Copy",
-    },
-  },
-  h8DSw40zNr: {
-    type: 200,
-    data: {
-      text: "Paste",
-    },
-  },
-  kNX8Rej9rk: {
-    type: 110,
-    data: {
-      title: "Why do you want to copy this flow?",
-      type: "short",
-    },
-  },
-};
-
-// the copied flow data with unique nodeIds using the replaceValue
-const mockCopiedFlowData: Flow["data"] = {
-  _root: {
-    edges: ["rUilJT3ST1", "kNX8RT3ST1"],
-  },
-  rUilJT3ST1: {
-    type: 100,
-    data: {
-      text: "Copy or paste?",
-    },
-    edges: ["Yh7t9T3ST1", "h8DSwT3ST1"],
-  },
-  Yh7t9T3ST1: {
-    type: 200,
-    data: {
-      text: "Copy",
-    },
-  },
-  h8DSwT3ST1: {
-    type: 200,
-    data: {
-      text: "Paste",
-    },
-  },
-  kNX8RT3ST1: {
-    type: 110,
-    data: {
-      title: "Why do you want to copy this flow?",
-      type: "short",
-    },
-  },
-};
-
-const mockCopyFlowResponse = {
-  message: `Successfully copied undefined`, // 'undefined' just reflects that we haven't mocked a flow.name here!
-  inserted: false,
-  replaceValue: "T3ST1",
-  data: mockCopiedFlowData,
-};
-
-const mockCopyFlowResponseInserted = {
-  message: `Successfully copied undefined`,
-  inserted: true,
-  replaceValue: "T3ST1",
-  data: mockCopiedFlowData,
-};
