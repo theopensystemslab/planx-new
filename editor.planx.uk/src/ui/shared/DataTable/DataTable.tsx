@@ -20,6 +20,7 @@ import {
 } from "./types";
 import {
   columnCellComponentRegistry,
+  createFilterOperator,
   getColumnFilterType,
   getValueOptions,
 } from "./utils";
@@ -83,6 +84,10 @@ export const DataTable = <T,>({
           ...baseColDef,
           valueOptions: columnValueOptions,
           ...column.columnOptions,
+          filterOperators:
+            columnValueOptions &&
+            columnValueOptions.length > 0 &&
+            createFilterOperator(columnValueOptions),
         }
       : {
           ...baseColDef,
