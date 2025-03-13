@@ -45,7 +45,7 @@
     "@turf/helpers": "^7.0.0",
     "@vitejs/plugin-react-swc": "^3.7.0",
     "array-move": "^4.0.0",
-    "axios": "^1.7.4",
+    "axios": "^1.8.3",
     "bowser": "^2.11.0",
     "camelcase-keys": "^9.0.0",
     "classnames": "^2.3.2",
