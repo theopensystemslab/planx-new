@@ -57,8 +57,38 @@
 	}
 }
 
+# Direct proxy to Hasura without additional JWT validation
+# Used for public GraphQL API requests and Hasura console
+(direct_to_hasura) {
+	import security_headers
+	header X-Auth-Validated skip
+
+	reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
+}
+
 # Reverse proxy for Hasura GraphQL Engine
 :{$HASURA_PROXY_PORT} {
+	@isAccessingHasuraConsole {
+		path /console /console/*
+	}
+
+	# Handle Hasura console routes - bypass JWT validation
+	handle @isAccessingHasuraConsole {
+		import direct_to_hasura
+	}
+
+	# Handle requests using the Hasura admin secret
+	# Strip JWT cookie so requests don't get proxied by REST API
+	# Hasura still handles validation and permissions in these instances
+	@isUsingAdminSecret {
+		header x-hasura-admin-secret *
+	}
+
+	handle @isUsingAdminSecret {
+		request_header -Cookie cookie_name=jwt
+
+		import direct_to_hasura
+	}
 
 	# Validation conditions match getToken() in REST API
 	# Please see api.planx.uk/modules/auth/middleware.ts
@@ -88,9 +118,6 @@
 
 	# Default route for public requests
 	handle {
-		import security_headers
-		header X-Auth-Validated skip
-
-		reverse_proxy {$HASURA_NETWORK_LOCATION}:8080
+		import direct_to_hasura
 	}
 }
