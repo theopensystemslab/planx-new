@@ -28,13 +28,14 @@ export class CustomWorld extends World {
   trialFlowId!: string;
   standardFlowId!: string;
   userClient!: CoreDomainClient["client"];
+  adminClient!: CoreDomainClient["client"];
 }
 
-Before("@trial-user-permissions", async function () {
+Before("@trial-team-permissions", async function () {
   await cleanup();
 });
 
-After("@trial-user-permissions", async function () {
+After("@trial-team-permissions", async function () {
   await cleanup();
 });
 
@@ -55,9 +56,10 @@ Given(
 );
 
 Given<CustomWorld>(
-  "there is one trial user and one standard user:",
+  "there is one trial user, one standard user, and one platform admin:",
   async function (this, dataTable: DataTable) {
-    const [trialUser, standardUser] = dataTable.hashes() as UserRecord[];
+    const [trialUser, standardUser, platformAdmin] =
+      dataTable.hashes() as UserRecord[];
 
     const trialUserId = await createUser({
       id: Number(trialUser.id),
@@ -80,8 +82,21 @@ Given<CustomWorld>(
       isPlatformAdmin: false,
     });
 
+    const platformAdminId = await createUser({
+      id: Number(platformAdmin.id),
+      firstName: platformAdmin.first_name,
+      lastName: platformAdmin.last_name,
+      email: platformAdmin.email,
+      isPlatformAdmin: true,
+    });
+
+    if (platformAdminId) {
+      const { client: adminClient } = await getClient(platformAdmin.email);
+      this.adminClient = adminClient;
+    }
+
     assert.ok(
-      trialUserId && standardUserId,
+      trialUserId && standardUserId && platformAdminId,
       "Failed to add trial and standard users",
     );
   },
@@ -190,6 +205,18 @@ Then<CustomWorld>(
       updateStatusResponse,
       "error updating flow status",
       "Error not thrown",
+    );
+  },
+);
+
+Then<CustomWorld>(
+  "a platform admin can update the status",
+  async function (this) {
+    const isTrialTeam = await updateFlowStatus($admin.client, this.trialFlowId);
+    assert.equal(
+      isTrialTeam,
+      true,
+      "Error has been thrown when updating status",
     );
   },
 );

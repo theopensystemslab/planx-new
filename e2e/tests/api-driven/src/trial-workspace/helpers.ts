@@ -134,15 +134,15 @@ export async function updateFlowStatus(
 ): Promise<string> {
   try {
     const {
-      update_flows: { returning },
+      update_flows: { flow },
     } = await client.request(
       gql`
-        mutation MyMutation($flowId: uuid) {
+        mutation updateFlowStatus($flowId: uuid!) {
           update_flows(
             where: { id: { _eq: $flowId } }
             _set: { status: online }
           ) {
-            returning {
+            flow: returning {
               team {
                 is_trial_team
               }
@@ -155,7 +155,7 @@ export async function updateFlowStatus(
       },
     );
 
-    return returning[0].team.is_trial_team;
+    return flow[0].team.is_trial_team;
   } catch (error) {
     console.error("Unable to update flow status", error);
     return "error updating flow status";
