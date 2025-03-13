@@ -10,7 +10,9 @@ import { useStore } from "pages/FlowEditor/lib/store";
  * If fee variables not found, or not successfully parsed, we do not show the user a fee breakdown
  * Instead an internal error will be raised allowing us to correct the flow content
  */
-export const useFeeBreakdown = (inviteToPayFeeBreakdown?: FeeBreakdown): FeeBreakdown | undefined => {
+export const useFeeBreakdown = (
+  inviteToPayFeeBreakdown?: FeeBreakdown,
+): FeeBreakdown | undefined => {
   const [passportData, sessionId] = useStore((state) => [
     state.computePassport().data,
     state.sessionId,
@@ -20,7 +22,7 @@ export const useFeeBreakdown = (inviteToPayFeeBreakdown?: FeeBreakdown): FeeBrea
   if (inviteToPayFeeBreakdown) return inviteToPayFeeBreakdown;
 
   // Type narrowing - all valid non-ITP sessions will have passport data by this point in the journey
-  if (!passportData) return 
+  if (!passportData) return;
 
   try {
     const feeBreakdown = getFeeBreakdown(passportData);

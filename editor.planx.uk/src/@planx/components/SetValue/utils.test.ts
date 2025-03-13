@@ -84,7 +84,7 @@ describe("calculateNewValues() helper function", () => {
         expected: ["bear", "dog", "monkey"],
       },
       { previous: ["bear", "dog", "lion"], expected: ["bear", "dog"] },
-      { previous: ["bear"], expected: ["bear"]},
+      { previous: ["bear"], expected: ["bear"] },
     ])(
       "input of $previous sets passport value to be $expected",
       ({ previous, expected }) => {

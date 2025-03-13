@@ -12,19 +12,7 @@ import {
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
 import { getFlowNamesForFilter } from "./getFlowNamesForFilter";
-
-const isCouncilTeam = () => {
-  const internalTeamNames = [
-    "WikiHouse",
-    "PlanX",
-    "Open Systems Lab",
-    "Testing",
-    "Open Digital Planning",
-    "Environment Agency",
-    "Templates",
-  ];
-  return (team: AdminPanelData) => !internalTeamNames.includes(team.name);
-};
+import { isCouncilTeam } from "./utils";
 
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
