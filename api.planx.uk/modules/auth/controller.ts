@@ -1,7 +1,11 @@
 import type { CookieOptions, RequestHandler, Response } from "express";
 import type { Request } from "express-jwt";
-import { revokeToken } from "./service/logout/revokeToken.js";
-import { userContext } from "./middleware.js";
+import {
+  createTokenDigest,
+  isTokenRevoked,
+  revokeToken,
+} from "./service/logout/revokeToken.js";
+import { getToken, userContext } from "./middleware.js";
 import { ServerError } from "../../errors/serverError.js";
 
 export const failedLogin: RequestHandler = (_req, _res, next) =>
@@ -99,4 +103,12 @@ export const logout: RequestHandler = async (_req, res, next) => {
       }),
     );
   }
+};
+
+export const isJWTRevoked: RequestHandler = async (req, res) => {
+  const jwt = getToken(req);
+  const tokenDigest = createTokenDigest(jwt);
+  const isRevoked = await isTokenRevoked(tokenDigest);
+
+  return isRevoked ? res.status(401).send() : res.status(200).send();
 };

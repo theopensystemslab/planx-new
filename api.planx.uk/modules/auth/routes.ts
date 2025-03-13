@@ -27,9 +27,7 @@ export default (passport: Authenticator): Router => {
     Controller.handleSuccess,
   );
 
-  // Dummy route with no logic
-  // TODO: Call isRevoked()
-  router.get("/auth/validate-jwt", (_req, res) => res.status(200).send());
+  router.get("/auth/validate-jwt", Controller.isJWTRevoked);
 
   return router;
 };
