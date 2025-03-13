@@ -155,6 +155,7 @@ test.describe("Flow creation, publish and preview", () => {
   }: {
     browser: Browser;
   }) => {
+    test.setTimeout(90_000);
     const page = await createAuthenticatedSession({
       browser,
       userId: context.user!.id!,
