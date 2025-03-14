@@ -1,13 +1,19 @@
 import Typography from "@mui/material/Typography";
+import { GridFilterItem } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
 import { Feedback } from "routes/feedback";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
+import { MultipleOptionSelectFilter } from "ui/shared/DataTable/components/MultipleOptionSelectFilter";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
-import { dateFormatter } from "ui/shared/DataTable/utils";
+import {
+  containsItem,
+  dateFormatter,
+  isValidFilterInput,
+} from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
@@ -30,8 +36,31 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 200,
       type: ColumnFilterType.ARRAY,
       columnOptions: {
-        valueOptions: feedbackTypeOptions,
-        filterable: true,
+        valueOptions: feedbackTypeOptions.map((option) => option.label),
+        filterOperators: [
+          {
+            value: "is",
+            getApplyFilterFn: (filterItem: GridFilterItem) => {
+              if (!isValidFilterInput(filterItem)) {
+                return null;
+              }
+              // return a function that is applied to all the rows in turn
+              return (currentRowValue: any): boolean => {
+                return filterItem.value.some(
+                  (filterValue: Pick<GridFilterItem, "value">) =>
+                    containsItem(
+                      feedbackTypeText(currentRowValue),
+                      filterValue,
+                    ),
+                );
+              };
+            },
+            InputComponent: MultipleOptionSelectFilter,
+            InputComponentProps: {
+              options: feedbackTypeOptions.map((option) => option.label),
+            },
+          },
+        ],
       },
       customComponent: (params) => <>{feedbackTypeText(params.value)}</>,
     },
