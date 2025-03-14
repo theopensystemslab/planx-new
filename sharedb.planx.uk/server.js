@@ -10,9 +10,10 @@ const { JSDOM } = require('jsdom');
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const TOKEN_EXPIRY_CODE = 4001;
 
-const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
+const { PORT = 8000, JWT_SECRET, PG_URL, API_URL_EXT } = process.env;
 assert(JWT_SECRET);
 assert(PG_URL);
+assert(API_URL_EXT);
 
 const sharedb = new ShareDB({
   db: new PostgresDB({
@@ -76,7 +77,20 @@ function sanitise(input) {
   } else {
     return input;
   }
-}
+};
+
+async function checkIfJWTRevoked(authToken) {
+  const response = await fetch(`${API_URL_EXT}/auth/validate-jwt`, {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${authToken}`
+    }
+  });
+
+  if (response.ok) return;
+
+  throw Error("Token has been revoked. Please log in again.")
+};
 
 const wss = new Server({
   port: PORT,
@@ -109,8 +123,10 @@ const wss = new Server({
 wss.on("connection", function (ws, req) {
   // JWTs expire every 24hrs
   // Check status every minute - client side will logout on expiry
-  const tokenCheckInterval = setInterval(() => {
+  const tokenCheckInterval = setInterval(async () => {
     try {
+      await checkIfJWTRevoked(req.authToken)
+
       jwt.verify(req.authToken, JWT_SECRET, (err) => {
         if (err) {
           ws.close(TOKEN_EXPIRY_CODE, "Token expired");
