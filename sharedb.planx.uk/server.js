@@ -76,7 +76,20 @@ function sanitise(input) {
   } else {
     return input;
   }
-}
+};
+
+async function checkIfJWTRevoked(authToken) {
+  const response = await fetch("/auth/validate-jwt", {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${authToken}`
+    }
+  });
+
+  if (response.ok) return;
+
+  throw Error("Token has been revoked. Please log in again.")
+};
 
 const wss = new Server({
   port: PORT,
@@ -109,8 +122,10 @@ const wss = new Server({
 wss.on("connection", function (ws, req) {
   // JWTs expire every 24hrs
   // Check status every minute - client side will logout on expiry
-  const tokenCheckInterval = setInterval(() => {
+  const tokenCheckInterval = setInterval(async () => {
     try {
+      await checkIfJWTRevoked(req.authToken)
+
       jwt.verify(req.authToken, JWT_SECRET, (err) => {
         if (err) {
           ws.close(TOKEN_EXPIRY_CODE, "Token expired");
