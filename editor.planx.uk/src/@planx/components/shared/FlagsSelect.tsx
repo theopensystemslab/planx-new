@@ -12,6 +12,7 @@ import { SelectMultiple } from "ui/shared/SelectMultiple";
 interface Props {
   value?: Array<Flag["value"]>;
   onChange: (values: Array<Flag["value"]>) => void;
+  disabled?: boolean;
 }
 
 const renderOptions: AutocompleteProps<
@@ -81,6 +82,7 @@ export const FlagsSelect: React.FC<Props> = (props) => {
         value={value}
         renderOption={renderOptions}
         renderTags={renderTags}
+        disabled={props.disabled}
       />
     </InputRow>
   );

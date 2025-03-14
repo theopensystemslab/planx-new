@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef } from "react";
 import {
   DragDropContext,
@@ -22,6 +21,7 @@ export interface EditorProps<T> {
   index: number;
   value: T;
   onChange: (newValue: T) => void;
+  disabled?: boolean;
 }
 
 export interface Props<T, EditorExtraProps = {}> {
@@ -34,6 +34,7 @@ export interface Props<T, EditorExtraProps = {}> {
   noDragAndDrop?: boolean;
   isFieldDisabled?: (item: T, index: number) => boolean;
   maxItems?: number;
+  disabled?: boolean;
 }
 
 const Item = styled(Box)(({ theme }) => ({
@@ -44,13 +45,10 @@ const Item = styled(Box)(({ theme }) => ({
 export default function ListManager<T, EditorExtraProps>(
   props: Props<T, EditorExtraProps>,
 ) {
-  const { Editor, maxItems = Infinity } = props;
+  const { Editor, maxItems = Infinity, disabled } = props;
   // Initialize a random ID when the component mounts
   const randomId = useRef(String(Math.random()));
 
-  // useStore.getState().getTeam().slug undefined here, use window instead
-  const teamSlug = window.location.pathname.split("/")[1];
-  const isViewOnly = !useStore.getState().canUserEditTeam(teamSlug);
   const isMaxLength = props.values.length >= maxItems;
 
   return props.noDragAndDrop ? (
@@ -65,6 +63,7 @@ export default function ListManager<T, EditorExtraProps>(
                 onChange={(newItem) => {
                   props.onChange(setAt(index, newItem, props.values));
                 }}
+                disabled={disabled}
                 {...(props.editorExtraProps || {})}
               />
               <Box sx={{ display: "flex", alignItems: "flex-start" }}>
@@ -74,7 +73,7 @@ export default function ListManager<T, EditorExtraProps>(
                   }}
                   aria-label="Delete"
                   size="large"
-                  disabled={isViewOnly || props?.isFieldDisabled?.(item, index)}
+                  disabled={disabled || props?.isFieldDisabled?.(item, index)}
                 >
                   <Delete />
                 </IconButton>
@@ -88,7 +87,7 @@ export default function ListManager<T, EditorExtraProps>(
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
-        disabled={isViewOnly || isMaxLength}
+        disabled={disabled || isMaxLength}
       >
         {props.newValueLabel || "add new"}
       </Button>
@@ -124,11 +123,11 @@ export default function ListManager<T, EditorExtraProps>(
                         <IconButton
                           disableRipple
                           {...(props.noDragAndDrop
-                            ? { disabled: true || isViewOnly }
+                            ? { disabled: true }
                             : provided.dragHandleProps)}
                           aria-label="Drag"
                           size="large"
-                          disabled={isViewOnly}
+                          disabled={disabled}
                         >
                           <DragHandle />
                         </IconButton>
@@ -139,6 +138,9 @@ export default function ListManager<T, EditorExtraProps>(
                         onChange={(newItem) => {
                           props.onChange(setAt(index, newItem, props.values));
                         }}
+                        disabled={
+                          disabled || props?.isFieldDisabled?.(item, index)
+                        }
                         {...(props.editorExtraProps || {})}
                       />
                       <Box>
@@ -149,7 +151,7 @@ export default function ListManager<T, EditorExtraProps>(
                           aria-label="Delete"
                           size="large"
                           disabled={
-                            isViewOnly || props?.isFieldDisabled?.(item, index)
+                            disabled || props?.isFieldDisabled?.(item, index)
                           }
                         >
                           <Delete />
@@ -169,7 +171,7 @@ export default function ListManager<T, EditorExtraProps>(
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
         }}
-        disabled={isViewOnly || isMaxLength}
+        disabled={disabled || isMaxLength}
       >
         {props.newValueLabel || "add new"}
       </Button>
