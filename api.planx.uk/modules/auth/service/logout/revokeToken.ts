@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { $api } from "../../../../client/index.js";
+import { $admin, $api } from "../../../../client/index.js";
 import { gql } from "graphql-request";
 import { getJWTExpiration } from "../jwt.js";
 import { ServerError } from "../../../../errors/serverError.js";
@@ -27,7 +27,7 @@ export const createTokenDigest = (jwt: string) => {
 
 export const isTokenRevoked = async (tokenDigest: string): Promise<boolean> => {
   try {
-    const { revokedToken } = await $api.client.request<IsRevokedQuery>(
+    const { revokedToken } = await $admin.client.request<IsRevokedQuery>(
       gql`
         query IsTokenRevoked($token_digest: String!) {
           revokedToken: revoked_tokens_by_pk(token_digest: $token_digest) {

@@ -30,6 +30,19 @@ paths:
           description: OK
         "500":
           $ref: "#/components/responses/ErrorMessage"
+  /auth/validate-jwt:
+    get:
+      summary: Validate JSON web token (JWT)
+      description:
+        Check the status of a user's JWT. Resolves if not-revoked, rejects if JWT is revoked.
+        Used by Hasura proxy in order to check JWT status.
+        Full JWT validation and permission checks still carried out by Hasura.
+      tags: ["auth"]
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorised
   /auth/google:
     get:
       summary: Authenticate via Google SSO

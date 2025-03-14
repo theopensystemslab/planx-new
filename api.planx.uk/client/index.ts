@@ -24,6 +24,15 @@ export const $public = new CoreDomainClient({
 });
 
 /**
+ * Connects to Hasura using the "admin" role
+ * Should only be used to verify token status (which bypasses proxy back to auth/validate-jwt endpoint
+ */
+export const $admin = new CoreDomainClient({
+  targetURL: process.env.HASURA_GRAPHQL_URL!,
+  auth: { adminSecret: process.env.HASURA_GRAPHQL_ADMIN_SECRET! },
+});
+
+/**
  * Get a planx-core client with permissions scoped to the current user.
  * This client instance ensures that all operations are restricted
  * to the permissions of the user who initiated the request.
