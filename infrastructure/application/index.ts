@@ -577,6 +577,7 @@ export = async () => {
             name: "PG_URL",
             value: rootDbUrl,
           },
+          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
         ],
       },
     },
