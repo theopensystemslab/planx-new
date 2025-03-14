@@ -21,7 +21,7 @@ import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import { DebugConsole } from "./DebugConsole";
 import EditHistory from "./EditHistory";
-import { PublishFlowButton } from "./Publish/PublishFlowButton";
+import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Search from "./Search";
 import StyledTab from "./StyledTab";
 
@@ -216,7 +216,7 @@ const Sidebar: React.FC = React.memo(() => {
                 </Tooltip>
               )}
             </Box>
-            <PublishFlowButton previewURL={urls.preview} />
+            <CheckForChangesToPublishButton previewURL={urls.preview} />
           </Header>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">

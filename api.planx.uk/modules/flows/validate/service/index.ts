@@ -5,7 +5,12 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
 
-import { dataMerged, getMostRecentPublishedFlow } from "../../../../helpers.js";
+import {
+  dataMerged,
+  getComments,
+  getMostRecentPublishedFlow,
+  type Comment,
+} from "../../../../helpers.js";
 import { validateFileTypes } from "./fileTypes.js";
 import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
@@ -29,6 +34,7 @@ interface FlowValidateAndDiffResponse {
   alteredNodes: AlteredNode[] | null;
   message: string;
   validationChecks?: FlowValidationResponse[];
+  comments: Comment[] | null;
 }
 
 const validateAndDiffFlow = async (
@@ -37,18 +43,21 @@ const validateAndDiffFlow = async (
   const flattenedFlow = await dataMerged(flowId);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
 
-  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
+  const delta = jsondiffpatch.diff(mostRecent?.data, flattenedFlow);
   if (!delta)
     return {
       alteredNodes: null,
+      comments: null,
       message: "No new changes to publish",
     };
 
-  // Only get alteredNodes and do validationChecks if there have been changes
+  // Only get alteredNodes and comments and do validationChecks if there have been changes
   const alteredNodes = Object.keys(delta).map((key) => ({
     id: key,
     ...flattenedFlow[key],
   }));
+
+  const comments = await getComments(flowId, mostRecent?.createdAt);
 
   const validationChecks = [];
   const sections = validateSections(flattenedFlow);
@@ -78,6 +87,7 @@ const validateAndDiffFlow = async (
 
   return {
     alteredNodes,
+    comments,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
   };

@@ -1,13 +1,15 @@
 import type { Node } from "@opensystemslab/planx-core/types";
-import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { z } from "zod";
-import { validateAndDiffFlow } from "./service/index.js";
 import { ServerError } from "../../../errors/index.js";
+import { type Comment } from "../../../helpers.js";
+import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import { validateAndDiffFlow } from "./service/index.js";
 
 interface ValidateAndDiffResponse {
   message: string;
   alteredNodes: Node[] | null;
   description?: string;
+  comments: Comment[] | null;
 }
 
 export const validateAndDiffSchema = z.object({
