@@ -17,7 +17,7 @@ services:
 
   metabase:
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.52.7
+    image: metabase/metabase:v0.53.6
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -87,6 +87,7 @@ services:
     environment:
       HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
       HASURA_NETWORK_LOCATION: "hasura"
+      API_NETWORK_LOCATION: http://api:${API_PORT}
     healthcheck:
       test: ["CMD", "wget", "--spider", "--quiet", "localhost:$HASURA_PROXY_PORT/healthz"]
       interval: 15s

@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {
+  getGridStringOperators,
   GridFilterItem,
   GridValueOptionsParams,
   ValueOptions,
@@ -13,7 +14,7 @@ import { False, True } from "./components/cellIcons";
 import { MultipleOptionSelectFilter } from "./components/MultipleOptionSelectFilter";
 import { ColumnFilterType, ColumnRenderType } from "./types";
 
-const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
+export const isValidFilterInput = (filterItem: GridFilterItem): boolean => {
   return (
     Array.isArray(filterItem.value) &&
     filterItem.value.length > 0 &&
@@ -33,7 +34,7 @@ export const containsItem = (
 
 export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
   {
-    value: "contains",
+    value: "is",
     getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!isValidFilterInput(filterItem)) {
         return null;
@@ -64,6 +65,10 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
     },
   },
 ];
+
+export const defaultStringFilterOperator = getGridStringOperators().find(
+  (op) => op.value === "contains",
+);
 
 export const getValueOptions = (
   options:
@@ -116,4 +121,5 @@ export const getColumnFilterType = (columnType?: ColumnRenderType) => {
 /**
  * Format date times to a standard format, e.g 31/12/25 14:40:45
  */
-export const dateFormatter = (value: string) => format(new Date(value), "dd/MM/yy HH:mm:ss");
+export const dateFormatter = (value: string) =>
+  format(new Date(value), "dd/MM/yy HH:mm:ss");

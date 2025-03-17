@@ -1,11 +1,16 @@
-import { getGridStringOperators, GridFilterItem } from "@mui/x-data-grid";
+import { GridFilterItem } from "@mui/x-data-grid";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import ErrorFallback from "components/Error/ErrorFallback";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
-import { containsItem, dateFormatter } from "ui/shared/DataTable/utils";
+import {
+  containsItem,
+  dateFormatter,
+  defaultStringFilterOperator,
+} from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import {
@@ -34,13 +39,15 @@ const EventsLog: React.FC<EventsLogProps> = ({
   if (error) return <ErrorFallback error={error} />;
   if (submissions.length === 0)
     return (
-      <ErrorSummary
-        format="info"
-        heading={`No payments or submissions found for this ${
-          filterByFlow ? "service" : "team"
-        }`}
-        message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
-      />
+      <SettingsSection>
+        <ErrorSummary
+          format="info"
+          heading={`No payments or submissions found for this ${
+            filterByFlow ? "service" : "team"
+          }`}
+          message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
+        />
+      </SettingsSection>
     );
 
   const rowData = submissions.map((submission, index) => ({
@@ -48,10 +55,6 @@ const EventsLog: React.FC<EventsLogProps> = ({
     id: `${submission.eventId}-${index}`,
     downloadSubmissionLink: undefined,
   }));
-
-  const defaultStringFilterOperator = getGridStringOperators().find(
-    (op) => op.value === "contains",
-  );
 
   const columns: ColumnConfig<Submission>[] = [
     {

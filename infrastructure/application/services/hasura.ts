@@ -93,6 +93,7 @@ export const createHasuraService = async ({
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
             { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
+            { name: "API_NETWORK_LOCATION", value: `https://api.${DOMAIN}` },
           ],
         },
         hasura: {
