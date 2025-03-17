@@ -38,7 +38,7 @@ const app = express();
 
 useSwaggerDocs(app);
 
-app.set("trust proxy", 1);
+app.set("trust proxy", 2);
 
 const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
   if (!origin) return callback(null, true);
