@@ -43,7 +43,7 @@ const validateAndDiffFlow = async (
   const flattenedFlow = await dataMerged(flowId);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
 
-  const delta = jsondiffpatch.diff(mostRecent?.data, flattenedFlow);
+  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
   if (!delta)
     return {
       alteredNodes: null,
@@ -57,7 +57,8 @@ const validateAndDiffFlow = async (
     ...flattenedFlow[key],
   }));
 
-  const comments = await getComments(flowId, mostRecent?.createdAt);
+  // const comments = await getComments(flowId, mostRecent?.createdAt);
+  const comments = null;
 
   const validationChecks = [];
   const sections = validateSections(flattenedFlow);

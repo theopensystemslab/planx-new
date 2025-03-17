@@ -27,7 +27,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
 
   const flattenedFlow = await dataMerged(flowId);
   const mostRecent = await getMostRecentPublishedFlow(flowId);
-  const delta = jsondiffpatch.diff(mostRecent?.data, flattenedFlow);
+  const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
   if (!delta) return null;
 

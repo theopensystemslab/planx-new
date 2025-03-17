@@ -1,15 +1,18 @@
+import CheckCircle from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
+import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
@@ -114,12 +117,17 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         <DialogTitle variant="h3" component="h1">
           {`Test`}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="body2">
-            {`Preview these content changes in-service before publishing `}
+            {`Preview your changes before publishing:`}
+          </Typography>
+          <Typography variant="body2" mb={2}>
             <Link href={previewURL} target="_blank">
-              {`here (opens in a new tab).`}
+              {previewURL}
             </Link>
+          </Typography>
+          <Typography variant="body2">
+            {`You can share this link with others on your team. They will not need to log into the editor.`}
           </Typography>
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
@@ -139,15 +147,37 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           {`Publish`}
         </DialogTitle>
         <DialogContent>
-          <Input
-            bordered
-            required
-            type="text"
-            name="summary"
-            value={summary || ""}
-            placeholder="Summarise your changes..."
-            onChange={(e) => setSummary(e.target.value)}
-          />
+          <InputLabel label="Summarise your changes" htmlFor="summary">
+            <Input
+              id="summary"
+              bordered
+              required
+              type="text"
+              name="summary"
+              value={summary || ""}
+              onChange={(e) => setSummary(e.target.value)}
+            />
+          </InputLabel>
+          <Divider />
+          <Typography variant="h4" mt={2}>
+            {`Status`}
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }} mt={1}>
+            <CheckCircle
+              color="success"
+              fontSize="large"
+              sx={{ minWidth: (theme) => theme.spacing(5.5) }}
+            />
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ display: "flex", flexDirection: "column" }}
+              gutterBottom
+            >
+              {`Online`}
+              <Typography variant="caption">{`Your service is accepting responses`}</Typography>
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
           <Button onClick={handleBack}>BACK</Button>

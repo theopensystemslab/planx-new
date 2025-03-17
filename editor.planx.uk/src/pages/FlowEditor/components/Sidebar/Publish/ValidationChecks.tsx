@@ -14,6 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
 import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import countBy from "lodash/countBy";
 import React from "react";
 
@@ -50,64 +51,74 @@ export const ValidationChecks = (props: {
 
   return (
     <Box pb={2}>
-      <Typography
-        variant="h4"
-        component="h3"
-        gutterBottom
-        sx={{ display: "flex", alignItems: "center" }}
-      >
-        Validation checks
-        <LightTooltip
-          title="Validation checks are automatic tests that scan your service and highlight when content changes introduce an error, like incorrectly using a component type or breaking an integration."
-          placement="right"
-          arrow={false}
-        >
-          <IconButton>
-            <Help color="primary" />
-          </IconButton>
-        </LightTooltip>
-      </Typography>
       <ValidationSummary validationChecks={validationChecks} />
-      <List>
-        {validationChecks.map((check, i) => (
-          <ListItem
-            key={i}
-            dense
-            sx={{
-              backgroundColor: (theme) => theme.palette.background.default,
-              border: (theme) => `1px solid ${theme.palette.border.light}`,
-              marginTop: "-1px", // eliminate double borders
-            }}
+      <SimpleExpand
+        id="validation-checks-list"
+        data-testid="validation-checks-list"
+        lightFontStyle
+        buttonText={{
+          open: "Show validation checks",
+          closed: "Hide validation checks",
+        }}
+      >
+        {/* <Typography
+          variant="h4"
+          component="h3"
+          gutterBottom
+          sx={{ display: "flex", alignItems: "center" }}
+        >
+          Validation checks
+          <LightTooltip
+            title="Validation checks are automatic tests that scan your service and highlight when content changes introduce an error, like incorrectly using a component type or breaking an integration."
+            placement="right"
+            arrow={false}
           >
-            <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(4) }}>
-              {Icon[check.status]}
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography
-                  variant="body2"
-                  color={
-                    check.status === "Not applicable" ? "GrayText" : "inherit"
-                  }
-                >
-                  {check.title}
-                </Typography>
-              }
-              secondary={
-                <Typography
-                  variant="body2"
-                  fontSize="small"
-                  color={
-                    check.status === "Not applicable" ? "GrayText" : "inherit"
-                  }
-                >
-                  {check.message}
-                </Typography>
-              }
-            />
-          </ListItem>
-        ))}
-      </List>
+            <IconButton>
+              <Help color="primary" />
+            </IconButton>
+          </LightTooltip>
+        </Typography> */}
+        <List>
+          {validationChecks.map((check, i) => (
+            <ListItem
+              key={i}
+              dense
+              sx={{
+                backgroundColor: (theme) => theme.palette.background.default,
+                border: (theme) => `1px solid ${theme.palette.border.light}`,
+                marginTop: "-1px", // eliminate double borders
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: (theme) => theme.spacing(4) }}>
+                {Icon[check.status]}
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                  <Typography
+                    variant="body2"
+                    color={
+                      check.status === "Not applicable" ? "GrayText" : "inherit"
+                    }
+                  >
+                    {check.title}
+                  </Typography>
+                }
+                secondary={
+                  <Typography
+                    variant="body2"
+                    fontSize="small"
+                    color={
+                      check.status === "Not applicable" ? "GrayText" : "inherit"
+                    }
+                  >
+                    {check.message}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </SimpleExpand>
     </Box>
   );
 };
@@ -162,7 +173,7 @@ const ValidationSummary = (props: { validationChecks: ValidationCheck[] }) => {
         sx={{ display: "flex", flexDirection: "column" }}
         gutterBottom
       >
-        {atLeastOneFail ? `Fix errors before publishing` : `Ready to publish`}
+        {atLeastOneFail ? `Fix errors before testing` : `Ready to test`}
         <Typography variant="caption">{formattedSummary}</Typography>
       </Typography>
     </Box>

@@ -1,13 +1,10 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Collapse from "@mui/material/Collapse";
-import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import React, { useState } from "react";
-import Caret from "ui/icons/Caret";
+import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import React from "react";
 
 import {
   AlteredExternalPortalsSummary,
@@ -38,10 +35,10 @@ export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   }
 
   return (
-    <li key={node.id}>
+    <ListItem key={node.id} disablePadding sx={{ display: "list-item" }}>
       <Typography variant="body2">{text}</Typography>
       {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
-    </li>
+    </ListItem>
   );
 };
 
@@ -57,7 +54,6 @@ export const AlteredNodesSummaryContent = (props: {
   lastPublishedTitle: string;
 }) => {
   const { alteredNodes, lastPublishedTitle } = props;
-  const [expandNodes, setExpandNodes] = useState<boolean>(false);
 
   const changeSummary: AlteredNodesSummary = {
     title: lastPublishedTitle,
@@ -86,76 +82,62 @@ export const AlteredNodesSummaryContent = (props: {
   return (
     <Box pb={2}>
       <Typography variant="h4" component="h3" gutterBottom>
-        {`Changes`}
+        {`Summary of changes since last publish`}
       </Typography>
-      {changeSummary["title"] && (
-        <Typography variant="body2">{changeSummary["title"]}</Typography>
-      )}
-      {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
-        <Box pb={2}>
-          <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
-            <ListItem
-              key={"updated"}
-              disablePadding
-              sx={{ display: "list-item" }}
-            >
-              <Typography variant="body2">{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
-            </ListItem>
-            <ListItem
-              key={"deleted"}
-              disablePadding
-              sx={{ display: "list-item" }}
-            >
-              <Typography variant="body2">{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
-            </ListItem>
-          </List>
-          <Box
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              marginBottom: 2,
-            }}
-          >
-            <Box
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="body2">{`See detailed changelog `}</Typography>
-              <Button
-                onClick={() => setExpandNodes((expandNodes) => !expandNodes)}
-                size="small"
-                disableRipple
-              >
-                <Caret
-                  expanded={expandNodes}
-                  color="primary"
-                  titleAccess={
-                    expandNodes ? "Less information" : "More information"
-                  }
-                />
-              </Button>
-            </Box>
-            <Collapse in={expandNodes}>
-              <Box pb={1}>
-                <ul>
-                  {alteredNodes.map((node) => (
-                    <AlteredNodeListItem key={node.id} node={node} />
-                  ))}
-                </ul>
-              </Box>
-            </Collapse>
-          </Box>
-        </Box>
-      )}
-      <Divider />
+      <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+        <ListItem key="comment-1" disablePadding sx={{ display: "list-item" }}>
+          <Typography variant="body2">{`Updated CIL flags`}</Typography>
+        </ListItem>
+        <ListItem key="comment-2" disablePadding sx={{ display: "list-item" }}>
+          <Typography variant="body2">{`Turned on send to Power Automate`}</Typography>
+        </ListItem>
+        <ListItem key="comment-3" disablePadding sx={{ display: "list-item" }}>
+          <Typography variant="body2">{`Updated Gov Pay metadata to include new ledger code`}</Typography>
+        </ListItem>
+      </List>
       {changeSummary["portals"].length > 0 && (
-        <>
-          <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
-          <Divider />
-        </>
+        <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
+      )}
+      {alteredNodes.length > 0 && (
+        <SimpleExpand
+          id="validation-checks-list"
+          data-testid="validation-checks-list"
+          lightFontStyle
+          buttonText={{
+            open: `Show ${alteredNodes.length} individual node changes`,
+            closed: "Hide individual node changes",
+          }}
+        >
+          {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
+            <Box>
+              <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+                <ListItem
+                  key={"updated"}
+                  disablePadding
+                  sx={{ display: "list-item" }}
+                >
+                  <Typography
+                    variant="body2"
+                    fontWeight="bold"
+                  >{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
+                </ListItem>
+                <ListItem
+                  key={"deleted"}
+                  disablePadding
+                  sx={{ display: "list-item" }}
+                >
+                  <Typography
+                    variant="body2"
+                    fontWeight="bold"
+                  >{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
+                </ListItem>
+                {alteredNodes.map((node) => (
+                  <AlteredNodeListItem key={node.id} node={node} />
+                ))}
+              </List>
+            </Box>
+          )}
+        </SimpleExpand>
       )}
     </Box>
   );

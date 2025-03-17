@@ -27,11 +27,11 @@ tables=(
   team_members 
   team_themes
   team_settings
-  flow_comments
   # Optional tables
   # Please comment in if working on a feature and you require example data locally
   # You will need to manually grant select permissions to the github_actions on production, and update main.sql
   # feedback
+  # flow_comments
 )
 
 # run copy commands on remote  db

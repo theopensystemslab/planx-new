@@ -153,7 +153,6 @@ interface PublishedFlowsResponse {
     publishedFlows: {
       data: Flow["data"];
       id: number;
-      createdAt: string;
     }[];
   } | null;
 }
@@ -161,7 +160,7 @@ interface PublishedFlowsResponse {
 // Get the most recent version of a published flow's data (flattened, with external portal nodes)
 const getMostRecentPublishedFlow = async (
   id: string,
-): Promise<{ data: Flow["data"]; createdAt: string } | undefined> => {
+): Promise<Flow["data"] | undefined> => {
   const { flow } = await $public.client.request<PublishedFlowsResponse>(
     gql`
       query GetMostRecentPublishedFlow($id: uuid!) {
@@ -171,7 +170,6 @@ const getMostRecentPublishedFlow = async (
             order_by: { created_at: desc }
           ) {
             data
-            createdAt
           }
         }
       }
@@ -179,7 +177,7 @@ const getMostRecentPublishedFlow = async (
     { id },
   );
 
-  const mostRecent = flow?.publishedFlows?.[0];
+  const mostRecent = flow?.publishedFlows?.[0]?.data;
   return mostRecent;
 };
 

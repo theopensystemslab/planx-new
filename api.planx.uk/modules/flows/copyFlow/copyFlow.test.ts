@@ -45,7 +45,6 @@ beforeEach(() => {
         publishedFlows: [
           {
             data: mockFlowData,
-            createdAt: "2024-12-31",
           },
         ],
       },

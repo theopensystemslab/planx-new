@@ -34,8 +34,8 @@ const createPaymentSendEvents = async (
       });
     }
 
-    const publishedFlow = await getMostRecentPublishedFlow(session.flow.id);
-    if (!publishedFlow?.data) {
+    const publishedFlowData = await getMostRecentPublishedFlow(session.flow.id);
+    if (!publishedFlowData) {
       return next({
         status: 400,
         message: `Cannot fetch flow data to create payment send events`,
@@ -45,7 +45,7 @@ const createPaymentSendEvents = async (
     // Find this sessions Send component, determine which "destinations" we need to queue up events for
     //   REMINDER to keep these destinations in sync with api.planx.uk/modules/send/createSendEvents/controller.ts
     const sendNode: [string, Node] | undefined = Object.entries(
-      publishedFlow.data,
+      publishedFlowData,
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
     const destinations: SendIntegration[] = sendNode?.[1]?.data?.destinations;
 

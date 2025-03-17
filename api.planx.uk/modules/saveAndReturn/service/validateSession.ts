@@ -93,18 +93,18 @@ async function reconcileSessionData({
   const alteredSectionIds = new Set<string>();
 
   const currentFlow = await getMostRecentPublishedFlow(sessionData.id);
-  if (!currentFlow?.data)
+  if (!currentFlow)
     throw Error(`Unable to find published flow for flow ${sessionData.id}`);
 
   // create ordered breadcrumbs to be able to look up section IDs later
   const orderedBreadcrumbs: OrderedBreadcrumbs = sortBreadcrumbs(
-    currentFlow.data as FlowGraph,
+    currentFlow as FlowGraph,
     sessionData.breadcrumbs,
   );
 
   const findParentNode = (nodeId: string): string | undefined => {
     const [parentId, _] =
-      Object.entries(currentFlow.data).find(([_, node]) =>
+      Object.entries(currentFlow).find(([_, node]) =>
         node.edges?.includes(nodeId),
       ) || [];
     return parentId;
