@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { $api } from "../../../client/index.js";
+import { $admin } from "../../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
 import type { HasuraClaims, JWTData } from "../types.js";
 import { checkUserCanAccessEnv, getAllowedRolesForUser } from "./utils.js";
@@ -8,7 +8,7 @@ import { fromUnixTime } from "date-fns";
 export const buildUserJWT = async (
   email: string,
 ): Promise<string | undefined> => {
-  const user = await $api.user.getByEmail(email);
+  const user = await $admin.user.getByEmail(email);
   if (!user) return;
 
   const hasAccess = await checkUserCanAccessEnv(user, process.env.NODE_ENV);

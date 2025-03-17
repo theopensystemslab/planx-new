@@ -1,4 +1,4 @@
-import { $api } from "../../../client/index.js";
+import { $admin } from "../../../client/index.js";
 import type { User, Role } from "@opensystemslab/planx-core/types";
 
 /**
@@ -27,7 +27,7 @@ export const checkUserCanAccessEnv = async (
   const isDemoUser = getAllowedRolesForUser(user).includes("demoUser");
   if (isDemoUser) return false;
 
-  const isStagingOnlyUser = await $api.user.isStagingOnly(user.email);
+  const isStagingOnlyUser = await $admin.user.isStagingOnly(user.email);
   if (isStagingOnlyUser) return false;
 
   return true;

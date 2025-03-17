@@ -2,7 +2,7 @@ import { getTestJWT } from "../../../tests/mockJWT.js";
 import { getJWTExpiration } from "./jwt.js";
 
 vi.mock("../../../client/index.js", () => ({
-  $api: {},
+  $admin: {},
 }));
 
 describe("getJWTExpiration() helper function", () => {
