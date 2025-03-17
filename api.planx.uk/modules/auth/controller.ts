@@ -112,8 +112,8 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET!);
   } catch (error) {
     return res.status(401).send();
-  };
-  
+  }
+
   const tokenDigest = createTokenDigest(token);
   const isRevoked = await isTokenRevoked(tokenDigest);
 
