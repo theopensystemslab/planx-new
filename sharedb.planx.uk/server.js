@@ -1,6 +1,5 @@
 const assert = require("assert");
 const { Server } = require("ws");
-const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const PostgresDB = require("./sharedb-postgresql");
