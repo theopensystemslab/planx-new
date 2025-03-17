@@ -528,6 +528,7 @@ export = async () => {
     serviceRegistries: {
       registryArn: apiDiscoveryService.arn,
       containerName: "api", 
+      containerPort: config.requireNumber("api-port"),
     },
     desiredCount: 1,
   });
