@@ -514,6 +514,12 @@ export = async () => {
         ],
       },
     },
+    serviceRegistries: {
+      registryArn: networking.requireOutput("privateDnsNamespaceArn"),
+      port: config.requireNumber("api-port"),
+      containerName: "api", 
+      containerPort: config.requireNumber("api-port"),
+    },
     desiredCount: 1,
   });
   new cloudflare.Record("api", {
