@@ -6,6 +6,11 @@
 {
 	# Handle HTTPS redirection in AWS at the LoadBalancer level
 	auto_https off
+	log {
+		output stdout
+		format json
+		level DEBUG
+	}
 }
 
 (security_headers) {
