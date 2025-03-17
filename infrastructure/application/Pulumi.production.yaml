@@ -3,8 +3,6 @@ config:
     secure: AAABAE+ZtQZO26XlmfAS7tG1DkwQ+G5OP82Roe4EOuk/tG1bMsI=
   application:airbrake-project-key:
     secure: AAABAPIGB+gWevPn0SzWnuSuV1RmdwpLOlWKnu8cM/kxLfslvdCIRcU0n0M0XNJ3jwj4EdFn7/llsL1Kg2XnDA==
-  application:api-port:
-    secure: AAABAJI7FTsjTP2Fc0iucQi/K414DnIU1n+gRsGeoR6NYz6h
   application:cloudflare-zone-id: a9b9933f28e786ec4cfd4bb596f5a519
   application:db-host:
     secure: AAABAKwKjFnIcXMFrWd1q378VFvSly5wFJaNaKk/mGv0W0AVyFn9reP3pZsI2BxfAliC3jn083AA+6kuh/uSezRId08GN0XBN9oqLdkeAFeucP4=

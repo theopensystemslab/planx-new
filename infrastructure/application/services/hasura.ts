@@ -84,10 +84,7 @@ export const createHasuraService = async ({
           healthCheck: {
             // hasuraProxy health depends on hasura health
             // use wget since busybox applet is included in Alpine base image (curl is not)
-            command: [
-              "CMD-SHELL",
-              `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`,
-            ],
+            command: ["CMD-SHELL", `wget --spider --quiet http://localhost:${HASURA_PROXY_PORT}/healthz || exit 1`],
             // generous config; if hasura is saturated/blocking, we give service a chance to scale out before whole task is replaced
             interval: 30,
             timeout: 15,
@@ -96,7 +93,7 @@ export const createHasuraService = async ({
           environment: [
             { name: "HASURA_PROXY_PORT", value: String(HASURA_PROXY_PORT) },
             { name: "HASURA_NETWORK_LOCATION", value: "localhost" },
-            { name: "API_NETWORK_LOCATION", value: `https://api.internal.${config.requireSecret("api-port")}` },
+            { name: "API_NETWORK_LOCATION", value: `https://api.${DOMAIN}` },
           ],
         },
         hasura: {
