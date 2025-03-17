@@ -31,4 +31,4 @@ export const vpcId = vpc.id;
 export const clusterName = cluster.cluster.name;
 export const privateSubnetIds = vpc.privateSubnetIds;
 export const publicSubnetIds = vpc.publicSubnetIds;
-export const privateDnsNamespaceId = privateDnsNamespace.id
+export const privateDnsNamespaceArn = privateDnsNamespace.arn;

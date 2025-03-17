@@ -335,18 +335,6 @@ export = async () => {
     domain: DOMAIN,
   });
 
-  const apiDiscoveryService = new aws.servicediscovery.Service("api-discovery", {
-    name: "api",
-    dnsConfig: {
-      namespaceId: networking.requireOutput("privateDnsNamespaceId"),
-      dnsRecords: [{
-        ttl: 15,
-        type: "A",
-      }],
-      routingPolicy: "INSTANCE",
-    },
-  });
-
   const apiService = new awsx.ecs.FargateService("api", {
     cluster,
     subnets: networking.requireOutput("publicSubnetIds"),
@@ -527,7 +515,7 @@ export = async () => {
       },
     },
     serviceRegistries: {
-      registryArn: apiDiscoveryService.arn,
+      registryArn: networking.requireOutput("privateDnsNamespaceArn"),
       port: config.requireNumber("api-port"),
       containerName: "api", 
       containerPort: config.requireNumber("api-port"),
