@@ -343,6 +343,7 @@ export = async () => {
         ttl: 15,
         type: "A",
       }],
+      routingPolicy: "INSTANCE",
     },
   });
 
