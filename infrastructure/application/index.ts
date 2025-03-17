@@ -570,13 +570,10 @@ export = async () => {
         environment: [
           { name: "PORT", value: String(SHAREDB_PORT) },
           {
-            name: "JWT_SECRET",
-            value: config.requireSecret("jwt-secret"),
-          },
-          {
             name: "PG_URL",
             value: rootDbUrl,
           },
+          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
         ],
       },
     },
