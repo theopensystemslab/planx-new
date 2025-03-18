@@ -6,8 +6,7 @@ export const getFlowNamesForFilter = (data: AdminPanelData[]) => {
   // Sort strings alphabetically, transform to title case and remove trailing spaces
   const processedData = flattenedData
     .sort()
-    .filter((str) => !str.endsWith(" "))
-    .map((str) => capitalize(str.toLowerCase()));
+    .map((str) => capitalize(str?.toLowerCase()?.trim()));
 
   // remove duplicates
   return [...new Set(processedData)];
