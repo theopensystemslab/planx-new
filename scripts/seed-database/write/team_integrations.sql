@@ -7,7 +7,6 @@ CREATE TEMPORARY TABLE sync_team_integrations (
   has_planning_data boolean,
   staging_govpay_secret text,
   staging_file_api_key text,
-  power_automate_webhook_url text,
   staging_power_automate_api_key text
 );
 
