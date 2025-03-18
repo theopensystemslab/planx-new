@@ -51,8 +51,8 @@ dependencies:
     specifier: 1.0.0-alpha.5
     version: 1.0.0-alpha.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#edcb32c
-    version: github.com/theopensystemslab/planx-core/edcb32c(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#848c15c
+    version: github.com/theopensystemslab/planx-core/848c15c(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -6952,7 +6952,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.26.10
       '@types/raf': 3.4.3
-      core-js: 3.31.0
+      core-js: 3.41.0
       raf: 3.4.1
       regenerator-runtime: 0.13.11
       rgbcolor: 1.0.1
@@ -7343,7 +7343,6 @@ packages:
   /core-js@3.41.0:
     resolution: {integrity: sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==}
     requiresBuild: true
-    dev: true
 
   /core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -7752,14 +7751,14 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@9.2.0:
-    resolution: {integrity: sha512-KNihz119m/3cqq/YE/Ci0Se7/eR5l4/8USvriQWAlhRaA+Tq0jzqtfUbSQuap+pIrXhO+lTbv0de50Be4pPmZw==}
+  /docx@9.3.0:
+    resolution: {integrity: sha512-IQwbSLBEMKNJmP9CDqSu3vJDhJps6tv/DlxsxuvfTclapd0JPCz1IFJTU//WdTjUenPMFaUD2Kg1nkQb/BWPIg==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 22.10.5
       hash.js: 1.1.7
       jszip: 3.10.1
-      nanoid: 5.0.9
+      nanoid: 5.1.4
       xml: 1.0.1
       xml-js: 1.6.11
     dev: false
@@ -10236,7 +10235,7 @@ packages:
       fflate: 0.8.2
     optionalDependencies:
       canvg: 3.0.11
-      core-js: 3.31.0
+      core-js: 3.41.0
       dompurify: 3.2.4
       html2canvas: 1.4.1
     dev: false
@@ -11054,6 +11053,12 @@ packages:
 
   /nanoid@5.0.9:
     resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    dev: false
+
+  /nanoid@5.1.4:
+    resolution: {integrity: sha512-GTFcMIDgR7tqji/LpSY8rtg464VnJl/j6ypoehYnuGb+Y8qZUdtKB8WVCXon0UEZgFDbuUxpIl//6FHLHgXSNA==}
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
@@ -14747,9 +14752,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/edcb32c(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/edcb32c}
-    id: github.com/theopensystemslab/planx-core/edcb32c
+  github.com/theopensystemslab/planx-core/848c15c(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/848c15c}
+    id: github.com/theopensystemslab/planx-core/848c15c
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14763,7 +14768,7 @@ packages:
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 9.2.0
+      docx: 9.3.0
       eslint: 8.57.1
       fast-xml-parser: 5.0.9
       graphql: 16.10.0
