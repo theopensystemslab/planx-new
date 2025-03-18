@@ -107,6 +107,8 @@ export const logout: RequestHandler = async (_req, res, next) => {
 
 export const isJWTRevoked: RequestHandler = async (req, res) => {
   const jwt = getToken(req);
+  if (!jwt) return res.status(401).send();
+
   const tokenDigest = createTokenDigest(jwt);
   const isRevoked = await isTokenRevoked(tokenDigest);
 
