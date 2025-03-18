@@ -117,7 +117,7 @@ export const Filters = <T extends object>({
   useEffect(() => {
     const parseStateFromURL = () => {
       const searchParams = new URLSearchParams(route.url.search);
-      const searchParamToMap = searchParams.entries().toArray() as [
+      const searchParamToMap = Array.from(searchParams.entries()) as [
         FilterKey<T>,
         FilterValues,
       ][];
