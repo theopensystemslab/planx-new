@@ -325,14 +325,14 @@ const Sidebar: React.FC = React.memo(() => {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         title="Set service online"
-        confirmText="Yes"
-        cancelText="No"
+        confirmText="Set service online"
+        cancelText="Cancel"
       >
         <Typography variant="body1" gutterBottom>
-          Toggle your service between "offline" and "online".
+          Toggle your service to be "online".
         </Typography>
         <Typography variant="body1" gutterBottom>
-          A service must be online to be accessed by the public, and to enable
+          A service must be online to be accessed by the public, to accept responses, and to enable
           analytics gathering.
         </Typography>
         <Typography variant="body1" gutterBottom>
