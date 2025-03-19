@@ -1,15 +1,13 @@
+import { capitalize } from "lodash";
 import { AdminPanelData } from "types";
 
-export const internalTeamNames = [
-  "WikiHouse",
-  "PlanX",
-  "Open Systems Lab",
-  "Testing",
-  "Open Digital Planning",
-  "Environment Agency",
-  "Templates",
-];
+export const getFlowNamesForFilter = (data: AdminPanelData[]) => {
+  const flattenedFlowNames = data.flatMap((teamData) => teamData.liveFlows);
+  // Sort strings alphabetically, transform to title case and remove trailing spaces
+  const formattedFlowNames = flattenedFlowNames
+    .map((name) => capitalize(name?.toLowerCase()?.trim()))
+    .sort();
 
-export const isCouncilTeam = () => {
-  return (team: AdminPanelData) => !internalTeamNames.includes(team.name);
+  // Remove duplicates
+  return [...new Set(formattedFlowNames)];
 };
