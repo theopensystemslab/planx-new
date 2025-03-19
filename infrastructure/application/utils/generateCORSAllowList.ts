@@ -6,11 +6,13 @@ export const generateCORSAllowList = (customDomains: CustomDomains, domain: stri
   const customDomainURLs = customDomains.map(team => `https://${team.domain}`);
   const editorURL = `https://${domain}`;
   const apiURL = `https://api.${domain}`; // Required for requests from API docs
+  const hasuraURL = `https://hasura.${domain}`; // Required for proxied auth requests
   const microsoftLoginURLs = ["https://login.live.com, https://login.microsoftonline.com"];
   const corsAllowList = [
     ...customDomainURLs,
     editorURL,
     apiURL,
+    hasuraURL,
     ...microsoftLoginURLs,
   ];
 

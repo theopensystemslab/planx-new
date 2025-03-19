@@ -19,7 +19,9 @@ export const PlatformAdminPanel = () => {
 
   const filteredPanelData = adminPanelData?.filter(isCouncilTeam());
 
-  const liveFlowValueOptions = getFlowNamesForFilter(filteredPanelData!);
+  const liveFlowValueOptions = filteredPanelData
+    ? getFlowNamesForFilter(filteredPanelData)
+    : [];
 
   const columns: ColumnConfig<AdminPanelData>[] = [
     {
