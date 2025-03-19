@@ -48,12 +48,24 @@ describe("feedback", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query feedback", () => {
-      expect(i.queries).not.toContain("feedback");
+    test("can query feedback", () => {
+      expect(i.queries).toContain("feedback");
     });
 
-    test("cannot mutate feedback", async () => {
-      expect(i).toHaveNoMutationsFor("feedback");
+    test("cannot insert feedback", async () => {
+      expect(i.mutations).not.toContain("insert_feedback");
+      expect(i.mutations).not.toContain("insert_feedback_one");
+    });
+
+    test("cannot delete feedback", async () => {
+      expect(i.mutations).not.toContain("delete_feedback");
+      expect(i.mutations).not.toContain("delete_feedback_by_pk");
+    });
+
+    test("can update feedback", async () => {
+      expect(i.mutations).toContain("update_feedback");
+      expect(i.mutations).toContain("update_feedback_by_pk");
+      expect(i.mutations).toContain("update_feedback_many");
     });
   });
 
@@ -63,12 +75,24 @@ describe("feedback", () => {
       i = await introspectAs("teamEditor");
     });
 
-    test("cannot query feedback", () => {
-      expect(i.queries).not.toContain("feedback");
+    test("can query feedback", () => {
+      expect(i.queries).toContain("feedback");
     });
 
-    test("cannot mutate feedback", async () => {
-      expect(i).toHaveNoMutationsFor("feedback");
+    test("cannot insert feedback", async () => {
+      expect(i.mutations).not.toContain("insert_feedback");
+      expect(i.mutations).not.toContain("insert_feedback_one");
+    });
+
+    test("cannot delete feedback", async () => {
+      expect(i.mutations).not.toContain("delete_feedback");
+      expect(i.mutations).not.toContain("delete_feedback_by_pk");
+    });
+
+    test("can update feedback", async () => {
+      expect(i.mutations).toContain("update_feedback");
+      expect(i.mutations).toContain("update_feedback_by_pk");
+      expect(i.mutations).toContain("update_feedback_many");
     });
   });
 
