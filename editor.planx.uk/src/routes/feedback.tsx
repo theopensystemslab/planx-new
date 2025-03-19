@@ -5,7 +5,7 @@ import { FeedbackCategory } from "components/Feedback/types";
 import gql from "graphql-tag";
 import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { compose, mount, NotFoundError, route, withData } from "navi";
-import { FeedbackLog } from "pages/FlowEditor/components/Flow/FeedbackLog/FeedbackLog";
+import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 

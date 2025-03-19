@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 
-import { FeedbackLog } from "./FeedbackLog";
+import { FeedbackLog } from "../../FeedbackLog/FeedbackLog";
 import { mockFeedback } from "./mocks/mockFeedback";
 
 const meta = {

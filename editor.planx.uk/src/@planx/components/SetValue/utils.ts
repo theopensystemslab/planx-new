@@ -66,7 +66,7 @@ const calculateNewValues: CalculateNewValues = ({
       if (typeof rawPrevious === "string" && previous[0] !== current) {
         return previous[0];
       }
-      
+
       // Single item arrays should be preserved as arrays
       if (previous.length === 1 && previous[0] !== current) {
         return previous;
