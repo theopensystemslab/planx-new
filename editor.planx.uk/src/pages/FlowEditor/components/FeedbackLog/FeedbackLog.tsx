@@ -17,12 +17,23 @@ import {
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
-import { feedbackTypeOptions } from "./feedbackFilterOptions";
+import { StatusChip } from "./components/StatusChip";
+import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
 import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
   const columns: ColumnConfig<Feedback>[] = [
+    {
+      field: "status",
+      headerName: "Status",
+      type: ColumnFilterType.ARRAY,
+      customComponent: StatusChip,
+      columnOptions: {
+        valueOptions: statusOptions,
+        filterable: false,
+      },
+    },
     {
       field: "flowName",
       headerName: "Service",
