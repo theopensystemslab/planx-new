@@ -4,6 +4,7 @@ import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import {
@@ -54,6 +55,7 @@ export const AlteredNodesSummaryContent = (props: {
   lastPublishedTitle: string;
 }) => {
   const { alteredNodes, lastPublishedTitle } = props;
+  const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
 
   const changeSummary: AlteredNodesSummary = {
     title: lastPublishedTitle,
@@ -80,9 +82,9 @@ export const AlteredNodesSummaryContent = (props: {
   });
 
   return (
-    <Box pb={2}>
-      <Typography variant="h4" component="h3" gutterBottom>
-        {`Summary of changes since last publish`}
+    <Box>
+      <Typography variant="h5" component="h3" gutterBottom>
+        {`Changes to your service since last publish`}
       </Typography>
       <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
         <ListItem key="comment-1" disablePadding sx={{ display: "list-item" }}>
@@ -98,13 +100,13 @@ export const AlteredNodesSummaryContent = (props: {
       {changeSummary["portals"].length > 0 && (
         <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
       )}
-      {alteredNodes.length > 0 && (
+      {isPlatformAdmin && alteredNodes.length > 1 && (
         <SimpleExpand
           id="validation-checks-list"
           data-testid="validation-checks-list"
           lightFontStyle
           buttonText={{
-            open: `Show ${alteredNodes.length} individual node changes`,
+            open: `Show individual node changes`,
             closed: "Hide individual node changes",
           }}
         >

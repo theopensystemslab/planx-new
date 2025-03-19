@@ -51,7 +51,7 @@ const validateAndDiffFlow = async (
       message: "No new changes to publish",
     };
 
-  // Only get alteredNodes and comments and do validationChecks if there have been changes
+  // Only get alteredNodes and history and do validationChecks if there have been changes
   const alteredNodes = Object.keys(delta).map((key) => ({
     id: key,
     ...flattenedFlow[key],

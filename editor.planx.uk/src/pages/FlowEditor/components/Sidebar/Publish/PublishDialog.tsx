@@ -1,20 +1,23 @@
-import CheckCircle from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
+import { FONT_WEIGHT_BOLD } from "theme";
 import InputLabel from "ui/editor/InputLabel";
+import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
+import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
 
@@ -94,11 +97,11 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogTitle>
         <DialogContent>
           <>
+            <ValidationChecks validationChecks={validationChecks} />
             <AlteredNodesSummaryContent
               alteredNodes={alteredNodes}
               lastPublishedTitle={lastPublishedTitle}
             />
-            <ValidationChecks validationChecks={validationChecks} />
           </>
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
@@ -112,14 +115,18 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   };
 
   const TestStep = () => {
+    const [completed, setCompleted] = useState<boolean>(false);
+    const [showError, setShowError] = useState<boolean>(false);
+
     return (
       <>
         <DialogTitle variant="h3" component="h1">
           {`Test`}
         </DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="body2">
-            {`Preview your changes before publishing:`}
+          <Typography variant="h4" component="h2" mb={1}>
+            {`Go to your preview link`}
+            <CopyButton link={previewURL} isActive={true} />
           </Typography>
           <Typography variant="body2" mb={2}>
             <Link href={previewURL} target="_blank">
@@ -127,12 +134,49 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             </Link>
           </Typography>
           <Typography variant="body2">
-            {`You can share this link with others on your team. They will not need to log into the editor.`}
+            {`This link reflects how the public form will appear on next publish. You can share this link internally with others on your team without prompting them to log into the editor. Do not share this link publicly.`}
           </Typography>
+          <Box marginTop={2}>
+            <ErrorWrapper
+              error={
+                showError
+                  ? `Confirm you have completed this step before continuing`
+                  : ``
+              }
+              id={`test-step-completion-error`}
+            >
+              <Grid container component="fieldset" sx={{ margin: 0 }}>
+                <Typography
+                  component="legend"
+                  variant="body2"
+                  fontWeight={FONT_WEIGHT_BOLD}
+                  gutterBottom
+                  id={`test-step-completion-label`}
+                >
+                  {`Have you or your team previewed these changes?`}
+                </Typography>
+                <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
+                  <ChecklistItem
+                    id={`test-confirmation-checkbox`}
+                    label={`Yes, these changes have been tested`}
+                    checked={completed}
+                    onChange={() => {
+                      setCompleted(!completed);
+                      setShowError(false);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </ErrorWrapper>
+          </Box>
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
           <Button onClick={handleBack}>BACK</Button>
-          <Button color="primary" variant="contained" onClick={handleNext}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => (completed ? handleNext() : setShowError(true))}
+          >
             NEXT
           </Button>
         </DialogActions>
@@ -155,29 +199,11 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
               type="text"
               name="summary"
               value={summary || ""}
+              multiline
+              rows={2}
               onChange={(e) => setSummary(e.target.value)}
             />
           </InputLabel>
-          <Divider />
-          <Typography variant="h4" mt={2}>
-            {`Status`}
-          </Typography>
-          <Box sx={{ display: "flex", alignItems: "center" }} mt={1}>
-            <CheckCircle
-              color="success"
-              fontSize="large"
-              sx={{ minWidth: (theme) => theme.spacing(5.5) }}
-            />
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ display: "flex", flexDirection: "column" }}
-              gutterBottom
-            >
-              {`Online`}
-              <Typography variant="caption">{`Your service is accepting responses`}</Typography>
-            </Typography>
-          </Box>
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
           <Button onClick={handleBack}>BACK</Button>
@@ -195,16 +221,29 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
       onClose={() => setDialogOpen(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      maxWidth="md"
+      PaperProps={{
+        sx: {
+          minWidth: 800,
+          maxHeight: "80%",
+        },
+      }}
     >
-      <Box padding={2}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+      <Stepper
+        activeStep={activeStep}
+        sx={{
+          padding: 2,
+          backgroundColor: (theme) => theme.palette.background.default,
+          borderBottom: `1px solid`,
+          borderColor: (theme) => theme.palette.border.light,
+        }}
+      >
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      <Box padding={1}>
         {
           {
             0: <ReviewStep />,
