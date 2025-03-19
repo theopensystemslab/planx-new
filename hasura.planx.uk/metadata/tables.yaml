@@ -299,6 +299,25 @@
           - user_context
         filter: {}
       comment: ""
+    - role: platformAdmin
+      permission:
+        columns:
+          - id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - id
+        filter:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      comment: ""
   update_permissions:
     - role: platformAdmin
       permission:
