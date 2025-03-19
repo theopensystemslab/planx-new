@@ -22,6 +22,11 @@ import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
+  const handleProcessRowUpdate = (updatedRow: Feedback) => {
+    console.log("Added/updated editor notes:", updatedRow.editorNotes);
+    return updatedRow;
+  };
+
   const columns: ColumnConfig<Feedback>[] = [
     {
       field: "flowName",
@@ -29,6 +34,15 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 250,
       type: ColumnFilterType.CUSTOM,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+    },
+    {
+      field: "editorNotes",
+      headerName: "Editor notes",
+      width: 250,
+      columnOptions: {
+        editable: true,
+        sortable: false,
+      },
     },
     {
       field: "type",
@@ -162,6 +176,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           rows={feedback}
           columns={columns}
           csvExportFileName={`${format(Date.now(), "yyyy-MM-dd")}-feedback`}
+          onProcessRowUpdate={handleProcessRowUpdate}
         />
       )}
     </FixedHeightDashboardContainer>

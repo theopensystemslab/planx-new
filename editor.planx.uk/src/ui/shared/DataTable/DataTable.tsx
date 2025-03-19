@@ -29,6 +29,7 @@ export const DataTable = <T,>({
   rows,
   columns,
   csvExportFileName,
+  onProcessRowUpdate,
 }: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
@@ -128,6 +129,8 @@ export const DataTable = <T,>({
           slots={{
             toolbar: CustomToolbar,
           }}
+          getRowId={(row) => row.id}
+          processRowUpdate={onProcessRowUpdate}
         />
       </Box>
     </Box>
