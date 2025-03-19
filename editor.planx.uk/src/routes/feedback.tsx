@@ -12,7 +12,7 @@ import React from "react";
 import { client } from "../lib/graphql";
 import { makeTitle } from "./utils";
 
-type FeedbackType = Sentiment & FeedbackCategory;
+type FeedbackType = Sentiment | FeedbackCategory;
 
 export interface Feedback {
   id: number;
@@ -23,7 +23,7 @@ export interface Feedback {
   userContext: string | null;
   createdAt: string;
   address: string | null;
-  feedbackScore: number;
+  feedbackScore: number | null;
   flowName: string;
   platform: string;
   browser: string;
