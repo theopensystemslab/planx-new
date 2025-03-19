@@ -33,8 +33,6 @@ config:
     secure: AAABAK8LsYKKNgIS4fepW5Sh6+WKxNopxsos51eBttT7O8E8K0HYOswgrIWuYJ0R1eJHDLKRHqQ=
   application:file-api-key-tewkesbury:
     secure: AAABALlStpxyNG5SRQFVYJMGmCyteUkoU9XBTBJn2kcf6APdqO1JwxU4jiU9Qo6a6aZQXK60an7xbkuD2hla/UvjR7Wu7cXY
-  application:skip-rate-limit-secret:
-    secure: AAABANwjBmGN73bwF6nqQP5i8tKMe3mi0NMBdae4uaLasG2VfPvC1D4mk7QWIFqVnzsD5jCN20Eqos/r2B+EAo2rAws3JeD/
   application:google-client-id: 987324067365-vpsk3kgeq5n32ihjn760ihf8l7m5rhh8.apps.googleusercontent.com
   application:google-client-secret:
     secure: AAABAGQuqQDU4S+vR+cQaFoa6xAeWU9clVaNonQ/dq0R8Dke+o0y7ALOmYMy4fOX4Pa6HiZl85npU/cbwy8HdMYaiA==
@@ -55,7 +53,7 @@ config:
   application:idox-nexus-submission-url: https://dev.identity.idoxgroup.com/agw/submission-api
   application:idox-nexus-token-url: https://dev.identity.idoxgroup.com/uaa/oauth/token
   application:jwt-secret:
-    secure: AAABACbmLC4176IBxX5iL64/nycSXEsCYSQ0hTb7t2OCVlWUc627Vr/EpBhcqPrw9q+0z8UOvRJG5/c/DflZxfPxyJRUVNu+
+    secure: AAABALZC9DSGHVkghAwofy8R8qWh6svk6bFG753F04nr0RI4iNXOIFBlJp1u5wlnPLdo+5gCLPLpkvke0cKODV0BGr07ibAa
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
   application:metabase-api-key:
@@ -72,6 +70,8 @@ config:
     secure: AAABAKhzYRhAmGmoBY1fPF75JWSWMOTORRCUAPKqvFUJMA60U5IFDUvPZ1Y+FuLtQ6Y1sQ8Q3laXGbp0f9j3Lw==
   application:session-secret:
     secure: AAABALL3iIm9+wB88/0ig7H+Y8Rmhb9OqaIz6sSTHmb5jf8+vBvXzY79z4pG6mJq9YPCxg==
+  application:skip-rate-limit-secret:
+    secure: AAABANwjBmGN73bwF6nqQP5i8tKMe3mi0NMBdae4uaLasG2VfPvC1D4mk7QWIFqVnzsD5jCN20Eqos/r2B+EAo2rAws3JeD/
   application:slack-internal-errors-webhook:
     secure: AAABAPkO1mBzTkXVWjpzAeP9ZbkifOiBwxj+rL5OONBu6DY87Pw1FualS6jSmQ5yeoGovZowNy3iMsArq4lxSX2BnBAur4O4a90Qou5zGUFACSTfLkZOgsyImvbdwRRnFPBBskfQ+bqwX9OZjO5AAXkEa9bqu3ViFQ==
   application:slack-webhook-url:

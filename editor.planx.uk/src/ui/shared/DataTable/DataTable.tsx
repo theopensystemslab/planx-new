@@ -83,6 +83,10 @@ export const DataTable = <T,>({
       ? {
           ...baseColDef,
           valueOptions: columnValueOptions,
+          filterOperators:
+            columnValueOptions &&
+            columnValueOptions.length > 0 &&
+            createFilterOperator(columnValueOptions),
           ...column.columnOptions,
           filterOperators:
             columnValueOptions &&

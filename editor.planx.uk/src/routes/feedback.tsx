@@ -12,7 +12,7 @@ import React from "react";
 import { client } from "../lib/graphql";
 import { makeTitle } from "./utils";
 
-type FeedbackType = Sentiment & FeedbackCategory;
+type FeedbackType = Sentiment | FeedbackCategory;
 
 export interface Feedback {
   id: number;

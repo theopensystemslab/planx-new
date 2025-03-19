@@ -16,13 +16,10 @@
 	header {
 		# Enable HSTS
 		Strict-Transport-Security "max-age=15552000; includeSubDomains"
-
 		# Disable clients from sniffing the media type
 		X-Content-Type-Options nosniff
-
 		# Clickjacking protection
 		X-Frame-Options DENY
-
 		# Do not leak server information
 		-Server
 	}

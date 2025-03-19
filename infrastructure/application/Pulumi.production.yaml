@@ -54,7 +54,7 @@ config:
   application:idox-nexus-submission-url: todo
   application:idox-nexus-token-url: todo
   application:jwt-secret:
-    secure: AAABABnYUYnZbOVTfN/n+m6kMQV951efSyHJYKVkGmtYvbPkpAk+BUIciL6AbJvW2x5bBuYvsrmY1v5lyZkoqoJ3XgDA/MTBQNIiNg==
+    secure: AAABAHMOapvJ7uHLUBcN7J/PukuMkaRBwdOnKEf7+U8+2RES8ddt5N0PnpXfviQMaIjhEwWNFYeC1U9bb6cSHQcs8lBM/4jE
   application:mapbox-access-token:
     secure: AAABAGwrLOkFpIZ3u8XeKIsfk1ujqFYKdv4us+ia2EdCXU8sBj2LiXfn8K6UcOifzf3HlOA6CYL3WwalKLmtvuq90CInbipB3dtY4Mr2Vx7NcUA7zxbUtli+8WcShIiNq490GwlTlf7ChjnNSIr3FzCeK3D/Xiq25wT0398c5ZwHyg==
   application:mb-db-connection-uri:
