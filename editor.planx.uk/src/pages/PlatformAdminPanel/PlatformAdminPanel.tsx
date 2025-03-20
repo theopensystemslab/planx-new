@@ -11,16 +11,13 @@ import {
   False as NotConfigured,
   True as Configured,
 } from "../../ui/shared/DataTable/components/cellIcons";
-import { getFlowNamesForFilter } from "./getFlowNamesForFilter";
-import { isCouncilTeam } from "./utils";
+import { getFlowNamesForFilter } from "./utils";
 
 export const PlatformAdminPanel = () => {
   const adminPanelData = useStore((state) => state.adminPanelData);
 
-  const filteredPanelData = adminPanelData?.filter(isCouncilTeam());
-
-  const liveFlowValueOptions = filteredPanelData
-    ? getFlowNamesForFilter(filteredPanelData)
+  const liveFlowValueOptions = adminPanelData
+    ? getFlowNamesForFilter(adminPanelData)
     : [];
 
   const columns: ColumnConfig<AdminPanelData>[] = [
@@ -112,7 +109,7 @@ export const PlatformAdminPanel = () => {
           {` environment.`}
         </Typography>
       </SettingsSection>
-      <DataTable rows={filteredPanelData} columns={columns} />
+      <DataTable rows={adminPanelData} columns={columns} />
     </FixedHeightDashboardContainer>
   );
 };

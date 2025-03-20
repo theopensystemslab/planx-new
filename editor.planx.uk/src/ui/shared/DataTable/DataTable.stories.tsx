@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Meta, StoryObj } from "@storybook/react";
-import { getFlowNamesForFilter } from "pages/PlatformAdminPanel/getFlowNamesForFilter";
+import { getFlowNamesForFilter } from "pages/PlatformAdminPanel/utils";
 
 import { DataTable } from "./DataTable";
 import { mockTeams } from "./mockTeams";
