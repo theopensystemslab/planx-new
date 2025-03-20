@@ -302,12 +302,14 @@
     - role: platformAdmin
       permission:
         columns:
+          - editor_notes
           - id
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
+          - editor_notes
           - id
         filter:
           team:
@@ -322,6 +324,7 @@
     - role: platformAdmin
       permission:
         columns:
+          - editor_notes
           - status
         filter: {}
         check: null
@@ -329,6 +332,7 @@
     - role: teamEditor
       permission:
         columns:
+          - editor_notes
           - status
         filter:
           team:
