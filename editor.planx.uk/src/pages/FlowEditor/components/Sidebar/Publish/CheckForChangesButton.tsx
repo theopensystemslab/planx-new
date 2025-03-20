@@ -8,6 +8,7 @@ import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
 
+import { HistoryItem } from "../EditHistory";
 import { AlteredNode } from "./AlteredNodes";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 import { ValidationCheck } from "./ValidationChecks";
@@ -36,6 +37,7 @@ export const CheckForChangesToPublishButton: React.FC<{
     [],
   );
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
+  const [history, setHistory] = useState<HistoryItem[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>();
 
@@ -46,9 +48,10 @@ export const CheckForChangesToPublishButton: React.FC<{
       setAlteredNodes(
         alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
       );
+      setHistory(alteredFlow?.data?.history ? alteredFlow.data.history : []);
       setLastPublishedTitle(
         alteredFlow?.data.alteredNodes
-          ? `Found changes to ${alteredFlow.data.alteredNodes.length} nodes`
+          ? `Found changes ready to publish`
           : alteredFlow?.data.message,
       );
       setValidationChecks(alteredFlow?.data?.validationChecks);
@@ -74,7 +77,7 @@ export const CheckForChangesToPublishButton: React.FC<{
       const { alteredNodes, message } = await publishFlow(flowId, summary);
       setLastPublishedTitle(
         alteredNodes
-          ? `Successfully published changes to ${alteredNodes.length} nodes`
+          ? `Successfully published changes`
           : `${message}` || "No new changes to publish",
       );
     } catch (error) {
@@ -115,6 +118,7 @@ export const CheckForChangesToPublishButton: React.FC<{
             dialogOpen={dialogOpen}
             setDialogOpen={setDialogOpen}
             alteredNodes={alteredNodes}
+            history={history}
             lastPublishedTitle={lastPublishedTitle}
             validationChecks={validationChecks}
             previewURL={previewURL}

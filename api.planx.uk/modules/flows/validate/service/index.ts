@@ -7,9 +7,10 @@ import * as jsondiffpatch from "jsondiffpatch";
 
 import {
   dataMerged,
-  getComments,
+  getHistory,
   getMostRecentPublishedFlow,
-  type Comment,
+  getMostRecentPublishedFlowDate,
+  type FlowHistoryEntry,
 } from "../../../../helpers.js";
 import { validateFileTypes } from "./fileTypes.js";
 import { validateInviteToPay } from "./inviteToPay.js";
@@ -34,7 +35,7 @@ interface FlowValidateAndDiffResponse {
   alteredNodes: AlteredNode[] | null;
   message: string;
   validationChecks?: FlowValidationResponse[];
-  comments: Comment[] | null;
+  history: FlowHistoryEntry[] | null;
 }
 
 const validateAndDiffFlow = async (
@@ -47,18 +48,18 @@ const validateAndDiffFlow = async (
   if (!delta)
     return {
       alteredNodes: null,
-      comments: null,
+      history: null,
       message: "No new changes to publish",
     };
 
-  // Only get alteredNodes and history and do validationChecks if there have been changes
+  // Only get alteredNodes, history, and do validationChecks if there have been changes
   const alteredNodes = Object.keys(delta).map((key) => ({
     id: key,
     ...flattenedFlow[key],
   }));
 
-  // const comments = await getComments(flowId, mostRecent?.createdAt);
-  const comments = null;
+  const lastPublishedAt = await getMostRecentPublishedFlowDate(flowId);
+  const history = await getHistory(flowId, lastPublishedAt);
 
   const validationChecks = [];
   const sections = validateSections(flattenedFlow);
@@ -88,7 +89,7 @@ const validateAndDiffFlow = async (
 
   return {
     alteredNodes,
-    comments,
+    history,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
   };

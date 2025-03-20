@@ -1,12 +1,15 @@
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useStore } from "pages/FlowEditor/lib/store";
+import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React from "react";
 
+import { HistoryItem } from "../EditHistory";
 import {
   AlteredExternalPortalsSummary,
   ExternalPortal,
@@ -53,8 +56,12 @@ interface AlteredNodesSummary {
 export const AlteredNodesSummaryContent = (props: {
   alteredNodes: AlteredNode[];
   lastPublishedTitle: string;
+  history?: HistoryItem[];
 }) => {
-  const { alteredNodes, lastPublishedTitle } = props;
+  const { alteredNodes, lastPublishedTitle, history } = props;
+  const comments = history?.filter((item) => item.type === "comment") || [];
+  const operations = history?.filter((item) => item.type === "operation") || [];
+
   const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
 
   const changeSummary: AlteredNodesSummary = {
@@ -83,20 +90,55 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box>
-      <Typography variant="h5" component="h3" gutterBottom>
+      <Typography variant="h4" component="h3" gutterBottom>
         {`Changes to your service since last publish`}
       </Typography>
-      <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
-        <ListItem key="comment-1" disablePadding sx={{ display: "list-item" }}>
-          <Typography variant="body2">{`Updated CIL flags`}</Typography>
-        </ListItem>
-        <ListItem key="comment-2" disablePadding sx={{ display: "list-item" }}>
-          <Typography variant="body2">{`Turned on send to Power Automate`}</Typography>
-        </ListItem>
-        <ListItem key="comment-3" disablePadding sx={{ display: "list-item" }}>
-          <Typography variant="body2">{`Updated Gov Pay metadata to include new ledger code`}</Typography>
-        </ListItem>
-      </List>
+      {comments.length > 0 && (
+        <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+          {comments.map((comment) => (
+            <ListItem
+              key={comment.id}
+              disablePadding
+              sx={{ display: "list-item" }}
+            >
+              <ListItemText
+                primary={
+                  <Typography variant="body2">{comment.comment}</Typography>
+                }
+                secondary={
+                  <Typography
+                    variant="body2"
+                    fontSize="small"
+                  >{`Commented ${formatLastEditDate(comment.createdAt)} by ${
+                    comment.firstName
+                  } ${comment.lastName}`}</Typography>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      )}
+      {comments.length === 0 && operations.length > 0 && (
+        <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+          <ListItem
+            key={"operation-summary"}
+            disablePadding
+            sx={{ display: "list-item" }}
+          >
+            <ListItemText
+              primary={
+                <Typography variant="body2">{`${operations.length} edits have been made to your service`}</Typography>
+              }
+              secondary={
+                <Typography
+                  variant="body2"
+                  fontSize="small"
+                >{`See the full details of these edits in "History". Hint: "Add comments" between edits for a friendlier summary here on next publish.`}</Typography>
+              }
+            />
+          </ListItem>
+        </List>
+      )}
       {changeSummary["portals"].length > 0 && (
         <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
       )}

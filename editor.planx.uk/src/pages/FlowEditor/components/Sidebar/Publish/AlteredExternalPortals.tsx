@@ -73,7 +73,7 @@ export const AlteredExternalPortalsSummary = (props: {
 
   return (
     <Box pt={2}>
-      <Typography variant="h5" component="h3" gutterBottom>
+      <Typography variant="h4" component="h3" gutterBottom>
         {`Changes to nested services`}
       </Typography>
       <List sx={{ listStyleType: "disc", marginLeft: 3 }}>

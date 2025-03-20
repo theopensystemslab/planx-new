@@ -18,6 +18,7 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
+import { HistoryItem } from "../EditHistory";
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
 
@@ -56,6 +57,7 @@ interface ChangesDialogProps {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
   alteredNodes: AlteredNode[];
+  history?: HistoryItem[];
   lastPublishedTitle: string;
   validationChecks: ValidationCheck[];
   previewURL: string;
@@ -69,6 +71,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     dialogOpen,
     setDialogOpen,
     alteredNodes,
+    history,
     lastPublishedTitle,
     validationChecks,
     previewURL,
@@ -101,6 +104,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             <AlteredNodesSummaryContent
               alteredNodes={alteredNodes}
               lastPublishedTitle={lastPublishedTitle}
+              history={history}
             />
           </>
         </DialogContent>

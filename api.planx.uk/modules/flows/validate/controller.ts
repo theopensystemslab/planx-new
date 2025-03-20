@@ -1,7 +1,7 @@
 import type { Node } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 import { ServerError } from "../../../errors/index.js";
-import { type Comment } from "../../../helpers.js";
+import { type FlowHistoryEntry } from "../../../helpers.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import { validateAndDiffFlow } from "./service/index.js";
 
@@ -9,7 +9,7 @@ interface ValidateAndDiffResponse {
   message: string;
   alteredNodes: Node[] | null;
   description?: string;
-  comments: Comment[] | null;
+  history: FlowHistoryEntry[] | null;
 }
 
 export const validateAndDiffSchema = z.object({

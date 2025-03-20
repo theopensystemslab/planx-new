@@ -60,18 +60,18 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "GetComments",
+    name: "GetHistory",
     matchOnVariables: false,
     data: {
-      comments: [
+      history: [
         {
           id: 1,
-          actor: {
-            firstName: "Test",
-            lastName: "Editor",
-          },
-          comment: "Changed order of about the applicant questions",
           createdAt: "2025-01-01",
+          firstName: "Test",
+          lastName: "Editor",
+          type: "comment",
+          data: null,
+          comment: "Changed order of about the applicant questions",
         },
       ],
     },

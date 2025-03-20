@@ -15,14 +15,14 @@ export interface GetFlowDataResponse {
   team_id: number;
   team: { slug: string };
   publishedFlows:
-    | {
-        data: Flow["data"];
-        id: number;
-        created_at: string;
-        summary: string;
-        publisher_id: number;
-      }[]
-    | [];
+  | {
+    data: Flow["data"];
+    id: number;
+    created_at: string;
+    summary: string;
+    publisher_id: number;
+  }[]
+  | [];
 }
 
 // Get a flow's data (unflattened)
@@ -153,6 +153,7 @@ interface PublishedFlowsResponse {
     publishedFlows: {
       data: Flow["data"];
       id: number;
+      created_at: string;
     }[];
   } | null;
 }
@@ -204,35 +205,60 @@ const getMostRecentPublishedFlowVersion = async (
   return mostRecent;
 };
 
-export interface Comment {
+export const getMostRecentPublishedFlowDate = async (
+  id: string,
+): Promise<string | undefined> => {
+  const { flow } = await $public.client.request<PublishedFlowsResponse>(
+    gql`
+      query GetMostRecentPublishedFlowVersion($id: uuid!) {
+        flow: flows_by_pk(id: $id) {
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
+            created_at
+          }
+        }
+      }
+    `,
+    { id },
+  );
+
+  const mostRecent = flow?.publishedFlows?.[0]?.created_at;
+  return mostRecent;
+};
+
+export interface FlowHistoryEntry {
   id: number;
-  actor: {
-    firstName: string;
-    lastName: string;
-  };
-  comment: string;
   createdAt: string;
+  firstName: string;
+  lastName: string;
+  type: "comment" | "operation";
+  comment: string | null;
+  data: any; // Operation["data"] via editor's sharedb json OT types
 }
 
-// Get comments in a flow's "History" since last publish
-export const getComments = async (flowId: string, lastPublishedAt?: string) => {
+// Get comments and operations from a flow's "History" since last publish
+export const getHistory = async (flowId: string, lastPublishedAt?: string) => {
   const { client: $client } = getClient();
-  const response = await $client.request<{ comments: Comment[] | [] }>(
+  const response = await $client.request<{ history: FlowHistoryEntry[] | [] }>(
     gql`
-      query GetComments($flow_id: uuid!, $last_published_at: String) {
-        comments: flow_comments(
+      query GetHistory($flow_id: uuid!, $last_published_at: timestamptz) {
+        history: flow_history(
           where: {
-            created_at: { _gt: $last_published_at }
-            flow_id: { _eq: $flow_id }
-          }
+            flow_id: {_eq: $flow_id}, 
+            type: {_nin: "publish"}, 
+            created_at: {_gt: $last_published_at}
+          }, 
+          order_by: {created_at: desc}
         ) {
           id
-          actor {
-            firstName: first_name
-            lastName: last_name
-          }
-          comment
           createdAt: created_at
+          firstName: first_name
+          lastName: last_name
+          type
+          data
+          comment
         }
       }
     `,
@@ -242,7 +268,7 @@ export const getComments = async (flowId: string, lastPublishedAt?: string) => {
     },
   );
 
-  return response.comments;
+  return response.history;
 };
 
 /**
