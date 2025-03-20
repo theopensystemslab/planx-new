@@ -1,4 +1,4 @@
-import { Feedback } from "routes/feedback";
+import { Feedback, FeedbackStatus } from "routes/feedback";
 
 import { FeedbackType } from "./types";
 
@@ -27,6 +27,13 @@ export const feedbackTypeText = (type: FeedbackType) => {
     default:
       return "Inaccuracy";
   }
+};
+
+export const feedbackStatusText: Record<FeedbackStatus, string> = {
+  unread: "Unread",
+  urgent: "Urgent",
+  to_follow_up: "To follow up",
+  read: "Read",
 };
 
 export const getCombinedHelpText = (feedback: Feedback) => {
