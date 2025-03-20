@@ -61,8 +61,8 @@ interface ChangesDialogProps {
   lastPublishedTitle: string;
   validationChecks: ValidationCheck[];
   previewURL: string;
-  summary?: string;
-  setSummary: React.Dispatch<React.SetStateAction<string | undefined>>;
+  summary: string;
+  setSummary: React.Dispatch<React.SetStateAction<string>>;
   handlePublish: () => Promise<void>;
 }
 
@@ -81,7 +81,6 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   } = props;
 
   const steps = ["Review", "Test", "Publish"];
-
   const [activeStep, setActiveStep] = useState<number>(0);
 
   const handleNext = () => {
@@ -93,6 +92,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   };
 
   const ReviewStep = () => {
+    const [showError, setShowError] = useState<boolean>(false);
+    const atLeastOneFail =
+      validationChecks.filter((check) => check.status === "Fail").length > 0;
+
     return (
       <>
         <DialogTitle variant="h3" component="h1">
@@ -100,7 +103,11 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogTitle>
         <DialogContent>
           <>
-            <ValidationChecks validationChecks={validationChecks} />
+            <ErrorWrapper
+              error={showError ? `Fix errors before continuing` : ``}
+            >
+              <ValidationChecks validationChecks={validationChecks} />
+            </ErrorWrapper>
             <AlteredNodesSummaryContent
               alteredNodes={alteredNodes}
               lastPublishedTitle={lastPublishedTitle}
@@ -110,7 +117,11 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
-          <Button color="primary" variant="contained" onClick={handleNext}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => (atLeastOneFail ? setShowError(true) : handleNext())}
+          >
             NEXT
           </Button>
         </DialogActions>
@@ -129,7 +140,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
           <Typography variant="h4" component="h2" mb={1}>
-            {`Go to your preview link`}
+            {`Your preview link`}
             <CopyButton link={previewURL} isActive={true} />
           </Typography>
           <Typography variant="body2" mb={2}>
@@ -202,7 +213,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
               required
               type="text"
               name="summary"
-              value={summary || ""}
+              value={summary}
               multiline
               rows={2}
               onChange={(e) => setSummary(e.target.value)}
@@ -211,7 +222,14 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
           <Button onClick={handleBack}>BACK</Button>
-          <Button color="primary" variant="contained" onClick={handlePublish}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              handlePublish();
+              setActiveStep(0);
+            }}
+          >
             PUBLISH
           </Button>
         </DialogActions>
@@ -225,6 +243,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
       onClose={() => setDialogOpen(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      scroll="paper"
       PaperProps={{
         sx: {
           minWidth: 800,

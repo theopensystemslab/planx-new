@@ -15,14 +15,14 @@ export interface GetFlowDataResponse {
   team_id: number;
   team: { slug: string };
   publishedFlows:
-  | {
-    data: Flow["data"];
-    id: number;
-    created_at: string;
-    summary: string;
-    publisher_id: number;
-  }[]
-  | [];
+    | {
+        data: Flow["data"];
+        id: number;
+        created_at: string;
+        summary: string;
+        publisher_id: number;
+      }[]
+    | [];
 }
 
 // Get a flow's data (unflattened)
@@ -246,11 +246,11 @@ export const getHistory = async (flowId: string, lastPublishedAt?: string) => {
       query GetHistory($flow_id: uuid!, $last_published_at: timestamptz) {
         history: flow_history(
           where: {
-            flow_id: {_eq: $flow_id}, 
-            type: {_nin: "publish"}, 
-            created_at: {_gt: $last_published_at}
-          }, 
-          order_by: {created_at: desc}
+            flow_id: { _eq: $flow_id }
+            type: { _nin: "publish" }
+            created_at: { _gt: $last_published_at }
+          }
+          order_by: { created_at: desc }
         ) {
           id
           createdAt: created_at

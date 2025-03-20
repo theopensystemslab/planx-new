@@ -39,7 +39,7 @@ export const CheckForChangesToPublishButton: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [history, setHistory] = useState<HistoryItem[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [summary, setSummary] = useState<string>();
+  const [summary, setSummary] = useState<string>("");
 
   const handleCheckForChangesToPublish = async () => {
     try {
@@ -89,7 +89,6 @@ export const CheckForChangesToPublishButton: React.FC<{
   const _lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
     const user = await lastPublisher(flowId);
-
     setLastPublishedTitle(formatLastPublishMessage(date, user));
   }, [flowId]);
 

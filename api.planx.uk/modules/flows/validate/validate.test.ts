@@ -50,6 +50,20 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
+    name: "GetMostRecentPublishedFlowVersion",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        publishFlows: [
+          {
+            createdAt: "2024-12-31",
+          },
+        ],
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "PublishFlow",
     matchOnVariables: false,
     data: {
@@ -817,15 +831,15 @@ describe("flow comments since last publish", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.comments).toEqual([
+        expect(res.body.history).toEqual([
           {
             id: 1,
-            actor: {
-              firstName: "Test",
-              lastName: "Editor",
-            },
-            comment: "Changed order of about the applicant questions",
             createdAt: "2025-01-01",
+            firstName: "Test",
+            lastName: "Editor",
+            type: "comment",
+            data: null,
+            comment: "Changed order of about the applicant questions",
           },
         ]);
       });
@@ -838,7 +852,7 @@ describe("flow comments since last publish", () => {
       .expect(200)
       .then((res) => {
         expect(res.body.message).toEqual("No new changes to publish");
-        expect(res.body.comments).toBeNull();
+        expect(res.body.history).toBeNull();
       });
   });
 });

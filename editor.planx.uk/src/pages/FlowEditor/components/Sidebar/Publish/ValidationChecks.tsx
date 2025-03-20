@@ -2,34 +2,17 @@ import Cancel from "@mui/icons-material/Cancel";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
-import Help from "@mui/icons-material/Help";
 import NotInterested from "@mui/icons-material/NotInterested";
 import WarningAmber from "@mui/icons-material/WarningAmber";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { styled } from "@mui/material/styles";
-import Tooltip, { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import countBy from "lodash/countBy";
 import React from "react";
-
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.text.primary,
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-    fontWeight: theme.typography.fontWeightRegular,
-    borderRadius: 4,
-  },
-}));
 
 export interface ValidationCheck {
   title: string;
@@ -61,23 +44,6 @@ export const ValidationChecks = (props: {
           closed: "Hide validation checks",
         }}
       >
-        {/* <Typography
-          variant="h4"
-          component="h3"
-          gutterBottom
-          sx={{ display: "flex", alignItems: "center" }}
-        >
-          Validation checks
-          <LightTooltip
-            title="Validation checks are automatic tests that scan your service and highlight when content changes introduce an error, like incorrectly using a component type or breaking an integration."
-            placement="right"
-            arrow={false}
-          >
-            <IconButton>
-              <Help color="primary" />
-            </IconButton>
-          </LightTooltip>
-        </Typography> */}
         <List>
           {validationChecks.map((check, i) => (
             <ListItem

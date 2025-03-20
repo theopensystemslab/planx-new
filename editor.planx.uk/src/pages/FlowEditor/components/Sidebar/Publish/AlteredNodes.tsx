@@ -106,12 +106,11 @@ export const AlteredNodesSummaryContent = (props: {
                   <Typography variant="body2">{comment.comment}</Typography>
                 }
                 secondary={
-                  <Typography
-                    variant="body2"
-                    fontSize="small"
-                  >{`Commented ${formatLastEditDate(comment.createdAt)} by ${
-                    comment.firstName
-                  } ${comment.lastName}`}</Typography>
+                  <Typography variant="body2" fontSize="small">
+                    {`Commented ${formatLastEditDate(comment.createdAt)} by ${
+                      comment.firstName
+                    } ${comment.lastName}`}
+                  </Typography>
                 }
               />
             </ListItem>
@@ -127,22 +126,28 @@ export const AlteredNodesSummaryContent = (props: {
           >
             <ListItemText
               primary={
-                <Typography variant="body2">{`${operations.length} edits have been made to your service`}</Typography>
+                <Typography variant="body2">
+                  {`${operations.length} edits to your service`}
+                </Typography>
               }
               secondary={
-                <Typography
-                  variant="body2"
-                  fontSize="small"
-                >{`See the full details of these edits in "History". Hint: "Add comments" between edits for a friendlier summary here on next publish.`}</Typography>
+                <Typography variant="body2" fontSize="small">
+                  {`See full details in "History"`}
+                </Typography>
               }
             />
+          </ListItem>
+          <ListItem key={"hint"} disablePadding>
+            <Typography variant="body2" fontSize="small">
+              {`Hint: "Add comments" between edits for a friendlier summary here on next publish.`}
+            </Typography>
           </ListItem>
         </List>
       )}
       {changeSummary["portals"].length > 0 && (
         <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
       )}
-      {isPlatformAdmin && alteredNodes.length > 1 && (
+      {isPlatformAdmin && (
         <SimpleExpand
           id="validation-checks-list"
           data-testid="validation-checks-list"
