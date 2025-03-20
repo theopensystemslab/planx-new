@@ -6,10 +6,10 @@ import { Feedback, FeedbackStatus } from "routes/feedback";
 import { feedbackStatusText } from "../utils";
 
 const FEEDBACK_COLOURS: Record<FeedbackStatus, ChipProps["color"]> = {
-  unread: "success",
+  unread: "info",
   urgent: "error",
   to_follow_up: "warning",
-  read: "default",
+  read: "success",
 };
 
 export const StatusChip = (
