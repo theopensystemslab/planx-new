@@ -28,8 +28,8 @@ const ModalHeader = styled(Box)(({ theme }) => ({
 }));
 
 const ModalBody = styled(Box)(({ theme }) => ({
-   background: theme.palette.background.paper,
-   overflow: "auto",
+  background: theme.palette.background.paper,
+  overflow: "auto",
 }));
 
 export const DataTableModal: React.FC<DataTableModalProps> = ({
@@ -46,9 +46,7 @@ export const DataTableModal: React.FC<DataTableModalProps> = ({
           <Close />
         </CloseButton>
       </ModalHeader>
-      <ModalBody>
-        {children}
-      </ModalBody>
+      <ModalBody>{children}</ModalBody>
     </Dialog>
   );
 };

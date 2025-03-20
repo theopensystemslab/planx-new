@@ -92,3 +92,7 @@ describe("JWT in query params", () => {
     await supertest(app).get(`/auth/validate-jwt?token=NOT_A_JWT`).expect(200);
   });
 });
+
+test("no JWT", async () => {
+  await supertest(app).get("/auth/validate-jwt").expect(401);
+});

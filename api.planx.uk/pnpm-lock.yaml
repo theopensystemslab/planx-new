@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.701.0
     version: 3.701.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#edcb32c
-    version: github.com/theopensystemslab/planx-core/edcb32c(@types/react@19.0.10)
+    specifier: git+https://github.com/theopensystemslab/planx-core#848c15c
+    version: github.com/theopensystemslab/planx-core/848c15c(@types/react@19.0.10)
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -4014,14 +4014,14 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@9.2.0:
-    resolution: {integrity: sha512-KNihz119m/3cqq/YE/Ci0Se7/eR5l4/8USvriQWAlhRaA+Tq0jzqtfUbSQuap+pIrXhO+lTbv0de50Be4pPmZw==}
+  /docx@9.3.0:
+    resolution: {integrity: sha512-IQwbSLBEMKNJmP9CDqSu3vJDhJps6tv/DlxsxuvfTclapd0JPCz1IFJTU//WdTjUenPMFaUD2Kg1nkQb/BWPIg==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 22.10.5
       hash.js: 1.1.7
       jszip: 3.10.1
-      nanoid: 5.0.9
+      nanoid: 5.1.4
       xml: 1.0.1
       xml-js: 1.6.11
     dev: false
@@ -5373,6 +5373,7 @@ packages:
       chalk: 3.0.0
       diff-match-patch: 1.0.5
     dev: false
+    bundledDependencies: []
 
   /jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -5748,6 +5749,12 @@ packages:
 
   /nanoid@5.0.9:
     resolution: {integrity: sha512-Aooyr6MXU6HpvvWXKoVoXwKMs/KyVakWwg7xQfv5/S/RIgJMy0Ifa45H9qqYy7pTCszrHzP21Uk4PZq2HpEM8Q==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    dev: false
+
+  /nanoid@5.1.4:
+    resolution: {integrity: sha512-GTFcMIDgR7tqji/LpSY8rtg464VnJl/j6ypoehYnuGb+Y8qZUdtKB8WVCXon0UEZgFDbuUxpIl//6FHLHgXSNA==}
     engines: {node: ^18 || >=20}
     hasBin: true
     dev: false
@@ -7508,9 +7515,9 @@ packages:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/edcb32c(@types/react@19.0.10):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/edcb32c}
-    id: github.com/theopensystemslab/planx-core/edcb32c
+  github.com/theopensystemslab/planx-core/848c15c(@types/react@19.0.10):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/848c15c}
+    id: github.com/theopensystemslab/planx-core/848c15c
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -7524,7 +7531,7 @@ packages:
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 9.2.0
+      docx: 9.3.0
       eslint: 8.57.1
       fast-xml-parser: 5.0.9
       graphql: 16.10.0

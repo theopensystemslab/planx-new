@@ -5,7 +5,7 @@ import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContain
 import SettingsSection from "ui/editor/SettingsSection";
 import { slugify } from "utils";
 
-import { useStore } from "../../../lib/store";
+import { useStore } from "../../lib/store";
 import EventsLog from "./components/EventsLog";
 import { Submission, SubmissionsProps } from "./types";
 

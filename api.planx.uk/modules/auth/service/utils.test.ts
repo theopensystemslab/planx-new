@@ -14,7 +14,7 @@ const mockUser: User = {
 
 vi.mock("../../../client", () => {
   return {
-    $api: {
+    $admin: {
       user: {
         isStagingOnly: () => mockIsStagingOnly(),
       },
