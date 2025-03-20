@@ -33,6 +33,7 @@ export const mockFeedback: Feedback[] = [
     nodeText:
       'This service is a work in progress, any feedback you share about your experience will help us to improve it.\n<br>\n<br>\nDon\'t share any personal or financial information in your feedback. If you do we will act according to our <a href="">privacy policy</a>',
     projectType: null,
+    status: "unread",
   },
   {
     address: null,
@@ -59,6 +60,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
+    status: "read",
   },
   {
     address: null,
@@ -85,6 +87,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
+    status: "urgent",
   },
   {
     address: null,
@@ -111,6 +114,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
+    status: "to_follow_up",
   },
   {
     address: null,
@@ -137,6 +141,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
+    status: "unread",
   },
   {
     address: null,
@@ -163,6 +168,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
+    status: "read",
   },
   {
     address: null,
@@ -189,5 +195,6 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
+    status: "urgent",
   },
 ];

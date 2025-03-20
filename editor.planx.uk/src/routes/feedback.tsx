@@ -14,6 +14,9 @@ import { makeTitle } from "./utils";
 
 type FeedbackType = Sentiment | FeedbackCategory;
 
+/** Matches feedback_status_enum table */
+export type FeedbackStatus = "unread" | "read" | "to_follow_up" | "urgent";
+
 export interface Feedback {
   id: number;
   type: FeedbackType;
@@ -34,6 +37,7 @@ export interface Feedback {
   nodeId: string | null;
   nodeText: string | null;
   projectType: string | null;
+  status: FeedbackStatus;
 }
 
 const feedbackRoutes = compose(
