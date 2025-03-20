@@ -1,6 +1,8 @@
 import Typography from "@mui/material/Typography";
 import { GridFilterItem } from "@mui/x-data-grid";
 import { format } from "date-fns";
+import gql from "graphql-tag";
+import { client } from "lib/graphql";
 import capitalize from "lodash/capitalize";
 import React from "react";
 import { Feedback } from "routes/feedback";
@@ -23,8 +25,24 @@ import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
-  const handleProcessRowUpdate = (updatedRow: Feedback) => {
-    console.log("Added/updated editor notes:", updatedRow.editorNotes);
+  const handleProcessRowUpdate = async (updatedRow: Feedback) => {
+    await client.mutate({
+      mutation: gql`
+        mutation UpdateEditorNotes($id: Int!, $editor_notes: String) {
+          update_feedback_by_pk(
+            pk_columns: { id: $id }
+            _set: { editor_notes: $editor_notes }
+          ) {
+            id
+          }
+        }
+      `,
+      variables: {
+        id: updatedRow.id,
+        editor_notes: updatedRow.editorNotes,
+      },
+    });
+
     return updatedRow;
   };
 
