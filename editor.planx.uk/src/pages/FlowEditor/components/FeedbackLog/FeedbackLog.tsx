@@ -96,13 +96,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "nodeType",
       headerName: "Where",
       width: 280,
-      type: ColumnFilterType.CUSTOM,
       customComponent: (params) => (
         <>{`${params.value} - ${params.row.nodeTitle}`}</>
       ),
-      columnOptions: {
-        filterable: false, // TODO: make filterable
-      },
     },
     {
       field: "userContext",
