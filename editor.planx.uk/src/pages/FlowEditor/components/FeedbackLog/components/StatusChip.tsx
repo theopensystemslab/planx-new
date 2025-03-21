@@ -10,7 +10,7 @@ export const FEEDBACK_COLOURS = {
   urgent: "error",
   in_progress: "warning",
   actioned: "success",
-};
+} as const;
 
 export const StatusChip = (
   params: GridRenderCellParams<
