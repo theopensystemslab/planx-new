@@ -28,6 +28,7 @@ import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
 import Section from "@planx/components/Section/Editor";
 import Send from "@planx/components/Send/Editor";
+import SetFee from "@planx/components/SetFee/Editor";
 import SetValue from "@planx/components/SetValue/Editor";
 import TaskList from "@planx/components/TaskList/Editor";
 import TextInput from "@planx/components/TextInput/Editor";
@@ -70,6 +71,7 @@ const components: {
   review: Review,
   section: Section,
   send: Send,
+  "set-fee": SetFee,
   "set-value": SetValue,
   "task-list": TaskList,
   "text-input": TextInput,

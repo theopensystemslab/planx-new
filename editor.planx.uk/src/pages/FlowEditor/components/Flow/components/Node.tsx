@@ -121,6 +121,8 @@ const Node: React.FC<any> = (props) => {
       );
     case TYPES.Send:
       return <Question {...allProps} text={node?.data?.title ?? "Send"} />;
+    case TYPES.SetFee:
+      return <Question {...allProps} text={"Set fee"} />;
     case TYPES.SetValue:
       return <Question {...allProps} text={getSetValueText(node.data)} />;
     case TYPES.TaskList:

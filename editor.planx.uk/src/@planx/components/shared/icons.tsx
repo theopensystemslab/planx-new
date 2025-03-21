@@ -6,6 +6,7 @@ import CloudUpload from "@mui/icons-material/CloudUpload";
 import ContactPage from "@mui/icons-material/ContactPage";
 import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
+import CurrencyPound from "@mui/icons-material/CurrencyPound";
 import DoorFrontOutlined from "@mui/icons-material/DoorFrontOutlined";
 import Event from "@mui/icons-material/Event";
 import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
@@ -64,6 +65,7 @@ export const ICONS: {
   [TYPES.Review]: RateReviewOutlined,
   [TYPES.Section]: List,
   [TYPES.Send]: Send,
+  [TYPES.SetFee]: CurrencyPound,
   [TYPES.SetValue]: PlaylistAdd,
   [TYPES.Question]: CallSplit,
   [TYPES.TaskList]: List,
