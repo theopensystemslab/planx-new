@@ -77,9 +77,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "feedbackScore",
       headerName: "Rating",
       width: 125,
+      type: ColumnFilterType.SINGLE_SELECT,
       columnOptions: {
-        filterable: false, // TODO: make filterable
-        valueFormatter: (params) => EmojiRating[params],
+        valueOptions: EmojiRating,
       },
     },
     {
@@ -100,13 +100,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "nodeType",
       headerName: "Where",
       width: 280,
-      type: ColumnFilterType.CUSTOM,
       customComponent: (params) => (
         <>{`${params.value} - ${params.row.nodeTitle}`}</>
       ),
-      columnOptions: {
-        filterable: false, // TODO: make filterable
-      },
     },
     {
       field: "userContext",
@@ -118,9 +114,8 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       headerName: "Help text (more information)",
       width: 280,
       type: ColumnFilterType.CUSTOM,
-      customComponent: ExpandableHelpText,
+      customComponent: (params) => <ExpandableHelpText {...params} />,
       columnOptions: {
-        filterable: false, // TODO: make filterable
         valueFormatter: (params) => stripHTMLTags(params),
       },
     },
