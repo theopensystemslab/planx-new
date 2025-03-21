@@ -43,6 +43,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
         px: 1.5,
         py: 1,
         margin: 0,
+        mb: 1,
       }}
     >
       <ListItemText
