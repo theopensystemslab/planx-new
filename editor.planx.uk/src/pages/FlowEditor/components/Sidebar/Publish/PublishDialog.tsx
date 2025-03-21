@@ -56,10 +56,10 @@ export const NoChangesDialog = ({
     <DialogContent>
       <Typography variant="body2">{`No new changes to publish`}</Typography>
     </DialogContent>
-    <DialogActions>
-      <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
+    <DialogActions sx={{ paddingX: 2 }}>
+      <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
       <Button color="primary" variant="contained" disabled={true}>
-        PUBLISH
+        Publish
       </Button>
     </DialogActions>
   </Dialog>
@@ -128,13 +128,13 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </>
         </DialogContent>
         <DialogFooterActions sx={{ paddingX: 2 }}>
-          <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
+          <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
           <Button
             color="primary"
             variant="contained"
             onClick={() => (atLeastOneFail ? setShowError(true) : handleNext())}
           >
-            NEXT
+            Next
           </Button>
         </DialogFooterActions>
       </>
@@ -198,13 +198,13 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Box>
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={handleBack}>BACK</Button>
+          <Button onClick={handleBack}>Back</Button>
           <Button
             color="primary"
             variant="contained"
             onClick={() => (completed ? handleNext() : setShowError(true))}
           >
-            NEXT
+            Next
           </Button>
         </DialogFooterActions>
       </>
@@ -233,7 +233,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </InputLabel>
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={handleBack}>BACK</Button>
+          <Button onClick={handleBack}>Back</Button>
           <Button
             color="primary"
             variant="contained"
@@ -242,7 +242,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
               setActiveStep(0);
             }}
           >
-            PUBLISH
+            Publish
           </Button>
         </DialogFooterActions>
       </>
@@ -275,7 +275,15 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
       >
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel>{label}</StepLabel>
+            <StepLabel
+              sx={(theme) => ({
+                "& .MuiStepIcon-root.Mui-completed": {
+                  color: theme.palette.success.main,
+                },
+              })}
+            >
+              {label}
+            </StepLabel>
           </Step>
         ))}
       </Stepper>
