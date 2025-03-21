@@ -73,9 +73,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "feedbackScore",
       headerName: "Rating",
       width: 125,
+      type: ColumnFilterType.SINGLE_SELECT,
       columnOptions: {
-        filterable: false, // TODO: make filterable
-        valueFormatter: (params) => EmojiRating[params],
+        valueOptions: EmojiRating,
       },
     },
     {

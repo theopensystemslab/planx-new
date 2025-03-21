@@ -2,13 +2,13 @@ import { Feedback, FeedbackStatus } from "routes/feedback";
 
 import { FeedbackType } from "./types";
 
-export const EmojiRating: Record<number, string> = {
-  1: "Terrible",
-  2: "Poor",
-  3: "Neutral",
-  4: "Good",
-  5: "Excellent",
-};
+export const EmojiRating = [
+  { value: 1, label: "Terrible" },
+  { value: 2, label: "Poor" },
+  { value: 3, label: "Neutral" },
+  { value: 4, label: "Good" },
+  { value: 5, label: "Excellent" },
+];
 
 export const feedbackTypeText = (type: FeedbackType) => {
   switch (type) {
