@@ -7,7 +7,17 @@ import {
 
 export const ColumnFilterType = {
   BOOLEAN: "boolean",
-  ARRAY: "singleSelect", // when the column can be filtered from a range of known values
+  /**
+   * Custom data type for columns containing an array of strings
+   * Filters are customised to match single select behaviour - values within the array are treated as a discrete list
+   */
+  ARRAY: "array",
+  /**
+   * Column contains an discrete set of values
+   * Filters default to "is", "is not" vs "contains", "does not contain"
+   * Docs: https://mui.com/x/react-data-grid/column-definition/#special-properties
+   */
+  SINGLE_SELECT: "singleSelect",
   DATE: "date",
   CUSTOM: "custom",
 } as const;

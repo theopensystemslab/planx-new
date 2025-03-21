@@ -32,7 +32,9 @@ export const containsItem = (
   return false;
 };
 
-export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
+export const createArrayFilterOperator = (
+  columnValueOptions: ValueOptions[],
+) => [
   {
     value: "is",
     getApplyFilterFn: (filterItem: GridFilterItem) => {
@@ -40,23 +42,14 @@ export const createFilterOperator = (columnValueOptions: ValueOptions[]) => [
         return null;
       }
 
-      // return a function that is applied to all the rows in turn
       return (currentRowValue: string[]): boolean => {
-        if (!currentRowValue?.length) {
-          return false;
-        }
+        if (!currentRowValue?.length) return false;
 
-        return Array.isArray(currentRowValue)
-          ? currentRowValue.some((arrayItem) =>
-              filterItem.value.some(
-                (filterValue: Pick<GridFilterItem, "value">) =>
-                  containsItem(arrayItem, filterValue),
-              ),
-            )
-          : filterItem.value.some(
-              (filterValue: Pick<GridFilterItem, "value">) =>
-                containsItem(currentRowValue, filterValue),
-            );
+        return currentRowValue.some((arrayItem) =>
+          filterItem.value.some((filterValue: Pick<GridFilterItem, "value">) =>
+            containsItem(arrayItem, filterValue),
+          ),
+        );
       };
     },
     InputComponent: MultipleOptionSelectFilter,
@@ -86,6 +79,7 @@ export const columnCellComponentRegistry = {
     value ? <True /> : <False />,
   [ColumnFilterType.DATE]: () => undefined, // use default MUI data grid behaviour
   [ColumnFilterType.CUSTOM]: () => undefined,
+  [ColumnFilterType.SINGLE_SELECT]: () => undefined,
   [ColumnFilterType.ARRAY]: (value: string[], filterValues?: string[]) => {
     return (
       <Box component="ol" padding={0} margin={0} sx={{ listStyleType: "none" }}>
@@ -109,9 +103,10 @@ export const getColumnFilterType = (columnType?: ColumnRenderType) => {
       return "boolean";
     case ColumnFilterType.DATE:
       return "date";
-    case ColumnFilterType.ARRAY:
+    case ColumnFilterType.SINGLE_SELECT:
       return "singleSelect";
     case ColumnFilterType.CUSTOM:
+    case ColumnFilterType.ARRAY:
       return undefined;
     default:
       return undefined;

@@ -20,7 +20,7 @@ import {
 } from "./types";
 import {
   columnCellComponentRegistry,
-  createFilterOperator,
+  createArrayFilterOperator,
   getColumnFilterType,
   getValueOptions,
 } from "./utils";
@@ -80,21 +80,18 @@ export const DataTable = <T,>({
         : undefined,
     };
 
-    return column.type === ColumnFilterType.ARRAY
-      ? {
-          ...baseColDef,
-          valueOptions: columnValueOptions,
-          filterOperators:
-            columnValueOptions &&
-            columnValueOptions.length > 0 &&
-            createFilterOperator(columnValueOptions),
-          ...column.columnOptions,
-        }
-      : {
-          ...baseColDef,
-          valueOptions: undefined,
-          ...column.columnOptions,
-        };
+    const gridColDef = {
+      ...baseColDef,
+      valueOptions: columnValueOptions,
+      ...column.columnOptions,
+    };
+
+    if (column.type === ColumnFilterType.ARRAY && columnValueOptions?.length) {
+      gridColDef.filterOperators =
+        createArrayFilterOperator(columnValueOptions);
+    }
+
+    return gridColDef;
   }) as GridColDef[];
 
   const handleFilterChange = (model: GridFilterModel) => {
