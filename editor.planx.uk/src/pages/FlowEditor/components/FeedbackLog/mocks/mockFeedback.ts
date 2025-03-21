@@ -1,4 +1,4 @@
-import { Feedback } from "../../../../../../routes/feedback";
+import { Feedback } from "../../../../../routes/feedback";
 
 export const mockFeedback: Feedback[] = [
   {
@@ -34,6 +34,7 @@ export const mockFeedback: Feedback[] = [
       'This service is a work in progress, any feedback you share about your experience will help us to improve it.\n<br>\n<br>\nDon\'t share any personal or financial information in your feedback. If you do we will act according to our <a href="">privacy policy</a>',
     projectType: null,
     status: "unread",
+    editorNotes: "This is important!",
   },
   {
     address: null,
@@ -61,6 +62,7 @@ export const mockFeedback: Feedback[] = [
     nodeText: null,
     projectType: null,
     status: "read",
+    editorNotes: "No action needed",
   },
   {
     address: null,
@@ -88,6 +90,7 @@ export const mockFeedback: Feedback[] = [
     nodeText: null,
     projectType: null,
     status: "urgent",
+    editorNotes: "Let's do something about this",
   },
   {
     address: null,
@@ -115,6 +118,7 @@ export const mockFeedback: Feedback[] = [
     nodeText: null,
     projectType: null,
     status: "to_follow_up",
+    editorNotes: "No action needed",
   },
   {
     address: null,
@@ -142,6 +146,7 @@ export const mockFeedback: Feedback[] = [
     nodeText: null,
     projectType: null,
     status: "unread",
+    editorNotes: null,
   },
   {
     address: null,
@@ -169,6 +174,7 @@ export const mockFeedback: Feedback[] = [
     nodeText: null,
     projectType: null,
     status: "read",
+    editorNotes: "Let's take some action here - BB",
   },
   {
     address: null,
@@ -196,5 +202,6 @@ export const mockFeedback: Feedback[] = [
     nodeText: null,
     projectType: null,
     status: "urgent",
+    editorNotes: null,
   },
 ];

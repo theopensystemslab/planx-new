@@ -38,6 +38,7 @@ export interface Feedback {
   nodeText: string | null;
   projectType: string | null;
   status: FeedbackStatus;
+  editorNotes: string | null;
 }
 
 const feedbackRoutes = compose(

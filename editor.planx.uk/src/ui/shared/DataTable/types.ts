@@ -39,4 +39,5 @@ export interface DataGridProps<T> {
   rows: readonly T[] | undefined;
   columns: Array<ColumnConfig<T>>;
   csvExportFileName?: string;
+  onProcessRowUpdate?: (updatedRow: T) => void;
 }
