@@ -1,7 +1,10 @@
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
@@ -16,7 +19,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 
-import { removeAt, setAt } from "../../../utils";
+import { insertAt, removeAt, setAt } from "../../../utils";
 
 export interface EditorProps<T> {
   index: number;
@@ -38,8 +41,43 @@ export interface Props<T, EditorExtraProps = {}> {
 
 const Item = styled(Box)(({ theme }) => ({
   display: "flex",
-  marginBottom: theme.spacing(2),
+  "&:last-child": {
+    marginBottom: theme.spacing(2),
+  },
 }));
+
+const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
+  justifyContent: "space-between",
+  paddingLeft: theme.spacing(1.5),
+  paddingRight: theme.spacing(3),
+  width: "100%",
+  height: theme.spacing(2),
+  opacity: 0,
+  transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+  "&:hover": {
+    opacity: 1,
+  },
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+  border: `1px solid ${theme.palette.primary.main}`,
+  width: "90%",
+}));
+
+const InsertButton: React.FC<{
+  handleClick: () => void;
+  disabled: boolean;
+}> = ({ handleClick, disabled }) => (
+  <InsertButtonRoot
+    onClick={handleClick}
+    disabled={disabled}
+    disableRipple
+    tabIndex={-1}
+  >
+    <AddCircleOutlineIcon color="primary" fontSize="small" sx={{ mr: -0.5 }} />
+    <StyledDivider variant="middle" />
+  </InsertButtonRoot>
+);
 
 export default function ListManager<T, EditorExtraProps>(
   props: Props<T, EditorExtraProps>,
@@ -84,6 +122,7 @@ export default function ListManager<T, EditorExtraProps>(
         })}
       </Box>
       <Button
+        sx={{ mt: 2 }}
         size="large"
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
@@ -113,51 +152,67 @@ export default function ListManager<T, EditorExtraProps>(
           <Box ref={provided.innerRef} {...provided.droppableProps}>
             {props.values.map((item, index) => {
               return (
-                <Draggable
-                  draggableId={String(index)}
-                  index={index}
-                  key={index}
-                >
-                  {(provided: DraggableProvided) => (
-                    <Item {...provided.draggableProps} ref={provided.innerRef}>
-                      <Box>
-                        <IconButton
-                          disableRipple
-                          {...(props.noDragAndDrop
-                            ? { disabled: true || isViewOnly }
-                            : provided.dragHandleProps)}
-                          aria-label="Drag"
-                          size="large"
-                          disabled={isViewOnly}
-                        >
-                          <DragHandle />
-                        </IconButton>
-                      </Box>
-                      <Editor
-                        index={index}
-                        value={item}
-                        onChange={(newItem) => {
-                          props.onChange(setAt(index, newItem, props.values));
-                        }}
-                        {...(props.editorExtraProps || {})}
-                      />
-                      <Box>
-                        <IconButton
-                          onClick={() => {
-                            props.onChange(removeAt(index, props.values));
-                          }}
-                          aria-label="Delete"
-                          size="large"
-                          disabled={
-                            isViewOnly || props?.isFieldDisabled?.(item, index)
-                          }
-                        >
-                          <Delete />
-                        </IconButton>
-                      </Box>
-                    </Item>
+                <React.Fragment key={index}>
+                  {Boolean(index) && (
+                    <InsertButton
+                      disabled={isViewOnly || isMaxLength}
+                      handleClick={() => {
+                        props.onChange(
+                          insertAt(index, props.newValue(), props.values),
+                        );
+                      }}
+                    />
                   )}
-                </Draggable>
+                  <Draggable
+                    draggableId={String(index)}
+                    index={index}
+                    key={index}
+                  >
+                    {(provided: DraggableProvided) => (
+                      <Item
+                        {...provided.draggableProps}
+                        ref={provided.innerRef}
+                      >
+                        <Box>
+                          <IconButton
+                            disableRipple
+                            {...(props.noDragAndDrop
+                              ? { disabled: true || isViewOnly }
+                              : provided.dragHandleProps)}
+                            aria-label="Drag"
+                            size="large"
+                            disabled={isViewOnly}
+                          >
+                            <DragHandle />
+                          </IconButton>
+                        </Box>
+                        <Editor
+                          index={index}
+                          value={item}
+                          onChange={(newItem) => {
+                            props.onChange(setAt(index, newItem, props.values));
+                          }}
+                          {...(props.editorExtraProps || {})}
+                        />
+                        <Box>
+                          <IconButton
+                            onClick={() => {
+                              props.onChange(removeAt(index, props.values));
+                            }}
+                            aria-label="Delete"
+                            size="large"
+                            disabled={
+                              isViewOnly ||
+                              props?.isFieldDisabled?.(item, index)
+                            }
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Box>
+                      </Item>
+                    )}
+                  </Draggable>
+                </React.Fragment>
               );
             })}
             {provided.placeholder}
