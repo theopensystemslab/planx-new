@@ -29,7 +29,7 @@ export type StatusOption = {
 };
 
 export const statusOptions: StatusOption[] = (
-  ["unread", "read", "to_follow_up", "urgent"] as const
+  ["unread", "actioned", "in_progress", "urgent"] as const
 ).map((type) => ({
   value: type,
   label: feedbackStatusText[type],

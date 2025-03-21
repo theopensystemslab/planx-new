@@ -8,8 +8,8 @@ import { feedbackStatusText } from "../utils";
 const FEEDBACK_COLOURS: Record<FeedbackStatus, ChipProps["color"]> = {
   unread: "info",
   urgent: "error",
-  to_follow_up: "warning",
-  read: "success",
+  in_progress: "warning",
+  actioned: "success",
 };
 
 export const StatusChip = (

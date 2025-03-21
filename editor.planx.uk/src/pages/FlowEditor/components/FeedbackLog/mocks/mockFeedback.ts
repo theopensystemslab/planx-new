@@ -61,7 +61,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
-    status: "read",
+    status: "actioned",
     editorNotes: "No action needed",
   },
   {
@@ -117,7 +117,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
-    status: "to_follow_up",
+    status: "in_progress",
     editorNotes: "No action needed",
   },
   {
@@ -173,7 +173,7 @@ export const mockFeedback: Feedback[] = [
     nodeId: "5SuQhstVL5",
     nodeText: null,
     projectType: null,
-    status: "read",
+    status: "actioned",
     editorNotes: "Let's take some action here - BB",
   },
   {

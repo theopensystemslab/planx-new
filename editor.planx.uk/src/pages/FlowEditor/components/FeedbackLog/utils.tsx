@@ -32,8 +32,8 @@ export const feedbackTypeText = (type: FeedbackType) => {
 export const feedbackStatusText: Record<FeedbackStatus, string> = {
   unread: "Unread",
   urgent: "Urgent",
-  to_follow_up: "To follow up",
-  read: "Read",
+  actioned: "Actioned",
+  in_progress: "In progress",
 };
 
 export const getCombinedHelpText = (feedback: Feedback) => {
