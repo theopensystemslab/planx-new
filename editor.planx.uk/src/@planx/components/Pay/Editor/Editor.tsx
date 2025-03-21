@@ -50,6 +50,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   name="title"
                   value={values.title}
                   onChange={handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputRow>
@@ -59,6 +60,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   name="bannerTitle"
                   value={values.bannerTitle}
                   onChange={handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputRow>
@@ -67,6 +69,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   name="description"
                   value={values.description}
                   onChange={handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputRow>
@@ -81,6 +84,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   name="instructionsTitle"
                   value={values.instructionsTitle}
                   onChange={handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputRow>
@@ -89,6 +93,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   name="instructionsDescription"
                   value={values.instructionsDescription}
                   onChange={handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputRow>
@@ -96,27 +101,31 @@ const Component: React.FC<Props> = (props: Props) => {
                   checked={values.hidePay}
                   onChange={() => setFieldValue("hidePay", !values.hidePay)}
                   label="Hide the pay buttons and show fee for information only"
+                  disabled={props.disabled}
                 />
               </InputRow>
             </ModalSectionContent>
           </ModalSection>
-          <InviteToPaySection />
-          <GovPayMetadataSection />
+          <InviteToPaySection disabled={props.disabled} />
+          <GovPayMetadataSection disabled={props.disabled} />
           <MoreInformation
             changeField={handleChange}
             definitionImg={values.definitionImg}
             howMeasured={values.howMeasured}
             policyRef={values.policyRef}
             info={values.info}
+            disabled={props.disabled}
           />
           <InternalNotes
             name="notes"
             onChange={handleChange}
             value={values.notes}
+            disabled={props.disabled}
           />
           <ComponentTagSelect
             onChange={(value) => setFieldValue("tags", value)}
             value={values.tags}
+            disabled={props.disabled}
           />
         </Form>
       )}

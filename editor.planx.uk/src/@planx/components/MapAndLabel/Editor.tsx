@@ -61,6 +61,7 @@ function MapAndLabelComponent(props: Props) {
                 value={formik.values.title}
                 onChange={formik.handleChange}
                 required
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -69,12 +70,14 @@ function MapAndLabelComponent(props: Props) {
                 placeholder="Description"
                 value={formik.values.description}
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
             <DataFieldAutocomplete
               required
               value={formik.values.fn}
               onChange={(value) => formik.setFieldValue("fn", value)}
+              disabled={props.disabled}
             />
           </InputGroup>
         </ModalSectionContent>
@@ -107,6 +110,7 @@ function MapAndLabelComponent(props: Props) {
                           const target = e?.target as HTMLInputElement;
                           formik.setFieldValue("basemap", target.value);
                         }}
+                        disabled={props.disabled}
                       />
                     ))}
                   </RadioGroup>
@@ -134,6 +138,7 @@ function MapAndLabelComponent(props: Props) {
                           const target = e?.target as HTMLInputElement;
                           formik.setFieldValue("drawType", target.value);
                         }}
+                        disabled={props.disabled}
                       />
                     ))}
                   </RadioGroup>
@@ -149,6 +154,7 @@ function MapAndLabelComponent(props: Props) {
                     formik.setFieldValue("drawColor", color);
                   }}
                   errorMessage={formik.errors.drawColor}
+                  disabled={props.disabled}
                 />
               </InputRowItem>
             </InputRow>
@@ -168,6 +174,7 @@ function MapAndLabelComponent(props: Props) {
                     )?.schema,
                   );
                 }}
+                disabled={props.disabled}
               >
                 {SCHEMAS.map(({ name }) => (
                   <MenuItem key={name} value={name}>
@@ -179,7 +186,7 @@ function MapAndLabelComponent(props: Props) {
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }

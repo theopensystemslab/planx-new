@@ -33,11 +33,13 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
   "& fieldset": {
     borderColor: theme.palette.border.main,
   },
-  backgroundColor: theme.palette.background.main,
   [`& .${outlinedInputClasses.root}, input`]: {
     cursor: "pointer",
     // TODO extract as `format="data"` prop more like `Input` ?
-    backgroundColor: theme.palette.background.default,
+  },
+  "& .MuiInputBase-root.Mui-disabled input": {
+    background: "transparent",
+    cursor: "default",
   },
   [`& .${inputLabelClasses.root}`]: {
     textDecoration: "underline",
