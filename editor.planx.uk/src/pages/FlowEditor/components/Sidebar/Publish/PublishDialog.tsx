@@ -9,6 +9,7 @@ import Link from "@mui/material/Link";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { FONT_WEIGHT_BOLD } from "theme";
@@ -27,6 +28,17 @@ interface NoChangesDialogProps {
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+const DialogFooterActions = styled(DialogActions)(({ theme }) => ({
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  width: "100%",
+  padding: theme.spacing(2),
+  background: theme.palette.background.paper,
+  borderTop: `1px solid ${theme.palette.border.light}`,
+  justifyContent: "space-between",
+}));
+
 export const NoChangesDialog = ({
   dialogOpen,
   setDialogOpen,
@@ -44,7 +56,7 @@ export const NoChangesDialog = ({
     <DialogContent>
       <Typography variant="body2">{`No new changes to publish`}</Typography>
     </DialogContent>
-    <DialogActions sx={{ paddingX: 2 }}>
+    <DialogActions>
       <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
       <Button color="primary" variant="contained" disabled={true}>
         PUBLISH
@@ -115,7 +127,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             />
           </>
         </DialogContent>
-        <DialogActions sx={{ paddingX: 2 }}>
+        <DialogFooterActions sx={{ paddingX: 2 }}>
           <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
           <Button
             color="primary"
@@ -124,7 +136,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           >
             NEXT
           </Button>
-        </DialogActions>
+        </DialogFooterActions>
       </>
     );
   };
@@ -185,7 +197,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             </ErrorWrapper>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ paddingX: 2 }}>
+        <DialogFooterActions>
           <Button onClick={handleBack}>BACK</Button>
           <Button
             color="primary"
@@ -194,7 +206,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           >
             NEXT
           </Button>
-        </DialogActions>
+        </DialogFooterActions>
       </>
     );
   };
@@ -220,7 +232,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             />
           </InputLabel>
         </DialogContent>
-        <DialogActions sx={{ paddingX: 2 }}>
+        <DialogFooterActions>
           <Button onClick={handleBack}>BACK</Button>
           <Button
             color="primary"
@@ -232,7 +244,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           >
             PUBLISH
           </Button>
-        </DialogActions>
+        </DialogFooterActions>
       </>
     );
   };
@@ -240,14 +252,15 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   return (
     <Dialog
       open={dialogOpen}
+      fullWidth
+      maxWidth="md"
       onClose={() => setDialogOpen(false)}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      scroll="paper"
       PaperProps={{
         sx: {
-          minWidth: 800,
-          maxHeight: "80%",
+          height: "100%",
+          overflowY: "hidden",
         },
       }}
     >
@@ -266,7 +279,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Step>
         ))}
       </Stepper>
-      <Box padding={1}>
+      <Box padding={1} paddingBottom={8} sx={{ overflowY: "scroll" }}>
         {
           {
             0: <ReviewStep />,
