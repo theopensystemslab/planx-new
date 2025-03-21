@@ -2,7 +2,6 @@ import Typography from "@mui/material/Typography";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
-import { Feedback } from "routes/feedback";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { DataTable } from "ui/shared/DataTable/DataTable";
@@ -15,7 +14,7 @@ import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { StatusChip } from "./components/StatusChip";
 import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
 import { updateEditorNotes } from "./queries/updateEditorNotes";
-import { FeedbackLogProps } from "./types";
+import { Feedback, FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {

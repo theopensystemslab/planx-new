@@ -1,4 +1,4 @@
-import { Feedback } from "../../../../../routes/feedback";
+import { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 
 export const mockFeedback: Feedback[] = [
   {

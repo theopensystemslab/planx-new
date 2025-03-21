@@ -1,6 +1,4 @@
-import { FeedbackStatus } from "routes/feedback";
-
-import { FeedbackType } from "./types";
+import { FEEDBACK_STATUS, FeedbackStatus, FeedbackType } from "./types";
 import { feedbackStatusText, feedbackTypeText } from "./utils";
 
 export type FeedbackTypeOption = {
@@ -28,9 +26,7 @@ export type StatusOption = {
   label: string;
 };
 
-export const statusOptions: StatusOption[] = (
-  ["unread", "actioned", "in_progress", "urgent"] as const
-).map((type) => ({
+export const statusOptions: StatusOption[] = FEEDBACK_STATUS.map((type) => ({
   value: type,
   label: feedbackStatusText[type],
 }));
