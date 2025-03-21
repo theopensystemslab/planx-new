@@ -210,7 +210,7 @@ export = async () => {
       }),
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.53.6",
+        image: "metabase/metabase:v0.53.7",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
