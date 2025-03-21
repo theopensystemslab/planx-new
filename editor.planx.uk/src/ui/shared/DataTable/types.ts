@@ -4,6 +4,7 @@ import {
   GridSingleSelectColDef,
   GridTreeNodeWithRender,
 } from "@mui/x-data-grid";
+import React from "react";
 
 export const ColumnFilterType = {
   BOOLEAN: "boolean",
@@ -50,4 +51,6 @@ export interface DataGridProps<T> {
   columns: Array<ColumnConfig<T>>;
   csvExportFileName?: string;
   onProcessRowUpdate?: (updatedRow: T) => void;
+  checkboxSelection?: boolean;
+  customTools?: React.FC[];
 }

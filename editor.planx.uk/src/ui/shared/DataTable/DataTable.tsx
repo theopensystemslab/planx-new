@@ -30,6 +30,8 @@ export const DataTable = <T,>({
   columns,
   csvExportFileName,
   onProcessRowUpdate,
+  checkboxSelection,
+  customTools,
 }: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
@@ -47,6 +49,8 @@ export const DataTable = <T,>({
   const CustomToolbar = () => {
     return (
       <GridToolbarContainer>
+        {customTools &&
+          customTools.map((CustomTool, index) => <CustomTool key={index} />)}
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
@@ -128,6 +132,7 @@ export const DataTable = <T,>({
           }}
           getRowId={(row) => row.id}
           processRowUpdate={onProcessRowUpdate}
+          checkboxSelection={checkboxSelection}
         />
       </Box>
     </Box>
