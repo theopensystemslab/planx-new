@@ -53,6 +53,8 @@ import type { Section } from "@planx/components/Section/model";
 import SectionComponent from "@planx/components/Section/Public";
 import type { Send } from "@planx/components/Send/model";
 import SendComponent from "@planx/components/Send/Public";
+import type { SetFee } from "@planx/components/SetFee/model";
+import SetFeeComponent from "@planx/components/SetFee/Public";
 import type { SetValue } from "@planx/components/SetValue/model";
 import SetValueComponent from "@planx/components/SetValue/Public";
 import type { TaskList } from "@planx/components/TaskList/model";
@@ -247,6 +249,9 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.Send:
       return <SendComponent {...getComponentProps<Send>()} />;
+
+    case TYPES.SetFee:
+      return <SetFeeComponent {...getComponentProps<SetFee>()} />;
 
     case TYPES.SetValue:
       return <SetValueComponent {...getComponentProps<SetValue>()} />;

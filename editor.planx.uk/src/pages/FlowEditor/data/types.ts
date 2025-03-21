@@ -33,6 +33,7 @@ export const SLUGS: {
   [TYPES.Review]: "review",
   [TYPES.Section]: "section",
   [TYPES.Send]: "send",
+  [TYPES.SetFee]: "set-fee",
   [TYPES.SetValue]: "set-value",
   [TYPES.Question]: "question",
   [TYPES.TaskList]: "task-list",
