@@ -9,8 +9,10 @@ import {
   useGridSelector,
 } from "@mui/x-data-grid";
 import * as React from "react";
-import { FeedbackStatus } from "routes/feedback";
 
+import { statusOptions } from "../feedbackFilterOptions";
+import { updateFeedbackStatus } from "../queries/updateFeedbackStatus";
+import { FeedbackStatus } from "../types";
 import { FEEDBACK_COLOURS } from "./StatusChip";
 
 const StyledMenuItem = styled(MenuItem, {
@@ -28,13 +30,35 @@ const StyledMenuItem = styled(MenuItem, {
 
 export const ChangeStatusTool: React.FC = () => {
   const apiRef = useGridApiContext();
-  const selectedRows = useGridSelector(apiRef, gridRowSelectionStateSelector);
+  const selectedRowIds = useGridSelector(apiRef, gridRowSelectionStateSelector);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const updateGridUI = (status: FeedbackStatus) => {
+    selectedRowIds.forEach((id) => {
+      apiRef.current.updateRows([{ id, status }]);
+    });
+
+    // Deselect rows
+    apiRef.current.setRowSelectionModel([]);
+  };
+
+  const handleChangeStatus = async (status: FeedbackStatus) => {
+    // Close menu immediately before starting async operations
+    handleClose();
+
+    try {
+      await updateFeedbackStatus(selectedRowIds, status);
+      updateGridUI(status);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -53,7 +77,7 @@ export const ChangeStatusTool: React.FC = () => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         size="small"
-        disabled={!selectedRows.length}
+        disabled={!selectedRowIds.length}
       >
         Mark as
       </Button>
@@ -66,18 +90,16 @@ export const ChangeStatusTool: React.FC = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <StyledMenuItem color={getColor("read")} onClick={handleClose}>
-          Read
-        </StyledMenuItem>
-        <StyledMenuItem color={getColor("to_follow_up")} onClick={handleClose}>
-          To follow up
-        </StyledMenuItem>
-        <StyledMenuItem color={getColor("urgent")} onClick={handleClose}>
-          Urgent
-        </StyledMenuItem>
-        <StyledMenuItem color={getColor("unread")} onClick={handleClose}>
-          Unread
-        </StyledMenuItem>
+        {statusOptions.map(({ value, label }, index) => (
+          <StyledMenuItem
+            color={getColor(value)}
+            onClick={() => handleChangeStatus(value)}
+            value={value}
+            key={`statusMenuItem-${index}`}
+          >
+            {label}
+          </StyledMenuItem>
+        ))}
       </Menu>
     </div>
   );
