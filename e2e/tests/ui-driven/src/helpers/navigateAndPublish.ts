@@ -8,7 +8,7 @@ export const navigateToService = async (page: Page, slug: string) => {
 };
 
 export const publishService = async (page: Page) => {
-  page.getByRole("button", { name: "CHECK FOR CHANGES TO PUBLISH" }).click();
+  page.getByRole("button", { name: "Check for changes to publish" }).click();
   await expect(
     page.getByRole("heading", { name: "Check for changes to publish" }),
   ).toBeVisible();
