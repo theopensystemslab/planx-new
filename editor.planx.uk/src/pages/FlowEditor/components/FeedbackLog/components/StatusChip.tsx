@@ -1,8 +1,8 @@
 import Chip from "@mui/material/Chip";
 import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import React from "react";
-import { Feedback } from "routes/feedback";
 
+import { Feedback } from "../types";
 import { feedbackStatusText } from "../utils";
 
 export const FEEDBACK_COLOURS = {

@@ -4,7 +4,7 @@ import { setup } from "testUtils";
 import { it } from "vitest";
 
 import { FeedbackLog } from "../FeedbackLog";
-import { mockFeedback } from "./mockFeedback";
+import { mockFeedback } from "../mocks/mockFeedback";
 
 describe("When the feedback log renders", () => {
   it("shows the expected headers and rows without an error", () => {
