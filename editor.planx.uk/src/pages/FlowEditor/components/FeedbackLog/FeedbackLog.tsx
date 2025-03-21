@@ -10,6 +10,7 @@ import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
 import { dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
+import { ChangeStatusTool } from "./components/ChangeStatusTool";
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { StatusChip } from "./components/StatusChip";
 import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
@@ -158,6 +159,8 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           columns={columns}
           csvExportFileName={`${format(Date.now(), "yyyy-MM-dd")}-feedback`}
           onProcessRowUpdate={handleProcessRowUpdate}
+          checkboxSelection
+          customTools={[ChangeStatusTool]}
         />
       )}
     </FixedHeightDashboardContainer>
