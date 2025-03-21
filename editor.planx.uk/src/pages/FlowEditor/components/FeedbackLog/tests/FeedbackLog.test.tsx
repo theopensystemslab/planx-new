@@ -41,6 +41,6 @@ describe("When the feedback log renders", () => {
 
     expect(screen.getByRole("gridcell", { name: "Same error" })).toBeVisible();
 
-    expect(screen.getAllByText("Issue")).toHaveLength(3); // Three pieces of feedback are issues in the mock data
+    expect(screen.getAllByText("Issue")).toHaveLength(4); // Four pieces of feedback are issues in the mock data
   });
 });

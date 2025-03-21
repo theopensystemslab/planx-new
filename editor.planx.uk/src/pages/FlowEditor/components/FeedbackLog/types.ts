@@ -7,8 +7,8 @@ export type FeedbackType = Sentiment | FeedbackCategory;
 /** Matches feedback_status_enum table */
 export const FEEDBACK_STATUS = [
   "unread",
-  "read",
-  "to_follow_up",
+  "actioned",
+  "in_progress",
   "urgent",
 ] as const;
 export type FeedbackStatus = (typeof FEEDBACK_STATUS)[number];
