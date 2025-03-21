@@ -34,6 +34,7 @@ export interface Feedback {
   nodeText: string | null;
   projectType: string | null;
   status: FeedbackStatus;
+  editorNotes: string | null;
 }
 
 export interface CollapsibleRowProps extends Feedback {
