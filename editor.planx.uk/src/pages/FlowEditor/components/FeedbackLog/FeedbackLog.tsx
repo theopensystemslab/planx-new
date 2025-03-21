@@ -38,8 +38,12 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "flowName",
       headerName: "Service",
       width: 250,
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+      columnOptions: {
+        // Allow filtering by unique flow names
+        valueOptions: [...new Set(feedback.map(({ flowName }) => flowName))],
+      },
     },
     {
       field: "editorNotes",
