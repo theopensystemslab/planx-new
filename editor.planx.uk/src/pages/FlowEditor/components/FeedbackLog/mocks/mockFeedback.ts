@@ -63,7 +63,6 @@ export const mockFeedback: Feedback[] = [
     projectType: null,
     status: "read",
     editorNotes: "No action needed",
-    editorNotes: "Let's try to sort this out",
   },
   {
     address: null,
