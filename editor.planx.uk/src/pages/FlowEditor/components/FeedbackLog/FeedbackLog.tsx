@@ -19,10 +19,16 @@ import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { StatusChip } from "./components/StatusChip";
 import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
+import { updateEditorNotes } from "./queries/updateEditorNotes";
 import { FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
+  const handleProcessRowUpdate = async (updatedRow: Feedback) => {
+    await updateEditorNotes(updatedRow);
+    return updatedRow;
+  };
+
   const columns: ColumnConfig<Feedback>[] = [
     {
       field: "status",
@@ -40,6 +46,15 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       width: 250,
       type: ColumnFilterType.CUSTOM,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+    },
+    {
+      field: "editorNotes",
+      headerName: "Editor notes",
+      width: 250,
+      columnOptions: {
+        editable: true,
+        sortable: false,
+      },
     },
     {
       field: "type",
@@ -173,6 +188,7 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           rows={feedback}
           columns={columns}
           csvExportFileName={`${format(Date.now(), "yyyy-MM-dd")}-feedback`}
+          onProcessRowUpdate={handleProcessRowUpdate}
         />
       )}
     </FixedHeightDashboardContainer>
