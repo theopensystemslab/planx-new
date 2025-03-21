@@ -15,7 +15,7 @@ import { makeTitle } from "./utils";
 type FeedbackType = Sentiment | FeedbackCategory;
 
 /** Matches feedback_status_enum table */
-export type FeedbackStatus = "unread" | "read" | "to_follow_up" | "urgent";
+export type FeedbackStatus = "unread" | "in_progress" | "urgent" | "actioned";
 
 export interface Feedback {
   id: number;
