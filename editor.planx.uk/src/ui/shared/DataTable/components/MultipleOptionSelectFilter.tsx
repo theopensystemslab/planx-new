@@ -58,7 +58,6 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
           setChipData(value);
           return applyValue({ ...item, value });
         }}
-        value={item.value}
       />
     </FormControl>
   );

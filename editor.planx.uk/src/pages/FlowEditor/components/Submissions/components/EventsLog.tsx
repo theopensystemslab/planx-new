@@ -68,7 +68,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "eventType",
       headerName: "Event",
       width: 230,
-      type: ColumnFilterType.ARRAY,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: SubmissionEvent,
       columnOptions: {
         valueOptions: submissionEventTypes,
@@ -78,7 +78,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "status",
       headerName: "Status",
       width: 125,
-      type: ColumnFilterType.ARRAY,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: StatusChip,
       columnOptions: {
         valueOptions: submissionStatusOptions,
