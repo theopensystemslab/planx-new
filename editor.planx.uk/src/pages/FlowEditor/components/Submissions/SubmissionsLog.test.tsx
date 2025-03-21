@@ -50,6 +50,10 @@ describe("When the submissions log renders", () => {
       1,
     );
 
-    expect(screen.getAllByText("Dsn impact metrics")).toHaveLength(3); // All submissions in the mock data are from this flow
+    expect(screen.getAllByText("Dsn impact metrics")).toHaveLength(1);
+    expect(screen.getAllByText("Report a breach")).toHaveLength(1);
+    expect(
+      screen.getAllByText("Apply for a lawful development certificate"),
+    ).toHaveLength(1);
   });
 });

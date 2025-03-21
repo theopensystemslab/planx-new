@@ -61,8 +61,12 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "flowName",
       headerName: "Service",
       width: 250,
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+      columnOptions: {
+        // Allow filtering by unique flow names
+        valueOptions: [...new Set(submissions.map(({ flowName }) => flowName))],
+      },
     },
     {
       field: "eventType",
