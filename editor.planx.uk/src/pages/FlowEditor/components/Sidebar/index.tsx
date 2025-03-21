@@ -12,10 +12,13 @@ import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { ConfirmationDialog } from "components/ConfirmationDialog";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
 import Reset from "ui/icons/Reset";
+import { Switch } from "ui/shared/Switch";
 
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
@@ -80,7 +83,7 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
 }));
 
 const Header = styled("header")(({ theme }) => ({
-  padding: theme.spacing(1, 2),
+  padding: theme.spacing(1, 2, 0, 2),
   "& input": {
     flex: "1",
     padding: "5px",
@@ -91,9 +94,9 @@ const Header = styled("header")(({ theme }) => ({
   },
   "& svg": {
     cursor: "pointer",
-    opacity: "0.7",
-    margin: "6px 4px 1px 4px",
-    fontSize: "1.2rem",
+    opacity: 0.9,
+    margin: theme.spacing(0, 0.6),
+    fontSize: "1.5rem",
   },
 }));
 
@@ -126,6 +129,13 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
+const PlatformLink = styled(Link)(() => ({
+  color: "inherit",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+})) as typeof Link;
+
 const Sidebar: React.FC = React.memo(() => {
   const [resetPreview, isFlowPublished, toggleSidebar, showSidebar] = useStore(
     (state) => [
@@ -137,6 +147,12 @@ const Sidebar: React.FC = React.memo(() => {
   );
 
   const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDialogOpen(event.target.checked);
+  };
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -168,55 +184,61 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <Box width="100%" display="flex">
-              <input type="text" disabled value={urls.preview} />
+            <Box
+              display="flex"
+              width="100%"
+              sx={{ alignItems: "center", gap: 1 }}
+            >
+              <Box display="flex">
+                <Permission.IsPlatformAdmin>
+                  <Tooltip title="Open draft service">
+                    <PlatformLink
+                      href={urls.draft}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <OpenInNewOffIcon />
+                    </PlatformLink>
+                  </Tooltip>
+                </Permission.IsPlatformAdmin>
 
-              <Permission.IsPlatformAdmin>
-                <Tooltip title="Open draft service">
-                  <Link
-                    href={urls.draft}
+                <Tooltip title="Open preview of changes to publish">
+                  <PlatformLink
+                    href={urls.preview}
                     target="_blank"
                     rel="noopener noreferrer"
-                    color="inherit"
                   >
-                    <OpenInNewOffIcon />
-                  </Link>
+                    <OpenInNewIcon />
+                  </PlatformLink>
                 </Tooltip>
-              </Permission.IsPlatformAdmin>
 
-              <Tooltip title="Open preview of changes to publish">
-                <Link
-                  href={urls.preview}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  color="inherit"
-                >
-                  <OpenInNewIcon />
-                </Link>
-              </Tooltip>
-
-              {isFlowPublished ? (
-                <Tooltip title="Open published service">
-                  <Link
-                    href={urls.analytics}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="inherit"
-                  >
-                    <LanguageIcon />
-                  </Link>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Flow not yet published">
-                  <Box>
-                    <Link component={"button"} disabled aria-disabled={true}>
+                {isFlowPublished ? (
+                  <Tooltip title="Open published service">
+                    <PlatformLink
+                      href={urls.analytics}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <LanguageIcon />
-                    </Link>
-                  </Box>
-                </Tooltip>
-              )}
+                    </PlatformLink>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Flow not yet published">
+                    <Box>
+                      <Link component={"button"} disabled aria-disabled={true}>
+                        <LanguageIcon />
+                      </Link>
+                    </Box>
+                  </Tooltip>
+                )}
+              </Box>
+              <PublishFlowButton previewURL={urls.preview} />
             </Box>
-            <PublishFlowButton previewURL={urls.preview} />
+            <Switch
+              checked={dialogOpen}
+              onChange={handleSwitchChange}
+              label="Service online"
+            />
           </Header>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
@@ -259,6 +281,24 @@ const Sidebar: React.FC = React.memo(() => {
           )}
         </SidebarWrapper>
       </Collapse>
+      <ConfirmationDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        title="Set service online"
+        confirmText="Set service online"
+        cancelText="Cancel"
+      >
+        <Typography variant="body1" gutterBottom>
+          Toggle your service to be "online".
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          A service must be online to be accessed by the public, to accept
+          responses, and to enable analytics gathering.
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          Offline services can still be edited and published as normal.
+        </Typography>
+      </ConfirmationDialog>
     </Root>
   );
 });
