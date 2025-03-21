@@ -110,9 +110,8 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       headerName: "Help text (more information)",
       width: 280,
       type: ColumnFilterType.CUSTOM,
-      customComponent: ExpandableHelpText,
+      customComponent: (params) => <ExpandableHelpText {...params} />,
       columnOptions: {
-        filterable: false, // TODO: make filterable
         valueFormatter: (params) => stripHTMLTags(params),
       },
     },
