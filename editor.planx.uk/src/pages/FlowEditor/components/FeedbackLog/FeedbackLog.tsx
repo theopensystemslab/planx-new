@@ -3,7 +3,6 @@ import { GridFilterItem } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
-import { Feedback } from "routes/feedback";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
 import { MultipleOptionSelectFilter } from "ui/shared/DataTable/components/MultipleOptionSelectFilter";
@@ -16,11 +15,12 @@ import {
 } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
+import { ChangeStatusTool } from "./components/ChangeStatusTool";
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
 import { StatusChip } from "./components/StatusChip";
 import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
 import { updateEditorNotes } from "./queries/updateEditorNotes";
-import { FeedbackLogProps } from "./types";
+import { Feedback, FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
@@ -189,6 +189,8 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           columns={columns}
           csvExportFileName={`${format(Date.now(), "yyyy-MM-dd")}-feedback`}
           onProcessRowUpdate={handleProcessRowUpdate}
+          checkboxSelection
+          customTools={[ChangeStatusTool]}
         />
       )}
     </FixedHeightDashboardContainer>
