@@ -118,7 +118,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
         refreshFlows();
       })
       .catch((err) => {
-        if (err.message === "Request failed with status code 403") {
+        if (err.message === "Flow copying is not permitted for this flow") {
           toast.error(`Failed - flow copying is not permitted for this flow`);
         }
         console.error(err);

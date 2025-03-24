@@ -32,11 +32,10 @@ const getExternalPortals = async () => {
   const { data } = await client.query({
     query: gql`
       query GetFlows {
-        flows(order_by: { slug: asc }, where: { is_copiable: { _eq: true } }) {
+        flows(order_by: { slug: asc }) {
           id
           slug
           name
-          isCopyable: is_copiable
           team {
             slug
             name
