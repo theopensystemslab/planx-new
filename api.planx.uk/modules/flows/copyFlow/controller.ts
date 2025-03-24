@@ -1,8 +1,7 @@
 import { z } from "zod";
-import { ServerError } from "../../../errors/index.js";
-import { getFlowPermissions } from "../../../helpers.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import type { Flow } from "../../../types.js";
+import { ServerError } from "../../../errors/index.js";
 import { copyFlow } from "./service.js";
 
 interface CopyFlowResponse {
@@ -10,10 +9,6 @@ interface CopyFlowResponse {
   inserted: boolean;
   replaceValue: string;
   data: Flow["data"];
-}
-
-interface ErrorResponse {
-  error: string;
 }
 
 export const copyFlowSchema = z.object({
@@ -28,7 +23,7 @@ export const copyFlowSchema = z.object({
 
 export type CopyFlowController = ValidatedRequestHandler<
   typeof copyFlowSchema,
-  CopyFlowResponse | ErrorResponse
+  CopyFlowResponse
 >;
 
 export const copyFlowController: CopyFlowController = async (
@@ -38,14 +33,6 @@ export const copyFlowController: CopyFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-
-    const { isCopiable } = await getFlowPermissions(flowId);
-
-    if (!isCopiable) {
-      return res.status(403).json({
-        error: "Flow copying is not permitted for this flow",
-      });
-    }
     const { replaceValue, insert } = res.locals.parsedReq.body;
     const { flow, uniqueFlowData } = await copyFlow(
       flowId,
@@ -56,7 +43,7 @@ export const copyFlowController: CopyFlowController = async (
     res.status(200).send({
       message: `Successfully copied ${flow.slug}`,
       inserted: insert,
-      replaceValue,
+      replaceValue: replaceValue,
       data: uniqueFlowData,
     });
   } catch (error) {

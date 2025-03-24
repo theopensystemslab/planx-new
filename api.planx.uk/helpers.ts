@@ -359,35 +359,14 @@ const getFormattedEnvironment = (): string => {
   return capitalize(environment);
 };
 
-const getFlowPermissions = async (
-  id: string,
-): Promise<{ isCopiable: boolean }> => {
-  const { flow } = await $public.client.request<{
-    flow: { isCopiable: boolean } | null;
-  }>(
-    gql`
-      query GetFlowPermissions($id: uuid!) {
-        flow: flows_by_pk(id: $id) {
-          isCopiable: is_copiable
-        }
-      }
-    `,
-    { id },
-  );
-  if (!flow) throw Error(`Unable to get flow with id ${id}`);
-
-  return flow;
-};
-
 export {
-  createFlow,
-  dataMerged,
-  getChildren,
   getFlowData,
-  getFlowPermissions,
-  getFormattedEnvironment,
   getMostRecentPublishedFlow,
   getMostRecentPublishedFlowVersion,
-  isLiveEnv,
+  dataMerged,
+  getChildren,
   makeUniqueFlow,
+  createFlow,
+  isLiveEnv,
+  getFormattedEnvironment,
 };

@@ -125,7 +125,7 @@ describe("authentication and error handling", () => {
       });
   });
 
-  it("returns a 403 error if the flow is not set as copiable in the database", async () => {
+  it("returns a 500 error if the flow is not set as copiable in the database", async () => {
     queryMock.mockQuery({
       name: "GetFlowPermissions",
       matchOnVariables: false,
@@ -145,7 +145,7 @@ describe("authentication and error handling", () => {
       .post("/flows/1/copy")
       .send(validBody)
       .set(auth)
-      .expect(403)
+      .expect(500)
       .then((res) => {
         expect(res.body.error).toMatch(
           /Flow copying is not permitted for this flow/,

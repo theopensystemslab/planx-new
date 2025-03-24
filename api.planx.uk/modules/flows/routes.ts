@@ -39,6 +39,7 @@ import {
   createFlowFromTemplateController,
   createFlowFromTemplateSchema,
 } from "./createFlowFromTemplate/controller.js";
+import { canCopyFlow } from "./copyFlow/middleware.js";
 
 const router = Router();
 
@@ -60,6 +61,7 @@ router.post(
   "/flows/:flowId/copy",
   useTeamEditorAuth,
   validate(copyFlowSchema),
+  canCopyFlow,
   copyFlowController,
 );
 

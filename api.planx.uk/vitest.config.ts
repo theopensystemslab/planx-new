@@ -13,10 +13,10 @@ export default defineConfig({
       // html reporter required to inspect coverage in Vitest UI dashboard
       reporter: ["lcov", "html", "text-summary"],
       thresholds: {
-        statements: 74.62,
-        branches: 58.44,
-        functions: 75.63,
-        lines: 74.76,
+        statements: 74.84,
+        branches: 59.34,
+        functions: 76.36,
+        lines: 75.08,
         autoUpdate: true,
       },
     },
