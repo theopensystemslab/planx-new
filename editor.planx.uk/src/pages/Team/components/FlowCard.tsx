@@ -3,6 +3,7 @@ import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { isAxiosError } from "axios";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { Link } from "react-navi";
@@ -118,7 +119,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
         refreshFlows();
       })
       .catch((err) => {
-        if (err.message === "Flow copying is not permitted for this flow") {
+        if (isAxiosError(err)) {
           toast.error(`Failed - flow copying is not permitted for this flow`);
         }
         console.error(err);

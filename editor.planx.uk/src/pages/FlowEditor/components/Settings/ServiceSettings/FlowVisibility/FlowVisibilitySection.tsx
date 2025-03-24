@@ -43,10 +43,10 @@ export const FlowVisibility = () => {
       </SettingsSection>
       <SettingsSection background>
         <Switch
-          label="Copiable by others"
+          label={form.values.isCopiable ? "Copiable by others" : "Not copiable by others"}
           name={"service.status"}
           variant="editorPage"
-          checked={form.values.isCopiable === true}
+          checked={form.values.isCopiable}
           onChange={() =>
             form.setFieldValue("isCopiable", !form.values.isCopiable)
           }

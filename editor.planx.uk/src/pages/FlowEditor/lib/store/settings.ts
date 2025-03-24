@@ -118,7 +118,9 @@ export const settingsStore: StateCreator<
   getFlowInformation: async (flowSlug, teamSlug) => {
     const {
       data: {
-        flows: [{ settings, status, description, summary, limitations }],
+        flows: [
+          { settings, status, description, summary, limitations, isCopiable },
+        ],
       },
     } = await client.query<GetFlowInformation>({
       query: gql`
@@ -133,7 +135,7 @@ export const settingsStore: StateCreator<
             summary
             status
             limitations
-            isCopyable: is_copiable
+            isCopiable: is_copiable
           }
         }
       `,
@@ -150,6 +152,7 @@ export const settingsStore: StateCreator<
       flowDescription: description,
       flowSummary: summary,
       flowLimitations: limitations,
+      flowIsCopiable: isCopiable,
     });
 
     return { settings, status, description, summary, limitations };
