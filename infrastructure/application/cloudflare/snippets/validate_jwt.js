@@ -8,7 +8,7 @@ export default {
       if (authHeaderJWT) return authHeaderJWT;
 
       const cookies = request.headers.get("cookie");
-      const cookieJWT = cookies?.match(/(?:^|;\s*)jwt=([^;]*)(?:;|$)/)?.[1];
+      const cookieJWT = cookies?.match(/(?:^|;\s*)jwt=([^;]+)(?:;|$)/)?.[1];
       if (cookieJWT) return cookieJWT;
     };
 
