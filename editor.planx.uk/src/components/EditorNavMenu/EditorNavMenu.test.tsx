@@ -1,4 +1,4 @@
-import { within } from "@testing-library/react";
+import { getByLabelText, within } from "@testing-library/react";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
@@ -19,6 +19,7 @@ let mockTeamName: string | undefined = undefined;
 let mockFlowName: string | undefined = undefined;
 let mockAnalyticsLink: string | undefined = undefined;
 const mockGetUserRoleForCurrentTeam = vi.fn();
+let mockGetTeam = vi.fn();
 
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn(() => [
@@ -26,6 +27,7 @@ vi.mock("pages/FlowEditor/lib/store", async () => ({
     mockFlowName,
     mockAnalyticsLink,
     mockGetUserRoleForCurrentTeam(),
+    mockGetTeam(),
   ]),
 }));
 
@@ -60,14 +62,17 @@ describe("teamLayoutRoutes", () => {
       url: { href: "/test-team" },
     } as ReturnType<typeof mockNavi.useCurrentRoute>);
     mockTeamName = "test-team";
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: null }});
   });
 
-  it("does not display for teamViewers", () => {
+  it("only displays the 'planning data' route for teamViewers", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamViewer");
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(0);
+    expect(menuItems).toHaveLength(2);
+    expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
+    expect(within(menuItems[1]).getByText("Planning Data unavailable")).toBeInTheDocument();
   });
 
   it("displays for teamEditors", () => {
@@ -75,7 +80,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(7);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
   });
 
@@ -84,8 +89,31 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(6);
+    expect(menuItems).toHaveLength(7);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
+  });
+});
+
+describe("teamPlanningDataRoute", () => {
+  beforeEach(() => {
+    mockNavi.useCurrentRoute.mockReturnValue({
+      url: { href: "/test-team" },
+    } as ReturnType<typeof mockNavi.useCurrentRoute>);
+    mockTeamName = "test-team";
+  });
+
+  it("is disabled without a reference code", () => {
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: null }});
+
+    const { getByRole } = setup(<EditorNavMenu />);
+    expect(getByRole("button", { name: /Planning Data/ })).toBeDisabled();
+  });
+
+  it("is enabled with a reference code", () => {
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" }});
+
+    const { getByRole } = setup(<EditorNavMenu />);
+    expect(getByRole("button", { name: /Planning Data/ })).not.toBeDisabled();
   });
 });
 
