@@ -34,14 +34,14 @@ export type CopyFlowController = ValidatedRequestHandler<
 export const copyFlowController: CopyFlowController = async (
   _req,
   res,
-  next
+  next,
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
 
-    const { is_copiable } = await getFlowPermissions(flowId);
+    const { isCopiable } = await getFlowPermissions(flowId);
 
-    if (!is_copiable) {
+    if (!isCopiable) {
       return res.status(403).json({
         error: "Flow copying is not permitted for this flow",
       });
@@ -50,7 +50,7 @@ export const copyFlowController: CopyFlowController = async (
     const { flow, uniqueFlowData } = await copyFlow(
       flowId,
       replaceValue,
-      insert
+      insert,
     );
 
     res.status(200).send({
@@ -61,7 +61,7 @@ export const copyFlowController: CopyFlowController = async (
     });
   } catch (error) {
     return next(
-      new ServerError({ message: `Failed to copy flow. Error: ${error}` })
+      new ServerError({ message: `Failed to copy flow. Error: ${error}` }),
     );
   }
 };

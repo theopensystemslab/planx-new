@@ -133,7 +133,7 @@ export const settingsStore: StateCreator<
             summary
             status
             limitations
-            is_copiable
+            isCopyable: is_copiable
           }
         }
       `,

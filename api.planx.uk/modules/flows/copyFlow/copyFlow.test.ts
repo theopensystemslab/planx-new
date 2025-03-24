@@ -70,7 +70,7 @@ beforeEach(() => {
     matchOnVariables: false,
     data: {
       flow: {
-        is_copiable: true,
+        isCopiable: true,
       },
     },
   });
@@ -125,34 +125,33 @@ describe("authentication and error handling", () => {
       });
   });
 
-  it(
-    "returns a 403 error if the flow is not set as copiable in the database",
-    async () => {
-      queryMock.mockQuery({
-        name: "GetFlowPermissions",
-        matchOnVariables: false,
-        data: {
-          flow: {
-            is_copiable: false,
-          },
+  it("returns a 403 error if the flow is not set as copiable in the database", async () => {
+    queryMock.mockQuery({
+      name: "GetFlowPermissions",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          isCopiable: false,
         },
+      },
+    });
+
+    const validBody = {
+      insert: false,
+      replaceValue: "T3ST1",
+    };
+
+    await supertest(app)
+      .post("/flows/1/copy")
+      .send(validBody)
+      .set(auth)
+      .expect(403)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Flow copying is not permitted for this flow/,
+        );
       });
-
-      const validBody = {
-        insert: false,
-        replaceValue: "T3ST1",
-      };
-
-      await supertest(app)
-        .post("/flows/1/copy")
-        .send(validBody)
-        .set(auth)
-        .expect(403)
-        .then((res) => {
-          expect(res.body.error).toMatch(/Flow copying is not permitted for this flow/);
-        });
-    }
-  );
+  });
 
   it("returns an error if the operation to insert a new flow fails", async () => {
     const body = {

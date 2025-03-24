@@ -36,7 +36,7 @@ const getExternalPortals = async () => {
           id
           slug
           name
-          is_copiable
+          isCopyable: is_copiable
           team {
             slug
             name

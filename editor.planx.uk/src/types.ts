@@ -18,7 +18,7 @@ export interface Flow {
   id: string;
   slug: string;
   name: string;
-  is_copiable: boolean;
+  isCopiable: boolean;
   team: Team;
   settings?: FlowSettings;
   status?: FlowStatus;
