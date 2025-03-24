@@ -71,14 +71,14 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   pt: 0.5,
                   color: "common.white",
-                  "&::before": {
+                  "& > p::before": {
                     content: '"“"',
                     fontSize: "1.25em",
                   },
-                  "&::after": {
+                  "& > p::after": {
                     content: '"”"',
                     fontSize: "1.25em",
                   },
