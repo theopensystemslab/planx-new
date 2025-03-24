@@ -3,11 +3,13 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 
 import { HistoryItem } from "../EditHistory";
@@ -25,6 +27,23 @@ export interface AlteredNode {
   type: TYPES;
   data?: any;
 }
+
+const HistoryComment = styled(Box)(({ theme }) => ({
+  width: "100%",
+  margin: theme.spacing(0.5, 0),
+  padding: theme.spacing(1, 1.5),
+  background: theme.palette.grey[400],
+  color: theme.palette.text.primary,
+  borderRadius: theme.shape.borderRadius,
+  "& > p::before": {
+    content: '"“"',
+    fontSize: "1.25em",
+  },
+  "& > p::after": {
+    content: '"”"',
+    fontSize: "1.25em",
+  },
+}));
 
 export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -46,7 +65,18 @@ export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   return (
     <ListItem key={node.id} disablePadding sx={{ display: "list-item" }}>
       <Typography variant="body2">{text}</Typography>
-      {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
+      {data && (
+        <pre
+          style={{
+            fontSize: ".8em",
+            whiteSpace: "pre-line",
+            overflowWrap: "break-word",
+            wordWrap: "break-word",
+          }}
+        >
+          {data}
+        </pre>
+      )}
     </ListItem>
   );
 };
@@ -100,23 +130,27 @@ export const AlteredNodesSummaryContent = (props: {
         {`Changes to your service since last publish`}
       </Typography>
       {comments.length > 0 && (
-        <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+        <List sx={{ listStyleType: "none" }}>
           {comments.map((comment) => (
-            <ListItem
-              key={comment.id}
-              disablePadding
-              sx={{ display: "list-item" }}
-            >
+            <ListItem key={comment.id} disablePadding>
               <ListItemText
                 primary={
-                  <Typography variant="body2">{comment.comment}</Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                  >
+                    {comment.firstName} {comment.lastName}
+                  </Typography>
                 }
                 secondary={
-                  <Typography variant="body2" fontSize="small">
-                    {`Commented ${formatLastEditDate(comment.createdAt)} by ${
-                      comment.firstName
-                    } ${comment.lastName}`}
-                  </Typography>
+                  <>
+                    <Typography variant="body2" fontSize="small">
+                      {`Commented ${formatLastEditDate(comment.createdAt)}`}
+                    </Typography>
+                    <HistoryComment>
+                      <Typography variant="body2">{comment.comment}</Typography>
+                    </HistoryComment>
+                  </>
                 }
               />
             </ListItem>
@@ -124,24 +158,22 @@ export const AlteredNodesSummaryContent = (props: {
         </List>
       )}
       {comments.length === 0 && operations.length > 0 && (
-        <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
-          <ListItem
-            key={"operation-summary"}
-            disablePadding
-            sx={{ display: "list-item" }}
-          >
-            <ListItemText
-              primary={
-                <Typography variant="body2">
-                  {`${operations.length} edits to your service`}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="body2" fontSize="small">
-                  {`See full details in "History"`}
-                </Typography>
-              }
-            />
+        <List sx={{ listStyleType: "none" }}>
+          <ListItem key={"operation-summary"} disablePadding>
+            <HistoryComment>
+              <ListItemText
+                primary={
+                  <Typography variant="body2">
+                    {`${operations.length} edits to your service`}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" fontSize="small">
+                    {`See full details in "History"`}
+                  </Typography>
+                }
+              />
+            </HistoryComment>
           </ListItem>
           <ListItem key={"hint"} disablePadding>
             <Typography variant="body2" fontSize="small">
