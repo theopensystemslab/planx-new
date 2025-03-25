@@ -123,5 +123,6 @@ export const FEEDBACK_SUMMARY_FIELDS = gql`
     nodeText: node_text
     projectType: project_type
     editorNotes: editor_notes
+    status: status
   }
 `;

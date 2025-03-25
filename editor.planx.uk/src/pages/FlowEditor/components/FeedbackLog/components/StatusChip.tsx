@@ -1,16 +1,16 @@
-import Chip, { ChipProps } from "@mui/material/Chip";
+import Chip from "@mui/material/Chip";
 import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import React from "react";
-import { Feedback, FeedbackStatus } from "routes/feedback";
 
+import { Feedback } from "../types";
 import { feedbackStatusText } from "../utils";
 
-const FEEDBACK_COLOURS: Record<FeedbackStatus, ChipProps["color"]> = {
+export const FEEDBACK_COLOURS = {
   unread: "info",
   urgent: "error",
   in_progress: "warning",
   actioned: "success",
-};
+} as const;
 
 export const StatusChip = (
   params: GridRenderCellParams<

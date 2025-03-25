@@ -1,45 +1,13 @@
-import type { Node } from "@opensystemslab/planx-core/types";
-import { ComponentType } from "@opensystemslab/planx-core/types";
-import { Sentiment } from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
-import { FeedbackCategory } from "components/Feedback/types";
 import gql from "graphql-tag";
 import { FEEDBACK_SUMMARY_FIELDS } from "lib/feedback";
 import { compose, mount, NotFoundError, route, withData } from "navi";
 import { FeedbackLog } from "pages/FlowEditor/components/FeedbackLog/FeedbackLog";
+import { Feedback } from "pages/FlowEditor/components/FeedbackLog/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import { client } from "../lib/graphql";
 import { makeTitle } from "./utils";
-
-type FeedbackType = Sentiment | FeedbackCategory;
-
-/** Matches feedback_status_enum table */
-export type FeedbackStatus = "unread" | "in_progress" | "urgent" | "actioned";
-
-export interface Feedback {
-  id: number;
-  type: FeedbackType;
-  nodeTitle: string | null;
-  nodeType: keyof typeof ComponentType | null;
-  userComment: string | null;
-  userContext: string | null;
-  createdAt: string;
-  address: string | null;
-  feedbackScore: number | null;
-  flowName: string;
-  platform: string;
-  browser: string;
-  helpDefinition: string | null;
-  helpSources: string | null;
-  helpText: string | null;
-  nodeData: Node["data"] | null;
-  nodeId: string | null;
-  nodeText: string | null;
-  projectType: string | null;
-  status: FeedbackStatus;
-  editorNotes: string | null;
-}
 
 const feedbackRoutes = compose(
   withData((req) => ({
