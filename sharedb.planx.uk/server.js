@@ -88,7 +88,10 @@ async function validateJWT(authToken) {
     }
   });
 
-  if (response.ok) return;
+  if (response.ok) {
+    const decodedToken = await response.json();
+    return decodedToken;
+  }
 
   throw Error(`Invalid JWT. Please log in again. Error: ${response.body}`)
 };
@@ -100,7 +103,7 @@ const wss = new Server({
       // checks if JWT is included in cookies, does not allow connection if invalid
       const [, token] = info.req.headers.cookie?.match(/jwt\=([^;]+)/) || [];
       if (!token) return cb(false, 401, "Unauthorized");
-      await validateJWT(token);
+      const decoded = await validateJWT(token);
 
       console.log({ newConnection: decoded });
       info.req.uId = decoded;
