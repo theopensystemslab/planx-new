@@ -1,6 +1,5 @@
 const assert = require("assert");
 const { Server } = require("ws");
-const jwt = require("jsonwebtoken");
 const ShareDB = require("sharedb");
 const WebSocketJSONStream = require("@teamwork/websocket-json-stream");
 const PostgresDB = require("./sharedb-postgresql");
@@ -10,8 +9,8 @@ const { JSDOM } = require('jsdom');
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const TOKEN_EXPIRY_CODE = 4001;
 
-const { PORT = 8000, JWT_SECRET, PG_URL } = process.env;
-assert(JWT_SECRET);
+const { PORT = 8000, API_URL_EXT, PG_URL } = process.env;
+assert(API_URL_EXT);
 assert(PG_URL);
 
 const sharedb = new ShareDB({
@@ -78,30 +77,40 @@ function sanitise(input) {
   }
 }
 
+/**
+ * Checks via REST API if token is invalid (not signed by PlanX) or revoked (logged out user)
+ */
+async function validateJWT(authToken) {
+  const response = await fetch(`${API_URL_EXT}/auth/validate-jwt`, {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${authToken}`
+    }
+  });
+
+  if (response.ok) {
+    const decodedToken = await response.json();
+    return decodedToken;
+  }
+
+  throw Error(`Invalid JWT. Please log in again. Error: ${response.body}`)
+};
+
 const wss = new Server({
   port: PORT,
-  verifyClient: (info, cb) => {
+  verifyClient: async (info, cb) => {
     try {
       // checks if JWT is included in cookies, does not allow connection if invalid
       const [, token] = info.req.headers.cookie?.match(/jwt\=([^;]+)/) || [];
+      if (!token) return cb(false, 401, "Unauthorized");
+      const decoded = await validateJWT(token);
 
-      if (!token) {
-        cb(false, 401, "Unauthorized");
-      } else {
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
-          if (err) {
-            cb(false, 401, "Unauthorized");
-          } else {
-            console.log({ newConnection: decoded });
-            info.req.authToken = token;
-            info.req.uId = decoded;
-            cb(true);
-          }
-        });
-      }
+      console.log({ newConnection: decoded });
+      info.req.uId = decoded;
+      cb(true);
     } catch (err) {
       console.error({ err });
-      cb(false, 500, err.message);
+      cb(false, 401, `Unauthorized. Error: ${err.message}`);
     }
   },
 });
@@ -109,14 +118,9 @@ const wss = new Server({
 wss.on("connection", function (ws, req) {
   // JWTs expire every 24hrs
   // Check status every minute - client side will logout on expiry
-  const tokenCheckInterval = setInterval(() => {
+  const tokenCheckInterval = setInterval(async () => {
     try {
-      jwt.verify(req.authToken, JWT_SECRET, (err) => {
-        if (err) {
-          ws.close(TOKEN_EXPIRY_CODE, "Token expired");
-          clearInterval(tokenCheckInterval);
-        }
-      });
+      await validateJWT(req.authToken)
     } catch (error) {
       console.error("Token validation error:", error);
       ws.close(TOKEN_EXPIRY_CODE, "Token validation error");
