@@ -48,20 +48,27 @@ const Item = styled(Box)(({ theme }) => ({
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
-  paddingLeft: theme.spacing(1.5),
-  paddingRight: theme.spacing(3),
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(2),
   width: "100%",
-  height: theme.spacing(2),
-  opacity: 0,
-  transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-  "&:hover": {
+  height: theme.spacing(2.5),
+  "& svg": {
+    color: theme.palette.text.secondary,
+    transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+  },
+  "&:hover svg": {
+    color: theme.palette.primary.main,
+  },
+  "&:hover hr": {
     opacity: 1,
   },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  width: "90%",
+  border: `1px dashed ${theme.palette.primary.main}`,
+  width: "91%",
+  opacity: 0,
+  transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
 }));
 
 const InsertButton: React.FC<{
@@ -74,8 +81,8 @@ const InsertButton: React.FC<{
     disableRipple
     tabIndex={-1}
   >
-    <AddCircleOutlineIcon color="primary" fontSize="small" sx={{ mr: -0.5 }} />
     <StyledDivider variant="middle" />
+    <AddCircleOutlineIcon sx={{ transform: `translateX(-6px)` }} />
   </InsertButtonRoot>
 );
 
