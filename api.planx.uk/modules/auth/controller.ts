@@ -111,13 +111,12 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
   if (!token) return res.status(401).send();
 
   try {
-    jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const tokenDigest = createTokenDigest(token);
+    const isRevoked = await isTokenRevoked(tokenDigest);
+
+    return isRevoked ? res.status(401).send() : res.status(200).json(decoded);
   } catch (error) {
     return res.status(401).send();
   }
-
-  const tokenDigest = createTokenDigest(token);
-  const isRevoked = await isTokenRevoked(tokenDigest);
-
-  return isRevoked ? res.status(401).send() : res.status(200).send();
 };
