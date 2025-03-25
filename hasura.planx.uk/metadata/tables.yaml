@@ -1070,7 +1070,12 @@
                 _is_null: true
             - is_template:
                 _eq: false
-        check: {}
+        check:
+          _and:
+            - team_id:
+                _eq: 32
+            - creator_id:
+                _eq: x-hasura-user-id
         validate_input:
           definition:
             forward_client_headers: false
@@ -1134,7 +1139,15 @@
                 _is_null: true
             - is_template:
                 _eq: false
-        check: {}
+        check:
+          _and:
+            - team:
+                members:
+                  _and:
+                    - user_id:
+                        _eq: x-hasura-user-id
+                    - role:
+                        _eq: teamEditor
         validate_input:
           definition:
             forward_client_headers: false
