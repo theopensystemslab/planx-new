@@ -18,7 +18,15 @@ import React, { useRef } from "react";
 import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import EditorIcon from "ui/icons/Editor";
 
-import { MenuButton, MenuItem, MenuTitle, MenuWrap, Root } from "./styles";
+import TestEnvironmentBanner from "../TestEnvironmentBanner/TestEnvironmentBanner";
+import {
+  MenuButton,
+  MenuItem,
+  MenuList,
+  MenuTitle,
+  MenuWrap,
+  Root,
+} from "./styles";
 import { Route, RoutesForURL } from "./types";
 
 function EditorNavMenu() {
@@ -126,9 +134,13 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: referenceCode ? `Planning Data (external link)` : `Planning Data unavailable`,
+      title: referenceCode
+        ? `Planning Data (external link)`
+        : `Planning Data unavailable`,
       Icon: LayersIcon,
-      route: referenceCode ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}` : `#`,
+      route: referenceCode
+        ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+        : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
     },
@@ -166,12 +178,14 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: flowAnalyticsLink ? `Analytics (external link)` : `Analytics page unavailable`,
+      title: flowAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
       Icon: LeaderboardIcon,
       route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
       disabled: !flowAnalyticsLink,
-    }
+    },
   ];
 
   const defaultRoutes: RoutesForURL = {
@@ -217,35 +231,38 @@ function EditorNavMenu() {
   return (
     <Root compact={compact}>
       <MenuWrap>
-        {visibleRoutes.map(({ title, Icon, route, disabled }) => (
-          <MenuItem key={title}>
-            {compact ? (
-              <Tooltip title={title} placement="right">
-                <Box component="span">
-                  <MenuButton
-                    title={title}
-                    isActive={isActive(route)}
-                    disabled={disabled}
-                    disableRipple
-                    onClick={() => handleClick(route, disabled)}
-                  >
-                    <Icon />
-                  </MenuButton>
-                </Box>
-              </Tooltip>
-            ) : (
-              <MenuButton
-                isActive={isActive(route)}
-                disabled={disabled}
-                disableRipple
-                onClick={() => handleClick(route, disabled)}
-              >
-                <Icon fontSize="small" />
-                <MenuTitle variant="body3">{title}</MenuTitle>
-              </MenuButton>
-            )}
-          </MenuItem>
-        ))}
+        <MenuList>
+          {visibleRoutes.map(({ title, Icon, route, disabled }) => (
+            <MenuItem key={title}>
+              {compact ? (
+                <Tooltip title={title} placement="right">
+                  <Box component="span">
+                    <MenuButton
+                      title={title}
+                      isActive={isActive(route)}
+                      disabled={disabled}
+                      disableRipple
+                      onClick={() => handleClick(route, disabled)}
+                    >
+                      <Icon />
+                    </MenuButton>
+                  </Box>
+                </Tooltip>
+              ) : (
+                <MenuButton
+                  isActive={isActive(route)}
+                  disabled={disabled}
+                  disableRipple
+                  onClick={() => handleClick(route, disabled)}
+                >
+                  <Icon fontSize="small" />
+                  <MenuTitle variant="body3">{title}</MenuTitle>
+                </MenuButton>
+              )}
+            </MenuItem>
+          ))}
+        </MenuList>
+        <TestEnvironmentBanner variant={compact ? "short" : "full"} />
       </MenuWrap>
     </Root>
   );
