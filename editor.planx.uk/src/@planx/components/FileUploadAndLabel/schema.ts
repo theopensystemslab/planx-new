@@ -154,7 +154,7 @@ export const formatFileLabelSchemaErrors = (
 export const fileListSchema = object({
   required: array().test({
     name: "allRequiredFilesUploaded",
-    message: "Please upload and label all required files",
+    message: "Please upload and label all required information",
     test: (userFile?: UserFile[]) => {
       const isEverySlotFilled = Boolean(
         userFile?.every(

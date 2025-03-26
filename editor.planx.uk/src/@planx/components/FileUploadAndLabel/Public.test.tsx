@@ -510,7 +510,7 @@ describe("Adding tags and syncing state", () => {
     await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(0);
     const error = await within(document.body).findByText(
-      "Please upload and label all required files",
+      "Please upload and label all required information",
     );
     expect(error).toBeVisible();
   });
