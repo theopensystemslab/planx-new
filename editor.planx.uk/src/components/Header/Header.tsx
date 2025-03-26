@@ -413,7 +413,7 @@ const PublicToolbar: React.FC<{
       )}
       <NavBar />
       <AnalyticsDisabledBanner />
-      <TestEnvironmentBanner />
+      <TestEnvironmentBanner variant="banner" />
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}
@@ -525,7 +525,6 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </EditorHeaderContainer>
       </EditorHeader>
-      <TestEnvironmentBanner />
       {user && (
         <StyledPopover
           open={open}

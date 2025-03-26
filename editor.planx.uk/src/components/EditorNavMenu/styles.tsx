@@ -1,26 +1,10 @@
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import GroupIcon from "@mui/icons-material/Group";
-import Info from "@mui/icons-material/Info";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import PaletteIcon from "@mui/icons-material/Palette";
-import RateReviewIcon from "@mui/icons-material/RateReview";
-import SchoolIcon from "@mui/icons-material/School";
-import TuneIcon from "@mui/icons-material/Tune";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { Role } from "@opensystemslab/planx-core/types";
-import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
-import { useCurrentRoute, useLoadingRoute, useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import EditorIcon from "ui/icons/Editor";
+
+import { HEADER_HEIGHT_EDITOR } from "../Header/Header";
 
 const MENU_WIDTH_COMPACT = "51px";
 const MENU_WIDTH_FULL = "164px";
@@ -34,12 +18,21 @@ export const Root = styled(Box, {
   borderRight: `1px solid ${theme.palette.border.light}`,
 }));
 
-export const MenuWrap = styled("ul")(({ theme }) => ({
-  listStyle: "none",
+export const MenuWrap = styled(Box)(({ theme }) => ({
   margin: 0,
   padding: theme.spacing(1, 0.4, 0, 0.4),
   position: "sticky",
   top: 0,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  height: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+}));
+
+export const MenuList = styled("ul")(() => ({
+  listStyle: "none",
+  margin: 0,
+  padding: 0,
 }));
 
 export const MenuItem = styled("li")(({ theme }) => ({
