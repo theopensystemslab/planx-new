@@ -1,4 +1,4 @@
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddIcon from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
 import Box from "@mui/material/Box";
@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -48,36 +48,50 @@ const Item = styled(Box)(({ theme }) => ({
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
   justifyContent: "space-between",
-  paddingLeft: theme.spacing(1.5),
-  paddingRight: theme.spacing(3),
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(2),
   width: "100%",
-  height: theme.spacing(2),
-  opacity: 0,
-  transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+  height: theme.spacing(3),
+  color: theme.palette.grey[600],
+  transition:
+    "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
   "&:hover": {
     opacity: 1,
+    color: theme.palette.primary.main,
+    "& hr": {
+      opacity: 1,
+    },
   },
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
-  border: `1px solid ${theme.palette.primary.main}`,
-  width: "90%",
+  border: `1px dashed ${theme.palette.primary.main}`,
+  width: "91%",
+  opacity: 0,
+  transition: "inherit",
 }));
 
 const InsertButton: React.FC<{
   handleClick: () => void;
   disabled: boolean;
-}> = ({ handleClick, disabled }) => (
-  <InsertButtonRoot
-    onClick={handleClick}
-    disabled={disabled}
-    disableRipple
-    tabIndex={-1}
-  >
-    <AddCircleOutlineIcon color="primary" fontSize="small" sx={{ mr: -0.5 }} />
-    <StyledDivider variant="middle" />
-  </InsertButtonRoot>
-);
+  isDragging: boolean;
+}> = ({ handleClick, disabled, isDragging }) => {
+  return (
+    <InsertButtonRoot
+      onClick={handleClick}
+      disabled={disabled}
+      disableRipple
+      tabIndex={-1}
+      sx={{
+        opacity: isDragging ? 0 : 1,
+        visibility: isDragging ? "hidden" : "visible",
+      }}
+    >
+      <StyledDivider variant="middle" />
+      <AddIcon sx={{ transform: `translateX(-6px)` }} />
+    </InsertButtonRoot>
+  );
+};
 
 export default function ListManager<T, EditorExtraProps>(
   props: Props<T, EditorExtraProps>,
@@ -90,6 +104,7 @@ export default function ListManager<T, EditorExtraProps>(
   const teamSlug = window.location.pathname.split("/")[1];
   const isViewOnly = !useStore.getState().canUserEditTeam(teamSlug);
   const isMaxLength = props.values.length >= maxItems;
+  const [isDragging, setIsDragging] = useState(false);
 
   return props.noDragAndDrop ? (
     <>
@@ -134,7 +149,9 @@ export default function ListManager<T, EditorExtraProps>(
     </>
   ) : (
     <DragDropContext
+      onDragStart={() => setIsDragging(true)}
       onDragEnd={(dropResult: DropResult) => {
+        setIsDragging(false);
         if (!dropResult.source || !dropResult.destination) {
           return;
         }
@@ -161,6 +178,7 @@ export default function ListManager<T, EditorExtraProps>(
                           insertAt(index, props.newValue(), props.values),
                         );
                       }}
+                      isDragging={isDragging}
                     />
                   )}
                   <Draggable
