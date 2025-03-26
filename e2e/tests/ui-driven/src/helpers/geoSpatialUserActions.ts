@@ -1,8 +1,11 @@
 import { expect, Page } from "@playwright/test";
 import { setupOSMockResponse } from "../mocks/osPlacesResponse.js";
+import { setupPlanningDataMockResponse } from "../mocks/gisResponse.js";
 
 export async function answerFindProperty(page: Page) {
   await setupOSMockResponse(page);
+  await setupPlanningDataMockResponse(page);
+
   await page.getByLabel("Postcode").fill("SW1 1AA");
   await page.getByLabel("Select an address").click();
   await page.getByRole("option").first().click();
