@@ -1,66 +1,66 @@
 import Typography from "@mui/material/Typography";
-import { GridFilterItem } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import capitalize from "lodash/capitalize";
 import React from "react";
-import { Feedback } from "routes/feedback";
 import FixedHeightDashboardContainer from "ui/editor/FixedHeightDashboardContainer";
 import SettingsSection from "ui/editor/SettingsSection";
-import { MultipleOptionSelectFilter } from "ui/shared/DataTable/components/MultipleOptionSelectFilter";
 import { DataTable } from "ui/shared/DataTable/DataTable";
 import { ColumnConfig, ColumnFilterType } from "ui/shared/DataTable/types";
-import {
-  containsItem,
-  dateFormatter,
-  isValidFilterInput,
-} from "ui/shared/DataTable/utils";
+import { dateFormatter } from "ui/shared/DataTable/utils";
 import ErrorSummary from "ui/shared/ErrorSummary/ErrorSummary";
 
+import { ChangeStatusTool } from "./components/ChangeStatusTool";
 import { ExpandableHelpText } from "./components/ExpandableHelpText";
-import { feedbackTypeOptions } from "./feedbackFilterOptions";
-import { FeedbackLogProps } from "./types";
+import { StatusChip } from "./components/StatusChip";
+import { feedbackTypeOptions, statusOptions } from "./feedbackFilterOptions";
+import { updateEditorNotes } from "./queries/updateEditorNotes";
+import { Feedback, FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
 export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
+  const handleProcessRowUpdate = async (updatedRow: Feedback) => {
+    await updateEditorNotes(updatedRow);
+    return updatedRow;
+  };
+
   const columns: ColumnConfig<Feedback>[] = [
+    {
+      field: "status",
+      headerName: "Status",
+      type: ColumnFilterType.ARRAY,
+      customComponent: StatusChip,
+      columnOptions: {
+        valueOptions: statusOptions,
+        filterable: false,
+      },
+    },
     {
       field: "flowName",
       headerName: "Service",
       width: 250,
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+      columnOptions: {
+        // Allow filtering by unique flow names
+        valueOptions: [...new Set(feedback.map(({ flowName }) => flowName))],
+      },
+    },
+    {
+      field: "editorNotes",
+      headerName: "Editor notes",
+      width: 250,
+      columnOptions: {
+        editable: true,
+        sortable: false,
+      },
     },
     {
       field: "type",
       headerName: "Type",
       width: 200,
-      type: ColumnFilterType.ARRAY,
+      type: ColumnFilterType.SINGLE_SELECT,
       columnOptions: {
-        valueOptions: feedbackTypeOptions.map((option) => option.label),
-        filterOperators: [
-          {
-            value: "is",
-            getApplyFilterFn: (filterItem: GridFilterItem) => {
-              if (!isValidFilterInput(filterItem)) {
-                return null;
-              }
-              // return a function that is applied to all the rows in turn
-              return (currentRowValue: any): boolean => {
-                return filterItem.value.some(
-                  (filterValue: Pick<GridFilterItem, "value">) =>
-                    containsItem(
-                      feedbackTypeText(currentRowValue),
-                      filterValue,
-                    ),
-                );
-              };
-            },
-            InputComponent: MultipleOptionSelectFilter,
-            InputComponentProps: {
-              options: feedbackTypeOptions.map((option) => option.label),
-            },
-          },
-        ],
+        valueOptions: feedbackTypeOptions,
       },
       customComponent: (params) => <>{feedbackTypeText(params.value)}</>,
     },
@@ -77,9 +77,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "feedbackScore",
       headerName: "Rating",
       width: 125,
+      type: ColumnFilterType.SINGLE_SELECT,
       columnOptions: {
-        filterable: false, // TODO: make filterable
-        valueFormatter: (params) => EmojiRating[params],
+        valueOptions: EmojiRating,
       },
     },
     {
@@ -100,13 +100,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       field: "nodeType",
       headerName: "Where",
       width: 280,
-      type: ColumnFilterType.CUSTOM,
       customComponent: (params) => (
         <>{`${params.value} - ${params.row.nodeTitle}`}</>
       ),
-      columnOptions: {
-        filterable: false, // TODO: make filterable
-      },
     },
     {
       field: "userContext",
@@ -118,9 +114,8 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
       headerName: "Help text (more information)",
       width: 280,
       type: ColumnFilterType.CUSTOM,
-      customComponent: ExpandableHelpText,
+      customComponent: (params) => <ExpandableHelpText {...params} />,
       columnOptions: {
-        filterable: false, // TODO: make filterable
         valueFormatter: (params) => stripHTMLTags(params),
       },
     },
@@ -162,6 +157,9 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
           rows={feedback}
           columns={columns}
           csvExportFileName={`${format(Date.now(), "yyyy-MM-dd")}-feedback`}
+          onProcessRowUpdate={handleProcessRowUpdate}
+          checkboxSelection
+          customTools={[ChangeStatusTool]}
         />
       )}
     </FixedHeightDashboardContainer>

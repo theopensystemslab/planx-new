@@ -37,27 +37,55 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
     <ListItem
       key={publishedFlowId}
       disablePadding
-      sx={{ display: "list-item" }}
+      sx={{
+        backgroundColor: "border.input",
+        color: "common.white",
+        px: 1.5,
+        py: 1,
+        margin: 0,
+        mb: 1,
+      }}
     >
       <ListItemText
+        sx={{ color: "common.white" }}
         primary={
           useStore.getState().canUserEditTeam(text.split("/")[0]) ? (
-            <Link href={`../${text}`} target="_blank">
-              <Typography variant="body2">{text}</Typography>
+            <Link href={`../${text}`} target="_blank" color="inherit">
+              <Typography variant="body1">{text}</Typography>
             </Link>
           ) : (
-            <Typography variant="body2">{text}</Typography>
+            <Typography variant="body1">{text}</Typography>
           )
         }
         secondary={
           <>
-            <Typography variant="body2" fontSize="small">
+            <Typography
+              color="secondary.dark"
+              variant="body2"
+              fontSize="small"
+              sx={{ pt: 0.5 }}
+            >
               {externalPortalLastPublishedTitle}
             </Typography>
             {summary && (
-              <Typography variant="body2" fontSize="small">
-                {summary}
-              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  pt: 0.5,
+                  color: "common.white",
+                  "& > p::before": {
+                    content: '"“"',
+                    fontSize: "1.25em",
+                  },
+                  "& > p::after": {
+                    content: '"”"',
+                    fontSize: "1.25em",
+                  },
+                }}
+              >
+                <Typography variant="body2">{summary}</Typography>
+              </Box>
             )}
           </>
         }
@@ -72,11 +100,11 @@ export const AlteredExternalPortalsSummary = (props: {
   const { portals } = props;
 
   return (
-    <Box pt={2}>
+    <Box py={2}>
       <Typography variant="h4" component="h3" gutterBottom>
-        {`Changes to nested services`}
+        {`Nested services`}
       </Typography>
-      <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+      <List>
         {portals.map((portal) => (
           <AlteredExternalPortalListItem key={portal.flowId} {...portal} />
         ))}

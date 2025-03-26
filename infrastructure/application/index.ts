@@ -210,7 +210,7 @@ export = async () => {
       }),
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.53.6",
+        image: "metabase/metabase:v0.53.7",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
@@ -569,10 +569,7 @@ export = async () => {
         portMappings: [sharedbListenerHttp],
         environment: [
           { name: "PORT", value: String(SHAREDB_PORT) },
-          {
-            name: "JWT_SECRET",
-            value: config.requireSecret("jwt-secret"),
-          },
+          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
           {
             name: "PG_URL",
             value: rootDbUrl,

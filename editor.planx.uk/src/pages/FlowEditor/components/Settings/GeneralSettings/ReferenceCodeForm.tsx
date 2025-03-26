@@ -16,8 +16,8 @@ export default function ReferenceCodeForm({
 }: FormProps) {
   const formSchema = Yup.object().shape({
     referenceCode: Yup.string()
-      .min(3, "Code must be 3 characters long")
-      .max(3, "Code must be 3 characters long")
+      .min(3, "Code must be at least 3 characters long")
+      .max(5, "Code cannot exceed 5 characters long")
       .required("Enter a reference code"),
   });
 
@@ -45,11 +45,11 @@ export default function ReferenceCodeForm({
       description={
         <>
           <Typography variant="body2">
-            Your local authority reference code is required for submissions.
-            This is a unique three-letter code per local authority.
+            Your local authority reference code is required for submissions and GIS integrations.
+            This is a unique three to five-letter code per local authority.
           </Typography>
           <Typography variant="body2">
-            The reference code can be found from Planning Data at:{" "}
+            Find your reference code on Planning Data at:{" "}
             <Link
               href="https://www.planning.data.gov.uk/entity/?dataset=local-authority"
               target="_blank"

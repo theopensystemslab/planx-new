@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import type { CookieOptions, RequestHandler, Response } from "express";
 import type { Request } from "express-jwt";
 import {
@@ -106,11 +107,16 @@ export const logout: RequestHandler = async (_req, res, next) => {
 };
 
 export const isJWTRevoked: RequestHandler = async (req, res) => {
-  const jwt = getToken(req);
-  if (!jwt) return res.status(401).send();
+  const token = getToken(req);
+  if (!token) return res.status(401).send();
 
-  const tokenDigest = createTokenDigest(jwt);
-  const isRevoked = await isTokenRevoked(tokenDigest);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+    const tokenDigest = createTokenDigest(token);
+    const isRevoked = await isTokenRevoked(tokenDigest);
 
-  return isRevoked ? res.status(401).send() : res.status(200).send();
+    return isRevoked ? res.status(401).send() : res.status(200).json(decoded);
+  } catch (error) {
+    return res.status(401).send();
+  }
 };

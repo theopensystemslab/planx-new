@@ -20,7 +20,7 @@ import {
 } from "./types";
 import {
   columnCellComponentRegistry,
-  createFilterOperator,
+  createArrayFilterOperator,
   getColumnFilterType,
   getValueOptions,
 } from "./utils";
@@ -29,6 +29,9 @@ export const DataTable = <T,>({
   rows,
   columns,
   csvExportFileName,
+  onProcessRowUpdate,
+  checkboxSelection,
+  customTools,
 }: DataGridProps<T>) => {
   const renderCellComponentByType = (
     params: RenderCellParams,
@@ -46,6 +49,8 @@ export const DataTable = <T,>({
   const CustomToolbar = () => {
     return (
       <GridToolbarContainer>
+        {customTools &&
+          customTools.map((CustomTool, index) => <CustomTool key={index} />)}
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
@@ -79,21 +84,18 @@ export const DataTable = <T,>({
         : undefined,
     };
 
-    return column.type === ColumnFilterType.ARRAY
-      ? {
-          ...baseColDef,
-          valueOptions: columnValueOptions,
-          filterOperators:
-            columnValueOptions &&
-            columnValueOptions.length > 0 &&
-            createFilterOperator(columnValueOptions),
-          ...column.columnOptions,
-        }
-      : {
-          ...baseColDef,
-          valueOptions: undefined,
-          ...column.columnOptions,
-        };
+    const gridColDef = {
+      ...baseColDef,
+      valueOptions: columnValueOptions,
+      ...column.columnOptions,
+    };
+
+    if (column.type === ColumnFilterType.ARRAY && columnValueOptions?.length) {
+      gridColDef.filterOperators =
+        createArrayFilterOperator(columnValueOptions);
+    }
+
+    return gridColDef;
   }) as GridColDef[];
 
   const handleFilterChange = (model: GridFilterModel) => {
@@ -128,6 +130,9 @@ export const DataTable = <T,>({
           slots={{
             toolbar: CustomToolbar,
           }}
+          getRowId={(row) => row.id}
+          processRowUpdate={onProcessRowUpdate}
+          checkboxSelection={checkboxSelection}
         />
       </Box>
     </Box>

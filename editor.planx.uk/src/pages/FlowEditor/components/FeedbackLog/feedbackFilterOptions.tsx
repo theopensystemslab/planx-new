@@ -1,5 +1,5 @@
-import { FeedbackType } from "./types";
-import { feedbackTypeText } from "./utils";
+import { FEEDBACK_STATUS, FeedbackStatus, FeedbackType } from "./types";
+import { feedbackStatusText, feedbackTypeText } from "./utils";
 
 export type FeedbackTypeOption = {
   value: FeedbackType;
@@ -19,4 +19,14 @@ export const feedbackTypeOptions: FeedbackTypeOption[] = (
 ).map((type) => ({
   value: type,
   label: feedbackTypeText(type),
+}));
+
+export type StatusOption = {
+  value: FeedbackStatus;
+  label: string;
+};
+
+export const statusOptions: StatusOption[] = FEEDBACK_STATUS.map((type) => ({
+  value: type,
+  label: feedbackStatusText[type],
 }));
