@@ -98,12 +98,16 @@ const LeftBox = styled(Box)(() => ({
   justifyContent: "start",
 }));
 
-const RightBox = styled(Box)(() => ({
+const RightBox = styled(Box)(({ theme }) => ({
   display: "flex",
   flexGrow: 0,
   flexShrink: 0,
   flexBasis: "140px",
   justifyContent: "end",
+  "&.right-box--editor": {
+    flexBasis: "320px",
+    gap: theme.spacing(1),
+  },
 }));
 
 const ProfileSection = styled(MuiToolbar)(({ theme }) => ({
@@ -413,7 +417,7 @@ const PublicToolbar: React.FC<{
       )}
       <NavBar />
       <AnalyticsDisabledBanner />
-      <TestEnvironmentBanner />
+      <TestEnvironmentBanner variant="banner" />
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}
@@ -489,7 +493,8 @@ const EditorToolbar: React.FC<{
             <LeftBox>
               <Breadcrumbs />
             </LeftBox>
-            <RightBox>
+            <RightBox className="right-box--editor">
+              <TestEnvironmentBanner variant="header" />
               {user && (
                 <ProfileSection disableGutters>
                   <Box mr={1} />
@@ -525,7 +530,6 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </EditorHeaderContainer>
       </EditorHeader>
-      <TestEnvironmentBanner />
       {user && (
         <StyledPopover
           open={open}

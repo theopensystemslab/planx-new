@@ -68,6 +68,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   },
   error: {
     main: "#D4351C",
+    light: "#EC7F6F",
   },
   success: {
     main: "#49A74C",
