@@ -1,6 +1,7 @@
 import { expect, Page } from "@playwright/test";
 import { mockRoadData } from "./geospatialMocks.js";
 import propertyConstraintsResponse from "./propertyConstraintResponse.json" with { type: "json" };
+import planningDataResponse from "./planningDataResponse.json" with { type: "json" };
 
 export async function setupGISMockResponse(page: Page) {
   const gisDigitalLandEndpoint = "**/gis/E2E?geom*";
@@ -17,7 +18,7 @@ export async function setupGISMockResponse(page: Page) {
 export function checkGISMockRequestUrl(url: string) {
   const splitUrl = url.split("/").pop()?.split("%2C");
   return (
-    !splitUrl?.includes("designated.conservationArea") &&
+    splitUrl?.includes("designated.conservationArea") &&
     splitUrl?.includes("listed")
   );
 }
@@ -28,6 +29,18 @@ export async function setupRoadsMockResponse(page: Page) {
     await route.fulfill({
       status: 200,
       body: JSON.stringify(mockRoadData),
+    });
+  });
+}
+
+export async function setupPlanningDataMockResponse(page: Page) {
+  const planningDataEndpoint = new RegExp(
+    /https:\/\/www\.planning\.data\.gov\.uk\/entity\.geojson/,
+  );
+  await page.route(planningDataEndpoint, async (route) => {
+    await route.fulfill({
+      status: 200,
+      body: JSON.stringify(planningDataResponse),
     });
   });
 }

@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { Feature } from "geojson";
+import { Feature, MultiPolygon, Polygon } from "geojson";
 
 export const waitForMapComponent = async (page: Page) => {
   await page.waitForFunction(() => {
@@ -37,7 +37,7 @@ export const resetMapBoundary = async (page: Page) => {
 export const checkGeoJsonContent = async (
   page: Page,
   attribute: "geojsondata" | "drawgeojsondata",
-  geoJson: Feature,
+  geoJson: Feature<Polygon | MultiPolygon>,
 ) => {
   // Wait for the map component to be present
   const mapComponent = await page.waitForSelector("my-map");
@@ -51,10 +51,22 @@ export const checkGeoJsonContent = async (
   // Get the geojsonData attribute
   const geojsonData = await mapComponent.getAttribute(attribute);
 
-  expect(
-    JSON.parse(geojsonData!),
-    "map attribute matches expected mock attribute",
-  ).toEqual(geoJson);
+  expect(geojsonData).toBeDefined();
+
+  // Exact GeoJSON coords can change with version bumps of OpenLayers and Playwright
+  // Compare using .toBeCloseTo() assertion
+  const coords: Array<[number, number]> = JSON.parse(geojsonData!).geometry
+    .coordinates[0];
+  const expectedCoords = geoJson.geometry.coordinates[0];
+
+  coords
+    .flat(2)
+    .forEach((coord, index) =>
+      expect(
+        coord,
+        "map attribute matches expected mock attribute",
+      ).toBeCloseTo(expectedCoords.flat(2)[index]),
+    );
 };
 
 export const checkUploadFileAltRoute = async (page: Page) => {
