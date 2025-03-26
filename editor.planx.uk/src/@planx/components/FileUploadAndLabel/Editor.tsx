@@ -1,6 +1,5 @@
 import RuleIcon from "@mui/icons-material/Rule";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -126,13 +125,13 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
 
   // Rather than default to generic `useStore().getFlowSchema()`
   //   File Upload components can specifically suggest based on ODP Schema enum options
-  let schema = getValidSchemaValues("FileType") || [];
+  const schema = getValidSchemaValues("FileType") || [];
   // Additionally ensure that existing initial values are supported & pre-populated on load
   if (props.value.fn && !schema?.includes(props.value.fn))
     schema.push(props.value.fn);
 
   return (
-    <Box sx={{ flex: 1 }} data-testid="rule-list-manager">
+    <Box sx={{ flex: 1, mb: 2 }} data-testid="rule-list-manager">
       <ModalSubtitle title="File" />
       <InputRow>
         <Input
@@ -149,9 +148,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         required
         schema={schema}
         value={props.value.fn}
-        onChange={(value) => 
-          props.onChange(merge(props.value, { fn: value }))
-        }
+        onChange={(value) => props.onChange(merge(props.value, { fn: value }))}
       />
       <ModalSubtitle title="Rule" />
       <InputRow>
@@ -264,7 +261,6 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           />
         </InputRowItem>
       </InputRow>
-      <Divider sx={{ mb: 2, mt: 4 }} />
     </Box>
   );
 }
