@@ -37,6 +37,7 @@ import {
   planningConstraintHeadersMock,
   setupGISMockResponse,
   setupRoadsMockResponse,
+  setupPlanningDataMockResponse,
 } from "./mocks/gisResponse.js";
 import {
   answerFindProperty,
@@ -144,6 +145,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     await setupGISMockResponse(page);
     await setupRoadsMockResponse(page);
+    await setupPlanningDataMockResponse(page);
 
     await expect(
       page.locator("h1", { hasText: "Find the property" }),
