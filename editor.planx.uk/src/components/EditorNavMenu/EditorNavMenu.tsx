@@ -126,9 +126,13 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: referenceCode ? `Planning Data (external link)` : `Planning Data unavailable`,
+      title: referenceCode
+        ? `Planning Data (external link)`
+        : `Planning Data unavailable`,
       Icon: LayersIcon,
-      route: referenceCode ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}` : `#`,
+      route: referenceCode
+        ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+        : `#`,
       accessibleBy: "*",
       disabled: !referenceCode,
     },
@@ -166,12 +170,14 @@ function EditorNavMenu() {
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {
-      title: flowAnalyticsLink ? `Analytics (external link)` : `Analytics page unavailable`,
+      title: flowAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
       Icon: LeaderboardIcon,
       route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
       disabled: !flowAnalyticsLink,
-    }
+    },
   ];
 
   const defaultRoutes: RoutesForURL = {
@@ -241,7 +247,9 @@ function EditorNavMenu() {
                 onClick={() => handleClick(route, disabled)}
               >
                 <Icon fontSize="small" />
-                <MenuTitle variant="body3">{title}</MenuTitle>
+                <MenuTitle variant="body3" pt={0.15}>
+                  {title}
+                </MenuTitle>
               </MenuButton>
             )}
           </MenuItem>
