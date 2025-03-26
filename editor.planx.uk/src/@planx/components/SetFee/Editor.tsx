@@ -1,13 +1,15 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-
-import { EditorProps } from "../shared/types";
-import { parseSetFee, SetFee } from "./model";
-import ModalSection from "ui/editor/ModalSection";
 import React from "react";
-import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { ModalFooter } from "ui/editor/ModalFooter";
+import ModalSection from "ui/editor/ModalSection";
+import ModalSectionContent from "ui/editor/ModalSectionContent";
+import InputGroup from "ui/editor/InputGroup";
+
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
+import { ICONS } from "../shared/icons";
+import { parseSetFee, SetFee } from "./model";
 
 type Props = EditorProps<TYPES.SetFee, SetFee>;
 
@@ -27,12 +29,17 @@ function SetFeeComponent(props: Props) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent title="Passport field name">
-          <DataFieldAutocomplete
-            required
-            value={formik.values.fn}
-            onChange={(value) => formik.setFieldValue("fn", value)}
-          />
+        <ModalSectionContent
+          title="Set fee"
+          Icon={ICONS[TYPES.SetFee]}
+        >
+          <InputGroup>
+            <DataFieldAutocomplete
+              required
+              value={formik.values.fn}
+              onChange={(value) => formik.setFieldValue("fn", value)}
+            />
+          </InputGroup>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter formik={formik} showMoreInformation={false} />
