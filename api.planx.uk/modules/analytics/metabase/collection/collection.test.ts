@@ -7,8 +7,6 @@ import { updateMetabaseId } from "./updateMetabaseId.js";
 import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
-process.env.NODE_ENV = "test";
-
 describe("createTeamCollection", () => {
   beforeEach(() => {
     nock.cleanAll();
