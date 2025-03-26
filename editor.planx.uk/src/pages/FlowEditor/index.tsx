@@ -13,19 +13,14 @@ import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButt
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
 import Sidebar from "./components/Sidebar";
-import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
 
-const EditorContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "isTestEnvBannerVisible",
-})<{ isTestEnvBannerVisible?: boolean }>(({ isTestEnvBannerVisible }) => ({
+const EditorContainer = styled(Box)(() => ({
   display: "flex",
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
-  maxHeight: isTestEnvBannerVisible
-    ? `calc(100vh - ${HEADER_HEIGHT_EDITOR * 2}px)`
-    : `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
+  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
 }));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
@@ -47,15 +42,8 @@ const FlowEditor = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
-  const isTestEnvBannerVisible = useStore(
-    (state) => state.isTestEnvBannerVisible,
-  );
-
   return (
-    <EditorContainer
-      id="editor-container"
-      isTestEnvBannerVisible={isTestEnvBannerVisible}
-    >
+    <EditorContainer id="editor-container">
       <Box
         sx={{
           display: "flex",
