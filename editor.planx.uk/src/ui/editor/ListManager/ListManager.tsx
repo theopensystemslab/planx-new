@@ -42,11 +42,8 @@ export interface Props<T, EditorExtraProps = {}> {
   maxItems?: number;
 }
 
-const Item = styled(Box)(({ theme }) => ({
+const Item = styled(Box)(() => ({
   display: "flex",
-  "&:last-child": {
-    marginBottom: theme.spacing(2),
-  },
 }));
 
 const InsertButtonRoot = styled(ButtonBase)(({ theme }) => ({
@@ -274,6 +271,7 @@ export default function ListManager<T, EditorExtraProps>(
       </Droppable>
       <Button
         size="medium"
+        sx={{ mt: 2 }}
         onClick={() => {
           props.onChange([...props.values, props.newValue()]);
           setItemKeys((prev) => [...prev, nanoid()]);
