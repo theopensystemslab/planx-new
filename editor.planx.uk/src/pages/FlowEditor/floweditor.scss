@@ -5,6 +5,8 @@ $hangerBackground: #f2f2f2;
 $focus: #ffdd00;
 $lockedBackground: #eeeeee;
 $lockedBorder: #b0b0b0;
+$dataBackground: #f0f0f0;
+$lockedDataBackground: #e2e2e2;
 
 $endpointWidth: 50px;
 $hangerWidth: 16px;
@@ -197,8 +199,26 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
+  & .card-data-field {
+    border-color: $nodeBorder;
+    background: $dataBackground;
+
+    .flow-locked & {
+      border-color: $lockedBorder;
+      background: $lockedDataBackground;
+    }
+  }
+
+  & .card-tag {
+    border-color: $nodeBorder;
+    .flow-locked & {
+      opacity: 0.75;
+      border-color: $lockedBorder;
+    }
+  }
+
   &.type-SetValue > div > a {
-    background: #f0f0f0;
+    background: $dataBackground;
     font-family: $fontMonospace;
   }
 
