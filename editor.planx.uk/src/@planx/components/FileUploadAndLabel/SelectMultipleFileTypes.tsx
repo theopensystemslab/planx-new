@@ -41,7 +41,7 @@ const renderGroup: AutocompleteProps<
   <RenderGroupHeaderBlock
     key={params.key}
     params={params}
-    displayName={`${capitalize(params.group)} files`}
+    displayName={`${capitalize(params.group)} information`}
   />
 );
 
