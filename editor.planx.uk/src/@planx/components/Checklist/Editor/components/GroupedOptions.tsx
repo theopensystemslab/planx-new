@@ -62,6 +62,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
                     );
                   }}
                   size="large"
+                  disabled={disabled}
                 >
                   <Delete />
                 </IconButton>
