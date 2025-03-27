@@ -28,6 +28,12 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
+import {
+  isLivePlatform,
+  isLocalPlatform,
+  isPizzaPlatform,
+  isStagingPlatform,
+} from "theme";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -51,6 +57,10 @@ export interface EditorUIStore {
   showSidebar: boolean;
   toggleSidebar: () => void;
   isTestEnvBannerVisible: boolean;
+  isStaging: boolean;
+  isPizza: boolean;
+  isLive: boolean;
+  isLocal: boolean;
   hideTestEnvBanner: () => void;
   showTags: boolean;
   toggleShowTags: () => void;
@@ -81,6 +91,11 @@ export const editorUIStore: StateCreator<
     },
 
     isTestEnvBannerVisible: !window.location.href.includes(".uk"),
+
+    isStaging: isStagingPlatform,
+    isPizza: isPizzaPlatform,
+    isLive: isLivePlatform,
+    isLocal: isLocalPlatform,
 
     hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
 
