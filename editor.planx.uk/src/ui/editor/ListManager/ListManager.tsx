@@ -124,6 +124,7 @@ export default function ListManager<T, EditorExtraProps>(
                     props.onChange(setAt(index, newItem, props.values));
                   }}
                   {...(props.editorExtraProps || {})}
+                  disabled={disabled}
                 />
                 <Box sx={{ display: "flex", alignItems: "flex-start" }}>
                   <IconButton
@@ -133,9 +134,7 @@ export default function ListManager<T, EditorExtraProps>(
                     }}
                     aria-label="Delete"
                     size="large"
-                    disabled={
-                      disabled || props?.isFieldDisabled?.(item, index)
-                    }
+                    disabled={disabled || props?.isFieldDisabled?.(item, index)}
                   >
                     <Delete />
                   </IconButton>
@@ -237,6 +236,7 @@ export default function ListManager<T, EditorExtraProps>(
                               );
                             }}
                             {...(props.editorExtraProps || {})}
+                            disabled={disabled}
                           />
                           <Box>
                             <IconButton
