@@ -15,6 +15,8 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
+// eslint-disable-next-line no-restricted-imports
+import { switchClasses } from "@mui/material/Switch";
 import { tablePaginationClasses } from "@mui/material/TablePagination";
 import { tooltipClasses } from "@mui/material/Tooltip";
 import { deepmerge } from "@mui/utils";
@@ -22,7 +24,6 @@ import { gridClasses } from "@mui/x-data-grid";
 import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
-import { switchClasses } from "ui/shared/Switch";
 
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
