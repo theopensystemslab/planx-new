@@ -212,7 +212,7 @@ function Component(props: Props) {
               .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
                 <ListSubheader
-                  key={`subheader-${fileListCategory}-files`}
+                  key={`subheader-${fileListCategory}-information`}
                   disableGutters
                   disableSticky
                   sx={{
