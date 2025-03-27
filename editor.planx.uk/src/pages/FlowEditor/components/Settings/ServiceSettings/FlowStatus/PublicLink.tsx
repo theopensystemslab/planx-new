@@ -7,7 +7,7 @@ import { FlowStatus } from "@opensystemslab/planx-core/types";
 import React, { useState } from "react";
 import SettingsDescription from "ui/editor/SettingsDescription";
 
-const CopyButton = (props: { link: string; isActive: boolean }) => {
+export const CopyButton = (props: { link: string; isActive: boolean }) => {
   const [copyMessage, setCopyMessage] = useState<"copy" | "copied">("copy");
   return (
     <Button
