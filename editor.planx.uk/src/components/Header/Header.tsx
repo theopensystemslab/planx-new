@@ -226,10 +226,15 @@ const TeamLogo: React.FC = () => {
 
 const Breadcrumbs: React.FC = () => {
   const route = useCurrentRoute();
-  const [team, isStandalone] = useStore((state) => [
-    state.getTeam(),
-    state.previewEnvironment === "standalone",
-  ]);
+  const [team, isStandalone, isStaging, isPizza, isLocal] = useStore(
+    (state) => [
+      state.getTeam(),
+      state.previewEnvironment === "standalone",
+      state.isStaging,
+      state.isPizza,
+      state.isLocal,
+    ],
+  );
 
   return (
     <BreadcrumbsRoot>
@@ -242,6 +247,11 @@ const Breadcrumbs: React.FC = () => {
       >
         Plan✕
       </BreadcrumbsLink>
+      <Typography>
+        {isStaging && "staging"}
+        {isLocal && "local"}
+        {isPizza && "pizza"}
+      </Typography>
       {team.slug && (
         <>
           {" / "}
