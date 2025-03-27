@@ -212,7 +212,7 @@ function Component(props: Props) {
               .filter(isCategoryVisible)
               .flatMap((fileListCategory) => [
                 <ListSubheader
-                  key={`subheader-${fileListCategory}-files`}
+                  key={`subheader-${fileListCategory}-information`}
                   disableGutters
                   disableSticky
                   sx={{
@@ -222,7 +222,7 @@ function Component(props: Props) {
                   }}
                 >
                   <Typography variant="h3" component="h2">
-                    {`${capitalize(fileListCategory)} files`}
+                    {`${capitalize(fileListCategory)} information`}
                   </Typography>
                 </ListSubheader>,
                 fileList[fileListCategory].map((fileType) => (

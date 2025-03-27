@@ -96,7 +96,7 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    expect(queryByRole("heading", { name: /Optional files/ })).toBeNull();
+    expect(queryByRole("heading", { name: /Optional information/ })).toBeNull();
   });
 
   it("shows optional files if there are no other types", () => {
@@ -107,7 +107,9 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    expect(getByRole("heading", { name: /Optional files/ })).toBeVisible();
+    expect(
+      getByRole("heading", { name: /Optional information/ }),
+    ).toBeVisible();
   });
 });
 
@@ -190,7 +192,9 @@ describe("Info-only mode with hidden drop zone", () => {
       />,
     );
 
-    expect(queryByRole("heading", { name: /Optional files/ })).toBeVisible();
+    expect(
+      queryByRole("heading", { name: /Optional information/ }),
+    ).toBeVisible();
   });
 });
 
@@ -510,7 +514,7 @@ describe("Adding tags and syncing state", () => {
     await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(0);
     const error = await within(document.body).findByText(
-      "Please upload and label all required files",
+      "Please upload and label all required information",
     );
     expect(error).toBeVisible();
   });
