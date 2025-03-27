@@ -140,6 +140,10 @@ $fontMonospace: "Source Code Pro", monospace;
       background: white;
       border: $nodeBorderWidth dashed $nodeBorder;
       z-index: -1;
+      .flow-locked & {
+        border-color: $lockedBorder;
+        background: transparent;
+      }
     }
   }
 
