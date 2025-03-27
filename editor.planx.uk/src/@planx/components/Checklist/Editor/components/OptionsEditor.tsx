@@ -2,7 +2,6 @@ import {
   BaseOptionsEditor,
   BaseOptionsEditorProps,
 } from "@planx/components/shared/BaseOptionsEditor";
-import { props } from "ramda";
 import React from "react";
 import SimpleMenu from "ui/editor/SimpleMenu";
 
