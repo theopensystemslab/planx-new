@@ -71,9 +71,12 @@ export const mapInputValidationSchema = ({
   array()
     .when([], {
       is: () => required,
-      then: array().min(1, `Draw at least one ${
-        mapOptions?.drawType?.toLocaleLowerCase() || "feature"
-      } on the map`,),
+      then: array().min(
+        1,
+        `Draw at least one ${
+          mapOptions?.drawType?.toLocaleLowerCase() || "feature"
+        } on the map`,
+      ),
       otherwise: array().notRequired(),
     })
     .test({
@@ -115,7 +118,7 @@ export interface DateField extends BaseField<DateInput> {
 
 export interface AddressField extends BaseField<AddressInput> {
   type: "address";
-};
+}
 
 type MapInput = {
   title: string;
