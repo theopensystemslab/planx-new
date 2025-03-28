@@ -740,6 +740,7 @@
         set:
           creator_id: x-hasura-user-id
         columns:
+          - analytics_link
           - copied_from
           - created_at
           - creator_id
@@ -1011,6 +1012,7 @@
     - role: api
       permission:
         columns:
+          - analytics_link
           - copied_from
           - created_at
           - creator_id
@@ -1157,6 +1159,32 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+  event_triggers:
+    - name: setup_metabase_dashboard
+      definition:
+        enable_manual: false
+        insert:
+          columns: '*'
+      retry_conf:
+        interval_sec: 10
+        num_retries: 0
+        timeout_sec: 60
+      webhook: '{{HASURA_PLANX_API_URL}}/metabase/dashboard'
+      headers:
+        - name: authorization
+          value: '{{HASURA_PLANX_API_KEY}}'
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "serviceSlug": {{$body.event.data.new.slug}},
+              "flowId": {{$body.event.data.new.id}},
+              "teamId": {{$body.event.data.new.team_id}},
+              "serviceName": {{$body.event.data.new.name}}
+            }
+        template_engine: Kriti
+        version: 2
 - table:
     name: global_settings
     schema: public
@@ -2907,7 +2935,7 @@
       request_transform:
         body:
           action: transform
-          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}},\r\n  \"description\": \"Collection for {{$body.event.data.new.name}}\",\r\n  \"parentId\": 58\r\n}"
+          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}}\r\n}"
         template_engine: Kriti
         version: 2
 - table:
@@ -3141,6 +3169,148 @@
             timeout: 10
             url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
           type: http
+      comment: teamEditors can only update customisations for flows which they can edit
+  delete_permissions:
+    - role: platformAdmin
+      permission:
+        filter: {}
+      comment: ""
+- table:
+    name: templated_flow_edits
+    schema: public
+  object_relationships:
+    - name: flow
+      using:
+        foreign_key_constraint_on: flow_id
+  insert_permissions:
+    - role: demoUser
+      permission:
+        check:
+          flow:
+            team_id:
+              _eq: 32
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: Demo users can only insert records for flows from the demo team (teamId = 32)
+    - role: platformAdmin
+      permission:
+        check: {}
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: ""
+    - role: teamEditor
+      permission:
+        check:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: teamEditors can only insert nodes for templated flows which they can edit
+  select_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+      comment: Demo users can only view records associated with flows they have created
+    - role: platformAdmin
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: demoUser
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter:
+          flow:
+            creator_id:
+              _eq: x-hasura-user-id
+        check: null
+      comment: Demo users can only update records associated with flows they have created
+    - role: platformAdmin
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+        check: {}
+      comment: ""
+    - role: teamEditor
+      permission:
+        columns:
+          - node_data
+          - node_id
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter:
+          flow:
+            team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+        check: null
       comment: teamEditors can only update customisations for flows which they can edit
   delete_permissions:
     - role: platformAdmin

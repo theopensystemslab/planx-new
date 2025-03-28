@@ -4,7 +4,7 @@ import nock from "nock";
 import { MetabaseError } from "../shared/client.js";
 import { $api } from "../../../../client/index.js";
 import { updateMetabaseId } from "./updateMetabaseId.js";
-import { getTeamIdAndMetabaseId } from "./getTeamIdAndMetabaseId.js";
+import { getTeamIdAndMetabaseId } from "../shared/getTeamIdAndMetabaseId.js";
 import { createCollection } from "./createCollection.js";
 
 describe("createTeamCollection", () => {
@@ -65,24 +65,24 @@ describe("createTeamCollection", () => {
     metabaseMock
       .post("/api/collection/", {
         name: testName,
-        parent_id: 100,
+        parent_id: 78,
       })
       .reply(200, {
         id: 123,
         name: testName,
-        parent_id: 100,
+        parent_id: 78,
       });
 
     // Mock GET request for verifying the new collection
     metabaseMock.get("/api/collection/123").reply(200, {
       id: 123,
       name: testName,
-      parent_id: 100,
+      parent_id: 78,
     });
 
     const collectionId = await createCollection({
       name: testName,
-      parentId: 100,
+      parentId: 78,
     });
 
     // Check the ID is returned correctly
@@ -90,7 +90,7 @@ describe("createTeamCollection", () => {
 
     // Verify the collection details using the service function
     const collection = await getCollection(collectionId);
-    expect(collection.parentId).toBe(100);
+    expect(collection.parentId).toBe(78);
     expect(metabaseMock.isDone()).toBe(true);
   });
 
@@ -236,11 +236,7 @@ describe("edge cases", () => {
     vi.spyOn($api.client, "request").mockRejectedValue(
       new Error("Invalid slug"),
     );
-    await expect(
-      createTeamCollection({
-        slug: "",
-      }),
-    ).rejects.toThrow();
+    await expect(createTeamCollection("")).rejects.toThrow();
   });
 
   test("handles name with special characters", async () => {
@@ -279,10 +275,6 @@ describe("edge cases", () => {
     vi.spyOn($api.client, "request").mockRejectedValue(
       new Error("Slug too long"),
     );
-    await expect(
-      createTeamCollection({
-        slug: longSlug,
-      }),
-    ).rejects.toThrow();
+    await expect(createTeamCollection(longSlug)).rejects.toThrow();
   });
 });

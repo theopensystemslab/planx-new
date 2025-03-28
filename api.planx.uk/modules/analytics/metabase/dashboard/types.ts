@@ -3,17 +3,10 @@ import type { ApiResponse } from "../shared/types.js";
 import { z } from "zod";
 
 export interface CreateNewDashboardParams {
-  teamName: string;
-  /** Original / template Metabase Dashboard ID, it is the number that follows /dashboard/ in the URL */
-  templateId: number;
-  /** Optional text to be displayed as the dashboard description */
-  description?: string;
-  /** Number for the copied dashboard's parent collection */
-  collectionId: number;
-  /** A filter that should be automatically set, eg `Team slug` */
-  filter: string;
-  /** Default filter value, eg `council-name` */
-  value: string;
+  flowId: string;
+  teamId: number;
+  serviceSlug: string;
+  serviceName: string;
 }
 
 /* We don't want users to be able to deep copy templates / dashboards because it will wreak Metabase havoc. This is why there is no isDeepCopy option here */
@@ -38,18 +31,11 @@ export type UpdateFilterParams = {
 };
 
 export const createNewDashboardSchema = z.object({
-  params: z.object({
-    slug: z.string(),
-    service: z.string(),
-    templateId: z.coerce.number(),
-  }),
   body: z.object({
-    teamName: z.string(),
-    description: z.string().optional(),
-    collectionId: z.coerce.number(),
-    collectionPosition: z.coerce.number().nullable().optional(),
-    filter: z.string(),
-    value: z.string(),
+    flowId: z.string(),
+    teamId: z.number(),
+    serviceSlug: z.string(),
+    serviceName: z.string(),
   }),
 });
 
