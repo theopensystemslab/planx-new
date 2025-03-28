@@ -70,7 +70,6 @@ export const BaseFormSection: React.FC = () => {
               https://test.com/team/
             </InputAdornment>
           }
-          errorMessage={errors.flow?.slug}
         />
       </InputLabel>
     </>
