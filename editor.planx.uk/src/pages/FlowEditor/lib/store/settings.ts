@@ -23,6 +23,9 @@ export interface SettingsStore {
   setFlowSettings: (flowSettings?: FlowSettings) => void;
   flowStatus?: FlowStatus;
   setFlowStatus: (flowStatus: FlowStatus) => void;
+  flowCanCreateFromCopy?: boolean;
+  setFlowCanCreateFromCopy: (canCreateFromCopy: boolean) => void;
+  updateFlowCanCreateFromCopy: (canCreateFromCopy: boolean) => Promise<boolean>;
   updateFlowStatus: (newStatus: FlowStatus) => Promise<boolean>;
   flowSummary?: string;
   updateFlowSummary: (newSummary: string) => Promise<boolean>;
@@ -59,6 +62,21 @@ export const settingsStore: StateCreator<
       status: newStatus,
     });
     set({ flowStatus: newStatus });
+    return Boolean(result?.id);
+  },
+
+  flowCanCreateFromCopy: undefined,
+
+  setFlowCanCreateFromCopy: (canCreateFromCopy) =>
+    set({ flowCanCreateFromCopy: canCreateFromCopy }),
+
+  updateFlowCanCreateFromCopy: async (canCreateFromCopy) => {
+    const { id, $client } = get();
+    const result = await $client.flow.setFlowVisibility({
+      flow: { id },
+      canCreateFromCopy,
+    });
+    set({ flowCanCreateFromCopy: canCreateFromCopy });
     return Boolean(result?.id);
   },
 
@@ -101,7 +119,16 @@ export const settingsStore: StateCreator<
   getFlowInformation: async (flowSlug, teamSlug) => {
     const {
       data: {
-        flows: [{ settings, status, description, summary, limitations }],
+        flows: [
+          {
+            settings,
+            status,
+            description,
+            summary,
+            limitations,
+            canCreateFromCopy,
+          },
+        ],
       },
     } = await client.query<GetFlowInformation>({
       query: gql`
@@ -116,6 +143,7 @@ export const settingsStore: StateCreator<
             summary
             status
             limitations
+            canCreateFromCopy: can_create_from_copy
           }
         }
       `,
@@ -132,6 +160,7 @@ export const settingsStore: StateCreator<
       flowDescription: description,
       flowSummary: summary,
       flowLimitations: limitations,
+      flowCanCreateFromCopy: canCreateFromCopy,
     });
 
     return { settings, status, description, summary, limitations };
