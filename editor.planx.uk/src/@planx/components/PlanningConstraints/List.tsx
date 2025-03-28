@@ -48,7 +48,13 @@ interface StyledAccordionProps extends BoxProps {
 
 const StyledAccordion = styled(Accordion, {
   shouldForwardProp: (prop) =>
-    !["category", "metadata", "content", "data"].includes(prop as string),
+    ![
+      "category",
+      "metadata",
+      "content",
+      "data",
+      "inaccurateConstraints",
+    ].includes(prop as string),
 })<StyledAccordionProps>(({ theme, category }) => ({
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
   paddingRight: 0,
