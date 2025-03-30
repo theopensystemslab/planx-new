@@ -35,7 +35,7 @@ const sendToBOPSFailure: Submission = {
     version: "1",
   },
   createdAt: "2024-01-12T12:18:12.805747+00:00",
-  flowName: "Dsn impact metrics",
+  flowName: "Apply for a lawful development certificate",
 };
 
 const jsonError: Submission = {
@@ -51,7 +51,7 @@ const jsonError: Submission = {
     version: "1",
   },
   createdAt: "2024-01-12T12:18:12.805747+00:00",
-  flowName: "Dsn impact metrics",
+  flowName: "Report a breach",
 };
 
 export const mockSubmissions: Submission[] = [

@@ -8,6 +8,16 @@ export function setAt<T>(index: number, newItem: T, arr: Array<T>): Array<T> {
   return arr.map((item, i) => (i === index ? newItem : item));
 }
 
+export function insertAt<T>(
+  index: number,
+  newItem: T,
+  arr: Array<T>,
+): Array<T> {
+  const newArr = [...arr];
+  newArr.splice(index, 0, newItem);
+  return newArr;
+}
+
 // Basic explanation of this function: how many characters need to be shifted/modified in string 'a' to arrive at string 'b'
 // Source: https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/string/levenshtein-distance/levenshteinDistance.js
 export const levenshteinDistance = (a: string, b: string): number => {

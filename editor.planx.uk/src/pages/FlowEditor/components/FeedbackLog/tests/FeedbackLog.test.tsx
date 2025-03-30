@@ -4,7 +4,7 @@ import { setup } from "testUtils";
 import { it } from "vitest";
 
 import { FeedbackLog } from "../FeedbackLog";
-import { mockFeedback } from "./mockFeedback";
+import { mockFeedback } from "../mocks/mockFeedback";
 
 describe("When the feedback log renders", () => {
   it("shows the expected headers and rows without an error", () => {
@@ -41,6 +41,6 @@ describe("When the feedback log renders", () => {
 
     expect(screen.getByRole("gridcell", { name: "Same error" })).toBeVisible();
 
-    expect(screen.getAllByText("Issue")).toHaveLength(3); // Three pieces of feedback are issues in the mock data
+    expect(screen.getAllByText("Issue")).toHaveLength(4); // Four pieces of feedback are issues in the mock data
   });
 });

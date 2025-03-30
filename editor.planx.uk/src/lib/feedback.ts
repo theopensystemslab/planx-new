@@ -122,5 +122,7 @@ export const FEEDBACK_SUMMARY_FIELDS = gql`
     nodeId: node_id
     nodeText: node_text
     projectType: project_type
+    editorNotes: editor_notes
+    status: status
   }
 `;

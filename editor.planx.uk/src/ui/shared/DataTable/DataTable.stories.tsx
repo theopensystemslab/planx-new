@@ -36,6 +36,8 @@ export const Basic = {
         type: ColumnFilterType.ARRAY,
         columnOptions: {
           valueOptions: liveFlowValueOptions,
+          sortable: false,
+          filterOperators: arrayFilterOperators(liveFlowValueOptions),
         },
       },
       {

@@ -1,14 +1,12 @@
-import { Feedback } from "routes/feedback";
+import { Feedback, FeedbackStatus, FeedbackType } from "./types";
 
-import { FeedbackType } from "./types";
-
-export const EmojiRating: Record<number, string> = {
-  1: "Terrible",
-  2: "Poor",
-  3: "Neutral",
-  4: "Good",
-  5: "Excellent",
-};
+export const EmojiRating = [
+  { value: 1, label: "Terrible" },
+  { value: 2, label: "Poor" },
+  { value: 3, label: "Neutral" },
+  { value: 4, label: "Good" },
+  { value: 5, label: "Excellent" },
+];
 
 export const feedbackTypeText = (type: FeedbackType) => {
   switch (type) {
@@ -27,6 +25,13 @@ export const feedbackTypeText = (type: FeedbackType) => {
     default:
       return "Inaccuracy";
   }
+};
+
+export const feedbackStatusText: Record<FeedbackStatus, string> = {
+  unread: "Unread",
+  urgent: "Urgent",
+  actioned: "Actioned",
+  in_progress: "In progress",
 };
 
 export const getCombinedHelpText = (feedback: Feedback) => {

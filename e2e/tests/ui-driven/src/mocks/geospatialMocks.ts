@@ -1,5 +1,5 @@
 import { OptionWithDataValues } from "../helpers/types.js";
-import { Feature, Polygon } from "geojson";
+import { Feature, MultiPolygon, Polygon } from "geojson";
 
 type ChangeHandlerProperties = {
   label: string;
@@ -14,7 +14,7 @@ export const mockPropertyTypeOptions: OptionWithDataValues[] = [
   { optionText: "Commercial", dataValue: "commercial" },
 ];
 
-export const mockTitleBoundaryGeoJson: Feature = {
+export const mockTitleBoundaryGeoJson: Feature<MultiPolygon> = {
   type: "Feature",
   geometry: {
     type: "MultiPolygon",

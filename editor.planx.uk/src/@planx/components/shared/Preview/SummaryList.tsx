@@ -131,6 +131,7 @@ const presentationalComponents: {
   [TYPES.Review]: undefined,
   [TYPES.Section]: undefined,
   [TYPES.Send]: undefined,
+  [TYPES.SetFee]: undefined,
   [TYPES.SetValue]: undefined,
   [TYPES.Question]: Question,
   [TYPES.TaskList]: undefined,

@@ -61,14 +61,18 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "flowName",
       headerName: "Service",
       width: 250,
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+      columnOptions: {
+        // Allow filtering by unique flow names
+        valueOptions: [...new Set(submissions.map(({ flowName }) => flowName))],
+      },
     },
     {
       field: "eventType",
       headerName: "Event",
       width: 230,
-      type: ColumnFilterType.ARRAY,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: SubmissionEvent,
       columnOptions: {
         valueOptions: submissionEventTypes,
@@ -78,7 +82,7 @@ const EventsLog: React.FC<EventsLogProps> = ({
       field: "status",
       headerName: "Status",
       width: 125,
-      type: ColumnFilterType.ARRAY,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: StatusChip,
       columnOptions: {
         valueOptions: submissionStatusOptions,
