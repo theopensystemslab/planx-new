@@ -1,82 +1,17 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-// eslint-disable-next-line no-restricted-imports
-import { SwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
-import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
-import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
-import Input, { Props as InputProps } from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import InputRowItem from "ui/shared/InputRowItem";
-import { Switch } from "ui/shared/Switch";
 
-import type { FlowSettings } from "../../../../../types";
-import { useStore } from "../../../lib/store";
-
-const TextInput: React.FC<{
-  title: string;
-  richText?: boolean;
-  description?: string;
-  switchProps?: SwitchProps;
-  headingInputProps?: InputProps;
-  contentInputProps?: InputProps;
-}> = ({
-  title,
-  richText = false,
-  description,
-  switchProps,
-  headingInputProps,
-  contentInputProps,
-}) => {
-  return (
-    <Box width="100%">
-      <Box mb={0.5} display="flex" alignItems="center">
-        <Switch
-          label={title}
-          name={switchProps?.name}
-          variant="editorPage"
-          onChange={switchProps?.onChange}
-          checked={switchProps?.checked}
-        />
-      </Box>
-      <Box mb={1}>
-        {description && (
-          <SettingsDescription>{description}</SettingsDescription>
-        )}
-      </Box>
-      <InputRow>
-        <InputRowItem>
-          <Input placeholder="Heading" format="bold" {...headingInputProps} />
-        </InputRowItem>
-      </InputRow>
-      <InputRow>
-        <InputRowItem>
-          {richText ? (
-            <RichTextInput
-              placeholder="Text"
-              multiline
-              rows={6}
-              {...contentInputProps}
-            />
-          ) : (
-            <Input
-              placeholder="Text"
-              multiline
-              rows={6}
-              {...contentInputProps}
-            />
-          )}
-        </InputRowItem>
-      </InputRow>
-    </Box>
-  );
-};
+import type { FlowSettings } from "../../../../../../types";
+import { useStore } from "../../../../lib/store";
+import { TextInput } from "./components/TextInput";
 
 export const FooterLinksAndLegalDisclaimer = () => {
   const [flowSettings, updateFlowSettings] = useStore((state) => [

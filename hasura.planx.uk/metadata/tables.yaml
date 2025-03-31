@@ -869,6 +869,7 @@
     - role: api
       permission:
         columns:
+          - can_create_from_copy
           - copied_from
           - created_at
           - creator_id
@@ -896,6 +897,7 @@
       permission:
         columns:
           - analytics_link
+          - can_create_from_copy
           - created_at
           - creator_id
           - data
@@ -936,6 +938,7 @@
       permission:
         columns:
           - analytics_link
+          - can_create_from_copy
           - created_at
           - creator_id
           - data
@@ -961,6 +964,7 @@
     - role: public
       permission:
         columns:
+          - can_create_from_copy
           - created_at
           - creator_id
           - data
@@ -985,6 +989,7 @@
       permission:
         columns:
           - analytics_link
+          - can_create_from_copy
           - created_at
           - creator_id
           - data
@@ -1011,6 +1016,7 @@
     - role: api
       permission:
         columns:
+          - can_create_from_copy
           - copied_from
           - created_at
           - creator_id
@@ -1089,6 +1095,7 @@
     - role: platformAdmin
       permission:
         columns:
+          - can_create_from_copy
           - data
           - deleted_at
           - description
@@ -1116,6 +1123,7 @@
     - role: teamEditor
       permission:
         columns:
+          - can_create_from_copy
           - data
           - deleted_at
           - description
