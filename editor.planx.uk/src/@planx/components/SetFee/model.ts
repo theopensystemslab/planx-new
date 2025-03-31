@@ -6,12 +6,16 @@ export interface SetFee extends BaseNodeData {
   amount?: number;
 }
 
-export const parseSetFee = (data: Record<string, any> | undefined): SetFee => ({
-  operation: data?.operation || "calculateVAT",
-  fn: data?.fn || "",
-  amount: data?.amount,
-  ...parseBaseNodeData(data),
-});
+export const parseSetFee = (data: Record<string, any> | undefined): SetFee => {
+  const initialOperation = data?.operation || "calculateVAT";
+
+  return {
+    operation: initialOperation,
+    fn: data?.fn || getDefaults(initialOperation).fn,
+    amount: data?.amount || getDefaults(initialOperation)?.amount,
+    ...parseBaseNodeData(data),
+  };
+};
 
 export const getDefaults = (operation: SetFee["operation"]) => {
   switch (operation) {

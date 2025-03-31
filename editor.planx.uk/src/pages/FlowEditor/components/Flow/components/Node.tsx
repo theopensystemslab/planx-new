@@ -178,11 +178,11 @@ const getSetValueText = ({ operation, fn, val }: Store.Node["data"] = {}) => {
 const getSetFeeText = ({ operation, fn, amount }: Store.Node["data"] = {}) => {
   switch (operation) {
     case "calculateVAT":
-      return `Calculate VAT on ${fn}`;
+      return `Apply VAT to ${fn}`;
     case "addServiceCharge":
-      return `Add Plan✕ service charge`;
+      return `Add Plan✕ service charge to application.fee.payable`;
     case "addFastTrackFee":
-      return `Add £${amount} Fast Track fee`;
+      return `Add £${amount} Fast Track fee to application.fee.payable`;
     default:
       return "Set fee";
   }

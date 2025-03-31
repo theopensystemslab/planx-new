@@ -128,7 +128,7 @@ const ExampleText: React.FC<SetFee> = ({ operation }) => {
             response={JSON.stringify({
               passport: {
                 data: {
-                  [PAY_FN]: 180,
+                  [PAY_FN]: 280,
                   [getDefaults(operation).fn]: 150,
                   [`${getDefaults(operation).fn}.VAT`]: 30,
                 },
@@ -154,6 +154,10 @@ function SetFeeComponent(props: Props) {
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
     const target = event.target as HTMLInputElement;
     formik.setFieldValue("operation", target.value);
+
+    // Clear prior fn, amount inputs when switching between operations but do not reset tags, internal notes
+    formik.setFieldValue("fn", undefined);
+    formik.setFieldValue("amount", undefined);
   };
 
   const CalculateVATForm = () => (
