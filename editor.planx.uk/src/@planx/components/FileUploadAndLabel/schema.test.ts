@@ -311,7 +311,7 @@ describe("fileListSchema", () => {
 
     await expect(() =>
       fileListSchema.validate(mockFileList, { context: { slots: mockSlots } }),
-    ).rejects.toThrow(/Please upload and label all required files/);
+    ).rejects.toThrow(/Please upload and label all required information/);
   });
 
   it("allows fileLists where all 'required' fileTypes have slots set", async () => {

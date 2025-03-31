@@ -569,10 +569,7 @@ export = async () => {
         portMappings: [sharedbListenerHttp],
         environment: [
           { name: "PORT", value: String(SHAREDB_PORT) },
-          {
-            name: "JWT_SECRET",
-            value: config.requireSecret("jwt-secret"),
-          },
+          { name: "API_URL_EXT", value: `https://api.${DOMAIN}` },
           {
             name: "PG_URL",
             value: rootDbUrl,

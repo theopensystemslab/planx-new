@@ -171,7 +171,9 @@ describe("Pay component - Editor Modal", () => {
       expect(finalDeleteButton).toBeDefined();
 
       await user.click(finalDeleteButton);
-      expect(getAllByLabelText("Delete")).toHaveLength(3);
+      await waitFor(() => {
+        expect(getAllByLabelText("Delete")).toHaveLength(3);
+      });
 
       // Required to trigger submission outside the context of FormModal component
       fireEvent.submit(getByRole("form"));

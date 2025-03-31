@@ -4,6 +4,7 @@ import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
 import Info from "@mui/icons-material/Info";
+import LayersIcon from "@mui/icons-material/Layers";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import PaletteIcon from "@mui/icons-material/Palette";
@@ -24,15 +25,16 @@ function EditorNavMenu() {
   const { navigate } = useNavigation();
   const { url } = useCurrentRoute();
   const isRouteLoading = useLoadingRoute();
-  const [teamSlug, flowSlug, flowAnalyticsLink, role, flowId] = useStore(
+  const [teamSlug, flowSlug, flowAnalyticsLink, role, team] = useStore(
     (state) => [
       state.teamSlug,
       state.flowSlug,
       state.flowAnalyticsLink,
       state.getUserRoleForCurrentTeam(),
-      state.id,
+      state.getTeam(),
     ],
   );
+  const referenceCode = team?.settings?.referenceCode;
 
   const isActive = (route: string) => url.href.endsWith(route);
 
@@ -123,9 +125,20 @@ function EditorNavMenu() {
       route: `/${teamSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
+    {
+      title: referenceCode
+        ? `Planning Data (external link)`
+        : `Planning Data unavailable`,
+      Icon: LayersIcon,
+      route: referenceCode
+        ? `https://submit.planning.data.gov.uk/organisations/local-authority:${referenceCode}`
+        : `#`,
+      accessibleBy: "*",
+      disabled: !referenceCode,
+    },
   ];
 
-  const flowLayoutRoutesMain: Route[] = [
+  const flowLayoutRoutes: Route[] = [
     {
       title: "Editor",
       Icon: EditorIcon,
@@ -156,30 +169,15 @@ function EditorNavMenu() {
       route: `/${teamSlug}/${flowSlug}/submissions`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
-  ];
-
-  const flowAnalyticsRoute: Route[] = flowAnalyticsLink
-    ? [
-        {
-          title: "Analytics (external link)",
-          Icon: LeaderboardIcon,
-          route: flowAnalyticsLink,
-          accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-        },
-      ]
-    : [
-        {
-          title: "Analytics page unavailable",
-          Icon: LeaderboardIcon,
-          route: "#",
-          accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
-          disabled: true,
-        },
-      ];
-
-  const flowLayoutRoutes: Route[] = [
-    ...flowLayoutRoutesMain,
-    ...flowAnalyticsRoute,
+    {
+      title: flowAnalyticsLink
+        ? `Analytics (external link)`
+        : `Analytics page unavailable`,
+      Icon: LeaderboardIcon,
+      route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      disabled: !flowAnalyticsLink,
+    },
   ];
 
   const defaultRoutes: RoutesForURL = {
@@ -249,7 +247,9 @@ function EditorNavMenu() {
                 onClick={() => handleClick(route, disabled)}
               >
                 <Icon fontSize="small" />
-                <MenuTitle variant="body3">{title}</MenuTitle>
+                <MenuTitle variant="body3" pt={0.15}>
+                  {title}
+                </MenuTitle>
               </MenuButton>
             )}
           </MenuItem>

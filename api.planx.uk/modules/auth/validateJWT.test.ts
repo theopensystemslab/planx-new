@@ -22,7 +22,12 @@ describe("JWT in auth header", async () => {
     await supertest(app)
       .get("/auth/validate-jwt")
       .set(authHeaderJWT)
-      .expect(200);
+      .expect(200)
+      .then((res) => {
+        // Decoded JWT returned
+        expect(res.body).toHaveProperty("sub", "123");
+        expect(res.body).toHaveProperty("email", "test@opensystemslab.io");
+      });
   });
 
   test("revoked JWT", async () => {
@@ -40,7 +45,7 @@ describe("JWT in auth header", async () => {
     await supertest(app)
       .get("/auth/validate-jwt")
       .set({ authorization: "Bearer NOT_A_JWT" })
-      .expect(200);
+      .expect(401);
   });
 });
 
@@ -51,7 +56,12 @@ describe("JWT in cookie", () => {
     await supertest(app)
       .get("/auth/validate-jwt")
       .set("Cookie", `jwt=${jwt}`)
-      .expect(200);
+      .expect(200)
+      .then((res) => {
+        // Decoded JWT returned
+        expect(res.body).toHaveProperty("sub", "123");
+        expect(res.body).toHaveProperty("email", "test@opensystemslab.io");
+      });
   });
 
   test("revoked JWT", async () => {
@@ -69,7 +79,7 @@ describe("JWT in cookie", () => {
     await supertest(app)
       .get("/auth/validate-jwt")
       .set("Cookie", `jwt=NOT_A_JWT`)
-      .expect(200);
+      .expect(401);
   });
 });
 
@@ -77,7 +87,14 @@ describe("JWT in query params", () => {
   test("valid JWT", async () => {
     const jwt = getTestJWT({ role: "teamEditor" });
 
-    await supertest(app).get(`/auth/validate-jwt?token=${jwt}`).expect(200);
+    await supertest(app)
+      .get(`/auth/validate-jwt?token=${jwt}`)
+      .expect(200)
+      .then((res) => {
+        // Decoded JWT returned
+        expect(res.body).toHaveProperty("sub", "123");
+        expect(res.body).toHaveProperty("email", "test@opensystemslab.io");
+      });
   });
 
   test("revoked JWT", async () => {
@@ -89,7 +106,7 @@ describe("JWT in query params", () => {
   });
 
   test("invalid JWT", async () => {
-    await supertest(app).get(`/auth/validate-jwt?token=NOT_A_JWT`).expect(200);
+    await supertest(app).get(`/auth/validate-jwt?token=NOT_A_JWT`).expect(401);
   });
 });
 

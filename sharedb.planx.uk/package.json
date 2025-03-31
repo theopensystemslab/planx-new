@@ -6,7 +6,6 @@
     "@teamwork/websocket-json-stream": "^2.0.0",
     "dompurify": "^3.2.4",
     "jsdom": "^26.0.0",
-    "jsonwebtoken": "^8.5.1",
     "pg": "^8.12.0",
     "sharedb": "^4.1.1",
     "ws": "^8.17.1"
@@ -21,8 +20,6 @@
   },
   "pnpm": {
     "overrides": {
-      "jsonwebtoken@<=8.5.1": ">=9.0.0",
-      "jsonwebtoken@<9.0.0": ">=9.0.0",
       "semver@<7.5.2": ">=7.5.2"
     }
   }
