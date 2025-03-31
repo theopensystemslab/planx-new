@@ -62,9 +62,16 @@ export const UserUpsertModal = ({
     resetForm({ values });
   };
 
+  const formatUser = (user: AddNewEditorFormValues) => ({
+    ...user,
+    email: user.email.toLowerCase(),
+  });
+
   const handleSubmitToAddNewUser = async () => {
+    const newUser = formatUser(formik.values);
+
     const createUserResult = await createAndAddUserToTeam({
-      newUser: formik.values,
+      newUser,
       teamId,
       teamSlug,
     }).catch((err) => {
@@ -81,17 +88,19 @@ export const UserUpsertModal = ({
       return;
     }
     clearErrors();
-    optimisticallyAddNewMember(formik.values, createUserResult.id);
+    optimisticallyAddNewMember(newUser, createUserResult.id);
     setShowModal(false);
     toast.success("Successfully added a user");
   };
+
   const handleSubmitToUpdateUser = async () => {
-    if (!initialValues) {
-      return;
-    }
+    if (!initialValues) return;
+
+    const updatedUser = formatUser(formik.values);
+
     const response = await updateTeamMember(
       initialValues.id,
-      formik.values,
+      updatedUser,
     ).catch((err) => {
       if (isUserAlreadyExistsError(err.message)) {
         setShowUserAlreadyExistsError(true);
@@ -107,7 +116,7 @@ export const UserUpsertModal = ({
     }
 
     clearErrors();
-    optimisticallyUpdateExistingMember(formik.values, initialValues.id);
+    optimisticallyUpdateExistingMember(updatedUser, initialValues.id);
     setShowModal(false);
     toast.success("Successfully updated a user");
   };
