@@ -122,7 +122,7 @@ const Node: React.FC<any> = (props) => {
     case TYPES.Send:
       return <Question {...allProps} text={node?.data?.title ?? "Send"} />;
     case TYPES.SetFee:
-      return <Question {...allProps} text={"Set fee"} />;
+      return <Question {...allProps} text={getSetFeeText(node.data)} />;
     case TYPES.SetValue:
       return <Question {...allProps} text={getSetValueText(node.data)} />;
     case TYPES.TaskList:
@@ -172,6 +172,19 @@ const getSetValueText = ({ operation, fn, val }: Store.Node["data"] = {}) => {
       return `Remove ${fn}`;
     default:
       return `Replace ${fn} with ${val}`;
+  }
+};
+
+const getSetFeeText = ({ operation, fn, amount }: Store.Node["data"] = {}) => {
+  switch (operation) {
+    case "calculateVAT":
+      return `Calculate VAT on ${fn}`;
+    case "addServiceCharge":
+      return `Add Plan✕ service charge`;
+    case "addFastTrackFee":
+      return `Add £${amount} Fast Track fee`;
+    default:
+      return "Set fee";
   }
 };
 
