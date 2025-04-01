@@ -106,6 +106,7 @@ export const EditHistoryTimeline = ({
           <TimelineSeparator>
             <TimelineDot
               sx={{
+                padding: "3px",
                 bgcolor: (theme) =>
                   inUndoScope(i) && isUndoType(op.type)
                     ? theme.palette.grey[300]
