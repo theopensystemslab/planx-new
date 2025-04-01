@@ -66,7 +66,7 @@ function EditorNavMenu() {
       title: "Admin panel",
       Icon: AdminPanelSettingsIcon,
       route: "admin-panel",
-      accessibleBy: ["platformAdmin"],
+      accessibleBy: ["platformAdmin", "analyst"],
     },
     {
       title: "Resources",

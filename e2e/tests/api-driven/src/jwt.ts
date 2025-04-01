@@ -34,6 +34,7 @@ const getAllowedRolesForUser = (user: User): Role[] => {
     ...teamRoles, // User specific roles
   ];
   if (user.isPlatformAdmin) allowedRoles.push("platformAdmin");
+  if (user.isAnalyst) allowedRoles.push("analyst");
 
   return [...new Set(allowedRoles)];
 };
