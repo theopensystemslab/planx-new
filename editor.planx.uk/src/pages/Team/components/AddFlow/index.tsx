@@ -75,7 +75,6 @@ export const AddFlow: React.FC = () => {
         }
       }
 
-      // TODO: Handle more gracefully
       throw error;
     }
   };

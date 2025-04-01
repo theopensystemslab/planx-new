@@ -1,6 +1,5 @@
 import { object, string } from "yup";
 
-// TODO: Validate unique flow name
 export const validationSchema = object().shape({
   mode: string().oneOf(["new", "copy", "template"]).required(),
   flow: object({

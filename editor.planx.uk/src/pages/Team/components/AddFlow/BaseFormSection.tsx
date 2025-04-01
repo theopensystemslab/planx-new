@@ -1,5 +1,6 @@
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
+import { typographyClasses } from "@mui/material/Typography";
 import { useFormikContext } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
@@ -8,6 +9,25 @@ import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 
 import { CREATE_FLOW_MODES, CreateFlow } from "./types";
+
+const URLPrefix: React.FC = () => {
+  const { origin, pathname } = window.location;
+  const urlPrefix = `${origin}${pathname}/`;
+
+  return (
+    <InputAdornment
+      position="start"
+      sx={(theme) => ({
+        mr: 0,
+        [`& .${typographyClasses.root}`]: {
+          color: theme.palette.text.disabled,
+        },
+      })}
+    >
+      {urlPrefix}
+    </InputAdornment>
+  );
+};
 
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
@@ -62,14 +82,7 @@ export const BaseFormSection: React.FC = () => {
           disabled
           id="flow.slug"
           type="text"
-          // TODO: Custom subdomains?
-          // TODO: Font colours
-          // TODO: Correctly format
-          startAdornment={
-            <InputAdornment position="start" sx={{ mr: 0 }}>
-              https://test.com/team/
-            </InputAdornment>
-          }
+          startAdornment={<URLPrefix />}
         />
       </InputLabel>
     </>
