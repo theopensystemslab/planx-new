@@ -94,6 +94,7 @@ const introspectAs = async (role, userId = undefined) => {
     platformAdmin: gqlWithRole("platformAdmin", userId),
     teamEditor: gqlWithRole("teamEditor", userId),
     api: gqlWithRole("api"),
+    analyst: gqlWithRole("analyst"),
   }[role];
   const INTROSPECTION_QUERY = `
     query IntrospectionQuery {
@@ -112,10 +113,10 @@ const introspectAs = async (role, userId = undefined) => {
   const { types } = response.data.__schema;
   const queries = types
     .find((x) => x.name === "query_root")
-    .fields.map((x) => x.name);
+    ?.fields.map((x) => x.name) || []
   const mutations = types
     .find((x) => x.name === "mutation_root")
-    .fields.map((x) => x.name);
+    ?.fields.map((x) => x.name) || []
 
   return {
     types,
