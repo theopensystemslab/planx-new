@@ -1,12 +1,15 @@
+import { User } from "@opensystemslab/planx-core/types";
+
 import { ReadMePageProps } from "../types";
 
-export const platformAdminUser = {
+export const platformAdminUser: User & { jwt: string } = {
   id: 1,
   firstName: "Editor",
   lastName: "Test",
   isPlatformAdmin: true,
   email: "test@test.com",
   teams: [],
+  isAnalyst: false,
   jwt: "x.y.z",
 };
 

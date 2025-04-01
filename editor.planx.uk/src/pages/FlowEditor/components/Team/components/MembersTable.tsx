@@ -58,6 +58,7 @@ export const MembersTable = ({
     teamViewer: "Viewer",
     demoUser: "Demo User",
     public: "Public",
+    analyst: "Analyst",
   };
 
   const editUser = (member: TeamMember) => {

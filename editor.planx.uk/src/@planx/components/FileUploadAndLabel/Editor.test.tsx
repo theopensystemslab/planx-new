@@ -17,6 +17,7 @@ describe("FileUploadAndLabel - Editor Modal", () => {
       firstName: "Editor",
       lastName: "Test",
       isPlatformAdmin: true,
+      isAnalyst: false,
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",

@@ -8,6 +8,7 @@ const { canUserEditTeam } = getState();
 const redUser: User = {
   id: 1,
   isPlatformAdmin: false,
+  isAnalyst: false,
   firstName: "Red",
   lastName: "Reddison",
   email: "red@red-team.com",
@@ -34,6 +35,7 @@ const redUser: User = {
 const blueUser: User = {
   id: 2,
   isPlatformAdmin: false,
+  isAnalyst: false,
   firstName: "Blue",
   lastName: "Bluey",
   email: "blue@blue-team.com",
@@ -52,6 +54,7 @@ const blueUser: User = {
 const readOnlyUser: User = {
   id: 3,
   isPlatformAdmin: false,
+  isAnalyst: false,
   firstName: "Read",
   lastName: "Only",
   email: "readonly@no-team.com",
@@ -61,6 +64,7 @@ const readOnlyUser: User = {
 const adminUser: User = {
   id: 4,
   isPlatformAdmin: true,
+  isAnalyst: false,
   firstName: "Platform",
   lastName: "Admin",
   email: "admin@opensystemslab.io",
