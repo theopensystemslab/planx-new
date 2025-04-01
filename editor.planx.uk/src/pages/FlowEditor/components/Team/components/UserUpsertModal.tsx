@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
@@ -19,7 +20,6 @@ import {
 import { upsertMemberSchema } from "../formSchema";
 import { createAndAddUserToTeam } from "../queries/createAndAddUserToTeam";
 import { updateTeamMember } from "../queries/updateUser";
-import { SettingsDialog } from "../styles";
 import { AddNewEditorFormValues, EditorModalProps } from "../types";
 import {
   optimisticallyAddNewMember,
@@ -134,7 +134,7 @@ export const UserUpsertModal = ({
   });
 
   return (
-    <SettingsDialog
+    <Dialog
       aria-labelledby="dialog-heading"
       data-testid={`dialog-${actionType}-user`}
       open={showModal || false}
@@ -237,6 +237,6 @@ export const UserUpsertModal = ({
           </ErrorWrapper>
         </DialogActions>
       </form>
-    </SettingsDialog>
+    </Dialog>
   );
 };
