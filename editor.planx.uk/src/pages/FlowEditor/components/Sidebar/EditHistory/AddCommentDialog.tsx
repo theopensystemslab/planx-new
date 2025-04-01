@@ -8,6 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
+import { AddButton } from "ui/editor/AddButton";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 
@@ -35,15 +36,11 @@ export const AddCommentDialog = ({
 
   return (
     <Box>
-      <Button
-        variant="contained"
-        color="secondary"
-        fullWidth
-        size="small"
-        onClick={() => setDialogOpen(true)}
-      >
-        Add a comment
-      </Button>
+      <Box ml="-4px">
+        <AddButton onClick={() => setDialogOpen(true)} size="small">
+          Add a comment
+        </AddButton>
+      </Box>
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
