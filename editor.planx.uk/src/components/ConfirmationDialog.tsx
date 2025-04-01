@@ -29,20 +29,7 @@ export const ConfirmationDialog: React.FC<
   const onConfirm = () => onClose(true);
 
   return (
-    <Dialog
-      data-testid="confirmation-dialog"
-      PaperProps={{
-        sx: {
-          width: "100%",
-          maxWidth: (theme) => theme.breakpoints.values.md,
-          borderRadius: 0,
-          background: "#FFF",
-          margin: (theme) => theme.spacing(2),
-        },
-      }}
-      maxWidth="xl"
-      open={open}
-    >
+    <Dialog data-testid="confirmation-dialog" maxWidth="xl" open={open}>
       <DialogTitle variant="h4">{title}</DialogTitle>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions>

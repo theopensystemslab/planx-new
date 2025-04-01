@@ -57,16 +57,6 @@ export const FileTaggingModal = ({
       data-testid="file-tagging-dialog"
       maxWidth="xl"
       aria-labelledby="dialog-heading"
-      PaperProps={{
-        sx: {
-          width: "100%",
-          maxWidth: (theme) => theme.breakpoints.values.md,
-          borderRadius: 0,
-          borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
-          background: "#FFF",
-          margin: (theme) => theme.spacing(2),
-        },
-      }}
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
