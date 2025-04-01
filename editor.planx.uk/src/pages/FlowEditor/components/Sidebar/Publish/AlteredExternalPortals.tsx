@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import BlockQuote from "ui/editor/BlockQuote";
 
 import { useStore } from "../../../lib/store";
 
@@ -74,17 +75,9 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
                   alignItems: "flex-start",
                   pt: 0.5,
                   color: "common.white",
-                  "& > p::before": {
-                    content: '"“"',
-                    fontSize: "1.25em",
-                  },
-                  "& > p::after": {
-                    content: '"”"',
-                    fontSize: "1.25em",
-                  },
                 }}
               >
-                <Typography variant="body2">{summary}</Typography>
+                <BlockQuote>{summary}</BlockQuote>
               </Box>
             )}
           </>

@@ -10,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import BlockQuote from "ui/editor/BlockQuote";
 import Caret from "ui/icons/Caret";
 
 import { HistoryItem } from "../EditHistory";
@@ -32,17 +33,10 @@ const HistoryComment = styled(Box)(({ theme }) => ({
   width: "100%",
   margin: theme.spacing(0.5, 0),
   padding: theme.spacing(1, 1.5),
-  background: theme.palette.grey[400],
+  background: theme.palette.secondary.dark,
   color: theme.palette.text.primary,
   borderRadius: theme.shape.borderRadius,
-  "& > p::before": {
-    content: '"“"',
-    fontSize: "1.25em",
-  },
-  "& > p::after": {
-    content: '"”"',
-    fontSize: "1.25em",
-  },
+  border: `1px solid rgba(0,0,0,0.08)`,
 }));
 
 export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
@@ -144,11 +138,12 @@ export const AlteredNodesSummaryContent = (props: {
                 }
                 secondary={
                   <>
-                    <Typography variant="body2" fontSize="small">
-                      {`Commented ${formatLastEditDate(comment.createdAt)}`}
+                    <Typography variant="body2" fontSize="small" py={0.25}>
+                      <strong>Commented</strong>{" "}
+                      {`${formatLastEditDate(comment.createdAt)}`}
                     </Typography>
                     <HistoryComment>
-                      <Typography variant="body2">{comment.comment}</Typography>
+                      <BlockQuote>{comment.comment}</BlockQuote>
                     </HistoryComment>
                   </>
                 }
@@ -164,7 +159,7 @@ export const AlteredNodesSummaryContent = (props: {
               <ListItemText
                 primary={
                   <Typography variant="body2">
-                    {`${operations.length} edits to your service`}
+                    <strong>{`${operations.length} edits to your service`}</strong>
                   </Typography>
                 }
                 secondary={

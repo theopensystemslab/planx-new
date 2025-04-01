@@ -241,10 +241,8 @@ const Sidebar: React.FC = React.memo(() => {
             </SidebarContainer>
           )}
           {activeTab === "History" && (
-            <SidebarContainer py={3}>
-              <Container>
-                <EditHistory />
-              </Container>
+            <SidebarContainer p={2}>
+              <EditHistory />
             </SidebarContainer>
           )}
           {activeTab === "Search" && (
