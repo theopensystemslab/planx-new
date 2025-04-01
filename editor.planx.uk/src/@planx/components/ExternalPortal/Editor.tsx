@@ -1,8 +1,4 @@
-import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
-import {
-  autocompleteClasses,
-  AutocompleteProps,
-} from "@mui/material/Autocomplete";
+import { autocompleteClasses } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import {
   ComponentType as TYPES,
@@ -16,31 +12,12 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
+import { PopupIcon } from "ui/shared/PopUpIcon";
 import * as Yup from "yup";
 
 import { ICONS } from "../shared/icons";
+import { Flow, FlowAutocompleteListProps } from "./types";
 
-interface Flow {
-  id: string;
-  slug: string;
-  name: string;
-  team: string;
-}
-
-type FlowAutocompleteListProps = AutocompleteProps<
-  Flow,
-  false,
-  false,
-  true,
-  "div"
->;
-
-const PopupIcon = (
-  <ArrowIcon
-    sx={(theme) => ({ color: theme.palette.primary.main })}
-    fontSize="large"
-  />
-);
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
   props,
   option,

@@ -18,7 +18,6 @@ import type {
 import groupBy from "lodash/groupBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ReactNode, useState } from "react";
-import ReactHtmlParser from "react-html-parser";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import Caret from "ui/icons/Caret";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -48,7 +47,13 @@ interface StyledAccordionProps extends BoxProps {
 
 const StyledAccordion = styled(Accordion, {
   shouldForwardProp: (prop) =>
-    !["category", "metadata", "content", "data"].includes(prop as string),
+    ![
+      "category",
+      "metadata",
+      "content",
+      "data",
+      "inaccurateConstraints",
+    ].includes(prop as string),
 })<StyledAccordionProps>(({ theme, category }) => ({
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,
   paddingRight: 0,
@@ -132,7 +137,8 @@ export default function ConstraintsList({
                   inaccurateConstraints={inaccurateConstraints}
                   setInaccurateConstraints={setInaccurateConstraints}
                 >
-                  {metadata?.[con.fn]?.plural || ReactHtmlParser(con.text)}
+                  {metadata?.[con.fn]?.plural ||
+                    ReactMarkdownOrHtml({ source: con.text })}
                 </ConstraintListItem>
               ))}
             </List>
