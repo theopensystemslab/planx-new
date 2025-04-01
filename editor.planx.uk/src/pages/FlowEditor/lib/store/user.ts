@@ -59,6 +59,7 @@ export const userStore: StateCreator<
     if (!user) return;
 
     if (user.isPlatformAdmin) return "platformAdmin";
+    if (user.isAnalyst) return "analyst";
 
     const currentUserTeam = user.teams.find(
       ({ team: { slug } }) => slug === teamSlug,
