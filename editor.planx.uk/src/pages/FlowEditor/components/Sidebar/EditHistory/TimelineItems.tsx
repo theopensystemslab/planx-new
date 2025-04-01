@@ -58,7 +58,7 @@ export const OperationTimelineItem = ({
   return (
     <TimeLineItem sx={{ bgcolor: (theme) => theme.palette.info.light }}>
       <Typography
-        variant="body2"
+        variant="body3"
         component="ul"
         padding={1.5}
         paddingLeft={3}
@@ -82,7 +82,7 @@ export const OperationTimelineItem = ({
           lightFontStyle={true}
         >
           <Typography
-            variant="body2"
+            variant="body3"
             component="ul"
             padding={2}
             paddingLeft={3.5}
