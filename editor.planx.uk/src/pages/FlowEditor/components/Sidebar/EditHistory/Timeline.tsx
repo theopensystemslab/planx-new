@@ -184,7 +184,7 @@ export const EditHistoryTimeline = ({
                     onMouseLeave={() => setFocusedOpIndex(undefined)}
                   >
                     <RestoreOutlined
-                      fontSize="large"
+                      fontSize="medium"
                       color={
                         inUndoScope(i) && isUndoType(op.type)
                           ? "inherit"
