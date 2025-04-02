@@ -2,6 +2,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
 import { typographyClasses } from "@mui/material/Typography";
 import { useFormikContext } from "formik";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
@@ -55,8 +56,11 @@ export const BaseFormSection: React.FC = () => {
             <MenuItem
               key={mode}
               value={mode}
-              // TODO: Enable "copy" and "template" modes
-              disabled={mode !== "new"}
+              // TODO: Enable "copy"
+              disabled={
+                mode === "copy" ||
+                (mode === "template" && !hasFeatureFlag("TEMPLATES"))
+              }
             >
               {title}
             </MenuItem>
