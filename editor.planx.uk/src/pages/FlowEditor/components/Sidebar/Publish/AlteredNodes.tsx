@@ -120,7 +120,7 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box>
-      <Typography variant="h3" gutterBottom pt={1}>
+      <Typography variant="h3" component="h2" gutterBottom pt={1}>
         {`Changes to your service since last publish`}
       </Typography>
       {comments.length > 0 && (

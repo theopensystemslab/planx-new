@@ -29,13 +29,13 @@ interface NoChangesDialogProps {
 }
 
 const DialogFooterActions = styled(DialogActions)(({ theme }) => ({
-  position: "absolute",
+  position: "sticky",
   bottom: 0,
   left: 0,
   width: "100%",
-  padding: theme.spacing(2),
+  padding: theme.spacing(2, 3),
   background: theme.palette.background.paper,
-  borderTop: `1px solid ${theme.palette.border.light}`,
+  borderTop: `1px solid ${theme.palette.border.main}`,
   justifyContent: "space-between",
 }));
 
@@ -50,13 +50,13 @@ export const NoChangesDialog = ({
     aria-describedby="alert-dialog-description"
     maxWidth="md"
   >
-    <DialogTitle variant="h3" component="h1">
+    <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
       {`Check for changes to publish`}
     </DialogTitle>
-    <DialogContent>
+    <DialogContent sx={{ p: 3 }}>
       <Typography variant="body2">{`No new changes to publish`}</Typography>
     </DialogContent>
-    <DialogActions sx={{ paddingX: 2 }}>
+    <DialogActions>
       <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
       <Button color="primary" variant="contained" disabled={true}>
         Publish
@@ -110,10 +110,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
 
     return (
       <>
-        <DialogTitle variant="h3" component="h1">
+        <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
           {`Review`}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ p: 3 }}>
           <>
             <ErrorWrapper
               error={showError ? `Fix errors before continuing` : ``}
@@ -127,7 +127,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             />
           </>
         </DialogContent>
-        <DialogFooterActions sx={{ paddingX: 2 }}>
+        <DialogFooterActions>
           <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
           <Button
             color="primary"
@@ -147,10 +147,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
 
     return (
       <>
-        <DialogTitle variant="h3" component="h1">
+        <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
           {`Test`}
         </DialogTitle>
-        <DialogContent sx={{ display: "flex", flexDirection: "column" }}>
+        <DialogContent sx={{ display: "flex", flexDirection: "column", p: 3 }}>
           <Typography variant="h4" component="h2" mb={1}>
             {`Your preview link`}
             <CopyButton link={previewURL} isActive={true} />
@@ -214,10 +214,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   const PublishStep = () => {
     return (
       <>
-        <DialogTitle variant="h3" component="h1">
+        <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
           {`Publish`}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ p: 3 }}>
           <InputLabel label="Summarise your changes" htmlFor="summary">
             <Input
               id="summary"
@@ -268,17 +268,22 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         activeStep={activeStep}
         sx={{
           padding: 2,
+          px: 3,
           backgroundColor: (theme) => theme.palette.background.default,
           borderBottom: `1px solid`,
-          borderColor: (theme) => theme.palette.border.light,
+          borderColor: (theme) => theme.palette.border.main,
         }}
       >
         {steps.map((label) => (
           <Step key={label}>
             <StepLabel
               sx={(theme) => ({
+                fontWeight: "bold",
                 "& .MuiStepIcon-root.Mui-completed": {
                   color: theme.palette.success.main,
+                },
+                "& .MuiStepIcon-root.Mui-active": {
+                  color: theme.palette.info.main,
                 },
               })}
             >
@@ -287,7 +292,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </Step>
         ))}
       </Stepper>
-      <Box padding={1} paddingBottom={8} sx={{ overflowY: "scroll" }}>
+      <Box sx={{ overflowY: "scroll" }}>
         {
           {
             0: <ReviewStep />,
