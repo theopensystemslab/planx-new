@@ -39,7 +39,6 @@ export const CheckForChangesToPublishButton: React.FC<{
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [history, setHistory] = useState<HistoryItem[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [summary, setSummary] = useState<string>("");
 
   const handleCheckForChangesToPublish = async () => {
     try {
@@ -70,7 +69,7 @@ export const CheckForChangesToPublishButton: React.FC<{
     }
   };
 
-  const handlePublish = async () => {
+  const handlePublish = async (summary: string) => {
     try {
       setDialogOpen(false);
       setLastPublishedTitle("Publishing changes...");
@@ -121,8 +120,6 @@ export const CheckForChangesToPublishButton: React.FC<{
             lastPublishedTitle={lastPublishedTitle}
             validationChecks={validationChecks}
             previewURL={previewURL}
-            summary={summary}
-            setSummary={setSummary}
             handlePublish={handlePublish}
           />
         )}

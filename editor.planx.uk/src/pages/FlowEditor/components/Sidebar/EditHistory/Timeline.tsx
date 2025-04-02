@@ -213,7 +213,7 @@ export const EditHistoryTimeline = ({
                     inUndoScope={inUndoScope}
                   />
                 ),
-                publish: (
+                publish: op.comment && (
                   <PublishTimelineItem event={op as PublishHistoryItem} />
                 ),
               }[op.type]

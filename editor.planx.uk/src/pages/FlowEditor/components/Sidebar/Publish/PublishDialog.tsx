@@ -73,9 +73,7 @@ interface ChangesDialogProps {
   lastPublishedTitle: string;
   validationChecks: ValidationCheck[];
   previewURL: string;
-  summary: string;
-  setSummary: React.Dispatch<React.SetStateAction<string>>;
-  handlePublish: () => Promise<void>;
+  handlePublish: (summary: string) => Promise<void>;
 }
 
 export const ChangesDialog = (props: ChangesDialogProps) => {
@@ -87,8 +85,6 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     lastPublishedTitle,
     validationChecks,
     previewURL,
-    summary,
-    setSummary,
     handlePublish,
   } = props;
 
@@ -212,24 +208,56 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
   };
 
   const PublishStep = () => {
+    const [summary, setSummary] = useState<string>("");
+    const [showError, setShowError] = useState<boolean>(false);
+
+    const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.value.length) {
+        setShowError(false);
+      }
+      setSummary(e.target.value);
+    };
+
+    const validateAndPublish = () => {
+      const invalidInput = !summary || summary.trim().length === 0;
+
+      if (invalidInput) {
+        setShowError(true);
+      } else {
+        handlePublish(summary);
+        setActiveStep(0);
+        setSummary("");
+      }
+    };
+
     return (
       <>
         <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
           {`Publish`}
         </DialogTitle>
         <DialogContent sx={{ p: 3 }}>
+          <Typography variant="body2" mb={2}>
+            {`This is the final step to publish your content. Summary messages help other editors on your team understand what is changing and appear in "History."`}
+          </Typography>
           <InputLabel label="Summarise your changes" htmlFor="summary">
-            <Input
-              id="summary"
-              bordered
-              required
-              type="text"
-              name="summary"
-              value={summary}
-              multiline
-              rows={2}
-              onChange={(e) => setSummary(e.target.value)}
-            />
+            <ErrorWrapper
+              error={
+                showError ? "Provide a summary before publishing" : undefined
+              }
+              id="input-error-publishing-summary"
+            >
+              <Input
+                id="summary"
+                bordered
+                required
+                type="text"
+                name="summary"
+                value={summary}
+                multiline
+                rows={2}
+                onChange={(e) => changeInput(e)}
+              />
+            </ErrorWrapper>
           </InputLabel>
         </DialogContent>
         <DialogFooterActions>
@@ -237,10 +265,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => {
-              handlePublish();
-              setActiveStep(0);
-            }}
+            onClick={validateAndPublish}
           >
             Publish
           </Button>

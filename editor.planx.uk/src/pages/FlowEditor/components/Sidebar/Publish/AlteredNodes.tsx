@@ -159,7 +159,11 @@ export const AlteredNodesSummaryContent = (props: {
               <ListItemText
                 primary={
                   <Typography variant="body2">
-                    <strong>{`${operations.length} edits to your service`}</strong>
+                    <strong>{`${
+                      operations.length === 1
+                        ? "1 edit"
+                        : `${operations.length} edits`
+                    } since last publish`}</strong>
                   </Typography>
                 }
                 secondary={
@@ -202,31 +206,29 @@ export const AlteredNodesSummaryContent = (props: {
               border: `1px solid ${theme.palette.border.light}`,
             })}
           >
-            {(changeSummary.updated > 0 || changeSummary.deleted > 0) && (
-              <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
-                <ListItem
-                  key={"updated"}
-                  disablePadding
-                  sx={{ display: "list-item" }}
-                >
-                  <Typography variant="body2" fontWeight="bold">
-                    {`${changeSummary.updated} nodes have been updated or added`}
-                  </Typography>
-                </ListItem>
-                <ListItem
-                  key={"deleted"}
-                  disablePadding
-                  sx={{ display: "list-item" }}
-                >
-                  <Typography variant="body2" fontWeight="bold">
-                    {`${changeSummary.deleted} nodes have been deleted`}
-                  </Typography>
-                </ListItem>
-                {alteredNodes.map((node) => (
-                  <AlteredNodeListItem key={node.id} node={node} />
-                ))}
-              </List>
-            )}
+            <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+              <ListItem
+                key={"updated"}
+                disablePadding
+                sx={{ display: "list-item" }}
+              >
+                <Typography variant="body2" fontWeight="bold">
+                  {`${changeSummary.updated} nodes have been updated or added`}
+                </Typography>
+              </ListItem>
+              <ListItem
+                key={"deleted"}
+                disablePadding
+                sx={{ display: "list-item" }}
+              >
+                <Typography variant="body2" fontWeight="bold">
+                  {`${changeSummary.deleted} nodes have been deleted`}
+                </Typography>
+              </ListItem>
+              {alteredNodes.map((node) => (
+                <AlteredNodeListItem key={node.id} node={node} />
+              ))}
+            </List>
           </AccordionDetails>
         </PublishModalAccordion>
       )}

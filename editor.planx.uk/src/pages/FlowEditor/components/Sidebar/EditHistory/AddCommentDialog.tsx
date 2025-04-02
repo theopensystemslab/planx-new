@@ -10,6 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { AddButton } from "ui/editor/AddButton";
 import InputLabel from "ui/public/InputLabel";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 interface AddCommentDialogProps {
@@ -22,13 +23,20 @@ export const AddCommentDialog = ({
   actorId,
 }: AddCommentDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
 
   const formik = useFormik<{ comment: string }>({
     initialValues: { comment: "" },
     onSubmit: async (values, { resetForm }) => {
-      await useStore.getState().addFlowComment(flowId, actorId, values.comment);
-      setDialogOpen(false);
-      resetForm();
+      if (!values.comment) {
+        setShowError(true);
+      } else {
+        await useStore
+          .getState()
+          .addFlowComment(flowId, actorId, values.comment);
+        setDialogOpen(false);
+        resetForm();
+      }
     },
     validateOnBlur: false,
     validateOnChange: false,
@@ -55,15 +63,20 @@ export const AddCommentDialog = ({
           {`History reflects the individual edits to your flow. Insert a custom comment into the timeline to add context. This will help other editors understand what's changed on next publish.`}
           <Box mt={2} component="form" onSubmit={formik.handleSubmit}>
             <InputLabel label="Comment">
-              <Input
-                required={true}
-                name="comment"
-                value={formik.values.comment}
-                onChange={formik.handleChange}
-                bordered
-                multiline={true}
-                rows={3}
-              />
+              <ErrorWrapper
+                error={showError ? "Enter a comment" : undefined}
+                id="add-comment-input-error"
+              >
+                <Input
+                  required
+                  name="comment"
+                  value={formik.values.comment}
+                  onChange={formik.handleChange}
+                  bordered
+                  multiline
+                  rows={3}
+                />
+              </ErrorWrapper>
             </InputLabel>
           </Box>
         </DialogContent>
