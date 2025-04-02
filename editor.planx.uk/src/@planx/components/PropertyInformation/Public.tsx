@@ -38,6 +38,9 @@ function Component(props: PublicProps<PropertyInformation>) {
     <Presentational
       title={props.title}
       description={props.description}
+      info={props.info}
+      policyRef={props.policyRef}
+      howMeasured={props.howMeasured}
       showPropertyTypeOverride={props.showPropertyTypeOverride}
       address={passport.data?._address}
       propertyType={passport.data?.["property.type"]}
@@ -69,6 +72,9 @@ function Component(props: PublicProps<PropertyInformation>) {
 export interface PresentationalProps {
   title: string;
   description: string;
+  info?: string;
+  policyRef?: string;
+  howMeasured?: string;
   showPropertyTypeOverride?: boolean;
   address?: SiteAddress;
   propertyType?: string[];
@@ -84,6 +90,9 @@ export function Presentational(props: PresentationalProps) {
   const {
     title,
     description,
+    info,
+    policyRef,
+    howMeasured,
     showPropertyTypeOverride,
     address,
     propertyType,
@@ -124,7 +133,13 @@ export function Presentational(props: PresentationalProps) {
 
   return (
     <Card handleSubmit={handleSubmit}>
-      <CardHeader title={title} description={description} />
+      <CardHeader
+        title={title}
+        description={description}
+        info={info}
+        policyRef={policyRef}
+        howMeasured={howMeasured}
+      />
       <MapContainer environment={environment}>
         <p style={visuallyHidden}>
           A static map centred on the property address, showing the title

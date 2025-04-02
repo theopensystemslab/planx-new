@@ -83,6 +83,7 @@ describe("Header Component - Editor Route", () => {
           firstName: "Test",
           lastName: "User",
           isPlatformAdmin: false,
+          isAnalyst: false,
           teams: [],
           id: 123,
           email: "test@example.com",

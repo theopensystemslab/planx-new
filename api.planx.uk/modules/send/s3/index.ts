@@ -41,6 +41,15 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
       });
     }
 
+    // Confirm that this session has not already been successfully submitted before proceeding
+    const lastSubmittedAppStatus = await checkS3AuditTable(sessionId);
+    if (lastSubmittedAppStatus === 202) {
+      return next({
+        status: 200,
+        message: `Skipping send, already successfully submitted`,
+      });
+    }
+
     const session = await $api.session.find(sessionId);
     const passport = session?.data?.passport as Passport;
     const flowName = session?.flow?.name;
@@ -137,5 +146,37 @@ const sendToS3: SendIntegrationController = async (_req, res, next) => {
     );
   }
 };
+
+interface FindApplication {
+  s3Applications: {
+    status: number;
+  }[];
+}
+
+/**
+ * Query the S3 audit table to see if we already have an application for this session
+ */
+async function checkS3AuditTable(sessionId: string): Promise<number> {
+  const application = await $api.client.request<FindApplication>(
+    gql`
+      query FindApplication($session_id: String = "") {
+        s3Applications: s3_applications(
+          where: {
+            session_id: { _eq: $session_id }
+            webhook_response: { _has_key: "status" }
+          }
+          order_by: { created_at: desc }
+        ) {
+          status: webhook_response(path: "status")
+        }
+      }
+    `,
+    {
+      session_id: sessionId,
+    },
+  );
+
+  return application?.s3Applications[0]?.status;
+}
 
 export { sendToS3 };

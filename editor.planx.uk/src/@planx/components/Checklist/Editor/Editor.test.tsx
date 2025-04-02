@@ -17,6 +17,7 @@ describe("Checklist editor component", () => {
       firstName: "Editor",
       lastName: "Test",
       isPlatformAdmin: true,
+      isAnalyst: true,
       email: "test@test.com",
       teams: [],
       jwt: "x.y.z",

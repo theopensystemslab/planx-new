@@ -1,3 +1,4 @@
+import { User } from "@opensystemslab/planx-core/types";
 import ChecklistComponent from "@planx/components/Checklist/Editor/Editor";
 import { within } from "@testing-library/react";
 import { TAG_DISPLAY_VALUES } from "pages/FlowEditor/components/Flow/components/Tag";
@@ -11,12 +12,13 @@ import { it } from "vitest";
 
 const { setState } = useStore;
 
-const mockUser = {
+const mockUser: Omit<User, "isPlatformAdmin"> = {
   id: 200,
   firstName: "Testy",
   lastName: "McTester",
   email: "test@email.com",
   teams: [],
+  isAnalyst: false,
 };
 
 describe("Checklist Component for a Platform Admin", () => {
