@@ -110,6 +110,17 @@ describe(`sending an application by email to a planning office`, () => {
         },
       },
     });
+
+    queryMock.mockQuery({
+      name: "FindApplication",
+      matchOnVariables: false,
+      data: {
+        emailApplications: [],
+      },
+      variables: {
+        session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+      },
+    });
   });
 
   it("succeeds when provided with valid data", async () => {
@@ -175,6 +186,34 @@ describe(`sending an application by email to a planning office`, () => {
           error:
             "Send to email is not enabled for this local authority (other-council)",
         });
+      });
+  });
+
+  it("exits early if the session has already been successfully submitted via email", async () => {
+    queryMock.mockQuery({
+      name: "FindApplication",
+      matchOnVariables: false,
+      data: {
+        emailApplications: [
+          {
+            response: "Success",
+          },
+        ],
+      },
+      variables: {
+        session_id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
+      },
+    });
+
+    await supertest(app)
+      .post("/email-submission/southwark")
+      .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+      .send({ payload: { sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" } })
+      .expect(200)
+      .then((res) => {
+        expect(res.body.error).toMatch(
+          /Skipping send, already successfully submitted/,
+        );
       });
   });
 

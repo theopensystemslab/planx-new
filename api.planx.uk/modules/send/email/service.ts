@@ -141,3 +141,35 @@ export async function insertAuditEntry(
 
   return response?.application?.id;
 }
+
+interface FindApplication {
+  emailApplications: {
+    response: string;
+  }[];
+}
+
+/**
+ * Query the emails audit table to see if we already have an application for this session
+ */
+export async function checkEmailAuditTable(sessionId: string): Promise<string> {
+  const application = await $api.client.request<FindApplication>(
+    gql`
+      query FindApplication($session_id: String = "") {
+        emailApplications: email_applications(
+          where: {
+            session_id: { _eq: $session_id }
+            response: { _has_key: "message" }
+          }
+          order_by: { created_at: desc }
+        ) {
+          response: response(path: "message")
+        }
+      }
+    `,
+    {
+      session_id: sessionId,
+    },
+  );
+
+  return application?.emailApplications[0]?.response;
+}
