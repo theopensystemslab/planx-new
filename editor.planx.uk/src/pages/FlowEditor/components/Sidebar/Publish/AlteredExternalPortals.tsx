@@ -42,7 +42,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
         backgroundColor: "border.input",
         color: "common.white",
         px: 1.5,
-        py: 1,
+        py: 0.7,
         margin: 0,
         mb: 1,
       }}
@@ -93,7 +93,7 @@ export const AlteredExternalPortalsSummary = (props: {
   const { portals } = props;
 
   return (
-    <Box py={2}>
+    <Box py={1}>
       <Typography variant="h4" component="h3" gutterBottom>
         {`Nested services`}
       </Typography>

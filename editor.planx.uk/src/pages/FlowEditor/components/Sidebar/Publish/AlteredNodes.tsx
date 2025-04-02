@@ -120,7 +120,7 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box>
-      <Typography variant="h3" component="h3" gutterBottom pt={1}>
+      <Typography variant="h3" gutterBottom pt={1}>
         {`Changes to your service since last publish`}
       </Typography>
       {comments.length > 0 && (
@@ -130,7 +130,7 @@ export const AlteredNodesSummaryContent = (props: {
               <ListItemText
                 primary={
                   <Typography
-                    variant="body1"
+                    variant="body2"
                     sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
                   >
                     {comment.firstName} {comment.lastName}

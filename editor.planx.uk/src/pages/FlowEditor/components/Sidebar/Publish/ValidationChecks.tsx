@@ -180,7 +180,6 @@ const ValidationSummary = (props: { validationChecks: ValidationCheck[] }) => {
         variant="body1"
         component="div"
         sx={{ display: "flex", flexDirection: "column" }}
-        gutterBottom
       >
         {atLeastOneFail ? `Fix errors before testing` : `Ready to test`}
         <Typography variant="caption">{formattedSummary}</Typography>
