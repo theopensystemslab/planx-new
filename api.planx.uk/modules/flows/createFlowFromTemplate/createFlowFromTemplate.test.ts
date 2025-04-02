@@ -4,6 +4,7 @@ import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import { authHeader } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import type { Flow } from "../../../types.js";
+import type { NewFlow } from "./controller.js";
 
 const mockSourceTemplateFlowData: Flow["data"] = {
   _root: {
@@ -17,8 +18,10 @@ const mockSourceTemplateFlowData: Flow["data"] = {
   },
 };
 
-const validBody = {
+const validBody: NewFlow = {
   teamId: 1,
+  slug: "my-new-flow",
+  name: "My New Flow",
 };
 
 const invalidBody = {};
@@ -123,9 +126,9 @@ describe("success", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          message: "Successfully created flow from template undefined-template",
+          message: "Successfully created flow from template id 1",
           id: "2",
-          slug: "undefined-template",
+          slug: "my-new-flow",
         });
       });
   });
