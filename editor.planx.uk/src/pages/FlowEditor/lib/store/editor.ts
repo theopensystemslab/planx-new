@@ -168,6 +168,7 @@ export interface EditorStore extends Store.Store {
   copyNode: (id: NodeId) => void;
   createFlow: (newFlow: NewFlow) => Promise<string>;
   createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
+  createFlowFromCopy: (newFlow: NewFlow) => Promise<string>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
@@ -375,6 +376,26 @@ export const editorStore: StateCreator<
     );
 
     set({ isTemplatedFrom: true });
+
+    return response.data.id;
+  },
+
+  createFlowFromCopy: async ({ name, slug, sourceId, teamId }) => {
+    const token = get().jwt;
+
+    const response = await axios.post<{ id: string }>(
+      `${import.meta.env.VITE_APP_API_URL}/flows/${sourceId}/copy/`,
+      {
+        teamId,
+        name,
+        slug,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     return response.data.id;
   },
