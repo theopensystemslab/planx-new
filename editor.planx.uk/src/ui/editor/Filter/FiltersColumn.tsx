@@ -1,37 +1,74 @@
 import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import { visuallyHidden } from "@mui/utils";
 import { capitalize, get } from "lodash";
 import React from "react";
-import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
+import SelectInput from "../SelectInput/SelectInput";
 import Filters, { FilterKey, FilterValues } from "./Filter";
+import { StyledChip } from "./FilterStyles";
 
 interface FiltersColumnProps<T> {
   title: string;
   optionKey: FilterKey<T>;
   optionValues: FilterValues[];
   filters?: Filters<T> | null;
-  handleChange: (key: FilterKey<T>, value: FilterValues) => void;
+  handleChange: (key: FilterKey<T>, value: FilterValues | "") => void;
 }
 
 export const FiltersColumn = <T extends object>(
   props: FiltersColumnProps<T>,
 ) => {
+  const selectedValue = get(props.filters, props.optionKey) || "";
+
   return (
     <Box>
-      <Typography component={"legend"} variant="h5" pb={0.5}>
+      <Typography
+        component={"legend"}
+        variant="h5"
+        pb={0.5}
+        style={visuallyHidden}
+      >
         {props.title}
       </Typography>
-      {props.optionValues.map((value) => (
-        <ChecklistItem
-          key={`${props.optionKey.toString()}-${value}-checkbox`}
-          onChange={() => props.handleChange(props.optionKey, value)}
-          label={capitalize(`${value}`)}
-          id={`${props.optionKey.toString()}-${value}-checkbox`}
-          checked={get(props.filters, props.optionKey) === value}
-          variant="compact"
+      {selectedValue ? (
+        <StyledChip
+          label={capitalize(`${selectedValue}`)}
+          onDelete={() => props.handleChange(props.optionKey, "")}
+          sx={{
+            width: "100%",
+            height: 40,
+            display: "flex",
+            alignItems: "center",
+          }}
         />
-      ))}
+      ) : (
+        <SelectInput
+          value={selectedValue}
+          onChange={(event) =>
+            props.handleChange(
+              props.optionKey,
+              event.target.value as FilterValues,
+            )
+          }
+          fullWidth
+          displayEmpty
+          sx={{ height: 40, maxWidth: "200px" }}
+        >
+          <MenuItem value="" disabled>
+            {props.title}
+          </MenuItem>
+          {props.optionValues.map((value) => (
+            <MenuItem
+              key={`${props.optionKey.toString()}-${value}`}
+              value={value}
+            >
+              {capitalize(`${value}`)}
+            </MenuItem>
+          ))}
+        </SelectInput>
+      )}
     </Box>
   );
 };
