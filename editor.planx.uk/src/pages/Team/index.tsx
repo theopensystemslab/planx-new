@@ -110,24 +110,9 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const { data: templates } = useQuery<{ flows: TemplateOption[] }>(gql`
-    query GetTemplates {
-      flows(where: { is_template: { _eq: true } }) {
-        id
-        slug
-        name
-      }
-    }
-  `);
-
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
   const flowsHaveBeenFiltered = matchingFlows?.length !== flows?.length;
-  const showAddTemplateButton =
-    showAddFlowButton &&
-    templates &&
-    Boolean(templates?.flows.length) &&
-    hasFeatureFlag("TEMPLATES");
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
@@ -166,17 +151,6 @@ const Team: React.FC = () => {
         </Box>
         {teamHasFlows && (
           <>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              {showAddTemplateButton && (
-                <StartFromTemplateButton templates={templates?.flows} />
-              )}
-            </Box>
             <Box>
               <Filters<FlowSummary>
                 records={flows}
