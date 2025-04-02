@@ -15,6 +15,7 @@ type SortDirection = "asc" | "desc";
 
 const StyledSelectInput = styled(SelectInput)(() => ({
   minWidth: "170px",
+  height: "40px",
 }));
 
 export interface SortableFields<T> {

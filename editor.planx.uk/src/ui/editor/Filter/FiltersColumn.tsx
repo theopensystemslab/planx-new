@@ -36,12 +36,6 @@ export const FiltersColumn = <T extends object>(
         <StyledChip
           label={capitalize(`${selectedValue}`)}
           onDelete={() => props.handleChange(props.optionKey, "")}
-          sx={{
-            width: "100%",
-            height: 40,
-            display: "flex",
-            alignItems: "center",
-          }}
         />
       ) : (
         <SelectInput
