@@ -163,16 +163,20 @@ export const Filters = <T extends object>({
   };
 
   return (
-    <form name="filters" aria-label="Filter options">
-      <FiltersContent>
-        <Typography variant="body2">
+    <FiltersContent>
+      <form
+        name="filters"
+        aria-label="Filter options"
+        style={{ display: "flex", alignItems: "center", gap: "10px" }}
+      >
+        <Typography variant="body2" sx={{ flexShrink: 0 }}>
           <strong>Filter by</strong>
         </Typography>
         {optionsToFilter.map((option) => (
           <fieldset
             key={option.displayName}
             aria-describedby={`${option.displayName}-description`}
-            style={{ flexBasis: "160px" }}
+            style={{ flexBasis: "160px", flexShrink: 0 }}
           >
             <div
               key={`${option.displayName}-description`}
@@ -193,8 +197,8 @@ export const Filters = <T extends object>({
             />
           </fieldset>
         ))}
-      </FiltersContent>
-    </form>
+      </form>
+    </FiltersContent>
   );
 };
 
