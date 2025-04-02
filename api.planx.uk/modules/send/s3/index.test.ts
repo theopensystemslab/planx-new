@@ -55,6 +55,17 @@ describe("uploading an application to S3", () => {
         insertS3Application: { id: 1 },
       },
     });
+
+    queryMock.mockQuery({
+      name: "FindApplication",
+      matchOnVariables: false,
+      data: {
+        s3Applications: [],
+      },
+      variables: {
+        session_id: sessionId,
+      },
+    });
   });
 
   describe("request validation", () => {
@@ -113,6 +124,41 @@ describe("uploading an application to S3", () => {
         .then((res) => {
           expect(res.body.error).toMatch(
             /Upload to S3 is not enabled for this local authority/,
+          );
+        });
+    });
+
+    it("throws an error if this session was already submitted", async () => {
+      $api.team.getIntegrations = vi.fn().mockResolvedValueOnce({
+        powerAutomateWebhookURL: mockPowerAutomateWebhookURL,
+        powerAutomateAPIKey: mockPowerAutomateAPIKey,
+      });
+
+      queryMock.mockQuery({
+        name: "FindApplication",
+        matchOnVariables: false,
+        data: {
+          s3Applications: [
+            {
+              status: 202,
+            },
+          ],
+        },
+        variables: {
+          session_id: sessionId,
+        },
+      });
+
+      await supertest(app)
+        .post("/upload-submission/barnet")
+        .set({ Authorization: process.env.HASURA_PLANX_API_KEY! })
+        .send({
+          payload: { sessionId },
+        })
+        .expect(200)
+        .then((res) => {
+          expect(res.body.error).toMatch(
+            /Skipping send, already successfully submitted/,
           );
         });
     });
