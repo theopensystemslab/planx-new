@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.701.0
     version: 3.701.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#9320ee8
-    version: github.com/theopensystemslab/planx-core/9320ee8(@types/react@19.0.10)
+    specifier: git+https://github.com/theopensystemslab/planx-core#02df0dd
+    version: github.com/theopensystemslab/planx-core/02df0dd(@types/react@19.0.10)
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -1891,7 +1891,6 @@ packages:
   /@mui/base@5.0.0-beta.60(@types/react@19.0.10)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-w8twR3qCUI+uJHO5xDOuc1yB5l46KFbvNsTwIvEW9tQkKxVaiEFf2GAXHuvFJiHfZLqjzett6drZjghy8D1Z1A==}
     engines: {node: '>=14.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
       react: ^17.0.0 || ^18.0.0
@@ -7598,9 +7597,9 @@ packages:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/9320ee8(@types/react@19.0.10):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9320ee8}
-    id: github.com/theopensystemslab/planx-core/9320ee8
+  github.com/theopensystemslab/planx-core/02df0dd(@types/react@19.0.10):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/02df0dd}
+    id: github.com/theopensystemslab/planx-core/02df0dd
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true

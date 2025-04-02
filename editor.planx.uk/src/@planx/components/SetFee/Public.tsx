@@ -12,34 +12,29 @@ export default function Component(props: Props) {
   const passport = useStore().computePassport();
 
   const makePassportData = (props: Props): Passport["data"] | undefined => {
-    const { operation, fn, amount } = props;
+    const { operation, fn } = props;
+    const amount = Number(props.amount);
+
+    const VAT_MULTIPLIER = 1.2;
+    const fnPlusVAT = passport.data?.[fn] * VAT_MULTIPLIER;
+    const amountPlusVAT = amount * VAT_MULTIPLIER;
 
     switch (operation) {
       case "calculateVAT":
         if (passport.data?.[fn]) {
           return {
-            [fn]: passport.data[fn] * 1.2,
-            [`${fn}.VAT`]: passport.data[fn] * 1.2 - passport.data[fn],
+            [fn]: fnPlusVAT,
+            [`${fn}.VAT`]: fnPlusVAT - passport.data[fn],
           };
         } else {
-          return undefined;
+          return undefined; // TODO throw error - can't calculate VAT on undefined ??
         }
       default: // "addServiceCharge" & "addFastTrackFee" work the same mathematically
-        if (amount && passport.data?.[PAY_FN]) {
-          return {
-            [PAY_FN]: passport.data[PAY_FN] + amount * 1.2,
-            [fn]: amount,
-            [`${fn}.VAT`]: amount * 1.2 - amount,
-          };
-        } else if (amount) {
-          return {
-            [PAY_FN]: 0 + amount * 1.2,
-            [fn]: amount,
-            [`${fn}.VAT`]: amount * 1.2 - amount,
-          };
-        } else {
-          return undefined;
-        }
+        return {
+          [PAY_FN]: (passport.data?.[PAY_FN] || 0) + amountPlusVAT,
+          [fn]: amount,
+          [`${fn}.VAT`]: amountPlusVAT - amount,
+        };
     }
   };
 
@@ -48,7 +43,7 @@ export default function Component(props: Props) {
       data: makePassportData(props),
       auto: true,
     });
-  }, []);
+  });
 
   return null;
 }
