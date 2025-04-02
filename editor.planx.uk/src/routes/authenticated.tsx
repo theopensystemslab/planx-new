@@ -75,7 +75,11 @@ const editorRoutes = compose(
     }),
 
     "/admin-panel": map(async (req) => {
-      const isAuthorised = useStore.getState().user?.isPlatformAdmin;
+      const user = useStore.getState().user;
+      if (!user) throw new NotFoundError();
+
+      const { isPlatformAdmin, isAnalyst } = user;
+      const isAuthorised = isPlatformAdmin || isAnalyst;
       if (!isAuthorised)
         throw new NotFoundError(
           `User does not have access to ${req.originalUrl}`,
@@ -108,6 +112,11 @@ const editorRoutes = compose(
               }
             }
           `,
+          context: {
+            headers: {
+              "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst"
+            }
+          }
         });
         useStore.getState().setAdminPanelData(data.adminPanel);
 

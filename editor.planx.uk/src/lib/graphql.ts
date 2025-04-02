@@ -46,11 +46,12 @@ const httpLink = createHttpLink({
  * Set auth header in Apollo client
  * Must be done post-authentication once we have a value for JWT
  */
-export const authMiddleware = setContext(async () => {
+export const authMiddleware = setContext(async (_operation, { headers }) => {
   const jwt = await getJWT();
 
   return {
     headers: {
+      ...headers,
       authorization: jwt ? `Bearer ${jwt}` : undefined,
     },
   };

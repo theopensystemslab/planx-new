@@ -49,6 +49,7 @@ Given(
       lastName: featureData[0].last_name,
       email: featureData[0].email,
       isPlatformAdmin: false,
+      isAnalyst: false,
     });
 
     const userTwoId = await createUser({
@@ -57,6 +58,7 @@ Given(
       lastName: featureData[1].last_name,
       email: featureData[1].email,
       isPlatformAdmin: true,
+      isAnalyst: false,
     });
 
     const userOne = await $admin.user.getById(userOneId);

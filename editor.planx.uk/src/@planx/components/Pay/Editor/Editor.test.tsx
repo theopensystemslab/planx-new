@@ -39,6 +39,7 @@ describe("Pay component - Editor Modal", () => {
       id: 123,
       email: "b.baggins@shire.com",
       isPlatformAdmin: true,
+      isAnalyst: true,
       firstName: "Bilbo",
       lastName: "Baggins",
       teams: [],

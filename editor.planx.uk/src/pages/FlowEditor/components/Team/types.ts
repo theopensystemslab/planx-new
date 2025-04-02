@@ -3,7 +3,10 @@ import React, { SetStateAction } from "react";
 
 export type TeamMember = ActiveTeamMember | ArchivedTeamMember;
 
-type ArchivedTeamMember = Omit<User, "teams" | "isPlatformAdmin" | "email"> & {
+type ArchivedTeamMember = Omit<
+  User,
+  "teams" | "isPlatformAdmin" | "email" | "isAnalyst"
+> & {
   role: Role;
   email: string | null;
 };
@@ -11,16 +14,19 @@ type ArchivedTeamMember = Omit<User, "teams" | "isPlatformAdmin" | "email"> & {
 type ActiveTeamMember = Omit<User, "teams" | "isPlatformAdmin"> & {
   role: Role;
 };
+
 export interface MembersTableProps {
   members: TeamMember[];
   showAddMemberButton?: boolean;
   showEditMemberButton?: boolean;
   showRemoveMemberButton?: boolean;
 }
+
 export interface AddNewEditorModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
 }
+
 export interface AddNewEditorFormValues {
   email: string;
   firstName: string;

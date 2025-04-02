@@ -9,6 +9,7 @@ const mockUser: User = {
   id: 123,
   email: "test@example.com",
   isPlatformAdmin: false,
+  isAnalyst: false,
   teams: [],
 };
 

@@ -11,4 +11,3 @@ VALUES
 
 -- Set default value
 alter table "public"."feedback" alter column "status" set default 'unread';
-alter table "public"."feedback" alter column "status" set not null;

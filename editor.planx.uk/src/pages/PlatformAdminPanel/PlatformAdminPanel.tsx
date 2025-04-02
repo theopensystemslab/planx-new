@@ -24,8 +24,12 @@ export const PlatformAdminPanel = () => {
     {
       field: "name",
       headerName: "Team",
-      type: ColumnFilterType.CUSTOM,
+      type: ColumnFilterType.SINGLE_SELECT,
       customComponent: (params) => <strong>{`${params.value}`}</strong>,
+      columnOptions: {
+        // Allow filtering by unique team names
+        valueOptions: [...new Set(adminPanelData?.map(({ name }) => name))],
+      },
     },
     {
       field: "referenceCode",

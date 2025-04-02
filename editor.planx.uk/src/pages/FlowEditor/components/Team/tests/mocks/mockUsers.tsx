@@ -20,6 +20,7 @@ export const emptyTeamMemberObj: TeamMember = {
 
 export const mockPlainUser: User = {
   isPlatformAdmin: false,
+  isAnalyst: false,
   firstName: "r",
   lastName: "r",
   email: "r",
