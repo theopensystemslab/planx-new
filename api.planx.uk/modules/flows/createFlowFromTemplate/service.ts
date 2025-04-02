@@ -1,26 +1,24 @@
 import { createFlow, getFlowData } from "../../../helpers.js";
+import type { NewFlow } from "./controller.js";
 
 const createFlowFromTemplate = async (
   templateId: string,
-  teamId: number,
+  { teamId, slug, name }: NewFlow,
 ): Promise<{ id: string; slug: string }> => {
   // Fetch the source template data
   const sourceTemplate = await getFlowData(templateId);
 
-  const newSlug = sourceTemplate.slug + "-template";
-  const newName = sourceTemplate.name + " (template)";
-
   // Create the new templated flow, including an associated operation and initial publish, and templated_from reference to the source templateId
   const { id } = await createFlow(
     teamId,
-    newSlug,
-    newName,
+    slug,
+    name,
     sourceTemplate.data,
     undefined, // flows.copied_from
-    templateId,
+    templateId
   );
 
-  return { id: id, slug: newSlug };
+  return { id, slug };
 };
 
 export { createFlowFromTemplate };
