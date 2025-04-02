@@ -4,6 +4,7 @@ import type { EmailSubmissionNotifyConfig } from "../../../types.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import type { SendIntegrationController } from "../types.js";
 import {
+  checkEmailAuditTable,
   getSessionEmailDetailsById,
   getTeamEmailSettings,
   insertAuditEntry,
@@ -28,6 +29,15 @@ export const sendToEmail: SendIntegrationController = async (
       return next({
         status: 400,
         message: `Send to email is not enabled for this local authority (${localAuthority})`,
+      });
+    }
+
+    // Confirm that this session has not already been successfully submitted before proceeding
+    const lastSubmittedAppStatus = await checkEmailAuditTable(sessionId);
+    if (lastSubmittedAppStatus === "Success") {
+      return next({
+        status: 200,
+        message: `Skipping send, already successfully submitted`,
       });
     }
 
