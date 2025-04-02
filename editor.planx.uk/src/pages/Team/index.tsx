@@ -20,7 +20,7 @@ import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
 const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(3, 0),
+  padding: theme.spacing(2, 0, 3),
   margin: 0,
   display: "grid",
   gridAutoRows: "1fr",
@@ -32,6 +32,20 @@ const DashboardList = styled("ul")(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     gridTemplateColumns: "repeat(3, 1fr)",
   },
+}));
+
+export const FiltersContainer = styled(Box)(({ theme }) => ({
+  width: "100%",
+  margin: theme.spacing(1, 0, 2),
+  padding: theme.spacing(1.5, 2),
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: theme.spacing(1),
+  border: `1px solid ${theme.palette.border.main}`,
+  background: theme.palette.secondary.dark,
 }));
 
 const GetStarted: React.FC = () => (
@@ -147,14 +161,26 @@ const Team: React.FC = () => {
         </Box>
         {teamHasFlows && (
           <>
-            <Box>
+            <FiltersContainer>
               <Filters<FlowSummary>
                 records={flows}
                 setFilteredRecords={setFilteredFlows}
                 filterOptions={filterOptions}
                 clearFilters={shouldClearFilters}
               />
-            </Box>
+              {teamHasFlows && matchingFlows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={matchingFlows}
+                    setRecords={setSortedFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
+            </FiltersContainer>
             <Box
               sx={{
                 display: "flex",
@@ -169,6 +195,7 @@ const Team: React.FC = () => {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   gap: 2,
+                  minHeight: "50px",
                 }}
               >
                 <ShowingServicesHeader
@@ -183,18 +210,6 @@ const Team: React.FC = () => {
                   </Button>
                 )}
               </Box>
-              {teamHasFlows && matchingFlows && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body2">
-                    <strong>Sort by</strong>
-                  </Typography>
-                  <SortControl<FlowSummary>
-                    records={matchingFlows}
-                    setRecords={setSortedFlows}
-                    sortOptions={sortOptions}
-                  />
-                </Box>
-              )}
             </Box>
             {sortedFlows && (
               <DashboardList>
