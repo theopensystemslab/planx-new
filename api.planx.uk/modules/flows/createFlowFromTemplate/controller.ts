@@ -16,8 +16,12 @@ export const createFlowFromTemplateSchema = z.object({
   }),
   body: z.object({
     teamId: z.number(),
+    name: z.string(),
+    slug: z.string(),
   }),
 });
+
+export type NewFlow = z.infer<typeof createFlowFromTemplateSchema>["body"];
 
 export type CreateFlowFromTemplateController = ValidatedRequestHandler<
   typeof createFlowFromTemplateSchema,
@@ -28,14 +32,14 @@ export const createFlowFromTemplateController: CreateFlowFromTemplateController 
   async (_req, res, next) => {
     try {
       const { templateId } = res.locals.parsedReq.params;
-      const { teamId } = res.locals.parsedReq.body;
+      const newFlow = res.locals.parsedReq.body;
 
-      const { id, slug } = await createFlowFromTemplate(templateId, teamId);
+      const { id } = await createFlowFromTemplate(templateId, newFlow);
 
       res.status(200).send({
-        message: `Successfully created flow from template ${slug}`,
+        message: `Successfully created flow from template ${newFlow.slug}`,
         id,
-        slug,
+        slug: newFlow.slug,
       });
     } catch (error) {
       return next(
