@@ -1,23 +1,13 @@
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import { capitalize, findKey, get, isEmpty, omit } from "lodash";
+import { get, isEmpty, omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
 import { Paths } from "type-fest";
 import { slugify } from "utils";
 
 import { FiltersColumn } from "./FiltersColumn";
-import {
-  FiltersBody,
-  FiltersContainer,
-  FiltersContent,
-  FiltersHeader,
-  FiltersToggle,
-  StyledChip,
-} from "./FilterStyles";
+import { FiltersContent } from "./FilterStyles";
 import { addToSearchParams, clearSearchParams } from "./searchParamUtils";
 
 export type FilterKey<T> = Paths<T>;
@@ -63,7 +53,6 @@ export const Filters = <T extends object>({
   filterOptions,
   clearFilters = false,
 }: FiltersProps<T>) => {
-  const [expanded, setExpanded] = useState<boolean>(false);
   const [optionsToFilter] = useState(filterOptions);
 
   const navigation = useNavigation();
@@ -174,74 +163,38 @@ export const Filters = <T extends object>({
   };
 
   return (
-    <FiltersContainer
-      expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
-    >
-      <FiltersHeader
-        expandIcon={
-          expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />
-        }
-      >
-        <FiltersToggle>
-          {expanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          <Typography variant="h4">
-            {expanded ? "Hide filters" : "Show filters"}
-          </Typography>
-        </FiltersToggle>
-        <Box sx={{ display: "flex", gap: 1 }}>
-          {values.filters &&
-            Object.entries(values.filters).map(([_key, value]) => {
-              if (!value) return;
-              return (
-                <StyledChip
-                  onClick={(e) => e.stopPropagation()}
-                  label={capitalize(`${value}`)}
-                  key={`${value}`}
-                  onDelete={() => {
-                    const targetKey = findKey(
-                      values.filters,
-                      (keys) => keys === value,
-                    ) as FilterKey<T>;
-                    removeFilter(targetKey);
-                  }}
-                />
-              );
-            })}
-        </Box>
-      </FiltersHeader>
-      <FiltersBody>
-        <form name="filters" aria-label="Filter options">
-          <FiltersContent>
-            {optionsToFilter.map((option) => (
-              <fieldset
-                key={option.displayName}
-                aria-describedby={`${option.displayName}-description`}
-                style={{ flexBasis: "20%" }}
-              >
-                <div
-                  key={`${option.displayName}-description`}
-                  id={`${option.displayName}-description`}
-                  className="sr-only"
-                  hidden
-                >
-                  Select options to filter the list by {option.displayName}
-                </div>
+    <form name="filters" aria-label="Filter options">
+      <FiltersContent>
+        <Typography variant="body2">
+          <strong>Filter by</strong>
+        </Typography>
+        {optionsToFilter.map((option) => (
+          <fieldset
+            key={option.displayName}
+            aria-describedby={`${option.displayName}-description`}
+            style={{ flexBasis: "160px" }}
+          >
+            <div
+              key={`${option.displayName}-description`}
+              id={`${option.displayName}-description`}
+              className="sr-only"
+              hidden
+            >
+              Select options to filter the list by {option.displayName}
+            </div>
 
-                <FiltersColumn
-                  key={`${option.displayName}-filter-column`}
-                  title={option.displayName}
-                  optionKey={option.optionKey}
-                  optionValues={option.optionValue}
-                  filters={values.filters}
-                  handleChange={handleChange}
-                />
-              </fieldset>
-            ))}
-          </FiltersContent>
-        </form>
-      </FiltersBody>
-    </FiltersContainer>
+            <FiltersColumn
+              key={`${option.displayName}-filter-column`}
+              title={option.displayName}
+              optionKey={option.optionKey}
+              optionValues={option.optionValue}
+              filters={values.filters}
+              handleChange={handleChange}
+            />
+          </fieldset>
+        ))}
+      </FiltersContent>
+    </form>
   );
 };
 
