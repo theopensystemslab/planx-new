@@ -19,7 +19,7 @@ import {
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { client } from "lib/graphql";
 import navigation from "lib/navigation";
 import debounce from "lodash/debounce";
@@ -28,6 +28,7 @@ import omitBy from "lodash/omitBy";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
 import { type } from "ot-json0";
+import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -165,15 +166,8 @@ export interface EditorStore extends Store.Store {
   connectTo: (id: NodeId) => Promise<void>;
   copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: NodeId) => void;
-  createFlow: (
-    teamId: number,
-    newSlug: string,
-    newName: string,
-  ) => Promise<string>;
-  createFlowFromTemplate: (
-    templateId: string,
-    teamId: number,
-  ) => Promise<AxiosResponse>;
+  createFlow: (newFlow: NewFlow) => Promise<string>;
+  createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
   validateAndDiffFlow: (flowId: string) => Promise<any>;
   getFlows: (teamId: number) => Promise<FlowSummary[]>;
   isClone: (id: NodeId) => boolean;
@@ -341,15 +335,15 @@ export const editorStore: StateCreator<
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async (teamId, newSlug, newName) => {
+  createFlow: async ({ teamId, name, slug }) => {
     const token = get().jwt;
 
-    await axios.post(
+    const response = await axios.post<{ id: string }>(
       `${import.meta.env.VITE_APP_API_URL}/flows/create`,
       {
-        teamId: teamId,
-        slug: newSlug,
-        name: newName,
+        teamId,
+        slug,
+        name,
       },
       {
         headers: {
@@ -358,18 +352,20 @@ export const editorStore: StateCreator<
       },
     );
 
-    return newSlug;
+    return response.data.id;
   },
 
-  createFlowFromTemplate: async (templateId, teamId) => {
+  createFlowFromTemplate: async ({ name, slug, sourceId, teamId }) => {
     const token = get().jwt;
 
-    const response = await axios.post(
+    const response = await axios.post<{ id: string }>(
       `${
         import.meta.env.VITE_APP_API_URL
-      }/flows/create-from-template/${templateId}`,
+      }/flows/create-from-template/${sourceId}`,
       {
-        teamId: teamId,
+        teamId,
+        name,
+        slug,
       },
       {
         headers: {
@@ -380,7 +376,7 @@ export const editorStore: StateCreator<
 
     set({ isTemplatedFrom: true });
 
-    return response;
+    return response.data.id;
   },
 
   validateAndDiffFlow(flowId: string) {
