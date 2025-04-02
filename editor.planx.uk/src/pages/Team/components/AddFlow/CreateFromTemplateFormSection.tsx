@@ -1,3 +1,4 @@
+import { gql, useQuery } from "@apollo/client";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormikContext } from "formik";
 import React from "react";
@@ -6,14 +7,26 @@ import InputLabel from "ui/public/InputLabel";
 
 import { CreateFlow } from "./types";
 
+export interface TemplateOption {
+  name: string;
+  slug: string;
+  id: string;
+}
+
 export const CreateFromTemplateFormSection: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<CreateFlow>();
 
-  if (values.mode !== "template") return null;
+  const { data } = useQuery<{ templates: TemplateOption[] }>(gql`
+    query GetTemplates {
+      templates: flows(where: { is_template: { _eq: true } }) {
+        id
+        slug
+        name
+      }
+    }
+  `);
 
-  // TODO: Fetch data
-  const templateForms: { id: string; flowName: string; teamName: string }[] =
-    [];
+  if (values.mode !== "template" || !data?.templates?.length) return null;
 
   return (
     <InputLabel label="Available templates" id="available-templates-select">
@@ -21,14 +34,14 @@ export const CreateFromTemplateFormSection: React.FC = () => {
         value={values.flow.sourceId}
         name="mode"
         bordered
-        required={true}
+        required
         title={"Available templates"}
         labelId="available-templates-select"
-        onChange={(e) => setFieldValue("flow.source.id", e.target.value)}
+        onChange={(e) => setFieldValue("flow.sourceId", e.target.value)}
       >
-        {templateForms.map(({ id, flowName, teamName }) => (
+        {data.templates.map(({ id, name }) => (
           <MenuItem key={id} value={id}>
-            {`${teamName} - ${flowName}`}
+            {name}
           </MenuItem>
         ))}
       </SelectInput>

@@ -32,7 +32,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const { teamId, createFlow, teamSlug } = useStore();
+  const { teamId, createFlow, createFlowFromTemplate, teamSlug } = useStore();
 
   const initialValues: CreateFlow = {
     mode: "new",
@@ -40,6 +40,7 @@ export const AddFlow: React.FC = () => {
       slug: "",
       name: "",
       sourceId: "",
+      teamId,
     },
   };
 
@@ -47,26 +48,20 @@ export const AddFlow: React.FC = () => {
     { mode, flow },
     { setFieldError },
   ) => {
-    let newFlowId: string | undefined;
-
     try {
       switch (mode) {
         case "new":
-          newFlowId = await createFlow(teamId, flow.slug, flow.name);
+          await createFlow(flow);
           break;
         case "copy":
           // newFlowId = await createFlowFromCopy(flow);
           break;
         case "template":
-          // newFlowId = await createFlowFromTemplate(flow);
+          await createFlowFromTemplate(flow);
           break;
       }
 
-      if (!newFlowId) {
-        throw new Error("Flow creation failed");
-      }
-
-      navigate(`/${teamSlug}/${newFlowId}`);
+      navigate(`/${teamSlug}/${flow.slug}`);
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
