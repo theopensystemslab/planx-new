@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
+// eslint-disable-next-line no-restricted-imports
 import DialogActions from "@mui/material/DialogActions/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -16,9 +17,12 @@ interface AddCommentDialogProps {
   actorId: number;
 }
 
-export const AddCommentDialog = ({ flowId, actorId }: AddCommentDialogProps) => {
+export const AddCommentDialog = ({
+  flowId,
+  actorId,
+}: AddCommentDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  
+
   const formik = useFormik<{ comment: string }>({
     initialValues: { comment: "" },
     onSubmit: async (values, { resetForm }) => {
@@ -32,9 +36,11 @@ export const AddCommentDialog = ({ flowId, actorId }: AddCommentDialogProps) => 
 
   return (
     <Box>
-      <AddButton onClick={() => setDialogOpen(true)}>
-        Add a comment
-      </AddButton>
+      <Box ml={-0.5}>
+        <AddButton onClick={() => setDialogOpen(true)} size="small">
+          Add a comment
+        </AddButton>
+      </Box>
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -57,13 +63,14 @@ export const AddCommentDialog = ({ flowId, actorId }: AddCommentDialogProps) => 
                 bordered
                 multiline={true}
                 rows={3}
-                autoFocus
               />
             </InputLabel>
           </Box>
         </DialogContent>
         <DialogActions sx={{ paddingX: 2 }}>
-          <Button disableRipple onClick={() => setDialogOpen(false)}>BACK</Button>
+          <Button disableRipple onClick={() => setDialogOpen(false)}>
+            BACK
+          </Button>
           <Button
             type="submit"
             color="primary"
@@ -77,4 +84,4 @@ export const AddCommentDialog = ({ flowId, actorId }: AddCommentDialogProps) => 
       </Dialog>
     </Box>
   );
-}
+};

@@ -1,25 +1,43 @@
+import AccordionDetails from "@mui/material/AccordionDetails";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
-import React from "react";
+import React, { useState } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import BlockQuote from "ui/editor/BlockQuote";
+import Caret from "ui/icons/Caret";
 
 import { HistoryItem } from "../EditHistory";
 import {
   AlteredExternalPortalsSummary,
   ExternalPortal,
 } from "./AlteredExternalPortals";
+import {
+  PublishModalAccordion,
+  PublishModalAccordionSummary,
+} from "./ValidationChecks";
 
 export interface AlteredNode {
   id: string;
   type: TYPES;
   data?: any;
 }
+
+const HistoryComment = styled(Box)(({ theme }) => ({
+  width: "100%",
+  margin: theme.spacing(0.5, 0),
+  padding: theme.spacing(1, 1.5),
+  background: theme.palette.secondary.dark,
+  color: theme.palette.text.primary,
+  borderRadius: theme.shape.borderRadius,
+  border: `1px solid rgba(0,0,0,0.08)`,
+}));
 
 export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -41,7 +59,18 @@ export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   return (
     <ListItem key={node.id} disablePadding sx={{ display: "list-item" }}>
       <Typography variant="body2">{text}</Typography>
-      {data && <pre style={{ fontSize: ".8em" }}>{data}</pre>}
+      {data && (
+        <pre
+          style={{
+            fontSize: ".8em",
+            whiteSpace: "pre-line",
+            overflowWrap: "break-word",
+            wordWrap: "break-word",
+          }}
+        >
+          {data}
+        </pre>
+      )}
     </ListItem>
   );
 };
@@ -59,6 +88,7 @@ export const AlteredNodesSummaryContent = (props: {
   history?: HistoryItem[];
 }) => {
   const { alteredNodes, lastPublishedTitle, history } = props;
+  const [expanded, setExpanded] = useState(false);
   const comments = history?.filter((item) => item.type === "comment") || [];
   const operations = history?.filter((item) => item.type === "operation") || [];
 
@@ -90,27 +120,32 @@ export const AlteredNodesSummaryContent = (props: {
 
   return (
     <Box>
-      <Typography variant="h4" component="h3" gutterBottom>
+      <Typography variant="h3" component="h2" gutterBottom pt={1}>
         {`Changes to your service since last publish`}
       </Typography>
       {comments.length > 0 && (
-        <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
+        <List sx={{ listStyleType: "none" }}>
           {comments.map((comment) => (
-            <ListItem
-              key={comment.id}
-              disablePadding
-              sx={{ display: "list-item" }}
-            >
+            <ListItem key={comment.id} disablePadding>
               <ListItemText
                 primary={
-                  <Typography variant="body2">{comment.comment}</Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                  >
+                    {comment.firstName} {comment.lastName}
+                  </Typography>
                 }
                 secondary={
-                  <Typography variant="body2" fontSize="small">
-                    {`Commented ${formatLastEditDate(comment.createdAt)} by ${
-                      comment.firstName
-                    } ${comment.lastName}`}
-                  </Typography>
+                  <>
+                    <Typography variant="body2" fontSize="small" py={0.25}>
+                      <strong>Commented</strong>{" "}
+                      {`${formatLastEditDate(comment.createdAt)}`}
+                    </Typography>
+                    <HistoryComment>
+                      <BlockQuote>{comment.comment}</BlockQuote>
+                    </HistoryComment>
+                  </>
                 }
               />
             </ListItem>
@@ -118,24 +153,22 @@ export const AlteredNodesSummaryContent = (props: {
         </List>
       )}
       {comments.length === 0 && operations.length > 0 && (
-        <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
-          <ListItem
-            key={"operation-summary"}
-            disablePadding
-            sx={{ display: "list-item" }}
-          >
-            <ListItemText
-              primary={
-                <Typography variant="body2">
-                  {`${operations.length} edits to your service`}
-                </Typography>
-              }
-              secondary={
-                <Typography variant="body2" fontSize="small">
-                  {`See full details in "History"`}
-                </Typography>
-              }
-            />
+        <List sx={{ listStyleType: "none" }}>
+          <ListItem key={"operation-summary"} disablePadding>
+            <HistoryComment>
+              <ListItemText
+                primary={
+                  <Typography variant="body2">
+                    <strong>{`${operations.length} edits to your service`}</strong>
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2" fontSize="small">
+                    {`See full details in "History"`}
+                  </Typography>
+                }
+              />
+            </HistoryComment>
           </ListItem>
           <ListItem key={"hint"} disablePadding>
             <Typography variant="body2" fontSize="small">
@@ -148,45 +181,54 @@ export const AlteredNodesSummaryContent = (props: {
         <AlteredExternalPortalsSummary portals={changeSummary["portals"]} />
       )}
       {isPlatformAdmin && (
-        <SimpleExpand
-          id="validation-checks-list"
-          data-testid="validation-checks-list"
-          lightFontStyle
-          buttonText={{
-            open: `Show individual node changes`,
-            closed: "Hide individual node changes",
-          }}
+        <PublishModalAccordion
+          sx={(theme) => ({
+            borderTop: `1px solid ${theme.palette.border.main}`,
+          })}
+          expanded={expanded}
+          onChange={() => setExpanded(!expanded)}
         >
-          {(changeSummary["updated"] > 0 || changeSummary["deleted"] > 0) && (
-            <Box>
+          <PublishModalAccordionSummary expandIcon={<Caret />}>
+            <Typography>
+              {expanded
+                ? "Hide individual node changes"
+                : "Show individual node changes"}
+            </Typography>
+          </PublishModalAccordionSummary>
+          <AccordionDetails
+            sx={(theme) => ({
+              padding: 0,
+              backgroundColor: "background.default",
+              border: `1px solid ${theme.palette.border.light}`,
+            })}
+          >
+            {(changeSummary.updated > 0 || changeSummary.deleted > 0) && (
               <List sx={{ listStyleType: "disc", marginLeft: 3 }}>
                 <ListItem
                   key={"updated"}
                   disablePadding
                   sx={{ display: "list-item" }}
                 >
-                  <Typography
-                    variant="body2"
-                    fontWeight="bold"
-                  >{`${changeSummary["updated"]} nodes have been updated or added`}</Typography>
+                  <Typography variant="body2" fontWeight="bold">
+                    {`${changeSummary.updated} nodes have been updated or added`}
+                  </Typography>
                 </ListItem>
                 <ListItem
                   key={"deleted"}
                   disablePadding
                   sx={{ display: "list-item" }}
                 >
-                  <Typography
-                    variant="body2"
-                    fontWeight="bold"
-                  >{`${changeSummary["deleted"]} nodes have been deleted`}</Typography>
+                  <Typography variant="body2" fontWeight="bold">
+                    {`${changeSummary.deleted} nodes have been deleted`}
+                  </Typography>
                 </ListItem>
                 {alteredNodes.map((node) => (
                   <AlteredNodeListItem key={node.id} node={node} />
                 ))}
               </List>
-            </Box>
-          )}
-        </SimpleExpand>
+            )}
+          </AccordionDetails>
+        </PublishModalAccordion>
       )}
     </Box>
   );

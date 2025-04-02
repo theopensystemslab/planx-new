@@ -43,10 +43,10 @@ const Root = styled(Box)(({ theme }) => ({
   zIndex: 1,
 }));
 
-const SidebarContainer = styled(Box)(() => ({
+const SidebarContainer = styled(Box)(({ theme }) => ({
   overflow: "auto",
   flex: 1,
-  background: "#fff",
+  background: theme.palette.background.default,
   position: "relative",
 }));
 
@@ -241,10 +241,8 @@ const Sidebar: React.FC = React.memo(() => {
             </SidebarContainer>
           )}
           {activeTab === "History" && (
-            <SidebarContainer py={3}>
-              <Container>
-                <EditHistory />
-              </Container>
+            <SidebarContainer>
+              <EditHistory />
             </SidebarContainer>
           )}
           {activeTab === "Search" && (

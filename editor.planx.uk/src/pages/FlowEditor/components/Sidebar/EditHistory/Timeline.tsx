@@ -14,34 +14,49 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastEditDate } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import { CommentHistoryItem, HistoryItem, OperationHistoryItem, PublishHistoryItem } from ".";
-import { CommentTimelineItem, OperationTimelineItem, PublishTimelineItem } from "./TimelineItems";
+
+import {
+  CommentHistoryItem,
+  HistoryItem,
+  OperationHistoryItem,
+  PublishHistoryItem,
+} from ".";
+import {
+  CommentTimelineItem,
+  OperationTimelineItem,
+  PublishTimelineItem,
+} from "./TimelineItems";
 
 interface EditHistoryTimelineProps {
   events: HistoryItem[];
 }
 
-export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) => {
+export const EditHistoryTimeline = ({
+  events = [],
+}: EditHistoryTimelineProps) => {
   const [focusedOpIndex, setFocusedOpIndex] = useState<number | undefined>(
     undefined,
   );
 
-  const [flow, teamSlug, canUserEditTeam, undoOperation, deleteFlowComment] = useStore(
-    (state) => [
+  const [flow, teamSlug, canUserEditTeam, undoOperation, deleteFlowComment] =
+    useStore((state) => [
       state.flow,
       state.teamSlug,
       state.canUserEditTeam,
       state.undoOperation,
       state.deleteFlowComment,
-    ],
-  );
+    ]);
 
   const handleUndo = (i: number) => {
     // Get all events since & including the selected one
     const eventsToUndo = events.slice(0, i + 1);
 
-    const operationsToUndo = eventsToUndo.filter((event) => event.type === "operation") as OperationHistoryItem[];
-    const commentsToDelete = eventsToUndo.filter((event) => event.type === "comment") as CommentHistoryItem[];
+    const operationsToUndo = eventsToUndo.filter(
+      (event) => event.type === "operation",
+    ) as OperationHistoryItem[];
+    const commentsToDelete = eventsToUndo.filter(
+      (event) => event.type === "comment",
+    ) as CommentHistoryItem[];
 
     // Make a flattened list of operations, with the latest operations first
     const operationsData: Array<OT.Op[]> = [];
@@ -68,8 +83,12 @@ export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) =
   };
 
   const showUndoButton = (event: HistoryItem): boolean => {
-    // Only show the restore button for operations within teams I can edit, omitting the intial default operation for new flows which won't have an actor 
-    return event.type === "operation" && Boolean(event.actorId) && canUserEditTeam(teamSlug);
+    // Only show the restore button for operations within teams I can edit, omitting the intial default operation for new flows which won't have an actor
+    return (
+      event.type === "operation" &&
+      Boolean(event.actorId) &&
+      canUserEditTeam(teamSlug)
+    );
   };
 
   return (
@@ -87,6 +106,7 @@ export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) =
           <TimelineSeparator>
             <TimelineDot
               sx={{
+                padding: "3px",
                 bgcolor: (theme) =>
                   inUndoScope(i) && isUndoType(op.type)
                     ? theme.palette.grey[300]
@@ -106,9 +126,7 @@ export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) =
           </TimelineSeparator>
           <TimelineContent
             sx={{
-              paddingRight: 0,
-              paddingTop: 0.1,
-              paddingBottom: 2,
+              paddingBottom: 1.5,
               minWidth: "100%",
               maxWidth: "100%",
             }}
@@ -123,23 +141,39 @@ export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) =
             >
               <Box>
                 <Typography
-                  variant="body1"
+                  variant="body2"
                   sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                  color={inUndoScope(i) && isUndoType(op.type) ? "GrayText" : "inherit"}
-                  py={0.33}
+                  color={
+                    inUndoScope(i) && isUndoType(op.type)
+                      ? "GrayText"
+                      : "inherit"
+                  }
                 >
-                  {`${op.actorId
-                    ? `${op.firstName} ${op.lastName}`
-                    : `Created flow`
-                    }`}
+                  {`${
+                    op.actorId
+                      ? `${op.firstName} ${op.lastName}`
+                      : `Created flow`
+                  }`}
                 </Typography>
                 <Typography
                   variant="body2"
                   fontSize="small"
+                  pt={0.25}
                   pb={0.75}
-                  color={inUndoScope(i) && isUndoType(op.type) ? "GrayText" : "text.secondary"}
+                  color={
+                    inUndoScope(i) && isUndoType(op.type)
+                      ? "GrayText"
+                      : "text.secondary"
+                  }
                 >
-                  {formatLastEditDate(op.createdAt)}
+                  <strong>{`${
+                    {
+                      publish: "Published",
+                      comment: "Commented",
+                      operation: "Edited",
+                    }[op.type]
+                  }`}</strong>{" "}
+                  {`${formatLastEditDate(op.createdAt)}`}
                 </Typography>
               </Box>
               {showUndoButton(op) && (
@@ -151,21 +185,42 @@ export const EditHistoryTimeline = ({ events = [] }: EditHistoryTimelineProps) =
                     onMouseLeave={() => setFocusedOpIndex(undefined)}
                   >
                     <RestoreOutlined
-                      fontSize="large"
-                      color={inUndoScope(i) && isUndoType(op.type) ? "inherit" : "primary"}
+                      fontSize="medium"
+                      color={
+                        inUndoScope(i) && isUndoType(op.type)
+                          ? "inherit"
+                          : "primary"
+                      }
                     />
                   </IconButton>
                 </Tooltip>
               )}
             </Box>
-            {{
-              operation: <OperationTimelineItem event={op as OperationHistoryItem} i={i} inUndoScope={inUndoScope} flow={flow} />,
-              comment: <CommentTimelineItem event={op as CommentHistoryItem} i={i} inUndoScope={inUndoScope} />,
-              publish: <PublishTimelineItem event={op as PublishHistoryItem} />,
-            }[op.type]}
+            {
+              {
+                operation: (
+                  <OperationTimelineItem
+                    event={op as OperationHistoryItem}
+                    i={i}
+                    inUndoScope={inUndoScope}
+                    flow={flow}
+                  />
+                ),
+                comment: (
+                  <CommentTimelineItem
+                    event={op as CommentHistoryItem}
+                    i={i}
+                    inUndoScope={inUndoScope}
+                  />
+                ),
+                publish: (
+                  <PublishTimelineItem event={op as PublishHistoryItem} />
+                ),
+              }[op.type]
+            }
           </TimelineContent>
         </TimelineItem>
       ))}
     </Timeline>
   );
-}
+};
