@@ -37,7 +37,7 @@ export const createFlowFromTemplateController: CreateFlowFromTemplateController 
       const { id } = await createFlowFromTemplate(templateId, newFlow);
 
       res.status(200).send({
-        message: `Successfully created flow from template id ${templateId}`,
+        message: `Successfully created flow from template ${newFlow.slug}`,
         id,
         slug: newFlow.slug,
       });
