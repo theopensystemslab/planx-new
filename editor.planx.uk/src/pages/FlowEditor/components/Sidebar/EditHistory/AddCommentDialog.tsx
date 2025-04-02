@@ -36,7 +36,7 @@ export const AddCommentDialog = ({
 
   return (
     <Box>
-      <Box ml="-4px">
+      <Box ml={-0.5}>
         <AddButton onClick={() => setDialogOpen(true)} size="small">
           Add a comment
         </AddButton>
