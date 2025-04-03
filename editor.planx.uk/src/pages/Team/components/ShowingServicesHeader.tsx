@@ -12,7 +12,7 @@ export const ShowingServicesHeader = ({
       : `Showing ${matchedFlowsCount} service`;
 
   return (
-    <Typography variant="h3" component="h2">
+    <Typography variant="h4" component="h2">
       {showingServicesMessage}
     </Typography>
   );
