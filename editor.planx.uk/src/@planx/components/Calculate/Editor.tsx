@@ -53,7 +53,7 @@ export default function Component(props: Props) {
         }
         if (typeof result === "boolean" && !values.formatOutputForAutomations) {
           errors.formula =
-            "For boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
+            "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
         }
       } catch (error: any) {
         errors.formula = error.message;
