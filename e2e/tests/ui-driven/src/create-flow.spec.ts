@@ -68,8 +68,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     const editor = new PlaywrightEditor(page);
 
-    page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
-    await editor.addNewService();
+    await editor.addNewService({ name: serviceProps.name });
 
     // update context to allow flow to be torn down
     context.flow = { ...serviceProps };
@@ -165,10 +164,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     const editor = new PlaywrightEditor(page);
 
-    page.on("dialog", (dialog) =>
-      dialog.accept(externalPortalServiceProps.name),
-    );
-    await editor.addNewService();
+    await editor.addNewService({ name: externalPortalServiceProps.name });
 
     // update context to allow new flow to be torn down
     context.externalPortalFlow = { ...externalPortalServiceProps };

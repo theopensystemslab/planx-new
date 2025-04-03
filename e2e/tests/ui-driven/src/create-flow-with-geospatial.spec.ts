@@ -72,8 +72,7 @@ test.describe("Flow creation, publish and preview", () => {
 
     const editor = new PlaywrightEditor(page);
 
-    page.on("dialog", (dialog) => dialog.accept(serviceProps.name));
-    await editor.addNewService();
+    await editor.addNewService({ name: serviceProps.name });
 
     await editor.createFindProperty();
     await expect(editor.nodeList).toContainText(["Find property"]);

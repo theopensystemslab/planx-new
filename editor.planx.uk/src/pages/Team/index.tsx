@@ -7,16 +7,15 @@ import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
-import { AddButton } from "ui/editor/AddButton";
+import { useCurrentRoute } from "react-navi";
 import Filters from "ui/editor/Filter/Filter";
 import { SortControl } from "ui/editor/SortControl/SortControl";
 import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
-import { slugify } from "utils";
 
 import { useStore } from "../FlowEditor/lib/store";
 import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import { AddFlow } from "./components/AddFlow";
 import FlowCard, { Card, CardContent } from "./components/FlowCard";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
@@ -40,38 +39,17 @@ const DashboardList = styled("ul")(({ theme }) => ({
   },
 }));
 
-const GetStarted: React.FC<{ flows: FlowSummary[] | null }> = ({ flows }) => (
+const GetStarted: React.FC = () => (
   <DashboardList sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
         <Typography>Get started by creating your first service</Typography>
-        <AddFlowButton flows={flows} />
+        <AddFlow />
       </CardContent>
     </Card>
   </DashboardList>
 );
-
-const AddFlowButton: React.FC<{ flows: FlowSummary[] | null }> = ({
-  flows,
-}) => {
-  const { navigate } = useNavigation();
-  const { teamId, createFlow, teamSlug } = useStore();
-
-  const addFlow = async () => {
-    const newFlowName = prompt("Service name");
-    if (!newFlowName) return;
-
-    const uniqueFlow = getUniqueFlow(newFlowName, flows);
-
-    if (uniqueFlow) {
-      const newId = await createFlow(teamId, uniqueFlow.slug, uniqueFlow.name);
-      navigate(`/${teamSlug}/${newId}`);
-    }
-  };
-
-  return <AddButton onClick={addFlow}>Add a new service</AddButton>;
-};
 
 const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
@@ -175,7 +153,7 @@ const Team: React.FC = () => {
             <Typography variant="h2" component="h1" pr={1}>
               Services
             </Typography>
-            {showAddFlowButton && <AddFlowButton flows={flows} />}
+            {showAddFlowButton && <AddFlow />}
           </Box>
           {teamHasFlows && (
             <SearchBox<FlowSummary>
@@ -266,28 +244,10 @@ const Team: React.FC = () => {
             )}
           </>
         )}
-        {flows && !flows.length && <GetStarted flows={flows} />}
+        {flows && !flows.length && <GetStarted />}
       </Container>
     </Box>
   );
 };
 
 export default Team;
-
-const getUniqueFlow = (
-  name: string,
-  flows: FlowSummary[] | null,
-): { slug: string; name: string } | undefined => {
-  const newFlowSlug = slugify(name);
-  const duplicateFlowName = flows?.find((flow) => flow.slug === newFlowSlug);
-
-  if (duplicateFlowName) {
-    const updatedName = prompt(
-      `A service already exists with the name '${name}', enter another name`,
-      name,
-    );
-    if (!updatedName) return;
-    return getUniqueFlow(updatedName, flows);
-  }
-  return { slug: newFlowSlug, name: name };
-};
