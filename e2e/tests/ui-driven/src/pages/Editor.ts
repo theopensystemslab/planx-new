@@ -34,7 +34,6 @@ import { selectedFlag } from "../helpers/globalHelpers.js";
 
 export class PlaywrightEditor {
   readonly page: Page;
-  readonly addNewServiceButton: Locator;
   readonly firstNode: Locator;
   readonly yesBranch: Locator;
   readonly noBranch: Locator;
@@ -47,9 +46,6 @@ export class PlaywrightEditor {
 
   constructor(page: Page) {
     this.page = page;
-    this.addNewServiceButton = page.locator("button", {
-      hasText: "Add a new service",
-    });
     this.firstNode = page.locator("li.hanger > a").first();
     this.yesBranch = page.locator("#flow .card .options .option").nth(0);
     this.noBranch = page.locator("#flow .card .options .option").nth(1);
@@ -62,8 +58,24 @@ export class PlaywrightEditor {
     };
   }
 
-  async addNewService() {
-    await this.addNewServiceButton.click();
+  async addNewService({
+    name,
+    mode = "new",
+  }: {
+    name: string;
+    mode?: "new" | "copy" | "template";
+  }) {
+    const openModalButton = this.page.locator("button", {
+      hasText: "Add a new service",
+    });
+    await openModalButton.click();
+
+    if (mode !== "new") {
+      throw Error("Unsupported mode for create flow");
+    }
+
+    this.page.getByLabel("Service name").fill(name);
+    this.page.getByRole("button", { name: "Add service " }).click();
   }
 
   async createQuestion() {
