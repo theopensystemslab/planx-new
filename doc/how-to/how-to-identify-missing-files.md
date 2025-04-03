@@ -1,7 +1,7 @@
 # How to identify and fix missing files
 
 ## Context
-PlanX allows applicants to upload images alongside their applications. These files are stored on AWS S3. When each file is uploaded, we use Scanii (link) to scan the uploaded files for - 
+PlanX allows applicants to upload images alongside their applications. These files are stored on AWS S3. When each file is uploaded, we use [Scanii](https://scanii.com/) to scan the uploaded files for - 
  - Malware (Malicious, unwanted or otherwise dangerous software)
  - NSFW Images (Detects adult, offensive or otherwise inappropriate images)
 
