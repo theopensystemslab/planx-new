@@ -15,6 +15,8 @@ import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import { parseSetFee, SetFee } from "./model";
+import { handleSetFees } from "./utils";
+import { mockPassport } from "./utils.test";
 
 type Props = EditorProps<TYPES.SetFee, SetFee>;
 
@@ -82,15 +84,16 @@ function SetFeeComponent(props: Props) {
       <ModalSection>
         <ModalSectionContent title="Plan✕ service charge">
           <Typography variant="body2" mb={2}>
-            A £40 service charge plus 20% VAT will only be applied when{" "}
-            <strong>application.fee.payable</strong> is greater than £100 (after
-            any Fast Track fees, exemptions, or reductions and exclusive of
-            VAT).
+            A £{formik.values.serviceChargeAmount} service charge plus 20% VAT
+            will only be applied when <strong>application.fee.payable</strong>{" "}
+            is greater than £100 (after any Fast Track fees, exemptions, or
+            reductions and exclusive of VAT).
           </Typography>
           <Typography variant="body2" mb={2}>
             Open Systems Lab invoices quarterly to collect the service charge.
-            If you'd like to charge a higher fee than £40, please get in touch
-            with [EMAIL].
+            If you'd like to charge a higher fee than £
+            {formik.values.serviceChargeAmount}, please get in touch with
+            [EMAIL].
           </Typography>
         </ModalSectionContent>
       </ModalSection>
@@ -136,18 +139,16 @@ function SetFeeComponent(props: Props) {
             expandAllLevels
             response={JSON.stringify({
               passport: {
-                data: {
-                  "application.fee.payable": formik.values.applyCalculatedVAT
-                    ? 240
-                    : 200,
-                  ...(formik.values.applyCalculatedVAT && {
-                    "application.fee.payable.VAT": 40,
-                  }),
-                  "application.fee.calculated": 200,
-                  ...(formik.values.applyCalculatedVAT && {
-                    "application.fee.calculated.VAT": 40,
-                  }),
-                },
+                data: handleSetFees({
+                  passport: mockPassport,
+                  applyCalculatedVAT: formik.values.applyCalculatedVAT,
+                  fastTrackFeeAmount: Number(
+                    formik.values.fastTrackFeeAmount || 0,
+                  ),
+                  serviceChargeAmount: formik.values.serviceChargeAmount,
+                  applyPaymentProcessingFee:
+                    formik.values.applyPaymentProcessingFee,
+                }),
               },
             })}
           />
