@@ -6,12 +6,10 @@ export const validationSchema = object().shape({
     slug: string().required("Slug is required"),
     name: string().required("Name is required"),
     teamId: number().integer().required("Team ID is required"),
-    sourceId: string().when("mode", {
+    sourceId: string().when("$mode", {
       is: "new",
       then: string().notRequired(),
-      otherwise: string().required(
-        "Please select a source flow"
-      ),
+      otherwise: string().required("Please select a source flow"),
     }),
   }).required(),
 });
