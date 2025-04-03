@@ -5,7 +5,7 @@ PlanX allows applicants to upload images alongside their applications. These fil
  - Malware (Malicious, unwanted or otherwise dangerous software)
  - NSFW Images (Detects adult, offensive or otherwise inappropriate images)
 
-Scanii is an AWS application which runs on our AWS accounts, which operated through a Lambda function.
+Scanii is an AWS application which runs on our AWS accounts, which operates through a Lambda function.
 
 When Scanii detects an image which breaks it's moderation policy the file is deleted from S3. We do not currently subscribe to these events or take further action (e.g. updating the user's breadcrumbs/passport, or logging these events).
 
