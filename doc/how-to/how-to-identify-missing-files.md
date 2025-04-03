@@ -20,7 +20,7 @@ If the above is reported (failure to download files) please take the following s
   - Keep hold of this, you'll need it shortly
 - (Optional) Verify the file is not present in the AWS bucket
 - Go to AWS > CloudWatch > Log groups > Scanii-Lambda-Callback > Search log group
-- Set timeframe if known (will speed up search dramatically - even if set to all events later that session creation data)
+- Set timeframe if known (will speed up search dramatically - even if set to all events later than session creation data)
 - Search for S3 file key (excluding file name)
   - If the full path is `abc12345/my_file.jpg`, search for `abc12345`
   - Searches can have issues with `/` or other characters in the full file path
