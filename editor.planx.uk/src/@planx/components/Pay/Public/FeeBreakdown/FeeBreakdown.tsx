@@ -151,7 +151,7 @@ const PaymentProcessingFee: FeeBreakdownRow = ({ amount }) => {
 
   return (
     <TableRow>
-      <TableCell>Payment processing fee</TableCell>
+      <TableCell>Payment processing fee (1%)</TableCell>
       <TableCell align="right">
         {formattedPriceWithCurrencySymbol(amount.paymentProcessing)}
       </TableCell>
