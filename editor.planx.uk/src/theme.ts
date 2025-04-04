@@ -23,7 +23,26 @@ import type {} from "@mui/x-data-grid/themeAugmentation";
 import { TeamTheme } from "@opensystemslab/planx-core/types";
 import { getContrastTextColor } from "styleUtils";
 
-const DEFAULT_PRIMARY_COLOR = "#0010A4";
+const url = window.location.href;
+
+export const isLivePlatform = url.includes(".uk");
+export const isStagingPlatform = url.includes(".dev");
+export const isPizzaPlatform = url.includes(".pizza");
+export const isLocalPlatform =
+  !isLivePlatform && !isStagingPlatform && !isPizzaPlatform;
+
+let DEFAULT_PRIMARY_COLOR;
+
+if (isLivePlatform) {
+  DEFAULT_PRIMARY_COLOR = "#0010A4";
+} else if (isStagingPlatform) {
+  DEFAULT_PRIMARY_COLOR = "#034E23";
+} else if (isPizzaPlatform) {
+  DEFAULT_PRIMARY_COLOR = "#45034F";
+} else {
+  DEFAULT_PRIMARY_COLOR = "#4F0B03";
+}
+
 const DEFAULT_TONAL_OFFSET = 0.1;
 
 // Type styles
@@ -97,6 +116,39 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   tonalOffset: DEFAULT_TONAL_OFFSET,
 };
 
+const STAGING_PALETTE: Partial<PaletteOptions> = {
+  background: {
+    paper: "#FEF6F6",
+    dark: "#592130",
+  },
+  secondary: {
+    main: "#F3D2D1",
+    dark: "#EED2D2",
+  },
+};
+
+const PIZZA_PALETTE: Partial<PaletteOptions> = {
+  background: {
+    paper: "#F7FFFA",
+    dark: "#21592A",
+  },
+  secondary: {
+    main: "#F3D2D1",
+    dark: "#D1EDDD",
+  },
+};
+
+const LOCAL_PALETTE: Partial<PaletteOptions> = {
+  background: {
+    paper: "#F7FAFF",
+    dark: "#214359",
+  },
+  secondary: {
+    main: "#F3D2D1",
+    dark: "#D1DAED",
+  },
+};
+
 // GOVUK Focus style
 // https://design-system.service.gov.uk/get-started/focus-states/
 // https://github.com/alphagov/govuk-frontend/blob/main/src/govuk/helpers/_focused.scss
@@ -157,7 +209,16 @@ const getThemeOptions = ({
       contrastText: getContrastTextColor(actionColour, "#FFF")!,
     },
   };
-  const palette = createPalette(deepmerge(DEFAULT_PALETTE, teamPalette));
+  let basePalette = DEFAULT_PALETTE;
+  if (isStagingPlatform) {
+    basePalette = deepmerge(DEFAULT_PALETTE, STAGING_PALETTE);
+  } else if (isPizzaPlatform) {
+    basePalette = deepmerge(DEFAULT_PALETTE, PIZZA_PALETTE);
+  } else if (isLocalPlatform) {
+    basePalette = deepmerge(DEFAULT_PALETTE, LOCAL_PALETTE);
+  }
+
+  const palette = createPalette(deepmerge(basePalette, teamPalette));
 
   const themeOptions: ThemeOptions = {
     // Set default spacing unit to match GOV.UK
