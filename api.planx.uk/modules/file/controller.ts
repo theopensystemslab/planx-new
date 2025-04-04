@@ -140,7 +140,7 @@ export const privateDownloadController: DownloadController = async (
 
 export type DeleteController = ValidatedRequestHandler<
   typeof hostedFileSchema,
-  Record<string, never>
+  Record<string, never> | { error: string }
 >;
 
 export const publicDeleteController: DeleteController = async (
@@ -153,7 +153,13 @@ export const publicDeleteController: DeleteController = async (
 
   try {
     const file = await getFileFromS3(filePath);
-    if (!file || file.isPrivate) throw Error("Bad request");
+    if (!file) {
+      return res.status(404).json({
+        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
+      });
+    }
+
+    if (file.isPrivate) throw Error("Bad request");
 
     // once we've established that the file is public, we can delete it
     await deleteFilesByKey([filePath]);

@@ -106,6 +106,8 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/UploadFile"
+        "404":
+          $ref: "#/components/responses/MissingFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /file/private/{fileKey}/{fileName}:
