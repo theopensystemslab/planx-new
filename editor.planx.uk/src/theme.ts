@@ -714,6 +714,9 @@ const getThemeOptions = ({
               {
                 padding: "20px 10px",
               },
+            [`& .${gridClasses.cell}.${gridClasses.cellCheckbox}`]: {
+              paddingTop: "1px",
+            },
             [`& .${gridClasses.toolbarContainer}`]: {
               borderBottom: `1px solid ${palette.border.main}`,
               background: palette.secondary.dark,

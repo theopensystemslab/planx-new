@@ -12,7 +12,7 @@ export const ExpandableHelpText = (props: GridCellParams) => {
   const { truncated: truncatedHelpText, full: fullHelpText } =
     getCombinedHelpText(row);
   return (
-    <Box>
+    <Box sx={{ "& p": { mt: 0 } }}>
       <ReactMarkdownOrHtml source={truncatedHelpText} />
 
       {fullHelpText && (
@@ -23,7 +23,9 @@ export const ExpandableHelpText = (props: GridCellParams) => {
             closed: "Hide full text",
           }}
         >
-          <ReactMarkdownOrHtml source={fullHelpText} />
+          <Box sx={{ "& p": { marginTop: "0.5em" } }}>
+            <ReactMarkdownOrHtml source={fullHelpText} />
+          </Box>
         </SimpleExpand>
       )}
     </Box>
