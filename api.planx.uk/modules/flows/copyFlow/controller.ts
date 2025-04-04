@@ -3,7 +3,13 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 import type { Flow } from "../../../types.js";
 import { ServerError } from "../../../errors/index.js";
 import { copyFlow } from "./service.js";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
+
+const getReplacementCharacters = () =>
+  customAlphabet(
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+    5,
+  );
 
 interface CopyFlowResponse {
   message: string;
@@ -20,7 +26,7 @@ export const copyFlowSchema = z.object({
     slug: z.string(),
     name: z.string(),
     teamId: z.number().int().positive(),
-    replaceValue: z.string().length(5).default(nanoid(5)),
+    replaceValue: z.string().length(5).default(getReplacementCharacters()),
     insert: z.boolean().optional().default(false),
   }),
 });
