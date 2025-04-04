@@ -14,7 +14,7 @@ export const MoreInformation = ({
   howMeasured,
   policyRef,
   info,
-  disabled = false,
+  disabled,
 }: MoreInformationProps) => {
   return (
     <ModalSection>

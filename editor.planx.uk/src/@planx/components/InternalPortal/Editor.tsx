@@ -36,7 +36,7 @@ const InternalPortalForm: React.FC<{
   flows = [],
   tags = [],
   notes = "",
-  disabled = false,
+  disabled,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -113,7 +113,11 @@ const InternalPortalForm: React.FC<{
           </ModalSectionContent>
         )}
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} disabled={disabled} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={disabled}
+      />
     </form>
   );
 };

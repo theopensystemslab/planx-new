@@ -40,7 +40,7 @@ export default function ImgInput({
   onChange,
   acceptedFileTypes,
   backgroundColor,
-  disabled = false,
+  disabled,
 }: {
   img?: string;
   onChange?: (newUrl?: string) => void;

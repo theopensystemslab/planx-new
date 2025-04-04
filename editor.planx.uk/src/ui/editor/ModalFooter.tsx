@@ -19,7 +19,7 @@ export const ModalFooter = <T extends BaseNodeData>({
   showMoreInformation = true,
   showInternalNotes = true,
   showTags = true,
-  disabled = false,
+  disabled,
 }: Props<T>) => (
   <>
     {showMoreInformation && (

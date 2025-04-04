@@ -24,7 +24,7 @@ export const Switch: React.FC<Props> = ({
   name,
   variant = "editorModal",
   capitalize = false,
-  disabled = false,
+  disabled,
 }) => (
   <Box>
     <FormControlLabel
