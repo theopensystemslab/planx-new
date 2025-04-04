@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
@@ -7,7 +8,6 @@ import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { SettingsDialog } from "../styles";
 import { EditorModalProps } from "../types";
 import { optimisticallyUpdateExistingMember } from "./lib/optimisticallyUpdateMembersTable";
 
@@ -47,7 +47,7 @@ export const RemoveUserModal = ({
   };
 
   return (
-    <SettingsDialog
+    <Dialog
       aria-labelledby="dialog-heading"
       data-testid={`dialog-${actionType}-user`}
       open={showModal || false}
@@ -100,6 +100,6 @@ export const RemoveUserModal = ({
           </Button>
         </Box>
       </DialogActions>
-    </SettingsDialog>
+    </Dialog>
   );
 };

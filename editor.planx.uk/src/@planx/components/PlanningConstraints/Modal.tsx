@@ -138,16 +138,6 @@ export const OverrideEntitiesModal = ({
       data-testid="override-planning-constraint-entities-dialog"
       maxWidth="xl"
       aria-labelledby="dialog-heading"
-      PaperProps={{
-        sx: {
-          width: "100%",
-          maxWidth: (theme) => theme.breakpoints.values.md,
-          borderRadius: 0,
-          borderTop: (theme) => `20px solid ${theme.palette.primary.main}`,
-          background: "#FFF",
-          margin: (theme) => theme.spacing(2),
-        },
-      }}
     >
       <DialogContent>
         <Box component="form">
