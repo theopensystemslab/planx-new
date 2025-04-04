@@ -35,8 +35,16 @@ export const formatLastEditMessage = (
   return `Last edited ${formatLastEditDate(date)} by ${name}`;
 };
 
-export const formatLastPublishMessage = (date: string, user: string): string =>
-  `Last published ${formatLastEditDate(date)} by ${user}`;
+export const formatLastPublishMessage = (
+  date?: string,
+  user?: string,
+): string => {
+  if (!date) return "Not yet published";
+
+  if (!user) return `Last published ${formatLastEditDate(date)}`;
+
+  return `Last published ${formatLastEditDate(date)} by ${user}`;
+};
 
 export const formatServiceLastUpdated = (date: string): string => {
   const formattedDate = new Date(date).toLocaleDateString("en-gb");

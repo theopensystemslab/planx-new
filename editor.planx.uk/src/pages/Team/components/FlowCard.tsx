@@ -4,17 +4,22 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { Link } from "react-navi";
+import { Link, useCurrentRoute } from "react-navi";
 import { inputFocusStyle } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { getSortParams } from "ui/editor/SortControl/utils";
 import { slugify } from "utils";
 
 import { client } from "../../../lib/graphql";
 import SimpleMenu from "../../../ui/editor/SimpleMenu";
 import { useStore } from "../../FlowEditor/lib/store";
 import { FlowSummary } from "../../FlowEditor/lib/store/editor";
-import { formatLastEditMessage } from "../../FlowEditor/utils";
+import {
+  formatLastEditMessage,
+  formatLastPublishMessage,
+} from "../../FlowEditor/utils";
+import { sortOptions } from "../helpers/sortAndFilterOptions";
 import { ArchiveDialog } from "./ArchiveDialog";
 
 export const Card = styled("li")(({ theme }) => ({
@@ -104,16 +109,24 @@ const FlowCard: React.FC<FlowCardProps> = ({
     ],
   );
 
+  const route = useCurrentRoute();
+
+  const {
+    sortObject: { displayName: sortDisplayName },
+  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+
   const handleArchive = () => {
     archiveFlow(flow.id).then(() => {
       refreshFlows();
     });
   };
+
   const handleCopy = () => {
     copyFlow(flow.id).then(() => {
       refreshFlows();
     });
   };
+
   const handleMove = (newTeam: string) => {
     moveFlow(flow.id, newTeam, flow.name).then(() => {
       refreshFlows();
@@ -138,6 +151,14 @@ const FlowCard: React.FC<FlowCardProps> = ({
     },
   ];
 
+  const publishedDate = formatLastPublishMessage(
+    flow.publishedFlows[0]?.publishedAt,
+  );
+  const editedDate = formatLastEditMessage(
+    flow.operations[0]?.createdAt,
+    flow.operations[0]?.actor,
+  );
+
   return (
     <>
       {isArchiveDialogOpen && (
@@ -159,10 +180,9 @@ const FlowCard: React.FC<FlowCardProps> = ({
               {flow.name}
             </Typography>
             <LinkSubText>
-              {formatLastEditMessage(
-                flow.operations[0]?.createdAt,
-                flow.operations[0]?.actor,
-              )}
+              {sortDisplayName === "Last published"
+                ? publishedDate
+                : editedDate}
             </LinkSubText>
           </Box>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
