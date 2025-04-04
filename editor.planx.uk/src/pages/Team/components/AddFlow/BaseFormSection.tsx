@@ -56,11 +56,7 @@ export const BaseFormSection: React.FC = () => {
             <MenuItem
               key={mode}
               value={mode}
-              // TODO: Enable "copy"
-              disabled={
-                mode === "copy" ||
-                (mode === "template" && !hasFeatureFlag("TEMPLATES"))
-              }
+              disabled={mode === "template" && !hasFeatureFlag("TEMPLATES")}
             >
               {title}
             </MenuItem>

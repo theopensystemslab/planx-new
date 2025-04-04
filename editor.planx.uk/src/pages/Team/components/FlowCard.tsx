@@ -109,11 +109,14 @@ const FlowCard: React.FC<FlowCardProps> = ({
       refreshFlows();
     });
   };
+
+  // TODO: Update this
   const handleCopy = () => {
     copyFlow(flow.id).then(() => {
       refreshFlows();
     });
   };
+
   const handleMove = (newTeam: string) => {
     moveFlow(flow.id, newTeam, flow.name).then(() => {
       refreshFlows();

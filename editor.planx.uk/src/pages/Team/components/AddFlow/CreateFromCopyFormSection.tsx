@@ -1,3 +1,4 @@
+import { gql, useQuery } from "@apollo/client";
 import MenuItem from "@mui/material/MenuItem";
 import { useFormikContext } from "formik";
 import React from "react";
@@ -6,14 +7,33 @@ import InputLabel from "ui/public/InputLabel";
 
 import { CreateFlow } from "./types";
 
+interface CopiableFlow {
+  id: string;
+  slug: string;
+  name: string;
+  team: { name: string };
+}
+
 export const CreateFromCopyFormSection: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<CreateFlow>();
 
-  if (values.mode !== "copy") return null;
+  const { data } = useQuery<{ copiableFlows: CopiableFlow[] }>(gql`
+    query GetCopiableFlows {
+      copiableFlows: flows(
+        where: { can_create_from_copy: { _eq: true } }
+        order_by: { team: { name: asc }, name: asc }
+      ) {
+        id
+        slug
+        name
+        team {
+          name
+        }
+      }
+    }
+  `);
 
-  // TODO: Fetch data
-  const copiableFlows: { id: string; flowName: string; teamName: string }[] =
-    [];
+  if (values.mode !== "copy" || !data?.copiableFlows?.length) return null;
 
   return (
     <InputLabel label="Available flows" id="available-flow-select">
@@ -24,11 +44,11 @@ export const CreateFromCopyFormSection: React.FC = () => {
         required={true}
         title={"Available flows"}
         labelId="available-flow-select"
-        onChange={(e) => setFieldValue("flow.source.id", e.target.value)}
+        onChange={(e) => setFieldValue("flow.sourceId", e.target.value)}
       >
-        {copiableFlows.map(({ id, flowName, teamName }) => (
+        {data.copiableFlows.map(({ id, name, team }) => (
           <MenuItem key={id} value={id}>
-            {`${teamName} - ${flowName}`}
+            {`${team.name} - ${name}`}
           </MenuItem>
         ))}
       </SelectInput>

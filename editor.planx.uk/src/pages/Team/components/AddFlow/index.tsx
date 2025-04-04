@@ -32,7 +32,13 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const { teamId, createFlow, createFlowFromTemplate, teamSlug } = useStore();
+  const {
+    teamId,
+    createFlow,
+    createFlowFromTemplate,
+    createFlowFromCopy,
+    teamSlug,
+  } = useStore();
 
   const initialValues: CreateFlow = {
     mode: "new",
@@ -48,13 +54,14 @@ export const AddFlow: React.FC = () => {
     { mode, flow },
     { setFieldError },
   ) => {
+    console.log({ flow, mode });
     try {
       switch (mode) {
         case "new":
           await createFlow(flow);
           break;
         case "copy":
-          // newFlowId = await createFlowFromCopy(flow);
+          await createFlowFromCopy(flow);
           break;
         case "template":
           await createFlowFromTemplate(flow);
