@@ -154,7 +154,7 @@ interface FindApplication {
 export async function checkEmailAuditTable(sessionId: string): Promise<string> {
   const application = await $api.client.request<FindApplication>(
     gql`
-      query FindApplication($session_id: String = "") {
+      query FindApplication($session_id: uuid!) {
         emailApplications: email_applications(
           where: {
             session_id: { _eq: $session_id }
