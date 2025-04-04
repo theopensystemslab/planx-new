@@ -51,8 +51,8 @@ dependencies:
     specifier: 1.0.0-alpha.5
     version: 1.0.0-alpha.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#9320ee8
-    version: github.com/theopensystemslab/planx-core/9320ee8(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#5959a13
+    version: github.com/theopensystemslab/planx-core/5959a13(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -3350,30 +3350,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@mui/base@5.0.0-beta.60(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-w8twR3qCUI+uJHO5xDOuc1yB5l46KFbvNsTwIvEW9tQkKxVaiEFf2GAXHuvFJiHfZLqjzett6drZjghy8D1Z1A==}
-    engines: {node: '>=14.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0
-      react: ^17.0.0 || ^18.0.0
-      react-dom: ^17.0.0 || ^18.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.27.0
-      '@floating-ui/react-dom': 2.1.2(react-dom@18.3.1)(react@18.3.1)
-      '@mui/types': 7.4.0(@types/react@18.2.45)
-      '@mui/utils': 6.4.8(@types/react@18.2.45)(react@18.3.1)
-      '@popperjs/core': 2.11.8
-      '@types/react': 18.2.45
-      clsx: 2.1.1
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    dev: false
-
   /@mui/core-downloads-tracker@5.17.1:
     resolution: {integrity: sha512-OcZj+cs6EfUD39IoPBOgN61zf1XFVY+imsGoBDwXeSq2UHJZE3N59zzBOVjclck91Ne3e9gudONOeILvHCIhUA==}
     dev: false
@@ -3825,26 +3801,6 @@ packages:
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
-      react-is: 19.0.0
-    dev: false
-
-  /@mui/utils@6.4.8(@types/react@18.2.45)(react@18.3.1):
-    resolution: {integrity: sha512-C86gfiZ5BfZ51KqzqoHi1WuuM2QdSKoFhbkZeAfQRB+jCc4YNhhj11UXFVMMsqBgZ+Zy8IHNJW3M9Wj/LOwRXQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
-      react: ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.27.0
-      '@mui/types': 7.2.24(@types/react@18.2.45)
-      '@types/prop-types': 15.7.14
-      '@types/react': 18.2.45
-      clsx: 2.1.1
-      prop-types: 15.8.1
-      react: 18.3.1
       react-is: 19.0.0
     dev: false
 
@@ -14772,9 +14728,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/9320ee8(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/9320ee8}
-    id: github.com/theopensystemslab/planx-core/9320ee8
+  github.com/theopensystemslab/planx-core/5959a13(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5959a13}
+    id: github.com/theopensystemslab/planx-core/5959a13
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14783,7 +14739,6 @@ packages:
       '@emotion/react': 11.13.3(@types/react@18.2.45)(react@18.3.1)
       '@emotion/styled': 11.13.0(@emotion/react@11.13.3)(@types/react@18.2.45)(react@18.3.1)
       '@formatjs/intl-listformat': 7.7.11
-      '@mui/base': 5.0.0-beta.60(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
       '@mui/material': 5.15.10(@emotion/react@11.13.3)(@emotion/styled@11.13.0)(@types/react@18.2.45)(react-dom@18.3.1)(react@18.3.1)
       ajv: 8.17.1
       ajv-formats: 2.1.1(ajv@8.17.1)
