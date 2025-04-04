@@ -1,10 +1,8 @@
-import { gql, useQuery } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
@@ -19,10 +17,6 @@ import { AddFlow } from "./components/AddFlow";
 import FlowCard, { Card, CardContent } from "./components/FlowCard";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
-import {
-  StartFromTemplateButton,
-  TemplateOption,
-} from "./StartFromTemplateButton";
 
 const DashboardList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(3, 0),
@@ -110,24 +104,9 @@ const Team: React.FC = () => {
     fetchFlows();
   }, [fetchFlows]);
 
-  const { data: templates } = useQuery<{ flows: TemplateOption[] }>(gql`
-    query GetTemplates {
-      flows(where: { is_template: { _eq: true } }) {
-        id
-        slug
-        name
-      }
-    }
-  `);
-
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
   const flowsHaveBeenFiltered = matchingFlows?.length !== flows?.length;
-  const showAddTemplateButton =
-    showAddFlowButton &&
-    templates &&
-    Boolean(templates?.flows.length) &&
-    hasFeatureFlag("TEMPLATES");
 
   return (
     <Box bgcolor={"background.paper"} flexGrow={1}>
@@ -166,17 +145,6 @@ const Team: React.FC = () => {
         </Box>
         {teamHasFlows && (
           <>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              {showAddTemplateButton && (
-                <StartFromTemplateButton templates={templates?.flows} />
-              )}
-            </Box>
             <Box>
               <Filters<FlowSummary>
                 records={flows}
