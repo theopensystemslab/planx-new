@@ -40,7 +40,6 @@ export const AddFlow: React.FC = () => {
     { mode, flow },
     { setFieldError },
   ) => {
-    console.log({ flow, mode });
     try {
       switch (mode) {
         case "new":
