@@ -164,7 +164,6 @@ export interface EditorStore extends Store.Store {
   archiveFlow: (flowId: string) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => Promise<void>;
-  copyFlow: (flowId: string) => Promise<any>;
   copyNode: (id: NodeId) => void;
   createFlow: (newFlow: NewFlow) => Promise<string>;
   createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
@@ -304,31 +303,6 @@ export const editorStore: StateCreator<
 
     doc.on("op", (_op: any, isLocalOp?: boolean) =>
       isLocalOp ? cloneStateFromLocalOps() : cloneStateFromRemoteOps(),
-    );
-  },
-
-  copyFlow: async (flowId: string) => {
-    const token = get().jwt;
-
-    // when copying a flow, we make nodeIds unique by replacing part of the original nodeId string.
-    //   the onboarding script will often provide a meaningful string reflecting the team name (eg "LAM"),
-    //     but when accessed from the editor we generate a string using the same method as in src/@planx/graph/index.ts
-    const randomReplacementCharacters = customAlphabet(en)(
-      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-      5, // a full nodeId is 10 characters long
-    );
-
-    return axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/copy`,
-      {
-        replaceValue: randomReplacementCharacters(),
-        insert: true,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
     );
   },
 
