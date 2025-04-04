@@ -29,7 +29,6 @@ export const Basic: Story = {
         payable: 1000,
         reduction: 0,
         exemption: 0,
-        vat: 0,
       },
     },
   },
@@ -55,7 +54,6 @@ export const WithVAT: Story = {
         fastTrack: 100, // 20% VAT = 20
         reduction: 0,
         exemption: 0,
-        vat: 26, // Summed VAT
       },
     },
   },
@@ -79,7 +77,6 @@ export const WithReductions: Story = {
         payable: 800,
         reduction: 200,
         exemption: 0,
-        vat: 0,
       },
     },
   },
@@ -104,7 +101,6 @@ export const WithExemptions: Story = {
         serviceCharge: 30,
         reduction: 0,
         exemption: 1000,
-        vat: 6,
       },
     },
   },
