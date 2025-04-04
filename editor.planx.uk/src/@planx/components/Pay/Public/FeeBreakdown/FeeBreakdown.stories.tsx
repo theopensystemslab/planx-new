@@ -39,7 +39,8 @@ export const WithVAT: Story = {
   parameters: {
     docs: {
       description: {
-        story: "A fee breakdown which includes VAT",
+        story:
+          "A fee breakdown which includes a VAT-able service charge and Fast Track fee",
       },
     },
   },
@@ -49,10 +50,12 @@ export const WithVAT: Story = {
       exemptions: [],
       amount: {
         calculated: 1000,
-        payable: 1000,
+        payable: 1156,
+        serviceCharge: 30, // 20% VAT = 6
+        fastTrack: 100, // 20% VAT = 20
         reduction: 0,
         exemption: 0,
-        vat: 166.67,
+        vat: 26, // Summed VAT
       },
     },
   },
@@ -76,7 +79,7 @@ export const WithReductions: Story = {
         payable: 800,
         reduction: 200,
         exemption: 0,
-        vat: 133.36,
+        vat: 0,
       },
     },
   },
@@ -87,7 +90,7 @@ export const WithExemptions: Story = {
     docs: {
       description: {
         story:
-          "A fee breakdown with an exemption - this sets the payable fee to £0",
+          "A fee breakdown with an exemption - this sets the payable fee to the VAT-able service charge only",
       },
     },
   },
@@ -97,10 +100,11 @@ export const WithExemptions: Story = {
       exemptions: ["disability"],
       amount: {
         calculated: 1000,
-        payable: 0,
+        payable: 36,
+        serviceCharge: 30,
         reduction: 0,
         exemption: 1000,
-        vat: 0,
+        vat: 6,
       },
     },
   },

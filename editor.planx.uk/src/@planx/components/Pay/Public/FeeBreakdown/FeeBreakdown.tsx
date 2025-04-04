@@ -98,6 +98,32 @@ const Exemptions: FeeBreakdownSection = ({ exemptions, amount }) => {
   );
 };
 
+const ServiceCharge: FeeBreakdownSection = ({ amount }) => {
+  if (!amount.serviceCharge) return null;
+
+  return (
+    <TableRow>
+      <TableCell>Service charge</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(amount.serviceCharge)}
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const FastTrackFee: FeeBreakdownSection = ({ amount }) => {
+  if (!amount.fastTrack) return null;
+
+  return (
+    <TableRow>
+      <TableCell>Fast Track fee</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(amount.fastTrack)}
+      </TableCell>
+    </TableRow>
+  );
+};
+
 const VAT: FeeBreakdownSection = ({ amount }) => {
   if (!amount.vat) return null;
 
@@ -136,6 +162,8 @@ export const FeeBreakdown: React.FC<{
           <ApplicationFee {...breakdown} />
           <Reductions {...breakdown} />
           <Exemptions {...breakdown} />
+          <FastTrackFee {...breakdown} />
+          <ServiceCharge {...breakdown} />
           <Total {...breakdown} />
           <VAT {...breakdown} />
         </TableBody>
