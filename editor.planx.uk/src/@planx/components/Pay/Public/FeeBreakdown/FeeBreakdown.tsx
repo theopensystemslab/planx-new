@@ -29,27 +29,43 @@ const BoldTableRow = styled(TableRow)(() => ({
 
 const VAT_RATE = 0.2;
 
-type FeeBreakdownSection = React.FC<IFeeBreakdown>;
+type FeeBreakdownRow = React.FC<IFeeBreakdown>;
 
-const Header = () => (
+const Header: FeeBreakdownRow = ({ amount }) => (
   <TableHead>
     <BoldTableRow>
       <TableCell>Description</TableCell>
       <TableCell align="right">Amount</TableCell>
+      {amount.payableVAT ? (
+        <TableCell align="right" sx={{ color: "GrayText" }}>
+          VAT (20%)
+        </TableCell>
+      ) : (
+        <TableCell></TableCell>
+      )}
     </BoldTableRow>
   </TableHead>
 );
 
-const ApplicationFee: FeeBreakdownSection = ({ amount }) => (
+const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
   <TableRow>
     <TableCell>Application fee</TableCell>
     <TableCell align="right">
       {formattedPriceWithCurrencySymbol(amount.calculated)}
     </TableCell>
+    {amount.payableVAT && amount.payableVAT > 0 ? (
+      <TableCell align="right" sx={{ color: "GrayText" }}>
+        {amount.calculatedVAT && amount.calculatedVAT > 0
+          ? formattedPriceWithCurrencySymbol(amount.calculatedVAT)
+          : undefined}
+      </TableCell>
+    ) : (
+      <TableCell></TableCell>
+    )}
   </TableRow>
 );
 
-const Reductions: FeeBreakdownSection = ({ amount, reductions }) => {
+const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
   if (!amount.reduction) return null;
 
   return (
@@ -63,7 +79,7 @@ const Reductions: FeeBreakdownSection = ({ amount, reductions }) => {
       {reductions.map((reduction) => (
         <TableRow key={reduction}>
           <TableCell colSpan={2}>
-            <Box sx={{ pl: 2, color: "grey", textTransform: "capitalize" }}>
+            <Box sx={{ pl: 2, color: "GrayText", textTransform: "capitalize" }}>
               {reduction}
             </Box>
           </TableCell>
@@ -74,7 +90,7 @@ const Reductions: FeeBreakdownSection = ({ amount, reductions }) => {
 };
 
 /* TODO: Parse exemption descriptions from schema */
-const Exemptions: FeeBreakdownSection = ({ exemptions, amount }) => {
+const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
   if (!amount.exemption) return null;
 
   return (
@@ -88,7 +104,7 @@ const Exemptions: FeeBreakdownSection = ({ exemptions, amount }) => {
       {exemptions.map((exemption) => (
         <TableRow key={exemption}>
           <TableCell colSpan={2}>
-            <Box sx={{ pl: 2, color: "grey", textTransform: "capitalize" }}>
+            <Box sx={{ pl: 2, color: "GrayText", textTransform: "capitalize" }}>
               {exemption}
             </Box>
           </TableCell>
@@ -98,27 +114,70 @@ const Exemptions: FeeBreakdownSection = ({ exemptions, amount }) => {
   );
 };
 
-const VAT: FeeBreakdownSection = ({ amount }) => {
-  if (!amount.vat) return null;
+const FastTrackFee: FeeBreakdownRow = ({ amount }) => {
+  if (!amount.fastTrack || !amount.fastTrackVAT) return null;
 
   return (
     <TableRow>
-      <TableCell variant="footer">{`Includes VAT (${
-        VAT_RATE * 100
-      }%)`}</TableCell>
-      <TableCell variant="footer" align="right">
-        {formattedPriceWithCurrencySymbol(amount.vat)}
+      <TableCell>Fast Track fee</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(amount.fastTrack)}
+      </TableCell>
+      <TableCell align="right" sx={{ color: "GrayText" }}>
+        {formattedPriceWithCurrencySymbol(amount.fastTrackVAT)}
       </TableCell>
     </TableRow>
   );
 };
 
-const Total: FeeBreakdownSection = ({ amount }) => (
+const ServiceCharge: FeeBreakdownRow = ({ amount }) => {
+  if (!amount.serviceCharge || !amount.serviceChargeVAT) return null;
+
+  return (
+    <TableRow>
+      <TableCell>Service charge</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(amount.serviceCharge)}
+      </TableCell>
+      <TableCell align="right" sx={{ color: "GrayText" }}>
+        {formattedPriceWithCurrencySymbol(amount.serviceChargeVAT)}
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const PaymentProcessingFee: FeeBreakdownRow = ({ amount }) => {
+  if (!amount.paymentProcessing || !amount.paymentProcessingVAT) return null;
+
+  return (
+    <TableRow>
+      <TableCell>Payment processing fee</TableCell>
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(amount.paymentProcessing)}
+      </TableCell>
+      <TableCell align="right" sx={{ color: "GrayText" }}>
+        {formattedPriceWithCurrencySymbol(amount.paymentProcessingVAT)}
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const Total: FeeBreakdownRow = ({ amount }) => (
   <BoldTableRow>
-    <TableCell>Total</TableCell>
+    <TableCell>
+      {amount.payableVAT && amount.payableVAT > 0
+        ? `Total including VAT`
+        : `Total`}
+    </TableCell>
     <TableCell align="right">
       {formattedPriceWithCurrencySymbol(amount.payable)}
     </TableCell>
+    <TableCell></TableCell>
+    {/* {amount.payableVAT && (
+      <TableCell align="right" sx={{ color: "GrayText" }}>
+        {formattedPriceWithCurrencySymbol(amount.payableVAT)}
+      </TableCell>
+    )} */}
   </BoldTableRow>
 );
 
@@ -131,13 +190,15 @@ export const FeeBreakdown: React.FC<{
   return (
     <TableContainer sx={{ mt: 3 }}>
       <StyledTable data-testid="fee-breakdown-table">
-        <Header />
+        <Header {...breakdown} />
         <TableBody>
           <ApplicationFee {...breakdown} />
           <Reductions {...breakdown} />
           <Exemptions {...breakdown} />
+          <FastTrackFee {...breakdown} />
+          <ServiceCharge {...breakdown} />
+          <PaymentProcessingFee {...breakdown} />
           <Total {...breakdown} />
-          <VAT {...breakdown} />
         </TableBody>
       </StyledTable>
     </TableContainer>
