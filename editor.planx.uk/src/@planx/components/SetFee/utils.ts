@@ -7,6 +7,7 @@ type HandleSetFees = (params: {
   passport: Store.Passport;
   applyCalculatedVAT: boolean;
   fastTrackFeeAmount: number;
+  applyServiceCharge: boolean;
   serviceChargeAmount: number;
   applyPaymentProcessingFee: boolean;
 }) => Store.Passport["data"];
@@ -15,6 +16,7 @@ export const handleSetFees: HandleSetFees = ({
   passport,
   applyCalculatedVAT,
   fastTrackFeeAmount,
+  applyServiceCharge,
   serviceChargeAmount,
   applyPaymentProcessingFee,
 }) => {
@@ -44,11 +46,11 @@ export const handleSetFees: HandleSetFees = ({
     fees[payableVAT] = calculatedVAT;
   }
 
-  const isFastTrack =
-    passport.data?.["fastTrack.optIn"]?.[0] === "true" &&
+  const addFastTrack =
+    passport.data?.["application.fastTrack"] &&
     fastTrackFeeAmount &&
     fastTrackFeeAmount > 0;
-  if (isFastTrack) {
+  if (addFastTrack) {
     const fastTrackVAT = fastTrackFeeAmount * VAT_PERCENTAGE;
 
     fees["application.fee.fastTrack"] = fastTrackFeeAmount;
@@ -57,9 +59,8 @@ export const handleSetFees: HandleSetFees = ({
     fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
   }
 
-  // TODO - double check this condition
-  const isServiceChargeApplicable = fees[payable] - fees[payableVAT] >= 100;
-  if (isServiceChargeApplicable) {
+  const addServiceCharge = applyServiceCharge && fees[payable] >= 100;
+  if (addServiceCharge) {
     const serviceChargeVAT = serviceChargeAmount * VAT_PERCENTAGE;
 
     fees["application.fee.serviceCharge"] = serviceChargeAmount;

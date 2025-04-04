@@ -8,8 +8,12 @@ import { handleSetFees } from "./utils";
 export type Props = PublicProps<SetFee>;
 
 export default function Component(props: Props) {
-  const { applyCalculatedVAT, serviceChargeAmount, applyPaymentProcessingFee } =
-    props;
+  const {
+    applyCalculatedVAT,
+    applyServiceCharge,
+    serviceChargeAmount,
+    applyPaymentProcessingFee,
+  } = props;
   const fastTrackFeeAmount = Number(props.fastTrackFeeAmount || 0);
 
   const passport = useStore().computePassport();
@@ -19,6 +23,7 @@ export default function Component(props: Props) {
       passport,
       applyCalculatedVAT,
       fastTrackFeeAmount,
+      applyServiceCharge,
       serviceChargeAmount,
       applyPaymentProcessingFee,
     });

@@ -4,6 +4,7 @@ import { BaseNodeData, parseBaseNodeData } from "../shared";
 export interface SetFee extends BaseNodeData {
   applyCalculatedVAT: boolean;
   fastTrackFeeAmount?: number;
+  applyServiceCharge: boolean;
   serviceChargeAmount: number;
   applyPaymentProcessingFee: boolean;
   paymentProcessingFeePercentage: number;
@@ -13,6 +14,7 @@ export interface SetFee extends BaseNodeData {
 export const parseSetFee = (data: Record<string, any> | undefined): SetFee => ({
   applyCalculatedVAT: data?.applyCalculatedVAT || false,
   fastTrackFeeAmount: data?.fastTrackFeeAmount,
+  applyServiceCharge: data?.applyServiceCharge || false,
   serviceChargeAmount: DEFAULT_SERVICE_CHARGE_AMOUNT,
   applyPaymentProcessingFee: data?.applyPaymentProcessingFee || false,
   paymentProcessingFeePercentage: DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,

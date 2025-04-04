@@ -58,8 +58,8 @@ function SetFeeComponent(props: Props) {
           <Typography variant="body2">
             If this is a discretionary service, apply 20% VAT to the application
             fee. The incoming <strong>application.fee.calculated</strong> should
-            be exclusive of VAT and already reflect the correct development
-            category and any exemptions or reductions.
+            be exclusive of VAT and already reflect any exemptions, reductions
+            or increases.
           </Typography>
         </ModalSectionContent>
       </ModalSection>
@@ -67,8 +67,8 @@ function SetFeeComponent(props: Props) {
         <ModalSectionContent title="Fast Track fee (optional)">
           <Typography variant="body2" mb={2}>
             If this service supports Fast Track journeys, specify the fee
-            amount. This fee plus 20% VAT will only be applied when{" "}
-            <strong>fastTrack.optIn</strong> is "true".
+            amount. This fee plus 20% VAT will be added when{" "}
+            <strong>application.fastTrack</strong> applies.
           </Typography>
           <InputRow>
             <InputRowLabel>£</InputRowLabel>
@@ -82,18 +82,33 @@ function SetFeeComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Plan✕ service charge">
+        <ModalSectionContent title="Plan✕ service charge (optional)">
+          <InputRow>
+            <Switch
+              checked={formik.values.applyServiceCharge}
+              onChange={() =>
+                formik.setFieldValue(
+                  "applyServiceCharge",
+                  !formik.values.applyServiceCharge,
+                )
+              }
+              label="Apply Plan✕ service charge"
+            />
+          </InputRow>
           <Typography variant="body2" mb={2}>
             A £{formik.values.serviceChargeAmount} service charge plus 20% VAT
-            will only be applied when <strong>application.fee.payable</strong>{" "}
-            is greater than £100 (after any Fast Track fees, exemptions, or
-            reductions and exclusive of VAT).
+            will be added unless <strong>application.fee.payable</strong> is
+            less than £100 (after any Fast Track fees, exemptions, reductions or
+            increases, inclusive of VAT).
           </Typography>
           <Typography variant="body2" mb={2}>
             Open Systems Lab invoices quarterly to collect the service charge.
             If you'd like to charge a higher fee than £
-            {formik.values.serviceChargeAmount}, please get in touch with
-            [EMAIL].
+            {formik.values.serviceChargeAmount}, please contact{" "}
+            <a href="mailto:support@planx.uk" target="_self">
+              support@planx.uk
+            </a>
+            .
           </Typography>
         </ModalSectionContent>
       </ModalSection>
@@ -112,19 +127,16 @@ function SetFeeComponent(props: Props) {
             />
           </InputRow>
           <Typography variant="body2" mb={2}>
-            If your internal finance team does not wish to absorb Stripe
-            transaction fees incurred by GOV.UK Pay for this service, use this
-            option to apply an additional 1% of{" "}
-            <strong>application.fee.payable</strong> plus 20% VAT payment
-            processing fee to the amount owed by the applicant.
+            If your council does not wish to absorb Stripe transaction fees
+            incurred by GOV.UK Pay for this service, use this option to apply an
+            additional 1% of <strong>application.fee.payable</strong> plus 20%
+            VAT payment processing fee to the amount owed by the applicant.
           </Typography>
           <Typography variant="body2" mb={2}>
             Please note that it is your responsibility to configure which credit
             card types are accepted in your GOV.UK Pay account. 1% is an average
             processing fee only; American Express and non-EU credit cards are
-            likely to have higher rates. If the transaction fee paid is lower
-            than 1%, Open Systems Lab will invoice quarterly to collect the
-            difference.
+            likely to have higher rates.
           </Typography>
         </ModalSectionContent>
       </ModalSection>
@@ -145,6 +157,7 @@ function SetFeeComponent(props: Props) {
                   fastTrackFeeAmount: Number(
                     formik.values.fastTrackFeeAmount || 0,
                   ),
+                  applyServiceCharge: formik.values.applyServiceCharge,
                   serviceChargeAmount: formik.values.serviceChargeAmount,
                   applyPaymentProcessingFee:
                     formik.values.applyPaymentProcessingFee,
