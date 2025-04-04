@@ -3,6 +3,7 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 import type { Flow } from "../../../types.js";
 import { ServerError } from "../../../errors/index.js";
 import { copyFlow } from "./service.js";
+import { nanoid } from "nanoid";
 
 interface CopyFlowResponse {
   message: string;
@@ -16,10 +17,16 @@ export const copyFlowSchema = z.object({
     flowId: z.string(),
   }),
   body: z.object({
-    replaceValue: z.string().length(5),
+    slug: z.string(),
+    name: z.string(),
+    teamId: z.number().int().positive(),
+    replaceValue: z.string().length(5).default(nanoid(5)),
     insert: z.boolean().optional().default(false),
   }),
 });
+
+export type CopyFlowRequest = z.infer<typeof copyFlowSchema>["params"] &
+  z.infer<typeof copyFlowSchema>["body"];
 
 export type CopyFlowController = ValidatedRequestHandler<
   typeof copyFlowSchema,
@@ -33,17 +40,15 @@ export const copyFlowController: CopyFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-    const { replaceValue, insert } = res.locals.parsedReq.body;
-    const { flow, uniqueFlowData } = await copyFlow(
-      flowId,
-      replaceValue,
-      insert,
-    );
+    const body = res.locals.parsedReq.body;
+    const params = { flowId, ...body };
+
+    const { flow, uniqueFlowData } = await copyFlow(params);
 
     res.status(200).send({
       message: `Successfully copied ${flow.slug}`,
-      inserted: insert,
-      replaceValue: replaceValue,
+      inserted: body.insert,
+      replaceValue: body.replaceValue,
       data: uniqueFlowData,
     });
   } catch (error) {
