@@ -132,6 +132,7 @@ const SendComponent: React.FC<Props> = (props) => {
               value={formik.values.title}
               placeholder="Editor title"
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <Box mt={2}>
@@ -146,6 +147,7 @@ const SendComponent: React.FC<Props> = (props) => {
                       checked={formik.values.destinations.includes(
                         option.value,
                       )}
+                      disabled={props.disabled}
                     />
                   </Grid>
                 ))}

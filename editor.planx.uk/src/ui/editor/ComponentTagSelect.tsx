@@ -15,6 +15,7 @@ import { SelectMultiple } from "ui/shared/SelectMultiple";
 interface Props {
   value?: NodeTag[];
   onChange: (values: NodeTag[]) => void;
+  disabled?: boolean;
 }
 
 const skipTag = (role?: Role) => {
@@ -72,7 +73,11 @@ const renderTags: AutocompleteProps<
     );
   });
 
-export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
+export const ComponentTagSelect: React.FC<Props> = ({
+  value,
+  onChange,
+  disabled,
+}) => {
   return (
     <ModalSection>
       <ModalSectionContent title="Tags" Icon={BookmarksIcon}>
@@ -85,6 +90,7 @@ export const ComponentTagSelect: React.FC<Props> = ({ value, onChange }) => {
             value={value}
             renderOption={renderOption}
             renderTags={renderTags}
+            disabled={disabled}
           />
         </InputRow>
       </ModalSectionContent>

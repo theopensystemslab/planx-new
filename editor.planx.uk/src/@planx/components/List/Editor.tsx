@@ -110,6 +110,7 @@ function ListComponent(props: Props) {
               placeholder="Title"
               onChange={formik.handleChange}
               required
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -118,12 +119,14 @@ function ListComponent(props: Props) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <DataFieldAutocomplete
             required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
           <ErrorWrapper error={formik.errors.schema?.max}>
             <InputRow>
@@ -131,6 +134,7 @@ function ListComponent(props: Props) {
               <InputRowItem>
                 <SelectInput
                   value={formik.values.schemaName}
+                  disabled={props.disabled}
                   onChange={(e) => {
                     formik.setFieldValue("schemaName", e.target.value);
                     formik.setFieldValue(
@@ -152,7 +156,7 @@ function ListComponent(props: Props) {
           </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }

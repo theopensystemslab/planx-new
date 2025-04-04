@@ -48,6 +48,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -56,11 +57,13 @@ const DateInputComponent: React.FC<Props> = (props) => {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <DataFieldAutocomplete
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
           <Box mt={2}>
             <InputRow>
@@ -72,6 +75,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
                 onChange={(newDate: string, eventType: string) => {
                   formik.setFieldValue("min", paddedDate(newDate, eventType));
                 }}
+                disabled={props.disabled}
               />
             </InputRow>
           </Box>
@@ -85,12 +89,13 @@ const DateInputComponent: React.FC<Props> = (props) => {
                 onChange={(newDate: string, eventType: string) => {
                   formik.setFieldValue("max", paddedDate(newDate, eventType));
                 }}
+                disabled={props.disabled}
               />
             </InputRow>
           </Box>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };

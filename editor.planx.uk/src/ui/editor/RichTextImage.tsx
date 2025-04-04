@@ -53,6 +53,7 @@ const ImageNode: React.FC<NodeViewWrapperProps> = ({
   selected,
   node,
   updateAttributes,
+  editor,
 }) => {
   const { src, alt } = node.attrs;
 
@@ -78,6 +79,7 @@ const ImageNode: React.FC<NodeViewWrapperProps> = ({
           }}
           type="button"
           onClick={onEditAlt}
+          disabled={!editor.options.editable}
         >
           Edit
         </Link>

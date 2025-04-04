@@ -78,6 +78,7 @@ function FileUploadAndLabelComponent(props: Props) {
               placeholder={formik.values.title}
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -87,6 +88,7 @@ function FileUploadAndLabelComponent(props: Props) {
               placeholder="Description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -99,6 +101,7 @@ function FileUploadAndLabelComponent(props: Props) {
                 )
               }
               label="Hide the drop zone and show files list for information only"
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
@@ -112,10 +115,11 @@ function FileUploadAndLabelComponent(props: Props) {
             }}
             Editor={FileTypeEditor}
             newValue={newFileType}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }
@@ -142,18 +146,21 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             props.onChange(merge(props.value, { name: e.target.value }))
           }
           placeholder="File type"
+          disabled={props.disabled}
         />
       </InputRow>
       <DataFieldAutocomplete
         required
         schema={schema}
         value={props.value.fn}
+        disabled={props.disabled}
         onChange={(value) => props.onChange(merge(props.value, { fn: value }))}
       />
       <ModalSubtitle title="Rule" />
       <InputRow>
         <SelectInput
           value={props.value.rule.condition}
+          disabled={props.disabled}
           onChange={(e) =>
             props.onChange(
               setCondition(
@@ -186,6 +193,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
               )
             }
             placeholder="Data field"
+            disabled={props.disabled}
           />
           <Operator>Equals</Operator>
           <Input
@@ -202,6 +210,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
               )
             }
             placeholder="Value"
+            disabled={props.disabled}
           />
         </InputRow>
       )}
@@ -217,6 +226,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             );
           }}
           placeholder="Why it matters"
+          disabled={props.disabled}
         />
       </InputRow>
       <InputRow>
@@ -232,6 +242,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             );
           }}
           placeholder="Policy source"
+          disabled={props.disabled}
         />
       </InputRow>
       <InputRow>
@@ -247,10 +258,12 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
             );
           }}
           placeholder="How is it defined?"
+          disabled={props.disabled}
         />
         <InputRowItem width={50}>
           <ImgInput
             img={props.value.moreInformation?.definitionImg}
+            disabled={props.disabled}
             onChange={(newUrl) => {
               props.onChange(
                 merge(props.value, {

@@ -9,12 +9,14 @@ export interface InternalNotesProps {
   name?: string;
   value?: string;
   onChange: (ev: ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 export const InternalNotes: React.FC<InternalNotesProps> = ({
   name,
   value,
   onChange,
+  disabled,
 }) => {
   return (
     <ModalSection>
@@ -28,6 +30,7 @@ export const InternalNotes: React.FC<InternalNotesProps> = ({
             multiline
             placeholder="Internal notes"
             rows={3}
+            disabled={disabled}
           />
         </InputRow>
       </ModalSectionContent>

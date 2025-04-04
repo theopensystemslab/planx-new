@@ -21,9 +21,10 @@ import ChecklistOptionsEditor from "./OptionsEditor";
 
 interface Props {
   formik: FormikHookReturn;
+  disabled?: boolean;
 }
 
-export const GroupedOptions = ({ formik }: Props) => {
+export const GroupedOptions = ({ formik, disabled }: Props) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
@@ -47,6 +48,7 @@ export const GroupedOptions = ({ formik }: Props) => {
                   value={groupedOption.title}
                   placeholder="Section Title"
                   onChange={formik.handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
               <Box flex={0}>
@@ -60,6 +62,7 @@ export const GroupedOptions = ({ formik }: Props) => {
                     );
                   }}
                   size="large"
+                  disabled={disabled}
                 >
                   <Delete />
                 </IconButton>
@@ -74,6 +77,7 @@ export const GroupedOptions = ({ formik }: Props) => {
                     newOptions,
                   );
                 }}
+                disabled={disabled}
                 newValue={() => ({
                   id: "",
                   data: {
@@ -124,6 +128,7 @@ export const GroupedOptions = ({ formik }: Props) => {
       <Box mt={1}>
         <Button
           size="large"
+          disabled={disabled}
           onClick={() => {
             formik.setFieldValue(`groupedOptions`, [
               ...nonExclusiveOptionGroups,
@@ -144,6 +149,7 @@ export const GroupedOptions = ({ formik }: Props) => {
           grouped
           exclusiveOptions={exclusiveOptions[0]?.children}
           nonExclusiveOptions={nonExclusiveOptionGroups}
+          disabled={disabled}
         />
       ) : (
         <></>

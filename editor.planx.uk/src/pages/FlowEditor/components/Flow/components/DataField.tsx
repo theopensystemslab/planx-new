@@ -11,16 +11,11 @@ export const DataField: React.FC<{
 
   return (
     <Box
+      className="card-data-field"
       sx={(theme) => ({
         fontFamily: theme.typography.data.fontFamily,
         fontSize: theme.typography.data,
-        backgroundColor: "#f0f0f0",
-        borderColor:
-          variant === "parent"
-            ? theme.palette.common.black
-            : theme.palette.grey[400],
-        borderWidth:
-          variant === "parent" ? "0 1px 1px 1px" : "1px 0 0 0",
+        borderWidth: variant === "parent" ? "0 1px 1px 1px" : "1px 0 0 0",
         borderStyle: "solid",
         width: "100%",
         p: 0.5,
