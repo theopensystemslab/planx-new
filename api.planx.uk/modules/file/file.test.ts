@@ -351,9 +351,9 @@ describe("File download", () => {
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
-        .expect(500)
+        .expect(404)
         .then((res) => {
-          expect(res.body.error).toMatch(/S3 error!/);
+          expect(res.body.error).toMatch(/Missing file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
@@ -368,9 +368,9 @@ describe("File download", () => {
 
       await supertest(app)
         .get("/file/public/someKey/someFile.txt")
-        .expect(500)
+        .expect(404)
         .then((res) => {
-          expect(res.body.error).toMatch(/Missing body from S3 file/);
+          expect(res.body.error).toMatch(/Missing file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });
@@ -445,9 +445,9 @@ describe("File download", () => {
         .set({ "api-key": "test" })
         .field("filename", "some_file.txt")
         .attach("file", Buffer.from("some data"), "some_file.txt")
-        .expect(500)
+        .expect(404)
         .then((res) => {
-          expect(res.body.error).toMatch(/S3 error!/);
+          expect(res.body.error).toMatch(/Missing file/);
         });
       expect(mockGetObject).toHaveBeenCalledTimes(1);
     });

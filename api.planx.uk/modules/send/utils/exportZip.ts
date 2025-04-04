@@ -244,10 +244,9 @@ export class ExportZip {
     // Files are stored decoded on S3, but encoded in our passport, ensure the key matches S3 before fetching it
     const s3Key = url.split("/").slice(-2).join("/");
     const decodedS3Key = decodeURIComponent(s3Key);
-    const { body } = await getFileFromS3(decodedS3Key);
-    if (!body) throw new Error("file not found");
+    const file = await getFileFromS3(decodedS3Key);
 
-    this.zip.addFile(name, body);
+    if (file) this.zip.addFile(name, file.body);
   }
 
   toBuffer(): Buffer {
