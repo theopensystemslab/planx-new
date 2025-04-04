@@ -1,8 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
+import TableRowsIcon from "@mui/icons-material/TableRows";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { hasFeatureFlag } from "lib/featureFlags";
 import { isEmpty, orderBy } from "lodash";
@@ -24,23 +28,40 @@ import {
   TemplateOption,
 } from "./StartFromTemplateButton";
 
-const DashboardList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(3, 0),
-  margin: 0,
-  display: "grid",
-  gridAutoRows: "1fr",
-  gridTemplateColumns: "repeat(1, 1fr)",
-  gridGap: theme.spacing(2),
-  [theme.breakpoints.up("md")]: {
-    gridTemplateColumns: "repeat(2, 1fr)",
-  },
-  [theme.breakpoints.up("lg")]: {
-    gridTemplateColumns: "repeat(3, 1fr)",
-  },
+const DashboardList = styled("ul")<{ viewType: "grid" | "row" }>(
+  ({ theme, viewType }) => ({
+    padding: theme.spacing(2, 0, 3),
+    margin: 0,
+    display: viewType === "grid" ? "grid" : "flex",
+    flexDirection: viewType === "grid" ? "row" : "column",
+    gap: theme.spacing(2),
+    gridAutoRows: "1fr",
+    gridTemplateColumns: viewType === "grid" ? "repeat(1, 1fr)" : "none",
+    [theme.breakpoints.up("md")]: {
+      gridTemplateColumns: viewType === "grid" ? "repeat(2, 1fr)" : "none",
+    },
+    [theme.breakpoints.up("lg")]: {
+      gridTemplateColumns: viewType === "grid" ? "repeat(3, 1fr)" : "none",
+    },
+  }),
+);
+
+export const FiltersContainer = styled(Box)(({ theme }) => ({
+  width: "100%",
+  margin: theme.spacing(1, 0, 2),
+  padding: theme.spacing(1.5, 0),
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: theme.spacing(1),
+  borderTop: `1px solid ${theme.palette.border.light}`,
+  borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
 const GetStarted: React.FC = () => (
-  <DashboardList sx={{ paddingTop: 2 }}>
+  <DashboardList viewType="grid" sx={{ paddingTop: 2 }}>
     <Card>
       <CardContent>
         <Typography variant="h3">No services found</Typography>
@@ -72,6 +93,17 @@ const Team: React.FC = () => {
   const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
 
   const route = useCurrentRoute();
+
+  const [viewType, setViewType] = useState<"grid" | "row">("grid");
+
+  const handleViewChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    newView: "grid" | "row",
+  ) => {
+    if (newView) {
+      setViewType(newView);
+    }
+  };
 
   useEffect(() => {
     const diffFlows =
@@ -177,14 +209,26 @@ const Team: React.FC = () => {
                 <StartFromTemplateButton templates={templates?.flows} />
               )}
             </Box>
-            <Box>
+            <FiltersContainer>
               <Filters<FlowSummary>
                 records={flows}
                 setFilteredRecords={setFilteredFlows}
                 filterOptions={filterOptions}
                 clearFilters={shouldClearFilters}
               />
-            </Box>
+              {teamHasFlows && matchingFlows && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Typography variant="body2">
+                    <strong>Sort by</strong>
+                  </Typography>
+                  <SortControl<FlowSummary>
+                    records={matchingFlows}
+                    setRecords={setSortedFlows}
+                    sortOptions={sortOptions}
+                  />
+                </Box>
+              )}
+            </FiltersContainer>
             <Box
               sx={{
                 display: "flex",
@@ -199,6 +243,7 @@ const Team: React.FC = () => {
                   justifyContent: "flex-start",
                   alignItems: "center",
                   gap: 2,
+                  minHeight: "50px",
                 }}
               >
                 <ShowingServicesHeader
@@ -213,21 +258,22 @@ const Team: React.FC = () => {
                   </Button>
                 )}
               </Box>
-              {teamHasFlows && matchingFlows && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body2">
-                    <strong>Sort by</strong>
-                  </Typography>
-                  <SortControl<FlowSummary>
-                    records={matchingFlows}
-                    setRecords={setSortedFlows}
-                    sortOptions={sortOptions}
-                  />
-                </Box>
-              )}
+              <ToggleButtonGroup
+                value={viewType}
+                exclusive
+                onChange={handleViewChange}
+                size="small"
+              >
+                <ToggleButton value="grid" disableRipple>
+                  <ViewModuleIcon />
+                </ToggleButton>
+                <ToggleButton value="row" disableRipple>
+                  <TableRowsIcon />
+                </ToggleButton>
+              </ToggleButtonGroup>
             </Box>
             {sortedFlows && (
-              <DashboardList>
+              <DashboardList viewType={viewType as "grid" | "row"}>
                 {sortedFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
