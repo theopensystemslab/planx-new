@@ -240,6 +240,9 @@ const getThemeOptions = ({
         enteringScreen: 400,
       },
     },
+    shape: {
+      borderRadius: 2,
+    },
     components: {
       MuiAccordion: {
         styleOverrides: {

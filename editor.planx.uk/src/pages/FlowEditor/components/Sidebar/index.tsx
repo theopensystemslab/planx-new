@@ -21,7 +21,7 @@ import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import { DebugConsole } from "./DebugConsole";
 import EditHistory from "./EditHistory";
-import { PublishFlowButton } from "./Publish/PublishFlowButton";
+import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Search from "./Search";
 import StyledTab from "./StyledTab";
 
@@ -43,10 +43,10 @@ const Root = styled(Box)(({ theme }) => ({
   zIndex: 1,
 }));
 
-const SidebarContainer = styled(Box)(() => ({
+const SidebarContainer = styled(Box)(({ theme }) => ({
   overflow: "auto",
   flex: 1,
-  background: "#fff",
+  background: theme.palette.background.default,
   position: "relative",
 }));
 
@@ -216,7 +216,7 @@ const Sidebar: React.FC = React.memo(() => {
                 </Tooltip>
               )}
             </Box>
-            <PublishFlowButton previewURL={urls.preview} />
+            <CheckForChangesToPublishButton previewURL={urls.preview} />
           </Header>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
@@ -241,10 +241,8 @@ const Sidebar: React.FC = React.memo(() => {
             </SidebarContainer>
           )}
           {activeTab === "History" && (
-            <SidebarContainer py={3}>
-              <Container>
-                <EditHistory />
-              </Container>
+            <SidebarContainer>
+              <EditHistory />
             </SidebarContainer>
           )}
           {activeTab === "Search" && (
