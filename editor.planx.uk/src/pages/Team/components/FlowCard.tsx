@@ -33,8 +33,8 @@ export const Card = styled("li")(({ theme }) => ({
   justifyContent: "stretch",
   borderRadius: "3px",
   backgroundColor: theme.palette.background.default,
-  border: `1px solid ${theme.palette.border.main}`,
-  boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
+  border: `1px solid ${theme.palette.border.light}`,
+  boxShadow: "0 2px 6px 1px rgba(0, 0, 0, 0.1)",
 }));
 
 export const CardBanner = styled(Box)(({ theme }) => ({
@@ -51,7 +51,7 @@ export const CardContent = styled(Box)(({ theme }) => ({
   height: "100%",
   textDecoration: "none",
   color: "currentColor",
-  padding: theme.spacing(2, 2, 1),
+  padding: theme.spacing(2, 2, 1.5),
   display: "flex",
   flexDirection: "column",
   alignItems: "flex-start",
@@ -81,10 +81,11 @@ const LinkSubText = styled(Box)(({ theme }) => ({
 const StyledSimpleMenu = styled(SimpleMenu)(({ theme }) => ({
   display: "flex",
   marginTop: "auto",
-  borderTop: `1px solid ${theme.palette.border.main}`,
+  borderTop: `1px solid ${theme.palette.border.light}`,
   backgroundColor: theme.palette.background.paper,
   overflow: "hidden",
   borderRadius: "0px 0px 4px 4px",
+  maxHeight: "35px",
   "& > button": {
     padding: theme.spacing(0.25, 1),
     width: "100%",
