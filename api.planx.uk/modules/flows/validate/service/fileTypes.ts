@@ -37,7 +37,7 @@ const validateFileTypes = (flowGraph: FlowGraph): FlowValidationResponse => {
     });
     return {
       title: "File types",
-      status: "Warn",
+      status: "Fail",
       message: `Your FileUpload or UploadAndLabel are setting data fields that are not supported by the current release of the ODP Schema: ${summarisedInvalidFileFns.join(", ")}`,
     };
   }
