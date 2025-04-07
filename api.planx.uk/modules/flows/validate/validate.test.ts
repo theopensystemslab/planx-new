@@ -482,7 +482,7 @@ describe("invite to pay validation on diff", () => {
 });
 
 describe("ODP Schema file type validation on diff", () => {
-  it("warns if any file data fields aren't supported by the ODP Schema", async () => {
+  it("fails if any file data fields aren't supported by the ODP Schema", async () => {
     const alteredFlow = {
       ...mockFlowData,
       fileUpload: {
@@ -543,7 +543,7 @@ describe("ODP Schema file type validation on diff", () => {
         expect(res.body.validationChecks).toEqual([
           {
             title: "File types",
-            status: "Warn",
+            status: "Fail",
             message:
               "Your FileUpload or UploadAndLabel are setting data fields that are not supported by the current release of the ODP Schema: sitePlanTypo (1)",
           },

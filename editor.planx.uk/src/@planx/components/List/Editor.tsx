@@ -30,6 +30,7 @@ import { ParkingGLA } from "./schemas/GLA/ParkingGLA";
 import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
+import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -66,6 +67,7 @@ export const SCHEMAS = [
     schema: ExistingAndProposedUsesGLA,
   },
   { name: "Material details", schema: MaterialDetails },
+  { name: "Material details (LBC)", schema: MaterialDetailsLBC },
   { name: "Building details (GLA)", schema: BuildingDetailsGLA },
   { name: "Communal spaces (GLA)", schema: CommunalSpaceGLA },
   { name: "Protected spaces (GLA)", schema: ProtectedSpaceGLA },

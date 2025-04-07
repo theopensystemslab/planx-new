@@ -35,7 +35,7 @@ const validateProjectTypes = (flowGraph: FlowGraph): FlowValidationResponse => {
     });
     return {
       title: "Project types",
-      status: "Warn",
+      status: "Fail",
       message: `Your Checklists setting "proposal.projectType" include options that are not supported by the current release of the ODP Schema: ${summarisedInvalidProjectVals.join(", ")}`,
     };
   }
