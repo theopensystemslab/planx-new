@@ -9,8 +9,8 @@ dependencies:
     specifier: ^11.1.1
     version: 11.1.1
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#5959a13
-    version: github.com/theopensystemslab/planx-core/5959a13(@types/react@19.0.10)
+    specifier: git+https://github.com/theopensystemslab/planx-core#cc91e75
+    version: github.com/theopensystemslab/planx-core/cc91e75(@types/react@19.0.10)
   axios:
     specifier: ^1.8.3
     version: 1.8.3
@@ -1086,7 +1086,7 @@ packages:
     dev: false
 
   /concat-map@0.0.1:
-    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
+    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: false
 
   /convert-source-map@1.9.0:
@@ -3085,9 +3085,9 @@ packages:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/5959a13(@types/react@19.0.10):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/5959a13}
-    id: github.com/theopensystemslab/planx-core/5959a13
+  github.com/theopensystemslab/planx-core/cc91e75(@types/react@19.0.10):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/cc91e75}
+    id: github.com/theopensystemslab/planx-core/cc91e75
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
