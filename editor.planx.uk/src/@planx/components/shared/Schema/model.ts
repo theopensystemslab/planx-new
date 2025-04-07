@@ -158,6 +158,8 @@ export interface Schema {
 
 /**
  * Value returned per field, based on field type
+ * ResponseValues are parsed on submission in planx-core
+ * If adding a ResponseValue here, please update `schemaResponsesSchema` (src/export/bops/utils/schema.ts) in planx-core
  */
 export type ResponseValue<T extends Field> = T extends MapField
   ? Feature[]
