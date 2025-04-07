@@ -27,18 +27,25 @@ const BoldTableRow = styled(TableRow)(() => ({
   },
 }));
 
-const VAT_RATE = 0.2;
-
 type FeeBreakdownRow = React.FC<IFeeBreakdown>;
 
 const Header: FeeBreakdownRow = ({ amount }) => (
   <TableHead>
     <BoldTableRow>
       <TableCell>Description</TableCell>
-      <TableCell align="right">Amount</TableCell>
+      <TableCell align="right">
+        Amount {amount.payableVAT ? ` (excl VAT)` : ``}
+      </TableCell>
       {amount.payableVAT ? (
         <TableCell align="right" sx={{ color: "GrayText" }}>
           VAT (20%)
+        </TableCell>
+      ) : (
+        <TableCell></TableCell>
+      )}
+      {amount.payableVAT ? (
+        <TableCell align="right">
+          <strong>Total</strong>
         </TableCell>
       ) : (
         <TableCell></TableCell>
@@ -62,6 +69,19 @@ const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
     ) : (
       <TableCell></TableCell>
     )}
+    {amount.payableVAT && amount.payableVAT > 0 ? (
+      <TableCell align="right">
+        <strong>
+          {amount.calculatedVAT && amount.calculatedVAT > 0
+            ? formattedPriceWithCurrencySymbol(
+                amount.calculated + amount.calculatedVAT,
+              )
+            : undefined}
+        </strong>
+      </TableCell>
+    ) : (
+      <TableCell></TableCell>
+    )}
   </TableRow>
 );
 
@@ -75,6 +95,12 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
         <TableCell align="right">
           {formattedPriceWithCurrencySymbol(-amount.reduction)}
         </TableCell>
+        {amount.payableVAT ? (
+          <>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </>
+        ) : undefined}
       </TableRow>
       {reductions.map((reduction) => (
         <TableRow key={reduction}>
@@ -83,6 +109,12 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
               {reduction}
             </Box>
           </TableCell>
+          {amount.payableVAT ? (
+            <>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </>
+          ) : undefined}
         </TableRow>
       ))}
     </>
@@ -100,6 +132,12 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
         <TableCell align="right">
           {formattedPriceWithCurrencySymbol(-amount.exemption)}
         </TableCell>
+        {amount.payableVAT ? (
+          <>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+          </>
+        ) : undefined}
       </TableRow>
       {exemptions.map((exemption) => (
         <TableRow key={exemption}>
@@ -108,6 +146,12 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
               {exemption}
             </Box>
           </TableCell>
+          {amount.payableVAT ? (
+            <>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+            </>
+          ) : undefined}
         </TableRow>
       ))}
     </>
@@ -126,6 +170,13 @@ const FastTrackFee: FeeBreakdownRow = ({ amount }) => {
       <TableCell align="right" sx={{ color: "GrayText" }}>
         {formattedPriceWithCurrencySymbol(amount.fastTrackVAT)}
       </TableCell>
+      <TableCell align="right">
+        <strong>
+          {formattedPriceWithCurrencySymbol(
+            amount.fastTrack + amount.fastTrackVAT,
+          )}
+        </strong>
+      </TableCell>
     </TableRow>
   );
 };
@@ -141,6 +192,13 @@ const ServiceCharge: FeeBreakdownRow = ({ amount }) => {
       </TableCell>
       <TableCell align="right" sx={{ color: "GrayText" }}>
         {formattedPriceWithCurrencySymbol(amount.serviceChargeVAT)}
+      </TableCell>
+      <TableCell align="right">
+        <strong>
+          {formattedPriceWithCurrencySymbol(
+            amount.serviceCharge + amount.serviceChargeVAT,
+          )}
+        </strong>
       </TableCell>
     </TableRow>
   );
@@ -158,26 +216,39 @@ const PaymentProcessingFee: FeeBreakdownRow = ({ amount }) => {
       <TableCell align="right" sx={{ color: "GrayText" }}>
         {formattedPriceWithCurrencySymbol(amount.paymentProcessingVAT)}
       </TableCell>
+      <TableCell align="right">
+        <strong>
+          {formattedPriceWithCurrencySymbol(
+            amount.paymentProcessing + amount.paymentProcessingVAT,
+          )}
+        </strong>
+      </TableCell>
     </TableRow>
   );
 };
 
 const Total: FeeBreakdownRow = ({ amount }) => (
   <BoldTableRow>
-    <TableCell>
-      {amount.payableVAT && amount.payableVAT > 0
-        ? `Total including VAT`
-        : `Total`}
-    </TableCell>
+    <TableCell>Total</TableCell>
     <TableCell align="right">
-      {formattedPriceWithCurrencySymbol(amount.payable)}
+      {amount.payableVAT
+        ? formattedPriceWithCurrencySymbol(amount.payable - amount.payableVAT)
+        : formattedPriceWithCurrencySymbol(amount.payable)}
     </TableCell>
-    <TableCell></TableCell>
-    {/* {amount.payableVAT && (
-      <TableCell align="right" sx={{ color: "GrayText" }}>
+    {amount.payableVAT ? (
+      <TableCell align="right">
         {formattedPriceWithCurrencySymbol(amount.payableVAT)}
       </TableCell>
-    )} */}
+    ) : (
+      <TableCell></TableCell>
+    )}
+    {amount.payableVAT ? (
+      <TableCell align="right">
+        {formattedPriceWithCurrencySymbol(amount.payable)}
+      </TableCell>
+    ) : (
+      <TableCell></TableCell>
+    )}
   </BoldTableRow>
 );
 

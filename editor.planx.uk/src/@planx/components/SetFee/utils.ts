@@ -20,19 +20,19 @@ export const handleSetFees: HandleSetFees = ({
   serviceChargeAmount,
   applyPaymentProcessingFee,
 }) => {
-  // Calculated is incoming application fee including exemptions and reductions, exclusive of VAT
-  const calculated = passport.data?.["application.fee.calculated"];
+  // Calculated is base application fee exclusive of VAT
+  //   Any exemptions or reductions will have already set `application.fee.payable`
+  const calculated = passport.data?.["application.fee.calculated"] || 0;
+  const incomingPayable = passport.data?.[PAY_FN];
 
   // `application.fee.payable` is total amount to be paid to GOV PAY inclusive of VAT
   //   `application.fee.payable.VAT` is sum of all VAT-suffixed line items
   const payable = PAY_FN;
   const payableVAT = `${PAY_FN}.VAT`;
 
-  // TODO - throw error if no incoming calculated OR incoming passport already has > 0 payable value ??
-
-  // At minimum, set calculated = payable
+  // At minimum, set calculated = payable if payable does not exist yet
   const fees = {
-    [payable]: calculated || 0,
+    [payable]: incomingPayable >= 0 ? incomingPayable : calculated,
     [payableVAT]: 0,
   };
 
