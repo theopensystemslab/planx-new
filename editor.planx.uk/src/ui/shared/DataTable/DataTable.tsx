@@ -133,6 +133,7 @@ export const DataTable = <T,>({
           getRowId={(row) => row.id}
           processRowUpdate={onProcessRowUpdate}
           checkboxSelection={checkboxSelection}
+          disableRowSelectionOnClick
         />
       </Box>
     </Box>

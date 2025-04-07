@@ -51,6 +51,10 @@ export default function Component(props: Props) {
         if (Number.isNaN(Number(result))) {
           errors.formula = "Enter a formula which outputs a number";
         }
+        if (typeof result === "boolean" && !values.formatOutputForAutomations) {
+          errors.formula =
+            "For Boolean functions, toggle on 'Format the output to automate a future Question or Checklist only'";
+        }
       } catch (error: any) {
         errors.formula = error.message;
       }
@@ -131,16 +135,16 @@ export default function Component(props: Props) {
             onChange={(value) => formik.setFieldValue("fn", value)}
           />
           <InputRow>
-          <Switch            
-            checked={formik.values.formatOutputForAutomations}
-            onChange={() =>
-              formik.setFieldValue(
-                "formatOutputForAutomations",
-                !formik.values.formatOutputForAutomations
-              )
-            }
-            label="Format the output to automate a future Question or Checklist only"
-          />
+            <Switch
+              checked={formik.values.formatOutputForAutomations}
+              onChange={() =>
+                formik.setFieldValue(
+                  "formatOutputForAutomations",
+                  !formik.values.formatOutputForAutomations,
+                )
+              }
+              label="Format the output to automate a future Question or Checklist only"
+            />
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">
@@ -196,8 +200,8 @@ export default function Component(props: Props) {
             <></>
           )}
           <p>
-            <strong>{formik.values.fn || "<output>"}</strong> would be set
-            to <strong>{sampleResult}</strong>
+            <strong>{formik.values.fn || "<output>"}</strong> would be set to{" "}
+            <strong>{sampleResult}</strong>
           </p>
         </ModalSectionContent>
       </ModalSection>

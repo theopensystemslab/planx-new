@@ -44,6 +44,16 @@ components:
           schema:
             type: string
             format: binary
+    MissingFile:
+      description: Missing file - this file has been deleted by our content moderation system (Scanii)
+      content:
+        application/json:
+          schema:
+            type: "object"
+            properties:
+              error:
+                type: "string"
+                example: "Missing file"
 paths:
   /file/private/upload:
     post:
@@ -82,6 +92,8 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DownloadFile"
+        "404":
+          $ref: "#/components/responses/MissingFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
     delete:
@@ -94,6 +106,8 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/UploadFile"
+        "404":
+          $ref: "#/components/responses/MissingFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /file/private/{fileKey}/{fileName}:
@@ -107,5 +121,7 @@ paths:
       responses:
         "204":
           description: Successful deletion
+        "404":
+          $ref: "#/components/responses/MissingFile"
         "500":
           $ref: "#/components/responses/ErrorMessage"

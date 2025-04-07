@@ -2,7 +2,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
 import { typographyClasses } from "@mui/material/Typography";
 import { useFormikContext } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
@@ -11,8 +11,11 @@ import { slugify } from "utils";
 import { CREATE_FLOW_MODES, CreateFlow } from "./types";
 
 const URLPrefix: React.FC = () => {
-  const { origin, pathname } = window.location;
-  const urlPrefix = `${origin}${pathname}/`;
+  // Store in component state so this does not update when user submits form
+  const [urlPrefix] = useState(() => {
+    const { origin, pathname } = window.location;
+    return `${origin}${pathname}/`;
+  });
 
   return (
     <InputAdornment
@@ -76,7 +79,7 @@ export const BaseFormSection: React.FC = () => {
           value={values.flow?.name}
         />
       </InputLabel>
-      <InputLabel label="Service URL" htmlFor="flow.slug">
+      <InputLabel label="Editor URL" htmlFor="flow.slug">
         <Input
           {...getFieldProps("flow.slug")}
           disabled

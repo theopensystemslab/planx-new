@@ -81,7 +81,7 @@ export const hostedFileSchema = z.object({
 
 export type DownloadController = ValidatedRequestHandler<
   typeof hostedFileSchema,
-  Buffer | undefined
+  Buffer | { error: string }
 >;
 
 export const publicDownloadController: DownloadController = async (
@@ -93,7 +93,14 @@ export const publicDownloadController: DownloadController = async (
   const filePath = buildFilePath(fileKey, fileName);
 
   try {
-    const { body, headers, isPrivate } = await getFileFromS3(filePath);
+    const file = await getFileFromS3(filePath);
+    if (!file) {
+      return res.status(404).json({
+        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
+      });
+    }
+
+    const { body, headers, isPrivate } = file;
 
     if (isPrivate) throw Error("Bad request");
 
@@ -115,10 +122,15 @@ export const privateDownloadController: DownloadController = async (
   const filePath = buildFilePath(fileKey, fileName);
 
   try {
-    const { body, headers } = await getFileFromS3(filePath);
+    const file = await getFileFromS3(filePath);
+    if (!file) {
+      return res.status(404).json({
+        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
+      });
+    }
 
-    res.set(headers);
-    res.send(body);
+    res.set(file.headers);
+    res.send(file.body);
   } catch (error) {
     return next(
       new ServerError({ message: `Failed to download private file: ${error}` }),
@@ -128,7 +140,7 @@ export const privateDownloadController: DownloadController = async (
 
 export type DeleteController = ValidatedRequestHandler<
   typeof hostedFileSchema,
-  Record<string, never>
+  Record<string, never> | { error: string }
 >;
 
 export const publicDeleteController: DeleteController = async (
@@ -140,8 +152,14 @@ export const publicDeleteController: DeleteController = async (
   const filePath = buildFilePath(fileKey, fileName);
 
   try {
-    const { isPrivate } = await getFileFromS3(filePath);
-    if (isPrivate) throw Error("Bad request");
+    const file = await getFileFromS3(filePath);
+    if (!file) {
+      return res.status(404).json({
+        error: `Missing file - this file has been deleted by our automated content filtering system. Please contact PlanX for further details quoting file ID ${filePath}`,
+      });
+    }
+
+    if (file.isPrivate) throw Error("Bad request");
 
     // once we've established that the file is public, we can delete it
     await deleteFilesByKey([filePath]);
