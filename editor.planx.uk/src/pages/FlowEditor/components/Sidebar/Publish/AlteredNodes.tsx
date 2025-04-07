@@ -168,7 +168,7 @@ export const AlteredNodesSummaryContent = (props: {
                 }
                 secondary={
                   <Typography variant="body2" fontSize="small">
-                    {`See full details in "History"`}
+                    {`Find full details in the History tab in the editor sidebar.`}
                   </Typography>
                 }
               />
@@ -176,7 +176,7 @@ export const AlteredNodesSummaryContent = (props: {
           </ListItem>
           <ListItem key={"hint"} disablePadding>
             <Typography variant="body2" fontSize="small">
-              {`Hint: "Add comments" between edits for a friendlier summary here on next publish.`}
+              {`Hint: Comments added to the History tab in the editor sidebar will display here. Comments are the friendliest way to describe what's changed.`}
             </Typography>
           </ListItem>
         </List>

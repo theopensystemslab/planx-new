@@ -98,6 +98,7 @@ export const CheckForChangesToPublishButton: React.FC<{
     <Box width="100%" mt={2}>
       <Box display="flex" flexDirection="column" alignItems="flex-end">
         <Button
+          data-testid="check-for-changes-to-publish-button"
           sx={{ width: "100%" }}
           variant="contained"
           color="primary"

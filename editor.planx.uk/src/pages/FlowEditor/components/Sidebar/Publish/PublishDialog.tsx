@@ -126,6 +126,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         <DialogFooterActions>
           <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
           <Button
+            data-testid="next-step-test-button"
             color="primary"
             variant="contained"
             onClick={() => (atLeastOneFail ? setShowError(true) : handleNext())}
@@ -180,7 +181,8 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
                 </Typography>
                 <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
                   <ChecklistItem
-                    id={`test-confirmation-checkbox`}
+                    id="test-confirmation-checkbox"
+                    data-testid="test-confirmation-checkbox"
                     label={`Yes, these changes have been tested`}
                     checked={completed}
                     onChange={() => {
@@ -196,6 +198,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         <DialogFooterActions>
           <Button onClick={handleBack}>Back</Button>
           <Button
+            data-testid="next-step-publish-button"
             color="primary"
             variant="contained"
             onClick={() => (completed ? handleNext() : setShowError(true))}
@@ -237,9 +240,9 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogTitle>
         <DialogContent sx={{ p: 3 }}>
           <Typography variant="body2" mb={2}>
-            {`This is the final step to publish your content. Summary messages help other editors on your team understand what is changing and appear in "History."`}
+            {`This is the final step to publish your content. Summary messages help other editors on your team understand what is changing and will appear in the History tab in the editor sidebar."`}
           </Typography>
-          <InputLabel label="Summarise your changes" htmlFor="summary">
+          <InputLabel label="Summarise the changes" htmlFor="summary">
             <ErrorWrapper
               error={
                 showError ? "Provide a summary before publishing" : undefined
@@ -248,6 +251,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             >
               <Input
                 id="summary"
+                data-testid="publish-summary-input"
                 bordered
                 required
                 type="text"
@@ -263,6 +267,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         <DialogFooterActions>
           <Button onClick={handleBack}>Back</Button>
           <Button
+            data-testid="publish-button"
             color="primary"
             variant="contained"
             onClick={validateAndPublish}
