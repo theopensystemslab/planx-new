@@ -13,17 +13,17 @@ export const publishService = async (page: Page) => {
 
   // 3-step modal opens on Review step, click "next" to Test step
   await expect(page.getByRole("heading", { name: "Review" })).toBeVisible();
-  page.getByTestId("next-step-test-button").click();
+  await page.getByTestId("next-step-test-button").click();
 
   // Confirm changes have been tested, click "next" to Publish step
   await expect(page.getByRole("heading", { name: "Test" })).toBeVisible();
-  page.getByTestId("test-confirmation-checkbox").click();
-  page.getByTestId("next-step-publish-button").click();
+  await page.getByTestId("test-confirmation-checkbox").click();
+  await page.getByTestId("next-step-publish-button").click();
 
   // Add a "summary" and publish
   await expect(page.getByRole("heading", { name: "Publish" })).toBeVisible();
-  page.getByTestId("publish-summary-input").fill("lorem ipsum");
-  page.getByTestId("publish-button").click();
+  await page.getByTestId("publish-summary-input").fill("lorem ipsum");
+  await page.getByTestId("publish-button").click();
 };
 
 export const turnServiceOnline = async (page: Page) => {
