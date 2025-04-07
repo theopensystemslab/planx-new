@@ -17,9 +17,7 @@ export const publishService = async (page: Page) => {
 
   // Confirm changes have been tested, click "next" to Publish step
   await expect(page.getByRole("heading", { name: "Test" })).toBeVisible();
-  page
-    .getByTestId("test-confirmation-checkbox")
-    .selectOption({ label: "Yes, these changes have been tested" });
+  page.getByTestId("test-confirmation-checkbox").click();
   page.getByTestId("next-step-publish-button").click();
 
   // Add a "summary" and publish
