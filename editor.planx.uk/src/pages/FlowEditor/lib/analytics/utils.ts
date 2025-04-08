@@ -32,7 +32,8 @@ export function extractNodeTitle(node: Store.Node): string {
       : node?.data?.title ??
         node?.data?.text ??
         node?.data?.flagSet ??
-        node?.data?.category;
+        node?.data?.category ??
+        node?.data?.heading;
   return nodeTitle;
 }
 
