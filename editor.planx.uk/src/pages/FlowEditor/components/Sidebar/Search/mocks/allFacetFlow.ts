@@ -105,8 +105,8 @@ export const mockFlow: FlowGraph = {
   "7eG9iF86xd": {
     data: {
       color: {
-        text: "#000",
-        background: "rgba(1, 99, 96, 0.1)",
+        text: "#0B0C0C",
+        background: "#EFF7EE",
       },
       heading: "Snake",
       moreInfo: "<p>Tarantula</p>",
@@ -562,8 +562,8 @@ export const mockConfirmationResult: SearchResult<IndexedNode> = {
     type: 725,
     data: {
       color: {
-        text: "#000",
-        background: "rgba(1, 99, 96, 0.1)",
+        text: "#0B0C0C",
+        background: "#EFF7EE",
       },
       heading: "Snake",
       moreInfo: "<p>Tarantula</p>",

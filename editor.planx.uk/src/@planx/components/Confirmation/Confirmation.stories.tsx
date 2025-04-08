@@ -19,7 +19,7 @@ export const Basic = {
     heading: "Application sent",
     description: `A payment receipt has been emailed to you. You will also 
     receive an email to confirm when your application has been received.`,
-    color: { background: "rgba(1, 99, 96, 0.1)", text: "#000" },
+    color: { background: "#EFF7EE", text: "#0B0C0C" },
     sessionId: "123-t3st-456",
     applicableDetails: {
       "Planning Application Reference": "LBL–LDCP-2138261",
