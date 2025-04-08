@@ -51,8 +51,8 @@ dependencies:
     specifier: 1.0.0-alpha.5
     version: 1.0.0-alpha.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#cc91e75
-    version: github.com/theopensystemslab/planx-core/cc91e75(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#707f825
+    version: github.com/theopensystemslab/planx-core/707f825(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -8461,8 +8461,8 @@ packages:
   /fast-uri@3.0.6:
     resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
 
-  /fast-xml-parser@5.0.9:
-    resolution: {integrity: sha512-2mBwCiuW3ycKQQ6SOesSB8WeF+fIGb6I/GG5vU5/XEptwFFhp9PE8b9O7fbs2dpq9fXn4ULR3UsfydNUCntf5A==}
+  /fast-xml-parser@5.2.0:
+    resolution: {integrity: sha512-Uw9+Mjt4SBRud1IcaYuW/O0lW8SKKdMl5g7g24HiIuyH5fQSD+AVLybSlJtqLYEbytVFjWQa5DMGcNgeksdRBg==}
     hasBin: true
     dependencies:
       strnum: 2.0.5
@@ -13755,8 +13755,8 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /type-fest@4.38.0:
-    resolution: {integrity: sha512-2dBz5D5ycHIoliLYLi0Q2V7KRaDlH0uWIvmk7TYlAg5slqwiPv1ezJdZm1QEM0xgk29oYWMCbIG7E6gHpvChlg==}
+  /type-fest@4.39.1:
+    resolution: {integrity: sha512-uW9qzd66uyHYxwyVBYiwS4Oi0qZyUqwjU+Oevr6ZogYiXt99EOYtwvzMSLw1c3lYo2HzJsep/NB23iEVEgjG/w==}
     engines: {node: '>=16'}
     dev: false
 
@@ -14728,9 +14728,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/cc91e75(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/cc91e75}
-    id: github.com/theopensystemslab/planx-core/cc91e75
+  github.com/theopensystemslab/planx-core/707f825(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/707f825}
+    id: github.com/theopensystemslab/planx-core/707f825
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14746,7 +14746,7 @@ packages:
       copyfiles: 2.4.1
       docx: 9.3.0
       eslint: 8.57.1
-      fast-xml-parser: 5.0.9
+      fast-xml-parser: 5.2.0
       graphql: 16.10.0
       graphql-request: 6.1.0(graphql@16.10.0)
       json-schema-to-typescript: 15.0.4
@@ -14755,7 +14755,7 @@ packages:
       prettier: 3.5.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.38.0
+      type-fest: 4.39.1
       uuid: 11.1.0
       zod: 3.24.2
     transitivePeerDependencies:
