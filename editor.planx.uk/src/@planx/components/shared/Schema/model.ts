@@ -71,9 +71,12 @@ export const mapInputValidationSchema = ({
   array()
     .when([], {
       is: () => required,
-      then: array().min(1, `Draw at least one ${
-        mapOptions?.drawType?.toLocaleLowerCase() || "feature"
-      } on the map`,),
+      then: array().min(
+        1,
+        `Draw at least one ${
+          mapOptions?.drawType?.toLocaleLowerCase() || "feature"
+        } on the map`,
+      ),
       otherwise: array().notRequired(),
     })
     .test({
@@ -115,7 +118,7 @@ export interface DateField extends BaseField<DateInput> {
 
 export interface AddressField extends BaseField<AddressInput> {
   type: "address";
-};
+}
 
 type MapInput = {
   title: string;
@@ -158,6 +161,8 @@ export interface Schema {
 
 /**
  * Value returned per field, based on field type
+ * ResponseValues are parsed on submission in planx-core
+ * If adding a ResponseValue here, please update `schemaResponsesSchema` (src/export/bops/utils/schema.ts) in planx-core
  */
 export type ResponseValue<T extends Field> = T extends MapField
   ? Feature[]
