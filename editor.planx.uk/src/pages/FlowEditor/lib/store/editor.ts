@@ -247,7 +247,7 @@ export const editorStore: StateCreator<
         mutation updateFlow($id: uuid!) {
           flow: update_flows_by_pk(
             pk_columns: { id: $id }
-            _set: { deleted_at: "now()", status: "offline" }
+            _set: { deleted_at: "now()", status: offline }
           ) {
             id
             name
