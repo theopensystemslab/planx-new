@@ -42,7 +42,7 @@ function SetFeeComponent(props: Props) {
         />
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Application fee VAT (optional)">
+        <ModalSectionContent title="Application fee VAT">
           <InputRow>
             <Switch
               checked={formik.values.applyCalculatedVAT}
@@ -64,7 +64,7 @@ function SetFeeComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Fast Track fee (optional)">
+        <ModalSectionContent title="Fast Track fee">
           <Typography variant="body2" mb={2}>
             If this service supports Fast Track journeys, specify the fee
             amount. This fee plus 20% VAT will be added when{" "}
@@ -82,7 +82,7 @@ function SetFeeComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Plan✕ service charge (optional)">
+        <ModalSectionContent title="Plan✕ service charge">
           <InputRow>
             <Switch
               checked={formik.values.applyServiceCharge}
@@ -113,7 +113,7 @@ function SetFeeComponent(props: Props) {
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
-        <ModalSectionContent title="Payment processing fee (optional)">
+        <ModalSectionContent title="Payment processing fee">
           <InputRow>
             <Switch
               checked={formik.values.applyPaymentProcessingFee}

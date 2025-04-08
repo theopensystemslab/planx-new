@@ -16,7 +16,7 @@ export const Basic: Story = {
     docs: {
       description: {
         story:
-          "A basic fee breakdown table - just a fee, no reductions or exemptions",
+          "A basic fee breakdown table for a statutory application fee without any extra charges, exemptions or reductions",
       },
     },
   },
@@ -25,8 +25,8 @@ export const Basic: Story = {
       reductions: [],
       exemptions: [],
       amount: {
-        calculated: 1000,
-        payable: 1000,
+        calculated: 528,
+        payable: 528,
         reduction: 0,
         exemption: 0,
       },
@@ -39,7 +39,7 @@ export const WithVAT: Story = {
     docs: {
       description: {
         story:
-          "A fee breakdown which includes a VAT-able service charge and Fast Track fee",
+          "A fee breakdown which includes a VAT-able discretionary application fee, service charge, Fast Track fee, and payment processing fee",
       },
     },
   },
@@ -49,33 +49,16 @@ export const WithVAT: Story = {
       exemptions: [],
       amount: {
         calculated: 1000,
-        payable: 1156,
-        serviceCharge: 30, // 20% VAT = 6
-        fastTrack: 100, // 20% VAT = 20
+        calculatedVAT: 200,
+        payable: 1354.06,
+        payableVAT: 225.68,
+        serviceCharge: 40,
+        serviceChargeVAT: 8,
+        fastTrack: 75,
+        fastTrackVAT: 15,
+        paymentProcessing: 13.38,
+        paymentProcessingVAT: 2.68,
         reduction: 0,
-        exemption: 0,
-      },
-    },
-  },
-};
-
-export const WithReductions: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "A fee breakdown with a list of reductions. The reductions amount is summarised and not calculated per-item.",
-      },
-    },
-  },
-  args: {
-    inviteToPayFeeBreakdown: {
-      reductions: ["alternative", "parishCouncil"],
-      exemptions: [],
-      amount: {
-        calculated: 1000,
-        payable: 800,
-        reduction: 200,
         exemption: 0,
       },
     },
@@ -87,20 +70,45 @@ export const WithExemptions: Story = {
     docs: {
       description: {
         story:
-          "A fee breakdown with an exemption - this sets the payable fee to the VAT-able service charge only",
+          "A fee breakdown with an exemption that zeros out the application fee",
       },
     },
   },
   args: {
     inviteToPayFeeBreakdown: {
       reductions: [],
-      exemptions: ["disability"],
+      exemptions: ["resubmission"],
       amount: {
         calculated: 1000,
-        payable: 36,
-        serviceCharge: 30,
+        payable: 0,
         reduction: 0,
         exemption: 1000,
+      },
+    },
+  },
+};
+
+export const WithReductions: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A fee breakdown for a statutory application type with reductions and a service charge. The total reductions amount is summarised, not itemised",
+      },
+    },
+  },
+  args: {
+    inviteToPayFeeBreakdown: {
+      reductions: ["alternative", "parishCouncil"],
+      exemptions: [],
+      amount: {
+        calculated: 1000,
+        payable: 848,
+        payableVAT: 8,
+        serviceCharge: 40,
+        serviceChargeVAT: 8,
+        reduction: 200,
+        exemption: 0,
       },
     },
   },

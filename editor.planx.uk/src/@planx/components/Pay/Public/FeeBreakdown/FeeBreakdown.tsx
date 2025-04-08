@@ -29,6 +29,15 @@ const BoldTableRow = styled(TableRow)(() => ({
 
 type FeeBreakdownRow = React.FC<IFeeBreakdown>;
 
+// TODO - Eventually read these from ODP JSON Schema
+const exemptionsReductionLookup: Record<string, string> = {
+  resubmission: "Resubmission",
+  disability: "Access for disabled persons",
+  parishCouncil: "Parish or community council",
+  alternative: "Alternative proposal",
+  sports: "Sports club",
+};
+
 const Header: FeeBreakdownRow = ({ amount }) => (
   <TableHead>
     <BoldTableRow>
@@ -76,7 +85,7 @@ const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
             ? formattedPriceWithCurrencySymbol(
                 amount.calculated + amount.calculatedVAT,
               )
-            : undefined}
+            : formattedPriceWithCurrencySymbol(amount.calculated)}
         </strong>
       </TableCell>
     ) : (
@@ -98,15 +107,17 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
         {amount.payableVAT ? (
           <>
             <TableCell></TableCell>
-            <TableCell></TableCell>
+            <TableCell align="right">
+              {formattedPriceWithCurrencySymbol(-amount.reduction)}
+            </TableCell>
           </>
         ) : undefined}
       </TableRow>
       {reductions.map((reduction) => (
         <TableRow key={reduction}>
           <TableCell colSpan={2}>
-            <Box sx={{ pl: 2, color: "GrayText", textTransform: "capitalize" }}>
-              {reduction}
+            <Box sx={{ pl: 2, color: "GrayText" }}>
+              {exemptionsReductionLookup[reduction]}
             </Box>
           </TableCell>
           {amount.payableVAT ? (
@@ -135,15 +146,17 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
         {amount.payableVAT ? (
           <>
             <TableCell></TableCell>
-            <TableCell></TableCell>
+            <TableCell align="right">
+              {formattedPriceWithCurrencySymbol(-amount.exemption)}
+            </TableCell>
           </>
         ) : undefined}
       </TableRow>
       {exemptions.map((exemption) => (
         <TableRow key={exemption}>
           <TableCell colSpan={2}>
-            <Box sx={{ pl: 2, color: "GrayText", textTransform: "capitalize" }}>
-              {exemption}
+            <Box sx={{ pl: 2, color: "GrayText" }}>
+              {exemptionsReductionLookup[exemption]}
             </Box>
           </TableCell>
           {amount.payableVAT ? (
