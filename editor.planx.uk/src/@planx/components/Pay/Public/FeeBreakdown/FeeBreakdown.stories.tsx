@@ -70,7 +70,7 @@ export const WithExemptions: Story = {
     docs: {
       description: {
         story:
-          "A fee breakdown with an exemption that zeros out the application fee",
+          "A fee breakdown with an exemption that zeros out the statutory application fee",
       },
     },
   },
@@ -108,6 +108,29 @@ export const WithReductions: Story = {
         serviceCharge: 40,
         serviceChargeVAT: 8,
         reduction: 200,
+        exemption: 0,
+      },
+    },
+  },
+};
+
+export const WithModifications: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A fee breakdown for a statutory householder fee with a sports club fee (flat fee of £578). In this case, the sports club fee is greater than the householder application fee so we label it a modification rather than reduction",
+      },
+    },
+  },
+  args: {
+    inviteToPayFeeBreakdown: {
+      reductions: ["sports"],
+      exemptions: [],
+      amount: {
+        calculated: 258,
+        payable: 578,
+        reduction: -320, // TODO fix +/- logic
         exemption: 0,
       },
     },

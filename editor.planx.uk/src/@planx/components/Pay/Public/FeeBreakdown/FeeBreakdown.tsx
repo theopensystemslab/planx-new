@@ -100,7 +100,9 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
   return (
     <>
       <TableRow>
-        <TableCell>Reductions</TableCell>
+        <TableCell>
+          {amount.reduction < 0 ? `Modifications` : `Reductions`}
+        </TableCell>
         <TableCell align="right">
           {formattedPriceWithCurrencySymbol(-amount.reduction)}
         </TableCell>
@@ -115,7 +117,7 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
       </TableRow>
       {reductions.map((reduction) => (
         <TableRow key={reduction}>
-          <TableCell colSpan={2}>
+          <TableCell colSpan={amount.payableVAT ? 4 : 2}>
             <Box sx={{ pl: 2, color: "GrayText" }}>
               {exemptionsReductionLookup[reduction]}
             </Box>
@@ -154,7 +156,7 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
       </TableRow>
       {exemptions.map((exemption) => (
         <TableRow key={exemption}>
-          <TableCell colSpan={2}>
+          <TableCell colSpan={amount.payableVAT ? 4 : 2}>
             <Box sx={{ pl: 2, color: "GrayText" }}>
               {exemptionsReductionLookup[exemption]}
             </Box>
