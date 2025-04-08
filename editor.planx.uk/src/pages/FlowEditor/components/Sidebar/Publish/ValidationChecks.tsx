@@ -57,9 +57,10 @@ export const PublishModalAccordionSummary = styled(AccordionSummary)(
 
 export const ValidationChecks = (props: {
   validationChecks: ValidationCheck[];
+  expandedByDefault: boolean;
 }) => {
-  const { validationChecks } = props;
-  const [expanded, setExpanded] = useState(false);
+  const { validationChecks, expandedByDefault } = props;
+  const [expanded, setExpanded] = useState(expandedByDefault);
 
   const Icon: Record<ValidationCheck["status"], React.ReactElement> = {
     Pass: <Done color="success" />,

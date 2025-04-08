@@ -114,7 +114,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             <ErrorWrapper
               error={showError ? `Fix errors before continuing` : ``}
             >
-              <ValidationChecks validationChecks={validationChecks} />
+              <ValidationChecks
+                validationChecks={validationChecks}
+                expandedByDefault={atLeastOneFail}
+              />
             </ErrorWrapper>
             <AlteredNodesSummaryContent
               alteredNodes={alteredNodes}
@@ -240,7 +243,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
         </DialogTitle>
         <DialogContent sx={{ p: 3 }}>
           <Typography variant="body2" mb={2}>
-            {`This is the final step to publish your content. Summary messages help other editors on your team understand what is changing and will appear in the History tab in the editor sidebar."`}
+            {`This is the final step to publish your content. Summary messages help other editors on your team understand what is changing and will appear in the History tab in the editor sidebar.`}
           </Typography>
           <InputLabel label="Summarise the changes" htmlFor="summary">
             <ErrorWrapper
@@ -284,7 +287,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
       open={dialogOpen}
       fullWidth
       maxWidth="md"
-      onClose={() => setDialogOpen(false)}
+      onClose={() => {
+        setDialogOpen(false);
+        setActiveStep(0);
+      }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       PaperProps={{
