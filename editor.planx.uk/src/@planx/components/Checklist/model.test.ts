@@ -23,7 +23,7 @@ describe("Checklist - validation", () => {
 
     it("validates optional fields with a value", async () => {
       await expect(() => validationSchema.validate(["test1"])).rejects.toThrow(
-        /All options must be checked/
+        /All options must be checked/,
       );
     });
   });
