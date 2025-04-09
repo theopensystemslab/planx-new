@@ -1,5 +1,6 @@
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import { useTheme } from "@mui/material/styles";
 import { IndexedNode } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import {
@@ -90,8 +91,14 @@ const Search: React.FC = () => {
     [search],
   );
 
+  const theme = useTheme();
+  const backgroundStyle = {
+    background: theme.palette.background.paper,
+  };
+
   return (
     <Virtuoso<Data, Context>
+      style={backgroundStyle}
       totalCount={results.length}
       context={{
         results,
