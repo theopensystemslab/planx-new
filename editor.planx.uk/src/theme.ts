@@ -118,34 +118,19 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
 
 const STAGING_PALETTE: Partial<PaletteOptions> = {
   background: {
-    paper: "#FEF6F6",
     dark: "#592130",
-  },
-  secondary: {
-    main: "#F3D2D1",
-    dark: "#EED2D2",
   },
 };
 
 const PIZZA_PALETTE: Partial<PaletteOptions> = {
   background: {
-    paper: "#F7FFFA",
     dark: "#21592A",
-  },
-  secondary: {
-    main: "#F3D2D1",
-    dark: "#D1EDDD",
   },
 };
 
 const LOCAL_PALETTE: Partial<PaletteOptions> = {
   background: {
-    paper: "#F7FAFF",
     dark: "#214359",
-  },
-  secondary: {
-    main: "#F3D2D1",
-    dark: "#D1DAED",
   },
 };
 

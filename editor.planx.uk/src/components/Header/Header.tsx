@@ -19,6 +19,7 @@ import Paper from "@mui/material/Paper";
 import Popover, { popoverClasses } from "@mui/material/Popover";
 import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -246,12 +247,10 @@ const Breadcrumbs: React.FC = () => {
         variant="body1"
       >
         Plan✕
+        {isStaging && " staging"}
+        {isLocal && " local"}
+        {isPizza && " pizza"}
       </BreadcrumbsLink>
-      <Typography>
-        {isStaging && "staging"}
-        {isLocal && "local"}
-        {isPizza && "pizza"}
-      </Typography>
       {team.slug && (
         <>
           {" / "}
@@ -358,6 +357,16 @@ const PublicToolbar: React.FC<{
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const openConfirmationDialog = () => setIsDialogOpen(true);
 
+  const route = useCurrentRoute();
+  const currentPath = route.url.pathname.split("/").slice(-1)[0];
+
+  const [isStaging, isPizza, isLocal, isLive] = useStore((state) => [
+    state.isStaging,
+    state.isPizza,
+    state.isLocal,
+    state.isLive,
+  ]);
+
   const handleRestart = (isConfirmed: boolean) => {
     setIsDialogOpen(false);
     if (isConfirmed) {
@@ -383,6 +392,81 @@ const PublicToolbar: React.FC<{
   return (
     <>
       <SkipLink href="#main-content">Skip to main content</SkipLink>
+      {(isLive ||
+        isPizza ||
+        isLocal ||
+        isStaging ||
+        currentPath === "preview" ||
+        currentPath === "draft" ||
+        currentPath === "published") && (
+        <Container
+          maxWidth={false}
+          sx={(theme) => ({
+            backgroundColor: theme.palette.background.dark,
+            position: "sticky",
+            top: 0,
+            zIndex: 1,
+          })}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 1,
+            }}
+            py={1}
+          >
+            <Typography variant="body2">Plan✕</Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 1,
+              }}
+            >
+              {isStaging && (
+                <Tooltip title="Staging environment used for final testing before release">
+                  <Typography variant="body2">Staging</Typography>
+                </Tooltip>
+              )}
+              {isPizza && (
+                <Tooltip title="Pizza environment used for internal QA or demos">
+                  <Typography variant="body2">Pizza</Typography>
+                </Tooltip>
+              )}
+              {isLocal && (
+                <Tooltip title="Local development environment running on your machine">
+                  <Typography variant="body2">Local</Typography>
+                </Tooltip>
+              )}
+              {isLive && (
+                <Tooltip title="Live production environment that users see">
+                  <Typography variant="body2">Live</Typography>
+                </Tooltip>
+              )}
+              |
+              {(currentPath === "preview" ||
+                currentPath === "draft" ||
+                currentPath === "published") && (
+                <Tooltip
+                  title={
+                    currentPath === "preview"
+                      ? "Preview mode shows unpublished changes as they would appear live"
+                      : "Draft mode is for editing content that hasn’t been published"
+                  }
+                >
+                  <Typography variant="body2">
+                    {capitalize(currentPath)}
+                  </Typography>
+                </Tooltip>
+              )}
+            </Box>
+          </Box>
+        </Container>
+      )}
       <PublicHeader disableGutters>
         <Container maxWidth={false}>
           <InnerContainer>
