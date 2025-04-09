@@ -151,8 +151,9 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
 interface PublishedFlowsResponse {
   flow: {
     publishedFlows: {
-      data: Flow["data"];
-      id: number;
+      data?: Flow["data"];
+      id?: number;
+      createdAt?: string;
     }[];
   } | null;
 }
@@ -202,6 +203,72 @@ const getMostRecentPublishedFlowVersion = async (
 
   const mostRecent = flow?.publishedFlows?.[0]?.id;
   return mostRecent;
+};
+
+export const getMostRecentPublishedFlowDate = async (
+  id: string,
+): Promise<string | undefined> => {
+  const { flow } = await $public.client.request<PublishedFlowsResponse>(
+    gql`
+      query GetMostRecentPublishedFlowVersion($id: uuid!) {
+        flow: flows_by_pk(id: $id) {
+          publishedFlows: published_flows(
+            limit: 1
+            order_by: { created_at: desc }
+          ) {
+            createdAt: created_at
+          }
+        }
+      }
+    `,
+    { id },
+  );
+
+  const mostRecent = flow?.publishedFlows?.[0]?.createdAt;
+  return mostRecent;
+};
+
+export interface FlowHistoryEntry {
+  id: number;
+  createdAt: string;
+  firstName: string;
+  lastName: string;
+  type: "comment" | "operation";
+  comment: string | null;
+  data: unknown; // Operation["data"] via editor's sharedb json OT types
+}
+
+// Get comments and operations from a flow's "History" since last publish
+export const getHistory = async (flowId: string, lastPublishedAt?: string) => {
+  const { client: $client } = getClient();
+  const response = await $client.request<{ history: FlowHistoryEntry[] | [] }>(
+    gql`
+      query GetHistory($flow_id: uuid!, $last_published_at: timestamptz) {
+        history: flow_history(
+          where: {
+            flow_id: { _eq: $flow_id }
+            type: { _nin: "publish" }
+            created_at: { _gt: $last_published_at }
+          }
+          order_by: { created_at: desc }
+        ) {
+          id
+          createdAt: created_at
+          firstName: first_name
+          lastName: last_name
+          type
+          data
+          comment
+        }
+      }
+    `,
+    {
+      flow_id: flowId,
+      last_published_at: lastPublishedAt,
+    },
+  );
+
+  return response.history;
 };
 
 /**

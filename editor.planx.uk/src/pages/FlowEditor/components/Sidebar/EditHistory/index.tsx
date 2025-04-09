@@ -6,13 +6,17 @@ import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedL
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { Operation } from "types";
+
 import { AddCommentDialog } from "./AddCommentDialog";
 import { EditHistoryTimeline } from "./Timeline";
 
-export type HistoryItem = OperationHistoryItem | CommentHistoryItem | PublishHistoryItem;
+export type HistoryItem =
+  | OperationHistoryItem
+  | CommentHistoryItem
+  | PublishHistoryItem;
 
 interface BaseHistoryItem {
-  id: number
+  id: number;
   createdAt: string;
   actorId: number | undefined;
   firstName: string;
@@ -38,19 +42,17 @@ export interface PublishHistoryItem extends BaseHistoryItem {
 }
 
 const EditHistory = () => {
-  const [flowId, canUserEditTeam, teamSlug, user] = useStore(
-    (state) => [
-      state.id,
-      state.canUserEditTeam,
-      state.teamSlug,
-      state.getUser(),
-    ],
-  );
+  const [flowId, canUserEditTeam, teamSlug, user] = useStore((state) => [
+    state.id,
+    state.canUserEditTeam,
+    state.teamSlug,
+    state.getUser(),
+  ]);
 
   const { data, loading, error } = useSubscription<{ history: HistoryItem[] }>(
     gql`
       subscription GetFlowHistory($flow_id: uuid = "") {
-        history: flow_history (
+        history: flow_history(
           limit: 50
           where: { flow_id: { _eq: $flow_id } }
           order_by: { created_at: desc }
@@ -93,8 +95,10 @@ const EditHistory = () => {
   if (!loading && !data?.history) return null;
 
   return (
-    <Box>
-      {user?.id && canUserEditTeam(teamSlug) && <AddCommentDialog flowId={flowId} actorId={user.id} />}
+    <Box p={2}>
+      {user?.id && canUserEditTeam(teamSlug) && (
+        <AddCommentDialog flowId={flowId} actorId={user.id} />
+      )}
       {data?.history && <EditHistoryTimeline events={data.history} />}
       {data?.history.length === 50 && (
         <>

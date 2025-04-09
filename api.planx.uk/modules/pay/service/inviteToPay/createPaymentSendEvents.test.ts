@@ -49,6 +49,7 @@ describe("Create payment send events webhook", () => {
           publishedFlows: [
             {
               data: flowWithInviteToPay,
+              createdAt: "2024-12-31",
             },
           ],
         },

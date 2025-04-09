@@ -50,12 +50,44 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
+    name: "GetMostRecentPublishedFlowVersion",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        publishFlows: [
+          {
+            createdAt: "2024-12-31",
+          },
+        ],
+      },
+    },
+  });
+
+  queryMock.mockQuery({
     name: "PublishFlow",
     matchOnVariables: false,
     data: {
       publishedFlow: {
         data: mockFlowData,
       },
+    },
+  });
+
+  queryMock.mockQuery({
+    name: "GetHistory",
+    matchOnVariables: false,
+    data: {
+      history: [
+        {
+          id: 1,
+          createdAt: "2025-01-01",
+          firstName: "Test",
+          lastName: "Editor",
+          type: "comment",
+          data: null,
+          comment: "Changed order of about the applicant questions",
+        },
+      ],
     },
   });
 });
@@ -760,6 +792,67 @@ describe("planning constraints validation on diff", () => {
               'Your flow is not using Checklists which set "proposal.projectType"',
           },
         ]);
+      });
+  });
+});
+
+describe("flow comments since last publish", () => {
+  it("returns recent comments if there are changes to publish", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      externalPortalNodeId: {
+        edges: ["newSectionNodeId"],
+        type: 310,
+      },
+      newSectionNodeId: {
+        type: 360,
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.history).toEqual([
+          {
+            id: 1,
+            createdAt: "2025-01-01",
+            firstName: "Test",
+            lastName: "Editor",
+            type: "comment",
+            data: null,
+            comment: "Changed order of about the applicant questions",
+          },
+        ]);
+      });
+  });
+
+  it("returns no comments if there are no changes to publish", async () => {
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("No new changes to publish");
+        expect(res.body.history).toBeNull();
       });
   });
 });
