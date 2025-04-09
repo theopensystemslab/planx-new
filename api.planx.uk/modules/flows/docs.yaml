@@ -102,7 +102,7 @@ components:
           type: string
           example: Your flow has valid file types
       required: true
-    Comment:
+    HistoryEntry:
       type: object
       properties:
         id:
@@ -233,11 +233,11 @@ components:
                     items:
                       $ref: "#/components/schemas/ValidationCheck"
                   - type: "null"
-              comments:
+              history:
                 oneOf:
                   - type: array
                     items:
-                      $ref: "#/components/schemas/Comment"
+                      $ref: "#/components/schemas/HistoryEntry"
                   - type: "null"
     FlattenData:
       content:

@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Step from "@mui/material/Step";
+import { stepIconClasses } from "@mui/material/StepIcon";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import { styled } from "@mui/material/styles";
@@ -218,7 +219,7 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     const [showError, setShowError] = useState<boolean>(false);
 
     const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.value.length) {
+      if (e.target.value.trim().length) {
         setShowError(false);
       }
       setSummary(e.target.value);
@@ -315,10 +316,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             <StepLabel
               sx={(theme) => ({
                 fontWeight: "bold",
-                "& .MuiStepIcon-root.Mui-completed": {
+                [`& .${stepIconClasses.completed}`]: {
                   color: theme.palette.success.main,
                 },
-                "& .MuiStepIcon-root.Mui-active": {
+                [`& .${stepIconClasses.active}`]: {
                   color: theme.palette.info.main,
                 },
               })}

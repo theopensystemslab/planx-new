@@ -51,12 +51,9 @@ export const EditHistoryTimeline = ({
     // Get all events since & including the selected one
     const eventsToUndo = events.slice(0, i + 1);
 
-    const operationsToUndo = eventsToUndo.filter(
-      (event) => event.type === "operation",
-    ) as OperationHistoryItem[];
-    const commentsToDelete = eventsToUndo.filter(
-      (event) => event.type === "comment",
-    ) as CommentHistoryItem[];
+    const isOperation = (event: HistoryItem): event is OperationHistoryItem =>
+      event.type === "operation";
+    const operationsToUndo = eventsToUndo.filter(isOperation);
 
     // Make a flattened list of operations, with the latest operations first
     const operationsData: Array<OT.Op[]> = [];
@@ -67,6 +64,9 @@ export const EditHistoryTimeline = ({
     undoOperation(flattenedOperationsData);
 
     // Also delete each comment in the undo scope
+    const isComment = (event: HistoryItem): event is CommentHistoryItem =>
+      event.type === "comment";
+    const commentsToDelete = eventsToUndo.filter(isComment);
     commentsToDelete.forEach(async (comment) => {
       await deleteFlowComment(comment.id);
     });

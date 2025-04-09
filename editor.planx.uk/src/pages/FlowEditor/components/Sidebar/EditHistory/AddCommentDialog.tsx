@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-// eslint-disable-next-line no-restricted-imports
-import DialogActions from "@mui/material/DialogActions/DialogActions";
+import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useFormik } from "formik";
@@ -28,7 +27,7 @@ export const AddCommentDialog = ({
   const formik = useFormik<{ comment: string }>({
     initialValues: { comment: "" },
     onSubmit: async (values, { resetForm }) => {
-      if (!values.comment) {
+      if (!values.comment.trim()) {
         setShowError(true);
       } else {
         await useStore

@@ -151,9 +151,9 @@ const createAssociatedOperation = async (flowId: Flow["id"]) => {
 interface PublishedFlowsResponse {
   flow: {
     publishedFlows: {
-      data: Flow["data"];
-      id: number;
-      created_at: string;
+      data?: Flow["data"];
+      id?: number;
+      createdAt?: string;
     }[];
   } | null;
 }
@@ -216,7 +216,7 @@ export const getMostRecentPublishedFlowDate = async (
             limit: 1
             order_by: { created_at: desc }
           ) {
-            created_at
+            createdAt: created_at
           }
         }
       }
@@ -224,7 +224,7 @@ export const getMostRecentPublishedFlowDate = async (
     { id },
   );
 
-  const mostRecent = flow?.publishedFlows?.[0]?.created_at;
+  const mostRecent = flow?.publishedFlows?.[0]?.createdAt;
   return mostRecent;
 };
 
@@ -235,7 +235,7 @@ export interface FlowHistoryEntry {
   lastName: string;
   type: "comment" | "operation";
   comment: string | null;
-  data: any; // Operation["data"] via editor's sharedb json OT types
+  data: unknown; // Operation["data"] via editor's sharedb json OT types
 }
 
 // Get comments and operations from a flow's "History" since last publish
