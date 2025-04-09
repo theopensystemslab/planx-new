@@ -16,6 +16,7 @@ export interface BaseOptionsEditorProps {
   showDescriptionField?: boolean;
   onChange: (newVal: Option) => void;
   children?: ReactNode;
+  disabled?: boolean;
 }
 
 export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
@@ -30,6 +31,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
           format="bold"
           multiline
           value={props.value.data.text || ""}
+          disabled={props.disabled}
           onChange={(ev) => {
             props.onChange({
               ...props.value,
@@ -44,6 +46,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
       </InputRowItem>
       <ImgInput
         img={props.value.data.img}
+        disabled={props.disabled}
         onChange={(img) => {
           props.onChange({
             ...props.value,
@@ -62,6 +65,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
           value={props.value.data.description || ""}
           placeholder="Description"
           multiline
+          disabled={props.disabled}
           onChange={(ev) =>
             props.onChange({
               ...props.value,
@@ -79,6 +83,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
         key={`${props.value.id}-data-field-autocomplete`}
         schema={props.schema}
         value={props.value.data.val}
+        disabled={props.disabled}
         onChange={(targetValue) => {
           props.onChange({
             ...props.value,
@@ -92,6 +97,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
     )}
     <FlagsSelect
       value={props.value.data.flags}
+      disabled={props.disabled}
       onChange={(ev) => {
         props.onChange({
           ...props.value,

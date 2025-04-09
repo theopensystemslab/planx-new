@@ -51,6 +51,9 @@ const FlowEditor = () => {
     (state) => state.isTestEnvBannerVisible,
   );
 
+  const teamSlug = useStore.getState().getTeam().slug;
+  const lockedFlow = !useStore.getState().canUserEditTeam(teamSlug);
+
   return (
     <EditorContainer
       id="editor-container"
@@ -64,7 +67,12 @@ const FlowEditor = () => {
           overflowX: "auto",
         }}
       >
-        <Box id="editor" ref={scrollContainerRef} sx={{ position: "relative" }}>
+        <Box
+          id="editor"
+          ref={scrollContainerRef}
+          className={lockedFlow ? "flow-locked" : ""}
+          sx={{ position: "relative" }}
+        >
           <Flow flow={flow} breadcrumbs={breadcrumbs} />
           <EditorVisualControls
             orientation="vertical"

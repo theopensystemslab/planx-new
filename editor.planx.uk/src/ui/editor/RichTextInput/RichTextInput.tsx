@@ -59,7 +59,7 @@ const RichTextInput: FC<Props> = (props) => {
       }),
     ],
     content: fromHtml(stringValue),
-    editable: Boolean(props.onChange),
+    editable: !props.disabled,
   });
 
   const [addingLink, setAddingLink] = useState<{

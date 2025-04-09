@@ -93,6 +93,7 @@ function PlanningConstraintsComponent(props: Props) {
                 placeholder={formik.values.title}
                 value={formik.values.title}
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -101,6 +102,7 @@ function PlanningConstraintsComponent(props: Props) {
                 placeholder="Description"
                 value={formik.values.description}
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -127,6 +129,7 @@ function PlanningConstraintsComponent(props: Props) {
                             formik.values.dataValues?.length
                           }
                           onChange={changeSelectAll(formik.values.dataValues)}
+                          disabled={props.disabled}
                         />
                       </TableCell>
                       <TableCell
@@ -150,6 +153,7 @@ function PlanningConstraintsComponent(props: Props) {
                                 ) || false
                               }
                               onChange={changeDataset(dataset.val)}
+                              disabled={props.disabled}
                             />
                           </TableCell>
                           <TableCell>
@@ -201,12 +205,17 @@ function PlanningConstraintsComponent(props: Props) {
                 placeholder="Planning conditions disclaimer"
                 value={formik.values.disclaimer}
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 }

@@ -86,12 +86,14 @@ declare module "@mui/material/styles/createPalette" {
     main: string;
     paper: string;
     dark: string;
+    disabled: string;
   }
 
   interface TypeBackgroundOptions {
     main: string;
     paper: string;
     dark: string;
+    disabled: string;
   }
 }
 

@@ -17,6 +17,7 @@ export interface Props {
   handleSubmit?: (data: any, children?: any) => void;
   node?: any;
   autoAnswer?: Node["id"];
+  disabled?: boolean;
 }
 
 const Filter: React.FC<Props> = (props) => {
@@ -71,6 +72,7 @@ const Filter: React.FC<Props> = (props) => {
             name="category"
             value={formik.values.category}
             onChange={formik.handleChange}
+            disabled={props.disabled}
           >
             {Array.from(categories).map((category) => (
               <option key={category} value={category}>
