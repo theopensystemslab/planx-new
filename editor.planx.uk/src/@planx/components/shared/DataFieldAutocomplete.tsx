@@ -13,6 +13,7 @@ interface Props {
   value?: string;
   onChange: (value: string | null) => void;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const renderOptions: AutocompleteProps<
@@ -62,6 +63,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         autoSelect
         value={value}
         options={options}
+        disabled={props.disabled}
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
           const { inputValue } = params;

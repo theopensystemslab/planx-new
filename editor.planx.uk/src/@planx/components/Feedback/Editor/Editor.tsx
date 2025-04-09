@@ -46,6 +46,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   name="title"
                   value={formik.values.title}
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputLabel>
             </InputRow>
@@ -56,6 +57,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   value={formik.values.description}
                   placeholder="Description"
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputLabel>
             </InputRow>
@@ -70,6 +72,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   name="ratingQuestion"
                   value={formik.values.ratingQuestion}
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputLabel>
             </InputRow>
@@ -83,6 +86,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   name="freeformQuestion"
                   value={formik.values.freeformQuestion}
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputLabel>
             </InputRow>
@@ -92,6 +96,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   name="disclaimer"
                   value={formik.values.disclaimer}
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputLabel>
             </InputRow>
@@ -105,12 +110,13 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   )
                 }
                 label="Feedback required"
+                disabled={props.disabled}
               />
             </InputRow>
           </InputGroup>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };

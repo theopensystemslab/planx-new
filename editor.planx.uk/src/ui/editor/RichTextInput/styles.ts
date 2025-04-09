@@ -59,6 +59,11 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       padding: theme.spacing(0.25, 0.5),
       borderRadius: "4px",
     },
+    // Styles for disabled input
+    '&[contenteditable="false"]': {
+      backgroundColor: theme.palette.background.disabled,
+      color: theme.palette.text.disabled,
+    },
   },
 }));
 

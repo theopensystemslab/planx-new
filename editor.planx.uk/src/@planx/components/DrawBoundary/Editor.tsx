@@ -43,6 +43,7 @@ function DrawBoundaryComponent(props: Props) {
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -51,6 +52,7 @@ function DrawBoundaryComponent(props: Props) {
               placeholder="Description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputGroup label="Data field">
@@ -75,6 +77,7 @@ function DrawBoundaryComponent(props: Props) {
               name="titleForUploading"
               value={formik.values.titleForUploading}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -83,6 +86,7 @@ function DrawBoundaryComponent(props: Props) {
               placeholder="Description"
               value={formik.values.descriptionForUploading}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -95,11 +99,12 @@ function DrawBoundaryComponent(props: Props) {
                 )
               }
               label="Hide file upload and allow user to continue without data"
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }

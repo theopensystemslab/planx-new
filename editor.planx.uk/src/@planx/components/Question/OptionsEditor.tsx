@@ -10,6 +10,7 @@ const QuestionOptionsEditor: React.FC<BaseOptionsEditorProps> = ({
   schema,
   onChange,
   showValueField = false,
+  disabled,
 }) => {
   return (
     <BaseOptionsEditor
@@ -18,6 +19,7 @@ const QuestionOptionsEditor: React.FC<BaseOptionsEditorProps> = ({
       onChange={onChange}
       showValueField={showValueField}
       showDescriptionField={true}
+      disabled={disabled}
     />
   );
 };

@@ -31,7 +31,7 @@ interface RootProps extends ButtonBaseProps {
 const Root = styled(ButtonBase, {
   shouldForwardProp: (prop) =>
     !["isDragActive", "variant"].includes(prop.toString()),
-})<RootProps>(({ theme, isDragActive, variant }) => ({
+})<RootProps>(({ theme, isDragActive, variant, disabled }) => ({
   borderRadius: 0,
   height: 50,
   width: 50,
@@ -46,6 +46,9 @@ const Root = styled(ButtonBase, {
     color: "#757575",
     height: "fitContent",
     width: "fitContent",
+  }),
+  ...(disabled && {
+    backgroundColor: theme.palette.background.disabled,
   }),
 }));
 

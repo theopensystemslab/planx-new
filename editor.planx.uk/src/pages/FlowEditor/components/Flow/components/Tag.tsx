@@ -43,9 +43,9 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
 
   return (
     <Box
+      className="card-tag"
       sx={(theme) => ({
         bgcolor: tagBgColor,
-        borderColor: theme.palette.common.black,
         borderWidth: "0 1px 1px 1px",
         borderStyle: "solid",
         width: "100%",
