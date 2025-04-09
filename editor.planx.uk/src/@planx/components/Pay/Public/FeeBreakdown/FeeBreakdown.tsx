@@ -46,7 +46,10 @@ const Header: FeeBreakdownRow = ({ amount }) => (
         Amount {amount.payableVAT ? ` (excl VAT)` : ``}
       </TableCell>
       {amount.payableVAT ? (
-        <TableCell align="right" sx={{ color: "GrayText" }}>
+        <TableCell
+          align="right"
+          sx={(theme) => ({ color: theme.palette.text.secondary })}
+        >
           VAT (20%)
         </TableCell>
       ) : (
@@ -70,7 +73,10 @@ const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
       {formattedPriceWithCurrencySymbol(amount.calculated)}
     </TableCell>
     {amount.payableVAT && amount.payableVAT > 0 ? (
-      <TableCell align="right" sx={{ color: "GrayText" }}>
+      <TableCell
+        align="right"
+        sx={(theme) => ({ color: theme.palette.text.secondary })}
+      >
         {amount.calculatedVAT && amount.calculatedVAT > 0
           ? formattedPriceWithCurrencySymbol(amount.calculatedVAT)
           : undefined}
@@ -118,7 +124,12 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
       {reductions.map((reduction) => (
         <TableRow key={reduction}>
           <TableCell colSpan={amount.payableVAT ? 4 : 2}>
-            <Box sx={{ pl: 2, color: "GrayText" }}>
+            <Box
+              sx={(theme) => ({
+                pl: theme.spacing(2),
+                color: theme.palette.text.secondary,
+              })}
+            >
               {exemptionsReductionLookup[reduction]}
             </Box>
           </TableCell>
@@ -157,7 +168,12 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
       {exemptions.map((exemption) => (
         <TableRow key={exemption}>
           <TableCell colSpan={amount.payableVAT ? 4 : 2}>
-            <Box sx={{ pl: 2, color: "GrayText" }}>
+            <Box
+              sx={(theme) => ({
+                pl: theme.spacing(2),
+                color: theme.palette.text.secondary,
+              })}
+            >
               {exemptionsReductionLookup[exemption]}
             </Box>
           </TableCell>
@@ -182,7 +198,10 @@ const FastTrackFee: FeeBreakdownRow = ({ amount }) => {
       <TableCell align="right">
         {formattedPriceWithCurrencySymbol(amount.fastTrack)}
       </TableCell>
-      <TableCell align="right" sx={{ color: "GrayText" }}>
+      <TableCell
+        align="right"
+        sx={(theme) => ({ color: theme.palette.text.secondary })}
+      >
         {formattedPriceWithCurrencySymbol(amount.fastTrackVAT)}
       </TableCell>
       <TableCell align="right">
@@ -205,7 +224,10 @@ const ServiceCharge: FeeBreakdownRow = ({ amount }) => {
       <TableCell align="right">
         {formattedPriceWithCurrencySymbol(amount.serviceCharge)}
       </TableCell>
-      <TableCell align="right" sx={{ color: "GrayText" }}>
+      <TableCell
+        align="right"
+        sx={(theme) => ({ color: theme.palette.text.secondary })}
+      >
         {formattedPriceWithCurrencySymbol(amount.serviceChargeVAT)}
       </TableCell>
       <TableCell align="right">
@@ -228,7 +250,10 @@ const PaymentProcessingFee: FeeBreakdownRow = ({ amount }) => {
       <TableCell align="right">
         {formattedPriceWithCurrencySymbol(amount.paymentProcessing)}
       </TableCell>
-      <TableCell align="right" sx={{ color: "GrayText" }}>
+      <TableCell
+        align="right"
+        sx={(theme) => ({ color: theme.palette.text.secondary })}
+      >
         {formattedPriceWithCurrencySymbol(amount.paymentProcessingVAT)}
       </TableCell>
       <TableCell align="right">
