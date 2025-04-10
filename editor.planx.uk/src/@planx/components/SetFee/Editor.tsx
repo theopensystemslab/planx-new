@@ -105,8 +105,8 @@ function SetFeeComponent(props: Props) {
             Open Systems Lab invoices quarterly to collect the service charge.
             If you'd like to charge a higher fee than £
             {formik.values.serviceChargeAmount}, please contact{" "}
-            <a href="mailto:support@planx.uk" target="_self">
-              support@planx.uk
+            <a href="mailto:finance@opensystemslab.io" target="_self">
+              finance@opensystemslab.io
             </a>
             .
           </Typography>
