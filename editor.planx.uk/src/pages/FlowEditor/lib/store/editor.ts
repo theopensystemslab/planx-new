@@ -234,30 +234,30 @@ export const editorStore: StateCreator<
   },
 
   archiveFlow: async (flowId) => {
-    const { data } = await client.mutate<{
-      flow: { id: string; name: string };
-    }>({
-      mutation: gql`
-        mutation updateFlow($id: uuid!) {
-          flow: update_flows_by_pk(
-            pk_columns: { id: $id }
-            _set: { deleted_at: "now()", status: offline }
-          ) {
-            id
-            name
+    try {
+      const { data } = await client.mutate<{
+        flow: { id: string; name: string };
+      }>({
+        mutation: gql`
+          mutation updateFlow($id: uuid!) {
+            flow: update_flows_by_pk(
+              pk_columns: { id: $id }
+              _set: { deleted_at: "now()", status: offline }
+            ) {
+              id
+              name
+            }
           }
-        }
-      `,
-      variables: {
-        id: flowId,
-      },
-    });
+        `,
+        variables: {
+          id: flowId,
+        },
+      });
 
-    if (!data)
-      return alert(
-        `We are unable to archive this flow, refesh and try again or contact an admin`,
-      );
-    return data?.flow;
+      return data?.flow;
+    } catch (error) {
+      throw Error("Failed to archive flow", { cause: error })
+    };
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {
