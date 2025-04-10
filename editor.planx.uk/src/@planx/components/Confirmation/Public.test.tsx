@@ -25,7 +25,6 @@ vi.mock("@opensystemslab/planx-core", () => {
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
     <ConfirmationComponent
-      color={{ text: "#0B0C0C", background: "#EFF7EE" }}
       heading="heading"
       description="description"
       nextSteps={[
@@ -65,7 +64,6 @@ describe("Confirmation component", () => {
 
     const { user } = setup(
       <ConfirmationComponent
-        color={{ text: "#0B0C0C", background: "#EFF7EE" }}
         heading="heading"
         description="description"
         nextSteps={[
@@ -105,7 +103,6 @@ describe("Confirmation component", () => {
 
     const { user } = setup(
       <ConfirmationComponent
-        color={{ text: "#0B0C0C", background: "#EFF7EE" }}
         heading="heading"
         description="description"
         nextSteps={[
