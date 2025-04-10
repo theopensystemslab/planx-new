@@ -2517,6 +2517,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - submission_email
           - team_id
@@ -2536,6 +2537,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - submission_email
           - team_id
@@ -2555,6 +2557,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - submission_email
           - team_id
@@ -2574,6 +2577,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - submission_email
           - team_id
@@ -2611,6 +2615,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - submission_email
           - team_id
@@ -2631,6 +2636,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - submission_email
           - team_id
@@ -2925,20 +2931,21 @@
     - role: analyst
       permission:
         columns:
-          - live_flows
-          - article_4s_enabled
-          - govpay_enabled
-          - planning_data_enabled
-          - power_automate_enabled
-          - id
-          - govnotify_personalisation
           - action_colour
+          - article_4s_enabled
           - bops_submission_url
           - favicon
+          - govnotify_personalisation
+          - govpay_enabled
           - homepage
+          - id
+          - is_trial
           - link_colour
+          - live_flows
           - logo
           - name
+          - planning_data_enabled
+          - power_automate_enabled
           - primary_colour
           - reference_code
           - send_to_email_address
@@ -2957,6 +2964,7 @@
           - govpay_enabled
           - homepage
           - id
+          - is_trial
           - link_colour
           - live_flows
           - logo
