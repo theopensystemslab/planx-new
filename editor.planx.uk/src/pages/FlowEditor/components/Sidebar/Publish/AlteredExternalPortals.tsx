@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import { focusStyle } from "theme";
 import BlockQuote from "ui/editor/BlockQuote";
 
 import { useStore } from "../../../lib/store";
@@ -45,6 +46,12 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
         py: 0.7,
         margin: 0,
         mb: 1,
+        "&:focus-within": {
+          ...focusStyle,
+          "& *": {
+            color: "text.primary",
+          },
+        },
       }}
     >
       <ListItemText

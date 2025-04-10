@@ -316,10 +316,10 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
             <StepLabel
               sx={(theme) => ({
                 fontWeight: "bold",
-                [`& .${stepIconClasses.completed}`]: {
+                [`& .${stepIconClasses.completed} svg`]: {
                   color: theme.palette.success.main,
                 },
-                [`& .${stepIconClasses.active}`]: {
+                [`& .${stepIconClasses.active} svg`]: {
                   color: theme.palette.info.main,
                 },
               })}
