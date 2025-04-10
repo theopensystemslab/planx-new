@@ -9,6 +9,7 @@ import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
 
+import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
 import { CREATE_FLOW_MODES, CreateFlow } from "./types";
 
@@ -68,6 +69,7 @@ export const BaseFormSection: React.FC = () => {
         </SelectInput>
       </InputLabel>
       <CreateFromTemplateFormSection />
+      <CreateFromCopyFormSection />
       <InputLabel label="Service name" htmlFor="flow.name">
         <Input
           {...getFieldProps("flow.name")}

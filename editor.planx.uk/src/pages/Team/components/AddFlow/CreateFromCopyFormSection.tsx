@@ -1,9 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import MenuItem from "@mui/material/MenuItem";
+import { SelectChangeEvent } from "@mui/material/Select";
 import { useFormikContext } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import InputLabel from "ui/public/InputLabel";
+import { slugify } from "utils";
 
 import { CreateFlow } from "./types";
 
@@ -35,6 +37,20 @@ export const CreateFromCopyFormSection: React.FC = () => {
 
   if (values.mode !== "copy" || !data?.copiableFlows?.length) return null;
 
+  const handleChange = (e: SelectChangeEvent<unknown>) => {
+    setFieldValue("flow.sourceId", e.target.value)
+
+    const selectedFlow = data.copiableFlows.find(({ id }) => id === e.target.value);
+    if (!selectedFlow) return;
+
+    // Suggest a naming convention
+    if (!/(copy|template)$/.test(values.flow.name)) {
+      const newFlowName = `${selectedFlow.name} (copy)`;
+      setFieldValue("flow.name", newFlowName)
+      setFieldValue("flow.slug", slugify(newFlowName));
+    }
+  }
+
   return (
     <InputLabel label="Available flows" id="available-flow-select">
       <SelectInput
@@ -44,7 +60,7 @@ export const CreateFromCopyFormSection: React.FC = () => {
         required={true}
         title={"Available flows"}
         labelId="available-flow-select"
-        onChange={(e) => setFieldValue("flow.sourceId", e.target.value)}
+        onChange={handleChange}
       >
         {data.copiableFlows.map(({ id, name, team }) => (
           <MenuItem key={id} value={id}>

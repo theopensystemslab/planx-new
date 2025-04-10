@@ -13,7 +13,6 @@ import { AddButton } from "ui/editor/AddButton";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
-import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
@@ -104,7 +103,6 @@ export const AddFlow: React.FC = () => {
                   sx={{ gap: 2, display: "flex", flexDirection: "column" }}
                 >
                   <BaseFormSection />
-                  <CreateFromCopyFormSection />
                 </DialogContent>
                 <DialogActions sx={{ paddingX: 2 }}>
                   <Button 
