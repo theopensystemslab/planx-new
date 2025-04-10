@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Dialog, { dialogClasses } from "@mui/material/Dialog";
+import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
@@ -15,20 +14,7 @@ import { AddButton } from "ui/editor/AddButton";
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
-import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
 import { CreateFlow, validationSchema } from "./types";
-
-// TODO: Standardise or share this
-export const StyledDialog = styled(Dialog)(({ theme }) => ({
-  [`& .${dialogClasses.paper}`]: {
-    width: "100%",
-    maxWidth: theme.breakpoints.values.md,
-    borderRadius: 0,
-    borderTop: `20px solid ${theme.palette.primary.main}`,
-    background: theme.palette.background.paper,
-    margin: theme.spacing(2),
-  },
-}));
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
@@ -89,7 +75,7 @@ export const AddFlow: React.FC = () => {
         validationSchema={validationSchema}
       >
         {({ resetForm }) => (
-          <StyledDialog
+          <Dialog
             open={dialogOpen}
             onClose={() => {
               setDialogOpen(false);
@@ -129,7 +115,7 @@ export const AddFlow: React.FC = () => {
                 </DialogActions>
               </Form>
             </Box>
-          </StyledDialog>
+          </Dialog>
         )}
       </Formik>
     </Box>
