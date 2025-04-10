@@ -58,10 +58,6 @@ export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
   const formik = useFormik({
     initialValues: {
-      color: props.node?.color || {
-        text: "#000",
-        background: "rgba(1, 99, 96, 0.1)",
-      },
       heading: props.node?.data?.heading || "Application sent",
       description:
         props.node?.data?.description ||
