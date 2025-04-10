@@ -7,6 +7,7 @@ import {
 import gql from "graphql-tag";
 import { client } from "lib/graphql";
 import { TeamMember } from "pages/FlowEditor/components/Team/types";
+import { CreateTeam } from "pages/Teams/AddTeamButton";
 import type { StateCreator } from "zustand";
 
 import { SharedStore } from "./shared";
@@ -29,7 +30,7 @@ export interface TeamStore {
   fetchCurrentTeamSettings: () => Promise<TeamSettings>;
   updateTeamTheme: (theme: Partial<TeamTheme>) => Promise<boolean>;
   updateTeamSettings: (teamSettings: Partial<TeamSettings>) => Promise<boolean>;
-  createTeam: (newTeam: { name: string; slug: string }) => Promise<number>;
+  createTeam: (newTeam: CreateTeam) => Promise<number>;
   setTeamMembers: (teamMembers: TeamMember[]) => Promise<void>;
   deleteUser: (userId: number) => Promise<boolean>;
 }
@@ -120,6 +121,7 @@ export const teamStore: StateCreator<
               externalPlanningSiteName: external_planning_site_name
               externalPlanningSiteUrl: external_planning_site_url
               submissionEmail: submission_email
+              isTrial: is_trial
             }
           }
         }
