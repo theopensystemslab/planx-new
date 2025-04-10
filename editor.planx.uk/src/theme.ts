@@ -442,7 +442,7 @@ const getThemeOptions = ({
             maxWidth: theme.breakpoints.values.md,
             borderRadius: 0,
             borderTop: `20px solid ${palette.primary.main}`,
-            background: "#FFF",
+            background: theme.palette.background.paper,
             margin: theme.spacing(2),
           }),
         },
