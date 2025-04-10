@@ -34,3 +34,18 @@ Please note - this update is immediate and will effect other open PRs. It's advi
 
 ## planx-core
 Steps 4, 5 & 9 also apply here and should be updated shortly after.
+
+## AWS Lambda
+We have an AWS Lambda application (Scanii) which also runs on Node. This application is installed manually, and not managed via IaC (Pulumi).
+
+The runtime Node version used for Lambda functions is not tied to the Node version used by PlanX, but it's worth upgrading at the same time to keep these in sync.
+
+The following steps need to be taken on both AWS Staging and Production account - 
+
+1. Log in to AWS environment
+2. Navigate to AWS Lambda > Functions
+3. For each function (currently 2) update the runtime
+  
+**Steps**
+
+Select function > Runtime settings > Edit > Runtime > Select Node version > Save
