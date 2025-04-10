@@ -11,9 +11,17 @@ type Story = StoryObj<typeof meta>;
 
 export default meta;
 
-export const Basic = {
+export const Spinner = {
   args: {
     msDelayBeforeVisible: 5,
     text: "Loading...",
+  },
+} satisfies Story;
+
+export const TextOnly = {
+  args: {
+    msDelayBeforeVisible: 5,
+    text: "Loading",
+    variant: "ellipses",
   },
 } satisfies Story;
