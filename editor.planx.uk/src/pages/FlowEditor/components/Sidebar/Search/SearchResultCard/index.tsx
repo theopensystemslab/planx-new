@@ -18,6 +18,7 @@ const SearchResultCardRoot = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
 })<{ portalId?: string }>(({ theme, portalId }) => ({
   border: `1px solid ${theme.palette.common.black}`,
+  background: theme.palette.background.default,
   display: "block",
   padding: 0,
   borderWidth: portalId ? 4 : 2,
@@ -74,7 +75,11 @@ export const SearchResultCard: React.FC<{
   const headlineVariant = isDataKey ? "data" : undefined;
 
   return (
-    <SearchResultCardRoot onClick={handleClick} portalId={portalId}>
+    <SearchResultCardRoot
+      onClick={handleClick}
+      portalId={portalId}
+      disableRipple
+    >
       {portalId && <InternalPortalHeader portalId={portalId} />}
       <Box p={1}>
         <Box

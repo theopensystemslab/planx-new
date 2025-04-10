@@ -13,7 +13,7 @@ export const ExternalPortals: React.FC<ExternalPortalsProps> = ({
     <Root>
       {Object.values(externalPortals).map(({ name, href }) => (
         <ListItem key={`external-portal-card-${name}`} disablePadding>
-          <ListItemButton component="a" href={`../${href}`}>
+          <ListItemButton component="a" href={`../${href}`} disableRipple>
             <Typography variant="body2">
               {href.replaceAll("/", " / ")}
             </Typography>

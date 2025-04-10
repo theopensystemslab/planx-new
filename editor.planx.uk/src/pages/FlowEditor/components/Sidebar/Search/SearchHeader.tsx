@@ -37,7 +37,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
       <Typography
         component={"label"}
         htmlFor="pattern"
-        variant="h3"
+        variant="h4"
         mb={1}
         display={"block"}
       >
