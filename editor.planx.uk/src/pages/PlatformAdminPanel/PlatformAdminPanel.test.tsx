@@ -56,17 +56,17 @@ describe("Platform admin panel", () => {
     const { container } = setup(<PlatformAdminPanel />);
 
     // get all cells in the 'Planning Constraints' column
-    const planningContraintCells = container.querySelectorAll(
+    const planningConstraintCells = container.querySelectorAll(
       '[data-field="planningDataEnabled"]',
     );
 
-    const firstRow = planningContraintCells[1]; // first non-header row
+    const firstRow = planningConstraintCells[1]; // first non-header row
 
     expect(
       within(firstRow as HTMLElement).getByTestId("CloseIcon"), // cross icon
     ).toBeVisible();
 
-    const secondRow = planningContraintCells[2];
+    const secondRow = planningConstraintCells[2];
 
     expect(
       within(secondRow as HTMLElement).getByTestId("DoneIcon"), // tick icon

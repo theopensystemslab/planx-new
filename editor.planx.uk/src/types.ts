@@ -117,6 +117,7 @@ export interface AdminPanelData {
   linkColour?: string;
   actionColour?: string;
   liveFlows: string[] | null;
+  isTrial: boolean;
 }
 
 export interface Operation {
