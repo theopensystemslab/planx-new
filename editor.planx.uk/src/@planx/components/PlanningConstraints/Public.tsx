@@ -1,3 +1,4 @@
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import type {
   EnhancedGISResponse,
@@ -6,7 +7,7 @@ import type {
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
-import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
+import DelayedLoadingText from "components/DelayedLoadingIndicator/DelayedLoadingText";
 import { GraphError } from "components/Error/GraphError";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
@@ -226,10 +227,12 @@ function Component(props: Props) {
     return (
       <Card handleSubmit={props.handleSubmit} isValid>
         <CardHeader title={props.title} description={props.description || ""} />
-        <DelayedLoadingIndicator
-          text="Fetching data..."
+        <DelayedLoadingText
+          text="Checking for planning constraints that may apply to this property"
           msDelayBeforeVisible={0}
         />
+        <Skeleton variant="rectangular" width={900} height={60} />
+        <Skeleton variant="rectangular" width={900} height={60} />
       </Card>
     );
 

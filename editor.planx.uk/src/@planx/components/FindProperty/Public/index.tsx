@@ -259,7 +259,7 @@ function Component(props: Props) {
             {Boolean(address) && isValidating && (
               <DelayedLoadingIndicator
                 msDelayBeforeVisible={50}
-                text="Fetching address data..."
+                text="Finding information about the property"
                 inline
               />
             )}
