@@ -112,7 +112,6 @@ export const AddFlow: React.FC = () => {
                   sx={{ gap: 2, display: "flex", flexDirection: "column" }}
                 >
                   <BaseFormSection />
-                  <CreateFromTemplateFormSection />
                   <CreateFromCopyFormSection />
                 </DialogContent>
                 <DialogActions sx={{ paddingX: 2 }}>
