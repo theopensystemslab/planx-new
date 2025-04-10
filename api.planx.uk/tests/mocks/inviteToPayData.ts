@@ -66,7 +66,6 @@ export const paymentRequestResponse: Partial<PaymentRequest> = {
     amount: {
       payable: 123.45,
       calculated: 123.45,
-      vat: 0,
       reduction: 0,
       exemption: 0,
     },

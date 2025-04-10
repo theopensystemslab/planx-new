@@ -82,7 +82,7 @@ export const WithExemptions: Story = {
         calculated: 1000,
         payable: 0,
         reduction: 0,
-        exemption: 1000,
+        exemption: -1000,
       },
     },
   },
@@ -107,7 +107,7 @@ export const WithReductions: Story = {
         payableVAT: 8,
         serviceCharge: 40,
         serviceChargeVAT: 8,
-        reduction: 200,
+        reduction: -200,
         exemption: 0,
       },
     },
@@ -130,7 +130,7 @@ export const WithModifications: Story = {
       amount: {
         calculated: 258,
         payable: 578,
-        reduction: -320, // TODO fix +/- logic
+        reduction: 320,
         exemption: 0,
       },
     },

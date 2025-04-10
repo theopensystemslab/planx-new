@@ -107,16 +107,16 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
     <>
       <TableRow>
         <TableCell>
-          {amount.reduction < 0 ? `Modifications` : `Reductions`}
+          {amount.reduction > 0 ? `Modifications` : `Reductions`}
         </TableCell>
         <TableCell align="right">
-          {formattedPriceWithCurrencySymbol(-amount.reduction)}
+          {formattedPriceWithCurrencySymbol(amount.reduction)}
         </TableCell>
         {amount.payableVAT ? (
           <>
             <TableCell></TableCell>
             <TableCell align="right">
-              {formattedPriceWithCurrencySymbol(-amount.reduction)}
+              {formattedPriceWithCurrencySymbol(amount.reduction)}
             </TableCell>
           </>
         ) : undefined}
@@ -154,13 +154,13 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
       <TableRow>
         <TableCell>Exemptions</TableCell>
         <TableCell align="right">
-          {formattedPriceWithCurrencySymbol(-amount.exemption)}
+          {formattedPriceWithCurrencySymbol(amount.exemption)}
         </TableCell>
         {amount.payableVAT ? (
           <>
             <TableCell></TableCell>
             <TableCell align="right">
-              {formattedPriceWithCurrencySymbol(-amount.exemption)}
+              {formattedPriceWithCurrencySymbol(amount.exemption)}
             </TableCell>
           </>
         ) : undefined}
