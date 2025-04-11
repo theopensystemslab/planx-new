@@ -13,12 +13,17 @@ import { AddButton } from "ui/editor/AddButton";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
-import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const { teamId, createFlow, createFlowFromTemplate, teamSlug } = useStore();
+  const {
+    teamId,
+    createFlow,
+    createFlowFromTemplate,
+    createFlowFromCopy,
+    teamSlug,
+  } = useStore();
 
   const initialValues: CreateFlow = {
     mode: "new",
@@ -40,7 +45,7 @@ export const AddFlow: React.FC = () => {
           await createFlow(flow);
           break;
         case "copy":
-          // newFlowId = await createFlowFromCopy(flow);
+          await createFlowFromCopy(flow);
           break;
         case "template":
           await createFlowFromTemplate(flow);
@@ -51,7 +56,7 @@ export const AddFlow: React.FC = () => {
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
-        if (message.includes("Uniqueness violation")) {
+        if (message?.includes("Uniqueness violation")) {
           setFieldError("flow.name", "Flow name must be unique");
         }
       }
@@ -74,7 +79,7 @@ export const AddFlow: React.FC = () => {
         validateOnChange={false}
         validationSchema={validationSchema}
       >
-        {({ resetForm }) => (
+        {({ resetForm, isSubmitting }) => (
           <Dialog
             open={dialogOpen}
             onClose={() => {
@@ -98,10 +103,13 @@ export const AddFlow: React.FC = () => {
                   sx={{ gap: 2, display: "flex", flexDirection: "column" }}
                 >
                   <BaseFormSection />
-                  <CreateFromCopyFormSection />
                 </DialogContent>
                 <DialogActions sx={{ paddingX: 2 }}>
-                  <Button disableRipple onClick={() => setDialogOpen(false)}>
+                  <Button 
+                    disableRipple 
+                    onClick={() => setDialogOpen(false)}
+                    disabled={isSubmitting}
+                  >
                     Back
                   </Button>
                   <Button
@@ -109,6 +117,7 @@ export const AddFlow: React.FC = () => {
                     color="primary"
                     variant="contained"
                     disableRipple
+                    disabled={isSubmitting}
                   >
                     Add service
                   </Button>

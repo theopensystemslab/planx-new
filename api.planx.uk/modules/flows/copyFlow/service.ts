@@ -1,10 +1,14 @@
 import { makeUniqueFlow, getFlowData, createFlow } from "../../../helpers.js";
+import type { CopyFlowRequest } from "./controller.js";
 
-const copyFlow = async (
-  flowId: string,
-  replaceValue: string,
-  insert: boolean,
-) => {
+const copyFlow = async ({
+  flowId,
+  slug,
+  name,
+  teamId,
+  replaceValue,
+  insert,
+}: CopyFlowRequest) => {
   // Fetch the original flow
   const flow = await getFlowData(flowId);
 
@@ -13,11 +17,8 @@ const copyFlow = async (
 
   // Check if copied flow data should be inserted into `flows` table, or just returned for reference
   if (insert) {
-    const newSlug = flow.slug + "-copy";
-    const newName = flow.name + " (copy)";
-
     // Insert the flow and an associated operation
-    await createFlow(flow.team_id, newSlug, newName, uniqueFlowData, flowId);
+    await createFlow(teamId, slug, name, uniqueFlowData, flowId);
   }
 
   return { flow, uniqueFlowData };
