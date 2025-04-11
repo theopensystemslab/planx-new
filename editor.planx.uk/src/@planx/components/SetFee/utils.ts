@@ -1,3 +1,4 @@
+import { PassportFeeFields } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { PAY_FN } from "../Pay/model";
@@ -12,6 +13,16 @@ type HandleSetFees = (params: {
   applyPaymentProcessingFee: boolean;
 }) => Store.Passport["data"];
 
+// SetFee outputs any `number` type PassportFeeFields, never `boolean` ones
+type OutputFees = Omit<
+  PassportFeeFields,
+  | "application.fee.exemption.disability"
+  | "application.fee.exemption.resubmission"
+  | "application.fee.reduction.alternative"
+  | "application.fee.reduction.parishCouncil"
+  | "application.fee.reduction.sports"
+>;
+
 export const handleSetFees: HandleSetFees = ({
   passport,
   applyCalculatedVAT,
@@ -19,10 +30,11 @@ export const handleSetFees: HandleSetFees = ({
   applyServiceCharge,
   serviceChargeAmount,
   applyPaymentProcessingFee,
-}) => {
+}): OutputFees => {
   // Calculated is base application fee exclusive of VAT
   //   Any exemptions or reductions will have already set `application.fee.payable`
-  const calculated = passport.data?.["application.fee.calculated"] || 0;
+  const CALCULATED_FN = "application.fee.calculated";
+  const calculated = passport.data?.[CALCULATED_FN] || 0;
   const incomingPayable = passport.data?.[PAY_FN];
 
   // `application.fee.payable` is total amount to be paid to GOV PAY inclusive of VAT
@@ -32,6 +44,7 @@ export const handleSetFees: HandleSetFees = ({
 
   // At minimum, set calculated = payable if payable does not exist yet
   const fees = {
+    [CALCULATED_FN]: calculated,
     [payable]: incomingPayable >= 0 ? incomingPayable : calculated,
     [payableVAT]: 0,
   };
@@ -40,8 +53,8 @@ export const handleSetFees: HandleSetFees = ({
   if (applyCalculatedVAT) {
     const calculatedVAT = calculated * VAT_PERCENTAGE;
 
-    fees["application.fee.calculated"] = calculated;
-    fees["application.fee.calculated.VAT"] = calculatedVAT;
+    fees[CALCULATED_FN] = calculated;
+    fees[`${CALCULATED_FN}.VAT`] = calculatedVAT;
     fees[payable] = fees[payable] + calculatedVAT;
     fees[payableVAT] = calculatedVAT;
   }
