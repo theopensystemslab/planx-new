@@ -21,6 +21,7 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
@@ -57,7 +58,7 @@ const Root = styled(AppBar)(({ theme }) => ({
   color: theme.palette.common.white,
 }));
 
-const BreadcrumbsRoot = styled(Box)(({ theme }) => ({
+const BreadcrumbsRoot = styled(Box)(() => ({
   cursor: "pointer",
   fontSize: 20,
   display: "flex",
@@ -234,6 +235,10 @@ const Breadcrumbs: React.FC = () => {
     state.previewEnvironment === "standalone",
   ]);
 
+  const flowStatus = useStore.getState().status as StatusVariant | undefined;
+
+  console.log(flowStatus);
+
   return (
     <>
       <BreadcrumbsRoot>
@@ -278,6 +283,20 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
+      {route.data.flow && (
+        <Button
+          variant="link"
+          href={`/${team.slug}/${route.data.flow}/service`}
+          sx={(theme) => ({
+            color: theme.palette.text.primary,
+            textDecoration: "none",
+          })}
+        >
+          <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
+            {flowStatus}
+          </FlowTag>
+        </Button>
+      )}
     </>
   );
 };
@@ -453,21 +472,13 @@ const ServiceTitle: React.FC = () => {
   );
 };
 
-interface EditorToolbarProps {
+const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
   route: Route;
-  flow: FlowSummary;
-}
-
-const EditorToolbar: React.FC<EditorToolbarProps> = ({ headerRef, flow }) => {
+}> = ({ headerRef }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
   const [user, token] = useStore((state) => [state.getUser(), state.jwt]);
-
-  const statusVariant =
-    flow?.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
-
-  console.log(statusVariant);
 
   const handleClose = () => {
     setOpen(false);
@@ -492,23 +503,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ headerRef, flow }) => {
           <InnerContainer>
             <LeftBox>
               <Breadcrumbs />
-              {flow && (
-                <Button
-                  variant="link"
-                  href="/testing/online-offline-test/service"
-                  sx={(theme) => ({
-                    color: theme.palette.text.primary,
-                    textDecoration: "none",
-                  })}
-                >
-                  <FlowTag
-                    tagType={FlowTagType.Status}
-                    statusVariant={statusVariant}
-                  >
-                    {statusVariant}
-                  </FlowTag>
-                </Button>
-              )}
             </LeftBox>
             <RightBox>
               {user && (
@@ -578,10 +572,9 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ headerRef, flow }) => {
 
 interface ToolbarProps {
   headerRef: RefObject<HTMLDivElement>;
-  flow: FlowSummary;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef, flow }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
   const route = useCurrentRoute();
   const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -595,13 +588,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef, flow }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return (
-      <EditorToolbar
-        headerRef={headerRef}
-        route={route}
-        flow={flow}
-      ></EditorToolbar>
-    );
+    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
   }
 
   switch (path) {
