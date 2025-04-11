@@ -6,16 +6,13 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { Team } from "@opensystemslab/planx-core/types";
-import navigation from "lib/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
 import { borderedFocusStyle } from "theme";
-import { AddButton } from "ui/editor/AddButton";
-import Permission from "ui/editor/Permission";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
-import { slugify } from "utils";
 
-import { useStore } from "./FlowEditor/lib/store";
+import { useStore } from "../FlowEditor/lib/store";
+import { AddTeamButton } from "./AddTeamButton";
 
 interface TeamTheme {
   slug: string;
@@ -53,10 +50,7 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 }));
 
 const Teams: React.FC<Props> = ({ teams }) => {
-  const [canUserEditTeam, createTeam] = useStore((state) => [
-    state.canUserEditTeam,
-    state.createTeam,
-  ]);
+  const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
   const [searchedTeams, setSearchedTeams] = useState<Team[] | null>(null);
   const [clearSearch, setClearSearch] = useState<boolean>(false);
@@ -90,7 +84,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
       );
     });
 
-  const noResultsCard = (
+  const NoResultsCard = (
     <Card>
       <CardContent>
         <Typography variant="h3">No results</Typography>
@@ -117,33 +111,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
         <Typography variant="h2" component="h1">
           Select a team
         </Typography>
-        <Permission.IsPlatformAdmin>
-          <AddButton
-            onClick={async () => {
-              const newTeamName = prompt("Team name");
-
-              if (newTeamName) {
-                const newSlug = slugify(newTeamName);
-                const teamSlugDuplicate = teams.find(
-                  (team) => team.slug === newSlug,
-                );
-                if (teamSlugDuplicate !== undefined) {
-                  alert(
-                    `A team with the name "${teamSlugDuplicate.name}" already exists. Enter a unique team name to continue.`,
-                  );
-                } else {
-                  await createTeam({
-                    name: newTeamName,
-                    slug: newSlug,
-                  });
-                  navigation.navigate(`/${newSlug}`);
-                }
-              }
-            }}
-          >
-            Add a new team
-          </AddButton>
-        </Permission.IsPlatformAdmin>
+        <AddTeamButton />
       </Box>
       {editableTeams.length > 0 && (
         <>
@@ -185,7 +153,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
             />
           </Box>
 
-          {searchedTeams?.length ? renderTeams(searchedTeams) : noResultsCard}
+          {searchedTeams?.length ? renderTeams(searchedTeams) : NoResultsCard}
         </>
       )}
     </Container>
