@@ -165,7 +165,6 @@ function SetFeeComponent(props: Props) {
                     formik.values.fastTrackFeeAmount || 0,
                   ),
                   applyServiceCharge: formik.values.applyServiceCharge,
-                  serviceChargeAmount: formik.values.serviceChargeAmount,
                   applyPaymentProcessingFee:
                     formik.values.applyPaymentProcessingFee,
                 }),

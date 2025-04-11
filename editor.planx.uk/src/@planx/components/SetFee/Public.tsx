@@ -11,7 +11,6 @@ export default function Component(props: Props) {
   const {
     applyCalculatedVAT,
     applyServiceCharge,
-    serviceChargeAmount,
     applyPaymentProcessingFee,
   } = props;
   const fastTrackFeeAmount = Number(props.fastTrackFeeAmount || 0);
@@ -24,7 +23,6 @@ export default function Component(props: Props) {
       applyCalculatedVAT,
       fastTrackFeeAmount,
       applyServiceCharge,
-      serviceChargeAmount,
       applyPaymentProcessingFee,
     });
 

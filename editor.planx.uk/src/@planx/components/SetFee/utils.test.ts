@@ -16,7 +16,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -41,7 +40,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -67,7 +65,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -93,7 +90,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 150,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -117,7 +113,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -141,7 +136,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 150,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -168,7 +162,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 183,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -196,7 +189,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -222,7 +214,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 50,
         applyServiceCharge: true,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -247,7 +238,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: true,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -274,7 +264,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: false,
         fastTrackFeeAmount: 0,
         applyServiceCharge: false,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: false,
       });
 
@@ -299,7 +288,6 @@ describe("handleSetFees() function", () => {
         applyCalculatedVAT: true,
         fastTrackFeeAmount: 80,
         applyServiceCharge: true,
-        serviceChargeAmount: 40,
         applyPaymentProcessingFee: true,
       });
 

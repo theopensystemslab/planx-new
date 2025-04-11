@@ -2,14 +2,13 @@ import { PassportFeeFields } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
 
 import { PAY_FN } from "../Pay/model";
-import { DEFAULT_PAYMENT_PROCESSING_PERCENTAGE, VAT_PERCENTAGE } from "./model";
+import { DEFAULT_PAYMENT_PROCESSING_PERCENTAGE, DEFAULT_SERVICE_CHARGE_AMOUNT, VAT_PERCENTAGE } from "./model";
 
 type HandleSetFees = (params: {
   passport: Store.Passport;
   applyCalculatedVAT: boolean;
   fastTrackFeeAmount: number;
   applyServiceCharge: boolean;
-  serviceChargeAmount: number;
   applyPaymentProcessingFee: boolean;
 }) => Store.Passport["data"];
 
@@ -28,7 +27,6 @@ export const handleSetFees: HandleSetFees = ({
   applyCalculatedVAT,
   fastTrackFeeAmount,
   applyServiceCharge,
-  serviceChargeAmount,
   applyPaymentProcessingFee,
 }): OutputFees => {
   // Calculated is base application fee exclusive of VAT
@@ -74,6 +72,7 @@ export const handleSetFees: HandleSetFees = ({
 
   const addServiceCharge = applyServiceCharge && fees[payable] >= 100;
   if (addServiceCharge) {
+    const serviceChargeAmount = DEFAULT_SERVICE_CHARGE_AMOUNT;
     const serviceChargeVAT = serviceChargeAmount * VAT_PERCENTAGE;
 
     fees["application.fee.serviceCharge"] = serviceChargeAmount;
