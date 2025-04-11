@@ -11,6 +11,7 @@ import BoundaryForm from "./BoundaryForm";
 import ContactForm from "./ContactForm";
 import ReferenceCodeForm from "./ReferenceCodeForm";
 import SubmissionsForm from "./SubmissionsForm";
+import TrialAccountForm from "./TrialAccountForm";
 
 export interface FormProps {
   formikConfig: FormikConfig<TeamSettings>;
@@ -68,6 +69,7 @@ const GeneralSettings: React.FC = () => {
             onSuccess={onSuccess}
           />
           <SubmissionsForm formikConfig={formikConfig} onSuccess={onSuccess} />
+          <TrialAccountForm formikConfig={formikConfig} onSuccess={onSuccess} />
         </>
       )}
     </Container>
