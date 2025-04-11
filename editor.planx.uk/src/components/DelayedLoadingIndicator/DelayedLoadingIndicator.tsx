@@ -6,11 +6,15 @@ import React, { useEffect, useState } from "react";
 
 export interface Props {
   inline?: boolean;
+  variant?: "spinner" | "ellipses";
+  text?: string;
+  msDelayBeforeVisible?: number;
+  children?: React.ReactNode;
 }
 
-const Root = styled(Box, {
+const SpinnerRoot = styled(Box, {
   shouldForwardProp: (prop) => prop !== "inline",
-})<Props>(({ inline }) => ({
+})<Pick<Props, "inline">>(({ inline }) => ({
   padding: 60,
   display: "flex",
   alignItems: "center",
@@ -20,22 +24,53 @@ const Root = styled(Box, {
   }),
 }));
 
-const DelayedLoadingIndicator: React.FC<{
-  msDelayBeforeVisible?: number;
-  text?: string;
-  inline?: boolean;
-}> = ({ msDelayBeforeVisible = 0, text, inline }) => {
+const EllipsesText = styled(Typography)(() => ({
+  "&::after": {
+    display: "inline-block",
+    animation: "ellipsis steps(1,end) 1s infinite",
+    content: '""',
+  },
+  "@keyframes ellipsis": {
+    "0%": { content: '""' },
+    "25%": { content: '"."' },
+    "50%": { content: '".."' },
+    "75%": { content: '"..."' },
+    "100%": { content: '""' },
+  },
+}));
+
+const DelayedLoadingIndicator: React.FC<Props> = ({
+  inline,
+  text,
+  msDelayBeforeVisible = 0,
+  variant = "spinner",
+  children,
+}) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const timeout = setTimeout(() => setVisible(true), msDelayBeforeVisible);
-    return () => {
-      clearTimeout(timeout);
-    };
+    return () => clearTimeout(timeout);
   }, [msDelayBeforeVisible]);
 
-  return visible ? (
-    <Root
+  if (!visible) return null;
+
+  if (variant === "ellipses") {
+    return (
+      <Box
+        role="alert"
+        aria-busy="true"
+        aria-live="assertive"
+        data-testid="delayed-loading-text"
+        pt={2}
+      >
+        <EllipsesText variant="body1">{text ?? "Loading…"}</EllipsesText>
+        {children}
+      </Box>
+    );
+  }
+  return (
+    <SpinnerRoot
       role="alert"
       aria-busy="true"
       aria-live="assertive"
@@ -46,8 +81,8 @@ const DelayedLoadingIndicator: React.FC<{
       <Typography variant="body2" sx={{ ml: "1rem" }}>
         {text ?? "Loading..."}
       </Typography>
-    </Root>
-  ) : null;
+    </SpinnerRoot>
+  );
 };
 
 export default DelayedLoadingIndicator;
