@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import type {
@@ -231,9 +232,32 @@ function Component(props: Props) {
           variant="ellipses"
           text="Checking for planning constraints that may apply to this property"
           msDelayBeforeVisible={0}
-        />
-        <Skeleton variant="rectangular" width={900} height={60} />
-        <Skeleton variant="rectangular" width={900} height={60} />
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              mt: 2,
+              "& > span": {
+                maxWidth: "100%",
+              },
+            }}
+          >
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={60}
+              aria-hidden="true"
+            />
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={60}
+              aria-hidden="true"
+            />
+          </Box>
+        </DelayedLoadingIndicator>
       </Card>
     );
 

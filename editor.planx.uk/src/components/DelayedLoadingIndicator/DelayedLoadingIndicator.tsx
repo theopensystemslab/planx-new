@@ -9,6 +9,7 @@ export interface Props {
   variant?: "spinner" | "ellipses";
   text?: string;
   msDelayBeforeVisible?: number;
+  children?: React.ReactNode;
 }
 
 const SpinnerRoot = styled(Box, {
@@ -43,6 +44,7 @@ const DelayedLoadingIndicator: React.FC<Props> = ({
   text,
   msDelayBeforeVisible = 0,
   variant = "spinner",
+  children,
 }) => {
   const [visible, setVisible] = useState(false);
 
@@ -63,6 +65,7 @@ const DelayedLoadingIndicator: React.FC<Props> = ({
         pt={2}
       >
         <EllipsesText variant="body1">{text ?? "Loading…"}</EllipsesText>
+        {children}
       </Box>
     );
   }
