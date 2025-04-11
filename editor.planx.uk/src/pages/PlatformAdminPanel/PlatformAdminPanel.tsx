@@ -99,6 +99,11 @@ export const PlatformAdminPanel = () => {
       headerName: "Favicon",
       type: ColumnFilterType.BOOLEAN,
     },
+    {
+      field: "isTrial",
+      headerName: "Trial account",
+      type: ColumnFilterType.BOOLEAN,
+    },
   ];
 
   return (

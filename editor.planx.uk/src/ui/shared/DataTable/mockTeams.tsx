@@ -30,6 +30,7 @@ export const mockTeams: AdminPanelData[] = [
     powerAutomateEnabled: false,
     sendToEmailAddress: undefined,
     bopsSubmissionURL: undefined,
+    isTrial: false,
   },
   {
     id: "2",
@@ -48,6 +49,7 @@ export const mockTeams: AdminPanelData[] = [
     slug: "doncaster",
     article4sEnabled: false,
     powerAutomateEnabled: false,
+    isTrial: true,
   },
   {
     id: "3",
@@ -68,6 +70,7 @@ export const mockTeams: AdminPanelData[] = [
     slug: "newcastle",
     article4sEnabled: true,
     powerAutomateEnabled: true,
+    isTrial: false,
   },
   {
     id: "4",
@@ -85,5 +88,6 @@ export const mockTeams: AdminPanelData[] = [
     slug: "tewkesbury",
     article4sEnabled: false,
     powerAutomateEnabled: false,
+    isTrial: false,
   },
 ];

@@ -10,6 +10,7 @@ import {
 } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import { AdminPanelData } from "types";
 import NotionEmbed from "ui/editor/NotionEmbed";
 
 import { client } from "../lib/graphql";
@@ -86,7 +87,7 @@ const editorRoutes = compose(
         );
 
       return route(async () => {
-        const { data } = await client.query({
+        const { data } = await client.query<{ adminPanel: AdminPanelData[] }>({
           query: gql`
             query {
               adminPanel: teams_summary {
@@ -109,6 +110,7 @@ const editorRoutes = compose(
                 primaryColour: primary_colour
                 linkColour: link_colour
                 actionColour: action_colour
+                isTrial: is_trial
               }
             }
           `,
