@@ -4,6 +4,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
+import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -16,11 +17,17 @@ import { Switch } from "ui/shared/Switch";
 import { ICONS } from "../shared/icons";
 import { parseSetFee, SetFee } from "./model";
 import { handleSetFees } from "./utils";
-import { mockPassport } from "./utils.test";
 
 type Props = EditorProps<TYPES.SetFee, SetFee>;
 
 export default SetFeeComponent;
+
+const mockPassport: Store.Passport = {
+  data: {
+    "application.fee.calculated": 200,
+    "application.fastTrack": ["true"],
+  },
+};
 
 function SetFeeComponent(props: Props) {
   const formik = useFormik({
