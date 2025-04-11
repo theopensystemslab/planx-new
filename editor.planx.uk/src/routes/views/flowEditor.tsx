@@ -9,6 +9,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
   id: string;
+  status: string;
   flowAnalyticsLink: string;
   templatedFrom: string;
   isTemplate: boolean;
@@ -18,6 +19,7 @@ interface FlowEditorData {
 interface GetFlowEditorData {
   flows: {
     id: string;
+    status: string;
     flowAnalyticsLink: string;
     templatedFrom: string;
     isTemplate: boolean;
@@ -43,6 +45,7 @@ export const getFlowEditorData = async (
           where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
         ) {
           id
+          status
           flowAnalyticsLink: analytics_link
           templatedFrom: templated_from
           isTemplate: is_template
@@ -65,6 +68,7 @@ export const getFlowEditorData = async (
 
   const flowEditorData: FlowEditorData = {
     id: flow.id,
+    status: flow.status,
     flowAnalyticsLink: flow.flowAnalyticsLink,
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
@@ -79,11 +83,18 @@ export const getFlowEditorData = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
-  const { id, flowAnalyticsLink, isFlowPublished, isTemplate, templatedFrom } =
-    await getFlowEditorData(flow, req.params.team);
+  const {
+    id,
+    status,
+    flowAnalyticsLink,
+    isFlowPublished,
+    isTemplate,
+    templatedFrom,
+  } = await getFlowEditorData(flow, req.params.team);
 
   useStore.setState({
     id,
+    status,
     flowAnalyticsLink,
     isFlowPublished,
     isTemplate,

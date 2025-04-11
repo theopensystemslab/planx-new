@@ -1,12 +1,11 @@
-import Edit from "@mui/icons-material/Edit";
 import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Person from "@mui/icons-material/Person";
-import Visibility from "@mui/icons-material/Visibility";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
@@ -22,11 +21,13 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
@@ -40,6 +41,8 @@ import {
   LINE_HEIGHT_BASE,
 } from "theme";
 import { ApplicationPath } from "types";
+import FlowTag from "ui/editor/FlowTag/FlowTag";
+import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
@@ -90,12 +93,13 @@ const InnerContainer = styled(Box)(() => ({
   justifyContent: "space-between",
 }));
 
-const LeftBox = styled(Box)(() => ({
+const LeftBox = styled(Box)(({ theme }) => ({
   display: "flex",
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: "140px",
   justifyContent: "start",
+  gap: theme.spacing(1.5),
 }));
 
 const RightBox = styled(Box)(() => ({
@@ -231,58 +235,70 @@ const Breadcrumbs: React.FC = () => {
     state.previewEnvironment === "standalone",
   ]);
 
+  const flowStatus = useStore.getState().status as StatusVariant | undefined;
+
+  console.log(flowStatus);
+
   return (
-    <BreadcrumbsRoot>
-      <BreadcrumbsLink
-        component={ReactNaviLink}
-        href={"/"}
-        prefetch={false}
-        {...(isStandalone && { target: "_blank" })}
-        variant="body1"
-      >
-        Plan✕
-      </BreadcrumbsLink>
-      {team.slug && (
-        <>
-          {" / "}
-          <BreadcrumbsLink
-            component={ReactNaviLink}
-            href={`/${team.slug}`}
-            prefetch={false}
-            {...(isStandalone && { target: "_blank" })}
-            variant="body1"
-          >
-            {team.slug}
-          </BreadcrumbsLink>
-        </>
-      )}
+    <>
+      <BreadcrumbsRoot>
+        <BreadcrumbsLink
+          component={ReactNaviLink}
+          href={"/"}
+          prefetch={false}
+          {...(isStandalone && { target: "_blank" })}
+          variant="body1"
+        >
+          Plan✕
+        </BreadcrumbsLink>
+        {team.slug && (
+          <>
+            {" / "}
+            <BreadcrumbsLink
+              component={ReactNaviLink}
+              href={`/${team.slug}`}
+              prefetch={false}
+              {...(isStandalone && { target: "_blank" })}
+              variant="body1"
+            >
+              {team.slug}
+            </BreadcrumbsLink>
+          </>
+        )}
+        {route.data.flow && (
+          <>
+            {" / "}
+            <Link
+              style={{
+                color: "#fff",
+                textDecoration: "none",
+              }}
+              component={ReactNaviLink}
+              href={rootFlowPath(false)}
+              prefetch={false}
+              variant="body1"
+            >
+              {route.data.flow}
+            </Link>
+          </>
+        )}
+      </BreadcrumbsRoot>
       {route.data.flow && (
-        <>
-          {" / "}
-          <Link
-            style={{
-              color: "#fff",
-              textDecoration: "none",
-            }}
-            component={ReactNaviLink}
-            href={rootFlowPath(false)}
-            prefetch={false}
-            variant="body1"
-          >
-            {route.data.flow}
-          </Link>
-        </>
+        <Button
+          variant="link"
+          href={`/${team.slug}/${route.data.flow}/service`}
+          title="Update service status"
+          sx={(theme) => ({
+            color: theme.palette.text.primary,
+            textDecoration: "none",
+          })}
+        >
+          <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
+            {flowStatus}
+          </FlowTag>
+        </Button>
       )}
-      {route.data.flow && (
-        <>
-          {useStore.getState().canUserEditTeam(team.slug) ? (
-            <Edit fontSize="small" />
-          ) : (
-            <Visibility fontSize="small" />
-          )}
-        </>
-      )}
-    </BreadcrumbsRoot>
+    </>
   );
 };
 
