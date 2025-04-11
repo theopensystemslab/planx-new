@@ -1,18 +1,38 @@
 import type { PublicProps } from "@planx/components/shared/types";
-import { makeData } from "@planx/components/shared/utils";
+import { useStore } from "pages/FlowEditor/lib/store";
 import { useEffect } from "react";
 
-import type { SetFee } from "./model";
+import { type SetFee } from "./model";
+import { handleSetFees } from "./utils";
 
 export type Props = PublicProps<SetFee>;
 
 export default function Component(props: Props) {
+  const {
+    applyCalculatedVAT,
+    applyServiceCharge,
+    serviceChargeAmount,
+    applyPaymentProcessingFee,
+  } = props;
+  const fastTrackFeeAmount = Number(props.fastTrackFeeAmount || 0);
+
+  const passport = useStore().computePassport();
+
   useEffect(() => {
+    const newValues = handleSetFees({
+      passport,
+      applyCalculatedVAT,
+      fastTrackFeeAmount,
+      applyServiceCharge,
+      serviceChargeAmount,
+      applyPaymentProcessingFee,
+    });
+
     props.handleSubmit?.({
-      ...makeData(props, ["todo"], props.fn),
+      data: newValues,
       auto: true,
     });
-  }, []);
+  }, [props, passport]);
 
   return null;
 }

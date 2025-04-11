@@ -72,21 +72,21 @@ export const ForInformationOnly = {
   },
 } satisfies Story;
 
-// TODO: Setup fee breakdown amounts
-export const WithFeeBreakdown = {
-  args: {
-    title: "Pay for your application",
-    bannerTitle: "The fee is",
-    description: "The fee covers the cost of processing your application",
-    fee: 103,
-    instructionsTitle: "How to pay",
-    instructionsDescription: "Pay via GOV.UK Pay",
-    buttonTitle: "Pay",
-    onConfirm: () => {},
-    error: undefined,
-    showInviteToPay: false,
-  },
-} satisfies Story;
+// // TODO: Setup fee breakdown amounts
+// export const WithFeeBreakdown = {
+//   args: {
+//     title: "Pay for your application",
+//     bannerTitle: "The fee is",
+//     description: "The fee covers the cost of processing your application",
+//     fee: 103,
+//     instructionsTitle: "How to pay",
+//     instructionsDescription: "Pay via GOV.UK Pay",
+//     buttonTitle: "Pay",
+//     onConfirm: () => {},
+//     error: undefined,
+//     showInviteToPay: false,
+//   },
+// } satisfies Story;
 
 export const WithError = {
   args: {
