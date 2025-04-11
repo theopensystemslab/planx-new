@@ -26,6 +26,7 @@ import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
+import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
@@ -277,25 +278,6 @@ const Breadcrumbs: React.FC = () => {
           </>
         )}
       </BreadcrumbsRoot>
-      {route.data.flow && (
-        <>
-          <Button
-            variant="link"
-            href="/testing/online-offline-test/service"
-            sx={(theme) => ({
-              color: theme.palette.text.primary,
-              textDecoration: "none",
-            })}
-          >
-            <FlowTag
-              tagType={FlowTagType.Status}
-              statusVariant={StatusVariant.Online}
-            >
-              Online
-            </FlowTag>
-          </Button>
-        </>
-      )}
     </>
   );
 };
@@ -471,13 +453,21 @@ const ServiceTitle: React.FC = () => {
   );
 };
 
-const EditorToolbar: React.FC<{
+interface EditorToolbarProps {
   headerRef: React.RefObject<HTMLElement>;
   route: Route;
-}> = ({ headerRef }) => {
+  flow: FlowSummary;
+}
+
+const EditorToolbar: React.FC<EditorToolbarProps> = ({ headerRef, flow }) => {
   const { navigate } = useNavigation();
   const [open, setOpen] = useState(false);
   const [user, token] = useStore((state) => [state.getUser(), state.jwt]);
+
+  const statusVariant =
+    flow?.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
+
+  console.log(statusVariant);
 
   const handleClose = () => {
     setOpen(false);
@@ -502,6 +492,23 @@ const EditorToolbar: React.FC<{
           <InnerContainer>
             <LeftBox>
               <Breadcrumbs />
+              {flow && (
+                <Button
+                  variant="link"
+                  href="/testing/online-offline-test/service"
+                  sx={(theme) => ({
+                    color: theme.palette.text.primary,
+                    textDecoration: "none",
+                  })}
+                >
+                  <FlowTag
+                    tagType={FlowTagType.Status}
+                    statusVariant={statusVariant}
+                  >
+                    {statusVariant}
+                  </FlowTag>
+                </Button>
+              )}
             </LeftBox>
             <RightBox>
               {user && (
@@ -571,9 +578,10 @@ const EditorToolbar: React.FC<{
 
 interface ToolbarProps {
   headerRef: RefObject<HTMLDivElement>;
+  flow: FlowSummary;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ headerRef, flow }) => {
   const route = useCurrentRoute();
   const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
@@ -587,7 +595,13 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+    return (
+      <EditorToolbar
+        headerRef={headerRef}
+        route={route}
+        flow={flow}
+      ></EditorToolbar>
+    );
   }
 
   switch (path) {
