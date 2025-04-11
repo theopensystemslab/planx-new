@@ -287,6 +287,7 @@ const Breadcrumbs: React.FC = () => {
         <Button
           variant="link"
           href={`/${team.slug}/${route.data.flow}/service`}
+          title="Update service status"
           sx={(theme) => ({
             color: theme.palette.text.primary,
             textDecoration: "none",
