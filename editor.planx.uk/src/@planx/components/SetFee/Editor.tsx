@@ -73,6 +73,7 @@ function SetFeeComponent(props: Props) {
                 )
               }
               label="Apply VAT to the application fee"
+              disabled={props.disabled}
             />
           </InputRow>
           <Typography variant="body2">
@@ -103,6 +104,7 @@ function SetFeeComponent(props: Props) {
                     : formik.values.fastTrackFeeAmount
                 } // Show placeholder unless > 0
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
           </ErrorWrapper>
@@ -120,6 +122,7 @@ function SetFeeComponent(props: Props) {
                 )
               }
               label="Apply Plan✕ service charge"
+              disabled={props.disabled}
             />
           </InputRow>
           <Typography variant="body2" mb={2}>
@@ -152,6 +155,7 @@ function SetFeeComponent(props: Props) {
                 )
               }
               label="Put payment processing fee to applicants"
+              disabled={props.disabled}
             />
           </InputRow>
           <Typography variant="body2" mb={2}>
