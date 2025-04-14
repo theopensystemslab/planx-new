@@ -19,10 +19,12 @@ const InvalidJSONError = () => "Error parsing response";
 
 interface FormattedResponseProps {
   response: string | object | Record<string, unknown>;
+  expandAllLevels?: boolean;
 }
 
 export const FormattedResponse: React.FC<FormattedResponseProps> = ({
   response,
+  expandAllLevels,
 }) => {
   let parsedResponse;
   try {
@@ -38,7 +40,7 @@ export const FormattedResponse: React.FC<FormattedResponseProps> = ({
         <ReactJson
           src={parsedResponse}
           theme="monokai"
-          collapsed={2}
+          collapsed={expandAllLevels ? false : 2}
           displayDataTypes={false}
           indentWidth={2}
           style={{ background: "transparent" }}

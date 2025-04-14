@@ -137,17 +137,17 @@ export default function Component(props: Props) {
             disabled={props.disabled}
           />
           <InputRow>
-          <Switch            
-            checked={formik.values.formatOutputForAutomations}
-            onChange={() =>
-              formik.setFieldValue(
-                "formatOutputForAutomations",
-                !formik.values.formatOutputForAutomations
-              )
-            }
-            label="Format the output to automate a future Question or Checklist only"
-            disabled={props.disabled}
-          />
+            <Switch
+              checked={formik.values.formatOutputForAutomations}
+              onChange={() =>
+                formik.setFieldValue(
+                  "formatOutputForAutomations",
+                  !formik.values.formatOutputForAutomations,
+                )
+              }
+              label="Format the output to automate a future Question or Checklist only"
+              disabled={props.disabled}
+            />
           </InputRow>
         </ModalSectionContent>
         <ModalSectionContent title="Formula">

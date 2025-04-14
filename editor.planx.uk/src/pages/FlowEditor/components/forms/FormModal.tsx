@@ -86,11 +86,11 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.InternalPortal}>Internal portal</option>
         <option value={TYPES.ExternalPortal}>External portal</option>
         <option value={TYPES.Section}>Section</option>
-        <option value={TYPES.SetFee}>Set fee (testing only)</option>
         <option value={TYPES.SetValue}>Set value</option>
       </optgroup>
       <optgroup label="Payment">
         <option value={TYPES.Calculate}>Calculate</option>
+        <option value={TYPES.SetFee}>Set fees</option>
         <option value={TYPES.Pay}>Pay</option>
       </optgroup>
       <optgroup label="Outputs">

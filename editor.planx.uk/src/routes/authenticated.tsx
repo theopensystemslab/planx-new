@@ -116,9 +116,9 @@ const editorRoutes = compose(
           `,
           context: {
             headers: {
-              "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst"
-            }
-          }
+              "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst",
+            },
+          },
         });
         useStore.getState().setAdminPanelData(data.adminPanel);
 

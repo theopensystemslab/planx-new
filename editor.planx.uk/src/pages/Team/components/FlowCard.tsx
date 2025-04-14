@@ -123,8 +123,10 @@ const FlowCard: React.FC<FlowCardProps> = ({
       refreshFlows();
       toast.success("Archived flow");
     } catch (error) {
-      toast.error("We are unable to archive this flow, refesh and try again or contact an admin");
-    };
+      toast.error(
+        "We are unable to archive this flow, refesh and try again or contact an admin",
+      );
+    }
   };
 
   const handleCopy = () => {

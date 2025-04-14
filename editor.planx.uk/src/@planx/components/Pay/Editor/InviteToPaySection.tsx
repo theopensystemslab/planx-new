@@ -16,7 +16,9 @@ interface InviteToPaySectionProps {
   disabled?: boolean;
 }
 
-export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({ disabled }) => {
+export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
+  disabled,
+}) => {
   const { handleChange, values, setFieldValue } = useFormikContext<Pay>();
 
   return (

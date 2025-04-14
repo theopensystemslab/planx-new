@@ -256,8 +256,8 @@ export const editorStore: StateCreator<
 
       return data?.flow;
     } catch (error) {
-      throw Error("Failed to archive flow", { cause: error })
-    };
+      throw Error("Failed to archive flow", { cause: error });
+    }
   },
 
   connect: (src, tgt, { before = undefined } = {}) => {

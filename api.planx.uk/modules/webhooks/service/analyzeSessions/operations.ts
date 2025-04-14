@@ -18,6 +18,7 @@ import type { Operation } from "../sanitiseApplicationData/types.js";
 const ALLOW_LIST = [
   "applicant.researchOptIn",
   "application.declaration.connection",
+  "application.fastTrack",
   "application.information.harmful",
   "application.information.sensitive",
   "application.type",

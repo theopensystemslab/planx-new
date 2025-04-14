@@ -39,7 +39,7 @@ export default function ChecklistItem({
   id,
   inputProps,
   variant,
-  disabled
+  disabled,
 }: Props): FCReturn {
   return (
     <Root>

@@ -31,18 +31,20 @@ export const CreateFromTemplateFormSection: React.FC = () => {
   if (values.mode !== "template" || !data?.templates?.length) return null;
 
   const handleChange = (e: SelectChangeEvent<unknown>) => {
-    setFieldValue("flow.sourceId", e.target.value)
+    setFieldValue("flow.sourceId", e.target.value);
 
-    const selectedTemplate = data.templates.find(({ id }) => id === e.target.value);
+    const selectedTemplate = data.templates.find(
+      ({ id }) => id === e.target.value,
+    );
     if (!selectedTemplate) return;
 
     // Suggest a naming convention
     if (!values.flow.name.endsWith(" (template)")) {
       const newFlowName = `${selectedTemplate.name} (template)`;
-      setFieldValue("flow.name", newFlowName)
+      setFieldValue("flow.name", newFlowName);
       setFieldValue("flow.slug", slugify(newFlowName));
     }
-  }
+  };
 
   return (
     <InputLabel label="Available templates" id="available-templates-select">

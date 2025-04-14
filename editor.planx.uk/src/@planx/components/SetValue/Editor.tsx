@@ -138,7 +138,11 @@ function SetValueComponent(props: Props) {
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} disabled={props.disabled} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 }
