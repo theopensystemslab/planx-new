@@ -24,7 +24,7 @@ import { HistoryItem } from "../EditHistory";
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
 
-interface NoChangesDialogProps {
+interface DialogProps {
   dialogOpen: boolean;
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -43,7 +43,7 @@ const DialogFooterActions = styled(DialogActions)(({ theme }) => ({
 export const NoChangesDialog = ({
   dialogOpen,
   setDialogOpen,
-}: NoChangesDialogProps) => (
+}: DialogProps) => (
   <Dialog
     open={dialogOpen}
     onClose={() => setDialogOpen(false)}
@@ -66,9 +66,33 @@ export const NoChangesDialog = ({
   </Dialog>
 );
 
-interface ChangesDialogProps {
-  dialogOpen: boolean;
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+export const TrailAccountDialog = ({
+  dialogOpen,
+  setDialogOpen,
+}: DialogProps) => (
+  <Dialog
+    open={dialogOpen}
+    onClose={() => setDialogOpen(false)}
+    aria-labelledby="alert-dialog-title"
+    aria-describedby="alert-dialog-description"
+    maxWidth="md"
+  >
+    <DialogTitle variant="h3" component="h1" sx={{ px: 3, py: 2 }}>
+      Unable to publish
+    </DialogTitle>
+    <DialogContent sx={{ p: 3 }}>
+      <Typography variant="body2">Teams in trial mode are unable to publish services. For further information, please contact Open Systems Lab.</Typography>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
+      <Button color="primary" variant="contained" disabled={true}>
+        Publish
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
+
+interface ChangesDialogProps extends DialogProps {
   alteredNodes: AlteredNode[];
   history?: HistoryItem[];
   lastPublishedTitle: string;

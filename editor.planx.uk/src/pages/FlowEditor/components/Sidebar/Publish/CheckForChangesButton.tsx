@@ -10,7 +10,7 @@ import { useAsync } from "react-use";
 
 import { HistoryItem } from "../EditHistory";
 import { AlteredNode } from "./AlteredNodes";
-import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
+import { ChangesDialog, NoChangesDialog, TrailAccountDialog } from "./PublishDialog";
 import { ValidationCheck } from "./ValidationChecks";
 
 export const CheckForChangesToPublishButton: React.FC<{
@@ -22,12 +22,14 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublished,
     lastPublisher,
     validateAndDiffFlow,
+    isTrial,
   ] = useStore((state) => [
     state.id,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
     state.validateAndDiffFlow,
+    state.teamSettings.isTrial,
   ]);
 
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -38,9 +40,14 @@ export const CheckForChangesToPublishButton: React.FC<{
   );
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [history, setHistory] = useState<HistoryItem[]>();
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const [publishDialogOpen, setPublishDialogOpen] = useState<boolean>(false);
+  const [noChangesDialogOpen, setNoChangesDialogOpen] = useState<boolean>(false);
+  const [trialAccountDialogOpen, setTrialAccountDialogOpen] = useState<boolean>(false);
 
   const handleCheckForChangesToPublish = async () => {
+    if (isTrial) return setTrialAccountDialogOpen(true);
+
     try {
       setLastPublishedTitle("Checking for changes...");
       const alteredFlow = await validateAndDiffFlow(flowId);
@@ -54,7 +61,12 @@ export const CheckForChangesToPublishButton: React.FC<{
           : alteredFlow?.data.message,
       );
       setValidationChecks(alteredFlow?.data?.validationChecks);
-      setDialogOpen(true);
+
+      if (!alteredNodes || alteredNodes?.length === 0) {
+        return setNoChangesDialogOpen(true);
+      }
+      
+      setPublishDialogOpen(true);
     } catch (error) {
       setLastPublishedTitle("Error checking for changes to publish");
 
@@ -71,7 +83,7 @@ export const CheckForChangesToPublishButton: React.FC<{
 
   const handlePublish = async (summary: string) => {
     try {
-      setDialogOpen(false);
+      setPublishDialogOpen(false);
       setLastPublishedTitle("Publishing changes...");
       const { alteredNodes, message } = await publishFlow(flowId, summary);
       setLastPublishedTitle(
@@ -107,23 +119,24 @@ export const CheckForChangesToPublishButton: React.FC<{
         >
           CHECK FOR CHANGES TO PUBLISH
         </Button>
-        {!alteredNodes || alteredNodes?.length === 0 ? (
-          <NoChangesDialog
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-          />
-        ) : (
-          <ChangesDialog
-            dialogOpen={dialogOpen}
-            setDialogOpen={setDialogOpen}
-            alteredNodes={alteredNodes}
-            history={history}
-            lastPublishedTitle={lastPublishedTitle}
-            validationChecks={validationChecks}
-            previewURL={previewURL}
-            handlePublish={handlePublish}
-          />
-        )}
+        <NoChangesDialog
+          dialogOpen={noChangesDialogOpen}
+          setDialogOpen={setNoChangesDialogOpen}
+        />
+        <TrailAccountDialog
+          dialogOpen={trialAccountDialogOpen}
+          setDialogOpen={setTrialAccountDialogOpen}
+        />
+        <ChangesDialog
+          dialogOpen={publishDialogOpen}
+          setDialogOpen={setPublishDialogOpen}
+          alteredNodes={alteredNodes!}
+          history={history}
+          lastPublishedTitle={lastPublishedTitle}
+          validationChecks={validationChecks}
+          previewURL={previewURL}
+          handlePublish={handlePublish}
+        />
         <Box mr={0}>
           <Typography variant="caption">{lastPublishedTitle}</Typography>
         </Box>
