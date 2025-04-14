@@ -5,7 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
@@ -38,14 +40,22 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
     },
   };
 
+  const toast = useToast();
+
   const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async ({ flow }, { setFieldError }) => {
     try {
       await createFlowFromCopy(flow);
       handleClose();
-      // TODO: Toast?
+      toast.success(`Created new flow "${flow.name}"`)
     } catch (error) {
-      // TODO: Handle unique slug error 
-      setFieldError("flow.name", "Flow name must be unique")
+      if (isAxiosError(error)) {
+        const message = error?.response?.data?.error;
+        if (message?.includes("Uniqueness violation")) {
+          setFieldError("flow.name", "Flow name must be unique");
+        }
+      }
+
+      throw error;
     }
   };
 
