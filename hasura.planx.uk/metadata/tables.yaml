@@ -1038,7 +1038,15 @@
                 _eq: false
             - deleted_at:
                 _is_null: true
-        check: {}
+        check:
+          _not:
+            _and:
+              - status:
+                  _eq: online
+              - team:
+                  team_settings:
+                    is_trial:
+                      _eq: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -1082,6 +1090,14 @@
                 _eq: 32
             - creator_id:
                 _eq: x-hasura-user-id
+            - _not:
+                _and:
+                  - status:
+                      _eq: online
+                  - team:
+                      team_settings:
+                        is_trial:
+                          _eq: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -1110,7 +1126,15 @@
         filter:
           deleted_at:
             _is_null: true
-        check: {}
+        check:
+          _not:
+            _and:
+              - status:
+                  _eq: online
+              - team:
+                  team_settings:
+                    is_trial:
+                      _eq: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -1156,6 +1180,14 @@
                         _eq: x-hasura-user-id
                     - role:
                         _eq: teamEditor
+            - _not:
+                _and:
+                  - status:
+                      _eq: online
+                  - team:
+                      team_settings:
+                        is_trial:
+                          _eq: true
         validate_input:
           definition:
             forward_client_headers: false
@@ -2597,6 +2629,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - team_id
         filter: {}

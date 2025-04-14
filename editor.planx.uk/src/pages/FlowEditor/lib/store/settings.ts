@@ -57,12 +57,19 @@ export const settingsStore: StateCreator<
 
   updateFlowStatus: async (newStatus) => {
     const { id, $client } = get();
-    const result = await $client.flow.setStatus({
-      flow: { id },
-      status: newStatus,
-    });
-    set({ flowStatus: newStatus });
-    return Boolean(result?.id);
+    try {
+      const result = await $client.flow.setStatus({
+        flow: { id },
+        status: newStatus,
+      });
+      if (!result?.id) throw Error("Failed to update flow status");
+
+      set({ flowStatus: newStatus });
+      return Boolean(result.id);
+    } catch (error) {
+      console.error(error)
+      return false
+    }
   },
 
   flowCanCreateFromCopy: undefined,

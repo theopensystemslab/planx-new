@@ -43,13 +43,13 @@ const FlowStatus = () => {
     },
     onSubmit: async (values, { resetForm }) => {
       const isSuccess = await updateFlowStatus(values.status);
-      if (isSuccess) {
-        toast.success("Service settings updated successfully");
-        // Send a Slack notification to #planx-notifications
-        sendFlowStatusSlackNotification(values.status);
-        // Reset "dirty" status to disable Save & Reset buttons
-        resetForm({ values });
-      }
+      if (!isSuccess) return toast.error("Failed to update settings");
+
+      toast.success("Service settings updated successfully");
+      // Send a Slack notification to #planx-notifications
+      sendFlowStatusSlackNotification(values.status);
+      // Reset "dirty" status to disable Save & Reset buttons
+      resetForm({ values });
     },
   });
 
