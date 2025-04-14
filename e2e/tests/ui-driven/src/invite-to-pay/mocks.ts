@@ -21,7 +21,15 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
   feeBreakdown: {
     amount: {
       calculated: 123.45,
+      calculatedVAT: 0,
       payable: 123.45,
+      payableVAT: 0,
+      fastTrack: 0,
+      fastTrackVAT: 0,
+      serviceCharge: 0,
+      serviceChargeVAT: 0,
+      paymentProcessing: 0,
+      paymentProcessingVAT: 0,
       reduction: 0,
       exemption: 0,
     },
