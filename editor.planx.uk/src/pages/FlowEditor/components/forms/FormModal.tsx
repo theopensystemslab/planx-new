@@ -90,7 +90,7 @@ const NodeTypeSelect: React.FC<{
       </optgroup>
       <optgroup label="Payment">
         <option value={TYPES.Calculate}>Calculate</option>
-        <option value={TYPES.SetFee}>Set fee</option>
+        <option value={TYPES.SetFee}>Set fees</option>
         <option value={TYPES.Pay}>Pay</option>
       </optgroup>
       <optgroup label="Outputs">
