@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useFormik } from "formik";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Permission from "ui/editor/Permission";
@@ -23,16 +24,25 @@ export default function TrialAccountForm({
     isTrial: boolean().required(),
   });
 
+  const toast = useToast();
+
+
   const formik = useFormik({
     ...formikConfig,
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
-      const isSuccess = await useStore.getState().updateTeamSettings({
-        isTrial: values.isTrial,
-      });
-      if (isSuccess) {
+      try {
+        const isSuccess = await useStore.getState().updateTeamSettings({
+          isTrial: values.isTrial,
+        });
+
+        if (!isSuccess) throw Error("updateTeamSettings() failed");
+
         onSuccess();
         resetForm({ values });
+      } catch (error) {
+        console.error(error)
+        toast.error("Failed to update team's trial account status");
       }
     },
   });
