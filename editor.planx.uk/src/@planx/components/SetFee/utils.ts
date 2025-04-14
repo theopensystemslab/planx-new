@@ -6,6 +6,7 @@ import { PAY_FN } from "../Pay/model";
 import {
   DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
   DEFAULT_SERVICE_CHARGE_AMOUNT,
+  DEFAULT_SERVICE_CHARGE_THRESHOLD,
   VAT_PERCENTAGE,
 } from "./model";
 
@@ -56,8 +57,8 @@ export const handleSetFees: HandleSetFees = ({
   }
 
   const addFastTrack =
-    passport.data?.["application.fastTrack"] &&
-    fastTrackFeeAmount &&
+    passport.data &&
+    Object.hasOwn(passport.data, "application.fastTrack") && // Any passport value is okay/expected here, checking for presence of key only
     fastTrackFeeAmount > 0;
   if (addFastTrack) {
     const fastTrackVAT = fastTrackFeeAmount * VAT_PERCENTAGE;
@@ -68,7 +69,8 @@ export const handleSetFees: HandleSetFees = ({
     fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
   }
 
-  const addServiceCharge = applyServiceCharge && fees[payable] >= 100;
+  const addServiceCharge =
+    applyServiceCharge && fees[payable] >= DEFAULT_SERVICE_CHARGE_THRESHOLD;
   if (addServiceCharge) {
     const serviceChargeAmount = DEFAULT_SERVICE_CHARGE_AMOUNT;
     const serviceChargeVAT = serviceChargeAmount * VAT_PERCENTAGE;

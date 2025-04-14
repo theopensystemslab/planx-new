@@ -2,20 +2,27 @@ import Code from "@mui/icons-material/Code";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import { FormattedResponse } from "pages/FlowEditor/components/Submissions/components/FormattedResponse";
 import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
-import { parseSetFee, SetFee } from "./model";
+import {
+  DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
+  DEFAULT_SERVICE_CHARGE_THRESHOLD,
+  parseSetFee,
+  SetFee,
+  VAT_PERCENTAGE,
+} from "./model";
 import { handleSetFees } from "./utils";
 
 type Props = EditorProps<TYPES.SetFee, SetFee>;
@@ -38,15 +45,21 @@ function SetFeeComponent(props: Props) {
         data: newValues,
       });
     },
+    validate: (values) => {
+      const errors: FormikErrors<SetFee> = {};
+      if (values.fastTrackFeeAmount < 0) {
+        errors.fastTrackFeeAmount = "Fast Track fee amount must be positive";
+      }
+      return errors;
+    },
+    validateOnBlur: false,
+    validateOnChange: true,
   });
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
-        <ModalSectionContent
-          title="Set service fees"
-          Icon={ICONS[TYPES.SetFee]}
-        />
+        <ModalSectionContent title="Set fees" Icon={ICONS[TYPES.SetFee]} />
       </ModalSection>
       <ModalSection>
         <ModalSectionContent title="Application fee VAT">
@@ -63,10 +76,10 @@ function SetFeeComponent(props: Props) {
             />
           </InputRow>
           <Typography variant="body2">
-            If this is a discretionary service, apply 20% VAT to the application
-            fee. The incoming <strong>application.fee.calculated</strong> should
-            be exclusive of VAT and already reflect any exemptions, reductions
-            or increases.
+            If this is a discretionary service, apply {VAT_PERCENTAGE * 100}%
+            VAT to the application fee. The incoming{" "}
+            <strong>application.fee.calculated</strong> should be exclusive of
+            VAT and already reflect any exemptions, reductions or increases.
           </Typography>
         </ModalSectionContent>
       </ModalSection>
@@ -74,23 +87,25 @@ function SetFeeComponent(props: Props) {
         <ModalSectionContent title="Fast Track fee">
           <Typography variant="body2" mb={2}>
             If this service supports Fast Track journeys, specify the fee
-            amount. This fee plus 20% VAT will be added when{" "}
+            amount. This fee plus {VAT_PERCENTAGE * 100}% VAT will be added when{" "}
             <strong>application.fastTrack</strong> applies.
           </Typography>
-          <InputRow>
-            <InputRowLabel>£</InputRowLabel>
-            <Input
-              name="fastTrackFeeAmount"
-              type="number"
-              placeholder="Amount (exclusive of VAT)"
-              value={
-                formik.values.fastTrackFeeAmount === 0
-                  ? ``
-                  : formik.values.fastTrackFeeAmount
-              } // Show placeholder unless > 0
-              onChange={formik.handleChange}
-            />
-          </InputRow>
+          <ErrorWrapper error={formik.errors.fastTrackFeeAmount}>
+            <InputRow>
+              <InputRowLabel>£</InputRowLabel>
+              <Input
+                name="fastTrackFeeAmount"
+                type="number"
+                placeholder="Amount (exclusive of VAT)"
+                value={
+                  formik.values.fastTrackFeeAmount === 0
+                    ? ``
+                    : formik.values.fastTrackFeeAmount
+                } // Show placeholder unless > 0
+                onChange={formik.handleChange}
+              />
+            </InputRow>
+          </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
       <ModalSection>
@@ -108,10 +123,11 @@ function SetFeeComponent(props: Props) {
             />
           </InputRow>
           <Typography variant="body2" mb={2}>
-            A £{formik.values.serviceChargeAmount} service charge plus 20% VAT
-            will be added unless <strong>application.fee.payable</strong> is
-            less than £100 (after any Fast Track fees, exemptions, reductions or
-            increases, inclusive of VAT).
+            A £{formik.values.serviceChargeAmount} service charge plus{" "}
+            {VAT_PERCENTAGE * 100}% VAT will be added unless{" "}
+            <strong>application.fee.payable</strong> is less than £
+            {DEFAULT_SERVICE_CHARGE_THRESHOLD} (after any Fast Track fees,
+            exemptions, reductions or increases, inclusive of VAT).
           </Typography>
           <Typography variant="body2" mb={2}>
             Open Systems Lab invoices quarterly to collect the service charge.
@@ -141,12 +157,14 @@ function SetFeeComponent(props: Props) {
           <Typography variant="body2" mb={2}>
             If your council does not wish to absorb Stripe transaction fees
             incurred by GOV.UK Pay for this service, use this option to apply an
-            additional 1% of <strong>application.fee.payable</strong> plus 20%
-            VAT payment processing fee to the amount owed by the applicant.
+            additional {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% of{" "}
+            <strong>application.fee.payable</strong> plus {VAT_PERCENTAGE * 100}
+            % VAT payment processing fee to the amount owed by the applicant.
           </Typography>
           <Typography variant="body2" mb={2}>
             Please note that it is your responsibility to configure which credit
-            card types are accepted in your GOV.UK Pay account. 1% is an average
+            card types are accepted in your GOV.UK Pay account.{" "}
+            {DEFAULT_PAYMENT_PROCESSING_PERCENTAGE * 100}% is an average
             processing fee only; American Express and non-EU credit cards are
             likely to have higher rates.
           </Typography>
@@ -156,7 +174,8 @@ function SetFeeComponent(props: Props) {
         <ModalSectionContent title="Example" Icon={Code}>
           <Typography variant="body2" mb={2}>
             This example output is based on an incoming{" "}
-            <strong>application.fee.calculated</strong> of £200 and your
+            <strong>application.fee.calculated</strong> of £
+            {examplePassport.data?.["application.fee.calculated"]} and your
             selections above.
           </Typography>
           <FormattedResponse
