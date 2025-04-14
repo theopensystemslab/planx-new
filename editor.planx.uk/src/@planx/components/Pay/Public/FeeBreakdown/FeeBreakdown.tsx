@@ -38,6 +38,11 @@ const exemptionsReductionLookup: Record<string, string> = {
   sports: "Sports club",
 };
 
+// FeeBreakdown table displays 2 or 4 columns depending if VAT-able line items
+function showAdditionalVATColumns(amount: IFeeBreakdown["amount"]): boolean {
+  return amount.payableVAT && amount.payableVAT > 0 ? true : false;
+}
+
 const Header: FeeBreakdownRow = ({ amount }) => (
   <TableHead>
     <BoldTableRow>
@@ -45,22 +50,18 @@ const Header: FeeBreakdownRow = ({ amount }) => (
       <TableCell align="right">
         Amount {amount.payableVAT ? ` (excl VAT)` : ``}
       </TableCell>
-      {amount.payableVAT ? (
-        <TableCell
-          align="right"
-          sx={(theme) => ({ color: theme.palette.text.secondary })}
-        >
-          VAT (20%)
-        </TableCell>
-      ) : (
-        <TableCell></TableCell>
-      )}
-      {amount.payableVAT ? (
-        <TableCell align="right">
-          <strong>Total</strong>
-        </TableCell>
-      ) : (
-        <TableCell></TableCell>
+      {showAdditionalVATColumns(amount) && (
+        <>
+          <TableCell
+            align="right"
+            sx={(theme) => ({ color: theme.palette.text.secondary })}
+          >
+            VAT (20%)
+          </TableCell>
+          <TableCell align="right">
+            <strong>Total</strong>
+          </TableCell>
+        </>
       )}
     </BoldTableRow>
   </TableHead>
@@ -72,30 +73,26 @@ const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
     <TableCell align="right">
       {formattedPriceWithCurrencySymbol(amount.calculated)}
     </TableCell>
-    {amount.payableVAT && amount.payableVAT > 0 ? (
-      <TableCell
-        align="right"
-        sx={(theme) => ({ color: theme.palette.text.secondary })}
-      >
-        {amount.calculatedVAT && amount.calculatedVAT > 0
-          ? formattedPriceWithCurrencySymbol(amount.calculatedVAT)
-          : undefined}
-      </TableCell>
-    ) : (
-      <TableCell></TableCell>
-    )}
-    {amount.payableVAT && amount.payableVAT > 0 ? (
-      <TableCell align="right">
-        <strong>
+    {showAdditionalVATColumns(amount) && (
+      <>
+        <TableCell
+          align="right"
+          sx={(theme) => ({ color: theme.palette.text.secondary })}
+        >
           {amount.calculatedVAT && amount.calculatedVAT > 0
-            ? formattedPriceWithCurrencySymbol(
+            ? formattedPriceWithCurrencySymbol(amount.calculatedVAT)
+            : undefined}
+        </TableCell>
+        <TableCell align="right">
+          <strong>
+            {amount.calculatedVAT && amount.calculatedVAT > 0
+              ? formattedPriceWithCurrencySymbol(
                 amount.calculated + amount.calculatedVAT,
               )
-            : formattedPriceWithCurrencySymbol(amount.calculated)}
-        </strong>
-      </TableCell>
-    ) : (
-      <TableCell></TableCell>
+              : formattedPriceWithCurrencySymbol(amount.calculated)}
+          </strong>
+        </TableCell>
+      </>
     )}
   </TableRow>
 );
@@ -112,14 +109,14 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
         <TableCell align="right">
           {formattedPriceWithCurrencySymbol(amount.reduction)}
         </TableCell>
-        {amount.payableVAT ? (
+        {showAdditionalVATColumns(amount) && (
           <>
             <TableCell></TableCell>
             <TableCell align="right">
               {formattedPriceWithCurrencySymbol(amount.reduction)}
             </TableCell>
           </>
-        ) : undefined}
+        )}
       </TableRow>
       {reductions.map((reduction) => (
         <TableRow key={reduction}>
@@ -133,19 +130,18 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
               {exemptionsReductionLookup[reduction]}
             </Box>
           </TableCell>
-          {amount.payableVAT ? (
+          {showAdditionalVATColumns(amount) && (
             <>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </>
-          ) : undefined}
+          )}
         </TableRow>
       ))}
     </>
   );
 };
 
-/* TODO: Parse exemption descriptions from schema */
 const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
   if (!amount.exemption) return null;
 
@@ -156,14 +152,14 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
         <TableCell align="right">
           {formattedPriceWithCurrencySymbol(amount.exemption)}
         </TableCell>
-        {amount.payableVAT ? (
+        {showAdditionalVATColumns(amount) && (
           <>
             <TableCell></TableCell>
             <TableCell align="right">
               {formattedPriceWithCurrencySymbol(amount.exemption)}
             </TableCell>
           </>
-        ) : undefined}
+        )}
       </TableRow>
       {exemptions.map((exemption) => (
         <TableRow key={exemption}>
@@ -177,12 +173,12 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
               {exemptionsReductionLookup[exemption]}
             </Box>
           </TableCell>
-          {amount.payableVAT ? (
+          {showAdditionalVATColumns(amount) && (
             <>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </>
-          ) : undefined}
+          )}
         </TableRow>
       ))}
     </>
@@ -192,6 +188,7 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
 const FastTrackFee: FeeBreakdownRow = ({ amount }) => {
   if (!amount.fastTrack || !amount.fastTrackVAT) return null;
 
+  // Always VAT-able
   return (
     <TableRow>
       <TableCell>Fast Track fee</TableCell>
@@ -218,6 +215,7 @@ const FastTrackFee: FeeBreakdownRow = ({ amount }) => {
 const ServiceCharge: FeeBreakdownRow = ({ amount }) => {
   if (!amount.serviceCharge || !amount.serviceChargeVAT) return null;
 
+  // Always VAT-able
   return (
     <TableRow>
       <TableCell>Service charge</TableCell>
@@ -244,6 +242,7 @@ const ServiceCharge: FeeBreakdownRow = ({ amount }) => {
 const PaymentProcessingFee: FeeBreakdownRow = ({ amount }) => {
   if (!amount.paymentProcessing || !amount.paymentProcessingVAT) return null;
 
+  // Always VAT-able
   return (
     <TableRow>
       <TableCell>Payment processing fee (1%)</TableCell>
@@ -275,19 +274,15 @@ const Total: FeeBreakdownRow = ({ amount }) => (
         ? formattedPriceWithCurrencySymbol(amount.payable - amount.payableVAT)
         : formattedPriceWithCurrencySymbol(amount.payable)}
     </TableCell>
-    {amount.payableVAT ? (
-      <TableCell align="right">
-        {formattedPriceWithCurrencySymbol(amount.payableVAT)}
-      </TableCell>
-    ) : (
-      <TableCell></TableCell>
-    )}
-    {amount.payableVAT ? (
-      <TableCell align="right">
-        {formattedPriceWithCurrencySymbol(amount.payable)}
-      </TableCell>
-    ) : (
-      <TableCell></TableCell>
+    {showAdditionalVATColumns(amount) && (
+      <>
+        <TableCell align="right">
+          {amount.payableVAT ? formattedPriceWithCurrencySymbol(amount.payableVAT) : undefined}
+        </TableCell>
+        <TableCell align="right">
+          {formattedPriceWithCurrencySymbol(amount.payable)}
+        </TableCell>
+      </>
     )}
   </BoldTableRow>
 );

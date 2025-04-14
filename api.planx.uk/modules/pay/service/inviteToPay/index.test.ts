@@ -46,7 +46,7 @@ describe("Invite to pay API route", () => {
   });
 
   describe("valid request scenarios", () => {
-    test.only("a valid sessionId", async () => {
+    test("a valid sessionId", async () => {
       await supertest(app)
         .post(validSessionURL)
         .send(validPostBody)
