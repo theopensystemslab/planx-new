@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#a04cc03
-    version: github.com/theopensystemslab/planx-core/a04cc03(@types/react@19.0.10)
+    specifier: git+https://github.com/theopensystemslab/planx-core#62ca406
+    version: github.com/theopensystemslab/planx-core/62ca406(@types/react@19.0.10)
   axios:
     specifier: ^1.8.3
     version: 1.8.3
@@ -1844,8 +1844,8 @@ packages:
       js-tokens: 4.0.0
     dev: false
 
-  /marked@15.0.7:
-    resolution: {integrity: sha512-dgLIeKGLx5FwziAnsk4ONoGwHwGPJzselimvlVskE9XLN4Orv9u2VA3GWw/lYUqjfA0rUT/6fqKwfZJapP9BEg==}
+  /marked@15.0.8:
+    resolution: {integrity: sha512-rli4l2LyZqpQuRve5C0rkn6pj3hT8EWPC+zkAxFTAJLxRbENfTAhEQq9itrmf1Y81QtAX5D/MYlGlIomNgj9lA==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -2634,9 +2634,9 @@ packages:
     resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/a04cc03(@types/react@19.0.10):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a04cc03}
-    id: github.com/theopensystemslab/planx-core/a04cc03
+  github.com/theopensystemslab/planx-core/62ca406(@types/react@19.0.10):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/62ca406}
+    id: github.com/theopensystemslab/planx-core/62ca406
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2657,7 +2657,7 @@ packages:
       graphql-request: 6.1.0(graphql@16.10.0)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.21
-      marked: 15.0.7
+      marked: 15.0.8
       prettier: 3.5.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
