@@ -40,7 +40,7 @@ const exemptionsReductionLookup: Record<string, string> = {
 
 // FeeBreakdown table displays 2 or 4 columns depending if VAT-able line items
 function showAdditionalVATColumns(amount: IFeeBreakdown["amount"]): boolean {
-  return amount.payableVAT && amount.payableVAT > 0 ? true : false;
+  return amount.payableVAT > 0 ? true : false;
 }
 
 const Header: FeeBreakdownRow = ({ amount }) => (
@@ -48,7 +48,7 @@ const Header: FeeBreakdownRow = ({ amount }) => (
     <BoldTableRow>
       <TableCell>Description</TableCell>
       <TableCell align="right">
-        Amount {amount.payableVAT ? ` (excl VAT)` : ``}
+        Amount {amount.payableVAT > 0 ? ` (excl VAT)` : ``}
       </TableCell>
       {showAdditionalVATColumns(amount) && (
         <>
@@ -79,16 +79,16 @@ const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
           align="right"
           sx={(theme) => ({ color: theme.palette.text.secondary })}
         >
-          {amount.calculatedVAT && amount.calculatedVAT > 0
+          {amount.calculatedVAT > 0
             ? formattedPriceWithCurrencySymbol(amount.calculatedVAT)
             : undefined}
         </TableCell>
         <TableCell align="right">
           <strong>
-            {amount.calculatedVAT && amount.calculatedVAT > 0
+            {amount.calculatedVAT > 0
               ? formattedPriceWithCurrencySymbol(
-                amount.calculated + amount.calculatedVAT,
-              )
+                  amount.calculated + amount.calculatedVAT,
+                )
               : formattedPriceWithCurrencySymbol(amount.calculated)}
           </strong>
         </TableCell>
@@ -270,14 +270,16 @@ const Total: FeeBreakdownRow = ({ amount }) => (
   <BoldTableRow>
     <TableCell>Total</TableCell>
     <TableCell align="right">
-      {amount.payableVAT
+      {amount.payableVAT > 0
         ? formattedPriceWithCurrencySymbol(amount.payable - amount.payableVAT)
         : formattedPriceWithCurrencySymbol(amount.payable)}
     </TableCell>
     {showAdditionalVATColumns(amount) && (
       <>
         <TableCell align="right">
-          {amount.payableVAT ? formattedPriceWithCurrencySymbol(amount.payableVAT) : undefined}
+          {amount.payableVAT > 0
+            ? formattedPriceWithCurrencySymbol(amount.payableVAT)
+            : undefined}
         </TableCell>
         <TableCell align="right">
           {formattedPriceWithCurrencySymbol(amount.payable)}

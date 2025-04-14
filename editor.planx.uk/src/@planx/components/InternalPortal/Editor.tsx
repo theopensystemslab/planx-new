@@ -28,6 +28,7 @@ const InternalPortalForm: React.FC<{
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
+  disabled?: boolean;
 }> = ({
   handleSubmit,
   text = "",
@@ -35,6 +36,7 @@ const InternalPortalForm: React.FC<{
   flows = [],
   tags = [],
   notes = "",
+  disabled,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -79,7 +81,7 @@ const InternalPortalForm: React.FC<{
               placeholder="Enter a portal name"
               rows={2}
               value={formik.values.text}
-              disabled={!!formik.values.flowId}
+              disabled={disabled || !!formik.values.flowId}
               id="portalFlowId"
             />
           </ErrorWrapper>
@@ -100,7 +102,7 @@ const InternalPortalForm: React.FC<{
               name="flowId"
               value={formik.values.flowId}
               onChange={formik.handleChange}
-              disabled={!!formik.values.text}
+              disabled={disabled || !!formik.values.text}
             >
               {flows.map((flow) => (
                 <MenuItem key={flow.id} value={flow.id}>
@@ -111,7 +113,11 @@ const InternalPortalForm: React.FC<{
           </ModalSectionContent>
         )}
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={disabled}
+      />
     </form>
   );
 };

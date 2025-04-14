@@ -101,6 +101,7 @@ function SetValueComponent(props: Props) {
             required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
         {formik.values.operation !== "removeAll" && (
@@ -113,6 +114,7 @@ function SetValueComponent(props: Props) {
                 value={formik.values.val}
                 placeholder="value"
                 onChange={formik.handleChange}
+                disabled={props.disabled}
               />
             </InputRow>
           </ModalSectionContent>
@@ -129,13 +131,18 @@ function SetValueComponent(props: Props) {
                   variant="compact"
                   value={option.value}
                   onChange={handleRadioChange}
+                  disabled={props.disabled}
                 />
               ))}
             </RadioGroup>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 }

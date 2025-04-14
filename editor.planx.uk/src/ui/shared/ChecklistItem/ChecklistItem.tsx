@@ -29,6 +29,7 @@ interface Props {
   onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   variant?: "default" | "compact";
+  disabled?: boolean;
 }
 
 export default function ChecklistItem({
@@ -38,6 +39,7 @@ export default function ChecklistItem({
   id,
   inputProps,
   variant,
+  disabled,
 }: Props): FCReturn {
   return (
     <Root>
@@ -47,6 +49,7 @@ export default function ChecklistItem({
         onChange={onChange}
         inputProps={inputProps}
         variant={variant}
+        disabled={disabled}
       />
       <Label variant="body1" className="label" component={"label"} htmlFor={id}>
         {label}

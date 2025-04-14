@@ -4,4 +4,5 @@ interface MoreInformationProps {
   policyRef?: string;
   info?: string;
   definitionImg?: string;
+  disabled?: boolean;
 }

@@ -1,10 +1,5 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import { logger } from "airbrake";
 import { AxiosError } from "axios";
@@ -12,18 +7,15 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
-import Input from "ui/shared/Input/Input";
 
-import {
-  AlteredNode,
-  AlteredNodesSummaryContent,
-  ValidationCheck,
-  ValidationChecks,
-} from "./PublishDialog";
+import { HistoryItem } from "../EditHistory";
+import { AlteredNode } from "./AlteredNodes";
+import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
+import { ValidationCheck } from "./ValidationChecks";
 
-export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
-  previewURL,
-}) => {
+export const CheckForChangesToPublishButton: React.FC<{
+  previewURL: string;
+}> = ({ previewURL }) => {
   const [
     flowId,
     publishFlow,
@@ -45,8 +37,8 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
     [],
   );
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
+  const [history, setHistory] = useState<HistoryItem[]>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [summary, setSummary] = useState<string>();
 
   const handleCheckForChangesToPublish = async () => {
     try {
@@ -55,9 +47,10 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
       setAlteredNodes(
         alteredFlow?.data.alteredNodes ? alteredFlow.data.alteredNodes : [],
       );
+      setHistory(alteredFlow?.data?.history ? alteredFlow.data.history : []);
       setLastPublishedTitle(
         alteredFlow?.data.alteredNodes
-          ? `Found changes to ${alteredFlow.data.alteredNodes.length} nodes`
+          ? `Found changes ready to publish`
           : alteredFlow?.data.message,
       );
       setValidationChecks(alteredFlow?.data?.validationChecks);
@@ -76,14 +69,14 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
     }
   };
 
-  const handlePublish = async () => {
+  const handlePublish = async (summary: string) => {
     try {
       setDialogOpen(false);
       setLastPublishedTitle("Publishing changes...");
       const { alteredNodes, message } = await publishFlow(flowId, summary);
       setLastPublishedTitle(
         alteredNodes
-          ? `Successfully published changes to ${alteredNodes.length} nodes`
+          ? `Successfully published changes`
           : `${message}` || "No new changes to publish",
       );
     } catch (error) {
@@ -95,7 +88,6 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
   const _lastPublishedRequest = useAsync(async () => {
     const date = await lastPublished(flowId);
     const user = await lastPublisher(flowId);
-
     setLastPublishedTitle(formatLastPublishMessage(date, user));
   }, [flowId]);
 
@@ -106,6 +98,7 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
     <Box width="100%" mt={2}>
       <Box display="flex" flexDirection="column" alignItems="flex-end">
         <Button
+          data-testid="check-for-changes-to-publish-button"
           sx={{ width: "100%" }}
           variant="contained"
           color="primary"
@@ -114,63 +107,23 @@ export const PublishFlowButton: React.FC<{ previewURL: string }> = ({
         >
           CHECK FOR CHANGES TO PUBLISH
         </Button>
-        <Dialog
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          maxWidth="md"
-        >
-          <DialogTitle variant="h3" component="h1">
-            {`Check for changes to publish`}
-          </DialogTitle>
-          <DialogContent>
-            {alteredNodes?.length ? (
-              <>
-                <AlteredNodesSummaryContent
-                  alteredNodes={alteredNodes}
-                  lastPublishedTitle={lastPublishedTitle}
-                />
-                <ValidationChecks validationChecks={validationChecks} />
-                <Box pb={2}>
-                  <Typography variant="body2">
-                    {`Preview these content changes in-service before publishing `}
-                    <Link href={previewURL} target="_blank">
-                      {`here (opens in a new tab).`}
-                    </Link>
-                  </Typography>
-                </Box>
-                <Input
-                  bordered
-                  type="text"
-                  name="summary"
-                  value={summary || ""}
-                  placeholder="Summarise your changes..."
-                  onChange={(e) => setSummary(e.target.value)}
-                />
-              </>
-            ) : (
-              <Typography variant="body2">
-                {`No new changes to publish`}
-              </Typography>
-            )}
-          </DialogContent>
-          <DialogActions sx={{ paddingX: 2 }}>
-            <Button onClick={() => setDialogOpen(false)}>KEEP EDITING</Button>
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={handlePublish}
-              disabled={
-                !alteredNodes ||
-                alteredNodes.length === 0 ||
-                validationChecks.filter((v) => v.status === "Fail").length > 0
-              }
-            >
-              PUBLISH
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {!alteredNodes || alteredNodes?.length === 0 ? (
+          <NoChangesDialog
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+          />
+        ) : (
+          <ChangesDialog
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+            alteredNodes={alteredNodes}
+            history={history}
+            lastPublishedTitle={lastPublishedTitle}
+            validationChecks={validationChecks}
+            previewURL={previewURL}
+            handlePublish={handlePublish}
+          />
+        )}
         <Box mr={0}>
           <Typography variant="caption">{lastPublishedTitle}</Typography>
         </Box>

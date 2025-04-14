@@ -37,6 +37,7 @@ const mockTeam1: Team = {
     referenceCode: "OSL",
     externalPlanningSiteName: "Open Planning",
     externalPlanningSiteUrl: "openplanning.com",
+    isTrial: false,
   },
 };
 
@@ -63,6 +64,7 @@ const mockTeam2: Team = {
     referenceCode: "CSL",
     externalPlanningSiteName: "Closed Planning",
     externalPlanningSiteUrl: "closedplanning.com",
+    isTrial: false,
   },
 };
 

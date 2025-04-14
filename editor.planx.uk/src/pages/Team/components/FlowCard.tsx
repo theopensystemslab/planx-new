@@ -3,6 +3,7 @@ import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { Link, useCurrentRoute } from "react-navi";
 import { inputFocusStyle } from "theme";
@@ -110,15 +111,22 @@ const FlowCard: React.FC<FlowCardProps> = ({
   );
 
   const route = useCurrentRoute();
+  const toast = useToast();
 
   const {
     sortObject: { displayName: sortDisplayName },
   } = getSortParams<FlowSummary>(route.url.query, sortOptions);
 
-  const handleArchive = () => {
-    archiveFlow(flow.id).then(() => {
+  const handleArchive = async () => {
+    try {
+      await archiveFlow(flow.id);
       refreshFlows();
-    });
+      toast.success("Archived flow");
+    } catch (error) {
+      toast.error(
+        "We are unable to archive this flow, refesh and try again or contact an admin",
+      );
+    }
   };
 
   const handleCopy = () => {

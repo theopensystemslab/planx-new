@@ -22,7 +22,7 @@ type Props = EditorProps<TYPES.SetFee, SetFee>;
 
 export default SetFeeComponent;
 
-const mockPassport: Store.Passport = {
+const examplePassport: Store.Passport = {
   data: {
     "application.fee.calculated": 200,
     "application.fastTrack": ["true"],
@@ -81,8 +81,13 @@ function SetFeeComponent(props: Props) {
             <InputRowLabel>£</InputRowLabel>
             <Input
               name="fastTrackFeeAmount"
+              type="number"
               placeholder="Amount (exclusive of VAT)"
-              value={formik.values.fastTrackFeeAmount}
+              value={
+                formik.values.fastTrackFeeAmount === 0
+                  ? ``
+                  : formik.values.fastTrackFeeAmount
+              } // Show placeholder unless > 0
               onChange={formik.handleChange}
             />
           </InputRow>
@@ -159,11 +164,9 @@ function SetFeeComponent(props: Props) {
             response={JSON.stringify({
               passport: {
                 data: handleSetFees({
-                  passport: mockPassport,
+                  passport: examplePassport,
                   applyCalculatedVAT: formik.values.applyCalculatedVAT,
-                  fastTrackFeeAmount: Number(
-                    formik.values.fastTrackFeeAmount || 0,
-                  ),
+                  fastTrackFeeAmount: formik.values.fastTrackFeeAmount,
                   applyServiceCharge: formik.values.applyServiceCharge,
                   applyPaymentProcessingFee:
                     formik.values.applyPaymentProcessingFee,

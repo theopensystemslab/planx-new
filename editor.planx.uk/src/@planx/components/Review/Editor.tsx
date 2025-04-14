@@ -36,6 +36,7 @@ function Component(props: Props) {
               placeholder={formik.values.title}
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -44,11 +45,16 @@ function Component(props: Props) {
               placeholder="Description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} showMoreInformation={false} />
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 }

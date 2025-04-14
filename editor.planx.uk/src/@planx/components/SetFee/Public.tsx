@@ -10,11 +10,10 @@ export type Props = PublicProps<SetFee>;
 export default function Component(props: Props) {
   const {
     applyCalculatedVAT,
+    fastTrackFeeAmount,
     applyServiceCharge,
     applyPaymentProcessingFee,
   } = props;
-  const fastTrackFeeAmount = Number(props.fastTrackFeeAmount || 0);
-
   const passport = useStore().computePassport();
 
   useEffect(() => {

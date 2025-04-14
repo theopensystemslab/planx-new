@@ -12,7 +12,13 @@ import { Switch } from "ui/shared/Switch";
 import { ICONS } from "../../shared/icons";
 import { Pay } from "../model";
 
-export const InviteToPaySection: React.FC = () => {
+interface InviteToPaySectionProps {
+  disabled?: boolean;
+}
+
+export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
+  disabled,
+}) => {
   const { handleChange, values, setFieldValue } = useFormikContext<Pay>();
 
   return (
@@ -25,6 +31,7 @@ export const InviteToPaySection: React.FC = () => {
               setFieldValue("allowInviteToPay", !values.allowInviteToPay)
             }
             label="Allow applicants to invite someone else to pay"
+            disabled={disabled}
           />
         </InputRow>
         {values.allowInviteToPay ? (
@@ -38,6 +45,7 @@ export const InviteToPaySection: React.FC = () => {
                   placeholder="Card title"
                   value={values.secondaryPageTitle}
                   onChange={handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
             </Box>
@@ -50,6 +58,7 @@ export const InviteToPaySection: React.FC = () => {
                   placeholder="Title"
                   value={values.nomineeTitle}
                   onChange={handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
               <InputRow>
@@ -58,6 +67,7 @@ export const InviteToPaySection: React.FC = () => {
                   placeholder="Description"
                   value={values.nomineeDescription}
                   onChange={handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
             </Box>
@@ -70,6 +80,7 @@ export const InviteToPaySection: React.FC = () => {
                   placeholder="Title"
                   value={values.yourDetailsTitle}
                   onChange={handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
               <InputRow>
@@ -78,6 +89,7 @@ export const InviteToPaySection: React.FC = () => {
                   placeholder="Description"
                   value={values.yourDetailsDescription}
                   onChange={handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
               <InputRow>
@@ -87,6 +99,7 @@ export const InviteToPaySection: React.FC = () => {
                   placeholder="Label"
                   value={values.yourDetailsLabel}
                   onChange={handleChange}
+                  disabled={disabled}
                 />
               </InputRow>
             </Box>

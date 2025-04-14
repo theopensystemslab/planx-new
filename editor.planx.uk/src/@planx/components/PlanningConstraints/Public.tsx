@@ -1,3 +1,5 @@
+import Box from "@mui/material/Box";
+import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import type {
   EnhancedGISResponse,
@@ -227,9 +229,35 @@ function Component(props: Props) {
       <Card handleSubmit={props.handleSubmit} isValid>
         <CardHeader title={props.title} description={props.description || ""} />
         <DelayedLoadingIndicator
-          text="Fetching data..."
+          variant="ellipses"
+          text="Checking for planning constraints that may apply to this property"
           msDelayBeforeVisible={0}
-        />
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              mt: 2,
+              "& > span": {
+                maxWidth: "100%",
+              },
+            }}
+          >
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={60}
+              aria-hidden="true"
+            />
+            <Skeleton
+              variant="rectangular"
+              width={900}
+              height={60}
+              aria-hidden="true"
+            />
+          </Box>
+        </DelayedLoadingIndicator>
       </Card>
     );
 

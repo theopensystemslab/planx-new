@@ -32,6 +32,7 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
             });
           }}
           placeholder="Title"
+          disabled={props.disabled}
         />
       </InputRow>
       <InputRow>
@@ -46,6 +47,7 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
             });
           }}
           placeholder="Description"
+          disabled={props.disabled}
         />
       </InputRow>
     </Box>
@@ -56,10 +58,6 @@ export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
   const formik = useFormik({
     initialValues: {
-      color: props.node?.color || {
-        text: "#000",
-        background: "rgba(1, 99, 96, 0.1)",
-      },
       heading: props.node?.data?.heading || "Application sent",
       description:
         props.node?.data?.description ||
@@ -96,6 +94,7 @@ export default function ConfirmationEditor(props: Props) {
               name="heading"
               value={formik.values.heading}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -104,6 +103,7 @@ export default function ConfirmationEditor(props: Props) {
               name="description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
@@ -118,6 +118,7 @@ export default function ConfirmationEditor(props: Props) {
             }}
             Editor={NextStepEditor}
             newValue={() => ({ title: "", description: "" })}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
@@ -131,6 +132,7 @@ export default function ConfirmationEditor(props: Props) {
             value={formik.values.moreInfo}
             name="moreInfo"
             onChange={formik.handleChange}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
@@ -141,6 +143,7 @@ export default function ConfirmationEditor(props: Props) {
             value={formik.values.contactInfo}
             name="contactInfo"
             onChange={formik.handleChange}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>

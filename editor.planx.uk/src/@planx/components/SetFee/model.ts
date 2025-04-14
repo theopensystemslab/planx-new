@@ -3,7 +3,7 @@ import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export interface SetFee extends BaseNodeData {
   applyCalculatedVAT: boolean;
-  fastTrackFeeAmount?: number;
+  fastTrackFeeAmount: number;
   applyServiceCharge: boolean;
   serviceChargeAmount: number;
   applyPaymentProcessingFee: boolean;
@@ -13,7 +13,7 @@ export interface SetFee extends BaseNodeData {
 
 export const parseSetFee = (data: Record<string, any> | undefined): SetFee => ({
   applyCalculatedVAT: data?.applyCalculatedVAT || false,
-  fastTrackFeeAmount: data?.fastTrackFeeAmount,
+  fastTrackFeeAmount: data?.fastTrackFeeAmount || 0,
   applyServiceCharge: data?.applyServiceCharge || false,
   serviceChargeAmount: DEFAULT_SERVICE_CHARGE_AMOUNT,
   applyPaymentProcessingFee: data?.applyPaymentProcessingFee || false,
@@ -23,5 +23,6 @@ export const parseSetFee = (data: Record<string, any> | undefined): SetFee => ({
 });
 
 export const DEFAULT_SERVICE_CHARGE_AMOUNT = 40; // £40
+export const DEFAULT_SERVICE_CHARGE_THRESHOLD = 100; // £100
 export const DEFAULT_PAYMENT_PROCESSING_PERCENTAGE = 0.01; // 1%
 export const VAT_PERCENTAGE = 0.2; // 20%

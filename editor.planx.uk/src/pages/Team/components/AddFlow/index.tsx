@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Dialog, { dialogClasses } from "@mui/material/Dialog";
+import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
@@ -15,24 +14,11 @@ import { AddButton } from "ui/editor/AddButton";
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
-import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
 import { CreateFlow, validationSchema } from "./types";
-
-// TODO: Standardise or share this
-export const StyledDialog = styled(Dialog)(({ theme }) => ({
-  [`& .${dialogClasses.paper}`]: {
-    width: "100%",
-    maxWidth: theme.breakpoints.values.md,
-    borderRadius: 0,
-    borderTop: `20px solid ${theme.palette.primary.main}`,
-    background: theme.palette.background.paper,
-    margin: theme.spacing(2),
-  },
-}));
 
 export const AddFlow: React.FC = () => {
   const { navigate } = useNavigation();
-  const { teamId, createFlow, teamSlug } = useStore();
+  const { teamId, createFlow, createFlowFromTemplate, teamSlug } = useStore();
 
   const initialValues: CreateFlow = {
     mode: "new",
@@ -40,6 +26,7 @@ export const AddFlow: React.FC = () => {
       slug: "",
       name: "",
       sourceId: "",
+      teamId,
     },
   };
 
@@ -47,26 +34,20 @@ export const AddFlow: React.FC = () => {
     { mode, flow },
     { setFieldError },
   ) => {
-    let newFlowId: string | undefined;
-
     try {
       switch (mode) {
         case "new":
-          newFlowId = await createFlow(teamId, flow.slug, flow.name);
+          await createFlow(flow);
           break;
         case "copy":
           // newFlowId = await createFlowFromCopy(flow);
           break;
         case "template":
-          // newFlowId = await createFlowFromTemplate(flow);
+          await createFlowFromTemplate(flow);
           break;
       }
 
-      if (!newFlowId) {
-        throw new Error("Flow creation failed");
-      }
-
-      navigate(`/${teamSlug}/${newFlowId}`);
+      navigate(`/${teamSlug}/${flow.slug}`);
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
@@ -94,7 +75,7 @@ export const AddFlow: React.FC = () => {
         validationSchema={validationSchema}
       >
         {({ resetForm }) => (
-          <StyledDialog
+          <Dialog
             open={dialogOpen}
             onClose={() => {
               setDialogOpen(false);
@@ -117,7 +98,6 @@ export const AddFlow: React.FC = () => {
                   sx={{ gap: 2, display: "flex", flexDirection: "column" }}
                 >
                   <BaseFormSection />
-                  <CreateFromTemplateFormSection />
                   <CreateFromCopyFormSection />
                 </DialogContent>
                 <DialogActions sx={{ paddingX: 2 }}>
@@ -135,7 +115,7 @@ export const AddFlow: React.FC = () => {
                 </DialogActions>
               </Form>
             </Box>
-          </StyledDialog>
+          </Dialog>
         )}
       </Formik>
     </Box>

@@ -44,6 +44,7 @@ function FindPropertyComponent(props: Props) {
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
           <InputRow>
@@ -52,6 +53,7 @@ function FindPropertyComponent(props: Props) {
               placeholder="Description"
               value={formik.values.description}
               onChange={formik.handleChange}
+              disabled={props.disabled}
             />
           </InputRow>
         </ModalSectionContent>
@@ -66,6 +68,7 @@ function FindPropertyComponent(props: Props) {
                 )
               }
               label="Allow users to plot new addresses without a UPRN"
+              disabled={props.disabled}
             />
           </InputRow>
           {formik.values.allowNewAddresses ? (
@@ -77,6 +80,7 @@ function FindPropertyComponent(props: Props) {
                   name="newAddressTitle"
                   value={formik.values.newAddressTitle}
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputRow>
@@ -85,6 +89,7 @@ function FindPropertyComponent(props: Props) {
                   placeholder="Description"
                   value={formik.values.newAddressDescription}
                   onChange={formik.handleChange}
+                  disabled={props.disabled}
                 />
               </InputRow>
               <InputGroup label="New address description label">
@@ -96,6 +101,7 @@ function FindPropertyComponent(props: Props) {
                       name="newAddressDescriptionLabel"
                       value={formik.values.newAddressDescriptionLabel}
                       onChange={formik.handleChange}
+                      disabled={props.disabled}
                     />
                   </InputRowItem>
                 </InputRow>
@@ -106,7 +112,7 @@ function FindPropertyComponent(props: Props) {
           )}
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }

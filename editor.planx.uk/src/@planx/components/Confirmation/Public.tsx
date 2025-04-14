@@ -1,5 +1,6 @@
 import Check from "@mui/icons-material/Check";
 import Box from "@mui/material/Box";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { QuestionAndResponses } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
@@ -86,11 +87,15 @@ interface PresentationalProps extends Props {
 
 export function Presentational(props: PresentationalProps) {
   const isFinalCard = useStore().isFinalCard();
+  const theme = useTheme();
   return (
     <Box width="100%">
       <Banner
         heading={props.heading || ""}
-        color={props.color}
+        color={{
+          background: theme.palette.success.light,
+          text: theme.palette.text.primary,
+        }}
         Icon={Check}
         iconTitle={"Success"}
       >

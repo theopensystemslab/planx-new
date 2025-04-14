@@ -15,6 +15,8 @@ import createPalette, {
   PaletteOptions,
 } from "@mui/material/styles/createPalette";
 import { svgIconClasses } from "@mui/material/SvgIcon";
+// eslint-disable-next-line no-restricted-imports
+import { switchClasses } from "@mui/material/Switch";
 import { tablePaginationClasses } from "@mui/material/TablePagination";
 import { tooltipClasses } from "@mui/material/Tooltip";
 import { deepmerge } from "@mui/utils";
@@ -41,6 +43,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     default: "#FFFFFF",
     paper: "#F9F8F8",
     dark: "#2c2c2c",
+    disabled: "#EEEEEE",
   },
   secondary: {
     main: "#F3F2F1",
@@ -72,6 +75,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
   success: {
     main: "#49A74C",
     dark: "#265A26",
+    light: "#EFF7EE",
   },
   info: {
     main: "#2196F3",
@@ -239,6 +243,9 @@ const getThemeOptions = ({
       duration: {
         enteringScreen: 400,
       },
+    },
+    shape: {
+      borderRadius: 2,
     },
     components: {
       MuiAccordion: {
@@ -429,6 +436,18 @@ const getThemeOptions = ({
           },
         },
       },
+      MuiDialog: {
+        styleOverrides: {
+          paper: ({ theme }) => ({
+            width: "100%",
+            maxWidth: theme.breakpoints.values.md,
+            borderRadius: 0,
+            borderTop: `20px solid ${palette.primary.main}`,
+            background: theme.palette.background.paper,
+            margin: theme.spacing(2),
+          }),
+        },
+      },
       MuiIconButton: {
         defaultProps: {
           disableFocusRipple: true,
@@ -501,7 +520,7 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             "&.Mui-disabled": {
-              backgroundColor: palette.grey[200],
+              backgroundColor: palette.background.disabled,
             },
           },
         },
@@ -510,7 +529,7 @@ const getThemeOptions = ({
         styleOverrides: {
           root: {
             "&.Mui-disabled": {
-              backgroundColor: palette.grey[200],
+              backgroundColor: palette.background.disabled,
             },
           },
           icon: {
@@ -535,24 +554,23 @@ const getThemeOptions = ({
             padding: "8px",
             left: "-8px",
             marginRight: "-4px",
-            "& .MuiSwitch-switchBase": {
+            [`& .${switchClasses.switchBase}`]: {
               padding: "11px",
               borderRadius: "50%",
-              color: "rgb(255, 106, 0)",
-              "&.Mui-checked": {
+              [`&.${switchClasses.checked}`]: {
                 transform: "translateX(32px)",
               },
             },
-            "& .MuiSwitch-thumb": {
+            [`& .${switchClasses.thumb}`]: {
               background: palette.common.white,
               width: "22px",
               height: "22px",
             },
-            "& .MuiSwitch-track": {
+            [`& .${switchClasses.track}`]: {
               background: palette.background.dark,
               borderRadius: "20px",
               position: "relative",
-              opacity: "1 !important",
+              opacity: 1,
               "&::before, &::after": {
                 display: "inline-block",
                 position: "absolute",
@@ -574,15 +592,22 @@ const getThemeOptions = ({
                 right: "4px",
               },
             },
-            "& .MuiSwitch-switchBase.Mui-checked": {
-              "& + .MuiSwitch-track": {
+            [`& .${switchClasses.switchBase}.${switchClasses.checked}`]: {
+              [`& + .${switchClasses.track}`]: {
                 background: palette.success.dark,
-              },
-              "& + .MuiSwitch-track::before": {
                 opacity: 1,
+                "&::before": {
+                  opacity: 1,
+                },
+                "&::after": {
+                  opacity: 0,
+                },
               },
-              "& + .MuiSwitch-track::after": {
-                opacity: 0,
+            },
+            [`& .${switchClasses.switchBase}.${switchClasses.disabled}`]: {
+              [`& + .${switchClasses.track}`]: {
+                opacity: 1,
+                background: palette.text.disabled,
               },
             },
           },
@@ -641,6 +666,12 @@ const getThemeOptions = ({
               outline: "3px solid rgba(0,0,0,0)",
               outlineOffset: "1px",
               boxShadow: `0 0 0 4px ${palette.action.focus}`,
+            },
+            [`&.${radioClasses.disabled}::before`]: {
+              borderColor: palette.text.disabled,
+            },
+            [`&.${radioClasses.disabled}::after`]: {
+              color: palette.text.disabled,
             },
           },
         },

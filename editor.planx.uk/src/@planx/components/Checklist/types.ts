@@ -16,6 +16,7 @@ export interface ChecklistProps extends Checklist {
       text: string;
     } & BaseNodeData;
   };
+  disabled?: boolean;
 }
 
 export type PublicChecklistProps = PublicProps<Checklist>;

@@ -8,7 +8,6 @@ export interface Step {
 export interface Confirmation extends BaseNodeData {
   heading?: string;
   description?: string;
-  color?: { text: string; background: string };
   nextSteps?: Step[];
   moreInfo?: string;
   contactInfo?: string;

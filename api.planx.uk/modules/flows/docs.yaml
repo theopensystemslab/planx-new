@@ -102,6 +102,27 @@ components:
           type: string
           example: Your flow has valid file types
       required: true
+    HistoryEntry:
+      type: object
+      properties:
+        id:
+          type: number
+          required: true
+        actor:
+          type: object
+          properties:
+            firstName:
+              type: string
+              required: true
+            lastName:
+              type: string
+              required: true
+        comment:
+          type: string
+          required: true
+        createdAt:
+          type: string
+          required: true
   responses:
     CreateFlow:
       content:
@@ -211,6 +232,12 @@ components:
                   - type: array
                     items:
                       $ref: "#/components/schemas/ValidationCheck"
+                  - type: "null"
+              history:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/HistoryEntry"
                   - type: "null"
     FlattenData:
       content:

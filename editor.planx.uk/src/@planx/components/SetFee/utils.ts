@@ -1,8 +1,13 @@
 import { PassportFeeFields } from "@opensystemslab/planx-core/types";
 import { Store } from "pages/FlowEditor/lib/store";
+import { ConditionalPick } from "type-fest";
 
 import { PAY_FN } from "../Pay/model";
-import { DEFAULT_PAYMENT_PROCESSING_PERCENTAGE, DEFAULT_SERVICE_CHARGE_AMOUNT, VAT_PERCENTAGE } from "./model";
+import {
+  DEFAULT_PAYMENT_PROCESSING_PERCENTAGE,
+  DEFAULT_SERVICE_CHARGE_AMOUNT,
+  VAT_PERCENTAGE,
+} from "./model";
 
 type HandleSetFees = (params: {
   passport: Store.Passport;
@@ -12,15 +17,8 @@ type HandleSetFees = (params: {
   applyPaymentProcessingFee: boolean;
 }) => Store.Passport["data"];
 
-// SetFee outputs any `number` type PassportFeeFields, never `boolean` ones
-type OutputFees = Omit<
-  PassportFeeFields,
-  | "application.fee.exemption.disability"
-  | "application.fee.exemption.resubmission"
-  | "application.fee.reduction.alternative"
-  | "application.fee.reduction.parishCouncil"
-  | "application.fee.reduction.sports"
->;
+// SetFee outputs a partial subset of any `number` type PassportFeeFields, never `boolean` ones
+type OutputFees = Partial<ConditionalPick<PassportFeeFields, number>>;
 
 export const handleSetFees: HandleSetFees = ({
   passport,
@@ -42,9 +40,9 @@ export const handleSetFees: HandleSetFees = ({
 
   // At minimum, set calculated = payable if payable does not exist yet
   const fees = {
-    [CALCULATED_FN]: calculated,
     [payable]: incomingPayable >= 0 ? incomingPayable : calculated,
     [payableVAT]: 0,
+    [CALCULATED_FN]: calculated,
   };
 
   // Order of all extra fees and charges matters from here forwards!

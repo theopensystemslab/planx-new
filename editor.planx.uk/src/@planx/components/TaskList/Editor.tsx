@@ -39,6 +39,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
             });
           }}
           placeholder="Title"
+          disabled={props.disabled}
         />
       </InputRow>
       <InputRow>
@@ -53,6 +54,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
             });
           }}
           placeholder="Description"
+          disabled={props.disabled}
         />
       </InputRow>
     </Box>
@@ -81,6 +83,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
                 placeholder="Main title"
                 format="large"
+                disabled={props.disabled}
               />
             </InputRow>
             <InputRow>
@@ -89,6 +92,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
                 value={formik.values.description}
                 onChange={formik.handleChange}
                 placeholder="Main description"
+                disabled={props.disabled}
               />
             </InputRow>
           </Box>
@@ -99,10 +103,11 @@ const TaskListComponent: React.FC<Props> = (props) => {
             }}
             Editor={TaskEditor}
             newValue={newTask}
+            disabled={props.disabled}
           />
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter formik={formik} />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 };

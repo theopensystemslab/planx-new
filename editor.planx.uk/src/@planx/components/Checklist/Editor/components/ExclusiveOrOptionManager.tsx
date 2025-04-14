@@ -16,6 +16,7 @@ interface Props {
   nonExclusiveOptions: Option[] | Array<Group<Option>>;
   groupIndex?: number;
   grouped?: true;
+  disabled?: boolean;
 }
 
 export const ExclusiveOrOptionManager = ({
@@ -24,6 +25,7 @@ export const ExclusiveOrOptionManager = ({
   nonExclusiveOptions,
   groupIndex,
   grouped,
+  disabled,
 }: Props) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
@@ -74,6 +76,7 @@ export const ExclusiveOrOptionManager = ({
               }) satisfies Option
             }
             Editor={BaseOptionsEditor}
+            disabled={disabled}
             editorExtraProps={{
               showValueField: !!formik.values.fn,
               groupIndex,
