@@ -3,6 +3,7 @@ import { Store, useStore } from "pages/FlowEditor/lib/store";
 import OfflineLayout from "pages/layout/OfflineLayout";
 import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
+import TrialAccountLayout from "pages/layout/TrialAccountLayout";
 import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain, setPath } from "routes/utils";
@@ -59,11 +60,13 @@ export const publishedView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <OfflineLayout>
-        <SaveAndReturnLayout>
-          <View />
-        </SaveAndReturnLayout>
-      </OfflineLayout>
+      <TrialAccountLayout>
+        <OfflineLayout>
+          <SaveAndReturnLayout>
+            <View />
+          </SaveAndReturnLayout>
+        </OfflineLayout>
+      </TrialAccountLayout>
     </PublicLayout>
   );
 };

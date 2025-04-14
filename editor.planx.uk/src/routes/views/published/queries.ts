@@ -42,6 +42,7 @@ export const fetchSettingsForPublishedView = async (
                 helpOpeningHours: help_opening_hours
                 emailReplyToId: email_reply_to_id
                 boundaryBBox: boundary_bbox
+                isTrial: is_trial
               }
               integrations {
                 hasPlanningData: has_planning_data

@@ -2597,6 +2597,7 @@
           - help_phone
           - homepage
           - id
+          - is_trial
           - reference_code
           - team_id
         filter: {}
