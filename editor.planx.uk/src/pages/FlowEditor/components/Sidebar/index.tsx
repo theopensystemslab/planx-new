@@ -6,7 +6,6 @@ import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
@@ -126,11 +125,52 @@ const TabList = styled(Box)(({ theme }) => ({
   },
 }));
 
+const PublishedFlowButton: React.FC<{ url: string }> = ({ url }) => {
+  const [isFlowPublished, isTrialTeam] = useStore(
+    (state) => [
+      state.isFlowPublished,
+      state.teamSettings.isTrial
+    ],
+  );
+
+  if (isTrialTeam) return (
+    <Tooltip title="Published service unavailable in trial mode">
+      <Box>
+        <Link component={"button"} disabled aria-disabled={true}>
+          <LanguageIcon />
+        </Link>
+      </Box>
+    </Tooltip>
+  );
+
+  if (!isFlowPublished) return (
+    <Tooltip title="Flow not yet published">
+      <Box>
+        <Link component={"button"} disabled aria-disabled={true}>
+          <LanguageIcon />
+        </Link>
+      </Box>
+    </Tooltip>
+  );
+
+  return (
+    <Tooltip title={"Open published service"} >
+      <Link
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        color="inherit"
+      >
+        <LanguageIcon />
+      </Link>
+    </Tooltip >
+  )
+}
+
 const Sidebar: React.FC = React.memo(() => {
-  const [resetPreview, isFlowPublished, toggleSidebar, showSidebar] = useStore(
+  const [resetPreview, toggleSidebar, showSidebar] = useStore(
     (state) => [
       state.resetPreview,
-      state.isFlowPublished,
       state.toggleSidebar,
       state.showSidebar,
     ],
@@ -194,27 +234,7 @@ const Sidebar: React.FC = React.memo(() => {
                   <OpenInNewIcon />
                 </Link>
               </Tooltip>
-
-              {isFlowPublished ? (
-                <Tooltip title="Open published service">
-                  <Link
-                    href={urls.analytics}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    color="inherit"
-                  >
-                    <LanguageIcon />
-                  </Link>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Flow not yet published">
-                  <Box>
-                    <Link component={"button"} disabled aria-disabled={true}>
-                      <LanguageIcon />
-                    </Link>
-                  </Box>
-                </Tooltip>
-              )}
+              <PublishedFlowButton url={urls.analytics}/>
             </Box>
             <CheckForChangesToPublishButton previewURL={urls.preview} />
           </Header>
