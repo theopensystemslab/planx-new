@@ -56,6 +56,20 @@ beforeEach(() => {
       },
     },
   });
+
+  queryMock.mockQuery({
+    name: "CheckTeamTrialStatus",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        team: {
+          settings: {
+            isTrial: false,
+          },
+        },
+      },
+    },
+  });
 });
 
 const auth = authHeader({ role: "platformAdmin" });
@@ -69,6 +83,61 @@ it("requires a user to have the 'teamEditor' role", async () => {
     .post("/flows/1/publish")
     .set(authHeader({ role: "teamViewer" }))
     .expect(403);
+});
+
+describe("Trial teams", () => {
+  it("doesn't allow publishing for trial teams", async () => {
+    queryMock.mockQuery({
+      name: "CheckTeamTrialStatus",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          team: {
+            settings: {
+              isTrial: true,
+            },
+          },
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(401)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Action not available for trial team/);
+      });
+  });
+
+  it("handles error when checking trial status", async () => {
+    queryMock.mockQuery({
+      name: "CheckTeamTrialStatus",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          team: {
+            settings: {
+              isTrial: true,
+            },
+          },
+        },
+      },
+      graphqlErrors: [
+        {
+          message: "Something went wrong",
+        },
+      ],
+    });
+
+    await supertest(app)
+      .post("/flows/1/publish")
+      .set(authHeader({ role: "teamEditor" }))
+      .expect(500)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Failed to check team trial status/);
+      });
+  });
 });
 
 describe("publish", () => {

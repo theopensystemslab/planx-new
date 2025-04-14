@@ -6,13 +6,15 @@ import { expressjwt, type IsRevoked } from "express-jwt";
 import { generators } from "openid-client";
 import type { Authenticator } from "passport";
 import type { RequestHandler } from "http-proxy-middleware";
-import type { Role } from "@opensystemslab/planx-core/types";
+import type { Role, TeamSettings } from "@opensystemslab/planx-core/types";
 import { AsyncLocalStorage } from "async_hooks";
 import type { CookieOptions, Request } from "express";
 import {
   createTokenDigest,
   isTokenRevoked,
 } from "./service/logout/revokeToken.js";
+import { $api } from "../../client/index.js";
+import { gql } from "graphql-request";
 
 export const userContext = new AsyncLocalStorage<{ user: Express.User }>();
 
@@ -324,4 +326,51 @@ export const useNoCache: RequestHandler = (_req, res, next) => {
   );
   res.setHeader("Expires", "0");
   next();
+};
+
+type CheckTeamTrialStatusQuery = {
+  flow: {
+    team: {
+      settings: Pick<TeamSettings, "isTrial">;
+    };
+  };
+};
+
+/**
+ * Checks (using flow ID) if a team is currently in "trial" mode
+ * Teams in "trial" mode have access to limited functionality
+ */
+export const useTrialTeamAuth: RequestHandler = async (req, _res, next) => {
+  const flowId = req.params.flowId;
+  try {
+    const { flow } = await $api.client.request<CheckTeamTrialStatusQuery>(
+      gql`
+        query CheckTeamTrialStatus($flowId: uuid = "") {
+          flow: flows_by_pk(id: $flowId) {
+            team {
+              settings: team_settings {
+                isTrial: is_trial
+              }
+            }
+          }
+        }
+      `,
+      { flowId },
+    );
+
+    const isTrialTeam = flow.team.settings.isTrial;
+
+    return isTrialTeam
+      ? next({
+          status: 401,
+          message: "Unauthorised. Action not available for trial team.",
+        })
+      : next();
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to check team trial status. Error: ${error}`,
+      }),
+    );
+  }
 };

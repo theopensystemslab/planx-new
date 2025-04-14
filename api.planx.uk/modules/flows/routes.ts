@@ -4,6 +4,7 @@ import {
   useLoggedInUserAuth,
   usePlatformAdminAuth,
   useTeamEditorAuth,
+  useTrialTeamAuth,
 } from "../auth/middleware.js";
 import { copyFlowController, copyFlowSchema } from "./copyFlow/controller.js";
 import {
@@ -87,6 +88,7 @@ router.post(
 router.post(
   "/flows/:flowId/publish",
   useTeamEditorAuth,
+  useTrialTeamAuth,
   validate(publishFlowSchema),
   publishFlowController,
 );
