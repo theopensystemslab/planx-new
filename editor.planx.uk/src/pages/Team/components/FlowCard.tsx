@@ -101,10 +101,10 @@ const FlowCard: React.FC<FlowCardProps> = ({
 }) => {
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
     useState<boolean>(false);
-  const [archiveFlow, copyFlow, moveFlow, canUserEditTeam] = useStore(
+  const [archiveFlow, createFlowFromCopy, moveFlow, canUserEditTeam] = useStore(
     (state) => [
       state.archiveFlow,
-      state.copyFlow,
+      state.createFlowFromCopy,
       state.moveFlow,
       state.canUserEditTeam,
     ],
@@ -130,7 +130,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
   };
 
   const handleCopy = () => {
-    copyFlow(flow.id).then(() => {
+    createFlowFromCopy({
+      teamId,
+      slug: flow.slug + "-copy",
+      name: flow.name + " (copy)",
+      sourceId: flow.id,
+    }).then(() => {
       refreshFlows();
     });
   };

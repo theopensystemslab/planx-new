@@ -69,6 +69,9 @@ describe("authentication and error handling", () => {
     const validBody = {
       insert: false,
       replaceValue: "T3ST1",
+      teamId: 1,
+      name: "test (copy)",
+      slug: "test-copy",
     };
 
     await supertest(app)
@@ -86,6 +89,9 @@ describe("authentication and error handling", () => {
     const validBody = {
       insert: false,
       replaceValue: "T3ST1",
+      teamId: 1,
+      name: "test (copy)",
+      slug: "test-copy",
     };
 
     await supertest(app)
@@ -115,6 +121,9 @@ describe("authentication and error handling", () => {
     const body = {
       insert: true,
       replaceValue: "T3ST1",
+      teamId: 1,
+      name: "test (copy)",
+      slug: "test-copy",
     };
 
     queryMock.mockQuery({
@@ -161,6 +170,9 @@ it("returns copied unique flow data without inserting a new record", async () =>
   const body = {
     insert: false,
     replaceValue: "T3ST1",
+    teamId: 1,
+    name: "test (copy)",
+    slug: "test-copy",
   };
 
   await supertest(app)
@@ -177,6 +189,9 @@ it("inserts copied unique flow data", async () => {
   const body = {
     insert: true,
     replaceValue: "T3ST1",
+    teamId: 1,
+    name: "test (copy)",
+    slug: "test-copy",
   };
 
   await supertest(app)
@@ -193,6 +208,9 @@ it("throws an error if the a GraphQL operation fails", async () => {
   const body = {
     insert: true,
     replaceValue: "T3ST1",
+    teamId: 1,
+    name: "test (copy)",
+    slug: "test-copy",
   };
 
   queryMock.mockQuery({
@@ -227,6 +245,9 @@ it("throws an error if user details are missing", async () => {
   const body = {
     insert: true,
     replaceValue: "T3ST1",
+    teamId: 1,
+    name: "test (copy)",
+    slug: "test-copy",
   };
 
   await supertest(app)

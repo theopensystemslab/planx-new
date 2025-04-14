@@ -39,7 +39,7 @@ export const CreateFromTemplateFormSection: React.FC = () => {
     if (!selectedTemplate) return;
 
     // Suggest a naming convention
-    if (!values.flow.name.endsWith(" (template)")) {
+    if (!/(copy|template)$/.test(values.flow.name)) {
       const newFlowName = `${selectedTemplate.name} (template)`;
       setFieldValue("flow.name", newFlowName);
       setFieldValue("flow.slug", slugify(newFlowName));
