@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { NaviRequest, NotFoundError } from "navi";
 import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
@@ -9,7 +10,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
   id: string;
-  status: string;
+  status: FlowStatus;
   flowAnalyticsLink: string;
   templatedFrom: string;
   isTemplate: boolean;
@@ -19,7 +20,7 @@ interface FlowEditorData {
 interface GetFlowEditorData {
   flows: {
     id: string;
-    status: string;
+    status: FlowStatus;
     flowAnalyticsLink: string;
     templatedFrom: string;
     isTemplate: boolean;

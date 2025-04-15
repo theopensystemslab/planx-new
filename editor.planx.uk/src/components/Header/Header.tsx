@@ -235,9 +235,7 @@ const Breadcrumbs: React.FC = () => {
     state.previewEnvironment === "standalone",
   ]);
 
-  const flowStatus = useStore.getState().status as StatusVariant | undefined;
-
-  console.log(flowStatus);
+  const flowStatus = useStore((state) => state.status);
 
   return (
     <>
