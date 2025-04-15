@@ -21,13 +21,11 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
 import axios from "axios";
 import { clearLocalFlow } from "lib/local";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import React, { RefObject, useRef, useState } from "react";
 import {
   Link as ReactNaviLink,
@@ -235,7 +233,9 @@ const Breadcrumbs: React.FC = () => {
     state.previewEnvironment === "standalone",
   ]);
 
-  const flowStatus = useStore((state) => state.status);
+  const flowStatus = useStore((state) => state.status) as
+    | StatusVariant
+    | undefined;
 
   return (
     <>
