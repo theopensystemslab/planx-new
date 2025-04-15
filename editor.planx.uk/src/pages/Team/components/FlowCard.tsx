@@ -22,6 +22,7 @@ import {
 } from "../../FlowEditor/utils";
 import { sortOptions } from "../helpers/sortAndFilterOptions";
 import { ArchiveDialog } from "./ArchiveDialog";
+import { CopyDialog } from "./CopyDialog";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -101,10 +102,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
 }) => {
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
     useState<boolean>(false);
-  const [archiveFlow, createFlowFromCopy, moveFlow, canUserEditTeam] = useStore(
+  const [isCopyDialogOpen, setIsCopyDialogOpen] = useState<boolean>(false);
+
+  const [archiveFlow, moveFlow, canUserEditTeam] = useStore(
     (state) => [
       state.archiveFlow,
-      state.createFlowFromCopy,
       state.moveFlow,
       state.canUserEditTeam,
     ],
@@ -112,6 +114,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   const route = useCurrentRoute();
   const toast = useToast();
+
+  const handleCopyDialogClose = () => {
+    setIsCopyDialogOpen(false);
+    refreshFlows();
+  }
 
   const {
     sortObject: { displayName: sortDisplayName },
@@ -126,18 +133,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
       toast.error(
         "We are unable to archive this flow, refesh and try again or contact an admin",
       );
-    }
-  };
-
-  const handleCopy = () => {
-    createFlowFromCopy({
-      teamId,
-      slug: flow.slug + "-copy",
-      name: flow.name + " (copy)",
-      sourceId: flow.id,
-    }).then(() => {
-      refreshFlows();
-    });
+    };
   };
 
   const handleMove = (newTeam: string) => {
@@ -184,6 +180,17 @@ const FlowCard: React.FC<FlowCardProps> = ({
           }}
           onConfirm={handleArchive}
           submitLabel="Archive Service"
+        />
+      )}
+      {isCopyDialogOpen && (
+        <CopyDialog
+          isDialogOpen={isCopyDialogOpen}
+          handleClose={handleCopyDialogClose}
+          sourceFlow={{
+            name: flow.name, 
+            slug: flow.slug,
+            id: flow.id,
+          }}
         />
       )}
       <Card>
@@ -279,9 +286,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
               },
               {
                 label: "Copy",
-                onClick: () => {
-                  handleCopy();
-                },
+                onClick: () => setIsCopyDialogOpen(true),
               },
               {
                 label: "Move",
