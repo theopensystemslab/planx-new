@@ -1,7 +1,9 @@
+import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
@@ -23,6 +25,7 @@ const FlowStatus = () => {
     flowSlug,
     teamDomain,
     isFlowPublished,
+    isTrial,
   ] = useStore((state) => [
     state.flowStatus,
     state.updateFlowStatus,
@@ -31,6 +34,7 @@ const FlowStatus = () => {
     state.flowSlug,
     state.teamDomain,
     state.isFlowPublished,
+    state.teamSettings.isTrial
   ]);
   const toast = useToast();
 
@@ -40,13 +44,13 @@ const FlowStatus = () => {
     },
     onSubmit: async (values, { resetForm }) => {
       const isSuccess = await updateFlowStatus(values.status);
-      if (isSuccess) {
-        toast.success("Service settings updated successfully");
-        // Send a Slack notification to #planx-notifications
-        sendFlowStatusSlackNotification(values.status);
-        // Reset "dirty" status to disable Save & Reset buttons
-        resetForm({ values });
-      }
+      if (!isSuccess) return toast.error("Failed to update settings");
+
+      toast.success("Service settings updated successfully");
+      // Send a Slack notification to #planx-notifications
+      sendFlowStatusSlackNotification(values.status);
+      // Reset "dirty" status to disable Save & Reset buttons
+      resetForm({ values });
     },
   });
 
@@ -100,7 +104,16 @@ const FlowStatus = () => {
         </Typography>
       </SettingsSection>
       <SettingsSection background>
+        {isTrial &&
+          <WarningContainer>
+            <PendingActionsIcon sx={{ mr: 1 }} />
+            <Typography variant="body2">
+              Teams in "trial" mode cannot turn flows online.
+            </Typography>
+          </WarningContainer>
+        }
         <Switch
+          disabled={isTrial}
           label={statusForm.values.status as string}
           name={"service.status"}
           variant="editorPage"
@@ -121,13 +134,14 @@ const FlowStatus = () => {
           </p>
           <p>Offline services can still be edited and published as normal.</p>
         </SettingsDescription>
-
-        <PublicLink
-          isFlowPublished={isFlowPublished}
-          status={flowStatus || "offline"}
-          subdomain={subdomainLink}
-          publishedLink={publishedLink}
-        />
+        {!isTrial &&
+          <PublicLink
+            isFlowPublished={isFlowPublished}
+            status={flowStatus || "offline"}
+            subdomain={subdomainLink}
+            publishedLink={publishedLink}
+          />
+        }
 
         <Box>
           <Button
