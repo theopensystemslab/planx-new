@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import type { FlowStatus } from "@opensystemslab/planx-core/types";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import axios from "axios";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
@@ -104,19 +105,12 @@ const FlowStatus = () => {
       </SettingsSection>
       <SettingsSection background>
         {isTrial &&
-          <Box sx={(theme) => ({
-            border: `2px solid ${theme.palette.border.light}`,
-            marginBottom: theme.spacing(1),
-            padding: theme.spacing(1),
-            backgroundColor: theme.palette.common.white,
-            text: theme.palette.common.black,
-            display: "flex"
-          })}>
+          <WarningContainer>
             <PendingActionsIcon sx={{ mr: 1 }} />
             <Typography variant="body2">
               Teams in "trial" mode cannot turn flows online.
             </Typography>
-          </Box>
+          </WarningContainer>
         }
         <Switch
           disabled={isTrial}
@@ -140,7 +134,7 @@ const FlowStatus = () => {
           </p>
           <p>Offline services can still be edited and published as normal.</p>
         </SettingsDescription>
-        { !isTrial &&
+        {!isTrial &&
           <PublicLink
             isFlowPublished={isFlowPublished}
             status={flowStatus || "offline"}
