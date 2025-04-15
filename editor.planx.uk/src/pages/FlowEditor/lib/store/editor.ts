@@ -229,6 +229,11 @@ export const editorStore: StateCreator<
       { children, parent, before },
     )(get().flow);
     send(ops);
+
+    const isCustomisableNode = data?.tags?.includes("customisation");
+    if (get().isTemplatedFrom && isCustomisableNode) {
+      console.log("TODO add templated_flow_edits");
+    }
   },
 
   archiveFlow: async (flowId) => {
@@ -587,6 +592,12 @@ export const editorStore: StateCreator<
   removeNode: (id, parent) => {
     const [, ops] = remove(id, parent)(get().flow);
     send(ops);
+
+    const isCustomisableNode =
+      get().flow[id]?.data?.tags?.includes("customisation");
+    if (get().isTemplatedFrom && isCustomisableNode) {
+      console.log("TODO remove templated_flow_edits");
+    }
   },
 
   updateNode: ({ id, data }, { children = undefined } = {}) => {
@@ -595,11 +606,19 @@ export const editorStore: StateCreator<
       removeKeyIfMissing: true,
     })(get().flow);
     send(ops);
+
+    const isCustomisableNode = data?.tags?.includes("customisation");
+    if (get().isTemplatedFrom && isCustomisableNode) {
+      console.log("TODO update templated_flow_edits");
+    }
   },
 
   undoOperation: (ops: OT.Op[]) => {
     const inverseOps: OT.Op[] = type.invert(ops);
     send(inverseOps);
+
+    // TODO how will "undo" work with templated_flow_edits?
+    //   do we need to iterate over each inverseOp, check its' node ID and tags and treat like "removeNode"??
   },
 
   orderedFlow: undefined,
