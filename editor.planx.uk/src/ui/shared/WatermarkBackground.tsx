@@ -12,14 +12,21 @@ type WatermarkBackgroundProps = {
 
 const Root = styled(Box)(() => ({
   position: "absolute",
+  top: "0",
+  left: "0",
+  width: "100%",
+  height: "100%",
+  zIndex: 0,
+  overflow: "hidden",
+  pointerEvents: "none",
+}));
+
+const Wrapper = styled(Box)(() => ({
+  position: "absolute",
   top: "-50%",
   left: "-50%",
   width: "200%",
   height: "200%",
-  zIndex: 0,
-  overflow: "hidden",
-  transformOrigin: "center",
-  pointerEvents: "none",
 }));
 
 const Background = styled(Box, {
@@ -31,6 +38,7 @@ const Background = styled(Box, {
   width: "200%",
   height: "200%",
   transform: "rotate(-45deg)",
+  transformOrigin: "center",
   backgroundColor:
     variant === "light"
       ? theme.palette.common.white
@@ -56,7 +64,9 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
         This is a testing environment for new features. Do not use it to make
         permanent content changes.
       </div>
-      <Background variant={variant} opacity={opacity} />
+      <Wrapper>
+        <Background variant={variant} opacity={opacity} />
+      </Wrapper>
     </Root>
   );
 };
