@@ -9,6 +9,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
 import { TeamSummary } from "routes/authenticated";
 import { borderedFocusStyle } from "theme";
+import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -19,6 +20,7 @@ interface Props {
 
 const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
+  display: "block",
   "&:focus-within > div": {
     ...borderedFocusStyle,
   },
@@ -26,13 +28,14 @@ const StyledLink = styled(Link)(() => ({
 
 const TeamCard = styled(Card)(({ theme }) => ({
   display: "flex",
-  justifyContent: "flex-start",
+  justifyContent: "space-between",
   alignItems: "center",
   marginBottom: theme.spacing(2),
   color: theme.palette.text.primary,
   outline: `1px solid ${theme.palette.border.light}`,
   outlineOffset: "-1px",
   borderRadius: "1px",
+  paddingRight: theme.spacing(2),
 }));
 
 const TeamColourBand = styled(Box)(({ theme }) => ({
@@ -68,10 +71,13 @@ const Teams: React.FC<Props> = ({ teams }) => {
       return (
         <StyledLink href={`/${team.slug}`} key={team.slug} prefetch={false}>
           <TeamCard>
-            <TeamColourBand bgcolor={team.theme.primaryColour} />
-            <Typography p={2} variant="h3">
-              {team.name}
-            </Typography>
+            <Box sx={{ display: "flex" }}>
+              <TeamColourBand bgcolor={team.theme.primaryColour} />
+              <Typography p={2} variant="h3">
+                {team.name}
+              </Typography>
+            </Box>
+            { team.settings.isTrial && <InfoChip label="Trial account"/> }
           </TeamCard>
         </StyledLink>
       );
