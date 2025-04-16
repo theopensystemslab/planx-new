@@ -62,9 +62,9 @@ export default function TrialAccountForm({
             }
           />
           <SettingsDescription>
-            <p>Toggle this team between "trial" access and full access</p>
+            <p>Toggle this team between "trial account" and "full access"</p>
             <p>
-              A trial team had limited access to PlanX features - they are not
+              A trial account has limited access to PlanX features - they are not
               able to turn services online.
             </p>
           </SettingsDescription>

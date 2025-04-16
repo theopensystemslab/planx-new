@@ -125,7 +125,7 @@ export const AddTeamButton: React.FC = () => {
                   />
                   <Typography variant="body2" mt={-2}>
                     A trial account has limited access to PlanX functionality
-                    (e.g. turning services online). Trail teams can be promoted to
+                    (e.g. turning services online). Trial accounts can be promoted to
                     having full access via the settings panel.
                   </Typography>
                 </DialogContent>

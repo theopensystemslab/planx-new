@@ -108,7 +108,7 @@ const FlowStatus = () => {
           <WarningContainer>
             <PendingActionsIcon sx={{ mr: 1 }} />
             <Typography variant="body2">
-              Teams in "trial" mode cannot turn flows online.
+              Trial accounts cannot turn flows online.
             </Typography>
           </WarningContainer>
         }
