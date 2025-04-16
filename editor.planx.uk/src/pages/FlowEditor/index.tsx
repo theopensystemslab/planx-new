@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import React, { useRef } from "react";
 import { rootFlowPath } from "routes/utils";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import Flow from "./components/Flow";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";

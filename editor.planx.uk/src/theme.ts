@@ -28,6 +28,11 @@ import { getContrastTextColor } from "styleUtils";
 const DEFAULT_PRIMARY_COLOR = "#0010A4";
 const DEFAULT_TONAL_OFFSET = 0.1;
 
+const url = window.location.href;
+
+export const isLivePlatform = url.includes(".uk");
+export const isTestPlatform = !isLivePlatform;
+
 // Type styles
 export const FONT_WEIGHT_SEMI_BOLD = "600";
 export const FONT_WEIGHT_BOLD = "700";
@@ -272,6 +277,7 @@ const getThemeOptions = ({
       MuiContainer: {
         styleOverrides: {
           root: {
+            zIndex: 1,
             "@media (min-width: 500px)": {
               padding: "0 20px",
             },

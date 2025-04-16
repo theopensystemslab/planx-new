@@ -27,6 +27,7 @@ import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
+import { isLivePlatform, isTestPlatform } from "theme";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -62,6 +63,8 @@ export interface EditorUIStore {
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
+  isLive: boolean;
+  isTest: boolean;
 }
 
 export const editorUIStore: StateCreator<
@@ -82,6 +85,9 @@ export const editorUIStore: StateCreator<
     isTestEnvBannerVisible: !window.location.href.includes(".uk"),
 
     hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
+
+    isLive: isLivePlatform,
+    isTest: isTestPlatform,
 
     showTags: false,
 

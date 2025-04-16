@@ -7,6 +7,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import Header from "../../components/Header/Header";
 
@@ -15,6 +16,7 @@ const DashboardWrap = styled(Box)(({ theme }) => ({
   width: "100%",
   display: "flex",
   flexGrow: 1,
+  position: "relative",
 }));
 
 const DashboardContainer = styled(Box)(({ theme }) => ({
@@ -24,6 +26,7 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
   flexDirection: "row",
   width: "100%",
   overflow: "hidden",
+  position: "relative",
   [`& > .${containerClasses.root}, & > div:not(.fixed-height-container) > .${containerClasses.root}`]:
     {
       paddingTop: theme.spacing(3),
@@ -45,6 +48,7 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
       <DashboardWrap>
         <EditorNavMenu />
         <DashboardContainer>
+          <WatermarkBackground variant="dark" opacity={0.05} />
           <DndProvider backend={HTML5Backend}>{children}</DndProvider>
         </DashboardContainer>
       </DashboardWrap>
