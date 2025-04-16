@@ -165,9 +165,16 @@ export const teamStore: StateCreator<
     return await $client.team.updateTheme(teamId, theme);
   },
 
-  updateTeamSettings: async (teamSettings: Partial<TeamSettings>) => {
-    const { teamId, $client } = get();
-    return await $client.team.updateTeamSettings(teamId, teamSettings);
+  updateTeamSettings: async (updatedTeamSettings: Partial<TeamSettings>) => {
+    const { teamId, $client, teamSettings: currentTeamSettings } = get();
+    const isSuccess = await $client.team.updateTeamSettings(
+      teamId,
+      updatedTeamSettings,
+    );
+    if (isSuccess)
+      set({ teamSettings: { ...currentTeamSettings, ...updatedTeamSettings } });
+
+    return isSuccess;
   },
 
   setTeamMembers: async (teamMembers: TeamMember[]) => {
