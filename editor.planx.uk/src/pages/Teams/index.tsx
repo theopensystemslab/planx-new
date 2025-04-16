@@ -5,27 +5,22 @@ import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { Team } from "@opensystemslab/planx-core/types";
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
+import { TeamSummary } from "routes/authenticated";
 import { borderedFocusStyle } from "theme";
+import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { useStore } from "../FlowEditor/lib/store";
 import { AddTeamButton } from "./AddTeamButton";
-
-interface TeamTheme {
-  slug: string;
-  primaryColour: string;
-}
-
 interface Props {
-  teams: Array<Team>;
-  teamTheme: Array<TeamTheme>;
+  teams: Array<TeamSummary>;
 }
 
 const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
+  display: "block",
   "&:focus-within > div": {
     ...borderedFocusStyle,
   },
@@ -33,13 +28,14 @@ const StyledLink = styled(Link)(() => ({
 
 const TeamCard = styled(Card)(({ theme }) => ({
   display: "flex",
-  justifyContent: "flex-start",
+  justifyContent: "space-between",
   alignItems: "center",
   marginBottom: theme.spacing(2),
   color: theme.palette.text.primary,
   outline: `1px solid ${theme.palette.border.light}`,
   outlineOffset: "-1px",
   borderRadius: "1px",
+  paddingRight: theme.spacing(2),
 }));
 
 const TeamColourBand = styled(Box)(({ theme }) => ({
@@ -52,7 +48,7 @@ const TeamColourBand = styled(Box)(({ theme }) => ({
 const Teams: React.FC<Props> = ({ teams }) => {
   const [canUserEditTeam] = useStore((state) => [state.canUserEditTeam]);
 
-  const [searchedTeams, setSearchedTeams] = useState<Team[] | null>(null);
+  const [searchedTeams, setSearchedTeams] = useState<TeamSummary[] | null>(null);
   const [clearSearch, setClearSearch] = useState<boolean>(false);
 
   const viewOnlyTeams = useMemo(
@@ -60,7 +56,7 @@ const Teams: React.FC<Props> = ({ teams }) => {
     [canUserEditTeam, teams],
   );
 
-  const editableTeams: Team[] = teams.filter((team) =>
+  const editableTeams: TeamSummary[] = teams.filter((team) =>
     canUserEditTeam(team.slug),
   );
 
@@ -70,15 +66,18 @@ const Teams: React.FC<Props> = ({ teams }) => {
     }
   }, [clearSearch, searchedTeams, viewOnlyTeams]);
 
-  const renderTeams = (teamsToRender: Array<Team>) =>
+  const renderTeams = (teamsToRender: Array<TeamSummary>) =>
     teamsToRender.map((team) => {
       return (
         <StyledLink href={`/${team.slug}`} key={team.slug} prefetch={false}>
           <TeamCard>
-            <TeamColourBand bgcolor={team.theme.primaryColour} />
-            <Typography p={2} variant="h3">
-              {team.name}
-            </Typography>
+            <Box sx={{ display: "flex" }}>
+              <TeamColourBand bgcolor={team.theme.primaryColour} />
+              <Typography p={2} variant="h3">
+                {team.name}
+              </Typography>
+            </Box>
+            { team.settings.isTrial && <InfoChip label="Trial account"/> }
           </TeamCard>
         </StyledLink>
       );

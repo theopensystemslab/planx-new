@@ -7,6 +7,7 @@ import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCurrentRoute } from "react-navi";
 import Filters from "ui/editor/Filter/Filter";
+import { InfoChip } from "ui/editor/InfoChip";
 import { SortControl } from "ui/editor/SortControl/SortControl";
 import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
@@ -46,8 +47,8 @@ const GetStarted: React.FC = () => (
 );
 
 const Team: React.FC = () => {
-  const [{ id: teamId, slug }, canUserEditTeam, getFlows] = useStore(
-    (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows],
+  const [{ id: teamId, slug }, canUserEditTeam, getFlows, isTrial] = useStore(
+    (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows, state.teamSettings?.isTrial],
   );
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
@@ -132,6 +133,7 @@ const Team: React.FC = () => {
             <Typography variant="h2" component="h1" pr={1}>
               Services
             </Typography>
+            { isTrial && <InfoChip label="Trial account" /> }
             {showAddFlowButton && <AddFlow />}
           </Box>
           {teamHasFlows && (
