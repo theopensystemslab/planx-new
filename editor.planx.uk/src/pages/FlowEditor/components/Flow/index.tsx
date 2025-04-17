@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 import { rootFlowPath } from "routes/utils";
@@ -32,19 +33,32 @@ const Flow = ({ breadcrumbs = [] }: any) => {
 
   return (
     <>
-      <ol id="flow" data-layout={flowLayout} className="decisions">
+      <ol
+        id="flow"
+        data-layout={flowLayout}
+        className={`decisions${breadcrumbs.length ? " nested-decisions" : ""}`}
+      >
         <EndPoint text="start" />
         {showGetStarted && <GetStarted />}
 
-        {breadcrumbs.map((bc: any) => (
-          <Node key={bc.id} {...bc} />
+        {breadcrumbs.map((bc: any, index: number) => (
+          <Node
+            key={bc.id}
+            {...bc}
+            className={
+              index === breadcrumbs.length - 1 ? "active-breadcrumb" : ""
+            }
+          />
         ))}
 
-        {childNodes.map((node) => (
-          <Node key={node.id} {...node} />
-        ))}
+        <Box className="flow-child-nodes">
+          {childNodes.map((node) => (
+            <Node key={node.id} {...node} />
+          ))}
 
-        <Hanger />
+          <Hanger />
+        </Box>
+
         <EndPoint text="end" />
       </ol>
     </>
