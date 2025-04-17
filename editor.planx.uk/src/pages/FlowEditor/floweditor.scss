@@ -40,6 +40,21 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
+@mixin folderStyle($width) {
+  &::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: $width;
+    height: 8px;
+    background-color: #666;
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
+    border-top-left-radius: 2px;
+    z-index: -1;
+  }
+}
+
 // ------------------------------------------------
 
 #editor {
@@ -292,6 +307,20 @@ $fontMonospace: "Source Code Pro", monospace;
   cursor: pointer;
 }
 
+.root-node-link > a {
+  display: block;
+  text-decoration: none;
+  cursor: pointer;
+  padding: $padding;
+  color: $black;
+  background: white;
+  border-radius: 3px;
+  border: 1px solid $optionBorder;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  font-size: 14px;
+}
+
 .option {
   > a {
     border-color: $optionBorder;
@@ -371,7 +400,6 @@ $fontMonospace: "Source Code Pro", monospace;
 .flow-child-nodes {
   width: 100%;
   .nested-decisions & {
-    background: #f9f9f9;
     border: 2px dashed $lockedBorder;
     margin-top: -2px;
     padding: 0 ($padding * 2);
@@ -385,7 +413,7 @@ $fontMonospace: "Source Code Pro", monospace;
     color: white;
     border: none;
     .flow-locked & {
-      background: #555;
+      background: $black;
     }
   }
   &.breadcrumb {
@@ -413,19 +441,13 @@ $fontMonospace: "Source Code Pro", monospace;
     > a {
       background: $black;
       text-align: center;
-      &::before {
-        content: "";
-        position: absolute;
-        top: -5px;
-        left: 0;
-        width: 40px;
-        height: 8px;
-        background-color: #666;
-        clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
-        border-top-left-radius: 2px;
-        z-index: -1;
-      }
+      @include folderStyle(40px);
     }
+  }
+  &.internal-portal {
+    background: $black;
+    text-align: center;
+    @include folderStyle(30px);
   }
   .portalMenu {
     border-left: $nodeBorderWidth solid #aaa;
