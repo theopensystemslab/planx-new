@@ -17,7 +17,7 @@ import { getDisplayDetailsForResult } from "./getDisplayDetailsForResult";
 const SearchResultCardRoot = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
 })<{ portalId?: string }>(({ theme, portalId }) => ({
-  border: `1px solid ${theme.palette.common.black}`,
+  border: `1px solid ${theme.palette.border.input}`,
   background: theme.palette.background.default,
   display: "block",
   padding: 0,
@@ -28,25 +28,35 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
   padding: [theme.spacing(1), theme.spacing(0.5)],
   display: "flex",
   alignItems: "center",
-  backgroundColor: theme.palette.common.black,
+  backgroundColor: theme.palette.border.input,
   color: theme.palette.common.white,
   width: "100%",
-  borderColor: theme.palette.common.black,
+  borderColor: theme.palette.border.input,
   borderWidth: 4,
+  overflow: "visible",
+  position: "relative",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: "-10px",
+    left: "-4px",
+    width: "50px",
+    height: "6px",
+    backgroundColor: "#666",
+    clipPath: "polygon(0 0, 90% 0, 100% 100%, 0% 100%)",
+    borderTopLeftRadius: "2px",
+  },
 }));
 
 const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
   const portalName = useStore((state) => state.flow)[portalId].data?.text;
-  const Icon = ICONS[ComponentType.InternalPortal];
 
   return (
     <HeaderRoot>
-      {Icon && <Icon />}
       <Typography
         variant="body2"
         fontSize={14}
         fontWeight={FONT_WEIGHT_SEMI_BOLD}
-        ml={1}
       >
         {portalName}
       </Typography>

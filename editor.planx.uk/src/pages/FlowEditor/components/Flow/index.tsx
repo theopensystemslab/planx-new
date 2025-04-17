@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
+import { Link } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { useStore } from "../../lib/store";
@@ -31,6 +32,8 @@ const Flow = ({ breadcrumbs = [] }: any) => {
   const isFlowRoot = !portals.length;
   const showGetStarted = isFlowRoot && !childNodes.length;
 
+  const flowName = useStore((state) => state.flowName);
+
   return (
     <>
       <ol
@@ -38,7 +41,16 @@ const Flow = ({ breadcrumbs = [] }: any) => {
         data-layout={flowLayout}
         className={`decisions${breadcrumbs.length ? " nested-decisions" : ""}`}
       >
-        <EndPoint text="start" />
+        {!breadcrumbs.length ? (
+          <EndPoint text="start" />
+        ) : (
+          <li className="root-node-link">
+            <Link href={rootFlowPath(false)} prefetch={false}>
+              {flowName}
+            </Link>
+          </li>
+        )}
+
         {showGetStarted && <GetStarted />}
 
         {breadcrumbs.map((bc: any, index: number) => (
@@ -59,7 +71,7 @@ const Flow = ({ breadcrumbs = [] }: any) => {
           <Hanger />
         </Box>
 
-        <EndPoint text="end" />
+        {!breadcrumbs.length && <EndPoint text="end" />}
       </ol>
     </>
   );
