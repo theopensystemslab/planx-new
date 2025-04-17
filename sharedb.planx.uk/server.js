@@ -93,7 +93,7 @@ async function validateJWT(authToken) {
     return decodedToken;
   }
 
-  throw Error(`Invalid JWT. Please log in again. Error: ${response.body}`)
+  throw Error("Invalid JWT. Please log in again.");
 };
 
 const wss = new Server({
@@ -107,6 +107,7 @@ const wss = new Server({
 
       console.log({ newConnection: decoded });
       info.req.uId = decoded;
+      info.req.authToken = token;
       cb(true);
     } catch (err) {
       console.error({ err });

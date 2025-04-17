@@ -158,11 +158,11 @@ const parseErrorTypeFromHasuraResponse = (message: string) => {
 };
 
 export const handleExpiredJWTErrors = () => {
-  toast.error("Session expired, redirecting to login page...", {
-    toastId: "jwt_expiry_error",
+  toast.error("[GraphQL error]: Session expired, redirecting to login page...", {
+    toastId: "hasura_jwt_expiry_error",
     hideProgressBar: false,
     progress: undefined,
-    autoClose: 2_000,
+    autoClose: 4_000,
     onClose: () => (window.location.href = "/logout"),
   });
 
