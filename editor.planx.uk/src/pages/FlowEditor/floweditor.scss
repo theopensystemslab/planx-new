@@ -368,6 +368,16 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
+.flow-child-nodes {
+  width: 100%;
+  .nested-decisions & {
+    background: #f9f9f9;
+    border: 2px dashed $lockedBorder;
+    margin-top: -2px;
+    padding: 0 ($padding * 2);
+  }
+}
+
 .portal {
   justify-content: center !important;
   > a {
@@ -381,11 +391,13 @@ $fontMonospace: "Source Code Pro", monospace;
   &.breadcrumb {
     background-image: $pixel;
     background-repeat: no-repeat;
+    min-width: 200px;
     [data-layout="top-down"] & {
       background-position: center top;
-      background-size: $lineWidth $padding;
+      background-size: $lineWidth ($padding * 2);
       > a {
-        margin: $padding 0 0;
+        margin: ($padding * 2) 0 0;
+        width: 100%;
       }
     }
     [data-layout="left-right"] & {
@@ -395,9 +407,24 @@ $fontMonospace: "Source Code Pro", monospace;
         margin: 0 0 0 $padding;
       }
     }
+    &.active-breadcrumb {
+      width: 100% !important;
+    }
     > a {
-      background: #666;
+      background: $black;
       text-align: center;
+      &::before {
+        content: "";
+        position: absolute;
+        top: -5px;
+        left: 0;
+        width: 40px;
+        height: 8px;
+        background-color: #666;
+        clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
+        border-top-left-radius: 2px;
+        z-index: -1;
+      }
     }
   }
   .portalMenu {
