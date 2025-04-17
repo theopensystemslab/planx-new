@@ -95,7 +95,11 @@ const ExternalPortal: React.FC<any> = (props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
-        <Box className={classNames("card", "portal", { isDragging })}>
+        <Box
+          className={classNames("card", "portal", "external-portal", {
+            isDragging,
+          })}
+        >
           <Link href={`/${href}`} prefetch={false} ref={drag}>
             <span>{href}</span>
           </Link>
@@ -152,14 +156,17 @@ const InternalPortal: React.FC<any> = (props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
-        <Box className={classNames("card", "portal", { isDragging })}>
+        <Box
+          className={classNames("card", "portal", "internal-portal", {
+            isDragging,
+          })}
+        >
           <Link
             href={href}
             prefetch={false}
             ref={drag}
             onContextMenu={handleContext}
           >
-            {Icon && <Icon />}
             <span>{props.data.text}</span>
           </Link>
           <Link href={editHref} prefetch={false} className="portalMenu">
