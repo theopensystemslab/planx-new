@@ -282,19 +282,24 @@ const Breadcrumbs: React.FC = () => {
         )}
       </BreadcrumbsRoot>
       {route.data.flow && (
-        <Button
-          variant="link"
-          href={`/${team.slug}/${route.data.flow}/service`}
-          title="Update service status"
-          sx={(theme) => ({
-            color: theme.palette.text.primary,
-            textDecoration: "none",
-          })}
-        >
-          <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
-            {flowStatus}
-          </FlowTag>
-        </Button>
+        <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
+          {useStore.getState().canUserEditTeam(team.slug) ? (
+            <Button
+              variant="link"
+              href={`/${team.slug}/${route.data.flow}/service`}
+              title="Update service status"
+              sx={{ textDecoration: "none" }}
+            >
+              <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
+                {flowStatus}
+              </FlowTag>
+            </Button>
+          ) : (
+            <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
+              {flowStatus}
+            </FlowTag>
+          )}
+        </Box>
       )}
     </>
   );
