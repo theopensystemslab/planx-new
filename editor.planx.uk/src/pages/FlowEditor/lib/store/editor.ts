@@ -230,8 +230,10 @@ export const editorStore: StateCreator<
     )(get().flow);
     send(ops);
 
-    const isCustomisableNode = data?.tags?.includes("customisation");
-    if (get().isTemplatedFrom && isCustomisableNode) {
+    // TODO the only nodes you'll be allowed to fully 'add', rather than 'update',
+    //    in a templated flow will be within internal portals - this check needs to account for that
+    const parentIsCustomisableInternalPortalNode = false;
+    if (get().isTemplatedFrom && parentIsCustomisableInternalPortalNode) {
       console.log("TODO add templated_flow_edits");
     }
   },
@@ -608,8 +610,13 @@ export const editorStore: StateCreator<
     send(ops);
 
     const isCustomisableNode = data?.tags?.includes("customisation");
-    if (get().isTemplatedFrom && isCustomisableNode) {
-      console.log("TODO update templated_flow_edits");
+    if (ops.length > 0 && get().isTemplatedFrom && isCustomisableNode) {
+      const updatedNodeData: Record<string, any> = {};
+      ops.forEach((op) => {
+        const updatedKey = op.p[2];
+        updatedNodeData[updatedKey] = data[updatedKey];
+      });
+      console.log("here", id, updatedNodeData);
     }
   },
 
