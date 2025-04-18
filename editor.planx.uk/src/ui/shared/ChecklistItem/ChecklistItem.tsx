@@ -25,6 +25,7 @@ const Label = styled(Typography)(({ theme }) => ({
 interface Props {
   id?: string;
   label: string;
+  description?: string;
   checked: boolean;
   onChange: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
@@ -34,6 +35,7 @@ interface Props {
 
 export default function ChecklistItem({
   label,
+  description,
   onChange,
   checked,
   id,
@@ -51,9 +53,32 @@ export default function ChecklistItem({
         variant={variant}
         disabled={disabled}
       />
-      <Label variant="body1" className="label" component={"label"} htmlFor={id}>
-        {label}
-      </Label>
+      {description ? (
+        <Box>
+          <Label
+            variant="body1"
+            color="text.primary"
+            className="label"
+            component={"label"}
+            htmlFor={id}
+            pb={0}
+          >
+            {label}
+          </Label>
+          <Typography variant="body2" color="text.secondary" px={1.5}>
+            {description}
+          </Typography>
+        </Box>
+      ) : (
+        <Label
+          variant="body1"
+          className="label"
+          component={"label"}
+          htmlFor={id}
+        >
+          {label}
+        </Label>
+      )}
     </Root>
   );
 }
