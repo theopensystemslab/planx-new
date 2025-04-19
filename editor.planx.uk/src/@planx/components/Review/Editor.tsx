@@ -49,6 +49,17 @@ function Component(props: Props) {
             />
           </InputRow>
         </ModalSectionContent>
+        <ModalSectionContent subtitle="Disclaimer">
+          <InputRow>
+            <RichTextInput
+              name="disclaimer"
+              placeholder="Disclaimer"
+              value={formik.values.disclaimer}
+              onChange={formik.handleChange}
+              disabled={props.disabled}
+            />
+          </InputRow>
+        </ModalSectionContent>
       </ModalSection>
       <ModalFooter
         formik={formik}
