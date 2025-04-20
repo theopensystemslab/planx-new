@@ -17,6 +17,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import {
   Field,
@@ -331,19 +332,13 @@ function SummaryList(props: SummaryListProps) {
         confirmText="Yes"
         cancelText="No"
       >
-        <Typography>
-          Changing this answer means you will need to confirm any other answers
-          after it. This is because:
-          <ul>
-            <li>
-              a different answer might mean the service asks new questions
-            </li>
-            <li>
-              your planning officer needs the right information to assess your
-              application
-            </li>
-          </ul>
-        </Typography>
+        <ReactMarkdownOrHtml
+          // sketchy way to find the Review node in the flow to get the disclaimer, breaks if more than one review node in flow
+          source={
+            Object.values(props.flow).find((node) => node.type === TYPES.Review)
+              ?.data?.disclaimer
+          }
+        ></ReactMarkdownOrHtml>
       </ConfirmationDialog>
     </>
   );
