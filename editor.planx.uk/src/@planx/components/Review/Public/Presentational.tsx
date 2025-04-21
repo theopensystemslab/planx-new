@@ -1,7 +1,7 @@
 import { NodeId } from "@opensystemslab/planx-core/types";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import SummaryListsBySections from "@planx/components/shared/Preview/SummaryList";
+import SummaryLists from "@planx/components/shared/Preview/SummaryList";
 import { PrintButton } from "components/PrintButton";
 import { Store } from "pages/FlowEditor/lib/store";
 import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
@@ -32,7 +32,7 @@ function Component(props: Props) {
   return (
     <Card isValid handleSubmit={props.handleSubmit}>
       <CardHeader title={props.title} description={props.description} />
-      <SummaryListsBySections
+      <SummaryLists
         breadcrumbs={sortedBreadcrumbs}
         flow={props.flow}
         passport={props.passport}
