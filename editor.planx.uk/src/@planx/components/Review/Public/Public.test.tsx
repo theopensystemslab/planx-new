@@ -42,6 +42,7 @@ describe("Simple flow", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={{}}
         breadcrumbs={{}}
         passport={{}}
@@ -67,6 +68,7 @@ describe("Simple flow", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
@@ -89,6 +91,7 @@ describe("Simple flow", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
@@ -108,6 +111,7 @@ describe("Simple flow", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
@@ -143,6 +147,7 @@ describe("Simple flow", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
@@ -178,6 +183,7 @@ describe("Simple flow", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={mockedFlow}
         breadcrumbs={mockedBreadcrumbs}
         passport={mockedPassport}
@@ -218,6 +224,7 @@ describe("File uploads", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={fileUploadFlow}
         breadcrumbs={fileUploadBreadcrumbs}
         passport={fileUploadPassport}
@@ -236,6 +243,7 @@ describe("File uploads", () => {
       <Review
         title="Review"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={drawBoundaryFlow}
         breadcrumbs={uploadedPlansBreadcrumb}
         passport={uploadedPlansPassport}
@@ -270,6 +278,7 @@ describe("Flow with sections", () => {
       <Review
         title="Review with sections"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={flowWithSections}
         breadcrumbs={breadcrumbsWithSections}
         passport={passportWithSections}
@@ -297,6 +306,7 @@ describe("Flow with sections", () => {
       <Review
         title="Review with sections"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={flowWithSections}
         breadcrumbs={breadcrumbsWithSections}
         passport={passportWithSections}
@@ -328,6 +338,7 @@ describe("Flow with empty sections", () => {
       <Review
         title="Review with empty sections"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={flowWithEmptySections}
         breadcrumbs={breadcrumbsWithEmptySections}
         passport={passportWithEmptySections}
@@ -361,6 +372,7 @@ describe("Flow with empty sections", () => {
       <Review
         title="Review with empty sections"
         description="Check your answers before submitting"
+        disclaimer="<p>Changing this answer means you will need to confirm any other answers after it. This is because: </p><ul><li>a different answer might mean the service asks new questions</li><li>your planning officer needs the right information to assess your application</li></ul></p>"
         flow={flowWithEmptySections}
         breadcrumbs={breadcrumbsWithEmptySections}
         passport={passportWithEmptySections}
