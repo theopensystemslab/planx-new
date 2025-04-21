@@ -142,7 +142,7 @@ const presentationalComponents: {
 type BreadcrumbEntry = [NodeId, Store.Breadcrumbs];
 
 interface SummaryListBaseProps {
-  disclaimer: string;
+  disclaimer?: string;
   flow: Store.Flow;
   passport: Store.Passport;
   changeAnswer: (id: NodeId) => void;
