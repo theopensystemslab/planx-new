@@ -142,6 +142,7 @@ const presentationalComponents: {
 type BreadcrumbEntry = [NodeId, Store.Breadcrumbs];
 
 interface SummaryListBaseProps {
+  disclaimer: string;
   flow: Store.Flow;
   passport: Store.Passport;
   changeAnswer: (id: NodeId) => void;
@@ -240,6 +241,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   passport={props.passport}
                   changeAnswer={props.changeAnswer}
                   showChangeButton={props.showChangeButton}
+                  disclaimer={props.disclaimer}
                 />
               </React.Fragment>
             ),
@@ -257,6 +259,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
         passport={props.passport}
         changeAnswer={props.changeAnswer}
         showChangeButton={props.showChangeButton}
+        disclaimer={props.disclaimer}
       />
     );
   }
@@ -332,13 +335,7 @@ function SummaryList(props: SummaryListProps) {
         confirmText="Yes"
         cancelText="No"
       >
-        <ReactMarkdownOrHtml
-          // sketchy way to find the Review node in the flow to get the disclaimer, breaks if more than one review node in flow
-          source={
-            Object.values(props.flow).find((node) => node.type === TYPES.Review)
-              ?.data?.disclaimer
-          }
-        ></ReactMarkdownOrHtml>
+        <ReactMarkdownOrHtml source={props.disclaimer}></ReactMarkdownOrHtml>
       </ConfirmationDialog>
     </>
   );

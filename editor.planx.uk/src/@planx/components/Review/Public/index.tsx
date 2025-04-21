@@ -20,7 +20,8 @@ function Component(props: PublicProps<Review>) {
   return (
     <Presentational
       title={props.title}
-      description={props.description || ""}
+      description={props.description}
+      disclaimer={props.disclaimer}
       breadcrumbs={breadcrumbs}
       flow={flow}
       passport={passport}
