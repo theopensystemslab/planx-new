@@ -13,6 +13,7 @@ export default Component;
 interface Props {
   title: string;
   description: string;
+  disclaimer: string;
   breadcrumbs: Store.Breadcrumbs;
   flow: Store.Flow;
   passport: Store.Passport;
@@ -38,6 +39,7 @@ function Component(props: Props) {
         changeAnswer={props.changeAnswer}
         showChangeButton={props.showChangeButton}
         sectionComponent="h2"
+        disclaimer={props.disclaimer}
       />
       <PrintButton />
     </Card>
