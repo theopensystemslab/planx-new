@@ -10,7 +10,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
   id: string;
-  status: FlowStatus;
+  flowStatus: FlowStatus;
   flowAnalyticsLink: string;
   templatedFrom: string;
   isTemplate: boolean;
@@ -69,7 +69,7 @@ export const getFlowEditorData = async (
 
   const flowEditorData: FlowEditorData = {
     id: flow.id,
-    status: flow.status,
+    flowStatus: flow.status,
     flowAnalyticsLink: flow.flowAnalyticsLink,
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
@@ -86,7 +86,7 @@ export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
   const {
     id,
-    status,
+    flowStatus,
     flowAnalyticsLink,
     isFlowPublished,
     isTemplate,
@@ -95,7 +95,7 @@ export const flowEditorView = async (req: NaviRequest) => {
 
   useStore.setState({
     id,
-    status,
+    flowStatus,
     flowAnalyticsLink,
     isFlowPublished,
     isTemplate,

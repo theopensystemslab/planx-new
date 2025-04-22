@@ -40,7 +40,7 @@ import {
 } from "theme";
 import { ApplicationPath } from "types";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
-import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
+import { FlowTagType } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
@@ -233,9 +233,7 @@ const Breadcrumbs: React.FC = () => {
     state.previewEnvironment === "standalone",
   ]);
 
-  const flowStatus = useStore((state) => state.status) as
-    | StatusVariant
-    | undefined;
+  const flowStatus = useStore((state) => state.flowStatus);
 
   return (
     <>
