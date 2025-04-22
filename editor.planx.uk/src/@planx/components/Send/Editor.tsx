@@ -1,6 +1,7 @@
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -48,6 +49,12 @@ const SendComponent: React.FC<Props> = (props) => {
     }),
   });
 
+  const [teamSlug, flowSlug, submissionEmail] = useStore((state) => [
+    state.teamSlug,
+    state.flowSlug,
+    state.teamSettings.submissionEmail,
+  ]);
+
   const options: {
     value: SendIntegration;
     label: string;
@@ -59,22 +66,18 @@ const SendComponent: React.FC<Props> = (props) => {
       label: `BOPS ${
         import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging"
       }`,
-      // TODO add BOPS to state.teamIntegrations type and disable accordingly
     },
     {
       value: "email",
-      label: `Email to ${useStore(
-        (state) => state.teamSettings.submissionEmail || "planning office",
-      )}`,
+      label: `Email to ${submissionEmail || "planning office"}`,
       description:
-        "Configure one submission email per account under Team Settings. Please setup redirect rules in your inbox if different services require different emails.",
+        "Each team can set one email address for submissions in Team Settings. You can set up redirect or filtering rules in your inbox if you require submissions to go to different email addresses for different services.",
     },
     {
       value: "s3",
       label: "Microsoft Sharepoint",
       description:
-        "Receive submissions direct in your internal files system using a Power Automate workflow",
-      // TODO add Webhook URL to state.teamIntegrations type and disable accordingly
+        "Submissions will be sent to your MS SharePoint using a Power Automate workflow.",
     },
     {
       value: "uniform",
@@ -82,11 +85,8 @@ const SendComponent: React.FC<Props> = (props) => {
         import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging"
       }`,
       description:
-        "Warning: Legacy integration with very limited support! Only suitable for use with LDC-E and LDC-P application types for select councils.",
-      disabled: useStore(
-        (state) =>
-          !["buckinghamshire", "lambeth", "southwark"].includes(state.teamSlug),
-      ),
+        "This is a legacy integration with limited support. It is only available for specific councils and suitable for use with Lawful Development Certificate applications (existing and proposed).",
+      disabled: !["buckinghamshire", "lambeth", "southwark"].includes(teamSlug),
     },
   ];
 
@@ -149,9 +149,16 @@ const SendComponent: React.FC<Props> = (props) => {
           <WarningContainer>
             <FactCheckIcon />
             <Typography variant="body2" ml={2}>
-              View submissions activity for this service directly in the Plan✕
-              editor from the left menu. Successful submissions received less
-              than 28 days ago will be available to download by team editors.
+              Records of submissions can be viewed in the{" "}
+              <Link
+                href={`/${teamSlug}/${flowSlug}/submissions`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Submissions
+              </Link>{" "}
+              page in the left-hand menu. Editors can download successful
+              submissions within 28 days from receipt.
             </Typography>
           </WarningContainer>
         </ModalSectionContent>
