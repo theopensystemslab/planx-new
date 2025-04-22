@@ -21,8 +21,8 @@ dependencies:
     specifier: ^3.701.0
     version: 3.701.0
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#002bd48
-    version: github.com/theopensystemslab/planx-core/002bd48(@types/react@19.1.2)
+    specifier: git+https://github.com/theopensystemslab/planx-core#4456cab
+    version: github.com/theopensystemslab/planx-core/4456cab(@types/react@19.1.2)
   '@types/isomorphic-fetch':
     specifier: ^0.0.36
     version: 0.0.36
@@ -4021,8 +4021,8 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@9.4.0:
-    resolution: {integrity: sha512-/JhCGPXiJsIhpzbhmyn9aZPKXW7L2Ffy6xELUL5YhIN9nlk7LW00ydb+eJfwYUbIgz8SGc/HMVLoZD8iqTtj9Q==}
+  /docx@9.4.1:
+    resolution: {integrity: sha512-N92hA8ZZ7DRlXG93gZa702snV316IFGNyp+TXD6KSJ7Wokj5NlqmpqgtOZ7/jXqkdSf03Qh35QzMfVPNWKqv3A==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 22.14.1
@@ -7526,9 +7526,9 @@ packages:
     resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/002bd48(@types/react@19.1.2):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/002bd48}
-    id: github.com/theopensystemslab/planx-core/002bd48
+  github.com/theopensystemslab/planx-core/4456cab(@types/react@19.1.2):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4456cab}
+    id: github.com/theopensystemslab/planx-core/4456cab
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -7542,7 +7542,7 @@ packages:
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 9.4.0
+      docx: 9.4.1
       eslint: 8.57.1
       fast-xml-parser: 5.2.0
       graphql: 16.10.0
