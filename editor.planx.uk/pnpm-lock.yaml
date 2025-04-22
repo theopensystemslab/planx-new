@@ -51,8 +51,8 @@ dependencies:
     specifier: 1.0.0-alpha.5
     version: 1.0.0-alpha.5
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#002bd48
-    version: github.com/theopensystemslab/planx-core/002bd48(@types/react@18.2.45)
+    specifier: git+https://github.com/theopensystemslab/planx-core#4456cab
+    version: github.com/theopensystemslab/planx-core/4456cab(@types/react@18.2.45)
   '@tiptap/core':
     specifier: ^2.4.0
     version: 2.4.0(@tiptap/pm@2.0.3)
@@ -7775,8 +7775,8 @@ packages:
     dependencies:
       esutils: 2.0.3
 
-  /docx@9.3.0:
-    resolution: {integrity: sha512-IQwbSLBEMKNJmP9CDqSu3vJDhJps6tv/DlxsxuvfTclapd0JPCz1IFJTU//WdTjUenPMFaUD2Kg1nkQb/BWPIg==}
+  /docx@9.4.1:
+    resolution: {integrity: sha512-N92hA8ZZ7DRlXG93gZa702snV316IFGNyp+TXD6KSJ7Wokj5NlqmpqgtOZ7/jXqkdSf03Qh35QzMfVPNWKqv3A==}
     engines: {node: '>=10'}
     dependencies:
       '@types/node': 22.14.1
@@ -13755,8 +13755,8 @@ packages:
     engines: {node: '>=16'}
     dev: false
 
-  /type-fest@4.39.1:
-    resolution: {integrity: sha512-uW9qzd66uyHYxwyVBYiwS4Oi0qZyUqwjU+Oevr6ZogYiXt99EOYtwvzMSLw1c3lYo2HzJsep/NB23iEVEgjG/w==}
+  /type-fest@4.40.0:
+    resolution: {integrity: sha512-ABHZ2/tS2JkvH1PEjxFDTUWC8dB5OsIGZP4IFLhR293GqT5Y5qB1WwL2kMPYhQW9DVgVD8Hd7I8gjwPIf5GFkw==}
     engines: {node: '>=16'}
     dev: false
 
@@ -14699,8 +14699,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  /zod@3.24.2:
-    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+  /zod@3.24.3:
+    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
     dev: false
 
   /zstddec@0.1.0:
@@ -14728,9 +14728,9 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/theopensystemslab/planx-core/002bd48(@types/react@18.2.45):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/002bd48}
-    id: github.com/theopensystemslab/planx-core/002bd48
+  github.com/theopensystemslab/planx-core/4456cab(@types/react@18.2.45):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4456cab}
+    id: github.com/theopensystemslab/planx-core/4456cab
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -14744,7 +14744,7 @@ packages:
       ajv-formats: 2.1.1(ajv@8.17.1)
       cheerio: 1.0.0
       copyfiles: 2.4.1
-      docx: 9.3.0
+      docx: 9.4.1
       eslint: 8.57.1
       fast-xml-parser: 5.2.0
       graphql: 16.10.0
@@ -14755,9 +14755,9 @@ packages:
       prettier: 3.5.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.39.1
+      type-fest: 4.40.0
       uuid: 11.1.0
-      zod: 3.24.2
+      zod: 3.24.3
     transitivePeerDependencies:
       - '@types/react'
       - encoding
