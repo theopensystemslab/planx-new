@@ -1,5 +1,5 @@
 import { SendIntegration } from "@opensystemslab/planx-core/types";
-import { screen, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import axios from "axios";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -32,17 +32,19 @@ const tick = () =>
 vi.mock("axios");
 const mockAxios = vi.mocked(axios, true);
 
-mockAxios.post.mockResolvedValue({
-  data: hasuraEventsResponseMock,
-  status: 200,
-  statusText: "OK",
-});
-
 const originalLocation = window.location.pathname;
 
 beforeAll(() => (initialState = getState()));
 
-beforeEach(() => act(() => setState({ teamSlug: "testTeam" })));
+beforeEach(() => {
+  act(() => setState({ teamSlug: "testTeam" }));
+  mockAxios.post.mockReset();
+  mockAxios.post.mockResolvedValue({
+    data: hasuraEventsResponseMock,
+    status: 200,
+    statusText: "OK",
+  });
+});
 
 afterEach(() => {
   vi.clearAllMocks();
