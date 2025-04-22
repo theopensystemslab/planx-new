@@ -139,7 +139,7 @@
     "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.58.0",
-    "@vitest/eslint-plugin": "^1.1.4",
+    "@vitest/eslint-plugin": "^1.1.43",
     "autoprefixer": "^10.4.16",
     "css-loader": "^6.10.0",
     "esbuild": "^0.21.3",
@@ -167,7 +167,7 @@
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^5.6.2",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.1.9",
+    "vitest": "^3.1.2",
     "vitest-axe": "1.0.0-pre.3"
   },
   "packageManager": "pnpm@8.6.6",
