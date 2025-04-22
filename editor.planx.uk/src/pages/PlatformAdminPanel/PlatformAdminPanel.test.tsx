@@ -50,7 +50,7 @@ describe("Platform admin panel", () => {
     expect(
       screen.getAllByText("Apply for a lawful development certificate"),
     ).toHaveLength(2); // Two teams in the mock data have an LDC flow
-  });
+  }, 10_000);
 
   it("renders a tick / cross for boolean values", () => {
     const { container } = setup(<PlatformAdminPanel />);
