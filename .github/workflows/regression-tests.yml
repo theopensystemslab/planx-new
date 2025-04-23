@@ -1,4 +1,7 @@
 name: Regression Tests
+
+permissions: read-all
+
 on:
   workflow_dispatch:
   schedule:

@@ -1,4 +1,7 @@
 name: Pizza Teardown (Manual)
+
+permissions: read-all
+
 on:
   workflow_dispatch:
     inputs:

@@ -1,5 +1,7 @@
 name: Nightly staging database sync
 
+permissions: read-all
+
 on:
   schedule:
     # Runs nightly at 00:00 (https://crontab.guru/#0_0_*_*_*)

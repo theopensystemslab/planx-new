@@ -1,4 +1,7 @@
 name: Pulumi (Deploy Production)
+
+permissions: read-all
+
 on:
   push:
     branches:

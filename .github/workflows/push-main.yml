@@ -1,4 +1,7 @@
 name: Pulumi (Deploy Staging)
+
+permissions: read-all
+
 on:
   push:
     branches:

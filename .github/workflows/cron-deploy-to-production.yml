@@ -1,5 +1,7 @@
 name: "Automatic production deployment"
 
+permissions: read-all
+
 on:
   # TODO: Enable CRON if desired
   # schedule:
