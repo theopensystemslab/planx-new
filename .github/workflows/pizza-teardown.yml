@@ -1,6 +1,7 @@
 name: Pizza Teardown
 
-permissions: read-all
+permissions:
+  pull-requests: write
 
 on:
   pull_request:
