@@ -1,7 +1,8 @@
 import FactCheckIcon from "@mui/icons-material/FactCheck";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+// eslint-disable-next-line no-restricted-imports
+import { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -13,10 +14,10 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
-import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 import { array, object } from "yup";
 
 import { ICONS } from "../shared/icons";
@@ -55,41 +56,6 @@ const SendComponent: React.FC<Props> = (props) => {
     state.teamSettings.submissionEmail,
   ]);
 
-  const options: {
-    value: SendIntegration;
-    label: string;
-    description?: string;
-    disabled?: boolean;
-  }[] = [
-    {
-      value: "bops",
-      label: `BOPS ${
-        import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging"
-      }`,
-    },
-    {
-      value: "email",
-      label: `Email to ${submissionEmail || "planning office"}`,
-      description:
-        "Each team can set one email address for submissions in Team Settings. You can set up redirect or filtering rules in your inbox if you require submissions to go to different email addresses for different services.",
-    },
-    {
-      value: "s3",
-      label: "Microsoft Sharepoint",
-      description:
-        "Submissions will be sent to your MS SharePoint using a Power Automate workflow.",
-    },
-    {
-      value: "uniform",
-      label: `Uniform ${
-        import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging"
-      }`,
-      description:
-        "This is a legacy integration with limited support. It is only available for specific councils and suitable for use with Lawful Development Certificate applications (existing and proposed).",
-      disabled: !["buckinghamshire", "lambeth", "southwark"].includes(teamSlug),
-    },
-  ];
-
   const changeCheckbox =
     (value: SendIntegration) =>
     (_checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
@@ -103,13 +69,7 @@ const SendComponent: React.FC<Props> = (props) => {
         newCheckedValues = [...formik.values.destinations, value];
       }
 
-      formik.setFieldValue(
-        "destinations",
-        newCheckedValues.sort((a, b) => {
-          const originalValues = options.map((cb) => cb.value);
-          return originalValues.indexOf(a) - originalValues.indexOf(b);
-        }),
-      );
+      formik.setFieldValue("destinations", newCheckedValues.sort());
     };
 
   return (
@@ -126,26 +86,116 @@ const SendComponent: React.FC<Props> = (props) => {
               disabled={props.disabled}
             />
           </InputRow>
-          <Box mt={2}>
-            <ErrorWrapper error={getIn(formik.errors, "destinations")}>
-              <Grid container spacing={0}>
-                {options.map((option) => (
-                  <Grid item xs={12} key={option.value}>
-                    <ChecklistItem
-                      id={option.value}
-                      label={option.label}
-                      description={option.description}
-                      onChange={changeCheckbox(option.value)}
-                      checked={formik.values.destinations.includes(
-                        option.value,
-                      )}
-                      disabled={option.disabled || props.disabled}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            </ErrorWrapper>
-          </Box>
+        </ModalSectionContent>
+      </ModalSection>
+      <ModalSection>
+        <ErrorWrapper error={getIn(formik.errors, "destinations")}>
+          <>
+            <ModalSectionContent title={"Back Office Planning System"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("bops")}
+                  onChange={
+                    changeCheckbox(
+                      "bops",
+                    ) as unknown as MuiSwitchProps["onChange"]
+                  }
+                  label={`Send to BOPS ${
+                    import.meta.env.VITE_APP_ENV === "production"
+                      ? "production"
+                      : "staging"
+                  }`}
+                  disabled={props.disabled}
+                />
+              </InputRow>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"Email"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("email")}
+                  onChange={
+                    changeCheckbox(
+                      "email",
+                    ) as unknown as MuiSwitchProps["onChange"]
+                  }
+                  label={`Send to ${submissionEmail || "your inbox"}`}
+                  disabled={props.disabled}
+                />
+              </InputRow>
+              <Typography variant="body2">
+                Each team can set one submission email address in{" "}
+                <Link
+                  href={`/${teamSlug}/general-settings`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Team Settings
+                </Link>
+                . You can set up redirect or filtering rules in your inbox if
+                you require submissions to go to different email addresses for
+                different services.
+              </Typography>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"Microsoft SharePoint"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("s3")}
+                  onChange={
+                    changeCheckbox(
+                      "s3",
+                    ) as unknown as MuiSwitchProps["onChange"]
+                  }
+                  label="Send to Microsoft SharePoint"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+              <Typography variant="body2">
+                Receive submissions in MS SharePoint via a Power Automate
+                workflow. Learn more about this option on{" "}
+                <Link
+                  href="https://opensystemslab.notion.site/How-you-can-receive-process-PlanX-applications-using-Microsoft-365-tools-like-Power-Automate-13197a4bbd24421eaf7b5021ddd07741?pvs=74"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Notion
+                </Link>
+                .
+              </Typography>
+            </ModalSectionContent>
+            <Divider />
+            <ModalSectionContent title={"Uniform"}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.destinations.includes("uniform")}
+                  onChange={
+                    changeCheckbox(
+                      "uniform",
+                    ) as unknown as MuiSwitchProps["onChange"]
+                  }
+                  label={`Send to Uniform ${
+                    import.meta.env.VITE_APP_ENV === "production"
+                      ? "production"
+                      : "staging"
+                  }`}
+                  disabled={
+                    props.disabled ||
+                    !["buckinghamshire", "lambeth", "southwark"].includes(
+                      teamSlug,
+                    )
+                  }
+                />
+              </InputRow>
+              <Typography variant="body2">
+                This is a legacy integration with limited support. It is only
+                available for specific councils and suitable for use with Lawful
+                Development Certificate applications (existing and proposed).
+              </Typography>
+            </ModalSectionContent>
+          </>
+        </ErrorWrapper>
+        <ModalSectionContent>
           <WarningContainer>
             <FactCheckIcon />
             <Typography variant="body2" ml={2}>
@@ -157,7 +207,7 @@ const SendComponent: React.FC<Props> = (props) => {
               >
                 Submissions
               </Link>{" "}
-              page in the left-hand menu. Editors can download successful
+              log in the left-hand menu. Editors can download successful
               submissions within 28 days from receipt.
             </Typography>
           </WarningContainer>
