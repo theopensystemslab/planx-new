@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@types/node": "22.10.5",
+    "@types/node": "22.14.1",
     "@types/tldjs": "^2.3.1"
   },
   "dependencies": {

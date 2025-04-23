@@ -6,14 +6,14 @@
   "type": "module",
   "exports": "./dist/index.js",
   "engines": {
-    "node": ">=22.10",
+    "node": ">=22.14",
     "pnpm": "8.6.6"
   },
   "dependencies": {
     "@airbrake/node": "^2.1.8",
     "@aws-sdk/client-s3": "^3.696.0",
     "@aws-sdk/s3-request-presigner": "^3.701.0",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#002bd48",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#4456cab",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "axios": "^1.8.3",
@@ -35,7 +35,7 @@
     "graphql-request": "^4.3.0",
     "he": "^1.2.0",
     "helmet": "^7.1.0",
-    "http-proxy-middleware": "^2.0.7",
+    "http-proxy-middleware": "^2.0.9",
     "husky": "^8.0.3",
     "isomorphic-fetch": "^3.0.0",
     "jsdom": "^24.1.0",
@@ -93,7 +93,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/lodash": "^4.17.0",
     "@types/multer": "^1.4.11",
-    "@types/node": "22.10.5",
+    "@types/node": "22.14.1",
     "@types/passport": "^1.0.16",
     "@types/passport-google-oauth20": "^2.0.14",
     "@types/supertest": "^6.0.2",
@@ -102,9 +102,9 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@vitest/coverage-istanbul": "^3.0.7",
-    "@vitest/eslint-plugin": "^1.1.36",
-    "@vitest/ui": "^3.0.7",
+    "@vitest/coverage-istanbul": "^3.1.2",
+    "@vitest/eslint-plugin": "^1.1.43",
+    "@vitest/ui": "^3.1.2",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
@@ -118,7 +118,8 @@
     "tsx": "^4.19.3",
     "typescript": "^5.5.2",
     "uuid": "^10.0.0",
-    "vitest": "^3.0.7"
+    "vite": "^6.3.2",
+    "vitest": "^3.1.2"
   },
   "pnpm": {
     "peerDependencyRules": {

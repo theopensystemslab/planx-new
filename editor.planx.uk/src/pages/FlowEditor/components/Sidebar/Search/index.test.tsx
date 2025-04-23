@@ -21,12 +21,9 @@ import { VirtuosoWrapper } from "./testUtils";
 
 const { setState, getState } = useStore;
 
-let initialState: FullStore;
-
-beforeAll(() => (initialState = getState()));
-
-beforeEach(() => setState({ flow }));
-afterEach(() => act(() => setState(initialState)));
+beforeEach(() => {
+  setState({ flow, orderedFlow: undefined });
+});
 
 vi.mock("@opensystemslab/planx-core", async (originalModule) => {
   const actualModule = await originalModule<typeof planxCore>();

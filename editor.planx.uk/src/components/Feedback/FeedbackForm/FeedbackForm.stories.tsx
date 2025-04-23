@@ -18,7 +18,7 @@ export const EmptyForm: Story = {
       { id: "userContext", name: "userContext", label: "What were you doing?" },
       { id: "userComment", name: "userComment", label: "What went wrong?" },
     ],
-    handleSubmit: async (values) => {
+    handleSubmit: async (values: unknown) => {
       console.log(values);
     },
   },

@@ -61,6 +61,37 @@ export const Grouped = {
   },
 } satisfies Story;
 
+export const WithDescriptions = {
+  args: {
+    text: "List the changes involved in the project",
+    description: "Select only as many as you need to describe the project.",
+    howMeasured:
+      "The term 'changes' includes both physical works and changes in the use of the property, if appropriate.",
+    options: [
+      { id: "a", data: { val: "a", text: "Repair windows or doors" } },
+      {
+        id: "b",
+        data: {
+          val: "b",
+          text: "Changes to trees or hedges",
+          description:
+            "This includes trimming, fully removing, and planting new trees or hedges.",
+        },
+      },
+      {
+        id: "c",
+        data: {
+          val: "c",
+          text: "Install a swimming pool",
+          description:
+            "This option alone does not include any outbuildings, fences, or landscaping.",
+        },
+      },
+    ],
+    allRequired: false,
+  },
+} satisfies Story;
+
 export const WithImages = {
   args: {
     text: "What do you want to do to the roof?",
@@ -93,6 +124,25 @@ export const WithImages = {
     ],
   },
 };
+
+export const ExclusiveOr = {
+  args: {
+    text: "List the changes involved in the project",
+    description: "Select only as many as you need to describe the project.",
+    howMeasured:
+      "The term 'changes' includes both physical works and changes in the use of the property, if appropriate.",
+    options: [
+      { id: "a", data: { val: "a", text: "Repair windows or doors" } },
+      { id: "b", data: { val: "b", text: "Changes to trees or hedges" } },
+      { id: "c", data: { val: "c", text: "Install a swimming pool" } },
+      {
+        id: "none",
+        data: { val: "none", text: "None of the above", exclusive: true },
+      },
+    ],
+    allRequired: false,
+  },
+} satisfies Story;
 
 export const AllRequired = {
   args: {

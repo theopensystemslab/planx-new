@@ -61,11 +61,17 @@ export default function ChecklistItem({
             className="label"
             component={"label"}
             htmlFor={id}
+            aria-describedby={`checkbox-description-${id}`}
             pb={0}
           >
             {label}
           </Label>
-          <Typography variant="body2" color="text.secondary" px={1.5}>
+          <Typography
+            id={`checkbox-description-${id}`}
+            variant="body2"
+            color="text.secondary"
+            px={1.5}
+          >
             {description}
           </Typography>
         </Box>

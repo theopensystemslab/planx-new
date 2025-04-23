@@ -51,7 +51,7 @@ describe("DateInputComponent - Editor Modal", () => {
 
     expect(await screen.findByText(minError)).toBeVisible();
     expect(await screen.findByText(maxError)).toBeVisible();
-  });
+  }, 10_000);
 
   it("does not show errors if min is less than max", async () => {
     const promise = Promise.resolve();

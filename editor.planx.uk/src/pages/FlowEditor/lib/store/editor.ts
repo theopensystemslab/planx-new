@@ -31,7 +31,7 @@ import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { FlowLayout } from "../../components/Flow";
-import { connectToDB, getConnection } from "./../sharedb";
+import { connectToDB, getFlowConnection } from "./../sharedb";
 import { type Store } from ".";
 import type { SharedStore } from "./shared";
 import { UserStore } from "./user";
@@ -274,7 +274,7 @@ export const editorStore: StateCreator<
 
     console.log("connecting to", id, get().id);
 
-    doc = getConnection(id);
+    doc = getFlowConnection(id);
     (window as any)["doc"] = doc;
 
     await connectToDB(doc);
