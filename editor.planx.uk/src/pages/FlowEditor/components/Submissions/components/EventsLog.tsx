@@ -42,10 +42,10 @@ const EventsLog: React.FC<EventsLogProps> = ({
       <SettingsSection>
         <ErrorSummary
           format="info"
-          heading={`No payments or submissions found for this ${
+          heading={`No payment or send events found for this ${
             filterByFlow ? "service" : "team"
           }`}
-          message="If you're looking for events before 1st January 2024, please contact a PlanX developer."
+          message="If you're looking for events before 1st January 2024, please contact a PlanX developer"
         />
       </SettingsSection>
     );
