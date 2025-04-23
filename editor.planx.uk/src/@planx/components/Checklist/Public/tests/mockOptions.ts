@@ -16,12 +16,14 @@ export const options: {
       id: "caravan_id",
       data: {
         text: "Caravan",
+        description: "A caravan is a temporary structure.",
       },
     },
     {
       id: "house_id",
       data: {
         text: "House",
+        description: "A house can be detached, semi-detached or terraced.",
       },
     },
     {
@@ -82,6 +84,7 @@ export const groupedOptions: Array<Group<Option>> = [
         id: "S1_Option2",
         data: {
           text: "S1 Option2",
+          description: "S1 Option2 has a description",
         },
       },
     ],

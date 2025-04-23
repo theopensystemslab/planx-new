@@ -31,6 +31,7 @@ export const ChecklistItems = ({
             <ChecklistItem
               onChange={changeCheckbox(option.id)}
               label={option.data.text}
+              description={option.data.description}
               id={option.id}
               checked={
                 formik.values.checked.includes(option.id) &&

@@ -34,6 +34,32 @@ describe("Checklist Component - Grouped Layout", () => {
       answers: ["S1_Option1", "S2_Option2"],
     });
   });
+
+  it("displays descriptions when provided", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <Checklist
+        allRequired={false}
+        description=""
+        text="home type?"
+        handleSubmit={handleSubmit}
+        groupedOptions={groupedOptions}
+      />,
+    );
+
+    await user.click(screen.getByText("Section 1"));
+    expect(screen.getByText("S1 Option2")).toBeVisible();
+    expect(screen.getByText("S1 Option2 has a description")).toBeVisible();
+
+    await user.click(screen.getByText("S1 Option2"));
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalledWith({
+      answers: ["S1_Option2"],
+    });
+  });
+
   it("recovers checkboxes state when clicking the back button", async () => {
     const handleSubmit = vi.fn();
 

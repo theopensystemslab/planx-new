@@ -92,6 +92,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
                 editorExtraProps={{
                   groupIndex,
                   showValueField: !!formik.values.fn,
+                  showDescriptionField: true,
                   onMoveToGroup: (
                     movedItemIndex: number,
                     moveToGroupIndex: number,

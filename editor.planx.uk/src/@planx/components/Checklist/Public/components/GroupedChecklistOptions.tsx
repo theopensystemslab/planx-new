@@ -26,7 +26,7 @@ export const GroupedChecklistOptions = ({
 }: GroupedChecklistOptionsProps) => {
   const { expandedGroups, toggleGroup } = useExpandedGroups(
     groupedOptions,
-    previouslySubmittedData
+    previouslySubmittedData,
   );
 
   return (
@@ -56,6 +56,7 @@ export const GroupedChecklistOptions = ({
                       onChange={changeCheckbox(option.id)}
                       key={option.data.text}
                       label={option.data.text}
+                      description={option.data.description}
                       id={option.id}
                       checked={formik.values.checked.includes(option.id)}
                     />
