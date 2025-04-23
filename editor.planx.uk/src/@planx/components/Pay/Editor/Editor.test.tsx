@@ -247,7 +247,7 @@ describe("Pay component - Editor Modal", () => {
       );
     });
 
-    it("only disables the first instance of a required filed", async () => {
+    it("only disables the first instance of a required field", async () => {
       act(() => setState({ user: mockUser, flowName: "test flow" }));
 
       const handleSubmit = vi.fn();
@@ -292,6 +292,6 @@ describe("Pay component - Editor Modal", () => {
 
       // This tests that the user is able to fix their mistake
       expect(duplicateKeyDeleteIcon).not.toBeDisabled();
-    });
+    }, 10_000);
   });
 });

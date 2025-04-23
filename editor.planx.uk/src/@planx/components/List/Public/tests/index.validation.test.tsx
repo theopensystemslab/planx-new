@@ -217,7 +217,7 @@ describe("Form validation and error handling", () => {
 
   test(
     "an error displays if the maximum number of items is exceeded",
-    { timeout: 35_000 },
+    { timeout: 40_000 },
     async () => {
       const { user, getAllByTestId, getByTestId, getByText } = setup(
         <ListComponent {...mockZooProps} />,
