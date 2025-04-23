@@ -132,7 +132,7 @@ const SendComponent: React.FC<Props> = (props) => {
                 >
                   Team Settings
                 </Link>
-                . You can set up redirect or filtering rules in your inbox if
+                . You should set up redirect or filtering rules in your inbox if
                 you require submissions to go to different email addresses for
                 different services.
               </Typography>
@@ -153,13 +153,13 @@ const SendComponent: React.FC<Props> = (props) => {
               </InputRow>
               <Typography variant="body2">
                 Receive submissions in MS SharePoint via a Power Automate
-                workflow. Learn more about this option on{" "}
+                workflow. Learn more about this option in our{" "}
                 <Link
                   href="https://opensystemslab.notion.site/How-you-can-receive-process-PlanX-applications-using-Microsoft-365-tools-like-Power-Automate-13197a4bbd24421eaf7b5021ddd07741?pvs=74"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Notion
+                  resources
                 </Link>
                 .
               </Typography>
