@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 import { $api } from "../../../../client/index.js";
 
 interface UpdatePublicAnalyticsLink {
-  flows: {
+  flow: {
     id: string;
     publicLink: string;
   };
@@ -15,12 +15,16 @@ export const updatePublicAnalyticsLink = async (
   try {
     const response = await $api.client.request<UpdatePublicAnalyticsLink>(
       gql`
-        mutation UpdatePublicAnalyticsLink($id: uuid!, $publicLink: String!) {
-          update_flows(
-            where: { id: { _eq: $id } }
+        mutation UpdatePublicAnalyticsLink(
+          $id: uuid!
+          $publicLink: String!
+        ) {
+          flow: update_flows_by_pk(
             _set: { analytics_link: $publicLink }
+            pk_columns: { id: $id }
           ) {
-            affected_rows
+            id
+            analytics_link
           }
         }
       `,

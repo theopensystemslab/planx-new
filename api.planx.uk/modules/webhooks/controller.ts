@@ -182,7 +182,7 @@ export const isCleanJSONBController: IsCleanJSONBController = async (
   } catch (error) {
     return next(
       new ServerError({
-        message: "Failed to validate application data",
+        message: "Failed to validate flow data",
         cause: error,
       }),
     );
