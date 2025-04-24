@@ -177,7 +177,7 @@ type GetApplicationTypeResponse = {
   lowcal_sessions_by_pk: {
     data: string[];
   };
-}
+};
 
 /**
  * Query this session to retrieve application.type from the passport
@@ -186,18 +186,18 @@ async function getApplicationType(
   sessionId: string,
 ): Promise<string | undefined> {
   const applicationType: GetApplicationTypeResponse = await $api.client.request(
-      gql`
-        query GetApplicationType($id: uuid!) {
-          lowcal_sessions_by_pk(id: $id) {
-            data(path:"passport.data['application.type']")
-          }
+    gql`
+      query GetApplicationType($id: uuid!) {
+        lowcal_sessions_by_pk(id: $id) {
+          data(path: "passport.data['application.type']")
         }
-      `,
-      {
-        id: sessionId,
-      },
-    );
-  
+      }
+    `,
+    {
+      id: sessionId,
+    },
+  );
+
   return applicationType?.lowcal_sessions_by_pk?.data?.[0];
 }
 
