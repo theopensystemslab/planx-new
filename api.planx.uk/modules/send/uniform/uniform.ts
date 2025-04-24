@@ -84,9 +84,9 @@ export const sendToUniform: SendIntegrationController = async (
   // only LDC-E & LDC-P application types are supported
   const applicationType = await getApplicationType(payload.sessionId);
   if (applicationType === "ldc.listedBuildingWorks") {
-    return res.status(200).send({
-      sessionId: payload.sessionId,
-      message: `Skipping send, Idox/Uniform connector does not support application type: ${applicationType}`,
+    return next({
+      status: 400,
+      message: `Skipping send, Idox/Uniform connector does not support application type ${applicationType} (${payload.sessionId})`,
     });
   }
 
