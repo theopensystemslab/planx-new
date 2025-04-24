@@ -81,6 +81,15 @@ export const sendToUniform: SendIntegrationController = async (
     });
   }
 
+  // only LDC-E & LDC-P application types are supported
+  const applicationType = await getApplicationType(payload.sessionId);
+  if (applicationType === "ldc.listedBuildingWorks") {
+    return res.status(200).send({
+      sessionId: payload.sessionId,
+      message: `Skipping send, Idox/Uniform connector does not support application type: ${applicationType}`,
+    });
+  }
+
   try {
     // Request 1/4 - Authenticate
     const { token, organisation, organisationId } =
@@ -162,6 +171,34 @@ async function checkUniformAuditTable(
     );
 
   return application?.uniform_applications[0]?.response;
+}
+
+type GetApplicationTypeResponse = {
+  lowcal_sessions_by_pk: {
+    data: string[];
+  };
+}
+
+/**
+ * Query this session to retrieve application.type from the passport
+ */
+async function getApplicationType(
+  sessionId: string,
+): Promise<string | undefined> {
+  const applicationType: GetApplicationTypeResponse = await $api.client.request(
+      gql`
+        query GetApplicationType($id: uuid!) {
+          lowcal_sessions_by_pk(id: $id) {
+            data(path:"passport.data['application.type']")
+          }
+        }
+      `,
+      {
+        id: sessionId,
+      },
+    );
+  
+  return applicationType?.lowcal_sessions_by_pk?.data?.[0];
 }
 
 /**
