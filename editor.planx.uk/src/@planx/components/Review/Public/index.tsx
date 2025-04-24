@@ -3,6 +3,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import type { Review } from "../model";
+import { DEFAULT_REVIEW_DISCLAIMER } from "../model";
 import Presentational from "./Presentational";
 
 export default Component;
@@ -21,7 +22,7 @@ function Component(props: PublicProps<Review>) {
     <Presentational
       title={props.title}
       description={props.description}
-      disclaimer={props.disclaimer}
+      disclaimer={props.disclaimer || DEFAULT_REVIEW_DISCLAIMER}
       breadcrumbs={breadcrumbs}
       flow={flow}
       passport={passport}
