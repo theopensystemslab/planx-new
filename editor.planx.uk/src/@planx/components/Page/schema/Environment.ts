@@ -51,6 +51,7 @@ export const EnvironmentGLA: PageSchema = {
       data: {
         title: "What area of green roof is proposed?",
         fn: "greenRoof.area",
+        units: "m²",
         allowNegatives: false,
       },
     },
@@ -61,6 +62,7 @@ export const EnvironmentGLA: PageSchema = {
         title:
           "What percentage of material from demolition and construction will be re-used or recycled?",
         fn: "waste.reuseRecycle",
+        units: "percent",
         allowNegatives: false,
       },
     },
@@ -71,6 +73,7 @@ export const EnvironmentGLA: PageSchema = {
         title:
           "What is the percentage reduction of surface water discharge from the site for a 1 in 100-year rainfall event?",
         fn: "flood.dischargeReduction",
+        units: "percent",
         allowNegatives: false,
       },
     },
