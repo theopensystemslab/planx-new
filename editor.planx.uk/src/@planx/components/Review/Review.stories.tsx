@@ -1,6 +1,7 @@
 import { Meta } from "@storybook/react";
 import React from "react";
 
+import { DEFAULT_REVIEW_DISCLAIMER } from "./model";
 import {
   breadcrumbsWithSections,
   flowWithSections,
@@ -29,6 +30,7 @@ export const Basic = () => {
     <Presentational
       title="Review"
       description="Check your answers before submitting"
+      disclaimer={DEFAULT_REVIEW_DISCLAIMER}
       breadcrumbs={mockedBreadcrumbs}
       flow={mockedFlow}
       passport={mockedPassport}
@@ -46,6 +48,7 @@ export const WithSections = () => {
     <Presentational
       title="Review"
       description="Check your answers before submitting"
+      disclaimer={DEFAULT_REVIEW_DISCLAIMER}
       breadcrumbs={breadcrumbsWithSections}
       flow={flowWithSections}
       passport={passportWithSections}

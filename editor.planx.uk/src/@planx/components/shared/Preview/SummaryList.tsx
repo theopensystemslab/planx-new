@@ -17,6 +17,7 @@ import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import {
   Field,
@@ -141,6 +142,7 @@ const presentationalComponents: {
 type BreadcrumbEntry = [NodeId, Store.Breadcrumbs];
 
 interface SummaryListBaseProps {
+  disclaimer?: string;
   flow: Store.Flow;
   passport: Store.Passport;
   changeAnswer: (id: NodeId) => void;
@@ -239,6 +241,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
                   passport={props.passport}
                   changeAnswer={props.changeAnswer}
                   showChangeButton={props.showChangeButton}
+                  disclaimer={props.disclaimer}
                 />
               </React.Fragment>
             ),
@@ -256,6 +259,7 @@ function SummaryListsBySections(props: SummaryListsBySectionsProps) {
         passport={props.passport}
         changeAnswer={props.changeAnswer}
         showChangeButton={props.showChangeButton}
+        disclaimer={props.disclaimer}
       />
     );
   }
@@ -331,19 +335,7 @@ function SummaryList(props: SummaryListProps) {
         confirmText="Yes"
         cancelText="No"
       >
-        <Typography>
-          Changing this answer means you will need to confirm any other answers
-          after it. This is because:
-          <ul>
-            <li>
-              a different answer might mean the service asks new questions
-            </li>
-            <li>
-              your planning officer needs the right information to assess your
-              application
-            </li>
-          </ul>
-        </Typography>
+        <ReactMarkdownOrHtml source={props.disclaimer}></ReactMarkdownOrHtml>
       </ConfirmationDialog>
     </>
   );
