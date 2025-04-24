@@ -17,7 +17,7 @@ const DASHBOARD_IDS = {
 } as const;
 
 const environment =
-  process.env.NODE_ENV === "production" ? "production" : "staging";
+  process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
 const AFPP = {
   template: DASHBOARD_IDS[environment].AFPP,
@@ -47,13 +47,11 @@ const includedServices = [AFPP, FOIYNPP, LDC, preApp, RAB];
 // TODO: figure out how to handle discretionary services
 // const discretionaryDashboardTemplate = 118
 
-export async function findDashboardTemplate(
-  slug: string,
-): Promise<number | null> {
+export function findDashboardTemplate(slug: string): number | null {
   for (const service of includedServices) {
     for (const serviceSlug of service.slugs) {
       if (slug.includes(serviceSlug)) {
-        return await service.template;
+        return service.template;
       }
     }
   }

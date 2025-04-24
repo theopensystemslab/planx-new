@@ -18,7 +18,7 @@ export async function createNewDashboard({
 }: CreateNewDashboardParams): Promise<string | undefined> {
   try {
     const { teamName, teamSlug } = await getTeamNameAndSlug(teamId);
-    const templateId = await findDashboardTemplate(serviceSlug);
+    const templateId = findDashboardTemplate(serviceSlug);
 
     if (!templateId) return;
 
