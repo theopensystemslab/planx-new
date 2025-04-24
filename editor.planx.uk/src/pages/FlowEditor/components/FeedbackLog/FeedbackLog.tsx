@@ -17,7 +17,10 @@ import { updateEditorNotes } from "./queries/updateEditorNotes";
 import { Feedback, FeedbackLogProps } from "./types";
 import { EmojiRating, feedbackTypeText, stripHTMLTags } from "./utils";
 
-export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
+export const FeedbackLog: React.FC<FeedbackLogProps> = ({
+  feedback,
+  isFlowLevel,
+}) => {
   const handleProcessRowUpdate = async (updatedRow: Feedback) => {
     await updateEditorNotes(updatedRow);
     return updatedRow;
@@ -138,17 +141,21 @@ export const FeedbackLog: React.FC<FeedbackLogProps> = ({ feedback }) => {
     <FixedHeightDashboardContainer bgColor="background.paper">
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          Feedback log
+          Feedback
         </Typography>
         <Typography variant="body1" maxWidth="contentWrap">
-          Feedback from users about this team's services.
+          Feedback reports from users about{" "}
+          {isFlowLevel ? "this service" : "all services in this team"}. This
+          table only includes feedback received within the last six months.
         </Typography>
       </SettingsSection>
       {feedback.length === 0 ? (
         <SettingsSection>
           <ErrorSummary
             format="info"
-            heading="No feedback found for this team"
+            heading={`No feedback found for this ${
+              isFlowLevel ? "service" : "team"
+            }`}
             message="If you're looking for feedback from more than six months ago, please contact a PlanX developer"
           />
         </SettingsSection>

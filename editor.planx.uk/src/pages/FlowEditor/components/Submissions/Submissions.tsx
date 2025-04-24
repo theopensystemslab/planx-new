@@ -52,13 +52,10 @@ const Submissions: React.FC<SubmissionsProps> = ({ flowSlug }) => {
           Submissions
         </Typography>
         <Typography variant="body1" maxWidth="contentWrap">
-          {`Feed of payment and submission events for ${
-            flowSlug ? "this service" : "services in this team"
-          }.`}
-        </Typography>
-        <Typography variant="body1" maxWidth="contentWrap">
-          Successful submission events from within the last 28 days are
-          available to be downloaded by team editors.
+          Payment and send events for{" "}
+          {flowSlug ? "this service" : "all services in this team"}. Successful
+          submissions received within the last 28 days are available to
+          download. This table includes events since 1st January 2024.
         </Typography>
       </SettingsSection>
       <EventsLog

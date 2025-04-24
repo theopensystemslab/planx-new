@@ -48,7 +48,7 @@ const serviceFeedbackRoutes = compose(
 
       return {
         title: makeTitle("Service feedback"),
-        view: <FeedbackLog feedback={feedback} />,
+        view: <FeedbackLog feedback={feedback} isFlowLevel={true} />,
       };
     }),
   }),
