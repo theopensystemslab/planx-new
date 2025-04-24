@@ -2,11 +2,6 @@ import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import type { ApiResponse } from "../shared/types.js";
 
-/** Interface for incoming request */
-export interface NewCollectionParams {
-  slug: string;
-}
-
 /** We use a name and not slug here so that the eventual dashboard name is in title case */
 export type CreateCollectionParams = {
   name: string;
