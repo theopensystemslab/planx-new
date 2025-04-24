@@ -44,13 +44,15 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
         <Grid container component="fieldset">
           <legend style={visuallyHidden}>{title}</legend>
           {options.map((option) => (
-            <ChecklistItem
-              key={option.id}
-              onChange={changeCheckbox(option.id)}
-              label={option.data.text}
-              id={option.id}
-              checked={value.includes(option.id)}
-            />
+            <Grid item xs={12}>
+              <ChecklistItem
+                key={option.id}
+                onChange={changeCheckbox(option.id)}
+                label={option.data.text}
+                id={option.id}
+                checked={value.includes(option.id)}
+              />
+            </Grid>
           ))}
         </Grid>
       </ErrorWrapper>
