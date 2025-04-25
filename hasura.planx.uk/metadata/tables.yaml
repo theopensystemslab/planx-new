@@ -870,6 +870,7 @@
     - role: api
       permission:
         columns:
+          - analytics_link
           - can_create_from_copy
           - copied_from
           - created_at
