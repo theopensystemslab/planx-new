@@ -105,7 +105,7 @@ export const validPaymentRequest = {
           helpEmail: "help@council.gov.uk",
           helpPhone: "123",
           helpOpeningHours: "9a-5p",
-          emailReplyToId: "123",
+          emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
         },
       },
     },

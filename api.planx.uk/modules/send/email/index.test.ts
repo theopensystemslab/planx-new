@@ -50,7 +50,7 @@ describe(`sending an application by email to a planning office`, () => {
         teams: [
           {
             teamSettings: {
-              emailReplyToId: "abc123",
+              emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
               submissionEmail: "planning.office.example@council.gov.uk",
             },
           },
@@ -167,7 +167,7 @@ describe(`sending an application by email to a planning office`, () => {
         teams: [
           {
             teamSettings: {
-              emailReplyToId: "abc123",
+              emailReplyToId: "727d48fa-cb8a-42f9-b8b2-55032f3bb451",
               submissionEmail: null,
             },
           },
