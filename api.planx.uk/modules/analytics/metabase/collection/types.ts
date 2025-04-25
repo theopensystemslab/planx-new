@@ -2,36 +2,21 @@ import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
 import type { ApiResponse } from "../shared/types.js";
 
-/** Interface for incoming request */
-export interface NewCollectionParams {
-  slug: string;
-  description?: string;
-  /** Optional; if the collection is a child of a parent, specify parent ID here */
-  parentId?: number;
-}
-
 /** We use a name and not slug here so that the eventual dashboard name is in title case */
-export type CreateCollectionParams = Omit<NewCollectionParams, "slug"> & {
+export type CreateCollectionParams = {
   name: string;
+  parentId?: number;
 };
 
 export type MetabaseCreateCollectionParams = {
   name: string;
-  description?: string;
   parent_id?: number;
 };
-
-/** TODO: when running on production, turn below comment back into code
- * the Metabase collection ID is for the "Council" collection
- * see https://github.com/theopensystemslab/planx-new/pull/4072#discussion_r1892631692
- **/
-const COUNCILS_COLLECTION_ID = 78;
 
 export const createTeamCollectionSchema = z.object({
   body: z.object({
     slug: z.string().min(1),
     description: z.string().optional(),
-    parentId: z.number().optional().default(COUNCILS_COLLECTION_ID),
   }),
 });
 

@@ -5,6 +5,7 @@ info:
 
 tags:
   - name: analytics
+  - name: metabase
 
 components:
   responses:
@@ -18,41 +19,57 @@ components:
         slug:
           type: string
           description: PlanX team slug
+          minLength: 1
         description:
           type: string
           description: Optional description for the collection
-        parentId:
-          type: integer
-          description: Optional ID of the parent collection
       required:
         - slug
 
     NewDashboard:
       type: object
       properties:
-        templateId:
-          type: integer
-          description: ID of the template dashboard to copy from
+        flowId:
+          type: string
+          description: ID of the flow
+        teamId:
+          type: number
+          description: ID of the team
+        serviceSlug:
+          type: string
+          description: Service slug identifier
+      required:
+        - flowId
+        - teamId
+        - serviceSlug
+
+    CopyDashboard:
+      type: object
+      properties:
+        dashboardId:
+          type: number
+          description: ID of the dashboard to copy
+        name:
+          type: string
+          description: Name for the new dashboard
         description:
           type: string
           description: Optional description for the dashboard
         collectionId:
-          type: integer
-          description: Optional ID of the collection to place the dashboard in
+          type: number
+          description: ID of the collection to place the dashboard in
         collectionPosition:
-          type: integer
+          type: number
           description: Optional position within the collection
           minimum: 0
-        filter:
-          type: string
-          description: Filter parameter to update
-        value:
-          type: string
-          description: Value to set for the filter
+        isDeepCopy:
+          type: boolean
+          description: Whether to perform a deep copy
+          default: false
       required:
-        - templateId
-        - filter
-        - value
+        - dashboardId
+        - name
+        - collectionId
 
 paths:
   /analytics/log-user-exit:
@@ -75,7 +92,31 @@ paths:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
 
-  /metabase/collection:
+  /collections/check:
+    get:
+      summary: Check Metabase collections
+      description: Checks if collections exist in Metabase
+      tags:
+        - metabase
+      responses:
+        "200":
+          description: Collections check successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+
+  /collections/new:
     post:
       summary: Create new Metabase collection
       description: Creates a new collection in Metabase if it doesn't already exist
@@ -109,44 +150,31 @@ paths:
                     type: string
                     description: Error message
 
-  /metabase/dashboard/{slug}/{service}:
+  /dashboard/copy:
     post:
-      summary: Create new Metabase dashboard
-      description: Creates a new dashboard in Metabase by copying a template and updating filters
+      summary: Copy Metabase dashboard
+      description: Creates a new dashboard in Metabase by copying an existing one
       tags:
         - metabase
-      parameters:
-        - name: slug
-          in: path
-          required: true
-          schema:
-            type: string
-          description: PlanX team slug
-        - name: service
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Service identifier
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/NewDashboard"
+              $ref: "#/components/schemas/CopyDashboard"
       responses:
         "201":
-          description: Dashboard created successfully
+          description: Dashboard copied successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   data:
-                    type: string
-                    description: Public link to the created dashboard
+                    type: object
+                    description: The copied dashboard information
         "400":
-          description: Bad request or dashboard creation failed
+          description: Bad request or dashboard copy failed
           content:
             application/json:
               schema:

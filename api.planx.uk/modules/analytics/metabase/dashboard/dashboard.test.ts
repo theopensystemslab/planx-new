@@ -1,8 +1,7 @@
 import nock from "nock";
 import { copyDashboard } from "./copyDashboard.js";
 import { getDashboard } from "./getDashboard.js";
-import { updateFilter } from "./updateFilter.js";
-import { generatePublicLink } from "./generatePublicLink.js";
+import { generatePublicLinkWithFilters } from "./generatePublicLinkWithFilters.js";
 
 const BASE_URL = process.env.METABASE_URL_EXT;
 
@@ -85,86 +84,12 @@ describe("Dashboard Operations", () => {
     });
   });
 
-  describe("updateFilter", () => {
-    const dashboardId = 123;
-    const filterName = "test_filter";
-    const filterValue = "new_value";
-
-    test("successfully updates string filter value", async () => {
-      nock(BASE_URL!)
-        .get(`/api/dashboard/${dashboardId}`)
-        .reply(200, {
-          parameters: [
-            {
-              name: filterName,
-              type: "string/=",
-              value: ["old_value"],
-            },
-          ],
-        });
-
-      nock(BASE_URL!)
-        .put(`/api/dashboard/${dashboardId}`, {
-          parameters: [
-            {
-              name: filterName,
-              type: "string/=",
-              value: [filterValue],
-            },
-          ],
-        })
-        .reply(200, {
-          parameters: [
-            {
-              name: filterName,
-              type: "string/=",
-              value: [filterValue],
-            },
-          ],
-          param_fields: {},
-        });
-
-      const result = await updateFilter({
-        dashboardId: dashboardId,
-        filter: filterName,
-        value: filterValue,
-      });
-
-      expect(result).toEqual({
-        success: true,
-        updatedFilter: filterName,
-      });
-    });
-
-    test("handles non-string filter type appropriately", async () => {
-      nock(BASE_URL!)
-        .get(`/api/dashboard/${dashboardId}`)
-        .reply(200, {
-          parameters: [
-            {
-              name: filterName,
-              type: "number/=",
-              value: [42],
-            },
-          ],
-        });
-
-      await expect(
-        updateFilter({
-          dashboardId: dashboardId,
-          filter: filterName,
-          value: "not_a_number",
-        }),
-      ).rejects.toThrow(
-        "Filter type 'number/=' is not supported. Only string filters are currently supported.",
-      );
-    });
-  });
-
-  describe("generatePublicLink", () => {
+  describe("generatePublicLinkWithFilters", () => {
     test("generates public link", async () => {
       const dashboardId = 8;
       const testUuid = 1111111;
+      const teamSlug = "council-slug";
+      const serviceSlug = "find-out-if";
 
       nock(BASE_URL!)
         .post(`/api/dashboard/${dashboardId}/public_link`)
@@ -172,8 +97,14 @@ describe("Dashboard Operations", () => {
           uuid: testUuid,
         });
 
-      const link = await generatePublicLink(dashboardId);
-      expect(link).toBe(`${BASE_URL}/public/dashboard/${testUuid}`);
+      const link = await generatePublicLinkWithFilters(
+        dashboardId,
+        serviceSlug,
+        teamSlug,
+      );
+      expect(link).toBe(
+        `${BASE_URL}/public/dashboard/${testUuid}?service_slug=${serviceSlug}&team_slug=${teamSlug}`,
+      );
     });
   });
 });
