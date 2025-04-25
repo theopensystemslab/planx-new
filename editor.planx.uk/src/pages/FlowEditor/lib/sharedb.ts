@@ -10,7 +10,7 @@ const TOKEN_EXPIRY_CODE = 4001 as const;
 
 const createWSConnection = () => {
   const socket = new ReconnectingWebSocket(
-    import.meta.env.VITE_APP_SHAREDB_URL || ""
+    import.meta.env.VITE_APP_SHAREDB_URL || "",
   );
 
   const toastConfig: Partial<ToastOptions> = {
@@ -23,10 +23,13 @@ const createWSConnection = () => {
   /** Listen for expired tokens events and force logout */
   socket.addEventListener("close", ({ code, reason }) => {
     if (code === TOKEN_EXPIRY_CODE && reason === "Token validation error") {
-      toast.error("[ShareDB error]: Session expired, redirecting to login page...", {
-        toastId: "sharedb_jwt_expiry",
-        ...toastConfig,
-      });
+      toast.error(
+        "[ShareDB error]: Session expired, redirecting to login page...",
+        {
+          toastId: "sharedb_jwt_expiry",
+          ...toastConfig,
+        },
+      );
     }
   });
 
@@ -37,10 +40,13 @@ const createWSConnection = () => {
     // Only display a single toast at a time
     if (toast.isActive("sharedb_jwt_expiry")) return;
 
-    toast.error("[ShareDB error]: Unhandled error, redirecting to login page...", {
-      toastId: "sharedb_error",
-      ...toastConfig,
-    });
+    toast.error(
+      "[ShareDB error]: Unhandled error, redirecting to login page...",
+      {
+        toastId: "sharedb_error",
+        ...toastConfig,
+      },
+    );
   });
 
   return socket;
