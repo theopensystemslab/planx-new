@@ -93,6 +93,10 @@ async function validateJWT(authToken) {
     return decodedToken;
   }
 
+  if (response.status === 429) {
+    throw Error("API rate limit exceeded");
+  }
+
   throw Error("Invalid JWT. Please log in again.");
 };
 
