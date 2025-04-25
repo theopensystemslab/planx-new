@@ -1,8 +1,6 @@
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-// eslint-disable-next-line no-restricted-imports
-import { SwitchProps as MuiSwitchProps } from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
@@ -56,21 +54,18 @@ const SendComponent: React.FC<Props> = (props) => {
     state.teamSettings.submissionEmail,
   ]);
 
-  const changeCheckbox =
-    (value: SendIntegration) =>
-    (_checked: React.MouseEvent<HTMLButtonElement, MouseEvent> | undefined) => {
-      let newCheckedValues: SendIntegration[];
+  const toggleSwitch = (value: SendIntegration) => {
+    let newCheckedValues: SendIntegration[];
 
-      if (formik.values.destinations.includes(value)) {
-        newCheckedValues = formik.values.destinations.filter(
-          (x) => x !== value,
-        );
-      } else {
-        newCheckedValues = [...formik.values.destinations, value];
-      }
+    // Remove or append this value from the existing array of destinations
+    if (formik.values.destinations.includes(value)) {
+      newCheckedValues = formik.values.destinations.filter((x) => x !== value);
+    } else {
+      newCheckedValues = [...formik.values.destinations, value];
+    }
 
-      formik.setFieldValue("destinations", newCheckedValues.sort());
-    };
+    formik.setFieldValue("destinations", newCheckedValues.sort());
+  };
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -95,11 +90,7 @@ const SendComponent: React.FC<Props> = (props) => {
               <InputRow>
                 <Switch
                   checked={formik.values.destinations.includes("bops")}
-                  onChange={
-                    changeCheckbox(
-                      "bops",
-                    ) as unknown as MuiSwitchProps["onChange"]
-                  }
+                  onChange={() => toggleSwitch("bops")}
                   label={`Send to BOPS ${
                     import.meta.env.VITE_APP_ENV === "production"
                       ? "production"
@@ -114,11 +105,7 @@ const SendComponent: React.FC<Props> = (props) => {
               <InputRow>
                 <Switch
                   checked={formik.values.destinations.includes("email")}
-                  onChange={
-                    changeCheckbox(
-                      "email",
-                    ) as unknown as MuiSwitchProps["onChange"]
-                  }
+                  onChange={() => toggleSwitch("email")}
                   label={`Send to ${submissionEmail || "your inbox"}`}
                   disabled={props.disabled}
                 />
@@ -142,11 +129,7 @@ const SendComponent: React.FC<Props> = (props) => {
               <InputRow>
                 <Switch
                   checked={formik.values.destinations.includes("s3")}
-                  onChange={
-                    changeCheckbox(
-                      "s3",
-                    ) as unknown as MuiSwitchProps["onChange"]
-                  }
+                  onChange={() => toggleSwitch("s3")}
                   label="Send to Microsoft SharePoint"
                   disabled={props.disabled}
                 />
@@ -169,11 +152,7 @@ const SendComponent: React.FC<Props> = (props) => {
               <InputRow>
                 <Switch
                   checked={formik.values.destinations.includes("uniform")}
-                  onChange={
-                    changeCheckbox(
-                      "uniform",
-                    ) as unknown as MuiSwitchProps["onChange"]
-                  }
+                  onChange={() => toggleSwitch("uniform")}
                   label={`Send to Uniform ${
                     import.meta.env.VITE_APP_ENV === "production"
                       ? "production"
