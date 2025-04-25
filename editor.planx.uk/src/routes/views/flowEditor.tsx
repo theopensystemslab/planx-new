@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { NaviRequest, NotFoundError } from "navi";
 import FlowEditorLayout from "pages/layout/FlowEditorLayout";
 import React from "react";
@@ -9,6 +10,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
   id: string;
+  flowStatus: FlowStatus;
   flowAnalyticsLink: string;
   templatedFrom: string;
   isTemplate: boolean;
@@ -18,6 +20,7 @@ interface FlowEditorData {
 interface GetFlowEditorData {
   flows: {
     id: string;
+    status: FlowStatus;
     flowAnalyticsLink: string;
     templatedFrom: string;
     isTemplate: boolean;
@@ -43,6 +46,7 @@ export const getFlowEditorData = async (
           where: { slug: { _eq: $slug }, team: { slug: { _eq: $team_slug } } }
         ) {
           id
+          status
           flowAnalyticsLink: analytics_link
           templatedFrom: templated_from
           isTemplate: is_template
@@ -65,6 +69,7 @@ export const getFlowEditorData = async (
 
   const flowEditorData: FlowEditorData = {
     id: flow.id,
+    flowStatus: flow.status,
     flowAnalyticsLink: flow.flowAnalyticsLink,
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
@@ -79,11 +84,18 @@ export const getFlowEditorData = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
-  const { id, flowAnalyticsLink, isFlowPublished, isTemplate, templatedFrom } =
-    await getFlowEditorData(flow, req.params.team);
+  const {
+    id,
+    flowStatus,
+    flowAnalyticsLink,
+    isFlowPublished,
+    isTemplate,
+    templatedFrom,
+  } = await getFlowEditorData(flow, req.params.team);
 
   useStore.setState({
     id,
+    flowStatus,
     flowAnalyticsLink,
     isFlowPublished,
     isTemplate,
