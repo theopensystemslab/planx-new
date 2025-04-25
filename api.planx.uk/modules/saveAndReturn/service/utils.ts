@@ -4,7 +4,7 @@ import { addDays, format } from "date-fns";
 import { gql } from "graphql-request";
 
 import { $api } from "../../../client/index.js";
-import type { Template } from "../../../lib/notify/index.js";
+import type { Template } from "../../../lib/notify/templates/index.js";
 import { getClientForTemplate, sendEmail } from "../../../lib/notify/index.js";
 import type { LowCalSession } from "../../../types.js";
 

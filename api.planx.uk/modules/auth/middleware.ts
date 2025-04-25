@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import assert from "assert";
 import { ServerError } from "../../errors/index.js";
-import type { Template } from "../../lib/notify/index.js";
+import type { Template } from "../../lib/notify/templates/index.js";
 import { expressjwt, type IsRevoked } from "express-jwt";
 import { generators } from "openid-client";
 import type { Authenticator } from "passport";
@@ -52,7 +52,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
       status: 400,
     });
   };
-  const template: Template = req.params.template as Template;
+  const template = req.params.template as Template;
   switch (template) {
     // Requires authorization - can only be triggered by Hasura scheduled events
     case "reminder":

@@ -4,7 +4,7 @@ import type {
   Session,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
-import type { EmailSubmissionNotifyConfig } from "../../../types.js";
+import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
 
 interface GetTeamEmailSettings {
   teams: {
@@ -102,7 +102,7 @@ export async function insertAuditEntry(
   sessionId: string,
   teamSlug: string,
   recipient: string,
-  notifyRequest: EmailSubmissionNotifyConfig,
+  notifyRequest: TemplateRegistry["submit"]["config"],
   sendEmailResponse: {
     message: string;
     expiryDate?: string;
