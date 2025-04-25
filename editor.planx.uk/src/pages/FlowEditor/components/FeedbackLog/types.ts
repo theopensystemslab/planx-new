@@ -42,4 +42,5 @@ export interface CollapsibleRowProps extends Feedback {
 }
 export interface FeedbackLogProps {
   feedback: Feedback[];
+  isFlowLevel?: boolean;
 }

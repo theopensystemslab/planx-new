@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
 import type { NumberField } from "@planx/components/shared/Schema/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
+import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
@@ -19,7 +19,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
       {data.description && (
         <FieldInputDescription description={data.description} />
       )}
-      <Box sx={{ display: "flex", alignItems: "baseline" }}>
+      <InputRow>
         <Input
           {...fieldProps}
           onChange={formik.handleChange}
@@ -36,7 +36,7 @@ export const NumberFieldInput: React.FC<Props<NumberField>> = (props) => {
           }}
         />
         {data.units && <InputRowLabel>{data.units}</InputRowLabel>}
-      </Box>
+      </InputRow>
     </InputLabel>
   );
 };

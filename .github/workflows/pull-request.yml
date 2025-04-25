@@ -1,4 +1,9 @@
 name: Pull Request
+
+permissions:
+  pull-requests: write
+  packages: read
+
 on:
   pull_request:
     types:
@@ -12,10 +17,6 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-
-permissions:
-  pull-requests: write
-  packages: read
 
 jobs:
   changes:
