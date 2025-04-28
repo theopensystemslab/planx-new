@@ -59,7 +59,7 @@ export default function Component(props: Props) {
   const previousArea =
     props.previouslySubmittedData?.data?.[`${props.fn}.area`] ||
     passport.data?.["property.boundary.area"];
-  
+
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
   const [mapValidationError, setMapValidationError] = useState<string>();
@@ -167,8 +167,7 @@ export default function Component(props: Props) {
 
         // Track the type of map interaction
         if (
-          boundary?.geometry ===
-          passport.data?.["property.boundary"]?.geometry
+          boundary?.geometry === passport.data?.["property.boundary"]?.geometry
         ) {
           newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
             DrawBoundaryUserAction.Accept;
@@ -259,9 +258,9 @@ export default function Component(props: Props) {
                   drawGeojsonData={JSON.stringify(boundary)}
                   drawGeojsonDataBuffer={10}
                   clipGeojsonData={
-                    addressPoint &&
+                    boundary &&
                     JSON.stringify(
-                      buffer(addressPoint, bufferInMeters, { units: "meters" }),
+                      buffer(boundary, bufferInMeters, { units: "meters" }),
                     )
                   }
                   zoom={20}
