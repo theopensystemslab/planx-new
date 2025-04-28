@@ -31,7 +31,7 @@ export const UtilitiesGLA: PageSchema = {
       required: false,
       data: {
         title: "Number of new water connections required",
-        fn: "proposal.utilities.water.connections",
+        fn: "utilities.water.connections",
         allowNegatives: false,
       },
     },
@@ -40,7 +40,7 @@ export const UtilitiesGLA: PageSchema = {
       required: false,
       data: {
         title: "Number of new gas connections required",
-        fn: "proposal.utilities.gas.connections",
+        fn: "utilities.gas.connections",
         allowNegatives: false,
       },
     },
@@ -49,7 +49,7 @@ export const UtilitiesGLA: PageSchema = {
       required: false,
       data: {
         title: "Number of homes served by full fibre internet connection",
-        fn: "proposal.utilities.internet.residentialUnits",
+        fn: "utilities.internet.residentialUnits",
         allowNegatives: false,
       },
     },
@@ -59,7 +59,7 @@ export const UtilitiesGLA: PageSchema = {
       data: {
         title:
           "Number of commercial units served by full fibre internet connection",
-        fn: "proposal.utilities.internet.commercialUnits",
+        fn: "utilities.internet.commercialUnits",
         allowNegatives: false,
       },
     },
@@ -67,7 +67,7 @@ export const UtilitiesGLA: PageSchema = {
       type: "question",
       data: {
         title: "Have you consulted mobile network operators?",
-        fn: "flood.greenSuDS",
+        fn: "utilities.mobileNetworkOperators.consulted",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
           { id: "false", data: { text: "No", val: "false" } },
