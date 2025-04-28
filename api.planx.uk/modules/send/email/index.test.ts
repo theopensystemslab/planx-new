@@ -1,5 +1,6 @@
 import supertest from "supertest";
 import type * as planxCore from "@opensystemslab/planx-core";
+import type { ExportClient } from "@opensystemslab/planx-core";
 import { queryMock } from "../../../tests/graphqlQueryMock.js";
 import app from "../../../server.js";
 
@@ -11,21 +12,25 @@ const mockGenerateCSVData = vi.fn().mockResolvedValue([
   },
 ]);
 
-vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
-  const actualCore = await importOriginal<typeof planxCore>();
-  const actualCoreDomainClient = actualCore.CoreDomainClient;
+vi.mock("@opensystemslab/planx-core", async () => {
+  const actualCore = await vi.importActual<typeof planxCore>(
+    "@opensystemslab/planx-core",
+  );
+  const mockPassport = vi.fn().mockImplementation(() => ({
+    files: vi.fn().mockImplementation(() => []),
+  }));
+  const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
+    constructor() {
+      super();
+      this.getDocumentTemplateNamesForSession = vi.fn();
+      this.export.csvData = () => mockGenerateCSVData();
+    }
+  };
 
   return {
-    Passport: vi.fn().mockImplementation(() => ({
-      files: vi.fn().mockImplementation(() => []),
-    })),
-    CoreDomainClient: class extends actualCoreDomainClient {
-      constructor() {
-        super();
-        this.getDocumentTemplateNamesForSession = vi.fn();
-        this.export.csvData = () => mockGenerateCSVData();
-      }
-    },
+    ...actualCore,
+    Passport: mockPassport,
+    CoreDomainClient: mockCoreDomainClient,
   };
 });
 
@@ -75,6 +80,15 @@ describe(`sending an application by email to a planning office`, () => {
         session: {
           email: "simulate-delivered@notifications.service.gov.uk",
           flow: { slug: "test-flow", name: "Test Flow" },
+          passportData: {
+            _address: {
+              single_line_address: "Bag End, Underhill, Hobbiton",
+            },
+            "proposal.projectType": "",
+            "applicant.name.first": "Bilbo",
+            "applicant.name.last": "Baggins",
+            "application.fee.payable": 100,
+          },
         },
       },
       variables: { id: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49" },

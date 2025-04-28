@@ -99,54 +99,60 @@ const getSubmitEmailConfig = async ({
   localAuthority: string;
   sessionId: string;
 }): Promise<TemplateRegistry["submit"]["config"]> => {
-  const { email, flow, passportData } =
-    await getSessionEmailDetailsById(sessionId);
+  try {
+    const { email, flow, passportData } =
+      await getSessionEmailDetailsById(sessionId);
 
-  // Type narrowing
-  if (!teamSettings.submissionEmail) throw Error("Submission email missing!");
+    // Type narrowing
+    if (!teamSettings.submissionEmail) throw Error("Submission email missing!");
 
-  const projectTypes = passportData["proposal.projectType"] as string[];
-  const projectType = formatRawProjectTypes(projectTypes);
+    const projectTypes = passportData["proposal.projectType"] as string[];
+    const projectType = formatRawProjectTypes(projectTypes);
 
-  const address = passportData["_address"] as SiteAddress;
-  const addressLine = address?.single_line_address || address?.title;
+    const address = passportData["_address"] as SiteAddress;
+    const addressLine = address?.single_line_address || address?.title;
 
-  const applicantName = [
-    passportData["applicant.name.title"],
-    passportData["applicant.name.first"],
-    passportData["applicant.name.last"],
-  ]
-    .filter(Boolean)
-    .join(" ");
+    const applicantName = [
+      passportData["applicant.name.title"],
+      passportData["applicant.name.first"],
+      passportData["applicant.name.last"],
+    ]
+      .filter(Boolean)
+      .join(" ");
 
-  const payable = getFeeBreakdown(passportData).amount.payable;
-  const fee = payable
-    ? payable.toLocaleString("en-GB", { style: "currency", currency: "GBP" })
-    : "N/A";
+    const payable = getFeeBreakdown(passportData).amount.payable;
+    const fee = payable
+      ? payable.toLocaleString("en-GB", { style: "currency", currency: "GBP" })
+      : "N/A";
 
-  const flowName = flow.name;
+    const flowName = flow.name;
 
-  // Make application files download magic link
-  const params = new URLSearchParams({
-    email: teamSettings.submissionEmail,
-    localAuthority,
-  });
-  const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
+    // Make application files download magic link
+    const params = new URLSearchParams({
+      email: teamSettings.submissionEmail,
+      localAuthority,
+    });
+    const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
 
-  // Prepare email template
-  const config: TemplateRegistry["submit"]["config"] = {
-    personalisation: {
-      serviceName: flowName,
-      sessionId,
-      applicantEmail: email,
-      downloadLink: applicationFilesDownloadLink,
-      address: addressLine || "Address not submitted",
-      projectType: projectType || "Project type not submitted",
-      applicantName,
-      fee,
-    },
-    emailReplyToId: teamSettings.emailReplyToId,
-  };
+    // Prepare email template
+    const config: TemplateRegistry["submit"]["config"] = {
+      personalisation: {
+        serviceName: flowName,
+        sessionId,
+        applicantEmail: email,
+        downloadLink: applicationFilesDownloadLink,
+        address: addressLine || "Address not submitted",
+        projectType: projectType || "Project type not submitted",
+        applicantName,
+        fee,
+      },
+      emailReplyToId: teamSettings.emailReplyToId,
+    };
 
-  return config;
+    return config;
+  } catch (error) {
+    throw new Error(
+      `Failed to fetch details for 'submit' email template for session ${sessionId}. Error: ${error}`,
+    );
+  }
 };
