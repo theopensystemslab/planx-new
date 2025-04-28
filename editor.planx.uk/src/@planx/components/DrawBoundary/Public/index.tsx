@@ -209,17 +209,14 @@ export default function Component(props: Props) {
     }
   };
 
-  return (
-    <Card handleSubmit={validateAndSubmit} isValid={true}>
-      {getBody(bufferInMeters, mapValidationError, fileValidationError)}
-    </Card>
-  );
+  /**
+   * Clip map extent to buffered boundary, with a fallback to address point if required
+   */
+  const clipGeojsonData = boundary
+    ? JSON.stringify(buffer(boundary, bufferInMeters, { units: "meters" }))
+    : JSON.stringify(buffer(addressPoint, bufferInMeters, { units: "meters" }));
 
-  function getBody(
-    bufferInMeters: number,
-    mapValidationError?: string,
-    fileValidationError?: string,
-  ) {
+  function getBody(mapValidationError?: string, fileValidationError?: string) {
     if (page === "draw") {
       return (
         <>
@@ -257,12 +254,7 @@ export default function Component(props: Props) {
                   drawPointer="crosshair"
                   drawGeojsonData={JSON.stringify(boundary)}
                   drawGeojsonDataBuffer={10}
-                  clipGeojsonData={
-                    boundary &&
-                    JSON.stringify(
-                      buffer(boundary, bufferInMeters, { units: "meters" }),
-                    )
-                  }
+                  clipGeojsonData={clipGeojsonData}
                   zoom={20}
                   maxZoom={23}
                   latitude={Number(passport?.data?._address?.latitude)}
@@ -337,4 +329,10 @@ export default function Component(props: Props) {
       );
     }
   }
+
+  return (
+    <Card handleSubmit={validateAndSubmit} isValid={true}>
+      {getBody(mapValidationError, fileValidationError)}
+    </Card>
+  );
 }
