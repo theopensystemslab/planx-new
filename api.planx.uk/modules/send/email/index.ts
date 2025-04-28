@@ -106,8 +106,11 @@ const getSubmitEmailConfig = async ({
     // Type narrowing
     if (!teamSettings.submissionEmail) throw Error("Submission email missing!");
 
-    const projectTypes = passportData["proposal.projectType"] as string[];
-    const projectType = formatRawProjectTypes(projectTypes);
+    const projectTypes = passportData["proposal.projectType"] as
+      | string[]
+      | undefined;
+    const projectType =
+      projectTypes?.length && formatRawProjectTypes(projectTypes);
 
     const address = passportData["_address"] as SiteAddress;
     const addressLine = address?.single_line_address || address?.title;
