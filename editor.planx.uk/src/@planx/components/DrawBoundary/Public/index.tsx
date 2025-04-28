@@ -59,7 +59,7 @@ export default function Component(props: Props) {
   const previousArea =
     props.previouslySubmittedData?.data?.[`${props.fn}.area`] ||
     passport.data?.["property.boundary.area"];
-  
+
   const [boundary, setBoundary] = useState<Boundary>(previousBoundary);
   const [area, setArea] = useState<number | undefined>(previousArea);
   const [mapValidationError, setMapValidationError] = useState<string>();
@@ -167,8 +167,7 @@ export default function Component(props: Props) {
 
         // Track the type of map interaction
         if (
-          boundary?.geometry ===
-          passport.data?.["property.boundary"]?.geometry
+          boundary?.geometry === passport.data?.["property.boundary"]?.geometry
         ) {
           newPassportData[PASSPORT_COMPONENT_ACTION_KEY] =
             DrawBoundaryUserAction.Accept;
@@ -210,17 +209,21 @@ export default function Component(props: Props) {
     }
   };
 
-  return (
-    <Card handleSubmit={validateAndSubmit} isValid={true}>
-      {getBody(bufferInMeters, mapValidationError, fileValidationError)}
-    </Card>
-  );
+  /**
+   * Clip map extent to buffered boundary, with a fallback to address point if required
+   */
+  const clipGeojsonData = (() => {
+    if (boundary)
+      return JSON.stringify(
+        buffer(boundary, bufferInMeters, { units: "meters" }),
+      );
+    if (addressPoint)
+      return JSON.stringify(
+        buffer(addressPoint, bufferInMeters, { units: "meters" }),
+      );
+  })();
 
-  function getBody(
-    bufferInMeters: number,
-    mapValidationError?: string,
-    fileValidationError?: string,
-  ) {
+  function getBody(mapValidationError?: string, fileValidationError?: string) {
     if (page === "draw") {
       return (
         <>
@@ -258,12 +261,7 @@ export default function Component(props: Props) {
                   drawPointer="crosshair"
                   drawGeojsonData={JSON.stringify(boundary)}
                   drawGeojsonDataBuffer={10}
-                  clipGeojsonData={
-                    addressPoint &&
-                    JSON.stringify(
-                      buffer(addressPoint, bufferInMeters, { units: "meters" }),
-                    )
-                  }
+                  clipGeojsonData={clipGeojsonData}
                   zoom={20}
                   maxZoom={23}
                   latitude={Number(passport?.data?._address?.latitude)}
@@ -338,4 +336,10 @@ export default function Component(props: Props) {
       );
     }
   }
+
+  return (
+    <Card handleSubmit={validateAndSubmit} isValid={true}>
+      {getBody(mapValidationError, fileValidationError)}
+    </Card>
+  );
 }
