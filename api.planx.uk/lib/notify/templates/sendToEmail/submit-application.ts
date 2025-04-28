@@ -14,4 +14,8 @@ export type Config = NotifyConfig<{
   sessionId: string;
   applicantEmail: string;
   downloadLink: string;
+  address: string;
+  fee: string;
+  projectType: string;
+  applicantName: string;
 }>;
