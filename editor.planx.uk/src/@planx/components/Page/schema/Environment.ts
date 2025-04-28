@@ -11,13 +11,6 @@ export const EnvironmentGLA: PageSchema = {
         fn: "water",
         options: [
           {
-            id: "residentialWaterUsage",
-            data: {
-              text: "Internal residential water usage",
-              val: "residentialWaterUsage",
-            },
-          },
-          {
             id: "greyWaterReuse",
             data: { text: "Grey water reuse", val: "greyWaterReuse" },
           },
@@ -33,6 +26,29 @@ export const EnvironmentGLA: PageSchema = {
             },
           },
         ],
+      },
+    },
+    {
+      type: "number",
+      required: false,
+      data: {
+        title: "What is the targeted internal residential water usage?",
+        description:
+          "Enter a number that describes the litres per person per day (sometimes called l/p/d).",
+        fn: "residentialWaterUsage",
+        units: "litres",
+        allowNegatives: false,
+      },
+    },
+    {
+      type: "number",
+      required: false,
+      data: {
+        title:
+          "What is the percentage reduction of surface water discharge from the site for a 1 in 100-year rainfall event?",
+        fn: "flood.dischargeReduction",
+        units: "percent",
+        allowNegatives: false,
       },
     },
     {
@@ -59,28 +75,6 @@ export const EnvironmentGLA: PageSchema = {
       type: "number",
       required: false,
       data: {
-        title:
-          "What percentage of material from demolition and construction will be re-used or recycled?",
-        fn: "waste.reuseRecycle",
-        units: "percent",
-        allowNegatives: false,
-      },
-    },
-    {
-      type: "number",
-      required: false,
-      data: {
-        title:
-          "What is the percentage reduction of surface water discharge from the site for a 1 in 100-year rainfall event?",
-        fn: "flood.dischargeReduction",
-        units: "percent",
-        allowNegatives: false,
-      },
-    },
-    {
-      type: "number",
-      required: false,
-      data: {
         title: "What are the total annual NOx emissions of the proposal?",
         description:
           "This information will be available from an Air Quality Assessment.",
@@ -99,6 +93,17 @@ export const EnvironmentGLA: PageSchema = {
           "This information will be available from an Air Quality Assessment.",
         fn: "pollution.PM.annual",
         units: "kilograms",
+        allowNegatives: false,
+      },
+    },
+    {
+      type: "number",
+      required: false,
+      data: {
+        title:
+          "What percentage of material from demolition and construction will be re-used or recycled?",
+        fn: "waste.reuseRecycle",
+        units: "percent",
         allowNegatives: false,
       },
     },
