@@ -212,9 +212,16 @@ export default function Component(props: Props) {
   /**
    * Clip map extent to buffered boundary, with a fallback to address point if required
    */
-  const clipGeojsonData = boundary
-    ? JSON.stringify(buffer(boundary, bufferInMeters, { units: "meters" }))
-    : JSON.stringify(buffer(addressPoint, bufferInMeters, { units: "meters" }));
+  const clipGeojsonData = (() => {
+    if (boundary)
+      return JSON.stringify(
+        buffer(boundary, bufferInMeters, { units: "meters" }),
+      );
+    if (addressPoint)
+      return JSON.stringify(
+        buffer(addressPoint, bufferInMeters, { units: "meters" }),
+      );
+  })();
 
   function getBody(mapValidationError?: string, fileValidationError?: string) {
     if (page === "draw") {
