@@ -65,3 +65,9 @@ export const templateRegistry = {
 export type TemplateRegistry = typeof templateRegistry;
 
 export type Template = keyof TemplateRegistry;
+
+export type EmailFooter = {
+  helpEmail: string;
+  helpOpeningHours: string;
+  helpPhone: string;
+};
