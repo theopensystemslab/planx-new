@@ -123,10 +123,7 @@ const getSubmitEmailConfig = async ({
       .filter(Boolean)
       .join(" ");
 
-    const payable = getFeeBreakdown(passportData).amount.payable;
-    const fee = payable
-      ? payable.toLocaleString("en-GB", { style: "currency", currency: "GBP" })
-      : "N/A";
+    const fee = getFee(passportData);
 
     const flowName = flow.name;
 
@@ -147,7 +144,7 @@ const getSubmitEmailConfig = async ({
         address: addressLine || "Address not submitted",
         projectType: projectType || "Project type not submitted",
         applicantName,
-        fee,
+        fee: fee || "N/A",
       },
       emailReplyToId: teamSettings.emailReplyToId,
     };
@@ -157,5 +154,20 @@ const getSubmitEmailConfig = async ({
     throw new Error(
       `Failed to fetch details for 'submit' email template for session ${sessionId}. Error: ${error}`,
     );
+  }
+};
+
+const getFee = (passportData: Record<string, unknown>): string | undefined => {
+  try {
+    const payable = getFeeBreakdown(passportData).amount.payable;
+    const fee = payable.toLocaleString("en-GB", {
+      style: "currency",
+      currency: "GBP",
+    });
+
+    return fee;
+  } catch (error) {
+    // Ignore (valid) error - this may not be a fee-carrying service
+    return undefined;
   }
 };
