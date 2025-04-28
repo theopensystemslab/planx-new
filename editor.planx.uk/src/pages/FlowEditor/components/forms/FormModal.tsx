@@ -100,7 +100,9 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
-const containsMadeLink = (data: Record<string, unknown>): boolean => {
+const containsMadeLink = (data?: Record<string, unknown>): boolean => {
+  if (!data) return false;
+
   return Object.values(data).some((value) => {
     if (typeof value !== "string") return false;
 
@@ -192,7 +194,7 @@ const FormModal: React.FC<{
             id={id}
             disabled={disabled}
             handleSubmit={(
-              data: any,
+              data: { data?: Record<string, unknown> },
               children: Array<any> | undefined = undefined,
             ) => {
               if (containsMadeLink(data.data)) {
