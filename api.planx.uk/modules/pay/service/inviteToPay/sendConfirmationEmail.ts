@@ -2,36 +2,44 @@ import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
 import { $api } from "../../../../client/index.js";
 import { sendEmail } from "../../../../lib/notify/index.js";
-import type {
-  AgentAndPayeeSubmissionNotifyConfig,
-  AgentAndPayeeSubmissionNotifyPersonalisation,
-} from "../../../../types.js";
+import type { TemplateRegistry } from "../../../../lib/notify/templates/index.js";
 
 export async function sendAgentAndPayeeConfirmationEmail(sessionId: string) {
-  const { personalisation, applicantEmail, payeeEmail, projectTypes } =
-    await getDataForPayeeAndAgentEmails(sessionId);
+  const {
+    personalisation,
+    applicantEmail,
+    payeeEmail,
+    projectTypes,
+    emailReplyToId,
+  } = await getDataForPayeeAndAgentEmails(sessionId);
   const projectType = projectTypes.length
     ? formatRawProjectTypes(projectTypes)
     : "Project type not submitted";
-  const config: AgentAndPayeeSubmissionNotifyConfig = {
+  const config = {
     personalisation: {
       ...personalisation,
       projectType,
     },
+    emailReplyToId,
   };
   await sendEmail("confirmation-agent", applicantEmail, config);
   await sendEmail("confirmation-payee", payeeEmail, config);
+
   return { message: "Success" };
 }
 
+type PayeeAndAgentPersonalisation = Omit<
+  TemplateRegistry["confirmation-payee"]["config"]["personalisation"] &
+    TemplateRegistry["confirmation-agent"]["config"]["personalisation"],
+  "projectType"
+>;
+
 type PayeeAndAgentEmailData = {
-  personalisation: Omit<
-    AgentAndPayeeSubmissionNotifyPersonalisation,
-    "projectType"
-  >;
+  personalisation: PayeeAndAgentPersonalisation;
   applicantEmail: string;
   payeeEmail: string;
   projectTypes: string[];
+  emailReplyToId: string;
 };
 
 async function getDataForPayeeAndAgentEmails(
@@ -98,8 +106,8 @@ async function getDataForPayeeAndAgentEmails(
   const { payeeEmail, payeeName, address, projectTypes, applicantName } =
     data.paymentRequests[0];
   return {
+    emailReplyToId,
     personalisation: {
-      emailReplyToId,
       helpEmail,
       helpOpeningHours,
       helpPhone,

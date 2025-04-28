@@ -1,14 +1,19 @@
 import { sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
-import type { NotifyConfig } from "../../types.js";
+import type { TemplateRegistry } from "./templates/index.js";
 
 vi.mock("notifications-node-client");
 
 const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
-const mockConfig: NotifyConfig = {
+const mockConfig: TemplateRegistry["save"]["config"] = {
+  emailReplyToId: "test",
   personalisation: {
-    teamName: "test",
-    emailReplyToId: "test",
+    serviceName: "test",
+    sessionId: "test",
+    address: "test",
+    projectType: "test",
+    resumeLink: "test",
+    expiryDate: "test",
     helpEmail: "test",
     helpOpeningHours: "test",
     helpPhone: "test",

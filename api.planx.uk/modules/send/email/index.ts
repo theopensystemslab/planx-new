@@ -1,6 +1,6 @@
 import { ServerError } from "../../../errors/serverError.js";
 import { sendEmail } from "../../../lib/notify/index.js";
-import type { EmailSubmissionNotifyConfig } from "../../../types.js";
+import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
 import { markSessionAsSubmitted } from "../../saveAndReturn/service/utils.js";
 import type { SendIntegrationController } from "../types.js";
 import {
@@ -53,14 +53,14 @@ export const sendToEmail: SendIntegrationController = async (
     const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
 
     // Prepare email template
-    const config: EmailSubmissionNotifyConfig = {
+    const config: TemplateRegistry["submit"]["config"] = {
       personalisation: {
         serviceName: flowName,
         sessionId,
         applicantEmail: email,
         downloadLink: applicationFilesDownloadLink,
-        ...teamSettings,
       },
+      emailReplyToId: teamSettings.emailReplyToId,
     };
 
     // Send the email

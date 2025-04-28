@@ -60,12 +60,12 @@ describe("sendAgentAndPayeeConfirmationEmail", () => {
     });
 
     const expectedConfig = {
+      emailReplyToId: "123",
       personalisation: {
         applicantName: "xyz",
         payeeName: "payeeName",
         address: "123 PLACE",
         projectType: "Paint the facade and changes to internal walls or layout",
-        emailReplyToId: "123",
         helpEmail: "help@email.com",
         helpOpeningHours: "9-5",
         helpPhone: "123",

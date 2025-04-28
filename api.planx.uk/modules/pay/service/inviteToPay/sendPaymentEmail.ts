@@ -1,12 +1,11 @@
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import type { PaymentRequest, Team } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
-import type { Template } from "../../../../lib/notify/index.js";
+import type { Template } from "../../../../lib/notify/templates/index.js";
 import {
   getClientForTemplate,
   sendEmail,
 } from "../../../../lib/notify/index.js";
-import type { InviteToPayNotifyConfig } from "../../../../types.js";
 import {
   calculateExpiryDate,
   getServiceLink,
@@ -116,15 +115,15 @@ const validatePaymentRequest = async (
 const getInviteToPayNotifyConfig = (
   session: SessionDetails,
   paymentRequest: PaymentRequest,
-): InviteToPayNotifyConfig => {
+) => {
   const flow = session.flow;
   const { settings } = session.flow.team;
 
   return {
+    emailReplyToId: settings.emailReplyToId,
     personalisation: {
       helpEmail: settings.helpEmail,
       helpPhone: settings.helpPhone,
-      emailReplyToId: settings.emailReplyToId,
       helpOpeningHours: settings.helpOpeningHours,
       sessionId: paymentRequest.sessionId,
       paymentRequestId: paymentRequest.id,
