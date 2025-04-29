@@ -1,3 +1,6 @@
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import Typography from "@mui/material/Typography";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import axios, { isAxiosError } from "axios";
@@ -5,6 +8,7 @@ import { useFormik } from "formik";
 import type { Feature, MultiPolygon, Polygon } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
+import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/editor/InputLabel";
 import Input from "ui/shared/Input/Input";
 import * as Yup from "yup";
@@ -16,6 +20,37 @@ export type PlanningDataEntity = Feature<
   Polygon | MultiPolygon,
   Record<string, unknown>
 >;
+
+const BoundaryDescription: React.FC = () => (
+  <>
+    <p>
+      The boundary URL is used to retrieve the outer boundary of your council
+      area. This can then help users define whether they are within your council
+      area.
+    </p>
+    <p>
+      The boundary should be given as a link from:{" "}
+      <a
+        href="https://www.planning.data.gov.uk/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        https://www.planning.data.gov.uk/entity/1234567
+      </a>
+    </p>
+  </>
+);
+
+const SLPInfo: React.FC = () => (
+  <WarningContainer>
+    <TravelExploreIcon sx={{ mr: 1 }} />
+    <Typography variant="body2" color={(theme) => theme.palette.text.secondary}>
+      Tewkesbury, Cheltenham and Gloucestershire share a Strategic and Local
+      Plan (SLP). Planning applicantions can span across boundaries of these
+      three authorities.
+    </Typography>
+  </WarningContainer>
+);
 
 /**
  * Convert a complex local authority boundary to a simplified bounding box
@@ -65,29 +100,18 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     },
   });
 
+  const route = useCurrentRoute();
+  const teamSlug = route.data.team;
+
+  // Cheltenham, Gloucester and Tewkesbury Strategic Local Plan
+  const slpTeams = ["cheltenham", "gloucester", "tewkesbury"];
+  const isSLPTeam = slpTeams.includes(teamSlug);
+
   return (
     <SettingsForm
       formik={formik}
       legend="Boundary"
-      description={
-        <>
-          <p>
-            The boundary URL is used to retrieve the outer boundary of your
-            council area. This can then help users define whether they are
-            within your council area.
-          </p>
-          <p>
-            The boundary should be given as a link from:{" "}
-            <a
-              href="https://www.planning.data.gov.uk/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              https://www.planning.data.gov.uk/entity/1234567
-            </a>
-          </p>
-        </>
-      }
+      description={<BoundaryDescription />}
       input={
         <InputLabel label="Boundary URL" htmlFor="boundaryUrl">
           <Input
@@ -98,9 +122,12 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
               formik.setFieldValue("boundaryUrl", ev.target.value);
             }}
             id="boundaryUrl"
+            disabled={isSLPTeam}
           />
         </InputLabel>
       }
-    />
+    >
+      {isSLPTeam && <SLPInfo />}
+    </SettingsForm>
   );
 }

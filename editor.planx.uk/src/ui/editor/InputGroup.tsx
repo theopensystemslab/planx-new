@@ -7,8 +7,7 @@ import Typography from "@mui/material/Typography";
 import React, { PropsWithChildren, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
-interface Props {
-  children: JSX.Element[] | JSX.Element;
+type Props = React.PropsWithChildren<{
   label?: string;
   grow?: boolean;
   deleteInputGroup?: () => void;
@@ -18,7 +17,7 @@ interface Props {
   id?: string;
   index?: number;
   handleMove?: (dragIndex: number, hoverIndex: number) => void;
-}
+}>;
 
 interface RootProps extends BoxProps {
   flowSpacing?: boolean;
