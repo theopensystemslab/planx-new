@@ -24,6 +24,7 @@ export interface TeamStore {
 
   setTeam: (team: Team) => void;
   getTeam: () => Team;
+  setTeamSettings: (teamSettings: TeamSettings) => void;
   initTeamStore: (slug: string) => Promise<void>;
   clearTeamStore: () => void;
   fetchCurrentTeam: () => Promise<Team>;
@@ -77,6 +78,8 @@ export const teamStore: StateCreator<
     members: get().teamMembers,
     domain: get().teamDomain,
   }),
+
+  setTeamSettings: (teamSettings) => set({ teamSettings }),
 
   createTeam: async (newTeam) => {
     const { $client } = get();

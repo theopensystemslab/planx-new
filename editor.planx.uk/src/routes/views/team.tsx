@@ -2,7 +2,7 @@ import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { View } from "react-navi";
-import { getTeamFromDomain } from "routes/utils";
+import { fetchTeamBoundingBox, getTeamFromDomain } from "routes/utils";
 
 /**
  * View wrapper for /team routes
@@ -16,6 +16,7 @@ export const teamView = async (req: NaviRequest) => {
   if (currentSlug !== routeSlug) {
     try {
       await initTeamStore(routeSlug);
+      // await fetchTeamBoundingBox(routeSlug);
     } catch (error) {
       throw new NotFoundError(`Team not found: ${error}`);
     }

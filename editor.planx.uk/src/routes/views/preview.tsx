@@ -6,7 +6,7 @@ import PublicLayout from "pages/layout/PublicLayout";
 import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import { View } from "react-navi";
-import { getTeamFromDomain } from "routes/utils";
+import { fetchTeamBoundingBox, getTeamFromDomain } from "routes/utils";
 
 import { fetchSettingsForPublishedView } from "./published/queries";
 
@@ -38,6 +38,8 @@ export const previewView = async (req: NaviRequest) => {
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
+
+  await fetchTeamBoundingBox(teamSlug);
 
   return (
     <PublicLayout>

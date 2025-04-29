@@ -5,7 +5,7 @@ import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import { View } from "react-navi";
-import { getTeamFromDomain, setPath } from "routes/utils";
+import { fetchTeamBoundingBox, getTeamFromDomain, setPath } from "routes/utils";
 import { Flow, GlobalSettings } from "types";
 
 import { fetchSettingsForPublishedView, getLastPublishedAt } from "./queries";
@@ -56,6 +56,8 @@ export const publishedView = async (req: NaviRequest) => {
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
+
+  await fetchTeamBoundingBox(teamSlug);
 
   return (
     <PublicLayout>

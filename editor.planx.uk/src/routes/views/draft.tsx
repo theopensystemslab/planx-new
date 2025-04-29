@@ -10,7 +10,7 @@ import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings } from "types";
 
-import { getTeamFromDomain } from "../utils";
+import { fetchTeamBoundingBox, getTeamFromDomain } from "../utils";
 
 interface DraftSettings {
   flows: Flow[];
@@ -37,6 +37,8 @@ export const draftView = async (req: NaviRequest) => {
   state.setGlobalSettings(data.globalSettings[0]);
   state.setFlowSettings(flow.settings);
   state.setTeam(flow.team);
+
+  await fetchTeamBoundingBox(teamSlug);
 
   return (
     <PublicLayout>

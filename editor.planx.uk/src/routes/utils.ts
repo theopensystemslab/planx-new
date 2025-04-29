@@ -1,5 +1,12 @@
 import { ComponentType as NodeTypes } from "@opensystemslab/planx-core/types";
+import { TeamSettings } from "@opensystemslab/planx-core/types";
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
+import { featureCollection } from "@turf/helpers";
+import union from "@turf/union";
+import { Feature, GeoJsonProperties, Polygon } from "geojson";
 import gql from "graphql-tag";
+import { client } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -106,4 +113,55 @@ export const validateTeamRoute = async (req: NaviRequest) => {
     externalTeamName !== req.params.team
   )
     throw new NotFoundError(req.originalUrl);
+};
+
+interface GetSLPBoundingBoxes {
+  teams: {
+    id: number;
+    teamSettings: Pick<TeamSettings, "boundaryBBox">;
+  }[];
+}
+
+/**
+ * TODO: Docs
+ */
+export const fetchTeamBoundingBox = async (teamSlug: string): Promise<void> => {
+  // Cheltenham, Gloucester and Tewkesbury Strategic Local Plan
+  const slpTeams = ["cheltenham", "gloucester", "tewkesbury"];
+  if (!slpTeams.includes(teamSlug)) return;
+
+  console.log("fetching SLP bbox");
+
+  const { data } = await client.query<GetSLPBoundingBoxes>({
+    query: gql`
+      query GetSLPBoundingBoxes($slpTeams: [String!]) {
+        teams(where: { slug: { _in: $slpTeams } }) {
+          id
+          teamSettings: team_settings {
+            boundaryBBox: boundary_bbox
+          }
+        }
+      }
+    `,
+    variables: { slpTeams },
+  });
+
+  console.log({ data });
+
+  // Join bboxes and merge to a single GeoJSON polygon feature
+  const slpBboxes = data.teams
+    .map((team) => team.teamSettings.boundaryBBox)
+    .filter(Boolean) as Feature<Polygon, GeoJsonProperties>[];
+
+  console.log({ slpBboxes });
+
+  const merged = union(featureCollection(slpBboxes));
+  if (!merged) throw Error("Failed to merge SLP bounding boxes");
+
+  const mergedBbox = bboxPolygon(bbox(merged));
+
+  // Save merged bbox to store, where it can be queried by application (e.g. Map, MapAndLabel or List components)
+  const state = useStore.getState();
+  const currentTeamSettings = state.teamSettings;
+  state.setTeamSettings({ ...currentTeamSettings, boundaryBBox: mergedBbox });
 };
