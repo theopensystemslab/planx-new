@@ -12,7 +12,7 @@
     "axios": "^1.8.3",
     "dotenv": "^16.3.1",
     "dotenv-expand": "^10.0.0",
-    "graphql": "^16.8.1",
+    "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
     "nock": "^13.3.1"
