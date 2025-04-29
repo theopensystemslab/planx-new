@@ -33,7 +33,7 @@ export const ConfirmEmail: React.FC<{
   });
 
   return (
-    <Box width="100%">
+    <Box component="main" id="main-content" width="100%">
       <Card handleSubmit={formik.handleSubmit}>
         <CardHeader
           title="Enter your email address"
