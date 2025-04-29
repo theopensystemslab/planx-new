@@ -178,6 +178,7 @@ interface FlattenOptions {
   depth?: number;
   path?: string | null;
   separator?: string;
+  omitIndexKeys?: boolean;
 }
 
 /**
@@ -186,7 +187,12 @@ interface FlattenOptions {
  */
 export function flatten<T extends Record<string, any>>(
   object: T,
-  { depth = Infinity, path = null, separator = "." }: FlattenOptions = {},
+  {
+    depth = Infinity,
+    path = null,
+    separator = ".",
+    omitIndexKeys = false,
+  }: FlattenOptions = {},
 ): T {
   return Object.keys(object).reduce((acc: T, key: string): T => {
     const value = object[key];
@@ -194,7 +200,8 @@ export function flatten<T extends Record<string, any>>(
     // If the key is a whole number, convert to text before setting newPath
     //   eg because Calculate/MathJS cannot automate passport variables with number segments
     if (/^-?\d+$/.test(key)) {
-      key = convertNumberToText(parseInt(key) + 1);
+      // omitIndexKeys is used by Page which always has single fieldset so no need to add '.one.' segment to data values
+      key = omitIndexKeys ? "" : convertNumberToText(parseInt(key) + 1);
     }
 
     const newPath = [path, key].filter(Boolean).join(separator);
@@ -208,7 +215,12 @@ export function flatten<T extends Record<string, any>>(
     return isObject && depth > 0
       ? {
           ...acc,
-          ...flatten(value, { depth: depth - 1, path: newPath, separator }),
+          ...flatten(value, {
+            depth: depth - 1,
+            path: newPath,
+            separator,
+            omitIndexKeys,
+          }),
         }
       : { ...acc, [newPath]: value };
   }, {} as T);
