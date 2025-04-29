@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@opensystemslab/planx-core':
-    specifier: git+https://github.com/theopensystemslab/planx-core#4456cab
-    version: github.com/theopensystemslab/planx-core/4456cab(@types/react@19.0.10)
+    specifier: git+https://github.com/theopensystemslab/planx-core#3e63240
+    version: github.com/theopensystemslab/planx-core/3e63240(@types/react@19.0.10)
   axios:
     specifier: ^1.8.3
     version: 1.8.3
@@ -18,11 +18,11 @@ dependencies:
     specifier: ^8.56.0
     version: 8.56.0
   graphql:
-    specifier: ^16.10.0
-    version: 16.10.0
+    specifier: ^16.11.0
+    version: 16.11.0
   graphql-request:
     specifier: ^6.1.0
-    version: 6.1.0(graphql@16.10.0)
+    version: 6.1.0(graphql@16.11.0)
   isomorphic-fetch:
     specifier: ^3.0.0
     version: 3.0.0
@@ -347,12 +347,12 @@ packages:
       tslib: 2.8.1
     dev: false
 
-  /@graphql-typed-document-node/core@3.2.0(graphql@16.10.0):
+  /@graphql-typed-document-node/core@3.2.0(graphql@16.11.0):
     resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      graphql: 16.10.0
+      graphql: 16.11.0
     dev: false
 
   /@humanwhocodes/config-array@0.11.14:
@@ -1345,8 +1345,8 @@ packages:
     resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
     dev: false
 
-  /fast-xml-parser@5.2.0:
-    resolution: {integrity: sha512-Uw9+Mjt4SBRud1IcaYuW/O0lW8SKKdMl5g7g24HiIuyH5fQSD+AVLybSlJtqLYEbytVFjWQa5DMGcNgeksdRBg==}
+  /fast-xml-parser@5.2.1:
+    resolution: {integrity: sha512-Kqq/ewnRACQ20e0BlQ5KqHRYWRBp7yv+jttK4Yj2yY+2ldgCoxJkrP1NHUhjypsJ+eQXlGJ/jebM3wa60s1rbQ==}
     hasBin: true
     dependencies:
       strnum: 2.0.5
@@ -1501,20 +1501,20 @@ packages:
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  /graphql-request@6.1.0(graphql@16.10.0):
+  /graphql-request@6.1.0(graphql@16.11.0):
     resolution: {integrity: sha512-p+XPfS4q7aIpKVcgmnZKhMNqhltk20hfXtkaIkTfjjmiKMJ5xrt5c743cL03y/K7y1rg3WrIC49xGiEQ4mxdNw==}
     peerDependencies:
       graphql: 14 - 16
     dependencies:
-      '@graphql-typed-document-node/core': 3.2.0(graphql@16.10.0)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.11.0)
       cross-fetch: 3.2.0
-      graphql: 16.10.0
+      graphql: 16.11.0
     transitivePeerDependencies:
       - encoding
     dev: false
 
-  /graphql@16.10.0:
-    resolution: {integrity: sha512-AjqGKbDGUFRKIRCP9tCKiIGHyriz2oHEbPIbEtcSLSs4YjReZOIPQQWek4+6hjw62H9QShXHyaGivGiYVLeYFQ==}
+  /graphql@16.11.0:
+    resolution: {integrity: sha512-mS1lbMsxgQj6hge1XZ6p7GPhbrtFwUFYi3wRzXAC/FmYnyXMTvvI3td3rjmQ2u8ewXueaSvRPWaEcgVVOT9Jnw==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
     dev: false
 
@@ -1844,8 +1844,8 @@ packages:
       js-tokens: 4.0.0
     dev: false
 
-  /marked@15.0.8:
-    resolution: {integrity: sha512-rli4l2LyZqpQuRve5C0rkn6pj3hT8EWPC+zkAxFTAJLxRbENfTAhEQq9itrmf1Y81QtAX5D/MYlGlIomNgj9lA==}
+  /marked@15.0.11:
+    resolution: {integrity: sha512-1BEXAU2euRCG3xwgLVT1y0xbJEld1XOrmRJpUwRCcy7rxhSCwMrmEu9LXoPhHSCJG41V7YcQ2mjKRr5BA3ITIA==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: false
@@ -2467,8 +2467,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: false
 
-  /type-fest@4.40.0:
-    resolution: {integrity: sha512-ABHZ2/tS2JkvH1PEjxFDTUWC8dB5OsIGZP4IFLhR293GqT5Y5qB1WwL2kMPYhQW9DVgVD8Hd7I8gjwPIf5GFkw==}
+  /type-fest@4.40.1:
+    resolution: {integrity: sha512-9YvLNnORDpI+vghLU/Nf+zSv0kL47KbVJ1o3sKgoTefl6i+zebxbiDQWoe/oWWqPhIgQdRZRT1KA9sCPL810SA==}
     engines: {node: '>=16'}
     dev: false
 
@@ -2634,9 +2634,9 @@ packages:
     resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
     dev: false
 
-  github.com/theopensystemslab/planx-core/4456cab(@types/react@19.0.10):
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4456cab}
-    id: github.com/theopensystemslab/planx-core/4456cab
+  github.com/theopensystemslab/planx-core/3e63240(@types/react@19.0.10):
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/3e63240}
+    id: github.com/theopensystemslab/planx-core/3e63240
     name: '@opensystemslab/planx-core'
     version: 1.0.0
     prepare: true
@@ -2652,16 +2652,16 @@ packages:
       copyfiles: 2.4.1
       docx: 9.4.1
       eslint: 8.57.1
-      fast-xml-parser: 5.2.0
-      graphql: 16.10.0
-      graphql-request: 6.1.0(graphql@16.10.0)
+      fast-xml-parser: 5.2.1
+      graphql: 16.11.0
+      graphql-request: 6.1.0(graphql@16.11.0)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.21
-      marked: 15.0.8
+      marked: 15.0.11
       prettier: 3.5.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      type-fest: 4.40.0
+      type-fest: 4.40.1
       uuid: 11.1.0
       zod: 3.24.3
     transitivePeerDependencies:
