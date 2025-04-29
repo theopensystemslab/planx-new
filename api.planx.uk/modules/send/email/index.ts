@@ -1,3 +1,7 @@
+import {
+  formatRawProjectTypes,
+  getFeeBreakdown,
+} from "@opensystemslab/planx-core";
 import { ServerError } from "../../../errors/serverError.js";
 import { sendEmail } from "../../../lib/notify/index.js";
 import type { TemplateRegistry } from "../../../lib/notify/templates/index.js";
@@ -9,6 +13,10 @@ import {
   getTeamEmailSettings,
   insertAuditEntry,
 } from "./service.js";
+import type {
+  SiteAddress,
+  TeamContactSettings,
+} from "@opensystemslab/planx-core/types";
 
 export const sendToEmail: SendIntegrationController = async (
   req,
@@ -41,27 +49,11 @@ export const sendToEmail: SendIntegrationController = async (
       });
     }
 
-    // Get the applicant email and flow slug associated with the session
-    const { email, flow } = await getSessionEmailDetailsById(sessionId);
-    const flowName = flow.name;
-
-    // Make application files download magic link
-    const params = new URLSearchParams({
-      email: teamSettings.submissionEmail,
-      localAuthority: localAuthority,
+    const config = await getSubmitEmailConfig({
+      teamSettings,
+      localAuthority,
+      sessionId,
     });
-    const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
-
-    // Prepare email template
-    const config: TemplateRegistry["submit"]["config"] = {
-      personalisation: {
-        serviceName: flowName,
-        sessionId,
-        applicantEmail: email,
-        downloadLink: applicationFilesDownloadLink,
-      },
-      emailReplyToId: teamSettings.emailReplyToId,
-    };
 
     // Send the email
     const response = await sendEmail(
@@ -95,5 +87,87 @@ export const sendToEmail: SendIntegrationController = async (
         }`,
       }),
     );
+  }
+};
+
+const getSubmitEmailConfig = async ({
+  teamSettings,
+  localAuthority,
+  sessionId,
+}: {
+  teamSettings: TeamContactSettings;
+  localAuthority: string;
+  sessionId: string;
+}): Promise<TemplateRegistry["submit"]["config"]> => {
+  try {
+    const { email, flow, passportData } =
+      await getSessionEmailDetailsById(sessionId);
+
+    // Type narrowing
+    if (!teamSettings.submissionEmail) throw Error("Submission email missing!");
+
+    const projectTypes = passportData["proposal.projectType"] as
+      | string[]
+      | undefined;
+    const projectType =
+      projectTypes?.length && formatRawProjectTypes(projectTypes);
+
+    const address = passportData["_address"] as SiteAddress;
+    const addressLine = address?.single_line_address || address?.title;
+
+    const applicantName = [
+      passportData["applicant.name.title"],
+      passportData["applicant.name.first"],
+      passportData["applicant.name.last"],
+    ]
+      .filter(Boolean)
+      .join(" ");
+
+    const fee = getFee(passportData);
+
+    const flowName = flow.name;
+
+    // Make application files download magic link
+    const params = new URLSearchParams({
+      email: teamSettings.submissionEmail,
+      localAuthority,
+    });
+    const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
+
+    // Prepare email template
+    const config: TemplateRegistry["submit"]["config"] = {
+      personalisation: {
+        serviceName: flowName,
+        sessionId,
+        applicantEmail: email,
+        downloadLink: applicationFilesDownloadLink,
+        address: addressLine || "Address not submitted",
+        projectType: projectType || "Project type not submitted",
+        applicantName,
+        fee: fee || "N/A",
+      },
+      emailReplyToId: teamSettings.emailReplyToId,
+    };
+
+    return config;
+  } catch (error) {
+    throw new Error(
+      `Failed to fetch details for 'submit' email template for session ${sessionId}. Error: ${error}`,
+    );
+  }
+};
+
+const getFee = (passportData: Record<string, unknown>): string | undefined => {
+  try {
+    const payable = getFeeBreakdown(passportData).amount.payable;
+    const fee = payable.toLocaleString("en-GB", {
+      style: "currency",
+      currency: "GBP",
+    });
+
+    return fee;
+  } catch (error) {
+    // Ignore (valid) error - this may not be a fee-carrying service
+    return undefined;
   }
 };

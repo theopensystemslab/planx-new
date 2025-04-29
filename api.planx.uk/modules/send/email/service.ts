@@ -58,6 +58,7 @@ export async function getSessionData(sessionId: string) {
 
 interface GetSessionEmailDetailsById {
   session: {
+    passportData: Record<string, unknown>;
     email: string;
     flow: {
       slug: string;
@@ -71,6 +72,7 @@ export async function getSessionEmailDetailsById(sessionId: string) {
     gql`
       query GetSessionEmailDetails($id: uuid!) {
         session: lowcal_sessions_by_pk(id: $id) {
+          passportData: data(path: "passport.data")
           email
           flow {
             slug
