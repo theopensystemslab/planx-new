@@ -43,6 +43,32 @@ describe("passport data shape", () => {
     });
   });
 
+  it("flattens page item and omits index key segments", async () => {
+    const defaultPassportData = {
+      mockFn: [
+        {
+          age: 10,
+          "cuteness.amount": "Very",
+          "email.address": "richard.parker@pi.com",
+          name: "Richard Parker",
+          size: "Medium",
+          food: ["bamboo", "leaves"],
+        },
+      ],
+    };
+
+    expect(
+      flatten(defaultPassportData, { depth: 2, omitIndexKeys: true }),
+    ).toEqual({
+      "mockFn.age": 10,
+      "mockFn.cuteness.amount": "Very",
+      "mockFn.email.address": "richard.parker@pi.com",
+      "mockFn.name": "Richard Parker",
+      "mockFn.size": "Medium",
+      "mockFn.food": ["bamboo", "leaves"],
+    });
+  });
+
   it("adds summary stats when applicable fields are set", async () => {
     const defaultPassportData = {
       "proposal.units.residential": [

@@ -24,7 +24,7 @@ export const BuildingDetailsGLA: Schema = {
     {
       type: "number",
       data: {
-        title: "How many storeys does the building have?",
+        title: "How many storeys will the building have?",
         fn: "storeys",
         allowNegatives: false,
       },

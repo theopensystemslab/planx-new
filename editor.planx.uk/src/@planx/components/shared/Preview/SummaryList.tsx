@@ -22,6 +22,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 import {
   Field,
   isAddressFieldResponse,
+  isChecklistFieldResponse,
   isMapFieldResponse,
   isNumberFieldResponse,
   isTextResponse,
@@ -631,6 +632,7 @@ function Page(props: ComponentProps) {
   const displayValue = (answer: ResponseValue<Field>) => {
     if (isTextResponse(answer)) return answer;
     if (isNumberFieldResponse(answer)) return answer.toString();
+    if (isChecklistFieldResponse(answer)) return answer.join(", ");
     if (isMapFieldResponse(answer)) return `${answer.length || 0} features`;
     if (isAddressFieldResponse(answer))
       return formatAsSingleLineAddress(answer);
@@ -639,6 +641,11 @@ function Page(props: ComponentProps) {
     return answer;
   };
 
+  // Omit un-answered optional fields from Review component display
+  const fieldsWithAnswers = fields.filter(
+    (field) => displayValue(answers[0][field.data.fn]) !== "",
+  );
+
   return (
     <>
       <Box component="dt">{props.node.data.title}</Box>
@@ -646,7 +653,7 @@ function Page(props: ComponentProps) {
         component="dd"
         sx={{ gap: 2, display: "flex", flexDirection: "column" }}
       >
-        {fields.map((field) => (
+        {fieldsWithAnswers.map((field) => (
           <Box key={field.data.fn}>
             <Typography fontWeight={FONT_WEIGHT_SEMI_BOLD}>
               {field.data.title}

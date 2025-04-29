@@ -47,6 +47,7 @@ export const MaterialDetails: Schema = {
     },
     {
       type: "text",
+      required: false,
       data: {
         title: "Existing material description",
         fn: "existing",
