@@ -1,15 +1,17 @@
-import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import Typography from "@mui/material/Typography";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
+import { visuallyHidden } from "@mui/utils";
 import { bbox } from "@turf/bbox";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import axios, { isAxiosError } from "axios";
 import { useFormik } from "formik";
-import type { Feature, MultiPolygon, Polygon } from "geojson";
+import type { Feature, GeoJsonObject, MultiPolygon, Polygon } from "geojson";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
 import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/editor/InputLabel";
+import InputLegend from "ui/editor/InputLegend";
+import SettingsDescription from "ui/editor/SettingsDescription";
+import SettingsSection from "ui/editor/SettingsSection";
 import Input from "ui/shared/Input/Input";
 import * as Yup from "yup";
 
@@ -20,6 +22,37 @@ export type PlanningDataEntity = Feature<
   Polygon | MultiPolygon,
   Record<string, unknown>
 >;
+
+const PreviewMap: React.FC<{ geojsonData?: GeoJsonObject }> = ({
+  geojsonData,
+}) => {
+  if (!geojsonData) return;
+
+  return (
+    <>
+      <p style={visuallyHidden}>
+        A static map displaying your team's boundary.
+      </p>
+      {/* @ts-ignore */}
+      <my-map
+        id="team-boundary-map"
+        ariaLabelOlFixedOverlay="A static map displaying your team's boundary"
+        geojsonData={JSON.stringify(geojsonData)}
+        geojsonColor="#ff0000"
+        geojsonFill
+        geojsonBuffer={1_000}
+        osProxyEndpoint={`${
+          import.meta.env.VITE_APP_API_URL
+        }/proxy/ordnance-survey`}
+        hideResetControl
+        staticMode
+        style={{ width: "100%", height: "30vh" }}
+        osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+        collapseAttributions
+      />
+    </>
+  );
+};
 
 const BoundaryDescription: React.FC = () => (
   <>
@@ -41,15 +74,23 @@ const BoundaryDescription: React.FC = () => (
   </>
 );
 
-const SLPInfo: React.FC = () => (
-  <WarningContainer>
-    <TravelExploreIcon sx={{ mr: 1 }} />
-    <Typography variant="body2" color={(theme) => theme.palette.text.secondary}>
-      Tewkesbury, Cheltenham and Gloucestershire share a Strategic and Local
-      Plan (SLP). Planning applicantions can span across boundaries of these
-      three authorities.
-    </Typography>
-  </WarningContainer>
+const SLPInfo: React.FC<{ geojsonData?: GeoJsonObject }> = ({
+  geojsonData,
+}) => (
+  <SettingsSection background>
+    <InputLegend>Boundary</InputLegend>
+    <SettingsDescription>
+      <Typography
+        variant="body2"
+        color={(theme) => theme.palette.text.secondary}
+      >
+        Tewkesbury, Cheltenham and Gloucestershire share a Strategic and Local
+        Plan (SLP). Planning applicantions can span across boundaries of these
+        three authorities.
+      </Typography>
+    </SettingsDescription>
+    <PreviewMap geojsonData={geojsonData} />
+  </SettingsSection>
 );
 
 /**
@@ -76,13 +117,19 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
+        // Fetch boundary from Planning Data
         const { data } = await axios.get<PlanningDataEntity>(
           `${values.boundaryUrl}.geojson`,
         );
 
+        // Transform and update formik state
+        const boundaryBBox = convertToBoundingBox(data);
+        formik.setFieldValue("boundaryBBox", boundaryBBox);
+
+        // Update database
         const isUpdateSuccess = await useStore.getState().updateTeamSettings({
           boundaryUrl: values.boundaryUrl,
-          boundaryBBox: convertToBoundingBox(data),
+          boundaryBBox,
         });
         if (isUpdateSuccess) {
           onSuccess();
@@ -107,27 +154,32 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const slpTeams = ["cheltenham", "gloucester", "tewkesbury"];
   const isSLPTeam = slpTeams.includes(teamSlug);
 
+  if (isSLPTeam) return <SLPInfo geojsonData={formik.values.boundaryBBox} />;
+
   return (
     <SettingsForm
       formik={formik}
       legend="Boundary"
       description={<BoundaryDescription />}
       input={
-        <InputLabel label="Boundary URL" htmlFor="boundaryUrl">
-          <Input
-            name="boundary"
-            value={formik.values.boundaryUrl}
-            errorMessage={formik.errors.boundaryUrl}
-            onChange={(ev: ChangeEvent<HTMLInputElement>) => {
-              formik.setFieldValue("boundaryUrl", ev.target.value);
-            }}
-            id="boundaryUrl"
-            disabled={isSLPTeam}
+        <>
+          <InputLabel label="Boundary URL" htmlFor="boundaryUrl">
+            <Input
+              name="boundary"
+              value={formik.values.boundaryUrl}
+              errorMessage={formik.errors.boundaryUrl}
+              onChange={(ev: ChangeEvent<HTMLInputElement>) => {
+                formik.setFieldValue("boundaryUrl", ev.target.value);
+              }}
+              id="boundaryUrl"
+            />
+          </InputLabel>
+          <PreviewMap
+            key={JSON.stringify(formik.values.boundaryBBox)}
+            geojsonData={formik.values.boundaryBBox}
           />
-        </InputLabel>
+        </>
       }
-    >
-      {isSLPTeam && <SLPInfo />}
-    </SettingsForm>
+    ></SettingsForm>
   );
 }
