@@ -621,9 +621,10 @@ function Page(props: ComponentProps) {
   const fields = (props.node.data as Page).schema.fields;
 
   // Omit un-answered optional fields from Review component display
-  const fieldsWithAnswers = fields.filter((field) =>
-    Boolean(answers[0][field.data.fn]),
-  );
+  const fieldsWithAnswers = fields.filter((field) => {
+    const answer = answers[0][field.data.fn];
+    return Array.isArray(answer) ? answer.length > 0 : Boolean(answer);
+  });
 
   return (
     <>

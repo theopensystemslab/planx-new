@@ -10,11 +10,8 @@ import { getFieldProps, Props } from ".";
 import { FieldInputDescription } from "./shared";
 
 export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
-  const {
-    data: { title, description, options },
-    formik,
-  } = props;
-  const { id, errorMessage, name, value } = getFieldProps(props);
+  const { data, formik } = props;
+  const { id, errorMessage, name, value, title } = getFieldProps(props);
 
   if (!Array.isArray(value))
     throw Error(
@@ -39,11 +36,13 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
 
   return (
     <InputLabel label={title} id={`checklist-label-${id}`}>
-      {description && <FieldInputDescription description={description} />}
+      {data.description && (
+        <FieldInputDescription description={data.description} />
+      )}
       <ErrorWrapper error={errorMessage} id={id}>
         <Grid container component="fieldset">
           <legend style={visuallyHidden}>{title}</legend>
-          {options.map((option) => (
+          {data.options.map((option) => (
             <Grid item xs={12}>
               <ChecklistItem
                 key={option.id}
