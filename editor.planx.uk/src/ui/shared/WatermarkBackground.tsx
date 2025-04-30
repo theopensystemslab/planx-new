@@ -55,7 +55,7 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
   variant = "light",
   opacity = 0.1,
 }) => {
-  const [isTest] = useStore((state) => [state.isTest]);
+  const [isTest] = useStore((state) => [!state.isLiveEnv]);
 
   if (!isTest) return null;
 

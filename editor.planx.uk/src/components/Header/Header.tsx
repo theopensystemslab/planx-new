@@ -47,7 +47,6 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../../routes/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
-import TestEnvironmentBanner from "../TestEnvironmentBanner/TestEnvironmentBanner";
 
 const HEADER_HEIGHT_PUBLIC = 74;
 export const HEADER_HEIGHT_EDITOR = 56;
@@ -430,7 +429,6 @@ const PublicToolbar: React.FC<{
       )}
       <NavBar />
       <AnalyticsDisabledBanner />
-      <TestEnvironmentBanner />
       <ConfirmationDialog
         open={isDialogOpen}
         onClose={handleRestart}
@@ -542,7 +540,6 @@ const EditorToolbar: React.FC<{
           </InnerContainer>
         </EditorHeaderContainer>
       </EditorHeader>
-      <TestEnvironmentBanner />
       {user && (
         <StyledPopover
           open={open}

@@ -27,7 +27,7 @@ import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
-import { isLivePlatform, isTestPlatform } from "theme";
+import { isLiveEnv } from "utils";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -50,7 +50,6 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
-  isTestEnvBannerVisible: boolean;
   hideTestEnvBanner: () => void;
   showTags: boolean;
   toggleShowTags: () => void;
@@ -63,8 +62,7 @@ export interface EditorUIStore {
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
-  isLive: boolean;
-  isTest: boolean;
+  isLiveEnv: boolean;
 }
 
 export const editorUIStore: StateCreator<
@@ -82,12 +80,7 @@ export const editorUIStore: StateCreator<
       set({ showSidebar: !get().showSidebar });
     },
 
-    isTestEnvBannerVisible: !window.location.href.includes(".uk"),
-
-    hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
-
-    isLive: isLivePlatform,
-    isTest: isTestPlatform,
+    isLiveEnv: isLiveEnv(),
 
     showTags: false,
 
