@@ -50,7 +50,6 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
-  hideTestEnvBanner: () => void;
   showTags: boolean;
   toggleShowTags: () => void;
   showImages: boolean;
