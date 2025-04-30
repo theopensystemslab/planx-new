@@ -56,6 +56,7 @@ export const ALLOW_LIST = [
   "findProperty.action",
   "_overrides",
   "planningConstraints.action",
+  "platform",
   "property.constraints.planning",
   "property.type",
   "propertyInformation.action",
@@ -168,6 +169,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     nodeId: string,
     direction?: AnalyticsLogDirection,
     analyticsSessionId?: number,
+    additionalAnswers?: Record<string, any>,
   ) {
     const nodeToTrack = flow[nodeId];
 
@@ -187,6 +189,11 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
     const nodeType = nodeToTrack?.type ? TYPES[nodeToTrack.type] : null;
     const nodeTitle = extractNodeTitle(nodeToTrack);
+
+    const allowListAnswers = {
+      ...getAllowListAnswers(nodeId, breadcrumbs[nodeId], flow, breadcrumbs),
+      ...additionalAnswers,
+    };
 
     const result = await insertNewAnalyticsLog(
       logDirection,
@@ -322,6 +329,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!shouldTrackAnalytics) return;
     const userAgent = Bowser.parse(window.navigator.userAgent);
     const referrer = document.referrer || null;
+    const platform = Bowser.parse(window.navigator.platform);
 
     const response = await publicClient.mutate({
       mutation: INSERT_NEW_ANALYTICS,
@@ -329,6 +337,7 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         type,
         flow_id: flowId,
         user_agent: userAgent,
+        platform: platform,
         referrer,
       },
     });
