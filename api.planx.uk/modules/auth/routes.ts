@@ -27,11 +27,7 @@ export default (passport: Authenticator): Router => {
     Controller.handleSuccess,
   );
 
-  router.get(
-    "/auth/validate-jwt",
-    Middleware.useNoCache,
-    Controller.isJWTRevoked,
-  );
+  router.get("/auth/validate-jwt", Controller.isJWTRevoked);
 
   return router;
 };

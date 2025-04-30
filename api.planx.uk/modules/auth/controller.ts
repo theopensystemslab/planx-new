@@ -115,7 +115,17 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
     const tokenDigest = createTokenDigest(token);
     const isRevoked = await isTokenRevoked(tokenDigest);
 
-    return isRevoked ? res.status(401).send() : res.status(200).json(decoded);
+    if (isRevoked) {
+      res.set("Cache-Control", "no-store");
+      return res.status(401).send();
+    }
+
+    // Cache responses for 1 minute
+    res.set("Cache-Control", "max-age=60");
+    const expiresDate = new Date(Date.now() + 60_000);
+    res.set("Expires", expiresDate.toUTCString());
+
+    return res.status(200).json(decoded);
   } catch (error) {
     return res.status(401).send();
   }
