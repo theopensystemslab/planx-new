@@ -7,9 +7,9 @@ import {
   ComponentType as TYPES,
   NodeId,
 } from "@opensystemslab/planx-core/types";
-import { formatAsSingleLineAddress } from "@planx/components/AddressInput/model";
 import { PASSPORT_UPLOAD_KEY } from "@planx/components/DrawBoundary/model";
 import { PASSPORT_REQUESTED_FILES_KEY } from "@planx/components/FileUploadAndLabel/model";
+import { formatSchemaDisplayValue } from "@planx/components/List/utils";
 import type { Page } from "@planx/components/Page/model";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import format from "date-fns/format";
@@ -19,16 +19,7 @@ import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import {
-  Field,
-  isAddressFieldResponse,
-  isChecklistFieldResponse,
-  isMapFieldResponse,
-  isNumberFieldResponse,
-  isTextResponse,
-  ResponseValue,
-  SchemaUserResponse,
-} from "../Schema/model";
+import { SchemaUserResponse } from "../Schema/model";
 
 export default SummaryListsBySections;
 
@@ -629,21 +620,9 @@ function Page(props: ComponentProps) {
   const answers = getAnswersByNode(props) as SchemaUserResponse[];
   const fields = (props.node.data as Page).schema.fields;
 
-  const displayValue = (answer: ResponseValue<Field>) => {
-    if (isTextResponse(answer)) return answer;
-    if (isNumberFieldResponse(answer)) return answer.toString();
-    if (isChecklistFieldResponse(answer)) return answer.join(", ");
-    if (isMapFieldResponse(answer)) return `${answer.length || 0} features`;
-    if (isAddressFieldResponse(answer))
-      return formatAsSingleLineAddress(answer);
-
-    // TODO: Handle other types more gracefully
-    return answer;
-  };
-
   // Omit un-answered optional fields from Review component display
-  const fieldsWithAnswers = fields.filter(
-    (field) => displayValue(answers[0][field.data.fn]) !== "",
+  const fieldsWithAnswers = fields.filter((field) =>
+    Boolean(answers[0][field.data.fn]),
   );
 
   return (
@@ -659,7 +638,7 @@ function Page(props: ComponentProps) {
               {field.data.title}
             </Typography>
             <Typography>
-              <>{displayValue(answers[0][field.data.fn])}</>
+              {formatSchemaDisplayValue(answers[0][field.data.fn], field)}
             </Typography>
           </Box>
         ))}
