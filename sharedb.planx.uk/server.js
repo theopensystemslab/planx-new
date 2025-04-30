@@ -123,15 +123,15 @@ const wss = new Server({
 wss.on("connection", function (ws, req) {
   // JWTs expire every 24hrs
   // Check status every minute - client side will logout on expiry
-  const tokenCheckInterval = setInterval(async () => {
-    try {
-      await validateJWT(req.authToken)
-    } catch (error) {
-      console.error("Token validation error:", error);
-      ws.close(TOKEN_EXPIRY_CODE, "Token validation error");
-      clearInterval(tokenCheckInterval);
-    }
-  }, ONE_MINUTE_IN_MS);
+  // const tokenCheckInterval = setInterval(async () => {
+  //   try {
+  //     await validateJWT(req.authToken)
+  //   } catch (error) {
+  //     console.error("Token validation error:", error);
+  //     ws.close(TOKEN_EXPIRY_CODE, "Token validation error");
+  //     clearInterval(tokenCheckInterval);
+  //   }
+  // }, ONE_MINUTE_IN_MS);
 
   const stream = new WebSocketJSONStream(ws);
   sharedb.listen(stream, req);
