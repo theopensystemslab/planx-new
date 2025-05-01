@@ -58,8 +58,11 @@ const BoundaryDescription: React.FC = () => (
   <>
     <p>
       The boundary URL is used to retrieve the outer boundary of your council
-      area. This can then help users define whether they are within your council
-      area.
+      area. The bounding box of your boundary (shown below) limits the area 
+      applicants can access via the map within your services.
+    </p>
+    <p>
+      The detailed boundary is still referenced when planning constraints are checked.
     </p>
     <p>
       The boundary should be given as a link from:{" "}
@@ -159,7 +162,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   return (
     <SettingsForm
       formik={formik}
-      legend="Boundary"
+      legend="Boundary (bounding box)"
       description={<BoundaryDescription />}
       input={
         <>
