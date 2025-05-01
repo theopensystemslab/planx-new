@@ -8,13 +8,13 @@ import InputLegend from "ui/editor/InputLegend";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
 
-type SettingsFormProps<TFormikValues> = {
+type SettingsFormProps<TFormikValues> = React.PropsWithChildren<{
   legend: string;
   description: React.ReactElement;
   input: React.ReactElement;
   formik: FormikProps<TFormikValues>;
   preview?: React.ReactElement;
-};
+}>;
 
 export const SettingsForm = <TFormikValues,>({
   formik,
@@ -22,6 +22,7 @@ export const SettingsForm = <TFormikValues,>({
   description,
   input,
   preview,
+  children,
 }: SettingsFormProps<TFormikValues>) => {
   return (
     <SettingsSection background>
@@ -30,6 +31,7 @@ export const SettingsForm = <TFormikValues,>({
           <InputLegend>{legend}</InputLegend>
           <SettingsDescription>{description}</SettingsDescription>
           {input}
+          {children}
         </InputGroup>
         {preview && (
           <Box>
