@@ -153,9 +153,9 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
   const route = useCurrentRoute();
   const teamSlug = route.data.team;
 
-  // Cheltenham, Gloucester and Tewkesbury Strategic Local Plan
-  const slpTeams = ["cheltenham", "gloucester", "tewkesbury"];
-  const isSLPTeam = slpTeams.includes(teamSlug);
+  // Cheltenham, Gloucester and Tewkesbury share a Strategic Local Plan
+  // All SLP services are hosted on the Tewkesbury PlanX team
+  const isSLPTeam = teamSlug === "tewkesbury"
 
   if (isSLPTeam) return <SLPInfo geojsonData={formik.values.boundaryBBox} />;
 
