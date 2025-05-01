@@ -39,6 +39,7 @@ import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/PreviousLDCE";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.List, List>;
 
@@ -83,6 +84,7 @@ export const SCHEMAS = [
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,
   },
+  { name: "Sketch Plan (testing only)", schema: Trees },
 ];
 
 function ListComponent(props: Props) {
