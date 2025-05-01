@@ -280,7 +280,7 @@ jobs:
     if: ${{ needs.changes.outputs.hasura == 'true' }}
     steps:
       - uses: actions/checkout@v4
-      - uses: Fieldguide/action-hasura-change-summary@v2
+      - uses: Fieldguide/action-hasura-change-summary@v3
         id: hasura-change
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
