@@ -171,7 +171,7 @@ export interface EditorStore extends Store.Store {
   isClone: (id: NodeId) => boolean;
   lastPublished: (flowId: string) => Promise<string>;
   lastPublisher: (flowId: string) => Promise<string>;
-  lastPublishedDate: string;
+  lastPublishedDate?: string;
   setLastPublishedDate: (date: string) => void;
   isFlowPublished: boolean;
   isTemplate: boolean;
@@ -452,7 +452,7 @@ export const editorStore: StateCreator<
     return lastPublishedDate;
   },
 
-  lastPublishedDate: "",
+  lastPublishedDate: undefined,
 
   setLastPublishedDate: (date: string) => {
     set({ lastPublishedDate: date });

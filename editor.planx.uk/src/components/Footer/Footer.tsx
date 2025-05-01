@@ -55,11 +55,13 @@ export default function Footer(props: Props) {
   return (
     <Root>
       <Container maxWidth={false}>
-        <Box pb={2}>
-          <Typography variant="body2">
-            {formatServiceLastUpdated(lastPublishedDate)}
-          </Typography>
-        </Box>
+        {lastPublishedDate && 
+          <Box pb={2}>
+            <Typography variant="body2">
+              {formatServiceLastUpdated(lastPublishedDate)}
+            </Typography>
+          </Box>
+        }
         {items && items.length > 0 && (
           <ButtonGroup pb={2.5}>
             {items
