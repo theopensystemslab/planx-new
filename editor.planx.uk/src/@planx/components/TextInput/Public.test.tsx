@@ -26,6 +26,30 @@ test("requires a value before being able to continue", async () => {
   expect(handleSubmit).toHaveBeenCalled();
 });
 
+test("requires a non-empty string before being able to continue", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = setup(
+    <TextInput
+      title="hello"
+      type={TextInputType.Short}
+      handleSubmit={handleSubmit}
+    />,
+  );
+
+  expect(screen.getByRole("heading")).toHaveTextContent("hello");
+
+  await user.type(screen.getByLabelText("hello"), " ");
+  await user.click(screen.getByTestId("continue-button"));
+
+  expect(handleSubmit).toHaveBeenCalledTimes(0);
+
+  const errorMessage = await screen.findByText(
+    "Enter your answer before continuing",
+  );
+  expect(errorMessage).toBeVisible();
+});
+
 test("requires a valid email before being able to continue", async () => {
   const handleSubmit = vi.fn();
 

@@ -32,7 +32,7 @@ export const textInputValidationSchema = ({
   string()
     .when([], {
       is: () => required,
-      then: string().required("Enter your answer before continuing"),
+      then: string().trim().required("Enter your answer before continuing"),
       otherwise: string().notRequired(),
     })
     .test({
