@@ -27,7 +27,6 @@ import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
-import { isLiveEnv } from "utils";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -61,7 +60,6 @@ export interface EditorUIStore {
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
-  isLiveEnv: boolean;
 }
 
 export const editorUIStore: StateCreator<
@@ -78,8 +76,6 @@ export const editorUIStore: StateCreator<
     toggleSidebar: () => {
       set({ showSidebar: !get().showSidebar });
     },
-
-    isLiveEnv: isLiveEnv(),
 
     showTags: false,
 

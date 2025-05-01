@@ -55,9 +55,9 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
   variant = "light",
   opacity = 0.1,
 }) => {
-  const [isTest] = useStore((state) => [!state.isLiveEnv]);
-
-  if (!isTest) return null;
+  // Only display banner on Staging and Pizza environments
+  const isTestEnvironment = ["staging", "pizza"].includes(process.env.VITE_APP_ENV!);
+  if (!isTestEnvironment) return null;
 
   return (
     <Root>
