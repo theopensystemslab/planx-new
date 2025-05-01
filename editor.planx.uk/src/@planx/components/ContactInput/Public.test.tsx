@@ -247,3 +247,29 @@ test("does not allow the name 'Test Test' to be used", async () => {
   );
   expect(errorMessage).toBeVisible();
 });
+
+test("requires a non-empty string before being able to continue", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = setup(
+    <ContactInput
+      handleSubmit={handleSubmit}
+      title="Enter your contact details"
+      fn="applicant"
+    />,
+  );
+
+  await fillInFieldsUsingLabel(user, {
+    "First name": "Someone",
+    "Last name": " ",
+    "Phone number": "0123456789",
+    "Email address": "test@gov.uk",
+  });
+
+  await user.click(screen.getByTestId("continue-button"));
+
+  expect(handleSubmit).not.toHaveBeenCalled();
+
+  const errorMessage = await screen.findByText("Enter a last name");
+  expect(errorMessage).toBeVisible();
+});

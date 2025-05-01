@@ -6,11 +6,11 @@ import { BaseNodeData, parseBaseNodeData } from "../shared";
 
 export const addressValidationSchema = (): SchemaOf<Address> =>
   object({
-    line1: string().required("Enter the first line of an address"),
+    line1: string().trim().required("Enter the first line of an address"),
     line2: string(),
-    town: string().required("Enter a town"),
+    town: string().trim().required("Enter a town"),
     county: string(),
-    postcode: string().required("Enter a postcode"),
+    postcode: string().trim().required("Enter a postcode"),
     country: string(),
   });
 

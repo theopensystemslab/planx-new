@@ -41,6 +41,28 @@ test("submits an address", async () => {
   });
 });
 
+test("requires a non-empty string before being able to continue", async () => {
+  const handleSubmit = vi.fn();
+
+  const { user } = setup(
+    <AddressInput handleSubmit={handleSubmit} title="" fn="foo" />,
+  );
+
+  await fillInFieldsUsingLabel(user, {
+    "Address line 1": "Flat 1",
+    "Address line 2 (optional)": "221b Baker St",
+    Town: " ",
+    Postcode: "SW1A 2AA",
+  });
+
+  await user.click(screen.getByTestId("continue-button"));
+
+  expect(handleSubmit).not.toHaveBeenCalled();
+
+  const errorMessage = await screen.findByText("Enter a town");
+  expect(errorMessage).toBeVisible();
+});
+
 test("recovers previously submitted text when clicking the back button", async () => {
   const handleSubmit = vi.fn();
   const componentId = uniqueId();

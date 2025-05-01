@@ -14,11 +14,12 @@ export type Contact = {
 
 export const userDataSchema: SchemaOf<Contact> = object({
   title: string(),
-  firstName: string().required("Enter a first name"),
-  lastName: string().required("Enter a last name"),
+  firstName: string().trim().required("Enter a first name"),
+  lastName: string().trim().required("Enter a last name"),
   organisation: string(),
-  phone: string().required("Enter a phone number"),
+  phone: string().trim().required("Enter a phone number"),
   email: string()
+    .trim()
     .email(
       "Enter an email address in the correct format, like name@example.com",
     )
