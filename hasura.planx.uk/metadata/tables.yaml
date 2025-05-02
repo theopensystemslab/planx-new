@@ -2932,7 +2932,6 @@
           - created_at
           - domain
           - id
-          - metabase_id
           - name
           - slug
           - updated_at
@@ -2987,8 +2986,7 @@
   update_permissions:
     - role: api
       permission:
-        columns:
-          - metabase_id
+        columns: []
         filter: {}
         check: {}
       comment: ""
