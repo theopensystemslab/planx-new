@@ -12,7 +12,7 @@ export const getTeamSlug = async (id: number) => {
   try {
     const response = await $api.client.request<GetTeamSlug>(
       gql`
-        query GetTeamNameAndSlug($id: Int!) {
+        query GetTeamSlug($id: Int!) {
           teams(where: { id: { _eq: $id } }) {
             id
             teamSlug: slug
