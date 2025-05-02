@@ -39,7 +39,7 @@ config:
   application:govuk-notify-api-key:
     secure: AAABACgwjEmlLmE19ofRO8e/JpD8sHDV2lcDmSXbU/Mw8ZRh5gTgll8DZ3BVjpDWfQfIecBAIf2TFgeo9CsBSLjfaRJ7eJyKDSWm7i8LlMC2JN/PN+Ig8oeI0H0oLkqJIziNKKjx+e97zDiXO9LZ1CVzrywR
   application:hasura-admin-secret:
-    secure: AAABAHsoh7ZNkr6ep3xXsUZpp/JIjshBX+tJ0KOFgGnJ4wxR0oIcB6VewVDuwSyFJRVix72YahM=
+    secure: AAABACnU/Z5aGH2DaNQ29YkJqx8bKKRYFEdXvJm0yswo0pK2Iqnz09j7H2kOaZOzY2fSfEDu8rU=
   application:hasura-cpu: "1024"
   application:hasura-memory: "2048"
   application:hasura-planx-api-key:
@@ -53,7 +53,7 @@ config:
   application:idox-nexus-submission-url: https://dev.identity.idoxgroup.com/agw/submission-api
   application:idox-nexus-token-url: https://dev.identity.idoxgroup.com/uaa/oauth/token
   application:jwt-secret:
-    secure: AAABALZC9DSGHVkghAwofy8R8qWh6svk6bFG753F04nr0RI4iNXOIFBlJp1u5wlnPLdo+5gCLPLpkvke0cKODV0BGr07ibAa
+    secure: AAABAOo4AlDxNYjUfyS2yp8VjbhmziWGQvA54PfnGYOyi5i6o3Lt9GLwAeUCrQYnr663MFjWw49+0wXVdeumyvtRF49cdFEb
   application:mapbox-access-token:
     secure: AAABAMWf2zVq5/mKCLynpgzAidNsnbUEBpb47n7MRWp2xzRgwaf3kzOvnZax9N04ZScQqU6I5/tEKTBAbSb8MIBJ8mU2iTZbPg8FD6wYsetRyftm1K39KBsIl9aS7fXvZFOG7BsC4qMDEhlDkH8gbV2HTev3VvvRUe3lzVhjNGNHqQ==
   application:metabase-api-key:
