@@ -1,4 +1,4 @@
 config:
   aws:profile: planx-production-pulumi
   data:db-password:
-    secure: AAABACXx8m8VMNORq7t4OYe7Gabo6vAdhHDU3UIE1hbiMS+S0suVD0lG0nMKKneUTOoK7jMDb7eUAE36xaGb6w==
+    secure: AAABACbCdypv7o70LB82UfPZihnvfUE7/XjaOPcnGxRLh+deBbVAE8cZTZ1UPSnB60qwJBLhQT7lUiw3ODkS0Q==
