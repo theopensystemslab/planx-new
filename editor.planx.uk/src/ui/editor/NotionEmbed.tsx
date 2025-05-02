@@ -18,7 +18,13 @@ const NotionEmbed: React.FC<{
       src={embedUrl}
       width="100%"
       height="600"
-      style={{ width: "100%", height: "100%", border: "0", padding: "0" }}
+      style={{
+        width: "100%",
+        height: "100%",
+        border: "0",
+        padding: "0",
+        zIndex: 1,
+      }}
       title={title}
     />
   );

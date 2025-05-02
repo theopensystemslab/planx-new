@@ -272,6 +272,7 @@ const getThemeOptions = ({
       MuiContainer: {
         styleOverrides: {
           root: {
+            zIndex: 1,
             "@media (min-width: 500px)": {
               padding: "0 20px",
             },
