@@ -90,7 +90,7 @@ test.describe("Flow creation, publish and preview", () => {
     await expect(editor.nodeList).toContainText(["About the property"]);
     await editor.createInternalPortal();
     await editor.populateInternalPortal();
-    await page.getByRole("link", { name: "start" }).click(); // return to main flow
+    await page.getByRole("link", { name: serviceProps.name }).click(); // return to main flow
     // await editor.createUploadAndLabel();
     await editor.createDrawBoundary();
     await editor.createPlanningConstraints();
