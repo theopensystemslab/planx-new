@@ -14,12 +14,11 @@ export async function createNewDashboardLink({
   teamId,
   serviceSlug,
 }: CreateNewDashboardLinkParams): Promise<string | undefined> {
-  if ( status !== "online" ) {
+  if (status !== "online") {
     return;
   }
 
   try {
-    console.log("trying to createNewDashboardLink")
     const { teamSlug } = await getTeamSlug(teamId);
     const dashboardPublicLink = findDashboardPublicLink(serviceSlug);
 
