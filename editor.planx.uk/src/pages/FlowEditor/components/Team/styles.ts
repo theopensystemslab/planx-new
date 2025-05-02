@@ -12,6 +12,7 @@ export const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  background: theme.palette.background.default,
   "&:nth-of-type(even)": {
     background: theme.palette.background.paper,
   },

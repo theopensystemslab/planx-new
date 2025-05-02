@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import React from "react";
 import { useLoadingRoute } from "react-navi";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 const Wrapper = styled(Box)(({ theme }) => ({
   width: "100vw",
@@ -17,6 +18,7 @@ const Wrapper = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   background: theme.palette.primary.main,
+  position: "relative",
 }));
 
 const LoginContainer = styled(Container)(() => ({
@@ -53,6 +55,7 @@ const Login: React.FC = () => {
 
   return (
     <Wrapper>
+      <WatermarkBackground variant="light" opacity={0.1} />
       <LoginContainer>
         <Typography mb={1} mt={1} variant="h1" fontWeight="400">
           Plan✕

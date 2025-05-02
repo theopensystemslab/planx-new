@@ -49,8 +49,6 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
-  isTestEnvBannerVisible: boolean;
-  hideTestEnvBanner: () => void;
   showTags: boolean;
   toggleShowTags: () => void;
   showImages: boolean;
@@ -78,10 +76,6 @@ export const editorUIStore: StateCreator<
     toggleSidebar: () => {
       set({ showSidebar: !get().showSidebar });
     },
-
-    isTestEnvBannerVisible: !window.location.href.includes(".uk"),
-
-    hideTestEnvBanner: () => set({ isTestEnvBannerVisible: false }),
 
     showTags: false,
 
