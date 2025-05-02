@@ -5,10 +5,8 @@ import {
   logUserExitController,
   logUserResumeController,
 } from "./analyticsLog/controller.js";
-import { metabaseCollectionsController } from "./metabase/collection/controller.js";
-import { metabaseDashboardsController } from "./metabase/dashboard/controller.js";
-import { createTeamCollectionSchema } from "./metabase/collection/types.js";
-import { createNewDashboardSchema } from "./metabase/dashboard/types.js";
+import { metabaseDashboardsController } from "./metabase/controller.js";
+import { createNewDashboardLinkSchema } from "./metabase/types.js";
 import { useEnvGuard } from "../../shared/middleware/useEnvGuard.js";
 
 const router = Router();
@@ -31,13 +29,8 @@ router.use(
 );
 
 router.post(
-  "/metabase/collection",
-  validate(createTeamCollectionSchema),
-  metabaseCollectionsController,
-);
-router.post(
   "/metabase/dashboard",
-  validate(createNewDashboardSchema),
+  validate(createNewDashboardLinkSchema),
   metabaseDashboardsController,
 );
 
