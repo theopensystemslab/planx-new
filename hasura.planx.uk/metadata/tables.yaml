@@ -1204,8 +1204,9 @@
     - name: setup_metabase_dashboard
       definition:
         enable_manual: false
-        insert:
-          columns: '*'
+        update:
+          columns:
+            - status
       retry_conf:
         interval_sec: 10
         num_retries: 0
@@ -1219,6 +1220,7 @@
           action: transform
           template: |-
             {
+              "status": {{$body.event.data.new.status}},
               "serviceSlug": {{$body.event.data.new.slug}},
               "flowId": {{$body.event.data.new.id}},
               "teamId": {{$body.event.data.new.team_id}},
