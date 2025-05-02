@@ -13,7 +13,10 @@ export const metabaseDashboardsController: NewDashboardLinkHandler = async (
     return res.status(201).json({ data: dashboardLink });
   } catch (error) {
     next(
-      new ServerError({ message: "Failed to create dashboard link", cause: error }),
+      new ServerError({
+        message: "Failed to create dashboard link",
+        cause: error,
+      }),
     );
   }
 };

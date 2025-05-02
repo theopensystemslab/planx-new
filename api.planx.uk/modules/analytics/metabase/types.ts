@@ -2,9 +2,9 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 import { z } from "zod";
 
 export type ApiResponse<T> = {
-    data?: T;
-    error?: string;
-  };
+  data?: T;
+  error?: string;
+};
 
 export type NewDashboardLinkHandler = ValidatedRequestHandler<
   typeof createNewDashboardLinkSchema,
@@ -12,16 +12,16 @@ export type NewDashboardLinkHandler = ValidatedRequestHandler<
 >;
 
 export const createNewDashboardLinkSchema = z.object({
-    body: z.object({
-      flowId: z.string(),
-      teamId: z.number(),
-      serviceSlug: z.string(),
-      serviceName: z.string(),
-    }),
-  });
+  body: z.object({
+    flowId: z.string(),
+    teamId: z.number(),
+    serviceSlug: z.string(),
+    serviceName: z.string(),
+  }),
+});
 
 export type CreateNewDashboardLinkParams = {
   flowId: string;
   teamId: number;
   serviceSlug: string;
-}
+};

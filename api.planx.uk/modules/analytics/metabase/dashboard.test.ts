@@ -11,7 +11,8 @@ describe("Metabase dashboard link module", () => {
       const serviceSlugCIY = "check-if-you-need-planning-permission";
       const linkFOI = findDashboardPublicLink(serviceSlugFOI);
       const linkCIY = findDashboardPublicLink(serviceSlugCIY);
-      const publicLinkFOI = "https://metabase.editor.planx.dev/public/dashboard/d6303f0b-d6e8-4169-93c0-f988a93e19bc?service_slug={service-slug}&team_slug={team-slug}"
+      const publicLinkFOI =
+        "https://metabase.editor.planx.dev/public/dashboard/d6303f0b-d6e8-4169-93c0-f988a93e19bc?service_slug={service-slug}&team_slug={team-slug}";
       expect(linkFOI).toBe(publicLinkFOI);
       expect(linkCIY).toBe(publicLinkFOI);
     });
@@ -25,7 +26,8 @@ describe("Metabase dashboard link module", () => {
       const linkLDC = findDashboardPublicLink(serviceSlugLDC);
       const linkPreApp = findDashboardPublicLink(serviceSlugPreApp);
 
-      const publicLinkSubmission = "https://metabase.editor.planx.dev/public/dashboard/363fd552-8c2b-40d9-8b7a-21634ec182cc?service_slug={service-slug}&team_slug={team-slug}";
+      const publicLinkSubmission =
+        "https://metabase.editor.planx.dev/public/dashboard/363fd552-8c2b-40d9-8b7a-21634ec182cc?service_slug={service-slug}&team_slug={team-slug}";
       expect(linkAFPP).toBe(publicLinkSubmission);
       expect(linkLDC).toBe(publicLinkSubmission);
       expect(linkPreApp).toBe(publicLinkSubmission);
@@ -40,10 +42,10 @@ describe("Metabase dashboard link module", () => {
 
   describe("getTeamSlug", () => {
     test("fetches team slug for a valid team ID", async () => {
-      const mockResponse = { data: { teams: [{ id: 1, teamSlug: "team-slug" }] } };
-      nock("http://localhost")
-        .post("/graphql")
-        .reply(200, mockResponse);
+      const mockResponse = {
+        data: { teams: [{ id: 1, teamSlug: "team-slug" }] },
+      };
+      nock("http://localhost").post("/graphql").reply(200, mockResponse);
 
       const result = await getTeamSlug(1);
       expect(result.teamSlug).toBe("team-slug");
@@ -76,9 +78,7 @@ describe("Metabase dashboard link module", () => {
           flow: { id: "flow-id", analytics_link: "https://test.com" },
         },
       };
-      nock("http://localhost")
-        .post("/graphql")
-        .reply(200, mockResponse);
+      nock("http://localhost").post("/graphql").reply(200, mockResponse);
 
       const result = await updatePublicAnalyticsLink(
         "flow-id",
