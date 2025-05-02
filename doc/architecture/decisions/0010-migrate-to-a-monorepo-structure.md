@@ -1,7 +1,7 @@
 # 10. Migrate to a monorepo structure
 
 ## Status
-Proposed
+Approved
 
 ## Context
 Our current repository structure in planx-new consists of - 
@@ -72,6 +72,7 @@ We will transition to a fully configured Turborepo monorepo structure, bringing 
 
 2. Configure shared linting and TypeScript config with current planx-core codebase
 3. Archive existing planx-core repository, update `README.md`
+4. Migrate planx-core GitHub actions
 
 > [!CAUTION]
 > This is probably the point of maximum risk or frustration. If a change will be required to planx-core at this moment in time we'll need to implement it in the original repository (to import into planx-new via commit hash) and later duplicate the change in `planx-new` to maintain feature parity. Ideally we'd aim for a (short) feature freeze in planx-core here, but we'd need to account for bug fixing or required schema updates.
