@@ -2,6 +2,7 @@ import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import { SendIntegration } from "@opensystemslab/planx-core/types";
 import axios, { AxiosResponse } from "axios";
+import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
@@ -107,7 +108,16 @@ const CreateSendEvents: React.FC<Props> = ({
       ]),
     );
 
-    props.handleSubmit && props?.handleSubmit({ data });
+    const userAgent = Bowser.parse(window.navigator.userAgent); // This is a weird workaround so that we can include platform in `allow_list_answers` in order to pull it through easily in the `submission_services_summary` table
+    const referrer = document.referrer || null;
+    props.handleSubmit &&
+      props.handleSubmit({
+        data: {
+          ...data,
+          "send.analytics.userAgent": userAgent,
+          "send.analytics.referrer": referrer,
+        },
+      });
   }, [loading, error, value, destinations, props]);
 
   // Throw errors so that they're caught by our error boundaries and Airbrake
