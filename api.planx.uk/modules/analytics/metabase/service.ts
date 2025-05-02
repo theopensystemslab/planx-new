@@ -14,7 +14,7 @@ export async function createNewDashboardLink({
   teamId,
   serviceSlug,
 }: CreateNewDashboardLinkParams): Promise<string | undefined> {
-  if ( status !== "online" ) {
+  if (status !== "online") {
     return;
   }
 
@@ -22,7 +22,6 @@ export async function createNewDashboardLink({
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
   try {
-    console.log("trying to createNewDashboardLink")
     const { teamSlug } = await getTeamSlug(teamId);
     const dashboardPublicLink = generateDashboardLink({
       environment,
