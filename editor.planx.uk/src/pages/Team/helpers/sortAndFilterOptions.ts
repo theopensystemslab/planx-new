@@ -1,3 +1,4 @@
+import { hasFeatureFlag } from "lib/featureFlags";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { FilterOptions } from "ui/editor/Filter/Filter";
 import { SortableFields } from "ui/editor/SortControl/SortControl";
@@ -30,7 +31,12 @@ const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   _value,
 ) => flow.publishedFlows[0]?.hasSendComponent;
 
-export const filterOptions: FilterOptions<FlowSummary>[] = [
+const checkFlowTemplatedFrom: FilterOptions<FlowSummary>["validationFn"] = (
+  flow,
+  _value,
+) => Boolean(flow.templatedFrom)
+
+const baseFilterOptions: FilterOptions<FlowSummary>[] = [
   {
     displayName: "Online status",
     optionKey: "status",
@@ -44,3 +50,14 @@ export const filterOptions: FilterOptions<FlowSummary>[] = [
     validationFn: checkFlowServiceType,
   },
 ];
+
+const templateFilterOption: FilterOptions<FlowSummary> =  {
+  displayName: "Template",
+  optionKey: "templatedFrom",
+  optionValue: ["template"],
+  validationFn: checkFlowTemplatedFrom,
+};
+
+export const filterOptions: FilterOptions<FlowSummary>[] = hasFeatureFlag("TEMPLATES")
+  ? [...baseFilterOptions, templateFilterOption]
+  : baseFilterOptions;
