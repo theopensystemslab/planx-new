@@ -103,6 +103,7 @@ export const linkSelectionError = (selectionHtml: string): string | null => {
 export const getContentHierarchyError = (doc: JSONContent): string | null => {
   let h1Index = -1;
   let h2Index = -1;
+  let h3Index = -1;
 
   let error: string | null = null;
 
@@ -110,25 +111,27 @@ export const getContentHierarchyError = (doc: JSONContent): string | null => {
     if (d.type === "paragraph") {
       return;
     } else if (d.type === "heading") {
-      const level = d.attrs?.level === 1 ? 1 : 2;
+      const level = d.attrs?.level;
       if (level === 1) {
-        if (h1Index === -1 && h2Index !== -1) {
-          error = "A level 1 heading must come before a level 2 heading.";
-        } else if (h1Index !== -1) {
+        if (h1Index !== -1) {
           error =
             "There cannot be more than one level 1 heading in the document.";
         } else if (index !== 0) {
           error = "The level 1 heading must come first in the document.";
+        } else if (h2Index !== -1) {
+          error = "A level 1 heading must come before a level 2 heading.";
         }
         h1Index = index;
-        return;
-      }
-      if (level === 2) {
-        if (h1Index === -1) {
+      } else if (level === 2) {
+        if (h1Index !== -1 && index < h1Index) {
           error = "A level 1 heading must come before a level 2 heading.";
         }
         h2Index = index;
-        return;
+      } else if (level === 3) {
+        if (h2Index === -1) {
+          error = "A level 2 heading must come before a level 3 heading.";
+        }
+        h3Index = index;
       }
     }
     return null;
