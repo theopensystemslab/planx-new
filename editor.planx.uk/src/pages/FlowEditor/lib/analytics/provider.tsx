@@ -61,6 +61,8 @@ export const ALLOW_LIST = [
   "propertyInformation.action",
   "proposal.projectType",
   "rab.exitReason",
+  "send.analytics.userAgent",
+  "send.analytics.referrer",
   "service.type",
   "usedFOIYNPP",
   "user.role",
