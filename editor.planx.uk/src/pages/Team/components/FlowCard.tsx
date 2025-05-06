@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { Link, useCurrentRoute } from "react-navi";
 import { inputFocusStyle } from "theme";
@@ -143,6 +144,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
   };
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
+  const isTemplateService = Boolean(flow.templatedFrom);
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
@@ -158,6 +160,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
       displayName: "Submission",
       shouldAddTag: isSubmissionService,
     },
+    {
+      type: FlowTagType.Template,
+      displayName: "Template",
+      shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplateService,
+    }
   ];
 
   const publishedDate = formatLastPublishMessage(

@@ -149,6 +149,7 @@ export interface FlowSummary {
   summary: string;
   operations: FlowSummaryOperations[];
   publishedFlows: PublishedFlowSummary[];
+  templatedFrom: string | null;
 }
 
 export interface EditorStore extends Store.Store {
@@ -402,6 +403,7 @@ export const editorStore: StateCreator<
                 lastName: last_name
               }
             }
+            templatedFrom: templated_from
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1
