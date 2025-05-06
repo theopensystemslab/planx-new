@@ -16,6 +16,7 @@ export const createFlowSchema = z.object({
     teamId: z.number(),
     slug: z.string(),
     name: z.string().trim(),
+    isTemplate: z.boolean().optional().default(false),
   }),
 });
 
@@ -30,11 +31,17 @@ export const createFlowController: CreateFlowController = async (
   next,
 ) => {
   try {
-    const { teamId, slug, name } = res.locals.parsedReq.body;
-    const initialFlowData: FlowGraph = { _root: { edges: [] } };
+    const { teamId, slug, name, isTemplate } = res.locals.parsedReq.body;
+    const flowData: FlowGraph = { _root: { edges: [] } };
 
     // createFlow automatically handles the associated operation and initial publish
-    const { id } = await createFlow(teamId, slug, name, initialFlowData);
+    const { id } = await createFlow({
+      teamId,
+      slug,
+      name,
+      isTemplate,
+      flowData,
+    });
 
     res.status(200).send({
       message: `Successfully created flow ${slug}`,

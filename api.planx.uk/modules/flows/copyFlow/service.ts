@@ -18,7 +18,14 @@ const copyFlow = async ({
   // Check if copied flow data should be inserted into `flows` table, or just returned for reference
   if (insert) {
     // Insert the flow and an associated operation
-    await createFlow(teamId, slug, name, uniqueFlowData, flowId);
+    await createFlow({
+      teamId,
+      slug,
+      name,
+      isTemplate: false,
+      flowData: uniqueFlowData,
+      copiedFrom: flowId,
+    });
   }
 
   return { flow, uniqueFlowData };

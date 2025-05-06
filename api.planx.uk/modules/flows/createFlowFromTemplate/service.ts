@@ -9,14 +9,14 @@ const createFlowFromTemplate = async (
   const sourceTemplate = await getFlowData(templateId);
 
   // Create the new templated flow, including an associated operation and initial publish, and templated_from reference to the source templateId
-  const { id } = await createFlow(
+  const { id } = await createFlow({
     teamId,
     slug,
     name,
-    sourceTemplate.data,
-    undefined, // flows.copied_from
-    templateId,
-  );
+    isTemplate: false,
+    flowData: sourceTemplate.data,
+    templatedFrom: templateId,
+  });
 
   return { id, slug };
 };
