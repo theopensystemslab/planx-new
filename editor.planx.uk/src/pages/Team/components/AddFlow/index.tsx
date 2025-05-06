@@ -32,6 +32,7 @@ export const AddFlow: React.FC = () => {
       name: "",
       sourceId: "",
       teamId,
+      isTemplate: false,
     },
   };
 

@@ -1,3 +1,4 @@
+import { boolean } from "mathjs";
 import { number, object, string } from "yup";
 
 export const validationSchema = object().shape({
@@ -6,6 +7,7 @@ export const validationSchema = object().shape({
     slug: string().required("Slug is required"),
     name: string().required("Name is required"),
     teamId: number().integer().required("Team ID is required"),
+    isTemplate: boolean(),
     sourceId: string().when("$mode", {
       is: "new",
       then: string().notRequired(),
@@ -19,6 +21,7 @@ export type NewFlow = {
   name: string;
   teamId: number;
   sourceId?: string;
+  isTemplate?: boolean;
 };
 
 export type CreateFlow = {

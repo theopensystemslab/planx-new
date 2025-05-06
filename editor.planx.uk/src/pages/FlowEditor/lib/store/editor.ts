@@ -303,16 +303,12 @@ export const editorStore: StateCreator<
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async ({ teamId, name, slug }) => {
+  createFlow: async (newFlow) => {
     const token = get().jwt;
 
     const response = await axios.post<{ id: string }>(
       `${import.meta.env.VITE_APP_API_URL}/flows/create`,
-      {
-        teamId,
-        slug,
-        name,
-      },
+      newFlow,
       {
         headers: {
           Authorization: `Bearer ${token}`,
