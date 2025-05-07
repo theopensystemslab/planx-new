@@ -1209,6 +1209,7 @@
         enable_manual: false
         update:
           columns:
+            - analytics_link
             - status
       retry_conf:
         interval_sec: 10
@@ -1223,6 +1224,7 @@
           action: transform
           template: |-
             {
+              "analyticsLink": {{$body.event.data.new.analytics_link}},
               "status": {{$body.event.data.new.status}},
               "serviceSlug": {{$body.event.data.new.slug}},
               "flowId": {{$body.event.data.new.id}},
