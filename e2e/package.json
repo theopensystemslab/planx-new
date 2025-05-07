@@ -20,7 +20,7 @@
       "prettier -w ./tests"
     ]
   },
-  "packageManager": "pnpm@8.6.6",
+  "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "22.14.1",
