@@ -173,8 +173,7 @@ export async function buildSubmissionExportZip({
   });
 
   // add an optional GeoJSON file to zip
-  const geojson: GeoJSON.Feature | undefined =
-    passport?.data?.["proposal.site"];
+  const geojson = passport?.data?.["proposal.site"];
   if (geojson) {
     if (userAction) {
       geojson["properties"] ??= {};

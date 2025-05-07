@@ -1,12 +1,12 @@
 import isObject from "lodash/isObject.js";
 import { JSDOM } from "jsdom";
-import createDOMPurify from "dompurify";
+import createDOMPurify, { type WindowLike } from "dompurify";
 import he from "he";
 import { reportError } from "../../../pay/helpers.js";
 
 // Setup JSDOM and DOMPurify
 const window = new JSDOM("").window;
-const DOMPurify = createDOMPurify(window);
+const DOMPurify = createDOMPurify(window as unknown as WindowLike);
 
 /**
  * Function which returns -

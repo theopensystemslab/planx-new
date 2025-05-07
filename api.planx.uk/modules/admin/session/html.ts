@@ -27,9 +27,7 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
     if (!session) throw Error(`Unable to find session ${req.params.sessionId}`);
 
     const responses = await $api.export.csvData(req.params.sessionId);
-    const boundingBox = session.data.passport.data[
-      "proposal.site.buffered"
-    ] as unknown as GeoJSON.Feature;
+    const boundingBox = session.data.passport.data["proposal.site.buffered"];
     const userAction = session.data.passport.data?.[
       "drawBoundary.action"
     ] as unknown as DrawBoundaryUserAction | undefined;
@@ -74,9 +72,7 @@ export const getRedactedHTMLExport: HTMLExportHandler = async (
     const redactedResponses = await $api.export.csvDataRedacted(
       req.params.sessionId,
     );
-    const boundingBox = session.data.passport.data[
-      "proposal.site.buffered"
-    ] as unknown as GeoJSON.Feature;
+    const boundingBox = session.data.passport.data["proposal.site.buffered"];
     const userAction = session.data.passport.data?.[
       "drawBoundary.action"
     ] as unknown as DrawBoundaryUserAction | undefined;
