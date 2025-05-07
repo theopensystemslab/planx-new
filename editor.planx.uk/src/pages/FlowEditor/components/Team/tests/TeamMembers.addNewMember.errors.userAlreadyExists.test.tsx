@@ -19,6 +19,7 @@ vi.mock(
 let initialState: FullStore;
 
 describe("when a user fills in the 'add a new member' form correctly but the user already exists", () => {
+  beforeAll(() => (initialState = useStore.getState()));
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
     useStore.setState({

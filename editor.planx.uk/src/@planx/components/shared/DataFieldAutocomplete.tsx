@@ -25,9 +25,9 @@ const renderOptions: AutocompleteProps<
 >["renderOption"] = (props, option) => {
   return (
     <ListItem
-      key={option}
-      sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }}
       {...props}
+      sx={{ fontFamily: (theme) => theme.typography.data.fontFamily }}
+      key={option}
     >
       {option}
     </ListItem>
