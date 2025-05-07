@@ -4,6 +4,7 @@
     "test:watch": "vitest watch",
     "build-jwt": "DOTENV_CONFIG_PATH=../.env.test node -r dotenv/config scripts/buildJWT.js"
   },
+  "packageManager": "pnpm@10.10.0",
   "dependencies": {
     "dotenv": "^16.4.1",
     "isomorphic-fetch": "^3.0.0",
