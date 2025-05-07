@@ -148,6 +148,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
   const isTemplateService = Boolean(flow.templatedFrom);
+  const isSourceTemplateService = Boolean(flow.isTemplate);
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
@@ -167,7 +168,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
       type: FlowTagType.Template,
       displayName: "Template",
       shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplateService,
-    }
+    },
+    {
+      type: FlowTagType.SourceTemplate,
+      displayName: "Source Template",
+      shouldAddTag: hasFeatureFlag("TEMPLATES") && isSourceTemplateService,
+    },
   ];
 
   const publishedDate = formatLastPublishMessage(

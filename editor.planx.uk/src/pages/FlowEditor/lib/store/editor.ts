@@ -150,6 +150,7 @@ export interface FlowSummary {
   operations: FlowSummaryOperations[];
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
+  isTemplate: boolean;
 }
 
 export interface EditorStore extends Store.Store {
@@ -400,6 +401,7 @@ export const editorStore: StateCreator<
               }
             }
             templatedFrom: templated_from
+            isTemplate: is_template
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1
