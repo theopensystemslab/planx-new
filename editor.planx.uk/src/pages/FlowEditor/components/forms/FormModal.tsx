@@ -156,21 +156,17 @@ const FormModal: React.FC<{
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
-  // Nodes should be disabled when either condition is true:
+  // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
   //  2. The user has edit access to this team, but it is a templated flow and the node is not tagged 'customisation'
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
-  const isCustomisableNodeInTemplatedFlow = (
-    isTemplatedFrom: boolean,
-    node: Store.Node,
-  ) => {
-    return isTemplatedFrom && node.data?.tags?.includes("customisation");
+  const isCustomisableNode = (node: Store.Node) => {
+    return node.data?.tags?.includes("customisation");
   };
   const disabled = isTemplatedFrom
-    ? !canUserEditNode(teamSlug) ||
-      !isCustomisableNodeInTemplatedFlow(isTemplatedFrom, node)
+    ? !canUserEditNode(teamSlug) || !isCustomisableNode(node)
     : !canUserEditNode(teamSlug);
 
   const toast = useToast();
