@@ -66,6 +66,58 @@ interface CreateFlowResponse {
   };
 }
 
+const createFlowMutation = gql`
+  mutation InsertFlow(
+    $team_id: Int!
+    $slug: String!
+    $name: String!
+    $data: jsonb = {}
+    $copied_from: uuid
+    $templated_from: uuid
+  ) {
+    flow: insert_flows_one(
+      object: {
+        team_id: $team_id
+        slug: $slug
+        name: $name
+        data: $data
+        version: 1
+        copied_from: $copied_from
+        templated_from: $templated_from
+      }
+    ) {
+      id
+    }
+  }
+`;
+
+const createSourceTemplateMutation = gql`
+  mutation InsertSourceTemplateFlow(
+    $team_id: Int!
+    $slug: String!
+    $name: String!
+    $data: jsonb = {}
+    $copied_from: uuid
+    $templated_from: uuid
+    $is_template: Boolean
+  ) {
+    flow: insert_flows_one(
+      object: {
+        team_id: $team_id
+        slug: $slug
+        name: $name
+        data: $data
+        version: 1
+        copied_from: $copied_from
+        templated_from: $templated_from
+        is_template: $is_template
+      }
+    ) {
+      id
+    }
+  }
+`;
+
 // Insert a new flow into the `flows` table
 const createFlow = async ({
   teamId,
@@ -87,46 +139,23 @@ const createFlow = async ({
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
 
+  /** Only platformAdmins have write permissions for the is_template column */
+  const mutation = isTemplate
+    ? createSourceTemplateMutation
+    : createFlowMutation;
+
   try {
     const {
       flow: { id },
-    } = await $client.request<CreateFlowResponse>(
-      gql`
-        mutation InsertFlow(
-          $team_id: Int!
-          $slug: String!
-          $name: String!
-          $data: jsonb = {}
-          $copied_from: uuid
-          $templated_from: uuid
-          $is_template: Boolean
-        ) {
-          flow: insert_flows_one(
-            object: {
-              team_id: $team_id
-              slug: $slug
-              name: $name
-              data: $data
-              version: 1
-              copied_from: $copied_from
-              templated_from: $templated_from
-              is_template: $is_template
-            }
-          ) {
-            id
-          }
-        }
-      `,
-      {
-        team_id: teamId,
-        slug: slug,
-        name: name,
-        data: flowData,
-        copied_from: copiedFrom,
-        templated_from: templatedFrom,
-        is_template: isTemplate,
-      },
-    );
+    } = await $client.request<CreateFlowResponse>(mutation, {
+      team_id: teamId,
+      slug: slug,
+      name: name,
+      data: flowData,
+      copied_from: copiedFrom,
+      templated_from: templatedFrom,
+      ...(isTemplate && { is_template: isTemplate }),
+    });
 
     await createAssociatedOperation(id);
     await publishFlow(id, "Created flow");
