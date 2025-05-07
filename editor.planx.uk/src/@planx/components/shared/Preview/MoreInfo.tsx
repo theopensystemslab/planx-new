@@ -4,6 +4,8 @@ import Container from "@mui/material/Container";
 import Drawer, { DrawerProps } from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { visuallyHidden } from "@mui/utils";
 import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import React from "react";
 
@@ -59,6 +61,7 @@ const CloseButton = styled(Box)(({ theme }) => ({
   top: theme.spacing(1),
   right: theme.spacing(1),
   color: theme.palette.text.primary,
+  zIndex: theme.zIndex.drawer + 1,
 }));
 
 interface IMoreInfo {
@@ -93,6 +96,9 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
       </IconButton>
     </CloseButton>
     <Container maxWidth={false} sx={{ bgcolor: "white" }}>
+      <Typography variant="h1" sx={visuallyHidden}>
+        More information
+      </Typography>
       <DrawerContent>{children}</DrawerContent>
     </Container>
     <MoreInfoFeedbackComponent />
