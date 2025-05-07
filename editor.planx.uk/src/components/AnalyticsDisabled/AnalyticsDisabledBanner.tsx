@@ -8,13 +8,15 @@ import { visuallyHidden } from "@mui/utils";
 import React, { useState } from "react";
 import AnalyticsChart from "ui/icons/AnalyticsChart";
 
-const AnalyticsWarning = styled(Box)(() => ({
+const AnalyticsWarning = styled(Box)(({ theme }) => ({
   display: "flex",
   backgroundColor: "#FFFB00",
   color: "#070707",
   justifyContent: "space-between",
   alignItems: "center",
   padding: "0.2em 0",
+  position: "relative",
+  zIndex: theme.zIndex.appBar,
 }));
 
 const AnalyticsDisabledBanner: React.FC = () => {
