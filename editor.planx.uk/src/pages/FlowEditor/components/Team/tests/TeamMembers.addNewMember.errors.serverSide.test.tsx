@@ -18,6 +18,7 @@ vi.mock(
 );
 
 describe("when a user fills in the 'add a new member' form correctly but there is a server-side error", () => {
+  beforeAll(() => (initialState = useStore.getState()));
   afterAll(() => useStore.setState(initialState));
   beforeEach(async () => {
     useStore.setState({

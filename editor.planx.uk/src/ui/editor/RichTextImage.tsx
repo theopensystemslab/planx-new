@@ -7,15 +7,15 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Image from "@tiptap/extension-image";
 import {
+  NodeViewProps,
   NodeViewWrapper,
-  NodeViewWrapperProps,
   ReactNodeViewRenderer,
 } from "@tiptap/react";
 import React from "react";
 
 const StyledNodeViewWrapper = styled(NodeViewWrapper, {
   shouldForwardProp: (prop) => prop !== "selected",
-})<NodeViewWrapperProps & { selected: boolean }>(({ selected, theme }) => ({
+})<{ selected: boolean }>(({ selected, theme }) => ({
   outline: selected ? `3px solid ${theme.palette.action.focus}` : undefined,
   position: "relative",
 }));
@@ -49,11 +49,12 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
   marginRight: theme.spacing(1),
 }));
 
-const ImageNode: React.FC<NodeViewWrapperProps> = ({
-  selected,
+const ImageNode: React.FC<NodeViewProps> = ({
   node,
   updateAttributes,
   editor,
+  selected,
+  ...props
 }) => {
   const { src, alt } = node.attrs;
 
@@ -63,7 +64,7 @@ const ImageNode: React.FC<NodeViewWrapperProps> = ({
   };
 
   return (
-    <StyledNodeViewWrapper selected={selected}>
+    <StyledNodeViewWrapper selected={selected} {...props}>
       <StyledImg src={src} alt={alt} />
       <AltTextIndicator>
         <IconButton size="small" sx={{ flex: "0 0 auto" }}>
