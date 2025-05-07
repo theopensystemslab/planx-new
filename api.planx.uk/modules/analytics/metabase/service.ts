@@ -9,28 +9,32 @@ import { getTeamSlug } from "./getTeamSlug.js";
  * @returns The dashboard name (the Metabase API performs GETs with the dashboard ID, so we have to have that locally already--no need to return it here)
  */
 export async function createNewDashboardLink({
+  analyticsLink,
+  status,
   flowId,
   teamId,
   serviceSlug,
 }: CreateNewDashboardLinkParams): Promise<string | undefined> {
-  try {
-    const { teamSlug } = await getTeamSlug(teamId);
-    const dashboardPublicLink = findDashboardPublicLink(serviceSlug);
+  if (status === "online" && analyticsLink === null) {
+    try {
+      const { teamSlug } = await getTeamSlug(teamId);
+      const dashboardPublicLink = findDashboardPublicLink(serviceSlug);
 
-    if (!dashboardPublicLink) return;
+      if (!dashboardPublicLink) return;
 
-    const filteredLink = await filterPublicLink(
-      dashboardPublicLink,
-      serviceSlug,
-      teamSlug,
-    );
+      const filteredLink = await filterPublicLink(
+        dashboardPublicLink,
+        serviceSlug,
+        teamSlug,
+      );
 
-    await updatePublicAnalyticsLink(flowId, filteredLink);
-    return;
-  } catch (error) {
-    throw new ServerError({
-      message: `Error in createNewDashboardLink: ${error}`,
-      cause: error,
-    });
-  }
+      await updatePublicAnalyticsLink(flowId, filteredLink);
+      return;
+    } catch (error) {
+      throw new ServerError({
+        message: `Error in createNewDashboardLink: ${error}`,
+        cause: error,
+      });
+    }
+  } else return;
 }
