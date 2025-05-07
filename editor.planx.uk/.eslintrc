@@ -104,6 +104,13 @@
           "expect"
         ]
       }
+    ],
+    "no-restricted-syntax": [
+      "error",
+        {
+          "selector": "MemberExpression[object.name='process'][property.name='env']",
+          "message": "Use import.meta.env instead of process.env in Vite applications"
+        }
     ]
   },
   "overrides": [
