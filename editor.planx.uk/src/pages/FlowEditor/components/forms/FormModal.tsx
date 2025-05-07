@@ -168,9 +168,10 @@ const FormModal: React.FC<{
   ) => {
     return isTemplatedFrom && node.data?.tags?.includes("customisation");
   };
-  const disabled =
-    !canUserEditNode(teamSlug) ||
-    !isCustomisableNodeInTemplatedFlow(isTemplatedFrom, node);
+  const disabled = isTemplatedFrom
+    ? !canUserEditNode(teamSlug) ||
+      !isCustomisableNodeInTemplatedFlow(isTemplatedFrom, node)
+    : !canUserEditNode(teamSlug);
 
   const toast = useToast();
 
