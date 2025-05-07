@@ -35,7 +35,6 @@ export async function createNewDashboardLink({
         message: `Error in createNewDashboardLink: ${error}`,
         cause: error,
       });
-  }
-}
-  else return
+    }
+  } else return;
 }
