@@ -1,21 +1,24 @@
+import isNull from "lodash/isNull.js";
 import { ServerError } from ".././../errors/index.js";
-import type { CreateSessionEventController } from "./service/lowcalSessionEvents/schema.js";
+import { analyzeSessions } from "./service/analyzeSessions/index.js";
 import {
   createSessionExpiryEvent,
   createSessionReminderEvent,
 } from "./service/lowcalSessionEvents/index.js";
-import type { SendSlackNotification } from "./service/sendNotification/types.js";
-import { sendSlackNotification } from "./service/sendNotification/index.js";
-import type { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
+import type { CreateSessionEventController } from "./service/lowcalSessionEvents/schema.js";
 import {
   createPaymentExpiryEvents,
   createPaymentInvitationEvents,
   createPaymentReminderEvents,
 } from "./service/paymentRequestEvents/index.js";
-import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
+import type { CreatePaymentEventController } from "./service/paymentRequestEvents/schema.js";
 import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index.js";
+import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
+import { sendSlackNotification } from "./service/sendNotification/index.js";
+import type { SendSlackNotification } from "./service/sendNotification/types.js";
+import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
-import { analyzeSessions } from "./service/analyzeSessions/index.js";
+import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,
@@ -183,6 +186,35 @@ export const isCleanJSONBController: IsCleanJSONBController = async (
     return next(
       new ServerError({
         message: "Failed to validate application data",
+        cause: error,
+      }),
+    );
+  }
+};
+
+export const updateTemplatedFlowEditsController: UpdateTemplatedFlowEditsController = async (
+  _req,
+  res,
+  next,
+) => {
+  const { flowId, templatedFrom, data } = res.locals.parsedReq.body.payload;
+
+  try {
+    if (isNull(templatedFrom)) {
+      return res.status(200).send({
+        message: `Not a templated flow, skipping updates (${flowId})`,
+      });
+    }
+
+    const response = await updateTemplatedFlowEdits(flowId, templatedFrom, data);
+    return res.status(200).send({
+      message: `Successfully updated templated flow edits (${flowId})`,
+      data: response,
+    });
+  } catch (error) {
+    return next(
+      new ServerError({
+        message: `Failed to update templated flow edits ${flowId}`,
         cause: error,
       }),
     );
