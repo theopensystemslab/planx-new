@@ -34,7 +34,7 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
     mode: "copy",
     flow: {
       slug: sourceFlow.slug + "-copy",
-      name: sourceFlow.name + " (copy)",
+      name: sourceFlow.name.trim() + " (copy)",
       sourceId: sourceFlow.id,
       teamId,
     },
