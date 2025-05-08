@@ -1,5 +1,4 @@
-import { boolean } from "mathjs";
-import { number, object, string } from "yup";
+import { boolean, number, object, string } from "yup";
 
 export const validationSchema = object().shape({
   mode: string().oneOf(["new", "copy", "template"]).required(),

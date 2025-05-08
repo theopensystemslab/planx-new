@@ -99,7 +99,6 @@ const createSourceTemplateMutation = gql`
     $data: jsonb = {}
     $copied_from: uuid
     $templated_from: uuid
-    $is_template: Boolean
   ) {
     flow: insert_flows_one(
       object: {
@@ -110,7 +109,7 @@ const createSourceTemplateMutation = gql`
         version: 1
         copied_from: $copied_from
         templated_from: $templated_from
-        is_template: $is_template
+        is_template: true
       }
     ) {
       id
@@ -154,7 +153,6 @@ const createFlow = async ({
       data: flowData,
       copied_from: copiedFrom,
       templated_from: templatedFrom,
-      ...(isTemplate && { is_template: isTemplate }),
     });
 
     await createAssociatedOperation(id);
