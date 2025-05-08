@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
 import { TeamSummary } from "routes/authenticated";
-import { borderedFocusStyle } from "theme";
+import { focusStyle } from "theme";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
@@ -21,9 +21,7 @@ interface Props {
 const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
   display: "block",
-  "&:focus-within > div": {
-    ...borderedFocusStyle,
-  },
+  "&:focus, &:focus-within > div": focusStyle,
 }));
 
 const TeamCard = styled(Card)(({ theme }) => ({
