@@ -33,8 +33,8 @@ interface Props {
 }
 
 const validationSchema = object().shape({
-  slug: string().required("Slug is required"),
-  name: string().required("Name is required")
+  flowName: string().trim().required("Name is required"),
+  flowSlug: string().trim().required("Slug is required"),
 });
 
 export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow }) => {
@@ -116,7 +116,7 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
                 <InputLabel label="Service name" htmlFor="flowName">
                   <Input
                     {...getFieldProps("flowName")}
-                    id="name"
+                    id="flowName"
                     type="text"
                     onChange={(e) => {
                       setFieldValue("flowName", e.target.value);
