@@ -98,7 +98,7 @@ const ApplicationFee: FeeBreakdownRow = ({ amount }) => (
 );
 
 const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
-  if (!amount.reduction) return null;
+  if (reductions.length === 0) return null;
 
   return (
     <>
@@ -113,7 +113,9 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
           <>
             <TableCell></TableCell>
             <TableCell align="right">
-              {formattedPriceWithCurrencySymbol(amount.reduction)}
+              <strong>
+                {formattedPriceWithCurrencySymbol(amount.reduction)}
+              </strong>
             </TableCell>
           </>
         )}
@@ -143,7 +145,7 @@ const Reductions: FeeBreakdownRow = ({ amount, reductions }) => {
 };
 
 const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
-  if (!amount.exemption) return null;
+  if (exemptions.length === 0) return null;
 
   return (
     <>
@@ -156,7 +158,9 @@ const Exemptions: FeeBreakdownRow = ({ exemptions, amount }) => {
           <>
             <TableCell></TableCell>
             <TableCell align="right">
-              {formattedPriceWithCurrencySymbol(amount.exemption)}
+              <strong>
+                {formattedPriceWithCurrencySymbol(amount.exemption)}
+              </strong>
             </TableCell>
           </>
         )}

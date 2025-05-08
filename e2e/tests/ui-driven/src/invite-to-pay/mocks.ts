@@ -65,6 +65,7 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       "proposal.projectType": ["alter.decks", "alter.internal"],
       "applicant.agent.email": "testAgent@opensystemslab.com",
       "application.fee.payable": 123.45,
+      "application.fee.calculated": 123.45,
       "_contact.applicant.agent": {
         "applicant.agent": {
           email: "testAgent@opensystemslab.com",
