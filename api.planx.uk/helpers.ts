@@ -125,7 +125,7 @@ const createFlow = async ({
         copied_from: copiedFrom,
         templated_from: templatedFrom,
         is_template: isTemplate,
-      }
+      },
     );
 
     await createAssociatedOperation(id);
