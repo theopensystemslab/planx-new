@@ -1,4 +1,3 @@
-import { gql } from "@apollo/client";
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
@@ -13,7 +12,6 @@ import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import { getSortParams } from "ui/editor/SortControl/utils";
 import { slugify } from "utils";
 
-import { client } from "../../../lib/graphql";
 import SimpleMenu from "../../../ui/editor/SimpleMenu";
 import { useStore } from "../../FlowEditor/lib/store";
 import { FlowSummary } from "../../FlowEditor/lib/store/editor";
@@ -24,6 +22,7 @@ import {
 import { sortOptions } from "../helpers/sortAndFilterOptions";
 import { ArchiveDialog } from "./ArchiveDialog";
 import { CopyDialog } from "./CopyDialog";
+import { RenameDialog } from "./RenameDialog";
 
 export const Card = styled("li")(({ theme }) => ({
   listStyle: "none",
@@ -96,14 +95,13 @@ interface FlowCardProps {
 
 const FlowCard: React.FC<FlowCardProps> = ({
   flow,
-  flows,
-  teamId,
   teamSlug,
   refreshFlows,
 }) => {
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
     useState<boolean>(false);
   const [isCopyDialogOpen, setIsCopyDialogOpen] = useState<boolean>(false);
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState<boolean>(false);
 
   const [archiveFlow, moveFlow, canUserEditTeam] = useStore(
     (state) => [
@@ -118,6 +116,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   const handleCopyDialogClose = () => {
     setIsCopyDialogOpen(false);
+    refreshFlows();
+  }
+
+  const handleRenameDialogClose = () => {
+    setIsRenameDialogOpen(false);
     refreshFlows();
   }
 
@@ -200,6 +203,17 @@ const FlowCard: React.FC<FlowCardProps> = ({
           }}
         />
       )}
+      {isRenameDialogOpen && (
+        <RenameDialog
+          isDialogOpen={isRenameDialogOpen}
+          handleClose={handleRenameDialogClose}
+          flow={{
+            name: flow.name, 
+            slug: flow.slug,
+            id: flow.id,
+          }}
+        />
+      )}
       <Card>
         <CardContent>
           <Box>
@@ -246,50 +260,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
           <StyledSimpleMenu
             items={[
               {
-                onClick: async () => {
-                  const newName = prompt("New name", flow.name);
-                  if (newName && newName !== flow.name) {
-                    const newSlug = slugify(newName);
-                    const duplicateFlowName = flows?.find(
-                      (flow: any) => flow.slug === newSlug,
-                    );
-                    if (!duplicateFlowName) {
-                      await client.mutate({
-                        mutation: gql`
-                          mutation UpdateFlowSlug(
-                            $teamId: Int
-                            $slug: String
-                            $newSlug: String
-                            $newName: String
-                          ) {
-                            update_flows(
-                              where: {
-                                team: { id: { _eq: $teamId } }
-                                slug: { _eq: $slug }
-                              }
-                              _set: { slug: $newSlug, name: $newName }
-                            ) {
-                              affected_rows
-                            }
-                          }
-                        `,
-                        variables: {
-                          teamId: teamId,
-                          slug: flow.slug,
-                          newSlug: newSlug,
-                          newName: newName,
-                        },
-                      });
-
-                      refreshFlows();
-                    } else if (duplicateFlowName) {
-                      alert(
-                        `The flow "${newName}" already exists. Enter a unique flow name to continue`,
-                      );
-                    }
-                  }
-                },
                 label: "Rename",
+                onClick: () => setIsRenameDialogOpen(true),
               },
               {
                 label: "Copy",

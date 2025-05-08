@@ -16,7 +16,7 @@ export const createFlowFromTemplateSchema = z.object({
   }),
   body: z.object({
     teamId: z.number(),
-    name: z.string(),
+    name: z.string().trim(),
     slug: z.string(),
   }),
 });
