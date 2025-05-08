@@ -18,8 +18,8 @@ import { slugify } from "utils";
 import { object, string } from "yup";
 
 interface RenameFlow {
-  name: string;
-  slug: string;
+  flowName: string;
+  flowSlug: string;
 }
 
 interface Props {
@@ -40,7 +40,7 @@ const validationSchema = object().shape({
 export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow }) => {
   const toast = useToast();
 
-  const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async ({ name, slug }, { setFieldError, setSubmitting }) => {
+  const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async ({ flowName, flowSlug }, { setFieldError, setSubmitting }) => {
     try {
       await client.mutate({
         mutation: gql`
@@ -59,12 +59,12 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
         `,
         variables: {
           flowId: flow.id,
-          newSlug: slug,
-          newName: name.trim(),
+          newSlug: flowSlug,
+          newName: flowName.trim(),
         },
       });
       handleClose();
-      toast.success(`Renamed flow to "${name}"`)
+      toast.success(`Renamed flow to "${flowName}"`)
     } catch (error) {
       const isUniqueSlugError = 
         error instanceof Error 
@@ -72,7 +72,7 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
         && error.message.includes("Uniqueness violation");
 
       if (isUniqueSlugError) {
-        setFieldError("name", "Flow name must be unique");
+        setFieldError("flowName", "Flow name must be unique");
       } else {
         toast.error("Failed to rename flow. Please try again.");
       }
@@ -84,7 +84,7 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
 
   return (
     <Formik<RenameFlow>
-      initialValues={{ name: flow.name, slug: flow.slug }}
+      initialValues={{ flowName: flow.name, flowSlug: flow.slug }}
       onSubmit={onSubmit}
       validateOnBlur={false}
       validateOnChange={false}
@@ -113,24 +113,24 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
               <DialogContent
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
-                <InputLabel label="Service name" htmlFor="flow.name">
+                <InputLabel label="Service name" htmlFor="flowName">
                   <Input
-                    {...getFieldProps("name")}
+                    {...getFieldProps("flowName")}
                     id="name"
                     type="text"
                     onChange={(e) => {
-                      setFieldValue("name", e.target.value);
-                      setFieldValue("slug", slugify(e.target.value));
+                      setFieldValue("flowName", e.target.value);
+                      setFieldValue("flowSlug", slugify(e.target.value));
                     }}
-                    errorMessage={errors.name}
-                    value={values.name}
+                    errorMessage={errors.flowName}
+                    value={values.flowName}
                   />
                 </InputLabel>
-                <InputLabel label="Editor URL" htmlFor="slug">
+                <InputLabel label="Editor URL" htmlFor="flowSlug">
                   <Input
-                    {...getFieldProps("slug")}
+                    {...getFieldProps("flowSlug")}
                     disabled
-                    id="slug"
+                    id="flowSlug"
                     type="text"
                     startAdornment={<URLPrefix />}
                   />
