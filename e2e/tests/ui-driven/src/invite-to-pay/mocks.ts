@@ -20,7 +20,7 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
   applicantName: "Mr Agent (Agency Ltd)",
   feeBreakdown: {
     amount: {
-      calculated: 123.45,
+      calculated: 0,
       calculatedVAT: 0,
       payable: 123.45,
       payableVAT: 0,
@@ -65,7 +65,6 @@ export const mockSessionData: Omit<SessionData, "id"> = {
       "proposal.projectType": ["alter.decks", "alter.internal"],
       "applicant.agent.email": "testAgent@opensystemslab.com",
       "application.fee.payable": 123.45,
-      "application.fee.calculated": 123.45,
       "_contact.applicant.agent": {
         "applicant.agent": {
           email: "testAgent@opensystemslab.com",
