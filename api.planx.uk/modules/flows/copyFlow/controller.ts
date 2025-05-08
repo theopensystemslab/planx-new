@@ -24,7 +24,7 @@ export const copyFlowSchema = z.object({
   }),
   body: z.object({
     slug: z.string(),
-    name: z.string(),
+    name: z.string().trim(),
     teamId: z.number().int().positive(),
     replaceValue: z.string().length(5).default(getReplacementCharacters()),
     insert: z.boolean().optional().default(false),
