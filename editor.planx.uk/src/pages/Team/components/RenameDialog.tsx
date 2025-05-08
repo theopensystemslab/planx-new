@@ -66,13 +66,17 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
       handleClose();
       toast.success(`Renamed flow to "${name}"`)
     } catch (error) {
-      if (error instanceof Error && isApolloError(error)) {
-        if (error.message.includes("Uniqueness violation")) {
-          return setFieldError("name", "Flow name must be unique");
-        }
+      const isUniqueSlugError = 
+        error instanceof Error 
+        && isApolloError(error)
+        && error.message.includes("Uniqueness violation");
+
+      if (isUniqueSlugError) {
+        setFieldError("name", "Flow name must be unique");
       } else {
         toast.error("Failed to rename flow. Please try again.");
       }
+      return;
     } finally {
       setSubmitting(false);
     }
