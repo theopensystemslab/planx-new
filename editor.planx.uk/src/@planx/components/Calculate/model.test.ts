@@ -82,6 +82,13 @@ describe("evaluate", () => {
     expect(expected).toEqual(actual);
   });
 
+  test("does not default to default values when actual value is 0 and default is > 0", () => {
+    const actual = evaluate("ceil(apples/4)", { apples: 0 }, { apples: 10 });
+
+    const expected = 0;
+    expect(expected).toEqual(actual);
+  });
+
   test("defaults work with nested variables", () => {
     const actual = evaluate("a.b.c", {}, { "a.b.c": 10 });
 
