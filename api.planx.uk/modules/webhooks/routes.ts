@@ -1,21 +1,23 @@
 import { Router } from "express";
+import { validate } from "../../shared/middleware/validate.js";
 import { useHasuraAuth } from "../auth/middleware.js";
 import { createPaymentSendEvents } from "../pay/service/inviteToPay/createPaymentSendEvents.js";
-import { validate } from "../../shared/middleware/validate.js";
 import {
-  isCleanJSONBController,
+  analyzeSessionsController,
   createPaymentExpiryEventsController,
   createPaymentInvitationEventsController,
   createPaymentReminderEventsController,
   createSessionExpiryEventController,
   createSessionReminderEventController,
+  isCleanJSONBController,
   sanitiseApplicationDataController,
   sendSlackNotificationController,
-  analyzeSessionsController,
+  updateTemplatedFlowEditsController,
 } from "./controller.js";
-import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
-import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
 import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema.js";
+import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
+import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
+import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
 import { isCleanJSONBSchema } from "./service/validateInput/schema.js";
 
 const router = Router();
@@ -60,6 +62,12 @@ router.post(
   "/webhooks/hasura/validate-input/jsonb/clean-html",
   validate(isCleanJSONBSchema),
   isCleanJSONBController,
+);
+
+router.post(
+  "/webhooks/hasura/update-templated-flow-edits",
+  validate(updateTemplatedFlowEditsEventSchema),
+  updateTemplatedFlowEditsController,
 );
 
 // TODO: Convert to the new API module structure
