@@ -17,6 +17,8 @@ export interface Props extends InputBaseProps {
   bordered?: boolean;
   errorMessage?: string;
   disabled?: boolean;
+  allowH1?: boolean;
+  classname?: string;
 }
 export interface VariablesState {
   variables: string[];

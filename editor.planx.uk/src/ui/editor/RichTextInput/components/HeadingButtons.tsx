@@ -6,9 +6,11 @@ import React from "react";
 const HeadingButton = ({
   editor,
   level,
+  label,
 }: {
   editor: Editor;
   level: number;
+  label: React.ReactNode;
 }) => (
   <IconButton
     size="small"
@@ -21,14 +23,26 @@ const HeadingButton = ({
         .run();
     }}
   >
-    <strong>H{level}</strong>
+    {label}
   </IconButton>
 );
 
-export const H1Button = ({ editor }: { editor: Editor }) => {
-  return <HeadingButton editor={editor} level={1} />;
+export const H1Button = ({
+  editor,
+  label,
+}: {
+  editor: Editor;
+  label: React.ReactNode;
+}) => {
+  return <HeadingButton editor={editor} level={1} label={label} />;
 };
 
-export const H2Button = ({ editor }: { editor: Editor }) => {
-  return <HeadingButton editor={editor} level={2} />;
+export const H2Button = ({
+  editor,
+  label,
+}: {
+  editor: Editor;
+  label: React.ReactNode;
+}) => {
+  return <HeadingButton editor={editor} level={2} label={label} />;
 };
