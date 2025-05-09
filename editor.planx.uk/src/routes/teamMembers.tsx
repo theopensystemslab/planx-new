@@ -49,6 +49,8 @@ const teamMembersRoutes = compose(
           `User does not have access to ${req.originalUrl}`,
         );
 
+      console.log(req.params)
+
       const teamSlug = useStore.getState().teamSlug;
 
       const {
