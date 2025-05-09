@@ -65,11 +65,7 @@ const ContentComponent: React.FC<Props> = (props) => {
         data-testid="content"
         p={color === "#ffffff" || !color ? 0 : 2}
       >
-        <ReactMarkdownOrHtml
-          source={content}
-          openLinksOnNewTab
-          manuallyIncrementHeaders
-        />
+        <ReactMarkdownOrHtml source={content} openLinksOnNewTab />
       </Content>
       {!!(info || policyRef || howMeasured) && (
         <Typography variant="subtitle1" component="div">

@@ -20,7 +20,7 @@ import React, {
 
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
-import { H1Button, H2Button } from "./components/HeadingButtons";
+import { H1Button, H2Button, H3Button } from "./components/HeadingButtons";
 import { PopupError } from "./components/PopUpError";
 import {
   BoldButton,
@@ -215,8 +215,9 @@ const RichTextInput: FC<Props> = (props) => {
             />
           ) : (
             <>
-              <H1Button editor={editor} />
+              {props.allowH1 && <H1Button editor={editor} />}
               <H2Button editor={editor} />
+              <H3Button editor={editor} />
               <BoldButton editor={editor} />
               <ItalicButton editor={editor} />
               <BulletListButton editor={editor} />

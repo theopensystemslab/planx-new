@@ -32,3 +32,7 @@ export const H1Button = ({ editor }: { editor: Editor }) => {
 export const H2Button = ({ editor }: { editor: Editor }) => {
   return <HeadingButton editor={editor} level={2} />;
 };
+
+export const H3Button = ({ editor }: { editor: Editor }) => {
+  return <HeadingButton editor={editor} level={3} />;
+};
