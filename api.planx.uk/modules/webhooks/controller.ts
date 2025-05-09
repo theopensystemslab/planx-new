@@ -192,31 +192,32 @@ export const isCleanJSONBController: IsCleanJSONBController = async (
   }
 };
 
-export const updateTemplatedFlowEditsController: UpdateTemplatedFlowEditsController = async (
-  _req,
-  res,
-  next,
-) => {
-  const { flowId, templatedFrom, data } = res.locals.parsedReq.body.payload;
+export const updateTemplatedFlowEditsController: UpdateTemplatedFlowEditsController =
+  async (_req, res, next) => {
+    const { flowId, templatedFrom, data } = res.locals.parsedReq.body.payload;
 
-  try {
-    if (isNull(templatedFrom)) {
+    try {
+      if (isNull(templatedFrom)) {
+        return res.status(200).send({
+          message: `Not a templated flow, skipping updates (${flowId})`,
+        });
+      }
+
+      const response = await updateTemplatedFlowEdits(
+        flowId,
+        templatedFrom,
+        data,
+      );
       return res.status(200).send({
-        message: `Not a templated flow, skipping updates (${flowId})`,
+        message: `Successfully updated templated flow edits (${flowId})`,
+        data: response,
       });
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: `Failed to update templated flow edits ${flowId}`,
+          cause: error,
+        }),
+      );
     }
-
-    const response = await updateTemplatedFlowEdits(flowId, templatedFrom, data);
-    return res.status(200).send({
-      message: `Successfully updated templated flow edits (${flowId})`,
-      data: response,
-    });
-  } catch (error) {
-    return next(
-      new ServerError({
-        message: `Failed to update templated flow edits ${flowId}`,
-        cause: error,
-      }),
-    );
-  }
-};
+  };
