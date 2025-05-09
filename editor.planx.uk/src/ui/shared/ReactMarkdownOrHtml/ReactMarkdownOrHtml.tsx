@@ -9,7 +9,7 @@ const styles = (theme: Theme) => ({
   "& a": linkStyle(theme.palette.link.main),
   "& h1": theme.typography.h2,
   "& h2": theme.typography.h3,
-  "& h3": theme.typography.h3,
+  "& h3": theme.typography.h4,
   "& strong": {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
   },

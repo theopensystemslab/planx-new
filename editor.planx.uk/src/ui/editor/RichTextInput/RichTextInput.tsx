@@ -21,6 +21,7 @@ import React, {
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import { H1Button, H2Button } from "./components/HeadingButtons";
+import { InlineError } from "./components/InlineError";
 import { PopupError } from "./components/PopUpError";
 import {
   BoldButton,
@@ -90,7 +91,7 @@ const RichTextInput: FC<Props> = (props) => {
       }
       const doc = transaction.editor.getJSON();
 
-      setContentHierarchyError(getContentHierarchyError(doc));
+      setContentHierarchyError(getContentHierarchyError(doc, props.allowH1));
       setLinkNewTabError(getLinkNewTabError(doc.content));
       setLegislationLinkError(getLegislationLinkError(doc.content));
 
@@ -139,7 +140,7 @@ const RichTextInput: FC<Props> = (props) => {
     }
     internalValue.current = stringValue;
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(getContentHierarchyError(doc));
+    setContentHierarchyError(getContentHierarchyError(fromHtml(stringValue), props.allowH1));
     editor.commands.setContent(doc);
   }, [stringValue]);
 
@@ -176,7 +177,8 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <RichContentContainer>
+    <RichContentContainer className={`rich-text-editor ${props.allowH1 ? 'allow-h1' : ''}`}
+>
       {editor && (
         <StyledBubbleMenu
           editor={editor}
@@ -215,8 +217,8 @@ const RichTextInput: FC<Props> = (props) => {
             />
           ) : (
             <>
-              <H1Button editor={editor} />
-              <H2Button editor={editor} />
+              <H1Button editor={editor} label={<strong>{props.allowH1 ? "H1" : "H2"}</strong>} />
+              <H2Button editor={editor} label={<strong>{props.allowH1 ? "H2" : "H3"}</strong>} />
               <BoldButton editor={editor} />
               <ItalicButton editor={editor} />
               <BulletListButton editor={editor} />
@@ -301,25 +303,19 @@ const RichTextInput: FC<Props> = (props) => {
       )}
       <EditorContent editor={editor} />
       {contentHierarchyError && (
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError
-            id="content-error-hierarchy"
-            error={contentHierarchyError}
-          />
-        </Box>
+        <InlineError
+          id="content-error-hierarchy"
+          error={contentHierarchyError}
+        />
       )}
       {linkNewTabError && (
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError id="content-error-link-tab" error={linkNewTabError} />
-        </Box>
+        <InlineError id="content-error-link-tab" error={linkNewTabError} />
       )}
       {legislationLinkError && (
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError
-            id="content-error-legislation-link"
-            error={legislationLinkError}
-          />
-        </Box>
+        <InlineError
+          id="content-error-legislation-link"
+          error={legislationLinkError}
+        />
       )}
     </RichContentContainer>
   );
