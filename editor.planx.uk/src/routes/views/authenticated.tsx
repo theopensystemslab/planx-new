@@ -14,8 +14,6 @@ export const authenticatedView = async () => {
   const authCookie = getCookie("auth");
   if (!authCookie) return redirect("/login");
 
-  await useStore.getState().initUserStore();
-
   useStore.getState().setPreviewEnvironment("editor");
 
   return (
