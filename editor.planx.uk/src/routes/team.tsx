@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { compose, lazy, map, mount, route, withData, withView } from "navi";
+import { compose, lazy, map, mount, NotFoundError, route, withContext, withData } from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import Team from "pages/Team";
@@ -7,9 +7,8 @@ import React from "react";
 
 import { client } from "../lib/graphql";
 import { useStore } from "../pages/FlowEditor/lib/store";
-import { makeTitle } from "./utils";
+import { getTeamFromDomain, makeTitle } from "./utils";
 import { getFlowEditorData } from "./views/flowEditor";
-import { teamView } from "./views/team";
 
 let cached: { flowSlug?: string; teamSlug?: string } = {
   flowSlug: undefined,
@@ -32,7 +31,19 @@ const routes = compose(
     team: req.params.team,
   })),
 
-  withView(async (req) => await teamView(req)),
+  withContext(async (req) => {
+    const { initTeamStore, teamSlug: currentSlug } = useStore.getState();
+    const routeSlug =
+      req.params.team || (await getTeamFromDomain(window.location.hostname));
+
+    if (currentSlug !== routeSlug) {
+      try {
+        await initTeamStore(routeSlug);
+      } catch (error) {
+        throw new NotFoundError(`Team not found: ${error}`);
+      }
+    }
+  }),
 
   mount({
     "/": route(() => ({
