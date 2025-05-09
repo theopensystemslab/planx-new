@@ -102,30 +102,37 @@ export const linkSelectionError = (selectionHtml: string): string | null => {
 
 export const getContentHierarchyError = (
   doc: JSONContent,
-  allowH1?: boolean,
-): string | null => {
+  rootLevelContent?: boolean,
+): string[] | null => {
+  const errors: string[] = [];
+  const topLevelNodes = doc.content || [];
+
   let h1Index = -1;
   let h2Index = -1;
-  let error: string | null = null;
 
-  (doc.content || []).forEach((d: JSONContent, index) => {
+  if (rootLevelContent) {
+    const firstNode = topLevelNodes[0];
+    if (!firstNode || firstNode.type !== "heading" || firstNode.attrs?.level !== 1) {
+      errors.push("The document must start with a level 1 heading (H1).");
+    }
+  }
+
+  topLevelNodes.forEach((d: JSONContent, index) => {
     if (d.type !== "heading") return;
 
     const level = d.attrs?.level;
 
-    if (allowH1) {
+    if (rootLevelContent) {
       if (level === 1) {
-        if (h1Index !== -1) {
-          error = "There cannot be more than one level 1 heading in the document.";
-        } else if (index !== 0) {
-          error = "The level 1 heading must come first in the document.";
+        if (h1Index !== -1 && index !== 0) {
+          errors.push("There cannot be more than one level 1 heading (H1) in the document.");
         }
         h1Index = index;
       }
 
       if (level === 2) {
         if (h1Index === -1) {
-          error = "A level 1 heading must come before a level 2 heading.";
+          errors.push("A level 1 heading (H1) must come before a level 2 heading (H2).");
         }
         h2Index = index;
       }
@@ -135,7 +142,7 @@ export const getContentHierarchyError = (
           h2Index = index;
         }
         if (h1Index === -1) {
-          error = "A level 2 heading must come before a level 3 heading.";
+          errors.push("A level 2 heading (H2) must come before a level 3 heading (H3).");
         }
       }
 
@@ -145,5 +152,5 @@ export const getContentHierarchyError = (
     }
   });
 
-  return error;
+  return errors.length > 0 ? errors : null;
 };

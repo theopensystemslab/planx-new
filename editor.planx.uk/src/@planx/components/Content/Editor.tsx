@@ -36,7 +36,7 @@ const ContentComponent: React.FC<Props> = (props) => {
               value={formik.values.content}
               onChange={formik.handleChange}
               disabled={props.disabled}
-              allowH1
+              rootLevelContent
             />
           </InputRow>
           <ColorPicker
