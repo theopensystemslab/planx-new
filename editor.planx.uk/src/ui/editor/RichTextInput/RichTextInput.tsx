@@ -72,7 +72,7 @@ const RichTextInput: FC<Props> = (props) => {
   const internalValue = useRef<string | null>(null);
 
   const [contentHierarchyError, setContentHierarchyError] = useState<
-    string | null
+    string[] | null
   >(getContentHierarchyError(fromHtml(stringValue)));
 
   const [linkNewTabError, setLinkNewTabError] = useState<string | undefined>(
@@ -91,7 +91,7 @@ const RichTextInput: FC<Props> = (props) => {
       }
       const doc = transaction.editor.getJSON();
 
-      setContentHierarchyError(getContentHierarchyError(doc, props.allowH1));
+      setContentHierarchyError(getContentHierarchyError(doc, props.rootLevelContent));
       setLinkNewTabError(getLinkNewTabError(doc.content));
       setLegislationLinkError(getLegislationLinkError(doc.content));
 
@@ -140,7 +140,7 @@ const RichTextInput: FC<Props> = (props) => {
     }
     internalValue.current = stringValue;
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(getContentHierarchyError(fromHtml(stringValue), props.allowH1));
+    setContentHierarchyError(getContentHierarchyError(fromHtml(stringValue), props.rootLevelContent));
     editor.commands.setContent(doc);
   }, [stringValue]);
 
@@ -177,7 +177,7 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <RichContentContainer className={`rich-text-editor ${props.allowH1 ? 'allow-h1' : ''}`}
+    <RichContentContainer className={`rich-text-editor ${props.rootLevelContent ? 'allow-h1' : ''}`}
 >
       {editor && (
         <StyledBubbleMenu
@@ -217,8 +217,8 @@ const RichTextInput: FC<Props> = (props) => {
             />
           ) : (
             <>
-              <H1Button editor={editor} label={<strong>{props.allowH1 ? "H1" : "H2"}</strong>} />
-              <H2Button editor={editor} label={<strong>{props.allowH1 ? "H2" : "H3"}</strong>} />
+              <H1Button editor={editor} label={<strong>{props.rootLevelContent ? "H1" : "H2"}</strong>} />
+              <H2Button editor={editor} label={<strong>{props.rootLevelContent ? "H2" : "H3"}</strong>} />
               <BoldButton editor={editor} />
               <ItalicButton editor={editor} />
               <BulletListButton editor={editor} />
@@ -302,12 +302,13 @@ const RichTextInput: FC<Props> = (props) => {
         </StyledBubbleMenu>
       )}
       <EditorContent editor={editor} />
-      {contentHierarchyError && (
+      {contentHierarchyError?.map((err, idx) => (
         <InlineError
-          id="content-error-hierarchy"
-          error={contentHierarchyError}
+          key={`content-error-hierarchy-${idx}`}
+          id={`content-error-hierarchy-${idx}`}
+          error={err}
         />
-      )}
+      ))}
       {linkNewTabError && (
         <InlineError id="content-error-link-tab" error={linkNewTabError} />
       )}
