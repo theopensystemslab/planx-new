@@ -1,3 +1,4 @@
+import { isApolloError } from "@apollo/client";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -5,63 +6,85 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
-import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
+import gql from "graphql-tag";
 import { useToast } from "hooks/useToast";
-import { useStore } from "pages/FlowEditor/lib/store";
+import { client } from "lib/graphql";
 import React from "react";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import { slugify } from "utils";
+import { object, string } from "yup";
 
-import { CreateFlow, validationSchema } from "./AddFlow/types";
+interface RenameFlow {
+  flowName: string;
+  flowSlug: string;
+}
 
 interface Props {
   isDialogOpen: boolean;
   handleClose: () => void;
-  sourceFlow: {
+  flow: {
     name: string,
     slug: string,
     id: string,
   }
 }
 
-export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceFlow }) => {
-  const { teamId, createFlowFromCopy } = useStore();
+const validationSchema = object().shape({
+  flowName: string().trim().required("Name is required"),
+  flowSlug: string().trim().required("Slug is required"),
+});
 
-  const initialValues: CreateFlow = {
-    mode: "copy",
-    flow: {
-      slug: sourceFlow.slug + "-copy",
-      name: sourceFlow.name.trim() + " (copy)",
-      sourceId: sourceFlow.id,
-      teamId,
-    },
-  };
-
+export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow }) => {
   const toast = useToast();
 
-  const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async ({ flow }, { setFieldError }) => {
+  const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async ({ flowName, flowSlug }, { setFieldError, setSubmitting }) => {
     try {
-      await createFlowFromCopy(flow);
+      await client.mutate({
+        mutation: gql`
+          mutation UpdateFlowSlug(
+            $flowId: uuid!
+            $newSlug: String
+            $newName: String
+          ) {
+            update_flows_by_pk(
+              pk_columns: { id: $flowId }
+              _set: { slug: $newSlug, name: $newName }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          flowId: flow.id,
+          newSlug: flowSlug,
+          newName: flowName.trim(),
+        },
+      });
       handleClose();
-      toast.success(`Created new flow "${flow.name}"`)
+      toast.success(`Renamed flow to "${flowName}"`)
     } catch (error) {
-      if (isAxiosError(error)) {
-        const message = error?.response?.data?.error;
-        if (message?.includes("Uniqueness violation")) {
-          setFieldError("flow.name", "Flow name must be unique");
-        }
-      }
+      const isUniqueSlugError = 
+        error instanceof Error 
+        && isApolloError(error)
+        && error.message.includes("Uniqueness violation");
 
-      throw error;
+      if (isUniqueSlugError) {
+        setFieldError("flowName", "Flow name must be unique");
+      } else {
+        toast.error("Failed to rename flow. Please try again.");
+      }
+      return;
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <Formik<CreateFlow>
-      initialValues={initialValues}
+    <Formik<RenameFlow>
+      initialValues={{ flowName: flow.name, flowSlug: flow.slug }}
       onSubmit={onSubmit}
       validateOnBlur={false}
       validateOnChange={false}
@@ -81,7 +104,7 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
           <DialogTitle variant="h3" component="h1">
             <Box sx={{ mt: 1, mb: 4 }}>
               <Typography variant="h3" component="h2" id="dialog-heading">
-                Copy "{sourceFlow.name}"
+                Rename "{flow.name}"
               </Typography>
             </Box>
           </DialogTitle>
@@ -90,24 +113,24 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
               <DialogContent
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
-                <InputLabel label="Service name" htmlFor="flow.name">
+                <InputLabel label="Service name" htmlFor="flowName">
                   <Input
-                    {...getFieldProps("flow.name")}
-                    id="flow.name"
+                    {...getFieldProps("flowName")}
+                    id="flowName"
                     type="text"
                     onChange={(e) => {
-                      setFieldValue("flow.name", e.target.value);
-                      setFieldValue("flow.slug", slugify(e.target.value));
+                      setFieldValue("flowName", e.target.value);
+                      setFieldValue("flowSlug", slugify(e.target.value));
                     }}
-                    errorMessage={errors.flow?.name}
-                    value={values.flow?.name}
+                    errorMessage={errors.flowName}
+                    value={values.flowName}
                   />
                 </InputLabel>
-                <InputLabel label="Editor URL" htmlFor="flow.slug">
+                <InputLabel label="Editor URL" htmlFor="flowSlug">
                   <Input
-                    {...getFieldProps("flow.slug")}
+                    {...getFieldProps("flowSlug")}
                     disabled
-                    id="flow.slug"
+                    id="flowSlug"
                     type="text"
                     startAdornment={<URLPrefix />}
                   />
@@ -128,7 +151,7 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
                   disableRipple
                   disabled={isSubmitting}
                 >
-                  Copy service
+                  Rename service
                 </Button>
               </DialogActions>
             </Form>

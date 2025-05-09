@@ -9,6 +9,8 @@ import React from "react";
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
   backgroundColor: theme.palette.background.paper,
+  position: "relative",
+  zIndex: theme.zIndex.appBar,
 }));
 
 const ReportButton = styled(Button)(({ theme }) => ({

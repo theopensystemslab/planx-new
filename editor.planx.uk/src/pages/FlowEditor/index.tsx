@@ -3,6 +3,7 @@ import "./floweditor.scss";
 import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
+import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import React, { useRef } from "react";
 import { rootFlowPath } from "routes/utils";
 
@@ -20,6 +21,7 @@ const EditorContainer = styled(Box)(() => ({
   alignItems: "stretch",
   overflow: "hidden",
   flexGrow: 1,
+  maxHeight: `calc(100vh - ${HEADER_HEIGHT_EDITOR}px)`,
 }));
 
 const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({

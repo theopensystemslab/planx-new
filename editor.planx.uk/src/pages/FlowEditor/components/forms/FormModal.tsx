@@ -17,7 +17,7 @@ import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
-import { useStore } from "../../lib/store";
+import { Store, useStore } from "../../lib/store";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -137,20 +137,37 @@ const FormModal: React.FC<{
   extraProps?: any;
 }> = ({ type, handleDelete, Component, id, before, parent, extraProps }) => {
   const { navigate } = useNavigation();
-  const [addNode, updateNode, node, makeUnique, connect] = useStore((store) => [
+  const [
+    addNode,
+    updateNode,
+    node,
+    makeUnique,
+    connect,
+    teamSlug,
+    isTemplatedFrom,
+  ] = useStore((store) => [
     store.addNode,
     store.updateNode,
     store.flow[id],
     store.makeUnique,
     store.connect,
+    store.getTeam().slug,
+    store.isTemplatedFrom,
   ]);
   const handleClose = () => navigate(rootFlowPath(true));
 
-  const teamSlug = useStore.getState().getTeam().slug;
+  // Nodes should be disabled when:
+  //  1. The user doesn't have any edit access to this team
+  //  2. The user has edit access to this team, but it is a templated flow and the node is not tagged 'customisation'
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
-  const disabled = !canUserEditNode(teamSlug);
+  const isCustomisableNode = (node: Store.Node) => {
+    return node.data?.tags?.includes("customisation");
+  };
+  const disabled = isTemplatedFrom
+    ? !canUserEditNode(teamSlug) || !isCustomisableNode(node)
+    : !canUserEditNode(teamSlug);
 
   const toast = useToast();
 

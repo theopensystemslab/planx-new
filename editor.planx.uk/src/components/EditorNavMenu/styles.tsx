@@ -14,6 +14,7 @@ export const Root = styled(Box, {
   flexShrink: 0,
   background: theme.palette.background.paper,
   borderRight: `1px solid ${theme.palette.border.light}`,
+  zIndex: theme.zIndex.appBar,
 }));
 
 export const MenuWrap = styled("ul")(({ theme }) => ({

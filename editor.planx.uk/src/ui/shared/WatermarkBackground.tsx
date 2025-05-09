@@ -11,7 +11,7 @@ type WatermarkBackgroundProps = {
 };
 
 const Root = styled(Box)(() => ({
-  position: "absolute",
+  position: "fixed",
   top: "0",
   left: "0",
   width: "100%",
@@ -55,7 +55,7 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
   opacity = 0.1,
 }) => {
   // Only display watermark on Staging and Pizza environments
-  const isTestEnvironment = process.env.VITE_APP_ENV !== "production";
+  const isTestEnvironment = import.meta.env.VITE_APP_ENV !== "production";
   if (!isTestEnvironment) return null;
 
   return (

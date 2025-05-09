@@ -136,7 +136,7 @@ export const createPaymentRequestQueryMock = {
     ],
     feeBreakdown: {
       amount: {
-        calculated: 123.45,
+        calculated: 0,
         calculatedVAT: 0,
         reduction: 0,
         exemption: 0,
