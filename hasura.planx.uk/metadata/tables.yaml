@@ -747,6 +747,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -779,6 +780,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings
@@ -848,6 +850,7 @@
           - data
           - description
           - id
+          - is_template
           - limitations
           - name
           - settings

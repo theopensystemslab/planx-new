@@ -2,15 +2,18 @@ import MenuItem from "@mui/material/MenuItem";
 import { useFormikContext } from "formik";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
+import Permission from "ui/editor/Permission";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { URLPrefix } from "ui/editor/URLPrefix";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
+import { Switch } from "ui/shared/Switch";
 import { slugify } from "utils";
 
 import { CreateFromCopyFormSection } from "./CreateFromCopyFormSection";
 import { CreateFromTemplateFormSection } from "./CreateFromTemplateFormSection";
 import { CREATE_FLOW_MODES, CreateFlow } from "./types";
+
 export const BaseFormSection: React.FC = () => {
   const { values, setFieldValue, getFieldProps, errors } =
     useFormikContext<CreateFlow>();
@@ -68,6 +71,21 @@ export const BaseFormSection: React.FC = () => {
           startAdornment={<URLPrefix />}
         />
       </InputLabel>
+      {values.mode === "new" && (
+        <Permission.IsPlatformAdmin>
+          <Switch
+            name="isTemplate"
+            checked={values.flow.isTemplate}
+            onChange={() =>
+              setFieldValue(
+                "flow.isTemplate",
+                !values.flow.isTemplate,
+              )
+            }
+            label={"Source template"}
+          />
+        </Permission.IsPlatformAdmin>
+      )}
     </>
   );
 };

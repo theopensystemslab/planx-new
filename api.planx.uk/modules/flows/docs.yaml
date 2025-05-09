@@ -65,6 +65,10 @@ components:
           type: string
           example: My new flow
           required: true
+        isTemplate:
+          type: boolean
+          example: true
+          required: false
     CreateFlowFromTemplate:
       type: object
       properties:

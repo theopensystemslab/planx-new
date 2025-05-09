@@ -67,14 +67,23 @@ interface CreateFlowResponse {
 }
 
 // Insert a new flow into the `flows` table
-const createFlow = async (
-  teamId: number,
-  slug: string,
-  name: string,
-  flowData: Flow["data"],
-  copiedFrom?: Flow["id"],
-  templatedFrom?: Flow["id"],
-) => {
+const createFlow = async ({
+  teamId,
+  slug,
+  name,
+  isTemplate,
+  flowData,
+  copiedFrom,
+  templatedFrom,
+}: {
+  teamId: number;
+  slug: string;
+  name: string;
+  isTemplate: boolean;
+  flowData: Flow["data"];
+  copiedFrom?: Flow["id"];
+  templatedFrom?: Flow["id"];
+}) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
 
@@ -90,6 +99,7 @@ const createFlow = async (
           $data: jsonb = {}
           $copied_from: uuid
           $templated_from: uuid
+          $is_template: Boolean
         ) {
           flow: insert_flows_one(
             object: {
@@ -100,6 +110,7 @@ const createFlow = async (
               version: 1
               copied_from: $copied_from
               templated_from: $templated_from
+              is_template: $is_template
             }
           ) {
             id
@@ -113,6 +124,7 @@ const createFlow = async (
         data: flowData,
         copied_from: copiedFrom,
         templated_from: templatedFrom,
+        is_template: isTemplate,
       },
     );
 

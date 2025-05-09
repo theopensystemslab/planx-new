@@ -167,7 +167,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
       type: FlowTagType.Template,
       displayName: "Template",
       shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplateService,
-    }
+    },
+    {
+      type: FlowTagType.SourceTemplate,
+      displayName: "Source Template",
+      shouldAddTag: hasFeatureFlag("TEMPLATES") && flow.isTemplate,
+    },
   ];
 
   const publishedDate = formatLastPublishMessage(

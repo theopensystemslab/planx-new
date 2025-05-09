@@ -150,6 +150,7 @@ export interface FlowSummary {
   operations: FlowSummaryOperations[];
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
+  isTemplate: boolean;
 }
 
 export interface EditorStore extends Store.Store {
@@ -303,16 +304,12 @@ export const editorStore: StateCreator<
     localStorage.setItem("clipboard", id);
   },
 
-  createFlow: async ({ teamId, name, slug }) => {
+  createFlow: async (newFlow) => {
     const token = get().jwt;
 
     const response = await axios.post<{ id: string }>(
       `${import.meta.env.VITE_APP_API_URL}/flows/create`,
-      {
-        teamId,
-        slug,
-        name,
-      },
+      newFlow,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -404,6 +401,7 @@ export const editorStore: StateCreator<
               }
             }
             templatedFrom: templated_from
+            isTemplate: is_template
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1

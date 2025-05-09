@@ -3,6 +3,7 @@ export const FlowTagType = {
   ApplicationType: "applicationType",
   ServiceType: "serviceType",
   Template: "template",
+  SourceTemplate: "sourceTemplate",
 } as const;
 
 export const StatusVariant = {
