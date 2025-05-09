@@ -20,7 +20,7 @@ export const mockPaymentRequest: Partial<PaymentRequest> = {
   applicantName: "Mr Agent (Agency Ltd)",
   feeBreakdown: {
     amount: {
-      calculated: 123.45,
+      calculated: 0,
       calculatedVAT: 0,
       payable: 123.45,
       payableVAT: 0,
