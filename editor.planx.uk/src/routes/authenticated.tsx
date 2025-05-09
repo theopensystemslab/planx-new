@@ -1,4 +1,4 @@
-import type { Team, TeamSettings, TeamTheme } from "@opensystemslab/planx-core/types";
+import type { Team, TeamSettings, TeamTheme, User } from "@opensystemslab/planx-core/types";
 import gql from "graphql-tag";
 import {
   compose,
@@ -7,6 +7,7 @@ import {
   mount,
   NotFoundError,
   route,
+  withContext,
   withView,
 } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -26,8 +27,21 @@ export type TeamSummary =
   { settings: Pick<TeamSettings, "isTrial"> } &
   { theme: Pick<TeamTheme, "primaryColour" | "logo"> }
 
+interface Context {
+  user: User
+}
+
 const editorRoutes = compose(
   withView(authenticatedView),
+
+  /**
+   * Ensure userStore is initialised
+   * Required for route guards to avoid race conditions
+   */
+  withContext(async (): Promise<Context> => {
+    const user = await useStore.getState().initUserStore();
+    return { user }
+  }),
 
   mount({
     "/": route(async () => {
@@ -58,8 +72,8 @@ const editorRoutes = compose(
       };
     }),
 
-    "/global-settings": map(async (req) => {
-      const isAuthorised = useStore.getState().user?.isPlatformAdmin;
+    "/global-settings": map<Context>(async (req, { user }) => {
+      const isAuthorised = user.isPlatformAdmin;
       if (!isAuthorised)
         throw new NotFoundError(
           `User does not have access to ${req.originalUrl}`,
@@ -84,10 +98,7 @@ const editorRoutes = compose(
       });
     }),
 
-    "/admin-panel": map(async (req) => {
-      const user = useStore.getState().user;
-      if (!user) throw new NotFoundError();
-
+    "/admin-panel": map<Context>(async (req, { user }) => {
       const { isPlatformAdmin, isAnalyst } = user;
       const isAuthorised = isPlatformAdmin || isAnalyst;
       if (!isAuthorised)

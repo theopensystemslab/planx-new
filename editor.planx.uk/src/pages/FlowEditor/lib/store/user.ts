@@ -14,7 +14,7 @@ export interface UserStore {
   setUser: (user: User & { jwt: string }) => void;
   getUser: () => User | undefined;
   canUserEditTeam: (teamSlug: Team["slug"]) => boolean;
-  initUserStore: () => Promise<void>;
+  initUserStore: () => Promise<User>;
   getUserRoleForCurrentTeam: () => Role | undefined;
 }
 
@@ -48,10 +48,12 @@ export const userStore: StateCreator<
   async initUserStore() {
     const { getUser, setUser } = get();
     const currentUser = getUser();
-    if (currentUser) return;
+    if (currentUser) return currentUser;
 
     const user = await getLoggedInUser();
     setUser(user);
+    
+    return user;
   },
 
   getUserRoleForCurrentTeam: () => {
