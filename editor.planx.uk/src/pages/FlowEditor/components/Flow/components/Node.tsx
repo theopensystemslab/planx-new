@@ -25,6 +25,7 @@ const Node: React.FC<any> = (props) => {
     ...props,
     wasVisited,
     tags: node.data?.tags,
+    className: props.className || "",
   };
 
   const type = props.type as TYPES;
