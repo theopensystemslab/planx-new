@@ -30,6 +30,7 @@ export interface Checklist extends BaseNodeData {
   allRequired?: boolean;
   categories?: Array<Category>;
   neverAutoAnswer?: boolean;
+  alwaysAutoAnswerBlank?: boolean;
   autoAnswers?: string[] | undefined;
 }
 

@@ -31,6 +31,7 @@ interface Props {
       text: string;
       type?: string;
       neverAutoAnswer?: boolean;
+      alwaysAutoAnswerBlank?: boolean;
     } & BaseNodeData;
   };
   options?: Option[];
@@ -49,6 +50,7 @@ export const Question: React.FC<Props> = (props) => {
       options: props.options || [],
       text: props.node?.data?.text || "",
       neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
+      alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
       ...parseBaseNodeData(props.node?.data),
     },
     onSubmit: ({ options, ...values }) => {
@@ -70,6 +72,18 @@ export const Question: React.FC<Props> = (props) => {
       const errors: FormikErrors<FormikValues> = {};
       if (values.fn && !options.some((option) => option.data.val)) {
         errors.fn = "At least one option must also set a data field";
+      }
+      if (values.alwaysAutoAnswerBlank && !values.fn) {
+        errors.alwaysAutoAnswerBlank =
+          "Set a data field for the Question and all options but one when never putting to user";
+      }
+      if (
+        values.alwaysAutoAnswerBlank &&
+        values.fn &&
+        options.filter((option) => !option.data.val).length !== 1
+      ) {
+        errors.alwaysAutoAnswerBlank =
+          "Exactly one option should have a blank data field when never putting to user";
       }
       return errors;
     },
@@ -143,6 +157,21 @@ export const Question: React.FC<Props> = (props) => {
                 disabled={props.disabled}
               />
             </InputRow>
+            <ErrorWrapper error={formik.errors.alwaysAutoAnswerBlank}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.alwaysAutoAnswerBlank}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "alwaysAutoAnswerBlank",
+                      !formik.values.alwaysAutoAnswerBlank,
+                    )
+                  }
+                  label="Never put to user (default to blank automation)"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+            </ErrorWrapper>
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent subtitle="Options">

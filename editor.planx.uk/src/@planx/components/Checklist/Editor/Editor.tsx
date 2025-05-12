@@ -27,6 +27,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
     initialValues: {
       allRequired: props.node?.data?.allRequired || false,
       neverAutoAnswer: props.node?.data?.neverAutoAnswer || false,
+      alwaysAutoAnswerBlank: props.node?.data?.alwaysAutoAnswerBlank || false,
       description: props.node?.data?.description || "",
       fn: props.node?.data?.fn || "",
       groupedOptions: props.groupedOptions,
@@ -93,6 +94,18 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       if (exclusiveOptions && exclusiveOptions.length > 1) {
         errors.options =
           "There should be a maximum of one exclusive option configured";
+      }
+      if (values.alwaysAutoAnswerBlank && !values.fn) {
+        errors.alwaysAutoAnswerBlank =
+          "Set a data field for the Checklist and all options but one when never putting to user";
+      }
+      if (
+        values.alwaysAutoAnswerBlank &&
+        values.fn &&
+        options?.filter((option) => !option.data.val).length !== 1
+      ) {
+        errors.alwaysAutoAnswerBlank =
+          "Exactly one option should have a blank data field when never putting to user";
       }
       return errors;
     },
@@ -190,6 +203,21 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 disabled={props.disabled}
               />
             </InputRow>
+            <ErrorWrapper error={formik.errors.alwaysAutoAnswerBlank}>
+              <InputRow>
+                <Switch
+                  checked={formik.values.alwaysAutoAnswerBlank}
+                  onChange={() =>
+                    formik.setFieldValue(
+                      "alwaysAutoAnswerBlank",
+                      !formik.values.alwaysAutoAnswerBlank,
+                    )
+                  }
+                  label="Never put to user (default to blank automation)"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+            </ErrorWrapper>
           </InputGroup>
         </ModalSectionContent>
         <ErrorWrapper error={formik.errors.options}>

@@ -9,6 +9,7 @@ export interface ChecklistProps extends Checklist {
     data?: {
       allRequired?: boolean;
       neverAutoAnswer?: boolean;
+      alwaysAutoAnswerBlank?: boolean;
       categories?: Array<Category>;
       description?: string;
       fn?: string;
