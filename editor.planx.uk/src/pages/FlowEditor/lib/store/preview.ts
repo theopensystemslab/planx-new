@@ -527,14 +527,14 @@ export const previewStore: StateCreator<
 
     const passport = computePassport();
 
-    // Only proceed if the user has seen at least one node with this fn before
+    // Only proceed if the user has seen at least one node with this fn before, unless "never put to user (default blank automation)" is toggled on
     const visitedFns = Object.entries(breadcrumbs).filter(
       ([nodeId, _breadcrumb]) =>
         flow[nodeId]?.data?.fn === data.fn ||
         // Account for nodes like FindProperty that don't have `data.fn` prop but still set passport vars like `property.region` etc
         Object.keys(passport?.data || {}).includes(data.fn),
     );
-    if (!visitedFns.length) return;
+    if (!visitedFns.length && !data?.alwaysAutoAnswerBlank) return;
 
     // For each visited node, get the data values of its' options (aka edges or Answer nodes)
     const visitedOptionVals: string[] = [];
@@ -648,18 +648,28 @@ export const previewStore: StateCreator<
         });
       } else {
         // If this node is asking about a constraint that we have NOT queried from an external source,
-        //   Then put it to the user exactly once and automate future instances of it
-        if (blankOption?.id && hasVisitedEveryOption)
-          optionsThatCanBeAutoAnswered.push(blankOption.id);
+        //   Then put it to the user exactly once and automate future instances of it, unless "never put to user" is toggled on
+        if (blankOption?.id)
+          if (hasVisitedEveryOption || data?.alwaysAutoAnswerBlank)
+            optionsThatCanBeAutoAnswered.push(blankOption.id);
       }
     }
 
     if (!foundPassportValues) {
       // If we don't have any existing passport values for this fn but we do have a blank option,
-      //  proceed through the blank if every option's val has been visited before
-      if (blankOption?.id && hasVisitedEveryOption)
-        optionsThatCanBeAutoAnswered.push(blankOption.id);
+      //  proceed through the blank if every option's val has been visited before or if "never put to user" is toggled on
+      if (blankOption?.id)
+        if (hasVisitedEveryOption || data?.alwaysAutoAnswerBlank)
+          optionsThatCanBeAutoAnswered.push(blankOption.id);
     }
+
+    // Even if we've never seen other options, if "never put to user" is toggled and a blank option exists, automate it by default
+    if (
+      optionsThatCanBeAutoAnswered.length === 0 &&
+      blankOption?.id &&
+      data?.alwaysAutoAnswerBlank
+    )
+      optionsThatCanBeAutoAnswered.push(blankOption.id);
 
     // Questions 'select one' and therefore can only auto-answer the single left-most matching option
     if (type === TYPES.Question) {

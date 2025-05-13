@@ -117,4 +117,26 @@ describe("Checklist editor component", () => {
       ),
     ).toBeInTheDocument();
   });
+
+  it("shows an error if 'never put to user' is toggled on without a data field", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} />
+      </DndProvider>,
+    );
+
+    await user.click(
+      screen.getByLabelText("Never put to user (default to blank automation)"),
+    );
+
+    expect(
+      screen.getByText(
+        "Set a data field for the Checklist and all options but one when never putting to user",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it.todo(
+    "shows an error if 'never put to user' is toggled on and more than one option has a blank data field",
+  );
 });

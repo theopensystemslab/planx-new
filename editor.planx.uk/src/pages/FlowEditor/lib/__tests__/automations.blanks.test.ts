@@ -123,6 +123,99 @@ describe("Auto-answering blanks", () => {
   });
 });
 
+describe("Auto-answered blanks when 'never put to user' is toggled on", () => {
+  beforeEach(() => {
+    resetPreview();
+    // Alter the default flow to toggle on "never put to user" in select Checklist and Question nodes
+    const alteredFlow = {
+      ...flow,
+      Path2Checklist2: {
+        data: {
+          alwaysAutoAnswerBlank: true,
+          fn: "option",
+          text: "Options 2",
+          allRequired: false,
+        },
+        type: 105,
+        edges: [
+          "Path2Checklist2OptionA",
+          "Path2Checklist2OptionB",
+          "Path2Checklist2OptionC",
+          "Path2Checklist2Blank",
+        ],
+      },
+      Path4Question2: {
+        data: {
+          alwaysAutoAnswerBlank: true,
+          fn: "option",
+          text: "Options 2",
+        },
+        type: 100,
+        edges: [
+          "Path4Question2OptionA",
+          "Path4Question2OptionB",
+          "Path4Question2Blank",
+        ],
+      },
+    };
+    setState({ flow: alteredFlow });
+  });
+
+  test("Checklists with different options do auto-answer the blank", () => {
+    // Manually select the test path
+    expect(upcomingCardIds()).toEqual(["TestPathSelection"]);
+    clickContinue("TestPathSelection", { answers: ["TestPath2"], auto: false });
+
+    // Manually proceed through the first blank
+    expect(upcomingCardIds()).toEqual(["Path2Checklist1", "Path2Checklist2"]);
+    clickContinue("Path2Checklist1", {
+      answers: ["Path2Checklist1Blank"],
+      auto: false,
+    });
+
+    // The second blank is usually put to the user because we do not have a passport value and we have NOT seen all options before,
+    //   BUT proceeds through the blank instead when 'never put to user' is toggled on
+    expect(computePassport()?.data).not.toHaveProperty("option");
+    expect(autoAnswerableOptions("Path2Checklist2")).toEqual([
+      "Path2Checklist2Blank",
+    ]);
+  });
+
+  test("Questions with different options do auto-answer the blank", () => {
+    // Manually select the test path
+    expect(upcomingCardIds()).toEqual(["TestPathSelection"]);
+    clickContinue("TestPathSelection", { answers: ["TestPath4"], auto: false });
+
+    // Manually proceed through the first blank
+    expect(upcomingCardIds()).toEqual([
+      "Path4Question1",
+      "Path4Question2",
+      "Path4Question3",
+    ]);
+    clickContinue("Path4Question1", {
+      answers: ["Path4Question1Blank"],
+      auto: false,
+    });
+
+    // The second blank is usually put to the user because we do not have a passport value and we have NOT seen all options before,
+    //   BUT proceeds through the blank instead when 'never put to user' is toggled on
+    expect(computePassport()?.data).not.toHaveProperty("option");
+    expect(autoAnswerableOptions("Path4Question2")).toEqual([
+      "Path4Question2Blank",
+    ]);
+    clickContinue("Path4Question2", {
+      answers: autoAnswerableOptions("Path4Question2"),
+      auto: false,
+    });
+
+    // The third blank is auto-answered because we do not have a passport value but we've seen all options before now
+    expect(computePassport()?.data).not.toHaveProperty("option");
+    expect(autoAnswerableOptions("Path4Question3")).toEqual([
+      "Path4Question3Blank",
+    ]);
+  });
+});
+
 // editor.planx.dev/testing/automate-blanks-test
 const flow: Store.Flow = {
   _root: {
