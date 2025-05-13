@@ -14,7 +14,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
 import Logo from "ui/images/OGLLogo.svg";
-import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
@@ -104,7 +103,6 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
       <ThemeProvider theme={teamMUITheme}>
         <Header />
         <MainContainer>
-          <WatermarkBackground variant="dark" opacity={0.05} />
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             {children}
           </ErrorBoundary>

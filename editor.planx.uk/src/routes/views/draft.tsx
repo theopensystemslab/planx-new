@@ -9,6 +9,7 @@ import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings } from "types";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import { getTeamFromDomain } from "../utils";
 
@@ -40,6 +41,7 @@ export const draftView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
+      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
       <TestWarningPage>
         <View />
       </TestWarningPage>

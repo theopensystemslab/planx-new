@@ -7,6 +7,7 @@ import { TestWarningPage } from "pages/Preview/TestWarningPage";
 import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain } from "routes/utils";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import { fetchSettingsForPublishedView } from "./published/queries";
 
@@ -41,6 +42,7 @@ export const previewView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
+      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={true} />
       <TestWarningPage>
         <View />
       </TestWarningPage>
