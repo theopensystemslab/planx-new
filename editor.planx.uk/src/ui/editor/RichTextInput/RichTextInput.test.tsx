@@ -37,7 +37,7 @@ describe("input validation", () => {
     );
 
     expect(
-      screen.queryByText('Links must wrap the text "(opens in a new tab)"'),
+      screen.queryByText('Links must wrap the text "(opens in a new tab)".'),
     ).not.toBeInTheDocument();
   });
 
@@ -49,7 +49,7 @@ describe("input validation", () => {
     );
 
     expect(
-      screen.getByText('Links must wrap the text "(opens in a new tab)"'),
+      screen.getByText('Links must wrap the text "(opens in a new tab)".'),
     ).toBeVisible();
   });
 
