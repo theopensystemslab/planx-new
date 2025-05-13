@@ -2,7 +2,6 @@ import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { type Editor } from "@tiptap/core";
 import History from "@tiptap/extension-history";
@@ -17,11 +16,11 @@ import React, {
   useRef,
   useState,
 } from "react";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import { H1Button, H2Button } from "./components/HeadingButtons";
-import { InlineError } from "./components/InlineError";
 import { PopupError } from "./components/PopUpError";
 import {
   BoldButton,
@@ -177,8 +176,17 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <RichContentContainer className={`rich-text-editor ${props.rootLevelContent ? 'allow-h1' : ''}`}
->
+    <ErrorWrapper
+      id={props.name}
+      error={[
+        ...(contentHierarchyError ?? []),
+        linkNewTabError,
+        legislationLinkError,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+    <RichContentContainer className={`rich-text-editor ${props.rootLevelContent ? 'allow-h1' : ''}`}>
       {editor && (
         <StyledBubbleMenu
           editor={editor}
@@ -302,23 +310,8 @@ const RichTextInput: FC<Props> = (props) => {
         </StyledBubbleMenu>
       )}
       <EditorContent editor={editor} />
-      {contentHierarchyError?.map((err, idx) => (
-        <InlineError
-          key={`content-error-hierarchy-${idx}`}
-          id={`content-error-hierarchy-${idx}`}
-          error={err}
-        />
-      ))}
-      {linkNewTabError && (
-        <InlineError id="content-error-link-tab" error={linkNewTabError} />
-      )}
-      {legislationLinkError && (
-        <InlineError
-          id="content-error-legislation-link"
-          error={legislationLinkError}
-        />
-      )}
     </RichContentContainer>
+    </ErrorWrapper>
   );
 };
 

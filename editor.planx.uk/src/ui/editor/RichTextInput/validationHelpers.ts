@@ -46,7 +46,7 @@ export const getLinkNewTabError = (
 
       return hasOpenTabText && !isLink;
     },
-    errorMessage: 'Links must wrap the text "(opens in a new tab)"',
+    errorMessage: 'Links must wrap the text "(opens in a new tab)".',
   });
 };
 
