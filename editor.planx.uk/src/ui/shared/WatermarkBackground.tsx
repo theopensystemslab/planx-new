@@ -8,6 +8,7 @@ const svgDataUri = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 type WatermarkBackgroundProps = {
   variant?: "light" | "dark";
   opacity?: number;
+  forceVisibility?: boolean;
 };
 
 const Root = styled(Box)(() => ({
@@ -53,10 +54,12 @@ const Background = styled(Box, {
 const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
   variant = "light",
   opacity = 0.1,
+  forceVisibility = false,
 }) => {
-  // Only display watermark on Staging and Pizza environments
+  // Only display watermark on Staging, Pizza and Local environments
   const isTestEnvironment = import.meta.env.VITE_APP_ENV !== "production";
-  if (!isTestEnvironment) return null;
+  
+  if (!isTestEnvironment && !forceVisibility) return null;
 
   return (
     <Root>
@@ -65,7 +68,7 @@ const WatermarkBackground: React.FC<WatermarkBackgroundProps> = ({
         permanent content changes.
       </Box>
       <Wrapper>
-        <Background variant={variant} opacity={opacity} />
+        <Background variant={variant} opacity={opacity} forceVisibility={forceVisibility} />
       </Wrapper>
     </Root>
   );
