@@ -2,7 +2,7 @@ import { filterPublicLink } from "./filterPublicLink.js";
 import { updatePublicAnalyticsLink } from "./updatePublicAnalyticsLink.js";
 import type { CreateNewDashboardLinkParams } from "./types.js";
 import { ServerError } from "../../../errors/serverError.js";
-import { findDashboardPublicLink } from "./findDashboardPublicLink.js";
+import { generateDashboardLink } from "./generateDashboardLink.js";
 import { getTeamSlug } from "./getTeamSlug.js";
 
 /**
@@ -13,10 +13,12 @@ export async function createNewDashboardLink({
   teamId,
   serviceSlug,
 }: CreateNewDashboardLinkParams): Promise<string | undefined> {
+  const environment =
+    process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
+
   try {
     const { teamSlug } = await getTeamSlug(teamId);
-    const dashboardPublicLink = findDashboardPublicLink(serviceSlug);
-
+    const dashboardPublicLink = generateDashboardLink({ environment, serviceSlug, teamSlug });
     if (!dashboardPublicLink) return;
 
     const filteredLink = await filterPublicLink(
