@@ -4,7 +4,7 @@ const DASHBOARD_PUBLIC_IDS = {
     discretionary: "868af689-f792-4820-8756-4aec92407b27",
     FOIYNPP: "f219818d-1076-4055-a35b-8be6e0ed4755",
     RAB: "0f52eb76-8d7f-459a-8327-4374731f31a3",
-    submission: "615885ed-b945-4dec-8e26-2826d4ecd27b"
+    submission: "615885ed-b945-4dec-8e26-2826d4ecd27b",
   },
   staging: {
     discretionary: "0c0abafd-e919-4da2-a5b3-1c637f703954",
@@ -43,19 +43,30 @@ const includedServices = [FOIYNPP, RAB, submission];
 // TODO: figure out how to handle discretionary services
 // const discretionaryDashboardTemplate = 118
 
-export const generateDashboardLink = ({ environment, serviceSlug, teamSlug }: {
+export const generateDashboardLink = ({
+  environment,
+  serviceSlug,
+  teamSlug,
+}: {
   environment: Environment;
   serviceSlug: string;
   teamSlug: string;
 }): string | undefined => {
-
   let dashboardId: string | undefined;
 
   for (const service of includedServices) {
-    const found = service.slugs.some(slug => serviceSlug.includes(slug));
-    console.log(`Does "${serviceSlug}" contain any of`, service.slugs, '?', found);
+    const found = service.slugs.some((slug) => serviceSlug.includes(slug));
+    console.log(
+      `Does "${serviceSlug}" contain any of`,
+      service.slugs,
+      "?",
+      found,
+    );
     if (found) {
-      console.log(`Found matching slug in "${serviceSlug}" for:`, service.slugs);
+      console.log(
+        `Found matching slug in "${serviceSlug}" for:`,
+        service.slugs,
+      );
       dashboardId = service.id;
       break;
     }
@@ -64,15 +75,17 @@ export const generateDashboardLink = ({ environment, serviceSlug, teamSlug }: {
   if (!dashboardId) {
     return;
   }
-  
+
   const baseDomain = environment === "production" ? "uk" : "dev";
   const host = `https://metabase.editor.planx.${baseDomain}`;
   const pathname = `/public/dashboard/${dashboardId}`;
   const url = new URL(pathname, host);
-  const search =  new URLSearchParams({ service: serviceSlug, team: teamSlug }).toString();
+  const search = new URLSearchParams({
+    service: serviceSlug,
+    team: teamSlug,
+  }).toString();
   url.search = search;
-  console.log({url})
+  console.log({ url });
 
   return url.toString();
-}
-
+};
