@@ -18,7 +18,11 @@ export async function createNewDashboardLink({
 
   try {
     const { teamSlug } = await getTeamSlug(teamId);
-    const dashboardPublicLink = generateDashboardLink({ environment, serviceSlug, teamSlug });
+    const dashboardPublicLink = generateDashboardLink({
+      environment,
+      serviceSlug,
+      teamSlug,
+    });
     if (!dashboardPublicLink) return;
 
     const filteredLink = await filterPublicLink(

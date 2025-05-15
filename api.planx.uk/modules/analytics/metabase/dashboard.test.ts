@@ -8,8 +8,12 @@ describe("Metabase dashboard link module", () => {
   describe("generateDashboardLink", () => {
     test("returns correct public link for a valid service slug", () => {
       const serviceSlug = "find-out-if-you-need-planning-permission";
-      const teamSlug = "test-council"
-      const linkFOI = generateDashboardLink({ environment: "staging", serviceSlug, teamSlug });
+      const teamSlug = "test-council";
+      const linkFOI = generateDashboardLink({
+        environment: "staging",
+        serviceSlug,
+        teamSlug,
+      });
       const publicLink =
         "https://metabase.editor.planx.dev/public/dashboard/d6303f0b-d6e8-4169-93c0-f988a93e19bc?service=find-out-if-you-need-planning-permission&team=test-council";
       expect(linkFOI).toBe(publicLink);
