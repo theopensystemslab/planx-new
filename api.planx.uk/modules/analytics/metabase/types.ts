@@ -13,6 +13,8 @@ export type NewDashboardLinkHandler = ValidatedRequestHandler<
 
 export const createNewDashboardLinkSchema = z.object({
   body: z.object({
+    analyticsLink: z.string().nullable(),
+    status: z.string(),
     flowId: z.string(),
     teamId: z.number(),
     serviceSlug: z.string(),
@@ -21,6 +23,8 @@ export const createNewDashboardLinkSchema = z.object({
 });
 
 export type CreateNewDashboardLinkParams = {
+  analyticsLink: string | null;
+  status: string;
   flowId: string;
   teamId: number;
   serviceSlug: string;
