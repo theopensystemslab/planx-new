@@ -1,22 +1,20 @@
 import { gql } from "graphql-request";
-import { $api } from "../../../../client/index.js";
+import { $api } from "../../../client/index.js";
 
-interface GetTeamNameAndSlug {
+interface GetTeamSlug {
   teams: {
     id: number;
-    teamName: string;
     teamSlug: string;
   }[];
 }
 
-export const getTeamNameAndSlug = async (id: number) => {
+export const getTeamSlug = async (id: number) => {
   try {
-    const response = await $api.client.request<GetTeamNameAndSlug>(
+    const response = await $api.client.request<GetTeamSlug>(
       gql`
-        query GetTeamNameAndSlug($id: Int!) {
+        query GetTeamSlug($id: Int!) {
           teams(where: { id: { _eq: $id } }) {
             id
-            teamName: name
             teamSlug: slug
           }
         }
