@@ -1,20 +1,18 @@
-import { findDashboardPublicLink } from "./findDashboardPublicLink.js";
+import { generateDashboardLink } from "./generateDashboardLink.js";
 import { getTeamSlug } from "./getTeamSlug.js";
 import { filterPublicLink } from "./filterPublicLink.js";
 import { updatePublicAnalyticsLink } from "./updatePublicAnalyticsLink.js";
 import { $api } from "../../../client/index.js";
 
 describe("Metabase dashboard link module", () => {
-  describe("findDashboardPublicLink", () => {
+  describe("generateDashboardLink", () => {
     test("returns correct public link for a valid service slug", () => {
-      const serviceSlugFOI = "find-out-if-you-need-planning-permission";
-      const serviceSlugCIY = "check-if-you-need-planning-permission";
-      const linkFOI = findDashboardPublicLink(serviceSlugFOI);
-      const linkCIY = findDashboardPublicLink(serviceSlugCIY);
-      const publicLinkFOI =
-        "https://metabase.editor.planx.dev/public/dashboard/d6303f0b-d6e8-4169-93c0-f988a93e19bc?service_slug={service-slug}&team_slug={team-slug}";
-      expect(linkFOI).toBe(publicLinkFOI);
-      expect(linkCIY).toBe(publicLinkFOI);
+      const serviceSlug = "find-out-if-you-need-planning-permission";
+      const teamSlug = "test-council"
+      const linkFOI = generateDashboardLink({ environment: "staging", serviceSlug, teamSlug });
+      const publicLink =
+        "https://metabase.editor.planx.dev/public/dashboard/d6303f0b-d6e8-4169-93c0-f988a93e19bc?service=find-out-if-you-need-planning-permission&team=test-council";
+      expect(linkFOI).toBe(publicLink);
     });
   });
 
