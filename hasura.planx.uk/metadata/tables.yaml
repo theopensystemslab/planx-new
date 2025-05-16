@@ -1250,7 +1250,7 @@
             {
               "createdAt": {{$body.created_at}},
               "payload": {
-                "flowId": {{$body.id}},
+                "flowId": {{$body.event.data.new.id}},
                 "templatedFrom": {{$body.event.data.new.templated_from}},
                 "data": {{$body.event.data.new.data}}
               }
@@ -3174,6 +3174,16 @@
           type: http
       comment: teamEditors can only insert nodes for templated flows which they can edit
   select_permissions:
+    - role: api
+      permission:
+        columns:
+          - data
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+        filter: {}
+      comment: ""
     - role: demoUser
       permission:
         columns:
@@ -3217,7 +3227,7 @@
           - flow_id
           - id
         filter: {}
-        check: null
+        check: {}
       comment: ""
     - role: demoUser
       permission:

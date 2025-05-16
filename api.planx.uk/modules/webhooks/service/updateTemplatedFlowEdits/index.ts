@@ -1,6 +1,7 @@
 import type { Node, NodeId } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
+import isEmpty from "lodash/isEmpty.js";
 import { $api } from "../../../../client/index.js";
 import { getFlowData } from "../../../../helpers.js";
 import type { Flow } from "../../../../types.js";
@@ -21,25 +22,48 @@ export const updateTemplatedFlowEdits = async (
   const delta = jsondiffpatch.diff(sourceTemplateData, data);
   if (!delta) return;
 
-  // For each changed node in the delta, store its' current data state only
-  const templatedFlowEditsData: Record<NodeId, Node["data"]> = {};
+  // For each changed node property in the delta, extract its' current data state only
+  //   to store in templated_flow_edits (delta returns before and after state)
+  const templatedFlowEditsData: Record<NodeId, Partial<Node>> = {};
   Object.entries(delta).forEach(([nodeId, nodeData]) => {
     const updatedNodeData: Node["data"] = {};
-    const updatedKeys = Object.keys(nodeData?.data);
-    updatedKeys.forEach((updatedKey) => {
+    const updatedKeys: string[] = nodeData?.data && Object.keys(nodeData.data);
+    updatedKeys?.forEach((updatedKey) => {
+      // TODO check how this handles removing properties eg 'description'
       updatedNodeData[updatedKey] = data[nodeId]?.["data"]?.[updatedKey];
     });
-    templatedFlowEditsData[nodeId] = updatedNodeData;
+
+    const updatedEdges = nodeData?.edges;
+
+    templatedFlowEditsData[nodeId] = {
+      ...(Object.keys(updatedNodeData).length > 0 && { data: updatedNodeData }),
+      ...(updatedEdges && { edges: data[nodeId]?.["edges"] }),
+    };
+
+    // If it's an entirely new node (Option type) that has been added, it won't
+    //   have changed data & edges ({}) but rather need to capture whole node data
+    Object.keys(templatedFlowEditsData).forEach((nodeId) => {
+      if (isEmpty(templatedFlowEditsData[nodeId])) {
+        templatedFlowEditsData[nodeId] = data[nodeId];
+      }
+    });
   });
 
-  await $api.client.request<any>(
+  const response = await $api.client.request<any>(
     gql`
-      mutation UpdateTemplatedFlowEdits($flow_id: uuid!, $data: jsonb = {}) {
-        templatedFlowEdits: update_templated_flow_edits(
-          where: { flow_id: { _eq: $flow_id } }
-          _set: { data: $data }
+      mutation UpsertTemplatedFlowEdits($flow_id: uuid!, $data: jsonb = {}) {
+        insert_templated_flow_edits_one(
+          object: { flow_id: $flow_id, data: $data }
+          on_conflict: {
+            constraint: templated_flow_edits_flow_id_key
+            update_columns: data
+          }
         ) {
-          affected_rows
+          id
+          flow_id
+          data
+          created_at
+          updated_at
         }
       }
     `,
@@ -49,5 +73,5 @@ export const updateTemplatedFlowEdits = async (
     },
   );
 
-  return { flowId, delta, templatedFlowEditsData };
+  return { flowId, delta, response };
 };
