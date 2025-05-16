@@ -143,6 +143,13 @@ const RichTextInput: FC<Props> = (props) => {
     editor.commands.setContent(doc);
   }, [stringValue]);
 
+  useEffect(() => {
+    const doc = fromHtml(stringValue);
+    setContentHierarchyError(getContentHierarchyError(doc, props.rootLevelContent));
+    setLinkNewTabError(getLinkNewTabError(doc.content));
+    setLegislationLinkError(getLegislationLinkError(doc.content));
+  }, [stringValue, props.rootLevelContent]);
+
   // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
   const getSelectionHtml = () => {
     if (!editor) {
