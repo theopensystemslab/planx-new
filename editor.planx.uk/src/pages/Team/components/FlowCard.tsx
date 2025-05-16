@@ -1,4 +1,5 @@
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
+import StarIcon from '@mui/icons-material/Star';
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -6,7 +7,7 @@ import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { Link, useCurrentRoute } from "react-navi";
-import { inputFocusStyle } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD, inputFocusStyle } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import { getSortParams } from "ui/editor/SortControl/utils";
@@ -36,8 +37,17 @@ export const Card = styled("li")(({ theme }) => ({
   boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
 }));
 
+export const CardBanner = styled(Box)(({ theme }) => ({
+  width: "100%",
+  background: "#E6D6FF",
+  padding: theme.spacing(0.5, 2),
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(0.4),
+}));
+
 export const CardContent = styled(Box)(({ theme }) => ({
-  position: "relative",
   height: "100%",
   textDecoration: "none",
   color: "currentColor",
@@ -96,6 +106,7 @@ interface FlowCardProps {
 const FlowCard: React.FC<FlowCardProps> = ({
   flow,
   teamSlug,
+  flows,
   refreshFlows,
 }) => {
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
@@ -149,6 +160,9 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
   const isTemplateService = Boolean(flow.templatedFrom);
 
+  const sourceFlow = flows.find(f => f.id === flow.templatedFrom);
+  const sourceTeamName = sourceFlow?.team?.name || "Template service";
+
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
 
@@ -182,7 +196,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
     flow.operations[0]?.createdAt,
     flow.operations[0]?.actor,
   );
-
+  
   return (
     <>
       {isArchiveDialogOpen && (
@@ -220,21 +234,35 @@ const FlowCard: React.FC<FlowCardProps> = ({
         />
       )}
       <Card>
-        <CardContent>
-          <Box>
-            <Typography variant="h3" component="h2">
-              {flow.name}
-            </Typography>
-            <LinkSubText>
-              {sortDisplayName === "Last published"
-                ? publishedDate
-                : editedDate}
-            </LinkSubText>
-          </Box>
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            {displayTags.map(
-              (tag) =>
-                tag.shouldAddTag && (
+        <Box sx={{ position: "relative", height: "100%", display: "flex", flexDirection: "column" }}>     
+          {hasFeatureFlag("TEMPLATES") && (flow.templatedFrom || flow.isTemplate) && (
+            <CardBanner>
+              {!flow.isTemplate && <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />}
+              <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+                {flow.isTemplate ? "Source template" : sourceTeamName }
+              </Typography>
+            </CardBanner>
+          )}
+          <CardContent>
+            <Box>
+              <Typography variant="h3" component="h2">
+                {flow.name}
+              </Typography>
+              <LinkSubText>
+                {sortDisplayName === "Last published"
+                  ? publishedDate
+                  : editedDate}
+              </LinkSubText>
+            </Box>
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+              {displayTags
+                .filter(
+                  (tag) =>
+                    tag.shouldAddTag &&
+                    tag.type !== FlowTagType.Template &&
+                    tag.type !== FlowTagType.SourceTemplate,
+                )
+                .map((tag) => (
                   <FlowTag
                     key={`${tag.displayName}-flowtag`}
                     tagType={tag.type}
@@ -242,25 +270,25 @@ const FlowCard: React.FC<FlowCardProps> = ({
                   >
                     {tag.displayName}
                   </FlowTag>
-                ),
+              ))}
+            </Box>
+            {flow.summary && (
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+              >
+                {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
+                <Link href={`./${flow.slug}/about`}>read more</Link>
+              </Typography>
             )}
-          </Box>
-          {flow.summary && (
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              sx={{ "& > a": { position: "relative", zIndex: 2 } }}
-            >
-              {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
-              <Link href={`./${flow.slug}/about`}>read more</Link>
-            </Typography>
-          )}
-          <DashboardLink
-            aria-label={flow.name}
-            href={`./${flow.slug}`}
-            prefetch={false}
-          />
-        </CardContent>
+            <DashboardLink
+              aria-label={flow.name}
+              href={`./${flow.slug}`}
+              prefetch={false}
+            />
+          </CardContent>
+        </Box>
         {canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[

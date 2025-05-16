@@ -151,6 +151,9 @@ export interface FlowSummary {
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
   isTemplate: boolean;
+  team: {
+    name: string;
+  };
 }
 
 export interface EditorStore extends Store.Store {
@@ -402,6 +405,9 @@ export const editorStore: StateCreator<
             }
             templatedFrom: templated_from
             isTemplate: is_template
+            team {
+              name
+            }
             publishedFlows: published_flows(
               order_by: { created_at: desc }
               limit: 1
