@@ -65,6 +65,14 @@ export const RichContentContainer = styled(Box)(({ theme }) => ({
       color: theme.palette.text.disabled,
     },
   },
+  "&.rich-text-editor:not(.allow-h1)": {
+    "& h1": {
+      fontSize: theme.typography.h1.fontSize,
+    },
+    "& h2": {
+      fontSize: theme.typography.h2.fontSize,
+    },
+  },
 }));
 
 export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({

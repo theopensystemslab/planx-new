@@ -2,7 +2,6 @@ import Check from "@mui/icons-material/Check";
 import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
-import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { type Editor } from "@tiptap/core";
 import History from "@tiptap/extension-history";
@@ -17,6 +16,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
@@ -71,7 +71,7 @@ const RichTextInput: FC<Props> = (props) => {
   const internalValue = useRef<string | null>(null);
 
   const [contentHierarchyError, setContentHierarchyError] = useState<
-    string | null
+    string[] | null
   >(getContentHierarchyError(fromHtml(stringValue)));
 
   const [linkNewTabError, setLinkNewTabError] = useState<string | undefined>(
@@ -90,7 +90,7 @@ const RichTextInput: FC<Props> = (props) => {
       }
       const doc = transaction.editor.getJSON();
 
-      setContentHierarchyError(getContentHierarchyError(doc));
+      setContentHierarchyError(getContentHierarchyError(doc, props.rootLevelContent));
       setLinkNewTabError(getLinkNewTabError(doc.content));
       setLegislationLinkError(getLegislationLinkError(doc.content));
 
@@ -139,9 +139,16 @@ const RichTextInput: FC<Props> = (props) => {
     }
     internalValue.current = stringValue;
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(getContentHierarchyError(doc));
+    setContentHierarchyError(getContentHierarchyError(fromHtml(stringValue), props.rootLevelContent));
     editor.commands.setContent(doc);
   }, [stringValue]);
+
+  useEffect(() => {
+    const doc = fromHtml(stringValue);
+    setContentHierarchyError(getContentHierarchyError(doc, props.rootLevelContent));
+    setLinkNewTabError(getLinkNewTabError(doc.content));
+    setLegislationLinkError(getLegislationLinkError(doc.content));
+  }, [stringValue, props.rootLevelContent]);
 
   // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
   const getSelectionHtml = () => {
@@ -176,7 +183,17 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <RichContentContainer>
+    <ErrorWrapper
+      id={props.name}
+      error={[
+        ...(contentHierarchyError ?? []),
+        linkNewTabError,
+        legislationLinkError,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+    <RichContentContainer className={`rich-text-editor ${props.rootLevelContent ? 'allow-h1' : ''}`}>
       {editor && (
         <StyledBubbleMenu
           editor={editor}
@@ -215,8 +232,8 @@ const RichTextInput: FC<Props> = (props) => {
             />
           ) : (
             <>
-              <H1Button editor={editor} />
-              <H2Button editor={editor} />
+              <H1Button editor={editor} label={<strong>{props.rootLevelContent ? "H1" : "H2"}</strong>} />
+              <H2Button editor={editor} label={<strong>{props.rootLevelContent ? "H2" : "H3"}</strong>} />
               <BoldButton editor={editor} />
               <ItalicButton editor={editor} />
               <BulletListButton editor={editor} />
@@ -300,28 +317,8 @@ const RichTextInput: FC<Props> = (props) => {
         </StyledBubbleMenu>
       )}
       <EditorContent editor={editor} />
-      {contentHierarchyError && (
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError
-            id="content-error-hierarchy"
-            error={contentHierarchyError}
-          />
-        </Box>
-      )}
-      {linkNewTabError && (
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError id="content-error-link-tab" error={linkNewTabError} />
-        </Box>
-      )}
-      {legislationLinkError && (
-        <Box sx={{ position: "absolute", top: 0, right: 0 }}>
-          <PopupError
-            id="content-error-legislation-link"
-            error={legislationLinkError}
-          />
-        </Box>
-      )}
     </RichContentContainer>
+    </ErrorWrapper>
   );
 };
 
