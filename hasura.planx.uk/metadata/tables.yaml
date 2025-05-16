@@ -1250,7 +1250,7 @@
             {
               "createdAt": {{$body.created_at}},
               "payload": {
-                "flowId": {{$body.id}},
+                "flowId": {{$body.event.data.new.id}},
                 "templatedFrom": {{$body.event.data.new.templated_from}},
                 "data": {{$body.event.data.new.data}}
               }
@@ -3095,6 +3095,16 @@
       using:
         foreign_key_constraint_on: flow_id
   insert_permissions:
+    - role: api
+      permission:
+        check: {}
+        columns:
+          - data
+          - created_at
+          - updated_at
+          - flow_id
+          - id
+      comment: ""
     - role: demoUser
       permission:
         check:
@@ -3102,12 +3112,11 @@
             team_id:
               _eq: 32
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         validate_input:
           definition:
             forward_client_headers: false
@@ -3122,12 +3131,11 @@
       permission:
         check: {}
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         validate_input:
           definition:
             forward_client_headers: false
@@ -3150,12 +3158,11 @@
                   - role:
                       _eq: teamEditor
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         validate_input:
           definition:
             forward_client_headers: false
@@ -3167,15 +3174,24 @@
           type: http
       comment: teamEditors can only insert nodes for templated flows which they can edit
   select_permissions:
-    - role: demoUser
+    - role: api
       permission:
         columns:
-          - node_data
-          - node_id
+          - data
           - created_at
           - updated_at
           - flow_id
           - id
+        filter: {}
+      comment: ""
+    - role: demoUser
+      permission:
+        columns:
+          - created_at
+          - flow_id
+          - id
+          - data
+          - updated_at
         filter:
           flow:
             creator_id:
@@ -3184,35 +3200,43 @@
     - role: platformAdmin
       permission:
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         filter: {}
       comment: ""
     - role: teamEditor
       permission:
         columns:
-          - node_data
-          - node_id
+          - created_at
+          - flow_id
+          - id
+          - data
+          - updated_at
+        filter: {}
+      comment: ""
+  update_permissions:
+    - role: api
+      permission:
+        columns:
+          - data
           - created_at
           - updated_at
           - flow_id
           - id
         filter: {}
+        check: {}
       comment: ""
-  update_permissions:
     - role: demoUser
       permission:
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         filter:
           flow:
             creator_id:
@@ -3231,12 +3255,11 @@
     - role: platformAdmin
       permission:
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         filter: {}
         check: {}
         validate_input:
@@ -3252,12 +3275,11 @@
     - role: teamEditor
       permission:
         columns:
-          - node_data
-          - node_id
           - created_at
-          - updated_at
           - flow_id
           - id
+          - data
+          - updated_at
         filter:
           flow:
             team:

@@ -6,12 +6,12 @@ import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
@@ -19,13 +19,19 @@ import Reset from "ui/icons/Reset";
 
 import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
+import Customisations from "./Customisations";
 import { DebugConsole } from "./DebugConsole";
 import EditHistory from "./EditHistory";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Search from "./Search";
 import StyledTab from "./StyledTab";
 
-type SidebarTabs = "PreviewBrowser" | "History" | "Search" | "Console";
+type SidebarTabs =
+  | "PreviewBrowser"
+  | "History"
+  | "Search"
+  | "Console"
+  | "Customise";
 
 const SIDEBAR_WIDTH = "500px";
 const SIDEBAR_WIDTH_MINIMISED = "20px";
@@ -127,16 +133,25 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [resetPreview, isFlowPublished, toggleSidebar, showSidebar] = useStore(
-    (state) => [
-      state.resetPreview,
-      state.isFlowPublished,
-      state.toggleSidebar,
-      state.showSidebar,
-    ],
-  );
+  const [
+    resetPreview,
+    isFlowPublished,
+    toggleSidebar,
+    showSidebar,
+    isTemplatedFrom,
+  ] = useStore((state) => [
+    state.resetPreview,
+    state.isFlowPublished,
+    state.toggleSidebar,
+    state.showSidebar,
+    state.isTemplatedFrom,
+  ]);
 
-  const [activeTab, setActiveTab] = useState<SidebarTabs>("PreviewBrowser");
+  const defaultActiveTab =
+    hasFeatureFlag("TEMPLATES") && isTemplatedFrom
+      ? "Customise"
+      : "PreviewBrowser";
+  const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
 
   const handleChange = (
     _event: React.SyntheticEvent,
@@ -220,12 +235,20 @@ const Sidebar: React.FC = React.memo(() => {
           </Header>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
+              {hasFeatureFlag("TEMPLATES") && isTemplatedFrom && (
+                <StyledTab value="Customise" label="Customise" />
+              )}
               <StyledTab value="PreviewBrowser" label="Preview" />
               <StyledTab value="History" label="History" />
               <StyledTab value="Search" label="Search" />
               <StyledTab value="Console" label="Console" />
             </Tabs>
           </TabList>
+          {activeTab === "Customise" && (
+            <SidebarContainer>
+              <Customisations />
+            </SidebarContainer>
+          )}
           {activeTab === "PreviewBrowser" && (
             <SidebarContainer>
               <ResetToggle

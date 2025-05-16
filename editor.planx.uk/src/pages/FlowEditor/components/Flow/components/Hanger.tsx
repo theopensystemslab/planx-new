@@ -30,16 +30,18 @@ const buildHref = (before: any, parent: any) => {
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
 
-  const [moveNode, pasteNode] = useStore((state) => [
+  const [moveNode, pasteNode, isTemplatedFrom] = useStore((state) => [
     state.moveNode,
     state.pasteNode,
+    state.isTemplatedFrom,
   ]);
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
   // Hiding the hanger is a proxy for disabling a 'view-only' user from adding, moving, cloning nodes
-  const hideHangerFromUser = !useStore.getState().canUserEditTeam(teamSlug);
+  const hideHangerFromUser =
+    !useStore.getState().canUserEditTeam(teamSlug) || isTemplatedFrom;
 
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL", "PAGE"],
