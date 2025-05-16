@@ -4,26 +4,37 @@ export const UtilitiesGLA: PageSchema = {
   type: "Utilities",
   fields: [
     {
-      type: "checklist",
+      type: "question",
+      data: {
+        title: "Does the development propose any fire suppression systems?",
+        fn: "utilities.fireSuppression",
+        options: [
+          { id: "true", data: { text: "Yes", val: "true" } },
+          { id: "false", data: { text: "No", val: "false" } },
+        ],
+      },
+    },
+    {
+      type: "question",
+      data: {
+        title: "Does the development propose any heat pumps?",
+        fn: "utilities.heatPump",
+        options: [
+          { id: "true", data: { text: "Yes", val: "true" } },
+          { id: "false", data: { text: "No", val: "false" } },
+        ],
+      },
+    },
+    {
+      type: "number",
       required: false,
       data: {
-        title: "Does the development provide any of the following?",
-        fn: "utilities",
-        options: [
-          {
-            id: "fireSuppression",
-            data: { text: "Fire suppression systems", val: "fireSuppression" },
-          },
-          {
-            id: "communityOwned",
-            data: {
-              text: "On-site community-owned energy generation",
-              val: "communityOwned",
-            },
-          },
-          { id: "solar", data: { text: "Solar energy", val: "solar" } },
-          { id: "heatPump", data: { text: "Heat pumps", val: "heatPump" } },
-        ],
+        title: "What is the targeted internal residential water usage?",
+        description:
+          "Enter a number that describes the litres per person per day (sometimes called l/p/d).",
+        fn: "residentialWaterUsage",
+        units: "litres",
+        allowNegatives: false,
       },
     },
     {

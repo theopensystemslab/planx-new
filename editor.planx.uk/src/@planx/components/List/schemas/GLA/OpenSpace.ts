@@ -126,7 +126,7 @@ export const OpenSpaceGLA: Schema = {
       type: "number",
       data: {
         title: "What is the area of this open space?",
-        units: "ha",
+        units: "m²",
         fn: "area",
         allowNegatives: false,
       },

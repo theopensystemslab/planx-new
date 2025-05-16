@@ -18,6 +18,7 @@ import { EditorProps } from "../shared/types";
 import { Page, parsePage } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 import { EnvironmentGLA } from "./schema/Environment";
+import { MonitoringGLA } from "./schema/Monitoring";
 import { UtilitiesGLA } from "./schema/Utilities";
 
 type Props = EditorProps<TYPES.Page, Page>;
@@ -26,6 +27,7 @@ export const PAGE_SCHEMAS = [
   { name: "Advert consent", schema: ProposedAdvertisements },
   { name: "Utilities (GLA)", schema: UtilitiesGLA },
   { name: "Environmental management (GLA)", schema: EnvironmentGLA },
+  { name: "Monitoring questions (GLA)", schema: MonitoringGLA },
 ] as const;
 
 function PageComponent(props: Props) {
