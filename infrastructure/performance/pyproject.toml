@@ -12,7 +12,7 @@ dependencies = [
     "click==8.1.7",
     "configargparse==1.7",
     "flask==3.0.3",
-    "flask-cors==5.0.0",
+    "flask-cors==6.0.0",
     "flask-login==0.6.3",
     "gevent==24.10.3",
     "geventhttpclient==2.3.1",
