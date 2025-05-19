@@ -7,7 +7,7 @@ RUN apk add --no-cache git
 COPY .gitconfig /root/.gitconfig
 
 WORKDIR /api
-RUN npm install -g pnpm@8.6.6
+RUN npm install -g pnpm@10.10.0
 
 # update package cache using lockfile
 # see https://pnpm.io/cli/fetch

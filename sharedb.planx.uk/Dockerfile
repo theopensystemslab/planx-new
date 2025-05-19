@@ -2,7 +2,7 @@
 FROM node:22.14.0-alpine AS base
 
 WORKDIR /sharedb
-RUN npm install -g pnpm@8.6.6
+RUN npm install -g pnpm@10.10.0
 COPY pnpm-lock.yaml .
 
 FROM base AS production

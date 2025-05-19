@@ -82,7 +82,7 @@ jobs:
         run: mv .gitconfig ~/.gitconfig
       - uses: pnpm/action-setup@v4.1.0
         with:
-          version: ${{ vars.PNPM_VERSION }}
+          version: 10.10.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -125,7 +125,7 @@ jobs:
         run: mv .gitconfig ~/.gitconfig
       - uses: pnpm/action-setup@v4.1.0
         with:
-          version: ${{ vars.PNPM_VERSION }}
+          version: 10.10.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -161,7 +161,7 @@ jobs:
           fail: true
       - uses: pnpm/action-setup@v4.1.0
         with:
-          version: ${{ vars.PNPM_VERSION }}
+          version: 10.10.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -192,7 +192,7 @@ jobs:
       - uses: pnpm/action-setup@v4.1.0
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
-          version: ${{ vars.PNPM_VERSION }}
+          version: 10.10.0
       - uses: actions/setup-node@v4
         if: steps.cache-react-build-assets.outputs.cache-hit != 'true'
         with:
@@ -250,7 +250,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
       - uses: pnpm/action-setup@v4.1.0
         with:
-          version: ${{ vars.PNPM_VERSION }}
+          version: 10.10.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -462,7 +462,7 @@ jobs:
       - name: Setup PNPM
         uses: pnpm/action-setup@v4.1.0
         with:
-          version: ${{ vars.PNPM_VERSION }}
+          version: 10.10.0
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
