@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - run: npm install -g pnpm@10.10.0
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
@@ -86,7 +86,7 @@ jobs:
           aws-access-key-id: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
           aws-region: eu-west-2
           aws-secret-access-key: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
-      - run: npm install -g pnpm@10.10.0
+      - run: npm install -g pnpm@${{ vars.PNPM_VERSION }}
         working-directory: infrastructure/application
       - run: pnpm install --frozen-lockfile
         working-directory: infrastructure/application
