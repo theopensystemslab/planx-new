@@ -29,7 +29,7 @@ dependencies = [
     "pyzmq==26.2.0",
     "requests==2.32.3",
     "ruff==0.7.4",
-    "setuptools==75.3.0",
+    "setuptools==78.1.1",
     "typing-extensions==4.12.2",
     "urllib3==2.2.3",
     "werkzeug==3.1.2",
