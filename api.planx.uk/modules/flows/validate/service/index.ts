@@ -58,9 +58,7 @@ const validateAndDiffFlow = async (
     ...flattenedFlow[key],
   }));
 
-  const lastPublishedAt = await getMostRecentPublishedFlowDate(flowId);
-  const history = await getHistory(flowId, lastPublishedAt);
-
+  const history = await getHistory(flowId);
   const validationChecks = [];
   const sections = validateSections(flattenedFlow);
   const inviteToPay = validateInviteToPay(flattenedFlow);
