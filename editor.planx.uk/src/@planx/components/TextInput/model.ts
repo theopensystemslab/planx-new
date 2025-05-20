@@ -10,12 +10,26 @@ export enum TextInputType {
   ExtraLong = "extraLong",
   Email = "email",
   Phone = "phone",
+  Custom = "custom",
 }
+
+const getTextLimit = (
+  type: TextInputType | undefined,
+  customLength?: number,
+): number => {
+  if (type === TextInputType.Custom && customLength) {
+    return customLength;
+  }
+  return type ? TEXT_LIMITS[type] : 0;
+};
 
 export const TEXT_LIMITS = {
   [TextInputType.Short]: 120,
   [TextInputType.Long]: 250,
   [TextInputType.ExtraLong]: 750,
+  [TextInputType.Custom]: 120,
+  [TextInputType.Email]: 50,
+  [TextInputType.Phone]: 16,
 } as const;
 
 export const emailRegex =
@@ -23,7 +37,7 @@ export const emailRegex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const textInputValidationSchema = ({
-  data: { type },
+  data: { type, customLength },
   required,
 }: {
   data: TextInput;
@@ -41,25 +55,31 @@ export const textInputValidationSchema = ({
         if (!type) {
           return "Enter your answer before continuing";
         }
+
+        const limit = getTextLimit(type, customLength);
+
         if (type === TextInputType.Phone) {
-          return "Enter a valid phone number.";
+          return `Enter a valid phone number (maximum ${limit} characters).`;
         }
         if (type === TextInputType.Email) {
-          return "Enter an email address in the correct format, like name@example.com";
+          return `Enter a valid email address (maximum ${limit} characters).`;
         }
-        return `Your answer must be ${TEXT_LIMITS[type]} characters or fewer.`;
+        return `Your answer must be ${limit} characters or fewer.`;
       })(),
       test: (value?: string) => {
         if (!value) return true;
         if (!type) return true;
+        if (!(value && value.length <= getTextLimit(type, customLength))) {
+          return false;
+        }
 
         if (type === TextInputType.Email) {
-          return Boolean(value && emailRegex.test(value));
+          return emailRegex.test(value);
         }
         if (type === TextInputType.Phone) {
-          return Boolean(value);
+          return value.length > 0;
         }
-        return Boolean(value && value.length <= TEXT_LIMITS[type]);
+        return true;
       },
     });
 
@@ -68,6 +88,7 @@ export interface TextInput extends BaseNodeData {
   description?: string;
   fn?: string;
   type?: TextInputType;
+  customLength?: number;
 }
 
 export const parseTextInput = (
@@ -77,5 +98,6 @@ export const parseTextInput = (
   description: data?.description,
   fn: data?.fn,
   type: data?.type,
+  customLength: data?.customLength,
   ...parseBaseNodeData(data),
 });
