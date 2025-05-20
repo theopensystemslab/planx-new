@@ -4,7 +4,7 @@ import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
-import { CharacterCounter, getTextLimit } from "ui/shared/CharacterCounter";
+import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
@@ -12,7 +12,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { TextInputType, textInputValidationSchema } from "./model";
+import { getTextLimit,textInputValidationSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
@@ -32,10 +32,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
     }),
   });
 
-  const characterCountLimit = props.type && getTextLimit(props.type);
-  const displayCharacterCount = Boolean(
-    props.type !== TextInputType.Short && characterCountLimit,
-  );
+  const characterCountLimit = getTextLimit(props.type, props.customLength);
+  const displayCharacterCount = characterCountLimit > 120;
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -78,8 +76,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
           />
           {displayCharacterCount && (
             <CharacterCounter
+              limit={characterCountLimit}
               count={formik.values.text.length}
-              textInputType={props.type || TextInputType.Long}
               error={Boolean(formik.errors.text)}
             />
           )}

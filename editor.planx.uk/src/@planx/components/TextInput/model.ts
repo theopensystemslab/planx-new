@@ -13,7 +13,7 @@ export enum TextInputType {
   Custom = "custom",
 }
 
-const getTextLimit = (
+export const getTextLimit = (
   type: TextInputType | undefined,
   customLength?: number,
 ): number => {

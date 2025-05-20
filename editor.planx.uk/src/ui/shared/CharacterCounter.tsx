@@ -1,32 +1,16 @@
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
-import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { debounce } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 export type Props = {
-  textInputType: TextInputType;
+  limit: number;
   count: number;
   error: boolean;
 };
 
-export function getTextLimit(type: TextInputType): number {
-  switch (type) {
-    case TextInputType.Short:
-    case TextInputType.Long:
-    case TextInputType.ExtraLong:
-      return TEXT_LIMITS[type];
-    default:
-      return 0;
-  }
-}
-
-export const CharacterCounter: React.FC<Props> = ({
-  textInputType,
-  count,
-  error,
-}) => {
+export const CharacterCounter: React.FC<Props> = ({ limit, count, error }) => {
   const [screenReaderCount, setScreenReaderCount] = useState<number>(0);
   const [showReaderCount, setShowReaderCount] = useState<boolean>(false);
 
@@ -38,7 +22,7 @@ export const CharacterCounter: React.FC<Props> = ({
     [],
   );
 
-  const currentCharacterCount = getTextLimit(textInputType) - count;
+  const currentCharacterCount = limit - count;
 
   const showCharacterLimitError = currentCharacterCount < 0;
 
@@ -62,7 +46,7 @@ export const CharacterCounter: React.FC<Props> = ({
   return (
     <>
       <Typography id={"character-hint"} sx={visuallyHidden} aria-hidden={true}>
-        {`You can enter up to ${getTextLimit(textInputType)} characters`}
+        {`You can enter up to ${limit} characters`} {/* Use limit directly */}
       </Typography>
       <Typography
         paddingTop={0.5}
