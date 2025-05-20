@@ -123,7 +123,7 @@ describe("flow template edits", () => {
     });
 
     test("can query templated_flow_edits", () => {
-      expect(i.queries).not.toContain("templated_flow_edits");
+      expect(i.queries).toContain("templated_flow_edits");
     });
 
     test("can create templated_flow_edits", () => {
