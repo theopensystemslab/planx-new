@@ -54,6 +54,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
               <InputLabel label="Description" htmlFor="description">
                 <RichTextInput
                   name="description"
+                  id="description"
                   value={formik.values.description}
                   placeholder="Description"
                   onChange={formik.handleChange}
@@ -70,6 +71,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                     "",
                   )}
                   name="ratingQuestion"
+                  id="ratingQuestion"
                   value={formik.values.ratingQuestion}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
@@ -84,6 +86,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                     "",
                   )}
                   name="freeformQuestion"
+                  id="freeformQuestion"
                   value={formik.values.freeformQuestion}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
@@ -94,6 +97,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
               <InputLabel label="Disclaimer text" htmlFor="disclaimer">
                 <RichTextInput
                   name="disclaimer"
+                  id="disclaimer"
                   value={formik.values.disclaimer}
                   onChange={formik.handleChange}
                   disabled={props.disabled}

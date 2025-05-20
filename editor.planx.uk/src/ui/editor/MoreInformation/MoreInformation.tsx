@@ -20,19 +20,21 @@ export const MoreInformation = ({
     <ModalSection>
       <ModalSectionContent title="More information" Icon={Help}>
         <InputGroup flowSpacing>
-          <InputLabel label="Why it matters">
+          <InputLabel label="Why it matters" htmlFor="info">
             <RichTextInput
               multiline
               name="info"
+              id="info"
               value={info}
               onChange={changeField}
               disabled={disabled}
             />
           </InputLabel>
-          <InputLabel label="Policy source">
+          <InputLabel label="Policy source" htmlFor="policyRef">
             <RichTextInput
               multiline
               name="policyRef"
+              id="policyRef"
               value={policyRef}
               onChange={changeField}
               disabled={disabled}
@@ -43,6 +45,7 @@ export const MoreInformation = ({
               <RichTextInput
                 multiline
                 name="howMeasured"
+                id="howMeasured"
                 value={howMeasured}
                 onChange={changeField}
                 disabled={disabled}

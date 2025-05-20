@@ -3,7 +3,7 @@ import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
 import IconButton from "@mui/material/IconButton";
-import { type Editor } from "@tiptap/core";
+import { type Editor, EditorOptions } from "@tiptap/core";
 import History from "@tiptap/extension-history";
 import Mention from "@tiptap/extension-mention";
 import ExtensionPlaceholder from "@tiptap/extension-placeholder";
@@ -43,7 +43,21 @@ import {
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
 
+  // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
+  // Pass in input props to ensure they're passed along to the rich text editor
+  const attributes = {
+    // User provided props
+    name: props.name,
+    id: props.id,
+    ...props.inputProps,
+    // Default props overwritted by assigning our own
+    contenteditable: "false",
+    role: "textbox",
+    translate: "no",
+  } as unknown as EditorOptions["editorProps"]["attributes"];
+
   const editor = useEditor({
+    editorProps: { attributes },
     extensions: [
       ...commonExtensions,
       History,
@@ -90,7 +104,9 @@ const RichTextInput: FC<Props> = (props) => {
       }
       const doc = transaction.editor.getJSON();
 
-      setContentHierarchyError(getContentHierarchyError(doc, props.rootLevelContent));
+      setContentHierarchyError(
+        getContentHierarchyError(doc, props.rootLevelContent),
+      );
       setLinkNewTabError(getLinkNewTabError(doc.content));
       setLegislationLinkError(getLegislationLinkError(doc.content));
 
@@ -139,13 +155,17 @@ const RichTextInput: FC<Props> = (props) => {
     }
     internalValue.current = stringValue;
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(getContentHierarchyError(fromHtml(stringValue), props.rootLevelContent));
+    setContentHierarchyError(
+      getContentHierarchyError(fromHtml(stringValue), props.rootLevelContent),
+    );
     editor.commands.setContent(doc);
   }, [stringValue]);
 
   useEffect(() => {
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(getContentHierarchyError(doc, props.rootLevelContent));
+    setContentHierarchyError(
+      getContentHierarchyError(doc, props.rootLevelContent),
+    );
     setLinkNewTabError(getLinkNewTabError(doc.content));
     setLegislationLinkError(getLegislationLinkError(doc.content));
   }, [stringValue, props.rootLevelContent]);
@@ -193,131 +213,145 @@ const RichTextInput: FC<Props> = (props) => {
         .filter(Boolean)
         .join(" ")}
     >
-    <RichContentContainer className={`rich-text-editor ${props.rootLevelContent ? 'allow-h1' : ''}`}>
-      {editor && (
-        <StyledBubbleMenu
-          editor={editor}
-          tippyOptions={{
-            duration: 100,
-            // Hack to "stop" transition of BubbleMenu
-            moveTransition: "transform 600s",
-          }}
-          className="bubble-menu"
-        >
-          {addingLink ? (
-            <Input
-              ref={urlInputRef}
-              onKeyDown={(ev) => {
-                if (ev.key === "Enter") {
-                  editor
-                    .chain()
-                    .focus()
-                    .toggleLink({
-                      href: addingLink.draft,
-                    })
-                    .run();
-                  setAddingLink(null);
-                }
-              }}
-              value={addingLink.draft}
-              onChange={(ev) => {
-                setAddingLink(
-                  (prev) =>
-                    prev && {
-                      ...prev,
-                      draft: trimUrlValue(ev.target.value),
-                    },
-                );
-              }}
-            />
-          ) : (
-            <>
-              <H1Button editor={editor} label={<strong>{props.rootLevelContent ? "H1" : "H2"}</strong>} />
-              <H2Button editor={editor} label={<strong>{props.rootLevelContent ? "H2" : "H3"}</strong>} />
-              <BoldButton editor={editor} />
-              <ItalicButton editor={editor} />
-              <BulletListButton editor={editor} />
-              <OrderedListButton editor={editor} />
-              <PublicFileUploadButton
-                variant="tooltip"
-                onChange={(src) =>
-                  editor?.chain().focus().setImage({ src }).run()
-                }
+      <RichContentContainer
+        className={`rich-text-editor ${
+          props.rootLevelContent ? "allow-h1" : ""
+        }`}
+      >
+        {editor && (
+          <StyledBubbleMenu
+            editor={editor}
+            tippyOptions={{
+              duration: 100,
+              // Hack to "stop" transition of BubbleMenu
+              moveTransition: "transform 600s",
+            }}
+            className="bubble-menu"
+          >
+            {addingLink ? (
+              <Input
+                ref={urlInputRef}
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    editor
+                      .chain()
+                      .focus()
+                      .toggleLink({
+                        href: addingLink.draft,
+                      })
+                      .run();
+                    setAddingLink(null);
+                  }
+                }}
+                value={addingLink.draft}
+                onChange={(ev) => {
+                  setAddingLink(
+                    (prev) =>
+                      prev && {
+                        ...prev,
+                        draft: trimUrlValue(ev.target.value),
+                      },
+                  );
+                }}
               />
-            </>
-          )}
-          {addingLink ? (
-            <>
-              {(() => {
-                const error =
-                  addingLink.selectionHtml &&
-                  linkSelectionError(addingLink.selectionHtml);
-                return error ? (
-                  <PopupError id="link-popup" error={error} />
-                ) : (
-                  <IconButton
-                    size="small"
-                    onClick={() => {
-                      editor
-                        .chain()
-                        .focus()
-                        .toggleLink({
-                          href: addingLink.draft,
-                        })
-                        .run();
-                      setAddingLink(null);
-                    }}
-                  >
-                    <Check />
-                  </IconButton>
-                );
-              })()}
+            ) : (
+              <>
+                <H1Button
+                  editor={editor}
+                  label={
+                    <strong>{props.rootLevelContent ? "H1" : "H2"}</strong>
+                  }
+                />
+                <H2Button
+                  editor={editor}
+                  label={
+                    <strong>{props.rootLevelContent ? "H2" : "H3"}</strong>
+                  }
+                />
+                <BoldButton editor={editor} />
+                <ItalicButton editor={editor} />
+                <BulletListButton editor={editor} />
+                <OrderedListButton editor={editor} />
+                <PublicFileUploadButton
+                  variant="tooltip"
+                  onChange={(src) =>
+                    editor?.chain().focus().setImage({ src }).run()
+                  }
+                />
+              </>
+            )}
+            {addingLink ? (
+              <>
+                {(() => {
+                  const error =
+                    addingLink.selectionHtml &&
+                    linkSelectionError(addingLink.selectionHtml);
+                  return error ? (
+                    <PopupError id="link-popup" error={error} />
+                  ) : (
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        editor
+                          .chain()
+                          .focus()
+                          .toggleLink({
+                            href: addingLink.draft,
+                          })
+                          .run();
+                        setAddingLink(null);
+                      }}
+                    >
+                      <Check />
+                    </IconButton>
+                  );
+                })()}
+                <IconButton
+                  size="small"
+                  disabled={!editor.isActive("link")}
+                  onClick={() => {
+                    editor.chain().focus().unsetLink().run();
+                    setAddingLink(null);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    setAddingLink(null);
+                  }}
+                >
+                  <Close />
+                </IconButton>
+              </>
+            ) : (
               <IconButton
                 size="small"
-                disabled={!editor.isActive("link")}
+                color={editor.isActive("link") ? "primary" : undefined}
                 onClick={() => {
-                  editor.chain().focus().unsetLink().run();
-                  setAddingLink(null);
+                  if (editor.isActive("link")) {
+                    const href =
+                      editor.getAttributes("link")?.href || initialUrlValue;
+                    setAddingLink({
+                      selectionHtml: getSelectionHtml(),
+                      draft: href,
+                    });
+                  } else {
+                    setAddingLink({
+                      selectionHtml: getSelectionHtml(),
+                      draft: initialUrlValue,
+                    });
+                  }
                 }}
               >
-                <Delete />
+                <LinkIcon />
               </IconButton>
-              <IconButton
-                size="small"
-                onClick={() => {
-                  setAddingLink(null);
-                }}
-              >
-                <Close />
-              </IconButton>
-            </>
-          ) : (
-            <IconButton
-              size="small"
-              color={editor.isActive("link") ? "primary" : undefined}
-              onClick={() => {
-                if (editor.isActive("link")) {
-                  const href =
-                    editor.getAttributes("link")?.href || initialUrlValue;
-                  setAddingLink({
-                    selectionHtml: getSelectionHtml(),
-                    draft: href,
-                  });
-                } else {
-                  setAddingLink({
-                    selectionHtml: getSelectionHtml(),
-                    draft: initialUrlValue,
-                  });
-                }
-              }}
-            >
-              <LinkIcon />
-            </IconButton>
-          )}
-        </StyledBubbleMenu>
-      )}
-      <EditorContent editor={editor} />
-    </RichContentContainer>
+            )}
+          </StyledBubbleMenu>
+        )}
+        <EditorContent editor={editor} />
+      </RichContentContainer>
     </ErrorWrapper>
   );
 };
