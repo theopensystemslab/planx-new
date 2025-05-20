@@ -259,7 +259,7 @@ const FormModal: React.FC<{
                   handleDelete();
                   navigate(rootFlowPath(true));
                 }}
-                disabled={disabled}
+                disabled={disabled || (isTemplatedFrom && isCustomisableNode(node))}
               >
                 delete
               </Button>
@@ -274,7 +274,7 @@ const FormModal: React.FC<{
                   makeUnique(id, parent);
                   navigate(rootFlowPath(true));
                 }}
-                disabled={disabled}
+                disabled={disabled || (isTemplatedFrom && isCustomisableNode(node))}
               >
                 make unique
               </Button>
