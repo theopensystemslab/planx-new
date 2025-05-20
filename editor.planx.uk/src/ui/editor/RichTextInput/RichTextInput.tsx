@@ -3,7 +3,7 @@ import Close from "@mui/icons-material/Close";
 import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
 import IconButton from "@mui/material/IconButton";
-import { type Editor } from "@tiptap/core";
+import { type Editor, EditorOptions } from "@tiptap/core";
 import History from "@tiptap/extension-history";
 import Mention from "@tiptap/extension-mention";
 import ExtensionPlaceholder from "@tiptap/extension-placeholder";
@@ -43,7 +43,21 @@ import {
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
 
+  // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
+  // Pass in input props to ensure they're passed along to the rich text editor
+  const attributes = {
+    // User provided props
+    name: props.name,
+    id: props.id,
+    ...props.inputProps,
+    // Default props overwritted by assigning our own
+    contenteditable: "false",
+    role: "textbox",
+    translate: "no",
+  } as unknown as EditorOptions["editorProps"]["attributes"];
+
   const editor = useEditor({
+    editorProps: { attributes },
     extensions: [
       ...commonExtensions,
       History,
@@ -336,12 +350,6 @@ const RichTextInput: FC<Props> = (props) => {
             )}
           </StyledBubbleMenu>
         )}
-        <input
-          type="hidden"
-          name={props.name}
-          id={props["id"]}
-          value={internalValue.current ?? stringValue}
-        />
         <EditorContent editor={editor} />
       </RichContentContainer>
     </ErrorWrapper>
