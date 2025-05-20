@@ -29,7 +29,7 @@ export const publishService = async (page: Page) => {
 export const turnServiceOnline = async (page: Page) => {
   page.locator('[aria-label="Service settings"]').click();
   page.getByRole("button", { name: "Set your service online" }).click();
-  await page.getByRole("checkbox").check();
+  await page.getByLabel("This service is ready to accept public responses").check();
   await page.getByRole("button", { name: "Set online" }).click();
   await expect(
     page.getByText("Service settings updated successfully"),
