@@ -108,7 +108,7 @@ export const UploadedFileCard: React.FC<Props> = ({
             width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
             role="progressbar"
             aria-valuenow={progress * 100 || 0}
-            aria-label={file.path}
+            aria-label={file.name}
           />
           <FilePreview>
             {file instanceof File && file?.type?.includes("image") ? (
@@ -130,15 +130,15 @@ export const UploadedFileCard: React.FC<Props> = ({
                 pb="0.25em"
                 sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
               >
-                {file.path}
+                {file.name}
               </Typography>
               <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
             </Box>
             {removeFile && (
               <IconButton
                 size="small"
-                aria-label={`Delete ${file.path}`}
-                title={`Delete ${file.path}`}
+                aria-label={`Delete ${file.name}`}
+                title={`Delete ${file.name}`}
                 onClick={removeFile}
               >
                 <DeleteIcon />
@@ -168,7 +168,7 @@ export const UploadedFileCard: React.FC<Props> = ({
             >
               Change
               <Box sx={visuallyHidden} component="span">
-                the list of what file {file.path} shows
+                the list of what file {file.name} shows
               </Box>
             </Link>
           </TagRoot>

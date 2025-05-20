@@ -216,7 +216,7 @@ test("captures output data in the correct format when uploading a file", async (
   expect(submitted.data).toHaveProperty(PASSPORT_UPLOAD_KEY);
   expect(submitted.data.locationPlan).toHaveLength(1);
   expect(submitted.data.locationPlan[0].url).toEqual(mockFileURL);
-  expect(submitted.data.locationPlan[0].file.path).toEqual(mockFileName);
+  expect(submitted.data.locationPlan[0].file.name).toEqual(mockFileName);
 
   // DrawBoundary action captured
   expect(submitted.data[PASSPORT_COMPONENT_ACTION_KEY]).toEqual(

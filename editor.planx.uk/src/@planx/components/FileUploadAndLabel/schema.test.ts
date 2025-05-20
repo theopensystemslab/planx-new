@@ -260,8 +260,8 @@ describe("fileLabelSchema", () => {
 
   it("rejects if any slots are untagged", async () => {
     const mockSlots = [
-      { id: "123", file: { path: "first.jpg" } },
-      { id: "456", file: { path: "second.jpg" } },
+      { id: "123", file: { path: "./first.jpg", name: "first.jpg" } },
+      { id: "456", file: { path: "./second.jpg", name: "second.jpg" } },
     ] as FileUploadSlot[];
 
     const mockFileList = {

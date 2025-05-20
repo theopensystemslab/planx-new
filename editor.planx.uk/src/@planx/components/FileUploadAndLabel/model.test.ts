@@ -548,7 +548,8 @@ describe("removeSlots function", () => {
   it("removes the correct slot from a file that has many slots", () => {
     const slot = {
       file: {
-        path: "first.jpg",
+        name: "first.jpg",
+        path: "./first.jpg",
       },
       status: "success",
       progress: 1,

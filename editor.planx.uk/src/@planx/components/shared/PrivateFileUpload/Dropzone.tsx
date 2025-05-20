@@ -110,9 +110,9 @@ export const Dropzone: React.FC<Props> = ({
                 setFileUploadStatus(() =>
                   acceptedFiles.length > 1
                     ? `Files ${acceptedFiles
-                        .map((file) => file.path)
+                        .map((file) => file.name)
                         .join(", ")} were uploaded`
-                    : `File ${acceptedFiles[0].path} was uploaded`,
+                    : `File ${acceptedFiles[0].name} was uploaded`,
                 );
               })
               .catch((error) => {
