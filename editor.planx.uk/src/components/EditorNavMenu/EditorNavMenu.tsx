@@ -175,7 +175,7 @@ function EditorNavMenu() {
         : `Analytics page unavailable`,
       Icon: LeaderboardIcon,
       route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "analyst"],
       disabled: !flowAnalyticsLink,
     },
   ];
