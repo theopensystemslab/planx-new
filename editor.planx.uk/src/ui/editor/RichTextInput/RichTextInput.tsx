@@ -42,6 +42,16 @@ import {
 
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
+  // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
+  // Pass in input props to ensure they're passed along to the rich text editor
+  const attributes = { 
+    // User provided props
+    ...props.inputProps, 
+    // Default props overwritted by assigning our own
+    contenteditable: "false", 
+    role: "textbox", 
+    translate: "no" 
+  } as unknown as EditorOptions["editorProps"]["attributes"];
 
   // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
   // Pass in input props to ensure they're passed along to the rich text editor
