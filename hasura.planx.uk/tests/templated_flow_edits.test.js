@@ -122,12 +122,22 @@ describe("flow template edits", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query templated_flow_edits", () => {
+    test("can query templated_flow_edits", () => {
       expect(i.queries).not.toContain("templated_flow_edits");
     });
 
-    test("cannot create, update, or delete templated_flow_edits", () => {
-      expect(i).toHaveNoMutationsFor("templated_flow_edits");
+    test("can create templated_flow_edits", () => {
+      expect(i.mutations).toContain("insert_templated_flow_edits");
+    });
+
+    test("can update templated_flow_edits", () => {
+      expect(i.mutations).toContain("update_templated_flow_edits");
+      expect(i.mutations).toContain("update_templated_flow_edits_by_pk");
+    });
+
+    test("cannot delete templated_flow_edits", () => {
+      expect(i.mutations).not.toContain("delete_templated_flow_edits");
+      expect(i.mutations).not.toContain("delete_templated_flow_edits_by_pk");
     });
   });
 });
