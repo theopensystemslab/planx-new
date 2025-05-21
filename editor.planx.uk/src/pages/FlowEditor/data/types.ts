@@ -29,6 +29,8 @@ export const SLUGS: {
   [TYPES.PlanningConstraints]: "planning-constraints",
   [TYPES.PropertyInformation]: "property-information",
   [TYPES.Answer]: "question",
+  [TYPES.ResponsiveChecklist]: "responsive-checklist",
+  [TYPES.ResponsiveQuestion]: "responsive-question",
   [TYPES.Result]: "result",
   [TYPES.Review]: "review",
   [TYPES.Section]: "section",
