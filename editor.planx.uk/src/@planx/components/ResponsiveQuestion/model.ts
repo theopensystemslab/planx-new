@@ -4,7 +4,7 @@ export interface ResponsiveQuestion extends BaseNodeData {
   fn: string;
 }
 
-export const parseContent = (
+export const parseResponsiveQuestion = (
   data: Record<string, any> | undefined,
 ): ResponsiveQuestion => ({
   fn: data?.fn || "",
