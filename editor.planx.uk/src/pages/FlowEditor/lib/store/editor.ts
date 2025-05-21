@@ -154,6 +154,11 @@ export interface FlowSummary {
   team: {
     name: string;
   };
+  template: {
+    team: {
+      name: string;
+    };
+  };
 }
 
 export interface EditorStore extends Store.Store {
@@ -405,6 +410,11 @@ export const editorStore: StateCreator<
             }
             templatedFrom: templated_from
             isTemplate: is_template
+            template {
+              team {
+                name
+              }
+            }
             team {
               name
             }

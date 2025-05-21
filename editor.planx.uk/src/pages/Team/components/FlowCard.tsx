@@ -1,5 +1,5 @@
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -114,13 +114,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const [isCopyDialogOpen, setIsCopyDialogOpen] = useState<boolean>(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState<boolean>(false);
 
-  const [archiveFlow, moveFlow, canUserEditTeam] = useStore(
-    (state) => [
-      state.archiveFlow,
-      state.moveFlow,
-      state.canUserEditTeam,
-    ],
-  );
+  const [archiveFlow, moveFlow, canUserEditTeam] = useStore((state) => [
+    state.archiveFlow,
+    state.moveFlow,
+    state.canUserEditTeam,
+  ]);
 
   const route = useCurrentRoute();
   const toast = useToast();
@@ -128,12 +126,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const handleCopyDialogClose = () => {
     setIsCopyDialogOpen(false);
     refreshFlows();
-  }
+  };
 
   const handleRenameDialogClose = () => {
     setIsRenameDialogOpen(false);
     refreshFlows();
-  }
+  };
 
   const {
     sortObject: { displayName: sortDisplayName },
@@ -148,7 +146,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
       toast.error(
         "We are unable to archive this flow, refesh and try again or contact an admin",
       );
-    };
+    }
   };
 
   const handleMove = (newTeam: string) => {
@@ -159,9 +157,6 @@ const FlowCard: React.FC<FlowCardProps> = ({
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
   const isTemplateService = Boolean(flow.templatedFrom);
-
-  const sourceFlow = flows.find(f => f.id === flow.templatedFrom);
-  const sourceTeamName = sourceFlow?.team?.name || "Template service";
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
@@ -196,7 +191,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
     flow.operations[0]?.createdAt,
     flow.operations[0]?.actor,
   );
-  
+
   return (
     <>
       {isArchiveDialogOpen && (
@@ -216,7 +211,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
           isDialogOpen={isCopyDialogOpen}
           handleClose={handleCopyDialogClose}
           sourceFlow={{
-            name: flow.name, 
+            name: flow.name,
             slug: flow.slug,
             id: flow.id,
           }}
@@ -227,22 +222,37 @@ const FlowCard: React.FC<FlowCardProps> = ({
           isDialogOpen={isRenameDialogOpen}
           handleClose={handleRenameDialogClose}
           flow={{
-            name: flow.name, 
+            name: flow.name,
             slug: flow.slug,
             id: flow.id,
           }}
         />
       )}
       <Card>
-        <Box sx={{ position: "relative", height: "100%", display: "flex", flexDirection: "column" }}>     
-          {hasFeatureFlag("TEMPLATES") && (flow.templatedFrom || flow.isTemplate) && (
-            <CardBanner>
-              {!flow.isTemplate && <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />}
-              <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-                {flow.isTemplate ? "Source template" : sourceTeamName }
-              </Typography>
-            </CardBanner>
-          )}
+        <Box
+          sx={{
+            position: "relative",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {hasFeatureFlag("TEMPLATES") &&
+            (flow.templatedFrom || flow.isTemplate) && (
+              <CardBanner>
+                {!flow.isTemplate && (
+                  <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />
+                )}
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {flow.isTemplate
+                    ? "Source template"
+                    : flow.template.team.name}
+                </Typography>
+              </CardBanner>
+            )}
           <CardContent>
             <Box>
               <Typography variant="h3" component="h2">
@@ -270,7 +280,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
                   >
                     {tag.displayName}
                   </FlowTag>
-              ))}
+                ))}
             </Box>
             {flow.summary && (
               <Typography
