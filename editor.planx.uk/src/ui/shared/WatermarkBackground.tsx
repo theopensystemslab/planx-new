@@ -31,7 +31,7 @@ const Wrapper = styled(Box)(() => ({
 }));
 
 const Background = styled(Box, {
-  shouldForwardProp: (prop) => !["variant", "opacity"].includes(prop as string),
+  shouldForwardProp: (prop) => !["variant", "opacity", "forceVisibility"].includes(prop as string),
 })<Required<WatermarkBackgroundProps>>(({ theme, variant, opacity }) => ({
   position: "absolute",
   top: "-50%",
