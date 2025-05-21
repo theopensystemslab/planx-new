@@ -1,19 +1,18 @@
-import Card from "@planx/components/shared/Preview/Card";
-import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
-import { PublicProps } from "@planx/components/shared/types";
+import type { PublicProps } from "@planx/components/shared/types";
+import { makeData } from "@planx/components/shared/utils";
+import { useEffect } from "react";
 
-import { ResponsiveChecklist } from "../model";
+import type { ResponsiveChecklist } from "../model";
 
-type Props = PublicProps<ResponsiveChecklist>;
+export type Props = PublicProps<ResponsiveChecklist>;
 
-function ResponsiveChecklistComponent(props: Props) {
-  return (
-    <Card handleSubmit={props.handleSubmit} isValid>
-      <CardHeader
-        info={props.info}
-        policyRef={props.policyRef}
-        howMeasured={props.howMeasured}
-      />
-    </Card>
-  );
+export default function Component(props: Props) {
+  useEffect(() => {
+    props.handleSubmit?.({
+      ...makeData(props, ["todo"], props.fn),
+      auto: true,
+    });
+  }, []);
+
+  return null;
 }
