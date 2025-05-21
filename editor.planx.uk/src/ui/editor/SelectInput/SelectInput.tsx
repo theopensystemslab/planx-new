@@ -5,12 +5,12 @@ import React, { ReactNode } from "react";
 
 import Input from "../../shared/Input/Input";
 
-export interface Props extends SelectProps {
+export type Props = SelectProps & {
   name?: string;
   children?: ReactNode;
   onChange?: SelectProps["onChange"];
   bordered?: boolean;
-}
+};
 
 const PREFIX = "SelectInput";
 

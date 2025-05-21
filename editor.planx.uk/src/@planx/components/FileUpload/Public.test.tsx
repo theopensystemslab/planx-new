@@ -68,7 +68,8 @@ const dummyFile = {
   filename: "placeholder.png",
   cachedSlot: {
     file: {
-      path: "placeholder.png",
+      name: "placeholder.png",
+      path: "./placeholder.png",
       type: "image/png",
       size: 6146,
     },

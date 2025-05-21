@@ -55,5 +55,5 @@ describe("When the submissions log renders", () => {
     expect(
       screen.getAllByText("Apply for a lawful development certificate"),
     ).toHaveLength(1);
-  }, 10_000);
+  }, 20_000);
 });

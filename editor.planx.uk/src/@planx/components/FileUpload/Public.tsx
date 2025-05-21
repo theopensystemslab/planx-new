@@ -21,10 +21,11 @@ const FileUploadComponent: React.FC<FileUpload> = (props) => {
       props,
       slots.map((slot) => ({
         url: slot.url,
-        filename: slot.file.path,
+        filename: slot.file.name,
         cachedSlot: {
           ...slot,
           file: {
+            name: slot.file.name,
             path: slot.file.path,
             type: slot.file.type,
             size: slot.file.size,

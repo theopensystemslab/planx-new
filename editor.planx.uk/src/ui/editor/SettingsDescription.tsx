@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import React, { ReactNode } from "react";
+import Typography, { TypographyProps } from "@mui/material/Typography";
+import React, { PropsWithChildren } from "react";
 
 const Description = styled(Typography)(({ theme }) => ({
   width: "100%",
@@ -19,11 +19,10 @@ const Description = styled(Typography)(({ theme }) => ({
 
 export default function SettingsDescription({
   children,
-}: {
-  children: ReactNode;
-}) {
+  ...props
+}: PropsWithChildren<TypographyProps>) {
   return (
-    <Description component="div" variant="body2">
+    <Description component="div" variant="body2" {...props}>
       {children}
     </Description>
   );

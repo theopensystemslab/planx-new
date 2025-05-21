@@ -7,6 +7,7 @@ import React from "react";
 import { View } from "react-navi";
 import { getTeamFromDomain, setPath } from "routes/utils";
 import { Flow, GlobalSettings } from "types";
+import WatermarkBackground from "ui/shared/WatermarkBackground";
 
 import { fetchSettingsForPublishedView, getLastPublishedAt } from "./queries";
 
@@ -59,6 +60,7 @@ export const publishedView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
+      <WatermarkBackground variant="dark" opacity={0.05} forceVisibility={false} />
       <OfflineLayout>
         <SaveAndReturnLayout>
           <View />

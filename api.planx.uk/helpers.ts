@@ -251,9 +251,12 @@ export interface FlowHistoryEntry {
 }
 
 // Get comments and operations from a flow's "History" since last publish
-export const getHistory = async (flowId: string, lastPublishedAt?: string) => {
+export const getHistory = async (flowId: string) => {
+  const lastPublishedAt = await getMostRecentPublishedFlowDate(flowId);
+  if (!lastPublishedAt) return null;
+
   const { client: $client } = getClient();
-  const response = await $client.request<{ history: FlowHistoryEntry[] | [] }>(
+  const response = await $client.request<{ history: FlowHistoryEntry[] }>(
     gql`
       query GetHistory($flow_id: uuid!, $last_published_at: timestamptz) {
         history: flow_history(

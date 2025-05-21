@@ -1,6 +1,5 @@
 import CloudUpload from "@mui/icons-material/CloudUpload";
-import Box from "@mui/material/Box";
-import ButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
+import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
@@ -17,7 +16,7 @@ interface Props {
   slots: FileUploadSlot[];
 }
 
-interface RootProps extends ButtonBaseProps {
+interface RootProps extends BoxProps {
   isDragActive: boolean;
 }
 
@@ -27,10 +26,11 @@ const FauxLink = styled(Box)(({ theme }) => ({
   whiteSpace: "nowrap",
 }));
 
-const Root = styled(ButtonBase, {
+const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "isDragActive",
 })<RootProps>(({ theme, isDragActive }) => ({
   height: "100%",
+  cursor: "pointer",
   minHeight: theme.spacing(14),
   backgroundColor: isDragActive
     ? theme.palette.background.default
@@ -110,9 +110,9 @@ export const Dropzone: React.FC<Props> = ({
                 setFileUploadStatus(() =>
                   acceptedFiles.length > 1
                     ? `Files ${acceptedFiles
-                        .map((file) => file.path)
+                        .map((file) => file.name)
                         .join(", ")} were uploaded`
-                    : `File ${acceptedFiles[0].path} was uploaded`,
+                    : `File ${acceptedFiles[0].name} was uploaded`,
                 );
               })
               .catch((error) => {
@@ -137,7 +137,7 @@ export const Dropzone: React.FC<Props> = ({
   });
 
   return (
-    <Root isDragActive={isDragActive} {...getRootProps({ role: "button" })}>
+    <Root isDragActive={isDragActive} {...getRootProps()}>
       <input
         data-testid="upload-input"
         {...getInputProps()}

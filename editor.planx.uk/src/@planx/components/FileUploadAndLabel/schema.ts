@@ -128,7 +128,7 @@ export const fileLabelSchema = object().test({
       if (!tagsForSlot.length) {
         errors.push(
           new ValidationError(
-            `File ${slot.file.path} is not labeled`,
+            `File ${slot.file.name} is not labeled`,
             undefined,
             slot.id,
           ),

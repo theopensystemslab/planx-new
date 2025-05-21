@@ -46,7 +46,7 @@ export const getLinkNewTabError = (
 
       return hasOpenTabText && !isLink;
     },
-    errorMessage: 'Links must wrap the text "(opens in a new tab)"',
+    errorMessage: 'Links must wrap the text "(opens in a new tab)".',
   });
 };
 
@@ -100,39 +100,57 @@ export const linkSelectionError = (selectionHtml: string): string | null => {
   return null;
 };
 
-export const getContentHierarchyError = (doc: JSONContent): string | null => {
+export const getContentHierarchyError = (
+  doc: JSONContent,
+  rootLevelContent?: boolean,
+): string[] | null => {
+  const errors: string[] = [];
+  const topLevelNodes = doc.content || [];
+
   let h1Index = -1;
   let h2Index = -1;
 
-  let error: string | null = null;
+  if (rootLevelContent) {
+    const firstNode = topLevelNodes[0];
+    if (!firstNode || firstNode.type !== "heading" || firstNode.attrs?.level !== 1) {
+      errors.push("The document must start with a level 1 heading (H1).");
+    }
+  }
 
-  (doc.content || []).forEach((d: JSONContent, index) => {
-    if (d.type === "paragraph") {
-      return;
-    } else if (d.type === "heading") {
-      const level = d.attrs?.level === 1 ? 1 : 2;
+  topLevelNodes.forEach((d: JSONContent, index) => {
+    if (d.type !== "heading") return;
+
+    const level = d.attrs?.level;
+
+    if (rootLevelContent) {
       if (level === 1) {
-        if (h1Index === -1 && h2Index !== -1) {
-          error = "A level 1 heading must come before a level 2 heading.";
-        } else if (h1Index !== -1) {
-          error =
-            "There cannot be more than one level 1 heading in the document.";
-        } else if (index !== 0) {
-          error = "The level 1 heading must come first in the document.";
+        if (h1Index !== -1 && index !== 0) {
+          errors.push("There cannot be more than one level 1 heading (H1) in the document.");
         }
         h1Index = index;
-        return;
       }
+
       if (level === 2) {
         if (h1Index === -1) {
-          error = "A level 1 heading must come before a level 2 heading.";
+          errors.push("A level 1 heading (H1) must come before a level 2 heading (H2).");
         }
         h2Index = index;
-        return;
+      }
+    } else {
+      if (level === 2) {
+        if (h2Index === -1 && h1Index === -1) {
+          h2Index = index;
+        }
+        if (h1Index === -1) {
+          errors.push("A level 2 heading (H2) must come before a level 3 heading (H3).");
+        }
+      }
+
+      if (level === 1) {
+        h1Index = index;
       }
     }
-    return null;
   });
 
-  return error;
+  return errors.length > 0 ? errors : null;
 };

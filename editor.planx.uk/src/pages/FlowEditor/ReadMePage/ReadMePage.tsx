@@ -146,9 +146,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       <SettingsSection background>
         <form onSubmit={formik.handleSubmit}>
           <InputGroup flowSpacing>
-            <InputLegend>Service description</InputLegend>
-            <SettingsDescription>
-              <>A short blurb on what this service is.</>
+            <InputLegend id="serviceSummary-label">Service description</InputLegend>
+            <SettingsDescription id="serviceSummary-description-text">
+              A short blurb on what this service is.
             </SettingsDescription>
             <Input
               multiline
@@ -158,8 +158,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               errorMessage={formik.errors.serviceSummary}
               disabled={!useStore.getState().canUserEditTeam(teamSlug)}
               inputProps={{
-                "aria-describedby": "A short blurb on what this service is.",
-                "aria-label": "Service Description",
+                "aria-describedby": "serviceSummary-description-text",
+                "aria-labelledby": "serviceSummary-label",
               }}
             />
             <CharacterCounter
@@ -169,8 +169,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             />
           </InputGroup>
           <InputGroup flowSpacing>
-            <InputLegend>What does this service do?</InputLegend>
-            <SettingsDescription>
+            <InputLegend id="serviceDescription-label">What does this service do?</InputLegend>
+            <SettingsDescription id="serviceDescription-description-text">
               <>
                 A longer description of the service. <br />
                 <br /> How should the service be used? What does it include? Are
@@ -179,11 +179,12 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </SettingsDescription>
             <InputRow>
               <RichTextInput
+                {...formik.getFieldProps("serviceDescription")}
                 disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 inputProps={{
-                  "aria-describedby": "A longer description of the service.",
+                  "aria-describedby": "serviceDescription-description-text",
+                  "aria-labelledby": "serviceDescription-label",
                 }}
-                {...formik.getFieldProps("serviceDescription")}
                 id="serviceDescription"
                 placeholder="The service..."
                 multiline
@@ -193,15 +194,16 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </InputRow>
           </InputGroup>
           <InputGroup flowSpacing>
-            <InputLegend>Limitations of the service</InputLegend>
-            <SettingsDescription>
+            <InputLegend id="serviceLimitations-label">Limitations of the service</InputLegend>
+            <SettingsDescription id="serviceLimitations-description-text">
               <>What does this service not include?</>
             </SettingsDescription>
             <InputRow>
               <RichTextInput
                 disabled={!useStore.getState().canUserEditTeam(teamSlug)}
                 inputProps={{
-                  "aria-describedby": "What does this service not include",
+                  "aria-describedby": "serviceLimitations-description-text",
+                  "aria-labelledby": "serviceLimitations-label",
                 }}
                 {...formik.getFieldProps("serviceLimitations")}
                 id="serviceLimitations"

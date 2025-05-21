@@ -36,8 +36,9 @@ describe("input validation", () => {
       />,
     );
 
-    const errorIcon = screen.queryByTestId("ErrorIcon");
-    expect(errorIcon).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Links must wrap the text "(opens in a new tab)".'),
+    ).not.toBeInTheDocument();
   });
 
   it("displays an error if the text '(opens in a new tab)' is not wrapped in an anchor element", async () => {
@@ -47,12 +48,8 @@ describe("input validation", () => {
       />,
     );
 
-    const errorIcon = screen.getByTestId("ErrorIcon");
-    expect(errorIcon).toBeVisible();
-
-    await user.click(errorIcon);
     expect(
-      screen.getByText('Links must wrap the text "(opens in a new tab)"'),
+      screen.getByText('Links must wrap the text "(opens in a new tab)".'),
     ).toBeVisible();
   });
 
@@ -65,10 +62,6 @@ describe("input validation", () => {
       />,
     );
 
-    const errorIcon = screen.getByTestId("ErrorIcon");
-    expect(errorIcon).toBeVisible();
-
-    await user.click(errorIcon);
     expect(
       screen.getByText(
         'Legislative policy links should not end in "/made" as these can be out of date.',
@@ -85,7 +78,10 @@ describe("input validation", () => {
       />,
     );
 
-    const errorIcon = screen.queryByTestId("ErrorIcon");
-    expect(errorIcon).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        'Legislative policy links should not end in "/made" as these can be out of date.',
+      ),
+    ).not.toBeInTheDocument();
   });
 });

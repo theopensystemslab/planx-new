@@ -16,7 +16,7 @@
     "@mui/utils": "^5.15.11",
     "@mui/x-data-grid": "^7.25.0",
     "@opensystemslab/map": "1.0.0-alpha.5",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#aacfdf3",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#0ab5053",
     "@tiptap/core": "^2.4.0",
     "@tiptap/extension-bold": "^2.0.3",
     "@tiptap/extension-bubble-menu": "^2.1.13",
@@ -168,7 +168,7 @@
     "vitest": "^3.1.2",
     "vitest-axe": "1.0.0-pre.3"
   },
-  "packageManager": "pnpm@8.6.6",
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "start": "vite --open",
     "build": "tsc && vite build",
@@ -225,6 +225,14 @@
     ]
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "@opensystemslab/planx-core",
+      "@parcel/watcher",
+      "@swc/core",
+      "core-js",
+      "esbuild",
+      "preact"
+    ],
     "overrides": {
       "postcss@<8.4.31": ">=8.4.31",
       "nth-check@<2.0.1": ">=2.0.1",

@@ -19,11 +19,19 @@
   "scripts": {
     "build-editor": "cd ../../editor.planx.uk && pnpm build"
   },
-  "packageManager": "pnpm@8.6.6",
+  "packageManager": "pnpm@10.10.0",
   "pnpm": {
     "overrides": {
       "protobufjs@>=7.0.0 <7.2.5": ">=7.2.5",
       "@grpc/grpc-js@>=1.10.0 <1.10.9": ">=1.10.9"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@pulumi/aws",
+      "@pulumi/cloudflare",
+      "@pulumi/docker",
+      "aws-sdk",
+      "protobufjs",
+      "tldjs"
+    ]
   }
 }
