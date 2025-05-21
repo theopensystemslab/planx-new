@@ -40,9 +40,8 @@ describe("when a user presses 'add a new member'", () => {
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton = await within(teamMembersTable).findByText(
-      "Add a new member",
-    );
+    const addMemberButton =
+      await within(teamMembersTable).findByText("Add a new member");
     user.click(addMemberButton);
   });
 
@@ -53,6 +52,7 @@ describe("when a user presses 'add a new member'", () => {
 });
 
 describe("when a user fills in the 'add a new member' form correctly", () => {
+  beforeAll(() => (initialState = useStore.getState()));
   afterAll(() => useStore.setState(initialState));
 
   beforeEach(async () => {

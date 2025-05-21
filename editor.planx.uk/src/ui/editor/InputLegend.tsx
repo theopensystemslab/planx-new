@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import React, { ReactNode } from "react";
+import Typography, { TypographyProps } from "@mui/material/Typography";
+import React, { PropsWithChildren } from "react";
 
 const Legend = styled(Typography)(() => ({
   display: "block",
@@ -8,9 +8,9 @@ const Legend = styled(Typography)(() => ({
   padding: 0,
 })) as typeof Typography;
 
-export default function InputLegend({ children }: { children: ReactNode }) {
+export default function InputLegend({ children, ...props }: PropsWithChildren<TypographyProps>) {
   return (
-    <Legend variant="h3" component="legend">
+    <Legend variant="h3" component="legend" {...props}>
       {children}
     </Legend>
   );

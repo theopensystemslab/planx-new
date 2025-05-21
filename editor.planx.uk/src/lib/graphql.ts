@@ -14,6 +14,7 @@ import { RetryLink } from "@apollo/client/link/retry";
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { logger } from "airbrake";
+import { GraphQLFormattedError } from "graphql";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { toast } from "react-toastify";
 
@@ -21,7 +22,7 @@ const toastId = "error_toast";
 
 // function used to verify response status
 const customFetch = async (
-  input: RequestInfo,
+  input: RequestInfo | URL,
   init?: RequestInit,
 ): Promise<Response> => {
   const fetchResult = await fetch(input, init);
@@ -122,7 +123,7 @@ const errorLink = onError(({ graphQLErrors, operation }) => {
 });
 
 const handleHasuraGraphQLErrors = (
-  errors: GraphQLErrors,
+  errors: ReadonlyArray<GraphQLFormattedError>,
   operation: Operation,
 ) => {
   errors.forEach(({ message, locations, path }) => {

@@ -216,10 +216,11 @@ const formatUserFiles = (userFile: UserFileWithSlots): FormattedUserFile[] =>
   userFile.slots.map((slot) => ({
     rule: userFile.rule,
     url: slot.url,
-    filename: slot.file.path,
+    filename: slot.file.name,
     cachedSlot: {
       ...slot,
       file: {
+        name: slot.file.name,
         path: slot.file.path,
         type: slot.file.type,
         size: slot.file.size,

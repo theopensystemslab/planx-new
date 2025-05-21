@@ -111,7 +111,8 @@ export const mockFileList = {
       slots: [
         {
           file: {
-            path: "PXL_20230511_093922923.jpg",
+            path: "./PXL_20230511_093922923.jpg",
+            name: "PXL_20230511_093922923.jpg",
           },
           status: "success",
           progress: 1,
@@ -174,7 +175,8 @@ export const mockFileListMultiple = {
       slots: [
         {
           file: {
-            path: "first.jpg",
+            name: "first.jpg",
+            path: "./first.jpg",
           },
           status: "success",
           progress: 1,
@@ -183,7 +185,8 @@ export const mockFileListMultiple = {
         },
         {
           file: {
-            path: "second.jpg",
+            name: "second.jpg",
+            path: "./second.jpg",
           },
           status: "success",
           progress: 1,
@@ -192,7 +195,8 @@ export const mockFileListMultiple = {
         },
         {
           file: {
-            path: "third.jpg",
+            name: "third.jpg",
+            path: "./third.jpg",
           },
           status: "success",
           progress: 1,
