@@ -24,6 +24,8 @@ import Pay from "@planx/components/Pay/Editor/Editor";
 import PlanningConstraints from "@planx/components/PlanningConstraints/Editor";
 import PropertyInformation from "@planx/components/PropertyInformation/Editor";
 import Question from "@planx/components/Question/Editor";
+import ResponsiveChecklist from "@planx/components/ResponsiveChecklist/Editor/Editor";
+import ResponsiveQuestion from "@planx/components/ResponsiveQuestion/Editor";
 import Result from "@planx/components/Result/Editor";
 import Review from "@planx/components/Review/Editor";
 import Section from "@planx/components/Section/Editor";
@@ -67,6 +69,8 @@ const components: {
   "planning-constraints": PlanningConstraints,
   "property-information": PropertyInformation,
   question: Question,
+  "responsive-checklist": ResponsiveChecklist,
+  "responsive-question": ResponsiveQuestion,
   result: Result,
   review: Review,
   section: Section,

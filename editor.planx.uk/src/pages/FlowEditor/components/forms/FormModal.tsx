@@ -52,6 +52,8 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Question">
         <option value={TYPES.Question}>Question</option>
         <option value={TYPES.Checklist}>Checklist</option>
+        <option value={TYPES.ResponsiveQuestion}>Responsive question</option>
+        <option value={TYPES.ResponsiveChecklist}>Responsive checklist</option>
         <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">
