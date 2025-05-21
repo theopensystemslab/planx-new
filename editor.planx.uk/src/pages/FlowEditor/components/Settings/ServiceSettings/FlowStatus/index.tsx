@@ -130,6 +130,8 @@ const FlowStatus = () => {
         </Typography>
         {import.meta.env.VITE_APP_ENV === "production" && (
           <Button
+            id="set-status-button"
+            data-testid="set-status-button"
             sx={{ mb: 2 }}
             disabled={isTrial}
             variant="contained"
@@ -142,6 +144,8 @@ const FlowStatus = () => {
         )}
         {import.meta.env.VITE_APP_ENV !== "production" && (
           <Button
+            id="set-status-button"
+            data-testid="set-status-button"
             sx={{ mb: 2 }}
             disabled={isTrial}
             variant="contained"
@@ -192,17 +196,19 @@ const FlowStatus = () => {
             cancelText="Cancel"
           >
             <Box marginTop={2}>
-              <Typography gutterBottom>
-                {statusForm.values.status === "online"
-                  ? "Services that are set offline are no longer publicly discoverable and cannot accept responses from users."
-                  : "Only services that are ready to be publicly discoverable and accept responses from users should be set online."}
-              </Typography>
               <ErrorWrapper
                 error={showError ? `Confirm before continuing` : ``}
               >
                 <Grid container component="fieldset" sx={{ margin: 0 }}>
+                  <Typography gutterBottom>
+                    {statusForm.values.status === "online"
+                      ? "Services that are set offline are no longer publicly discoverable and cannot accept responses from users."
+                      : "Only services that are ready to be publicly discoverable and accept responses from users should be set online."}
+                  </Typography>
                   <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
                     <ChecklistItem
+                      id="status-confirmation-checkbox"
+                      data-testid="status-confirmation-checkbox"
                       label={
                         statusForm.values.status === "online"
                           ? "This service will no longer be able to receive public responses"
