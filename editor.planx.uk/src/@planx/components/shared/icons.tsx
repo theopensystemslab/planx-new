@@ -61,6 +61,8 @@ export const ICONS: {
   [TYPES.PlanningConstraints]: Map,
   [TYPES.PropertyInformation]: LocationOnOutlined,
   [TYPES.Answer]: undefined,
+  [TYPES.ResponsiveChecklist]: CheckBoxOutlined,
+  [TYPES.ResponsiveQuestion]: CallSplit,
   [TYPES.Result]: PlaylistAddCheck,
   [TYPES.Review]: RateReviewOutlined,
   [TYPES.Section]: List,
