@@ -12,6 +12,7 @@ import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
+import FlowTag from "ui/editor/FlowTag/FlowTag";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
@@ -119,15 +120,23 @@ const FlowStatus = () => {
             </Typography>
           </WarningContainer>
         )}
-        <Typography
-          variant="body1"
-          fontWeight={FONT_WEIGHT_BOLD}
-          sx={{ mb: 2 }}
-        >
-          {statusForm.values.status === "online"
-            ? "Your service is currently online"
-            : "Your service is currently offline"}
-        </Typography>
+        <Box display="flex" alignItems="center" mb={2}>
+          <Typography
+            variant="body1"
+            fontWeight={FONT_WEIGHT_BOLD}
+            sx={{ mr: 1 }}
+          >
+            Your service is currently
+          </Typography>
+          <FlowTag
+            tagType="status"
+            statusVariant={
+              statusForm.values.status === "online" ? "online" : "offline"
+            }
+          >
+            {statusForm.values.status}
+          </FlowTag>
+        </Box>
         {import.meta.env.VITE_APP_ENV === "production" && (
           <Button
             id="set-status-button"
