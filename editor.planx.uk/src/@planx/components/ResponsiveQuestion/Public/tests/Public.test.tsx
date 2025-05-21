@@ -1,0 +1,1 @@
+import { ResponsiveQuestion } from "../../model";
