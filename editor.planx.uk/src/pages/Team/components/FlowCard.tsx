@@ -106,7 +106,6 @@ interface FlowCardProps {
 const FlowCard: React.FC<FlowCardProps> = ({
   flow,
   teamSlug,
-  flows,
   refreshFlows,
 }) => {
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] =
