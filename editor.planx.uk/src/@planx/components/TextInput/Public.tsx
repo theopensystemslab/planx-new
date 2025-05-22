@@ -12,7 +12,7 @@ import { object } from "yup";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { TextInput } from "./model";
-import { getTextLimit,textInputValidationSchema } from "./model";
+import { getTextLimit, textInputValidationSchema } from "./model";
 
 export type Props = PublicProps<TextInput>;
 
@@ -52,11 +52,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
               else if (type === "phone") return "tel";
               return "text";
             })(props.type)}
-            multiline={props.type && ["long", "extraLong"].includes(props.type)}
+            multiline={getTextLimit(props.type, props.customLength) > 120}
             rows={
-              props.type && ["long", "extraLong"].includes(props.type)
-                ? 5
-                : undefined
+              getTextLimit(props.type, props.customLength) > 120 ? 5 : undefined
             }
             name="text"
             value={formik.values.text}
