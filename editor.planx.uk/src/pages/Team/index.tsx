@@ -1,4 +1,3 @@
-
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import Box from "@mui/material/Box";
@@ -70,7 +69,12 @@ const GetStarted: React.FC = () => (
 
 const Team: React.FC = () => {
   const [{ id: teamId, slug }, canUserEditTeam, getFlows, isTrial] = useStore(
-    (state) => [state.getTeam(), state.canUserEditTeam, state.getFlows, state.teamSettings?.isTrial],
+    (state) => [
+      state.getTeam(),
+      state.canUserEditTeam,
+      state.getFlows,
+      state.teamSettings?.isTrial,
+    ],
   );
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
@@ -90,24 +94,31 @@ const Team: React.FC = () => {
 
   const route = useCurrentRoute();
 
-  const [viewType, setViewType] = useState<"grid" | "row">("grid");
+  const [showCardGrid, toggleCardGrid] = useStore((state) => [
+    state.showCardGrid,
+    state.toggleCardGrid,
+  ]);
+
+  const viewType = showCardGrid ? "grid" : "row";
 
   const handleViewChange = (
     _event: React.MouseEvent<HTMLElement>,
     newView: "grid" | "row",
   ) => {
-    if (newView) {
-      setViewType(newView);
+    if (!newView) return;
+
+    const isGrid = newView === "grid";
+    if (isGrid !== showCardGrid) {
+      toggleCardGrid();
     }
   };
 
   useEffect(() => {
     const diffFlows =
-      searchedFlows?.filter(
-        (searchedFlow) =>
-          filteredFlows?.some(
-            (filteredFlow) => filteredFlow.id === searchedFlow.id,
-          ),
+      searchedFlows?.filter((searchedFlow) =>
+        filteredFlows?.some(
+          (filteredFlow) => filteredFlow.id === searchedFlow.id,
+        ),
       ) || null;
 
     // Sort the array at the start using the query params
@@ -166,7 +177,7 @@ const Team: React.FC = () => {
             <Typography variant="h2" component="h1" pr={1}>
               Services
             </Typography>
-            { isTrial && <InfoChip label="Trial account" /> }
+            {isTrial && <InfoChip label="Trial account" />}
             {showAddFlowButton && <AddFlow />}
           </Box>
           {teamHasFlows && (
