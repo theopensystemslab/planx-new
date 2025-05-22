@@ -36,7 +36,7 @@ export const FiltersColumn = <T extends object>(
       {selectedValue ? (
         <StyledChip
           label={capitalize(`${selectedValue}`)}
-          onDelete={() => props.handleChange(props.optionKey, "")}
+          onClick={() => props.handleChange(props.optionKey, "")}
         />
       ) : (
         <SelectInput
