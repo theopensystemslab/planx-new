@@ -93,7 +93,14 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 placeholder="Maximum characters"
                 name="customLength"
                 value={formik.values.customLength}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.startsWith("-")) {
+                    return;
+                  }
+                  formik.handleChange(e);
+                }}
+                type="number"
                 disabled={props.disabled}
               />
             )}
