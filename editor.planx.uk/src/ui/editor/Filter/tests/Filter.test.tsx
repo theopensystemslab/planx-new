@@ -50,8 +50,8 @@ describe("the UI interactions of the Filter component", () => {
   it("displays the filter options by default", () => {
     setupTestEnvironment();
 
-    expect(screen.getByText("Online status")).toBeVisible();
-    expect(screen.getByText("Name")).toBeVisible();
+    expect(screen.getByLabelText("Online status")).toBeVisible();
+    expect(screen.getByLabelText("Name")).toBeVisible();
   });
 });
 
@@ -64,7 +64,7 @@ describe("Filter functionality", () => {
     ).not.toBeInTheDocument();
 
     // Open combobox and select "Online"
-    await user.click(screen.getByText("Online status"));
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
     await user.click(screen.getByRole("option", { name: "Online" }));
 
     // Expect online chip to be visible
@@ -80,7 +80,7 @@ describe("Filter functionality", () => {
     ).not.toBeInTheDocument();
 
     // Open combobox and select "Offline"
-    await user.click(screen.getByText("Online status"));
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
     await user.click(screen.getByRole("option", { name: "Offline" }));
 
     // Expect offline chip to be visible
@@ -99,7 +99,7 @@ describe("Filter functionality", () => {
   it("filters the records using a single option", async () => {
     const { user } = setupTestEnvironment();
 
-    await addFilter(user, "Online status");
+    await addFilter(user, "Online status", "Offline");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -112,8 +112,8 @@ describe("Filter functionality", () => {
   it("filters the records using multiple options", async () => {
     const { user } = setupTestEnvironment();
 
-    await addFilter(user, "Online status");
-    await addFilter(user, "Online-mock-2");
+    await addFilter(user, "Online status", "Online");
+    await addFilter(user, "Name", "Online-mock-2");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -126,7 +126,7 @@ describe("Filter functionality", () => {
   it("returns to mockRecords when all filters unchecked", async () => {
     const { user } = setupTestEnvironment();
 
-    await addFilter(user, "Online status");
+    await addFilter(user, "Online status", "Offline");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -136,7 +136,7 @@ describe("Filter functionality", () => {
     ]);
 
     // when we remove our filter, it should return to the array we passed into the prop 'records'
-    await removeFilter(user, "Online status");
+    await removeFilter(user, "Offline");
     expect(mockSetFilteredRecords).toHaveBeenCalledWith(mockRecords);
   });
 });
