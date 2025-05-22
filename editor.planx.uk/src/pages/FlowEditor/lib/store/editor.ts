@@ -151,9 +151,6 @@ export interface FlowSummary {
   publishedFlows: PublishedFlowSummary[];
   templatedFrom: string | null;
   isTemplate: boolean;
-  team: {
-    name: string;
-  };
   template: {
     team: {
       name: string;
@@ -414,9 +411,6 @@ export const editorStore: StateCreator<
               team {
                 name
               }
-            }
-            team {
-              name
             }
             publishedFlows: published_flows(
               order_by: { created_at: desc }
