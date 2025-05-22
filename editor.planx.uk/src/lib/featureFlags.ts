@@ -55,22 +55,24 @@ export const toggleFeatureFlag = (
 export const hasFeatureFlag = (featureFlag: FeatureFlag) =>
   activeFeatureFlags.has(featureFlag);
 
-// add methods to window for easy access in browser console
-(window as any).featureFlags = {
-  toggle: toggleFeatureFlag,
-  active: activeFeatureFlags,
-  has: hasFeatureFlag,
-};
+export const initFeatureFlags = () => {
+  // add methods to window for easy access in browser console
+  (window as any).featureFlags = {
+    toggle: toggleFeatureFlag,
+    active: activeFeatureFlags,
+    has: hasFeatureFlag,
+  };
 
-if (import.meta.env.VITE_APP_ENV !== "test") {
-  // log current flag status on page load
-  console.debug(
-    activeFeatureFlags.size > 0
-      ? `🎏 ${activeFeatureFlags.size} feature flags enabled: ${[
-          ...activeFeatureFlags,
-        ]
-          .sort()
-          .join(", ")}`
-      : `🎏 no active feature flags`,
-  );
+  if (import.meta.env.VITE_APP_ENV !== "test") {
+    // log current flag status on page load
+    console.debug(
+      activeFeatureFlags.size > 0
+        ? `🎏 ${activeFeatureFlags.size} feature flags enabled: ${[
+            ...activeFeatureFlags,
+          ]
+            .sort()
+            .join(", ")}`
+        : `🎏 no active feature flags`,
+    );
+  }
 }

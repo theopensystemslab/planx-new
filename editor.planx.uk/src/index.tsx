@@ -8,6 +8,7 @@ import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
+import { initFeatureFlags } from "lib/featureFlags";
 import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
@@ -39,6 +40,8 @@ window.addEventListener("vite:preloadError", (event) => {
   event.preventDefault();
   window.location.reload();
 });
+
+initFeatureFlags();
 
 const hasJWT = (): boolean | void => {
   // This cookie indicates the presence of the secure httpOnly "jwt" cookie
