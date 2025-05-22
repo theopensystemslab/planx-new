@@ -106,6 +106,15 @@ const Node: React.FC<any> = (props) => {
           text={node?.data?.title ?? "Property information"}
         />
       );
+    case TYPES.ResponsiveQuestion:
+    case TYPES.ResponsiveChecklist:
+      return (
+        <Checklist
+          {...allProps}
+          {...node}
+          text={node?.data?.text ?? "[Empty]"}
+        />
+      );
     case TYPES.Result:
       return (
         <Question

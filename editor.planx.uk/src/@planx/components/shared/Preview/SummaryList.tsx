@@ -120,6 +120,8 @@ const presentationalComponents: {
   [TYPES.PlanningConstraints]: undefined,
   [TYPES.PropertyInformation]: undefined,
   [TYPES.Answer]: Debug,
+  [TYPES.ResponsiveChecklist]: undefined,
+  [TYPES.ResponsiveQuestion]: undefined,
   [TYPES.Result]: undefined,
   [TYPES.Review]: undefined,
   [TYPES.Section]: undefined,

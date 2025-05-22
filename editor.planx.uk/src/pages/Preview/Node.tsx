@@ -45,6 +45,10 @@ import type { PropertyInformation } from "@planx/components/PropertyInformation/
 import PropertyInformationComponent from "@planx/components/PropertyInformation/Public";
 import type { Question } from "@planx/components/Question/model";
 import QuestionComponent from "@planx/components/Question/Public";
+import type { ResponsiveChecklist } from "@planx/components/ResponsiveChecklist/model";
+import ResponsiveChecklistComponent from "@planx/components/ResponsiveChecklist/Public/Public";
+import type { ResponsiveQuestion } from "@planx/components/ResponsiveQuestion/model";
+import ResponsiveQuestionComponent from "@planx/components/ResponsiveQuestion/Public/Public";
 import { Result } from "@planx/components/Result/model";
 import ResultComponent from "@planx/components/Result/Public";
 import type { Review } from "@planx/components/Review/model";
@@ -252,6 +256,20 @@ const Node: React.FC<Props> = (props) => {
 
     case TYPES.SetFee:
       return <SetFeeComponent {...getComponentProps<SetFee>()} />;
+
+    case TYPES.ResponsiveQuestion:
+      return (
+        <ResponsiveQuestionComponent
+          {...getComponentProps<ResponsiveQuestion>()}
+        />
+      );
+
+    case TYPES.ResponsiveChecklist:
+      return (
+        <ResponsiveChecklistComponent
+          {...getComponentProps<ResponsiveChecklist>()}
+        />
+      );
 
     case TYPES.SetValue:
       return <SetValueComponent {...getComponentProps<SetValue>()} />;
