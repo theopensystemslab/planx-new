@@ -83,47 +83,40 @@ export default function SelectInput({
   ...props
 }: Props): FCReturn {
   return (
-    console.log(props),
-    console.log({ value }),
-    (
-      <>
-        <label
-          id={`${name?.replaceAll(" ", "-")}-label`}
-          style={visuallyHidden}
-        >
-          {name}
-        </label>
-        <Root
-          variant="standard"
-          value={value}
-          labelId={`${name?.replaceAll(" ", "-")}-label`}
-          classes={{
-            select: classes.rootSelect,
-            icon: classes.icon,
-          }}
-          onChange={onChange}
-          IconComponent={ArrowIcon}
-          input={<Input bordered={bordered} />}
-          inputProps={{
-            name,
-            classes: {
-              select: classes.inputSelect,
-            },
-          }}
-          MenuProps={{
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            classes: {
-              paper: classes.menuPaper,
-            },
-          }}
-          {...props}
-        >
-          {children}
-        </Root>
-      </>
-    )
+    <>
+      <label id={`${name?.replaceAll(" ", "-")}-label`} style={visuallyHidden}>
+        {name}
+      </label>
+      <Root
+        variant="standard"
+        value={value}
+        labelId={`${name?.replaceAll(" ", "-")}-label`}
+        classes={{
+          select: classes.rootSelect,
+          icon: classes.icon,
+        }}
+        onChange={onChange}
+        IconComponent={ArrowIcon}
+        input={<Input bordered={bordered} />}
+        inputProps={{
+          name,
+          classes: {
+            select: classes.inputSelect,
+          },
+        }}
+        MenuProps={{
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          classes: {
+            paper: classes.menuPaper,
+          },
+        }}
+        {...props}
+      >
+        {children}
+      </Root>
+    </>
   );
 }
