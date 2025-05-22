@@ -1,3 +1,4 @@
+import CancelIcon from "@mui/icons-material/Cancel";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
@@ -37,6 +38,7 @@ export const FiltersColumn = <T extends object>(
         <StyledChip
           label={capitalize(`${selectedValue}`)}
           onClick={() => props.handleChange(props.optionKey, "")}
+          icon={<CancelIcon fontSize="small" />}
         />
       ) : (
         <SelectInput
