@@ -88,7 +88,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 />
               ))}
             </RadioGroup>
-            {formik.values.type === "custom" && (
+          </FormControl>
+        </ModalSectionContent>
+        {formik.values.type === "custom" && (
+          <ModalSectionContent title="Custom input style">
+            <InputRow>
               <Input
                 placeholder="Maximum characters"
                 name="customLength"
@@ -103,9 +107,28 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 type="number"
                 disabled={props.disabled}
               />
-            )}
-          </FormControl>
-        </ModalSectionContent>
+            </InputRow>
+            <InputRow>
+              <Input
+                placeholder="Regular expression"
+                format="data"
+                name="customRegex"
+                value={formik.values.customRegex}
+                onChange={formik.handleChange}
+                disabled={props.disabled}
+              />
+            </InputRow>
+            <InputRow>
+              <Input
+                placeholder="Example"
+                name="customExample"
+                value={formik.values.customExample}
+                onChange={formik.handleChange}
+                disabled={props.disabled}
+              />
+            </InputRow>
+          </ModalSectionContent>
+        )}
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>

@@ -23,6 +23,20 @@ export const getTextLimit = (
   return type ? TEXT_LIMITS[type] : 0;
 };
 
+export const getRegex = (
+  type: TextInputType | undefined,
+  customRegex?: string,
+): RegExp => {
+  if (type === TextInputType.Custom && customRegex) {
+    try {
+      return new RegExp(customRegex);
+    } catch {
+      return /.*/; // fallback to match anything if invalid regex
+    }
+  }
+  return type ? REGEX[type] : /.*/;
+};
+
 export const TEXT_LIMITS = {
   [TextInputType.Short]: 120,
   [TextInputType.Long]: 250,
@@ -36,8 +50,17 @@ export const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+export const REGEX = {
+  [TextInputType.Short]: /.*/,
+  [TextInputType.Long]: /.*/,
+  [TextInputType.ExtraLong]: /.*/,
+  [TextInputType.Custom]: /.*/,
+  [TextInputType.Email]: emailRegex,
+  [TextInputType.Phone]: /.*/,
+} as const;
+
 export const textInputValidationSchema = ({
-  data: { type, customLength },
+  data: { type, customLength, customRegex, customExample },
   required,
 }: {
   data: TextInput;
@@ -64,6 +87,11 @@ export const textInputValidationSchema = ({
         if (type === TextInputType.Email) {
           return `Enter an email address in the correct format, like name@example.com.`;
         }
+        if (type === TextInputType.Custom && customRegex) {
+          return customExample
+            ? `Enter the information in the correct format, like ${customExample}.`
+            : `Enter the information in the correct format.`;
+        }
         return `Your answer must be ${limit} characters or fewer.`;
       })(),
       test: (value?: string) => {
@@ -73,8 +101,12 @@ export const textInputValidationSchema = ({
           return false;
         }
 
+        const regex = getRegex(type, customRegex);
+        if (type === TextInputType.Custom && customRegex) {
+          return regex.test(value);
+        }
         if (type === TextInputType.Email) {
-          return emailRegex.test(value);
+          return regex.test(value);
         }
         if (type === TextInputType.Phone) {
           return value.length > 0;
@@ -89,6 +121,8 @@ export interface TextInput extends BaseNodeData {
   fn?: string;
   type?: TextInputType;
   customLength?: number;
+  customRegex?: string;
+  customExample?: string;
 }
 
 export const parseTextInput = (
@@ -99,5 +133,7 @@ export const parseTextInput = (
   fn: data?.fn,
   type: data?.type,
   customLength: data?.customLength,
+  customRegex: data?.customRegex,
+  customExample: data?.customExample,
   ...parseBaseNodeData(data),
 });
