@@ -56,35 +56,41 @@ describe("the UI interactions of the Filter component", () => {
 });
 
 describe("Filter functionality", () => {
-  it("manages filter chips correctly when selecting filters", async () => {
+  it("manages filter chips correctly when selecting and deselecting filters", async () => {
     const { user } = setupTestEnvironment();
 
     expect(
       screen.queryByRole("button", { name: "Online" }),
     ).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("checkbox", { name: "Online" }));
+    // Open combobox and select "Online"
+    await user.click(screen.getByText("Online status"));
+    await user.click(screen.getByRole("option", { name: "Online" }));
 
-    // when you select a filter, a clickable chip should appear for the option
+    // Expect online chip to be visible
     const onlineChip = screen.getByRole("button", { name: "Online" });
     expect(onlineChip).toBeVisible();
 
-    // change filter to it's other optionValue
-    await user.click(screen.getByRole("checkbox", { name: "Offline" }));
+    // Click the "Online" chip to remove it
+    await user.click(onlineChip);
 
-    // check it has been selected
-    const offlineChip = screen.getByRole("button", { name: "Offline" });
-    expect(offlineChip).toBeVisible();
-
-    // check previous filter has been deselected
+    // Verify "Online" chip is removed
     expect(
       screen.queryByRole("button", { name: "Online" }),
     ).not.toBeInTheDocument();
 
-    // click selected filter
-    await user.click(screen.getByRole("checkbox", { name: "Offline" }));
+    // Open combobox and select "Offline"
+    await user.click(screen.getByText("Online status"));
+    await user.click(screen.getByRole("option", { name: "Offline" }));
 
-    // check filter is deselected
+    // Expect offline chip to be visible
+    const offlineChip = screen.getByRole("button", { name: "Offline" });
+    expect(offlineChip).toBeVisible();
+
+    // Click the "Offline" chip to remove it
+    await user.click(offlineChip);
+
+    // Verify "Offline" chip is removed
     expect(
       screen.queryByRole("button", { name: "Offline" }),
     ).not.toBeInTheDocument();
@@ -93,7 +99,7 @@ describe("Filter functionality", () => {
   it("filters the records using a single option", async () => {
     const { user } = setupTestEnvironment();
 
-    await addFilter(user, "Offline");
+    await addFilter(user, "Online status");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -106,7 +112,7 @@ describe("Filter functionality", () => {
   it("filters the records using multiple options", async () => {
     const { user } = setupTestEnvironment();
 
-    await addFilter(user, "Online");
+    await addFilter(user, "Online status");
     await addFilter(user, "Online-mock-2");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
@@ -120,7 +126,7 @@ describe("Filter functionality", () => {
   it("returns to mockRecords when all filters unchecked", async () => {
     const { user } = setupTestEnvironment();
 
-    await addFilter(user, "Offline");
+    await addFilter(user, "Online status");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -130,7 +136,7 @@ describe("Filter functionality", () => {
     ]);
 
     // when we remove our filter, it should return to the array we passed into the prop 'records'
-    await removeFilter(user, "Offline");
+    await removeFilter(user, "Online status");
     expect(mockSetFilteredRecords).toHaveBeenCalledWith(mockRecords);
   });
 });
