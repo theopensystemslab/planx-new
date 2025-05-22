@@ -24,7 +24,7 @@ export const MonitoringGLA: PageSchema = {
       type: "question",
       required: false,
       data: {
-        title: "Does the property have a lead Registered Social Landlord?",
+        title: "Does the property have a lead registered social landlord?",
         fn: "property.socialLandlord",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
@@ -36,7 +36,7 @@ export const MonitoringGLA: PageSchema = {
       type: "text",
       required: false,
       data: {
-        title: "If known, what is the title number of the property?",
+        title: "What's the title number of the property?",
         fn: "property.titleNumber",
         type: TextInputType.Short,
       },
@@ -46,7 +46,7 @@ export const MonitoringGLA: PageSchema = {
       required: false,
       data: {
         title:
-          "If known, what is the certificate number from the most recent Energy Performance Certificate?",
+          "What's the certificate number from the most recent Energy Performance Certificate?",
         fn: "property.EPC",
         type: TextInputType.Short,
       },
@@ -66,7 +66,7 @@ export const MonitoringGLA: PageSchema = {
       type: "text",
       required: false,
       data: {
-        title: "If the development has a name, what is it?",
+        title: "What's the name of the development?",
         fn: "proposal.name",
         type: TextInputType.Short,
       },

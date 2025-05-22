@@ -6,7 +6,7 @@ export const UtilitiesGLA: PageSchema = {
     {
       type: "question",
       data: {
-        title: "Does the development propose any fire suppression systems?",
+        title: "Will there be any new automatic fire extinguishers?",
         fn: "utilities.fireSuppression",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
@@ -17,7 +17,7 @@ export const UtilitiesGLA: PageSchema = {
     {
       type: "question",
       data: {
-        title: "Does the development propose any heat pumps?",
+        title: "Will there be any new heat pumps?",
         fn: "utilities.heatPump",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
@@ -29,9 +29,9 @@ export const UtilitiesGLA: PageSchema = {
       type: "number",
       required: false,
       data: {
-        title: "What is the targeted internal residential water usage?",
+        title: "How many litres of water will each resident use a day?",
         description:
-          "Enter a number that describes the litres per person per day (sometimes called l/p/d).",
+          "This is known as the targeted residential water usage and is sometimes called l/p/d.",
         fn: "residentialWaterUsage",
         units: "litres",
         allowNegatives: false,
@@ -41,7 +41,7 @@ export const UtilitiesGLA: PageSchema = {
       type: "number",
       required: false,
       data: {
-        title: "Number of new water connections required",
+        title: "Number of new water connections",
         fn: "utilities.water.connections",
         allowNegatives: false,
       },
@@ -50,7 +50,7 @@ export const UtilitiesGLA: PageSchema = {
       type: "number",
       required: false,
       data: {
-        title: "Number of new gas connections required",
+        title: "Number of new gas connections",
         fn: "utilities.gas.connections",
         allowNegatives: false,
       },
@@ -59,7 +59,7 @@ export const UtilitiesGLA: PageSchema = {
       type: "number",
       required: false,
       data: {
-        title: "Number of homes served by full fibre internet connection",
+        title: "Number of new homes with full fibre internet connection",
         fn: "utilities.internet.residentialUnits",
         allowNegatives: false,
       },
@@ -69,7 +69,7 @@ export const UtilitiesGLA: PageSchema = {
       required: false,
       data: {
         title:
-          "Number of commercial units served by full fibre internet connection",
+          "Number of new commercial units with full fibre internet connection",
         fn: "utilities.internet.commercialUnits",
         allowNegatives: false,
       },
