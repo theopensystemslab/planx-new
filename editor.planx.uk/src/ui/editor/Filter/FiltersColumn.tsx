@@ -15,6 +15,7 @@ interface FiltersColumnProps<T> {
   optionValues: FilterValues[];
   filters?: Filters<T> | null;
   handleChange: (key: FilterKey<T>, value: FilterValues | "") => void;
+  name: string;
 }
 
 export const FiltersColumn = <T extends object>(
@@ -40,6 +41,7 @@ export const FiltersColumn = <T extends object>(
       ) : (
         <SelectInput
           value={selectedValue}
+          name={props.name}
           onChange={(event) =>
             props.handleChange(
               props.optionKey,
