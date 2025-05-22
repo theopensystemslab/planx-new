@@ -181,7 +181,6 @@ export const Filters = <T extends object>({
             <div
               key={`${option.displayName}-description`}
               id={`${option.displayName}-description`}
-              className="sr-only"
               hidden
             >
               Select options to filter the list by {option.displayName}
@@ -194,6 +193,7 @@ export const Filters = <T extends object>({
               optionValues={option.optionValue}
               filters={values.filters}
               handleChange={handleChange}
+              name={option.displayName}
             />
           </fieldset>
         ))}
