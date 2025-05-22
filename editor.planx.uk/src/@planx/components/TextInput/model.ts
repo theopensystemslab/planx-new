@@ -28,7 +28,7 @@ export const TEXT_LIMITS = {
   [TextInputType.Long]: 250,
   [TextInputType.ExtraLong]: 750,
   [TextInputType.Custom]: 120,
-  [TextInputType.Email]: 50,
+  [TextInputType.Email]: 320,
   [TextInputType.Phone]: 16,
 } as const;
 
@@ -62,7 +62,7 @@ export const textInputValidationSchema = ({
           return `Enter a valid phone number (maximum ${limit} characters).`;
         }
         if (type === TextInputType.Email) {
-          return `Enter a valid email address (maximum ${limit} characters).`;
+          return `Enter an email address in the correct format, like name@example.com.`;
         }
         return `Your answer must be ${limit} characters or fewer.`;
       })(),

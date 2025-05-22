@@ -33,7 +33,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
   });
 
   const characterCountLimit = getTextLimit(props.type, props.customLength);
-  const displayCharacterCount = characterCountLimit > 120;
+  const displayCharacterCount =
+    characterCountLimit > 120 && props.type !== "email";
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
@@ -52,9 +53,15 @@ const TextInputComponent: React.FC<Props> = (props) => {
               else if (type === "phone") return "tel";
               return "text";
             })(props.type)}
-            multiline={getTextLimit(props.type, props.customLength) > 120}
+            multiline={
+              getTextLimit(props.type, props.customLength) > 120 &&
+              props.type !== "email"
+            }
             rows={
-              getTextLimit(props.type, props.customLength) > 120 ? 5 : undefined
+              getTextLimit(props.type, props.customLength) > 120 &&
+              props.type !== "email"
+                ? 5
+                : undefined
             }
             name="text"
             value={formik.values.text}
