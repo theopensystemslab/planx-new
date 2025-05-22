@@ -1,18 +1,17 @@
-import type { Node, NodeId } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import * as jsondiffpatch from "jsondiffpatch";
-import isEmpty from "lodash/isEmpty.js";
 import { $api } from "../../../../client/index.js";
 import { getFlowData } from "../../../../helpers.js";
 import type { Flow } from "../../../../types.js";
+import { transformDeltaToTemplatedFlowEditsData } from "./helpers.js";
 
 export const updateTemplatedFlowEdits = async (
   flowId: string,
   templatedFrom: string,
   data: Flow["data"],
 ) => {
-  // We fetch the live source template data, not its' latest published version, so it's a comparable diff to live incoming data
-  //   Eg we need to pick up if external portal pointer flowIds have changed
+  // We fetch the live source template data, not its' latest published version, so it's a comparable diff to live incoming data (eg 'unflattened')
+  //  Alternatively may consider ShareDB 'fetchsnapshotbytimestamp' in future using last published timestamp, but currently no easy way to call from API
   const sourceTemplate = await getFlowData(templatedFrom);
   const sourceTemplateData = sourceTemplate?.data;
   if (!sourceTemplateData) return;
@@ -22,32 +21,11 @@ export const updateTemplatedFlowEdits = async (
   const delta = jsondiffpatch.diff(sourceTemplateData, data);
   if (!delta) return;
 
-  // For each changed node property in the delta, extract its' current data state only
-  //   to store in templated_flow_edits (delta returns before and after state)
-  const templatedFlowEditsData: Record<NodeId, Partial<Node>> = {};
-  Object.entries(delta).forEach(([nodeId, nodeData]) => {
-    const updatedNodeData: Node["data"] = {};
-    const updatedKeys: string[] = nodeData?.data && Object.keys(nodeData.data);
-    updatedKeys?.forEach((updatedKey) => {
-      // TODO check how this handles removing properties eg 'description'
-      updatedNodeData[updatedKey] = data[nodeId]?.["data"]?.[updatedKey];
-    });
-
-    const updatedEdges = nodeData?.edges;
-
-    templatedFlowEditsData[nodeId] = {
-      ...(Object.keys(updatedNodeData).length > 0 && { data: updatedNodeData }),
-      ...(updatedEdges && { edges: data[nodeId]?.["edges"] }),
-    };
-
-    // If it's an entirely new node (Option type) that has been added, it won't
-    //   have changed data & edges ({}) but rather need to capture whole node data
-    Object.keys(templatedFlowEditsData).forEach((nodeId) => {
-      if (isEmpty(templatedFlowEditsData[nodeId])) {
-        templatedFlowEditsData[nodeId] = data[nodeId];
-      }
-    });
-  });
+  // Compare the delta to incoming data and transform into shape we can store in `templated_flow_edits.data`
+  const templatedFlowEditsData = transformDeltaToTemplatedFlowEditsData(
+    delta,
+    data,
+  );
 
   const response = await $api.client.request<any>(
     gql`

@@ -71,7 +71,7 @@ const Customisations = () => {
               backgroundColor: (theme) =>
                 Object.keys(edits)?.includes(nodeId)
                   ? theme.palette.background.paper
-                  : "#FAE1B7", // same color as "customisation" tag for now
+                  : theme.palette.nodeTag.blocking, // same color as "customisation" tag for now
               border: `1px solid`,
               borderColor: (theme) => theme.palette.border.main,
               padding: (theme) => theme.spacing(2),

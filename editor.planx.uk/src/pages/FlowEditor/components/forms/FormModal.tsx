@@ -169,6 +169,10 @@ const FormModal: React.FC<{
     ? !canUserEditNode(teamSlug) || !isCustomisableNode(node)
     : !canUserEditNode(teamSlug);
 
+  // In cases of a templated flow, nodes tagged 'customisation' should not be disabled
+  //   but only the "Update" button should be visible in their modal, "Delete" & "Make unique" should be hidden
+  const hideButton = isTemplatedFrom && isCustomisableNode(node);
+
   const toast = useToast();
 
   return (
@@ -250,7 +254,7 @@ const FormModal: React.FC<{
       </DialogContent>
       <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
-          {handleDelete && (
+          {handleDelete && !hideButton && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
@@ -259,13 +263,13 @@ const FormModal: React.FC<{
                   handleDelete();
                   navigate(rootFlowPath(true));
                 }}
-                disabled={disabled || (isTemplatedFrom && isCustomisableNode(node))}
+                disabled={disabled}
               >
                 delete
               </Button>
             </Grid>
           )}
-          {handleDelete && (
+          {handleDelete && !hideButton && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
@@ -274,7 +278,7 @@ const FormModal: React.FC<{
                   makeUnique(id, parent);
                   navigate(rootFlowPath(true));
                 }}
-                disabled={disabled || (isTemplatedFrom && isCustomisableNode(node))}
+                disabled={disabled}
               >
                 make unique
               </Button>
