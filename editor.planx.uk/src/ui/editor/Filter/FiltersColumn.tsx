@@ -54,7 +54,7 @@ export const FiltersColumn = <T extends object>(
           displayEmpty
           sx={{ height: 40, maxWidth: "200px" }}
         >
-          <MenuItem value="" disabled>
+          <MenuItem value="" disabled style={visuallyHidden}>
             {props.title}
           </MenuItem>
           {props.optionValues.map((value) => (
