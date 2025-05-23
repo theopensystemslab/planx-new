@@ -1,8 +1,8 @@
 import type { TextField } from "@planx/components/shared/Schema/model";
-import { TextInputType } from "@planx/components/TextInput/model";
+import { getTextLimit, TextInputType } from "@planx/components/TextInput/model";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
-import { CharacterCounter, getTextLimit } from "ui/shared/CharacterCounter";
+import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../../constants";
@@ -52,7 +52,7 @@ export const TextFieldInput: React.FC<Props<TextField>> = (props) => {
       />
       {displayCharacterCount && (
         <CharacterCounter
-          textInputType={data.type || TextInputType.Long}
+          limit={characterCountLimit ?? 0}
           count={fieldProps?.value?.length}
           error={Boolean(fieldProps.errorMessage)}
         />

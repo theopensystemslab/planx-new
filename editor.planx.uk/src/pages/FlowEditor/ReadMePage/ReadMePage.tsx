@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
-import { TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize";
@@ -164,7 +163,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             />
             <CharacterCounter
               count={formik.values.serviceSummary.length}
-              textInputType={TextInputType.Short} // 120 characters
+              limit={120}
               error={Boolean(formik.errors.serviceSummary)}
             />
           </InputGroup>

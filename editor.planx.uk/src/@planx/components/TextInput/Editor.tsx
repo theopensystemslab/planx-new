@@ -68,14 +68,14 @@ const TextInputComponent: React.FC<Props> = (props) => {
         </ModalSectionContent>
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">
-            <RadioGroup defaultValue="default" value={formik.values.type}>
+            <RadioGroup defaultValue="short" value={formik.values.type}>
               {[
-                { id: "default", title: "Default" },
                 { id: "short", title: "Short (max 120 characters)" },
                 { id: "long", title: "Long (max 250 characters)" },
                 { id: "extraLong", title: "Extra long (max 750 characters)" },
                 { id: "email", title: "Email" },
                 { id: "phone", title: "Phone" },
+                { id: "custom", title: "Custom" },
               ].map((type) => (
                 <BasicRadio
                   key={type.id}
@@ -90,6 +90,45 @@ const TextInputComponent: React.FC<Props> = (props) => {
             </RadioGroup>
           </FormControl>
         </ModalSectionContent>
+        {formik.values.type === "custom" && (
+          <ModalSectionContent title="Custom input style">
+            <InputRow>
+              <Input
+                placeholder="Maximum characters"
+                name="customLength"
+                value={formik.values.customLength}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value.startsWith("-")) {
+                    return;
+                  }
+                  formik.handleChange(e);
+                }}
+                type="number"
+                disabled={props.disabled}
+              />
+            </InputRow>
+            <InputRow>
+              <Input
+                placeholder="Regular expression"
+                format="data"
+                name="customRegex"
+                value={formik.values.customRegex}
+                onChange={formik.handleChange}
+                disabled={props.disabled}
+              />
+            </InputRow>
+            <InputRow>
+              <Input
+                placeholder="Example"
+                name="customExample"
+                value={formik.values.customExample}
+                onChange={formik.handleChange}
+                disabled={props.disabled}
+              />
+            </InputRow>
+          </ModalSectionContent>
+        )}
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
