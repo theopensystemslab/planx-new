@@ -13,20 +13,7 @@ components:
       description: Successful response with no content. Not awaited from server as endpoint is called via the Beacon API
 
   schemas:
-    NewCollection:
-      type: object
-      properties:
-        slug:
-          type: string
-          description: PlanX team slug
-          minLength: 1
-        description:
-          type: string
-          description: Optional description for the collection
-      required:
-        - slug
-
-    NewDashboard:
+    FilterDashboardLink:
       type: object
       properties:
         flowId:
@@ -42,34 +29,6 @@ components:
         - flowId
         - teamId
         - serviceSlug
-
-    CopyDashboard:
-      type: object
-      properties:
-        dashboardId:
-          type: number
-          description: ID of the dashboard to copy
-        name:
-          type: string
-          description: Name for the new dashboard
-        description:
-          type: string
-          description: Optional description for the dashboard
-        collectionId:
-          type: number
-          description: ID of the collection to place the dashboard in
-        collectionPosition:
-          type: number
-          description: Optional position within the collection
-          minimum: 0
-        isDeepCopy:
-          type: boolean
-          description: Whether to perform a deep copy
-          default: false
-      required:
-        - dashboardId
-        - name
-        - collectionId
 
 paths:
   /analytics/log-user-exit:
@@ -92,89 +51,31 @@ paths:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
 
-  /collections/check:
-    get:
-      summary: Check Metabase collections
-      description: Checks if collections exist in Metabase
+  /metabase/dashboard:
+    post:
+      summary: Filter public dashboard link
+      description: Filters an existing public dashboard link based on the provided flow ID, team ID, and service slug
       tags:
         - metabase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterDashboardLink"
       responses:
         "200":
-          description: Collections check successful
+          description: Dashboard link filtered successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: number
-                        name:
-                          type: string
-
-  /collections/new:
-    post:
-      summary: Create new Metabase collection
-      description: Creates a new collection in Metabase if it doesn't already exist
-      tags:
-        - metabase
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/NewCollection"
-      responses:
-        "201":
-          description: Collection created successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: integer
-                    description: Metabase collection ID
-        "400":
-          description: Bad request or collection creation failed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
                     type: string
-                    description: Error message
-
-  /dashboard/copy:
-    post:
-      summary: Copy Metabase dashboard
-      description: Creates a new dashboard in Metabase by copying an existing one
-      tags:
-        - metabase
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CopyDashboard"
-      responses:
-        "201":
-          description: Dashboard copied successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: object
-                    description: The copied dashboard information
+                    description: The filtered public dashboard link
         "400":
-          description: Bad request or dashboard copy failed
+          description: Bad request or filtering failed
           content:
             application/json:
               schema:
