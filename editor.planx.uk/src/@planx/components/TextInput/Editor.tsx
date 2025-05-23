@@ -15,7 +15,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { parseTextInput, TextInput } from "./model";
+import { editorValidationSchema,parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
@@ -30,7 +30,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validate: () => {},
+    validateOnChange: false,
+    validationSchema: editorValidationSchema(),
   });
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
@@ -96,13 +97,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
                     placeholder="Maximum characters"
                     name="customLength"
                     value={formik.values.customLength}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value.startsWith("-")) {
-                        return;
-                      }
-                      formik.handleChange(e);
-                    }}
+                    onChange={formik.handleChange}
+                    errorMessage={formik.errors.customLength}
                     type="number"
                     disabled={props.disabled}
                   />

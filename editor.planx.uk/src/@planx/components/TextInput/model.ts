@@ -1,4 +1,4 @@
-import { string } from "yup";
+import { object, string } from "yup";
 
 import { BaseNodeData, parseBaseNodeData } from "../shared";
 
@@ -35,6 +35,24 @@ export const TEXT_LIMITS = {
 export const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export const editorValidationSchema = () =>
+  object({
+    customLength: string().when("type", {
+      is: "custom",
+      then: string()
+        .required("Enter a number")
+        .test({
+          name: "check for positive number",
+          message: "Character limit must be greater than 0",
+          test: (value?: string) => {
+            if (!value) return true;
+            const num = Number(value);
+            return num > 0;
+          },
+        }),
+    }),
+  });
 
 export const textInputValidationSchema = ({
   data: { type, customLength },
