@@ -36,9 +36,6 @@ export const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   "& > div > label": {
     paddingRight: theme.spacing(3),
   },
-  [`& .${autocompleteClasses.endAdornment}`]: {
-    top: "unset",
-  },
   "& button.Mui-disabled > svg": {
     color: theme.palette.text.disabled,
   },
