@@ -140,11 +140,6 @@ const ExternalPortalForm: React.FC<{
                   modifiers: [{ name: "flip", enabled: false }],
                 },
               }}
-              sx={{
-                [`& .${autocompleteClasses.endAdornment}`]: {
-                  top: "unset",
-                },
-              }}
               clearOnEscape
               handleHomeEndKeys
               autoHighlight
