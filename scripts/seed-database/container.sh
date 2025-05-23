@@ -15,7 +15,7 @@ echo downloading data from production
 # set-up tmp dir for remote data
 mkdir -p /tmp
 
-# Create sync.sql file for all our comnands which will be executed in a single transaction
+# Create sync.sql file for all our commands which will be executed in a single transaction
 touch '/tmp/sync.sql'
 
 tables=(

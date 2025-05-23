@@ -3027,21 +3027,24 @@
     - role: analyst
       permission:
         columns:
-          - action_colour
-          - article_4s_enabled
-          - bops_submission_url
-          - favicon
-          - govnotify_personalisation
-          - govpay_enabled
-          - homepage
-          - id
-          - is_trial
-          - link_colour
           - live_flows
+          - article_4s_enabled
+          - govpay_enabled_production
+          - govpay_enabled_staging
+          - is_trial
+          - planning_data_enabled
+          - power_automate_enabled_production
+          - power_automate_enabled_staging
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - bops_submission_url_production
+          - bops_submission_url_staging
+          - favicon
+          - homepage
+          - link_colour
           - logo
           - name
-          - planning_data_enabled
-          - power_automate_enabled
           - primary_colour
           - reference_code
           - send_to_email_address
@@ -3052,21 +3055,24 @@
     - role: platformAdmin
       permission:
         columns:
-          - action_colour
-          - article_4s_enabled
-          - bops_submission_url
-          - favicon
-          - govnotify_personalisation
-          - govpay_enabled
-          - homepage
-          - id
-          - is_trial
-          - link_colour
           - live_flows
+          - article_4s_enabled
+          - govpay_enabled_production
+          - govpay_enabled_staging
+          - is_trial
+          - planning_data_enabled
+          - power_automate_enabled_production
+          - power_automate_enabled_staging
+          - id
+          - govnotify_personalisation
+          - action_colour
+          - bops_submission_url_production
+          - bops_submission_url_staging
+          - favicon
+          - homepage
+          - link_colour
           - logo
           - name
-          - planning_data_enabled
-          - power_automate_enabled
           - primary_colour
           - reference_code
           - send_to_email_address

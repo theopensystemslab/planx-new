@@ -19,7 +19,7 @@ import { client } from "../lib/graphql";
 import GlobalSettingsView from "../pages/GlobalSettings";
 import { PlatformAdminPanel } from "../pages/PlatformAdminPanel/PlatformAdminPanel";
 import Teams from "../pages/Teams";
-import { makeTitle } from "./utils";
+import { makeTitle, PRODUCTION_ADMIN_PANEL_QUERY, STAGING_ADMIN_PANEL_QUERY } from "./utils";
 import { authenticatedView } from "./views/authenticated";
 
 export type TeamSummary =
@@ -106,34 +106,13 @@ const editorRoutes = compose(
           `User does not have access to ${req.originalUrl}`,
         );
 
+      const query = import.meta.env.VITE_APP_ENV === "production"
+        ? PRODUCTION_ADMIN_PANEL_QUERY
+        : STAGING_ADMIN_PANEL_QUERY
+
       return route(async () => {
         const { data } = await client.query<{ adminPanel: AdminPanelData[] }>({
-          query: gql`
-            query {
-              adminPanel: teams_summary {
-                id
-                name
-                slug
-                referenceCode: reference_code
-                homepage
-                subdomain
-                planningDataEnabled: planning_data_enabled
-                article4sEnabled: article_4s_enabled
-                govnotifyPersonalisation: govnotify_personalisation
-                govpayEnabled: govpay_enabled
-                powerAutomateEnabled: power_automate_enabled
-                sendToEmailAddress: send_to_email_address
-                bopsSubmissionURL: bops_submission_url
-                liveFlows: live_flows
-                logo
-                favicon
-                primaryColour: primary_colour
-                linkColour: link_colour
-                actionColour: action_colour
-                isTrial: is_trial
-              }
-            }
-          `,
+          query,
           context: {
             headers: {
               "x-hasura-role": isPlatformAdmin ? "platformAdmin" : "analyst",
