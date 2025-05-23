@@ -1,4 +1,5 @@
 import MoreHoriz from "@mui/icons-material/MoreHoriz";
+import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -6,7 +7,7 @@ import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { Link, useCurrentRoute } from "react-navi";
-import { inputFocusStyle } from "theme";
+import { FONT_WEIGHT_SEMI_BOLD, inputFocusStyle } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
 import { getSortParams } from "ui/editor/SortControl/utils";
@@ -36,8 +37,17 @@ export const Card = styled("li")(({ theme }) => ({
   boxShadow: "0 2px 4px 0 rgba(0, 0, 0, 0.1)",
 }));
 
+export const CardBanner = styled(Box)(({ theme }) => ({
+  width: "100%",
+  background: "#E6D6FF",
+  padding: theme.spacing(0.5, 2),
+  borderBottom: `1px solid ${theme.palette.border.main}`,
+  display: "flex",
+  alignItems: "center",
+  gap: theme.spacing(0.4),
+}));
+
 export const CardContent = styled(Box)(({ theme }) => ({
-  position: "relative",
   height: "100%",
   textDecoration: "none",
   color: "currentColor",
@@ -103,13 +113,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const [isCopyDialogOpen, setIsCopyDialogOpen] = useState<boolean>(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState<boolean>(false);
 
-  const [archiveFlow, moveFlow, canUserEditTeam] = useStore(
-    (state) => [
-      state.archiveFlow,
-      state.moveFlow,
-      state.canUserEditTeam,
-    ],
-  );
+  const [archiveFlow, moveFlow, canUserEditTeam] = useStore((state) => [
+    state.archiveFlow,
+    state.moveFlow,
+    state.canUserEditTeam,
+  ]);
 
   const route = useCurrentRoute();
   const toast = useToast();
@@ -117,12 +125,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const handleCopyDialogClose = () => {
     setIsCopyDialogOpen(false);
     refreshFlows();
-  }
+  };
 
   const handleRenameDialogClose = () => {
     setIsRenameDialogOpen(false);
     refreshFlows();
-  }
+  };
 
   const {
     sortObject: { displayName: sortDisplayName },
@@ -137,7 +145,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
       toast.error(
         "We are unable to archive this flow, refesh and try again or contact an admin",
       );
-    };
+    }
   };
 
   const handleMove = (newTeam: string) => {
@@ -202,7 +210,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
           isDialogOpen={isCopyDialogOpen}
           handleClose={handleCopyDialogClose}
           sourceFlow={{
-            name: flow.name, 
+            name: flow.name,
             slug: flow.slug,
             id: flow.id,
           }}
@@ -213,28 +221,57 @@ const FlowCard: React.FC<FlowCardProps> = ({
           isDialogOpen={isRenameDialogOpen}
           handleClose={handleRenameDialogClose}
           flow={{
-            name: flow.name, 
+            name: flow.name,
             slug: flow.slug,
             id: flow.id,
           }}
         />
       )}
       <Card>
-        <CardContent>
-          <Box>
-            <Typography variant="h3" component="h2">
-              {flow.name}
-            </Typography>
-            <LinkSubText>
-              {sortDisplayName === "Last published"
-                ? publishedDate
-                : editedDate}
-            </LinkSubText>
-          </Box>
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            {displayTags.map(
-              (tag) =>
-                tag.shouldAddTag && (
+        <Box
+          sx={{
+            position: "relative",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {hasFeatureFlag("TEMPLATES") &&
+            (flow.templatedFrom || flow.isTemplate) && (
+              <CardBanner>
+                {!flow.isTemplate && (
+                  <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />
+                )}
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  {flow.isTemplate
+                    ? "Source template"
+                    : flow.template.team.name}
+                </Typography>
+              </CardBanner>
+            )}
+          <CardContent>
+            <Box>
+              <Typography variant="h3" component="h2">
+                {flow.name}
+              </Typography>
+              <LinkSubText>
+                {sortDisplayName === "Last published"
+                  ? publishedDate
+                  : editedDate}
+              </LinkSubText>
+            </Box>
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+              {displayTags
+                .filter(
+                  (tag) =>
+                    tag.shouldAddTag &&
+                    tag.type !== FlowTagType.Template &&
+                    tag.type !== FlowTagType.SourceTemplate,
+                )
+                .map((tag) => (
                   <FlowTag
                     key={`${tag.displayName}-flowtag`}
                     tagType={tag.type}
@@ -242,25 +279,25 @@ const FlowCard: React.FC<FlowCardProps> = ({
                   >
                     {tag.displayName}
                   </FlowTag>
-                ),
+                ))}
+            </Box>
+            {flow.summary && (
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{ "& > a": { position: "relative", zIndex: 2 } }}
+              >
+                {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
+                <Link href={`./${flow.slug}/about`}>read more</Link>
+              </Typography>
             )}
-          </Box>
-          {flow.summary && (
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              sx={{ "& > a": { position: "relative", zIndex: 2 } }}
-            >
-              {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
-              <Link href={`./${flow.slug}/about`}>read more</Link>
-            </Typography>
-          )}
-          <DashboardLink
-            aria-label={flow.name}
-            href={`./${flow.slug}`}
-            prefetch={false}
-          />
-        </CardContent>
+            <DashboardLink
+              aria-label={flow.name}
+              href={`./${flow.slug}`}
+              prefetch={false}
+            />
+          </CardContent>
+        </Box>
         {canUserEditTeam(teamSlug) && (
           <StyledSimpleMenu
             items={[
