@@ -14,6 +14,9 @@ export const StyledChip = styled(Chip)(({ theme }) => ({
   justifyContent: "space-between",
   borderRadius: "50px",
   height: "36px",
+  "& > span": {
+    paddingRight: 0,
+  },
   "& > svg": {
     marginRight: "6px !important",
     fill: theme.palette.secondary.dark,
