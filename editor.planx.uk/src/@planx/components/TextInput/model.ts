@@ -60,8 +60,9 @@ export const textInputValidationSchema = ({
 }: {
   data: TextInput;
   required: boolean;
-}) =>
-  string()
+}) => {
+  const limit = getTextLimit(type, customLength);
+  return string()
     .when([], {
       is: () => required,
       then: string().trim().required("Enter your answer before continuing"),
@@ -74,8 +75,6 @@ export const textInputValidationSchema = ({
           return "Enter your answer before continuing";
         }
 
-        const limit = getTextLimit(type, customLength);
-
         if (type === TextInputType.Phone) {
           return `Enter a valid phone number (maximum ${limit} characters).`;
         }
@@ -87,7 +86,7 @@ export const textInputValidationSchema = ({
       test: (value?: string) => {
         if (!value) return true;
         if (!type) return true;
-        if (!(value && value.length <= getTextLimit(type, customLength))) {
+        if (!(value && value.length <= limit)) {
           return false;
         }
 
@@ -100,6 +99,7 @@ export const textInputValidationSchema = ({
         return true;
       },
     });
+};
 
 export interface TextInput extends BaseNodeData {
   title: string;
