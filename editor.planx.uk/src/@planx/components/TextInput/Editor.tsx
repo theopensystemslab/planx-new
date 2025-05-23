@@ -15,7 +15,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { editorValidationSchema,parseTextInput, TextInput } from "./model";
+import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
@@ -90,9 +90,17 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 />
               ))}
             </RadioGroup>
-            <Box mt={1}>
-              <InputRow>
-                {formik.values.type === "custom" && (
+          </FormControl>
+          <FormControl>
+            <InputRow>
+              {formik.values.type === "custom" && (
+                <Box
+                  sx={(theme) => ({
+                    borderLeft: `4px solid ${theme.palette.border.main}`,
+                    padding: theme.spacing(1, 2),
+                    marginLeft: "13px",
+                  })}
+                >
                   <Input
                     placeholder="Maximum characters"
                     name="customLength"
@@ -102,9 +110,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
                     type="number"
                     disabled={props.disabled}
                   />
-                )}
-              </InputRow>
-            </Box>
+                </Box>
+              )}
+            </InputRow>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
