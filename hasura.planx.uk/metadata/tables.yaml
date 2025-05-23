@@ -1922,6 +1922,18 @@
           - created_at
         filter: {}
 - table:
+    name: planx_website_stats
+    schema: public
+  select_permissions:
+    - role: public
+      permission:
+        columns:
+          - active_lpas
+          - submissions_last_week
+          - users_last_week
+        filter: {}
+      comment: ""
+- table:
     name: published_flows
     schema: public
   object_relationships:
