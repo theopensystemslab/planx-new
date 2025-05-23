@@ -53,13 +53,9 @@ const TextInputComponent: React.FC<Props> = (props) => {
               else if (type === "phone") return "tel";
               return "text";
             })(props.type)}
-            multiline={
-              getTextLimit(props.type, props.customLength) > 120 &&
-              props.type !== "email"
-            }
+            multiline={characterCountLimit > 120 && props.type !== "email"}
             rows={
-              getTextLimit(props.type, props.customLength) > 120 &&
-              props.type !== "email"
+              characterCountLimit > 120 && props.type !== "email"
                 ? 5
                 : undefined
             }
