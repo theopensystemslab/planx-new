@@ -115,7 +115,7 @@ export const parseTextInput = (
   title: data?.title || "",
   description: data?.description,
   fn: data?.fn,
-  type: data?.type,
+  type: data?.type ?? TextInputType.Short,
   customLength: data?.customLength,
   ...parseBaseNodeData(data),
 });
