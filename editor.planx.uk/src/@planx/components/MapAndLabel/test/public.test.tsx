@@ -350,12 +350,14 @@ describe("copy feature select", () => {
   });
 
   it("lists all other features as options (the current feature is not listed)", async () => {
-    const { getByTitle, user, queryByRole } = setup(<MapAndLabel {...props} />);
+    const { getByTitle, user, queryByRole, getByRole } = setup(
+      <MapAndLabel {...props} />,
+    );
     addMultipleFeatures([point1, point2]);
 
     const copyTitle = getByTitle("Copy from");
 
-    const copyInput = within(copyTitle).getByRole("combobox");
+    const copyInput = getByRole("combobox", copyTitle);
 
     expect(copyInput).not.toHaveAttribute("aria-disabled", "true");
 
@@ -379,9 +381,7 @@ describe("copy feature select", () => {
     await user.click(tabOne);
 
     const copyTitle = getByTitle("Copy from");
-    const copyInput = within(copyTitle).getByRole("combobox", {
-      name: "Copy from",
-    });
+    const copyInput = getByRole("combobox", copyTitle);
 
     await user.click(copyInput);
 

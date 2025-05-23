@@ -49,6 +49,8 @@ export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
+  showCardGrid: boolean;
+  toggleCardGrid: () => void;
   showTags: boolean;
   toggleShowTags: () => void;
   showImages: boolean;
@@ -75,6 +77,12 @@ export const editorUIStore: StateCreator<
 
     toggleSidebar: () => {
       set({ showSidebar: !get().showSidebar });
+    },
+
+    showCardGrid: true,
+
+    toggleCardGrid: () => {
+      set({ showCardGrid: !get().showCardGrid });
     },
 
     showTags: false,
@@ -113,6 +121,7 @@ export const editorUIStore: StateCreator<
     name: "editorUIStore",
     partialize: (state) => ({
       showSidebar: state.showSidebar,
+      showCardGrid: state.showCardGrid,
       showTags: state.showTags,
       showImages: state.showImages,
       showDataFields: state.showDataFields,
