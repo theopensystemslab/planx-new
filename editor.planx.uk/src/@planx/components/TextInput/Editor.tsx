@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -88,22 +89,26 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 />
               ))}
             </RadioGroup>
-            {formik.values.type === "custom" && (
-              <Input
-                placeholder="Maximum characters"
-                name="customLength"
-                value={formik.values.customLength}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value.startsWith("-")) {
-                    return;
-                  }
-                  formik.handleChange(e);
-                }}
-                type="number"
-                disabled={props.disabled}
-              />
-            )}
+            <Box mt={1}>
+              <InputRow>
+                {formik.values.type === "custom" && (
+                  <Input
+                    placeholder="Maximum characters"
+                    name="customLength"
+                    value={formik.values.customLength}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.startsWith("-")) {
+                        return;
+                      }
+                      formik.handleChange(e);
+                    }}
+                    type="number"
+                    disabled={props.disabled}
+                  />
+                )}
+              </InputRow>
+            </Box>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
