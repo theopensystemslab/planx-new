@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
+import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize";
@@ -28,6 +29,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
   teamSlug,
   flowSlug,
 }) => {
+  const characterCountLimit = TEXT_LIMITS[TextInputType.Short];
   const { status: flowStatus } = flowInformation;
   const [
     flowDescription,
@@ -115,8 +117,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     validateOnChange: false,
     validationSchema: object({
       serviceSummary: string().max(
-        120,
-        "Service description must be 120 characters or less",
+        characterCountLimit,
+        `Service description must be ${characterCountLimit} characters or less`,
       ),
     }),
   });
@@ -163,7 +165,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             />
             <CharacterCounter
               count={formik.values.serviceSummary.length}
-              limit={120}
+              limit={characterCountLimit}
               error={Boolean(formik.errors.serviceSummary)}
             />
           </InputGroup>
