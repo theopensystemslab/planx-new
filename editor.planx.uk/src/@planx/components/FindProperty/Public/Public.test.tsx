@@ -36,6 +36,7 @@ const osAddressProps = {
   "property.type": ["residential.HMO.parent"],
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
+  "property.ward": ["Old Kent Road"],
   "property.boundary.area": 1232.22,
   "property.boundary.area.hectares": 0.123222,
   "property.boundary": {
@@ -85,6 +86,7 @@ const proposedAddressProps = {
   },
   "property.localAuthorityDistrict": ["Southwark"],
   "property.region": ["London"],
+  "property.ward": ["Old Kent Road"],
   "property.boundary.area": 1232.22,
   "property.boundary.area.hectares": 0.123222,
   "property.boundary": {

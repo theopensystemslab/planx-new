@@ -81,9 +81,10 @@ function Component(props: Props) {
     string[] | undefined
   >();
   const [regions, setRegions] = useState<string[] | undefined>();
+  const [wards, setWards] = useState<string[] | undefined>();
   const [titleBoundary, setTitleBoundary] = useState<Feature | undefined>();
 
-  // Use the address point to fetch the Local Authority District(s) & region via Digital Land
+  // Use the address point to fetch the title boundary, Local Authority District(s), region & ward via Digital Land
   const options = new URLSearchParams({
     entries: "all", // includes historic for pre-merger LADs (eg Wycombe etc for Uniform connector mappings)
     geometry: `POINT(${address?.longitude} ${address?.latitude})`,
@@ -92,6 +93,7 @@ function Component(props: Props) {
   });
   options.append("dataset", "local-authority-district");
   options.append("dataset", "region"); // proxy for Greater London Authority (GLA) boundary
+  options.append("dataset", "ward");
   options.append("dataset", "title-boundary");
 
   // https://www.planning.data.gov.uk/docs#/Search%20entity
@@ -113,18 +115,22 @@ function Component(props: Props) {
     if (address && data?.features?.length > 0) {
       const lads: string[] = [];
       const regions: string[] = [];
+      const wards: string[] = [];
       let title: Feature | undefined;
       data.features.forEach((feature: any) => {
         if (feature.properties.dataset === "local-authority-district") {
           lads.push(feature.properties.name);
         } else if (feature.properties.dataset === "region") {
           regions.push(feature.properties.name);
+        } else if (feature.properties.dataset === "ward") {
+          wards.push(feature.properties.name);
         } else if (feature.properties.dataset === "title-boundary") {
           title = feature;
         }
       });
       setLocalAuthorityDistricts([...new Set(lads)]);
       setRegions([...new Set(regions)]);
+      setWards([...new Set(wards)]);
       setTitleBoundary(title);
     }
   }, [data, address]);
@@ -150,9 +156,15 @@ function Component(props: Props) {
         newPassportData["property.localAuthorityDistrict"] =
           localAuthorityDistricts;
       }
+
       if (regions) {
         newPassportData["property.region"] = regions;
       }
+
+      if (wards) {
+        newPassportData["property.ward"] = wards;
+      }
+
       if (titleBoundary) {
         const areaSquareMetres =
           Math.round(area(titleBoundary as Feature) * 100) / 100;
