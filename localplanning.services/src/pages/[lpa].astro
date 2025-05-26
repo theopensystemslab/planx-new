@@ -1,8 +1,9 @@
 ---
-import { fetchAllLPAs } from "../lib/lpa-api";
-import Layout from "../layouts/Layout.astro";
+import { fetchAllLPAs } from "@lib/lpa-api";
+import Layout from "@layouts/Layout.astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 
-export async function getStaticPaths() {
+export const getStaticPaths = (async () => {
   const lpas = await fetchAllLPAs();
 
   if (!lpas || !lpas.length) {
@@ -14,9 +15,13 @@ export async function getStaticPaths() {
     params: { lpa: lpa.slug },
     props: { lpaData: lpa },
   }));
-}
+}) satisfies GetStaticPaths;
 
 const { lpaData } = Astro.props;
+
+// TODO: Pass title as prop into layout?
+// type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 if (!lpaData) return Astro.redirect("/404");
 ---
@@ -26,6 +31,6 @@ if (!lpaData) return Astro.redirect("/404");
   <h2>Team Slug: {lpaData.slug}</h2>
   <h3>Services:</h3>
   <ul>
-    { lpaData.services.map(({ name }) => <li>{name}</li>)}
+    {lpaData.services.map(({ name }) => <li>{name}</li>)}
   </ul>
 </Layout>

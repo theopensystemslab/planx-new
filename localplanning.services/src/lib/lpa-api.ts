@@ -1,5 +1,3 @@
-import gql from "graphql-tag";
-
 interface Service {
   name: string;
   slug: string;
