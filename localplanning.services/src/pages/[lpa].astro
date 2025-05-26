@@ -1,0 +1,31 @@
+---
+import { fetchAllLPAs } from "../lib/lpa-api";
+import Layout from "../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const lpas = await fetchAllLPAs();
+
+  if (!lpas || !lpas.length) {
+    console.warn("No LPAs fetched for dynamic routes. Check GraphQL API.");
+    return [];
+  }
+
+  return lpas.map((lpa) => ({
+    params: { lpa: lpa.slug },
+    props: { lpaData: lpa },
+  }));
+}
+
+const { lpaData } = Astro.props;
+
+if (!lpaData) return Astro.redirect("/404");
+---
+
+<Layout>
+  <h1>{lpaData.name}</h1>
+  <h2>Team Slug: {lpaData.slug}</h2>
+  <h3>Services:</h3>
+  <ul>
+    { lpaData.services.map(({ name }) => <li>{name}</li>)}
+  </ul>
+</Layout>

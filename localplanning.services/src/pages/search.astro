@@ -1,0 +1,15 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ReactTest } from "../components/ReactTest";
+---
+
+<Layout>
+  <ReactTest client:load />
+  <hr/>
+  Some example URLs - 
+  <ul>
+    <li><a href="./buckinghamshire">Bucks</a></li>
+    <li><a href="./camden">Camden</a></li>
+    <li><a href="./lambeth">Lambeth</a></li>
+  </ul>
+</Layout>
