@@ -1,4 +1,4 @@
-interface Service {
+export interface Service {
   name: string;
   slug: string;
   // TODO: Public permission!
