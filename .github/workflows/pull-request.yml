@@ -192,7 +192,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/**/!(*dist)','localplanning.services/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles('localplanning.services/**/!(*dist)','localplanning.services/pnpm-lock.yaml') }}
+            ${{ runner.os }}-
       - uses: pnpm/action-setup@v4.1.0
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
@@ -337,7 +340,7 @@ jobs:
 
   create_or_update_vultr_instance:
     name: Upsert Vultr Instance
-    needs: [changes, build_react_app]
+    needs: [changes, build_react_app, build_localplanning_services]
     runs-on: ubuntu-22.04
     if: "${{ success() && !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
@@ -444,12 +447,15 @@ jobs:
           target: "planx-new/"
           overwrite: true
 
-      - name: Download localplanning.services build assets
-        id: cache-localplanning-build-assets
-        uses: actions/cache@v4
+      - name: Restore localplanning.services build assets
+        id: cache-localplanning-build-assets-restore
+        uses: actions/cache/restore@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/**', '!localplanning.services/dist/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/**/!(*dist)','localplanning.services/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles('localplanning.services/**/!(*dist)','localplanning.services/pnpm-lock.yaml') }}
+            ${{ runner.os }}-
   
       - name: upload built localplanning.services
         uses: appleboy/scp-action@master
@@ -476,6 +482,7 @@ jobs:
               - [Hasura](https://hasura.${{ env.FULL_DOMAIN }})
               - [API](https://api.${{ env.FULL_DOMAIN }}/docs)
               - [ShareDB](https://sharedb.${{ env.FULL_DOMAIN }})
+              - [LocalPlanning.services](https://localplanning.${{ env.FULL_DOMAIN }})
 
   healthcheck:
     name: Run Healthcheck on Pizza Services
