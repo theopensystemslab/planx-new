@@ -16,14 +16,11 @@ import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index
 import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
-import type {
-  UpdateTemplatedFlowEditsController,
-  UpdateTemplatedFlowEditsEvent,
-} from "./service/updateTemplatedFlowEdits/schema.js";
-import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
 import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
-import type { UpdateTemplatedFlowsOnSourcePublishController } from "./service/updateTemplatedFlowsOnSourcePublish/schema.js";
+import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
 import { updateTemplatedFlowsOnSourcePublish } from "./service/updateTemplatedFlowsOnSourcePublish/index.js";
+import type { UpdateTemplatedFlowsOnSourcePublishController } from "./service/updateTemplatedFlowsOnSourcePublish/schema.js";
+import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,

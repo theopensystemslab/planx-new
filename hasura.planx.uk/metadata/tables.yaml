@@ -2084,7 +2084,7 @@
             {
               "createdAt": {{$body.created_at}},
               "payload": {
-                "flowId": {{$body.event.new.flow_id}}
+                "flowId": {{$body.event.data.new.flow_id}}
               }
             }
         method: POST
