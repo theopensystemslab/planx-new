@@ -1,5 +1,6 @@
 services:
   postgres:
+    platform: linux/x86_64
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

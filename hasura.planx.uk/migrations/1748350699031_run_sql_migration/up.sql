@@ -1,4 +1,4 @@
-CREATE VIEW planx_website_stats AS
+CREATE VIEW "public"."planx_website_stats" AS
 SELECT
   (
     SELECT
