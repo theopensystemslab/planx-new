@@ -179,6 +179,9 @@ importers:
       graphql-tag:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.11.0)
+      idb:
+        specifier: ^8.0.3
+        version: 8.0.3
       immer:
         specifier: ^9.0.21
         version: 9.0.21
@@ -4706,6 +4709,9 @@ packages:
     engines: {node: ^10 || ^12 || >= 14}
     peerDependencies:
       postcss: '>=8.4.31'
+
+  idb@8.0.3:
+    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
 
   identity-obj-proxy@3.0.0:
     resolution: {integrity: sha512-00n6YnVHKrinT9t0d9+5yZC6UBNJANpYEQvL2LlX6Ab9lnmxzIRcEmTPuyGScvl1+jKuCICX1Z0Ab1pPKKdikA==}
@@ -12565,6 +12571,8 @@ snapshots:
   icss-utils@5.1.0(postcss@8.5.4):
     dependencies:
       postcss: 8.5.4
+
+  idb@8.0.3: {}
 
   identity-obj-proxy@3.0.0:
     dependencies:
