@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
+    "@opensystemslab/map": "1.0.0-alpha.5",
     "@tailwindcss/vite": "^4.1.7",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
