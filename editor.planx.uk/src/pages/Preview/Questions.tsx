@@ -5,6 +5,7 @@ import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { getLocalFlow, setLocalFlow } from "lib/local";
+import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
@@ -15,6 +16,9 @@ import { ApplicationPath, Session } from "types";
 import ErrorFallback from "../../components/Error/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { HandleSubmit } from "./Node";
+
+// TMP: remove this after debugging migration to IndexedDB
+const USE_LOCALSTORAGE_OVER_IDB_TMP = false;
 
 const BackBar = styled(Box)(() => ({
   top: 0,
@@ -84,24 +88,57 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   useEffect(() => {
     setCurrentCard();
 
+    // TMP: logs for debugging/testing migration to IndexedDB
+    console.info("Running initial setup useEffect");
+    console.log("isUsingLocalStorage?", isUsingLocalStorage);
+    console.log("isStandalone?", isStandalone);
+    console.log("flow ID:", id);
+
     if (!isStandalone) return;
 
-    if (isUsingLocalStorage) {
-      const state = getLocalFlow(id);
-      if (state) resumeSession(state);
-      createAnalytics(state ? "resume" : "init");
-      setGotFlow(true);
-    } else {
-      NEW.getLocalFlow(sessionId).then((state) => {
+    const loadSession = async () => {
+      console.info("loadSession called");
+      if (isUsingLocalStorage) {
+        try {
+          let state = null;
+          // TMP
+          if (USE_LOCALSTORAGE_OVER_IDB_TMP) {
+            console.info(
+              "Using localStorage over IndexedDB for debugging/testing purposes",
+            );
+            state = getLocalFlow(id);
+          } else {
+            // first try to get from IndexedDB (preferred storage)
+            state = await getLocalFlowIdb(id);
+            // if flow not in IndexedDB (or db connection fails), try localStorage
+            if (!state) {
+              console.debug(
+                `Flow ${id} not found in IndexedDB - falling back to localStorage`,
+              );
+              state = getLocalFlow(id);
+            }
+          }
+          if (state) resumeSession(state);
+          createAnalytics(state ? "resume" : "init");
+          setGotFlow(true);
+        } catch (error) {
+          console.error(`Error loading session for flow ID ${id}:`, error);
+        }
+      } else {
+        const state = await NEW.getLocalFlow(sessionId);
         // session data is resumed by ./ResumePage.tsx
         createAnalytics(state ? "resume" : "init");
         setGotFlow(true);
-      });
-    }
+      }
+    };
+
+    loadSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update session when a question is answered
   useEffect(() => {
+    console.info("Running update session useEffect");
     if (!gotFlow || !isStandalone || !id) return;
 
     const session: Session = {
@@ -112,10 +149,40 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       govUkPayment,
     };
 
-    isUsingLocalStorage
-      ? setLocalFlow(id, session)
-      : NEW.setLocalFlow(sessionId, session);
-  }, [gotFlow, breadcrumbs, passport, sessionId, id, govUkPayment]);
+    const saveFlowData = async () => {
+      console.info("saveFlowData called");
+      if (isUsingLocalStorage) {
+        // TMP
+        if (USE_LOCALSTORAGE_OVER_IDB_TMP) {
+          console.info(
+            "Using localStorage over IndexedDB for debugging/testing purposes",
+          );
+          setLocalFlow(id, session);
+          return;
+        }
+        // try first to save to IndexedDB, o/w fallback to localStorage
+        try {
+          await setLocalFlowIdb(id, session);
+        } catch (error) {
+          console.error("Error saving to IndexedDB:", error);
+          setLocalFlow(id, session);
+        }
+      } else {
+        await NEW.setLocalFlow(sessionId, session);
+      }
+    };
+
+    saveFlowData();
+  }, [
+    gotFlow,
+    breadcrumbs,
+    passport,
+    sessionId,
+    id,
+    govUkPayment,
+    isStandalone,
+    isUsingLocalStorage,
+  ]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
