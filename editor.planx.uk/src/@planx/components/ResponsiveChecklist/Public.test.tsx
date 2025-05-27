@@ -1,0 +1,1 @@
+import { ResponsiveChecklist } from "./model";
