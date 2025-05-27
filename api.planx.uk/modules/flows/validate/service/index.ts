@@ -1,6 +1,7 @@
 import type {
   ComponentType,
   Edges,
+  FlowStatus,
   Node,
 } from "@opensystemslab/planx-core/types";
 import * as jsondiffpatch from "jsondiffpatch";
@@ -9,7 +10,7 @@ import {
   dataMerged,
   getHistory,
   getMostRecentPublishedFlow,
-  getMostRecentPublishedFlowDate,
+  getTemplatedFlows,
   type FlowHistoryEntry,
 } from "../../../../helpers.js";
 import { validateFileTypes } from "./fileTypes.js";
@@ -36,6 +37,15 @@ interface FlowValidateAndDiffResponse {
   message: string;
   validationChecks?: FlowValidationResponse[];
   history: FlowHistoryEntry[] | null;
+  templatedFlows?:
+    | {
+        slug: string;
+        team: {
+          slug: string;
+        };
+        status: FlowStatus;
+      }[]
+    | [];
 }
 
 const validateAndDiffFlow = async (
@@ -85,11 +95,14 @@ const validateAndDiffFlow = async (
     .concat(passingChecks)
     .concat(notApplicableChecks);
 
+  const { templatedFlows } = await getTemplatedFlows(flowId);
+
   return {
     alteredNodes,
     history,
     message: "Changes queued to publish",
     validationChecks: sortedValidationChecks,
+    templatedFlows: templatedFlows,
   };
 };
 

@@ -23,6 +23,7 @@ import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink
 import { HistoryItem } from "../EditHistory";
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
 import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
+import { TemplatedFlows } from "./CheckForChangesButton";
 
 interface NoChangesDialogProps {
   dialogOpen: boolean;
@@ -75,6 +76,8 @@ interface ChangesDialogProps {
   validationChecks: ValidationCheck[];
   previewURL: string;
   handlePublish: (summary: string) => Promise<void>;
+  isTemplate: boolean;
+  templatedFlows?: TemplatedFlows;
 }
 
 export const ChangesDialog = (props: ChangesDialogProps) => {
@@ -87,6 +90,8 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     validationChecks,
     previewURL,
     handlePublish,
+    isTemplate,
+    templatedFlows,
   } = props;
 
   const steps = ["Review", "Test", "Publish"];
@@ -267,6 +272,11 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
               />
             </ErrorWrapper>
           </InputLabel>
+          {isTemplate && (
+            <Typography variant="body2" my={2}>
+              {`This flow is a template. Publishing it will automatically update the content of ${templatedFlows?.length || 0} templated flows. Each templated flow will still need to be reviewed and published by its' owner.`}
+            </Typography>
+          )}
         </DialogContent>
         <DialogFooterActions>
           <Button onClick={handleBack}>Back</Button>
