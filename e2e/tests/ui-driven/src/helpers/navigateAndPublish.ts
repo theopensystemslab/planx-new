@@ -28,9 +28,8 @@ export const publishService = async (page: Page) => {
 
 export const turnServiceOnline = async (page: Page) => {
   page.locator('[aria-label="Service settings"]').click();
-  page.getByLabel("Offline").click();
+  page.getByTestId("set-status-button").click();
 
-  page.getByRole("button", { name: "Save", disabled: false }).click();
   await expect(
     page.getByText("Service settings updated successfully"),
   ).toBeVisible();
