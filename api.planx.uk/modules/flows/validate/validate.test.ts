@@ -92,11 +92,10 @@ beforeEach(() => {
   });
 
   queryMock.mockQuery({
-    name: "GetIsTemplateAndTemplatedFlows",
+    name: "GetTemplatedFlows",
     matchOnVariables: false,
     data: {
       flow: {
-        isTemplate: false,
         templatedFlows: [],
       },
     },

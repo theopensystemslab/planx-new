@@ -37,15 +37,13 @@ interface FlowValidateAndDiffResponse {
   message: string;
   validationChecks?: FlowValidationResponse[];
   history: FlowHistoryEntry[] | null;
-  templatedFlows?:
-    | {
-        slug: string;
-        team: {
-          slug: string;
-        };
-        status: FlowStatus;
-      }[]
-    | [];
+  templatedFlows?: {
+    slug: string;
+    team: {
+      slug: string;
+    };
+    status: FlowStatus;
+  }[];
 }
 
 const validateAndDiffFlow = async (

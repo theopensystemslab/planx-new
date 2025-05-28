@@ -20,7 +20,7 @@ export type TemplatedFlows = {
     slug: string;
   };
   status: FlowStatus;
-}[] | [];
+}[];
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;

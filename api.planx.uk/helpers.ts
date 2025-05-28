@@ -287,15 +287,13 @@ export const getHistory = async (flowId: string) => {
 };
 
 interface GetTemplatedFlowsResponse {
-  templatedFlows:
-    | {
-        slug: string;
-        team: {
-          slug: string;
-        };
-        status: FlowStatus;
-      }[]
-    | [];
+  templatedFlows: {
+    slug: string;
+    team: {
+      slug: string;
+    };
+    status: FlowStatus;
+  }[];
 }
 
 // Get templatedFlows info to display in the publishing modal when a flow "isTemplate"
@@ -303,7 +301,7 @@ export const getTemplatedFlows = async (flowId: string) => {
   const { client: $client } = getClient();
   const response = await $client.request<{ flow: GetTemplatedFlowsResponse }>(
     gql`
-      query GetIsTemplateAndTemplatedFlows($flow_id: uuid!) {
+      query GetTemplatedFlows($flow_id: uuid!) {
         flow: flows_by_pk(id: $flow_id) {
           templatedFlows: templated_flows {
             slug
