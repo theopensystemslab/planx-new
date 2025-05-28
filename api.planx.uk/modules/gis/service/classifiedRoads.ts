@@ -1,7 +1,7 @@
 import {
   activePlanningConstraints,
-  type Constraint,
-  type GISResponse,
+  type PlanxGISResponse,
+  type PlanxPlanningConstraintCategory,
 } from "@opensystemslab/planx-core/types";
 import type { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
@@ -24,7 +24,7 @@ type OSFeatures = {
   }[];
 };
 
-// this is a meaningful subset of all properties returned, see nock for full sample response object
+// This is a meaningful subset of all properties returned, see nock for full sample response object
 type OSHighwayFeature = {
   OBJECTID: number;
   Identifier: string;
@@ -33,8 +33,12 @@ type OSHighwayFeature = {
   FormsPartOf: string;
 };
 
-interface RoadConstraint extends Constraint {
+interface RoadConstraint {
+  fn: string;
+  value: boolean;
+  text: string;
   data?: OSFeatures["features"];
+  category: PlanxPlanningConstraintCategory;
 }
 
 // Passport key comes from Digital Planning Schemas googlesheet
@@ -138,7 +142,7 @@ export const classifiedRoadsSearch = async (
             category: activePlanningConstraints[PASSPORT_FN].category,
           } as RoadConstraint,
         },
-      } as GISResponse);
+      } as PlanxGISResponse);
     } else {
       return res.json({
         ...baseResponse,
@@ -150,7 +154,7 @@ export const classifiedRoadsSearch = async (
             category: activePlanningConstraints[PASSPORT_FN].category,
           } as RoadConstraint,
         },
-      } as GISResponse);
+      } as PlanxGISResponse);
     }
   } catch (error: any) {
     return next({
