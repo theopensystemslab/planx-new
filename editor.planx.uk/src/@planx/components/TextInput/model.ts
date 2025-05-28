@@ -76,12 +76,12 @@ export const textInputValidationSchema = ({
         }
 
         if (type === TextInputType.Phone) {
-          return `Enter a valid phone number (maximum ${limit} characters).`;
+          return `Enter a valid phone number (maximum ${limit} characters)`;
         }
         if (type === TextInputType.Email) {
-          return `Enter an email address in the correct format, like name@example.com.`;
+          return `Enter an email address in the correct format, like name@example.com`;
         }
-        return `Your answer must be ${limit} characters or fewer.`;
+        return `Your answer must be ${limit} characters or fewer`;
       })(),
       test: (value?: string) => {
         if (!value) return true;
