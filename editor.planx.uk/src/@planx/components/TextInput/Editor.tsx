@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import RadioGroup from "@mui/material/RadioGroup";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -14,7 +15,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { parseTextInput, TextInput } from "./model";
+import { editorValidationSchema, parseTextInput, TextInput } from "./model";
 
 export type Props = EditorProps<TYPES.TextInput, TextInput>;
 
@@ -29,7 +30,8 @@ const TextInputComponent: React.FC<Props> = (props) => {
         });
       }
     },
-    validate: () => {},
+    validateOnChange: false,
+    validationSchema: editorValidationSchema(),
   });
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
@@ -68,14 +70,14 @@ const TextInputComponent: React.FC<Props> = (props) => {
         </ModalSectionContent>
         <ModalSectionContent title="Input style">
           <FormControl component="fieldset">
-            <RadioGroup defaultValue="default" value={formik.values.type}>
+            <RadioGroup defaultValue="short" value={formik.values.type}>
               {[
-                { id: "default", title: "Default" },
                 { id: "short", title: "Short (max 120 characters)" },
                 { id: "long", title: "Long (max 250 characters)" },
                 { id: "extraLong", title: "Extra long (max 750 characters)" },
                 { id: "email", title: "Email" },
                 { id: "phone", title: "Phone" },
+                { id: "custom", title: "Custom" },
               ].map((type) => (
                 <BasicRadio
                   key={type.id}
@@ -88,6 +90,29 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 />
               ))}
             </RadioGroup>
+          </FormControl>
+          <FormControl>
+            <InputRow>
+              {formik.values.type === "custom" && (
+                <Box
+                  sx={(theme) => ({
+                    borderLeft: `4px solid ${theme.palette.border.main}`,
+                    padding: theme.spacing(1, 2),
+                    marginLeft: "13px",
+                  })}
+                >
+                  <Input
+                    placeholder="Maximum characters"
+                    name="customLength"
+                    value={formik.values.customLength}
+                    onChange={formik.handleChange}
+                    errorMessage={formik.errors.customLength}
+                    type="number"
+                    disabled={props.disabled}
+                  />
+                </Box>
+              )}
+            </InputRow>
           </FormControl>
         </ModalSectionContent>
       </ModalSection>
