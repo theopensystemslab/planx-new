@@ -2063,6 +2063,35 @@
           - summary
         filter: {}
         allow_aggregations: true
+  event_triggers:
+    - name: update_templated_flows_on_source_publish
+      definition:
+        enable_manual: false
+        insert:
+          columns: '*'
+      retry_conf:
+        interval_sec: 10
+        num_retries: 0
+        timeout_sec: 60
+      webhook: '{{HASURA_PLANX_API_URL}}'
+      headers:
+        - name: authorization
+          value_from_env: HASURA_PLANX_API_KEY
+      request_transform:
+        body:
+          action: transform
+          template: |-
+            {
+              "createdAt": {{$body.created_at}},
+              "payload": {
+                "flowId": {{$body.event.data.new.flow_id}}
+              }
+            }
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        url: '{{$base_url}}/webhooks/hasura/update-templated-flows-on-source-publish'
+        version: 2
 - table:
     name: reconciliation_requests
     schema: public

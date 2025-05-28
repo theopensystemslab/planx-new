@@ -13,12 +13,14 @@ import {
   sanitiseApplicationDataController,
   sendSlackNotificationController,
   updateTemplatedFlowEditsController,
+  updateTemplatedFlowsOnSourcePublishController,
 } from "./controller.js";
 import { createSessionEventSchema } from "./service/lowcalSessionEvents/schema.js";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
 import { updateTemplatedFlowEditsEventSchema } from "./service/updateTemplatedFlowEdits/schema.js";
 import { isCleanJSONBSchema } from "./service/validateInput/schema.js";
+import { updateTemplatedFlowsOnSourcePublishEventSchema } from "./service/updateTemplatedFlowsOnSourcePublish/schema.js";
 
 const router = Router();
 
@@ -68,6 +70,12 @@ router.post(
   "/webhooks/hasura/update-templated-flow-edits",
   validate(updateTemplatedFlowEditsEventSchema),
   updateTemplatedFlowEditsController,
+);
+
+router.post(
+  "/webhooks/hasura/update-templated-flows-on-source-publish",
+  validate(updateTemplatedFlowsOnSourcePublishEventSchema),
+  updateTemplatedFlowsOnSourcePublishController,
 );
 
 // TODO: Convert to the new API module structure
