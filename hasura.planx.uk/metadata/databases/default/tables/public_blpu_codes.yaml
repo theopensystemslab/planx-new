@@ -1,0 +1,11 @@
+table:
+  name: blpu_codes
+  schema: public
+select_permissions:
+  - role: public
+    permission:
+      columns:
+        - description
+        - code
+        - value
+      filter: {}

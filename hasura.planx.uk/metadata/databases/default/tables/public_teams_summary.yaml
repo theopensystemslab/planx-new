@@ -1,0 +1,60 @@
+table:
+  name: teams_summary
+  schema: public
+select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - live_flows
+        - article_4s_enabled
+        - govpay_enabled_production
+        - govpay_enabled_staging
+        - is_trial
+        - planning_data_enabled
+        - power_automate_enabled_production
+        - power_automate_enabled_staging
+        - id
+        - govnotify_personalisation
+        - action_colour
+        - bops_submission_url_production
+        - bops_submission_url_staging
+        - favicon
+        - homepage
+        - link_colour
+        - logo
+        - name
+        - primary_colour
+        - reference_code
+        - send_to_email_address
+        - slug
+        - subdomain
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - live_flows
+        - article_4s_enabled
+        - govpay_enabled_production
+        - govpay_enabled_staging
+        - is_trial
+        - planning_data_enabled
+        - power_automate_enabled_production
+        - power_automate_enabled_staging
+        - id
+        - govnotify_personalisation
+        - action_colour
+        - bops_submission_url_production
+        - bops_submission_url_staging
+        - favicon
+        - homepage
+        - link_colour
+        - logo
+        - name
+        - primary_colour
+        - reference_code
+        - send_to_email_address
+        - slug
+        - subdomain
+      filter: {}
+    comment: ""

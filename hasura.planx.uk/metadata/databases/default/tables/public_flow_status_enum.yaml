@@ -1,0 +1,4 @@
+table:
+  name: flow_status_enum
+  schema: public
+is_enum: true

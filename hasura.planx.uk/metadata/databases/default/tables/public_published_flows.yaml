@@ -1,0 +1,142 @@
+table:
+  name: published_flows
+  schema: public
+object_relationships:
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+  - name: user
+    using:
+      foreign_key_constraint_on: publisher_id
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+        - has_send_component
+  - role: demoUser
+    permission:
+      check:
+        _and:
+          - flow:
+              creator_id:
+                _eq: x-hasura-user-id
+          - flow:
+              team:
+                id:
+                  _eq: 32
+      columns:
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+        - has_send_component
+    comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+        - has_send_component
+  - role: teamEditor
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      columns:
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+        - has_send_component
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - created_at
+        - flow_id
+        - data
+        - has_send_component
+      filter: {}
+      allow_aggregations: true
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - data
+        - flow_id
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - has_send_component
+      filter: {}
+      allow_aggregations: true
+  - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - data
+        - flow_id
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - has_send_component
+      filter: {}
+      allow_aggregations: true
+  - role: public
+    permission:
+      columns:
+        - created_at
+        - data
+        - flow_id
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+        - has_send_component
+      filter: {}
+      allow_aggregations: true
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
+        - id
+        - is_statutory_application_type
+        - publisher_id
+        - summary
+      filter: {}
+      allow_aggregations: true

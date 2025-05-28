@@ -1,0 +1,3 @@
+table:
+  name: email_events_log
+  schema: public

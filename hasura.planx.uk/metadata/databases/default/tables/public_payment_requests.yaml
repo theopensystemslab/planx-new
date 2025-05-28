@@ -1,0 +1,191 @@
+table:
+  name: payment_requests
+  schema: public
+object_relationships:
+  - name: session
+    using:
+      foreign_key_constraint_on: session_id
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - applicant_name
+        - created_at
+        - fee_breakdown
+        - govpay_metadata
+        - govpay_payment_id
+        - id
+        - paid_at
+        - payee_email
+        - payee_name
+        - payment_amount
+        - session_id
+        - session_preview_data
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - applicant_name
+        - created_at
+        - fee_breakdown
+        - govpay_metadata
+        - govpay_payment_id
+        - id
+        - paid_at
+        - payee_email
+        - payee_name
+        - payment_amount
+        - session_id
+        - session_preview_data
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - applicant_name
+        - created_at
+        - fee_breakdown
+        - govpay_payment_id
+        - id
+        - paid_at
+        - payment_amount
+        - session_preview_data
+      filter:
+        id:
+          _eq: x-hasura-payment-request-id
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - applicant_name
+        - created_at
+        - fee_breakdown
+        - govpay_metadata
+        - govpay_payment_id
+        - id
+        - paid_at
+        - payee_email
+        - payee_name
+        - payment_amount
+        - session_id
+        - session_preview_data
+      filter: {}
+      check: {}
+delete_permissions:
+  - role: api
+    permission:
+      filter: {}
+event_triggers:
+  - name: setup_payment_expiry_events
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "paymentRequestId": {{$body.event.data.new.id}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/create-payment-expiry-events'
+      version: 2
+  - name: setup_payment_invitation_events
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "paymentRequestId": {{$body.event.data.new.id}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/create-payment-invitation-events'
+      version: 2
+  - name: setup_payment_reminder_events
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "paymentRequestId": {{$body.event.data.new.id}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/create-payment-reminder-events'
+      version: 2
+  - name: setup_payment_send_events
+    definition:
+      enable_manual: false
+      update:
+        columns:
+          - paid_at
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "sessionId": {{$body.event.data.new.session_id}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/create-payment-send-events'
+      version: 2
