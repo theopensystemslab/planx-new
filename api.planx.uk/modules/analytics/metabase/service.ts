@@ -9,10 +9,14 @@ import { getTeamSlug } from "./getTeamSlug.js";
  * @returns The dashboard name (the Metabase API performs GETs with the dashboard ID, so we have to have that locally already--no need to return it here)
  */
 export async function createNewDashboardLink({
+  analyticsLink,
+  status,
   flowId,
   teamId,
   serviceSlug,
 }: CreateNewDashboardLinkParams): Promise<string | undefined> {
+  if (status !== "online" || analyticsLink !== null) return;
+
   const environment =
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
