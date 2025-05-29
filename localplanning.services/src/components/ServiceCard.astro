@@ -1,5 +1,6 @@
 ---
 import type { Service } from "@lib/lpa-api";
+import { PUBLIC_PLANX_EDITOR_URL } from "astro:env/client";
 
 type Props = Service;
 
@@ -19,9 +20,9 @@ if (!lpa) return;
       }
     </p>
   </div>
-  <!-- TODO: Env based URLs, custom subdomains -->
+  <!-- TODO: custom subdomains -->
   <a
-    href=`http://editor.planx.dev/${lpa}/${slug}/preview`
+    href=`${PUBLIC_PLANX_EDITOR_URL}/${lpa}/${slug}/preview`
     class="bg-action
     px-4
     inline-flex
