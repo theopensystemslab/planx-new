@@ -54,7 +54,7 @@ importers:
         specifier: 1.0.0-alpha.5
         version: 1.0.0-alpha.5
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#9f8d3d6
+        specifier: git+https://github.com/theopensystemslab/planx-core#bf8852b
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/0ab5053(@types/react@18.3.21)
       '@tiptap/core':
         specifier: ^2.4.0
