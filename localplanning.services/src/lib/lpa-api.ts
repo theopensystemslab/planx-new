@@ -1,3 +1,5 @@
+import { PUBLIC_PLANX_GRAPHQL_API_URL } from "astro:env/client";
+
 export interface Service {
   name: string;
   slug: string;
@@ -18,8 +20,7 @@ interface LPA {
 
 export async function fetchAllLPAs(): Promise<LPA[]> {
   try {
-    // TODO: Fetch from correct environment, set up astro env vars
-    const response = await fetch("https://hasura.editor.planx.dev/v1/graphql", {
+    const response = await fetch(PUBLIC_PLANX_GRAPHQL_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -52,10 +53,19 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
     }
 
     const lpas: LPA[] = json.data.lpas;
+
+    if (!lpas || !lpas.length) {
+      throw Error("No LPAs found - please check GraphQL API and database.");
+    }
+
     return lpas;
   } catch (error) {
-    console.error("Error fetching LPAs:", error);
+    const errorMessage = error instanceof Error 
+      ? error.message
+      : "Unknown error occurred";
 
-    return [];
+    throw new Error(
+      `Error fetching LPAs: ${errorMessage}`
+    );
   }
 }
