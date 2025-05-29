@@ -56,17 +56,7 @@ export const generateDashboardLink = ({
 
   for (const service of includedServices) {
     const found = service.slugs.some((slug) => serviceSlug.includes(slug));
-    console.log(
-      `Does "${serviceSlug}" contain any of`,
-      service.slugs,
-      "?",
-      found,
-    );
     if (found) {
-      console.log(
-        `Found matching slug in "${serviceSlug}" for:`,
-        service.slugs,
-      );
       dashboardId = service.id;
       break;
     }
@@ -85,7 +75,6 @@ export const generateDashboardLink = ({
     team: teamSlug,
   }).toString();
   url.search = search;
-  console.log({ url });
 
   return url.toString();
 };
