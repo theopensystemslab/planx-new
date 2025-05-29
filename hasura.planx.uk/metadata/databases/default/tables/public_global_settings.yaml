@@ -1,0 +1,59 @@
+table:
+  name: global_settings
+  schema: public
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - id
+        - footer_content
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+select_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - footer_content
+      filter: {}
+  - role: platformAdmin
+    permission:
+      columns:
+        - footer_content
+        - id
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - footer_content
+      filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - footer_content
+        - id
+      filter: {}
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - footer_content
+        - id
+      filter: {}
+      check: {}
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http

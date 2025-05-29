@@ -1,0 +1,67 @@
+table:
+  name: uniform_applications
+  schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - id
+        - response
+        - idox_submission_id
+        - created_at
+        - destination
+        - xml
+        - payload
+        - sanitised_at
+        - submission_reference
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - response
+        - idox_submission_id
+        - created_at
+        - destination
+        - xml
+        - payload
+        - sanitised_at
+        - submission_reference
+      filter: {}
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - response
+        - idox_submission_id
+        - created_at
+        - destination
+        - xml
+        - payload
+        - sanitised_at
+        - submission_reference
+      filter: {}
+      check: {}
+event_triggers:
+  - name: setup_uniform_applications_notifications
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 30
+      num_retries: 1
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      method: POST
+      query_params:
+        type: uniform-submission
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
+      version: 2

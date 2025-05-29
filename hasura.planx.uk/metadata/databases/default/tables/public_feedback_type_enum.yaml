@@ -1,0 +1,4 @@
+table:
+  name: feedback_type_enum
+  schema: public
+is_enum: true
