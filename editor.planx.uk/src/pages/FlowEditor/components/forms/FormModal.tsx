@@ -11,6 +11,7 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useToast } from "hooks/useToast";
+import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
@@ -52,6 +53,16 @@ const NodeTypeSelect: React.FC<{
       <optgroup label="Question">
         <option value={TYPES.Question}>Question</option>
         <option value={TYPES.Checklist}>Checklist</option>
+        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
+          <option value={TYPES.ResponsiveChecklist}>
+            Responsive checklist (testing only)
+          </option>
+        )}
+        {hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") && (
+          <option value={TYPES.ResponsiveQuestion}>
+            Responsive question (testing only)
+          </option>
+        )}
         <option value={TYPES.NextSteps}>Next steps</option>
       </optgroup>
       <optgroup label="Inputs">

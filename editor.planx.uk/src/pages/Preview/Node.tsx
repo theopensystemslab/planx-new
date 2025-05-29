@@ -45,6 +45,10 @@ import type { PropertyInformation } from "@planx/components/PropertyInformation/
 import PropertyInformationComponent from "@planx/components/PropertyInformation/Public";
 import type { Question } from "@planx/components/Question/model";
 import QuestionComponent from "@planx/components/Question/Public";
+import type { ResponsiveChecklist } from "@planx/components/ResponsiveChecklist/model";
+import ResponsiveChecklistComponent from "@planx/components/ResponsiveChecklist/Public";
+import type { ResponsiveQuestion } from "@planx/components/ResponsiveQuestion/model";
+import ResponsiveQuestionComponent from "@planx/components/ResponsiveQuestion/Public";
 import { Result } from "@planx/components/Result/model";
 import ResultComponent from "@planx/components/Result/Public";
 import type { Review } from "@planx/components/Review/model";
@@ -61,6 +65,7 @@ import type { TaskList } from "@planx/components/TaskList/model";
 import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
 import TextInputComponent from "@planx/components/TextInput/Public";
+import { hasFeatureFlag } from "lib/featureFlags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { exhaustiveCheck } from "utils";
@@ -237,6 +242,20 @@ const Node: React.FC<Props> = (props) => {
         />
       );
     }
+
+    case TYPES.ResponsiveChecklist:
+      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
+        <ResponsiveChecklistComponent
+          {...getComponentProps<ResponsiveChecklist>()}
+        />
+      ) : null;
+
+    case TYPES.ResponsiveQuestion:
+      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
+        <ResponsiveQuestionComponent
+          {...getComponentProps<ResponsiveQuestion>()}
+        />
+      ) : null;
 
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;

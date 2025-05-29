@@ -36,6 +36,8 @@ export const SLUGS: {
   [TYPES.SetFee]: "set-fee",
   [TYPES.SetValue]: "set-value",
   [TYPES.Question]: "question",
+  [TYPES.ResponsiveChecklist]: "responsive-checklist",
+  [TYPES.ResponsiveQuestion]: "responsive-question",
   [TYPES.TaskList]: "task-list",
   [TYPES.TextInput]: "text-input",
 } as const;
