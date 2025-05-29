@@ -1,5 +1,6 @@
 ---
 import type { Service } from "@lib/lpa-api";
+import Button from "./Button.astro";
 
 type Props = Service;
 
@@ -9,10 +10,10 @@ const { lpa } = Astro.params;
 if (!lpa) return;
 ---
 
-<li class="flex p-4 m-4 bg-gray-200 w-fit justify-between">
-  <div class="w-2/3">
-    <h3>{name}</h3>
-    <p>
+<li class="flex flex-col lg:flex-row gap-4 p-8 rounded my-4 bg-bg-light w-full justify-between items-start lg:items-center">
+  <div class="lg:w-2/3">
+    <h3 class="font-semibold mb-2 text-xl">{name}</h3>
+    <p class="text-text-secondary">
       {
         summary ||
           "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, voluptatum ipsam."
@@ -20,13 +21,10 @@ if (!lpa) return;
     </p>
   </div>
   <!-- TODO: Env based URLs, custom subdomains -->
-  <a
+  <Button
     href=`http://editor.planx.dev/${lpa}/${slug}/preview`
-    class="bg-action
-    px-4
-    inline-flex
-    items-center"
+    variant="primary"
   >
     Start your application
-  </a>
+  </Button>
 </li>

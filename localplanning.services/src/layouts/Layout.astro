@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import "@styles/global.css";
-import NavBar from "@components/NavBar.astro";
+import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 ---
 
@@ -15,9 +15,9 @@ import Footer from "@components/Footer.astro";
     <meta name="generator" content={Astro.generator} />
     <title>localplanning.services</title>
   </head>
-  <body class="bg-main">
-    <NavBar />
-    <main>
+  <body class="bg-black">
+    <Header />
+    <main class="bg-white">
       <slot/>
     </main>
     <Footer />
@@ -30,5 +30,6 @@ import Footer from "@components/Footer.astro";
     margin: 0;
     width: 100%;
     height: 100%;
+    color: var(--color-text-main);
   }
 </style>

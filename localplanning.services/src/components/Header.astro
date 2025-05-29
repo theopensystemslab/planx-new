@@ -1,0 +1,22 @@
+---
+import Button from "@components/Button.astro";
+import Container from "@components/Container.astro";
+---
+
+<header class="bg-bg-main">
+  <Container>
+    <div class="flex justify-between items-center py-6">
+      <a class="font-bold" href="/">Logo</a>
+      <nav class="flex items-center gap-8">
+        <ul class="flex gap-8">
+          <li><a class="underline underline-offset-4 decoration-text-secondary font-semibold" href="/">Home</a></li>
+          <li><a class="underline underline-offset-4 decoration-text-secondary font-semibold" href="/search">Search</a></li>
+          <li><a class="underline underline-offset-4 decoration-text-secondary font-semibold" href="/about">About</a></li>
+        </ul>
+        <Button href="/" variant="secondary" size="medium">Your applications</Button>
+      </nav>
+    </div>
+  </Container>
+</header>
+
+

@@ -1,0 +1,16 @@
+---
+import Button from "@components/Button.astro";
+const { title, description } = Astro.props;
+---
+
+<div class="w-full lg:w-1/3 bg-bg-light p-8 rounded">
+  <div class="mb-6">
+     <h3 class="font-semibold mb-2 text-2xl">{title}</h3>
+    <p class="text-text-secondary">
+      {description}
+    </p>
+  </div>
+    <Button href="./search" variant="primary">
+      Find your local planning authority
+    </Button>
+</div>
