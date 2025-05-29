@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import { $api } from "../../../../client/index.js";
+import { $api } from "../../../client/index.js";
 
 interface UpdatePublicAnalyticsLink {
   flow: {

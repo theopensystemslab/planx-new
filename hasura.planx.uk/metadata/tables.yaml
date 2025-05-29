@@ -1207,8 +1207,10 @@
     - name: setup_metabase_dashboard
       definition:
         enable_manual: false
-        insert:
-          columns: '*'
+        update:
+          columns:
+            - analytics_link
+            - status
       retry_conf:
         interval_sec: 10
         num_retries: 0
@@ -1222,6 +1224,8 @@
           action: transform
           template: |-
             {
+              "analyticsLink": {{$body.event.data.new.analytics_link}},
+              "status": {{$body.event.data.new.status}},
               "serviceSlug": {{$body.event.data.new.slug}},
               "flowId": {{$body.event.data.new.id}},
               "teamId": {{$body.event.data.new.team_id}},
@@ -2932,7 +2936,6 @@
           - created_at
           - domain
           - id
-          - metabase_id
           - name
           - slug
           - updated_at
@@ -2987,8 +2990,7 @@
   update_permissions:
     - role: api
       permission:
-        columns:
-          - metabase_id
+        columns: []
         filter: {}
         check: {}
       comment: ""
@@ -3000,26 +3002,6 @@
           - slug
         filter: {}
         check: null
-  event_triggers:
-    - name: setup_metabase_collection
-      definition:
-        enable_manual: false
-        insert:
-          columns: '*'
-      retry_conf:
-        interval_sec: 10
-        num_retries: 0
-        timeout_sec: 60
-      webhook: '{{HASURA_PLANX_API_URL}}/metabase/collection/'
-      headers:
-        - name: authorization
-          value_from_env: HASURA_PLANX_API_KEY
-      request_transform:
-        body:
-          action: transform
-          template: "{\r\n  \"slug\": {{$body.event.data.new.slug}}\r\n}"
-        template_engine: Kriti
-        version: 2
 - table:
     name: teams_summary
     schema: public
