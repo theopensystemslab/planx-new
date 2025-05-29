@@ -16,11 +16,9 @@ import { sanitiseApplicationData } from "./service/sanitiseApplicationData/index
 import type { SanitiseApplicationData } from "./service/sanitiseApplicationData/types.js";
 import { sendSlackNotification } from "./service/sendNotification/index.js";
 import type { SendSlackNotification } from "./service/sendNotification/types.js";
-import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 import type { UpdateTemplatedFlowEditsController } from "./service/updateTemplatedFlowEdits/schema.js";
-import { updateTemplatedFlowsOnSourcePublish } from "./service/updateTemplatedFlowsOnSourcePublish/index.js";
-import type { UpdateTemplatedFlowsOnSourcePublishController } from "./service/updateTemplatedFlowsOnSourcePublish/schema.js";
 import type { IsCleanJSONBController } from "./service/validateInput/schema.js";
+import { updateTemplatedFlowEdits } from "./service/updateTemplatedFlowEdits/index.js";
 
 export const sendSlackNotificationController: SendSlackNotification = async (
   _req,
@@ -218,23 +216,6 @@ export const updateTemplatedFlowEditsController: UpdateTemplatedFlowEditsControl
       return next(
         new ServerError({
           message: `Failed to update templated flow edits ${flowId}`,
-          cause: error,
-        }),
-      );
-    }
-  };
-
-export const updateTemplatedFlowsOnSourcePublishController: UpdateTemplatedFlowsOnSourcePublishController =
-  async (_req, res, next) => {
-    const { flowId } = res.locals.parsedReq.body.payload;
-
-    try {
-      const response = await updateTemplatedFlowsOnSourcePublish(flowId);
-      res.json(response);
-    } catch (error) {
-      return next(
-        new ServerError({
-          message: `Failed to update templated flows on source publish (source ID ${flowId})`,
           cause: error,
         }),
       );
