@@ -366,6 +366,15 @@
           remote_table:
             name: teams
             schema: public
+    - name: flow
+      using:
+        manual_configuration:
+          column_mapping:
+            flow_id: flow_id
+          insertion_order: null
+          remote_table:
+            name: feedback
+            schema: public
   select_permissions:
     - role: demoUser
       permission:
@@ -378,6 +387,7 @@
           - feedback_id
           - feedback_score
           - feedback_type
+          - flow_id
           - help_definition
           - help_sources
           - help_text
@@ -412,6 +422,7 @@
           - feedback_id
           - feedback_score
           - feedback_type
+          - flow_id
           - help_definition
           - help_sources
           - help_text
@@ -442,6 +453,7 @@
           - feedback_id
           - feedback_score
           - feedback_type
+          - flow_id
           - help_definition
           - help_sources
           - help_text
