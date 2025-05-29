@@ -1,4 +1,4 @@
-import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph, FlowStatus } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import capitalize from "lodash/capitalize.js";
@@ -284,6 +284,41 @@ export const getHistory = async (flowId: string) => {
   );
 
   return response.history;
+};
+
+interface GetTemplatedFlowsResponse {
+  templatedFlows: {
+    slug: string;
+    team: {
+      slug: string;
+    };
+    status: FlowStatus;
+  }[];
+}
+
+// Get templatedFlows info to display in the publishing modal when a flow "isTemplate"
+export const getTemplatedFlows = async (flowId: string) => {
+  const { client: $client } = getClient();
+  const response = await $client.request<{ flow: GetTemplatedFlowsResponse }>(
+    gql`
+      query GetTemplatedFlows($flow_id: uuid!) {
+        flow: flows_by_pk(id: $flow_id) {
+          templatedFlows: templated_flows {
+            slug
+            team {
+              slug
+            }
+            status
+          }
+        }
+      }
+    `,
+    {
+      flow_id: flowId,
+    },
+  );
+
+  return response.flow;
 };
 
 /**

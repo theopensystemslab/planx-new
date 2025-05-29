@@ -6,6 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
 import Step from "@mui/material/Step";
 import { stepIconClasses } from "@mui/material/StepIcon";
 import StepLabel from "@mui/material/StepLabel";
@@ -22,6 +24,7 @@ import Input from "ui/shared/Input/Input";
 import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
 import { HistoryItem } from "../EditHistory";
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
+import { TemplatedFlows } from "./CheckForChangesButton";
 import { ValidationCheck, ValidationChecks } from "./ValidationChecks";
 
 interface NoChangesDialogProps {
@@ -75,6 +78,8 @@ interface ChangesDialogProps {
   validationChecks: ValidationCheck[];
   previewURL: string;
   handlePublish: (summary: string) => Promise<void>;
+  isTemplate: boolean;
+  templatedFlows?: TemplatedFlows;
 }
 
 export const ChangesDialog = (props: ChangesDialogProps) => {
@@ -87,6 +92,8 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
     validationChecks,
     previewURL,
     handlePublish,
+    isTemplate,
+    templatedFlows,
   } = props;
 
   const steps = ["Review", "Test", "Publish"];
@@ -267,6 +274,25 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
               />
             </ErrorWrapper>
           </InputLabel>
+          {isTemplate && (
+            <>
+              <Typography variant="h4" component="h3" mt={2}>
+                {`This flow is a template`}
+              </Typography>
+              <Typography variant="body2" my={2}>
+                {`Publishing it will automatically update the contents of ${templatedFlows?.length || 0} templated flows. Each templated flow will still need to be reviewed and published by its' owner.`}
+              </Typography>
+              {templatedFlows?.length && templatedFlows.length > 0 && (
+                <List dense disablePadding sx={{ listStyleType: 'disc', marginLeft: 2 }}>
+                  {templatedFlows.map((templatedFlow, i) => (
+                    <ListItem key={i} dense disablePadding sx={{ display: 'list-item', fontSize: (theme) => theme.typography.body2 }}>
+                      {`${templatedFlow.team.slug}/${templatedFlow.slug} (${templatedFlow.status})`}
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+            </>
+          )}
         </DialogContent>
         <DialogFooterActions>
           <Button onClick={handleBack}>Back</Button>

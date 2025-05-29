@@ -12,6 +12,15 @@ import { HistoryItem } from "../EditHistory";
 import { AlteredNode } from "./AlteredNodes";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 import { ValidationCheck } from "./ValidationChecks";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
+
+export type TemplatedFlows = {
+  slug: string;
+  team: {
+    slug: string;
+  };
+  status: FlowStatus;
+}[];
 
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
@@ -22,12 +31,14 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublished,
     lastPublisher,
     validateAndDiffFlow,
+    isTemplate
   ] = useStore((state) => [
     state.id,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
     state.validateAndDiffFlow,
+    state.isTemplate
   ]);
 
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -38,6 +49,7 @@ export const CheckForChangesToPublishButton: React.FC<{
   );
   const [alteredNodes, setAlteredNodes] = useState<AlteredNode[]>();
   const [history, setHistory] = useState<HistoryItem[]>();
+  const [templatedFlows, setTemplatedFlows] = useState<TemplatedFlows>();
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const handleCheckForChangesToPublish = async () => {
@@ -54,6 +66,7 @@ export const CheckForChangesToPublishButton: React.FC<{
           : alteredFlow?.data.message,
       );
       setValidationChecks(alteredFlow?.data?.validationChecks);
+      setTemplatedFlows(alteredFlow?.data?.templatedFlows);
       setDialogOpen(true);
     } catch (error) {
       setLastPublishedTitle("Error checking for changes to publish");
@@ -122,6 +135,8 @@ export const CheckForChangesToPublishButton: React.FC<{
             validationChecks={validationChecks}
             previewURL={previewURL}
             handlePublish={handlePublish}
+            isTemplate={isTemplate}
+            templatedFlows={templatedFlows}
           />
         )}
         <Box mr={0}>

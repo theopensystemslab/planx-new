@@ -90,6 +90,16 @@ beforeEach(() => {
       ],
     },
   });
+
+  queryMock.mockQuery({
+    name: "GetTemplatedFlows",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        templatedFlows: [],
+      },
+    },
+  });
 });
 
 const auth = authHeader({ role: "platformAdmin" });
