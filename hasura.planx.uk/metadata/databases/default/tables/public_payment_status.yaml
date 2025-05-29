@@ -1,0 +1,37 @@
+table:
+  name: payment_status
+  schema: public
+object_relationships:
+  - name: lowcal_session
+    using:
+      manual_configuration:
+        column_mapping:
+          session_id: id
+        insertion_order: null
+        remote_table:
+          name: lowcal_sessions
+          schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - payment_id
+        - status
+        - team_slug
+        - created_at
+        - flow_id
+        - session_id
+        - amount
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - payment_id
+        - status
+        - team_slug
+        - created_at
+        - flow_id
+        - session_id
+        - amount
+      filter: {}

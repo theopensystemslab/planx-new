@@ -1,0 +1,124 @@
+table:
+  name: teams
+  schema: public
+object_relationships:
+  - name: integrations
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          name: team_integrations
+          schema: public
+  - name: team_settings
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          name: team_settings
+          schema: public
+  - name: theme
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          name: team_themes
+          schema: public
+array_relationships:
+  - name: flows
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          name: flows
+          schema: public
+  - name: members
+    using:
+      foreign_key_constraint_on:
+        column: team_id
+        table:
+          name: team_members
+          schema: public
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+      filter: {}
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+      filter:
+        id:
+          _in:
+            - 1
+            - 29
+            - 30
+            - 32
+    comment: 'For the demo user, we want to ensure they can only see their own team [id = 32], and the teams: Open Digital Planning [id = 30], Open Systems Lab [id = 1], and Templates [id = 29]  team '
+  - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+      filter: {}
+  - role: public
+    permission:
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+      filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+      filter: {}
+update_permissions:
+  - role: api
+    permission:
+      columns: []
+      filter: {}
+      check: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - domain
+        - name
+        - slug
+      filter: {}
+      check: null

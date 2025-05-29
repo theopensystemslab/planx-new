@@ -1,0 +1,140 @@
+table:
+  name: operations
+  schema: public
+object_relationships:
+  - name: actor
+    using:
+      foreign_key_constraint_on: actor_id
+  - name: flow
+    using:
+      foreign_key_constraint_on: flow_id
+insert_permissions:
+  - role: demoUser
+    permission:
+      check:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+    comment: ""
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+  - role: teamEditor
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+select_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - id
+        - flow_id
+        - version
+        - actor_id
+        - data
+        - created_at
+        - updated_at
+      filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - id
+        - flow_id
+        - version
+        - actor_id
+        - data
+        - created_at
+        - updated_at
+      filter: {}
+update_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter:
+        flow:
+          creator_id:
+            _eq: x-hasura-user-id
+      check: null
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter: {}
+      check: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - id
+        - actor_id
+        - version
+        - data
+        - created_at
+        - updated_at
+        - flow_id
+      filter:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      check: {}

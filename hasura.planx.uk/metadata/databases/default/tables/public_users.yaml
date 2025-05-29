@@ -1,0 +1,98 @@
+table:
+  name: users
+  schema: public
+array_relationships:
+  - name: created_flows
+    using:
+      foreign_key_constraint_on:
+        column: creator_id
+        table:
+          name: flows
+          schema: public
+  - name: operations
+    using:
+      foreign_key_constraint_on:
+        column: actor_id
+        table:
+          name: operations
+          schema: public
+  - name: teams
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: team_members
+          schema: public
+insert_permissions:
+  - role: platformAdmin
+    permission:
+      check: {}
+      columns:
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_platform_admin
+        - is_staging_only
+        - last_name
+        - updated_at
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - is_staging_only
+        - last_name
+        - updated_at
+      filter: {}
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter: {}
+  - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter: {}
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter: {}
+    comment: ""
+update_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - email
+        - first_name
+        - last_name
+      filter: {}
+      check: {}

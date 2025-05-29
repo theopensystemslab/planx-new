@@ -1,0 +1,70 @@
+table:
+  name: submission_services_log
+  schema: public
+object_relationships:
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_id: id
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
+select_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - created_at
+        - event_id
+        - event_type
+        - flow_id
+        - flow_name
+        - response
+        - retry
+        - session_id
+        - status
+        - team_id
+      filter:
+        team:
+          flows:
+            creator_id:
+              _eq: x-hasura-user-id
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - event_id
+        - event_type
+        - flow_id
+        - flow_name
+        - response
+        - retry
+        - session_id
+        - status
+        - team_id
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - created_at
+        - event_id
+        - event_type
+        - flow_id
+        - flow_name
+        - response
+        - retry
+        - session_id
+        - status
+        - team_id
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
+    comment: ""
