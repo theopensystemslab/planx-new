@@ -78,7 +78,7 @@ describe("handleSetFees() function", () => {
   });
 
   describe("adding Fast Track fee", () => {
-    it("does not add Fast Track if passport does not have `application.fastTrack` present", () => {
+    it("adds 0 Fast Track (for Gov Pay metadata) if passport does not have `application.fastTrack` present but Fast Track amount is greater than 0", () => {
       const incomingPassport: Store.Passport = {
         data: {
           "application.fee.calculated": 200,
@@ -97,6 +97,8 @@ describe("handleSetFees() function", () => {
         "application.fee.calculated": 200,
         "application.fee.payable": 200,
         "application.fee.payable.VAT": 0,
+        "application.fee.fastTrack": 0,
+        "application.fee.fastTrack.VAT": 0,
       });
     });
 

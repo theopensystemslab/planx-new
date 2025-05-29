@@ -56,17 +56,21 @@ export const handleSetFees: HandleSetFees = ({
     fees[payableVAT] = calculatedVAT;
   }
 
-  const addFastTrack =
-    passport.data &&
-    Object.hasOwn(passport.data, "application.fastTrack") && // Any passport value is okay/expected here, checking for presence of key only
-    fastTrackFeeAmount > 0;
+  const addFastTrack = fastTrackFeeAmount > 0;
   if (addFastTrack) {
-    const fastTrackVAT = fastTrackFeeAmount * VAT_PERCENTAGE;
+    // The fastTrackFeeAmount applies if `application.fastTrack` is present in the passport (any value is okay/expected, checking presence only)
+    if (passport.data && Object.hasOwn(passport.data, "application.fastTrack")) {
+      const fastTrackVAT = fastTrackFeeAmount * VAT_PERCENTAGE;
 
-    fees["application.fee.fastTrack"] = fastTrackFeeAmount;
-    fees["application.fee.fastTrack.VAT"] = fastTrackVAT;
-    fees[payable] = fees[payable] + fastTrackFeeAmount + fastTrackVAT;
-    fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
+      fees["application.fee.fastTrack"] = fastTrackFeeAmount;
+      fees["application.fee.fastTrack.VAT"] = fastTrackVAT;
+      fees[payable] = fees[payable] + fastTrackFeeAmount + fastTrackVAT;
+      fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
+    } else {
+      // If this flow set a fastTrackFeeAmount, but `application.fastTrack` does not apply, still capture 0 for Gov Pay metadata reporting
+      fees["application.fee.fastTrack"] = 0;
+      fees["application.fee.fastTrack.VAT"] = 0;
+    }
   }
 
   const addServiceCharge =
