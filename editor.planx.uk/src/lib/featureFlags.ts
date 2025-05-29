@@ -1,5 +1,8 @@
 // add/edit/remove feature flags in array below
-const AVAILABLE_FEATURE_FLAGS = ["TEMPLATES"] as const;
+const AVAILABLE_FEATURE_FLAGS = [
+  "TEMPLATES",
+  "RESPONSIVE_QUESTIONS_CHECKLISTS",
+] as const;
 
 type FeatureFlag = (typeof AVAILABLE_FEATURE_FLAGS)[number];
 
@@ -75,4 +78,4 @@ export const initFeatureFlags = () => {
         : `🎏 no active feature flags`,
     );
   }
-}
+};

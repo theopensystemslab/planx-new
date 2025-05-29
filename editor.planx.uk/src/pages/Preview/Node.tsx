@@ -65,6 +65,7 @@ import type { TaskList } from "@planx/components/TaskList/model";
 import TaskListComponent from "@planx/components/TaskList/Public";
 import type { TextInput } from "@planx/components/TextInput/model";
 import TextInputComponent from "@planx/components/TextInput/Public";
+import { hasFeatureFlag } from "lib/featureFlags";
 import mapAccum from "ramda/src/mapAccum";
 import React from "react";
 import { exhaustiveCheck } from "utils";
@@ -243,18 +244,18 @@ const Node: React.FC<Props> = (props) => {
     }
 
     case TYPES.ResponsiveChecklist:
-      return (
+      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
         <ResponsiveChecklistComponent
           {...getComponentProps<ResponsiveChecklist>()}
         />
-      );
+      ) : null;
 
     case TYPES.ResponsiveQuestion:
-      return (
+      return hasFeatureFlag("RESPONSIVE_QUESTIONS_CHECKLISTS") ? (
         <ResponsiveQuestionComponent
           {...getComponentProps<ResponsiveQuestion>()}
         />
-      );
+      ) : null;
 
     case TYPES.Result:
       return <ResultComponent {...getComponentProps<Result>()} />;
