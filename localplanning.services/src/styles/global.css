@@ -2,8 +2,38 @@
 @import "tailwindcss";
 
 @theme {
-  --color-main: #DDF0EC;
+
+  /*
+  / Color palette
+  */
+
+  /* Global colors */
   --color-black: #1A1B1B;
-  --color-action: #FECE85;
+  --color-white: #FFFFFF;
+
+  /* Background colors */
+  --color-bg-main: #DDF0EC;
+  --color-bg-light: #F2F5F5;
+  --color-bg-dark: var(--color-black);
+
+  /* Text colors */
+  --color-text-main: var(--color-black);
+  --color-text-secondary: #464949;
+
+  /* Action colors */
+  --color-action-main: #FECE85;
+  --color-action-main-hover: #FFDFAE;
+  --color-action-secondary: #1F2F2B;
+  --color-action-secondary-hover: var(--color-black);
+  
+  /*
+  / Typography
+  */
+
   --default-font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /*
+  / Layout styles
+  */
+
 }

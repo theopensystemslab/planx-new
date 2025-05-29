@@ -1,3 +1,7 @@
+---
+import Button from "./Button.astro";
+---
+
 <script>
   // @ts-expect-error: 'PostcodeSearch' is declared but its value is never read
   import { PostcodeSearch } from "@opensystemslab/map";
@@ -28,4 +32,4 @@
 </script>
 
 <postcode-search label="Enter a postcode" hintText="For example, NW3 7PH"></postcode-search>
-<button class="bg-action px-8 py-4">Find the local planning authority</button>
+<Button variant="primary" size="large">Find the local planning authority</Button>
