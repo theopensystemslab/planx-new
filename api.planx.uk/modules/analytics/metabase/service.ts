@@ -15,32 +15,32 @@ export async function createNewDashboardLink({
   teamId,
   serviceSlug,
 }: CreateNewDashboardLinkParams): Promise<string | undefined> {
-  if (status === "online" && analyticsLink === null) {
-    const environment =
-      process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
+  if (status !== "online" || analyticsLink !== null) return;
 
-    try {
-      const { teamSlug } = await getTeamSlug(teamId);
-      const dashboardPublicLink = generateDashboardLink({
-        environment,
-        serviceSlug,
-        teamSlug,
-      });
-      if (!dashboardPublicLink) return;
+  const environment =
+    process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
-      const filteredLink = await filterPublicLink(
-        dashboardPublicLink,
-        serviceSlug,
-        teamSlug,
-      );
+  try {
+    const { teamSlug } = await getTeamSlug(teamId);
+    const dashboardPublicLink = generateDashboardLink({
+      environment,
+      serviceSlug,
+      teamSlug,
+    });
+    if (!dashboardPublicLink) return;
 
-      await updatePublicAnalyticsLink(flowId, filteredLink);
-      return;
-    } catch (error) {
-      throw new ServerError({
-        message: `Error in createNewDashboardLink: ${error}`,
-        cause: error,
-      });
-    }
-  } else return;
+    const filteredLink = await filterPublicLink(
+      dashboardPublicLink,
+      serviceSlug,
+      teamSlug,
+    );
+
+    await updatePublicAnalyticsLink(flowId, filteredLink);
+    return;
+  } catch (error) {
+    throw new ServerError({
+      message: `Error in createNewDashboardLink: ${error}`,
+      cause: error,
+    });
+  }
 }
