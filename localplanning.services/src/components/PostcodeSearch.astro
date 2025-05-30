@@ -1,0 +1,31 @@
+<script>
+  // @ts-expect-error: 'PostcodeSearch' is declared but its value is never read
+  import { PostcodeSearch } from "@opensystemslab/map";
+
+  interface PostcodeChangeEventDetail {
+    postcode: string;
+    isValid: boolean;
+  }
+
+  type PostcodeChangeEventHandler = (
+    event: CustomEvent<PostcodeChangeEventDetail>
+  ) => void;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.querySelector("postcode-search");
+    if (!input) {
+      console.warn("<postcode-search> element not found for event listener.");
+      return;
+    }
+
+    const handlePostcodeChange: PostcodeChangeEventHandler = ({ detail }) => {
+      console.debug("Postcode Change:", detail);
+    };
+
+    // @ts-expect-error: PostcodeChangeEventHandler not recognised at HTMLInputElement event
+    input.addEventListener("postcodeChange", handlePostcodeChange);
+  });
+</script>
+
+<postcode-search label="Enter a postcode" hintText="For example, NW3 7PH"></postcode-search>
+<button class="bg-action px-8 py-4">Find the local planning authority</button>

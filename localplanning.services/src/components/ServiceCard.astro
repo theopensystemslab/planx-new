@@ -1,0 +1,32 @@
+---
+import type { Service } from "@lib/lpa-api";
+
+type Props = Service;
+
+const { name, slug, summary } = Astro.props;
+const { lpa } = Astro.params;
+
+if (!lpa) return;
+---
+
+<li class="flex p-4 m-4 bg-gray-200 w-fit justify-between">
+  <div class="w-2/3">
+    <h3>{name}</h3>
+    <p>
+      {
+        summary ||
+          "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique, voluptatum ipsam."
+      }
+    </p>
+  </div>
+  <!-- TODO: Env based URLs, custom subdomains -->
+  <a
+    href=`http://editor.planx.dev/${lpa}/${slug}/preview`
+    class="bg-action
+    px-4
+    inline-flex
+    items-center"
+  >
+    Start your application
+  </a>
+</li>

@@ -1,0 +1,27 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { cards } from "@content/index/cards";
+---
+
+<Layout>
+  <div>
+    <h1>Local planning services</h1>
+    <p>
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta laborum
+      impedit animi cumque accusamus ratione omnis reiciendis, commodi vitae
+      dolor in assumenda eius sunt, repellat consequatur minima voluptates saepe
+      odit.
+    </p>
+  </div>
+  <div class="flex justify-center gap-4 p-4 bg-white">
+    {
+      cards.map((card) => (
+        <div class="bg-main">
+          <h2>{card.title}</h2>
+          <p>{card.description}</p>
+          <a href="./search" class="bg-action font-bold">Find your local planning authority</a>
+        </div>
+      ))
+    }
+  </div>
+</Layout>
