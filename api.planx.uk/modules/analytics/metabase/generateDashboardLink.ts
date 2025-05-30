@@ -46,11 +46,11 @@ const includedServices = [FOIYNPP, RAB, submission];
 export const generateDashboardLink = ({
   environment,
   serviceSlug,
-  teamSlug,
+  flowId,
 }: {
   environment: Environment;
   serviceSlug: string;
-  teamSlug: string;
+  flowId: string;
 }): string | undefined => {
   let dashboardId: string | undefined;
 
@@ -71,8 +71,7 @@ export const generateDashboardLink = ({
   const pathname = `/public/dashboard/${dashboardId}`;
   const url = new URL(pathname, host);
   const search = new URLSearchParams({
-    service: serviceSlug,
-    team: teamSlug,
+    flow_id: flowId,
   }).toString();
   url.search = search;
 
