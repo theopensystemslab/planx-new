@@ -3,10 +3,10 @@ import Container from "@components/Container.astro";
 const { title } = Astro.props;
 ---
 
-<section class="py-20 bg-bg-main">
+<section class="clamp-[py,10,20] bg-bg-main">
   <Container class="text-center">
-    <h1 class="text-5xl font-bold text-main mb-6">{title}</h1>
-    <div class="text-lg text-text-secondary max-w-2xl space-y-2">
+    <h1 class="text-heading-xl">{title}</h1>
+    <div class="text-text-secondary text-body-lg max-w-2xl">
       <slot />
     </div>
   </Container> 

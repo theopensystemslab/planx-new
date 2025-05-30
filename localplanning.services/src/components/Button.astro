@@ -11,7 +11,7 @@ const {
   size = "medium",
 } = Astro.props as Props;
 
-const baseClasses = "inline-block font-semibold rounded transition";
+const baseClasses = "inline-block font-semibold rounded transition m-0";
 
 const variantClasses = {
   primary: "bg-action-main hover:bg-action-main-hover",
@@ -19,9 +19,9 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-  small: "text-sm py-2 px-3",
-  medium: "text-base py-3 px-4",
-  large: "text-lg py-3 px-5",
+  small: "text-body-sm clamp-[py,1,2] clamp-[px,2,3]",
+  medium: "text-body-md clamp-[py,2,3] clamp-[px,3,4]",
+  large: "text-body-lg clamp-[py,3,4] clamp-[px,4,5]",
 };
 
 const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]}`;
