@@ -145,7 +145,7 @@ export const CheckForChangesToPublishButton: React.FC<{
             <Typography variant="body2" mt={2} sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
               {isTemplatedFlowDueToPublish 
                 ? `Your templated flow is due for review and publish.`
-                : `Your templated flow is up to date with the source, no action needed.`
+                : `Your templated flow is up to date with the source.`
               }
             </Typography>
           </Box>
