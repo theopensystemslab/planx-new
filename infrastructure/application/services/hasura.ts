@@ -123,6 +123,7 @@ export const createHasuraService = async ({
               name: "HASURA_GRAPHQL_CORS_DOMAIN",
               value: [...CUSTOM_DOMAINS.map((x: any) => x.domain), DOMAIN]
                 .map((x) => `https://*.${x}, https://${x}`)
+                .concat("https://localplanning.services")
                 .join(", "),
             },
             {
