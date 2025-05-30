@@ -10,9 +10,10 @@ import { cards } from "@content/index/cards";
   <Masthead title="Local planning services">
     <p>Apply directly to your local planning authority — a faster and more cost-effective way to submit valid planning applications.</p>
     <p>Smart digital planning services, designed and built in collaboration with local planning authorities.</p>
+    <p>A project by <a class="paragraph-link paragraph-link--external" href="https://opendigitalplanning.org/">Open Digital Planning</a>, powered by <a class="paragraph-link paragraph-link--external" href="https://www.planx.uk/">PlanX</a>.</p>
   </Masthead>
   <Container paddingY>
-    <div class="flex flex-col lg:flex-row justify-center gap-6">
+    <div class="flex flex-col lg:flex-row justify-center clamp-[gap,4,6]">
       {
         cards.map((card) => (
           <OptionCard title={card.title} description={card.description} />
