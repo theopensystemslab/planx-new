@@ -313,12 +313,15 @@ select_permissions:
         - created_at
         - creator_id
         - data
+        - description
         - id
         - is_template
+        - limitations
         - name
         - settings
         - slug
         - status
+        - summary
         - team_id
         - templated_from
         - updated_at
