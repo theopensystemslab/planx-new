@@ -29,8 +29,8 @@ if (!lpaData) return Astro.redirect("/404");
   </Masthead>
   <Container paddingY>
     <div class="mb-8">
-      <h2 class="text-xl mb-4">Send a planning application to <span class="font-bold">{lpaData.name}</span></h2>
-      <a class="underline" href="/search">Search for a different postcode</a>
+      <h2 class="text-body-xl">Send a planning application to <span class="font-bold">{lpaData.name}</span></h2>
+      <a class="paragraph-link text-body-md" href="/search">Search for a different postcode</a>
     </div>
     <ul class="max-w-6xl">
       {lpaData.services.map((service) => <ServiceCard {...service} />)}

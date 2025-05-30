@@ -88,4 +88,11 @@
     @apply clamp-[text,xs,sm];
     margin-bottom: 0.5em;
   }
+
+  .paragraph-link {
+    @apply underline underline-offset-6;
+  }
+  .paragraph-link--external::after {
+    content: " ↗";
+  }
 }

@@ -3,12 +3,14 @@ interface Props {
   href?: string;
   variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
+  external?: boolean;
 }
 
 const {
   href = "#",
   variant = "primary",
   size = "medium",
+  external = false,
 } = Astro.props as Props;
 
 const baseClasses = "inline-block font-semibold rounded transition m-0";
@@ -19,12 +21,15 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-  small: "text-body-sm clamp-[py,1,2] clamp-[px,2,3]",
+  small: "text-body-sm py-2 clamp-[px,2,3]",
   medium: "text-body-md clamp-[py,2,3] clamp-[px,3,4]",
   large: "text-body-lg clamp-[py,3,4] clamp-[px,4,5]",
 };
 
-const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]}`;
+const externalClasses = external ? "after:content-['_↗']" : "";
+
+
+const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${externalClasses}`;
 ---
 
 <a href={href} class={classes}>
