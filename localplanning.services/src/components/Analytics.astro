@@ -1,0 +1,15 @@
+---
+const isProduction = import.meta.env.MODE === "production";
+const FathomSiteID = "RFDHXHDZ";
+---
+
+{
+  isProduction && (
+    <script
+      is:inline
+      src="https://cdn.usefathom.com/script.js"
+      data-site={FathomSiteID}
+      defer
+    />
+  )
+}

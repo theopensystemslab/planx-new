@@ -3,6 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import "@styles/global.css";
 import NavBar from "@components/NavBar.astro";
 import Footer from "@components/Footer.astro";
+import Analytics from "@components/Analytics.astro";
 ---
 
 <!doctype html>
@@ -14,11 +15,12 @@ import Footer from "@components/Footer.astro";
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>localplanning.services</title>
+    <Analytics/>
   </head>
   <body class="bg-main">
     <NavBar />
     <main>
-      <slot/>
+      <slot />
     </main>
     <Footer />
   </body>
