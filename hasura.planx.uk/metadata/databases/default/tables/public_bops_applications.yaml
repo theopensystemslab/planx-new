@@ -1,0 +1,70 @@
+table:
+  name: bops_applications
+  schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - id
+        - req_headers
+        - request
+        - response
+        - response_headers
+        - bops_id
+        - destination_url
+        - session_id
+        - created_at
+        - sanitised_at
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - req_headers
+        - request
+        - response
+        - response_headers
+        - bops_id
+        - destination_url
+        - session_id
+        - created_at
+        - sanitised_at
+      filter: {}
+update_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - req_headers
+        - request
+        - response
+        - response_headers
+        - bops_id
+        - destination_url
+        - session_id
+        - created_at
+        - sanitised_at
+      filter: {}
+      check: {}
+event_triggers:
+  - name: setup_bops_applications_notifications
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 30
+      num_retries: 1
+      timeout_sec: 60
+    webhook_from_env: HASURA_PLANX_API_URL
+    headers:
+      - name: authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      method: POST
+      query_params:
+        type: bops-submission
+      template_engine: Kriti
+      url: '{{$base_url}}/webhooks/hasura/send-slack-notification'
+      version: 2

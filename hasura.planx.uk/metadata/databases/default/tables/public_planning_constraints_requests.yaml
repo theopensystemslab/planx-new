@@ -1,0 +1,23 @@
+table:
+  name: planning_constraints_requests
+  schema: public
+insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - id
+        - response
+        - destination_url
+        - session_id
+        - created_at
+select_permissions:
+  - role: api
+    permission:
+      columns:
+        - id
+        - response
+        - destination_url
+        - session_id
+        - created_at
+      filter: {}

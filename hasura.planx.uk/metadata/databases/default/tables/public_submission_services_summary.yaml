@@ -1,0 +1,130 @@
+table:
+  name: submission_services_summary
+  schema: public
+object_relationships:
+  - name: session
+    using:
+      manual_configuration:
+        column_mapping:
+          session_id: id
+        insertion_order: null
+        remote_table:
+          name: lowcal_sessions
+          schema: public
+  - name: team
+    using:
+      manual_configuration:
+        column_mapping:
+          team_slug: slug
+        insertion_order: null
+        remote_table:
+          name: teams
+          schema: public
+select_permissions:
+  - role: demoUser
+    permission:
+      columns:
+        - number_times_resumed
+        - sent_to_bops
+        - sent_to_email
+        - sent_to_s3_power_automate
+        - sent_to_uniform
+        - user_clicked_save
+        - user_invited_to_pay
+        - session_length_days
+        - bops_applications
+        - email_applications
+        - payment_requests
+        - payment_status
+        - s3_applications
+        - uniform_applications
+        - allow_list_answers
+        - application_declaration_connection
+        - draw_boundary_action
+        - find_property_action
+        - property_constraints_planning
+        - property_type
+        - proposal_project_type
+        - user_role
+        - service_slug
+        - session_id
+        - team_slug
+        - created_at
+        - submitted_at
+      filter:
+        team:
+          flows:
+            creator_id:
+              _eq: x-hasura-user-id
+    comment: 'For future, if this moves outside of the Flow to somewhere like Team, we should update ''demoUser'' to only see submission data related to only their flows. '
+  - role: platformAdmin
+    permission:
+      columns:
+        - number_times_resumed
+        - sent_to_bops
+        - sent_to_email
+        - sent_to_s3_power_automate
+        - sent_to_uniform
+        - user_clicked_save
+        - user_invited_to_pay
+        - session_length_days
+        - bops_applications
+        - email_applications
+        - payment_requests
+        - payment_status
+        - s3_applications
+        - uniform_applications
+        - allow_list_answers
+        - application_declaration_connection
+        - draw_boundary_action
+        - find_property_action
+        - property_constraints_planning
+        - property_type
+        - proposal_project_type
+        - user_role
+        - service_slug
+        - session_id
+        - team_slug
+        - created_at
+        - submitted_at
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - number_times_resumed
+        - sent_to_bops
+        - sent_to_email
+        - sent_to_s3_power_automate
+        - sent_to_uniform
+        - user_clicked_save
+        - user_invited_to_pay
+        - session_length_days
+        - bops_applications
+        - email_applications
+        - payment_requests
+        - payment_status
+        - s3_applications
+        - uniform_applications
+        - allow_list_answers
+        - application_declaration_connection
+        - draw_boundary_action
+        - find_property_action
+        - property_constraints_planning
+        - property_type
+        - proposal_project_type
+        - user_role
+        - service_slug
+        - session_id
+        - team_slug
+        - created_at
+        - submitted_at
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
+    comment: ""
