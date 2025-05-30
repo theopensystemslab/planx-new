@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import "tailwindcss";
+@plugin "tailwind-clamp";
 
 @theme {
 
@@ -36,4 +37,55 @@
   / Layout styles
   */
 
+}
+
+/*
+/ Fluid type styles
+*/
+
+@layer components {
+
+  /* Heading styles */
+  .text-heading-xl {
+    @apply font-bold clamp-[text,3xl,5xl];
+    margin-bottom: 0.5em;
+  }
+  .text-heading-lg {
+    @apply font-bold clamp-[text,2xl,4xl];
+    margin-bottom: 0.5em;
+  }
+  .text-heading-md {
+    @apply font-semibold clamp-[text,xl,3xl];
+    margin-bottom: 0.5em;
+  }
+  .text-heading-sm {
+    @apply font-semibold clamp-[text,xl,2xl];
+    margin-bottom: 0.5em;
+  }
+  .text-heading-xs {
+    @apply font-semibold clamp-[text,base,xl];
+    margin-bottom: 0.5em;
+  }
+
+  /* Paragraph styles */
+  .text-body-xl,
+  .text-body-xl p {
+    @apply clamp-[text,lg,xl];
+    margin-bottom: 0.5em;
+  }
+  .text-body-lg,
+  .text-body-lg p {
+    @apply clamp-[text,base,lg];
+    margin-bottom: 0.5em;
+  }
+  .text-body-md,
+  .text-body-md p {
+    @apply clamp-[text,sm,base];
+    margin-bottom: 0.5em;
+  }
+  .text-body-sm,
+  .text-body-sm p {
+    @apply clamp-[text,xs,sm];
+    margin-bottom: 0.5em;
+  }
 }
