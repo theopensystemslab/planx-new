@@ -192,7 +192,8 @@ export interface EditorStore extends Store.Store {
   pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
   publishFlow: (
     flowId: string,
-    summary?: string,
+    summary: string,
+    templatedFlowIds?: string[],
   ) => Promise<PublishFlowResponse>;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
@@ -562,7 +563,11 @@ export const editorStore: StateCreator<
     }
   },
 
-  async publishFlow(flowId: string, summary?: string) {
+  async publishFlow(
+    flowId: string,
+    summary: string,
+    templatedFlowIds?: string[],
+  ) {
     const token = get().jwt;
 
     const urlWithParams = (url: string, params: any) =>
@@ -573,7 +578,7 @@ export const editorStore: StateCreator<
     const { data } = await axios.post<PublishFlowResponse>(
       urlWithParams(
         `${import.meta.env.VITE_APP_API_URL}/flows/${flowId}/publish`,
-        { summary },
+        { summary, templatedFlowIds },
       ),
       null,
       {

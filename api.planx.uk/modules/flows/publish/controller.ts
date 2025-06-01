@@ -14,7 +14,11 @@ export const publishFlowSchema = z.object({
     flowId: z.string(),
   }),
   query: z.object({
-    summary: z.string().optional(),
+    summary: z.string(),
+    templatedFlowIds: z
+      .string()
+      .optional()
+      .transform((z) => z?.split(",")),
   }),
 });
 
@@ -30,8 +34,8 @@ export const publishFlowController: PublishFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-    const { summary } = res.locals.parsedReq.query;
-    const alteredNodes = await publishFlow(flowId, summary);
+    const { summary, templatedFlowIds } = res.locals.parsedReq.query;
+    const alteredNodes = await publishFlow(flowId, summary, templatedFlowIds);
 
     return res.json({
       alteredNodes,

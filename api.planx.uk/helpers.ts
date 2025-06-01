@@ -288,6 +288,7 @@ export const getHistory = async (flowId: string) => {
 
 interface GetTemplatedFlowsResponse {
   templatedFlows: {
+    id: string;
     slug: string;
     team: {
       slug: string;
@@ -304,6 +305,7 @@ export const getTemplatedFlows = async (flowId: string) => {
       query GetTemplatedFlows($flow_id: uuid!) {
         flow: flows_by_pk(id: $flow_id) {
           templatedFlows: templated_flows {
+            id
             slug
             team {
               slug

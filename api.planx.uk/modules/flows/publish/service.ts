@@ -10,6 +10,7 @@ import { userContext } from "../../auth/middleware.js";
 import { getClient } from "../../../client/index.js";
 import { hasComponentType } from "../validate/helpers.js";
 import { hasStatutoryApplicationType } from "./helpers.js";
+import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
 
 interface PublishFlow {
   publishedFlow: {
@@ -21,7 +22,11 @@ interface PublishFlow {
   };
 }
 
-export const publishFlow = async (flowId: string, summary?: string) => {
+export const publishFlow = async (
+  flowId: string,
+  summary: string,
+  templatedFlowIds?: string[],
+) => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
 
@@ -68,7 +73,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       data: flattenedFlow,
       flow_id: flowId,
       publisher_id: parseInt(userId),
-      summary: summary ?? null,
+      summary: summary,
       has_send_component: hasSendComponent,
       is_statutory_application_type: isStatutoryApplication,
     },
@@ -80,6 +85,26 @@ export const publishFlow = async (flowId: string, summary?: string) => {
     id: key,
     ...publishedFlow[key],
   }));
+
+  // If we're publishing a source flow, queue up events to additionally update each of its' templated flows
+  if (templatedFlowIds && templatedFlowIds?.length > 0) {
+    templatedFlowIds.forEach(async (templatedFlowId, i) => {
+      // Stagger events by 10 seconds
+      const now = new Date();
+      const time = new Date(now.getTime() + (i > 0 ? i * 10 : 0) * 1000);
+
+      await createScheduledEvent({
+        webhook: `{{HASURA_PLANX_API_URL}}/flows/${flowId}/update-templated-flow/${templatedFlowId}`,
+        schedule_at: time,
+        payload: {
+          sourceFlowId: flowId,
+          templatedFlowId: templatedFlowId,
+          summary: summary,
+        },
+        comment: `publish_templated_flow_${templatedFlowId}`,
+      });
+    });
+  }
 
   return alteredNodes;
 };

@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import { AxiosError } from "axios";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -12,9 +13,9 @@ import { HistoryItem } from "../EditHistory";
 import { AlteredNode } from "./AlteredNodes";
 import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 import { ValidationCheck } from "./ValidationChecks";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
 
 export type TemplatedFlows = {
+  id: string;
   slug: string;
   team: {
     slug: string;
@@ -31,14 +32,14 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublished,
     lastPublisher,
     validateAndDiffFlow,
-    isTemplate
+    isTemplate,
   ] = useStore((state) => [
     state.id,
     state.publishFlow,
     state.lastPublished,
     state.lastPublisher,
     state.validateAndDiffFlow,
-    state.isTemplate
+    state.isTemplate,
   ]);
 
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
@@ -82,11 +83,18 @@ export const CheckForChangesToPublishButton: React.FC<{
     }
   };
 
-  const handlePublish = async (summary: string) => {
+  const handlePublish = async (
+    summary: string,
+    templatedFlowIds?: string[],
+  ) => {
     try {
       setDialogOpen(false);
       setLastPublishedTitle("Publishing changes...");
-      const { alteredNodes, message } = await publishFlow(flowId, summary);
+      const { alteredNodes, message } = await publishFlow(
+        flowId,
+        summary,
+        templatedFlowIds,
+      );
       setLastPublishedTitle(
         alteredNodes
           ? `Successfully published changes`
