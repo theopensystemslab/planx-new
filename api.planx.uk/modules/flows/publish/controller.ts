@@ -3,10 +3,12 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 import { z } from "zod";
 import { publishFlow } from "./service.js";
 import { ServerError } from "../../../errors/index.js";
+import type { ScheduledEventResponse } from "../../../lib/hasura/metadata/index.js";
 
 interface PublishFlowResponse {
   message: string;
-  alteredNodes: Node[] | null;
+  alteredNodes?: Node[];
+  templatedFlowsScheduledEventsResponse?: ScheduledEventResponse[];
 }
 
 export const publishFlowSchema = z.object({
@@ -35,11 +37,15 @@ export const publishFlowController: PublishFlowController = async (
   try {
     const { flowId } = res.locals.parsedReq.params;
     const { summary, templatedFlowIds } = res.locals.parsedReq.query;
-    const alteredNodes = await publishFlow(flowId, summary, templatedFlowIds);
+    const response = await publishFlow(flowId, summary, templatedFlowIds);
 
     return res.json({
-      alteredNodes,
-      message: alteredNodes ? "Changes published" : "No new changes to publish",
+      message: response?.alteredNodes
+        ? "Changes published"
+        : "No new changes to publish",
+      alteredNodes: response?.alteredNodes,
+      templatedFlowsScheduledEventsResponse:
+        response?.templatedFlowsScheduledEventsResponse,
     });
   } catch (error) {
     return next(

@@ -3,16 +3,12 @@ import { ServerError } from "../../../errors/serverError.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
 export const updateTemplatedFlowEventSchema = z.object({
-  payload: z.object({
-    comment: z.string(),
-    created_at: z.string().pipe(z.coerce.date()),
-    id: z.string(),
+  body: z.object({
     payload: z.object({
       sourceFlowId: z.string(),
       templatedFlowId: z.string(),
       summary: z.string(),
     }),
-    scheduled_time: z.string().pipe(z.coerce.date()),
   }),
 });
 
@@ -28,15 +24,17 @@ export type UpdateTemplatedFlowController = ValidatedRequestHandler<
 
 export const updateTemplatedFlowController: UpdateTemplatedFlowController =
   async (_req, res, next) => {
-    console.log(res.locals.parsedReq);
-    const { sourceFlowId } = res.locals.parsedReq.payload.payload;
+    const { sourceFlowId, templatedFlowId, summary } =
+      res.locals.parsedReq.body.payload;
 
     try {
-      res.json({ message: "WIP" });
+      res.status(200).send({
+        message: `Successfully queued up event to update ${templatedFlowId}`,
+      });
     } catch (error) {
       return next(
         new ServerError({
-          message: `Failed to update templated flow on source publish (source ID ${sourceFlowId})`,
+          message: `Failed to update templated flow on source publish (source ID ${sourceFlowId}, templated flow ID ${templatedFlowId})`,
           cause: error,
         }),
       );

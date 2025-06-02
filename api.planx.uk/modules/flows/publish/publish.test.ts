@@ -5,6 +5,13 @@ import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { userContext } from "../../auth/middleware.js";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
+import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
+import type { MockedFunction } from "vitest";
+
+vi.mock("../../../lib/hasura/metadata");
+const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<
+  typeof createScheduledEvent
+>;
 
 beforeAll(() => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
@@ -93,7 +100,6 @@ describe("publish", () => {
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          alteredNodes: null,
           message: "No new changes to publish",
         });
       });
