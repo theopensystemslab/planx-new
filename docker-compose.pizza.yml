@@ -35,10 +35,11 @@ services:
     entrypoint: "/goStatic -port 8044 -fallback /index.html"
 
   caddy:
-    image: caddy:2.9.1-alpine
+    build:
+      context: ./ci/caddy
     restart: always
     volumes:
-      - ./pizza.caddyfile:/etc/caddy/Caddyfile
+      - ./ci/caddy/Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
     ports:
