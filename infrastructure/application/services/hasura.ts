@@ -129,6 +129,7 @@ export const createHasuraService = async ({
                 .concat(
                   "https://localplanning.services",
                   "https://planx-website.webflow.io",
+                  "https://www.planx.uk",
                 )
                 .join(", "),
             },

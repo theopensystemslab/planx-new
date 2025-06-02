@@ -44,20 +44,29 @@ SELECT
       "public"."teams" AS t
       JOIN "public"."team_settings" AS ts ON t.id = ts.team_id
     WHERE
-      t."slug" NOT IN (
-        'demo',
-        'environment-agency',
-        'lambeth-sandbox',
-        'madetech',
-        'open-digital-planning',
-        'opensystemslab',
-        'planx',
-        'scotland',
-        'templates',
-        'test-april-25',
-        'testing',
-        'trial',
-        'wikihouse'
+      t."slug" IN (
+        'barking-and-dagenham',
+        'barnet',
+        'birmingham',
+        'braintree',
+        'bromley',
+        'buckinghamshire',
+        'camden',
+        'canterbury',
+        'doncaster',
+        'epsom-and-ewell',
+        'gateshead',
+        'gloucester',
+        'horsham',
+        'kingston',
+        'lambeth',
+        'medway',
+        'newcastle',
+        'south-gloucestershire',
+        'southwark',
+        'st-albans',
+        'tewkesbury',
+        'west-berkshire'
       )
       AND ts."is_trial" != TRUE
   ) AS active_lpas;
