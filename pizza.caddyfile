@@ -1,0 +1,26 @@
+*.${ROOT_DOMAIN} {
+    tls {
+        dns vultr {env.VULTR_API_KEY}
+    }
+    
+    @postgres host postgres.${ROOT_DOMAIN}
+    reverse_proxy @postgres postgres:5432
+    
+    @hasura host hasura.${ROOT_DOMAIN}
+    reverse_proxy @hasura hasura-proxy:${HASURA_PROXY_PORT}
+    
+    @api host api.${ROOT_DOMAIN}
+    reverse_proxy @api api:${API_PORT}
+    
+    @sharedb host sharedb.${ROOT_DOMAIN}
+    reverse_proxy @sharedb sharedb:8000
+    
+    @localplanning host localplanning.${ROOT_DOMAIN}
+    reverse_proxy @localplanning localplanning:8043
+    
+    @storybook host storybook.${ROOT_DOMAIN}
+    reverse_proxy @storybook storybook:8044
+
+    @editor host ${ROOT_DOMAIN}
+    reverse_proxy @editor editor:8043
+}

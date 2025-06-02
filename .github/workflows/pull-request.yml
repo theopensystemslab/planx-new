@@ -387,6 +387,7 @@ jobs:
             CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            echo -e "\nVULTR_API_KEY=${{ secrets.VULTR_API_KEY }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
@@ -423,6 +424,7 @@ jobs:
             CI=true ./scripts/pull-secrets.sh
 
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            echo -e "\nVULTR_API_KEY=${{ secrets.VULTR_API_KEY }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
             ./scripts/pullrequest/update.sh
