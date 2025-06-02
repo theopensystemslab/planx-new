@@ -1,0 +1,1 @@
+DROP VIEW "public"."planx_website_stats";
