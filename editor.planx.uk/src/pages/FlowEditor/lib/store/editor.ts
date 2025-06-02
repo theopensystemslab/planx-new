@@ -129,7 +129,6 @@ interface PublishFlowResponse {
 export type PublishedFlowSummary = {
   publishedAt: string;
   hasSendComponent: boolean;
-  isStatutoryApplicationType: boolean;
 };
 
 export type FlowSummaryOperations = {
@@ -428,7 +427,6 @@ export const editorStore: StateCreator<
             ) {
               publishedAt: created_at
               hasSendComponent: has_send_component
-              isStatutoryApplicationType: is_statutory_application_type
             }
           }
         }

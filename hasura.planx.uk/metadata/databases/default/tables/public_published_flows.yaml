@@ -13,14 +13,13 @@ insert_permissions:
     permission:
       check: {}
       columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - created_at
-        - flow_id
-        - data
-        - has_send_component
   - role: demoUser
     permission:
       check:
@@ -33,27 +32,25 @@ insert_permissions:
                 id:
                   _eq: 32
       columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - created_at
-        - flow_id
-        - data
-        - has_send_component
     comment: A demoUser can only insert a published flow for their own flows and for flows inside the Demo team [id = 32]
   - role: platformAdmin
     permission:
       check: {}
       columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - created_at
-        - flow_id
-        - data
-        - has_send_component
   - role: teamEditor
     permission:
       check:
@@ -66,26 +63,24 @@ insert_permissions:
                 - role:
                     _eq: teamEditor
       columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - created_at
-        - flow_id
-        - data
-        - has_send_component
 select_permissions:
   - role: api
     permission:
       columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - created_at
-        - flow_id
-        - data
-        - has_send_component
       filter: {}
       allow_aggregations: true
   - role: demoUser
@@ -94,11 +89,10 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - has_send_component
       filter: {}
       allow_aggregations: true
   - role: platformAdmin
@@ -107,11 +101,10 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - has_send_component
       filter: {}
       allow_aggregations: true
   - role: public
@@ -120,11 +113,10 @@ select_permissions:
         - created_at
         - data
         - flow_id
+        - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
-        - has_send_component
       filter: {}
       allow_aggregations: true
   - role: teamEditor
@@ -135,7 +127,6 @@ select_permissions:
         - flow_id
         - has_send_component
         - id
-        - is_statutory_application_type
         - publisher_id
         - summary
       filter: {}
