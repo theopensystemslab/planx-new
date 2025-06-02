@@ -177,6 +177,16 @@ export interface EditorStore extends Store.Store {
   isFlowPublished: boolean;
   isTemplate: boolean;
   isTemplatedFrom: boolean;
+  template?: {
+    id: string;
+    team: {
+      name: string;
+    }
+    publishedFlows: {
+      publishedAt: string;
+      summary: string;
+    }[];
+  };
   makeUnique: (id: NodeId, parent?: NodeId) => void;
   moveFlow: (
     flowId: string,
@@ -491,6 +501,8 @@ export const editorStore: StateCreator<
   isTemplate: false,
 
   isTemplatedFrom: false,
+
+  template: undefined,
 
   makeUnique: (id, parent) => {
     const [, ops] = makeUnique(id, parent)(get().flow);
