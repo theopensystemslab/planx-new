@@ -448,8 +448,8 @@ export const editorStore: StateCreator<
   lastPublished: async (flowId: string) => {
     const { data } = await client.query({
       query: gql`
-        query GetLastPublishedFlow($id: uuid) {
-          flows(limit: 1, where: { id: { _eq: $id } }) {
+        query GetLastPublishedFlow($id: uuid!) {
+          flow: flows_by_pk(id: $id) {
             published_flows(order_by: { created_at: desc }, limit: 1) {
               created_at
             }
@@ -461,7 +461,7 @@ export const editorStore: StateCreator<
       },
     });
 
-    const lastPublishedDate = data.flows[0].published_flows[0].created_at;
+    const lastPublishedDate = data.flow.published_flows[0].created_at;
     set({ lastPublishedDate });
     return lastPublishedDate;
   },
@@ -475,8 +475,8 @@ export const editorStore: StateCreator<
   lastPublisher: async (flowId: string) => {
     const { data } = await client.query({
       query: gql`
-        query GetLastPublisher($id: uuid) {
-          flows(limit: 1, where: { id: { _eq: $id } }) {
+        query GetLastPublisher($id: uuid!) {
+          flow: flows_by_pk(id: $id) {
             published_flows(order_by: { created_at: desc }, limit: 1) {
               user {
                 first_name
@@ -491,7 +491,7 @@ export const editorStore: StateCreator<
       },
     });
 
-    const { first_name, last_name } = data.flows[0].published_flows[0].user;
+    const { first_name, last_name } = data.flow.published_flows[0].user;
 
     return first_name.concat(" ", last_name);
   },
