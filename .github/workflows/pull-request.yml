@@ -427,7 +427,7 @@ jobs:
             echo -e "\nVULTR_API_KEY=${{ secrets.VULTR_API_KEY }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
-            ./scripts/pullrequest/update.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 

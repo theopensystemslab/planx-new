@@ -4,6 +4,9 @@ set -o errexit -o pipefail
 # run from project root
 cd "$(dirname $0)/../.."
 
+# Set password in case create operation failed
+echo "root:$SSH_PASSWORD" | chpasswd
+
 # set env for this shell
 set -o allexport
 source .env.pizza
