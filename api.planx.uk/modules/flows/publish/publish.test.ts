@@ -66,6 +66,7 @@ beforeEach(() => {
 });
 
 const auth = authHeader({ role: "platformAdmin" });
+const mockEndpoint = "/flows/1/publish?summary=test";
 
 it("requires a user to be logged in", async () => {
   await supertest(app).post("/flows/1/publish").expect(401);
@@ -73,9 +74,20 @@ it("requires a user to be logged in", async () => {
 
 it("requires a user to have the 'teamEditor' role", async () => {
   await supertest(app)
-    .post("/flows/1/publish")
+    .post(mockEndpoint)
     .set(authHeader({ role: "teamViewer" }))
     .expect(403);
+});
+
+it("requires the summary query param to be present", async () => {
+  await supertest(app)
+    .post(mockEndpoint.split("?")[0])
+    .set(auth)
+    .expect(400)
+    .then((res) => {
+      expect(res.body).toHaveProperty("issues");
+      expect(res.body).toHaveProperty("name", "ZodError");
+    });
 });
 
 describe("publish", () => {
@@ -90,12 +102,12 @@ describe("publish", () => {
       },
     });
 
-    await supertest(app).post("/flows/1/publish").set(auth).expect(200);
+    await supertest(app).post(mockEndpoint).set(auth).expect(200);
   });
 
   it("does not update if there are no new changes", async () => {
     await supertest(app)
-      .post("/flows/1/publish")
+      .post(mockEndpoint)
       .set(auth)
       .expect(200)
       .then((res) => {
@@ -148,7 +160,7 @@ describe("publish", () => {
     });
 
     await supertest(app)
-      .post("/flows/1/publish")
+      .post(mockEndpoint)
       .set(auth)
       .expect(200)
       .then((res) => {
@@ -177,7 +189,7 @@ describe("publish", () => {
     getStoreMock.mockReturnValue(undefined);
 
     await supertest(app)
-      .post("/flows/1/publish")
+      .post(mockEndpoint)
       .set(auth)
       .expect(500)
       .then((res) => {
