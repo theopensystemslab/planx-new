@@ -15,6 +15,16 @@ interface FlowEditorData {
   templatedFrom: string;
   isTemplate: boolean;
   isFlowPublished: boolean;
+  template?: {
+    id: string;
+    team: {
+      name: string;
+    };
+    publishedFlows: {
+      publishedAt: string;
+      summary: string;
+    }[];
+  };
 }
 
 interface GetFlowEditorData {
@@ -29,6 +39,16 @@ interface GetFlowEditorData {
         count: number;
       };
     };
+    template: {
+      id: string;
+      team: {
+        name: string;
+      };
+      publishedFlows: {
+        publishedAt: string;
+        summary: string;
+      }[];
+    } | null;
   }[];
 }
 
@@ -55,6 +75,19 @@ export const getFlowEditorData = async (
               count
             }
           }
+          template {
+            id
+            team {
+              name
+            }
+            publishedFlows: published_flows(
+              order_by: { created_at: desc }
+              limit: 1
+            ) {
+              publishedAt: created_at
+              summary
+            }
+          }
         }
       }
     `,
@@ -74,6 +107,7 @@ export const getFlowEditorData = async (
     templatedFrom: flow.templatedFrom,
     isTemplate: flow.isTemplate,
     isFlowPublished: flow.publishedFlowsAggregate?.aggregate.count > 0,
+    template: flow.template ? flow.template : undefined,
   };
 
   return flowEditorData;
@@ -91,6 +125,7 @@ export const flowEditorView = async (req: NaviRequest) => {
     isFlowPublished,
     isTemplate,
     templatedFrom,
+    template,
   } = await getFlowEditorData(flow, req.params.team);
 
   useStore.setState({
@@ -100,6 +135,7 @@ export const flowEditorView = async (req: NaviRequest) => {
     isFlowPublished,
     isTemplate,
     isTemplatedFrom: Boolean(templatedFrom),
+    template,
   });
 
   return (

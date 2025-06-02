@@ -24,6 +24,7 @@
 - "!include public_payment_status.yaml"
 - "!include public_payment_status_enum.yaml"
 - "!include public_planning_constraints_requests.yaml"
+- "!include public_planx_website_stats.yaml"
 - "!include public_published_flows.yaml"
 - "!include public_reconciliation_requests.yaml"
 - "!include public_revoked_tokens.yaml"

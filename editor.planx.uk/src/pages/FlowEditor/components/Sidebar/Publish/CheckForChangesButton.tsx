@@ -1,3 +1,4 @@
+import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -8,6 +9,8 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import BlockQuote from "ui/editor/BlockQuote";
 
 import { HistoryItem } from "../EditHistory";
 import { AlteredNode } from "./AlteredNodes";
@@ -33,6 +36,8 @@ export const CheckForChangesToPublishButton: React.FC<{
     lastPublisher,
     validateAndDiffFlow,
     isTemplate,
+    isTemplatedFrom,
+    template,
   ] = useStore((state) => [
     state.id,
     state.publishFlow,
@@ -40,11 +45,18 @@ export const CheckForChangesToPublishButton: React.FC<{
     state.lastPublisher,
     state.validateAndDiffFlow,
     state.isTemplate,
+    state.isTemplatedFrom,
+    state.template,
   ]);
 
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet",
   );
+  const [templateLastPublishedTitle, setTemplateLastPublishedTitle] =
+    useState<string>();
+  const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] =
+    useState<boolean>(false);
+
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
     [],
   );
@@ -110,7 +122,19 @@ export const CheckForChangesToPublishButton: React.FC<{
     const date = await lastPublished(flowId);
     const user = await lastPublisher(flowId);
     setLastPublishedTitle(formatLastPublishMessage(date, user));
-  }, [flowId]);
+
+    if (template) {
+      const sourceTemplateUser = await lastPublisher(template.id);
+      const sourceTemplateDate = template.publishedFlows[0].publishedAt;
+      setTemplateLastPublishedTitle(
+        formatLastPublishMessage(sourceTemplateDate, sourceTemplateUser),
+      );
+
+      if (date) {
+        setIsTemplatedFlowDueToPublish(sourceTemplateDate > date);
+      }
+    }
+  }, [flowId, template]);
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
@@ -118,6 +142,38 @@ export const CheckForChangesToPublishButton: React.FC<{
   return (
     <Box width="100%" mt={2}>
       <Box display="flex" flexDirection="column" alignItems="flex-end">
+        {isTemplatedFrom && template && (
+          <Box
+            sx={{
+              background: "#E6D6FF",
+              border: (theme) => `1px solid ${theme.palette.border.main}`,
+              width: "100%",
+              padding: (theme) => theme.spacing(1),
+              marginBottom: (theme) => theme.spacing(2),
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
+              <StarIcon sx={{ color: "#380F77" }} />
+              {`Templated from ${template.team.name}`}
+            </Typography>
+            <Typography variant="body2">
+              {templateLastPublishedTitle}
+            </Typography>
+            <BlockQuote>{template.publishedFlows[0]?.summary}</BlockQuote>
+            <Typography
+              variant="body2"
+              mt={2}
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
+              {isTemplatedFlowDueToPublish
+                ? `Your templated flow is due for review and publish.`
+                : `Your templated flow is up to date with the source.`}
+            </Typography>
+          </Box>
+        )}
         <Button
           data-testid="check-for-changes-to-publish-button"
           sx={{ width: "100%" }}

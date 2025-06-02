@@ -1,0 +1,40 @@
+---
+import { fetchAllLPAs } from "@lib/lpa-api";
+import Layout from "@layouts/Layout.astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import ServiceCard from "@components/ServiceCard.astro";
+
+export const getStaticPaths = (async () => {
+  const lpas = await fetchAllLPAs();
+  return lpas.map((lpa) => ({
+    params: { lpa: lpa.slug },
+    props: { lpaData: lpa },
+  }));
+}) satisfies GetStaticPaths;
+
+const { lpaData } = Astro.props;
+
+// TODO: Pass title as prop into layout?
+// type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+if (!lpaData) return Astro.redirect("/404");
+---
+
+<Layout>
+  <div class="bg-main">
+    <h1>Start a planning application</h1>
+    <p>Send a planning application directly to your local planning authority</p>
+  </div>
+  <div class="bg-white">
+    <h2>
+      Send a planning application to <span class="font-bold"
+        >{lpaData.name}</span
+      >
+    </h2>
+    <a href="/search">Search for a different postcode</a>
+    <ul>
+      {lpaData.services.map((service) => <ServiceCard {...service} />)}
+    </ul>
+  </div>
+</Layout>
