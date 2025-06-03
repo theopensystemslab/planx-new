@@ -1,26 +1,39 @@
-*.${ROOT_DOMAIN} {
+# Wildcard certificate - this just handles provisioning the certificate, then aborts
+# This ensures we request a single certificate per-Pizza, not one per-service/per-Pizza
+# Without this, it's possible to hit the Let's Encrypt limits on certificates
+*.{$ROOT_DOMAIN} {
     tls {
-        dns vultr {env.VULTR_API_KEY}
+        dns vultr {$VULTR_API_KEY}
     }
-    
-    @postgres host postgres.${ROOT_DOMAIN}
-    reverse_proxy @postgres postgres:5432
-    
-    @hasura host hasura.${ROOT_DOMAIN}
-    reverse_proxy @hasura hasura-proxy:${HASURA_PROXY_PORT}
-    
-    @api host api.${ROOT_DOMAIN}
-    reverse_proxy @api api:${API_PORT}
-    
-    @sharedb host sharedb.${ROOT_DOMAIN}
-    reverse_proxy @sharedb sharedb:8000
-    
-    @localplanning host localplanning.${ROOT_DOMAIN}
-    reverse_proxy @localplanning localplanning:8043
-    
-    @storybook host storybook.${ROOT_DOMAIN}
-    reverse_proxy @storybook storybook:8044
+    abort
+}
 
-    @editor host ${ROOT_DOMAIN}
-    reverse_proxy @editor editor:8043
+# Individual subdomain handlers
+postgres.{$ROOT_DOMAIN} {
+    reverse_proxy postgres:5432
+}
+
+hasura.{$ROOT_DOMAIN} {
+    reverse_proxy hasura-proxy:{$HASURA_PROXY_PORT}
+}
+
+api.{$ROOT_DOMAIN} {
+    reverse_proxy api:{$API_PORT}
+}
+
+sharedb.{$ROOT_DOMAIN} {
+    reverse_proxy sharedb:8000
+}
+
+localplanning.{$ROOT_DOMAIN} {
+    reverse_proxy localplanning:8043
+}
+
+storybook.{$ROOT_DOMAIN} {
+    reverse_proxy storybook:8044
+}
+
+# Root domain (no subdomain)
+{$ROOT_DOMAIN} {
+    reverse_proxy editor:8043
 }
