@@ -2,10 +2,6 @@ services:
   postgres:
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    labels:
-      virtual.host: postgres.${ROOT_DOMAIN}
-      virtual.port: 5432
-      virtual.tls-email: ${TLS_EMAIL}
 
   api:
     build:
@@ -50,6 +46,7 @@ services:
       - ROOT_DOMAIN=${ROOT_DOMAIN}
       - HASURA_PROXY_PORT=${HASURA_PROXY_PORT}
       - API_PORT=${API_PORT}
+      - TLS_EMAIL=${TLS_EMAIL}
 
 volumes:
   postgres_data:
