@@ -364,9 +364,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          debug: true
-          use_insecure_cipher: true 
+          password: ${{ steps.create.outputs.default_password }}
           command_timeout: 20m
           script: |
             apk update
@@ -402,9 +400,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          debug: true
-          use_insecure_cipher: true 
+          password: ${{ secrets.SSH_PASSWORD }}
           command_timeout: 10m
           # TODO: some of below script might be superfluous for server update (rather than create)
           script: |
