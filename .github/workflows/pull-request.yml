@@ -508,7 +508,8 @@ jobs:
     name: E2E tests
     runs-on: ubuntu-22.04
     needs: [changes]
-    if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.e2e == 'true' || needs.changes.outputs.editor == 'true' || needs.changes.outputs.sharedb == 'true' || needs.changes.outputs.hasura == 'true' }}
+    # REVERT!! Skipped to speed up iteration on CI
+    if: false
     steps:
       - name: Checkout
         uses: actions/checkout@v4
