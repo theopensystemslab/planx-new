@@ -21,6 +21,16 @@ object_relationships:
           name: flows
           schema: public
 insert_permissions:
+  - role: api
+    permission:
+      check: {}
+      columns:
+        - actor_id
+        - id
+        - comment
+        - created_at
+        - flow_id
+    comment: ""
   - role: demoUser
     permission:
       check:
