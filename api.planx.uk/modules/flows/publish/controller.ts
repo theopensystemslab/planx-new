@@ -3,10 +3,12 @@ import type { ValidatedRequestHandler } from "../../../shared/middleware/validat
 import { z } from "zod";
 import { publishFlow } from "./service.js";
 import { ServerError } from "../../../errors/index.js";
+import type { ScheduledEventResponse } from "../../../lib/hasura/metadata/index.js";
 
 interface PublishFlowResponse {
   message: string;
-  alteredNodes: Node[] | null;
+  alteredNodes?: Node[];
+  templatedFlowsScheduledEventsResponse?: ScheduledEventResponse[];
 }
 
 export const publishFlowSchema = z.object({
@@ -14,7 +16,11 @@ export const publishFlowSchema = z.object({
     flowId: z.string(),
   }),
   query: z.object({
-    summary: z.string().optional(),
+    summary: z.string(),
+    templatedFlowIds: z
+      .string()
+      .optional()
+      .transform((z) => z?.split(",")),
   }),
 });
 
@@ -30,12 +36,16 @@ export const publishFlowController: PublishFlowController = async (
 ) => {
   try {
     const { flowId } = res.locals.parsedReq.params;
-    const { summary } = res.locals.parsedReq.query;
-    const alteredNodes = await publishFlow(flowId, summary);
+    const { summary, templatedFlowIds } = res.locals.parsedReq.query;
+    const response = await publishFlow(flowId, summary, templatedFlowIds);
 
     return res.json({
-      alteredNodes,
-      message: alteredNodes ? "Changes published" : "No new changes to publish",
+      message: response?.alteredNodes
+        ? "Changes published"
+        : "No new changes to publish",
+      alteredNodes: response?.alteredNodes,
+      templatedFlowsScheduledEventsResponse:
+        response?.templatedFlowsScheduledEventsResponse,
     });
   } catch (error) {
     return next(

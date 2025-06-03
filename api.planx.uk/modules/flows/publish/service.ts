@@ -1,13 +1,17 @@
-import * as jsondiffpatch from "jsondiffpatch";
-import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
-import { gql } from "graphql-request";
 import {
   ComponentType,
   type FlowGraph,
   type Node,
 } from "@opensystemslab/planx-core/types";
-import { userContext } from "../../auth/middleware.js";
+import { gql } from "graphql-request";
+import * as jsondiffpatch from "jsondiffpatch";
 import { getClient } from "../../../client/index.js";
+import { dataMerged, getMostRecentPublishedFlow } from "../../../helpers.js";
+import {
+  createScheduledEvent,
+  type ScheduledEventResponse,
+} from "../../../lib/hasura/metadata/index.js";
+import { userContext } from "../../auth/middleware.js";
 import { hasComponentType } from "../validate/helpers.js";
 
 interface PublishFlow {
@@ -20,7 +24,14 @@ interface PublishFlow {
   };
 }
 
-export const publishFlow = async (flowId: string, summary?: string) => {
+export const publishFlow = async (
+  flowId: string,
+  summary: string,
+  templatedFlowIds?: string[],
+): Promise<{
+  alteredNodes: Node[];
+  templatedFlowsScheduledEventsResponse?: ScheduledEventResponse[];
+} | null> => {
   const userId = userContext.getStore()?.user?.sub;
   if (!userId) throw Error("User details missing from request");
 
@@ -28,6 +39,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
   const mostRecent = await getMostRecentPublishedFlow(flowId);
   const delta = jsondiffpatch.diff(mostRecent, flattenedFlow);
 
+  // If no changes, then nothing to publish nor events to queue up
   if (!delta) return null;
 
   const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
@@ -63,7 +75,7 @@ export const publishFlow = async (flowId: string, summary?: string) => {
       data: flattenedFlow,
       flow_id: flowId,
       publisher_id: parseInt(userId),
-      summary: summary ?? null,
+      summary: summary,
       has_send_component: hasSendComponent,
     },
   );
@@ -75,5 +87,28 @@ export const publishFlow = async (flowId: string, summary?: string) => {
     ...publishedFlow[key],
   }));
 
-  return alteredNodes;
+  // If we're publishing a source flow, queue up events to additionally update each of its' templated flows
+  let templatedFlowsScheduledEventsResponse:
+    | ScheduledEventResponse[]
+    | undefined;
+  if (templatedFlowIds && templatedFlowIds?.length > 0) {
+    templatedFlowsScheduledEventsResponse = await Promise.all(
+      templatedFlowIds.map((templatedFlowId, i) =>
+        createScheduledEvent({
+          webhook: `{{HASURA_PLANX_API_URL}}/flows/${flowId}/update-templated-flow/${templatedFlowId}`,
+          schedule_at: new Date(
+            new Date().getTime() + (i > 0 ? i * 10 : 0) * 1000,
+          ), // Stagger events by 10 seconds starting at "now"
+          payload: {
+            sourceFlowId: flowId,
+            templatedFlowId: templatedFlowId,
+            summary: summary,
+          },
+          comment: `update_templated_flow_${templatedFlowId}`,
+        }),
+      ),
+    );
+  }
+
+  return { alteredNodes, templatedFlowsScheduledEventsResponse };
 };

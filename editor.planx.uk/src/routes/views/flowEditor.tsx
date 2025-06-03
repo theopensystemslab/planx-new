@@ -19,7 +19,7 @@ interface FlowEditorData {
     id: string;
     team: {
       name: string;
-    }
+    };
     publishedFlows: {
       publishedAt: string;
       summary: string;
@@ -43,7 +43,7 @@ interface GetFlowEditorData {
       id: string;
       team: {
         name: string;
-      }
+      };
       publishedFlows: {
         publishedAt: string;
         summary: string;
@@ -74,7 +74,7 @@ export const getFlowEditorData = async (
             aggregate {
               count
             }
-          },
+          }
           template {
             id
             team {

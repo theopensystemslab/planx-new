@@ -11,6 +11,14 @@ import {
   copyPortalAsFlowController,
 } from "./copyFlowAsPortal/controller.js";
 import {
+  createFlowController,
+  createFlowSchema,
+} from "./createFlow/controller.js";
+import {
+  createFlowFromTemplateController,
+  createFlowFromTemplateSchema,
+} from "./createFlowFromTemplate/controller.js";
+import {
   downloadFlowSchema,
   downloadFlowSchemaController,
 } from "./downloadSchema/controller.js";
@@ -28,17 +36,13 @@ import {
   publishFlowSchema,
 } from "./publish/controller.js";
 import {
+  updateTemplatedFlowController,
+  updateTemplatedFlowEventSchema,
+} from "./updateTemplatedFlow/controller.js";
+import {
   validateAndDiffFlowController,
   validateAndDiffSchema,
 } from "./validate/controller.js";
-import {
-  createFlowController,
-  createFlowSchema,
-} from "./createFlow/controller.js";
-import {
-  createFlowFromTemplateController,
-  createFlowFromTemplateSchema,
-} from "./createFlowFromTemplate/controller.js";
 
 const router = Router();
 
@@ -109,6 +113,12 @@ router.get(
   "/flows/:flowId/flatten-data",
   validate(flattenFlowData),
   flattenFlowDataController,
+);
+
+router.post(
+  "/flows/:flowId/update-templated-flow/:templatedFlowId",
+  validate(updateTemplatedFlowEventSchema),
+  updateTemplatedFlowController,
 );
 
 export default router;

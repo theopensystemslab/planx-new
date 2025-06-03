@@ -5,6 +5,13 @@ import { authHeader, getTestJWT } from "../../../tests/mockJWT.js";
 import app from "../../../server.js";
 import { userContext } from "../../auth/middleware.js";
 import { mockFlowData } from "../../../tests/mocks/validateAndPublishMocks.js";
+import { createScheduledEvent } from "../../../lib/hasura/metadata/index.js";
+import type { MockedFunction } from "vitest";
+
+vi.mock("../../../lib/hasura/metadata");
+const mockedCreateScheduledEvent = createScheduledEvent as MockedFunction<
+  typeof createScheduledEvent
+>;
 
 beforeAll(() => {
   const getStoreMock = vi.spyOn(userContext, "getStore");
@@ -59,6 +66,7 @@ beforeEach(() => {
 });
 
 const auth = authHeader({ role: "platformAdmin" });
+const mockEndpoint = "/flows/1/publish?summary=test";
 
 it("requires a user to be logged in", async () => {
   await supertest(app).post("/flows/1/publish").expect(401);
@@ -66,9 +74,20 @@ it("requires a user to be logged in", async () => {
 
 it("requires a user to have the 'teamEditor' role", async () => {
   await supertest(app)
-    .post("/flows/1/publish")
+    .post(mockEndpoint)
     .set(authHeader({ role: "teamViewer" }))
     .expect(403);
+});
+
+it("requires the summary query param to be present", async () => {
+  await supertest(app)
+    .post(mockEndpoint.split("?")[0])
+    .set(auth)
+    .expect(400)
+    .then((res) => {
+      expect(res.body).toHaveProperty("issues");
+      expect(res.body).toHaveProperty("name", "ZodError");
+    });
 });
 
 describe("publish", () => {
@@ -83,17 +102,16 @@ describe("publish", () => {
       },
     });
 
-    await supertest(app).post("/flows/1/publish").set(auth).expect(200);
+    await supertest(app).post(mockEndpoint).set(auth).expect(200);
   });
 
   it("does not update if there are no new changes", async () => {
     await supertest(app)
-      .post("/flows/1/publish")
+      .post(mockEndpoint)
       .set(auth)
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          alteredNodes: null,
           message: "No new changes to publish",
         });
       });
@@ -142,7 +160,7 @@ describe("publish", () => {
     });
 
     await supertest(app)
-      .post("/flows/1/publish")
+      .post(mockEndpoint)
       .set(auth)
       .expect(200)
       .then((res) => {
@@ -171,7 +189,7 @@ describe("publish", () => {
     getStoreMock.mockReturnValue(undefined);
 
     await supertest(app)
-      .post("/flows/1/publish")
+      .post(mockEndpoint)
       .set(auth)
       .expect(500)
       .then((res) => {

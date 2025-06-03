@@ -77,7 +77,10 @@ interface ChangesDialogProps {
   lastPublishedTitle: string;
   validationChecks: ValidationCheck[];
   previewURL: string;
-  handlePublish: (summary: string) => Promise<void>;
+  handlePublish: (
+    summary: string,
+    templatedFlowIds?: string[],
+  ) => Promise<void>;
   isTemplate: boolean;
   templatedFlows?: TemplatedFlows;
 }
@@ -234,11 +237,12 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
 
     const validateAndPublish = () => {
       const invalidInput = !summary || summary.trim().length === 0;
+      const templatedFlowIds = templatedFlows?.map((flow) => flow.id);
 
       if (invalidInput) {
         setShowError(true);
       } else {
-        handlePublish(summary);
+        handlePublish(summary, templatedFlowIds);
         setActiveStep(0);
         setSummary("");
       }
@@ -283,9 +287,21 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
                 {`Publishing it will automatically update the contents of ${templatedFlows?.length || 0} templated flows. Each templated flow will still need to be reviewed and published by its' owner.`}
               </Typography>
               {templatedFlows?.length && templatedFlows.length > 0 && (
-                <List dense disablePadding sx={{ listStyleType: 'disc', marginLeft: 2 }}>
-                  {templatedFlows.map((templatedFlow, i) => (
-                    <ListItem key={i} dense disablePadding sx={{ display: 'list-item', fontSize: (theme) => theme.typography.body2 }}>
+                <List
+                  dense
+                  disablePadding
+                  sx={{ listStyleType: "disc", marginLeft: 2 }}
+                >
+                  {templatedFlows.map((templatedFlow) => (
+                    <ListItem
+                      key={templatedFlow.id}
+                      dense
+                      disablePadding
+                      sx={{
+                        display: "list-item",
+                        fontSize: (theme) => theme.typography.body2,
+                      }}
+                    >
                       {`${templatedFlow.team.slug}/${templatedFlow.slug} (${templatedFlow.status})`}
                     </ListItem>
                   ))}

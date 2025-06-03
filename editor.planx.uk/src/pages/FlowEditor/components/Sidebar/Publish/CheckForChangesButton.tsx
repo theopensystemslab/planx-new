@@ -18,6 +18,7 @@ import { ChangesDialog, NoChangesDialog } from "./PublishDialog";
 import { ValidationCheck } from "./ValidationChecks";
 
 export type TemplatedFlows = {
+  id: string;
   slug: string;
   team: {
     slug: string;
@@ -36,7 +37,7 @@ export const CheckForChangesToPublishButton: React.FC<{
     validateAndDiffFlow,
     isTemplate,
     isTemplatedFrom,
-    template
+    template,
   ] = useStore((state) => [
     state.id,
     state.publishFlow,
@@ -45,14 +46,16 @@ export const CheckForChangesToPublishButton: React.FC<{
     state.validateAndDiffFlow,
     state.isTemplate,
     state.isTemplatedFrom,
-    state.template
+    state.template,
   ]);
 
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet",
   );
-  const [templateLastPublishedTitle, setTemplateLastPublishedTitle] = useState<string>();
-  const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] = useState<boolean>(false);
+  const [templateLastPublishedTitle, setTemplateLastPublishedTitle] =
+    useState<string>();
+  const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] =
+    useState<boolean>(false);
 
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
     [],
@@ -92,11 +95,18 @@ export const CheckForChangesToPublishButton: React.FC<{
     }
   };
 
-  const handlePublish = async (summary: string) => {
+  const handlePublish = async (
+    summary: string,
+    templatedFlowIds?: string[],
+  ) => {
     try {
       setDialogOpen(false);
       setLastPublishedTitle("Publishing changes...");
-      const { alteredNodes, message } = await publishFlow(flowId, summary);
+      const { alteredNodes, message } = await publishFlow(
+        flowId,
+        summary,
+        templatedFlowIds,
+      );
       setLastPublishedTitle(
         alteredNodes
           ? `Successfully published changes`
@@ -116,7 +126,9 @@ export const CheckForChangesToPublishButton: React.FC<{
     if (template) {
       const sourceTemplateUser = await lastPublisher(template.id);
       const sourceTemplateDate = template.publishedFlows[0].publishedAt;
-      setTemplateLastPublishedTitle(formatLastPublishMessage(sourceTemplateDate, sourceTemplateUser));
+      setTemplateLastPublishedTitle(
+        formatLastPublishMessage(sourceTemplateDate, sourceTemplateUser),
+      );
 
       if (date) {
         setIsTemplatedFlowDueToPublish(sourceTemplateDate > date);
@@ -131,22 +143,34 @@ export const CheckForChangesToPublishButton: React.FC<{
     <Box width="100%" mt={2}>
       <Box display="flex" flexDirection="column" alignItems="flex-end">
         {isTemplatedFrom && template && (
-          <Box sx={{ background: "#E6D6FF", border: theme => `1px solid ${theme.palette.border.main}`, width: "100%", padding: theme => theme.spacing(1), marginBottom: theme => theme.spacing(2) }}>
-            <Typography variant="body2" sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+          <Box
+            sx={{
+              background: "#E6D6FF",
+              border: (theme) => `1px solid ${theme.palette.border.main}`,
+              width: "100%",
+              padding: (theme) => theme.spacing(1),
+              marginBottom: (theme) => theme.spacing(2),
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
               <StarIcon sx={{ color: "#380F77" }} />
               {`Templated from ${template.team.name}`}
             </Typography>
             <Typography variant="body2">
               {templateLastPublishedTitle}
             </Typography>
-            <BlockQuote>
-              {template.publishedFlows[0]?.summary}
-            </BlockQuote>
-            <Typography variant="body2" mt={2} sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
-              {isTemplatedFlowDueToPublish 
+            <BlockQuote>{template.publishedFlows[0]?.summary}</BlockQuote>
+            <Typography
+              variant="body2"
+              mt={2}
+              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            >
+              {isTemplatedFlowDueToPublish
                 ? `Your templated flow is due for review and publish.`
-                : `Your templated flow is up to date with the source.`
-              }
+                : `Your templated flow is up to date with the source.`}
             </Typography>
           </Box>
         )}

@@ -369,8 +369,13 @@ paths:
         - in: query
           name: summary
           type: text
+          required: true
+          description: Summary text of the published changes
+        - in: query
+          name: templatedFlowIds
+          type: text
           required: false
-          description: Optional text to summarise the published changes
+          description: If the flow being published is a source template, then comma-separated list of templated flow IDs which should be subsequently updated
       responses:
         "200":
           $ref: "#/components/responses/PublishFlow"
