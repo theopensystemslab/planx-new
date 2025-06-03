@@ -10,6 +10,7 @@ import groupBy from "lodash/groupBy";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
@@ -51,9 +52,10 @@ const FlagEditor: React.FC<{
             disabled={props.disabled}
           />
         </InputLabel>
-        <InputLabel label="Description">
-          <Input
-            multiline
+        <InputLabel label="Description" htmlFor="description">
+          <RichTextInput
+            name="description"
+            id="description"
             value={existingOverrides?.description ?? ""}
             onChange={(ev) =>
               props.onChange({
