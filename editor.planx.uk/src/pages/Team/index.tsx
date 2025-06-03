@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
-import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { isEmpty, orderBy } from "lodash";
@@ -17,29 +17,34 @@ import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { useStore } from "../FlowEditor/lib/store";
-import { FlowSummary } from "../FlowEditor/lib/store/editor";
+import { FlowCardView, FlowSummary } from "../FlowEditor/lib/store/editor";
 import { AddFlow } from "./components/AddFlow";
 import FlowCard, { Card, CardContent } from "./components/FlowCard";
 import { ShowingServicesHeader } from "./components/ShowingServicesHeader";
 import { filterOptions, sortOptions } from "./helpers/sortAndFilterOptions";
 
-const DashboardList = styled("ul")<{ viewType: "grid" | "row" }>(
-  ({ theme, viewType }) => ({
-    padding: theme.spacing(2, 0, 3),
-    margin: 0,
-    display: viewType === "grid" ? "grid" : "flex",
-    flexDirection: viewType === "grid" ? "row" : "column",
-    gap: theme.spacing(2),
+const DashboardList = styled("ul", {
+  shouldForwardProp: (prop) => prop !== "viewType",
+})<{ viewType: FlowCardView }>(({ theme, viewType }) => ({
+  padding: theme.spacing(2, 0, 3),
+  margin: 0,
+  gap: theme.spacing(2),
+  ...(viewType === "grid" && {
+    display: "grid",
     gridAutoRows: "1fr",
-    gridTemplateColumns: viewType === "grid" ? "repeat(1, 1fr)" : "none",
+    gridTemplateColumns: "repeat(1, 1fr)",
     [theme.breakpoints.up("md")]: {
-      gridTemplateColumns: viewType === "grid" ? "repeat(2, 1fr)" : "none",
+      gridTemplateColumns: "repeat(2, 1fr)",
     },
     [theme.breakpoints.up("lg")]: {
-      gridTemplateColumns: viewType === "grid" ? "repeat(3, 1fr)" : "none",
+      gridTemplateColumns: "repeat(3, 1fr)",
     },
   }),
-);
+  ...(viewType === "row" && {
+    display: "flex",
+    flexDirection: "column",
+  }),
+}));
 
 export const FiltersContainer = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -55,6 +60,20 @@ export const FiltersContainer = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.border.light}`,
 }));
 
+export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderColor: theme.palette.border.main,
+  "&:hover": {
+    backgroundColor: theme.palette.background.paper,
+  },
+  [`&.${toggleButtonClasses.selected}`]: {
+    backgroundColor: theme.palette.secondary.dark,
+  },
+  [`&.${toggleButtonClasses.selected}:hover`]: {
+    backgroundColor: theme.palette.secondary.dark,
+  },
+}));
+
 const GetStarted: React.FC = () => (
   <DashboardList viewType="grid" sx={{ paddingTop: 2 }}>
     <Card>
@@ -68,14 +87,21 @@ const GetStarted: React.FC = () => (
 );
 
 const Team: React.FC = () => {
-  const [{ id: teamId, slug }, canUserEditTeam, getFlows, isTrial] = useStore(
-    (state) => [
-      state.getTeam(),
-      state.canUserEditTeam,
-      state.getFlows,
-      state.teamSettings?.isTrial,
-    ],
-  );
+  const [
+    { id: teamId, slug },
+    canUserEditTeam,
+    getFlows,
+    isTrial,
+    flowCardView,
+    setFlowCardView,
+  ] = useStore((state) => [
+    state.getTeam(),
+    state.canUserEditTeam,
+    state.getFlows,
+    state.teamSettings?.isTrial,
+    state.flowCardView,
+    state.setFlowCardView,
+  ]);
 
   const [flows, setFlows] = useState<FlowSummary[] | null>(null);
 
@@ -94,22 +120,12 @@ const Team: React.FC = () => {
 
   const route = useCurrentRoute();
 
-  const [showCardGrid, toggleCardGrid] = useStore((state) => [
-    state.showCardGrid,
-    state.toggleCardGrid,
-  ]);
-
-  const viewType = showCardGrid ? "grid" : "row";
-
   const handleViewChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newView: "grid" | "row",
+    newView: FlowCardView | null,
   ) => {
-    if (!newView) return;
-
-    const isGrid = newView === "grid";
-    if (isGrid !== showCardGrid) {
-      toggleCardGrid();
+    if (newView !== null) {
+      setFlowCardView(newView);
     }
   };
 
@@ -241,21 +257,21 @@ const Team: React.FC = () => {
                 )}
               </Box>
               <ToggleButtonGroup
-                value={viewType}
+                value={flowCardView}
                 exclusive
                 onChange={handleViewChange}
                 size="small"
               >
-                <ToggleButton value="grid" disableRipple>
+                <StyledToggleButton value="grid" disableRipple>
                   <ViewModuleIcon />
-                </ToggleButton>
-                <ToggleButton value="row" disableRipple>
+                </StyledToggleButton>
+                <StyledToggleButton value="row" disableRipple>
                   <TableRowsIcon />
-                </ToggleButton>
+                </StyledToggleButton>
               </ToggleButtonGroup>
             </Box>
             {sortedFlows && (
-              <DashboardList viewType={viewType as "grid" | "row"}>
+              <DashboardList viewType={flowCardView}>
                 {sortedFlows.map((flow) => (
                   <FlowCard
                     flow={flow}
