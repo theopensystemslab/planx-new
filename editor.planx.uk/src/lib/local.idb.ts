@@ -10,10 +10,10 @@ import { Session } from "types";
 import { clearLocalFlow, getLocalFlow } from "./local";
 
 // define IndexedDB database name and version (should be bumped when changing the schema)
-const DB_NAME = "planx";
 const DB_VERSION = 1;
-const DB_STORE_FLOW_SESSIONS = "flows";
 const LOCAL_STORAGE_KEY_PREFIX = "flow:";
+export const DB_NAME = "planx";
+export const DB_STORE_FLOW_SESSIONS = "flows";
 
 interface PlanXIDB extends DBSchema {
   [DB_STORE_FLOW_SESSIONS]: {
@@ -61,15 +61,17 @@ export const getLocalFlowIdb = async (
   console.debug(
     `Retrieving flow with ID ${flowId} from IndexedDB (if it exists)`,
   );
+  let db: IDBPDatabase<PlanXIDB> | undefined;
   try {
-    const db = await getDb();
+    db = await getDb();
     const session = await db.get(DB_STORE_FLOW_SESSIONS, flowId);
     return session;
   } catch (e) {
     console.error(`Error retrieving flow with ID ${flowId} from IndexedDB:`, e);
-    // clean up just in case
-    await clearLocalFlowIdb(flowId);
     return undefined;
+  } finally {
+    // in any case, we close the db connection to avoid memory leaks
+    db?.close();
   }
 };
 
@@ -78,21 +80,27 @@ export const setLocalFlowIdb = async (
   session: Session,
 ): Promise<void> => {
   console.debug(`Storing flow with ID ${flowId} to IndexedDB`);
+  let db: IDBPDatabase<PlanXIDB> | undefined;
   try {
-    const db = await getDb();
+    db = await getDb();
     await db.put(DB_STORE_FLOW_SESSIONS, session, flowId);
   } catch (e) {
     console.error(`Error storing flow with ID ${flowId} in IndexedDB:`, e);
+  } finally {
+    db?.close();
   }
 };
 
 export const clearLocalFlowIdb = async (flowId: string): Promise<void> => {
   console.debug(`Clearing flow with ID ${flowId} from IndexedDB`);
+  let db: IDBPDatabase<PlanXIDB> | undefined;
   try {
-    const db = await getDb();
+    db = await getDb();
     await db.delete(DB_STORE_FLOW_SESSIONS, flowId);
   } catch (e) {
     console.error(`Error clearing flow with ID ${flowId} from IndexedDB:`, e);
+  } finally {
+    db?.close();
   }
 };
 

@@ -113,7 +113,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
             // if flow not in IndexedDB (or db connection fails), try localStorage
             if (!state) {
               console.debug(
-                `Flow ${id} not found in IndexedDB - falling back to localStorage`,
+                `Flow ${id} not found in IndexedDB - trying localStorage`,
               );
               state = getLocalFlow(id);
             }
