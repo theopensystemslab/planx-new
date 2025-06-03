@@ -36,7 +36,6 @@ export const CopyFeature: React.FC<Props> = ({
           bordered
           required
           title={"Copy from"}
-          labelId={`select-${destinationIndex}`}
           value={""}
           onChange={(e) => {
             const label = e.target.value as string;

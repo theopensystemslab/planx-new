@@ -45,10 +45,14 @@ const send = (ops: Array<any>) => {
   }
 };
 
+export type FlowCardView = "grid" | "row";
+
 export interface EditorUIStore {
   flowLayout: FlowLayout;
   showSidebar: boolean;
   toggleSidebar: () => void;
+  flowCardView: FlowCardView;
+  setFlowCardView: (view: FlowCardView) => void;
   showTags: boolean;
   toggleShowTags: () => void;
   showImages: boolean;
@@ -75,6 +79,12 @@ export const editorUIStore: StateCreator<
 
     toggleSidebar: () => {
       set({ showSidebar: !get().showSidebar });
+    },
+
+    flowCardView: "grid",
+
+    setFlowCardView: (view: FlowCardView) => {
+      set({ flowCardView: view });
     },
 
     showTags: false,
@@ -113,6 +123,7 @@ export const editorUIStore: StateCreator<
     name: "editorUIStore",
     partialize: (state) => ({
       showSidebar: state.showSidebar,
+      flowCardView: state.flowCardView,
       showTags: state.showTags,
       showImages: state.showImages,
       showDataFields: state.showDataFields,
