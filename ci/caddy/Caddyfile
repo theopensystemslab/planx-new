@@ -1,10 +1,19 @@
-# Wildcard certificate - this just handles provisioning the certificate, then aborts
-# This ensures we request a single certificate per-Pizza, not one per-service/per-Pizza
-# Without this, it's possible to hit the Let's Encrypt limits on certificates
+# Wildcard certificate - this just handles provisioning the certificate
+# This ensures we request a single certificate per-Pizza, not one per-service, per-Pizza
+# This avoids the Let's Encrypt limits on certificates
 *.{$ROOT_DOMAIN} {
     tls {
         dns vultr {$VULTR_API_KEY}
+        resolvers 1.1.1.1 8.8.8.8
     }
+
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
+    
+    respond "Wildcard cert provisioned" 200
     abort
 }
 
