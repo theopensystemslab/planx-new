@@ -56,6 +56,9 @@ importers:
       '@opensystemslab/planx-core':
         specifier: git+https://github.com/theopensystemslab/planx-core#4bb58ca
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/4bb58ca(@types/react@18.3.23)
+      '@tanstack/react-form':
+        specifier: ^1.12.1
+        version: 1.12.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tiptap/core':
         specifier: ^2.4.0
         version: 2.12.0(@tiptap/pm@2.12.0)
@@ -2670,6 +2673,30 @@ packages:
   '@swc/types@0.1.21':
     resolution: {integrity: sha512-2YEtj5HJVbKivud9N4bpPBAyZhj4S2Ipe5LkUG94alTpr7in/GU/EARgPAd3BwU+YOmFVJC2+kjqhGRi3r0ZpQ==}
 
+  '@tanstack/form-core@1.12.1':
+    resolution: {integrity: sha512-cCR3udteesUakO0K7T+2GkL8F2HKp7+khJmdLbebz63XbKCuHqSuEtC+bz4cw+Ad6eZxV2hvTkmZxdn39F8XUw==}
+
+  '@tanstack/react-form@1.12.1':
+    resolution: {integrity: sha512-wcxqqM9mKcjy4ePUQNYZDpuK1dicGHGYbM21UujKNGY2maYk7eXPmZ2xeCYAOEl2rpCjgOf2MZHlfi3Exlaocg==}
+    peerDependencies:
+      '@tanstack/react-start': ^1.112.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+      vinxi: ^0.5.0
+    peerDependenciesMeta:
+      '@tanstack/react-start':
+        optional: true
+      vinxi:
+        optional: true
+
+  '@tanstack/react-store@0.7.1':
+    resolution: {integrity: sha512-qUTEKdId6QPWGiWyKAPf/gkN29scEsz6EUSJ0C3HgLMgaqTAyBsQ2sMCfGVcqb+kkhEXAdjleCgH6LAPD6f2sA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@tanstack/store@0.7.1':
+    resolution: {integrity: sha512-PjUQKXEXhLYj2X5/6c1Xn/0/qKY0IVFxTJweopRfF26xfjVyb14yALydJrHupDh3/d+1WKmfEgZPBVCmDkzzwg==}
+
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
     engines: {node: '>=18'}
@@ -3969,6 +3996,9 @@ packages:
   decimal.js@10.5.0:
     resolution: {integrity: sha512-8vDa8Qxvr/+d94hSh5P3IJwI5t8/c0KsMp+g8bNw9cY2icONa5aPfvKeieW1WlG0WQYwwhJ7mjui2xtiePQSXw==}
 
+  decode-formdata@0.9.0:
+    resolution: {integrity: sha512-q5uwOjR3Um5YD+ZWPOF/1sGHVW9A5rCrRwITQChRXlmPkxDFBqCm4jNTIVdGHNH9OnR+V9MoZVgRhsFb+ARbUw==}
+
   decode-named-character-reference@1.1.0:
     resolution: {integrity: sha512-Wy+JTSbFThEOXQIR2L6mxJvEs+veIzpmqD7ynWxMXGpnk3smkHQOp6forLdHsKpAMW9iJpaBBIxz285t1n1C3w==}
 
@@ -4027,6 +4057,9 @@ packages:
   detect-newline@3.1.0:
     resolution: {integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==}
     engines: {node: '>=8'}
+
+  devalue@5.1.1:
+    resolution: {integrity: sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw==}
 
   diff-sequences@27.5.1:
     resolution: {integrity: sha512-k1gCAXAsNgLwEL+Y8Wvl+M6oEFj5bgazfZULpS5CneoPPXRaCCW7dm+q21Ky2VEE5X+VeRDBVg1Pcvvsr4TtNQ==}
@@ -10085,6 +10118,29 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
+  '@tanstack/form-core@1.12.1':
+    dependencies:
+      '@tanstack/store': 0.7.1
+
+  '@tanstack/react-form@1.12.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/form-core': 1.12.1
+      '@tanstack/react-store': 0.7.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      decode-formdata: 0.9.0
+      devalue: 5.1.1
+      react: 18.3.1
+    transitivePeerDependencies:
+      - react-dom
+
+  '@tanstack/react-store@0.7.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/store': 0.7.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      use-sync-external-store: 1.5.0(react@18.3.1)
+
+  '@tanstack/store@0.7.1': {}
+
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.27.1
@@ -11647,6 +11703,8 @@ snapshots:
 
   decimal.js@10.5.0: {}
 
+  decode-formdata@0.9.0: {}
+
   decode-named-character-reference@1.1.0:
     dependencies:
       character-entities: 2.0.2
@@ -11706,6 +11764,8 @@ snapshots:
     optional: true
 
   detect-newline@3.1.0: {}
+
+  devalue@5.1.1: {}
 
   diff-sequences@27.5.1: {}
 
