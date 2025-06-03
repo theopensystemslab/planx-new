@@ -1,36 +1,26 @@
-
 {
+    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+    
     email {$TLS_EMAIL}
+    
+    log {
+        level DEBUG
+        output stdout
+        format console
+    }
 }
 
-# Wildcard certificate with route-based proxying
-*.{$ROOT_DOMAIN}, {$ROOT_DOMAIN} {
+api.{$ROOT_DOMAIN} {
     tls {
         dns vultr {$VULTR_API_KEY}
-        resolvers 1.1.1.1 8.8.8.8
+        resolvers 1.1.1.1 8.8.8.8 208.67.222.222 208.67.220.220
     }
-
-    @postgres host postgres.{$ROOT_DOMAIN}
-    reverse_proxy @postgres postgres:5432
-
-    @hasura host hasura.{$ROOT_DOMAIN}
-    reverse_proxy @hasura hasura-proxy:{$HASURA_PROXY_PORT}
-
-    @api host api.{$ROOT_DOMAIN}
-    reverse_proxy @api api:{$API_PORT}
-
-    @sharedb host sharedb.{$ROOT_DOMAIN}
-    reverse_proxy @sharedb sharedb:8000
-
-    @localplanning host localplanning.{$ROOT_DOMAIN}
-    reverse_proxy @localplanning localplanning:8043
-
-    @storybook host storybook.{$ROOT_DOMAIN}
-    reverse_proxy @storybook storybook:8044
-
-    # Root domain (no subdomain)
-    @root host {$ROOT_DOMAIN}
-    reverse_proxy @root editor:8043
-
-    respond "Service not found" 404
+    
+    reverse_proxy api:{$API_PORT}
+    
+    log {
+        output stdout
+        format console
+        level DEBUG
+    }
 }
