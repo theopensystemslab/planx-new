@@ -5,7 +5,9 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButtonGroup, {
+  toggleButtonGroupClasses,
+} from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
@@ -63,14 +65,20 @@ export const FiltersContainer = styled(Box)(({ theme }) => ({
 export const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderColor: theme.palette.border.main,
+  borderRadius: 0,
+  margin: 0,
+  [`&.${toggleButtonGroupClasses.lastButton}`]: {
+    borderColor: theme.palette.border.main,
+  },
   "&:hover": {
     backgroundColor: theme.palette.background.paper,
   },
   [`&.${toggleButtonClasses.selected}`]: {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.background.default,
+    boxShadow: `0 -4px 0 0 ${theme.palette.info.main} inset`,
   },
   [`&.${toggleButtonClasses.selected}:hover`]: {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.background.default,
   },
 }));
 
