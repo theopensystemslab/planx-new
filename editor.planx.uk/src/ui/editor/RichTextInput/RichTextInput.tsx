@@ -42,6 +42,9 @@ import {
 
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
+  const variant = props.variant ?? "default";
+  const isRootLevel = variant === "rootLevelContent";
+
   // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
   // Pass in input props to ensure they're passed along to the rich text editor
   const attributes = {
@@ -103,9 +106,7 @@ const RichTextInput: FC<Props> = (props) => {
       }
       const doc = transaction.editor.getJSON();
 
-      setContentHierarchyError(
-        getContentHierarchyError(doc, props.rootLevelContent),
-      );
+      setContentHierarchyError(getContentHierarchyError(doc, variant));
       setLinkNewTabError(getLinkNewTabError(doc.content));
       setLegislationLinkError(getLegislationLinkError(doc.content));
 
@@ -124,7 +125,7 @@ const RichTextInput: FC<Props> = (props) => {
       } as unknown as ChangeEvent<HTMLInputElement>;
       props.onChange(changeEvent);
     },
-    [props.onChange],
+    [props.onChange, variant],
   );
 
   const handleSelectionUpdate = useCallback(() => {
@@ -155,19 +156,17 @@ const RichTextInput: FC<Props> = (props) => {
     internalValue.current = stringValue;
     const doc = fromHtml(stringValue);
     setContentHierarchyError(
-      getContentHierarchyError(fromHtml(stringValue), props.rootLevelContent),
+      getContentHierarchyError(fromHtml(stringValue), variant),
     );
     editor.commands.setContent(doc);
-  }, [stringValue]);
+  }, [stringValue, variant]);
 
   useEffect(() => {
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(
-      getContentHierarchyError(doc, props.rootLevelContent),
-    );
+    setContentHierarchyError(getContentHierarchyError(doc, variant));
     setLinkNewTabError(getLinkNewTabError(doc.content));
     setLegislationLinkError(getLegislationLinkError(doc.content));
-  }, [stringValue, props.rootLevelContent]);
+  }, [stringValue, variant]);
 
   // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
   const getSelectionHtml = () => {
@@ -213,9 +212,7 @@ const RichTextInput: FC<Props> = (props) => {
         .join(" ")}
     >
       <RichContentContainer
-        className={`rich-text-editor ${
-          props.rootLevelContent ? "allow-h1" : ""
-        }`}
+        className={`rich-text-editor ${isRootLevel ? "allow-h1" : ""}`}
       >
         {editor && (
           <StyledBubbleMenu
@@ -257,15 +254,11 @@ const RichTextInput: FC<Props> = (props) => {
               <>
                 <H1Button
                   editor={editor}
-                  label={
-                    <strong>{props.rootLevelContent ? "H1" : "H2"}</strong>
-                  }
+                  label={<strong>{isRootLevel ? "H1" : "H2"}</strong>}
                 />
                 <H2Button
                   editor={editor}
-                  label={
-                    <strong>{props.rootLevelContent ? "H2" : "H3"}</strong>
-                  }
+                  label={<strong>{isRootLevel ? "H2" : "H3"}</strong>}
                 />
                 <BoldButton editor={editor} />
                 <ItalicButton editor={editor} />
