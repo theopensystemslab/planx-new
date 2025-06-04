@@ -471,7 +471,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist"
           target: "planx-new/"
           overwrite: true
