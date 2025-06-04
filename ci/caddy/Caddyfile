@@ -1,26 +1,45 @@
 {
-    acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
-    
     email {$TLS_EMAIL}
-    
     log {
         level DEBUG
-        output stdout
-        format console
     }
 }
 
-api.{$ROOT_DOMAIN} {
+# Wildcard certificate
+*.{$ROOT_DOMAIN} {
     tls {
         dns vultr {$VULTR_API_KEY}
-        resolvers 1.1.1.1 8.8.8.8 208.67.222.222 208.67.220.220
+        resolvers 1.1.1.1 8.8.8.8
     }
-    
+    abort
+}
+
+# Individual subdomain handlers
+postgres.{$ROOT_DOMAIN} {
+    reverse_proxy postgres:5432
+}
+
+hasura.{$ROOT_DOMAIN} {
+    reverse_proxy hasura-proxy:{$HASURA_PROXY_PORT}
+}
+
+api.{$ROOT_DOMAIN} {
     reverse_proxy api:{$API_PORT}
-    
-    log {
-        output stdout
-        format console
-        level DEBUG
-    }
+}
+
+sharedb.{$ROOT_DOMAIN} {
+    reverse_proxy sharedb:8000
+}
+
+localplanning.{$ROOT_DOMAIN} {
+    reverse_proxy localplanning:8043
+}
+
+storybook.{$ROOT_DOMAIN} {
+    reverse_proxy storybook:8044
+}
+
+# Root domain (no subdomain)
+{$ROOT_DOMAIN} {
+    reverse_proxy editor:8043
 }
