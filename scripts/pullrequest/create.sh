@@ -4,7 +4,7 @@ set -o errexit -o pipefail
 # run from project root
 cd "$(dirname $0)/../.."
 
-echo "root:$SSH_PASSWORD" | chpasswd
+echo -e "$SSH_PASSWORD\n$SSH_PASSWORD" | passwd root
 
 # check if swap space is available - see link for more on updating swap:
 # https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
