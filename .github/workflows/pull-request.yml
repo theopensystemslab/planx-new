@@ -387,7 +387,12 @@ jobs:
 
             CI=true ./scripts/pull-secrets.sh
 
-            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            {
+              echo "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}"
+              echo "RUN_STORYBOOK=${{ contains(needs.changes.outputs.commit, '[run storybook]') }}"
+              echo "RUN_LOCALPLANNING=${{ needs.changes.outputs.localplanning }}"
+            } > .env.temp
+
             cat .env .env.temp .env.staging > .env.pizza
 
             SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
@@ -423,7 +428,12 @@ jobs:
 
             CI=true ./scripts/pull-secrets.sh
 
-            echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
+            {
+              echo "ROOT_DOMAIN=${{ env.FULL_DOMAIN }}"
+              echo "RUN_STORYBOOK=${{ contains(needs.changes.outputs.commit, '[run storybook]') }}"
+              echo "RUN_LOCALPLANNING=${{ needs.changes.outputs.localplanning }}"
+            } > .env.temp
+
             cat .env .env.temp .env.staging > .env.pizza
 
             ./scripts/pullrequest/update.sh

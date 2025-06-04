@@ -59,6 +59,7 @@ services:
       virtual.host: localplanning.${ROOT_DOMAIN}
       virtual.port: 8043
       virtual.tls-email: ${TLS_EMAIL}
+    profiles: ["localplanning"]
 
   storybook:
     image: pierrezemb/gostatic
@@ -69,6 +70,7 @@ services:
       virtual.host: storybook.${ROOT_DOMAIN}
       virtual.port: 8044
       virtual.tls-email: ${TLS_EMAIL}
+    profiles: ["storybook"]
 
   caddy-gen:
     image: wemakeservices/caddy-gen:latest
