@@ -122,7 +122,17 @@ const ResultComponent: React.FC<Props> = (props) => {
               the flag title will be used.
             </Typography>
             <Box mt={2}>
-              {allFlagsForSet.map((flag) => {
+              {[
+                ...allFlagsForSet,
+                {
+                  value: "no-result",
+                  text: "No result",
+                  category: formik.values.flagSet,
+                  bgColor: "#EEEEEE",
+                  color: "#000000",
+                  description: "",
+                },
+              ].map((flag) => {
                 return (
                   <FlagEditor
                     key={flag.value}
