@@ -3,10 +3,6 @@ import { PUBLIC_PLANX_GRAPHQL_API_URL } from "astro:env/client";
 export interface Service {
   name: string;
   slug: string;
-  // TODO: Public permission!
-  // description
-  // slug
-  // summary
   description: string | null;
   summary: string | null;
 }
@@ -29,9 +25,16 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
             lpas: teams(order_by: { name: asc }) {
               name
               slug
-              services: flows(where: {status: { _eq: online }}, order_by: { name: asc }) {
+              services: flows(
+                where: {
+                  status: { _eq: online }
+                }
+                order_by: { name: asc }
+              ) {
                 name
                 slug
+                summary
+                description
               }
             }
           }
