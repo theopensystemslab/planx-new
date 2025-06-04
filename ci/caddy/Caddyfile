@@ -8,6 +8,8 @@
 *.{$ROOT_DOMAIN}, {$ROOT_DOMAIN} {
     tls {
         dns vultr {$VULTR_API_KEY}
+        propagation_delay 120s
+        propagation_timeout 600s
     }
     
     @postgres host postgres.{$ROOT_DOMAIN}
