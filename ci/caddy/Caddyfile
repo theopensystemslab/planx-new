@@ -13,9 +13,8 @@
 	tls {
 		dns vultr {$VULTR_API_KEY}
 		# i.e. wait for propagation_delay before starting poll of DNS records (after put), then keep trying for propagation_timeout
-		# TRY: set env vars direct rather than relying on Caddyfile options - could also extend VULTR_POLLING_INTERVAL (default 2s)
-		propagation_delay 300s # default 0s - VULTR_TTL in lego implementation (300s is the time Vultr gives in GUI for DNS record TTL)
-		propagation_timeout 900s # default 2mins - VULTR_PROPAGATION_TIMEOUT ibid.
+		propagation_delay 300s # default 0s (300s is the time Vultr gives in for DNS record TTL)
+		propagation_timeout 900s # default 2mins
 	}
 
 	@root host {$ROOT_DOMAIN} www.{$ROOT_DOMAIN}
