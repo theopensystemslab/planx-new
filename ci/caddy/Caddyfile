@@ -1,0 +1,58 @@
+# initial block determines global options
+{
+	email {$TLS_EMAIL}
+	# dev / debugging options (comment out for main / in version control)
+	debug
+	acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+# TRY: separating out the wildcard and root domain?
+# see https://caddyserver.com/docs/caddyfile/patterns
+*.{$ROOT_DOMAIN}, {$ROOT_DOMAIN} {
+	# wilcard certs require a DNS challenge
+	tls {
+		dns vultr {$VULTR_API_KEY}
+		propagation_delay 60s
+		propagation_timeout 300s
+	}
+
+	@root host {$ROOT_DOMAIN} www.{$ROOT_DOMAIN}
+	handle @root {
+		reverse_proxy editor:8043
+	}
+
+	@api host api.{$ROOT_DOMAIN}
+	handle @api {
+		reverse_proxy api:{$API_PORT}
+	}
+
+	@hasura host hasura.{$ROOT_DOMAIN}
+	handle @hasura {
+		reverse_proxy hasura-proxy:{$HASURA_PROXY_PORT}
+	}
+
+	@localplanning host localplanning.{$ROOT_DOMAIN}
+	handle @localplanning {
+		reverse_proxy localplanning:8043
+	}
+
+	@postgres host postgres.{$ROOT_DOMAIN}
+	handle @postgres {
+		reverse_proxy postgres:{$PG_PORT}
+	}
+
+	@sharedb host sharedb.{$ROOT_DOMAIN}
+	handle @sharedb {
+		reverse_proxy sharedb:{$SHAREDB_PORT}
+	}
+
+	@storybook host storybook.{$ROOT_DOMAIN}
+	handle @storybook {
+		reverse_proxy storybook:8044
+	}
+
+	# abort for unhandled domains
+	handle {
+		abort
+	}
+}
