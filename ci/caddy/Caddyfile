@@ -12,9 +12,9 @@
 	# wilcard certs require a DNS challenge
 	tls {
 		dns vultr {$VULTR_API_KEY}
-		# i.e. wait for propagation_delay before starting poll of DNS records (after put), then keep trying for propagation_timeout
+		# read like: wait for propagation_delay before starting poll of DNS records (after put), then keep trying for propagation_timeout
 		propagation_delay 300s # default 0s (300s is the time Vultr gives in for DNS record TTL)
-		propagation_timeout 900s # default 2mins
+		propagation_timeout -1 # default 2mins (-1 indicates to not conduct propagation check, just handover to ACME after delay)
 	}
 
 	@root host {$ROOT_DOMAIN} www.{$ROOT_DOMAIN}
