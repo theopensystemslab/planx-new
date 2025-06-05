@@ -151,7 +151,7 @@ describe("File upload", () => {
         });
     });
 
-    it("should upload file", async () => {
+    it("should upload JPG", async () => {
       vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
       vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
 
@@ -162,6 +162,46 @@ describe("File upload", () => {
         .then((res) => {
           expect(res.body).toEqual({
             fileType: "image/jpeg",
+            // Bucket name stripped from URL
+            fileUrl:
+              "https://api.editor.planx.dev/file/private/nanoid/modified%20key",
+          });
+        });
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
+    });
+
+    it("should upload PDF", async () => {
+      vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
+      vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
+
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.pdf")
+        .attach("file", Buffer.from("some data"), "some_file.pdf")
+        .then((res) => {
+          expect(res.body).toEqual({
+            fileType: "application/pdf",
+            // Bucket name stripped from URL
+            fileUrl:
+              "https://api.editor.planx.dev/file/private/nanoid/modified%20key",
+          });
+        });
+      expect(mockPutObject).toHaveBeenCalledTimes(1);
+      expect(getSignedUrl).toHaveBeenCalledTimes(1);
+    });
+
+    it("should upload SVG", async () => {
+      vi.stubEnv("API_URL_EXT", "https://api.editor.planx.dev");
+      vi.stubEnv("AWS_S3_BUCKET", "myBucketName");
+
+      await supertest(app)
+        .post(PRIVATE_ENDPOINT)
+        .field("filename", "some_file.svg")
+        .attach("file", Buffer.from("some data"), "some_file.svg")
+        .then((res) => {
+          expect(res.body).toEqual({
+            fileType: "image/svg+xml",
             // Bucket name stripped from URL
             fileUrl:
               "https://api.editor.planx.dev/file/private/nanoid/modified%20key",

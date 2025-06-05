@@ -11,8 +11,13 @@ const FILE_SIZE_LIMIT = 30 * 1024 * 1024;
  * Should match MIME type restrictions in frontend
  * See editor.planx.uk/src/@planx/components/shared/PrivateFileUpload/Dropzone.tsx
  */
-const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png", "application/pdf"];
-const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf"];
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "application/pdf",
+  "image/svg+xml",
+];
+const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf", ".svg"];
 
 export const validateExtension = (filename: string): boolean => {
   const extension = path.extname(filename).toLowerCase();
