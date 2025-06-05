@@ -547,35 +547,6 @@ update_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
 event_triggers:
-  - name: setup_metabase_dashboard
-    definition:
-      enable_manual: false
-      update:
-        columns:
-          - analytics_link
-          - status
-    retry_conf:
-      interval_sec: 10
-      num_retries: 0
-      timeout_sec: 60
-    webhook: '{{HASURA_PLANX_API_URL}}/metabase/dashboard'
-    headers:
-      - name: authorization
-        value: '{{HASURA_PLANX_API_KEY}}'
-    request_transform:
-      body:
-        action: transform
-        template: |-
-          {
-            "analyticsLink": {{$body.event.data.new.analytics_link}},
-            "status": {{$body.event.data.new.status}},
-            "serviceSlug": {{$body.event.data.new.slug}},
-            "flowId": {{$body.event.data.new.id}},
-            "teamId": {{$body.event.data.new.team_id}},
-            "serviceName": {{$body.event.data.new.name}}
-          }
-      template_engine: Kriti
-      version: 2
   - name: update_templated_flow_edits
     definition:
       enable_manual: false
