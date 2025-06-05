@@ -79,6 +79,7 @@ export const Dropzone: React.FC<Props> = ({
       "image/jpeg": [".jpg", ".jpeg"],
       "image/png": [".png"],
       "application/pdf": [".pdf"],
+      "image/svg+xml": [".svg"],
     },
     maxSize: MAX_UPLOAD_SIZE_MB * 1e6,
     multiple: maxFiles !== 1,
