@@ -59,10 +59,10 @@ const environment = process.env.APP_ENVIRONMENT === "production" ? "production" 
 // The dashboard links across Metabase staging and production are different, so we need to store and be able to access both
 const DASHBOARD_PUBLIC_IDS = {
   production: {
-    discretionary: "868af689-f792-4820-8756-4aec92407b27",
-    FOIYNPP: "f219818d-1076-4055-a35b-8be6e0ed4755",
-    RAB: "0f52eb76-8d7f-459a-8327-4374731f31a3",
-    submission: "615885ed-b945-4dec-8e26-2826d4ecd27b",
+    discretionary: "34e5a17c-2f20-4543-be0b-4af8364dceee",
+    FOIYNPP: "d55b0362-3a21-4153-a53d-c1d6a55ff5e2",
+    RAB: "f3da39ec-bb4f-4ee0-8950-afcb5765d686",
+    submission: "040dad13-6783-4e48-9edc-be1b03aa5247",
   },
   staging: {
     discretionary: "0c0abafd-e919-4da2-a5b3-1c637f703954",
