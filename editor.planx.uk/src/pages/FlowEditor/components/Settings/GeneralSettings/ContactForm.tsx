@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { ChangeEvent } from "react";
@@ -9,6 +10,12 @@ import { SettingsForm } from "../shared/SettingsForm";
 import { FormProps } from ".";
 
 export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
+  const [teamSlug, token, helpEmail] = useStore((state) => [
+    state.teamSlug,
+    state.jwt,
+    state.teamSettings.helpEmail,
+  ]);
+
   const formSchema = Yup.object().shape({
     helpEmail: Yup.string()
       .email(
@@ -28,14 +35,23 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
     ...formikConfig,
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
+      const updatedEmail = helpEmail !== values.helpEmail;
       const isSuccess = await useStore.getState().updateTeamSettings({
         helpEmail: values.helpEmail,
         helpOpeningHours: values.helpOpeningHours,
         helpPhone: values.helpPhone,
         homepage: values.homepage,
       });
+
       if (isSuccess) {
         onSuccess();
+
+        if (updatedEmail) {
+          // Send a Slack notification to #planx-notifications with new email
+          //   Gov Notify does not have an API for configuring reply-to emails, so a dev needs to pick up
+          sendEmailChangeSlackNotification(values.helpEmail);
+        }
+
         resetForm({ values });
       }
     },
@@ -44,14 +60,40 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
   const onChangeFn = (type: string, event: ChangeEvent<HTMLInputElement>) =>
     formik.setFieldValue(type, event.target.value);
 
+  const sendEmailChangeSlackNotification = async (newEmail: string) => {
+    const skipTeamSlugs = [
+      "open-digital-planning",
+      "opensystemslab",
+      "planx",
+      "templates",
+      "testing",
+      "wikihouse",
+    ];
+    if (skipTeamSlugs.includes(teamSlug)) return;
+
+    const message = `:e-mail: *${teamSlug}* updated their Gov UK Notify reply-to email to *${newEmail}*; ensure this is configured in Gov UK Notify dashboard.`;
+
+    return axios.post(
+      `${import.meta.env.VITE_APP_API_URL}/send-slack-notification`,
+      {
+        message: message,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  };
+
   return (
     <SettingsForm
       legend="Contact information"
       formik={formik}
       description={
         <>
-          Details to help direct different messages, feedback, and enquiries
-          from users.
+          Populates Gov UK Notify templates for email replies and footer contact
+          information. Gov UK Notify templates apply to all submission services.
         </>
       }
       input={
@@ -67,7 +109,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
               id="homepage"
             />
           </InputLabel>
-          <InputLabel label="Contact email address" htmlFor="helpEmail">
+          <InputLabel label="Reply-to email address" htmlFor="helpEmail">
             <Input
               name="helpEmail"
               value={formik.values.helpEmail}
