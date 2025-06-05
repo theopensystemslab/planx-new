@@ -398,11 +398,11 @@ export const previewStore: StateCreator<
       flow,
     );
 
-    // The highest order flag collected in this category is our result, else "No result"
+    // The highest order flag collected in this category is our result, else mock "No result"
     const flag: Flag = possibleFlags.find(
       (f) => f.value === collectedFlags[0],
     ) || {
-      value: "no-result",
+      value: possibleFlags[0]?.value?.replace(/[^.]+$/, "noResult"),
       text: "No result",
       category: category as FlagSet,
       bgColor: "#EEEEEE",

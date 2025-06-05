@@ -86,7 +86,20 @@ const ResultComponent: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet = flags[formik.values.flagSet];
+  const allFlagsForSet = [
+    ...flags[formik.values.flagSet],
+    {
+      value: flags[formik.values.flagSet]?.[0]?.value?.replace(
+        /[^.]+$/,
+        "noResult",
+      ),
+      text: "No result",
+      category: formik.values.flagSet,
+      bgColor: "#EEEEEE",
+      color: "#000000",
+      description: "",
+    },
+  ];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -122,17 +135,7 @@ const ResultComponent: React.FC<Props> = (props) => {
               the flag title will be used.
             </Typography>
             <Box mt={2}>
-              {[
-                ...allFlagsForSet,
-                {
-                  value: "no-result",
-                  text: "No result",
-                  category: formik.values.flagSet,
-                  bgColor: "#EEEEEE",
-                  color: "#000000",
-                  description: "",
-                },
-              ].map((flag) => {
+              {allFlagsForSet.map((flag) => {
                 return (
                   <FlagEditor
                     key={flag.value}
