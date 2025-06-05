@@ -95,14 +95,16 @@ export const Presentational: React.FC<PresentationalProps> = ({
         color={headingColor}
       />
       <Card handleSubmit={handleSubmit}>
-        <Box mt={4} mb={3}>
-          <Typography variant="h2" gutterBottom>
-            {reasonsTitle}
-          </Typography>
-          <Typography variant="h3" gutterBottom>
-            These are the responses that suggest this result
-          </Typography>
-        </Box>
+        {visibleResponses.length > 0 && (
+          <Box mt={4} mb={3}>
+            <Typography variant="h2" gutterBottom>
+              {reasonsTitle}
+            </Typography>
+            <Typography variant="h3" gutterBottom>
+              These are the responses that suggest this result
+            </Typography>
+          </Box>
+        )}
         <Box mb={3}>
           <Responses
             responses={visibleResponses}
@@ -171,7 +173,7 @@ const ResultComponent: React.FC<Props> = (props) => {
       headingTitle={displayText.heading}
       description={displayText.description}
       reasonsTitle="Reasons"
-      responses={responses}
+      responses={flag.value !== "no-result" ? responses : []}
       disclaimer={flowSettings?.elements?.legalDisclaimer}
     />
   );
