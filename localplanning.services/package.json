@@ -19,6 +19,7 @@
     "astro": "^5.7.13",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "sharp": "^0.34.2",
     "tailwind-clamp": "^4.0.18",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3"
