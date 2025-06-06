@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # this script will purge all _acme-challenge TXT records in Vultr DNS for given pizza
+# assumes you have vultr-cli installed and VULTR_API_KEY exported (or a ~/.vultr-cli.yaml config)
 set -euo pipefail
 
 PIZZA=$1
