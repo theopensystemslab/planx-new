@@ -228,3 +228,12 @@ export const getSubmission = (environment: Environment) => ({
     "pre-application",
   ],
 });
+export const getDiscretionary = (environment: Environment) => ({
+  id: DASHBOARD_PUBLIC_IDS[environment].discretionary,
+  slugs: [
+    "check-whether-you-need-a-building-control-application",
+    "report-a-potential-dangerous-structure",
+    "check-constraints-on-a-property",
+    "check-your-planning-constraints",
+  ],
+});

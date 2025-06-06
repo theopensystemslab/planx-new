@@ -11,6 +11,7 @@ import {
   getFOIYNPP,
   getRAB,
   getSubmission,
+  getDiscretionary,
 } from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
@@ -167,8 +168,8 @@ const includedServices = [
   getFOIYNPP(environment),
   getRAB(environment),
   getSubmission(environment),
+  getDiscretionary(environment),
 ];
-// TODO: figure out how to handle discretionary services
 
 export const generateAnalyticsLink = ({
   environment,
