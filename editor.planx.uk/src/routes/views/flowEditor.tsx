@@ -6,9 +6,13 @@ import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
+import {
+  Environment,
+  getFOIYNPP,
+  getRAB,
+  getSubmission,
+} from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
-
-import { getFOIYNPP, getRAB, getSubmission, Environment } from "../../pages/FlowEditor/lib/analytics/utils";
 
 interface FlowEditorData {
   id: string;
@@ -54,7 +58,8 @@ interface GetFlowEditorData {
   }[];
 }
 
-const environment: Environment = import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
+const environment: Environment =
+  import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
 
 export const getFlowEditorData = async (
   flowSlug: string,
@@ -130,14 +135,15 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   } = await getFlowEditorData(flow, req.params.team);
 
- let flowAnalyticsLink: string | null = null;
+  let flowAnalyticsLink: string | null = null;
 
   if (flowStatus === "online") {
-    flowAnalyticsLink = generateAnalyticsLink({
-      environment,
-      flowId: id,
-      flowSlug: flow,
-    }) ?? null;
+    flowAnalyticsLink =
+      generateAnalyticsLink({
+        environment,
+        flowId: id,
+        flowSlug: flow,
+      }) ?? null;
   }
 
   useStore.setState({
