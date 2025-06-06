@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren } from "react";
 import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -61,22 +61,17 @@ interface Props extends PropsWithChildren {
  *  - Links to Editor modal for specific node
  */
 export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor }) => {
-  const [orderedFlow, setOrderedFlow, getURLForNode] = useStore((state) => [
+  const [orderedFlow, getURLForNode] = useStore((state) => [
     state.orderedFlow,
-    state.setOrderedFlow,
     state.getURLForNode,
   ]);
 
-  const { navigate } = useNavigation();
-
-  // Ensure we have an indexed version of the flow ready to generate links
-  // TODO: Should we move this responsibility to the store?
-  useEffect(() => {
-    if (!orderedFlow) setOrderedFlow();
-  }, [orderedFlow, setOrderedFlow]);
+  if (!orderedFlow) throw Error("An ordered flow is required to display a NodeCard");
 
   const node = orderedFlow?.find(({ id }) => id === nodeId);
-  if (!node) return;
+  if (!node) throw Error(`Invalid node. Cannot find node ${nodeId} on this flow`);
+
+  const { navigate } = useNavigation();
 
   const { iconKey, componentType, title } =
     getDisplayDetails(node);

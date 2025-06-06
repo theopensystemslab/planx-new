@@ -636,7 +636,6 @@ export const editorStore: StateCreator<
 
   setOrderedFlow: () => {
     const flow = get().flow as FlowGraph;
-    console.log("CALLING SORT FLOW...!")
     const orderedFlow = sortFlow(flow);
     set({ orderedFlow });
   },
