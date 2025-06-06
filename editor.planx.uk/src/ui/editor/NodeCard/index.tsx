@@ -15,7 +15,6 @@ const Root = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
 })<{ portalId?: string }>(({ theme, portalId }) => ({
   border: `1px solid ${theme.palette.common.black}`,
-  background: theme.palette.background.default,
   display: "block",
   padding: 0,
   borderWidth: portalId ? 4 : 2,
@@ -53,6 +52,7 @@ const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
 
 interface Props extends PropsWithChildren {
   nodeId: string;
+  backgroundColor?: string;
 }
 
 /**
@@ -60,7 +60,7 @@ interface Props extends PropsWithChildren {
  *  - Display nodes in a standard format (title, icon, etc)
  *  - Links to Editor modal for specific node
  */
-export const NodeCard: React.FC<Props> = ({ nodeId, children }) => {
+export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor }) => {
   const [orderedFlow, setOrderedFlow, getURLForNode] = useStore((state) => [
     state.orderedFlow,
     state.setOrderedFlow,
@@ -94,6 +94,7 @@ export const NodeCard: React.FC<Props> = ({ nodeId, children }) => {
       onClick={handleClick}
       portalId={portalId}
       disableRipple
+      sx={(theme) => ({ backgroundColor: backgroundColor || theme.palette.background.paper })}
     >
       {portalId && <InternalPortalHeader portalId={portalId} />}
       <Box p={1}>

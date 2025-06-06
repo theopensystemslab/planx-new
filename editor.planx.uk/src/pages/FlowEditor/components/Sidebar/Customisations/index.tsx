@@ -1,19 +1,18 @@
 import { gql, useSubscription } from "@apollo/client";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import Typography from "@mui/material/Typography";
 import { sortIdsDepthFirst } from "@planx/graph";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { NodeCard } from "ui/editor/NodeCard";
 
+import { CustomisationCard } from "./CustomisationCard";
 import { FlowEdits } from "./types";
 
 const Customisations = () => {
   const [flowId, flow] = useStore((state) => [
-    state.id, 
+    state.id,
     state.flow,
   ]);
 
@@ -69,17 +68,7 @@ const Customisations = () => {
       </Typography>
       <List sx={{ mt: 1 }}>
         {
-          sortedCustomisableNodeIds.map((nodeId) => 
-            <ListItem key={nodeId} sx={{ pb: 2, pt: 0, px: 0 }}>
-              <NodeCard nodeId={nodeId}>
-                {edits[nodeId] && (
-                  <Typography variant="body2">
-                    {/** TODO decide whether to include details of _what_ was edited? Just logging data for now! */}
-                    {JSON.stringify(edits[nodeId])}
-                  </Typography>
-                )}
-              </NodeCard>
-            </ListItem>)
+          sortedCustomisableNodeIds.map((nodeId) => <CustomisationCard key={nodeId} nodeId={nodeId} nodeEdits={edits[nodeId]} />)
         }
       </List>
     </Box>
