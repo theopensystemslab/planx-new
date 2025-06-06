@@ -44,6 +44,7 @@ const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
   const variant = props.variant ?? "default";
   const isRootLevel = variant === "rootLevelContent";
+  const isParagraph = variant === "paragraphContent";
 
   // a11y: Element is treated as a HTMLInputElement but Tiptap renders a HTMLDivElement
   // Pass in input props to ensure they're passed along to the rich text editor
@@ -252,14 +253,18 @@ const RichTextInput: FC<Props> = (props) => {
               />
             ) : (
               <>
-                <H1Button
-                  editor={editor}
-                  label={<strong>{isRootLevel ? "H1" : "H2"}</strong>}
-                />
-                <H2Button
-                  editor={editor}
-                  label={<strong>{isRootLevel ? "H2" : "H3"}</strong>}
-                />
+                {!isParagraph && (
+                  <>
+                    <H1Button
+                      editor={editor}
+                      label={<strong>{isRootLevel ? "H1" : "H2"}</strong>}
+                    />
+                    <H2Button
+                      editor={editor}
+                      label={<strong>{isRootLevel ? "H2" : "H3"}</strong>}
+                    />
+                  </>
+                )}
                 <BoldButton editor={editor} />
                 <ItalicButton editor={editor} />
                 <BulletListButton editor={editor} />

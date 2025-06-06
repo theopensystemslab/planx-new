@@ -70,6 +70,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   value={values.description}
                   onChange={handleChange}
                   disabled={props.disabled}
+                  variant="nestedContent"
                 />
               </InputRow>
               <InputRow>
@@ -94,6 +95,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   value={values.instructionsDescription}
                   onChange={handleChange}
                   disabled={props.disabled}
+                  variant="nestedContent"
                 />
               </InputRow>
               <InputRow>

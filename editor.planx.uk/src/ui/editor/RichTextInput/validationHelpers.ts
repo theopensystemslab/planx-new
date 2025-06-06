@@ -102,7 +102,11 @@ export const linkSelectionError = (selectionHtml: string): string | null => {
 
 export const getContentHierarchyError = (
   doc: JSONContent,
-  variant?: "default" | "rootLevelContent" | "nestedContent",
+  variant?:
+    | "default"
+    | "rootLevelContent"
+    | "nestedContent"
+    | "paragraphContent",
 ): string[] | null => {
   const errors: string[] = [];
   const topLevelNodes = doc.content || [];

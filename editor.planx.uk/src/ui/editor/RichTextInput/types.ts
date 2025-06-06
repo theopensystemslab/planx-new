@@ -17,7 +17,11 @@ export interface Props extends InputBaseProps {
   bordered?: boolean;
   errorMessage?: string;
   disabled?: boolean;
-  variant?: "default" | "rootLevelContent" | "nestedContent";
+  variant?:
+    | "default"
+    | "rootLevelContent"
+    | "nestedContent"
+    | "paragraphContent";
   classname?: string;
 }
 export interface VariablesState {
