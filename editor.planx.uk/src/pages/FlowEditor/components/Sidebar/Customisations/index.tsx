@@ -67,15 +67,17 @@ const Customisations = () => {
       <Typography variant="body2">
         {`When editing a template, this tab tracks your progress updating each component tagged "Customisation".`}
       </Typography>
-      <List>
+      <List sx={{ mt: 1 }}>
         {
           sortedCustomisableNodeIds.map((nodeId) => 
-            <ListItem key={nodeId} sx={{ pb: 2 }}>
+            <ListItem key={nodeId} sx={{ pb: 2, pt: 0, px: 0 }}>
               <NodeCard nodeId={nodeId}>
-                <Typography variant="body2">
-                  {/** TODO decide whether to include details of _what_ was edited? Just logging data for now! */}
-                  {JSON.stringify(edits[nodeId])}
-                </Typography>
+                {edits[nodeId] && (
+                  <Typography variant="body2">
+                    {/** TODO decide whether to include details of _what_ was edited? Just logging data for now! */}
+                    {JSON.stringify(edits[nodeId])}
+                  </Typography>
+                )}
               </NodeCard>
             </ListItem>)
         }

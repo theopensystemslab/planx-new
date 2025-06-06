@@ -122,7 +122,7 @@ export const NodeCard: React.FC<Props> = ({ nodeId, children }) => {
             </Typography>
           )}
         </Box>
-        <Box mt={1}>{ children }</Box>
+        { children && <Box mt={1}>{ children }</Box> }
       </Box>
     </Root>
   );
