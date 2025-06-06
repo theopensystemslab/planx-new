@@ -54,7 +54,7 @@ const Customisations = () => {
     );
   }
 
-  const edits = data?.edits?.[0]?.data || {};
+  const flowEdits = data?.edits?.[0]?.data || {};
 
   // TODO styles !
   //   "To do", "done/successfully customised", what can we re-use from Search (eg link to modal)?
@@ -68,7 +68,14 @@ const Customisations = () => {
       </Typography>
       <List sx={{ mt: 1 }}>
         {
-          sortedCustomisableNodeIds.map((nodeId) => <CustomisationCard key={nodeId} nodeId={nodeId} nodeEdits={edits[nodeId]} />)
+          sortedCustomisableNodeIds.map((nodeId) => 
+            <CustomisationCard 
+              key={nodeId} 
+              nodeId={nodeId} 
+              nodeEdits={flowEdits[nodeId]} 
+              flowEdits={flowEdits} 
+            />
+          )
         }
       </List>
     </Box>

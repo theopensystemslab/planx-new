@@ -67,17 +67,16 @@ interface Props extends PropsWithChildren {
  *  - Links to Editor modal for specific node
  */
 export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor }) => {
+  const { navigate } = useNavigation();
   const [orderedFlow, getURLForNode] = useStore((state) => [
     state.orderedFlow,
     state.getURLForNode,
   ]);
 
-  if (!orderedFlow) throw Error("An ordered flow is required to display a NodeCard");
+  if (!orderedFlow) return;
 
   const node = orderedFlow?.find(({ id }) => id === nodeId);
-  if (!node) throw Error(`Invalid node. Cannot find node ${nodeId} on this flow`);
-
-  const { navigate } = useNavigation();
+  if (!node) return
 
   const { iconKey, componentType, title } =
     getDisplayDetailsForNodeCard(node);
