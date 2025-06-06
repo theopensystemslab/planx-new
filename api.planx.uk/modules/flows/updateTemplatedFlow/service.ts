@@ -7,7 +7,7 @@ import type { Flow } from "../../../types.js";
 
 interface GetTemplatedFlowEdits {
   edits: {
-    data: Flow["data"]; // Not `FlowGraph` because not required to have _root !
+    data: Flow["data"]; // Not `FlowGraph` because not required to have `_root` !
   }[];
 }
 
@@ -47,7 +47,7 @@ export const updateTemplatedFlow = async (
     );
   const edits = templatedFlowEditsResponse.edits[0].data;
 
-  // Apply templated flow edits on top of source data using a deep merge
+  // Apply templated flow edits on top of source data using Lodash's deep merge
   const data = merge(sourceData, edits);
 
   // Set merged data as `flows.data` for templatedFlowId
@@ -85,7 +85,7 @@ export const updateTemplatedFlow = async (
     `,
     {
       flow_id: templatedFlowId,
-      comment: summary,
+      comment: `Updated based on source template publish with summary "${summary}"`,
       actor_id: sourcePublisher,
     },
   );
