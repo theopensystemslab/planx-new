@@ -55,7 +55,7 @@ const defaultFormatter: NodeCardFormatter = {
  * Formats an IndexedNode for display in the NodeCard
  * The values are combined in order of precedence: key-specific, component-specific, then defaults
  */
-export const getDisplayDetails = (
+export const getDisplayDetailsForNodeCard = (
   node: IndexedNode,
 ) => {
   const formatter: NodeCardFormatter = {

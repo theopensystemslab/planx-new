@@ -9,7 +9,7 @@ import React, { PropsWithChildren } from "react";
 import { useNavigation } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
-import { getDisplayDetails } from "./getDisplayDetails";
+import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";
 
 const Root = styled(ListItemButton, {
   shouldForwardProp: (prop) => prop !== "portalId",
@@ -74,7 +74,7 @@ export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor })
   const { navigate } = useNavigation();
 
   const { iconKey, componentType, title } =
-    getDisplayDetails(node);
+    getDisplayDetailsForNodeCard(node);
   const Icon = ICONS[iconKey];
   
   const portalId = node.internalPortalId;

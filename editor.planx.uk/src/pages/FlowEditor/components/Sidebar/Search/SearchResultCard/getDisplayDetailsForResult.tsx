@@ -5,6 +5,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
 import { SearchResult } from "hooks/useSearch";
+import { getDisplayDetailsForNodeCard } from "ui/editor/NodeCard/getDisplayDetailsForNodeCard";
 
 /**
  * Functions to map a search result to the fields required by SearchResultCard
@@ -224,5 +225,6 @@ export const getDisplayDetailsForResult = (
   return {
     key: formatter.getDisplayKey(result),
     headline: formatter.getHeadline(result),
+    ...getDisplayDetailsForNodeCard(result.item),
   };
 };
