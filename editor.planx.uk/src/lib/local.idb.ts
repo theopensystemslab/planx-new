@@ -126,7 +126,7 @@ export const migrateLocalStorageToIdb = async (
       `Migrating ${flowIds.length} flow(s) from localStorage to IndexedDB`,
     );
     const store = tx.objectStore(DB_STORE_FLOW_SESSIONS);
-    const failed_migrations = new Set<string>();
+    const failedMigrations = new Set<string>();
     for (const flowId of flowIds) {
       try {
         const session = getLocalFlow(flowId);
@@ -137,13 +137,13 @@ export const migrateLocalStorageToIdb = async (
       } catch (e) {
         // we let the migration attempt continue for debugging purposes, and bubble the error up later
         console.error(`Error migrating flow ${flowId}:`, e);
-        failed_migrations.add(flowId);
+        failedMigrations.add(flowId);
       }
     }
-    if (failed_migrations.size > 0) {
-      const sortedFailedMigrations = Array.from(failed_migrations).sort();
+    if (failedMigrations.size > 0) {
+      const sortedFailedMigrations = Array.from(failedMigrations).sort();
       throw new Error(
-        `Failed to migrate ${failed_migrations.size} flows: ${sortedFailedMigrations.join(", ")}`,
+        `Failed to migrate ${failedMigrations.size} flows: ${sortedFailedMigrations.join(", ")}`,
       );
     }
     // now that we are sure of a complete and successful migration, we can clear localStorage entries
