@@ -1,13 +1,15 @@
 ---
 import Button from "@components/Button.astro";
 import Container from "@components/Container.astro";
+import { Image } from 'astro:assets';
+import lpsLogo from '/public/local-planning-services-logo.svg';
 ---
 
 <header class="bg-bg-main">
   <Container>
     <div class="flex flex-col lg:flex-row justify-between lg:items-center py-6 gap-4">
       <a href="/">
-        <img src="/local-planning-services-logo.svg" alt="Local planning services logo" class="clamp-[w,24,32] text-bg-light" />
+        <Image src={lpsLogo} alt="Local planning services logo" class="clamp-[w,24,32] text-bg-light" />
       </a>
       <nav class="flex items-center clamp-[gap,7,8]">
         <ul class="flex clamp-[gap,6,8]">

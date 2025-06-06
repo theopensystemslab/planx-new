@@ -1,5 +1,8 @@
 ---
 import Container from "@components/Container.astro";
+import { Image } from 'astro:assets';
+import mhclgLogo from '/public/mhclg-logo.svg';
+import odpLogo from '/public//odp-logo.svg';
 ---
 
 <footer class="bg-bg-dark text-white pb-20">
@@ -8,8 +11,8 @@ import Container from "@components/Container.astro";
       <div class="flex flex-col gap-1">
         <p class="text-body-md">Supported by:</p>
         <div class="flex flex-row items-center gap-8">
-          <img src="/mhclg-logo.svg" alt="Local planning services logo" class="clamp-[w,30,36]" />
-          <img src="/odp-logo.svg" alt="Open Digital Planning logo" class="clamp-[w,30,36]" />
+          <Image src={mhclgLogo} alt="Ministry of Housing, Communities and Local Government logo" class="clamp-[w,30,36]" />
+          <Image src={odpLogo} alt="Open Digital Planning logo" class="clamp-[w,30,36]" />
         </div>
       </div>
       <p class="text-body-md">All content is available under the <a class="paragraph-link paragraph-link--external" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government License v3</a>, except where otherwise stated</p>
