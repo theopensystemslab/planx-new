@@ -4,28 +4,14 @@ import {
   IndexedNode,
 } from "@opensystemslab/planx-core/types";
 import { Calculate } from "@planx/components/Calculate/model";
-import { Checklist } from "@planx/components/Checklist/model";
-import { Confirmation } from "@planx/components/Confirmation/model";
-import { FileUploadAndLabel } from "@planx/components/FileUploadAndLabel/model";
-import { List } from "@planx/components/List/model";
-import { NextSteps } from "@planx/components/NextSteps/model";
-import { Pay } from "@planx/components/Pay/model";
-import { Schema } from "@planx/components/shared/Schema/model";
-import { TaskList } from "@planx/components/TaskList/model";
 import { SearchResult } from "hooks/useSearch";
-import { capitalize } from "lodash";
-import { SLUGS } from "pages/FlowEditor/data/types";
-import { useStore } from "pages/FlowEditor/lib/store";
 
 /**
  * Functions to map a search result to the fields required by SearchResultCard
  */
 interface SearchResultFormatter {
   getDisplayKey: (result: SearchResult<IndexedNode>) => string;
-  getIconKey: (result: SearchResult<IndexedNode>) => ComponentType;
-  getTitle: (result: SearchResult<IndexedNode>) => string;
   getHeadline: (result: SearchResult<IndexedNode>) => string;
-  getComponentType: (result: SearchResult<IndexedNode>) => string;
 }
 
 type KeyMap = Record<string, Partial<SearchResultFormatter>>;
@@ -211,21 +197,6 @@ const componentFormatters: ComponentMap = {
   // Answers are mapped to their parent questions / checklists
   [ComponentType.Answer]: {
     getDisplayKey: () => "Option (title)",
-    getIconKey: ({ item }) => {
-      const parentNode = useStore.getState().flow[item.parentId];
-      return parentNode.type!;
-    },
-    getTitle: ({ item }) => {
-      const parentNode = useStore.getState().flow[item.parentId];
-      return parentNode.data?.text;
-    },
-    getComponentType: ({ item }) => {
-      const parentNode = useStore.getState().flow[item.parentId];
-      const parentType = parentNode.type!;
-      const formatted = capitalize(SLUGS[parentType].replaceAll("-", " "));
-
-      return formatted;
-    },
   },
 };
 
@@ -234,12 +205,7 @@ const componentFormatters: ComponentMap = {
  */
 const defaultFormatter: SearchResultFormatter = {
   getDisplayKey: () => "Title",
-  getIconKey: ({ item }) => item.type,
-  getTitle: ({ item }) =>
-    (item.data?.title as string) || (item.data?.text as string) || "",
   getHeadline: ({ matchValue }) => matchValue,
-  getComponentType: ({ item }) =>
-    capitalize(SLUGS[item.type].replaceAll("-", " ")),
 };
 
 /**
@@ -256,9 +222,6 @@ export const getDisplayDetailsForResult = (
   };
 
   return {
-    iconKey: formatter.getIconKey(result),
-    componentType: formatter.getComponentType(result),
-    title: formatter.getTitle(result),
     key: formatter.getDisplayKey(result),
     headline: formatter.getHeadline(result),
   };
