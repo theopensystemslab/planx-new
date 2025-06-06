@@ -2,24 +2,23 @@ import { screen } from "@testing-library/react";
 import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import { expect } from "vitest";
 
-export const expandFilterAccordion = async (user: UserEvent) => {
-  const showAccordionTitle = screen.getByText("Show filters");
-  await user.click(showAccordionTitle);
+export const addFilter = async (
+  user: UserEvent,
+  selectLabel: string,
+  optionLabel: string,
+) => {
+  const combobox = screen.getByRole("combobox", { name: selectLabel });
+  await user.click(combobox);
 
-  const hideAccordionTitle = screen.getByText("Hide filters");
-  expect(hideAccordionTitle).toBeVisible();
-};
+  const option = screen.getByRole("option", { name: optionLabel });
+  await user.click(option);
 
-export const addFilter = async (user: UserEvent, name: string) => {
-  const checkbox = screen.getByRole("checkbox", { name: name });
-  await user.click(checkbox);
-  const filterChip = screen.getByRole("button", { name: name });
+  const filterChip = screen.getByRole("button", { name: optionLabel });
   expect(filterChip).toBeVisible();
 };
 
-export const removeFilter = async (user: UserEvent, name: string) => {
-  const checkbox = screen.getByRole("checkbox", { name: name });
-  await user.click(checkbox);
-  const filterChip = screen.queryByRole("button", { name: name });
+export const removeFilter = async (user: UserEvent, optionLabel: string) => {
+  const filterChip = screen.getByRole("button", { name: optionLabel });
+  await user.click(filterChip);
   expect(filterChip).not.toBeInTheDocument();
 };

@@ -345,7 +345,7 @@ jobs:
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
-        uses: theopensystemslab/vultr-action@v2.1
+        uses: theopensystemslab/vultr-action@v2.2-beta-5
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
@@ -355,6 +355,7 @@ jobs:
           pull_request_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
           tag: pullrequest
+          sshKeyIds: ${{ secrets.VULTR_SSH_KEY_IDS }}
 
       # CREATE STEPS
 
@@ -364,7 +365,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: ${{ steps.create.outputs.default_password }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 20m
           script: |
             apk update
@@ -399,7 +400,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 10m
           # TODO: some of below script might be superfluous for server update (rather than create)
           script: |
@@ -441,7 +442,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./${{ env.EDITOR_DIRECTORY }}/build"
           target: "planx-new/"
           overwrite: true
@@ -461,7 +462,7 @@ jobs:
         with:
           host: ${{ env.FULL_DOMAIN }}
           username: root
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist"
           target: "planx-new/"
           overwrite: true

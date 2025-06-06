@@ -7,7 +7,7 @@ import { describe, vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import Filters from "../Filter";
-import { addFilter, expandFilterAccordion, removeFilter } from "./helpers";
+import { addFilter, removeFilter } from "./helpers";
 import {
   mockFilterOptions,
   mockRecords,
@@ -41,70 +41,56 @@ const setupTestEnvironment = () => {
 };
 
 describe("the UI interactions of the Filter component", () => {
-  it("toggles visibility when the filter accordion is clicked", async () => {
-    const { user } = setupTestEnvironment();
-
-    const showFiltersHeader = screen.getByText("Show filters");
-    expect(showFiltersHeader).toBeVisible();
-
-    await user.click(showFiltersHeader);
-    expect(screen.getByText("Hide filters")).toBeVisible();
-  });
-
-  it("display the filter options when the accordion is open", async () => {
-    const { user } = setupTestEnvironment();
-
-    const filterStatusOption = screen.getByText("Online status");
-    const filterNameOption = screen.getByText("Name");
-
-    expect(filterStatusOption).not.toBeVisible();
-    expect(filterNameOption).not.toBeVisible();
-
-    await expandFilterAccordion(user);
-
-    expect(filterStatusOption).toBeVisible();
-    expect(filterNameOption).toBeVisible();
-  });
-
   it("should not have any accessibility violations on initial render", async () => {
     const { container } = setupTestEnvironment();
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
+
+  it("displays the filter options by default", () => {
+    setupTestEnvironment();
+
+    expect(screen.getByLabelText("Online status")).toBeVisible();
+    expect(screen.getByLabelText("Name")).toBeVisible();
+  });
 });
 
 describe("Filter functionality", () => {
-  it("manages filter chips correctly when selecting filters", async () => {
+  it("manages filter chips correctly when selecting and deselecting filters", async () => {
     const { user } = setupTestEnvironment();
-
-    await expandFilterAccordion(user);
 
     expect(
       screen.queryByRole("button", { name: "Online" }),
     ).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("checkbox", { name: "Online" }));
+    // Open combobox and select "Online"
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
+    await user.click(screen.getByRole("option", { name: "Online" }));
 
-    // when you select a filter, a clickable chip should appear for the option
+    // Expect online chip to be visible
     const onlineChip = screen.getByRole("button", { name: "Online" });
     expect(onlineChip).toBeVisible();
 
-    // change filter to it's other optionValue
-    await user.click(screen.getByRole("checkbox", { name: "Offline" }));
+    // Click the "Online" chip to remove it
+    await user.click(onlineChip);
 
-    // check it has been selected
-    const offlineChip = screen.getByRole("button", { name: "Offline" });
-    expect(offlineChip).toBeVisible();
-
-    // check previous filter has been deselected
+    // Verify "Online" chip is removed
     expect(
       screen.queryByRole("button", { name: "Online" }),
     ).not.toBeInTheDocument();
 
-    // click selected filter
-    await user.click(screen.getByRole("checkbox", { name: "Offline" }));
+    // Open combobox and select "Offline"
+    await user.click(screen.getByRole("combobox", { name: "Online status" }));
+    await user.click(screen.getByRole("option", { name: "Offline" }));
 
-    // check filter is deselected
+    // Expect offline chip to be visible
+    const offlineChip = screen.getByRole("button", { name: "Offline" });
+    expect(offlineChip).toBeVisible();
+
+    // Click the "Offline" chip to remove it
+    await user.click(offlineChip);
+
+    // Verify "Offline" chip is removed
     expect(
       screen.queryByRole("button", { name: "Offline" }),
     ).not.toBeInTheDocument();
@@ -113,8 +99,7 @@ describe("Filter functionality", () => {
   it("filters the records using a single option", async () => {
     const { user } = setupTestEnvironment();
 
-    await expandFilterAccordion(user);
-    await addFilter(user, "Offline");
+    await addFilter(user, "Online status", "Offline");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -127,9 +112,8 @@ describe("Filter functionality", () => {
   it("filters the records using multiple options", async () => {
     const { user } = setupTestEnvironment();
 
-    await expandFilterAccordion(user);
-    await addFilter(user, "Online");
-    await addFilter(user, "Online-mock-2");
+    await addFilter(user, "Online status", "Online");
+    await addFilter(user, "Name", "Online-mock-2");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {
@@ -142,8 +126,7 @@ describe("Filter functionality", () => {
   it("returns to mockRecords when all filters unchecked", async () => {
     const { user } = setupTestEnvironment();
 
-    await expandFilterAccordion(user);
-    await addFilter(user, "Offline");
+    await addFilter(user, "Online status", "Offline");
 
     expect(mockSetFilteredRecords).toHaveBeenCalledWith([
       {

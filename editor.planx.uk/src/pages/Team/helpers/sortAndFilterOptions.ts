@@ -31,10 +31,14 @@ const checkFlowServiceType: FilterOptions<FlowSummary>["validationFn"] = (
   _value,
 ) => flow.publishedFlows[0]?.hasSendComponent;
 
-const checkFlowTemplatedFrom: FilterOptions<FlowSummary>["validationFn"] = (
+const checkFlowTemplateType: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
-  _value,
-) => Boolean(flow.templatedFrom)
+  value,
+) => {
+  if (value === "template") return Boolean(flow.templatedFrom);
+  if (value === "source template") return Boolean(flow.isTemplate);
+  return false;
+};
 
 const baseFilterOptions: FilterOptions<FlowSummary>[] = [
   {
@@ -51,13 +55,15 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
   },
 ];
 
-const templateFilterOption: FilterOptions<FlowSummary> =  {
+const templateFilterOption: FilterOptions<FlowSummary> = {
   displayName: "Template",
   optionKey: "templatedFrom",
-  optionValue: ["template"],
-  validationFn: checkFlowTemplatedFrom,
+  optionValue: ["template", "source template"],
+  validationFn: checkFlowTemplateType,
 };
 
-export const filterOptions: FilterOptions<FlowSummary>[] = hasFeatureFlag("TEMPLATES")
+export const filterOptions: FilterOptions<FlowSummary>[] = hasFeatureFlag(
+  "TEMPLATES",
+)
   ? [...baseFilterOptions, templateFilterOption]
   : baseFilterOptions;

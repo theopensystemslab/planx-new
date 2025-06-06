@@ -3,6 +3,7 @@ import Search from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
+import { visuallyHidden } from "@mui/utils";
 import { useFormik } from "formik";
 import { FuseOptionKey } from "fuse.js";
 import { useSearch } from "hooks/useSearch";
@@ -87,7 +88,7 @@ export const SearchBox = <T extends object>({
             hidden: hideLabel,
           }}
         >
-          <strong>Search</strong>
+          <strong style={visuallyHidden}>Search</strong>
         </InputRowLabel>
         <InputRowItem>
           <Box sx={{ position: "relative" }}>

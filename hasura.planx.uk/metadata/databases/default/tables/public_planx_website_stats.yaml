@@ -6,7 +6,7 @@ select_permissions:
     permission:
       columns:
         - active_lpas
-        - submissions_last_week
-        - users_last_week
+        - submissions_last_30_days
+        - users_last_30_days
       filter: {}
     comment: ""
