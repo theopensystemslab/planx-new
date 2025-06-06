@@ -216,10 +216,12 @@ export const getFOIYNPP = (environment: Environment) => ({
     "find-out-if-you-need-planning-permission",
   ],
 });
+
 export const getRAB = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].RAB,
   slugs: ["report-a-planning-breach"],
 });
+
 export const getSubmission = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].submission,
   slugs: [
@@ -228,6 +230,7 @@ export const getSubmission = (environment: Environment) => ({
     "pre-application",
   ],
 });
+
 export const getDiscretionary = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].discretionary,
   slugs: [
