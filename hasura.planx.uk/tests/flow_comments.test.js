@@ -135,9 +135,9 @@ describe("flow comments", () => {
       expect(i.mutations).not.toContain("update_flow_comments_by_pk");
     });
 
-    test("can delete flow_comments", () => {
-      expect(i.mutations).toContain("delete_flow_comments");
-      expect(i.mutations).toContain("delete_flow_comments_by_pk");
+    test("cannot delete flow_comments", () => {
+      expect(i.mutations).not.toContain("delete_flow_comments");
+      expect(i.mutations).not.toContain("delete_flow_comments_by_pk");
     });
   });
 });
