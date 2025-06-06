@@ -398,11 +398,11 @@ export const previewStore: StateCreator<
       flow,
     );
 
-    // The highest order flag collected in this category is our result, else "No result"
+    // The highest order flag collected in this category is our result, else mock "No result"
     const flag: Flag = possibleFlags.find(
       (f) => f.value === collectedFlags[0],
     ) || {
-      value: undefined,
+      value: possibleFlags[0]?.value?.replace(/[^.]+$/, "noResult"),
       text: "No result",
       category: category as FlagSet,
       bgColor: "#EEEEEE",
@@ -584,8 +584,8 @@ export const previewStore: StateCreator<
       // Check if the existing passport value(s) startsWith at least one option's val (eg passport retains most granular values only)
       const matchingPassportValues = passportValues.filter(
         (passportValue: any) =>
-          sortedOptions.some(
-            (option) => passportValue?.startsWith(option.data?.val),
+          sortedOptions.some((option) =>
+            passportValue?.startsWith(option.data?.val),
           ),
       );
 

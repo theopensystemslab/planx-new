@@ -9,11 +9,13 @@ import { BaseNodeData } from "../shared";
 export interface FlagDisplayText {
   heading?: string;
   description?: string;
+  resetButton?: boolean;
 }
 
 export interface Result extends BaseNodeData {
   flagSet: FlagSet;
   overrides?: { [flagId: string]: FlagDisplayText };
+  resetButton?: boolean;
 }
 
 export interface PresentationalProps {
@@ -29,4 +31,6 @@ export interface PresentationalProps {
   responses: Array<Response>;
   disclaimer?: TextContent;
   previouslySubmittedData?: Store.UserData;
+  resetButton?: boolean;
+  resetPreview?: () => void;
 }

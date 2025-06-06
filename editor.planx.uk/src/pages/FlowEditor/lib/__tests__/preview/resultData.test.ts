@@ -17,7 +17,7 @@ describe("Default result data when no flags have been collected", () => {
           category: "Planning permission",
           color: "#000000",
           text: "No result",
-          value: undefined,
+          value: "flag.pp.noResult",
           description: "",
         },
         responses: [],
