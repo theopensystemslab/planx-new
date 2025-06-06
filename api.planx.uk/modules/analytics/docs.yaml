@@ -50,37 +50,3 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/AnalyticsResponse"
-
-  /metabase/dashboard:
-    post:
-      summary: Filter public dashboard link
-      description: Filters an existing public dashboard link based on the provided flow ID, team ID, and service slug
-      tags:
-        - metabase
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/FilterDashboardLink"
-      responses:
-        "200":
-          description: Dashboard link filtered successfully
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: string
-                    description: The filtered public dashboard link
-        "400":
-          description: Bad request or filtering failed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message
