@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import ListItemButton from "@mui/material/ListItemButton";
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
@@ -12,12 +12,18 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";
 
 const Root = styled(ListItemButton, {
-  shouldForwardProp: (prop) => prop !== "portalId",
-})<{ portalId?: string }>(({ theme, portalId }) => ({
+  shouldForwardProp: (prop) => !["portalId", "backgroundColor"].includes(prop as string),
+})<{ portalId?: string, backgroundColor?: string }>(({ theme, portalId, backgroundColor }) => ({
   border: `1px solid ${theme.palette.common.black}`,
   display: "block",
   padding: 0,
   borderWidth: portalId ? 4 : 2,
+  backgroundColor,
+  ...(backgroundColor && {
+    "&:hover": {
+      backgroundColor: alpha(backgroundColor, 0.7),
+    },
+  })
 }));
 
 const HeaderRoot = styled(Box)(({ theme }) => ({
@@ -89,7 +95,7 @@ export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor })
       onClick={handleClick}
       portalId={portalId}
       disableRipple
-      sx={(theme) => ({ backgroundColor: backgroundColor || theme.palette.background.paper })}
+      backgroundColor={backgroundColor}
     >
       {portalId && <InternalPortalHeader portalId={portalId} />}
       <Box p={1}>
