@@ -54,7 +54,7 @@ interface GetFlowEditorData {
 
 type Environment = keyof typeof DASHBOARD_PUBLIC_IDS;
 
-const environment = process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
+const environment = import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
 
 // The dashboard links across Metabase staging and production are different, so we need to store and be able to access both
 const DASHBOARD_PUBLIC_IDS = {
