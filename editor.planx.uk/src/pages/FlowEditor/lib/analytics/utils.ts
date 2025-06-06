@@ -220,7 +220,10 @@ export const getFOIYNPP = (environment: Environment) => ({
 
 export const getRAB = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].RAB,
-  slugs: ["report-a-planning-breach"],
+  slugs: [
+    "report-a-planning-breach",
+    "camden-report-a-planning-breach",
+  ],
 });
 
 export const getSubmission = (environment: Environment) => ({
@@ -228,7 +231,13 @@ export const getSubmission = (environment: Environment) => ({
   slugs: [
     "apply-for-planning-permission",
     "apply-for-a-lawful-development-certificate",
-    "pre-application",
+    "pre-application-advice",
+    "camden-apply-for-a-lawful-development-certificate",
+    "camden-apply-for-planning-permission",
+    "pre-application-for-energy-efficient-measures",
+    "tree-pre-application-advice",
+    "listed-building-pre-application-advice",
+    "apply-for-householder-and-listed-building-pre-application-advice",
   ],
 });
 
@@ -266,7 +275,7 @@ export const generateAnalyticsLink = ({
   let dashboardId: string | undefined;
 
   for (const service of includedServices) {
-    const found = service.slugs.some((slug) => flowSlug.includes(slug));
+    const found = service.slugs.some((slug) => flowSlug === slug);
     if (found) {
       dashboardId = service.id;
       break;
