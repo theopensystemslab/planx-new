@@ -274,13 +274,13 @@ export const generateAnalyticsLink = ({
 
   let dashboardId: string | undefined;
 
-  for (const service of includedServices) {
-    const found = service.slugs.some((slug) => flowSlug === slug);
-    if (found) {
-      dashboardId = service.id;
-      break;
-    }
-  }
+  const service = includedServices.find(service => 
+    service.slugs.some(slug => flowSlug === (slug))
+  );
+    
+  if (!service) return undefined;
+
+  dashboardId = service.id
 
   if (!dashboardId) {
     return;
