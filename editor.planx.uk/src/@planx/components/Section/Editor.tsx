@@ -49,6 +49,7 @@ function SectionComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              variant="paragraphContent"
             />
           </InputRow>
         </ModalSectionContent>

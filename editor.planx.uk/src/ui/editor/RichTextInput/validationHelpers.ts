@@ -102,7 +102,11 @@ export const linkSelectionError = (selectionHtml: string): string | null => {
 
 export const getContentHierarchyError = (
   doc: JSONContent,
-  rootLevelContent?: boolean,
+  variant?:
+    | "default"
+    | "rootLevelContent"
+    | "nestedContent"
+    | "paragraphContent",
 ): string[] | null => {
   const errors: string[] = [];
   const topLevelNodes = doc.content || [];
@@ -110,9 +114,13 @@ export const getContentHierarchyError = (
   let h1Index = -1;
   let h2Index = -1;
 
-  if (rootLevelContent) {
+  if (variant === "rootLevelContent") {
     const firstNode = topLevelNodes[0];
-    if (!firstNode || firstNode.type !== "heading" || firstNode.attrs?.level !== 1) {
+    if (
+      !firstNode ||
+      firstNode.type !== "heading" ||
+      firstNode.attrs?.level !== 1
+    ) {
       errors.push("The document must start with a level 1 heading (H1).");
     }
   }
@@ -122,27 +130,33 @@ export const getContentHierarchyError = (
 
     const level = d.attrs?.level;
 
-    if (rootLevelContent) {
+    if (variant === "rootLevelContent") {
       if (level === 1) {
         if (h1Index !== -1 && index !== 0) {
-          errors.push("There cannot be more than one level 1 heading (H1) in the document.");
+          errors.push(
+            "There cannot be more than one level 1 heading (H1) in the document.",
+          );
         }
         h1Index = index;
       }
 
       if (level === 2) {
         if (h1Index === -1) {
-          errors.push("A level 1 heading (H1) must come before a level 2 heading (H2).");
+          errors.push(
+            "A level 1 heading (H1) must come before a level 2 heading (H2).",
+          );
         }
         h2Index = index;
       }
-    } else {
+    } else if (variant === "default") {
       if (level === 2) {
         if (h2Index === -1 && h1Index === -1) {
           h2Index = index;
         }
         if (h1Index === -1) {
-          errors.push("A level 2 heading (H2) must come before a level 3 heading (H3).");
+          errors.push(
+            "A level 2 heading (H2) must come before a level 3 heading (H3).",
+          );
         }
       }
 
