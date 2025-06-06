@@ -9,6 +9,7 @@ import {
   BackwardsNavigationMetadata,
   BackwardsTargetMetadata,
 } from "./types";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 
 /**
  * Generate meaningful title for content analytic log
@@ -240,3 +241,50 @@ export const getDiscretionary = (environment: Environment) => ({
     "check-your-planning-constraints",
   ],
 });
+
+export const generateAnalyticsLink = ({
+  flowStatus,
+  environment,
+  flowId,
+  flowSlug,
+}: {
+  flowStatus: FlowStatus;
+  environment: Environment;
+  flowId: string;
+  flowSlug: string;
+}): string | undefined => {
+  
+  const includedServices = [
+    getFOIYNPP(environment),
+    getRAB(environment),
+    getSubmission(environment),
+    getDiscretionary(environment),
+  ];
+
+  if (flowStatus === "offline") return undefined;
+
+  let dashboardId: string | undefined;
+
+  for (const service of includedServices) {
+    const found = service.slugs.some((slug) => flowSlug.includes(slug));
+    if (found) {
+      dashboardId = service.id;
+      break;
+    }
+  }
+
+  if (!dashboardId) {
+    return;
+  }
+
+  const baseDomain = environment === "production" ? "uk" : "dev";
+  const host = `https://metabase.editor.planx.${baseDomain}`;
+  const pathname = `/public/dashboard/${dashboardId}`;
+  const url = new URL(pathname, host);
+  const search = new URLSearchParams({
+    flow_id: flowId,
+  }).toString();
+  url.search = search;
+
+  return url.toString();
+};

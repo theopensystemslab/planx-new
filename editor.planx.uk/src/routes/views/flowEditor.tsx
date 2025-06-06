@@ -6,13 +6,7 @@ import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
-import {
-  Environment,
-  getFOIYNPP,
-  getRAB,
-  getSubmission,
-  getDiscretionary,
-} from "../../pages/FlowEditor/lib/analytics/utils";
+import { Environment, generateAnalyticsLink } from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
@@ -136,16 +130,12 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   } = await getFlowEditorData(flow, req.params.team);
 
-  let flowAnalyticsLink: string | null = null;
-
-  if (flowStatus === "online") {
-    flowAnalyticsLink =
-      generateAnalyticsLink({
-        environment,
-        flowId: id,
-        flowSlug: flow,
-      }) ?? null;
-  }
+  const flowAnalyticsLink = generateAnalyticsLink({
+          flowStatus,
+          environment,
+          flowId: id,
+          flowSlug: flow,
+        });
 
   useStore.setState({
     id,
@@ -164,44 +154,3 @@ export const flowEditorView = async (req: NaviRequest) => {
   );
 };
 
-const includedServices = [
-  getFOIYNPP(environment),
-  getRAB(environment),
-  getSubmission(environment),
-  getDiscretionary(environment),
-];
-
-export const generateAnalyticsLink = ({
-  environment,
-  flowId,
-  flowSlug,
-}: {
-  environment: Environment;
-  flowId: string;
-  flowSlug: string;
-}): string | undefined => {
-  let dashboardId: string | undefined;
-
-  for (const service of includedServices) {
-    const found = service.slugs.some((slug) => flowSlug.includes(slug));
-    if (found) {
-      dashboardId = service.id;
-      break;
-    }
-  }
-
-  if (!dashboardId) {
-    return;
-  }
-
-  const baseDomain = environment === "production" ? "uk" : "dev";
-  const host = `https://metabase.editor.planx.${baseDomain}`;
-  const pathname = `/public/dashboard/${dashboardId}`;
-  const url = new URL(pathname, host);
-  const search = new URLSearchParams({
-    flow_id: flowId,
-  }).toString();
-  url.search = search;
-
-  return url.toString();
-};
