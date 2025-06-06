@@ -55,9 +55,12 @@ interface Props extends PropsWithChildren {
   nodeId: string;
 }
 
+/**
+ * Re-usable component that is responsible for the following -
+ *  - Display nodes in a standard format (title, icon, etc)
+ *  - Links to Editor modal for specific node
+ */
 export const NodeCard: React.FC<Props> = ({ nodeId, children }) => {
-
-  // Get ordered flow of indexed nodes from store
   const [orderedFlow, setOrderedFlow, getURLForNode] = useStore((state) => [
     state.orderedFlow,
     state.setOrderedFlow,

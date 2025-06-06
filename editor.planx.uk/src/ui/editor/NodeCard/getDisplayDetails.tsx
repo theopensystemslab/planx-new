@@ -7,8 +7,7 @@ import { SLUGS } from "pages/FlowEditor/data/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 
 /**
- * Functions to map a search result to the fields required by SearchResultCard
- * TODO: Docs
+ * Functions to map an indexed node to the display fields required by NodeCard
  */
 interface NodeCardFormatter {
   getIconKey: (node: IndexedNode) => ComponentType;
@@ -53,7 +52,7 @@ const defaultFormatter: NodeCardFormatter = {
 };
 
 /**
- * Formats a search result for display in the SearchResultCard
+ * Formats an IndexedNode for display in the NodeCard
  * The values are combined in order of precedence: key-specific, component-specific, then defaults
  */
 export const getDisplayDetails = (
