@@ -114,14 +114,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const [isCopyDialogOpen, setIsCopyDialogOpen] = useState<boolean>(false);
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState<boolean>(false);
 
-  const [archiveFlow, moveFlow, canUserEditTeam, isTemplate, isTemplatedFrom] =
-    useStore((state) => [
-      state.archiveFlow,
-      state.moveFlow,
-      state.canUserEditTeam,
-      state.isTemplate,
-      state.isTemplatedFrom,
-    ]);
+  const [archiveFlow, moveFlow, canUserEditTeam] = useStore((state) => [
+    state.archiveFlow,
+    state.moveFlow,
+    state.canUserEditTeam,
+  ]);
 
   const route = useCurrentRoute();
   const toast = useToast();
