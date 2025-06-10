@@ -1,6 +1,8 @@
 import { z } from "zod";
+
 import { ServerError } from "../../../errors/serverError.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
+import { updateTemplatedFlow } from "./service.js";
 
 export const updateTemplatedFlowEventSchema = z.object({
   body: z.object({
@@ -28,8 +30,11 @@ export const updateTemplatedFlowController: UpdateTemplatedFlowController =
       res.locals.parsedReq.body.payload;
 
     try {
+      const response = await updateTemplatedFlow(sourceFlowId, templatedFlowId);
+
       res.status(200).send({
-        message: `Successfully queued up event to update ${templatedFlowId}`,
+        message: `Successfully updated templated flow on source publish (source ID ${sourceFlowId}, templated flow ID ${templatedFlowId})`,
+        data: response,
       });
     } catch (error) {
       return next(
