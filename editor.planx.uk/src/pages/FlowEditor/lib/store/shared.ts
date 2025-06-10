@@ -15,7 +15,7 @@ export interface SharedStore extends Store.Store {
   flow: Store.Flow;
   flowSlug: string;
   flowName: string;
-  flowAnalyticsLink: string | null;
+  flowAnalyticsLink: string | undefined;
   id: string;
   getNode: (id: NodeId) => Store.Node | undefined;
   resetPreview: () => void;
@@ -60,7 +60,7 @@ export const sharedStore: StateCreator<
 
   flowName: "",
 
-  flowAnalyticsLink: null,
+  flowAnalyticsLink: undefined,
 
   id: "",
   previewEnvironment: "standalone",

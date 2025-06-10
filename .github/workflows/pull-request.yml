@@ -345,7 +345,7 @@ jobs:
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
-        uses: theopensystemslab/vultr-action@v2.2-beta-5
+        uses: theopensystemslab/vultr-action@v2.3
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
@@ -355,7 +355,7 @@ jobs:
           pull_request_id: ${{ env.PULLREQUEST_ID }}
           region: lhr
           tag: pullrequest
-          sshKeyIds: ${{ secrets.VULTR_SSH_KEY_IDS }}
+          ssh_key_ids: ${{ secrets.VULTR_SSH_KEY_IDS }}
 
       # CREATE STEPS
 

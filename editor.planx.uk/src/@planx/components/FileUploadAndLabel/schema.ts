@@ -1,4 +1,4 @@
-import { NODE_TAGS } from "@opensystemslab/planx-core/types";
+import { NODE_TAGS, TemplatedNodeData } from "@opensystemslab/planx-core/types";
 import {
   array,
   boolean,
@@ -32,9 +32,17 @@ const moreInformationSchema: SchemaOf<MoreInformation> = object({
   definitionImg: string(),
 });
 
+const templatedNodeSchema: SchemaOf<TemplatedNodeData> = object({
+  isTemplatedNode: boolean(),
+  templatedNodeInstructions: string(),
+  areTemplatedNodeInstructionsRequired: boolean(),
+});
+
 const baseNodeDataSchema: SchemaOf<BaseNodeData> = object({
   tags: array(mixed().oneOf([...NODE_TAGS])),
-}).concat(moreInformationSchema);
+})
+  .concat(moreInformationSchema)
+  .concat(templatedNodeSchema);
 
 const valFnSchema = mixed().when("condition", {
   is: checkIfConditionalRule,

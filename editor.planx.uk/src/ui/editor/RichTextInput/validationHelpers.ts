@@ -102,55 +102,86 @@ export const linkSelectionError = (selectionHtml: string): string | null => {
 
 export const getContentHierarchyError = (
   doc: JSONContent,
-  rootLevelContent?: boolean,
+  variant?:
+    | "default"
+    | "rootLevelContent"
+    | "nestedContent"
+    | "paragraphContent",
 ): string[] | null => {
   const errors: string[] = [];
   const topLevelNodes = doc.content || [];
 
+  switch (variant) {
+    case "rootLevelContent":
+      validateRootLevelContent(topLevelNodes, errors);
+      break;
+    case "nestedContent":
+    case "paragraphContent":
+      break;
+    default:
+      validateDefault(topLevelNodes, errors);
+      break;
+  }
+
+  return errors.length > 0 ? errors : null;
+};
+
+const validateRootLevelContent = (nodes: JSONContent[], errors: string[]) => {
+  const firstNode = nodes[0];
+  if (
+    !firstNode ||
+    firstNode.type !== "heading" ||
+    firstNode.attrs?.level !== 1
+  ) {
+    errors.push("The document must start with a level 1 heading (H1).");
+  }
+
+  let h1Count = 0;
+  let hasH1 = false;
+
+  nodes.forEach((node, index) => {
+    if (node.type !== "heading") return;
+
+    const level = node.attrs?.level;
+
+    if (level === 1) {
+      h1Count++;
+      hasH1 = true;
+      if (h1Count > 1) {
+        errors.push(
+          "There cannot be more than one level 1 heading (H1) in the document.",
+        );
+      }
+    }
+    if (level === 2 && !hasH1) {
+      errors.push(
+        "A level 1 heading (H1) must come before a level 2 heading (H2).",
+      );
+    }
+  });
+};
+
+const validateDefault = (nodes: JSONContent[], errors: string[]) => {
   let h1Index = -1;
   let h2Index = -1;
 
-  if (rootLevelContent) {
-    const firstNode = topLevelNodes[0];
-    if (!firstNode || firstNode.type !== "heading" || firstNode.attrs?.level !== 1) {
-      errors.push("The document must start with a level 1 heading (H1).");
+  nodes.forEach((node, index) => {
+    if (node.type !== "heading") return;
+
+    const level = node.attrs?.level;
+
+    if (level === 1) {
+      h1Index = index;
     }
-  }
-
-  topLevelNodes.forEach((d: JSONContent, index) => {
-    if (d.type !== "heading") return;
-
-    const level = d.attrs?.level;
-
-    if (rootLevelContent) {
-      if (level === 1) {
-        if (h1Index !== -1 && index !== 0) {
-          errors.push("There cannot be more than one level 1 heading (H1) in the document.");
-        }
-        h1Index = index;
-      }
-
-      if (level === 2) {
-        if (h1Index === -1) {
-          errors.push("A level 1 heading (H1) must come before a level 2 heading (H2).");
-        }
+    if (level === 2) {
+      if (h2Index === -1 && h1Index === -1) {
         h2Index = index;
       }
-    } else {
-      if (level === 2) {
-        if (h2Index === -1 && h1Index === -1) {
-          h2Index = index;
-        }
-        if (h1Index === -1) {
-          errors.push("A level 2 heading (H2) must come before a level 3 heading (H3).");
-        }
-      }
-
-      if (level === 1) {
-        h1Index = index;
+      if (h1Index === -1) {
+        errors.push(
+          "A level 2 heading (H2) must come before a level 3 heading (H3).",
+        );
       }
     }
   });
-
-  return errors.length > 0 ? errors : null;
 };

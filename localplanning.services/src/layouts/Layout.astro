@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import "@styles/global.css";
-import NavBar from "@components/NavBar.astro";
+import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import Analytics from "@components/Analytics.astro";
 ---
@@ -12,15 +12,15 @@ import Analytics from "@components/Analytics.astro";
     <ClientRouter />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>localplanning.services</title>
     <Analytics/>
   </head>
-  <body class="bg-main">
-    <NavBar />
-    <main>
-      <slot />
+  <body class="bg-black">
+    <Header />
+    <main class="bg-white">
+      <slot/>
     </main>
     <Footer />
   </body>
@@ -32,5 +32,6 @@ import Analytics from "@components/Analytics.astro";
     margin: 0;
     width: 100%;
     height: 100%;
+    color: var(--color-text-main);
   }
 </style>

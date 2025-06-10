@@ -6,6 +6,7 @@ import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
+import { Environment, generateAnalyticsLink } from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 
 interface FlowEditorData {
@@ -52,6 +53,9 @@ interface GetFlowEditorData {
   }[];
 }
 
+const environment: Environment =
+  import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
+
 export const getFlowEditorData = async (
   flowSlug: string,
   team: string,
@@ -67,7 +71,6 @@ export const getFlowEditorData = async (
         ) {
           id
           status
-          flowAnalyticsLink: analytics_link
           templatedFrom: templated_from
           isTemplate: is_template
           publishedFlowsAggregate: published_flows_aggregate {
@@ -121,12 +124,18 @@ export const flowEditorView = async (req: NaviRequest) => {
   const {
     id,
     flowStatus,
-    flowAnalyticsLink,
     isFlowPublished,
     isTemplate,
     templatedFrom,
     template,
   } = await getFlowEditorData(flow, req.params.team);
+
+  const flowAnalyticsLink = generateAnalyticsLink({
+          flowStatus,
+          environment,
+          flowId: id,
+          flowSlug: flow,
+        });
 
   useStore.setState({
     id,
@@ -138,9 +147,14 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   });
 
+  // Templated flows require access to an ordered flow
+  // Set this once upstream as it's an expensive operation
+  if (templatedFrom) useStore.getState().setOrderedFlow();
+
   return (
     <FlowEditorLayout>
       <View />
     </FlowEditorLayout>
   );
 };
+

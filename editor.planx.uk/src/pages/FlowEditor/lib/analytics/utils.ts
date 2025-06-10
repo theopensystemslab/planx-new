@@ -9,6 +9,7 @@ import {
   BackwardsNavigationMetadata,
   BackwardsTargetMetadata,
 } from "./types";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 
 /**
  * Generate meaningful title for content analytic log
@@ -190,3 +191,109 @@ export function getAllowListAnswers(
 
   return allowListAnswers;
 }
+
+export type Environment = keyof typeof DASHBOARD_PUBLIC_IDS;
+
+// The dashboard links across Metabase staging and production are different, so we need to store and be able to access both
+export const DASHBOARD_PUBLIC_IDS = {
+  production: {
+    discretionary: "34e5a17c-2f20-4543-be0b-4af8364dceee",
+    FOIYNPP: "d55b0362-3a21-4153-a53d-c1d6a55ff5e2",
+    RAB: "f3da39ec-bb4f-4ee0-8950-afcb5765d686",
+    submission: "040dad13-6783-4e48-9edc-be1b03aa5247",
+  },
+  staging: {
+    discretionary: "0c0abafd-e919-4da2-a5b3-1c637f703954",
+    FOIYNPP: "d6303f0b-d6e8-4169-93c0-f988a93e19bc",
+    RAB: "85c120bf-39b0-4396-bf8a-254b885e77f5",
+    submission: "363fd552-8c2b-40d9-8b7a-21634ec182cc",
+  },
+} as const;
+
+export const getFOIYNPP = (environment: Environment) => ({
+  id: DASHBOARD_PUBLIC_IDS[environment].FOIYNPP,
+  slugs: [
+    "check-if-you-need-planning-permission",
+    "find-out-if-you-need-planning-permission",
+  ],
+});
+
+export const getRAB = (environment: Environment) => ({
+  id: DASHBOARD_PUBLIC_IDS[environment].RAB,
+  slugs: [
+    "report-a-planning-breach",
+    "camden-report-a-planning-breach",
+  ],
+});
+
+export const getSubmission = (environment: Environment) => ({
+  id: DASHBOARD_PUBLIC_IDS[environment].submission,
+  slugs: [
+    "apply-for-planning-permission",
+    "apply-for-a-lawful-development-certificate",
+    "pre-application-advice",
+    "camden-apply-for-a-lawful-development-certificate",
+    "camden-apply-for-planning-permission",
+    "pre-application-for-energy-efficient-measures",
+    "tree-pre-application-advice",
+    "listed-building-pre-application-advice",
+    "apply-for-householder-and-listed-building-pre-application-advice",
+  ],
+});
+
+export const getDiscretionary = (environment: Environment) => ({
+  id: DASHBOARD_PUBLIC_IDS[environment].discretionary,
+  slugs: [
+    "check-whether-you-need-a-building-control-application",
+    "report-a-potential-dangerous-structure",
+    "check-constraints-on-a-property",
+    "check-your-planning-constraints",
+  ],
+});
+
+export const generateAnalyticsLink = ({
+  flowStatus,
+  environment,
+  flowId,
+  flowSlug,
+}: {
+  flowStatus: FlowStatus;
+  environment: Environment;
+  flowId: string;
+  flowSlug: string;
+}): string | undefined => {
+  
+  const includedServices = [
+    getFOIYNPP(environment),
+    getRAB(environment),
+    getSubmission(environment),
+    getDiscretionary(environment),
+  ];
+
+  if (flowStatus === "offline") return undefined;
+
+  let dashboardId: string | undefined;
+
+  const service = includedServices.find(service => 
+    service.slugs.some(slug => flowSlug === (slug))
+  );
+    
+  if (!service) return undefined;
+
+  dashboardId = service.id
+
+  if (!dashboardId) {
+    return;
+  }
+
+  const baseDomain = environment === "production" ? "uk" : "dev";
+  const host = `https://metabase.editor.planx.${baseDomain}`;
+  const pathname = `/public/dashboard/${dashboardId}`;
+  const url = new URL(pathname, host);
+  const search = new URLSearchParams({
+    flow_id: flowId,
+  }).toString();
+  url.search = search;
+
+  return url.toString();
+};

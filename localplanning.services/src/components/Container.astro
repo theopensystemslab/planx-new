@@ -1,0 +1,8 @@
+---
+const { paddingY = false } = Astro.props;
+const paddingClass = paddingY ? "clamp-[py,8,12]" : "";
+---
+
+<div class={`max-w-screen-2xl mx-auto clamp-[px,4,12] ${paddingClass}`}>
+  <slot />
+</div>

@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Remove vultr resources
-        uses: theopensystemslab/vultr-action@v2.2-beta-5
+        uses: theopensystemslab/vultr-action@v2.3
         with:
           action: destroy
           api_key: ${{ secrets.VULTR_API_KEY }}
@@ -28,3 +28,4 @@ jobs:
           pull_request_id: ${{  github.event.inputs.pull_request_id  }}
           region: lhr
           tag: manual-teardown
+          ssh_key_ids: ${{ secrets.VULTR_SSH_KEY_IDS }}
