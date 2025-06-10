@@ -31,7 +31,7 @@ const LeftGutter = styled(Grid)(({ theme }) => ({
     flex: `0 0 ${theme.spacing(6)}`,
   },
   [theme.breakpoints.up("lg")]: {
-    paddingTop: theme.spacing(0.25),
+    paddingTop: theme.spacing(0.2),
   },
 }));
 
