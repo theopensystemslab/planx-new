@@ -9,6 +9,7 @@ import ListManager from "ui/editor/ListManager/ListManager";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -219,6 +220,15 @@ export const Question: React.FC<Props> = (props) => {
       <ComponentTagSelect
         value={formik.values.tags}
         onChange={(value) => formik.setFieldValue("tags", value)}
+        disabled={props.disabled}
+      />
+      <TemplatedNodeConfiguration
+        formik={formik}
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
         disabled={props.disabled}
       />
     </form>
