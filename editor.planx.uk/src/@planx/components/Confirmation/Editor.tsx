@@ -6,6 +6,7 @@ import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
 } from "ui/editor/ListManager/ListManager";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -56,7 +57,7 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
 
 export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
-  const formik = useFormik({
+  const formik = useFormik<Confirmation>({
     initialValues: {
       heading: props.node?.data?.heading || "Application sent",
       description:
@@ -112,7 +113,7 @@ export default function ConfirmationEditor(props: Props) {
       <ModalSection>
         <ModalSectionContent title="Next steps" Icon={ICONS[TYPES.TaskList]}>
           <ListManager
-            values={formik.values.nextSteps}
+            values={formik.values.nextSteps || []}
             onChange={(steps: Step[]) => {
               formik.setFieldValue("nextSteps", steps);
             }}
@@ -147,6 +148,7 @@ export default function ConfirmationEditor(props: Props) {
           />
         </ModalSectionContent>
       </ModalSection>
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }

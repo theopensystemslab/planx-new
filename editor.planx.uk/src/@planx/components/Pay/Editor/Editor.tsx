@@ -129,6 +129,13 @@ const Component: React.FC<Props> = (props: Props) => {
             value={values.tags}
             disabled={props.disabled}
           />
+          {/* isTemplate && (<TemplatedNodeConfiguration
+            formik={formik}
+            isTemplatedNode={values.isTemplatedNode}
+            templatedNodeInstructions={values.templatedNodeInstructions}
+            areTemplatedNodeInstructionsRequired={values.areTemplatedNodeInstructionsRequired}
+            disabled={props.disabled}
+          />) */}
         </Form>
       )}
     </Formik>

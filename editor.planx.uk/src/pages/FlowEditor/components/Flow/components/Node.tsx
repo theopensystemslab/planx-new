@@ -25,6 +25,10 @@ const Node: React.FC<any> = (props) => {
     ...props,
     wasVisited,
     tags: node.data?.tags,
+    isTemplatedNode: node.data?.isTemplatedNode,
+    templatedNodeInstructions: node.data?.templatedNodeInstructions,
+    areTemplatedNodeInsructionsRequired:
+      node.data?.areTemplatedNodeInstructionsRequired,
   };
 
   const type = props.type as TYPES;
