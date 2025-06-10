@@ -47,13 +47,13 @@ export const updateTemplatedFlow = async (
     );
   const edits = templatedFlowEditsResponse.edits[0].data;
 
-  // Apply templated flow edits on top of source data using Lodash's deep merge
+  // Apply templated flow edits on top of source data using Lodash's deep merge (order of args matters!)
   const data = merge(sourceData, edits);
 
   // Set merged data as `flows.data` for templatedFlowId
   const updateFlowResponse = await $api.client.request<UpdateTemplatedFlowData>(
     gql`
-      mutation Insert($data: jsonb!, $id: uuid!) {
+      mutation UpdateTemplatedFlowData($data: jsonb!, $id: uuid!) {
         flow: update_flows_by_pk(
           pk_columns: { id: $id }
           _set: { data: $data }
