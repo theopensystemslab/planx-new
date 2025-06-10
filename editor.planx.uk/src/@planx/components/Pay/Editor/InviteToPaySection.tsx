@@ -68,6 +68,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
                   value={values.nomineeDescription}
                   onChange={handleChange}
                   disabled={disabled}
+                  variant="nestedContent"
                 />
               </InputRow>
             </Box>
@@ -90,6 +91,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
                   value={values.yourDetailsDescription}
                   onChange={handleChange}
                   disabled={disabled}
+                  variant="nestedContent"
                 />
               </InputRow>
               <InputRow>

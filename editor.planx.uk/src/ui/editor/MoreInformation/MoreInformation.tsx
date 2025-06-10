@@ -28,6 +28,7 @@ export const MoreInformation = ({
               value={info}
               onChange={changeField}
               disabled={disabled}
+              variant="nestedContent"
             />
           </InputLabel>
           <InputLabel label="Policy source" htmlFor="policyRef">
@@ -38,6 +39,7 @@ export const MoreInformation = ({
               value={policyRef}
               onChange={changeField}
               disabled={disabled}
+              variant="nestedContent"
             />
           </InputLabel>
           <InputLabel label="How it is defined?" htmlFor="howMeasured">
@@ -49,6 +51,7 @@ export const MoreInformation = ({
                 value={howMeasured}
                 onChange={changeField}
                 disabled={disabled}
+                variant="nestedContent"
               />
               <ImgInput
                 img={definitionImg}
