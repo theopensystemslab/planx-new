@@ -1,4 +1,4 @@
-import EditNoteIcon from "@mui/icons-material/EditNote";
+import StarIcon from "@mui/icons-material/Star";
 import Typography from "@mui/material/Typography";
 import type { TemplatedNodeData } from "@opensystemslab/planx-core/types";
 import { BaseNodeData } from "@planx/components/shared";
@@ -27,7 +27,7 @@ export const TemplatedNodeConfiguration = <T extends BaseNodeData>({
 }: TemplatedNodeConfigurationProps<T>) => {
   return (
     <ModalSection>
-      <ModalSectionContent title="Templates" Icon={EditNoteIcon}>
+      <ModalSectionContent title="Templates" Icon={StarIcon}>
         <Typography variant="body2" mb={2}>
           This node is in a source template. Configure how it should behave in
           templated flows.
