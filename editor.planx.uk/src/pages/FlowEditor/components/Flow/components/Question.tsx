@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import {
   ComponentType as TYPES,
   NodeTags,
+  TemplatedNodeData,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
@@ -23,7 +24,8 @@ type Props = {
   type: TYPES | "Error";
   [key: string]: any;
   wasVisited?: boolean;
-} & NodeTags;
+} & NodeTags &
+  TemplatedNodeData;
 
 const Question: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode, showHelpText, user] = useStore(

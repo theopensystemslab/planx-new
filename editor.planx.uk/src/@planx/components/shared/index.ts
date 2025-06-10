@@ -1,9 +1,13 @@
-import { Flag, NodeTags } from "@opensystemslab/planx-core/types";
+import {
+  Flag,
+  NodeTags,
+  TemplatedNodeData,
+} from "@opensystemslab/planx-core/types";
 import trim from "lodash/trim";
 import { Store } from "pages/FlowEditor/lib/store";
 
 /** Shared properties across all node types */
-export type BaseNodeData = NodeTags & MoreInformation;
+export type BaseNodeData = NodeTags & TemplatedNodeData & MoreInformation;
 
 export interface MoreInformation {
   howMeasured?: string;
@@ -22,6 +26,10 @@ export const parseBaseNodeData = (
   policyRef: data?.policyRef,
   info: data?.info,
   tags: data?.tags || [],
+  isTemplatedNode: data?.isTemplatedNode,
+  templatedNodeInstructions: data?.templatedNodeInstructions,
+  areTemplatedNodeInstructionsRequired:
+    data?.areTemplatedNodeInstructionsRequired,
 });
 
 export interface Option {
