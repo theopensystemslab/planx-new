@@ -1,7 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -29,8 +28,6 @@ export default function AddressInputComponent(props: Props): FCReturn {
     },
     validate: () => {},
   });
-
-  const isTemplate = useStore.getState().isTemplate;
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -66,11 +63,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
           />
         </ModalSectionContent>
       </ModalSection>
-      <ModalFooter
-        formik={formik}
-        disabled={props.disabled}
-        isTemplate={isTemplate}
-      />
+      <ModalFooter formik={formik} disabled={props.disabled} />
     </form>
   );
 }
