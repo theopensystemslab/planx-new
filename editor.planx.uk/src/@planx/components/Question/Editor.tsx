@@ -105,6 +105,8 @@ export const Question: React.FC<Props> = (props) => {
     }, 50);
   }, []);
 
+  const isTemplate = useStore.getState().isTemplate;
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <ModalSection>
@@ -222,15 +224,17 @@ export const Question: React.FC<Props> = (props) => {
         onChange={(value) => formik.setFieldValue("tags", value)}
         disabled={props.disabled}
       />
-      <TemplatedNodeConfiguration
-        formik={formik}
-        isTemplatedNode={formik.values.isTemplatedNode}
-        templatedNodeInstructions={formik.values.templatedNodeInstructions}
-        areTemplatedNodeInstructionsRequired={
-          formik.values.areTemplatedNodeInstructionsRequired
-        }
-        disabled={props.disabled}
-      />
+      {isTemplate && (
+        <TemplatedNodeConfiguration
+          formik={formik}
+          isTemplatedNode={formik.values.isTemplatedNode}
+          templatedNodeInstructions={formik.values.templatedNodeInstructions}
+          areTemplatedNodeInstructionsRequired={
+            formik.values.areTemplatedNodeInstructionsRequired
+          }
+          disabled={props.disabled}
+        />
+      )}
     </form>
   );
 };
