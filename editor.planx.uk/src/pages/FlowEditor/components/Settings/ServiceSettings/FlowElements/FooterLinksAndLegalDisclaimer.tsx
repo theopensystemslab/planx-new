@@ -14,10 +14,13 @@ import { useStore } from "../../../../lib/store";
 import { TextInput } from "./components/TextInput";
 
 export const FooterLinksAndLegalDisclaimer = () => {
-  const [flowSettings, updateFlowSettings] = useStore((state) => [
-    state.flowSettings,
-    state.updateFlowSettings,
-  ]);
+  const [flowStatus, flowSettings, updateFlowSettings, setFlowSettings] =
+    useStore((state) => [
+      state.flowStatus,
+      state.flowSettings,
+      state.updateFlowSettings,
+      state.setFlowSettings,
+    ]);
   const toast = useToast();
 
   const elementsForm = useFormik<FlowSettings>({
@@ -41,9 +44,11 @@ export const FooterLinksAndLegalDisclaimer = () => {
         },
       },
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       await updateFlowSettings(values);
+      setFlowSettings(values);
       toast.success("Service settings updated successfully");
+      resetForm({ values });
     },
     validate: () => {},
   });
@@ -111,7 +116,15 @@ export const FooterLinksAndLegalDisclaimer = () => {
               switchProps={{
                 name: "elements.privacy.show",
                 checked: elementsForm.values.elements?.privacy?.show,
-                onChange: elementsForm.handleChange,
+                onChange: (e) => {
+                  if (flowStatus === "online") {
+                    toast.error(
+                      "You cannot disable the privacy page for a service that is online",
+                    );
+                    return;
+                  }
+                  elementsForm.handleChange(e);
+                },
               }}
               headingInputProps={{
                 name: "elements.privacy.heading",

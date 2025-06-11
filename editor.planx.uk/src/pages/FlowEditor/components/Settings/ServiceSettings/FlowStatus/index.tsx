@@ -9,7 +9,7 @@ import axios from "axios";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
@@ -31,6 +31,7 @@ const FlowStatus = () => {
     teamDomain,
     isFlowPublished,
     isTrial,
+    flowSettings,
   ] = useStore((state) => [
     state.flowStatus,
     state.updateFlowStatus,
@@ -40,6 +41,7 @@ const FlowStatus = () => {
     state.teamDomain,
     state.isFlowPublished,
     state.teamSettings.isTrial,
+    state.flowSettings,
   ]);
   const toast = useToast();
 
@@ -60,7 +62,14 @@ const FlowStatus = () => {
   });
   const [dialogOpen, setDialogOpen] = useState(false);
   const [completed, setCompleted] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [confirmationError, setConfirmationError] = useState(false);
+  const [privacyError, setPrivacyError] = useState(false);
+
+  useEffect(() => {
+    if (flowSettings?.elements?.privacy?.show === true) {
+      setPrivacyError(false);
+    }
+  }, [flowSettings?.elements?.privacy?.show]);
 
   const publishedLink = `${window.location.origin}${rootFlowPath(
     false,
@@ -138,18 +147,41 @@ const FlowStatus = () => {
           </FlowTag>
         </Box>
         {import.meta.env.VITE_APP_ENV === "production" && (
-          <Button
-            id="set-status-button"
-            data-testid="set-status-button"
-            sx={{ mb: 2 }}
-            disabled={isTrial}
-            variant="contained"
-            onClick={() => setDialogOpen(true)}
-          >
-            {statusForm.values.status === "online"
-              ? "Set your service offline"
-              : "Set your service online"}
-          </Button>
+          <>
+            <ErrorWrapper
+              error={
+                privacyError
+                  ? "You must enable the privacy page to set your service online"
+                  : ""
+              }
+            >
+              <Box sx={{ display: "flex" }}>
+                <Button
+                  id="set-status-button"
+                  data-testid="set-status-button"
+                  sx={{ mb: 2 }}
+                  disabled={isTrial}
+                  variant="contained"
+                  onClick={() => {
+                    if (
+                      !flowSettings?.elements?.privacy?.show &&
+                      statusForm.values.status !== "online"
+                    ) {
+                      setPrivacyError(true);
+                      return;
+                    }
+
+                    setPrivacyError(false);
+                    setDialogOpen(true);
+                  }}
+                >
+                  {statusForm.values.status === "online"
+                    ? "Set your service offline"
+                    : "Set your service online"}
+                </Button>
+              </Box>
+            </ErrorWrapper>
+          </>
         )}
         {import.meta.env.VITE_APP_ENV !== "production" && (
           <Button
@@ -178,18 +210,18 @@ const FlowStatus = () => {
               if (!confirmed) {
                 setDialogOpen(false);
                 setCompleted(false);
-                setShowError(false);
+                setConfirmationError(false);
                 return;
               }
 
               if (!completed) {
-                setShowError(true);
+                setConfirmationError(true);
                 return;
               }
 
               setDialogOpen(false);
               setCompleted(false);
-              setShowError(false);
+              setConfirmationError(false);
               await statusForm.setFieldValue(
                 "status",
                 statusForm.values.status === "online" ? "offline" : "online",
@@ -206,7 +238,7 @@ const FlowStatus = () => {
           >
             <Box marginTop={2}>
               <ErrorWrapper
-                error={showError ? `Confirm before continuing` : ``}
+                error={confirmationError ? `Confirm before continuing` : ``}
               >
                 <Grid container component="fieldset" sx={{ margin: 0 }}>
                   <Typography gutterBottom>
@@ -226,7 +258,7 @@ const FlowStatus = () => {
                       checked={completed}
                       onChange={() => {
                         setCompleted(!completed);
-                        setShowError(false);
+                        setConfirmationError(false);
                       }}
                     />
                   </Grid>
