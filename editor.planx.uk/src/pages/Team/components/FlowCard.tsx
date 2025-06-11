@@ -156,7 +156,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
   };
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
-  const isTemplateService = Boolean(flow.templatedFrom);
+  const isTemplatedService = Boolean(flow.templatedFrom);
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
@@ -175,7 +175,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
     {
       type: FlowTagType.Template,
       displayName: "Template",
-      shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplateService,
+      shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplatedService,
     },
     {
       type: FlowTagType.SourceTemplate,
@@ -249,7 +249,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
                 >
                   {flow.isTemplate
                     ? "Source template"
-                    : flow.template.team.name}
+                    : `Templated from ${flow.template.team.name}`}
                 </Typography>
               </CardBanner>
             )}
@@ -309,6 +309,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
               {
                 label: "Copy",
                 onClick: () => setIsCopyDialogOpen(true),
+                disabled: flow.isTemplate || isTemplatedService,
               },
               {
                 label: "Move",
