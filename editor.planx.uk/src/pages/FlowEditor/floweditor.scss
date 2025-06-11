@@ -165,6 +165,7 @@ $fontMonospace: "Source Code Pro", monospace;
   & a {
     position: relative;
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: center;
     text-decoration: none;
@@ -186,17 +187,16 @@ $fontMonospace: "Source Code Pro", monospace;
       pointer-events: none;
     }
 
-    > span {
+    span {
       min-width: 80px;
-      max-width: 200px;
+      padding: 0 5px;
+      max-width: 220px;
       overflow-wrap: break-word;
     }
 
     // Component icon
     & svg {
-      margin-left: -6px;
       margin-top: -1px;
-      margin-right: 6px;
       width: 19px;
       height: 19px;
       opacity: 0.75;
@@ -213,11 +213,17 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
+  & .card-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding-top: 7px;
+    margin-left: -5px;
+  }
+
   & .card-tag {
-    border-color: $nodeBorder;
     .flow-locked & {
       opacity: 0.75;
-      border-color: $lockedBorder;
     }
   }
 
@@ -342,7 +348,7 @@ $fontMonospace: "Source Code Pro", monospace;
     text-decoration: none;
     border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;
-    max-width: 200px;
+    max-width: 220px;
     min-height: $size;
     border-radius: $size;
     color: $black;
@@ -369,11 +375,17 @@ $fontMonospace: "Source Code Pro", monospace;
 }
 
 .portal {
-  justify-content: center !important;
-  > a {
+  display: flex;
+  flex-direction: column;
+  background: $black;
+  > div {
+    display: flex;
+  }
+  > div a {
     background: $black;
     color: white;
     border: none;
+
     .flow-locked & {
       background: #555;
     }
@@ -381,11 +393,13 @@ $fontMonospace: "Source Code Pro", monospace;
   &.breadcrumb {
     background-image: $pixel;
     background-repeat: no-repeat;
+    background-color: transparent;
     [data-layout="top-down"] & {
       background-position: center top;
       background-size: $lineWidth $padding;
       > a {
         margin: $padding 0 0;
+        color: #fff;
       }
     }
     [data-layout="left-right"] & {
@@ -406,6 +420,7 @@ $fontMonospace: "Source Code Pro", monospace;
     justify-content: center;
     align-items: center;
     padding: 2px 6px;
+    margin-left: auto;
     svg {
       opacity: 1;
       margin: 0;

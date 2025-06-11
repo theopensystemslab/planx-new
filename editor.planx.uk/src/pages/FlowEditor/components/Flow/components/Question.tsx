@@ -28,15 +28,15 @@ type Props = {
   TemplatedNodeData;
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, user] = useStore(
-    (state) => [
+  const [isClone, childNodes, copyNode, showHelpText, showTags, user] =
+    useStore((state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.copyNode,
       state.showHelpText,
+      state.showTags,
       state.getUser(),
-    ],
-  );
+    ]);
 
   const parent = getParentId(props.parent);
 
@@ -98,20 +98,44 @@ const Question: React.FC<Props> = React.memo((props) => {
             onContextMenu={handleContext}
             ref={drag}
           >
-            {props.data?.img && (
-              <Thumbnail
-                imageSource={props.data?.img}
-                imageAltText={props.data?.text}
-              />
-            )}
-            {Icon && <Icon titleAccess={iconTitleAccess} />}
-            {showHelpText && hasHelpText && <Help fontSize="small" />}
-            <span>{props.text}</span>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "220px",
+              }}
+            >
+              {props.data?.img && (
+                <Thumbnail
+                  imageSource={props.data?.img}
+                  imageAltText={props.data?.text}
+                />
+              )}
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                {Icon && (
+                  <Icon
+                    titleAccess={iconTitleAccess}
+                    sx={{ marginLeft: "-6px" }}
+                  />
+                )}
+                <span>{props.text}</span>
+                {showHelpText && hasHelpText && (
+                  <Help fontSize="small" sx={{ marginLeft: "auto" }} />
+                )}
+              </Box>
+              {showTags && tagsByRole && tagsByRole.length > 0 && (
+                <Box className="card-tag-list">
+                  {tagsByRole.map((tag) => (
+                    <Tag tag={tag} key={tag} />
+                  ))}
+                </Box>
+              )}
+            </Box>
           </Link>
+
           {props.type !== TYPES.SetValue && props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
           )}
-          {tagsByRole?.map((tag) => <Tag tag={tag} key={tag} />)}
         </Box>
         <ol className="options">
           {childNodes.map((child: any) => (

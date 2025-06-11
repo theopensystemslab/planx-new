@@ -46,12 +46,12 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
       className="card-tag"
       sx={(theme) => ({
         bgcolor: tagBgColor,
-        borderWidth: "0 1px 1px 1px",
-        borderStyle: "solid",
-        width: "100%",
-        p: 0.5,
+        border: `1px solid rgba(0, 0, 0, 0.2)`,
+        padding: "2px 8px",
+        borderRadius: "50px",
         textAlign: "center",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
+        fontSize: "12px",
         color: getContrastTextColor(tagBgColor, "#FFF"),
       })}
     >

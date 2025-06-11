@@ -28,15 +28,15 @@ type Props = {
   TemplatedNodeData;
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, user] = useStore(
-    (state) => [
+  const [isClone, childNodes, copyNode, showHelpText, showTags, user] =
+    useStore((state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.copyNode,
       state.showHelpText,
+      state.showTags,
       state.getUser(),
-    ],
-  );
+    ]);
 
   const parent = getParentId(props.parent);
 
@@ -122,16 +122,24 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                 />
               )}
               <Box sx={{ display: "flex", flexDirection: "row" }}>
-                {Icon && <Icon />}
-                {showHelpText && hasHelpText && <Help fontSize="small" />}
+                {Icon && <Icon sx={{ marginLeft: "-6px" }} />}
                 <span>{props.text}</span>
+                {showHelpText && hasHelpText && (
+                  <Help fontSize="small" sx={{ marginLeft: "auto" }} />
+                )}
               </Box>
+              {showTags && tagsByRole && tagsByRole.length > 0 && (
+                <Box className="card-tag-list">
+                  {tagsByRole.map((tag) => (
+                    <Tag tag={tag} key={tag} />
+                  ))}
+                </Box>
+              )}
             </Box>
           </Link>
           {props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
           )}
-          {tagsByRole?.map((tag) => <Tag tag={tag} key={tag} />)}
         </Box>
         {groupedOptions ? (
           <ol className="categories">
