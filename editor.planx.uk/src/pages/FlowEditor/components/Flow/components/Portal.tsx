@@ -97,7 +97,7 @@ const ExternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
-          <Box>
+          <Box className="card-wrapper">
             <Link href={`/${href}`} prefetch={false} ref={drag}>
               <span>{href}</span>
             </Link>
@@ -106,15 +106,7 @@ const ExternalPortal: React.FC<any> = (props) => {
             </Link>
           </Box>
           {showTags && tagsByRole && tagsByRole.length > 0 && (
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 0.5,
-                borderTop: "1px solid #ccc",
-                p: 0.5,
-              }}
-            >
+            <Box className="card-tag-list">
               {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
             </Box>
           )}
@@ -169,7 +161,7 @@ const InternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
-          <Box>
+          <Box className="card-wrapper">
             <Link
               href={href}
               prefetch={false}
@@ -184,15 +176,7 @@ const InternalPortal: React.FC<any> = (props) => {
             </Link>
           </Box>
           {showTags && tagsByRole && tagsByRole.length > 0 && (
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 0.5,
-                borderTop: "1px solid #ccc",
-                p: 0.5,
-              }}
-            >
+            <Box className="card-tag-list">
               {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
             </Box>
           )}

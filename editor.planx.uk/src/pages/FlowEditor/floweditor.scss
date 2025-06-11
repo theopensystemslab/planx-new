@@ -12,6 +12,7 @@ $endpointWidth: 50px;
 $hangerWidth: 16px;
 $lineWidth: 2px;
 $nodeBorderWidth: 1px;
+$nodeMaxWidth: 240px;
 $padding: 10px;
 $editorPadding: 30px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
@@ -102,6 +103,26 @@ $fontMonospace: "Source Code Pro", monospace;
   position: relative;
   z-index: 1;
 
+  .card-wrapper {
+    max-width: $nodeMaxWidth;
+    & > a {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  &.portal .card-wrapper {
+    max-width: 260px;
+    & > a {
+      flex-direction: row;
+    }
+  }
+
+  .card-title {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
   &.isDragging {
     opacity: 0.3;
     & + .hanger {
@@ -158,8 +179,8 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   // Allow nodes to expand to width of data when toggled
-  &:not(.type-Section):not(.portal):not(.type-Filter) > a {
-    width: 100%;
+  &:not(.type-Section):not(.portal):not(.type-Filter) > div > a {
+    max-width: 100%;
   }
 
   & a {
@@ -174,7 +195,7 @@ $fontMonospace: "Source Code Pro", monospace;
     border: $nodeBorderWidth solid $nodeBorder;
     background: white;
     user-select: none;
-    padding: 6px 12px;
+    padding: 6px;
     overflow-wrap: break-word;
     word-break: break-word;
 
@@ -188,24 +209,26 @@ $fontMonospace: "Source Code Pro", monospace;
     }
 
     span {
-      min-width: 80px;
-      padding: 0 5px;
-      max-width: 220px;
+      min-width: 100px;
+      padding: 0 10px 0 5px;
+      max-width: $nodeMaxWidth;
       overflow-wrap: break-word;
     }
 
     // Component icon
     & svg {
-      margin-top: -1px;
-      width: 19px;
-      height: 19px;
-      opacity: 0.75;
+      margin-top: -2px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.95;
     }
   }
 
   & .card-data-field {
-    border-color: $nodeBorder;
+    border-color: $optionBorder;
     background: $dataBackground;
+    overflow-wrap: break-word;
+    word-break: break-word;
 
     .flow-locked & {
       border-color: $lockedBorder;
@@ -216,9 +239,12 @@ $fontMonospace: "Source Code Pro", monospace;
   & .card-tag-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 5px;
-    padding-top: 7px;
-    margin-left: -5px;
+    padding: 5px;
+    background: $dataBackground;
+    border: $nodeBorderWidth solid $optionBorder;
+    border-top: none;
   }
 
   & .card-tag {
@@ -348,7 +374,7 @@ $fontMonospace: "Source Code Pro", monospace;
     text-decoration: none;
     border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;
-    max-width: 220px;
+    max-width: $nodeMaxWidth;
     min-height: $size;
     border-radius: $size;
     color: $black;

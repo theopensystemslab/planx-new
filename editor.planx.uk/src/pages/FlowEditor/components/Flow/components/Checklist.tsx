@@ -101,44 +101,36 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Box>
+        <Box className="card-wrapper">
           <Link
             href={href}
             prefetch={false}
             onContextMenu={handleContext}
             ref={drag}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                maxWidth: "220px",
-              }}
-            >
-              {props.data?.img && (
-                <Thumbnail
-                  imageSource={props.data?.img}
-                  imageAltText={props.data?.text}
-                />
-              )}
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                {Icon && <Icon sx={{ marginLeft: "-6px" }} />}
-                <span>{props.text}</span>
-                {showHelpText && hasHelpText && (
-                  <Help fontSize="small" sx={{ marginLeft: "auto" }} />
-                )}
-              </Box>
-              {showTags && tagsByRole && tagsByRole.length > 0 && (
-                <Box className="card-tag-list">
-                  {tagsByRole.map((tag) => (
-                    <Tag tag={tag} key={tag} />
-                  ))}
-                </Box>
+            {props.data?.img && (
+              <Thumbnail
+                imageSource={props.data?.img}
+                imageAltText={props.data?.text}
+              />
+            )}
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+              {Icon && <Icon />}
+              <span>{props.text}</span>
+              {showHelpText && hasHelpText && (
+                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
               )}
             </Box>
           </Link>
           {props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
+          )}
+          {showTags && tagsByRole && tagsByRole.length > 0 && (
+            <Box className="card-tag-list">
+              {tagsByRole.map((tag) => (
+                <Tag tag={tag} key={tag} />
+              ))}
+            </Box>
           )}
         </Box>
         {groupedOptions ? (

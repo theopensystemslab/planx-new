@@ -50,7 +50,6 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
         padding: "2px 8px",
         borderRadius: "50px",
         textAlign: "center",
-        fontWeight: FONT_WEIGHT_SEMI_BOLD,
         fontSize: "12px",
         color: getContrastTextColor(tagBgColor, "#FFF"),
       })}
