@@ -10,6 +10,7 @@ config:
     secure: AAABAC2O6oVQLaaTRJw+MUVASpLK1Lo5qkARYpv90mbdc7T+XDLb27Z0LIKIA0yorbwvXjT1Ud4DnaCU4my5vA==
   application:db-url:
     secure: AAABAFI7BWi1MiV42eCEbNb5pkqvXsMD/AGFr76HpI96ZISZMDoTEZqMjkIOt8LKR6/dmxkgPa1pWfRYdKDYYnHJ0PY5brtHC5EwndG6Rpc9OcPmbkqjGIITv06jk1/IDxC1CRW9oq4xXhxDF4FN/MmhqqyCncUxS7jL2BhfKrQ/LMBrZtGF/e4GrXgHEqMXMTCHJQ==
+  application:domain: editor.planx.uk
   application:encryption-key:
     secure: AAABAGbTpoRtazwoNFNmaPCW0RdeTqjhEzQuYR1kl4ft7EWNxqswAu8Dc9T+YBxkYr3uaHbu5obzyo8I4QuVgg==
   application:file-api-key:

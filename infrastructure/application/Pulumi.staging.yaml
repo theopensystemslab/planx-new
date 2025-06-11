@@ -9,6 +9,7 @@ config:
     secure: AAABAMwwPy7/bMKC+iEonzpc0HrzblNfFBXBi60LiSTcoF1KxQkd+vkEUfBfhY96Tx4Nf8/JML6EBhtesIjoGN+r4Y1EcpW+thJoJa/g3Ssv4Dc=
   application:db-password:
     secure: AAABAAVV2tpNt1KK6I/h1PqHYZf5iDySr+GJOXy1cdMbIfO6cXNxel8Rv9EwmmAaPkPh7Z4vEZHIHSJqHrPDOA==
+  application:domain: editor.planx.dev
   application:encryption-key:
     secure: AAABAFTW2eRwQnXJq/IboPWtStOWXiF9WcsUKEiuosmp7TLZt52uKE3L+NrEGgsThOl3NkvFW2HhFa2XL6aB5w==
   application:file-api-key:
