@@ -97,7 +97,7 @@ const CUSTOM_DOMAINS: CustomDomains =
     : [];
 
 export = async () => {
-  const DOMAIN: string = config.require("domain");
+  const DOMAIN = env === "production" ? "editor.planx.uk" : "editor.planx.dev"; // config.require("domain");
 
   const repo = new awsx.ecr.Repository("repo", {
     lifeCyclePolicyArgs: {
