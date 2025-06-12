@@ -5,6 +5,7 @@ import {
   Flag,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import { getNoResultFlag } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
@@ -90,7 +91,10 @@ const ResultComponent: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet = flags[formik.values.flagSet];
+  const allFlagsForSet: FlagWithValue[] = [
+    ...(flags[formik.values.flagSet] ?? []),
+    getNoResultFlag(formik.values.flagSet) as FlagWithValue,
+  ];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">

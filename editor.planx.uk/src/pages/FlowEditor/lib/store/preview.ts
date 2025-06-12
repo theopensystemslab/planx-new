@@ -10,6 +10,7 @@ import {
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import { getNoResultFlag } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { DEFAULT_FN as planningConstraintsFn } from "@planx/components/PlanningConstraints/model";
 import { SetValue } from "@planx/components/SetValue/model";
@@ -398,17 +399,10 @@ export const previewStore: StateCreator<
       flow,
     );
 
-    // The highest order flag collected in this category is our result, else "No result"
-    const flag: Flag = possibleFlags.find(
-      (f) => f.value === collectedFlags[0],
-    ) || {
-      value: undefined,
-      text: "No result",
-      category: category as FlagSet,
-      bgColor: "#EEEEEE",
-      color: "#000000",
-      description: "",
-    };
+    // The highest order flag collected in this category is our result, else mock "No result"
+    const flag: Flag =
+      possibleFlags.find((f) => f.value === collectedFlags[0]) ||
+      getNoResultFlag(category as FlagSet);
 
     // Get breadcrumb nodes that set the result flag value (limited to Question & Checklist types)
     const responses = Object.entries(breadcrumbs)
@@ -584,8 +578,8 @@ export const previewStore: StateCreator<
       // Check if the existing passport value(s) startsWith at least one option's val (eg passport retains most granular values only)
       const matchingPassportValues = passportValues.filter(
         (passportValue: any) =>
-          sortedOptions.some(
-            (option) => passportValue?.startsWith(option.data?.val),
+          sortedOptions.some((option) =>
+            passportValue?.startsWith(option.data?.val),
           ),
       );
 
