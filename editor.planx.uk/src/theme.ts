@@ -98,6 +98,10 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     applicationType: "#D6EFFF",
     serviceType: "#FFEABE",
   },
+  template: {
+    main: "#E6D6FF",
+    dark: "#C099FF",
+  },
   tonalOffset: DEFAULT_TONAL_OFFSET,
 };
 

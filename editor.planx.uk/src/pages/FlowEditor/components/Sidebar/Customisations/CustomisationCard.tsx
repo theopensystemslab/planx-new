@@ -1,20 +1,51 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import { useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { NodeCard } from "ui/editor/NodeCard";
 
 import { FlowEdits, NodeEdits } from "./types";
 
 interface Props {
   nodeId: string;
-  nodeEdits?: NodeEdits
-  flowEdits: FlowEdits
-};
+  nodeEdits?: NodeEdits;
+  flowEdits: FlowEdits;
+}
 
-export const CustomisationCard: React.FC<Props> = ({ nodeId, nodeEdits, flowEdits }) => {
+const CardContainer = styled(Box)<{ isComplete: boolean }>(
+  ({ theme, isComplete }) => ({
+    backgroundColor: isComplete
+      ? theme.palette.common.white
+      : theme.palette.template.dark,
+    border: "1px solid",
+    borderColor: isComplete ? theme.palette.border.main : "transparent",
+    width: "100%",
+    padding: theme.spacing(0.25, 0.25, 0.25),
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+  }),
+);
+
+const StatusHeader = styled(Box)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: theme.spacing(0.5),
+  width: "100%",
+  padding: theme.spacing(0.5),
+}));
+
+export const CustomisationCard: React.FC<Props> = ({
+  nodeId,
+  nodeEdits,
+  flowEdits,
+}) => {
   const [flow] = useStore((state) => [state.flow]);
   const node = flow[nodeId];
 
@@ -22,42 +53,63 @@ export const CustomisationCard: React.FC<Props> = ({ nodeId, nodeEdits, flowEdit
     // This node has been directly edited
     if (nodeEdits) return true;
 
-    const isNodeWithChildren = node.type && [
-      ComponentType.Question, 
-      ComponentType.Checklist, 
-      ComponentType.ResponsiveQuestion, 
-      ComponentType.ResponsiveChecklist
-    ].includes(node.type);
+    const isNodeWithChildren =
+      node.type &&
+      [
+        ComponentType.Question,
+        ComponentType.Checklist,
+        ComponentType.ResponsiveQuestion,
+        ComponentType.ResponsiveChecklist,
+      ].includes(node.type);
 
     // The "children" of this node have been updated
     if (isNodeWithChildren) {
-      const isChildEdited = node.edges?.some((edgeId) => Boolean(flowEdits?.[edgeId]));
-      return isChildEdited
+      const isChildEdited = node.edges?.some((edgeId) =>
+        Boolean(flowEdits?.[edgeId]),
+      );
+      return isChildEdited;
     }
 
     // Node has not been edited
     return false;
   }, [nodeEdits, node, flowEdits]);
 
-  const isComplete = hasNodeBeenUpdated();
+  const isComplete = Boolean(hasNodeBeenUpdated());
 
   const theme = useTheme();
 
   return (
-    <ListItem key={nodeId} sx={{ pb: 2, pt: 0, px: 0 }}>
-      <NodeCard
-        nodeId={nodeId}
-        backgroundColor={isComplete
-          ? theme.palette.background.paper
-          : theme.palette.nodeTag.blocking
-        }>
-        {isComplete && (
-          <Typography variant="body2" component="pre">
-            {/** TODO decide whether to include details of _what_ was edited? Just logging data for now! */}
-            {JSON.stringify(nodeEdits, null, 2) || "Edges have been updated"}
+    <ListItem
+      key={nodeId}
+      sx={{
+        pb: 1,
+        pt: 0,
+        px: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        width: "100%",
+      }}
+    >
+      <CardContainer isComplete={isComplete}>
+        <StatusHeader>
+          {isComplete && <CheckCircleIcon color="success" fontSize="small" />}
+          <Typography
+            variant="body3"
+            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+          >
+            {isComplete ? "Done" : "Required"}
           </Typography>
-        )}
-      </NodeCard>
+        </StatusHeader>
+        <NodeCard nodeId={nodeId} backgroundColor={theme.palette.common.white}>
+          {/* {isComplete && ( */}
+          {/* <Typography variant="body2" component="pre">DONE */}
+          {/** TODO decide whether to include details of _what_ was edited? Just logging data for now! */}
+          {/* {JSON.stringify(nodeEdits, null, 2) || "Edges have been updated"} */}
+          {/* </Typography> */}
+          {/* )} */}
+        </NodeCard>
+      </CardContainer>
     </ListItem>
-  )
+  );
 };

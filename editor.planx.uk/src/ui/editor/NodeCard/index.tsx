@@ -12,19 +12,23 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { getDisplayDetailsForNodeCard } from "./getDisplayDetailsForNodeCard";
 
 const Root = styled(ListItemButton, {
-  shouldForwardProp: (prop) => !["portalId", "backgroundColor"].includes(prop as string),
-})<{ portalId?: string, backgroundColor?: string }>(({ theme, portalId, backgroundColor }) => ({
-  border: `1px solid ${theme.palette.common.black}`,
-  display: "block",
-  padding: 0,
-  borderWidth: portalId ? 4 : 2,
-  backgroundColor,
-  ...(backgroundColor && {
-    "&:hover": {
-      backgroundColor: alpha(backgroundColor, 0.7),
-    },
-  })
-}));
+  shouldForwardProp: (prop) =>
+    !["portalId", "backgroundColor"].includes(prop as string),
+})<{ portalId?: string; backgroundColor?: string }>(
+  ({ theme, portalId, backgroundColor }) => ({
+    border: `1px solid ${theme.palette.common.black}`,
+    display: "block",
+    maxWidth: "100%",
+    padding: 0,
+    borderWidth: portalId ? 4 : 2,
+    backgroundColor,
+    ...(backgroundColor && {
+      "&:hover": {
+        backgroundColor: alpha(backgroundColor, 0.7),
+      },
+    }),
+  }),
+);
 
 const HeaderRoot = styled(Box)(({ theme }) => ({
   padding: [theme.spacing(1), theme.spacing(0.5)],
@@ -66,7 +70,11 @@ interface Props extends PropsWithChildren {
  *  - Display nodes in a standard format (title, icon, etc)
  *  - Links to Editor modal for specific node
  */
-export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor }) => {
+export const NodeCard: React.FC<Props> = ({
+  nodeId,
+  children,
+  backgroundColor,
+}) => {
   const { navigate } = useNavigation();
   const [orderedFlow, getURLForNode] = useStore((state) => [
     state.orderedFlow,
@@ -76,12 +84,11 @@ export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor })
   if (!orderedFlow) return;
 
   const node = orderedFlow?.find(({ id }) => id === nodeId);
-  if (!node) return
+  if (!node) return;
 
-  const { iconKey, componentType, title } =
-    getDisplayDetailsForNodeCard(node);
+  const { iconKey, componentType, title } = getDisplayDetailsForNodeCard(node);
   const Icon = ICONS[iconKey];
-  
+
   const portalId = node.internalPortalId;
 
   const handleClick = () => {
@@ -126,7 +133,7 @@ export const NodeCard: React.FC<Props> = ({ nodeId, children, backgroundColor })
             </Typography>
           )}
         </Box>
-        { children && <Box mt={1}>{ children }</Box> }
+        {children && <Box mt={1}>{children}</Box>}
       </Box>
     </Root>
   );
