@@ -70,7 +70,7 @@ declare module "@mui/material/styles/createPalette" {
       applicationType: string;
       serviceType: string;
     };
-    template: {
+    template?: {
       main: string;
       dark: string;
     };
