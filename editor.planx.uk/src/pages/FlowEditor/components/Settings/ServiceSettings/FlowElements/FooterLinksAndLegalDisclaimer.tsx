@@ -117,7 +117,10 @@ export const FooterLinksAndLegalDisclaimer = () => {
                 name: "elements.privacy.show",
                 checked: elementsForm.values.elements?.privacy?.show,
                 onChange: (e) => {
-                  if (flowStatus === "online") {
+                  if (
+                    flowStatus === "online" &&
+                    elementsForm.values.elements?.privacy?.show
+                  ) {
                     toast.error(
                       "You cannot disable the privacy page for a service that is online",
                     );
