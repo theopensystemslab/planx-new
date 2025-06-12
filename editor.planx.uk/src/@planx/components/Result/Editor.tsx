@@ -5,6 +5,7 @@ import {
   Flag,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import { getNoResultFlag } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
@@ -89,19 +90,9 @@ const ResultComponent: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet = [
-    ...flags[formik.values.flagSet],
-    {
-      value: flags[formik.values.flagSet]?.[0]?.value?.replace(
-        /[^.]+$/,
-        "noResult",
-      ),
-      text: "No result",
-      category: formik.values.flagSet,
-      bgColor: "#EEEEEE",
-      color: "#000000",
-      description: "",
-    },
+  const allFlagsForSet: FlagWithValue[] = [
+    ...(flags[formik.values.flagSet] ?? []),
+    getNoResultFlag(formik.values.flagSet) as FlagWithValue,
   ];
 
   return (

@@ -10,6 +10,7 @@ import {
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import { getNoResultFlag } from "@opensystemslab/planx-core/types";
 import { FileList } from "@planx/components/FileUploadAndLabel/model";
 import { DEFAULT_FN as planningConstraintsFn } from "@planx/components/PlanningConstraints/model";
 import { SetValue } from "@planx/components/SetValue/model";
@@ -399,16 +400,9 @@ export const previewStore: StateCreator<
     );
 
     // The highest order flag collected in this category is our result, else mock "No result"
-    const flag: Flag = possibleFlags.find(
-      (f) => f.value === collectedFlags[0],
-    ) || {
-      value: possibleFlags[0]?.value?.replace(/[^.]+$/, "noResult"),
-      text: "No result",
-      category: category as FlagSet,
-      bgColor: "#EEEEEE",
-      color: "#000000",
-      description: "",
-    };
+    const flag: Flag =
+      possibleFlags.find((f) => f.value === collectedFlags[0]) ||
+      getNoResultFlag(category as FlagSet);
 
     // Get breadcrumb nodes that set the result flag value (limited to Question & Checklist types)
     const responses = Object.entries(breadcrumbs)
