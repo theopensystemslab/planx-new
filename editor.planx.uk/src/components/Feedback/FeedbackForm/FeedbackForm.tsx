@@ -56,8 +56,7 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
       <StyledForm>
         <FeedbackDisclaimer>
           Please do not include any personal data such as your name, email or
-          address. If we retain any sensitive information, we will act according
-          to our{" "}
+          address. All feedback is processed according to our{" "}
           <Link
             component={ReactNaviLink}
             href="pages/privacy"
