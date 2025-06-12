@@ -48,7 +48,7 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
       sx={{
         bgcolor: tagBgColor,
         border: `1px solid rgba(0, 0, 0, 0.2)`,
-        padding: "2px 12px",
+        padding: "4px 12px",
         borderRadius: "50px",
         textAlign: "center",
         fontSize: "12px",
