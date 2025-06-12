@@ -18,6 +18,7 @@ const Root = styled(ListItemButton, {
   ({ theme, portalId, backgroundColor }) => ({
     border: `1px solid ${theme.palette.common.black}`,
     display: "block",
+    maxWidth: "100%",
     padding: 0,
     borderWidth: portalId ? 4 : 2,
     backgroundColor,
