@@ -91,6 +91,7 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     blocking: "#FAE1B7",
     nonBlocking: "#FFFDB0",
     information: "#D6EFFF",
+    automation: "#B7E8B0",
   },
   flowTag: {
     online: "#D6FFD7",
