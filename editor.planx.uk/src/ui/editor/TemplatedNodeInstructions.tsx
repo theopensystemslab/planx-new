@@ -1,11 +1,11 @@
 import StarIcon from "@mui/icons-material/Star";
 import Typography from "@mui/material/Typography";
 import { BaseNodeData } from "@planx/components/shared";
-import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 import ModalSection from "./ModalSection";
+import ModalSectionContent from "./ModalSectionContent";
 
 export const TemplatedNodeInstructions = ({
   isTemplatedNode,
@@ -13,17 +13,16 @@ export const TemplatedNodeInstructions = ({
   areTemplatedNodeInstructionsRequired,
 }: BaseNodeData) => {
   const isTemplatedFrom = useStore.getState().isTemplatedFrom;
-  if (!isTemplatedFrom && !isTemplatedNode) return null;
+  if (!isTemplatedFrom || !isTemplatedNode) return null;
 
   return (
-    <ModalSection>
-      <WarningContainer>
-        <StarIcon />
-        <Typography variant="body2" ml={2}>
-          {templatedNodeInstructions}
-          {areTemplatedNodeInstructionsRequired ? `*` : ``}
-        </Typography>
-      </WarningContainer>
+    <ModalSection sectionBackgroundColor="#e6d6ff">
+      <ModalSectionContent
+        title={`Instructions ${areTemplatedNodeInstructionsRequired ? `(required)` : `(optional)`}`}
+        Icon={StarIcon}
+      >
+        <Typography variant="body2">{templatedNodeInstructions}</Typography>
+      </ModalSectionContent>
     </ModalSection>
   );
 };

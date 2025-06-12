@@ -8,6 +8,7 @@ import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
@@ -109,6 +110,13 @@ export default function Component(props: Props) {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      <TemplatedNodeInstructions
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent title="Calculate" Icon={ICONS[TYPES.Calculate]}>
           <Typography variant="body2" sx={{ mb: 2 }}>

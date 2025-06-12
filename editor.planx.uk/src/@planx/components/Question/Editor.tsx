@@ -10,6 +10,7 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -109,6 +110,13 @@ export const Question: React.FC<Props> = (props) => {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      <TemplatedNodeInstructions
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent title="Question" Icon={ICONS[type]}>
           <InputGroup>
