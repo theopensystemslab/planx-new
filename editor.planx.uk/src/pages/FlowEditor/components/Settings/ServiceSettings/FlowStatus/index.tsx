@@ -9,7 +9,7 @@ import axios from "axios";
 import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
@@ -147,41 +147,39 @@ const FlowStatus = () => {
           </FlowTag>
         </Box>
         {import.meta.env.VITE_APP_ENV === "production" && (
-          <>
-            <ErrorWrapper
-              error={
-                privacyError
-                  ? "You must enable the privacy page to set your service online"
-                  : ""
-              }
-            >
-              <Box sx={{ display: "flex" }}>
-                <Button
-                  id="set-status-button"
-                  data-testid="set-status-button"
-                  sx={{ mb: 2 }}
-                  disabled={isTrial}
-                  variant="contained"
-                  onClick={() => {
-                    if (
-                      !flowSettings?.elements?.privacy?.show &&
-                      statusForm.values.status !== "online"
-                    ) {
-                      setPrivacyError(true);
-                      return;
-                    }
+          <ErrorWrapper
+            error={
+              privacyError
+                ? "You must enable the privacy page below to set your service online"
+                : ""
+            }
+          >
+            <Box sx={{ display: "flex" }}>
+              <Button
+                id="set-status-button"
+                data-testid="set-status-button"
+                sx={{ mb: 2 }}
+                disabled={isTrial}
+                variant="contained"
+                onClick={() => {
+                  if (
+                    !flowSettings?.elements?.privacy?.show &&
+                    statusForm.values.status !== "online"
+                  ) {
+                    setPrivacyError(true);
+                    return;
+                  }
 
-                    setPrivacyError(false);
-                    setDialogOpen(true);
-                  }}
-                >
-                  {statusForm.values.status === "online"
-                    ? "Set your service offline"
-                    : "Set your service online"}
-                </Button>
-              </Box>
-            </ErrorWrapper>
-          </>
+                  setPrivacyError(false);
+                  setDialogOpen(true);
+                }}
+              >
+                {statusForm.values.status === "online"
+                  ? "Set your service offline"
+                  : "Set your service online"}
+              </Button>
+            </Box>
+          </ErrorWrapper>
         )}
         {import.meta.env.VITE_APP_ENV !== "production" && (
           <Button
