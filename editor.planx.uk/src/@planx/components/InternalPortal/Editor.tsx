@@ -9,6 +9,7 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
@@ -29,6 +30,9 @@ const InternalPortalForm: React.FC<{
   flows?: Array<Flow>;
   tags?: NodeTag[];
   disabled?: boolean;
+  isTemplatedNode?: boolean;
+  templatedNodeInstructions?: string;
+  areTemplatedNodeInstructionsRequired?: boolean;
 }> = ({
   handleSubmit,
   text = "",
@@ -37,6 +41,9 @@ const InternalPortalForm: React.FC<{
   tags = [],
   notes = "",
   disabled,
+  isTemplatedNode = false,
+  templatedNodeInstructions = "",
+  areTemplatedNodeInstructionsRequired = false,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -69,6 +76,13 @@ const InternalPortalForm: React.FC<{
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
+      <TemplatedNodeInstructions
+        isTemplatedNode={isTemplatedNode}
+        templatedNodeInstructions={templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent
           title="Internal portal"

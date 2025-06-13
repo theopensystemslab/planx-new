@@ -52,10 +52,10 @@ const ExternalPortalForm: React.FC<{
   handleSubmit?: (val: any) => void;
   flows?: Array<Flow>;
   tags?: NodeTag[];
+  disabled?: boolean;
   isTemplatedNode?: boolean;
   templatedNodeInstructions?: string;
   areTemplatedNodeInstructionsRequired?: boolean;
-  disabled?: boolean;
 }> = ({
   handleSubmit,
   flowId,
