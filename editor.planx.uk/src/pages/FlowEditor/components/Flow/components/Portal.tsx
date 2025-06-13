@@ -22,8 +22,10 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const addExternalPortal = useStore.getState().addExternalPortal;
-  const showTags = useStore((state) => state.showTags);
+  const { addExternalPortal, showTags } = useStore((state) => ({
+    addExternalPortal: state.addExternalPortal,
+    showTags: state.showTags,
+  }));
 
   const { data, loading } = useQuery(
     gql`
@@ -121,8 +123,10 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const copyNode = useStore((state) => state.copyNode);
-  const showTags = useStore((state) => state.showTags);
+  const { copyNode, showTags } = useStore((state) => ({
+    copyNode: state.copyNode,
+    showTags: state.showTags,
+  }));
 
   let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
   if (parent) {
