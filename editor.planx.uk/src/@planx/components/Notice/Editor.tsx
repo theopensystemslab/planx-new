@@ -8,6 +8,7 @@ import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
@@ -32,6 +33,13 @@ export interface NoticeEditorProps {
 const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
   return (
     <>
+      <TemplatedNodeInstructions
+        isTemplatedNode={props.value.isTemplatedNode}
+        templatedNodeInstructions={props.value.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          props.value.areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent title="Notice" Icon={ICONS[TYPES.Notice]}>
           <InputRow>
@@ -138,6 +146,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
     },
     validate: () => {},
   });
+
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <NoticeEditor

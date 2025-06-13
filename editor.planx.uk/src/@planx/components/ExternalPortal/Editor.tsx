@@ -1,4 +1,3 @@
-import { autocompleteClasses } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
 import {
   ComponentType as TYPES,
@@ -9,6 +8,7 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -53,6 +53,9 @@ const ExternalPortalForm: React.FC<{
   flows?: Array<Flow>;
   tags?: NodeTag[];
   disabled?: boolean;
+  isTemplatedNode?: boolean;
+  templatedNodeInstructions?: string;
+  areTemplatedNodeInstructionsRequired?: boolean;
 }> = ({
   handleSubmit,
   flowId,
@@ -60,6 +63,9 @@ const ExternalPortalForm: React.FC<{
   tags = [],
   notes = "",
   disabled = false,
+  isTemplatedNode = false,
+  templatedNodeInstructions = "",
+  areTemplatedNodeInstructionsRequired = false,
 }) => {
   const portalSchema = Yup.object().shape({
     flowId: Yup.string().required("Add a flow to submit"),
@@ -87,6 +93,13 @@ const ExternalPortalForm: React.FC<{
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
+      <TemplatedNodeInstructions
+        isTemplatedNode={isTemplatedNode}
+        templatedNodeInstructions={templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent
           title="External portal"
