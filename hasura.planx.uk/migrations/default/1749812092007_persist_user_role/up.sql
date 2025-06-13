@@ -67,3 +67,5 @@ CREATE OR REPLACE VIEW "public"."analytics_summary" AS
      LEFT JOIN analytics_logs al ON ((a.id = al.analytics_id)))
      LEFT JOIN flows f ON ((a.flow_id = f.id)))
      LEFT JOIN teams t ON ((t.id = f.team_id)));
+
+GRANT SELECT ON "public"."analytics_summary" TO metabase_read_only;
