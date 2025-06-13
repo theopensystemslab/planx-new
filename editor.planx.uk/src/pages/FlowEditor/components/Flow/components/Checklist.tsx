@@ -1,5 +1,6 @@
 import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   NodeTags,
@@ -11,6 +12,7 @@ import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -24,6 +26,7 @@ type Props = {
   type: TYPES;
   [key: string]: any;
   wasVisited?: boolean;
+  isTemplatedNode?: boolean;
 } & NodeTags &
   TemplatedNodeData;
 
@@ -101,7 +104,29 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Box className="card-wrapper">
+        <Box
+          // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
+          className={classNames("card-wrapper", {
+            "template-card": props.isTemplatedNode,
+          })}
+          sx={
+            props.isTemplatedNode
+              ? {
+                  backgroundColor: (theme) => theme.palette.template.dark,
+                }
+              : {}
+          }
+        >
+          {props.isTemplatedNode && (
+            <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
+              <Typography
+                variant="body3"
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                Required
+              </Typography>
+            </Box>
+          )}
           <Link
             href={href}
             prefetch={false}
