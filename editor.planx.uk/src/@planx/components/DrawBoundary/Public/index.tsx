@@ -51,7 +51,10 @@ const slotsSchema = array()
 
 export default function Component(props: Props) {
   const isMounted = useRef(false);
-  const passport = useStore((state) => state.computePassport());
+  const [passport, teamSlug] = useStore((state) => [
+    state.computePassport(),
+    state.teamSlug,
+  ]);
 
   const previousBoundary =
     props.previouslySubmittedData?.data?.[props.fn] ||
@@ -66,7 +69,11 @@ export default function Component(props: Props) {
 
   // Buffer applied to the address point to clip this map extent
   //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
-  const bufferInMeters = area && area > 15000 ? 300 : 120;
+  let bufferInMeters: number = area && area > 15000 ? 300 : 120;
+  if (teamSlug === "tewkesbury") {
+    // Tewkesbury services uniquely support "Strategic Local Partnership" boundary which requires larger buffer
+    bufferInMeters = 600;
+  }
 
   const previousFile =
     props.previouslySubmittedData?.data?.[PASSPORT_UPLOAD_KEY];
