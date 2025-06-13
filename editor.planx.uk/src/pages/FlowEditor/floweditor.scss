@@ -248,6 +248,9 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   & .card-tag {
+    &.automation {
+      width: 100%;
+    }
     .flow-locked & {
       opacity: 0.75;
     }
