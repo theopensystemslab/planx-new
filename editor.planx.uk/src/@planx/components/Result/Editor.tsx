@@ -10,6 +10,7 @@ import groupBy from "lodash/groupBy";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -88,6 +89,13 @@ const ResultComponent: React.FC<Props> = (props) => {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      <TemplatedNodeInstructions
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent title="Result" Icon={ICONS[TYPES.Result]}>
           <InputRow>

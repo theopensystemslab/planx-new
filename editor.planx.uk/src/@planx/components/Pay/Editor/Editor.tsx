@@ -13,6 +13,7 @@ import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import { MoreInformation } from "ui/editor/MoreInformation/MoreInformation";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
@@ -41,6 +42,13 @@ const Component: React.FC<Props> = (props: Props) => {
     >
       {({ values, handleChange, setFieldValue }) => (
         <Form id="modal" name="modal">
+          <TemplatedNodeInstructions
+            isTemplatedNode={values.isTemplatedNode}
+            templatedNodeInstructions={values.templatedNodeInstructions}
+            areTemplatedNodeInstructionsRequired={
+              values.areTemplatedNodeInstructionsRequired
+            }
+          />
           <ModalSection>
             <ModalSectionContent title="Payment" Icon={ICONS[TYPES.Pay]}>
               <InputRow>

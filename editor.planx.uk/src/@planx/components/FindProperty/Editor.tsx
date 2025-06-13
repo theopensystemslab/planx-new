@@ -7,6 +7,7 @@ import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -32,6 +33,13 @@ function FindPropertyComponent(props: Props) {
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      <TemplatedNodeInstructions
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent
           title="Find property"

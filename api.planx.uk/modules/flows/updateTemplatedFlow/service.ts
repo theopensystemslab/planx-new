@@ -45,7 +45,7 @@ export const updateTemplatedFlow = async (
         flow_id: templatedFlowId,
       },
     );
-  const edits = templatedFlowEditsResponse.edits[0].data;
+  const edits = templatedFlowEditsResponse.edits?.[0]?.data || {};
 
   // Apply templated flow edits on top of source data using Lodash's deep merge (order of args matters!)
   const data = merge(sourceData, edits);

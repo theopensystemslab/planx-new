@@ -9,6 +9,7 @@ import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -58,6 +59,13 @@ function SetFeeComponent(props: Props) {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
+      <TemplatedNodeInstructions
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
+        areTemplatedNodeInstructionsRequired={
+          formik.values.areTemplatedNodeInstructionsRequired
+        }
+      />
       <ModalSection>
         <ModalSectionContent title="Set fees" Icon={ICONS[TYPES.SetFee]} />
       </ModalSection>
