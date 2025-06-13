@@ -1,5 +1,7 @@
+import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
+import { Link } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { useStore } from "../../lib/store";
@@ -30,22 +32,46 @@ const Flow = ({ breadcrumbs = [] }: any) => {
   const isFlowRoot = !portals.length;
   const showGetStarted = isFlowRoot && !childNodes.length;
 
+  const flowName = useStore((state) => state.flowName);
+
   return (
     <>
-      <ol id="flow" data-layout={flowLayout} className="decisions">
-        <EndPoint text="start" />
+      <ol
+        id="flow"
+        data-layout={flowLayout}
+        className={`decisions${breadcrumbs.length ? " nested-decisions" : ""}`}
+      >
+        {!breadcrumbs.length ? (
+          <EndPoint text="start" />
+        ) : (
+          <li className="root-node-link">
+            <Link href={rootFlowPath(false)} prefetch={false}>
+              {flowName}
+            </Link>
+          </li>
+        )}
+
         {showGetStarted && <GetStarted />}
 
-        {breadcrumbs.map((bc: any) => (
-          <Node key={bc.id} {...bc} />
+        {breadcrumbs.map((bc: any, index: number) => (
+          <Node
+            key={bc.id}
+            {...bc}
+            className={
+              index === breadcrumbs.length - 1 ? "active-breadcrumb" : ""
+            }
+          />
         ))}
 
-        {childNodes.map((node) => (
-          <Node key={node.id} {...node} />
-        ))}
+        <Box className="flow-child-nodes">
+          {childNodes.map((node) => (
+            <Node key={node.id} {...node} />
+          ))}
 
-        <Hanger />
-        <EndPoint text="end" />
+          <Hanger />
+        </Box>
+
+        {!breadcrumbs.length && <EndPoint text="end" />}
       </ol>
     </>
   );

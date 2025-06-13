@@ -29,6 +29,7 @@ const Node: React.FC<any> = (props) => {
     templatedNodeInstructions: node.data?.templatedNodeInstructions,
     areTemplatedNodeInsructionsRequired:
       node.data?.areTemplatedNodeInstructionsRequired,
+    className: props.className || "",
   };
 
   const type = props.type as TYPES;
