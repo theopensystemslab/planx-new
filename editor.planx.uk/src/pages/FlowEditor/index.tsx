@@ -45,6 +45,7 @@ const FlowEditor = () => {
 
   const teamSlug = useStore.getState().getTeam().slug;
   const lockedFlow = !useStore.getState().canUserEditTeam(teamSlug);
+  // TODO: use lockedFlow styling when editing templated flows
 
   return (
     <EditorContainer id="editor-container">
