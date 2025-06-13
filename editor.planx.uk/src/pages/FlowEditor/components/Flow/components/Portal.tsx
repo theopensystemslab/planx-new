@@ -22,7 +22,10 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const addExternalPortal = useStore.getState().addExternalPortal;
+  const { addExternalPortal, showTags } = useStore((state) => ({
+    addExternalPortal: state.addExternalPortal,
+    showTags: state.showTags,
+  }));
 
   const { data, loading } = useQuery(
     gql`
@@ -96,14 +99,20 @@ const ExternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
-          <Link href={`/${href}`} prefetch={false} ref={drag}>
-            <span>{href}</span>
-          </Link>
-          <Link href={editHref} prefetch={false} className="portalMenu">
-            <MoreVert titleAccess="Edit Portal" />
-          </Link>
+          <Box className="card-wrapper">
+            <Link href={`/${href}`} prefetch={false} ref={drag}>
+              <span>{href}</span>
+            </Link>
+            <Link href={editHref} prefetch={false} className="portalMenu">
+              <MoreVert titleAccess="Edit Portal" />
+            </Link>
+          </Box>
+          {showTags && tagsByRole && tagsByRole.length > 0 && (
+            <Box className="card-tag-list">
+              {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+            </Box>
+          )}
         </Box>
-        {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
       </li>
     </>
   );
@@ -114,7 +123,10 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const copyNode = useStore((state) => state.copyNode);
+  const { copyNode, showTags } = useStore((state) => ({
+    copyNode: state.copyNode,
+    showTags: state.showTags,
+  }));
 
   let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
   if (parent) {
@@ -153,20 +165,26 @@ const InternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
-          <Link
-            href={href}
-            prefetch={false}
-            ref={drag}
-            onContextMenu={handleContext}
-          >
-            {Icon && <Icon />}
-            <span>{props.data.text}</span>
-          </Link>
-          <Link href={editHref} prefetch={false} className="portalMenu">
-            <MoreVert titleAccess="Edit Portal" />
-          </Link>
+          <Box className="card-wrapper">
+            <Link
+              href={href}
+              prefetch={false}
+              ref={drag}
+              onContextMenu={handleContext}
+            >
+              {Icon && <Icon />}
+              <span>{props.data.text}</span>
+            </Link>
+            <Link href={editHref} prefetch={false} className="portalMenu">
+              <MoreVert titleAccess="Edit Portal" />
+            </Link>
+          </Box>
+          {showTags && tagsByRole && tagsByRole.length > 0 && (
+            <Box className="card-tag-list">
+              {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+            </Box>
+          )}
         </Box>
-        {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
       </li>
     </>
   );

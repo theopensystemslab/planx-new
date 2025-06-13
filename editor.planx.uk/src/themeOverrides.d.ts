@@ -36,6 +36,7 @@ declare module "@mui/material/styles/createPalette" {
       nonBlocking: string;
       blocking: string;
       information: string;
+      automation: string;
     };
     flowTag: {
       online: string;
@@ -59,6 +60,7 @@ declare module "@mui/material/styles/createPalette" {
       nonBlocking: string;
       blocking: string;
       information: string;
+      automation: string;
     };
     flowTag?: {
       online: string;
