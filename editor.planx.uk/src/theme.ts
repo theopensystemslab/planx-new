@@ -90,13 +90,18 @@ const DEFAULT_PALETTE: Partial<PaletteOptions> = {
     error: "#FFA8A1",
     blocking: "#FAE1B7",
     nonBlocking: "#FFFDB0",
-    information: "#B7FAD7",
+    information: "#D6EFFF",
+    automation: "#B7E8B0",
   },
   flowTag: {
     online: "#D6FFD7",
     offline: "#EAEAEA",
     applicationType: "#D6EFFF",
     serviceType: "#FFEABE",
+  },
+  template: {
+    main: "#E6D6FF",
+    dark: "#C099FF",
   },
   tonalOffset: DEFAULT_TONAL_OFFSET,
 };

@@ -28,15 +28,15 @@ type Props = {
   TemplatedNodeData;
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, user] = useStore(
-    (state) => [
+  const [isClone, childNodes, copyNode, showHelpText, showTags, user] =
+    useStore((state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.copyNode,
       state.showHelpText,
+      state.showTags,
       state.getUser(),
-    ],
-  );
+    ]);
 
   const parent = getParentId(props.parent);
 
@@ -91,7 +91,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           },
         )}
       >
-        <Box>
+        <Box className="card-wrapper">
           <Link
             href={href}
             prefetch={false}
@@ -104,14 +104,24 @@ const Question: React.FC<Props> = React.memo((props) => {
                 imageAltText={props.data?.text}
               />
             )}
-            {Icon && <Icon titleAccess={iconTitleAccess} />}
-            {showHelpText && hasHelpText && <Help fontSize="small" />}
-            <span>{props.text}</span>
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+              {Icon && <Icon titleAccess={iconTitleAccess} />}
+              <span>{props.text}</span>
+              {showHelpText && hasHelpText && (
+                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
+              )}
+            </Box>
           </Link>
           {props.type !== TYPES.SetValue && props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
           )}
-          {tagsByRole?.map((tag) => <Tag tag={tag} key={tag} />)}
+          {showTags && tagsByRole && tagsByRole.length > 0 && (
+            <Box className="card-tag-list">
+              {tagsByRole.map((tag) => (
+                <Tag tag={tag} key={tag} />
+              ))}
+            </Box>
+          )}
         </Box>
         <ol className="options">
           {childNodes.map((child: any) => (

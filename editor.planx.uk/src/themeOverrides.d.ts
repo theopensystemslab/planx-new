@@ -36,12 +36,17 @@ declare module "@mui/material/styles/createPalette" {
       nonBlocking: string;
       blocking: string;
       information: string;
+      automation: string;
     };
     flowTag: {
       online: string;
       offline: string;
       applicationType: string;
       serviceType: string;
+    };
+    template: {
+      main: string;
+      dark: string;
     };
   }
 
@@ -59,12 +64,17 @@ declare module "@mui/material/styles/createPalette" {
       nonBlocking: string;
       blocking: string;
       information: string;
+      automation: string;
     };
     flowTag?: {
       online: string;
       offline: string;
       applicationType: string;
       serviceType: string;
+    };
+    template?: {
+      main: string;
+      dark: string;
     };
   }
 

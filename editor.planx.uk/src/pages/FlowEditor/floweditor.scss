@@ -12,6 +12,7 @@ $endpointWidth: 50px;
 $hangerWidth: 16px;
 $lineWidth: 2px;
 $nodeBorderWidth: 1px;
+$nodeMaxWidth: 240px;
 $padding: 10px;
 $editorPadding: 30px;
 $pixel: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADElEQVQImWO4cOECAATkAnFXdNPtAAAAAElFTkSuQmCC);
@@ -102,6 +103,26 @@ $fontMonospace: "Source Code Pro", monospace;
   position: relative;
   z-index: 1;
 
+  .card-wrapper {
+    max-width: $nodeMaxWidth;
+    & > a {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  &.portal .card-wrapper {
+    max-width: 260px;
+    & > a {
+      flex-direction: row;
+    }
+  }
+
+  .card-title {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+
   &.isDragging {
     opacity: 0.3;
     & + .hanger {
@@ -158,13 +179,14 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   // Allow nodes to expand to width of data when toggled
-  &:not(.type-Section):not(.portal):not(.type-Filter) > a {
-    width: 100%;
+  &:not(.type-Section):not(.portal):not(.type-Filter) > div > a {
+    max-width: 100%;
   }
 
   & a {
     position: relative;
     display: flex;
+    flex-direction: row;
     align-items: flex-start;
     justify-content: center;
     text-decoration: none;
@@ -173,7 +195,7 @@ $fontMonospace: "Source Code Pro", monospace;
     border: $nodeBorderWidth solid $nodeBorder;
     background: white;
     user-select: none;
-    padding: 6px 12px;
+    padding: 6px;
     overflow-wrap: break-word;
     word-break: break-word;
 
@@ -186,26 +208,27 @@ $fontMonospace: "Source Code Pro", monospace;
       pointer-events: none;
     }
 
-    > span {
-      min-width: 80px;
-      max-width: 200px;
+    span {
+      min-width: 100px;
+      padding: 0 10px 0 5px;
+      max-width: $nodeMaxWidth;
       overflow-wrap: break-word;
     }
 
     // Component icon
     & svg {
-      margin-left: -6px;
-      margin-top: -1px;
-      margin-right: 6px;
-      width: 19px;
-      height: 19px;
-      opacity: 0.75;
+      margin-top: -2px;
+      width: 20px;
+      height: 20px;
+      opacity: 0.95;
     }
   }
 
   & .card-data-field {
-    border-color: $nodeBorder;
+    border-color: $optionBorder;
     background: $dataBackground;
+    overflow-wrap: break-word;
+    word-break: break-word;
 
     .flow-locked & {
       border-color: $lockedBorder;
@@ -213,11 +236,23 @@ $fontMonospace: "Source Code Pro", monospace;
     }
   }
 
+  & .card-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px;
+    background: $dataBackground;
+    border: $nodeBorderWidth solid $optionBorder;
+    border-top: none;
+  }
+
   & .card-tag {
-    border-color: $nodeBorder;
+    &.automation {
+      width: 100%;
+    }
     .flow-locked & {
       opacity: 0.75;
-      border-color: $lockedBorder;
     }
   }
 
@@ -342,7 +377,7 @@ $fontMonospace: "Source Code Pro", monospace;
     text-decoration: none;
     border: $nodeBorderWidth solid $nodeBorder;
     min-width: $size;
-    max-width: 200px;
+    max-width: $nodeMaxWidth;
     min-height: $size;
     border-radius: $size;
     color: $black;
@@ -369,11 +404,17 @@ $fontMonospace: "Source Code Pro", monospace;
 }
 
 .portal {
-  justify-content: center !important;
-  > a {
+  display: flex;
+  flex-direction: column;
+  background: $black;
+  > div {
+    display: flex;
+  }
+  > div a {
     background: $black;
     color: white;
     border: none;
+
     .flow-locked & {
       background: #555;
     }
@@ -381,11 +422,13 @@ $fontMonospace: "Source Code Pro", monospace;
   &.breadcrumb {
     background-image: $pixel;
     background-repeat: no-repeat;
+    background-color: transparent;
     [data-layout="top-down"] & {
       background-position: center top;
       background-size: $lineWidth $padding;
       > a {
         margin: $padding 0 0;
+        color: #fff;
       }
     }
     [data-layout="left-right"] & {
@@ -406,6 +449,7 @@ $fontMonospace: "Source Code Pro", monospace;
     justify-content: center;
     align-items: center;
     padding: 2px 6px;
+    margin-left: auto;
     svg {
       opacity: 1;
       margin: 0;

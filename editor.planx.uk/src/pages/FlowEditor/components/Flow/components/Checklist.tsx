@@ -28,15 +28,15 @@ type Props = {
   TemplatedNodeData;
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, user] = useStore(
-    (state) => [
+  const [isClone, childNodes, copyNode, showHelpText, showTags, user] =
+    useStore((state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.copyNode,
       state.showHelpText,
+      state.showTags,
       state.getUser(),
-    ],
-  );
+    ]);
 
   const parent = getParentId(props.parent);
 
@@ -101,37 +101,37 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Box>
+        <Box className="card-wrapper">
           <Link
             href={href}
             prefetch={false}
             onContextMenu={handleContext}
             ref={drag}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                maxWidth: "220px",
-              }}
-            >
-              {props.data?.img && (
-                <Thumbnail
-                  imageSource={props.data?.img}
-                  imageAltText={props.data?.text}
-                />
+            {props.data?.img && (
+              <Thumbnail
+                imageSource={props.data?.img}
+                imageAltText={props.data?.text}
+              />
+            )}
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+              {Icon && <Icon />}
+              <span>{props.text}</span>
+              {showHelpText && hasHelpText && (
+                <Help fontSize="small" sx={{ marginLeft: "auto" }} />
               )}
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                {Icon && <Icon />}
-                {showHelpText && hasHelpText && <Help fontSize="small" />}
-                <span>{props.text}</span>
-              </Box>
             </Box>
           </Link>
           {props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
           )}
-          {tagsByRole?.map((tag) => <Tag tag={tag} key={tag} />)}
+          {showTags && tagsByRole && tagsByRole.length > 0 && (
+            <Box className="card-tag-list">
+              {tagsByRole.map((tag) => (
+                <Tag tag={tag} key={tag} />
+              ))}
+            </Box>
+          )}
         </Box>
         {groupedOptions ? (
           <ol className="categories">

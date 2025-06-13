@@ -145,7 +145,7 @@ export const CheckForChangesToPublishButton: React.FC<{
         {isTemplatedFrom && template && (
           <Box
             sx={{
-              background: "#E6D6FF",
+              background: (theme) => theme.palette.template.main,
               border: (theme) => `1px solid ${theme.palette.border.main}`,
               width: "100%",
               padding: (theme) => theme.spacing(1),

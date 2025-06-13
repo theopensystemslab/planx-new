@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
 import { Form, Formik, useFormikContext } from "formik";
 import React from "react";
+import { Link as ReactNaviLink } from "react-navi";
 import FeedbackDisclaimer from "ui/public/FeedbackDisclaimer";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
@@ -54,14 +55,15 @@ const FeedbackForm: React.FC<FormProps> = ({ inputs, handleSubmit }) => {
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <StyledForm>
         <FeedbackDisclaimer>
-          Don't share any personal or financial information in your feedback. If
-          you do we will act according to our{" "}
+          Please do not include any personal data such as your name, email or
+          address. All feedback is processed according to our{" "}
           <Link
-            href="https://www.planx.uk/privacy"
-            target="_blank"
-            rel="noopener"
+            component={ReactNaviLink}
+            href="pages/privacy"
+            prefetch={false}
+            color="primary"
           >
-            privacy policy
+            privacy notice
           </Link>
           .
         </FeedbackDisclaimer>

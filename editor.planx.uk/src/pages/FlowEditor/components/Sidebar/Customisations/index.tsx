@@ -11,19 +11,23 @@ import { CustomisationCard } from "./CustomisationCard";
 import { FlowEdits } from "./types";
 
 const Customisations = () => {
-  const [flowId, flow] = useStore((state) => [
-    state.id,
-    state.flow,
-  ]);
+  const [flowId, flow] = useStore((state) => [state.id, state.flow]);
 
   // Get the nodes within this flow that are customisable and sort them top-down to match graph
-  const customisableNodeIds = new Set(Object.entries(flow)
-    .filter(([_nodeId, nodeData]) => nodeData.data?.tags?.includes("customisation"))
-    .map((entry) => entry[0]));
-  const sortedCustomisableNodeIds = sortIdsDepthFirst(flow)(customisableNodeIds);
+  const customisableNodeIds = new Set(
+    Object.entries(flow)
+      .filter(([_nodeId, nodeData]) =>
+        nodeData.data?.tags?.includes("customisation"),
+      )
+      .map((entry) => entry[0]),
+  );
+  const sortedCustomisableNodeIds =
+    sortIdsDepthFirst(flow)(customisableNodeIds);
 
   // Subscribe to edits in order to mark customisable nodes "done"
-  const { data, loading, error } = useSubscription<{ edits: [{ data: FlowEdits }] }>(
+  const { data, loading, error } = useSubscription<{
+    edits: [{ data: FlowEdits }];
+  }>(
     gql`
       subscription GetTemplatedFlowEdits($flow_id: uuid = "") {
         edits: templated_flow_edits(where: { flow_id: { _eq: $flow_id } }) {
@@ -59,7 +63,7 @@ const Customisations = () => {
   // TODO styles !
   //   "To do", "done/successfully customised", what can we re-use from Search (eg link to modal)?
   return (
-    <Box p={2}>
+    <Box p={2} sx={{ backgroundColor: "background.paper" }}>
       <Typography variant="h4" mb={1}>
         {`Customise`}
       </Typography>
@@ -67,16 +71,14 @@ const Customisations = () => {
         {`When editing a template, this tab tracks your progress updating each component tagged "Customisation".`}
       </Typography>
       <List sx={{ mt: 1 }}>
-        {
-          sortedCustomisableNodeIds.map((nodeId) => 
-            <CustomisationCard 
-              key={nodeId} 
-              nodeId={nodeId} 
-              nodeEdits={flowEdits[nodeId]} 
-              flowEdits={flowEdits} 
-            />
-          )
-        }
+        {sortedCustomisableNodeIds.map((nodeId) => (
+          <CustomisationCard
+            key={nodeId}
+            nodeId={nodeId}
+            nodeEdits={flowEdits[nodeId]}
+            flowEdits={flowEdits}
+          />
+        ))}
       </List>
     </Box>
   );

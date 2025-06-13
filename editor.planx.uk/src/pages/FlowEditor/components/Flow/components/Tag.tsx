@@ -1,3 +1,4 @@
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import Box from "@mui/material/Box";
 import { Palette, useTheme } from "@mui/material/styles";
 import { NodeTag, Role } from "@opensystemslab/planx-core/types";
@@ -28,7 +29,7 @@ export const TAG_DISPLAY_VALUES: Record<
     displayName: "Analytics",
   },
   automation: {
-    color: "information",
+    color: "automation",
     displayName: "Automation",
   },
 } as const;
@@ -43,18 +44,25 @@ export const Tag: React.FC<{ tag: NodeTag }> = ({ tag }) => {
 
   return (
     <Box
-      className="card-tag"
-      sx={(theme) => ({
+      className={`card-tag ${tag}`}
+      sx={{
         bgcolor: tagBgColor,
-        borderWidth: "0 1px 1px 1px",
-        borderStyle: "solid",
-        width: "100%",
-        p: 0.5,
+        border: `1px solid rgba(0, 0, 0, 0.2)`,
+        padding: "4px 12px",
+        borderRadius: "50px",
         textAlign: "center",
+        fontSize: "12px",
         fontWeight: FONT_WEIGHT_SEMI_BOLD,
         color: getContrastTextColor(tagBgColor, "#FFF"),
-      })}
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "4px",
+      }}
     >
+      {tag === "automation" && (
+        <AutoFixHighIcon sx={{ fontSize: "13px", color: "inherit" }} />
+      )}
       {TAG_DISPLAY_VALUES[tag].displayName}
     </Box>
   );
