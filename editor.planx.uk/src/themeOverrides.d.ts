@@ -44,6 +44,10 @@ declare module "@mui/material/styles/createPalette" {
       applicationType: string;
       serviceType: string;
     };
+    template: {
+      main: string;
+      dark: string;
+    };
   }
 
   interface PaletteOptions {
@@ -67,6 +71,10 @@ declare module "@mui/material/styles/createPalette" {
       offline: string;
       applicationType: string;
       serviceType: string;
+    };
+    template?: {
+      main: string;
+      dark: string;
     };
   }
 

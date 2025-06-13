@@ -39,7 +39,7 @@ export const Card = styled("li")(({ theme }) => ({
 
 export const CardBanner = styled(Box)(({ theme }) => ({
   width: "100%",
-  background: "#E6D6FF",
+  background: theme.palette.template.main,
   padding: theme.spacing(0.5, 2),
   borderBottom: `1px solid ${theme.palette.border.main}`,
   display: "flex",
