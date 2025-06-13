@@ -21,7 +21,7 @@ export const TemplatedNodeInstructions = ({
   return (
     <ModalSection sectionBackgroundColor={theme.palette.template.main}>
       <ModalSectionContent
-        title={`Instructions ${areTemplatedNodeInstructionsRequired ? `(required)` : `(optional)`}`}
+        title={`Customise ${areTemplatedNodeInstructionsRequired ? `(required)` : `(optional)`}`}
         Icon={StarIcon}
       >
         <Typography variant="body2">{templatedNodeInstructions}</Typography>
