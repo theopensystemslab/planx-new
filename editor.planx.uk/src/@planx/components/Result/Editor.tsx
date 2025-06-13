@@ -5,15 +5,18 @@ import {
   Flag,
   flatFlags,
 } from "@opensystemslab/planx-core/types";
+import { getNoResultFlag } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
+import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
@@ -31,6 +34,7 @@ const FlagEditor: React.FC<{
   existingOverrides?: FlagDisplayText;
   onChange: (newValues: any) => any;
   disabled?: boolean;
+  children?: React.ReactNode;
 }> = (props) => {
   const { flag, existingOverrides } = props;
 
@@ -51,9 +55,10 @@ const FlagEditor: React.FC<{
             disabled={props.disabled}
           />
         </InputLabel>
-        <InputLabel label="Description">
-          <Input
-            multiline
+        <InputLabel label="Description" htmlFor="description">
+          <RichTextInput
+            name="description"
+            id="description"
             value={existingOverrides?.description ?? ""}
             onChange={(ev) =>
               props.onChange({
@@ -65,6 +70,7 @@ const FlagEditor: React.FC<{
           />
         </InputLabel>
       </Box>
+      <Box mt={2}>{props.children}</Box>
     </Box>
   );
 };
@@ -85,7 +91,10 @@ const ResultComponent: React.FC<Props> = (props) => {
     validate: () => {},
   });
 
-  const allFlagsForSet = flags[formik.values.flagSet];
+  const allFlagsForSet: FlagWithValue[] = [
+    ...(flags[formik.values.flagSet] ?? []),
+    getNoResultFlag(formik.values.flagSet) as FlagWithValue,
+  ];
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -129,22 +138,34 @@ const ResultComponent: React.FC<Props> = (props) => {
             </Typography>
             <Box mt={2}>
               {allFlagsForSet.map((flag) => {
+                const override = formik.values.overrides?.[flag.value] || {};
                 return (
                   <FlagEditor
                     key={flag.value}
                     flag={flag}
-                    existingOverrides={
-                      formik.values.overrides &&
-                      formik.values.overrides[flag.value]
-                    }
-                    onChange={(newValues: FlagDisplayText) => {
+                    existingOverrides={override}
+                    onChange={(newValues) => {
                       formik.setFieldValue("overrides", {
                         ...formik.values.overrides,
-                        ...{ [flag.value]: newValues },
+                        [flag.value]: newValues,
                       });
                     }}
                     disabled={props.disabled}
-                  />
+                  >
+                    <Switch
+                      checked={Boolean(override.resetButton)}
+                      onChange={() =>
+                        formik.setFieldValue("overrides", {
+                          ...formik.values.overrides,
+                          [flag.value]: {
+                            ...override,
+                            resetButton: !override.resetButton,
+                          },
+                        })
+                      }
+                      label="Reset to start of service"
+                    />
+                  </FlagEditor>
                 );
               })}
             </Box>
