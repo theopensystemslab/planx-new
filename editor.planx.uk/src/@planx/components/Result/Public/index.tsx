@@ -203,7 +203,7 @@ const ResultComponent: React.FC<Props> = (props) => {
       headingTitle={displayText.heading}
       description={displayText.description}
       reasonsTitle="Reasons"
-      responses={flag.value !== "no-result" ? responses : []}
+      responses={flag.value?.endsWith(".noResult") ? [] : responses}
       disclaimer={flowSettings?.elements?.legalDisclaimer}
       resetButton={!!override.resetButton}
     />
