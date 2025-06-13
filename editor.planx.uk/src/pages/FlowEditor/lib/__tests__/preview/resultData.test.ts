@@ -18,7 +18,6 @@ describe("Default result data when no flags have been collected", () => {
           color: "#000000",
           text: "No result",
           value: "flag.pp.noResult",
-          description: "",
         },
         responses: [],
       },
