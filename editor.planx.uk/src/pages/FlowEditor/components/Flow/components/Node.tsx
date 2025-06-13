@@ -128,7 +128,9 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question
           {...allProps}
-          text={`Result - ${node?.data?.flagSet ?? "Result"}`}
+          text={
+            node?.data?.flagSet ? `Result - ${node.data.flagSet}` : `Result`
+          }
         />
       );
     case TYPES.Review:
