@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import { ComponentType, NodeTag } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
@@ -10,6 +11,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
 import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
@@ -165,25 +167,49 @@ const InternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
-          <Box className="card-wrapper">
-            <Link
-              href={href}
-              prefetch={false}
-              ref={drag}
-              onContextMenu={handleContext}
-            >
-              {Icon && <Icon />}
-              <span>{props.data.text}</span>
-            </Link>
-            <Link href={editHref} prefetch={false} className="portalMenu">
-              <MoreVert titleAccess="Edit Portal" />
-            </Link>
-          </Box>
-          {showTags && tagsByRole && tagsByRole.length > 0 && (
-            <Box className="card-tag-list">
-              {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+          <Box
+            // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
+            className={classNames("card-wrapper", {
+              "template-card": props.isTemplatedNode,
+            })}
+            sx={
+              props.isTemplatedNode
+                ? {
+                    backgroundColor: (theme) => theme.palette.template.dark,
+                  }
+                : {}
+            }
+          >
+            {props.isTemplatedNode && (
+              <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
+                <Typography
+                  variant="body3"
+                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+                >
+                  Required
+                </Typography>
+              </Box>
+            )}
+            <Box sx={{ display: "flex", alignItems: "stretch" }}>
+              <Link
+                href={href}
+                prefetch={false}
+                ref={drag}
+                onContextMenu={handleContext}
+              >
+                {Icon && <Icon />}
+                <span>{props.data.text}</span>
+              </Link>
+              <Link href={editHref} prefetch={false} className="portalMenu">
+                <MoreVert titleAccess="Edit Portal" />
+              </Link>
             </Box>
-          )}
+            {showTags && tagsByRole && tagsByRole.length > 0 && (
+              <Box className="card-tag-list">
+                {tagsByRole?.map((tag: NodeTag) => <Tag tag={tag} key={tag} />)}
+              </Box>
+            )}
+          </Box>
         </Box>
       </li>
     </>

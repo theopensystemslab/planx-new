@@ -109,9 +109,22 @@ $fontMonospace: "Source Code Pro", monospace;
       display: flex;
       flex-direction: column;
     }
+    &.template-card {
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      & a {
+        background: #fff;
+      }
+    }
   }
+
   &.portal .card-wrapper {
     max-width: 260px;
+    &.template-card a {
+      background: $black;
+    }
     & > a {
       flex-direction: row;
     }
