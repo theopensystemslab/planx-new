@@ -1,0 +1,14 @@
+---
+import LegalContentPage from "@components/LegalContentPage.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const legalPages = await getCollection("legal");
+  return legalPages.map((page) => ({
+    params: { legal: page.slug },
+    props: { page },
+  }));
+}
+---
+
+<LegalContentPage {...Astro.props} />
