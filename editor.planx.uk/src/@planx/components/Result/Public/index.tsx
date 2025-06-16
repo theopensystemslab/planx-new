@@ -1,12 +1,16 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
-import Card from "@planx/components/shared/Preview/Card";
+import Card, {
+  contentFlowSpacing,
+} from "@planx/components/shared/Preview/Card";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import { PublicProps } from "@planx/components/shared/types";
+import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { Response } from "pages/FlowEditor/lib/store/preview";
 import React from "react";
@@ -83,9 +87,22 @@ export const Presentational: React.FC<PresentationalProps> = ({
   reasonsTitle = "",
   responses,
   disclaimer,
+  resetButton = false,
+  resetPreview,
 }) => {
   const visibleResponses = responses.filter((r) => !r.hidden);
   const hiddenResponses = responses.filter((r) => r.hidden);
+
+  const { trackEvent } = useAnalyticsTracking();
+
+  const handleResultResetClick = () => {
+    trackEvent({
+      event: "flowDirectionChange",
+      metadata: null,
+      flowDirection: "reset",
+    });
+    resetPreview && resetPreview();
+  };
 
   return (
     <Box width="100%" display="flex" flexDirection="column" alignItems="center">
@@ -94,15 +111,17 @@ export const Presentational: React.FC<PresentationalProps> = ({
         description={description}
         color={headingColor}
       />
-      <Card handleSubmit={handleSubmit}>
-        <Box mt={4} mb={3}>
-          <Typography variant="h2" gutterBottom>
-            {reasonsTitle}
-          </Typography>
-          <Typography variant="h3" gutterBottom>
-            These are the responses that suggest this result
-          </Typography>
-        </Box>
+      <Card handleSubmit={!resetButton ? () => handleSubmit?.() : undefined}>
+        {visibleResponses.length > 0 && (
+          <Box mt={4} mb={3}>
+            <Typography variant="h2" gutterBottom>
+              {reasonsTitle}
+            </Typography>
+            <Typography variant="h3" gutterBottom>
+              These are the responses that suggest this result
+            </Typography>
+          </Box>
+        )}
         <Box mb={3}>
           <Responses
             responses={visibleResponses}
@@ -141,6 +160,17 @@ export const Presentational: React.FC<PresentationalProps> = ({
             </Box>
           </WarningContainer>
         )}
+        {resetButton && (
+          <Button
+            variant="contained"
+            size="large"
+            type="submit"
+            onClick={handleResultResetClick}
+            sx={contentFlowSpacing}
+          >
+            Back to start
+          </Button>
+        )}
       </Card>
     </Box>
   );
@@ -159,6 +189,8 @@ const ResultComponent: React.FC<Props> = (props) => {
   const data = resultData(flagSet, props.overrides);
 
   const { flag, responses, displayText } = data[flagSet];
+  const override =
+    flag?.value && props.overrides ? props.overrides[flag.value] || {} : {};
 
   return (
     <Presentational
@@ -171,8 +203,9 @@ const ResultComponent: React.FC<Props> = (props) => {
       headingTitle={displayText.heading}
       description={displayText.description}
       reasonsTitle="Reasons"
-      responses={responses}
+      responses={flag.value?.endsWith(".noResult") ? [] : responses}
       disclaimer={flowSettings?.elements?.legalDisclaimer}
+      resetButton={!!override.resetButton}
     />
   );
 };
