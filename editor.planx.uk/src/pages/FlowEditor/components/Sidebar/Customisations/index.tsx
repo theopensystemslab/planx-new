@@ -58,15 +58,13 @@ const Customisations = () => {
 
   const flowEdits = data?.edits?.[0]?.data || {};
 
-  // TODO styles !
-  //   "To do", "done/successfully customised", what can we re-use from Search (eg link to modal)?
   return (
     <Box p={2} sx={{ backgroundColor: "background.paper" }}>
       <Typography variant="h4" mb={1}>
         {`Customise`}
       </Typography>
       <Typography variant="body2">
-        {`When editing a template, this tab tracks your progress updating each component tagged "Customisation".`}
+        {`When editing a templated flow, this tab tracks your progress updating nodes that can be customised`}
       </Typography>
       <List sx={{ mt: 1 }}>
         {sortedCustomisableNodeIds.map((nodeId) => (

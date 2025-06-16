@@ -32,6 +32,7 @@ const FlowStatus = () => {
     isFlowPublished,
     isTrial,
     flowSettings,
+    isTemplate,
   ] = useStore((state) => [
     state.flowStatus,
     state.updateFlowStatus,
@@ -42,6 +43,7 @@ const FlowStatus = () => {
     state.isFlowPublished,
     state.teamSettings.isTrial,
     state.flowSettings,
+    state.isTemplate,
   ]);
   const toast = useToast();
 
@@ -126,6 +128,15 @@ const FlowStatus = () => {
             <PendingActionsIcon sx={{ mr: 1 }} />
             <Typography variant="body2">
               Trial accounts cannot set flows online.
+            </Typography>
+          </WarningContainer>
+        )}
+        {isTemplate && (
+          <WarningContainer>
+            <PendingActionsIcon sx={{ mr: 1 }} />
+            <Typography variant="body2">
+              Source templates are discoverable from the "Add a new service"
+              modal when they are online.
             </Typography>
           </WarningContainer>
         )}

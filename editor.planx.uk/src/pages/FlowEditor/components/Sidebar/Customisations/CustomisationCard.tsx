@@ -74,9 +74,18 @@ export const CustomisationCard: React.FC<Props> = ({
     return false;
   }, [nodeEdits, node, flowEdits]);
 
+  const theme = useTheme();
+
   const isComplete = Boolean(hasNodeBeenUpdated());
 
-  const theme = useTheme();
+  const getTemplatedNodeStatus = (
+    isComplete: boolean,
+    areTemplatedNodeInstructionsRequired?: boolean,
+  ) => {
+    if (isComplete) return "Done";
+    if (areTemplatedNodeInstructionsRequired) return "Required";
+    return "Optional";
+  };
 
   return (
     <ListItem
@@ -98,16 +107,16 @@ export const CustomisationCard: React.FC<Props> = ({
             variant="body3"
             sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
           >
-            {isComplete ? "Done" : "Required"}
+            {getTemplatedNodeStatus(
+              isComplete,
+              node.data?.areTemplatedNodeInstructionsRequired,
+            )}
           </Typography>
         </StatusHeader>
         <NodeCard nodeId={nodeId} backgroundColor={theme.palette.common.white}>
-          {/* {isComplete && ( */}
-          {/* <Typography variant="body2" component="pre">DONE */}
-          {/** TODO decide whether to include details of _what_ was edited? Just logging data for now! */}
-          {/* {JSON.stringify(nodeEdits, null, 2) || "Edges have been updated"} */}
-          {/* </Typography> */}
-          {/* )} */}
+          <Typography variant="body2">
+            {node.data?.templatedNodeInstructions}
+          </Typography>
         </NodeCard>
       </CardContainer>
     </ListItem>

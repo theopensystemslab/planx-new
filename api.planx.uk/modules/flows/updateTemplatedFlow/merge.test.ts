@@ -64,7 +64,7 @@ it("prioritises customised text and data field additions", () => {
         fn: "direction",
         isTemplatedNode: true,
         templatedNodeInstructions: "Update this node",
-        areTemplatedNodeInstructionsRequired: true,
+        areTemplatedNodeInstructionsRequired: false,
       },
       edges: ["Option1", "Option2"],
     },

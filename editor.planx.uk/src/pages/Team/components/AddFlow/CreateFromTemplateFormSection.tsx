@@ -19,8 +19,10 @@ export const CreateFromTemplateFormSection: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<CreateFlow>();
 
   const { data } = useQuery<{ templates: TemplateOption[] }>(gql`
-    query GetTemplates {
-      templates: flows(where: { is_template: { _eq: true } }) {
+    query GetOnlineSourceTemplates {
+      templates: flows(
+        where: { is_template: { _eq: true }, status: { _eq: online } }
+      ) {
         id
         slug
         name
@@ -40,7 +42,7 @@ export const CreateFromTemplateFormSection: React.FC = () => {
 
     // Suggest a naming convention
     if (!/(copy|template)$/.test(values.flow.name)) {
-      const newFlowName = `${selectedTemplate.name} (template)`;
+      const newFlowName = `${selectedTemplate.name} (templated)`;
       setFieldValue("flow.name", newFlowName);
       setFieldValue("flow.slug", slugify(newFlowName));
     }

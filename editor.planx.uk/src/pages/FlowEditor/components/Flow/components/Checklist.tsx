@@ -4,8 +4,6 @@ import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   NodeTag,
-  NodeTags,
-  TemplatedNodeData,
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
@@ -27,9 +25,7 @@ type Props = {
   type: TYPES;
   [key: string]: any;
   wasVisited?: boolean;
-  isTemplatedNode?: boolean;
-} & NodeTags &
-  TemplatedNodeData;
+};
 
 const Checklist: React.FC<Props> = React.memo((props) => {
   const [isClone, childNodes, copyNode, showHelpText, showTags] = useStore(
@@ -104,23 +100,25 @@ const Checklist: React.FC<Props> = React.memo((props) => {
         <Box
           // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
           className={classNames("card-wrapper", {
-            "template-card": props.isTemplatedNode,
+            "template-card": props.data?.isTemplatedNode,
           })}
           sx={
-            props.isTemplatedNode
+            props.data?.isTemplatedNode
               ? {
                   backgroundColor: (theme) => theme.palette.template.dark,
                 }
               : {}
           }
         >
-          {props.isTemplatedNode && (
+          {props.data?.isTemplatedNode && (
             <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
               <Typography
                 variant="body3"
                 sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
               >
-                Required
+                {props.data?.areTemplatedNodeInstructionsRequired
+                  ? "Required"
+                  : "Optional"}
               </Typography>
             </Box>
           )}
