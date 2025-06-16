@@ -9,8 +9,6 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
 import { useAsync } from "react-use";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
-import BlockQuote from "ui/editor/BlockQuote";
 
 import { HistoryItem } from "../EditHistory";
 import { AlteredNode } from "./AlteredNodes";
@@ -146,31 +144,22 @@ export const CheckForChangesToPublishButton: React.FC<{
           <Box
             sx={{
               background: (theme) => theme.palette.template.main,
-              border: (theme) => `1px solid ${theme.palette.border.main}`,
               width: "100%",
               padding: (theme) => theme.spacing(1),
               marginBottom: (theme) => theme.spacing(2),
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            <Typography
-              variant="body2"
-              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-            >
-              <StarIcon sx={{ color: "#380F77" }} />
-              {`Templated from ${template.team.name}`}
-            </Typography>
+            <StarIcon sx={{ color: "#380F77" }} />
             <Typography variant="body2">
-              {templateLastPublishedTitle}
-            </Typography>
-            <BlockQuote>{template.publishedFlows[0]?.summary}</BlockQuote>
-            <Typography
-              variant="body2"
-              mt={2}
-              sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-            >
-              {isTemplatedFlowDueToPublish
-                ? `Your templated flow is due for review and publish.`
-                : `Your templated flow is up to date with the source.`}
+              {`Templated from ${template.team.name} - `}
+              <strong>
+                {isTemplatedFlowDueToPublish
+                  ? "Due to review and publish"
+                  : "Up to date"}
+              </strong>
             </Typography>
           </Box>
         )}

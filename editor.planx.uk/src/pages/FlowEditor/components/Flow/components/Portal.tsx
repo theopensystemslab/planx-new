@@ -93,8 +93,8 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const user = useStore.getState().getUser();
   const tagsByRole = user?.isPlatformAdmin
-    ? props.tags
-    : props.tags?.filter((tag: NodeTag) => tag !== "customisation");
+    ? props.data?.tags
+    : props.data?.tags?.filter((tag: NodeTag) => tag !== "customisation");
 
   return (
     <>
@@ -170,23 +170,25 @@ const InternalPortal: React.FC<any> = (props) => {
           <Box
             // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
             className={classNames("card-wrapper", {
-              "template-card": props.isTemplatedNode,
+              "template-card": props.data?.isTemplatedNode,
             })}
             sx={
-              props.isTemplatedNode
+              props.data?.isTemplatedNode
                 ? {
                     backgroundColor: (theme) => theme.palette.template.dark,
                   }
                 : {}
             }
           >
-            {props.isTemplatedNode && (
+            {props.data?.isTemplatedNode && (
               <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
                 <Typography
                   variant="body3"
                   sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
                 >
-                  Required
+                  {props.data?.areTemplatedNodeInstructionsRequired
+                    ? "Required"
+                    : "Optional"}
                 </Typography>
               </Box>
             )}
