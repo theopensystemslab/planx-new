@@ -16,9 +16,7 @@ const Customisations = () => {
   // Get the nodes within this flow that are customisable and sort them top-down to match graph
   const customisableNodeIds = new Set(
     Object.entries(flow)
-      .filter(([_nodeId, nodeData]) =>
-        nodeData.data?.tags?.includes("customisation"),
-      )
+      .filter(([_nodeId, nodeData]) => Boolean(nodeData.data?.isTemplatedNode))
       .map((entry) => entry[0]),
   );
   const sortedCustomisableNodeIds =

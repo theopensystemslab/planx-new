@@ -13,7 +13,7 @@ export const TAG_DISPLAY_VALUES: Record<
 > = {
   customisation: {
     color: "blocking",
-    displayName: "Customisation",
+    displayName: "Customisation (LEGACY)",
     editableBy: ["platformAdmin"],
   },
   toReview: {
