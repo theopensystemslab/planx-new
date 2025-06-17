@@ -1,4 +1,3 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -73,13 +72,6 @@ export const CustomisationCard: React.FC<Props> = ({
         }
         isComplete={isComplete}
         showStatusHeader={true}
-        sx={{
-          width: "100%",
-          padding: theme.spacing(0.25, 0.25, 0.25),
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
       >
         <NodeCard nodeId={nodeId} backgroundColor={theme.palette.common.white}>
           <Typography variant="body2">

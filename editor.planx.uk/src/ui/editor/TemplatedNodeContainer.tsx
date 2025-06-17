@@ -36,6 +36,11 @@ const StyledContainer = styled(Box)<{
 
   return {
     backgroundColor: getBackgroundColor(),
+    width: "100%",
+    padding: "4px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
     ...(isComplete && {
       border: "1px solid",
       borderColor: theme.palette.border.main,
