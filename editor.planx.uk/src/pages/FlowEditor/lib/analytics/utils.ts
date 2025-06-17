@@ -221,33 +221,41 @@ export const getFOIYNPP = (environment: Environment) => ({
 export const getRAB = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].RAB,
   slugs: [
-    "report-a-planning-breach",
     "camden-report-a-planning-breach",
+    "report-a-planning-breach",
   ],
 });
 
 export const getSubmission = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].submission,
   slugs: [
-    "apply-for-planning-permission",
     "apply-for-a-lawful-development-certificate",
-    "pre-application-advice",
+    "apply-for-building-regulations-applications",
+    "apply-for-building-regulations-notice",
+    "apply-for-householder-and-listed-building-pre-application-advice",
+    "apply-for-planning-permission",
     "camden-apply-for-a-lawful-development-certificate",
     "camden-apply-for-planning-permission",
+    "listed-building-pre-application-advice",
+    "notice-of-exempt-works-to-trees",
+    "pre-application-advice",
     "pre-application-for-energy-efficient-measures",
     "tree-pre-application-advice",
-    "listed-building-pre-application-advice",
-    "apply-for-householder-and-listed-building-pre-application-advice",
+    "submit-a-demolition-notice",
   ],
 });
 
 export const getDiscretionary = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].discretionary,
   slugs: [
-    "check-whether-you-need-a-building-control-application",
-    "report-a-potential-dangerous-structure",
     "check-constraints-on-a-property",
+    "check-whether-you-need-a-building-control-application",
     "check-your-planning-constraints",
+    "heritage-constraints",
+    "notify-us-of-any-high-efficiency-alternative-energy-systems",
+    "report-a-potential-dangerous-structure",
+    "request-a-building-control-quote",
+    "validation-requirements-live",
   ],
 });
 
