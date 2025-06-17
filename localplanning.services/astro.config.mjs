@@ -11,6 +11,7 @@ export default defineConfig({
     schema: {
       PUBLIC_PLANX_EDITOR_URL: envField.string({ context: "client", access: "public", optional: false }),
       PUBLIC_PLANX_GRAPHQL_API_URL: envField.string({ context: "client", access: "public", optional: false }),
+      PUBLIC_PLANX_REST_API_URL: envField.string({ context: "client", access: "public", optional: false }),
     }
   },
   vite: {
