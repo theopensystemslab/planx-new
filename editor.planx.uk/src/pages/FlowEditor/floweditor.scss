@@ -110,12 +110,18 @@ $fontMonospace: "Source Code Pro", monospace;
       display: flex;
       flex-direction: column;
     }
+    &.template-card > a {
+      background: #fff;
+    }
   }
 
   &.portal .card-wrapper {
     max-width: 260px;
     & > a {
       flex-direction: row;
+    }
+    &.template-card a {
+      background: $black;
     }
   }
 
@@ -501,6 +507,11 @@ $fontMonospace: "Source Code Pro", monospace;
       padding-right: 20px;
       .flow-locked & {
         background: #f5f4d2 !important;
+      }
+    }
+    & .template-card > a {
+      .flow-locked & {
+        background: #fffdb0 !important;
       }
     }
     // Triangle shapes to simulate paper fold on sticky note

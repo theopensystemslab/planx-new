@@ -44,8 +44,10 @@ const FlowEditor = () => {
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
   const teamSlug = useStore.getState().getTeam().slug;
-  const lockedFlow = !useStore.getState().canUserEditTeam(teamSlug);
-  // TODO: use lockedFlow styling when editing templated flows
+  const isTemplatedFrom = useStore.getState().isTemplatedFrom;
+
+  const lockedFlow =
+    !useStore.getState().canUserEditTeam(teamSlug) || isTemplatedFrom;
 
   return (
     <EditorContainer id="editor-container">
