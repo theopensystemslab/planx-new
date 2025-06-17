@@ -46,7 +46,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../../routes/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
-import { SkipLink } from "./SkipLink";
+import SkipLink from "./SkipLink";
 
 export const HEADER_HEIGHT_PUBLIC = 74;
 export const HEADER_HEIGHT_EDITOR = 56;

@@ -11,6 +11,7 @@ import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath, Session } from "types";
+import Main from "ui/shared/Main";
 
 import ErrorFallback from "../../components/Error/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
@@ -181,7 +182,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       </BackBar>
 
       {node && (
-        <Box component="main" id="main-content" sx={{ width: "100%" }}>
+        <Main>
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Node
               node={node}
@@ -189,7 +190,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
               handleSubmit={handleSubmit(node.id!)}
             />
           </ErrorBoundary>
-        </Box>
+        </Main>
       )}
     </Box>
   );

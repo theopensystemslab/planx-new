@@ -6,6 +6,7 @@ import { HEADER_HEIGHT_PUBLIC } from "./Header";
 
 const Root = styled("a")(({ theme }) => ({
   width: "100vw",
+  cursor: "pointer",
   height: HEADER_HEIGHT_PUBLIC / 2,
   backgroundColor: theme.palette.background.dark,
   color: theme.palette.common.white,
@@ -26,6 +27,17 @@ const Root = styled("a")(({ theme }) => ({
 export const SkipLink: React.FC = () => {
   const handleClick = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+    handleActivation();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleActivation();
+    }
+  };
+
+  const handleActivation = () => {
     const targetElement = document.getElementById("main-content");
     if (!targetElement) return;
 
@@ -34,8 +46,10 @@ export const SkipLink: React.FC = () => {
   };
 
   return (
-    <Root onClick={handleClick} tabIndex={0}>
+    <Root onClick={handleClick} onKeyDown={handleKeyDown} tabIndex={0}>
       Skip to main content
     </Root>
   );
 };
+
+export default SkipLink;
