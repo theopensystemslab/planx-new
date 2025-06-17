@@ -122,6 +122,7 @@ $fontMonospace: "Source Code Pro", monospace;
 
   &.portal .card-wrapper {
     max-width: 260px;
+    flex-direction: column;
     &.template-card a {
       background: $black;
     }
