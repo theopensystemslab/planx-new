@@ -23,10 +23,13 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
 
-  const { addExternalPortal, showTags } = useStore((state) => ({
-    addExternalPortal: state.addExternalPortal,
-    showTags: state.showTags,
-  }));
+  const { addExternalPortal, showTags, showTemplateStatus } = useStore(
+    (state) => ({
+      addExternalPortal: state.addExternalPortal,
+      showTags: state.showTags,
+      showTemplateStatus: state.showTemplateStatus,
+    }),
+  );
 
   const { data, loading } = useQuery(
     gql`
@@ -123,9 +126,10 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const { copyNode, showTags } = useStore((state) => ({
+  const { copyNode, showTags, showTemplateStatus } = useStore((state) => ({
     copyNode: state.copyNode,
     showTags: state.showTags,
+    showTemplateStatus: state.showTemplateStatus,
   }));
 
   let editHref = `${window.location.pathname}/nodes/${props.id}/edit`;
@@ -165,7 +169,7 @@ const InternalPortal: React.FC<any> = (props) => {
             areTemplatedNodeInstructionsRequired={
               props.data?.areTemplatedNodeInstructionsRequired
             }
-            showStatusHeader={true}
+            showStatusHeader={showTemplateStatus}
             className={classNames("card-wrapper", {
               "template-card": props.data?.isTemplatedNode,
             })}

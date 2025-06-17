@@ -27,15 +27,21 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, showTags] = useStore(
-    (state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-      state.copyNode,
-      state.showHelpText,
-      state.showTags,
-    ],
-  );
+  const [
+    isClone,
+    childNodes,
+    copyNode,
+    showHelpText,
+    showTags,
+    showTemplateStatus,
+  ] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+    state.copyNode,
+    state.showHelpText,
+    state.showTags,
+    state.showTemplateStatus,
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -101,7 +107,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           areTemplatedNodeInstructionsRequired={
             props.data?.areTemplatedNodeInstructionsRequired
           }
-          showStatusHeader={true}
+          showStatusHeader={showTemplateStatus}
           className={classNames("card-wrapper", {
             "template-card": props.data?.isTemplatedNode,
           })}

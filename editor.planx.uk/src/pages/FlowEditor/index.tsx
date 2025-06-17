@@ -12,6 +12,7 @@ import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFields
 import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButton";
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
 import { ToggleTagsButton } from "./components/FlowEditor/ToggleTagsButton";
+import { ToggleTemplateStatusButton } from "./components/FlowEditor/ToggleTemplateStatusButton";
 import Sidebar from "./components/Sidebar";
 import { useStore } from "./lib/store";
 import useScrollControlsAndRememberPosition from "./lib/useScrollControlsAndRememberPosition";
@@ -70,6 +71,7 @@ const FlowEditor = () => {
             orientation="vertical"
             aria-label="Toggle node attributes"
           >
+            <ToggleTemplateStatusButton />
             <ToggleImagesButton />
             <ToggleHelpTextButton />
             <ToggleDataFieldsButton />

@@ -61,6 +61,8 @@ export interface EditorUIStore {
   toggleShowDataFields: () => void;
   showHelpText: boolean;
   toggleShowHelpText: () => void;
+  showTemplateStatus: boolean;
+  toggleShowTemplateStatus: () => void;
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
@@ -102,6 +104,11 @@ export const editorUIStore: StateCreator<
     showHelpText: false,
 
     toggleShowHelpText: () => set({ showHelpText: !get().showHelpText }),
+
+    showTemplateStatus: false,
+
+    toggleShowTemplateStatus: () =>
+      set({ showTemplateStatus: !get().showTemplateStatus }),
 
     previousURL: undefined,
 
