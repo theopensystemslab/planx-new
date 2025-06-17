@@ -22,42 +22,11 @@ This approach tells Docker to automatically use emulation for all images.
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 ```
 
-### Permanent (Add to Shell Profile)
-
-For zsh:
-```bash
-echo 'export DOCKER_DEFAULT_PLATFORM=linux/amd64' >> ~/.zshrc
-source ~/.zshrc
-```
-
-For bash:
-```bash
-echo 'export DOCKER_DEFAULT_PLATFORM=linux/amd64' >> ~/.bashrc
-source ~/.bashrc
-```
-
-### Usage Example
-
-After setting the environment variable, you can run Docker commands normally:
-
-```bash
-# For PlanX project
-pnpm run up
-
-# General Docker commands
-docker run -it postgres:15
-docker-compose up
-```
-
-### Pros
+### Notes:
 - Simple, one-time setup
 - Works for all Docker commands automatically
-- No need to modify project files
-- Easy to disable when needed
+- Has to be set anew with each new terminal session
 
-### Cons
-- Applies emulation to all containers (may affect performance)
-- May use emulation even when ARM64 versions exist
 
 ## Solution 2: Docker Compose Override Files
 
@@ -96,7 +65,7 @@ Make it executable:
 chmod +x local-up.sh
 ```
 
-### Step 4: Prevent Accidental Commits
+### Step 4: Add to local git ignore
 
 Add to your local Git exclude:
 ```bash
@@ -104,43 +73,18 @@ echo "docker-compose.arm64.yml" >> .git/info/exclude
 echo "local-*.sh" >> .git/info/exclude
 ```
 
-### Pros
-- Fine-grained control over which services use emulation
-- Can improve performance by only emulating when necessary
-- Can be project-specific
-- Allows mixing native ARM64 and emulated x86_64 containers
-
-### Cons
-- More complex setup
-- Requires modifying commands or creating scripts
-- Needs to be set up for each project
-
-## Which Approach Should You Choose?
-
-### Use DOCKER_DEFAULT_PLATFORM if:
-- You want a simple, system-wide solution
-- You work with mostly older Docker images that lack ARM64 support
-- You're not concerned about maximum performance
-
-### Use Docker Compose overrides if:
-- You need maximum performance from containers
-- You want selective emulation (some containers with native ARM64, others emulated)
-- You're working on a shared project where others don't use Apple Silicon
+### Notes
+- Offers replacement for `docker-compose.override.yml`
+- Process can be repeated for ```docker-down``` and ```docker-restart``` scripts
 
 ## Additional Tips
 
-1. **Check for ARM64 support**: Before assuming emulation is needed, check if the image supports ARM64: 
+1. **Check for ARM64 support**: Before assuming emulation is needed, check if the image supports ARM64:
    ```bash
    docker manifest inspect <image>:<tag> | grep 'arm64'
    ```
 
-2. **Use ARM64-native alternatives**: When possible, use images that have native ARM64 support:
-   - `postgres:latest` instead of `postgis/postgis:X-Y-alpine`
-   - `arm64v8/postgres` instead of `postgres`
-
-3. **Test performance**: Emulation adds overhead. If performance is critical, benchmark the difference between emulated and native containers.
-
-4. **Disabling platform emulation**: To disable the global setting temporarily:
+2. **Disabling platform emulation**: To disable the global setting temporarily:
    ```bash
    unset DOCKER_DEFAULT_PLATFORM
    ```
