@@ -95,7 +95,10 @@ const Question: React.FC<Props> = React.memo((props) => {
           sx={
             props.data?.isTemplatedNode
               ? {
-                  backgroundColor: (theme) => theme.palette.template.dark,
+                  backgroundColor: (theme) => 
+                    props.data?.areTemplatedNodeInstructionsRequired
+                      ? theme.palette.template.dark
+                      : theme.palette.template.main,
                 }
               : {}
           }

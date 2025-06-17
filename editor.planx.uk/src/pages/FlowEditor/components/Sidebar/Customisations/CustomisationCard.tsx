@@ -17,11 +17,17 @@ interface Props {
   flowEdits: FlowEdits;
 }
 
-const CardContainer = styled(Box)<{ isComplete: boolean }>(
-  ({ theme, isComplete }) => ({
-    backgroundColor: isComplete
-      ? theme.palette.common.white
-      : theme.palette.template.dark,
+const CardContainer = styled(Box)<{ 
+  isComplete: boolean; 
+  areTemplatedNodeInstructionsRequired?: boolean; 
+}>(({ theme, isComplete, areTemplatedNodeInstructionsRequired }) => {
+  const getBackgroundColor = () => {
+    if (isComplete) return theme.palette.common.white;
+    if (areTemplatedNodeInstructionsRequired) return theme.palette.template.dark;
+    return theme.palette.template.main;
+  };
+  return {
+    backgroundColor: getBackgroundColor(),
     border: "1px solid",
     borderColor: isComplete ? theme.palette.border.main : "transparent",
     width: "100%",
@@ -29,8 +35,8 @@ const CardContainer = styled(Box)<{ isComplete: boolean }>(
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-  }),
-);
+  };
+});
 
 const StatusHeader = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -100,7 +106,10 @@ export const CustomisationCard: React.FC<Props> = ({
         width: "100%",
       }}
     >
-      <CardContainer isComplete={isComplete}>
+      <CardContainer 
+        isComplete={isComplete}
+        areTemplatedNodeInstructionsRequired={node.data?.areTemplatedNodeInstructionsRequired}
+      >
         <StatusHeader>
           {isComplete && <CheckCircleIcon color="success" fontSize="small" />}
           <Typography

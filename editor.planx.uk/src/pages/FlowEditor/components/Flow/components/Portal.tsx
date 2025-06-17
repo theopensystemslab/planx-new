@@ -169,10 +169,13 @@ const InternalPortal: React.FC<any> = (props) => {
             sx={
               props.data?.isTemplatedNode
                 ? {
-                    backgroundColor: (theme) => theme.palette.template.dark,
+                    backgroundColor: (theme) => 
+                      props.data?.areTemplatedNodeInstructionsRequired
+                        ? theme.palette.template.dark
+                        : theme.palette.template.main,
                   }
                 : {}
-            }
+          }
           >
             {props.data?.isTemplatedNode && (
               <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>

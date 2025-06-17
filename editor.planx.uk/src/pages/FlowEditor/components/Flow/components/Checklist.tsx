@@ -102,10 +102,13 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           className={classNames("card-wrapper", {
             "template-card": props.data?.isTemplatedNode,
           })}
-          sx={
+         sx={
             props.data?.isTemplatedNode
               ? {
-                  backgroundColor: (theme) => theme.palette.template.dark,
+                  backgroundColor: (theme) => 
+                    props.data?.areTemplatedNodeInstructionsRequired
+                      ? theme.palette.template.dark
+                      : theme.palette.template.main,
                 }
               : {}
           }
