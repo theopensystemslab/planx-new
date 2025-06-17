@@ -105,6 +105,7 @@ $fontMonospace: "Source Code Pro", monospace;
 
   .card-wrapper {
     max-width: $nodeMaxWidth;
+    flex-direction: column;
     & > a {
       display: flex;
       flex-direction: column;
