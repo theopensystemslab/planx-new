@@ -1,7 +1,6 @@
 import ErrorIcon from "@mui/icons-material/Error";
 import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   NodeTag,
@@ -11,7 +10,7 @@ import classNames from "classnames";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -87,34 +86,16 @@ const Question: React.FC<Props> = React.memo((props) => {
           },
         )}
       >
-        <Box
-          // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
+        <TemplatedNodeContainer
+          isTemplatedNode={props.data?.isTemplatedNode}
+          areTemplatedNodeInstructionsRequired={
+            props.data?.areTemplatedNodeInstructionsRequired
+          }
+          showStatusHeader={true}
           className={classNames("card-wrapper", {
             "template-card": props.data?.isTemplatedNode,
           })}
-          sx={
-            props.data?.isTemplatedNode
-              ? {
-                  backgroundColor: (theme) => 
-                    props.data?.areTemplatedNodeInstructionsRequired
-                      ? theme.palette.template.dark
-                      : theme.palette.template.main,
-                }
-              : {}
-          }
         >
-          {props.data?.isTemplatedNode && (
-            <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
-              <Typography
-                variant="body3"
-                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-              >
-                {props.data?.areTemplatedNodeInstructionsRequired
-                  ? "Required"
-                  : "Optional"}
-              </Typography>
-            </Box>
-          )}
           <Link
             href={href}
             prefetch={false}
@@ -145,7 +126,7 @@ const Question: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-        </Box>
+        </TemplatedNodeContainer>
         <ol className="options">
           {childNodes.map((child: any) => (
             <Node key={child.id} {...child} />

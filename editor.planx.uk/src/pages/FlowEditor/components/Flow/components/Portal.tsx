@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import MoreVert from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import { ComponentType, NodeTag } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
@@ -11,7 +10,7 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
@@ -161,34 +160,16 @@ const InternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
-          <Box
-            // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
+          <TemplatedNodeContainer
+            isTemplatedNode={props.data?.isTemplatedNode}
+            areTemplatedNodeInstructionsRequired={
+              props.data?.areTemplatedNodeInstructionsRequired
+            }
+            showStatusHeader={true}
             className={classNames("card-wrapper", {
               "template-card": props.data?.isTemplatedNode,
             })}
-            sx={
-              props.data?.isTemplatedNode
-                ? {
-                    backgroundColor: (theme) => 
-                      props.data?.areTemplatedNodeInstructionsRequired
-                        ? theme.palette.template.dark
-                        : theme.palette.template.main,
-                  }
-                : {}
-          }
           >
-            {props.data?.isTemplatedNode && (
-              <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
-                <Typography
-                  variant="body3"
-                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                >
-                  {props.data?.areTemplatedNodeInstructionsRequired
-                    ? "Required"
-                    : "Optional"}
-                </Typography>
-              </Box>
-            )}
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
                 href={href}
@@ -210,7 +191,7 @@ const InternalPortal: React.FC<any> = (props) => {
                 ))}
               </Box>
             )}
-          </Box>
+          </TemplatedNodeContainer>
         </Box>
       </li>
     </>
