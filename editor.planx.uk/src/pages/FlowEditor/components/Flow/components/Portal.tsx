@@ -102,12 +102,14 @@ const ExternalPortal: React.FC<any> = (props) => {
       <li ref={ref}>
         <Box className={classNames("card", "portal", { isDragging })}>
           <Box className="card-wrapper">
-            <Link href={`/${href}`} prefetch={false} ref={drag}>
-              <span>{href}</span>
-            </Link>
-            <Link href={editHref} prefetch={false} className="portalMenu">
-              <MoreVert titleAccess="Edit Portal" />
-            </Link>
+            <Box sx={{ display: "flex", alignItems: "stretch" }}>
+              <Link href={`/${href}`} prefetch={false} ref={drag}>
+                <span>{href}</span>
+              </Link>
+              <Link href={editHref} prefetch={false} className="portalMenu">
+                <MoreVert titleAccess="Edit Portal" />
+              </Link>
+            </Box>
           </Box>
           {showTags && tagsByRole && tagsByRole.length > 0 && (
             <Box className="card-tag-list">
