@@ -54,25 +54,6 @@ describe("Checklist Component for a Platform Admin", () => {
 
     expect(optionTexts).toEqual(expect.arrayContaining(tagDisplayNames));
   });
-
-  it("renders all tags with Customisation selected as a button", async () => {
-    const { queryByTestId, queryByRole } = setup(
-      <DndProvider backend={HTML5Backend}>
-        <ChecklistComponent
-          text=""
-          node={{ data: { text: "", tags: ["customisation"] } }}
-        />
-      </DndProvider>,
-    );
-
-    const customisationChip = queryByTestId("customisation-chip");
-    const customisationButton = queryByRole("button", {
-      name: /customisation/i,
-    });
-
-    expect(customisationChip).toBeInTheDocument();
-    expect(customisationButton).toBeInTheDocument();
-  });
 });
 
 describe("Checklist Component for a non Platform Admin", () => {
@@ -102,24 +83,5 @@ describe("Checklist Component for a non Platform Admin", () => {
     const optionTexts = options.map((option) => option.textContent);
 
     expect(optionTexts).not.toContain(/customisation/i);
-  });
-
-  it("renders all tags with static Customisation selected", async () => {
-    const { getByTestId, queryByRole } = setup(
-      <DndProvider backend={HTML5Backend}>
-        <ChecklistComponent
-          text=""
-          node={{ data: { text: "", tags: ["customisation"] } }}
-        />
-      </DndProvider>,
-    );
-
-    const customisationChip = getByTestId("customisation-chip");
-    const customisationButton = queryByRole("button", {
-      name: /customisation/i,
-    });
-
-    expect(customisationChip).toBeInTheDocument();
-    expect(customisationButton).not.toBeInTheDocument();
   });
 });

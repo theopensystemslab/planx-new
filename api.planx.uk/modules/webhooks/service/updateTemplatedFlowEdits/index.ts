@@ -16,7 +16,7 @@ export const updateTemplatedFlowEdits = async (
   const sourceTemplateData = sourceTemplate?.data;
   if (!sourceTemplateData) return;
 
-  // Because the templated flow only enables editing of nodes tagged "customisation" or their children,
+  // Because the templated flow only enables editing when a node or its' children has property `isTemplatedNode: true`,
   //   the delta by default will only ever include nodes we need to record in `templated_flow_edits`
   const delta = jsondiffpatch.diff(sourceTemplateData, data);
   if (!delta) return;

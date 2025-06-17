@@ -28,15 +28,15 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, showTags, user] =
-    useStore((state) => [
+  const [isClone, childNodes, copyNode, showHelpText, showTags] = useStore(
+    (state) => [
       state.isClone,
       state.childNodesOf(props.id),
       state.copyNode,
       state.showHelpText,
       state.showTags,
-      state.getUser(),
-    ]);
+    ],
+  );
 
   const parent = getParentId(props.parent);
 
@@ -69,10 +69,6 @@ const Question: React.FC<Props> = React.memo((props) => {
 
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
-
-  const tagsByRole = user?.isPlatformAdmin
-    ? props.data?.tags
-    : props.data?.tags?.filter((tag: NodeTag) => tag !== "customisation");
 
   return (
     <>
@@ -139,9 +135,9 @@ const Question: React.FC<Props> = React.memo((props) => {
           {props.type !== TYPES.SetValue && props.data?.fn && (
             <DataField value={props.data.fn} variant="parent" />
           )}
-          {showTags && tagsByRole && tagsByRole.length > 0 && (
+          {showTags && props.data?.tags?.length > 0 && (
             <Box className="card-tag-list">
-              {tagsByRole.map((tag: NodeTag) => (
+              {props.data.tags.map((tag: NodeTag) => (
                 <Tag tag={tag} key={tag} />
               ))}
             </Box>

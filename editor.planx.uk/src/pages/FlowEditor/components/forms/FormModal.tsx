@@ -169,12 +169,12 @@ const FormModal: React.FC<{
 
   // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
-  //  2. The user has edit access to this team, but it is a templated flow and the node is not tagged 'customisation'
+  //  2. The user has edit access to this team, but it is a templated flow and the node is not marked "isTemplatedNode"
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
   const isCustomisableNode = (node: Store.Node) => {
-    return node.data?.tags?.includes("customisation");
+    return Boolean(node.data?.isTemplatedNode);
   };
   const disabled = isTemplatedFrom
     ? !canUserEditNode(teamSlug) || !isCustomisableNode(node)
