@@ -36,11 +36,13 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 1. Clone this repository
 
-2. Setup your AWS CLI client with SSO - [detailed guide here](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/how-to-setup-aws-sso-credentials.md)
+2. Setup your AWS CLI client with SSO - [detailed guide here](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/aws/how-to-setup-aws-sso-credentials.md)
 
 3. Pull down environment secrets for running the application in staging mode by running `./scripts/pull-secrets.sh`. (NOTE: Even when running locally, API requests are routed to relevant staging servers and emails are actually processed and sent to provided addresses).
 
 4. Run `pnpm run up` from the project root to set up docker containers for the application's backend (postgres, sharedb, api and hasura server processes) and to pull seed application data from production.
+
+***Please Note***: If using a Mac running Apple silicone (M1 -M4) chips and running into Docker image compatibility issues please see our [troubleshooting guide](https://github.com/theopensystemslab/planx-new/blob/main/doc/how-to/aws/how-to-setup-aws-sso-credentials.md)
 
 5. Move into the hasura directory `cd ../hasura.planx.uk` and install dependencies `pnpm i`.
 
@@ -72,7 +74,7 @@ planx-new is a monorepo containing our full application stack. Here's a quick su
 
 7. Follow steps 7-9 above to start the editor and login !
 
-At this point you'll be running the full Planx application locally in a docker container. See our Github Actions pull request workflow as an example of how to deploy via docker to a virtual linux server, or explore the `infrastructure` directory for how to deploy via Pulumi infrastructure-as-code to AWS. 
+At this point you'll be running the full Planx application locally in a docker container. See our Github Actions pull request workflow as an example of how to deploy via docker to a virtual linux server, or explore the `infrastructure` directory for how to deploy via Pulumi infrastructure-as-code to AWS.
 
 We'd love to hear what you're building on Planx, don't hesitate to get in touch with questions.
 
@@ -126,7 +128,7 @@ You'll have to temporarily turn off branch protection rules to make this change,
 
 **Unmet peer dependencies**
 
-Make sure `pnpm` is installed globally at version 10.10.0 `pnpm add -g pnpm@10.10.0`, otherwise you may hit some unmet peer dependencies issues. 
+Make sure `pnpm` is installed globally at version 10.10.0 `pnpm add -g pnpm@10.10.0`, otherwise you may hit some unmet peer dependencies issues.
 
 ## Audits
 
