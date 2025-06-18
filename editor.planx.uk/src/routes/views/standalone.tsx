@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import gql from "graphql-tag";
 import { publicClient } from "lib/graphql";
 import { NaviRequest, NotFoundError } from "navi";
@@ -7,6 +6,7 @@ import PublicLayout from "pages/layout/PublicLayout";
 import React from "react";
 import { View } from "react-navi";
 import { Flow, GlobalSettings } from "types";
+import Main from "ui/shared/Main";
 
 import { getTeamFromDomain } from "../utils";
 
@@ -36,9 +36,9 @@ const standaloneView = async (req: NaviRequest) => {
 
   return (
     <PublicLayout>
-      <Box component="main" id="main-content" sx={{ width: "100%" }}>
+      <Main>
         <View />
-      </Box>
+      </Main>
     </PublicLayout>
   );
 };

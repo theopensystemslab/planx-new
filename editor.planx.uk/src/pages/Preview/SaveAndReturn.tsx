@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { useFormik } from "formik";
@@ -8,6 +7,7 @@ import { useCurrentRoute } from "react-navi";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
+import Main from "ui/shared/Main";
 import { object, ref, string } from "yup";
 
 const confirmEmailSchema = object({
@@ -33,7 +33,7 @@ export const ConfirmEmail: React.FC<{
   });
 
   return (
-    <Box component="main" id="main-content" width="100%">
+    <Main>
       <Card handleSubmit={formik.handleSubmit}>
         <CardHeader
           title="Enter your email address"
@@ -76,7 +76,7 @@ export const ConfirmEmail: React.FC<{
           </InputLabel>
         </InputRow>
       </Card>
-    </Box>
+    </Main>
   );
 };
 

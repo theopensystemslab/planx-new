@@ -34,7 +34,6 @@ import {
 } from "react-navi";
 import {
   borderedFocusStyle,
-  focusStyle,
   FONT_WEIGHT_SEMI_BOLD,
   LINE_HEIGHT_BASE,
 } from "theme";
@@ -47,8 +46,9 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../../routes/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import SkipLink from "./SkipLink";
 
-const HEADER_HEIGHT_PUBLIC = 74;
+export const HEADER_HEIGHT_PUBLIC = 74;
 export const HEADER_HEIGHT_EDITOR = 56;
 
 const Root = styled(AppBar)(({ theme }) => ({
@@ -151,26 +151,6 @@ const LogoLink = styled(Link)(() => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
-}));
-
-const SkipLink = styled("a")(({ theme }) => ({
-  tabIndex: 0,
-  width: "100vw",
-  height: HEADER_HEIGHT_PUBLIC / 2,
-  backgroundColor: theme.palette.background.dark,
-  color: theme.palette.common.white,
-  textDecoration: "underline",
-  padding: theme.spacing(1),
-  paddingLeft: theme.spacing(3),
-  // translate off-screen with absolute position
-  position: "absolute",
-  transform: "translateY(-100%)",
-  "&:focus": {
-    // bring it into view when accessed by tab
-    transform: "translateY(0%)",
-    position: "relative",
-    ...focusStyle,
-  },
 }));
 
 const ServiceTitleRoot = styled("span")(({ theme }) => ({
@@ -388,7 +368,7 @@ const PublicToolbar: React.FC<{
 
   return (
     <>
-      <SkipLink href="#main-content">Skip to main content</SkipLink>
+      <SkipLink />
       <PublicHeader disableGutters>
         <Container maxWidth={false}>
           <InnerContainer>

@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
 import { NotFoundError } from "navi";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { PropsWithChildren } from "react";
 import { useCurrentRoute } from "react-navi";
+import Main from "ui/shared/Main";
 
 import { ApplicationPath as AppPath } from "../../types";
 import ResumePage from "../Preview/ResumePage";
@@ -24,14 +24,14 @@ const SaveAndReturnLayout = ({ children }: PropsWithChildren) => {
         {
           [AppPath.SingleSession]: children,
           [AppPath.Save]: (
-            <Box component="main" id="main-content" sx={{ width: "100%" }}>
+            <Main>
               <SavePage />
-            </Box>
+            </Main>
           ),
           [AppPath.Resume]: (
-            <Box component="main" id="main-content" sx={{ width: "100%" }}>
+            <Main>
               <ResumePage />
-            </Box>
+            </Main>
           ),
           [AppPath.SaveAndReturn]: <SaveAndReturn>{children}</SaveAndReturn>,
         }[path]
