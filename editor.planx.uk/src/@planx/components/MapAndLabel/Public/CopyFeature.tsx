@@ -71,6 +71,7 @@ export const CopyFeature: React.FC<Props> = ({
         </InputLabel>
       </Box>
       <Button
+        data-testid="copyButton"
         type="submit"
         disableRipple
         sx={{ alignSelf: "flex-end", ml: 2, mb: 0.5 }}
