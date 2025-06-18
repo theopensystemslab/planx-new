@@ -19,13 +19,15 @@ const { title, lpaName, backgroundColor = "bg-bg-main", primaryColor, logo } = A
 >
   <Container class="text-center">
     <div class="flex flex-col items-start justify-start gap-6">
-      <Image
-        src={logo}
-        width={40}
-        height={40}
-        alt={`${lpaName} logo`}
-        class="clamp-[w,28,40]"
-      />
+      {logo && (
+        <Image
+          src={logo}
+          width={40}
+          height={40}
+          alt={`${lpaName} logo`}
+          class="clamp-[w,28,40]"
+        />
+      )}
       <div>
         <h1 class="text-heading-lg text-white m-0">
           {title.replace('{lpaName}', lpaName)}
