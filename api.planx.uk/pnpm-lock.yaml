@@ -25,8 +25,8 @@ importers:
         specifier: ^3.701.0
         version: 3.828.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#f0158c0
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f0158c0(@types/react@19.1.8)
+        specifier: git+https://github.com/theopensystemslab/planx-core#2653f6d
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2653f6d(@types/react@19.1.8)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -1009,8 +1009,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f0158c0':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f0158c0}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2653f6d':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2653f6d}
     version: 1.0.0
 
   '@paralleldrive/cuid2@2.2.2':
@@ -2825,6 +2825,7 @@ packages:
     resolution: {integrity: sha512-Quz3MvAwHxVYNXsOByL7xI5EB2WYOeFswqaHIA3qOK3isRWTxiplBEocmmru6XmxDB2L7jDNYtYA4FyimoAFEw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
+    bundledDependencies: []
 
   jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
@@ -5182,7 +5183,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/f0158c0(@types/react@19.1.8)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/2653f6d(@types/react@19.1.8)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.8)(react@18.3.1)
       '@emotion/styled': 11.14.0(@emotion/react@11.14.0(@types/react@19.1.8)(react@18.3.1))(@types/react@19.1.8)(react@18.3.1)
