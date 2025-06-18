@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { visuallyHidden } from "@mui/utils";
+import { useFormik } from "formik";
 import { Feature } from "geojson";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
@@ -27,39 +29,55 @@ export const CopyFeature: React.FC<Props> = ({
     (_, sourceIndex) => sourceIndex !== destinationIndex,
   );
 
+  const formik = useFormik({
+    initialValues: {
+      sourceLabel: sourceFeatures[0]?.properties?.label,
+    },
+    onSubmit: ({ sourceLabel }) => copyFeature(sourceLabel, destinationIndex),
+  });
+
   return (
-    <Box>
-      <InputLabel label="Copy from" id={`select-${destinationIndex}`}>
-        <SelectInput
-          disabled={isDisabled}
-          aria-describedby="copy-feature-description"
-          bordered
-          required
-          title={"Copy from"}
-          value={""}
-          onChange={(e) => {
-            const label = e.target.value as string;
-            // Convert text label to zero-indexed integer
-            const sourceIndex = parseInt(label, 10) - 1;
-            copyFeature(sourceIndex, destinationIndex);
-          }}
-          name={"copyFeature"}
-          style={{ width: "200px" }}
-        >
-          <span id="copy-feature-description" style={visuallyHidden}>
-            Please add at least two features to the map in order to enable this
-            feature
-          </span>
-          {sourceFeatures.map((option) => (
-            <MenuItem
-              key={option.properties?.label}
-              value={option.properties?.label}
-            >
-              {`${schema.type} ${option.properties?.label}`}
-            </MenuItem>
-          ))}
-        </SelectInput>
-      </InputLabel>
+    <Box
+      sx={{ display: "flex" }}
+      component={"form"}
+      onSubmit={formik.handleSubmit}
+    >
+      <Box>
+        <InputLabel label="Copy from" id={`select-${destinationIndex}`}>
+          <SelectInput
+            disabled={isDisabled}
+            aria-describedby="copy-feature-description"
+            bordered
+            required
+            title={"Copy from"}
+            value={formik.values.sourceLabel}
+            onChange={formik.handleChange}
+            name={"sourceLabel"}
+            style={{ width: "200px" }}
+          >
+            <span id="copy-feature-description" style={visuallyHidden}>
+              Please add at least two features to the map in order to enable
+              this feature
+            </span>
+            {sourceFeatures.map((option) => (
+              <MenuItem
+                key={option.properties?.label}
+                value={option.properties?.label}
+              >
+                {`${schema.type} ${option.properties?.label}`}
+              </MenuItem>
+            ))}
+          </SelectInput>
+        </InputLabel>
+      </Box>
+      <Button
+        type="submit"
+        disableRipple
+        sx={{ alignSelf: "flex-end", ml: 2, mb: 0.5 }}
+        disabled={isDisabled}
+      >
+        Copy
+      </Button>
     </Box>
   );
 };

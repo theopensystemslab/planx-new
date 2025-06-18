@@ -33,7 +33,7 @@ interface MapAndLabelContextValue {
   isFeatureInvalid: (index: number) => boolean;
   addInitialFeaturesToMap: (features: Feature[]) => void;
   editFeatureInForm: (index: number) => void;
-  copyFeature: (sourceIndex: number, destinationIndex: number) => void;
+  copyFeature: (sourceLabel: string, destinationIndex: number) => void;
   removeFeature: (index: number) => void;
   mapAndLabelProps: PresentationalProps;
   errors: {
@@ -204,7 +204,9 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     }
   };
 
-  const copyFeature = (sourceIndex: number, destinationIndex: number) => {
+  const copyFeature = (sourceLabel: string, destinationIndex: number) => {
+    // Convert text label to zero-indexed integer
+    const sourceIndex = parseInt(sourceLabel, 10) - 1;
     const sourceFeature = formik.values.schemaData[sourceIndex];
     formik.setFieldValue(`schemaData[${destinationIndex}]`, {
       ...sourceFeature,
