@@ -51,19 +51,28 @@ const StyledContainer = styled(Box)<{
 const StatusHeader = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
+  justifyContent: "space-between",
   gap: theme.spacing(0.5),
   width: "100%",
-  padding: theme.spacing(0.5),
+  padding: theme.spacing(0.5, 0.5, 0.75),
 }));
 
 const getTemplatedNodeStatus = (
   isComplete?: boolean,
   areTemplatedNodeInstructionsRequired?: boolean,
 ) => {
-  if (isComplete) return "Done";
   if (areTemplatedNodeInstructionsRequired) return "Required";
   return "Optional";
+};
+
+const getStatusIcon = (theme: any, isComplete?: boolean) => {
+  if (isComplete) {
+    return { color: theme.palette.success.main };
+  }
+  return {
+    color: theme.palette.text.primary,
+    opacity: 0.2,
+  };
 };
 
 export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
@@ -83,13 +92,6 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
     );
   }
 
-  const getStatusIcon = () => {
-    if (isComplete) {
-      return <CheckCircleIcon color="success" fontSize="small" />;
-    }
-    return undefined;
-  };
-
   return (
     <StyledContainer
       className={className}
@@ -102,16 +104,21 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
     >
       {showStatusHeader && (
         <StatusHeader>
-          {getStatusIcon()}
           <Typography
             variant="body3"
-            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+            sx={{
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            }}
           >
             {getTemplatedNodeStatus(
               isComplete,
               areTemplatedNodeInstructionsRequired,
             )}
           </Typography>
+          <CheckCircleIcon
+            fontSize="small"
+            sx={(theme) => getStatusIcon(theme, isComplete)}
+          />
         </StatusHeader>
       )}
       {children}
