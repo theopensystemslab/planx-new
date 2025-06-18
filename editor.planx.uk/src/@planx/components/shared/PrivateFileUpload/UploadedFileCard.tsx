@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -148,7 +149,7 @@ export const UploadedFileCard: React.FC<Props> = ({
         </FileCard>
         {tags && (
           <TagRoot>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            <List sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
               {tags.map((tag) => (
                 <ListItem key={tag} disablePadding sx={{ width: "auto" }}>
                   <Chip
@@ -159,7 +160,7 @@ export const UploadedFileCard: React.FC<Props> = ({
                   />
                 </ListItem>
               ))}
-            </Box>
+            </List>
             <Link
               onClick={() => onChange && onChange()}
               sx={{ fontFamily: "inherit", fontSize: "inherit" }}
