@@ -323,6 +323,36 @@ export const getTemplatedFlows = async (flowId: string) => {
   return response.flow;
 };
 
+interface GetTemplatedFlowEditsResponse {
+  templatedFrom: string | null;
+  edits: {
+    data: Flow["data"] | null; // not FlowGraph because no `_root`
+  };
+}
+
+export const getTemplatedFlowEdits = async (flowId: string) => {
+  const { client: $client } = getClient();
+  const response = await $client.request<{
+    flow: GetTemplatedFlowEditsResponse;
+  }>(
+    gql`
+      query GetTemplatedFlowEdits($flow_id: uuid!) {
+        flow: flows_by_pk(id: $flow_id) {
+          templatedFrom: templated_from
+          edits: templated_flow_edit {
+            data
+          }
+        }
+      }
+    `,
+    {
+      flow_id: flowId,
+    },
+  );
+
+  return response.flow;
+};
+
 /**
  * Flatten a flow to create a single JSON representation of the main flow data and any external portals
  *   By default, requires that any external portals are published and flattens their latest published version
