@@ -10,6 +10,10 @@ export interface Service {
 interface LPA {
   name: string;
   slug: string;
+  theme: {
+    logo: string;
+    primary_colour: string;
+  };
   services: Service[];
   // TODO: custom subdomains
 }
@@ -25,6 +29,10 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
             lpas: teams(order_by: { name: asc }) {
               name
               slug
+              theme {
+                logo
+                primary_colour
+              }
               services: flows(
                 where: {
                   status: { _eq: online }

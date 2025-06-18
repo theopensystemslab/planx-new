@@ -3,7 +3,7 @@ import { fetchAllLPAs } from "@lib/lpa-api";
 import Layout from "@layouts/Layout.astro";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import ServiceCard from "@components/ServiceCard.astro";
-import Masthead from "@components/Masthead.astro";
+import LpaMasthead from "@components/LpaMasthead.astro";
 import Container from "@components/Container.astro";
 
 export const getStaticPaths = (async () => {
@@ -24,9 +24,12 @@ if (!lpaData) return Astro.redirect("/404");
 ---
 
 <Layout>
-  <Masthead title="Start a planning application">
-    <p>Send a planning application directly to local planning authorities.</p>
-  </Masthead>
+  <LpaMasthead 
+    title="Send a planning application to {lpaName}" 
+    lpaName={lpaData.name}
+    logo={lpaData.theme.logo}
+    primaryColor={lpaData.theme?.primary_colour}
+  />
   <Container paddingY>
     <div class="mb-8">
       <h2 class="text-body-xl">Send a planning application to <span class="font-bold">{lpaData.name}</span></h2>
