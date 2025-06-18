@@ -1,26 +1,14 @@
+import SvgIcon, { type SvgIconProps } from "@mui/material/SvgIcon";
 import React from "react";
 
-interface Props {
-  children: React.ReactElement;
+interface Props extends SvgIconProps {
+  Icon: typeof SvgIcon;
   titleAccess: string;
-  ariaLabel: string;
+  ariaLabel?: string;
   role?: string;
 }
-
-const SemanticIcon: React.FC<Props> = ({
-  children,
-  titleAccess,
-  ariaLabel,
-  role = "img",
-  ...props
-}) => {
-  return React.cloneElement(children, {
-    ...props,
-    titleAccess,
-    "aria-label": ariaLabel,
-    role,
-    ...children.props,
-  });
-};
+const SemanticIcon: React.FC<Props> = ({ Icon, ...props }) => (
+  <Icon {...props} />
+);
 
 export default SemanticIcon;

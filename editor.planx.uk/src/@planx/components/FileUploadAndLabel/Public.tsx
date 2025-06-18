@@ -311,29 +311,20 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <SemanticIcon
-          titleAccess="Task completed icon"
-          ariaLabel={
+          Icon={CheckCircleIcon}
+          titleAccess={
             props.completed
               ? `${props.name} has been uploaded`
               : `${props.name} has not been uploaded`
           }
-        >
-          <CheckCircleIcon
-            data-testid={props.completed ? "complete-icon" : "incomplete-icon"}
-            color={props.completed ? "success" : "disabled"}
-            fontSize="large"
-            sx={{
-              marginRight: (theme) => theme.spacing(0.25),
-              paddingRight: (theme) => theme.spacing(0.5),
-            }}
-            // titleAccess="Task completed icon"
-            // aria-label={
-            //   props.completed
-            //     ? `${props.name} has been uploaded`
-            //     : `${props.name} has not been uploaded`
-            // }
-          />
-        </SemanticIcon>
+          data-testid={props.completed ? "complete-icon" : "incomplete-icon"}
+          color={props.completed ? "success" : "disabled"}
+          fontSize="large"
+          sx={{
+            marginRight: (theme) => theme.spacing(0.25),
+            paddingRight: (theme) => theme.spacing(0.5),
+          }}
+        />
         <Typography component="span" variant="body1">
           {props.name}
         </Typography>
