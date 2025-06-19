@@ -28,7 +28,7 @@ if (!lpaData) return Astro.redirect("/404");
     title="Send a planning application to {lpaName}" 
     lpaName={lpaData.name}
     logo={lpaData.theme.logo}
-    primaryColor={lpaData.theme?.primary_colour}
+    backgroundColour={lpaData.theme?.primaryColour}
   />
   <Container paddingY>
     <div class="mb-8">

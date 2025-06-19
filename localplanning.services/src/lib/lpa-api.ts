@@ -12,7 +12,7 @@ interface LPA {
   slug: string;
   theme: {
     logo: string;
-    primary_colour: string;
+    primaryColour: string;
   };
   services: Service[];
   // TODO: custom subdomains
@@ -31,7 +31,7 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
               slug
               theme {
                 logo
-                primary_colour
+                primaryColour: primary_colour
               }
               services: flows(
                 where: {
