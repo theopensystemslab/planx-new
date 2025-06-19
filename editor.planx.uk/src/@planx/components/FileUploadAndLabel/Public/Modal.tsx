@@ -8,10 +8,10 @@ import React, { useState } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { ValidationError } from "yup";
 
-import { FileUploadSlot } from "../FileUpload/model";
-import { UploadedFileCard } from "../shared/PrivateFileUpload/UploadedFileCard";
-import { FileList } from "./model";
-import { fileLabelSchema, formatFileLabelSchemaErrors } from "./schema";
+import { FileUploadSlot } from "../../FileUpload/model";
+import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
+import { FileList } from "../model";
+import { fileLabelSchema, formatFileLabelSchemaErrors } from "../schema";
 import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
 
 interface FileTaggingModalProps {
