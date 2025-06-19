@@ -92,9 +92,6 @@ const Question: React.FC<Props> = React.memo((props) => {
             props.data?.areTemplatedNodeInstructionsRequired
           }
           showStatusHeader={true}
-          className={classNames("card-wrapper", {
-            "template-card": props.data?.isTemplatedNode,
-          })}
         >
           <Link
             href={href}

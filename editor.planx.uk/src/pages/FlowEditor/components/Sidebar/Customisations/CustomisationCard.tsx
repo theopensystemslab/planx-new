@@ -66,10 +66,10 @@ export const CustomisationCard: React.FC<Props> = ({
       }}
     >
       <TemplatedNodeContainer
-        isTemplatedNode={node.data?.isTemplatedNode}
-        areTemplatedNodeInstructionsRequired={
-          node.data?.areTemplatedNodeInstructionsRequired
-        }
+        isTemplatedNode={Boolean(node.data?.isTemplatedNode)}
+        areTemplatedNodeInstructionsRequired={Boolean(
+          node.data?.areTemplatedNodeInstructionsRequired,
+        )}
         isComplete={isComplete}
         showStatusHeader={true}
       >

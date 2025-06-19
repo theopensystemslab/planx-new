@@ -166,9 +166,6 @@ const InternalPortal: React.FC<any> = (props) => {
               props.data?.areTemplatedNodeInstructionsRequired
             }
             showStatusHeader={true}
-            className={classNames("card-wrapper", {
-              "template-card": props.data?.isTemplatedNode,
-            })}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
