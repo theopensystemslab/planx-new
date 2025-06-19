@@ -53,12 +53,13 @@ const Root = styled(MuiButtonBase, {
 export interface Props {
   id?: string;
   tagType: TagType;
+  sectionTitle?: string;
   onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
 export default function Tag(props: Props): FCReturn {
-  const { id, tagType, onClick, children } = props;
+  const { id, tagType, onClick, children, sectionTitle } = props;
 
   return (
     <Root
@@ -68,7 +69,9 @@ export default function Tag(props: Props): FCReturn {
       tagType={tagType}
     >
       <Box sx={visuallyHidden} component="span">
-        The status of this section of the application is:
+        {sectionTitle
+          ? `section ${sectionTitle}`
+          : "The status of this section of the application is:"}
       </Box>
       {children}
     </Root>
