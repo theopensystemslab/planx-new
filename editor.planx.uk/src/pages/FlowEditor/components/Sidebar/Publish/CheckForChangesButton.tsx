@@ -50,8 +50,6 @@ export const CheckForChangesToPublishButton: React.FC<{
   const [lastPublishedTitle, setLastPublishedTitle] = useState<string>(
     "This flow is not published yet",
   );
-  const [templateLastPublishedTitle, setTemplateLastPublishedTitle] =
-    useState<string>();
   const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] =
     useState<boolean>(false);
 
@@ -122,12 +120,7 @@ export const CheckForChangesToPublishButton: React.FC<{
     setLastPublishedTitle(formatLastPublishMessage(date, user));
 
     if (template) {
-      const sourceTemplateUser = await lastPublisher(template.id);
       const sourceTemplateDate = template.publishedFlows[0].publishedAt;
-      setTemplateLastPublishedTitle(
-        formatLastPublishMessage(sourceTemplateDate, sourceTemplateUser),
-      );
-
       if (date) {
         setIsTemplatedFlowDueToPublish(sourceTemplateDate > date);
       }

@@ -113,9 +113,17 @@ export const CommentTimelineItem = ({
   inUndoScope,
 }: CommentTimelineItemProps) => (
   <TimeLineItem
-    bgcolor={(theme) =>
-      inUndoScope(i) ? theme.palette.grey[100] : theme.palette.secondary.dark
-    }
+    bgcolor={(theme) => {
+      if (inUndoScope(i)) {
+        return theme.palette.grey[100];
+      } else if (
+        event.comment.startsWith("Updated based on source template publish")
+      ) {
+        return theme.palette.template.main;
+      } else {
+        return theme.palette.secondary.dark;
+      }
+    }}
     color={inUndoScope(i) ? "GrayText" : "inherit"}
     p={1}
   >
