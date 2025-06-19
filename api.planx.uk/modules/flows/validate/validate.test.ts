@@ -100,6 +100,17 @@ beforeEach(() => {
       },
     },
   });
+
+  queryMock.mockQuery({
+    name: "GetTemplatedFlowEdits",
+    matchOnVariables: false,
+    data: {
+      flow: {
+        templatedFrom: null,
+        edits: null,
+      },
+    },
+  });
 });
 
 const auth = authHeader({ role: "platformAdmin" });
@@ -178,6 +189,11 @@ describe("sections validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
           },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
         ]);
       });
   });
@@ -242,6 +258,11 @@ describe("sections validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
           },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
         ]);
       });
   });
@@ -296,6 +317,11 @@ describe("invite to pay validation on diff", () => {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
+          },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
           },
         ]);
       });
@@ -362,6 +388,11 @@ describe("invite to pay validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
           },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
         ]);
       });
   });
@@ -422,6 +453,11 @@ describe("invite to pay validation on diff", () => {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
+          },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
           },
         ]);
       });
@@ -485,6 +521,11 @@ describe("invite to pay validation on diff", () => {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
+          },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
           },
         ]);
       });
@@ -578,6 +619,11 @@ describe("ODP Schema file type validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
           },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
         ]);
       });
   });
@@ -661,6 +707,11 @@ describe("ODP Schema file type validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
           },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
         ]);
       });
   });
@@ -728,6 +779,11 @@ describe("planning constraints validation on diff", () => {
             message:
               'Your flow is not using Checklists which set "proposal.projectType"',
           },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
         ]);
       });
   });
@@ -784,6 +840,199 @@ describe("planning constraints validation on diff", () => {
             title: "Sections",
             status: "Pass",
             message: "Your flow has valid Sections",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "File types",
+            status: "Not applicable",
+            message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
+        ]);
+      });
+  });
+});
+
+describe("templated node requirements validation on diff", () => {
+  it("fails if all required templated nodes have not been customised", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      PlanningConstraints: {
+        type: 11,
+        data: {
+          title: "Check all constraints",
+          fn: "property.constraints.planning",
+          isTemplatedNode: true,
+          templatedNodeInstructions:
+            "Select which datasets you'd like to query or update your disclaimer",
+          areTemplatedNodeInstructionsRequired: true,
+        },
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetTemplatedFlowEdits",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          templatedFrom: "source-flow-1",
+          edits: {
+            data: {
+              someOtherNode: {
+                data: {
+                  title: "Updated title",
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Templated nodes",
+            status: "Fail",
+            message: `Customise each "Required" node before publishing your templated flow`,
+          },
+          {
+            title: "Sections",
+            status: "Pass",
+            message: "Your flow has valid Sections",
+          },
+          {
+            title: "Planning Constraints",
+            status: "Pass",
+            message: "Your flow has valid Planning Constraints",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Not applicable",
+            message: "Your flow is not using Invite to Pay",
+          },
+          {
+            title: "File types",
+            status: "Not applicable",
+            message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Project types",
+            status: "Not applicable",
+            message:
+              'Your flow is not using Checklists which set "proposal.projectType"',
+          },
+        ]);
+      });
+  });
+
+  it("passes when all required templated nodes have been customised", async () => {
+    const alteredFlow = {
+      ...mockFlowData,
+      PlanningConstraints: {
+        type: 11,
+        data: {
+          title: "Check all constraints",
+          fn: "property.constraints.planning",
+          isTemplatedNode: true,
+          templatedNodeInstructions:
+            "Select which datasets you'd like to query or update your disclaimer",
+          areTemplatedNodeInstructionsRequired: true,
+        },
+      },
+    };
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: alteredFlow,
+          slug: "altered-flow-name",
+          team_id: 1,
+          team: {
+            slug: "testing",
+          },
+          publishedFlows: [{ data: alteredFlow }],
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "GetTemplatedFlowEdits",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          templatedFrom: "source-flow-1",
+          edits: {
+            data: {
+              PlanningConstraints: {
+                data: {
+                  disclaimer: "May not be accurate!",
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Sections",
+            status: "Pass",
+            message: "Your flow has valid Sections",
+          },
+          {
+            title: "Planning Constraints",
+            status: "Pass",
+            message: "Your flow has valid Planning Constraints",
+          },
+          {
+            title: "Templated nodes",
+            status: "Pass",
+            message: `All "Required" nodes in your templated flow have been customised`,
           },
           {
             title: "Invite to Pay",

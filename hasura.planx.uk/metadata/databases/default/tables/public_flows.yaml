@@ -17,6 +17,13 @@ object_relationships:
         remote_table:
           name: flows
           schema: public
+  - name: templated_flow_edit
+    using:
+      foreign_key_constraint_on:
+        column: flow_id
+        table:
+          name: templated_flow_edits
+          schema: public
 array_relationships:
   - name: comments
     using:
