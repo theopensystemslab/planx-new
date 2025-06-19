@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
-import { FlowInformation, RawGetFlowInformation } from "pages/FlowEditor/utils";
+import { FlowInformation } from "pages/FlowEditor/utils";
 import {
   AdminPanelData,
   FlowSettings,
@@ -124,7 +124,7 @@ export const settingsStore: StateCreator<
     return Boolean(result?.id);
   },
 
-  getFlowInformation: async (flowSlug, teamSlug) => {
+  getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
     const {
       data: {
         flows: [
@@ -139,7 +139,7 @@ export const settingsStore: StateCreator<
           },
         ],
       },
-    } = await client.query<RawGetFlowInformation>({
+    } = await client.query({
       query: gql`
         query GetFlow($slug: String!, $team_slug: String!) {
           flows(
