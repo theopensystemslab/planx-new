@@ -95,6 +95,12 @@ const Header = styled("header")(({ theme }) => ({
     border: "1px solid ${theme.palette.border.main}",
     borderWidth: "1px",
   },
+}));
+
+const Icons = styled(Box)(() => ({
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
   "& svg": {
     cursor: "pointer",
     opacity: "0.7",
@@ -183,7 +189,7 @@ const Sidebar: React.FC = React.memo(() => {
             {showSidebar ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </StyledToggleButton>
           <Header>
-            <Box width="100%" display="flex">
+            <Icons>
               <input type="text" disabled value={urls.preview} />
 
               <Permission.IsPlatformAdmin>
@@ -230,7 +236,7 @@ const Sidebar: React.FC = React.memo(() => {
                   </Box>
                 </Tooltip>
               )}
-            </Box>
+            </Icons>
             <CheckForChangesToPublishButton previewURL={urls.preview} />
           </Header>
           <TabList>

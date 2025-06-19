@@ -142,18 +142,23 @@ export const CheckForChangesToPublishButton: React.FC<{
               marginBottom: (theme) => theme.spacing(2),
               display: "flex",
               flexDirection: "row",
-              alignItems: "center",
+              alignItems: "flex-start",
             }}
           >
-            <StarIcon sx={{ color: "#380F77" }} />
-            <Typography variant="body2">
-              {`Templated from ${template.team.name} - `}
-              <strong>
-                {isTemplatedFlowDueToPublish
-                  ? "Due to review and publish"
-                  : "Up to date"}
-              </strong>
-            </Typography>
+            <StarIcon sx={{ color: "#380F77", mr: 0.5 }} fontSize="small" />
+            <Box>
+              <Typography variant="body2">
+                {`Templated from ${template.team.name}`}
+              </Typography>
+              <Typography variant="body2">
+                <strong>
+                  {isTemplatedFlowDueToPublish
+                    ? "Due to review and publish"
+                    : "Up to date"}
+                </strong>
+              </Typography>
+            </Box>
+
           </Box>
         )}
         <Button

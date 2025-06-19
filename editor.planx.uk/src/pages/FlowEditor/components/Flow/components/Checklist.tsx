@@ -1,6 +1,5 @@
 import Help from "@mui/icons-material/Help";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import {
   ComponentType as TYPES,
   NodeTag,
@@ -11,7 +10,7 @@ import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
@@ -97,31 +96,13 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           wasVisited: props.wasVisited,
         })}
       >
-        <Box
-          // TODO: update card (background colour, text) for differnt states (Requried, Optional, Done)
-          className={classNames("card-wrapper", {
-            "template-card": props.data?.isTemplatedNode,
-          })}
-          sx={
-            props.data?.isTemplatedNode
-              ? {
-                  backgroundColor: (theme) => theme.palette.template.dark,
-                }
-              : {}
+        <TemplatedNodeContainer
+          isTemplatedNode={props.data?.isTemplatedNode}
+          areTemplatedNodeInstructionsRequired={
+            props.data?.areTemplatedNodeInstructionsRequired
           }
+          showStatusHeader={true}
         >
-          {props.data?.isTemplatedNode && (
-            <Box sx={{ width: "100%", textAlign: "center", p: 0.4 }}>
-              <Typography
-                variant="body3"
-                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-              >
-                {props.data?.areTemplatedNodeInstructionsRequired
-                  ? "Required"
-                  : "Optional"}
-              </Typography>
-            </Box>
-          )}
           <Link
             href={href}
             prefetch={false}
@@ -152,7 +133,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
               ))}
             </Box>
           )}
-        </Box>
+        </TemplatedNodeContainer>
         {groupedOptions ? (
           <ol className="categories">
             {groupedOptions.map(({ title, children }, i) => (

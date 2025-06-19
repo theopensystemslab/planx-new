@@ -1,13 +1,11 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Box from "@mui/material/Box";
 import ListItem from "@mui/material/ListItem";
-import { styled, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { NodeCard } from "ui/editor/NodeCard";
+import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
 import { FlowEdits, NodeEdits } from "./types";
 
@@ -16,30 +14,6 @@ interface Props {
   nodeEdits?: NodeEdits;
   flowEdits: FlowEdits;
 }
-
-const CardContainer = styled(Box)<{ isComplete: boolean }>(
-  ({ theme, isComplete }) => ({
-    backgroundColor: isComplete
-      ? theme.palette.common.white
-      : theme.palette.template.dark,
-    border: "1px solid",
-    borderColor: isComplete ? theme.palette.border.main : "transparent",
-    width: "100%",
-    padding: theme.spacing(0.25, 0.25, 0.25),
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  }),
-);
-
-const StatusHeader = styled(Box)(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: theme.spacing(0.5),
-  width: "100%",
-  padding: theme.spacing(0.5),
-}));
 
 export const CustomisationCard: React.FC<Props> = ({
   nodeId,
@@ -78,15 +52,6 @@ export const CustomisationCard: React.FC<Props> = ({
 
   const isComplete = Boolean(hasNodeBeenUpdated());
 
-  const getTemplatedNodeStatus = (
-    isComplete: boolean,
-    areTemplatedNodeInstructionsRequired?: boolean,
-  ) => {
-    if (isComplete) return "Done";
-    if (areTemplatedNodeInstructionsRequired) return "Required";
-    return "Optional";
-  };
-
   return (
     <ListItem
       key={nodeId}
@@ -100,25 +65,20 @@ export const CustomisationCard: React.FC<Props> = ({
         width: "100%",
       }}
     >
-      <CardContainer isComplete={isComplete}>
-        <StatusHeader>
-          {isComplete && <CheckCircleIcon color="success" fontSize="small" />}
-          <Typography
-            variant="body3"
-            sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-          >
-            {getTemplatedNodeStatus(
-              isComplete,
-              node.data?.areTemplatedNodeInstructionsRequired,
-            )}
-          </Typography>
-        </StatusHeader>
+      <TemplatedNodeContainer
+        isTemplatedNode={Boolean(node.data?.isTemplatedNode)}
+        areTemplatedNodeInstructionsRequired={Boolean(
+          node.data?.areTemplatedNodeInstructionsRequired,
+        )}
+        isComplete={isComplete}
+        showStatusHeader={true}
+      >
         <NodeCard nodeId={nodeId} backgroundColor={theme.palette.common.white}>
           <Typography variant="body2">
             {node.data?.templatedNodeInstructions}
           </Typography>
         </NodeCard>
-      </CardContainer>
+      </TemplatedNodeContainer>
     </ListItem>
   );
 };
