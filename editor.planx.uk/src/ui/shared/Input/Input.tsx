@@ -3,12 +3,7 @@ import InputBase, {
   InputBaseProps,
 } from "@mui/material/InputBase";
 import { styled } from "@mui/material/styles";
-import React, {
-  ChangeEvent,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import React, { ChangeEvent, forwardRef } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -91,8 +86,6 @@ const StyledInputBase = styled(InputBase, {
 }));
 
 export default forwardRef((props: Props, ref): FCReturn => {
-  const container = useRef<HTMLDivElement | null>(null);
-
   const {
     format,
     bordered,
@@ -103,19 +96,6 @@ export default forwardRef((props: Props, ref): FCReturn => {
     id,
     ...restProps
   } = props;
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      focus: () => {
-        container.current?.querySelector("input")?.focus();
-      },
-      select: () => {
-        container.current?.querySelector("input")?.select();
-      },
-    }),
-    [],
-  );
 
   return (
     <ErrorWrapper error={errorMessage} id={id}>
@@ -129,7 +109,7 @@ export default forwardRef((props: Props, ref): FCReturn => {
           "aria-labelledby": ariaLabelledBy,
         }}
         id={id}
-        ref={container}
+        inputRef={ref}
         {...restProps}
       />
     </ErrorWrapper>
