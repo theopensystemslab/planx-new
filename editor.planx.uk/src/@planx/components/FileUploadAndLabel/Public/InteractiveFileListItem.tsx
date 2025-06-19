@@ -1,16 +1,15 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { MoreInformation } from "@planx/components/shared";
+import { StatusIcon } from "@planx/components/shared/Icons/StatusIcon";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { HelpClickMetadata } from "pages/FlowEditor/lib/analytics/types";
 import React, { useState } from "react";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import SemanticIcon from "../../shared/Icons/SemanticIcon";
 import { Image } from "../../shared/Preview/CardHeader/styled";
 import MoreInfo from "../../shared/Preview/MoreInfo";
 import MoreInfoSection from "../../shared/Preview/MoreInfoSection";
@@ -53,19 +52,11 @@ export const InteractiveFileListItem = (props: FileListItemProps) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <SemanticIcon
-          Icon={CheckCircleIcon}
-          titleAccess={
-            props.completed
-              ? `${props.name} has been uploaded`
-              : `${props.name} has not been uploaded`
-          }
-          data-testid={props.completed ? "complete-icon" : "incomplete-icon"}
-          color={props.completed ? "success" : "disabled"}
-          fontSize="large"
-          sx={{
-            marginRight: (theme) => theme.spacing(0.25),
-            paddingRight: (theme) => theme.spacing(0.5),
+        <StatusIcon
+          isCompleted={props.completed}
+          title={{
+            complete: `${props.name} has been uploaded`,
+            incomplete: `${props.name} has not been uploaded`,
           }}
         />
         <Typography component="span" variant="body1">
