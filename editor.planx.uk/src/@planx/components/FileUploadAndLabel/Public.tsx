@@ -21,6 +21,7 @@ import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHt
 
 import { FileUploadSlot } from "../FileUpload/model";
 import { MoreInformation } from "../shared";
+import SemanticIcon from "../shared/Icons/SemanticIcon";
 import Card from "../shared/Preview/Card";
 import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import { Image } from "../shared/Preview/CardHeader/styled";
@@ -309,7 +310,13 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <CheckCircleIcon
+        <SemanticIcon
+          Icon={CheckCircleIcon}
+          titleAccess={
+            props.completed
+              ? `${props.name} has been uploaded`
+              : `${props.name} has not been uploaded`
+          }
           data-testid={props.completed ? "complete-icon" : "incomplete-icon"}
           color={props.completed ? "success" : "disabled"}
           fontSize="large"
@@ -318,7 +325,9 @@ const InteractiveFileListItem = (props: FileListItemProps) => {
             paddingRight: (theme) => theme.spacing(0.5),
           }}
         />
-        <Typography variant="body1">{props.name}</Typography>
+        <Typography component="span" variant="body1">
+          {props.name}
+        </Typography>
       </Box>
       {!!(info || policyRef || howMeasured) && (
         <InfoButton
