@@ -1,0 +1,38 @@
+---
+import Container from "@components/Container.astro";
+import { Image } from "astro:assets";
+
+interface Props {
+  title: string;
+  lpaName: string;
+  backgroundColour: string;
+  logo?: string;
+}
+
+const { title, lpaName, backgroundColour, logo } = Astro.props;
+---
+
+<section 
+  class={"clamp-[py,5,15]"}
+  style={`background-color: ${backgroundColour}` }
+>
+  <Container class="text-center">
+    <div class="flex flex-col items-start justify-start gap-6">
+      {logo && (
+        <Image
+          src={logo}
+          width={40}
+          height={40}
+          alt={`${lpaName} logo`}
+          class="clamp-[w,28,40]"
+        />
+      )}
+      <div>
+        <h1 class="text-heading-lg text-white m-0">
+          {title.replace('{lpaName}', lpaName)}
+        </h1>
+      </div>
+    </div>
+    
+  </Container> 
+</section>
