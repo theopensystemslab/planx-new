@@ -1,7 +1,9 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
+import { FlowStatus } from "@opensystemslab/planx-core/types";
 
 import { Store } from "../store";
+import { useStore } from "../store";
 import { ALLOW_LIST } from "./provider";
 import {
   AllowListKey,
@@ -9,7 +11,6 @@ import {
   BackwardsNavigationMetadata,
   BackwardsTargetMetadata,
 } from "./types";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
 
 /**
  * Generate meaningful title for content analytic log
@@ -30,11 +31,11 @@ export function extractNodeTitle(node: Store.Node): string {
   const nodeTitle =
     node?.type === TYPES.Content
       ? getContentTitle(node)
-      : node?.data?.title ??
+      : (node?.data?.title ??
         node?.data?.text ??
         node?.data?.flagSet ??
         node?.data?.category ??
-        node?.data?.heading;
+        node?.data?.heading);
   return nodeTitle;
 }
 
@@ -220,29 +221,7 @@ export const getFOIYNPP = (environment: Environment) => ({
 
 export const getRAB = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].RAB,
-  slugs: [
-    "camden-report-a-planning-breach",
-    "report-a-planning-breach",
-  ],
-});
-
-export const getSubmission = (environment: Environment) => ({
-  id: DASHBOARD_PUBLIC_IDS[environment].submission,
-  slugs: [
-    "apply-for-a-lawful-development-certificate",
-    "apply-for-building-regulations-applications",
-    "apply-for-building-regulations-notice",
-    "apply-for-householder-and-listed-building-pre-application-advice",
-    "apply-for-planning-permission",
-    "camden-apply-for-a-lawful-development-certificate",
-    "camden-apply-for-planning-permission",
-    "listed-building-pre-application-advice",
-    "notice-of-exempt-works-to-trees",
-    "pre-application-advice",
-    "pre-application-for-energy-efficient-measures",
-    "tree-pre-application-advice",
-    "submit-a-demolition-notice",
-  ],
+  slugs: ["camden-report-a-planning-breach", "report-a-planning-breach"],
 });
 
 export const getDiscretionary = (environment: Environment) => ({
@@ -259,36 +238,58 @@ export const getDiscretionary = (environment: Environment) => ({
   ],
 });
 
+export const getSubmission = (
+  environment: Environment,
+  flowSlug: string,
+  isSubmissionService: boolean,
+  rab: ReturnType<typeof getRAB>,
+): { id: string } | undefined => {
+  // Exclude RAB slugs (since they are technically submissions)
+  if (isSubmissionService && !rab.slugs.includes(flowSlug)) {
+    return {
+      id: DASHBOARD_PUBLIC_IDS[environment].submission,
+    };
+  }
+  return undefined;
+};
+
 export const generateAnalyticsLink = ({
   flowStatus,
   environment,
   flowId,
   flowSlug,
+  isSubmissionService,
 }: {
   flowStatus: FlowStatus;
   environment: Environment;
   flowId: string;
   flowSlug: string;
+  isSubmissionService: boolean;
 }): string | undefined => {
-  
-  const includedServices = [
-    getFOIYNPP(environment),
-    getRAB(environment),
-    getSubmission(environment),
-    getDiscretionary(environment),
-  ];
-
   if (flowStatus === "offline") return undefined;
 
   let dashboardId: string | undefined;
 
-  const service = includedServices.find(service => 
-    service.slugs.some(slug => flowSlug === (slug))
+  const foiynpp = getFOIYNPP(environment);
+  const rab = getRAB(environment);
+  const discretionary = getDiscretionary(environment);
+  const submission = getSubmission(
+    environment,
+    flowSlug,
+    isSubmissionService,
+    rab,
   );
-    
-  if (!service) return undefined;
 
-  dashboardId = service.id
+  if (foiynpp.slugs.includes(flowSlug)) {
+    dashboardId = foiynpp.id;
+  } else if (rab.slugs.includes(flowSlug)) {
+    // since RAB is technically a submission service, we have to check it before general submission services below
+    dashboardId = rab.id;
+  } else if (discretionary.slugs.includes(flowSlug)) {
+    dashboardId = discretionary.id;
+  } else if (submission) {
+    dashboardId = submission.id;
+  }
 
   if (!dashboardId) {
     return;

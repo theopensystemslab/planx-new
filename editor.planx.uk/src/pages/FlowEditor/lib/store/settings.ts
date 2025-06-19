@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
-import { FlowInformation, GetFlowInformation } from "pages/FlowEditor/utils";
+import { FlowInformation, RawGetFlowInformation } from "pages/FlowEditor/utils";
 import {
   AdminPanelData,
   FlowSettings,
@@ -34,6 +34,7 @@ export interface SettingsStore {
   flowLimitations?: string;
   updateFlowLimitations: (newLimitations: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
+  isSubmissionService?: boolean;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
@@ -67,8 +68,8 @@ export const settingsStore: StateCreator<
       set({ flowStatus: newStatus });
       return Boolean(result.id);
     } catch (error) {
-      console.error(error)
-      return false
+      console.error(error);
+      return false;
     }
   },
 
@@ -134,10 +135,11 @@ export const settingsStore: StateCreator<
             summary,
             limitations,
             canCreateFromCopy,
+            published_flows,
           },
         ],
       },
-    } = await client.query<GetFlowInformation>({
+    } = await client.query<RawGetFlowInformation>({
       query: gql`
         query GetFlow($slug: String!, $team_slug: String!) {
           flows(
@@ -151,6 +153,9 @@ export const settingsStore: StateCreator<
             status
             limitations
             canCreateFromCopy: can_create_from_copy
+            published_flows(limit: 1, order_by: { created_at: desc }) {
+              has_send_component
+            }
           }
         }
       `,
@@ -161,6 +166,9 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
+    const isSubmissionService =
+      published_flows?.[0]?.has_send_component ?? false;
+
     set({
       flowSettings: settings,
       flowStatus: status,
@@ -168,9 +176,17 @@ export const settingsStore: StateCreator<
       flowSummary: summary,
       flowLimitations: limitations,
       flowCanCreateFromCopy: canCreateFromCopy,
+      isSubmissionService,
     });
 
-    return { settings, status, description, summary, limitations };
+    return {
+      settings,
+      status,
+      description,
+      summary,
+      limitations,
+      isSubmissionService,
+    };
   },
 
   globalSettings: undefined,

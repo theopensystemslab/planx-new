@@ -9,6 +9,20 @@ export interface FlowInformation {
   summary?: string;
   limitations?: string;
   canCreateFromCopy?: boolean;
+  isSubmissionService?: boolean;
+}
+
+export interface RawFlowInformation {
+  settings: FlowSettings;
+  status: FlowStatus;
+  description?: string;
+  summary?: string;
+  limitations?: string;
+  canCreateFromCopy?: boolean;
+  published_flows?: { has_send_component?: boolean }[];
+}
+export interface RawGetFlowInformation {
+  flows: RawFlowInformation[];
 }
 
 export interface GetFlowInformation {
