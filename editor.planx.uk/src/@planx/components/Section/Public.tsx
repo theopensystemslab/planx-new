@@ -153,7 +153,7 @@ export function SectionsOverviewList({
     }
   };
 
-  const getTag = (section: SectionStatus) => {
+  const getTag = (section: SectionStatus, sectionTitle: string) => {
     const tagTypes: Record<SectionStatus, TagType> = {
       [SectionStatus.NeedsUpdated]: TagType.Alert,
       [SectionStatus.ReadyToStart]: TagType.Active,
@@ -170,7 +170,7 @@ export function SectionsOverviewList({
         : () => {}; // no-op
 
     return (
-      <Tag tagType={tagType} onClick={onClick}>
+      <Tag tagType={tagType} onClick={onClick} sectionTitle={sectionTitle}>
         {section}
       </Tag>
     );
@@ -207,7 +207,9 @@ export function SectionsOverviewList({
               openLinksOnNewTab
             />
           </SectionTitle>
-          <SectionState> {getTag(sectionStatuses[sectionId])} </SectionState>
+          <SectionState>
+            {getTag(sectionStatuses[sectionId], sectionNode.data.title)}
+          </SectionState>
         </SectionRow>
       ))}
     </DescriptionList>
