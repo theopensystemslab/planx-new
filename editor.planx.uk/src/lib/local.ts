@@ -1,6 +1,7 @@
 import { Session } from "types";
 
 export const getLocalFlow = (id: string): Session | undefined => {
+  console.info("getLocalFlow", id);
   const entry = `flow:${id}`;
 
   try {
@@ -12,10 +13,12 @@ export const getLocalFlow = (id: string): Session | undefined => {
   }
 };
 
-export const setLocalFlow = (id: string, session: Session) => {
+export const setLocalFlow = (id: string, session: Session): void => {
+  console.info("setLocalFlow", id);
   localStorage.setItem(`flow:${id}`, JSON.stringify(session));
 };
 
-export const clearLocalFlow = (id: string) => {
+export const clearLocalFlow = (id: string): void => {
+  console.info("clearLocalFlow", id);
   localStorage.removeItem(`flow:${id}`);
 };
