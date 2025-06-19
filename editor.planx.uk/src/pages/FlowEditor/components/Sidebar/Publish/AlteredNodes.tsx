@@ -29,15 +29,21 @@ export interface AlteredNode {
   data?: any;
 }
 
-const HistoryComment = styled(Box)(({ theme }) => ({
-  width: "100%",
-  margin: theme.spacing(0.5, 0),
-  padding: theme.spacing(1, 1.5),
-  background: theme.palette.secondary.dark,
-  color: theme.palette.text.primary,
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid rgba(0,0,0,0.08)`,
-}));
+const HistoryComment = styled(Box, {
+  shouldForwardProp: (prop) => prop != "isTemplatedFlowUpdateComment",
+})<{ isTemplatedFlowUpdateComment?: boolean }>(
+  ({ theme, isTemplatedFlowUpdateComment }) => ({
+    width: "100%",
+    margin: theme.spacing(0.5, 0),
+    padding: theme.spacing(1, 1.5),
+    background: isTemplatedFlowUpdateComment
+      ? theme.palette.template.main
+      : theme.palette.secondary.dark,
+    color: theme.palette.text.primary,
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid rgba(0,0,0,0.08)`,
+  }),
+);
 
 export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   const { node } = props;
@@ -142,7 +148,11 @@ export const AlteredNodesSummaryContent = (props: {
                       <strong>Commented</strong>{" "}
                       {`${formatLastEditDate(comment.createdAt)}`}
                     </Typography>
-                    <HistoryComment>
+                    <HistoryComment
+                      isTemplatedFlowUpdateComment={comment.comment.startsWith(
+                        "Updated based on source template publish",
+                      )}
+                    >
                       <BlockQuote>{comment.comment}</BlockQuote>
                     </HistoryComment>
                   </>
