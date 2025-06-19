@@ -27,7 +27,7 @@ const validateTemplatedNodes = async (
     )
     .map(([nodeId, _node]) => nodeId);
   const allEditedTemplatedNodedIds = Object.keys(
-    templatedFlowEdits.edits.data || {},
+    templatedFlowEdits.edits?.data || {},
   );
 
   // Check if allRequiredTemplatedNodesIds are contained within allEditedTemplatedNodeIds

@@ -327,7 +327,7 @@ interface GetTemplatedFlowEditsResponse {
   templatedFrom: string | null;
   edits: {
     data: Flow["data"] | null; // not FlowGraph because no `_root`
-  };
+  } | null;
 }
 
 export const getTemplatedFlowEdits = async (flowId: string) => {
