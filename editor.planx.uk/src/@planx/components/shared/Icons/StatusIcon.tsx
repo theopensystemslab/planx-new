@@ -1,5 +1,6 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { svgIconClasses } from "@mui/material/SvgIcon";
 import React from "react";
 
 import SemanticIcon from "./SemanticIcon";
@@ -20,10 +21,10 @@ export const StatusIcon: React.FC<Props> = ({ isCompleted, title }) => (
     color={isCompleted ? "success" : "disabled"}
     fontSize="large"
     sx={{
-      marginRight: (theme) => theme.spacing(0.25),
-      paddingRight: (theme) => theme.spacing(0.5),
       ...(!isCompleted && {
-        transform: "rotate(-45deg)",
+        [`&.${svgIconClasses.root}`]: {
+          transform: "rotate(-45deg)",
+        },
       }),
     }}
   />

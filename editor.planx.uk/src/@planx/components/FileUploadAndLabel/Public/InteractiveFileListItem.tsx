@@ -52,13 +52,15 @@ export const InteractiveFileListItem = (props: FileListItemProps) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <StatusIcon
-          isCompleted={props.completed}
-          title={{
-            complete: `${props.name} has been uploaded`,
-            incomplete: `${props.name} has not been uploaded`,
-          }}
-        />
+        <Box mr={0.25} pr={0.5}>
+          <StatusIcon
+            isCompleted={props.completed}
+            title={{
+              complete: `${props.name} has been uploaded`,
+              incomplete: `${props.name} has not been uploaded`,
+            }}
+          />
+        </Box>
         <Typography component="span" variant="body1">
           {props.name}
         </Typography>
