@@ -9,14 +9,14 @@ import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/Render
 import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
 import { SelectMultiple } from "ui/shared/SelectMultiple";
 
-import { FileUploadSlot } from "../FileUpload/model";
+import { FileUploadSlot } from "../../FileUpload/model";
 import {
   addOrAppendSlots,
   FileList,
   getTagsForSlot,
   removeSlots,
   UserFile,
-} from "./model";
+} from "../model";
 
 interface SelectMultipleProps {
   uploadedFile: FileUploadSlot;
