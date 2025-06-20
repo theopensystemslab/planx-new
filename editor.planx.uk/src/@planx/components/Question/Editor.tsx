@@ -213,14 +213,7 @@ export const Question: React.FC<Props> = (props) => {
           />
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={formik.handleChange}
-        definitionImg={formik.values.definitionImg}
-        howMeasured={formik.values.howMeasured}
-        policyRef={formik.values.policyRef}
-        info={formik.values.info}
-        disabled={props.disabled}
-      />
+      <MoreInformation formik={formik} disabled={props.disabled} />
       <InternalNotes
         name="notes"
         onChange={formik.handleChange}

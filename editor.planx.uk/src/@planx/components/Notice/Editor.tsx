@@ -25,19 +25,20 @@ export interface Props {
 }
 
 export interface NoticeEditorProps {
-  value: Notice;
-  onChange: (newValue: Notice) => void;
+  formik: ReturnType<typeof useFormik<Notice>>;
   disabled?: boolean;
 }
 
-const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
+const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
+  const { values, handleChange } = formik;
+
   return (
     <>
       <TemplatedNodeInstructions
-        isTemplatedNode={props.value.isTemplatedNode}
-        templatedNodeInstructions={props.value.templatedNodeInstructions}
+        isTemplatedNode={values.isTemplatedNode}
+        templatedNodeInstructions={values.templatedNodeInstructions}
         areTemplatedNodeInstructionsRequired={
-          props.value.areTemplatedNodeInstructionsRequired
+          values.areTemplatedNodeInstructionsRequired
         }
       />
       <ModalSection>
@@ -46,102 +47,88 @@ const NoticeEditor: React.FC<NoticeEditorProps> = (props) => {
             <Input
               format="large"
               placeholder="Notice"
-              value={props.value.title}
+              value={values.title}
               onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
+                handleChange({
+                  ...values,
                   title: ev.target.value,
                 });
               }}
-              disabled={props.disabled}
+              disabled={disabled}
             />
           </InputRow>
           <InputRow>
             <RichTextInput
               placeholder="Description"
-              value={props.value.description}
+              value={values.description}
               onChange={(ev) => {
-                props.onChange({
-                  ...props.value,
+                handleChange({
+                  ...values,
                   description: ev.target.value,
                 });
               }}
-              disabled={props.disabled}
+              disabled={disabled}
             />
           </InputRow>
           <ColorPicker
             inline
             label="Background colour"
-            color={props.value.color}
+            color={values.color}
             onChange={(color) => {
-              props.onChange({
-                ...props.value,
+              handleChange({
+                ...values,
                 color,
               });
             }}
-            disabled={props.disabled}
+            disabled={disabled}
           />
           <InputRow>
             <Switch
-              checked={Boolean(props.value.resetButton)}
+              checked={Boolean(values.resetButton)}
               onChange={() =>
-                props.onChange({
-                  ...props.value,
-                  resetButton: !props.value.resetButton,
+                handleChange({
+                  ...values,
+                  resetButton: !values.resetButton,
                 })
               }
               label="Reset to start of service"
-              disabled={props.disabled}
+              disabled={disabled}
             />
           </InputRow>
         </ModalSectionContent>
       </ModalSection>
-      <MoreInformation
-        changeField={(ev: any) => {
-          props.onChange({
-            ...props.value,
-            [ev.target.name]: ev.target.value,
-          });
-        }}
-        definitionImg={props.value.definitionImg}
-        howMeasured={props.value.howMeasured}
-        policyRef={props.value.policyRef}
-        info={props.value.info}
-        disabled={props.disabled}
-      />
+      <MoreInformation formik={formik} disabled={disabled} />
       <InternalNotes
         name="notes"
         onChange={(ev) => {
-          props.onChange({
-            ...props.value,
+          handleChange({
+            ...values,
             notes: ev.target.value,
           });
         }}
-        value={props.value.notes}
-        disabled={props.disabled}
+        value={values.notes}
+        disabled={disabled}
       />
       <ComponentTagSelect
         onChange={(value) =>
-          props.onChange({
-            ...props.value,
+          handleChange({
+            ...values,
             tags: value,
           })
         }
-        value={props.value.tags}
-        disabled={props.disabled}
+        value={values.tags}
+        disabled={disabled}
       />
     </>
   );
 };
 
 const NoticeComponent: React.FC<Props> = (props) => {
-  const formik = useFormik<{ notice: Notice }>({
-    initialValues: {
-      notice: parseNotice(props.node?.data),
-    },
+  const formik = useFormik<Notice>({
+    initialValues: parseNotice(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
-        props.handleSubmit({ type: TYPES.Notice, data: newValues.notice });
+        props.handleSubmit({ type: TYPES.Notice, data: newValues });
       }
     },
     validate: () => {},
@@ -149,13 +136,7 @@ const NoticeComponent: React.FC<Props> = (props) => {
 
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
-      <NoticeEditor
-        value={formik.values.notice}
-        onChange={(notice) => {
-          formik.setFieldValue("notice", notice);
-        }}
-        disabled={props.disabled}
-      />
+      <NoticeEditor formik={formik} disabled={props.disabled} />
     </form>
   );
 };
