@@ -38,7 +38,7 @@ const AltTextIndicator = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   alignItems: "center",
   overflow: "hidden",
-  gap: "0.25em,",
+  gap: "0.25em",
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -54,7 +54,11 @@ const ImageNode: React.FC<NodeViewProps> = ({
   updateAttributes,
   editor,
   selected,
-  ...props
+  innerDecorations: _innerDecorations,
+  HTMLAttributes: _HTMLAttributes,
+  getPos: _getPos,
+  deleteNode: _deleteNode,
+  ...domProps
 }) => {
   const { src, alt } = node.attrs;
 
@@ -64,7 +68,7 @@ const ImageNode: React.FC<NodeViewProps> = ({
   };
 
   return (
-    <StyledNodeViewWrapper selected={selected} {...props}>
+    <StyledNodeViewWrapper selected={selected} {...domProps}>
       <StyledImg src={src} alt={alt} />
       <AltTextIndicator>
         <IconButton size="small" sx={{ flex: "0 0 auto" }}>
