@@ -9,7 +9,10 @@ import { FlowVisibility } from "./FlowVisibility/FlowVisibilitySection";
 import { TemplatedFlowStatus } from "./TemplatedFlowStatus/TemplatedFlowStatusSection";
 
 const ServiceSettings: React.FC = () => {
-  const isTemplatedFrom = useStore((state) => state.isTemplatedFrom);
+  const [isTemplatedFrom, isTemplate] = useStore((state) => [
+    state.isTemplatedFrom,
+    state.isTemplate,
+  ]);
 
   return (
     <Container
@@ -17,11 +20,11 @@ const ServiceSettings: React.FC = () => {
       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
     >
       <FlowStatus />
+      {!isTemplatedFrom && !isTemplate && <FlowVisibility />}
+      <FooterLinksAndLegalDisclaimer />
       {hasFeatureFlag("TEMPLATES") && isTemplatedFrom && (
         <TemplatedFlowStatus />
       )}
-      <FlowVisibility />
-      <FooterLinksAndLegalDisclaimer />
     </Container>
   );
 };
