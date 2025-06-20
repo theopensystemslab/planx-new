@@ -1,4 +1,6 @@
 import Help from "@mui/icons-material/Help";
+import { BaseNodeData } from "@planx/components/shared";
+// import { getIn } from "formik";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -8,14 +10,12 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import InputRow from "ui/shared/InputRow";
 
-export const MoreInformation = ({
-  changeField,
-  definitionImg,
-  howMeasured,
-  policyRef,
-  info,
+import { MoreInformationProps } from "./types";
+
+export const MoreInformation = <T extends BaseNodeData>({
+  formik,
   disabled,
-}: MoreInformationProps) => {
+}: MoreInformationProps<T>) => {
   return (
     <ModalSection>
       <ModalSectionContent title="More information" Icon={Help}>
@@ -25,8 +25,9 @@ export const MoreInformation = ({
               multiline
               name="info"
               id="info"
-              value={info}
-              onChange={changeField}
+              value={formik.values.info}
+              // errorMessage={getIn(formik.errors, "info")}
+              onChange={formik.handleChange}
               disabled={disabled}
               variant="nestedContent"
             />
@@ -36,8 +37,9 @@ export const MoreInformation = ({
               multiline
               name="policyRef"
               id="policyRef"
-              value={policyRef}
-              onChange={changeField}
+              value={formik.values.policyRef}
+              // errorMessage={getIn(formik.errors, "policyRef")}
+              onChange={formik.handleChange}
               disabled={disabled}
               variant="nestedContent"
             />
@@ -48,15 +50,16 @@ export const MoreInformation = ({
                 multiline
                 name="howMeasured"
                 id="howMeasured"
-                value={howMeasured}
-                onChange={changeField}
+                value={formik.values.howMeasured}
+                // errorMessage={getIn(formik.errors, "howMeasured")}
+                onChange={formik.handleChange}
                 disabled={disabled}
                 variant="nestedContent"
               />
               <ImgInput
-                img={definitionImg}
+                img={formik.values.definitionImg}
                 onChange={(newUrl) => {
-                  changeField({
+                  formik.handleChange({
                     target: { name: "definitionImg", value: newUrl },
                   });
                 }}

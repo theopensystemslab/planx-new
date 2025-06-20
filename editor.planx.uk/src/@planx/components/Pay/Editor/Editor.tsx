@@ -37,16 +37,16 @@ const Component: React.FC<Props> = (props: Props) => {
       initialValues={parsePay(props.node?.data)}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
-      validateOnChange={true}
-      validateOnBlur={true}
+      validateOnChange={false}
+      validateOnBlur={false}
     >
-      {({ values, handleChange, setFieldValue }) => (
+      {(formik) => (
         <Form id="modal" name="modal">
           <TemplatedNodeInstructions
-            isTemplatedNode={values.isTemplatedNode}
-            templatedNodeInstructions={values.templatedNodeInstructions}
+            isTemplatedNode={formik.values.isTemplatedNode}
+            templatedNodeInstructions={formik.values.templatedNodeInstructions}
             areTemplatedNodeInstructionsRequired={
-              values.areTemplatedNodeInstructionsRequired
+              formik.values.areTemplatedNodeInstructionsRequired
             }
           />
           <ModalSection>
@@ -56,8 +56,8 @@ const Component: React.FC<Props> = (props: Props) => {
                   format="large"
                   placeholder="Page title"
                   name="title"
-                  value={values.title}
-                  onChange={handleChange}
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
                   disabled={props.disabled}
                 />
               </InputRow>
@@ -66,8 +66,8 @@ const Component: React.FC<Props> = (props: Props) => {
                   format="bold"
                   placeholder="Banner title"
                   name="bannerTitle"
-                  value={values.bannerTitle}
-                  onChange={handleChange}
+                  value={formik.values.bannerTitle}
+                  onChange={formik.handleChange}
                   disabled={props.disabled}
                 />
               </InputRow>
@@ -75,8 +75,8 @@ const Component: React.FC<Props> = (props: Props) => {
                 <RichTextInput
                   placeholder="Banner description"
                   name="description"
-                  value={values.description}
-                  onChange={handleChange}
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
                   disabled={props.disabled}
                   variant="nestedContent"
                 />
@@ -91,8 +91,8 @@ const Component: React.FC<Props> = (props: Props) => {
                   format="large"
                   placeholder="Instructions title"
                   name="instructionsTitle"
-                  value={values.instructionsTitle}
-                  onChange={handleChange}
+                  value={formik.values.instructionsTitle}
+                  onChange={formik.handleChange}
                   disabled={props.disabled}
                 />
               </InputRow>
@@ -100,16 +100,18 @@ const Component: React.FC<Props> = (props: Props) => {
                 <RichTextInput
                   placeholder="Instructions description"
                   name="instructionsDescription"
-                  value={values.instructionsDescription}
-                  onChange={handleChange}
+                  value={formik.values.instructionsDescription}
+                  onChange={formik.handleChange}
                   disabled={props.disabled}
                   variant="nestedContent"
                 />
               </InputRow>
               <InputRow>
                 <Switch
-                  checked={values.hidePay}
-                  onChange={() => setFieldValue("hidePay", !values.hidePay)}
+                  checked={formik.values.hidePay}
+                  onChange={() =>
+                    formik.setFieldValue("hidePay", !formik.values.hidePay)
+                  }
                   label="Hide the pay buttons and show fee for information only"
                   disabled={props.disabled}
                 />
@@ -118,23 +120,16 @@ const Component: React.FC<Props> = (props: Props) => {
           </ModalSection>
           <InviteToPaySection disabled={props.disabled} />
           <GovPayMetadataSection disabled={props.disabled} />
-          <MoreInformation
-            changeField={handleChange}
-            definitionImg={values.definitionImg}
-            howMeasured={values.howMeasured}
-            policyRef={values.policyRef}
-            info={values.info}
-            disabled={props.disabled}
-          />
+          <MoreInformation formik={formik} disabled={props.disabled} />
           <InternalNotes
             name="notes"
-            onChange={handleChange}
-            value={values.notes}
+            onChange={formik.handleChange}
+            value={formik.values.notes}
             disabled={props.disabled}
           />
           <ComponentTagSelect
-            onChange={(value) => setFieldValue("tags", value)}
-            value={values.tags}
+            onChange={(value) => formik.setFieldValue("tags", value)}
+            value={formik.values.tags}
             disabled={props.disabled}
           />
           {/* isTemplate && (<TemplatedNodeConfiguration
