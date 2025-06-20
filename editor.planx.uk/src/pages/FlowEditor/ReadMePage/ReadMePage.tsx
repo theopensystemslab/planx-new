@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import SimpleExpand from "@planx/components/shared/Preview/SimpleExpand";
-import { TEXT_LIMITS, TextInputType } from "@planx/components/TextInput/model";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import capitalize from "lodash/capitalize";
@@ -18,10 +17,10 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { object, string } from "yup";
 
 import { ExternalPortals } from "../components/Sidebar/Search/ExternalPortalList/ExternalPortals";
 import { useStore } from "../lib/store";
+import { characterCountLimit, validationSchema } from "./model";
 import { ReadMePageForm, ReadMePageProps } from "./types";
 
 export const ReadMePage: React.FC<ReadMePageProps> = ({
@@ -29,7 +28,6 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
   teamSlug,
   flowSlug,
 }) => {
-  const characterCountLimit = TEXT_LIMITS[TextInputType.Short];
   const { status: flowStatus } = flowInformation;
   const [
     flowDescription,
@@ -115,12 +113,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: object({
-      serviceSummary: string().max(
-        characterCountLimit,
-        `Service description must be ${characterCountLimit} characters or less`,
-      ),
-    }),
+    validationSchema,
   });
 
   return (
@@ -147,7 +140,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       <SettingsSection background>
         <form onSubmit={formik.handleSubmit}>
           <InputGroup flowSpacing>
-            <InputLegend id="serviceSummary-label">Service description</InputLegend>
+            <InputLegend id="serviceSummary-label">
+              Service description
+            </InputLegend>
             <SettingsDescription id="serviceSummary-description-text">
               A short blurb on what this service is.
             </SettingsDescription>
@@ -170,7 +165,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             />
           </InputGroup>
           <InputGroup flowSpacing>
-            <InputLegend id="serviceDescription-label">What does this service do?</InputLegend>
+            <InputLegend id="serviceDescription-label">
+              What does this service do?
+            </InputLegend>
             <SettingsDescription id="serviceDescription-description-text">
               <>
                 A longer description of the service. <br />
@@ -195,7 +192,9 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
             </InputRow>
           </InputGroup>
           <InputGroup flowSpacing>
-            <InputLegend id="serviceLimitations-label">Limitations of the service</InputLegend>
+            <InputLegend id="serviceLimitations-label">
+              Limitations of the service
+            </InputLegend>
             <SettingsDescription id="serviceLimitations-description-text">
               <>What does this service not include?</>
             </SettingsDescription>
