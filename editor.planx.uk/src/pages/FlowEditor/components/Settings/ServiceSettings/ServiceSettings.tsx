@@ -9,7 +9,7 @@ import { FlowVisibility } from "./FlowVisibility/FlowVisibilitySection";
 import { TemplatedFlowStatus } from "./TemplatedFlowStatus/TemplatedFlowStatusSection";
 
 const ServiceSettings: React.FC = () => {
-  const isTemplatedFrom = useStore().isTemplatedFrom;
+  const isTemplatedFrom = useStore((state) => state.isTemplatedFrom);
 
   return (
     <Container
