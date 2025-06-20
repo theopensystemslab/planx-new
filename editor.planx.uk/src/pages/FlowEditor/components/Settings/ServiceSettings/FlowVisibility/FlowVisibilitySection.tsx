@@ -11,16 +11,9 @@ import { Switch } from "ui/shared/Switch";
 import { useStore } from "../../../../lib/store";
 
 export const FlowVisibility = () => {
-  const [
-    canCreateFromCopy,
-    updateCanCreateFromCopy,
-    isTemplate,
-    isTemplatedFrom,
-  ] = useStore((state) => [
+  const [canCreateFromCopy, updateCanCreateFromCopy] = useStore((state) => [
     state.flowCanCreateFromCopy,
     state.updateFlowCanCreateFromCopy,
-    state.isTemplate,
-    state.isTemplatedFrom,
   ]);
 
   const toast = useToast();
@@ -38,28 +31,6 @@ export const FlowVisibility = () => {
       }
     },
   });
-
-  if (isTemplate || isTemplatedFrom) {
-    return (
-      <Box mb={2}>
-        <SettingsSection>
-          <Typography variant="h2" component="h3" gutterBottom>
-            Visibility
-          </Typography>
-          <Typography variant="body1">
-            Manage the visibility of your service.
-          </Typography>
-        </SettingsSection>
-        <SettingsSection background>
-          <SettingsDescription>
-            <p>
-              {`${isTemplate ? "Source templates" : "Templated flows"} cannot be made visible for others to start "From copy". Instead, encourage others to start "From template" directly.`}
-            </p>
-          </SettingsDescription>
-        </SettingsSection>
-      </Box>
-    );
-  }
 
   return (
     <Box component="form" onSubmit={form.handleSubmit} mb={2}>
