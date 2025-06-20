@@ -21,7 +21,6 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "../../shared/Input/Input";
 import PublicFileUploadButton from "../../shared/PublicFileUploadButton";
 import { H1Button, H2Button } from "./components/HeadingButtons";
-import { PopupError } from "./components/PopUpError";
 import {
   BoldButton,
   BulletListButton,
@@ -33,12 +32,6 @@ import { RichContentContainer, StyledBubbleMenu } from "./styles";
 import { commonExtensions, passportClassName } from "./tiptapExtensions";
 import { Props } from "./types";
 import { fromHtml, initialUrlValue, toHtml, trimUrlValue } from "./utils";
-import {
-  getContentHierarchyError,
-  getLegislationLinkError,
-  getLinkNewTabError,
-  linkSelectionError,
-} from "./validationHelpers";
 
 const RichTextInput: FC<Props> = (props) => {
   const stringValue = String(props.value || "");
@@ -87,18 +80,6 @@ const RichTextInput: FC<Props> = (props) => {
   // Cache internal string value
   const internalValue = useRef<string | null>(null);
 
-  const [contentHierarchyError, setContentHierarchyError] = useState<
-    string[] | null
-  >(getContentHierarchyError(fromHtml(stringValue)));
-
-  const [linkNewTabError, setLinkNewTabError] = useState<string | undefined>(
-    getLinkNewTabError(fromHtml(stringValue).content),
-  );
-
-  const [legislationLinkError, setLegislationLinkError] = useState<
-    string | undefined
-  >(getLegislationLinkError(fromHtml(stringValue).content));
-
   // Handle update events
   const handleUpdate = useCallback(
     (transaction: { editor: Editor }) => {
@@ -106,11 +87,6 @@ const RichTextInput: FC<Props> = (props) => {
         return;
       }
       const doc = transaction.editor.getJSON();
-
-      setContentHierarchyError(getContentHierarchyError(doc, variant));
-      setLinkNewTabError(getLinkNewTabError(doc.content));
-      setLegislationLinkError(getLegislationLinkError(doc.content));
-
       const html = toHtml(doc);
       internalValue.current = html;
       // Cast as an HTML input change event to conform to input field API's
@@ -156,17 +132,7 @@ const RichTextInput: FC<Props> = (props) => {
     }
     internalValue.current = stringValue;
     const doc = fromHtml(stringValue);
-    setContentHierarchyError(
-      getContentHierarchyError(fromHtml(stringValue), variant),
-    );
     editor.commands.setContent(doc);
-  }, [stringValue, variant]);
-
-  useEffect(() => {
-    const doc = fromHtml(stringValue);
-    setContentHierarchyError(getContentHierarchyError(doc, variant));
-    setLinkNewTabError(getLinkNewTabError(doc.content));
-    setLegislationLinkError(getLegislationLinkError(doc.content));
   }, [stringValue, variant]);
 
   // Returns the HTML snippet under the current selection, typically wrapped in a <p> tag, e.g. '<p>selected text</p>'
@@ -202,16 +168,7 @@ const RichTextInput: FC<Props> = (props) => {
   }, [isAddingLink]);
 
   return (
-    <ErrorWrapper
-      id={props.name}
-      error={[
-        ...(contentHierarchyError ?? []),
-        linkNewTabError,
-        legislationLinkError,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
+    <ErrorWrapper id={props.name} error={props.errorMessage}>
       <RichContentContainer
         className={`rich-text-editor ${isRootLevel ? "allow-h1" : ""}`}
       >
@@ -279,30 +236,21 @@ const RichTextInput: FC<Props> = (props) => {
             )}
             {addingLink ? (
               <>
-                {(() => {
-                  const error =
-                    addingLink.selectionHtml &&
-                    linkSelectionError(addingLink.selectionHtml);
-                  return error ? (
-                    <PopupError id="link-popup" error={error} />
-                  ) : (
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        editor
-                          .chain()
-                          .focus()
-                          .toggleLink({
-                            href: addingLink.draft,
-                          })
-                          .run();
-                        setAddingLink(null);
-                      }}
-                    >
-                      <Check />
-                    </IconButton>
-                  );
-                })()}
+                <IconButton
+                  size="small"
+                  onClick={() => {
+                    editor
+                      .chain()
+                      .focus()
+                      .toggleLink({
+                        href: addingLink.draft,
+                      })
+                      .run();
+                    setAddingLink(null);
+                  }}
+                >
+                  <Check />
+                </IconButton>
                 <IconButton
                   size="small"
                   disabled={!editor.isActive("link")}
