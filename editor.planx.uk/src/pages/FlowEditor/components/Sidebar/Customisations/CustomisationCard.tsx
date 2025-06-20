@@ -71,7 +71,7 @@ export const CustomisationCard: React.FC<Props> = ({
           node.data?.areTemplatedNodeInstructionsRequired,
         )}
         isComplete={isComplete}
-        showStatusHeader={true}
+        showStatus={true}
       >
         <NodeCard nodeId={nodeId} backgroundColor={theme.palette.common.white}>
           <BlockQuote>{node.data?.templatedNodeInstructions}</BlockQuote>

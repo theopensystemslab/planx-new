@@ -11,7 +11,7 @@ interface TemplatedNodeContainerProps extends PropsWithChildren {
   isTemplatedNode: boolean;
   areTemplatedNodeInstructionsRequired: boolean;
   isComplete?: boolean;
-  showStatusHeader?: boolean;
+  showStatus?: boolean;
   className?: string;
 }
 
@@ -21,28 +21,33 @@ const StyledContainer = styled(Box, {
       "isTemplatedNode",
       "areTemplatedNodeInstructionsRequired",
       "isComplete",
+      "showStatus",
     ].includes(prop as string),
 })<{
   isTemplatedNode: boolean;
   areTemplatedNodeInstructionsRequired: boolean;
   isComplete?: boolean;
+  showStatus?: boolean;
 }>(({
   theme,
   isTemplatedNode,
   areTemplatedNodeInstructionsRequired,
   isComplete,
+  showStatus,
 }) => {
   if (!isTemplatedNode) return {};
 
-  const getBackgroundColor = () => {
-    if (isComplete) return theme.palette.common.white;
-    if (areTemplatedNodeInstructionsRequired)
-      return theme.palette.template.dark;
-    return theme.palette.template.main;
-  };
+  let backgroundColor = theme.palette.template.dark;
+  if (showStatus) {
+    if (isComplete) {
+      backgroundColor = theme.palette.common.white;
+    } else if (!areTemplatedNodeInstructionsRequired) {
+      backgroundColor = theme.palette.template.main;
+    }
+  }
 
   return {
-    backgroundColor: getBackgroundColor(),
+    backgroundColor,
     width: "100%",
     padding: "4px",
     display: "flex",
@@ -50,9 +55,10 @@ const StyledContainer = styled(Box, {
     justifyContent: "center",
     border: "1px solid",
     borderColor: "transparent",
-    ...(isComplete && {
-      borderColor: theme.palette.border.main,
-    }),
+    ...(isComplete &&
+      showStatus && {
+        borderColor: theme.palette.border.main,
+      }),
   };
 });
 
@@ -87,7 +93,7 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
   isTemplatedNode = false,
   areTemplatedNodeInstructionsRequired = false,
   isComplete = false,
-  showStatusHeader = false,
+  showStatus = false,
   className,
 }) => {
   const containerClasses = classNames(
@@ -110,8 +116,9 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
         areTemplatedNodeInstructionsRequired
       }
       isComplete={isComplete}
+      showStatus={showStatus}
     >
-      {showStatusHeader && (
+      {showStatus && (
         <StatusHeader>
           <Typography
             variant="body3"

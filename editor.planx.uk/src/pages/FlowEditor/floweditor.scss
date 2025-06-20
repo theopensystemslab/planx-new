@@ -3,7 +3,8 @@ $nodeBorder: $black;
 $optionBorder: #b1b4b6;
 $hangerBackground: #f2f2f2;
 $focus: #ffdd00;
-$lockedBackground: #eeeeee;
+$lockedFlowBackground: rgba(0, 0, 0, 0.07);
+$lockedNodeBackground: #eee;
 $lockedBorder: #b0b0b0;
 $dataBackground: #f0f0f0;
 $lockedDataBackground: #e2e2e2;
@@ -49,7 +50,7 @@ $fontMonospace: "Source Code Pro", monospace;
   padding: $editorPadding;
 
   &.flow-locked {
-    background: $lockedBackground;
+    background: $lockedFlowBackground;
   }
 
   ol,
@@ -208,7 +209,7 @@ $fontMonospace: "Source Code Pro", monospace;
     word-break: break-word;
 
     .flow-locked & {
-      background: $lockedBackground;
+      background: $lockedNodeBackground;
       border-color: $lockedBorder;
     }
 
@@ -526,7 +527,7 @@ $fontMonospace: "Source Code Pro", monospace;
         border-bottom: 12px solid #fff;
         border-left: 12px solid transparent;
         .flow-locked & {
-          border-bottom-color: $lockedBackground;
+          border-bottom-color: $lockedNodeBackground;
         }
       }
       &::after {
