@@ -14,7 +14,8 @@ import ChecklistOptionsEditor from "./components/OptionsEditor";
 export const Options: React.FC<{
   formik: FormikHookReturn;
   disabled?: boolean;
-}> = ({ formik, disabled }) => {
+  isTemplatedNode?: boolean;
+}> = ({ formik, disabled, isTemplatedNode }) => {
   const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
     formik.values.options,
     (option) => option.data.exclusive,
@@ -27,7 +28,11 @@ export const Options: React.FC<{
   return (
     <ModalSectionContent subtitle="Options">
       {formik.values.groupedOptions ? (
-        <GroupedOptions formik={formik} disabled={disabled} />
+        <GroupedOptions
+          formik={formik}
+          disabled={disabled}
+          isTemplatedNode={isTemplatedNode}
+        />
       ) : (
         <>
           <ListManager
@@ -60,6 +65,7 @@ export const Options: React.FC<{
                 currentOptionVals,
               ),
             }}
+            isTemplatedNode={isTemplatedNode}
           />
           {exclusiveOrOptionManagerShouldRender ? (
             <ExclusiveOrOptionManager
@@ -67,6 +73,7 @@ export const Options: React.FC<{
               exclusiveOptions={exclusiveOptions}
               nonExclusiveOptions={nonExclusiveOptions}
               disabled={disabled}
+              isTemplatedNode={isTemplatedNode}
             />
           ) : (
             <></>

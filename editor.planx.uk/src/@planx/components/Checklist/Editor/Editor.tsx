@@ -229,7 +229,11 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           </InputGroup>
         </ModalSectionContent>
         <ErrorWrapper error={formik.errors.options}>
-          <Options formik={formik} disabled={props.disabled} />
+          <Options
+            formik={formik}
+            disabled={props.disabled}
+            isTemplatedNode={props.node?.data?.isTemplatedNode}
+          />
         </ErrorWrapper>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />
