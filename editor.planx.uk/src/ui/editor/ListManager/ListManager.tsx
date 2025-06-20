@@ -112,16 +112,19 @@ export default function ListManager<T, EditorExtraProps>(
   const isMaxLength = props.values.length >= maxItems;
   const [isDragging, setIsDragging] = useState(false);
 
-  const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
+  const [isTemplate, isPlatformAdmin] = useStore((state) => [
+    state.isTemplate,
+    state.user?.isPlatformAdmin,
+  ]);
 
-  // `isTemplatedNode` disables reordering, adding, and deleting options unless you're a platform admin
-  if (props.isTemplatedNode && isPlatformAdmin) {
+  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin
+  if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
     return (
       <>
         <Box>
           <TransitionGroup>
             {props.values.map((item, index) => (
-              <Collapse key={itemKeys[index]} sx={{ marginTop: 2 }}>
+              <Collapse key={itemKeys[index]} sx={{ marginBottom: 2 }}>
                 <Item>
                   <Editor
                     index={index}

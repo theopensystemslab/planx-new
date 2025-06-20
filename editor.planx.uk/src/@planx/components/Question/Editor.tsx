@@ -210,7 +210,7 @@ export const Question: React.FC<Props> = (props) => {
                 currentOptionVals,
               ),
             }}
-            isTemplatedNode={props.node.data?.isTemplatedNode}
+            isTemplatedNode={props.node?.data?.isTemplatedNode}
           />
         </ModalSectionContent>
       </ModalSection>
