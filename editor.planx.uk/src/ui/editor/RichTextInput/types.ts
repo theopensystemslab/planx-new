@@ -7,23 +7,28 @@ export interface MentionListProps {
   command: any;
   onCreatePlaceholder: (val: string) => void;
 }
+
 export interface Placeholder {
   id: string;
   label: string;
 }
+
+export type Variant =
+  | "default"
+  | "rootLevelContent"
+  | "nestedContent"
+  | "paragraphContent";
+
 export interface Props extends InputBaseProps {
   className?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
   bordered?: boolean;
   errorMessage?: string;
   disabled?: boolean;
-  variant?:
-    | "default"
-    | "rootLevelContent"
-    | "nestedContent"
-    | "paragraphContent";
+  variant?: Variant;
   classname?: string;
 }
+
 export interface VariablesState {
   variables: string[];
   addVariable: (newVariable: string) => void;
