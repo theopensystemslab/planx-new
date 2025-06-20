@@ -165,7 +165,7 @@ const InternalPortal: React.FC<any> = (props) => {
             areTemplatedNodeInstructionsRequired={
               props.data?.areTemplatedNodeInstructionsRequired
             }
-            showStatusHeader={true}
+            showStatus={false}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link

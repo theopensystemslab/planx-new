@@ -101,7 +101,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           areTemplatedNodeInstructionsRequired={
             props.data?.areTemplatedNodeInstructionsRequired
           }
-          showStatusHeader={true}
+          showStatus={false}
         >
           <Link
             href={href}
