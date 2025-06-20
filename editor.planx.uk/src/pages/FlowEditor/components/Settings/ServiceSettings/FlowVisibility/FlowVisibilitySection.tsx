@@ -11,10 +11,18 @@ import { Switch } from "ui/shared/Switch";
 import { useStore } from "../../../../lib/store";
 
 export const FlowVisibility = () => {
-  const [canCreateFromCopy, updateCanCreateFromCopy] = useStore((state) => [
+  const [
+    canCreateFromCopy,
+    updateCanCreateFromCopy,
+    isTemplate,
+    isTemplatedFrom,
+  ] = useStore((state) => [
     state.flowCanCreateFromCopy,
     state.updateFlowCanCreateFromCopy,
+    state.isTemplate,
+    state.isTemplatedFrom,
   ]);
+
   const toast = useToast();
 
   const form = useFormik<{ canCreateFromCopy: boolean }>({
@@ -31,6 +39,28 @@ export const FlowVisibility = () => {
     },
   });
 
+  if (isTemplate || isTemplatedFrom) {
+    return (
+      <Box mb={2}>
+        <SettingsSection>
+          <Typography variant="h2" component="h3" gutterBottom>
+            Visibility
+          </Typography>
+          <Typography variant="body1">
+            Manage the visibility of your service.
+          </Typography>
+        </SettingsSection>
+        <SettingsSection background>
+          <SettingsDescription>
+            <p>
+              {`${isTemplate ? "Source templates" : "Templated flows"} cannot be made visible for others to start "From copy". Instead, encourage others to start "From template" directly.`}
+            </p>
+          </SettingsDescription>
+        </SettingsSection>
+      </Box>
+    );
+  }
+
   return (
     <Box component="form" onSubmit={form.handleSubmit} mb={2}>
       <SettingsSection>
@@ -43,17 +73,25 @@ export const FlowVisibility = () => {
       </SettingsSection>
       <SettingsSection background>
         <Switch
-          label={form.values.canCreateFromCopy ? "Can be copied to create new services" : "Cannot be copied to create new services"}
+          label={
+            form.values.canCreateFromCopy
+              ? "Can be copied to create new services"
+              : "Cannot be copied to create new services"
+          }
           name={"service.status"}
           variant="editorPage"
           checked={form.values.canCreateFromCopy}
           onChange={() =>
-            form.setFieldValue("canCreateFromCopy", !form.values.canCreateFromCopy)
+            form.setFieldValue(
+              "canCreateFromCopy",
+              !form.values.canCreateFromCopy,
+            )
           }
         />
         <SettingsDescription>
           <p>
-            Control if this flow can be used to create new services in other teams. The flow can still be copied and modified within your team.
+            Control if this flow can be used to create new services in other
+            teams. The flow can still be copied and modified within your team.
           </p>
         </SettingsDescription>
 
