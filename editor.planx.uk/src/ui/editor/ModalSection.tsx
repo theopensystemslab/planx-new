@@ -9,7 +9,7 @@ const Root = styled(Box, {
     backgroundColor: sectionBackgroundColor
       ? sectionBackgroundColor
       : undefined,
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(2),
     "& + .modalSection": {
       borderTop: `1px solid ${theme.palette.border.main}`,
     },

@@ -1,9 +1,9 @@
 import ListItem from "@mui/material/ListItem";
 import { useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useCallback } from "react";
+import BlockQuote from "ui/editor/BlockQuote";
 import { NodeCard } from "ui/editor/NodeCard";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
@@ -74,9 +74,7 @@ export const CustomisationCard: React.FC<Props> = ({
         showStatusHeader={true}
       >
         <NodeCard nodeId={nodeId} backgroundColor={theme.palette.common.white}>
-          <Typography variant="body2">
-            {node.data?.templatedNodeInstructions}
-          </Typography>
+          <BlockQuote>{node.data?.templatedNodeInstructions}</BlockQuote>
         </NodeCard>
       </TemplatedNodeContainer>
     </ListItem>
