@@ -6,8 +6,12 @@ import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
-import { Environment, generateAnalyticsLink } from "../../pages/FlowEditor/lib/analytics/utils";
+import {
+  Environment,
+  generateAnalyticsLink,
+} from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
+import { settingsStore } from "../../pages/FlowEditor/lib/store/settings";
 
 interface FlowEditorData {
   id: string;
@@ -121,6 +125,7 @@ export const getFlowEditorData = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
+
   const {
     id,
     flowStatus,
@@ -130,12 +135,20 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   } = await getFlowEditorData(flow, req.params.team);
 
+  const getFlowInformation = useStore.getState().getFlowInformation;
+
+  const { isSubmissionService } = await getFlowInformation(
+    flow,
+    req.params.team,
+  );
+
   const flowAnalyticsLink = generateAnalyticsLink({
-          flowStatus,
-          environment,
-          flowId: id,
-          flowSlug: flow,
-        });
+    flowStatus,
+    environment,
+    flowId: id,
+    flowSlug: flow,
+    isSubmissionService: isSubmissionService ?? false,
+  });
 
   useStore.setState({
     id,
@@ -157,4 +170,3 @@ export const flowEditorView = async (req: NaviRequest) => {
     </FlowEditorLayout>
   );
 };
-

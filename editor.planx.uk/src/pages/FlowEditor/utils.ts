@@ -9,6 +9,7 @@ export interface FlowInformation {
   summary?: string;
   limitations?: string;
   canCreateFromCopy?: boolean;
+  isSubmissionService?: boolean;
 }
 
 export interface GetFlowInformation {
