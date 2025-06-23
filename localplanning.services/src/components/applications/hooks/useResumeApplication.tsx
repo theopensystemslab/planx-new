@@ -25,6 +25,7 @@ export const useResumeApplication: UseResumeApplication = () => {
       const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/resume-application`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        // TODO: PlanX API currently requires a team name
         body: JSON.stringify({ payload: email })
       });
 
@@ -33,7 +34,7 @@ export const useResumeApplication: UseResumeApplication = () => {
       }
 
       const data: ResumeAPIResponse = await response.json();
-      // TEMP: Remove once API updated
+      // TEMP: Remove once PlanX API updated
       console.log({ data });
 
       navigate("/applications/check-your-inbox");
