@@ -1,4 +1,11 @@
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { richText } from "lib/yupExtensions";
+import { boolean, object, SchemaOf, string } from "yup";
+
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export enum DrawBoundaryUserAction {
   Accept = "Accepted the title boundary",
@@ -56,3 +63,15 @@ const defaultContent: DrawBoundary = {
   descriptionForUploading:
     "<p>Your location plan must:</p><ul><li><p>be based on an accurate, recognisable map</p></li><li><p>be drawn to a scale, labelled, and/or marked with a scale bar</p></li><li><p>show the site outline in red</p></li><li><p>include a<strong> </strong>north point</p></li></ul>",
 };
+
+export const validationSchema: SchemaOf<DrawBoundary> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText().required(),
+      titleForUploading: string().required(),
+      descriptionForUploading: richText().required(),
+      hideFileUpload: boolean(),
+      fn: string().nullable().required(),
+    }),
+  );
