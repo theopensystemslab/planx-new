@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import MenuItem from "@mui/material/MenuItem";
 import { SelectChangeEvent } from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
 import { useFormikContext } from "formik";
 import React from "react";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
@@ -30,12 +31,12 @@ export const CreateFromTemplateFormSection: React.FC = () => {
     }
   `);
 
-  if (values.mode !== "template" || !data?.templates?.length) return null;
+  if (values.mode !== "template") return null;
 
   const handleChange = (e: SelectChangeEvent<unknown>) => {
     setFieldValue("flow.sourceId", e.target.value);
 
-    const selectedTemplate = data.templates.find(
+    const selectedTemplate = data?.templates?.find(
       ({ id }) => id === e.target.value,
     );
     if (!selectedTemplate) return;
@@ -59,12 +60,17 @@ export const CreateFromTemplateFormSection: React.FC = () => {
         labelId="available-templates-select"
         onChange={handleChange}
       >
-        {data.templates.map(({ id, name }) => (
+        {data?.templates?.map(({ id, name }) => (
           <MenuItem key={id} value={id}>
             {name}
           </MenuItem>
         ))}
       </SelectInput>
+      {!data?.templates?.length && (
+        <Typography variant="caption">
+          No source templates are currently available or online
+        </Typography>
+      )}
     </InputLabel>
   );
 };

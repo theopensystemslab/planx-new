@@ -14,6 +14,7 @@ import BlockQuote from "ui/editor/BlockQuote";
 import Caret from "ui/icons/Caret";
 
 import { HistoryItem } from "../EditHistory";
+import { isAutoComment } from "../utils";
 import {
   AlteredExternalPortalsSummary,
   ExternalPortal,
@@ -149,8 +150,8 @@ export const AlteredNodesSummaryContent = (props: {
                       {`${formatLastEditDate(comment.createdAt)}`}
                     </Typography>
                     <HistoryComment
-                      isTemplatedFlowUpdateComment={comment.comment.startsWith(
-                        "Updated based on source template publish",
+                      isTemplatedFlowUpdateComment={isAutoComment(
+                        comment.comment,
                       )}
                     >
                       <BlockQuote>{comment.comment}</BlockQuote>
