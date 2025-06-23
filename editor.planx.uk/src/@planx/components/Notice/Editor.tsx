@@ -30,7 +30,7 @@ export interface NoticeEditorProps {
 }
 
 const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
-  const { values, handleChange } = formik;
+  const { values, handleChange, setFieldValue } = formik;
 
   return (
     <>
@@ -45,28 +45,20 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
         <ModalSectionContent title="Notice" Icon={ICONS[TYPES.Notice]}>
           <InputRow>
             <Input
+              name="title"
               format="large"
               placeholder="Notice"
               value={values.title}
-              onChange={(ev) => {
-                handleChange({
-                  ...values,
-                  title: ev.target.value,
-                });
-              }}
+              onChange={handleChange}
               disabled={disabled}
             />
           </InputRow>
           <InputRow>
             <RichTextInput
+              name="description"
               placeholder="Description"
               value={values.description}
-              onChange={(ev) => {
-                handleChange({
-                  ...values,
-                  description: ev.target.value,
-                });
-              }}
+              onChange={handleChange}
               disabled={disabled}
             />
           </InputRow>
@@ -75,22 +67,15 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
             label="Background colour"
             color={values.color}
             onChange={(color) => {
-              handleChange({
-                ...values,
-                color,
-              });
+              setFieldValue("color", color);
             }}
             disabled={disabled}
           />
           <InputRow>
             <Switch
+              name="resetButton"
               checked={Boolean(values.resetButton)}
-              onChange={() =>
-                handleChange({
-                  ...values,
-                  resetButton: !values.resetButton,
-                })
-              }
+              onChange={handleChange}
               label="Reset to start of service"
               disabled={disabled}
             />
@@ -100,22 +85,12 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
       <MoreInformation formik={formik} disabled={disabled} />
       <InternalNotes
         name="notes"
-        onChange={(ev) => {
-          handleChange({
-            ...values,
-            notes: ev.target.value,
-          });
-        }}
+        onChange={handleChange}
         value={values.notes}
         disabled={disabled}
       />
       <ComponentTagSelect
-        onChange={(value) =>
-          handleChange({
-            ...values,
-            tags: value,
-          })
-        }
+        onChange={(value) => formik.setFieldValue("tags", value)}
         value={values.tags}
         disabled={disabled}
       />
