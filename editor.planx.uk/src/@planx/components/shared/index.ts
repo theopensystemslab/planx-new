@@ -1,10 +1,13 @@
 import {
   Flag,
+  NODE_TAGS,
   NodeTags,
   TemplatedNodeData,
 } from "@opensystemslab/planx-core/types";
+import { richText } from "lib/yupExtensions";
 import trim from "lodash/trim";
 import { Store } from "pages/FlowEditor/lib/store";
+import { array, boolean, object, SchemaOf, string } from "yup";
 
 /** Shared properties across all node types */
 export type BaseNodeData = NodeTags & TemplatedNodeData & MoreInformation;
@@ -30,6 +33,33 @@ export const parseBaseNodeData = (
   templatedNodeInstructions: data?.templatedNodeInstructions,
   areTemplatedNodeInstructionsRequired:
     data?.areTemplatedNodeInstructionsRequired,
+});
+
+/**
+ * Yup validation schema describing BaseNodeData fields
+ */
+export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> = object({
+  // NodeTags
+  tags: array()
+    .of(
+      string()
+        .oneOf([...NODE_TAGS], "Invalid tag")
+        .required("Tag cannot be empty"),
+    )
+    .optional()
+    .default([]),
+
+  // TemplatedNodeData
+  isTemplatedNode: boolean().optional(),
+  templatedNodeInstructions: string().optional(),
+  areTemplatedNodeInstructionsRequired: boolean().optional(),
+
+  // MoreInformation
+  howMeasured: richText({ required: false }),
+  policyRef: richText({ required: false }),
+  info: richText({ required: false }),
+  notes: richText({ required: false }),
+  definitionImg: string().optional(),
 });
 
 export interface Option {
