@@ -2,12 +2,14 @@ import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
 import { parseNotice } from "@planx/components/Notice/model";
 import { useFormik } from "formik";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import ColorPicker from "ui/editor/ColorPicker/ColorPicker";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import { TemplatedNodeConfiguration } from "ui/editor/TemplatedNodeConfiguration";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -30,6 +32,8 @@ export interface NoticeEditorProps {
 }
 
 const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
+  const isTemplate = useStore.getState().isTemplate;
+
   const { values, handleChange, setFieldValue } = formik;
 
   return (
@@ -94,6 +98,17 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
         value={values.tags}
         disabled={disabled}
       />
+      {isTemplate && (
+        <TemplatedNodeConfiguration
+          formik={formik}
+          isTemplatedNode={values.isTemplatedNode}
+          templatedNodeInstructions={values.templatedNodeInstructions}
+          areTemplatedNodeInstructionsRequired={
+            values.areTemplatedNodeInstructionsRequired
+          }
+          disabled={disabled}
+        />
+      )}
     </>
   );
 };
