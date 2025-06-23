@@ -2,7 +2,7 @@ import StarIcon from "@mui/icons-material/Star";
 import Typography from "@mui/material/Typography";
 import type { TemplatedNodeData } from "@opensystemslab/planx-core/types";
 import { BaseNodeData } from "@planx/components/shared";
-import { useFormik } from "formik";
+import { FormikProps, useFormik } from "formik";
 import React from "react";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
@@ -14,7 +14,7 @@ import ModalSection from "./ModalSection";
 import ModalSectionContent from "./ModalSectionContent";
 
 export type TemplatedNodeConfigurationProps<T extends BaseNodeData> = {
-  formik: ReturnType<typeof useFormik<T>>;
+  formik: ReturnType<typeof useFormik<T>> | FormikProps<T>;
   disabled?: boolean;
 } & TemplatedNodeData;
 
