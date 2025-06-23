@@ -55,11 +55,11 @@ export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> = object({
   areTemplatedNodeInstructionsRequired: boolean().optional(),
 
   // MoreInformation
-  howMeasured: richText({ required: false }),
-  policyRef: richText({ required: false }),
-  info: richText({ required: false }),
-  notes: richText({ required: false }),
-  definitionImg: string().optional(),
+  howMeasured: richText({ variant: "nestedContent" }),
+  policyRef: richText({ variant: "nestedContent" }),
+  info: richText({ variant: "nestedContent" }),
+  notes: string(),
+  definitionImg: string(),
 });
 
 export interface Option {

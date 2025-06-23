@@ -172,15 +172,15 @@ describe("richText validation", () => {
     });
   });
 
-  describe("'required' param", () => {
-    it("rejects empty content when 'required' is true", async () => {
+  describe("'required' can be chained to schema", () => {
+    it("rejects empty content when chained with 'required'", async () => {
       await expect(() =>
-        richText({ required: true }).validate(""),
-      ).rejects.toThrow("Field is required");
+        richText().required("example error message").validate(""),
+      ).rejects.toThrow("example error message");
     });
 
-    it("accepts empty content when 'required' is false", async () => {
-      const result = richText().validate("");
+    it("accepts empty content when chained with 'optional'", async () => {
+      const result = richText().optional().validate("");
       expect(result).toBeDefined();
     });
   });
