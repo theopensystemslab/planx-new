@@ -30,7 +30,7 @@ export const useResumeApplication: UseResumeApplication = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to submit: ${response.statusText}`);
+        throw new Error(`Failed to submit: ${response.status}`);
       }
 
       const data: ResumeAPIResponse = await response.json();
