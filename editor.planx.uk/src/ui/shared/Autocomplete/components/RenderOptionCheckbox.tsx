@@ -1,24 +1,24 @@
 import { AutocompleteRenderOptionState } from "@mui/material/Autocomplete";
 import ListItem from "@mui/material/ListItem";
-import React, { ComponentProps, HTMLAttributes } from "react";
+import React, { ComponentProps } from "react";
 
 import { CustomCheckbox } from "../styles";
 
 interface RenderCheckboxProps {
-  listProps: HTMLAttributes<HTMLLIElement>;
+  listProps: React.ComponentPropsWithoutRef<"li">;
   displayName: string;
   state: AutocompleteRenderOptionState;
   checkboxProps?: ComponentProps<typeof CustomCheckbox>;
 }
 
 export const RenderOptionCheckbox = ({
-  listProps,
+  listProps: { key, ...restListProps },
   displayName,
   state,
   checkboxProps,
 }: RenderCheckboxProps) => {
   return (
-    <ListItem {...listProps}>
+    <ListItem key={key} {...restListProps}>
       <CustomCheckbox
         aria-hidden="true"
         className={state.selected ? "selected" : ""}

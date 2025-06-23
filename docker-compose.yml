@@ -119,7 +119,7 @@ services:
       AWS_S3_REGION: ${AWS_S3_REGION}
       AWS_SECRET_KEY: ${AWS_SECRET_KEY}
       # This is controlled via generateCORSAllowList() in staging and production
-      CORS_ALLOWLIST: ${EDITOR_URL_EXT}, ${API_URL_EXT}, https://login.live.com, https://login.microsoftonline.com
+      CORS_ALLOWLIST: ${EDITOR_URL_EXT}, ${API_URL_EXT}, ${LPS_URL_EXT}, https://login.live.com, https://login.microsoftonline.com
       EDITOR_URL_EXT: ${EDITOR_URL_EXT}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       FILE_API_KEY_BARNET: ${FILE_API_KEY_BARNET}

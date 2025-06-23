@@ -34,6 +34,7 @@ const renderOption: AutocompleteProps<
 
   return (
     <RenderOptionCheckbox
+      key={props.key}
       listProps={props}
       displayName={TAG_DISPLAY_VALUES[tag].displayName}
       state={state}

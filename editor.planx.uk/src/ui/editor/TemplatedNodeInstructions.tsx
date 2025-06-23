@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { BaseNodeData } from "@planx/components/shared";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
+import BlockQuote from "ui/editor/BlockQuote";
 
 import ModalSection from "./ModalSection";
 import ModalSectionContent from "./ModalSectionContent";
@@ -24,7 +25,7 @@ export const TemplatedNodeInstructions = ({
         title={`Customise ${areTemplatedNodeInstructionsRequired ? `(required)` : `(optional)`}`}
         Icon={StarIcon}
       >
-        <Typography variant="body2">{templatedNodeInstructions}</Typography>
+        <BlockQuote>{templatedNodeInstructions}</BlockQuote>
       </ModalSectionContent>
     </ModalSection>
   );

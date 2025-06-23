@@ -91,7 +91,7 @@ describe("Basic UI", () => {
 // Schema and field validation is handled in both List and Schema folders - here we're only testing the MapAndLabel specific error handling
 describe("validation and error handling", () => {
   it("shows errors for all required fields", async () => {
-    const { getByTestId, user, queryByRole, getAllByTestId } = setup(
+    const { getByTestId, user, queryByRole } = setup(
       <MapAndLabel {...props} />,
     );
     const map = getByTestId("map-and-label-map");
@@ -370,7 +370,7 @@ describe("copy feature select", () => {
   });
 
   it("copies all data from one feature to another", async () => {
-    const { getByTitle, user, getByLabelText, getByRole } = setup(
+    const { getByTitle, user, getByLabelText, getByRole, getByTestId } = setup(
       <MapAndLabel {...props} />,
     );
     addMultipleFeatures([point1, point2]);
@@ -386,8 +386,10 @@ describe("copy feature select", () => {
     await user.click(copyInput);
 
     const listItemTwo = getByRole("option", { name: "Tree 2" });
+    const copyButton = getByTestId("copyButton");
 
     await user.click(listItemTwo);
+    await user.click(copyButton);
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
     expect(getByLabelText("Proposed work (optional)")).toHaveDisplayValue(

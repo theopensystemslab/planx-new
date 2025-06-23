@@ -56,6 +56,7 @@ const renderOption: AutocompleteProps<
   "div"
 >["renderOption"] = (props, option, state) => (
   <RenderOptionCheckbox
+    key={props.key}
     listProps={props}
     displayName={option.name}
     state={state}

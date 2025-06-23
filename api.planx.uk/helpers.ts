@@ -12,6 +12,9 @@ export interface GetFlowDataResponse {
   slug: string;
   name: string;
   data: Flow["data"];
+  summary: string | null;
+  description: string | null;
+  limitations: string | null;
   team_id: number;
   team: { slug: string };
   publishedFlows:
@@ -36,6 +39,9 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           slug
           data
           name
+          summary
+          description
+          limitations
           team_id
           team {
             slug
@@ -75,6 +81,9 @@ const createFlow = async ({
   flowData,
   copiedFrom,
   templatedFrom,
+  summary,
+  description,
+  limitations,
 }: {
   teamId: number;
   slug: string;
@@ -83,6 +92,9 @@ const createFlow = async ({
   flowData: Flow["data"];
   copiedFrom?: Flow["id"];
   templatedFrom?: Flow["id"];
+  summary?: string;
+  description?: string;
+  limitations?: string;
 }) => {
   const { client: $client } = getClient();
   const userId = userContext.getStore()?.user?.sub;
@@ -100,6 +112,9 @@ const createFlow = async ({
           $copied_from: uuid
           $templated_from: uuid
           $is_template: Boolean
+          $summary: String
+          $description: String
+          $limitations: String
         ) {
           flow: insert_flows_one(
             object: {
@@ -111,6 +126,9 @@ const createFlow = async ({
               copied_from: $copied_from
               templated_from: $templated_from
               is_template: $is_template
+              summary: $summary
+              description: $description
+              limitations: $limitations
             }
           ) {
             id
@@ -125,6 +143,9 @@ const createFlow = async ({
         copied_from: copiedFrom,
         templated_from: templatedFrom,
         is_template: isTemplate,
+        summary: summary,
+        description: description,
+        limitations: limitations,
       },
     );
 
