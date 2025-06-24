@@ -1,8 +1,12 @@
-import { BaseNodeData } from "@planx/components/shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+} from "@planx/components/shared";
+import { richText } from "lib/yupExtensions";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import { FileWithPath } from "react-dropzone";
-import { array } from "yup";
+import { array, object } from "yup";
 
 export interface FileUpload extends BaseNodeData {
   id?: string;
@@ -54,3 +58,9 @@ export const slotsSchema = array()
       );
     },
   });
+
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    description: richText(),
+  }),
+);
