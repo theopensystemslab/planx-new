@@ -126,7 +126,11 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
   }, []);
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form
+      onSubmit={formik.handleSubmit}
+      id="modal"
+      data-testid="checklistEditorForm"
+    >
       <TemplatedNodeInstructions
         isTemplatedNode={formik.values.isTemplatedNode}
         templatedNodeInstructions={formik.values.templatedNodeInstructions}
@@ -145,7 +149,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 placeholder="Text"
                 onChange={formik.handleChange}
                 inputRef={focusRef}
-                required
+                errorMessage={formik.errors.text}
                 disabled={props.disabled}
               />
               <ImgInput
