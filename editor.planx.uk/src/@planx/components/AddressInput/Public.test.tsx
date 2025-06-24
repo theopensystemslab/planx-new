@@ -59,7 +59,7 @@ test("requires a non-empty string before being able to continue", async () => {
 
   expect(handleSubmit).not.toHaveBeenCalled();
 
-  const errorMessage = await screen.findByText("Enter a town");
+  const errorMessage = await screen.findByText(/Enter a town/);
   expect(errorMessage).toBeVisible();
 });
 
