@@ -49,7 +49,7 @@ describe("input validation", () => {
     );
 
     expect(
-      screen.getByText('Links must wrap the text "(opens in a new tab)".'),
+      screen.getByText(/Links must wrap the text "\(opens in a new tab\)"./),
     ).toBeVisible();
   });
 
@@ -64,7 +64,7 @@ describe("input validation", () => {
 
     expect(
       screen.getByText(
-        'Legislative policy links should not end in "/made" as these can be out of date.',
+        /Legislative policy links should not end in "\/made" as these can be out of date./,
       ),
     ).toBeVisible();
   });

@@ -43,9 +43,8 @@ describe("Checklist editor component", () => {
 
     await user.click(screen.getByLabelText("Expandable"));
 
-    const groupedOptionsEditor = await screen.findByPlaceholderText(
-      "Section Title",
-    );
+    const groupedOptionsEditor =
+      await screen.findByPlaceholderText("Section Title");
     expect(groupedOptionsEditor).toBeInTheDocument();
   });
 
@@ -113,7 +112,7 @@ describe("Checklist editor component", () => {
 
     expect(
       screen.getByText(
-        'Cannot configure exclusive "or" option alongside "all required" setting',
+        /Cannot configure exclusive "or" option alongside "all required" setting/,
       ),
     ).toBeInTheDocument();
   });
@@ -131,7 +130,7 @@ describe("Checklist editor component", () => {
 
     expect(
       screen.getByText(
-        "Set a data field for the Checklist and all options but one when never putting to user",
+        /Set a data field for the Checklist and all options but one when never putting to user/,
       ),
     ).toBeInTheDocument();
   });
