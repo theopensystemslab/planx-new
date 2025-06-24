@@ -7,6 +7,7 @@ import { Store } from "pages/FlowEditor/lib/store";
 import React from "react";
 import BlockQuote from "ui/editor/BlockQuote";
 
+import { isAutoComment } from "../utils";
 import type {
   CommentHistoryItem,
   OperationHistoryItem,
@@ -116,9 +117,7 @@ export const CommentTimelineItem = ({
     bgcolor={(theme) => {
       if (inUndoScope(i)) {
         return theme.palette.grey[100];
-      } else if (
-        event.comment.startsWith("Updated based on source template publish")
-      ) {
+      } else if (isAutoComment(event.comment)) {
         return theme.palette.template.main;
       } else {
         return theme.palette.secondary.dark;

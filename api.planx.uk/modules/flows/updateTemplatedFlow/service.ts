@@ -85,7 +85,7 @@ export const updateTemplatedFlow = async (
     `,
     {
       flow_id: templatedFlowId,
-      comment: `Updated based on source template publish with summary "${summary}"`,
+      comment: `Source template published: "${summary}"`,
       actor_id: sourcePublisher,
     },
   );
