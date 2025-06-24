@@ -117,7 +117,7 @@ export default function ListManager<T, EditorExtraProps>(
     state.user?.isPlatformAdmin,
   ]);
 
-  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin
+  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin or in the source template
   if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
     return (
       <>
