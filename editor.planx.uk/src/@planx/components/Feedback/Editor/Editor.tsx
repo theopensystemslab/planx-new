@@ -55,6 +55,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   value={formik.values.title}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
+                  errorMessage={formik.errors.title}
                 />
               </InputLabel>
             </InputRow>
@@ -67,6 +68,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   placeholder="Description"
                   onChange={formik.handleChange}
                   disabled={props.disabled}
+                  errorMessage={formik.errors.description}
                 />
               </InputLabel>
             </InputRow>
@@ -83,6 +85,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   value={formik.values.ratingQuestion}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
+                  errorMessage={formik.errors.ratingQuestion}
                 />
               </InputLabel>
             </InputRow>
@@ -98,6 +101,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   value={formik.values.freeformQuestion}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
+                  errorMessage={formik.errors.freeformQuestion}
                 />
               </InputLabel>
             </InputRow>
@@ -109,6 +113,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   value={formik.values.disclaimer}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
+                  errorMessage={formik.errors.disclaimer}
                 />
               </InputLabel>
             </InputRow>
