@@ -45,7 +45,7 @@ test("requires a non-empty string before being able to continue", async () => {
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 
   const errorMessage = await screen.findByText(
-    "Enter your answer before continuing",
+    /Enter your answer before continuing/,
   );
   expect(errorMessage).toBeVisible();
 });
@@ -185,6 +185,7 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
     ></TextInput>,
   );
 
+  await user.click(screen.getByTestId("continue-button"));
   const [errorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
   user.click(screen.getByTestId("continue-button"));
 
