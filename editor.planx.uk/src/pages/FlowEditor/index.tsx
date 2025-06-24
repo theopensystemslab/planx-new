@@ -65,7 +65,7 @@ const FlowEditor = () => {
           className={lockedFlow ? "flow-locked" : ""}
           sx={{ position: "relative" }}
         >
-          <Flow flow={flow} breadcrumbs={breadcrumbs} />
+          <Flow flow={flow} breadcrumbs={breadcrumbs} lockedFlow={lockedFlow} />
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"

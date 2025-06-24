@@ -37,11 +37,13 @@ const StyledContainer = styled(Box, {
 }) => {
   if (!isTemplatedNode) return {};
 
-  let backgroundColor = theme.palette.template.dark;
+  let backgroundColor;
   if (showStatus) {
     if (isComplete) {
       backgroundColor = theme.palette.common.white;
-    } else if (!areTemplatedNodeInstructionsRequired) {
+    } else if (areTemplatedNodeInstructionsRequired) {
+      backgroundColor = theme.palette.template.dark;
+    } else {
       backgroundColor = theme.palette.template.main;
     }
   }
@@ -49,7 +51,9 @@ const StyledContainer = styled(Box, {
   return {
     backgroundColor,
     width: "100%",
-    padding: "4px",
+    ...(showStatus && {
+      padding: "4px",
+    }),
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -76,16 +80,6 @@ const getTemplatedNodeStatus = (
 ) => {
   if (areTemplatedNodeInstructionsRequired) return "Required";
   return "Optional";
-};
-
-const getStatusIcon = (theme: Theme, isComplete?: boolean) => {
-  if (isComplete) {
-    return { color: theme.palette.success.main };
-  }
-  return {
-    color: theme.palette.text.primary,
-    opacity: 0.2,
-  };
 };
 
 export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
@@ -128,10 +122,12 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
           >
             {getTemplatedNodeStatus(areTemplatedNodeInstructionsRequired)}
           </Typography>
-          <CheckCircleIcon
-            fontSize="small"
-            sx={(theme) => getStatusIcon(theme, isComplete)}
-          />
+          {isComplete && (
+            <CheckCircleIcon
+              fontSize="small"
+              sx={(theme) => ({ color: theme.palette.success.main })}
+            />
+          )}
         </StatusHeader>
       )}
       {children}

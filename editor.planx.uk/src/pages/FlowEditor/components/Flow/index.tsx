@@ -13,7 +13,7 @@ export enum FlowLayout {
   LEFT_RIGHT = "left-right",
 }
 
-const Flow = ({ breadcrumbs = [] }: any) => {
+const Flow = ({ breadcrumbs = [], lockedFlow }: any) => {
   const [childNodes, getNode, flowLayout] = useStore((state) => [
     state.childNodesOf(breadcrumbs[breadcrumbs.length - 1] || ROOT_NODE_KEY),
     state.getNode,
@@ -37,11 +37,11 @@ const Flow = ({ breadcrumbs = [] }: any) => {
         {showGetStarted && <GetStarted />}
 
         {breadcrumbs.map((bc: any) => (
-          <Node key={bc.id} {...bc} />
+          <Node key={bc.id} {...bc} lockedFlow={lockedFlow} />
         ))}
 
         {childNodes.map((node) => (
-          <Node key={node.id} {...node} />
+          <Node key={node.id} {...node} lockedFlow={lockedFlow} />
         ))}
 
         <Hanger />

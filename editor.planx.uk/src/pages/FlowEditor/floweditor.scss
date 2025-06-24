@@ -113,6 +113,7 @@ $fontMonospace: "Source Code Pro", monospace;
     }
     &.template-card > a {
       background: #fff;
+      border-color: $nodeBorder;
     }
   }
 
@@ -513,6 +514,7 @@ $fontMonospace: "Source Code Pro", monospace;
     & .template-card > a {
       .flow-locked & {
         background: #fffdb0 !important;
+        border-color: $nodeBorder;
       }
     }
     // Triangle shapes to simulate paper fold on sticky note

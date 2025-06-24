@@ -165,7 +165,7 @@ const InternalPortal: React.FC<any> = (props) => {
             areTemplatedNodeInstructionsRequired={
               props.data?.areTemplatedNodeInstructionsRequired
             }
-            showStatus={false}
+            showStatus={!props.lockedFlow}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
