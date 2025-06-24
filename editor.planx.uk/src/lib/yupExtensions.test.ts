@@ -106,7 +106,27 @@ describe("richText validation", () => {
       });
     });
 
-    describe("non-root level content", () => {
+    describe("nested content", () => {
+      it("does not validate content hierarchy", () => {
+        const result = richText({ variant: "nestedContent" }).validate(`
+          <h3>Another heading</h3>
+          <h2>Another heading</h2>
+        `);
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("paragraph content", () => {
+      it("does not validate content hierarchy", () => {
+        const result = richText({ variant: "paragraphContent" }).validate(`
+          <h3>Another heading</h3>
+          <h2>Another heading</h2>
+        `);
+        expect(result).toBeDefined();
+      });
+    });
+
+    describe("default level content", () => {
       it("does not allow a H2 to come before a H1", async () => {
         await expect(() =>
           richText().validate(`
@@ -129,7 +149,7 @@ describe("richText validation", () => {
         );
       });
 
-      it("allows correctly formatted headings", async () => {
+      it("allows correctly formatted headings", () => {
         const result = richText().validate(`
           <h1>Heading</h1>
           <h2>Another heading</h2>

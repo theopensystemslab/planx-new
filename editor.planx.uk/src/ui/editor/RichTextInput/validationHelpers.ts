@@ -156,6 +156,10 @@ export const getContentHierarchyError: RichTextValidator = (
     case "rootLevelContent":
       validateRootLevelContent(content, errors);
       break;
+    case "nestedContent":
+    case "paragraphContent":
+      // No validation carried out
+      break;
     default:
       validateDefault(content, errors);
       break;
