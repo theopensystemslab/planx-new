@@ -81,6 +81,7 @@ const ExternalPortal: React.FC<any> = (props) => {
         type="Error"
         id={props.id}
         text="Corrupted external portal: flow no longer exists"
+        lockedFlow
       />
     );
   }
@@ -165,7 +166,7 @@ const InternalPortal: React.FC<any> = (props) => {
             areTemplatedNodeInstructionsRequired={
               props.data?.areTemplatedNodeInstructionsRequired
             }
-            showStatusHeader={true}
+            showStatus={!props.lockedFlow}
           >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link
