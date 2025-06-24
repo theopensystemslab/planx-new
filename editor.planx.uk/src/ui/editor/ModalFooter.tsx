@@ -28,14 +28,7 @@ export const ModalFooter = <T extends BaseNodeData>({
   return (
     <>
       {showMoreInformation && (
-        <MoreInformation
-          changeField={formik.handleChange}
-          definitionImg={formik.values.definitionImg}
-          howMeasured={formik.values.howMeasured}
-          policyRef={formik.values.policyRef}
-          info={formik.values.info}
-          disabled={disabled}
-        />
+        <MoreInformation formik={formik} disabled={disabled} />
       )}
       {showInternalNotes && (
         <InternalNotes

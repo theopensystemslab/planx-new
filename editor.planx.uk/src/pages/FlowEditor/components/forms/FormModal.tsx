@@ -217,7 +217,7 @@ const FormModal: React.FC<{
           <Close />
         </CloseButton>
       </DialogTitle>
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ p: 0 }}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Component
             node={node}

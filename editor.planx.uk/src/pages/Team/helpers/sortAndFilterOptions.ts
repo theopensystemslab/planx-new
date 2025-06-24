@@ -35,7 +35,7 @@ const checkFlowTemplateType: FilterOptions<FlowSummary>["validationFn"] = (
   flow,
   value,
 ) => {
-  if (value === "template") return Boolean(flow.templatedFrom);
+  if (value === "templated") return Boolean(flow.templatedFrom);
   if (value === "source template") return Boolean(flow.isTemplate);
   return false;
 };
@@ -56,9 +56,9 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
 ];
 
 const templateFilterOption: FilterOptions<FlowSummary> = {
-  displayName: "Template",
+  displayName: "Templates",
   optionKey: "templatedFrom",
-  optionValue: ["template", "source template"],
+  optionValue: ["templated", "source template"],
   validationFn: checkFlowTemplateType,
 };
 

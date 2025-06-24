@@ -34,11 +34,11 @@ export const CREATE_FLOW_MODES = [
     title: "New flow",
   },
   {
-    mode: "copy",
-    title: "From copy...",
+    mode: "template",
+    title: "From a template...",
   },
   {
-    mode: "template",
-    title: "From template...",
+    mode: "copy",
+    title: "Copy an existing flow...",
   },
 ] as const;

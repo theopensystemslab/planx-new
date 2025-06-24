@@ -15,6 +15,7 @@ export const FlowVisibility = () => {
     state.flowCanCreateFromCopy,
     state.updateFlowCanCreateFromCopy,
   ]);
+
   const toast = useToast();
 
   const form = useFormik<{ canCreateFromCopy: boolean }>({
@@ -43,17 +44,25 @@ export const FlowVisibility = () => {
       </SettingsSection>
       <SettingsSection background>
         <Switch
-          label={form.values.canCreateFromCopy ? "Can be copied to create new services" : "Cannot be copied to create new services"}
+          label={
+            form.values.canCreateFromCopy
+              ? "Can be copied to create new services"
+              : "Cannot be copied to create new services"
+          }
           name={"service.status"}
           variant="editorPage"
           checked={form.values.canCreateFromCopy}
           onChange={() =>
-            form.setFieldValue("canCreateFromCopy", !form.values.canCreateFromCopy)
+            form.setFieldValue(
+              "canCreateFromCopy",
+              !form.values.canCreateFromCopy,
+            )
           }
         />
         <SettingsDescription>
           <p>
-            Control if this flow can be used to create new services in other teams. The flow can still be copied and modified within your team.
+            Control if this flow can be used to create new services in other
+            teams. The flow can still be copied and modified within your team.
           </p>
         </SettingsDescription>
 

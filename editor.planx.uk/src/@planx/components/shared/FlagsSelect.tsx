@@ -15,7 +15,7 @@ interface Props {
   disabled?: boolean;
 }
 
-const renderOptions: AutocompleteProps<
+const renderOption: AutocompleteProps<
   Flag,
   true,
   true,
@@ -23,6 +23,7 @@ const renderOptions: AutocompleteProps<
   "div"
 >["renderOption"] = (props, flag, state) => (
   <RenderOptionCheckbox
+    key={props.key}
     listProps={props}
     displayName={flag.text}
     state={state}
@@ -80,7 +81,7 @@ export const FlagsSelect: React.FC<Props> = (props) => {
         onChange={handleChange}
         isOptionEqualToValue={(flag, value) => flag.value === value.value}
         value={value}
-        renderOption={renderOptions}
+        renderOption={renderOption}
         renderTags={renderTags}
         disabled={props.disabled}
       />

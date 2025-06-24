@@ -173,13 +173,13 @@ const FlowCard: React.FC<FlowCardProps> = ({
       shouldAddTag: isSubmissionService,
     },
     {
-      type: FlowTagType.Template,
-      displayName: "Template",
+      type: FlowTagType.Templated,
+      displayName: "Templated",
       shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplatedService,
     },
     {
       type: FlowTagType.SourceTemplate,
-      displayName: "Source Template",
+      displayName: "Source template",
       shouldAddTag: hasFeatureFlag("TEMPLATES") && flow.isTemplate,
     },
   ];
@@ -269,7 +269,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
                 .filter(
                   (tag) =>
                     tag.shouldAddTag &&
-                    tag.type !== FlowTagType.Template &&
+                    tag.type !== FlowTagType.Templated &&
                     tag.type !== FlowTagType.SourceTemplate,
                 )
                 .map((tag) => (

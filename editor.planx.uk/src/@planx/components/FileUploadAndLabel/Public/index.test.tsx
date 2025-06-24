@@ -8,9 +8,9 @@ import { Breadcrumbs } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import { mockFileTypes, mockFileTypesUniqueKeys } from "./mocks";
-import { PASSPORT_REQUESTED_FILES_KEY } from "./model";
-import FileUploadAndLabelComponent from "./Public";
+import { mockFileTypes, mockFileTypesUniqueKeys } from "./../mocks";
+import { PASSPORT_REQUESTED_FILES_KEY } from "./../model";
+import FileUploadAndLabelComponent from ".";
 
 const { getState, setState } = useStore;
 let initialState: FullStore;
