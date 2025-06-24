@@ -199,7 +199,13 @@ export default function SafeNode(props: any) {
   return (
     <ErrorBoundary
       FallbackComponent={() => (
-        <Question hasFailed type="Error" id={props.id} text="Corrupted" />
+        <Question
+          hasFailed
+          type="Error"
+          id={props.id}
+          text="Corrupted"
+          lockedFlow
+        />
       )}
     >
       <Node {...props} />

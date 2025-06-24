@@ -81,6 +81,7 @@ const ExternalPortal: React.FC<any> = (props) => {
         type="Error"
         id={props.id}
         text="Corrupted external portal: flow no longer exists"
+        lockedFlow
       />
     );
   }
