@@ -58,9 +58,9 @@ export function SelectMultiple<T>(props: Props<T>) {
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
       <StyledAutocomplete<T, true, true, false, "div">
         sx={{ mt: props.label ? 2 : 0 }}
-        role="status"
-        aria-atomic={true}
-        aria-live="polite"
+        // role="status"
+        // aria-atomic={true}
+        // aria-live="polite"
         disableClearable
         disableCloseOnSelect
         multiple
