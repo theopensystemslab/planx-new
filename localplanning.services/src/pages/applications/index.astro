@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
-import EmailForm from "@components/applications/EmailForm";
+import LoginForm from "@components/applications/LoginForm";
 ---
 
 <Layout>
@@ -10,6 +10,6 @@ import EmailForm from "@components/applications/EmailForm";
     <p>View applications in progress, and download sent applications.</p>
   </Masthead>
   <Container paddingY>
-    <EmailForm client:load/>
+    <LoginForm client:load />
   </Container>
 </Layout>
