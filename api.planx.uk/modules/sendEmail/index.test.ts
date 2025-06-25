@@ -10,8 +10,6 @@ import {
   mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks.js";
 
-// https://docs.notifications.service.gov.uk/node.html#email-addresses
-const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const SAVE_ENDPOINT = "/send-email/save";
 
 describe("Send Email endpoint", () => {
