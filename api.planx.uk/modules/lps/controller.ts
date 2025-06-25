@@ -1,5 +1,5 @@
 import { ServerError } from "../../errors/serverError.js";
-import { login } from "./service.js";
+import { login } from "./service/login.js";
 import type { Login } from "./types.js";
 
 export const loginController: Login = async (
@@ -9,8 +9,7 @@ export const loginController: Login = async (
 ) => {
   const { email } = res.locals.parsedReq.body;
   try {
-    login(email);
-    // Always return positive response to mitigate phishing requests
+    await login(email);
     return res.status(200).json({ message: "success"});
   } catch (error) {
     next(
