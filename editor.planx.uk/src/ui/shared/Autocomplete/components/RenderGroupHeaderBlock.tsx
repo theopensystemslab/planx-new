@@ -27,7 +27,12 @@ export const RenderGroupHeaderBlock = ({
           borderColor: theme.palette.border.main,
         })}
       >
-        <Typography py={1} variant="subtitle2" component="h4">
+        <Typography
+          py={1}
+          variant="subtitle2"
+          component="span"
+          sx={{ padding: 0 }}
+        >
           {displayName}
         </Typography>
       </ListSubheader>
