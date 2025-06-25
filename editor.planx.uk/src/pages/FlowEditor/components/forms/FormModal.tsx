@@ -169,20 +169,21 @@ const FormModal: React.FC<{
 
   // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
-  //  2. The user has edit access to this team, but it is a templated flow and the node is not marked "isTemplatedNode"
+  //  2. The user has edit access to this team, but it is:
+  //    - a templated flow
+  //    - and the node itself is not marked "isTemplatedNode" or a descendent of an internal portal marked "isTemplatedNode"
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
-  const isCustomisableNode = (node: Store.Node) => {
-    return Boolean(node.data?.isTemplatedNode);
-  };
-  const disabled = isTemplatedFrom
-    ? !canUserEditNode(teamSlug) || !isCustomisableNode(node)
-    : !canUserEditNode(teamSlug);
 
-  // In cases of a templated flow, nodes tagged 'customisation' should not be disabled
-  //   but only the "Update" button should be visible in their modal, "Delete" & "Make unique" should be hidden
-  const hideButton = isTemplatedFrom && isCustomisableNode(node);
+  const canUserEditTemplatedNode =
+    canUserEditNode(teamSlug) &&
+    isTemplatedFrom &&
+    Boolean(node?.data?.isTemplatedNode);
+
+  const disabled = isTemplatedFrom
+    ? !canUserEditTemplatedNode
+    : !canUserEditNode(teamSlug);
 
   const toast = useToast();
 
@@ -265,7 +266,7 @@ const FormModal: React.FC<{
       </DialogContent>
       <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
-          {handleDelete && !hideButton && (
+          {handleDelete && !canUserEditTemplatedNode && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
@@ -280,7 +281,7 @@ const FormModal: React.FC<{
               </Button>
             </Grid>
           )}
-          {handleDelete && !hideButton && (
+          {handleDelete && !canUserEditTemplatedNode && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
