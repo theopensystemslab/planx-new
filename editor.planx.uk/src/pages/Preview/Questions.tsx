@@ -18,9 +18,6 @@ import ErrorFallback from "../../components/Error/ErrorFallback";
 import { useStore } from "../FlowEditor/lib/store";
 import Node, { HandleSubmit } from "./Node";
 
-// TMP: remove this after debugging migration to IndexedDB
-const USE_LOCALSTORAGE_OVER_IDB_TMP = false;
-
 const BackBar = styled(Box)(() => ({
   top: 0,
   left: 0,
@@ -89,35 +86,20 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   useEffect(() => {
     setCurrentCard();
 
-    // TMP: logs for debugging/testing migration to IndexedDB
-    console.info("Running initial setup useEffect");
-    console.log("isUsingLocalStorage?", isUsingLocalStorage);
-    console.log("isStandalone?", isStandalone);
-    console.log("flow ID:", id);
-
     if (!isStandalone) return;
 
     const loadSession = async () => {
-      console.info("loadSession called");
       if (isUsingLocalStorage) {
         try {
           let state = null;
-          // TMP
-          if (USE_LOCALSTORAGE_OVER_IDB_TMP) {
-            console.info(
-              "Using localStorage over IndexedDB for debugging/testing purposes",
+          // first try to get from IndexedDB (preferred storage)
+          state = await getLocalFlowIdb(id);
+          // if flow not in IndexedDB (or db connection fails), try localStorage
+          if (!state) {
+            console.debug(
+              `Flow ${id} not found in IndexedDB - trying localStorage`,
             );
             state = getLocalFlow(id);
-          } else {
-            // first try to get from IndexedDB (preferred storage)
-            state = await getLocalFlowIdb(id);
-            // if flow not in IndexedDB (or db connection fails), try localStorage
-            if (!state) {
-              console.debug(
-                `Flow ${id} not found in IndexedDB - trying localStorage`,
-              );
-              state = getLocalFlow(id);
-            }
           }
           if (state) resumeSession(state);
           createAnalytics(state ? "resume" : "init");
@@ -139,7 +121,6 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   // Update session when a question is answered
   useEffect(() => {
-    console.info("Running update session useEffect");
     if (!gotFlow || !isStandalone || !id) return;
 
     const session: Session = {
@@ -151,16 +132,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     };
 
     const saveFlowData = async () => {
-      console.info("saveFlowData called");
       if (isUsingLocalStorage) {
-        // TMP
-        if (USE_LOCALSTORAGE_OVER_IDB_TMP) {
-          console.info(
-            "Using localStorage over IndexedDB for debugging/testing purposes",
-          );
-          setLocalFlow(id, session);
-          return;
-        }
         // try first to save to IndexedDB, o/w fallback to localStorage
         try {
           await setLocalFlowIdb(id, session);
