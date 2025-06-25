@@ -13,6 +13,7 @@ import { saveTemplate } from "./saveAndReturn/save-application.js";
 import { userConfirmationTemplate } from "./saveAndReturn/user-confirmation.js";
 import { resumeTemplate } from "./saveAndReturn/resume-application.js";
 import { submitTemplate } from "./sendToEmail/submit-application.js";
+import { lpsLoginTemplate } from "./lps/lpsLoginTemplate.js";
 
 export type NotifyConfig<T> = { personalisation: T; emailReplyToId: string };
 
@@ -60,6 +61,8 @@ export const templateRegistry = {
   confirmation: userConfirmationTemplate,
   // Send to email
   submit: submitTemplate,
+  // localplanning.services
+  "lps-login": lpsLoginTemplate
 } as const;
 
 export type TemplateRegistry = typeof templateRegistry;
@@ -71,3 +74,7 @@ export type EmailFooter = {
   helpOpeningHours: string;
   helpPhone: string;
 };
+
+/** Fallback reply to ID, points to devops+govuknotify@opensystemslab.io */
+export const DEVOPS_EMAIL_REPLY_TO_ID =
+  "727d48fa-cb8a-42f9-b8b2-55032f3bb451" as const;
