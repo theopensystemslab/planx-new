@@ -73,6 +73,7 @@ const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
       ref={ref}
       {...props}
       role="listbox"
+      aria-multiselectable="true"
       sx={{ paddingY: "0px !important" }}
     >
       {children}
