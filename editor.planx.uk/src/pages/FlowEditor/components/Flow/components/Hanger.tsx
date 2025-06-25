@@ -49,13 +49,13 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   const parentIsTemplatedInternalPortal =
     indexedParent?.type === TYPES.InternalPortal &&
     Boolean(flow[indexedParent.id]?.data?.isTemplatedNode);
-  const isWithinTemplatedInternalPortal =
+  const parentIsWithinTemplatedInternalPortal =
     indexedParent?.type === TYPES.InternalPortal &&
     indexedParent?.parentId &&
     Boolean(flow[indexedParent.parentId]?.data?.isTemplatedNode);
 
   const showHangerInTemplatedNodes =
-    parentIsTemplatedInternalPortal || isWithinTemplatedInternalPortal;
+    parentIsTemplatedInternalPortal || parentIsWithinTemplatedInternalPortal;
 
   // Hiding the hanger is a proxy for disabling a 'view-only' user from adding, moving, cloning nodes
   const hideHangerFromUser =

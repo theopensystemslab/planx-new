@@ -151,20 +151,23 @@ const FormModal: React.FC<{
   const [
     addNode,
     updateNode,
-    node,
+    flow,
     makeUnique,
     connect,
     teamSlug,
     isTemplatedFrom,
+    orderedFlow,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
-    store.flow[id],
+    store.flow,
     store.makeUnique,
     store.connect,
     store.getTeam().slug,
     store.isTemplatedFrom,
+    store.orderedFlow,
   ]);
+  const node = flow[id];
   const handleClose = () => navigate(rootFlowPath(true));
 
   // Nodes should be disabled when:
@@ -176,10 +179,20 @@ const FormModal: React.FC<{
     return useStore.getState().canUserEditTeam(teamSlug);
   };
 
+  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const parentIsTemplatedInternalPortal =
+    indexedParent?.type === TYPES.InternalPortal &&
+    Boolean(flow[indexedParent.id]?.data?.isTemplatedNode);
+  const parentIsWithinTemplatedInternalPortal =
+    indexedParent?.type === TYPES.InternalPortal &&
+    indexedParent?.parentId &&
+    Boolean(flow[indexedParent.parentId]?.data?.isTemplatedNode);
+
   const canUserEditTemplatedNode =
     canUserEditNode(teamSlug) &&
-    isTemplatedFrom &&
-    Boolean(node?.data?.isTemplatedNode);
+    (Boolean(node?.data?.isTemplatedNode) ||
+      parentIsTemplatedInternalPortal ||
+      parentIsWithinTemplatedInternalPortal);
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
