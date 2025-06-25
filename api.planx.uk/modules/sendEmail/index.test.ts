@@ -9,6 +9,7 @@ import {
   mockValidateSingleSessionRequest,
   mockValidateSingleSessionRequestMissingSession,
 } from "../../tests/mocks/saveAndReturnMocks.js";
+import { NOTIFY_TEST_EMAIL } from "../../lib/notify/utils.js";
 
 const SAVE_ENDPOINT = "/send-email/save";
 
@@ -43,7 +44,7 @@ describe("Send Email endpoint", () => {
       const data = {
         payload: {
           sessionId: "123",
-          email: TEST_EMAIL,
+          email: NOTIFY_TEST_EMAIL,
         },
       };
 
@@ -100,7 +101,7 @@ describe("Send Email endpoint", () => {
       const data = {
         payload: {
           sessionId: "123",
-          email: TEST_EMAIL,
+          email: NOTIFY_TEST_EMAIL,
         },
       };
 
@@ -119,7 +120,7 @@ describe("Send Email endpoint", () => {
       const data = {
         payload: {
           sessionId: "123",
-          email: TEST_EMAIL,
+          email: NOTIFY_TEST_EMAIL,
         },
       };
       await supertest(app).post("/send-email").send(data).expect(404);
@@ -129,7 +130,7 @@ describe("Send Email endpoint", () => {
       const data = {
         payload: {
           sessionId: "123",
-          email: TEST_EMAIL,
+          email: NOTIFY_TEST_EMAIL,
         },
       };
 
@@ -152,7 +153,7 @@ describe("Send Email endpoint", () => {
           const data = {
             payload: {
               sessionId: "123",
-              email: TEST_EMAIL,
+              email: NOTIFY_TEST_EMAIL,
             },
           };
           await supertest(app)
@@ -165,7 +166,7 @@ describe("Send Email endpoint", () => {
           const data = {
             payload: {
               sessionId: "123",
-              email: TEST_EMAIL,
+              email: NOTIFY_TEST_EMAIL,
             },
           };
           await supertest(app)
@@ -179,7 +180,7 @@ describe("Send Email endpoint", () => {
           const data = {
             payload: {
               sessionId: "123",
-              email: TEST_EMAIL,
+              email: NOTIFY_TEST_EMAIL,
               lockedAt: null,
             },
           };
@@ -245,7 +246,7 @@ describe("Send Email endpoint", () => {
       const data = {
         payload: {
           sessionId: "456",
-          email: TEST_EMAIL,
+          email: NOTIFY_TEST_EMAIL,
         },
       };
 
@@ -263,7 +264,7 @@ describe("Send Email endpoint", () => {
       const data = {
         payload: {
           sessionId: "123",
-          email: TEST_EMAIL,
+          email: NOTIFY_TEST_EMAIL,
         },
       };
 
@@ -288,7 +289,7 @@ describe("Setting up send email events", () => {
   const data = {
     payload: {
       sessionId: "123",
-      email: TEST_EMAIL,
+      email: NOTIFY_TEST_EMAIL,
     },
   };
 

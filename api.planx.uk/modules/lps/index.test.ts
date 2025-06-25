@@ -51,7 +51,7 @@ describe("logging into LPS applications", () => {
             personalisation: expect.objectContaining({
               magicLink: `https://www.localplanning.services/applications?token=${testToken}`,
             }),
-          })
+          }),
         );
       });
   });

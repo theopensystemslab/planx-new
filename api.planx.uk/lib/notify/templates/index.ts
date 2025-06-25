@@ -62,7 +62,7 @@ export const templateRegistry = {
   // Send to email
   submit: submitTemplate,
   // localplanning.services
-  "lps-login": lpsLoginTemplate
+  "lps-login": lpsLoginTemplate,
 } as const;
 
 export type TemplateRegistry = typeof templateRegistry;

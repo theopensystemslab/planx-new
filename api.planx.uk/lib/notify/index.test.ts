@@ -31,7 +31,9 @@ describe("sendEmail", () => {
   it("throw an error if an error is thrown within sendEmail()", async () => {
     const mockNotifyClient = NotifyClient.mock.instances[0];
     mockNotifyClient.sendEmail.mockRejectedValue(new Error());
-    await expect(sendEmail("save", NOTIFY_TEST_EMAIL, mockConfig)).rejects.toThrow();
+    await expect(
+      sendEmail("save", NOTIFY_TEST_EMAIL, mockConfig),
+    ).rejects.toThrow();
   });
 
   it("throw an error if the NotifyClient errors", async () => {
@@ -39,6 +41,8 @@ describe("sendEmail", () => {
     mockNotifyClient.sendEmail.mockRejectedValue({
       response: { data: { errors: ["Invalid email"] } },
     });
-    await expect(sendEmail("save", NOTIFY_TEST_EMAIL, mockConfig)).rejects.toThrow();
+    await expect(
+      sendEmail("save", NOTIFY_TEST_EMAIL, mockConfig),
+    ).rejects.toThrow();
   });
 });

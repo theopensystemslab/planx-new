@@ -1,7 +1,10 @@
 import { gql } from "graphql-request";
 import { $api } from "../../../client/index.js";
 import { sendEmail } from "../../../lib/notify/index.js";
-import { DEVOPS_EMAIL_REPLY_TO_ID, type TemplateRegistry } from "../../../lib/notify/templates/index.js";
+import {
+  DEVOPS_EMAIL_REPLY_TO_ID,
+  type TemplateRegistry,
+} from "../../../lib/notify/templates/index.js";
 
 interface CreateMagicLink {
   magicLink: {
@@ -22,28 +25,28 @@ const createMagicLinkToken = async (email: string): Promise<string> => {
         }
       }
     `,
-    { email }
+    { email },
   );
   return token;
 };
 
 const generateMagicLink = async (email: string) => {
   const token = await createMagicLinkToken(email);
-  const url = new URL("/applications", process.env.LPS_URL_EXT!)
+  const url = new URL("/applications", process.env.LPS_URL_EXT!);
   url.searchParams.append("token", token);
 
   return url.toString();
-}
+};
 
 const sendLoginEmail = async (email: string, magicLink: string) => {
   const config: TemplateRegistry["lps-login"]["config"] = {
     personalisation: { magicLink },
     // TODO: This should be a LPS specific email
     emailReplyToId: DEVOPS_EMAIL_REPLY_TO_ID,
-  }; 
+  };
 
   await sendEmail("lps-login", email, config);
-}
+};
 
 /**
  * Trigger an email containing a magic link
@@ -51,5 +54,5 @@ const sendLoginEmail = async (email: string, magicLink: string) => {
  */
 export const login = async (email: string) => {
   const magicLink = await generateMagicLink(email);
-  await sendLoginEmail(email, magicLink)
+  await sendLoginEmail(email, magicLink);
 };
