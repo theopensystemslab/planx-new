@@ -1,8 +1,8 @@
 import type { FormEventHandler } from "react";
-import { useResumeApplication } from "./hooks/useResumeApplication";
+import { useLogin } from "./hooks/useLogin";
 
-const EmailForm: React.FC = () => {
-  const { submitEmail, isLoading, error, clearError } = useResumeApplication();
+const LoginForm: React.FC = () => {
+  const { login, isLoading, error, clearError } = useLogin();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -11,14 +11,14 @@ const EmailForm: React.FC = () => {
     const email = formData.get("email")?.toString();
     if (!email) return;
 
-    await submitEmail(email);
+    await login(email);
   };
 
   return (
     <div className="max-w-3xl text-body-lg">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-start">
         <label htmlFor="email" className="font-semibold text-md">
-          Enter your email address
+          Enter your email address to log in
         </label>
         <input
           className="pt-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -48,4 +48,4 @@ const EmailForm: React.FC = () => {
   );
 };
 
-export default EmailForm;
+export default LoginForm;
