@@ -16,7 +16,7 @@ const EmailForm: React.FC = () => {
 
   return (
     <div className="max-w-3xl text-body-lg">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-start">
         <label htmlFor="email" className="font-semibold text-md">
           Enter your email address
         </label>
@@ -39,7 +39,7 @@ const EmailForm: React.FC = () => {
         <button 
           type="submit" 
           disabled={isLoading} 
-          className="inline-block font-semibold rounded transition m-0 bg-action-main hover:bg-action-main-hover text-body-md clamp-[py,2,3] clamp-[px,3,4] cursor-pointer w-min"
+          className="button button--primary button--medium"
         >
           {isLoading ? "Submitting..." : "Submit"}
         </button>
