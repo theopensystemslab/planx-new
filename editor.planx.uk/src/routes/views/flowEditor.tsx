@@ -9,6 +9,7 @@ import { client } from "../../lib/graphql";
 import {
   Environment,
   generateAnalyticsLink,
+  getAnalyticsDashboardId,
 } from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import { settingsStore } from "../../pages/FlowEditor/lib/store/settings";
@@ -137,18 +138,24 @@ export const flowEditorView = async (req: NaviRequest) => {
 
   const getFlowInformation = useStore.getState().getFlowInformation;
 
-  const { isSubmissionService } = await getFlowInformation(
-    flow,
-    req.params.team,
-  );
+  let { isSubmissionService } = await getFlowInformation(flow, req.params.team);
 
-  const flowAnalyticsLink = generateAnalyticsLink({
+  isSubmissionService = isSubmissionService ? isSubmissionService : false;
+
+  const dashboardId = getAnalyticsDashboardId({
     flowStatus,
     environment,
-    flowId: id,
     flowSlug: flow,
-    isSubmissionService: isSubmissionService ?? false,
+    isSubmissionService,
   });
+
+  const flowAnalyticsLink = dashboardId
+    ? generateAnalyticsLink({
+        environment,
+        flowId: id,
+        dashboardId,
+      })
+    : undefined;
 
   useStore.setState({
     id,

@@ -239,56 +239,48 @@ export const getDiscretionary = (environment: Environment) => ({
   ],
 });
 
-export const getSubmission = (
-  environment: Environment,
-  isSubmissionService: boolean,
-): { id: string } | undefined => {
-  // We don't need to exclude RAB slugs here because this function is called after getRAB() and they're already excluded
-  if (isSubmissionService) {
-    return {
-      id: DASHBOARD_PUBLIC_IDS[environment].submission,
-    };
-  }
-  return undefined;
+export const getSubmission = (environment: Environment): { id: string } => {
+  return {
+    id: DASHBOARD_PUBLIC_IDS[environment].submission,
+  };
 };
 
-export const generateAnalyticsLink = ({
+export const getAnalyticsDashboardId = ({
   flowStatus,
   environment,
-  flowId,
   flowSlug,
   isSubmissionService,
 }: {
   flowStatus: FlowStatus;
   environment: Environment;
-  flowId: string;
   flowSlug: string;
   isSubmissionService: boolean;
 }): string | undefined => {
   if (flowStatus === "offline") return undefined;
 
-  let dashboardId: string | undefined;
-
   const foiynpp = getFOIYNPP(environment);
   const rab = getRAB(environment);
   const discretionary = getDiscretionary(environment);
-  const submission = getSubmission(environment, isSubmissionService);
+  const submission = getSubmission(environment);
 
-  if (foiynpp.slugs.includes(flowSlug)) {
-    dashboardId = foiynpp.id;
-  } else if (rab.slugs.includes(flowSlug)) {
-    // since RAB is technically a submission service, we have to check it before general submission services below
-    dashboardId = rab.id;
-  } else if (discretionary.slugs.includes(flowSlug)) {
-    dashboardId = discretionary.id;
-  } else if (submission) {
-    dashboardId = submission.id;
-  }
+  if (foiynpp.slugs.includes(flowSlug)) return foiynpp.id;
+  if (rab.slugs.includes(flowSlug)) return rab.id;
+  if (discretionary.slugs.includes(flowSlug)) return discretionary.id;
+  // Finally, fallback to check general submission services
+  if (isSubmissionService) return submission.id;
 
-  if (!dashboardId) {
-    return;
-  }
+  return undefined;
+};
 
+export const generateAnalyticsLink = ({
+  environment,
+  flowId,
+  dashboardId,
+}: {
+  environment: Environment;
+  flowId: string;
+  dashboardId: string;
+}): string => {
   const baseDomain = environment === "production" ? "uk" : "dev";
   const host = `https://metabase.editor.planx.${baseDomain}`;
   const pathname = `/public/dashboard/${dashboardId}`;
