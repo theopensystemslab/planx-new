@@ -241,12 +241,10 @@ export const getDiscretionary = (environment: Environment) => ({
 
 export const getSubmission = (
   environment: Environment,
-  flowSlug: string,
   isSubmissionService: boolean,
-  rab: ReturnType<typeof getRAB>,
 ): { id: string } | undefined => {
-  // Exclude RAB slugs (since they are technically submissions)
-  if (isSubmissionService && !rab.slugs.includes(flowSlug)) {
+  // We don't need to exclude RAB slugs here because this function is called after getRAB() and they're already excluded
+  if (isSubmissionService) {
     return {
       id: DASHBOARD_PUBLIC_IDS[environment].submission,
     };
@@ -274,12 +272,7 @@ export const generateAnalyticsLink = ({
   const foiynpp = getFOIYNPP(environment);
   const rab = getRAB(environment);
   const discretionary = getDiscretionary(environment);
-  const submission = getSubmission(
-    environment,
-    flowSlug,
-    isSubmissionService,
-    rab,
-  );
+  const submission = getSubmission(environment, isSubmissionService);
 
   if (foiynpp.slugs.includes(flowSlug)) {
     dashboardId = foiynpp.id;
