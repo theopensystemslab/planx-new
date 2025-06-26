@@ -11,6 +11,11 @@ import {
 } from "types";
 import type { StateCreator } from "zustand";
 
+import {
+  Environment,
+  generateAnalyticsLink,
+  getAnalyticsDashboardId,
+} from "../analytics/utils";
 import { SharedStore } from "./shared";
 import { TeamStore } from "./team";
 
@@ -129,6 +134,7 @@ export const settingsStore: StateCreator<
       data: {
         flows: [
           {
+            id,
             settings,
             status,
             description,
@@ -168,6 +174,24 @@ export const settingsStore: StateCreator<
 
     const isSubmissionService = published_flows[0].has_send_component;
 
+    const environment: Environment =
+      import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
+
+    const dashboardId = getAnalyticsDashboardId({
+      flowStatus: status,
+      environment,
+      flowSlug,
+      isSubmissionService,
+    });
+
+    const analyticsLink = dashboardId
+      ? generateAnalyticsLink({
+          environment,
+          flowId: id,
+          dashboardId,
+        })
+      : undefined;
+
     set({
       flowSettings: settings,
       flowStatus: status,
@@ -175,7 +199,7 @@ export const settingsStore: StateCreator<
       flowSummary: summary,
       flowLimitations: limitations,
       flowCanCreateFromCopy: canCreateFromCopy,
-      isSubmissionService,
+      flowAnalyticsLink: analyticsLink,
     });
 
     return {
@@ -184,7 +208,7 @@ export const settingsStore: StateCreator<
       description,
       summary,
       limitations,
-      isSubmissionService,
+      analyticsLink,
     };
   },
 

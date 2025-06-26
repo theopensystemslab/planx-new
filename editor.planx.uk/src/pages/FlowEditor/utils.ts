@@ -9,7 +9,7 @@ export interface FlowInformation {
   summary?: string;
   limitations?: string;
   canCreateFromCopy?: boolean;
-  isSubmissionService: boolean;
+  analyticsLink?: string;
 }
 
 export interface GetFlowInformation {

@@ -58,9 +58,6 @@ interface GetFlowEditorData {
   }[];
 }
 
-const environment: Environment =
-  import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
-
 export const getFlowEditorData = async (
   flowSlug: string,
   team: string,
@@ -136,32 +133,9 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   } = await getFlowEditorData(flow, req.params.team);
 
-  const getFlowInformation = useStore.getState().getFlowInformation;
-
-  const { isSubmissionService } = await getFlowInformation(
-    flow,
-    req.params.team,
-  );
-
-  const dashboardId = getAnalyticsDashboardId({
-    flowStatus,
-    environment,
-    flowSlug: flow,
-    isSubmissionService,
-  });
-
-  const flowAnalyticsLink = dashboardId
-    ? generateAnalyticsLink({
-        environment,
-        flowId: id,
-        dashboardId,
-      })
-    : undefined;
-
   useStore.setState({
     id,
     flowStatus,
-    flowAnalyticsLink,
     isFlowPublished,
     isTemplate,
     isTemplatedFrom: Boolean(templatedFrom),
