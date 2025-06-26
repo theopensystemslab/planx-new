@@ -166,8 +166,7 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
-    const isSubmissionService =
-      published_flows?.[0]?.has_send_component ?? false;
+    const isSubmissionService = published_flows[0].has_send_component;
 
     set({
       flowSettings: settings,

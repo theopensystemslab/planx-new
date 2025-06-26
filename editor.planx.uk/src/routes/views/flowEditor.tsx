@@ -138,9 +138,10 @@ export const flowEditorView = async (req: NaviRequest) => {
 
   const getFlowInformation = useStore.getState().getFlowInformation;
 
-  let { isSubmissionService } = await getFlowInformation(flow, req.params.team);
-
-  isSubmissionService = isSubmissionService ? isSubmissionService : false;
+  const { isSubmissionService } = await getFlowInformation(
+    flow,
+    req.params.team,
+  );
 
   const dashboardId = getAnalyticsDashboardId({
     flowStatus,
