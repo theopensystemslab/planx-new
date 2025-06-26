@@ -75,10 +75,11 @@ export const nodeIsChildOfTemplatedInternalPortal = (
   flow: Store.Flow,
   node?: IndexedNode,
 ): boolean => {
-  if (node && node?.parentId) {
+  if (node && node?.parentId && node?.internalPortalId) {
     return (
-      node.type === TYPES.InternalPortal &&
-      Boolean(flow[node.parentId]?.data?.isTemplatedNode)
+      (flow[node.parentId]?.type === TYPES.InternalPortal &&
+        Boolean(flow[node.parentId]?.data?.isTemplatedNode)) ||
+      Boolean(flow[node.internalPortalId]?.data?.isTemplatedNode)
     );
   } else {
     return false;
