@@ -1,5 +1,8 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import classnames from "classnames";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
 import React from "react";
 import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
@@ -46,21 +49,21 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-  const parentIsTemplatedInternalPortal =
-    indexedParent?.type === TYPES.InternalPortal &&
-    Boolean(flow[indexedParent.id]?.data?.isTemplatedNode);
-  const parentIsWithinTemplatedInternalPortal =
-    indexedParent?.type === TYPES.InternalPortal &&
-    indexedParent?.parentId &&
-    Boolean(flow[indexedParent.parentId]?.data?.isTemplatedNode);
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+    flow,
+    indexedParent,
+  );
+  const parentIsChildOfTemplatedInternalPortal =
+    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
 
-  const showHangerInTemplatedNodes =
-    parentIsTemplatedInternalPortal || parentIsWithinTemplatedInternalPortal;
+  const showHangerInTemplatedFlow =
+    isTemplatedFrom &&
+    (parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal);
 
   // Hiding the hanger is a proxy for disabling a 'view-only' user from adding, moving, cloning nodes
   const hideHangerFromUser =
     !useStore.getState().canUserEditTeam(teamSlug) ||
-    (isTemplatedFrom && !showHangerInTemplatedNodes);
+    !showHangerInTemplatedFlow;
 
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL", "PAGE"],

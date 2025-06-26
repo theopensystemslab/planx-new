@@ -12,13 +12,17 @@ import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
-import { Store, useStore } from "../../lib/store";
+import { useStore } from "../../lib/store";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -174,25 +178,24 @@ const FormModal: React.FC<{
   //  1. The user doesn't have any edit access to this team
   //  2. The user has edit access to this team, but it is:
   //    - a templated flow
-  //    - and the node itself is not marked "isTemplatedNode" or a descendent of an internal portal marked "isTemplatedNode"
+  //    - and the node itself is not marked "isTemplatedNode" or a child of an internal portal marked "isTemplatedNode"
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
 
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-  const parentIsTemplatedInternalPortal =
-    indexedParent?.type === TYPES.InternalPortal &&
-    Boolean(flow[indexedParent.id]?.data?.isTemplatedNode);
-  const parentIsWithinTemplatedInternalPortal =
-    indexedParent?.type === TYPES.InternalPortal &&
-    indexedParent?.parentId &&
-    Boolean(flow[indexedParent.parentId]?.data?.isTemplatedNode);
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+    flow,
+    indexedParent,
+  );
+  const parentIsChildOfTemplatedInternalPortal =
+    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
 
   const canUserEditTemplatedNode =
     canUserEditNode(teamSlug) &&
     (Boolean(node?.data?.isTemplatedNode) ||
       parentIsTemplatedInternalPortal ||
-      parentIsWithinTemplatedInternalPortal);
+      parentIsChildOfTemplatedInternalPortal);
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
