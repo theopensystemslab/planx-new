@@ -1,9 +1,10 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  DEFAULT_FLAG_CATEGORY,
+  FlowStatus,
+} from "@opensystemslab/planx-core/types";
 
 import { Store } from "../store";
-import { useStore } from "../store";
 import { ALLOW_LIST } from "./provider";
 import {
   AllowListKey,
