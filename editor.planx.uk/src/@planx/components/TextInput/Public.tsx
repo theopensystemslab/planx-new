@@ -2,6 +2,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
+import { useFormErrorFocus } from "hooks/useFormErrorFoucs";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
@@ -30,6 +31,13 @@ const TextInputComponent: React.FC<Props> = (props) => {
     validationSchema: object({
       text: textInputValidationSchema({ data: props, required: true }),
     }),
+  });
+
+  useFormErrorFocus({
+    errors: formik.errors,
+    isSubmitting: formik.isSubmitting,
+    isValidating: formik.isValidating,
+    submitCount: formik.submitCount,
   });
 
   const characterCountLimit = getTextLimit(props.type, props.customLength);
