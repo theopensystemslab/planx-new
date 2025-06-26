@@ -197,6 +197,12 @@ const FormModal: React.FC<{
       parentIsTemplatedInternalPortal ||
       parentIsChildOfTemplatedInternalPortal);
 
+  const hideMakeUniqueDeleteButtons =
+    isTemplatedFrom &&
+    Boolean(node?.data?.isTemplatedNode) &&
+    (!parentIsTemplatedInternalPortal ||
+      !parentIsChildOfTemplatedInternalPortal);
+
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
@@ -282,7 +288,7 @@ const FormModal: React.FC<{
       </DialogContent>
       <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
-          {handleDelete && !canUserEditTemplatedNode && (
+          {handleDelete && !hideMakeUniqueDeleteButtons && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
@@ -297,7 +303,7 @@ const FormModal: React.FC<{
               </Button>
             </Grid>
           )}
-          {handleDelete && !canUserEditTemplatedNode && (
+          {handleDelete && !hideMakeUniqueDeleteButtons && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
