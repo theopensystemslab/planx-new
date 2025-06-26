@@ -141,7 +141,7 @@ export const settingsStore: StateCreator<
             summary,
             limitations,
             canCreateFromCopy,
-            published_flows,
+            publishedFlows,
           },
         ],
       },
@@ -159,8 +159,11 @@ export const settingsStore: StateCreator<
             status
             limitations
             canCreateFromCopy: can_create_from_copy
-            published_flows(limit: 1, order_by: { created_at: desc }) {
-              has_send_component
+            publishedFlows: published_flows(
+              limit: 1
+              order_by: { created_at: desc }
+            ) {
+              hasSendComponent: has_send_component
             }
           }
         }
@@ -172,7 +175,7 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
-    const isSubmissionService = published_flows[0].has_send_component;
+    const isSubmissionService = publishedFlows[0].hasSendComponent;
 
     const environment: Environment =
       import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
