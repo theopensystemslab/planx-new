@@ -8,8 +8,8 @@ interface Props {
 const { title } = Astro.props as Props;
 ---
 
-<details class="w-full max-w-screen-lg bg-bg-light rounded overflow-hidden [&[open]__.accordion-icon]:rotate-180">
-  <summary class="list-none flex items-center justify-between gap-4 clamp-[p,4,6] cursor-pointer hover:bg-gray-200 focus:bg-gray-200 text-heading-sm text-left m-0">
+<details class="w-full max-w-screen-lg bg-bg-light rounded overflow-hidden [&[open]__.accordion-icon]:rotate-180 [&[open]__summary]:bg-gray-200">
+  <summary class="list-none flex items-center justify-between gap-4 clamp-[p,4,6] cursor-pointer hover:bg-gray-200 text-heading-sm text-left m-0">
     {title}
     <Icon class="accordion-icon clamp-[w,8,10] h-auto" name="expand" />
   </summary>
