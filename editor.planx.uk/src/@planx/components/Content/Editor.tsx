@@ -1,6 +1,9 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Content } from "@planx/components/Content/model";
-import { parseContent } from "@planx/components/Content/model";
+import {
+  parseContent,
+  validationSchema,
+} from "@planx/components/Content/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -24,7 +27,9 @@ const ContentComponent: React.FC<Props> = (props) => {
         props.handleSubmit({ type: TYPES.Content, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -45,6 +50,7 @@ const ContentComponent: React.FC<Props> = (props) => {
               onChange={formik.handleChange}
               disabled={props.disabled}
               variant="rootLevelContent"
+              errorMessage={formik.errors.content}
             />
           </InputRow>
           <ColorPicker
@@ -55,6 +61,7 @@ const ContentComponent: React.FC<Props> = (props) => {
               formik.setFieldValue("color", color);
             }}
             disabled={props.disabled}
+            errorMessage={formik.errors.color}
           />
         </ModalSectionContent>
       </ModalSection>

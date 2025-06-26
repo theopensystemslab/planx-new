@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -105,17 +105,26 @@ describe("Checklist editor component", () => {
     );
 
     await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.type(screen.getByPlaceholderText("Option"), "First");
 
     await user.click(screen.getByRole("button", { name: /add "or" option/i }));
+    await user.type(
+      screen.getByPlaceholderText("Exclusive 'or' option"),
+      "Second",
+    );
 
     await user.click(screen.getByLabelText("All required"));
 
-    expect(
-      screen.getByText(
-        /Cannot configure exclusive "or" option alongside "all required" setting/,
-      ),
-    ).toBeInTheDocument();
-  });
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /Cannot configure exclusive "or" option alongside "all required" setting/,
+        ),
+      ).toBeInTheDocument()
+    );
+  }, 10_000);
 
   it("shows an error if 'never put to user' is toggled on without a data field", async () => {
     const { user } = setup(
@@ -128,11 +137,15 @@ describe("Checklist editor component", () => {
       screen.getByLabelText("Never put to user (default to blank automation)"),
     );
 
-    expect(
-      screen.getByText(
-        /Set a data field for the Checklist and all options but one when never putting to user/,
-      ),
-    ).toBeInTheDocument();
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /Set a data field for the Checklist and all options but one when never putting to user/,
+        ),
+      ).toBeInTheDocument(),
+    );
   });
 
   it.todo(

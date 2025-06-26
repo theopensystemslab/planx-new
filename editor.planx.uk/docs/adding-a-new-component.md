@@ -19,23 +19,41 @@ SetValue = 380,
 2. `model.ts`
 
 ```typescript
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import { boolean, string } from "yup";
 
 export interface SetValue extends BaseNodeData {
   fn: string;
+  myExampleBoolean: boolean;
+  myExampleNumber: number;
+  myExampleRichText: string;
 }
 
 export const parseContent = (
   data: Record<string, any> | undefined,
 ): SetValue => ({
   fn: data?.fn || "",
+  myExampleBoolean: data?.myExampleBoolean || false,
+  myExampleNumber: data?.myExampleNumber || 123
+  myExampleRichText: data?.myExampleRichText || "<p>Default content</p>",
   ...parseBaseNodeData(data),
 });
+
+// Yup validation schema describing structure of this component
+export const validationSchema: SchemaOf<SetValue> = baseNodeDataValidationSchema.concat(object({
+  fn: string(),
+  myExampleBoolean: boolean().required(),
+  myExampleNumber: number(),
+  myExampleRichText: richText(),
+}))
 ```
 
-3. `Editor.tsx`
+1. `Editor.tsx`
 
 ```typescript
+import { baseNodeDataValidationSchema } from "../shared";
+import validationSchema, type { SetValue } from "./model.ts"
+
 type Props = EditorProps<TYPES.SetValue, SetValue>;
 
 export default SetValueComponent;
@@ -48,6 +66,9 @@ function SetValueComponent(props: Props) {
         type: TYPES.SetValue,
         data: newValues,
       });
+      validationSchema,
+      validateOnChange: false,
+      validateOnBlur: false,
     },
   });
 

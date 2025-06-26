@@ -137,11 +137,19 @@ const createBaseComponent = async (
         .fill(options?.[0] || "proposal.list");
       await page.getByRole("combobox", { name: "Data field" }).press("Enter");
       break;
-    case ComponentType.Content:
+    case ComponentType.Content: {
+      // Type content
       await page
         .locator("p[data-placeholder='Content']")
         .fill(options?.[0] || "");
+      // Highlight text
+      await page
+        .locator('div[contenteditable="true"][role="textbox"][name="content"]')
+        .selectText();
+      // Create H1 to meet a11y requirements
+      await page.getByRole("button", { name: "H1" }).click();
       break;
+    }
     case ComponentType.Filter:
       await page
         .getByTestId("flagset-category-select")

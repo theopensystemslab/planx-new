@@ -12,7 +12,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { ContactInput, parseContactInput } from "./model";
+import { ContactInput, parseContactInput, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.ContactInput, ContactInput>;
 
@@ -27,7 +27,9 @@ export default function ContactInputComponent(props: Props): FCReturn {
         });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -52,6 +54,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
               placeholder="Title"
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -61,6 +64,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
@@ -68,6 +72,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
+            errorMessage={formik.errors.fn}
           />
         </ModalSectionContent>
       </ModalSection>

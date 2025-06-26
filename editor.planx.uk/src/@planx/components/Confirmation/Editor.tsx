@@ -15,7 +15,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { Confirmation, parseNextSteps, Step } from "./model";
+import { Confirmation, parseNextSteps, Step, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Confirmation, Confirmation>;
 
@@ -84,6 +84,9 @@ export default function ConfirmationEditor(props: Props) {
         props.handleSubmit({ type, data: values });
       }
     },
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (
@@ -104,6 +107,7 @@ export default function ConfirmationEditor(props: Props) {
               value={formik.values.heading}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.heading}
             />
           </InputRow>
           <InputRow>
@@ -113,6 +117,7 @@ export default function ConfirmationEditor(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
         </ModalSectionContent>
@@ -142,6 +147,7 @@ export default function ConfirmationEditor(props: Props) {
             name="moreInfo"
             onChange={formik.handleChange}
             disabled={props.disabled}
+            errorMessage={formik.errors.moreInfo}
           />
         </ModalSectionContent>
       </ModalSection>
@@ -153,6 +159,7 @@ export default function ConfirmationEditor(props: Props) {
             name="contactInfo"
             onChange={formik.handleChange}
             disabled={props.disabled}
+            errorMessage={formik.errors.contactInfo}
           />
         </ModalSectionContent>
       </ModalSection>

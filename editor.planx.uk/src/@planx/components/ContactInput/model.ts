@@ -1,7 +1,12 @@
+import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export type Contact = {
   title?: string;
@@ -56,3 +61,12 @@ export const parseContactInput = (
   fn: data?.fn || "",
   ...parseBaseNodeData(data),
 });
+
+export const validationSchema: SchemaOf<ContactInput> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText(),
+      fn: string(),
+    }),
+  );
