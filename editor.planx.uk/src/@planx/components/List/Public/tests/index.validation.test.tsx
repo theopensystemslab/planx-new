@@ -209,7 +209,7 @@ describe("Form validation and error handling", () => {
       await user.click(getByTestId("continue-button"));
 
       const minItemsErrorMessage = getByText(
-        `You must provide at least ${minNumberOfItems} response(s)`,
+        `Error: You must provide at least ${minNumberOfItems} response(s)`,
       );
       expect(minItemsErrorMessage).toBeVisible();
     },
@@ -241,7 +241,7 @@ describe("Form validation and error handling", () => {
       await user.click(getByTestId(/list-add-button/));
 
       const maxItemsErrorMessage = getByText(
-        `You can provide at most ${maxNumberOfItems} response(s)`,
+        `Error: You can provide at most ${maxNumberOfItems} response(s)`,
       );
       expect(maxItemsErrorMessage).toBeVisible();
     },

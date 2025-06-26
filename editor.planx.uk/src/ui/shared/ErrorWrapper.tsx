@@ -52,9 +52,13 @@ export default function ErrorWrapper({
   }, [error, trackEvent]);
 
   return (
-    <Root error={error} role={role} data-testid="error-wrapper">
-      <ErrorText id={inputId} data-testid={inputId} variant="body1">
-        {error}
+    <Root
+      error={error}
+      data-testid="error-wrapper"
+      aria-label={error ? "error message" : undefined}
+    >
+      <ErrorText id={inputId} data-testid={inputId} variant="body1" role={role}>
+        {error ? `Error: ${error}` : ""}
       </ErrorText>
       {children || null}
     </Root>
