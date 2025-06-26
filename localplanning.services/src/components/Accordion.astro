@@ -6,22 +6,28 @@ interface Props {
 }
 
 const { title } = Astro.props as Props;
+
+const idTitle = title
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '');
+
 ---
 
 <div class="accordion group w-ful max-w-screen-lg bg-bg-light rounded overflow-hidden">
   <button
     class="accordion__button flex w-full flex-1 items-center justify-between gap-4 clamp-[p,4,6] transition cursor-pointer hover:bg-gray-200 focus:bg-gray-200 text-heading-sm text-left m-0"
     type="button"
-    id={`${title} accordion menu button`}
+    id={`${idTitle}-accordion-button`}
     aria-expanded="false"
-    aria-controls={`${title} accordion menu content`}
+    aria-controls={`${idTitle}-accordion-content`}
   >
     {title}
     <Icon class="accordion__chevron clamp-[w,6,10] h-auto" name="expand" />
   </button>
   <div
-    id={`${title} accordion menu content`}
-    aria-labelledby={`${title} accordion menu button`}
+    id={`${idTitle}-accordion-content`}
+    aria-labelledby={`${idTitle}-accordion-button`}
     class="accordion__content hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
   >
     <section class="clamp-[py,4,6] clamp-[px,4,6] flex flex-col gap-6 border-t border-gray-300">
@@ -35,6 +41,7 @@ const { title } = Astro.props as Props;
     const accordionMenus = document.querySelectorAll(
       ".accordion",
     ) as NodeListOf<HTMLElement>;
+    
     accordionMenus.forEach((accordionMenu) => {
       const accordionButton = accordionMenu.querySelector(
         ".accordion__button",
@@ -47,7 +54,19 @@ const { title } = Astro.props as Props;
       ) as HTMLElement;
 
       if (accordionButton && accordionContent && accordionChevron) {
+        // Track if animation is in progress
+        let isAnimating = false;
+        
         accordionButton.addEventListener("click", (event) => {
+          // Prevent action if already animating
+          if (isAnimating) {
+            event.preventDefault();
+            return false;
+          }
+          
+          // Set animation flag
+          isAnimating = true;
+          
           if (!accordionMenu.classList.contains("active")) {
             // if accordion is currently closed, so open it
             accordionMenu.classList.add("active");
@@ -59,6 +78,11 @@ const { title } = Astro.props as Props;
             accordionContent.style.maxHeight =
               accordionContent.scrollHeight + "px";
             accordionChevron.classList.add("rotate-180");
+            
+            // Reset animation flag after opening animation completes
+            setTimeout(() => {
+              isAnimating = false;
+            }, 300);
           } else {
             // accordion is currently open, so close it
             accordionMenu.classList.remove("active");
@@ -68,11 +92,15 @@ const { title } = Astro.props as Props;
             // this makes it animate properly
             accordionContent.style.maxHeight = "0px";
             accordionChevron.classList.remove("rotate-180");
+            
             // delay to allow close animation
             setTimeout(() => {
               accordionContent.classList.add("hidden");
+              // Reset animation flag after closing animation completes
+              isAnimating = false;
             }, 300);
           }
+          
           event.preventDefault();
           return false;
         });
