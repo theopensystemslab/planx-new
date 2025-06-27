@@ -318,7 +318,7 @@ describe("picking an OS address", () => {
     );
 
     await user.type(await screen.findByLabelText("Postcode"), "SE5{enter}");
-    expect(screen.getByText("Enter a valid UK postcode")).toBeInTheDocument();
+    expect(screen.getByText(/Enter a valid UK postcode/)).toBeInTheDocument();
   });
 
   it("updates the address-autocomplete props when the postcode is changed", async () => {
@@ -420,7 +420,7 @@ describe("plotting a new address that does not have a uprn yet", () => {
     // keyUp should trigger the error message to display
     await user.type(await screen.findByLabelText("Name the site"), "{enter}");
     expect(
-      screen.getByText(`Enter a site description such as "Land at..."`),
+      screen.getByText(/Enter a site description such as "Land at\.\.\."/),
     ).toBeInTheDocument();
 
     // Continue button is always enabled, but validation prevents submit until we have complete address details

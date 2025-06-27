@@ -141,22 +141,22 @@ test("updating an internal portal", async () => {
 describe("validations", () => {
   describe("if no flowId is chosen", () => {
     const scenarios = [
-      { action: "adding without flows", error: "Enter a portal name" },
+      { action: "adding without flows", error: /Enter a portal name/ },
       {
         action: "updating without flows",
         id: "test",
-        error: "Enter a portal name",
+        error: /Enter a portal name/,
       },
       {
         action: "adding with flows",
         flows: [{ id: "portal", text: "portal" }],
-        error: "Enter a portal name or select an existing portal",
+        error: /Enter a portal name or select an existing portal/,
       },
       {
         action: "updating with flows",
         flows: [{ id: "portal", text: "portal" }],
         id: "test",
-        error: "Enter a portal name or select an existing portal",
+        error: /Enter a portal name or select an existing portal/,
       },
     ];
     for (const scenario of scenarios) {

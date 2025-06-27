@@ -1,0 +1,42 @@
+openapi: 3.1.0
+info:
+  title: Plan✕ API
+  version: 0.1.0
+tags:
+  - name: localplanning.services
+    description: Endpoints used by the localplanning.services site
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+  responses:
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: success
+paths:
+  /lps/login:
+    post:
+      tags: [localplanning.services]
+      summary: Generate a magic link to log into LPS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/LoginResponse"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"

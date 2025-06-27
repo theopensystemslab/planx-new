@@ -12,7 +12,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { AddressInput, parseAddressInput } from "./model";
+import { AddressInput, parseAddressInput, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.AddressInput, AddressInput>;
 
@@ -27,7 +27,9 @@ export default function AddressInputComponent(props: Props): FCReturn {
         });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (
@@ -52,6 +54,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
               placeholder="Title"
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -61,13 +64,14 @@ export default function AddressInputComponent(props: Props): FCReturn {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
-            required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
+            errorMessage={formik.errors.fn}
           />
         </ModalSectionContent>
       </ModalSection>

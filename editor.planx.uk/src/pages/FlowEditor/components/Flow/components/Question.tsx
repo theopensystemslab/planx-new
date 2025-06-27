@@ -24,7 +24,7 @@ type Props = {
   type: TYPES | "Error";
   [key: string]: any;
   wasVisited?: boolean;
-  lockedFlow: boolean;
+  showTemplatedNodeStatus: boolean;
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
@@ -92,7 +92,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           areTemplatedNodeInstructionsRequired={
             props.data?.areTemplatedNodeInstructionsRequired
           }
-          showStatus={!props.lockedFlow}
+          showStatus={props.showTemplatedNodeStatus}
         >
           <Link
             href={href}

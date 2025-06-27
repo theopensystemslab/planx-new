@@ -1,6 +1,6 @@
 import Help from "@mui/icons-material/Help";
 import { BaseNodeData } from "@planx/components/shared";
-// import { getIn } from "formik";
+import { getIn } from "formik";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -26,7 +26,7 @@ export const MoreInformation = <T extends BaseNodeData>({
               name="info"
               id="info"
               value={formik.values.info}
-              // errorMessage={getIn(formik.errors, "info")}
+              errorMessage={getIn(formik.errors, "info")}
               onChange={formik.handleChange}
               disabled={disabled}
               variant="nestedContent"
@@ -38,7 +38,7 @@ export const MoreInformation = <T extends BaseNodeData>({
               name="policyRef"
               id="policyRef"
               value={formik.values.policyRef}
-              // errorMessage={getIn(formik.errors, "policyRef")}
+              errorMessage={getIn(formik.errors, "policyRef")}
               onChange={formik.handleChange}
               disabled={disabled}
               variant="nestedContent"
@@ -51,7 +51,7 @@ export const MoreInformation = <T extends BaseNodeData>({
                 name="howMeasured"
                 id="howMeasured"
                 value={formik.values.howMeasured}
-                // errorMessage={getIn(formik.errors, "howMeasured")}
+                errorMessage={getIn(formik.errors, "howMeasured")}
                 onChange={formik.handleChange}
                 disabled={disabled}
                 variant="nestedContent"

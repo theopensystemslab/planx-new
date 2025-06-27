@@ -1,4 +1,11 @@
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { richText } from "lib/yupExtensions";
+import { boolean, object, SchemaOf, string } from "yup";
+
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export enum DrawBoundaryUserAction {
   Accept = "Accepted the title boundary",
@@ -49,10 +56,22 @@ const defaultContent: DrawBoundary = {
   description:
     "<p>The red line shown below should include:</p><ul><li><p>the outline of your property boundary</p></li><li><p>any works outside the property boundary</p></li><li><p>areas that will be closed off or you&apos;ll need access to during the works</p></li></ul><p>If the red line already includes all these, select continue. If not, select More information for guidance on how to amend or redraw the outline.</p>",
   howMeasured:
-    '<p>We have pre-populated the map with a red outline that includes the entire property using information from Land Registry.</p><p>In some cases, this outline might not include all the works or the areas that will be closed off. This might be because you&apos;re proposing works to a public highway (such as a dropped kerb), doing works that involve multiple properties, or works to a building that is part of a larger estate.</p><p>In these cases, you should amend the red outline by dragging the edges, or erase it by clicking the 🗑️-icon on the map and draw a new outline.</p><p></p><h1>How to draw and amend the outline</h1><ol><li><p>Move the cursor to the corner you want to start with and click or tap once.</p></li><li><p>Move the cursor to the next corner and click or tap.</p></li><li><p>Repeat until you have the shape you need.</p></li><li><p>Click or tap the last corner again to stop drawing.</p></li><li><p>To amend the outline, click or tap on a line and drag it into a new position.</p></li></ol><img src="https://api.editor.planx.uk/file/public/dni98ojg/Draw_Outline_2.gif">',
+    '<p>We have pre-populated the map with a red outline that includes the entire property using information from Land Registry.</p><p>In some cases, this outline might not include all the works or the areas that will be closed off. This might be because you&apos;re proposing works to a public highway (such as a dropped kerb), doing works that involve multiple properties, or works to a building that is part of a larger estate.</p><p>In these cases, you should amend the red outline by dragging the edges, or erase it by clicking the 🗑️-icon on the map and draw a new outline.</p><p></p><h1>How to draw and amend the outline</h1><ol><li><p>Move the cursor to the corner you want to start with and click or tap once.</p></li><li><p>Move the cursor to the next corner and click or tap.</p></li><li><p>Repeat until you have the shape you need.</p></li><li><p>Click or tap the last corner again to stop drawing.</p></li><li><p>To amend the outline, click or tap on a line and drag it into a new position.</p></li></ol><img src="https://api.editor.planx.uk/file/public/dni98ojg/Draw_Outline_2.gif" alt="Animated GIF showing how to draw a boundary on the map">',
   hideFileUpload: false,
   fn: "proposal.site",
   titleForUploading: "Upload a location plan",
   descriptionForUploading:
     "<p>Your location plan must:</p><ul><li><p>be based on an accurate, recognisable map</p></li><li><p>be drawn to a scale, labelled, and/or marked with a scale bar</p></li><li><p>show the site outline in red</p></li><li><p>include a<strong> </strong>north point</p></li></ul>",
 };
+
+export const validationSchema: SchemaOf<DrawBoundary> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText().required(),
+      titleForUploading: string().required(),
+      descriptionForUploading: richText().required(),
+      hideFileUpload: boolean(),
+      fn: string().nullable().required(),
+    }),
+  );

@@ -35,7 +35,8 @@ const DateInputComponent: React.FC<Props> = (props) => {
       }
     },
     validateOnChange: false,
-    validationSchema: editorValidationSchema(),
+    validateOnBlur: false,
+    validationSchema: editorValidationSchema,
   });
 
   return (
@@ -57,6 +58,7 @@ const DateInputComponent: React.FC<Props> = (props) => {
               placeholder="Title"
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -66,9 +68,11 @@ const DateInputComponent: React.FC<Props> = (props) => {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
+            errorMessage={formik.errors.fn}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}

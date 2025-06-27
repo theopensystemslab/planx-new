@@ -243,7 +243,7 @@ test("does not allow the name 'Test Test' to be used", async () => {
   expect(handleSubmit).not.toHaveBeenCalled();
 
   const errorMessage = await screen.findByText(
-    "'Test Test' is not a valid name - please submit test applications via the staging environment",
+    /'Test Test' is not a valid name - please submit test applications via the staging environment/,
   );
   expect(errorMessage).toBeVisible();
 });
@@ -270,6 +270,6 @@ test("requires a non-empty string before being able to continue", async () => {
 
   expect(handleSubmit).not.toHaveBeenCalled();
 
-  const errorMessage = await screen.findByText("Enter a last name");
+  const errorMessage = await screen.findByText(/Enter a last name/);
   expect(errorMessage).toBeVisible();
 });

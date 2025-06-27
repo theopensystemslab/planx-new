@@ -8,9 +8,9 @@ import { vi } from "vitest";
 
 import DateInputComponent from "./Editor";
 
-const minError = "Min must be less than max";
-const maxError = "Max must be greater than min";
-const invalidError = "Enter a valid date in DD.MM.YYYY format";
+const minError = /Min must be less than max/;
+const maxError = /Max must be greater than min/;
+const invalidError = /Enter a valid date in DD.MM.YYYY format/;
 
 describe("DateInputComponent - Editor Modal", () => {
   it("renders", () => {

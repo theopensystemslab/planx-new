@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import camelcaseKeys from "camelcase-keys";
 import { client } from "lib/graphql";
-import { FlowInformation, GetFlowInformation } from "pages/FlowEditor/utils";
+import { FlowInformation } from "pages/FlowEditor/utils";
 import {
   AdminPanelData,
   FlowSettings,
@@ -11,6 +11,11 @@ import {
 } from "types";
 import type { StateCreator } from "zustand";
 
+import {
+  Environment,
+  generateAnalyticsLink,
+  getAnalyticsDashboardId,
+} from "../analytics/utils";
 import { SharedStore } from "./shared";
 import { TeamStore } from "./team";
 
@@ -34,6 +39,7 @@ export interface SettingsStore {
   flowLimitations?: string;
   updateFlowLimitations: (newLimitations: string) => Promise<boolean>;
   globalSettings?: GlobalSettings;
+  isSubmissionService?: boolean;
   setGlobalSettings: (globalSettings: GlobalSettings) => void;
   updateFlowSettings: (newSettings: FlowSettings) => Promise<number>;
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
@@ -67,8 +73,8 @@ export const settingsStore: StateCreator<
       set({ flowStatus: newStatus });
       return Boolean(result.id);
     } catch (error) {
-      console.error(error)
-      return false
+      console.error(error);
+      return false;
     }
   },
 
@@ -123,21 +129,23 @@ export const settingsStore: StateCreator<
     return Boolean(result?.id);
   },
 
-  getFlowInformation: async (flowSlug, teamSlug) => {
+  getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
     const {
       data: {
         flows: [
           {
+            id,
             settings,
             status,
             description,
             summary,
             limitations,
             canCreateFromCopy,
+            publishedFlows,
           },
         ],
       },
-    } = await client.query<GetFlowInformation>({
+    } = await client.query({
       query: gql`
         query GetFlow($slug: String!, $team_slug: String!) {
           flows(
@@ -151,6 +159,12 @@ export const settingsStore: StateCreator<
             status
             limitations
             canCreateFromCopy: can_create_from_copy
+            publishedFlows: published_flows(
+              limit: 1
+              order_by: { created_at: desc }
+            ) {
+              hasSendComponent: has_send_component
+            }
           }
         }
       `,
@@ -161,6 +175,26 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
+    const isSubmissionService = publishedFlows[0].hasSendComponent;
+
+    const environment: Environment =
+      import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
+
+    const dashboardId = getAnalyticsDashboardId({
+      flowStatus: status,
+      environment,
+      flowSlug,
+      isSubmissionService,
+    });
+
+    const analyticsLink = dashboardId
+      ? generateAnalyticsLink({
+          environment,
+          flowId: id,
+          dashboardId,
+        })
+      : undefined;
+
     set({
       flowSettings: settings,
       flowStatus: status,
@@ -168,9 +202,17 @@ export const settingsStore: StateCreator<
       flowSummary: summary,
       flowLimitations: limitations,
       flowCanCreateFromCopy: canCreateFromCopy,
+      flowAnalyticsLink: analyticsLink,
     });
 
-    return { settings, status, description, summary, limitations };
+    return {
+      settings,
+      status,
+      description,
+      summary,
+      limitations,
+      analyticsLink,
+    };
   },
 
   globalSettings: undefined,

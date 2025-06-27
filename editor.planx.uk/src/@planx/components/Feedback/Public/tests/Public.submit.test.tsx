@@ -87,8 +87,8 @@ describe("when feedback is required but the user does not submit any data", asyn
 
   it("displays an appropriate error message for each missing field", async () => {
     const errorMessages = [
-      "Please rate your experience",
-      "Enter your feedback",
+      /Please rate your experience/,
+      /Enter your feedback/,
     ];
     errorMessages.map((error) => {
       expect(screen.getByText(error)).toBeVisible();

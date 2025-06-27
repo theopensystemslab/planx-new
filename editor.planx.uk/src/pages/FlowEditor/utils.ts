@@ -15,6 +15,7 @@ export interface FlowInformation {
   summary?: string;
   limitations?: string;
   canCreateFromCopy?: boolean;
+  analyticsLink?: string;
 }
 
 export interface GetFlowInformation {
@@ -84,4 +85,11 @@ export const nodeIsChildOfTemplatedInternalPortal = (
   } else {
     return false;
   }
+};
+
+export const flowIsTemplatedInternalPortal = (
+  flow: Store.Flow,
+  parentNode?: IndexedNode,
+): boolean => {
+  return parentNode ? nodeIsTemplatedInternalPortal(flow, parentNode) : false;
 };

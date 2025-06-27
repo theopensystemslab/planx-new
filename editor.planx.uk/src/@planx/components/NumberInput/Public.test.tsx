@@ -58,7 +58,7 @@ test("requires a positive number to be input by default", async () => {
   );
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(screen.getByText("Enter a positive number")).toBeInTheDocument();
+  expect(screen.getByText(/Enter a positive number/)).toBeInTheDocument();
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 });
 
@@ -105,7 +105,7 @@ test("a clear error is shown if decimal value added when onlyWholeNumbers is tog
   await user.type(textArea, "10.06");
   await user.click(screen.getByTestId("continue-button"));
 
-  expect(screen.getByText("Enter a whole number")).toBeInTheDocument();
+  expect(screen.getByText(/Enter a whole number/)).toBeInTheDocument();
   expect(handleSubmit).not.toHaveBeenCalled();
 });
 

@@ -44,7 +44,7 @@ export const Basic = {
     - to arrange a site visit, if required`,
     contactInfo: `
       You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
-      <br/><br/>
+      <br><br>
       <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>
     `,
     data: [],

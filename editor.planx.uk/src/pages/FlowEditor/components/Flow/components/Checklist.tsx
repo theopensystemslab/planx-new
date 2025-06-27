@@ -24,7 +24,7 @@ type Props = {
   type: TYPES;
   [key: string]: any;
   wasVisited?: boolean;
-  lockedFlow: boolean;
+  showTemplatedNodeStatus: boolean;
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
@@ -102,7 +102,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           areTemplatedNodeInstructionsRequired={
             props.data?.areTemplatedNodeInstructionsRequired
           }
-          showStatus={!props.lockedFlow}
+          showStatus={props.showTemplatedNodeStatus}
         >
           <Link
             href={href}

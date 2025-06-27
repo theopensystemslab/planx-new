@@ -73,6 +73,7 @@ export const useSendEmailAuth: RequestHandler = (req, res, next): void => {
     // Handled by other routes
     case "submit":
     case "resume":
+    case "lps-login":
       return next();
     default: {
       return handleInvalidTemplate(template);

@@ -1,7 +1,8 @@
+import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array } from "yup";
+import { array, object } from "yup";
 
-import { BaseNodeData, Option } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
 export enum ChecklistLayout {
   Basic,
@@ -152,3 +153,9 @@ export const checklistInputValidationSchema = ({
       },
     });
 };
+
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    description: richText(),
+  }),
+);

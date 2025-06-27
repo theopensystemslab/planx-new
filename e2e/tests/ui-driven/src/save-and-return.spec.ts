@@ -49,7 +49,7 @@ test.describe("Save and return", () => {
       await page.locator("#email").fill(context.user?.email);
       await page.getByTestId("continue-button").click();
       const errorMessage = page.getByTestId("error-message-confirmEmail");
-      await expect(errorMessage).toHaveText("Email address required");
+      await expect(errorMessage).toHaveText(/Email address required/);
     });
 
     test("email confirmation must match", async ({ page }) => {
@@ -58,7 +58,7 @@ test.describe("Save and return", () => {
       await page.locator("#confirmEmail").fill("notthesame@email.com");
       await page.getByTestId("continue-button").click();
       const errorMessage = page.getByTestId("error-message-confirmEmail");
-      await expect(errorMessage).toHaveText("Emails must match");
+      await expect(errorMessage).toHaveText(/Emails must match/);
     });
   });
 

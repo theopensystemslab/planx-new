@@ -106,12 +106,12 @@ describe("ConfirmEmail component", () => {
     await user.click(screen.getByTestId("continue-button"));
 
     expect(handleSubmit).not.toHaveBeenCalled();
-    expect(await screen.findAllByText("Email address required")).toHaveLength(
+    expect(await screen.findAllByText(/Email address required/)).toHaveLength(
       2,
     );
 
     screen
-      .getAllByText("Email address required")
+      .getAllByText(/Email address required/)
       .forEach((el) => expect(el).toBeVisible());
   });
 
@@ -134,7 +134,7 @@ describe("ConfirmEmail component", () => {
 
     expect(handleSubmit).not.toHaveBeenCalled();
 
-    expect(await screen.findByText("Emails must match")).toBeVisible();
+    expect(await screen.findByText(/Emails must match/)).toBeVisible();
   });
 
   it("will display an error for an invalid email address", async () => {
@@ -153,7 +153,7 @@ describe("ConfirmEmail component", () => {
 
     expect(handleSubmit).not.toHaveBeenCalled();
 
-    expect(await screen.findAllByText("Invalid email")).toHaveLength(2);
+    expect(await screen.findAllByText(/Invalid email/)).toHaveLength(2);
   });
 
   it("will display an error if a field is left empty", async () => {
@@ -173,7 +173,7 @@ describe("ConfirmEmail component", () => {
 
     expect(handleSubmit).not.toHaveBeenCalled();
 
-    expect(await screen.findAllByText("Email address required")).toHaveLength(
+    expect(await screen.findAllByText(/Email address required/)).toHaveLength(
       2,
     );
   });
@@ -196,7 +196,7 @@ describe("ConfirmEmail component", () => {
     );
 
     await user.click(screen.getByTestId("continue-button"));
-    expect(await screen.findAllByText("Email address required")).toHaveLength(
+    expect(await screen.findAllByText(/Email address required/)).toHaveLength(
       2,
     );
 
