@@ -2,16 +2,14 @@ import { Feedback } from "../model";
 
 export const defaultContent: Feedback = {
   title: "Tell us what you think",
-  freeformQuestion:
-    "<strong>Please tell us more about your experience.</strong>",
+  freeformQuestion: "Please tell us more about your experience.",
 
-  ratingQuestion:
-    "<strong>How would you rate your experience with this service?</strong>",
+  ratingQuestion: "How would you rate your experience with this service?",
 
   description:
     "This service is a work in progress, any feedback you share about your experience will help us to improve it.",
 
   disclaimer:
-    "The information collected here isn't monitored by planning officers. Don't use it to give extra information about your project or submission. If you do, it cannot be used to assess your project.",
+    "Please do not include any personal data such as your name, email or address. All feedback is processed according to our privacy notice.",
   feedbackRequired: false,
 };

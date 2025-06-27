@@ -1,10 +1,11 @@
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Typography from "@mui/material/Typography";
-import { Disclaimer } from "@planx/components/shared/Disclaimer";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
+import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
 import { FeedbackView } from "components/Feedback/types";
 import { useFormik } from "formik";
@@ -85,28 +86,16 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         id={"DESCRIPTION_TEXT"}
         openLinksOnNewTab
       />
-      <Typography variant="body1" sx={{ marginTop: 2 }}>
-        Please do not include any personal data such as your name, email or
-        address. All feedback is processed according to our{" "}
-        <Link
-          component={ReactNaviLink}
-          href="pages/privacy"
-          prefetch={false}
-          color="primary"
-        >
-          privacy notice
-        </Link>
-        .
-      </Typography>
       <Box my={4}>
         {props.ratingQuestion && (
           <InputLabel
             label={
-              <ReactMarkdownOrHtml
-                source={props.ratingQuestion}
-                id={"RATING_QUESTION"}
-                openLinksOnNewTab
-              />
+              <strong>
+                <ReactMarkdownOrHtml
+                  source={props.ratingQuestion}
+                  id={"RATING_QUESTION"}
+                />
+              </strong>
             }
           />
         )}
@@ -161,11 +150,12 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         {props.freeformQuestion && (
           <InputLabel
             label={
-              <ReactMarkdownOrHtml
-                source={props.freeformQuestion}
-                id={"RATING_QUESTION"}
-                openLinksOnNewTab
-              />
+              <strong>
+                <ReactMarkdownOrHtml
+                  source={props.freeformQuestion}
+                  id={"FREEFORM_QUESTION"}
+                />
+              </strong>
             }
           />
         )}
@@ -181,7 +171,27 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           errorMessage={formik.errors.userComment}
         />
       </Box>
-      {props.disclaimer && <Disclaimer text={props.disclaimer} />}
+      <WarningContainer>
+        <ErrorOutline />
+        <Typography
+          variant="body2"
+          component="div"
+          ml={2}
+          sx={{ "& p:first-of-type": { marginTop: 0 } }}
+        >
+          Please do not include any personal data such as your name, email or
+          address. All feedback is processed according to our{" "}
+          <Link
+            component={ReactNaviLink}
+            href="pages/privacy"
+            prefetch={false}
+            color="primary"
+          >
+            privacy notice
+          </Link>
+          .
+        </Typography>
+      </WarningContainer>
     </Card>
   );
 };
