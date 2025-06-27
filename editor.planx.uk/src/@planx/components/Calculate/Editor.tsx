@@ -13,6 +13,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
+import { baseNodeDataValidationSchema } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import type { Calculate } from "./model";
@@ -63,6 +64,8 @@ export default function Component(props: Props) {
     },
 
     validateOnChange: false,
+    validateOnBlur: false,
+    validationSchema: baseNodeDataValidationSchema,
   });
 
   const sampleResult = React.useMemo(() => {

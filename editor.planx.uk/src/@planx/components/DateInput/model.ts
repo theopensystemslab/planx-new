@@ -1,7 +1,12 @@
 import { isValid, parseISO } from "date-fns";
-import { object, string } from "yup";
+import { richText } from "lib/yupExtensions";
+import { object, SchemaOf, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 import { FieldValidationSchema } from "../shared/Schema/model";
 
 // Expected format: YYYY-MM-DD
@@ -123,9 +128,7 @@ export const dateInputValidationSchema = ({
   dateSchema()
     .when([], {
       is: () => required,
-      then: dateSchema().required(
-        "Enter a valid date in DD.MM.YYYY format"
-      ),
+      then: dateSchema().required("Enter a valid date in DD.MM.YYYY format"),
       otherwise: dateSchema().notRequired(),
     })
     .test({
@@ -158,22 +161,27 @@ export const parseDateInput = (
   ...parseBaseNodeData(data),
 });
 
-export const editorValidationSchema = () =>
-  object({
-    min: dateSchema().test({
-      name: "Min less than max",
-      message: "Min must be less than max",
-      test(date: string | undefined) {
-        if (!date) return true;
-        return date < this.parent.max;
-      },
+export const editorValidationSchema: SchemaOf<DateInput> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText(),
+      fn: string(),
+      min: dateSchema().test({
+        name: "Min less than max",
+        message: "Min must be less than max",
+        test(date: string | undefined) {
+          if (!date) return true;
+          return date < this.parent.max;
+        },
+      }),
+      max: dateSchema().test({
+        name: "Max greater than min",
+        message: "Max must be greater than min",
+        test(date: string | undefined) {
+          if (!date) return true;
+          return date > this.parent.min;
+        },
+      }),
     }),
-    max: dateSchema().test({
-      name: "Max greater than min",
-      message: "Max must be greater than min",
-      test(date: string | undefined) {
-        if (!date) return true;
-        return date > this.parent.min;
-      },
-    }),
-  });
+  );
