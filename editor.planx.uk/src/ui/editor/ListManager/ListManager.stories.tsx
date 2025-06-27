@@ -60,4 +60,24 @@ export const Basic = () => {
   );
 };
 
+export const WithinTemplatedNode = () => {
+  const [tasks, setTasks] = useState<Array<Item>>([
+    { name: "PlanX primary", color: "#0010A4" },
+    { name: "GOV.UK focus", color: "#ffdd00" },
+  ]);
+
+  return (
+    <ListManager
+      values={tasks}
+      onChange={setTasks}
+      Editor={Editor}
+      newValue={() => ({
+        name: "",
+        color: "#fff",
+      })}
+      isTemplatedNode={true}
+    />
+  );
+};
+
 export default metadata;

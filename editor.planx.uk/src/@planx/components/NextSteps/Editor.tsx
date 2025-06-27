@@ -130,6 +130,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
             Editor={TaskEditor}
             newValue={newStep}
             disabled={props.disabled}
+            isTemplatedNode={props.node?.data?.isTemplatedNode}
           />
         </ModalSectionContent>
       </ModalSection>
