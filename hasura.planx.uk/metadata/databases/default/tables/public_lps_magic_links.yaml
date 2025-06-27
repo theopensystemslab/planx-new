@@ -1,6 +1,16 @@
 table:
   name: lps_magic_links
   schema: public
+array_relationships:
+  - name: lowcal_sessions
+    using:
+      manual_configuration:
+        column_mapping:
+          email: email
+        insertion_order: null
+        remote_table:
+          name: lowcal_sessions
+          schema: public
 insert_permissions:
   - role: api
     permission:
