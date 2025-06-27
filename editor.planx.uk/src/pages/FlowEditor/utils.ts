@@ -15,7 +15,6 @@ export interface FlowInformation {
   summary?: string;
   limitations?: string;
   canCreateFromCopy?: boolean;
-  analyticsLink?: string;
 }
 
 export interface GetFlowInformation {
