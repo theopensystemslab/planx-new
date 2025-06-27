@@ -213,11 +213,8 @@ export class ExportZip {
     // make a tmp directory to avoid file name collisions if simultaneous applications
     this.tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), sessionId));
 
-    // we can't directly access `__dirname` in ESM, so get equivalent using fileURLToPath
-    const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
-    const __dirname = path.dirname(__filename); // get the name of the directory
     const sanitisedFilename = sanitize(`${flowSlug}-${sessionId}.zip`);
-    this.filename = path.join(__dirname, sanitisedFilename);
+    this.filename = sanitisedFilename;
   }
 
   addFile({ name, buffer }: { name: string; buffer: Buffer }) {

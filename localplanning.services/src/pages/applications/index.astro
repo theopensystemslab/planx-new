@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
+import LoginForm from "@components/applications/LoginForm";
 ---
 
 <Layout>
@@ -9,10 +10,6 @@ import Masthead from "@components/Masthead.astro";
     <p>View applications in progress, and download sent applications.</p>
   </Masthead>
   <Container paddingY>
-    <div class="max-w-3xl text-body-lg">
-      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus, qui. Provident, earum possimus? Explicabo natus minima quasi quos veritatis temporibus earum sapiente aliquam, eaque necessitatibus dolorum culpa possimus, perspiciatis cum.</p>
-    </div>
+    <LoginForm client:load />
   </Container>
-
-  
 </Layout>

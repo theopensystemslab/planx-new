@@ -6,6 +6,7 @@ import ListItem from "@mui/material/ListItem";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import InputRow from "ui/shared/InputRow";
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
   onChange: (value: string | null) => void;
   required?: boolean;
   disabled?: boolean;
+  errorMessage?: string;
 }
 
 const renderOptions: AutocompleteProps<
@@ -54,42 +56,44 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
 
   return (
     <InputRow>
-      <AutocompleteInput
-        id="data-field-autocomplete"
-        key="data-field-autocomplete"
-        placeholder="Data field"
-        required={Boolean(props.required)}
-        onChange={handleChange}
-        autoSelect
-        value={value}
-        options={options}
-        disabled={props.disabled}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-          const { inputValue } = params;
-          // Suggest the creation of a new value
-          const isExisting = options.some((option) => inputValue === option);
-          if (inputValue !== "" && !isExisting) {
-            filtered.push(`Add "${inputValue}"`);
-          }
-          return filtered;
-        }}
-        getOptionLabel={(option) => {
-          let formattedOption = option;
-          // If a new option was added, strip out the value between ""
-          if (option.startsWith('Add "')) {
-            formattedOption = option.split('"')[1];
-          }
-          return formattedOption;
-        }}
-        renderOption={renderOptions}
-        useDataFieldInput={true}
-        freeSolo
-        selectOnFocus
-        clearOnEscape
-        handleHomeEndKeys
-        autoHighlight
-      />
+      <ErrorWrapper error={props.errorMessage}>
+        <AutocompleteInput
+          id="data-field-autocomplete"
+          key="data-field-autocomplete"
+          placeholder="Data field"
+          required={Boolean(props.required)}
+          onChange={handleChange}
+          autoSelect
+          value={value}
+          options={options}
+          disabled={props.disabled}
+          filterOptions={(options, params) => {
+            const filtered = filter(options, params);
+            const { inputValue } = params;
+            // Suggest the creation of a new value
+            const isExisting = options.some((option) => inputValue === option);
+            if (inputValue !== "" && !isExisting) {
+              filtered.push(`Add "${inputValue}"`);
+            }
+            return filtered;
+          }}
+          getOptionLabel={(option) => {
+            let formattedOption = option;
+            // If a new option was added, strip out the value between ""
+            if (option.startsWith('Add "')) {
+              formattedOption = option.split('"')[1];
+            }
+            return formattedOption;
+          }}
+          renderOption={renderOptions}
+          useDataFieldInput={true}
+          freeSolo
+          selectOnFocus
+          clearOnEscape
+          handleHomeEndKeys
+          autoHighlight
+        />
+      </ErrorWrapper>
     </InputRow>
   );
 };

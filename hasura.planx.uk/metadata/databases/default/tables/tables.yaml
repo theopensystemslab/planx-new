@@ -19,6 +19,7 @@
 - "!include public_flows.yaml"
 - "!include public_global_settings.yaml"
 - "!include public_lowcal_sessions.yaml"
+- "!include public_lps_magic_links.yaml"
 - "!include public_operations.yaml"
 - "!include public_payment_requests.yaml"
 - "!include public_payment_status.yaml"

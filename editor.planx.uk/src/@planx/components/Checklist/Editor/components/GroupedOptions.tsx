@@ -51,7 +51,7 @@ export const GroupedOptions = ({
             <Box display="flex" pb={1}>
               <InputRow>
                 <Input
-                  required
+                  errorMessage={`formik.errors[${groupIndex}].title`}
                   format="bold"
                   name={`groupedOptions[${groupIndex}].title`}
                   value={groupedOption.title}

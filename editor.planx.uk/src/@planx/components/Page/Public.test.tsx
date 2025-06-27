@@ -88,7 +88,7 @@ it("handles PageSchema errors", async () => {
   // Error messages present, per field
   errorMessages = getAllByTestId(/error-message-input-number/);
   errorMessages.forEach((message) => expect(message).not.toBeEmptyDOMElement());
-  expect(getAllByText("Enter your answer before continuing")).toHaveLength(
+  expect(getAllByText(/Enter your answer before continuing/)).toHaveLength(
     ProposedAdvertisements.fields.length,
   );
 

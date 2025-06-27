@@ -11,7 +11,7 @@ interface TemplatedNodeContainerProps extends PropsWithChildren {
   isTemplatedNode: boolean;
   areTemplatedNodeInstructionsRequired: boolean;
   isComplete?: boolean;
-  showStatusHeader?: boolean;
+  showStatus?: boolean;
   className?: string;
 }
 
@@ -21,38 +21,48 @@ const StyledContainer = styled(Box, {
       "isTemplatedNode",
       "areTemplatedNodeInstructionsRequired",
       "isComplete",
+      "showStatus",
     ].includes(prop as string),
 })<{
   isTemplatedNode: boolean;
   areTemplatedNodeInstructionsRequired: boolean;
   isComplete?: boolean;
+  showStatus?: boolean;
 }>(({
   theme,
   isTemplatedNode,
   areTemplatedNodeInstructionsRequired,
   isComplete,
+  showStatus,
 }) => {
   if (!isTemplatedNode) return {};
 
-  const getBackgroundColor = () => {
-    if (isComplete) return theme.palette.common.white;
-    if (areTemplatedNodeInstructionsRequired)
-      return theme.palette.template.dark;
-    return theme.palette.template.main;
-  };
+  let backgroundColor;
+  if (showStatus) {
+    if (isComplete) {
+      backgroundColor = theme.palette.common.white;
+    } else if (areTemplatedNodeInstructionsRequired) {
+      backgroundColor = theme.palette.template.dark;
+    } else {
+      backgroundColor = theme.palette.template.main;
+    }
+  }
 
   return {
-    backgroundColor: getBackgroundColor(),
+    backgroundColor,
     width: "100%",
-    padding: "4px",
+    ...(showStatus && {
+      padding: "4px",
+    }),
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     border: "1px solid",
     borderColor: "transparent",
-    ...(isComplete && {
-      borderColor: theme.palette.border.main,
-    }),
+    ...(isComplete &&
+      showStatus && {
+        borderColor: theme.palette.border.main,
+      }),
   };
 });
 
@@ -72,22 +82,12 @@ const getTemplatedNodeStatus = (
   return "Optional";
 };
 
-const getStatusIcon = (theme: Theme, isComplete?: boolean) => {
-  if (isComplete) {
-    return { color: theme.palette.success.main };
-  }
-  return {
-    color: theme.palette.text.primary,
-    opacity: 0.2,
-  };
-};
-
 export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
   children,
   isTemplatedNode = false,
   areTemplatedNodeInstructionsRequired = false,
   isComplete = false,
-  showStatusHeader = false,
+  showStatus = false,
   className,
 }) => {
   const containerClasses = classNames(
@@ -110,8 +110,9 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
         areTemplatedNodeInstructionsRequired
       }
       isComplete={isComplete}
+      showStatus={showStatus}
     >
-      {showStatusHeader && (
+      {showStatus && (
         <StatusHeader>
           <Typography
             variant="body3"
@@ -121,10 +122,12 @@ export const TemplatedNodeContainer: React.FC<TemplatedNodeContainerProps> = ({
           >
             {getTemplatedNodeStatus(areTemplatedNodeInstructionsRequired)}
           </Typography>
-          <CheckCircleIcon
-            fontSize="small"
-            sx={(theme) => getStatusIcon(theme, isComplete)}
-          />
+          {isComplete && (
+            <CheckCircleIcon
+              fontSize="small"
+              sx={(theme) => ({ color: theme.palette.success.main })}
+            />
+          )}
         </StatusHeader>
       )}
       {children}

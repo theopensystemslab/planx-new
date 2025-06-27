@@ -84,7 +84,7 @@ const PublicFooter: React.FC = () => {
               color="inherit"
               target="_blank"
             >
-              Open Government Licence v3
+              Open Government Licence v3 (opens in a new tab)
             </Link>
             , except where otherwise stated
           </Typography>

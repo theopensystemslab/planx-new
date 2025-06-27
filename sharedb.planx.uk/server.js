@@ -36,13 +36,25 @@ sharedb.use("connect", (context, next) => {
   next();
 });
 
+// Sanitise incoming operations at the first stage of the op submission lifecycle
+// This ensures that any changes are applied to the generated snapshot (saved to the `flows` table)
+// Docs: https://share.github.io/sharedb/middleware/op-submission#submit
+sharedb.use("submit", (context, done) => {
+  try {
+    const { op } = context;
+    op.op = op.op.map(sanitiseOperation);
+  } catch (e) {
+    console.error("Error submitting to ShareDB: ", e);
+  };
+  done();
+});
+
 // Assign userId to op metadata when commit hook fires
 // This allows us to access this value at the db level
 sharedb.use("commit", (context, done) => {
   try {
     const { op, agent } = context;
     op.m.uId = agent.connectSession.userId;
-    op.op = op.op.map(sanitiseOperation);
   } catch (e) {
     console.error("Error committing to ShareDB: ", e);
   };

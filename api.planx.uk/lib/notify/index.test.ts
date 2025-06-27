@@ -1,10 +1,10 @@
 import { sendEmail } from "./index.js";
 import { NotifyClient } from "notifications-node-client";
 import type { TemplateRegistry } from "./templates/index.js";
+import { NOTIFY_TEST_EMAIL } from "./utils.js";
 
 vi.mock("notifications-node-client");
 
-const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 const mockConfig: TemplateRegistry["save"]["config"] = {
   emailReplyToId: "test",
   personalisation: {
@@ -31,7 +31,9 @@ describe("sendEmail", () => {
   it("throw an error if an error is thrown within sendEmail()", async () => {
     const mockNotifyClient = NotifyClient.mock.instances[0];
     mockNotifyClient.sendEmail.mockRejectedValue(new Error());
-    await expect(sendEmail("save", TEST_EMAIL, mockConfig)).rejects.toThrow();
+    await expect(
+      sendEmail("save", NOTIFY_TEST_EMAIL, mockConfig),
+    ).rejects.toThrow();
   });
 
   it("throw an error if the NotifyClient errors", async () => {
@@ -39,6 +41,8 @@ describe("sendEmail", () => {
     mockNotifyClient.sendEmail.mockRejectedValue({
       response: { data: { errors: ["Invalid email"] } },
     });
-    await expect(sendEmail("save", TEST_EMAIL, mockConfig)).rejects.toThrow();
+    await expect(
+      sendEmail("save", NOTIFY_TEST_EMAIL, mockConfig),
+    ).rejects.toThrow();
   });
 });

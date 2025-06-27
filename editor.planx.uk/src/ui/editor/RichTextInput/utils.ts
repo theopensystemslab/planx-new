@@ -60,7 +60,7 @@ export const toHtml = (doc: JSONContent) => {
   return outgoingHtml === emptyContent ? "" : outgoingHtml;
 };
 
-export const fromHtml = (htmlString: string) => {
+export const fromHtml = (htmlString: string): JSONContent => {
   return generateJSON(
     htmlString === "" ? emptyContent : htmlString,
     conversionExtensions,

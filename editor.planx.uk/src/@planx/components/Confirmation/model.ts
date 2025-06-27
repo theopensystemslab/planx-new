@@ -1,4 +1,9 @@
+import { richText } from "lib/yupExtensions";
+import { string } from "mathjs";
+import { array, object, SchemaOf } from "yup";
+
 import { BaseNodeData } from "../shared";
+import { baseNodeDataValidationSchema } from "./../shared/index";
 
 export interface Step {
   title: string;
@@ -18,3 +23,19 @@ export const parseNextSteps = (
 ): { nextSteps: Step[] } => ({
   nextSteps: data?.nextSteps || [],
 });
+
+export const validationSchema: SchemaOf<Confirmation> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      heading: string(),
+      description: richText(),
+      moreInfo: richText({ variant: "nestedContent" }),
+      contactInfo: richText(),
+      nextSteps: array(
+        object({
+          title: string(),
+          description: string(),
+        }),
+      ),
+    }),
+  );
