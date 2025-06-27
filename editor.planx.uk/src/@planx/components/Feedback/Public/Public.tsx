@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Link from "@mui/material/Link";
+import Typography from "@mui/material/Typography";
 import { Disclaimer } from "@planx/components/shared/Disclaimer";
 import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
@@ -11,6 +13,7 @@ import {
   insertFeedbackMutation,
 } from "lib/feedback";
 import React from "react";
+import { Link as ReactNaviLink } from "react-navi";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
 import NeutralFace from "ui/images/feedback_filled-03.svg";
@@ -82,6 +85,19 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
         id={"DESCRIPTION_TEXT"}
         openLinksOnNewTab
       />
+      <Typography variant="body1" sx={{ marginTop: 2 }}>
+        Please do not include any personal data such as your name, email or
+        address. All feedback is processed according to our{" "}
+        <Link
+          component={ReactNaviLink}
+          href="pages/privacy"
+          prefetch={false}
+          color="primary"
+        >
+          privacy notice
+        </Link>
+        .
+      </Typography>
       <Box my={4}>
         {props.ratingQuestion && (
           <InputLabel
