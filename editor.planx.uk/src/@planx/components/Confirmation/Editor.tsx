@@ -75,7 +75,7 @@ export default function ConfirmationEditor(props: Props) {
       contactInfo:
         props.node?.data?.contactInfo ||
         `You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
-          <br/><br/>
+          <br><br>
           <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>`,
       ...parseNextSteps(props.node?.data),
     },
