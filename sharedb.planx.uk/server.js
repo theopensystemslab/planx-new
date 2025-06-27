@@ -84,7 +84,8 @@ async function validateJWT(authToken) {
   const response = await fetch(`${API_URL_EXT}/auth/validate-jwt`, {
     method: "GET",
     headers: {
-      authorization: `Bearer ${authToken}`
+      authorization: `Bearer ${authToken}`,
+      foo: "bar",
     }
   });
 
