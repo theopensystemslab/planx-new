@@ -73,6 +73,9 @@ const ExternalPortalForm: React.FC<{
       flowId: flowId || null,
       tags,
       notes,
+      isTemplatedNode,
+      templatedNodeInstructions,
+      areTemplatedNodeInstructionsRequired,
     },
     onSubmit: (data) => {
       if (handleSubmit) {
