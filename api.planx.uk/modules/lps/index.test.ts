@@ -49,7 +49,7 @@ describe("logging into LPS applications", () => {
           NOTIFY_TEST_EMAIL,
           expect.objectContaining({
             personalisation: expect.objectContaining({
-              magicLink: `https://www.localplanning.services/applications?token=${testToken}`,
+              magicLink: `https://www.localplanning.services/applications?token=${testToken}&email=${encodeURIComponent(NOTIFY_TEST_EMAIL)}`,
             }),
           }),
         );
