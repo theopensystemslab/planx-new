@@ -13,6 +13,15 @@ components:
         email:
           type: string
           format: email
+    ApplicationsRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        token:
+          type: string
+          format: uuid
   responses:
     LoginResponse:
       type: object
@@ -20,6 +29,55 @@ components:
         message:
           type: string
           example: success
+    ApplicationsResponse:
+      type: object
+      properties:
+        applications:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              updatedAt:
+                type: string
+                format: date-time
+              submittedAt:
+                type: string
+                format: date-time
+              service:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                required:
+                  - name
+                  - slug
+              team:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  slug:
+                    type: string
+                required:
+                  - name
+                  - slug
+              url:
+                type: string
+                format: uri
+            required:
+              - id
+              - updatedAt
+              - submittedAt
+              - service
+              - team
+              - url
+      required:
+        - applications
 paths:
   /lps/login:
     post:
@@ -38,5 +96,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/responses/LoginResponse"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /lps/applications:
+    post:
+      tags: [localplanning.services]
+      summary: Fetch applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationsRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/ApplicationsResponse"
         "500":
           $ref: "#/components/responses/ErrorMessage"
