@@ -34,6 +34,7 @@ export const CustomisationCard: React.FC<Props> = ({
         ComponentType.Checklist,
         ComponentType.ResponsiveQuestion,
         ComponentType.ResponsiveChecklist,
+        ComponentType.InternalPortal,
       ].includes(node.type);
 
     // The "children" of this node have been updated
