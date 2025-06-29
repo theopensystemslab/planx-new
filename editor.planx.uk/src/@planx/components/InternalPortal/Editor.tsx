@@ -51,6 +51,9 @@ const InternalPortalForm: React.FC<{
       flowId,
       tags,
       notes,
+      isTemplatedNode,
+      templatedNodeInstructions,
+      areTemplatedNodeInstructionsRequired,
     },
     validate: (values) => {
       const errors: Record<string, string> = {};

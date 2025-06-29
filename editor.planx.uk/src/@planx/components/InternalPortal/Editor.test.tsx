@@ -40,6 +40,9 @@ describe("adding an internal portal", () => {
           text: "new internal portal",
           tags: [],
           notes: "",
+          isTemplatedNode: false,
+          templatedNodeInstructions: "",
+          areTemplatedNodeInstructionsRequired: false,
         },
       });
     });
@@ -133,6 +136,9 @@ test("updating an internal portal", async () => {
         text: "new val",
         tags: [],
         notes: "",
+        isTemplatedNode: false,
+        templatedNodeInstructions: "",
+        areTemplatedNodeInstructionsRequired: false,
       },
     });
   });
