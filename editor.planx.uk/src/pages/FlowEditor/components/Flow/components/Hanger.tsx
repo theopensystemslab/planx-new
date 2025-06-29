@@ -56,14 +56,14 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   const parentIsChildOfTemplatedInternalPortal =
     nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
 
-  const showHangerInTemplatedFlow =
-    isTemplatedFrom &&
-    (parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal);
+  const hideHangerInTemplatedFlow = !(
+    parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal
+  );
 
   // Hiding the hanger is a proxy for disabling a 'view-only' user from adding, moving, cloning nodes
-  const hideHangerFromUser =
-    !useStore.getState().canUserEditTeam(teamSlug) ||
-    !showHangerInTemplatedFlow;
+  const hideHangerFromUser = isTemplatedFrom
+    ? hideHangerInTemplatedFlow
+    : !useStore.getState().canUserEditTeam(teamSlug);
 
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL", "PAGE"],
