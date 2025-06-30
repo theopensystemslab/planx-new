@@ -112,6 +112,7 @@ const TaskListComponent: React.FC<Props> = (props) => {
             Editor={TaskEditor}
             newValue={newTask}
             disabled={props.disabled}
+            isTemplatedNode={props.node?.data?.isTemplatedNode}
           />
         </ModalSectionContent>
       </ModalSection>

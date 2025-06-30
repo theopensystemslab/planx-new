@@ -17,6 +17,7 @@ interface Props {
   groupIndex?: number;
   grouped?: true;
   disabled?: boolean;
+  isTemplatedNode?: boolean;
 }
 
 export const ExclusiveOrOptionManager = ({
@@ -26,6 +27,7 @@ export const ExclusiveOrOptionManager = ({
   groupIndex,
   grouped,
   disabled,
+  isTemplatedNode,
 }: Props) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
@@ -87,6 +89,7 @@ export const ExclusiveOrOptionManager = ({
                 currentOptionVals,
               ),
             }}
+            isTemplatedNode={isTemplatedNode}
           />
         </Box>
       </ErrorWrapper>

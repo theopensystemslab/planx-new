@@ -139,6 +139,23 @@ components:
             email:
               type: string
               format: email
+    UpdateTemplatedFlowEditsEvent:
+      type: object
+      properties:
+        createdAt:
+          required: true
+          type: string
+          format: date-time
+        payload:
+          required: true
+          type: object
+          properties:
+            flowId:
+              type: string
+            templatedFrom:
+              type: string
+            data:
+              type: object
   requests:
     ValidateInputRequest:
       description: |
@@ -243,6 +260,22 @@ components:
               message:
                 type: string
                 description: A message returned to the client
+    UpdateTemplatedFlowEditsSuccess:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                required: true
+              data:
+                type: object
+                properties:
+                  flowId:
+                    type: string
+                  delta:
+                    type: object
 paths:
   /webhooks/hasura/send-slack-notification:
     post:
@@ -387,3 +420,21 @@ paths:
           $ref: "#/components/responses/InputValidationSuccess"
         "500":
           $ref: "#/components/responses/InputValidationFailure"
+  /webhooks/hasura/update-templated-flow-edits:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth:: []
+      summary: Create templated flow edits update events
+      description: Setup event which will transform and update `templated_flow_edits` anytime a templated flow's `data` is updated
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTemplatedFlowEditsEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/UpdateTemplatedFlowEditsSuccess"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
