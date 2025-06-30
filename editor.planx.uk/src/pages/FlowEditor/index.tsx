@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
-import { flowIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
+import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useRef } from "react";
 import { rootFlowPath } from "routes/utils";
 
@@ -57,16 +57,17 @@ const FlowEditor = () => {
   const parentId = getParentId(undefined);
 
   const indexedParent = orderedFlow?.find(({ id }) => id === parentId);
-  const TemplatedInternalPortal = flowIsTemplatedInternalPortal(
+  const parentIsTemplatedInternalPortal = parentNodeIsTemplatedInternalPortal(
     flowObject,
     indexedParent,
   );
 
   const lockedFlow =
     !useStore.getState().canUserEditTeam(teamSlug) ||
-    (isTemplatedFrom && !TemplatedInternalPortal);
+    (isTemplatedFrom && !parentIsTemplatedInternalPortal);
 
-  const showTemplatedNodeStatus = !lockedFlow && !TemplatedInternalPortal;
+  const showTemplatedNodeStatus =
+    !lockedFlow && !parentIsTemplatedInternalPortal;
 
   return (
     <EditorContainer id="editor-container">

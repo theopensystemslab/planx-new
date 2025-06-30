@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
 import { nanoid } from "nanoid";
+import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
 import {
   DragDropContext,
@@ -41,6 +42,7 @@ export interface Props<T, EditorExtraProps = {}> {
   isFieldDisabled?: (item: T, index: number) => boolean;
   maxItems?: number;
   disabled?: boolean;
+  isTemplatedNode?: boolean;
 }
 
 const Item = styled(Box)(() => ({
@@ -110,53 +112,95 @@ export default function ListManager<T, EditorExtraProps>(
   const isMaxLength = props.values.length >= maxItems;
   const [isDragging, setIsDragging] = useState(false);
 
-  return props.noDragAndDrop ? (
-    <>
-      <Box>
-        <TransitionGroup>
-          {props.values.map((item, index) => (
-            <Collapse key={itemKeys[index]}>
-              <Item>
-                <Editor
-                  index={index}
-                  value={item}
-                  onChange={(newItem) => {
-                    props.onChange(setAt(index, newItem, props.values));
-                  }}
-                  {...(props.editorExtraProps || {})}
-                  disabled={disabled}
-                />
-                <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-                  <IconButton
-                    onClick={() => {
-                      props.onChange(removeAt(index, props.values));
-                      setItemKeys((prev) => prev.filter((_, i) => i !== index));
+  const [isTemplate, isPlatformAdmin] = useStore((state) => [
+    state.isTemplate,
+    state.user?.isPlatformAdmin,
+  ]);
+
+  // `isTemplatedNode` disables reordering, adding, and deleting options in the templated flow unless you're a platform admin or in the source template
+  if (props.isTemplatedNode && !isPlatformAdmin && !isTemplate) {
+    return (
+      <>
+        <Box>
+          <TransitionGroup>
+            {props.values.map((item, index) => (
+              <Collapse key={itemKeys[index]} sx={{ marginBottom: 2 }}>
+                <Item>
+                  <Editor
+                    index={index}
+                    value={item}
+                    onChange={(newItem) => {
+                      props.onChange(setAt(index, newItem, props.values));
                     }}
-                    aria-label="Delete"
-                    size="large"
-                    disabled={disabled || props?.isFieldDisabled?.(item, index)}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Box>
-              </Item>
-            </Collapse>
-          ))}
-        </TransitionGroup>
-      </Box>
-      <Button
-        sx={{ mt: 2 }}
-        size="large"
-        onClick={() => {
-          props.onChange([...props.values, props.newValue()]);
-          setItemKeys((prev) => [...prev, nanoid()]);
-        }}
-        disabled={disabled || isMaxLength}
-      >
-        {props.newValueLabel || "add new"}
-      </Button>
-    </>
-  ) : (
+                    {...(props.editorExtraProps || {})}
+                    disabled={disabled}
+                  />
+                </Item>
+              </Collapse>
+            ))}
+          </TransitionGroup>
+        </Box>
+      </>
+    );
+  }
+
+  // `noDragAndDrop` disables reordering, but allows adding and deleting options
+  if (props.noDragAndDrop) {
+    return (
+      <>
+        <Box>
+          <TransitionGroup>
+            {props.values.map((item, index) => (
+              <Collapse key={itemKeys[index]}>
+                <Item>
+                  <Editor
+                    index={index}
+                    value={item}
+                    onChange={(newItem) => {
+                      props.onChange(setAt(index, newItem, props.values));
+                    }}
+                    {...(props.editorExtraProps || {})}
+                    disabled={disabled}
+                  />
+                  <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+                    <IconButton
+                      onClick={() => {
+                        props.onChange(removeAt(index, props.values));
+                        setItemKeys((prev) =>
+                          prev.filter((_, i) => i !== index),
+                        );
+                      }}
+                      aria-label="Delete"
+                      size="large"
+                      disabled={
+                        disabled || props?.isFieldDisabled?.(item, index)
+                      }
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
+                </Item>
+              </Collapse>
+            ))}
+          </TransitionGroup>
+        </Box>
+        <Button
+          sx={{ mt: 2 }}
+          size="large"
+          onClick={() => {
+            props.onChange([...props.values, props.newValue()]);
+            setItemKeys((prev) => [...prev, nanoid()]);
+          }}
+          disabled={disabled || isMaxLength}
+        >
+          {props.newValueLabel || "add new"}
+        </Button>
+      </>
+    );
+  }
+
+  // Default ListManager supports reordering, adding, and deleting options
+  return (
     <DragDropContext
       onDragStart={() => setIsDragging(true)}
       onDragEnd={(dropResult: DropResult) => {

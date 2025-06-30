@@ -72,6 +72,13 @@ export const nodeIsTemplatedInternalPortal = (
   }
 };
 
+export const parentNodeIsTemplatedInternalPortal = (
+  flow: Store.Flow,
+  parentNode?: IndexedNode,
+): boolean => {
+  return parentNode ? nodeIsTemplatedInternalPortal(flow, parentNode) : false;
+};
+
 export const nodeIsChildOfTemplatedInternalPortal = (
   flow: Store.Flow,
   node?: IndexedNode,
@@ -85,11 +92,4 @@ export const nodeIsChildOfTemplatedInternalPortal = (
   } else {
     return false;
   }
-};
-
-export const flowIsTemplatedInternalPortal = (
-  flow: Store.Flow,
-  parentNode?: IndexedNode,
-): boolean => {
-  return parentNode ? nodeIsTemplatedInternalPortal(flow, parentNode) : false;
 };

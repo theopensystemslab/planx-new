@@ -39,6 +39,9 @@ test("adding an external portal", async () => {
         flowId: "b",
         tags: [],
         notes: "",
+        isTemplatedNode: false,
+        templatedNodeInstructions: "",
+        areTemplatedNodeInstructionsRequired: false,
       },
     }),
   );
@@ -81,6 +84,9 @@ test("changing an external portal", async () => {
         flowId: "a",
         tags: [],
         notes: "",
+        isTemplatedNode: false,
+        templatedNodeInstructions: "",
+        areTemplatedNodeInstructionsRequired: false,
       },
     }),
   );
