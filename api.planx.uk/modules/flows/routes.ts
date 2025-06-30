@@ -116,7 +116,7 @@ router.get(
 );
 
 router.post(
-  "/flows/:flowId/update-templated-flow/:templatedFlowId",
+  "/flows/:sourceFlowId/update-templated-flow/:templatedFlowId",
   validate(updateTemplatedFlowEventSchema),
   updateTemplatedFlowController,
 );

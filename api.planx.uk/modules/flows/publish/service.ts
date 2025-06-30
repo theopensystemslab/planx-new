@@ -102,7 +102,6 @@ export const publishFlow = async (
           payload: {
             sourceFlowId: flowId,
             templatedFlowId: templatedFlowId,
-            summary: summary,
           },
           comment: `update_templated_flow_${templatedFlowId}`,
         }),

@@ -1,3 +1,4 @@
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 
 import { ServerError } from "../../../errors/serverError.js";
@@ -9,14 +10,16 @@ export const updateTemplatedFlowEventSchema = z.object({
     payload: z.object({
       sourceFlowId: z.string(),
       templatedFlowId: z.string(),
-      summary: z.string(),
     }),
   }),
 });
 
 export interface UpdateTemplatedFlowResponse {
   message: string;
-  data?: any;
+  data: {
+    templatedFlowData: FlowGraph;
+    commentId: number;
+  };
 }
 
 export type UpdateTemplatedFlowController = ValidatedRequestHandler<
@@ -26,8 +29,7 @@ export type UpdateTemplatedFlowController = ValidatedRequestHandler<
 
 export const updateTemplatedFlowController: UpdateTemplatedFlowController =
   async (_req, res, next) => {
-    const { sourceFlowId, templatedFlowId, summary } =
-      res.locals.parsedReq.body.payload;
+    const { sourceFlowId, templatedFlowId } = res.locals.parsedReq.body.payload;
 
     try {
       const response = await updateTemplatedFlow(sourceFlowId, templatedFlowId);
