@@ -205,6 +205,7 @@ export default function SafeNode(props: any) {
           id={props.id}
           text="Corrupted"
           lockedFlow
+          showTemplatedNodeStatus
         />
       )}
     >

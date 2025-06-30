@@ -4,10 +4,12 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
+import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useRef } from "react";
 import { rootFlowPath } from "routes/utils";
 
 import Flow from "./components/Flow";
+import { getParentId } from "./components/Flow/lib/utils";
 import { ToggleDataFieldsButton } from "./components/FlowEditor/ToggleDataFieldsButton";
 import { ToggleHelpTextButton } from "./components/FlowEditor/ToggleHelpTextButton";
 import { ToggleImagesButton } from "./components/FlowEditor/ToggleImagesButton";
@@ -43,11 +45,29 @@ const FlowEditor = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
-  const teamSlug = useStore.getState().getTeam().slug;
-  const isTemplatedFrom = useStore.getState().isTemplatedFrom;
+  const [flowObject, orderedFlow, isTemplatedFrom, teamSlug] = useStore(
+    (state) => [
+      state.flow,
+      state.orderedFlow,
+      state.isTemplatedFrom,
+      state.getTeam().slug,
+    ],
+  );
+
+  const parentId = getParentId(undefined);
+
+  const indexedParent = orderedFlow?.find(({ id }) => id === parentId);
+  const parentIsTemplatedInternalPortal = parentNodeIsTemplatedInternalPortal(
+    flowObject,
+    indexedParent,
+  );
 
   const lockedFlow =
-    !useStore.getState().canUserEditTeam(teamSlug) || isTemplatedFrom;
+    !useStore.getState().canUserEditTeam(teamSlug) ||
+    (isTemplatedFrom && !parentIsTemplatedInternalPortal);
+
+  const showTemplatedNodeStatus =
+    !lockedFlow && !parentIsTemplatedInternalPortal;
 
   return (
     <EditorContainer id="editor-container">
@@ -65,7 +85,12 @@ const FlowEditor = () => {
           className={lockedFlow ? "flow-locked" : ""}
           sx={{ position: "relative" }}
         >
-          <Flow flow={flow} breadcrumbs={breadcrumbs} lockedFlow={lockedFlow} />
+          <Flow
+            flow={flow}
+            breadcrumbs={breadcrumbs}
+            lockedFlow={lockedFlow}
+            showTemplatedNodeStatus={showTemplatedNodeStatus}
+          />
           <EditorVisualControls
             orientation="vertical"
             aria-label="Toggle node attributes"
