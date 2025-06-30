@@ -250,6 +250,21 @@ components:
             type: object
             properties:
               $ref: "#/components/schemas/FlowData"
+    UpdateTemplatedFlow:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  templatedFlowData:
+                    type: object
+                  commentId:
+                    type: number
 paths:
   /flows/create:
     post:
@@ -427,5 +442,24 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/FlattenData"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /flows/{sourceFlowId}/update-templated-flow/{templatedFlowId}:
+    post:
+      summary: When a source flow is published, update a flow templated from it
+      description: When a source flow is published, update a flow templated from it by reconciling any customised edits with the source
+      tags: ["flows"]
+      parameters:
+        - in: path
+          name: sourceFlowId
+          type: string
+          required: true
+        - in: path
+          name: templatedFlowId
+          type: string
+          required: true
+      responses:
+        "200":
+          $ref: "#/components/responses/UpdateTemplatedFlow"
         "500":
           $ref: "#/components/responses/ErrorMessage"
