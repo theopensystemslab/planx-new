@@ -1,5 +1,9 @@
 import classnames from "classnames";
-import React from "react";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
+import React, { useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 
@@ -30,18 +34,46 @@ const buildHref = (before: any, parent: any) => {
 const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
 
-  const [moveNode, pasteNode, isTemplatedFrom] = useStore((state) => [
+  const [
+    moveNode,
+    pasteNode,
+    isTemplatedFrom,
+    flow,
+    orderedFlow,
+    setOrderedFlow,
+  ] = useStore((state) => [
     state.moveNode,
     state.pasteNode,
     state.isTemplatedFrom,
+    state.flow,
+    state.orderedFlow,
+    state.setOrderedFlow,
   ]);
+
+  useEffect(() => {
+    if (!orderedFlow) setOrderedFlow();
+  }, [orderedFlow, setOrderedFlow]);
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
 
+  // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
+  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+    flow,
+    indexedParent,
+  );
+  const parentIsChildOfTemplatedInternalPortal =
+    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+
+  const hideHangerInTemplatedFlow = !(
+    parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal
+  );
+
   // Hiding the hanger is a proxy for disabling a 'view-only' user from adding, moving, cloning nodes
-  const hideHangerFromUser =
-    !useStore.getState().canUserEditTeam(teamSlug) || isTemplatedFrom;
+  const hideHangerFromUser = isTemplatedFrom
+    ? hideHangerInTemplatedFlow
+    : !useStore.getState().canUserEditTeam(teamSlug);
 
   const [{ canDrop, item }, drop] = useDrop({
     accept: ["DECISION", "PORTAL", "PAGE"],
