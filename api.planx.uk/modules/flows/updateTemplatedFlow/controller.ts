@@ -1,3 +1,4 @@
+import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { z } from "zod";
 
 import { ServerError } from "../../../errors/serverError.js";
@@ -15,7 +16,10 @@ export const updateTemplatedFlowEventSchema = z.object({
 
 export interface UpdateTemplatedFlowResponse {
   message: string;
-  data?: any;
+  data: {
+    templatedFlowData: FlowGraph;
+    commentId: number;
+  };
 }
 
 export type UpdateTemplatedFlowController = ValidatedRequestHandler<
