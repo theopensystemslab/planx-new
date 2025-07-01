@@ -52,7 +52,7 @@ export const InteractiveFileListItem = (props: FileListItemProps) => {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box mr={0.25} pr={0.5}>
+        <Box sx={{ display: "flex", alignItems: "center", mr: 0.65 }}>
           <StatusIcon
             isCompleted={props.completed}
             title={{

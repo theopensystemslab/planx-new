@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-import { lighten, styled, useTheme } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import type { PaymentRequest } from "@opensystemslab/planx-core/types";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
@@ -37,8 +37,8 @@ const InviteToPay: React.FC<PaymentRequest> = ({ createdAt }) => {
         iconTitle={"Success"}
         heading="Payment invitation sent"
         color={{
-          background: lighten(theme.palette.success.main, 0.9),
-          text: "black",
+          background: theme.palette.success.light,
+          text: theme.palette.text.primary,
         }}
       >
         <Typography pt={2} variant="body2" maxWidth="formWrap">
