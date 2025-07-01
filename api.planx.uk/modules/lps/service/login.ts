@@ -5,6 +5,7 @@ import {
   DEVOPS_EMAIL_REPLY_TO_ID,
   type TemplateRegistry,
 } from "../../../lib/notify/templates/index.js";
+import { ServerError } from "../../../errors/serverError.js";
 
 interface CreateMagicLink {
   magicLink: {
@@ -13,27 +14,37 @@ interface CreateMagicLink {
 }
 
 const createMagicLinkToken = async (email: string): Promise<string> => {
-  const {
-    magicLink: { token },
-  } = await $api.client.request<CreateMagicLink>(
-    gql`
-      mutation CreateLPSLoginToken($email: String!) {
-        magicLink: insert_lps_magic_links_one(
-          object: { email: $email, operation: "login" }
-        ) {
-          token
+  try {
+    const {
+      magicLink: { token },
+    } = await $api.client.request<CreateMagicLink>(
+      gql`
+        mutation CreateLPSLoginToken($email: String!) {
+          magicLink: insert_lps_magic_links_one(
+            object: { email: $email, operation: "login" }
+          ) {
+            token
+          }
         }
-      }
-    `,
-    { email },
-  );
-  return token;
+      `,
+      { email },
+    );
+
+    return token;
+  } catch (error) {
+    throw new ServerError({
+      message: "GraphQL query CreateLPSLoginToken failed",
+      status: 500,
+    });
+  }
 };
 
 const generateMagicLink = async (email: string) => {
   const token = await createMagicLinkToken(email);
   const url = new URL("/applications", process.env.LPS_URL_EXT!);
+  // TODO: Maybe base64 encode these as a single param?
   url.searchParams.append("token", token);
+  url.searchParams.append("email", email);
 
   return url.toString();
 };
