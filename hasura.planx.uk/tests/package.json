@@ -6,7 +6,7 @@
   },
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
-    "dotenv": "^16.4.1",
+    "dotenv": "^17.0.0",
     "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.1",
     "uuid": "^11.0.2",
