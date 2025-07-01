@@ -1,5 +1,8 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { DEFAULT_FLAG_CATEGORY } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  DEFAULT_FLAG_CATEGORY,
+  FlowStatus,
+} from "@opensystemslab/planx-core/types";
 
 import { Store } from "../store";
 import { ALLOW_LIST } from "./provider";
@@ -9,7 +12,6 @@ import {
   BackwardsNavigationMetadata,
   BackwardsTargetMetadata,
 } from "./types";
-import { FlowStatus } from "@opensystemslab/planx-core/types";
 
 /**
  * Generate meaningful title for content analytic log
@@ -30,11 +32,11 @@ export function extractNodeTitle(node: Store.Node): string {
   const nodeTitle =
     node?.type === TYPES.Content
       ? getContentTitle(node)
-      : node?.data?.title ??
+      : (node?.data?.title ??
         node?.data?.text ??
         node?.data?.flagSet ??
         node?.data?.category ??
-        node?.data?.heading;
+        node?.data?.heading);
   return nodeTitle;
 }
 
@@ -220,29 +222,7 @@ export const getFOIYNPP = (environment: Environment) => ({
 
 export const getRAB = (environment: Environment) => ({
   id: DASHBOARD_PUBLIC_IDS[environment].RAB,
-  slugs: [
-    "camden-report-a-planning-breach",
-    "report-a-planning-breach",
-  ],
-});
-
-export const getSubmission = (environment: Environment) => ({
-  id: DASHBOARD_PUBLIC_IDS[environment].submission,
-  slugs: [
-    "apply-for-a-lawful-development-certificate",
-    "apply-for-building-regulations-applications",
-    "apply-for-building-regulations-notice",
-    "apply-for-householder-and-listed-building-pre-application-advice",
-    "apply-for-planning-permission",
-    "camden-apply-for-a-lawful-development-certificate",
-    "camden-apply-for-planning-permission",
-    "listed-building-pre-application-advice",
-    "notice-of-exempt-works-to-trees",
-    "pre-application-advice",
-    "pre-application-for-energy-efficient-measures",
-    "tree-pre-application-advice",
-    "submit-a-demolition-notice",
-  ],
+  slugs: ["camden-report-a-planning-breach", "report-a-planning-breach"],
 });
 
 export const getDiscretionary = (environment: Environment) => ({
@@ -259,41 +239,48 @@ export const getDiscretionary = (environment: Environment) => ({
   ],
 });
 
-export const generateAnalyticsLink = ({
+export const getSubmission = (environment: Environment): { id: string } => {
+  return {
+    id: DASHBOARD_PUBLIC_IDS[environment].submission,
+  };
+};
+
+export const getAnalyticsDashboardId = ({
   flowStatus,
   environment,
-  flowId,
   flowSlug,
+  isSubmissionService,
 }: {
   flowStatus: FlowStatus;
   environment: Environment;
-  flowId: string;
   flowSlug: string;
+  isSubmissionService: boolean;
 }): string | undefined => {
-  
-  const includedServices = [
-    getFOIYNPP(environment),
-    getRAB(environment),
-    getSubmission(environment),
-    getDiscretionary(environment),
-  ];
-
   if (flowStatus === "offline") return undefined;
 
-  let dashboardId: string | undefined;
+  const foiynpp = getFOIYNPP(environment);
+  const rab = getRAB(environment);
+  const discretionary = getDiscretionary(environment);
+  const submission = getSubmission(environment);
 
-  const service = includedServices.find(service => 
-    service.slugs.some(slug => flowSlug === (slug))
-  );
-    
-  if (!service) return undefined;
+  if (foiynpp.slugs.includes(flowSlug)) return foiynpp.id;
+  if (rab.slugs.includes(flowSlug)) return rab.id;
+  if (discretionary.slugs.includes(flowSlug)) return discretionary.id;
+  // Finally, fallback to check general submission services
+  if (isSubmissionService) return submission.id;
 
-  dashboardId = service.id
+  return undefined;
+};
 
-  if (!dashboardId) {
-    return;
-  }
-
+export const generateAnalyticsLink = ({
+  environment,
+  flowId,
+  dashboardId,
+}: {
+  environment: Environment;
+  flowId: string;
+  dashboardId: string;
+}): string => {
   const baseDomain = environment === "production" ? "uk" : "dev";
   const host = `https://metabase.editor.planx.${baseDomain}`;
   const pathname = `/public/dashboard/${dashboardId}`;

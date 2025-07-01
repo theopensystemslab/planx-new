@@ -6,8 +6,13 @@ import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
-import { Environment, generateAnalyticsLink } from "../../pages/FlowEditor/lib/analytics/utils";
+import {
+  Environment,
+  generateAnalyticsLink,
+  getAnalyticsDashboardId,
+} from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
+import { settingsStore } from "../../pages/FlowEditor/lib/store/settings";
 
 interface FlowEditorData {
   id: string;
@@ -52,9 +57,6 @@ interface GetFlowEditorData {
     } | null;
   }[];
 }
-
-const environment: Environment =
-  import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
 
 export const getFlowEditorData = async (
   flowSlug: string,
@@ -121,6 +123,7 @@ export const getFlowEditorData = async (
  */
 export const flowEditorView = async (req: NaviRequest) => {
   const [flow] = req.params.flow.split(",");
+
   const {
     id,
     flowStatus,
@@ -130,17 +133,12 @@ export const flowEditorView = async (req: NaviRequest) => {
     template,
   } = await getFlowEditorData(flow, req.params.team);
 
-  const flowAnalyticsLink = generateAnalyticsLink({
-          flowStatus,
-          environment,
-          flowId: id,
-          flowSlug: flow,
-        });
+  // We need to call `getFlowInformation` here to ensure that the store updates and we have the correct analytics link showing
+  useStore.getState().getFlowInformation(flow, req.params.team);
 
   useStore.setState({
     id,
     flowStatus,
-    flowAnalyticsLink,
     isFlowPublished,
     isTemplate,
     isTemplatedFrom: Boolean(templatedFrom),
@@ -157,4 +155,3 @@ export const flowEditorView = async (req: NaviRequest) => {
     </FlowEditorLayout>
   );
 };
-

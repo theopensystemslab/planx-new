@@ -1,6 +1,12 @@
-import { FlowStatus } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  FlowStatus,
+  IndexedNode,
+} from "@opensystemslab/planx-core/types";
 import { formatDistanceToNow } from "date-fns";
 import { FlowSettings } from "types";
+
+import { Store } from "./lib/store";
 
 export interface FlowInformation {
   settings: FlowSettings;
@@ -9,6 +15,7 @@ export interface FlowInformation {
   summary?: string;
   limitations?: string;
   canCreateFromCopy?: boolean;
+  analyticsLink?: string;
 }
 
 export interface GetFlowInformation {
@@ -49,4 +56,40 @@ export const formatLastPublishMessage = (
 export const formatServiceLastUpdated = (date: string): string => {
   const formattedDate = new Date(date).toLocaleDateString("en-gb");
   return `Service last updated ${formattedDate}`;
+};
+
+export const nodeIsTemplatedInternalPortal = (
+  flow: Store.Flow,
+  node?: IndexedNode,
+): boolean => {
+  if (node) {
+    return (
+      node.type === TYPES.InternalPortal &&
+      Boolean(flow[node.id]?.data?.isTemplatedNode)
+    );
+  } else {
+    return false;
+  }
+};
+
+export const parentNodeIsTemplatedInternalPortal = (
+  flow: Store.Flow,
+  parentNode?: IndexedNode,
+): boolean => {
+  return parentNode ? nodeIsTemplatedInternalPortal(flow, parentNode) : false;
+};
+
+export const nodeIsChildOfTemplatedInternalPortal = (
+  flow: Store.Flow,
+  node?: IndexedNode,
+): boolean => {
+  if (node && node?.parentId && node?.internalPortalId) {
+    return (
+      (flow[node.parentId]?.type === TYPES.InternalPortal &&
+        Boolean(flow[node.parentId]?.data?.isTemplatedNode)) ||
+      Boolean(flow[node.internalPortalId]?.data?.isTemplatedNode)
+    );
+  } else {
+    return false;
+  }
 };

@@ -339,7 +339,7 @@ describe("Confirm component with inviteToPay", () => {
     await user.type(await screen.findByLabelText("Email"), "jess@{enter}");
     expect(
       await screen.findByText(
-        "Enter an email address in the correct format, like name@example.com",
+        /Enter an email address in the correct format, like name@example.com/,
       ),
     ).toBeInTheDocument();
   });
@@ -356,7 +356,7 @@ describe("Confirm component with inviteToPay", () => {
       "test@opensystemslab.io{enter}",
     );
     expect(
-      await screen.findByText("Enter the full name of the person paying"),
+      await screen.findByText(/Enter the full name of the person paying/),
     ).toBeInTheDocument();
   });
 
@@ -376,7 +376,7 @@ describe("Confirm component with inviteToPay", () => {
       "Mr Nominee{enter}",
     );
     expect(
-      await screen.findByText("Enter your name or organisation name"),
+      await screen.findByText(/Enter your name or organisation name/),
     ).toBeInTheDocument();
   });
 

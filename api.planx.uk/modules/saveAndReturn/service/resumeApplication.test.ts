@@ -9,9 +9,9 @@ import {
 import { buildContentFromSessions } from "./resumeApplication.js";
 import type { PartialDeep } from "type-fest";
 import type { Team } from "@opensystemslab/planx-core/types";
+import { NOTIFY_TEST_EMAIL } from "../../../lib/notify/utils.js";
 
 const ENDPOINT = "/resume-application";
-const TEST_EMAIL = "simulate-delivered@notifications.service.gov.uk";
 
 describe("buildContentFromSessions function", () => {
   it("should return correctly formatted content for a single session", async () => {
@@ -265,7 +265,9 @@ describe("Resume Application endpoint", () => {
   });
 
   it("throws an error if a teamSlug is invalid", async () => {
-    const body = { payload: { teamSlug: "not-a-team", email: TEST_EMAIL } };
+    const body = {
+      payload: { teamSlug: "not-a-team", email: NOTIFY_TEST_EMAIL },
+    };
 
     queryMock.mockQuery({
       name: "ValidateRequest",
@@ -286,7 +288,9 @@ describe("Resume Application endpoint", () => {
   });
 
   it("sends a Notify email on successful resume", async () => {
-    const body = { payload: { teamSlug: "test-team", email: TEST_EMAIL } };
+    const body = {
+      payload: { teamSlug: "test-team", email: NOTIFY_TEST_EMAIL },
+    };
 
     queryMock.mockQuery({
       name: "ValidateRequest",
@@ -307,7 +311,9 @@ describe("Resume Application endpoint", () => {
   });
 
   it("give a successful response even if there is not a matching session", async () => {
-    const body = { payload: { teamSlug: "test-team", email: TEST_EMAIL } };
+    const body = {
+      payload: { teamSlug: "test-team", email: NOTIFY_TEST_EMAIL },
+    };
 
     queryMock.mockQuery({
       name: "ValidateRequest",

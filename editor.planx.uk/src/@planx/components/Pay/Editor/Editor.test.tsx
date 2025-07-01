@@ -207,7 +207,7 @@ describe("Pay component - Editor Modal", () => {
       // Test that validation schema is wired up to UI
       // model.test.ts tests validation schema behaviour in-depth
       await waitFor(() =>
-        expect(getByText("Key is a required field")).toBeVisible(),
+        expect(getByText(/Key is a required field/)).toBeVisible(),
       );
     });
 
@@ -243,7 +243,7 @@ describe("Pay component - Editor Modal", () => {
       // Test that validation schema is wired up to UI
       // model.test.ts tests validation schema behaviour in-depth
       await waitFor(() =>
-        expect(getByText("Keys must be unique")).toBeVisible(),
+        expect(getByText(/Keys must be unique/)).toBeVisible(),
       );
     });
 
@@ -285,7 +285,7 @@ describe("Pay component - Editor Modal", () => {
 
       // Test that validation schema is wired up to UI
       await waitFor(() =>
-        expect(getByText("Keys must be unique")).toBeVisible(),
+        expect(getByText(/Keys must be unique/)).toBeVisible(),
       );
 
       const duplicateKeyDeleteIcon = getAllByLabelText("Delete")[3];

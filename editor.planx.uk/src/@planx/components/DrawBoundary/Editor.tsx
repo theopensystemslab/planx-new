@@ -14,7 +14,7 @@ import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import type { DrawBoundary } from "./model";
-import { parseDrawBoundary } from "./model";
+import { parseDrawBoundary, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.DrawBoundary, DrawBoundary>;
 
@@ -28,7 +28,9 @@ function DrawBoundaryComponent(props: Props) {
         props.handleSubmit({ type: TYPES.DrawBoundary, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -52,6 +54,7 @@ function DrawBoundaryComponent(props: Props) {
               value={formik.values.title}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -61,6 +64,7 @@ function DrawBoundaryComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <InputGroup label="Data field">
@@ -70,6 +74,7 @@ function DrawBoundaryComponent(props: Props) {
                 format="data"
                 value={formik.values.fn}
                 disabled
+                errorMessage={formik.errors.fn}
               />
             </InputRow>
           </InputGroup>
@@ -86,6 +91,7 @@ function DrawBoundaryComponent(props: Props) {
               value={formik.values.titleForUploading}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.titleForUploading}
             />
           </InputRow>
           <InputRow>
@@ -95,6 +101,7 @@ function DrawBoundaryComponent(props: Props) {
               value={formik.values.descriptionForUploading}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.descriptionForUploading}
             />
           </InputRow>
           <InputRow>

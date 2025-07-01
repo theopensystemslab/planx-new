@@ -12,6 +12,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
+import { validationSchema } from "./model";
 
 function Component(props: any) {
   const formik = useFormik<{
@@ -41,7 +42,9 @@ function Component(props: any) {
         props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   // Rather than default to generic `useStore().getFlowSchema()`
@@ -80,6 +83,7 @@ function Component(props: any) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete

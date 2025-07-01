@@ -413,6 +413,7 @@ jobs:
             service docker start
             apk add docker-cli-compose
 
+            apk add git
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
             cd planx-new
             git add . && git stash

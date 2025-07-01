@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
+import { useStore } from "pages/FlowEditor/lib/store";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
 import remove from "ramda/src/remove";
@@ -22,9 +23,14 @@ import ChecklistOptionsEditor from "./OptionsEditor";
 interface Props {
   formik: FormikHookReturn;
   disabled?: boolean;
+  isTemplatedNode?: boolean;
 }
 
-export const GroupedOptions = ({ formik, disabled }: Props) => {
+export const GroupedOptions = ({
+  formik,
+  disabled,
+  isTemplatedNode,
+}: Props) => {
   const { schema, currentOptionVals } = useCurrentOptions(formik);
 
   const [exclusiveOptions, nonExclusiveOptionGroups] = partitionGroupedOptions(
@@ -34,6 +40,9 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
   const exclusiveOrOptionManagerShouldRender =
     nonExclusiveOptionGroups.length > 0;
 
+  const isPlatformAdmin = useStore.getState().user?.isPlatformAdmin;
+  const showAddDeleteButtons = !isTemplatedNode || isPlatformAdmin;
+
   return (
     <Box>
       {nonExclusiveOptionGroups.map(
@@ -42,7 +51,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
             <Box display="flex" pb={1}>
               <InputRow>
                 <Input
-                  required
+                  errorMessage={`formik.errors[${groupIndex}].title`}
                   format="bold"
                   name={`groupedOptions[${groupIndex}].title`}
                   value={groupedOption.title}
@@ -51,22 +60,24 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
                   disabled={disabled}
                 />
               </InputRow>
-              <Box flex={0}>
-                <IconButton
-                  title="Delete group"
-                  aria-label="Delete group"
-                  onClick={() => {
-                    formik.setFieldValue(
-                      `groupedOptions`,
-                      remove(groupIndex, 1, formik.values.groupedOptions),
-                    );
-                  }}
-                  size="large"
-                  disabled={disabled}
-                >
-                  <Delete />
-                </IconButton>
-              </Box>
+              {showAddDeleteButtons && (
+                <Box flex={0}>
+                  <IconButton
+                    title="Delete group"
+                    aria-label="Delete group"
+                    onClick={() => {
+                      formik.setFieldValue(
+                        `groupedOptions`,
+                        remove(groupIndex, 1, formik.values.groupedOptions),
+                      );
+                    }}
+                    size="large"
+                    disabled={disabled}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Box>
+              )}
             </Box>
             <Box pl={{ md: 2 }}>
               <ListManager
@@ -121,29 +132,32 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
                     currentOptionVals,
                   ),
                 }}
+                isTemplatedNode={isTemplatedNode}
               />
             </Box>
           </Box>
         ),
       )}
-      <Box mt={1}>
-        <Button
-          size="large"
-          disabled={disabled}
-          onClick={() => {
-            formik.setFieldValue(`groupedOptions`, [
-              ...nonExclusiveOptionGroups,
-              {
-                title: "",
-                children: [],
-              },
-              ...exclusiveOptions,
-            ]);
-          }}
-        >
-          add new group
-        </Button>
-      </Box>
+      {showAddDeleteButtons && (
+        <Box mt={1}>
+          <Button
+            size="large"
+            disabled={disabled}
+            onClick={() => {
+              formik.setFieldValue(`groupedOptions`, [
+                ...nonExclusiveOptionGroups,
+                {
+                  title: "",
+                  children: [],
+                },
+                ...exclusiveOptions,
+              ]);
+            }}
+          >
+            add new group
+          </Button>
+        </Box>
+      )}
       {exclusiveOrOptionManagerShouldRender ? (
         <ExclusiveOrOptionManager
           formik={formik}
@@ -151,6 +165,7 @@ export const GroupedOptions = ({ formik, disabled }: Props) => {
           exclusiveOptions={exclusiveOptions[0]?.children}
           nonExclusiveOptions={nonExclusiveOptionGroups}
           disabled={disabled}
+          isTemplatedNode={isTemplatedNode}
         />
       ) : (
         <></>
