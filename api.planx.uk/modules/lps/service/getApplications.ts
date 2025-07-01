@@ -15,7 +15,7 @@ export const getExpiry = () =>
 export interface RawApplication {
   id: string;
   updatedAt: string;
-  submittedAt: string;
+  submittedAt: string | null;
   service: {
     name: string;
     slug: string;
@@ -109,7 +109,7 @@ export const generateResumeLink = ({ service, id }: RawApplication) => {
     ? `https://${domain}/${flowSlug}`
     : `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/published`;
 
-  return `${serviceURL}&sessionId=${id}`;
+  return `${serviceURL}?sessionId=${id}`;
 };
 
 export const convertToLPSApplication = (

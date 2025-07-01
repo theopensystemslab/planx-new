@@ -16,7 +16,7 @@ export type Login = ValidatedRequestHandler<typeof loginSchema, LoginResponse>;
 export interface LPSApplication {
   id: string;
   updatedAt: string;
-  submittedAt: string;
+  submittedAt: string | null;
   service: {
     name: string;
     slug: string;
@@ -24,6 +24,7 @@ export interface LPSApplication {
   team: {
     name: string;
     slug: string;
+    domain: string | null;
   };
   url: string;
 }
