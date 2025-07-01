@@ -1,5 +1,11 @@
 import type { FormikErrors } from "formik";
-import { useRef, useEffect, useCallback } from "react";
+import {
+  useRef,
+  useEffect,
+  useCallback,
+  useState,
+  useLayoutEffect,
+} from "react";
 
 interface UseFormErrorFocusProps<T> {
   errors: FormikErrors<T>;
@@ -11,7 +17,6 @@ interface UseFormErrorFocusProps<T> {
   activeTabIndex?: number;
 }
 
-type ErrorObject = FormikErrors<unknown> | string | undefined;
 /**
  * Hook to focus on the input field associated with the first error in a form after submission.
  * For tabbed interfaces, can automatically switch to the tab containing the first error.
@@ -27,6 +32,9 @@ export function useFormErrorFocus<T>({
 }: UseFormErrorFocusProps<T>) {
   const previousSubmitCount = useRef(0);
   const previousErrors = useRef<FormikErrors<T>>({} as FormikErrors<T>);
+  const [elementToFocus, setElementToFocus] = useState<HTMLElement | null>(
+    null,
+  );
 
   const currentErrorKeys = Object.keys(errors).join(",");
 
@@ -37,8 +45,7 @@ export function useFormErrorFocus<T>({
       const pathSegments = mapping.fieldPath.split(".");
       let currentObj: any = errors;
       let hasError = true;
-      console.log("Segment:", pathSegments);
-      console.log("currentObj", currentObj);
+
       for (const segment of pathSegments) {
         const arrayMatch = segment.match(/(\w+)\[(\d+)\]/);
         if (arrayMatch) {
@@ -63,7 +70,7 @@ export function useFormErrorFocus<T>({
     return null;
   }, [errors, tabErrorMapping, onErrorInTab]);
 
-  const focusFirstErrorInput = useCallback(() => {
+  const findFirstErrorElement = useCallback(() => {
     const alertElements = Array.from(
       document.querySelectorAll('[role="alert"]'),
     ).filter((el) => {
@@ -81,28 +88,44 @@ export function useFormErrorFocus<T>({
         ) as HTMLElement;
 
         if (inputToFocus) {
-          setTimeout(() => {
-            inputToFocus?.focus();
-            inputToFocus?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }, 50);
-          return true;
+          return inputToFocus;
         }
       }
-
-      // If no input found, focus the error message itself
       errorEl.setAttribute("tabindex", "-1");
-      setTimeout(() => {
-        errorEl.focus();
-        errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 50);
-      return true;
+      return errorEl;
     }
 
-    return false;
+    return null;
   }, []);
+
+  useLayoutEffect(() => {
+    if (elementToFocus) {
+      elementToFocus.focus();
+
+      if (typeof elementToFocus.scrollIntoView === "function") {
+        elementToFocus.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+      setElementToFocus(null);
+    }
+  }, [elementToFocus]);
+
+  useEffect(() => {
+    if (Object.keys(errors).length > 0 && !isValidating && !isSubmitting) {
+      const errorElement = findFirstErrorElement();
+      if (errorElement) {
+        setElementToFocus(errorElement);
+      }
+    }
+  }, [
+    activeTabIndex,
+    findFirstErrorElement,
+    errors,
+    isValidating,
+    isSubmitting,
+  ]);
 
   useEffect(() => {
     const isNewSubmit = submitCount > previousSubmitCount.current;
@@ -116,19 +139,22 @@ export function useFormErrorFocus<T>({
       hasErrors &&
       (isNewSubmit || errorsChanged)
     ) {
-      // For tabbed interfaces, find and switch to tab with first error
       if (tabErrorMapping && onErrorInTab) {
         const tabWithError = findTabWithFirstError();
 
         if (tabWithError !== null && tabWithError !== activeTabIndex) {
           onErrorInTab(tabWithError);
-          focusFirstErrorInput();
+
           previousSubmitCount.current = submitCount;
           previousErrors.current = { ...errors };
           return;
         }
       }
-      focusFirstErrorInput();
+
+      const errorElement = findFirstErrorElement();
+      if (errorElement) {
+        setElementToFocus(errorElement);
+      }
     }
 
     if (!isSubmitting) {
@@ -140,7 +166,7 @@ export function useFormErrorFocus<T>({
     isValidating,
     isSubmitting,
     currentErrorKeys,
-    focusFirstErrorInput,
+    findFirstErrorElement,
     findTabWithFirstError,
     onErrorInTab,
     activeTabIndex,
