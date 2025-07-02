@@ -1,4 +1,3 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -6,6 +5,7 @@ import classNames from "classnames";
 import React from "react";
 import { PropsWithChildren } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 
 interface TemplatedNodeContainerProps extends PropsWithChildren {
   isTemplatedNode: boolean;

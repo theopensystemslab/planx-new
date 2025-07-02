@@ -1,6 +1,6 @@
 import Check from "@mui/icons-material/Check";
 import Container from "@mui/material/Container";
-import { lighten, useTheme } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { formatRawProjectTypes } from "@opensystemslab/planx-core";
 import {
@@ -156,8 +156,8 @@ export default function MakePayment({
         iconTitle={"Success"}
         heading="Payment received"
         color={{
-          background: lighten(theme.palette.success.main, 0.9),
-          text: "black",
+          background: theme.palette.success.light,
+          text: theme.palette.text.primary,
         }}
       >
         <Typography pt={2} variant="body2" maxWidth="formWrap">
