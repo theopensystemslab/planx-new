@@ -1,6 +1,11 @@
-import { number, object, string } from "yup";
+import { richText } from "lib/yupExtensions";
+import { boolean, number, object, SchemaOf, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 import { defaultContent } from "./components/defaultContent";
 
 export interface Feedback extends BaseNodeData {
@@ -27,6 +32,18 @@ export const parseFeedback = (
   feedbackRequired: data?.feedbackRequired || defaultContent.feedbackRequired,
   ...parseBaseNodeData(data),
 });
+
+export const validationSchema: SchemaOf<Feedback> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string(),
+      description: richText(),
+      ratingQuestion: richText(),
+      freeformQuestion: richText(),
+      disclaimer: richText(),
+      feedbackRequired: boolean().required(),
+    }),
+  );
 
 export const createFeedbackSchema = (feedbackRequired: boolean) => {
   return object().shape({

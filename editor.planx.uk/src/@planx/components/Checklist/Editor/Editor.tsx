@@ -17,7 +17,7 @@ import { Switch } from "ui/shared/Switch";
 import { Option, parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
-import { toggleExpandableChecklist } from "../model";
+import { toggleExpandableChecklist, validationSchema } from "../model";
 import { ChecklistProps } from "../types";
 import { Options } from "./Options";
 
@@ -110,6 +110,9 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       }
       return errors;
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const focusRef = useRef<HTMLInputElement | null>(null);
@@ -123,7 +126,11 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
   }, []);
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form
+      onSubmit={formik.handleSubmit}
+      id="modal"
+      data-testid="checklistEditorForm"
+    >
       <TemplatedNodeInstructions
         isTemplatedNode={formik.values.isTemplatedNode}
         templatedNodeInstructions={formik.values.templatedNodeInstructions}
@@ -142,7 +149,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 placeholder="Text"
                 onChange={formik.handleChange}
                 inputRef={focusRef}
-                required
+                errorMessage={formik.errors.text}
                 disabled={props.disabled}
               />
               <ImgInput
@@ -160,6 +167,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
                 placeholder="Description"
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.description}
               />
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>
@@ -229,7 +237,11 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
           </InputGroup>
         </ModalSectionContent>
         <ErrorWrapper error={formik.errors.options}>
-          <Options formik={formik} disabled={props.disabled} />
+          <Options
+            formik={formik}
+            disabled={props.disabled}
+            isTemplatedNode={props.node?.data?.isTemplatedNode}
+          />
         </ErrorWrapper>
       </ModalSection>
       <ModalFooter formik={formik} disabled={props.disabled} />

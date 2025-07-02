@@ -14,7 +14,6 @@ import { mixed } from "yup";
 
 interface Options {
   variant?: Variant;
-  required?: boolean;
 }
 
 interface ValidationCheck {
@@ -26,18 +25,9 @@ interface ValidationCheck {
  * Custom Yup schema describing the validation rules for a RichTextInput
  * Checks for both valid content, as well as HTML which adheres to a11y recommendations
  */
-export const richText = ({
-  required = false,
-  variant,
-}: Options | undefined = {}) => {
-  let schema = mixed();
-
-  if (required) {
-    schema = schema.required("Field is required");
-  }
-
+export const richText = ({ variant }: Options | undefined = {}) => {
   // Transform HTML string to tiptap JSON for easier traversal and validation
-  schema = schema.transform(
+  let schema = mixed().transform(
     (_value, originalValue): JSONContent | undefined => {
       if (!originalValue) return undefined;
       return fromHtml(originalValue);

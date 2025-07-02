@@ -514,7 +514,7 @@ describe("Adding tags and syncing state", () => {
     await user.click(getByText("Continue"));
     expect(handleSubmit).toHaveBeenCalledTimes(0);
     const error = await within(document.body).findByText(
-      "Please upload and label all required information",
+      /Please upload and label all required information/,
     );
     expect(error).toBeVisible();
   });
@@ -551,7 +551,7 @@ describe("Error handling", () => {
     expect(handleSubmit).not.toHaveBeenCalled();
 
     // Error warns user of this
-    const dropzoneError = await findByText("Upload at least one file");
+    const dropzoneError = await findByText(/Upload at least one file/);
     expect(dropzoneError).toBeVisible();
 
     await user.upload(input, file);

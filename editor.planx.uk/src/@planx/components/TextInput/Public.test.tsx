@@ -45,7 +45,7 @@ test("requires a non-empty string before being able to continue", async () => {
   expect(handleSubmit).toHaveBeenCalledTimes(0);
 
   const errorMessage = await screen.findByText(
-    "Enter your answer before continuing",
+    /Enter your answer before continuing/,
   );
   expect(errorMessage).toBeVisible();
 });
@@ -173,7 +173,7 @@ it("should always an empty error message element in the DOM", () => {
   expect(errorMessage).toBeEmptyDOMElement();
 });
 
-it("should change the role of the ErrorWrapper when an invalid input is given", async () => {
+it("should change the role of the ErrorText when an invalid input is given", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
@@ -185,11 +185,12 @@ it("should change the role of the ErrorWrapper when an invalid input is given", 
     ></TextInput>,
   );
 
-  const [errorWrapper, ..._rest] = screen.getAllByTestId("error-wrapper");
+  await user.click(screen.getByTestId("continue-button"));
+  const errorMessage = screen.getByTestId(`${ERROR_MESSAGE}-testId`);
   user.click(screen.getByTestId("continue-button"));
 
-  expect(errorWrapper).not.toBeEmptyDOMElement();
-  expect(errorWrapper).toHaveAttribute("role", "alert");
+  expect(errorMessage).not.toBeEmptyDOMElement();
+  expect(errorMessage).toHaveAttribute("role", "alert");
 });
 
 test("character limit counter should appear for long text inputs", async () => {

@@ -70,7 +70,7 @@ describe("Read Me Page component", () => {
       await user.click(screen.getByRole("button", { name: "Save" }));
 
       expect(
-        screen.getByText("Service description must be 120 characters or less"),
+        screen.getByText(/Service description must be 120 characters or less/),
       ).toBeInTheDocument();
 
       await user.click(screen.getByRole("button", { name: "Reset changes" })); // refreshes page and refetches data

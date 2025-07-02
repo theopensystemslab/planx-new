@@ -13,9 +13,9 @@ import AutocompleteInput from "ui/shared/Autocomplete/AutocompleteInput";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { PopupIcon } from "ui/shared/PopUpIcon";
-import * as Yup from "yup";
 
 import { ICONS } from "../shared/icons";
+import { validationSchema } from "./model";
 import { Flow, FlowAutocompleteListProps } from "./types";
 
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
@@ -67,26 +67,22 @@ const ExternalPortalForm: React.FC<{
   templatedNodeInstructions = "",
   areTemplatedNodeInstructionsRequired = false,
 }) => {
-  const portalSchema = Yup.object().shape({
-    flowId: Yup.string().required("Add a flow to submit"),
-  });
-
   const formik = useFormik({
     initialValues: {
       flow: flows.find((flow) => flow.id === flowId) || null,
       flowId: flowId || null,
       tags,
       notes,
+      isTemplatedNode,
+      templatedNodeInstructions,
+      areTemplatedNodeInstructionsRequired,
     },
-    onSubmit: (values) => {
-      formik.validateForm(values);
-      if (handleSubmit && !formik.errors.flowId) {
-        handleSubmit({ type: TYPES.ExternalPortal, data: values });
-      } else {
-        alert(JSON.stringify(values, null, 2));
+    onSubmit: (data) => {
+      if (handleSubmit) {
+        handleSubmit({ type: TYPES.ExternalPortal, data });
       }
     },
-    validationSchema: portalSchema,
+    validationSchema,
     validateOnChange: false,
     validateOnBlur: false,
   });

@@ -39,11 +39,11 @@
 
 }
 
-/*
-/ Fluid type styles
-*/
-
 @layer components {
+
+  /*
+  / Fluid type styles
+  */
 
   /* Heading styles */
   .text-heading-xl {
@@ -94,5 +94,33 @@
   }
   .paragraph-link--external::after {
     content: " ↗";
+  }
+
+  /*
+  /  Button styles
+  */
+
+  /* Core button styles */
+  .button {
+    @apply inline-block font-semibold rounded transition cursor-pointer;
+  }
+
+  /* Button variants */
+  .button--primary {
+    @apply bg-action-main hover:bg-action-main-hover;
+  }
+  .button--secondary {
+    @apply bg-action-secondary hover:bg-action-secondary-hover text-white;
+  }
+
+  /* Button sizes */
+  .button--large {
+    @apply clamp-[text,base,lg] clamp-[py,3,4] clamp-[px,4,5];
+  }
+  .button--medium {
+    @apply clamp-[text,sm,base] clamp-[py,2,3] clamp-[px,3,4];
+  }
+  .button--small {
+    @apply clamp-[text,xs,sm] py-2 clamp-[px,2,3];
   }
 }

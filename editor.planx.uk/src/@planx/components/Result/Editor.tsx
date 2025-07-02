@@ -4,11 +4,12 @@ import {
   ComponentType as TYPES,
   Flag,
   flatFlags,
+  getNoResultFlag,
 } from "@opensystemslab/planx-core/types";
-import { getNoResultFlag } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import groupBy from "lodash/groupBy";
 import React from "react";
+import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
@@ -172,6 +173,11 @@ const ResultComponent: React.FC<Props> = (props) => {
           </Box>
         </ModalSectionContent>
       </ModalSection>
+      <ModalFooter
+        formik={formik}
+        showMoreInformation={false}
+        disabled={props.disabled}
+      />
     </form>
   );
 };

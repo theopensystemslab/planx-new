@@ -13,11 +13,9 @@ const {
   external = false,
 } = Astro.props as Props;
 
-const baseClasses = "inline-block font-semibold rounded transition m-0";
-
 const variantClasses = {
-  primary: "bg-action-main hover:bg-action-main-hover",
-  secondary: "bg-action-secondary hover:bg-action-secondary-hover text-white",
+  primary: "button--primary",
+  secondary: "button--secondary",
 };
 
 const sizeClasses = {
@@ -29,7 +27,7 @@ const sizeClasses = {
 const externalClasses = external ? "after:content-['_↗']" : "";
 
 
-const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${externalClasses}`;
+const classes = `button ${variantClasses[variant]} ${sizeClasses[size]} ${externalClasses}`;
 ---
 
 <a href={href} class={classes}>

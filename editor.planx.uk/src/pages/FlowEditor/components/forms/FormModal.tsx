@@ -12,13 +12,17 @@ import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
+import {
+  nodeIsChildOfTemplatedInternalPortal,
+  nodeIsTemplatedInternalPortal,
+} from "pages/FlowEditor/utils";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
-import { Store, useStore } from "../../lib/store";
+import { useStore } from "../../lib/store";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   // Target all modal sections (the direct child is the backdrop, hence the double child selector)
@@ -151,38 +155,57 @@ const FormModal: React.FC<{
   const [
     addNode,
     updateNode,
-    node,
+    flow,
     makeUnique,
     connect,
     teamSlug,
     isTemplatedFrom,
+    orderedFlow,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
-    store.flow[id],
+    store.flow,
     store.makeUnique,
     store.connect,
     store.getTeam().slug,
     store.isTemplatedFrom,
+    store.orderedFlow,
   ]);
+  const node = flow[id];
   const handleClose = () => navigate(rootFlowPath(true));
 
   // Nodes should be disabled when:
   //  1. The user doesn't have any edit access to this team
-  //  2. The user has edit access to this team, but it is a templated flow and the node is not marked "isTemplatedNode"
+  //  2. The user has edit access to this team, but it is:
+  //    - a templated flow
+  //    - and the node itself is not marked "isTemplatedNode" or a child of an internal portal marked "isTemplatedNode"
   const canUserEditNode = (teamSlug: string) => {
     return useStore.getState().canUserEditTeam(teamSlug);
   };
-  const isCustomisableNode = (node: Store.Node) => {
-    return Boolean(node.data?.isTemplatedNode);
-  };
-  const disabled = isTemplatedFrom
-    ? !canUserEditNode(teamSlug) || !isCustomisableNode(node)
-    : !canUserEditNode(teamSlug);
 
-  // In cases of a templated flow, nodes tagged 'customisation' should not be disabled
-  //   but only the "Update" button should be visible in their modal, "Delete" & "Make unique" should be hidden
-  const hideButton = isTemplatedFrom && isCustomisableNode(node);
+  const indexedParent = orderedFlow?.find(({ id }) => id === parent);
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+    flow,
+    indexedParent,
+  );
+  const parentIsChildOfTemplatedInternalPortal =
+    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+
+  const canUserEditTemplatedNode =
+    canUserEditNode(teamSlug) &&
+    (Boolean(node?.data?.isTemplatedNode) ||
+      parentIsTemplatedInternalPortal ||
+      parentIsChildOfTemplatedInternalPortal);
+
+  const hideMakeUniqueDeleteButtons =
+    isTemplatedFrom &&
+    Boolean(node?.data?.isTemplatedNode) &&
+    (!parentIsTemplatedInternalPortal ||
+      !parentIsChildOfTemplatedInternalPortal);
+
+  const disabled = isTemplatedFrom
+    ? !canUserEditTemplatedNode
+    : !canUserEditNode(teamSlug);
 
   const toast = useToast();
 
@@ -265,7 +288,7 @@ const FormModal: React.FC<{
       </DialogContent>
       <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
-          {handleDelete && !hideButton && (
+          {handleDelete && !hideMakeUniqueDeleteButtons && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
@@ -280,7 +303,7 @@ const FormModal: React.FC<{
               </Button>
             </Grid>
           )}
-          {handleDelete && !hideButton && (
+          {handleDelete && !hideMakeUniqueDeleteButtons && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
                 fullWidth
