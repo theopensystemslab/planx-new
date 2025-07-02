@@ -154,7 +154,23 @@ export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
       id={`select-multiple-file-tags-${uploadedFile.id}`}
       isOptionEqualToValue={(option, value) => option.name === value.name}
       key={`form-${uploadedFile.id}`}
-      label="What does this file show? (select all that apply)"
+      label={
+        <>
+          What does this file show? (select all that apply)
+          <Box
+            component="span"
+            sx={{
+              position: "absolute",
+              clip: "rect(0 0 0 0)",
+              width: "1px",
+              height: "1px",
+              overflow: "hidden",
+            }}
+          >
+            This question refers to file: {uploadedFile.file.name}
+          </Box>
+        </>
+      }
       ListboxComponent={ListboxComponent}
       onChange={handleChange}
       options={options}
