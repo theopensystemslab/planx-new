@@ -98,15 +98,18 @@ export default function Checkbox({
   variant = "default",
   disabled,
 }: Props): FCReturn {
-  const handleChange = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.preventDefault();
-    onChange && onChange();
+  const handleChange = () => {
+    if (onChange) {
+      onChange();
+    }
   };
 
   return (
-    <Root onClick={handleChange} disabled={disabled} variant={variant}>
+    <Root disabled={disabled} variant={variant}>
       <Input
-        defaultChecked={checked}
+        checked={checked}
+        onChange={handleChange}
+        aria-checked={checked}
         type="checkbox"
         id={id}
         data-testid={id}

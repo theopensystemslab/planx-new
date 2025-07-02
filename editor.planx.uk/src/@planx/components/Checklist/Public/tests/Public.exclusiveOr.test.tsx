@@ -62,12 +62,12 @@ describe.each([
 
       await pressOption(optionLabelText);
 
-      expect(firstSelectedOption).toHaveAttribute("checked");
+      expect(firstSelectedOption).toBeChecked();
 
       await pressOption(oppositeOptionLabelText);
 
-      expect(firstSelectedOption).not.toHaveAttribute("checked");
-      expect(secondSelectedOption).toHaveAttribute("checked");
+      expect(firstSelectedOption).not.toBeChecked();
+      expect(secondSelectedOption).toBeChecked();
     });
   },
 );
