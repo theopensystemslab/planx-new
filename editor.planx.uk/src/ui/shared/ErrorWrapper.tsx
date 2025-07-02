@@ -12,7 +12,7 @@ export interface Props {
   id?: string;
   // "alert" - important and time-sensitive information (e.g. invalid input feedback)
   // "status" - advisory information which does not interrupt focus (e.g. file upload status)
-  role?: "alert" | "status";
+  role?: "alert" | "status" | undefined;
 }
 
 const Root = styled(Box, {
@@ -42,7 +42,7 @@ export default function ErrorWrapper({
   id,
   error,
   children,
-  role = "alert",
+  role,
 }: Props): FCReturn {
   const inputId = id ? `${ERROR_MESSAGE}-${id}` : undefined;
   const { trackEvent } = useAnalyticsTracking();
