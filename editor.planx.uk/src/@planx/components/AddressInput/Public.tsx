@@ -3,6 +3,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
 import { FormikErrors, useFormik } from "formik";
+import { useFormErrorFocus } from "hooks/useFormErrorFoucs";
 import React from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
@@ -31,6 +32,13 @@ export default function AddressInputComponent(props: Props): FCReturn {
     validateOnBlur: false,
     validateOnChange: false,
     validationSchema: addressValidationSchema,
+  });
+
+  useFormErrorFocus({
+    errors: formik.errors,
+    isSubmitting: formik.isSubmitting,
+    isValidating: formik.isValidating,
+    submitCount: formik.submitCount,
   });
 
   return (
