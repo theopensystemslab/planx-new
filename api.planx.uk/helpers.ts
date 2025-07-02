@@ -325,7 +325,7 @@ export const getTemplatedFlows = async (flowId: string) => {
     gql`
       query GetTemplatedFlows($flow_id: uuid!) {
         flow: flows_by_pk(id: $flow_id) {
-          templatedFlows: templated_flows {
+          templatedFlows: templated_flows(where: {deleted_at: {_is_null: true}}) {
             id
             slug
             team {
