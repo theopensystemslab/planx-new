@@ -5,7 +5,6 @@ import {
   tearDownTestContext,
 } from "./helpers/context.js";
 import { getTeamPage } from "./helpers/getPage.js";
-import { createAuthenticatedSession } from "./helpers/globalHelpers.js";
 import { answerQuestion, clickContinue } from "./helpers/userActions.js";
 import { PlaywrightEditor } from "./pages/Editor.js";
 import {
@@ -61,8 +60,10 @@ test.describe("Flow creation, publish and preview", () => {
     await tearDownTestContext();
   });
 
-  test("Create a flow", async ({ browser }) => {
-    test.setTimeout(70_000);
+  test("Create, publish, and preview a flow with geospatial components", async ({
+    browser,
+  }) => {
+    test.setTimeout(140_000);
 
     const page = await getTeamPage({
       browser,
@@ -103,17 +104,7 @@ test.describe("Flow creation, publish and preview", () => {
       "Planning constraints",
       // "File upload",
     ]);
-  });
 
-  test("Publish and preview flow with geospatial components", async ({
-    browser,
-  }) => {
-    test.setTimeout(70_000);
-
-    const page = await createAuthenticatedSession({
-      browser,
-      userId: context.user!.id!,
-    });
     // publish flow
     await navigateToService(page, serviceProps.slug);
     await publishService(page);
