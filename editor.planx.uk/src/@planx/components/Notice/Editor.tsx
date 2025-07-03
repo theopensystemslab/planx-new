@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { Notice } from "@planx/components/Notice/model";
-import { parseNotice } from "@planx/components/Notice/model";
+import { parseNotice, validationSchema } from "@planx/components/Notice/model";
 import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -18,13 +18,9 @@ import { Switch } from "ui/shared/Switch";
 import { InternalNotes } from "../../../ui/editor/InternalNotes";
 import { MoreInformation } from "../../../ui/editor/MoreInformation/MoreInformation";
 import { ICONS } from "../shared/icons";
+import { EditorProps } from "../shared/types";
 
-export interface Props {
-  id?: string;
-  handleSubmit?: (data: { type: TYPES.Notice; data: Notice }) => void;
-  node?: any;
-  disabled?: boolean;
-}
+export type Props = EditorProps<TYPES.Notice, Notice>;
 
 export interface NoticeEditorProps {
   formik: ReturnType<typeof useFormik<Notice>>;
@@ -64,6 +60,7 @@ const NoticeEditor: React.FC<NoticeEditorProps> = ({ formik, disabled }) => {
               value={values.description}
               onChange={handleChange}
               disabled={disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <ColorPicker
@@ -121,7 +118,9 @@ const NoticeComponent: React.FC<Props> = (props) => {
         props.handleSubmit({ type: TYPES.Notice, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
