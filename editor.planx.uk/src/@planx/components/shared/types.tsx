@@ -2,12 +2,12 @@ import { Store } from "pages/FlowEditor/lib/store";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
-export interface EditorProps<Type, Data> {
+export type EditorProps<Type, Data, ExtraProps extends Record<string, unknown> = Record<string, unknown>> = {
   id?: string;
   handleSubmit?: (data: { type: Type; data: Data }) => void;
   node?: any;
   disabled?: boolean;
-}
+} & ExtraProps;
 
 export type PublicProps<Data> = Data & {
   id?: string;
