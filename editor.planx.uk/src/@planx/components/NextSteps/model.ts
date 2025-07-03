@@ -1,8 +1,12 @@
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { richText } from "lib/yupExtensions";
+import { array, object, SchemaOf, string } from "yup";
+
+import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+
 
 export interface NextSteps extends BaseNodeData {
   title: string;
-  description: string;
+  description?: string;
   steps: Array<Step>;
 }
 
@@ -22,3 +26,17 @@ export const parseNextSteps = (
 });
 
 const DEFAULT_TITLE = "What would you like to do next?";
+
+export const validationSchema: SchemaOf<NextSteps> = baseNodeDataValidationSchema.concat(
+  object({
+    title: string().required(),
+    description: richText(),
+    steps: array(
+      object({
+        title: string().required(),
+        description: string().required(),
+        url: string().url(),
+      })
+    ).min(1),
+  })
+);
