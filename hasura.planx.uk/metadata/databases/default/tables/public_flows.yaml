@@ -224,6 +224,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
+        - deleted_at
         - description
         - id
         - is_template
@@ -250,6 +251,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
+        - deleted_at
         - description
         - id
         - is_template
@@ -290,6 +292,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
+        - deleted_at
         - description
         - id
         - is_template
@@ -343,6 +346,7 @@ select_permissions:
         - created_at
         - creator_id
         - data
+        - deleted_at
         - description
         - id
         - is_template
