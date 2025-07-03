@@ -12,7 +12,7 @@ export interface NextSteps extends BaseNodeData {
 
 export interface Step {
   title: string;
-  description: string;
+  description?: string;
   url?: string;
 }
 
@@ -34,7 +34,7 @@ export const validationSchema: SchemaOf<NextSteps> = baseNodeDataValidationSchem
     steps: array(
       object({
         title: string().required(),
-        description: string().required(),
+        description: string(),
         url: string().url(),
       })
     ).min(1),
