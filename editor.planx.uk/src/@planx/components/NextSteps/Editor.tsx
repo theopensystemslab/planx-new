@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NextSteps, Step } from "@planx/components/NextSteps/model";
-import { parseNextSteps } from "@planx/components/NextSteps/model";
+import { parseNextSteps, validationSchema } from "@planx/components/NextSteps/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React, { ChangeEvent } from "react";
@@ -87,7 +87,9 @@ const NextStepsComponent: React.FC<Props> = (props) => {
         props.handleSubmit({ type: TYPES.NextSteps, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -110,6 +112,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
                 placeholder="Main Title"
                 format="large"
                 disabled={props.disabled}
+                errorMessage={formik.errors.title}
               />
             </InputRow>
             <InputRow>
@@ -119,6 +122,7 @@ const NextStepsComponent: React.FC<Props> = (props) => {
                 onChange={formik.handleChange}
                 placeholder="Main Description"
                 disabled={props.disabled}
+                errorMessage={formik.errors.description}
               />
             </InputRow>
           </Box>
