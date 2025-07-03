@@ -28,8 +28,11 @@ export const sendSlackNotification = async (
     "barnet",
     "buckinghamshire",
     "camden",
+    "gateshead",
     "lambeth",
     "medway",
+    "south-gloucestershire",
+    "southwark",
   ];
   // Message app types are a bit messy - Uniform won't have app type at all so we id by system because only accepts LDCs,
   //   BOPS will have internal ID with app type prefix, Email & S3 will have full PlanX service name
