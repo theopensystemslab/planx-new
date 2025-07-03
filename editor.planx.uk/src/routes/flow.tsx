@@ -72,6 +72,8 @@ const newNode = route(async (req) => {
 
   const extraProps = {} as any;
 
+  // Pass in list of relevant flows for portals
+  // This makes testing and mocking simpler
   if (type === "external-portal") {
     extraProps.flows = await getExternalPortals();
   } else if (type === "internal-portal") {

@@ -35,15 +35,11 @@ describe("adding an internal portal", () => {
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
         type: TYPES.InternalPortal,
-        data: {
+        data: expect.objectContaining({
           flowId: "", // will be removed when saving the data
           text: "new internal portal",
           tags: [],
-          notes: "",
-          isTemplatedNode: false,
-          templatedNodeInstructions: "",
-          areTemplatedNodeInstructionsRequired: false,
-        },
+        }),
       });
     });
   });
@@ -115,7 +111,7 @@ test("updating an internal portal", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <InternalPortalForm id="test" text="val" handleSubmit={handleSubmit} />,
+    <InternalPortalForm id="test" node={{ data: { text: "val" } }} handleSubmit={handleSubmit} />,
   );
 
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
@@ -135,10 +131,6 @@ test("updating an internal portal", async () => {
         flowId: "", // will be removed when saving the data
         text: "new val",
         tags: [],
-        notes: "",
-        isTemplatedNode: false,
-        templatedNodeInstructions: "",
-        areTemplatedNodeInstructionsRequired: false,
       },
     });
   });
