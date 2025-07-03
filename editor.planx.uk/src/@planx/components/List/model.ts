@@ -1,7 +1,8 @@
+import { richText } from "lib/yupExtensions";
 import { cloneDeep } from "lodash";
-import { number, object } from "yup";
+import { number, object, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 import { Schema } from "../shared/Schema/model";
 import { SCHEMAS } from "./Editor";
 
@@ -22,7 +23,11 @@ export const parseContent = (data: Record<string, any> | undefined): List => ({
   ...parseBaseNodeData(data),
 });
 
-export const validationSchema = object({
+export const validationSchema = baseNodeDataValidationSchema.concat(object({
+  fn: string().nullable().required(),
+  title: string().required(),
+  description: richText(),
+  schemaName: string().required(),
   schema: object({
     max: number()
       .optional()
@@ -31,4 +36,4 @@ export const validationSchema = object({
         "The maximum must be greater than 1 - a Page component should be used when max is equal to 1",
       ),
   }),
-});
+}));

@@ -89,7 +89,7 @@ export const SCHEMAS = [
 ];
 
 function ListComponent(props: Props) {
-  const formik = useFormik({
+  const formik = useFormik<List>({
     initialValues: parseContent(props.node?.data),
     onSubmit: (newValues) => {
       props.handleSubmit?.({
@@ -130,6 +130,7 @@ function ListComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
