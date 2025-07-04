@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { sortIdsDepthFirst } from "@planx/graph";
 import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
@@ -46,10 +47,21 @@ export const navigationStore: StateCreator<
    * Called by setFlow() as we require a flow from the DB before proceeding
    */
   initNavigationStore: () => {
-    const sectionNodes = get().filterFlowByType(TYPES.Section) as Record<
-      string,
-      SectionNode
-    >;
+    const unorderedSectionNodes = get().filterFlowByType(
+      TYPES.Section,
+    ) as Record<string, SectionNode>;
+
+    // Because sections can be located in internal portals, ensure they're ordered depth-first
+    const sectionNodeIds = sortIdsDepthFirst(get().flow)(
+      new Set(Object.keys(unorderedSectionNodes)),
+    );
+    const sectionNodes: Record<string, SectionNode> = {};
+    Object.entries(unorderedSectionNodes)
+      .sort((a, b) =>
+        sectionNodeIds.indexOf(a[0]) < sectionNodeIds.indexOf(b[0]) ? -1 : 1,
+      )
+      .map((i) => (sectionNodes[i[0]] = i[1]));
+
     const sectionCount = Object.keys(sectionNodes).length;
     const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
