@@ -16,7 +16,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
-import { Page, parsePage } from "./model";
+import { Page, parsePage, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schema/AdvertConsent";
 import { EnvironmentGLA } from "./schema/Environment";
 import { MonitoringGLA } from "./schema/Monitoring";
@@ -40,6 +40,9 @@ function PageComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -60,7 +63,7 @@ function PageComponent(props: Props) {
               value={formik.values.title}
               placeholder="Title"
               onChange={formik.handleChange}
-              required
+              errorMessage={formik.errors.title}
               disabled={props.disabled}
             />
           </InputRow>
@@ -71,10 +74,11 @@ function PageComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
-            required
+            errorMessage={formik.errors.fn}
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
