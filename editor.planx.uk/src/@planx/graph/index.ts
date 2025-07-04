@@ -44,6 +44,14 @@ const isSectionNodeType = (id: string, graph: Graph): boolean =>
 const isExternalPortalNodeType = (id: string, graph: Graph): boolean =>
   graph[id]?.type === TYPES.ExternalPortal;
 
+// Sections can only be placed directly on the center of the graph, or within the first-level of a folder that is on the center of the graph
+const isInvalidSectionPosition = (id: string, graph: Graph): boolean =>
+  id !== ROOT_NODE_KEY &&
+  !(
+    graph[id]?.type === TYPES.InternalPortal &&
+    graph[ROOT_NODE_KEY]?.edges?.includes(id)
+  );
+
 const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
     return trim(x.replace(/[\u200B-\u200D\uFEFF↵]/g, ""));
@@ -166,11 +174,11 @@ const _add = (
 
   draft[id] = sanitize(nodeData);
 
-  if (isSectionNodeType(id, draft) && parent !== ROOT_NODE_KEY) {
+  if (isSectionNodeType(id, draft) && isInvalidSectionPosition(parent, draft)) {
     alert(
-      "cannot add sections on branches or in portals, must be on center of main graph. close this window & try again",
+      "cannot add sections on branches, must be on center of main graph. close this window & try again",
     );
-    throw new Error("cannot add sections on branches or in portals");
+    throw new Error("cannot add sections on branches");
   }
 
   if (before) {
@@ -270,7 +278,7 @@ export const move =
       const parentNode = draft[parent];
       parentNode.edges = parentNode.edges || [];
 
-      if (isSectionNodeType(id, graph) && toParent !== ROOT_NODE_KEY)
+      if (isSectionNodeType(id, graph) && isInvalidSectionPosition(id, graph))
         throw new Error(
           "cannot move sections onto branches, must be on center of graph",
         );
@@ -307,13 +315,15 @@ const _remove = (draft: Graph, id: string, parent: string) => {
 
   const idx = parentNode.edges.indexOf(id);
   if (idx >= 0) {
-    if (parent !== ROOT_NODE_KEY && parentNode.edges.length === 1) delete parentNode.edges;
+    if (parent !== ROOT_NODE_KEY && parentNode.edges.length === 1)
+      delete parentNode.edges;
     else parentNode.edges.splice(idx, 1);
   } else {
     throw new Error("not found in parent");
   }
 
-  if (parent !== ROOT_NODE_KEY && Object.keys(draft[parent]).length === 0) delete draft[parent];
+  if (parent !== ROOT_NODE_KEY && Object.keys(draft[parent]).length === 0)
+    delete draft[parent];
 
   if (numberOfEdgesTo(id, draft) === 0) {
     const { edges } = draft[id];
