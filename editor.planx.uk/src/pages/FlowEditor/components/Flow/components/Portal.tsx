@@ -96,7 +96,11 @@ const ExternalPortal: React.FC<any> = (props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
-        <Box className={classNames("card", "portal", { isDragging })}>
+        <Box
+          className={classNames("card", "portal", "external-portal", {
+            isDragging,
+          })}
+        >
           <Box className="card-wrapper">
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link href={`/${href}`} prefetch={false} ref={drag}>
@@ -161,7 +165,11 @@ const InternalPortal: React.FC<any> = (props) => {
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
-        <Box className={classNames("card", "portal", { isDragging })}>
+        <Box
+          className={classNames("card", "portal", "internal-portal", {
+            isDragging,
+          })}
+        >
           <TemplatedNodeContainer
             isTemplatedNode={props.data?.isTemplatedNode}
             areTemplatedNodeInstructionsRequired={
@@ -176,7 +184,6 @@ const InternalPortal: React.FC<any> = (props) => {
                 ref={drag}
                 onContextMenu={handleContext}
               >
-                {Icon && <Icon />}
                 <span>{props.data.text}</span>
               </Link>
               <Link href={editHref} prefetch={false} className="portalMenu">
