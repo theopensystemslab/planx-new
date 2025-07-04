@@ -15,6 +15,7 @@ import {
 } from "lib/feedback";
 import React from "react";
 import { Link as ReactNaviLink } from "react-navi";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import TerribleFace from "ui/images/feedback_filled-01.svg";
 import PoorFace from "ui/images/feedback_filled-02.svg";
 import NeutralFace from "ui/images/feedback_filled-03.svg";
@@ -88,16 +89,9 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
       />
       <Box my={4}>
         {props.ratingQuestion && (
-          <InputLabel
-            label={
-              <strong>
-                <ReactMarkdownOrHtml
-                  source={props.ratingQuestion}
-                  id={"RATING_QUESTION"}
-                />
-              </strong>
-            }
-          />
+          <Box sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+            <InputLabel label={props.ratingQuestion} />
+          </Box>
         )}
         <ErrorWrapper error={formik.errors.feedbackScore}>
           <StyledToggleButtonGroup
@@ -148,16 +142,9 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
           </StyledToggleButtonGroup>
         </ErrorWrapper>
         {props.freeformQuestion && (
-          <InputLabel
-            label={
-              <strong>
-                <ReactMarkdownOrHtml
-                  source={props.freeformQuestion}
-                  id={"FREEFORM_QUESTION"}
-                />
-              </strong>
-            }
-          />
+          <Box sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}>
+            <InputLabel label={props.freeformQuestion} />
+          </Box>
         )}
         <Input
           multiline={true}
