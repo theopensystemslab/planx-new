@@ -4,9 +4,9 @@ import { queryMock } from "../../tests/graphqlQueryMock.js";
 import { v4 as uuidV4 } from "uuid";
 import { NOTIFY_TEST_EMAIL } from "../../lib/notify/utils.js";
 import { sendEmail } from "../../lib/notify/index.js";
-import type { RawApplication } from "./service/getApplications.js";
-import * as getApplicationsService from "./service/getApplications.js";
+import * as getApplicationsService from "./service/getApplications/index.js";
 import * as loginService from "./service/login.js";
+import type { Application } from "./service/getApplications/types.js";
 
 vi.mock("../../lib/notify/index.js", () => ({
   sendEmail: vi.fn(),
@@ -102,9 +102,10 @@ describe("logging into LPS applications", () => {
 });
 
 describe("fetching applications", () => {
-  const mockLowcalSession: Omit<RawApplication, "id"> = {
-    updatedAt: "updatedAtTime",
-    submittedAt: "submittedAtTime",
+  const mockLowcalSession: Omit<Application, "id"> = {
+    createdAt: "createdAtTime",
+    addressLine: null,
+    addressTitle: null,
     service: {
       name: "Service Name",
       slug: "service-slug",
@@ -124,10 +125,26 @@ describe("fetching applications", () => {
         updateMagicLinks: {
           returning: [
             {
-              applications: [
-                { id: "1", ...mockLowcalSession },
-                { id: "2", ...mockLowcalSession },
-                { id: "3", ...mockLowcalSession },
+              drafts: [
+                {
+                  ...mockLowcalSession,
+                  id: "1",
+                  addressLine: "1, Bag End, The Shire, Eriador",
+                  addressTitle: null,
+                },
+                {
+                  ...mockLowcalSession,
+                  id: "2",
+                  addressLine: null,
+                  addressTitle: "Bag End",
+                },
+              ],
+              submitted: [
+                {
+                  ...mockLowcalSession,
+                  id: "3",
+                  submittedAt: "submittedAtTime",
+                },
               ],
             },
           ],
@@ -183,7 +200,8 @@ describe("fetching applications", () => {
         .send({ token, email: NOTIFY_TEST_EMAIL })
         .expect(200)
         .then((res) => {
-          expect(res.body.applications).toHaveLength(0);
+          expect(res.body.drafts).toHaveLength(0);
+          expect(res.body.submitted).toHaveLength(0);
         });
     });
 
@@ -193,22 +211,51 @@ describe("fetching applications", () => {
         .send({ token, email: NOTIFY_TEST_EMAIL })
         .expect(200)
         .then((res) => {
-          expect(res.body.applications).toHaveLength(3);
-          expect(res.body.applications[0]).toMatchObject({
+          expect(res.body.drafts).toHaveLength(2);
+          expect(res.body.drafts[0]).toMatchObject({
             id: "1",
-            updatedAt: "updatedAtTime",
-            submittedAt: "submittedAtTime",
+            createdAt: "createdAtTime",
             service: {
               name: "Service Name",
-              slug: "service-slug",
             },
             team: {
               name: "Team Name",
-              slug: "team-slug",
-              domain: null,
             },
-            url: "https://www.example.com/team-slug/service-slug/published?sessionId=1",
+            serviceUrl:
+              "https://www.example.com/team-slug/service-slug/published?sessionId=1",
           });
+
+          expect(res.body.submitted).toHaveLength(1);
+          expect(res.body.submitted[0]).toMatchObject({
+            id: "3",
+            createdAt: "createdAtTime",
+            submittedAt: "submittedAtTime",
+            service: {
+              name: "Service Name",
+            },
+            team: {
+              name: "Team Name",
+            },
+          });
+        });
+    });
+
+    it("formats addresses, where available", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token, email: NOTIFY_TEST_EMAIL })
+        .expect(200)
+        .then((res) => {
+          // Prefers single line address
+          expect(res.body.drafts[0].address).toBe(
+            "1, Bag End, The Shire, Eriador",
+          );
+
+          // Falls back to title
+          expect(res.body.drafts[1].address).toBe("Bag End");
+
+          // Will return null if no address available
+          expect(res.body.submitted[0].address).toBeNull();
         });
     });
   });

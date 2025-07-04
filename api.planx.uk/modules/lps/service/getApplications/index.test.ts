@@ -1,4 +1,5 @@
-import { generateResumeLink, type RawApplication } from "./getApplications.js";
+import type { Application } from "./types.js";
+import { generateResumeLink } from "./index.js";
 
 describe("generateResumeLink() helper function", () => {
   it("generates a valid URL for teams with a custom subdomain", () => {
@@ -12,7 +13,7 @@ describe("generateResumeLink() helper function", () => {
           domain: "planningservices.mycouncil.gov",
         },
       },
-    } as RawApplication);
+    } as Application);
 
     expect(actual).toEqual(expected);
   });
@@ -29,7 +30,7 @@ describe("generateResumeLink() helper function", () => {
           domain: null,
         },
       },
-    } as RawApplication);
+    } as Application);
 
     expect(actual).toEqual(expected);
   });

@@ -1,5 +1,5 @@
 import { ServerError } from "../../errors/serverError.js";
-import { getApplications } from "./service/getApplications.js";
+import { getApplications } from "./service/getApplications/index.js";
 import { login } from "./service/login.js";
 import type { Applications, Login } from "./types.js";
 
@@ -24,7 +24,7 @@ export const applicationsController: Applications = async (_req, res, next) => {
   const { email, token } = res.locals.parsedReq.body;
   try {
     const applications = await getApplications(email, token);
-    return res.status(200).json({ applications });
+    return res.status(200).json(applications);
   } catch (error) {
     next(
       new ServerError({
