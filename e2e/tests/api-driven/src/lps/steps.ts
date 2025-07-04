@@ -12,7 +12,10 @@ export class CustomWorld extends World {
   sessionIds!: string[];
   token!: string;
   email!: string;
-  applications!: { id: string }[];
+  applications!: {
+    drafts: { id: string }[];
+    submitted: { id: string }[];
+  };
 }
 
 Before<CustomWorld>("@lps-magic-links", async function () {
@@ -65,21 +68,28 @@ When<CustomWorld>("the correct details are provided", async function () {
 });
 
 Then<CustomWorld>("applications can't be accessed", function () {
-  assert.equal(this.applications.length, 0);
+  assert.equal(this.applications.drafts.length, 0);
+  assert.equal(this.applications.submitted.length, 0);
 });
 
 Then<CustomWorld>("applications can be accessed", async function () {
-  assert.equal(this.applications.length, 3);
+  assert.equal(this.applications.drafts.length, 2);
+  assert.equal(this.applications.submitted.length, 1);
 
   // Each application returned corresponds with the user's sessions
-  this.applications.forEach(({ id }) => {
+  this.applications.drafts.forEach(({ id }) => {
+    assert.equal(this.sessionIds.includes(id), true);
+  });
+
+  this.applications.submitted.forEach(({ id }) => {
     assert.equal(this.sessionIds.includes(id), true);
   });
 });
 
 Then<CustomWorld>("the link cannot be reused", async function () {
   this.applications = await getApplications(this.email, this.token);
-  assert.equal(this.applications.length, 0);
+  assert.equal(this.applications.drafts.length, 0);
+  assert.equal(this.applications.submitted.length, 0);
 
   const { usedAt } = await getLatestMagicLink();
   assert.notEqual(usedAt, null, "Magic link should be marked as consumed");
