@@ -16,7 +16,7 @@ const Root = styled(ListItemButton, {
     !["portalId", "backgroundColor"].includes(prop as string),
 })<{ portalId?: string; backgroundColor?: string }>(
   ({ theme, portalId, backgroundColor }) => ({
-    border: `1px solid ${theme.palette.common.black}`,
+    border: `1px solid ${theme.palette.text.primary}`,
     display: "block",
     maxWidth: "100%",
     padding: 0,
@@ -34,25 +34,22 @@ const HeaderRoot = styled(Box)(({ theme }) => ({
   padding: [theme.spacing(1), theme.spacing(0.5)],
   display: "flex",
   alignItems: "center",
-  backgroundColor: theme.palette.common.black,
+  backgroundColor: theme.palette.text.primary,
   color: theme.palette.common.white,
   width: "100%",
-  borderColor: theme.palette.common.black,
+  borderColor: theme.palette.text.primary,
   borderWidth: 4,
 }));
 
 const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
   const portalName = useStore((state) => state.flow)[portalId].data?.text;
-  const Icon = ICONS[ComponentType.InternalPortal];
 
   return (
-    <HeaderRoot>
-      {Icon && <Icon />}
+    <HeaderRoot className="node-card portal internal-portal">
       <Typography
         variant="body2"
         fontSize={14}
         fontWeight={FONT_WEIGHT_SEMI_BOLD}
-        ml={1}
       >
         {portalName}
       </Typography>
