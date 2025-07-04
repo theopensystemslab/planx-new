@@ -59,8 +59,6 @@ export const useFetchApplications = () => {
     retry: 2,
   }, queryClient);
 
-  console.log({applications})
-
   return {
     applications,
     isLoading,
