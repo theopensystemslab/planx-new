@@ -43,6 +43,9 @@ describe("when the Feedback component is rendered", async () => {
     expect(screen.getByRole("textbox")).toHaveFocus();
 
     await user.tab();
+    expect(screen.getByRole("link")).toHaveFocus();
+
+    await user.tab();
     expect(screen.getByTestId("continue-button")).toHaveFocus();
     await user.keyboard("[Space]"); // submits
 

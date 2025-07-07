@@ -38,8 +38,8 @@ export const validationSchema: SchemaOf<Feedback> =
     object({
       title: string(),
       description: richText(),
-      ratingQuestion: richText(),
-      freeformQuestion: richText(),
+      ratingQuestion: string(),
+      freeformQuestion: string(),
       disclaimer: richText(),
       feedbackRequired: boolean().required(),
     }),
