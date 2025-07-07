@@ -11,7 +11,6 @@ import { styled } from "@mui/material/styles";
 import Tabs from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
@@ -153,10 +152,7 @@ const Sidebar: React.FC = React.memo(() => {
     state.isTemplatedFrom,
   ]);
 
-  const defaultActiveTab =
-    hasFeatureFlag("TEMPLATES") && isTemplatedFrom
-      ? "Customise"
-      : "PreviewBrowser";
+  const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
 
   const handleChange = (
@@ -241,7 +237,7 @@ const Sidebar: React.FC = React.memo(() => {
           </Header>
           <TabList>
             <Tabs onChange={handleChange} value={activeTab} aria-label="">
-              {hasFeatureFlag("TEMPLATES") && isTemplatedFrom && (
+              {isTemplatedFrom && (
                 <StyledTab value="Customise" label="Customise" />
               )}
               <StyledTab value="PreviewBrowser" label="Preview" />
