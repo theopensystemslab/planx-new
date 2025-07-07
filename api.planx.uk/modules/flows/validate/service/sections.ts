@@ -59,7 +59,7 @@ const allSectionsOnRoot = (flowData: FlowGraph): boolean => {
       ([nodeId, nodeData]) =>
         nodeId !== "_root" &&
         (nodeData as Node)?.type === ComponentType.InternalPortal &&
-        !Boolean((nodeData as Node)?.data?.flattenedFromExternalPortal) &&
+        !(nodeData as Node)?.data?.flattenedFromExternalPortal &&
         rootEdgeIds.includes(nodeId),
     )
     ?.flatMap(([nodeId, _nodeData]) => nodeId);
