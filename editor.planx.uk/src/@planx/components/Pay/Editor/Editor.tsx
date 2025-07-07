@@ -83,6 +83,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   onChange={formik.handleChange}
                   disabled={props.disabled}
                   variant="nestedContent"
+                  errorMessage={formik.errors.description}
                 />
               </InputRow>
               <InputRow>
@@ -108,6 +109,7 @@ const Component: React.FC<Props> = (props: Props) => {
                   onChange={formik.handleChange}
                   disabled={props.disabled}
                   variant="nestedContent"
+                  errorMessage={formik.errors.instructionsDescription}
                 />
               </InputRow>
               <InputRow>

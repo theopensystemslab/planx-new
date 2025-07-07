@@ -4,6 +4,7 @@ import {
   GovUKCreatePaymentPayload,
   Passport as IPassport,
 } from "@opensystemslab/planx-core/types";
+import { richText } from "lib/yupExtensions";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { ApplicationPath, Passport } from "types";
 import { array, boolean, object, string } from "yup";
@@ -138,27 +139,27 @@ export const govPayMetadataSchema = array(
 export const validationSchema = object({
   title: string().trim().required(),
   bannerTitle: string().trim().required(),
-  description: string().trim().required(),
+  description: richText().required(),
   fn: string().oneOf([PAY_FN]).default(PAY_FN).required(),
   instructionsTitle: string().trim().required(),
-  instructionsDescription: string().trim().required(),
+  instructionsDescription: richText().required(),
   hidePay: boolean(),
   allowInviteToPay: boolean(),
   nomineeTitle: string().trim().when("allowInviteToPay", {
     is: true,
     then: string().required(),
   }),
-  nomineeDescription: string().trim().when("allowInviteToPay", {
+  nomineeDescription: richText().when("allowInviteToPay", {
     is: true,
-    then: string(),
+    then: richText(),
   }),
   yourDetailsTitle: string().trim().when("allowInviteToPay", {
     is: true,
     then: string().required(),
   }),
-  yourDetailsDescription: string().trim().when("allowInviteToPay", {
+  yourDetailsDescription: richText().when("allowInviteToPay", {
     is: true,
-    then: string(),
+    then: richText(),
   }),
   yourDetailsLabel: string().trim().when("allowInviteToPay", {
     is: true,
