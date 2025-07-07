@@ -3,12 +3,13 @@ import { Icon } from 'astro-icon/components'
 
 interface Props {
   title: string;
+  id?: string;
 }
 
-const { title } = Astro.props as Props;
+const { title, id } = Astro.props as Props;
 ---
 
-<details class="w-full max-w-screen-lg bg-bg-light rounded overflow-hidden group">
+<details class="w-full max-w-screen-lg bg-bg-light rounded overflow-hidden group" id={id}>
   <summary class="list-none flex items-center justify-between gap-4 clamp-[p,4,6] cursor-pointer hover:bg-gray-200 group-open:bg-gray-200 text-heading-sm text-left m-0">
     {title}
     <Icon class="clamp-[w,8,10] h-auto group-open:rotate-180" name="expand" />

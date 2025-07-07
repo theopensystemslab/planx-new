@@ -5,6 +5,7 @@ import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import ServiceCard from "@components/ServiceCard.astro";
 import LpaMasthead from "@components/LpaMasthead.astro";
 import Container from "@components/Container.astro";
+import Accordion from "@components/Accordion.astro";
 
 export const getStaticPaths = (async () => {
   const lpas = await fetchAllLPAs();
@@ -31,21 +32,61 @@ if (!lpaData) return Astro.redirect("/404");
     backgroundColour={lpaData.theme?.primaryColour}
   />
   <Container paddingY>
-    <div class="mb-8">
-      <h2 class="text-body-xl">
-        Send a planning application to <span class="font-bold"
-          >{lpaData.name}</span>
-      </h2>
-      <a class="paragraph-link text-body-md" href="/search"
-        >Search for a different postcode</a
-      >
+    <div class="flex flex-col gap-6">
+      <Accordion title="Start a planning application" id="apply-accordion">
+        <ul class="max-w-6xl">
+          {
+            lpaData.services.map((service) => (
+              <ServiceCard
+                service={service}
+                team={{ domain: lpaData.domain }}
+              />
+            ))
+          }
+        </ul>
+      </Accordion>
+      <Accordion title="Notify your authority" id="notify-accordion">
+        <ul class="max-w-6xl">
+          {
+            lpaData.services.map((service) => (
+              <ServiceCard
+                service={service}
+                team={{ domain: lpaData.domain }}
+              />
+            ))
+          }
+        </ul>
+      </Accordion>
+      <Accordion title="Get planning guidance" id="guidance-accordion">
+        <ul class="max-w-6xl">
+          {
+            lpaData.services.map((service) => (
+              <ServiceCard
+                service={service}
+                team={{ domain: lpaData.domain }}
+              />
+            ))
+          }
+        </ul>
+      </Accordion>
     </div>
-    <ul class="max-w-6xl">
-      {
-        lpaData.services.map((service) => (
-          <ServiceCard service={service} team={{ domain: lpaData.domain }} />
-        ))
-      }
-    </ul>
   </Container>
 </Layout>
+<script is:inline type="module" data-astro-rerun>
+  import { $action } from "./src/stores/action.ts";
+
+  const openAccordion = () => {
+    const action = $action.get();
+    if (!action) return;
+
+    const detailsEl = document.getElementById(`${action}-accordion`);
+    if (!detailsEl) return;
+
+    detailsEl.open = true;
+    // TODO: Scroll to summary (title), not list of services
+    // This might be an animation delay issue (?)
+    detailsEl.scrollIntoView({ behavior: "smooth" });
+  };
+
+  openAccordion();
+</script>

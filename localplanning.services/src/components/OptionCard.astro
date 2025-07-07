@@ -1,16 +1,51 @@
 ---
 import Button from "@components/Button.astro";
-const { title, description } = Astro.props;
+import type { Action } from "@stores/action";
+
+interface Props {
+  title: string;
+  description: string;
+  action: Action;
+}
+
+const { title, description, action } = Astro.props;
+
+const id = `action-${action}-button`;
 ---
 
-<div class="w-full lg:w-1/3 bg-bg-light clamp-[py,5,8] clamp-[px,4,8] rounded">
+<option-card
+  class="w-full lg:w-1/3 bg-bg-light clamp-[py,5,8] clamp-[px,4,8] rounded"
+  data-id={id}
+  data-action={action}
+>
   <div class="clamp-[mb,4,6]">
-     <h2 class="text-heading-sm">{title}</h2>
+    <h2 class="text-heading-sm">{title}</h2>
     <p class="text-text-secondary text-body-md">
       {description}
     </p>
   </div>
-    <Button href="./search" variant="primary">
-      Find local planning services
-    </Button>
-</div>
+  <Button href="./search" variant="primary" id={id}>
+    Find local planning services
+  </Button>
+</option-card>
+
+<script>
+  import { $action } from "@stores/action";
+  import type { Action } from "@stores/action.ts";
+
+  class OptionCard extends HTMLElement {
+    connectedCallback() {
+      // Read values from data-* attributes
+      const { id, action } = this.dataset || {};
+      if (!action) return;
+
+      const button = this.querySelector(`#${id}`);
+      if (!button) return;
+
+      // Store option to state, later referenced to open and scroll to relevant accordion
+      button.addEventListener("click", () => $action.set(action as Action));
+    }
+  }
+
+  customElements.define("option-card", OptionCard);
+</script>

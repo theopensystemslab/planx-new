@@ -4,6 +4,7 @@ interface Props {
   variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
   external?: boolean;
+  id?: string
 }
 
 const {
@@ -11,7 +12,8 @@ const {
   variant = "primary",
   size = "medium",
   external = false,
-} = Astro.props as Props;
+  id,
+} = Astro.props;
 
 const variantClasses = {
   primary: "button--primary",
@@ -30,6 +32,6 @@ const externalClasses = external ? "after:content-['_↗']" : "";
 const classes = `button ${variantClasses[variant]} ${sizeClasses[size]} ${externalClasses}`;
 ---
 
-<a href={href} class={classes}>
-   <slot />
+<a href={href} class={classes} id={id}>
+  <slot />
 </a>
