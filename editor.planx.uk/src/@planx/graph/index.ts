@@ -45,12 +45,10 @@ const isExternalPortalNodeType = (id: string, graph: Graph): boolean =>
   graph[id]?.type === TYPES.ExternalPortal;
 
 // Sections can only be placed directly on the center of the graph, or within the first-level of a folder that is on the center of the graph
-const isInvalidSectionPosition = (id: string, graph: Graph): boolean =>
-  id !== ROOT_NODE_KEY &&
-  !(
-    graph[id]?.type === TYPES.InternalPortal &&
-    graph[ROOT_NODE_KEY]?.edges?.includes(id)
-  );
+const isValidSectionPosition = (parent: string, graph: Graph): boolean =>
+  parent === ROOT_NODE_KEY ||
+  (graph[parent]?.type === TYPES.InternalPortal &&
+    Boolean(graph[ROOT_NODE_KEY]?.edges?.includes(parent)));
 
 const sanitize = (x: any) => {
   if ((x && typeof x === "string") || x instanceof String) {
@@ -174,7 +172,7 @@ const _add = (
 
   draft[id] = sanitize(nodeData);
 
-  if (isSectionNodeType(id, draft) && isInvalidSectionPosition(parent, draft)) {
+  if (isSectionNodeType(id, draft) && !isValidSectionPosition(parent, draft)) {
     alert(
       "cannot add sections on branches, must be on center of main graph. close this window & try again",
     );
@@ -278,7 +276,10 @@ export const move =
       const parentNode = draft[parent];
       parentNode.edges = parentNode.edges || [];
 
-      if (isSectionNodeType(id, graph) && isInvalidSectionPosition(id, graph))
+      if (
+        isSectionNodeType(id, graph) &&
+        !isValidSectionPosition(toParent, graph)
+      )
         throw new Error(
           "cannot move sections onto branches, must be on center of graph",
         );

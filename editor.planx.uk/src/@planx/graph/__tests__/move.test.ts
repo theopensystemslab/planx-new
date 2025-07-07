@@ -26,14 +26,14 @@ test("move sections within same root parent", () => {
     _root: {
       edges: ["a", "sectionNodeId"],
     },
-    a: {},
+    a: { type: 100 },
     sectionNodeId: { type: 360 },
   });
   expect(graph).toEqual({
     _root: {
       edges: ["sectionNodeId", "a"],
     },
-    a: {},
+    a: { type: 100 },
     sectionNodeId: { type: 360 },
   });
   expect(ops).toEqual([

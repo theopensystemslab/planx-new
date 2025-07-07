@@ -278,6 +278,6 @@ describe("error handling", () => {
         a: {},
         b: {},
       }),
-    ).toThrow("cannot add sections on branches or in portals");
+    ).toThrow("cannot add sections on branches");
   });
 });

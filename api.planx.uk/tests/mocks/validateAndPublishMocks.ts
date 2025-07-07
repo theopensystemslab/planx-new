@@ -157,12 +157,16 @@ export const flattenedParentFlow: FlowGraph = {
   ExternalPortalNode: {
     type: 300,
     edges: ["child-flow-id"],
+    data: {
+      flattenedFromExternalPortal: true,
+    },
   },
   "child-flow-id": {
     edges: ["QuestionInsidePortal"],
     type: 300,
     data: {
       text: "testing/child-flow",
+      flattenedFromExternalPortal: true,
     },
   },
   OptionB: {
