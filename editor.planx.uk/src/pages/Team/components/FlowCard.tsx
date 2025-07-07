@@ -241,7 +241,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
         >
           {isAnyTemplate && (
             <CardBanner>
-              {!isSourceTemplate && (
+              {isTemplatedFlow && (
                 <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />
               )}
               <Typography
