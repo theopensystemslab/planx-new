@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -20,10 +20,9 @@ import Checkbox from "ui/shared/Checkbox/Checkbox";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
-import { array, object, string } from "yup";
 
 import { ICONS } from "../shared/icons";
-import { availableDatasets, parseContent, PlanningConstraints } from "./model";
+import { availableDatasets, parseContent, PlanningConstraints, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.PlanningConstraints, PlanningConstraints>;
 
@@ -38,9 +37,9 @@ function PlanningConstraintsComponent(props: Props) {
         data: newValues,
       });
     },
-    validationSchema: object({
-      dataValues: array(string()).min(1, "Select at least one constraint"),
-    }),
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const changeSelectAll =
@@ -111,6 +110,7 @@ function PlanningConstraintsComponent(props: Props) {
                 value={formik.values.description}
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.description}
               />
             </InputRow>
             <InputRow>
@@ -124,7 +124,7 @@ function PlanningConstraintsComponent(props: Props) {
             </InputRow>
           </InputGroup>
           <InputGroup label="Which constraints do you want to check?">
-            <ErrorWrapper error={formik.errors.dataValues}>
+            <ErrorWrapper error={getIn(formik.errors, "dataValues")}>
               <TableContainer>
                 <Table size="small">
                   <TableHead>
@@ -214,6 +214,7 @@ function PlanningConstraintsComponent(props: Props) {
                 value={formik.values.disclaimer}
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.disclaimer}
               />
             </InputRow>
           </InputGroup>
