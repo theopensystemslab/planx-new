@@ -3,6 +3,7 @@ import {
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
+import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo } from "react";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
@@ -157,16 +158,7 @@ export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
       label={
         <>
           What does this file show? (select all that apply)
-          <Box
-            component="span"
-            sx={{
-              position: "absolute",
-              clip: "rect(0 0 0 0)",
-              width: "1px",
-              height: "1px",
-              overflow: "hidden",
-            }}
-          >
+          <Box component="span" sx={{ visuallyHidden }}>
             This question refers to file: {uploadedFile.file.name}
           </Box>
         </>
