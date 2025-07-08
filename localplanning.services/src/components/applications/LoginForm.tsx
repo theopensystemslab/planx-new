@@ -21,7 +21,6 @@ const LoginForm: React.FC = () => {
           Enter your email address to log in
         </label>
         <input
-          className="input--text"
           id="email"
           type="email"
           name="email"

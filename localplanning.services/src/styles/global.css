@@ -141,7 +141,9 @@
   /  Form styles
   */
 
-  .input--text {
+  input[type="text"],
+  input[type="email"],
+  input[type="search"] {
     width: var(--input-width);
     max-width: var(--input-max-width);
     height: var(--input-height);
@@ -150,7 +152,9 @@
     border: var(--input-border-width) solid var(--input-border-color);
   }
 
-  .input--text:focus {
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="search"]:focus {
     outline: var(--input-focus-outline);
     outline-offset: var(--input-focus-outline-offset);
     box-shadow: var(--input-focus-box-shadow);
