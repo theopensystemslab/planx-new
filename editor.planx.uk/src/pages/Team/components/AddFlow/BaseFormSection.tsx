@@ -36,7 +36,7 @@ export const BaseFormSection: React.FC = () => {
           }}
         >
           {CREATE_FLOW_MODES.map(({ mode, title }) => (
-            <MenuItem key={mode} value={mode} disabled={mode === "template"}>
+            <MenuItem key={mode} value={mode}>
               {title}
             </MenuItem>
           ))}
