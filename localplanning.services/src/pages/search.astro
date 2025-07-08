@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
-import PostcodeSearch from "@components/PostcodeSearch.astro";
+import PostcodeSearch from "@components/PostcodeSearch.tsx";
 ---
 
 <Layout>
@@ -11,7 +11,7 @@ import PostcodeSearch from "@components/PostcodeSearch.astro";
   </Masthead>
   <Container paddingY>
     <section class="mb-4">
-       <PostcodeSearch/>
+       <PostcodeSearch client:load/>
     </section>
     <section>
       <hr />
