@@ -47,9 +47,10 @@ export const GroupedChecklistOptions = ({
                 <Box
                   pt={0.5}
                   pb={2}
-                  aria-labelledby={`group-${index}-heading`}
+                  aria-labelledby={`whole-group-heading group-${index}-heading`}
                   id={`group-${index}-content`}
                   data-testid={`group-${index}${isExpanded ? "-expanded" : ""}`}
+                  role="group"
                 >
                   {group.children.map((option) => (
                     <ChecklistItem
