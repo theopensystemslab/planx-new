@@ -7,7 +7,7 @@ import ModalSectionContent from "ui/editor/ModalSectionContent";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { EditorProps } from "../shared/types";
-import { parseResponsiveChecklist, ResponsiveChecklist } from "./model";
+import { parseResponsiveChecklist, ResponsiveChecklist, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.ResponsiveChecklist, ResponsiveChecklist>;
 
@@ -22,6 +22,9 @@ function ResponsiveChecklistComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
