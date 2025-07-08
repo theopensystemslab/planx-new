@@ -35,32 +35,38 @@ export const parseBaseNodeData = (
     data?.areTemplatedNodeInstructionsRequired,
 });
 
-/**
- * Yup validation schema describing BaseNodeData fields
- */
-export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> = object({
-  // NodeTags
-  tags: array()
-    .of(
-      string()
-        .oneOf([...NODE_TAGS], "Invalid tag")
-        .required("Tag cannot be empty"),
-    )
-    .optional()
-    .default([]),
-
-  // TemplatedNodeData
-  isTemplatedNode: boolean().optional(),
-  templatedNodeInstructions: string().optional(),
-  areTemplatedNodeInstructionsRequired: boolean().optional(),
-
-  // MoreInformation
+export const moreInformationSchema: SchemaOf<MoreInformation> = object({
   howMeasured: richText({ variant: "nestedContent" }),
   policyRef: richText({ variant: "nestedContent" }),
   info: richText({ variant: "nestedContent" }),
   notes: string(),
   definitionImg: string(),
 });
+
+const templatedNodeSchema: SchemaOf<TemplatedNodeData> = object({
+  isTemplatedNode: boolean().optional(),
+  templatedNodeInstructions: string().optional(),
+  areTemplatedNodeInstructionsRequired: boolean().optional(),
+});
+
+const nodeTagsSchema: SchemaOf<NodeTags> = object({
+  tags: array()
+    .of(
+      string()
+        .oneOf([...NODE_TAGS], "Invalid tag")
+        .required("Tag cannot be empty")
+    )
+    .optional()
+    .default([]),
+});
+
+/**
+ * Yup validation schema describing BaseNodeData fields
+ */
+export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> = 
+  nodeTagsSchema
+    .concat(moreInformationSchema)
+    .concat(templatedNodeSchema);
 
 export interface Option {
   id: string;
