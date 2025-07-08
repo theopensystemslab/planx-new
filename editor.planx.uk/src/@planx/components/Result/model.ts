@@ -1,10 +1,13 @@
 import { FlagSet } from "@opensystemslab/planx-core/types";
+import { richText } from "lib/yupExtensions";
+import { mapValues } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import { Response } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
 import type { TextContent } from "types";
+import { boolean, lazy, mixed, object, string } from "yup";
 
-import { BaseNodeData } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema } from "../shared";
 
 export interface FlagDisplayText {
   heading?: string;
@@ -34,3 +37,27 @@ export interface PresentationalProps {
   resetButton?: boolean;
   resetPreview?: () => void;
 }
+
+const overridesSchema = lazy(obj => 
+  object(
+    mapValues(obj, () => object({
+      heading: string(),
+      description: richText(),
+      resetButton: boolean().optional(),
+    }))
+  )
+);
+
+export const validationSchema = baseNodeDataValidationSchema.concat(object({
+  flagSet: mixed().oneOf([
+    "Planning permission", 
+    "Works to listed buildings", 
+    "Works to trees & hedges", 
+    "Demolition in a conservation area", 
+    "Planning policy", 
+    "Community infrastructure levy", 
+    "Material change of use",
+  ]),
+  overrides: overridesSchema,
+  resetButton: boolean().optional(),
+}))
