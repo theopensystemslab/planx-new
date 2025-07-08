@@ -34,8 +34,21 @@
   --default-font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 
   /*
-  / Layout styles
+  / Form styles
   */
+
+  --input-width: 100%;
+  --input-max-width: 28rem;
+  --input-height: 48px;
+  --input-padding-y: clamp(0.5rem, 2vw, 0.75rem);
+  --input-padding-x: clamp(0.5rem, 2vw, 0.75rem);
+  --input-font-size: clamp(1rem, 2vw, 1.125rem);
+  --input-border-width: 2px;
+  --input-border-color: var(--color-black);
+
+  --input-focus-outline: rgb(255, 221, 0) solid 3px;
+  --input-focus-outline-offset: 0px;
+  --input-focus-box-shadow: 0px 0px 0px 2px inset;
 
 }
 
@@ -123,4 +136,34 @@
   .button--small {
     @apply clamp-[text,xs,sm] py-2 clamp-[px,2,3];
   }
+
+  /*
+  /  Form styles
+  */
+
+  .input--text {
+    width: var(--input-width);
+    max-width: var(--input-max-width);
+    height: var(--input-height);
+    padding: var(--input-padding-y) var(--input-padding-x);
+    font-size: var(--input-font-size);
+    border: var(--input-border-width) solid var(--input-border-color);
+  }
+
+  .input--text:focus {
+    outline: var(--input-focus-outline);
+    outline-offset: var(--input-focus-outline-offset);
+    box-shadow: var(--input-focus-box-shadow);
+  }
 }
+
+:root {
+  --postcode__input__height: var(--input-height);
+  --postcode__input__padding: var(--input-padding-y) var(--input-padding-x);
+  --postcode__font-family: var(--default-font-family);
+  --postcode__input__font-size: var(--input-font-size);
+  --postcode__input__border: var(--input-border-width) solid var(--input-border-color);
+  --postcode__input__width: var(--input-width);
+  --postcode__input__max-width: var(--input-max-width);
+}
+
