@@ -11,7 +11,7 @@ import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
-import { parseContent, Review } from "./model";
+import { parseContent, Review, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.Review, Review>;
 
@@ -24,6 +24,9 @@ function Component(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (
@@ -45,6 +48,7 @@ function Component(props: Props) {
               value={formik.values.title}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -54,6 +58,7 @@ function Component(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
         </ModalSectionContent>
@@ -65,6 +70,7 @@ function Component(props: Props) {
               value={formik.values.disclaimer}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.disclaimer}
             />
           </InputRow>
         </ModalSectionContent>

@@ -8,12 +8,11 @@ import { sortBreadcrumbs } from "pages/FlowEditor/lib/store/preview";
 import type { HandleSubmit } from "pages/Preview/Node";
 import React from "react";
 
+import { Review } from "../model";
+
 export default Component;
 
-interface Props {
-  title: string;
-  description: string;
-  disclaimer: string;
+interface Props extends Review {
   breadcrumbs: Store.Breadcrumbs;
   flow: Store.Flow;
   passport: Store.Passport;
