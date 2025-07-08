@@ -1,7 +1,9 @@
+import { richText } from "lib/yupExtensions";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { SectionNode, SectionStatus } from "types";
+import { object,SchemaOf, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export interface Section extends BaseNodeData {
   title: string;
@@ -83,3 +85,8 @@ export function computeSectionStatuses({
 
   return sectionStatuses;
 }
+
+export const validationSchema: SchemaOf<Section> = baseNodeDataValidationSchema.concat(object({
+  title: string().required(),
+  description: richText(),
+}))
