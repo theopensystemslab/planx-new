@@ -22,6 +22,7 @@ import { BaseNodeData, Option, parseBaseNodeData } from "../shared";
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import { getOptionsSchemaByFn } from "../shared/utils";
+import { validationSchema } from "./model";
 import QuestionOptionsEditor from "./OptionsEditor";
 
 interface Props {
@@ -89,6 +90,9 @@ export const Question: React.FC<Props> = (props) => {
       }
       return errors;
     },
+    validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   const schema = useStore().getFlowSchema();
@@ -145,6 +149,7 @@ export const Question: React.FC<Props> = (props) => {
                 placeholder="Description"
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.description}
               />
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>

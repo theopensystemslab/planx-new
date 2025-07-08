@@ -1,7 +1,9 @@
+import { richText } from "lib/yupExtensions";
 import { Store } from "pages/FlowEditor/lib/store";
 import { HandleSubmit } from "pages/Preview/Node";
+import { object } from "yup";
 
-import { BaseNodeData } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema } from "../shared";
 
 export interface Question extends BaseNodeData {
   id?: string;
@@ -21,3 +23,7 @@ export interface Question extends BaseNodeData {
   handleSubmit: HandleSubmit;
   autoAnswers?: string[] | undefined;
 }
+
+export const validationSchema = baseNodeDataValidationSchema.concat(object({
+  description: richText(),
+}));
