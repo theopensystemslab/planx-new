@@ -19,7 +19,7 @@ interface InviteToPaySectionProps {
 export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
   disabled,
 }) => {
-  const { handleChange, values, setFieldValue } = useFormikContext<Pay>();
+  const { handleChange, values, setFieldValue, errors } = useFormikContext<Pay>();
 
   return (
     <ModalSection>
@@ -69,6 +69,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
                   onChange={handleChange}
                   disabled={disabled}
                   variant="nestedContent"
+                  errorMessage={errors.nomineeDescription}
                 />
               </InputRow>
             </Box>
@@ -92,6 +93,7 @@ export const InviteToPaySection: React.FC<InviteToPaySectionProps> = ({
                   onChange={handleChange}
                   disabled={disabled}
                   variant="nestedContent"
+                  errorMessage={errors.yourDetailsDescription}
                 />
               </InputRow>
               <InputRow>
