@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React, { useState } from "react";
 import { Link, useCurrentRoute } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD, inputFocusStyle } from "theme";
@@ -156,7 +155,10 @@ const FlowCard: React.FC<FlowCardProps> = ({
   };
 
   const isSubmissionService = flow.publishedFlows?.[0]?.hasSendComponent;
-  const isTemplatedService = Boolean(flow.templatedFrom);
+
+  const isTemplatedFlow = Boolean(flow.templatedFrom);
+  const isSourceTemplate = flow.isTemplate;
+  const isAnyTemplate = isTemplatedFlow || isSourceTemplate;
 
   const statusVariant =
     flow.status === "online" ? StatusVariant.Online : StatusVariant.Offline;
@@ -175,12 +177,12 @@ const FlowCard: React.FC<FlowCardProps> = ({
     {
       type: FlowTagType.Templated,
       displayName: "Templated",
-      shouldAddTag: hasFeatureFlag("TEMPLATES") && isTemplatedService,
+      shouldAddTag: isTemplatedFlow,
     },
     {
       type: FlowTagType.SourceTemplate,
       displayName: "Source template",
-      shouldAddTag: hasFeatureFlag("TEMPLATES") && flow.isTemplate,
+      shouldAddTag: isSourceTemplate,
     },
   ];
 
@@ -237,22 +239,21 @@ const FlowCard: React.FC<FlowCardProps> = ({
             flexDirection: "column",
           }}
         >
-          {hasFeatureFlag("TEMPLATES") &&
-            (flow.templatedFrom || flow.isTemplate) && (
-              <CardBanner>
-                {!flow.isTemplate && (
-                  <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />
-                )}
-                <Typography
-                  variant="body2"
-                  sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
-                >
-                  {flow.isTemplate
-                    ? "Source template"
-                    : `Templated from ${flow.template.team.name}`}
-                </Typography>
-              </CardBanner>
-            )}
+          {isAnyTemplate && (
+            <CardBanner>
+              {isTemplatedFlow && (
+                <StarIcon sx={{ color: "#380F77", fontSize: "0.8em" }} />
+              )}
+              <Typography
+                variant="body2"
+                sx={{ fontWeight: FONT_WEIGHT_SEMI_BOLD }}
+              >
+                {isSourceTemplate
+                  ? "Source template"
+                  : `Templated from ${flow.template.team.name}`}
+              </Typography>
+            </CardBanner>
+          )}
           <CardContent>
             <Box>
               <Typography variant="h3" component="h2">
@@ -309,7 +310,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
               {
                 label: "Copy",
                 onClick: () => setIsCopyDialogOpen(true),
-                disabled: flow.isTemplate || isTemplatedService,
+                disabled: isAnyTemplate,
               },
               {
                 label: "Move",

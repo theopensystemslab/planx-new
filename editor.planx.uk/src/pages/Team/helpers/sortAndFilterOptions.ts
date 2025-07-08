@@ -1,4 +1,3 @@
-import { hasFeatureFlag } from "lib/featureFlags";
 import { FlowSummary } from "pages/FlowEditor/lib/store/editor";
 import { FilterOptions } from "ui/editor/Filter/Filter";
 import { SortableFields } from "ui/editor/SortControl/SortControl";
@@ -53,17 +52,12 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
     optionValue: ["submission"],
     validationFn: checkFlowServiceType,
   },
+  {
+    displayName: "Templates",
+    optionKey: "templatedFrom",
+    optionValue: ["templated", "source template"],
+    validationFn: checkFlowTemplateType,
+  },
 ];
 
-const templateFilterOption: FilterOptions<FlowSummary> = {
-  displayName: "Templates",
-  optionKey: "templatedFrom",
-  optionValue: ["templated", "source template"],
-  validationFn: checkFlowTemplateType,
-};
-
-export const filterOptions: FilterOptions<FlowSummary>[] = hasFeatureFlag(
-  "TEMPLATES",
-)
-  ? [...baseFilterOptions, templateFilterOption]
-  : baseFilterOptions;
+export const filterOptions: FilterOptions<FlowSummary>[] = baseFilterOptions;

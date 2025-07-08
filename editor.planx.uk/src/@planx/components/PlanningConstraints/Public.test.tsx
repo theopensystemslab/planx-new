@@ -49,6 +49,7 @@ describe("error state", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={vi.fn()}
+          dataValues={["test1", "test2", "test3"]}
         />
       </ErrorBoundary>,
     );
@@ -65,6 +66,7 @@ describe("error state", () => {
           description="Things that might affect your project"
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+          dataValues={["test1", "test2", "test3"]}
         />
       </ErrorBoundary>,
     );
@@ -96,6 +98,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={handleSubmit}
+        dataValues={["test1", "test2", "test3"]}
       />,
     );
 
@@ -115,6 +118,7 @@ describe("following a FindProperty component", () => {
         description="Things that might affect your project"
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
+        dataValues={["test1", "test2", "test3"]}
       />,
     );
     const results = await axe(container);
@@ -129,6 +133,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
+        dataValues={["test1", "test2", "test3"]}
       />,
     );
 
@@ -150,6 +155,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
+        dataValues={["test1", "test2", "test3", "road.classified"]}
       />,
     );
 
@@ -181,6 +187,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
+        dataValues={["test1", "test2", "test3"]}
       />,
     );
 
@@ -213,6 +220,7 @@ describe("following a FindProperty component", () => {
         fn="property.constraints.planning"
         disclaimer="This page does not include information about historic planning conditions that may apply to this property."
         handleSubmit={vi.fn()}
+        dataValues={["test1", "test2", "test3"]}
       />,
     );
 
@@ -363,6 +371,7 @@ describe("demo state", () => {
           fn="property.constraints.planning"
           disclaimer="This page does not include information about historic planning conditions that may apply to this property."
           handleSubmit={handleSubmit}
+          dataValues={["test1", "test2", "test3"]}
         />
       </ErrorBoundary>,
     );
