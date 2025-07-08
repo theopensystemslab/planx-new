@@ -69,13 +69,7 @@ function Component(props: PublicProps<PropertyInformation>) {
 }
 
 // Exported for tests
-export interface PresentationalProps {
-  title: string;
-  description: string;
-  info?: string;
-  policyRef?: string;
-  howMeasured?: string;
-  showPropertyTypeOverride?: boolean;
+export interface PresentationalProps extends PropertyInformation {
   address?: SiteAddress;
   propertyType?: string[];
   localAuthorityDistrict?: string[];

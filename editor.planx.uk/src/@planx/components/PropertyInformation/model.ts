@@ -5,7 +5,7 @@ import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from ".
 
 export interface PropertyInformation extends BaseNodeData {
   title: string;
-  description: string;
+  description?: string;
   showPropertyTypeOverride?: boolean;
 }
 
@@ -22,6 +22,6 @@ const defaultDescription = "<p>This is the information we currently have about t
 
 export const validationSchema = baseNodeDataValidationSchema.concat(object({
   title: string().required(),
-  description: richText().required(),
+  description: richText(),
   showPropertyTypeOverride: boolean().optional(),
 }))
