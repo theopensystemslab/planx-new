@@ -23,15 +23,27 @@ export const alterDrawGeoJson = async (page: Page) => {
   await map.click({ button: "left", position: { x: 150, y: 250 } });
   await map.click({ button: "left", position: { x: 200, y: 250 } });
   await map.click({ button: "left", position: { x: 100, y: 200 } });
+
+  // Wait for underlying attribute to update
+  await page.waitForFunction(() => {
+    const mapComponent = document.querySelector("my-map");
+    if (!mapComponent) return false;
+    const geoJson = mapComponent.getAttribute("drawgeojsondata");
+    return Boolean(geoJson);
+  });
 };
 
 export const resetMapBoundary = async (page: Page) => {
   const resetButton = page.getByLabel("Reset map view");
   await resetButton.click();
 
-  const resetGeoJson = await getMapProperties(page, "drawgeojsondata");
-
-  expect(resetGeoJson, "drawGeoJsonData should be reset").toEqual(null);
+  // Wait for the underlying attribute to update, not just the click action to complete
+  await page.waitForFunction(() => {
+    const mapComponent = document.querySelector("my-map");
+    if (!mapComponent) return false;
+    const resetGeoJson = mapComponent.getAttribute("drawgeojsondata");
+    return resetGeoJson === null;
+  });
 };
 
 export const checkGeoJsonContent = async (

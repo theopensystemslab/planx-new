@@ -252,12 +252,14 @@ const FormModal: React.FC<{
               data: { data?: Record<string, unknown> },
               children: Array<any> | undefined = undefined,
             ) => {
+              // TODO: Remove this!
               if (containsMadeLink(data.data)) {
                 toast.error(
                   'Legislation GOV UK links incorrectly ending in "/made" detected in your content. Please fix before continuing.',
                 );
                 return;
               }
+              // Handle internal portals
               if (typeof data === "string") {
                 connect(parent, data, { before });
               } else {

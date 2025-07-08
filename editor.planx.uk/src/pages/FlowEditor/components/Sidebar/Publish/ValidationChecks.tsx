@@ -1,5 +1,4 @@
 import Cancel from "@mui/icons-material/Cancel";
-import CheckCircle from "@mui/icons-material/CheckCircle";
 import Close from "@mui/icons-material/Close";
 import Done from "@mui/icons-material/Done";
 import NotInterested from "@mui/icons-material/NotInterested";
@@ -18,6 +17,7 @@ import countBy from "lodash/countBy";
 import React from "react";
 import { useState } from "react";
 import Caret from "ui/icons/Caret";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 
 export interface ValidationCheck {
   title: string;
@@ -175,7 +175,7 @@ const ValidationSummary = (props: { validationChecks: ValidationCheck[] }) => {
       {atLeastOneFail ? (
         <Cancel color="error" fontSize="large" />
       ) : (
-        <CheckCircle color="success" fontSize="large" />
+        <CheckCircleIcon color="success" fontSize="large" />
       )}
       <Typography
         variant="body1"

@@ -1,5 +1,4 @@
 import Container from "@mui/material/Container";
-import { hasFeatureFlag } from "lib/featureFlags";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
@@ -22,9 +21,7 @@ const ServiceSettings: React.FC = () => {
       <FlowStatus />
       {!isTemplatedFrom && !isTemplate && <FlowVisibility />}
       <FooterLinksAndLegalDisclaimer />
-      {hasFeatureFlag("TEMPLATES") && isTemplatedFrom && (
-        <TemplatedFlowStatus />
-      )}
+      {isTemplatedFrom && <TemplatedFlowStatus />}
     </Container>
   );
 };

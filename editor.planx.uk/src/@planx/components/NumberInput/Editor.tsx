@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import type { NumberInput } from "@planx/components/NumberInput/model";
-import { parseNumberInput } from "@planx/components/NumberInput/model";
+import { editorValidationSchema, parseNumberInput } from "@planx/components/NumberInput/model";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import React from "react";
@@ -28,7 +28,9 @@ export default function NumberInputComponent(props: Props): FCReturn {
         props.handleSubmit({ type: TYPES.NumberInput, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema: editorValidationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -53,6 +55,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
               placeholder="Title"
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -62,12 +65,14 @@ export default function NumberInputComponent(props: Props): FCReturn {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}
+            errorMessage={formik.errors.fn}
           />
           <InputRow>
             <InputRowLabel>units</InputRowLabel>
@@ -78,6 +83,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
                 placeholder="eg square metres"
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.units}
               />
             </InputRowItem>
           </InputRow>

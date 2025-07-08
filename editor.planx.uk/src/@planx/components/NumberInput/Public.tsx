@@ -12,7 +12,7 @@ import InputRowLabel from "ui/shared/InputRowLabel";
 import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { NumberInput } from "./model";
-import { parseNumber, validationSchema } from "./model";
+import { parseNumber, publicValidationSchema } from "./model";
 
 export type Props = PublicProps<NumberInput>;
 
@@ -31,7 +31,7 @@ export default function NumberInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: validationSchema({ data: props, required: true }),
+    validationSchema: publicValidationSchema({ data: props, required: true }),
   });
 
   const inputRef = useRef<HTMLInputElement>(null);

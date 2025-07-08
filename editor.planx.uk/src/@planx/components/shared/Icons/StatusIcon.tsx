@@ -1,7 +1,6 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { svgIconClasses } from "@mui/material/SvgIcon";
 import React from "react";
+import CheckCircleIcon from "ui/icons/CheckCircle";
+import SlashCircleIcon from "ui/icons/SlashCircle";
 
 import SemanticIcon from "./SemanticIcon";
 
@@ -15,17 +14,10 @@ interface Props {
 
 export const StatusIcon: React.FC<Props> = ({ isCompleted, title }) => (
   <SemanticIcon
-    Icon={isCompleted ? CheckCircleIcon : RemoveCircleOutlineIcon}
+    Icon={isCompleted ? CheckCircleIcon : SlashCircleIcon}
     titleAccess={isCompleted ? title.complete : title.incomplete}
     data-testid={isCompleted ? "complete-icon" : "incomplete-icon"}
     color={isCompleted ? "success" : "disabled"}
     fontSize="large"
-    sx={{
-      ...(!isCompleted && {
-        [`&.${svgIconClasses.root}`]: {
-          transform: "rotate(-45deg)",
-        },
-      }),
-    }}
   />
 );

@@ -1,4 +1,11 @@
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { richText } from "lib/yupExtensions";
+import { boolean, object, SchemaOf, string } from "yup";
+
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export enum FindPropertyUserAction {
   Existing = "Selected an existing address",
@@ -72,3 +79,15 @@ export const DEFAULT_NEW_ADDRESS_TITLE =
 export const DEFAULT_NEW_ADDRESS_DESCRIPTION =
   "You will need to select a location and provide a name to continue" as const;
 export const DEFAULT_NEW_ADDRESS_LABEL = "Name the site" as const;
+
+export const validationSchema: SchemaOf<FindProperty> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText(),
+      allowNewAddresses: boolean(),
+      newAddressTitle: string(),
+      newAddressDescription: richText(),
+      newAddressDescriptionLabel: string(),
+    }),
+  );

@@ -1,5 +1,4 @@
 import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
@@ -10,6 +9,7 @@ import {
 } from "lib/feedback";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import React, { useEffect, useRef, useState } from "react";
+import CheckCircleIcon from "ui/icons/CheckCircle";
 import FeedbackOption from "ui/public/FeedbackOption";
 
 import FeedbackForm from "../FeedbackForm/FeedbackForm";

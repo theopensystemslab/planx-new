@@ -1,17 +1,23 @@
 import { activePlanningConstraints } from "@opensystemslab/planx-core/types";
+import { richText } from "lib/yupExtensions";
+import { array, object, SchemaOf, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export interface PlanningConstraints extends BaseNodeData {
   title: string;
   description: string;
   fn: string;
   disclaimer: string;
-  dataValues?: string[] | undefined;
+  dataValues: string[];
 }
 
 export const parseContent = (
-  data: Record<string, any> | undefined,
+  data: Record<string, any> | undefined
 ): PlanningConstraints => ({
   title: data?.title || "Planning constraints",
   description:
@@ -53,3 +59,14 @@ export const availableDatasets: Dataset[] = Object.entries(
       ? constraint["digital-land-entities"]?.[0]
       : undefined,
 }));
+
+export const validationSchema: SchemaOf<PlanningConstraints> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText().required(),
+      fn: string().nullable().required(),
+      disclaimer: richText().required(),
+      dataValues: array(string().required()).min(1, "Select at least one constraint"),
+    })
+  );

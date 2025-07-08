@@ -1,6 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
 import { useFormikContext } from "formik";
-import { hasFeatureFlag } from "lib/featureFlags";
 import React from "react";
 import Permission from "ui/editor/Permission";
 import SelectInput from "ui/editor/SelectInput/SelectInput";
@@ -37,11 +36,7 @@ export const BaseFormSection: React.FC = () => {
           }}
         >
           {CREATE_FLOW_MODES.map(({ mode, title }) => (
-            <MenuItem
-              key={mode}
-              value={mode}
-              disabled={mode === "template" && !hasFeatureFlag("TEMPLATES")}
-            >
+            <MenuItem key={mode} value={mode}>
               {title}
             </MenuItem>
           ))}
@@ -77,10 +72,7 @@ export const BaseFormSection: React.FC = () => {
             name="isTemplate"
             checked={values.flow.isTemplate}
             onChange={() =>
-              setFieldValue(
-                "flow.isTemplate",
-                !values.flow.isTemplate,
-              )
+              setFieldValue("flow.isTemplate", !values.flow.isTemplate)
             }
             label={"Source template"}
           />

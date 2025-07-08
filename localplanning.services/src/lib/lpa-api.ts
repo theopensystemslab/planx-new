@@ -15,7 +15,7 @@ interface LPA {
     primaryColour: string;
   };
   services: Service[];
-  // TODO: custom subdomains
+  domain: string | null;
 }
 
 export async function fetchAllLPAs(): Promise<LPA[]> {
@@ -33,6 +33,7 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
                 logo
                 primaryColour: primary_colour
               }
+              domain
               services: flows(
                 where: {
                   status: { _eq: online }

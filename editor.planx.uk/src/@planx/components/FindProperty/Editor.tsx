@@ -15,21 +15,23 @@ import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
 import type { FindProperty } from "./model";
-import { parseFindProperty } from "./model";
+import { parseFindProperty, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.FindProperty, FindProperty>;
 
 export default FindPropertyComponent;
 
 function FindPropertyComponent(props: Props) {
-  const formik = useFormik({
+  const formik = useFormik<FindProperty>({
     initialValues: parseFindProperty(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.FindProperty, data: newValues });
       }
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
@@ -62,6 +64,7 @@ function FindPropertyComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
         </ModalSectionContent>
@@ -98,6 +101,7 @@ function FindPropertyComponent(props: Props) {
                   value={formik.values.newAddressDescription}
                   onChange={formik.handleChange}
                   disabled={props.disabled}
+                  errorMessage={formik.errors.newAddressDescription}
                 />
               </InputRow>
               <InputGroup label="New address description label">

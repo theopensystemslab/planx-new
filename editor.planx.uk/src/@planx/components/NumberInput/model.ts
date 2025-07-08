@@ -1,6 +1,11 @@
-import { object, string } from "yup";
+import { richText } from "lib/yupExtensions";
+import { boolean, object, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 import { FieldValidationSchema } from "../shared/Schema/model";
 
 export interface NumberInput extends BaseNodeData {
@@ -23,7 +28,7 @@ export const parseNumber = (raw: string): number | null => {
 };
 
 export const parseNumberInput = (
-  data: Record<string, any> | undefined,
+  data: Record<string, any> | undefined
 ): NumberInput => ({
   title: data?.title || "",
   description: data?.description,
@@ -75,7 +80,18 @@ export const numberInputValidationSchema = ({
       },
     });
 
-export const validationSchema = (args: FieldValidationSchema<NumberInput>) =>
+export const publicValidationSchema = (args: FieldValidationSchema<NumberInput>) =>
   object({
     value: numberInputValidationSchema(args),
   });
+
+export const editorValidationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    title: string().required(),
+    description: richText(),
+    fn: string().nullable(),
+    units: string(),
+    allowNegatives: boolean(),
+    isInteger: boolean(),
+  })
+);

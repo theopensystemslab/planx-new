@@ -22,7 +22,7 @@ import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
 import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
-import { MapAndLabel, parseContent } from "./model";
+import { MapAndLabel, parseContent, validationSchema } from "./model";
 import { SketchPlanCA } from "./schemas/SketchPlanCA";
 import { SketchPlanTPO } from "./schemas/SketchPlanTPO";
 
@@ -44,6 +44,9 @@ function MapAndLabelComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -68,7 +71,7 @@ function MapAndLabelComponent(props: Props) {
                 placeholder={"Title"}
                 value={formik.values.title}
                 onChange={formik.handleChange}
-                required
+                errorMessage={formik.errors.title}
                 disabled={props.disabled}
               />
             </InputRow>
@@ -79,10 +82,11 @@ function MapAndLabelComponent(props: Props) {
                 value={formik.values.description}
                 onChange={formik.handleChange}
                 disabled={props.disabled}
+                errorMessage={formik.errors.description}
               />
             </InputRow>
             <DataFieldAutocomplete
-              required
+              errorMessage={formik.errors.fn}
               value={formik.values.fn}
               onChange={(value) => formik.setFieldValue("fn", value)}
               disabled={props.disabled}

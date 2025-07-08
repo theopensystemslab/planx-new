@@ -1,8 +1,5 @@
 import MenuItem from "@mui/material/MenuItem";
-import {
-  ComponentType as TYPES,
-  NodeTag,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES,NodeId } from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -15,51 +12,28 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
 import { ICONS } from "../shared/icons";
+import { EditorProps } from "../shared/types";
+import { Flow, InternalPortal, parseInternalPortal, validationSchema } from "./model";
 
-interface Flow {
-  id: string;
-  text: string;
+type ExtraProps = {
+  flows?: Flow[];
 }
 
-const InternalPortalForm: React.FC<{
-  id?: string;
-  text?: string;
-  flowId?: string;
-  notes?: string;
-  handleSubmit?: (val: any) => void;
-  flows?: Array<Flow>;
-  tags?: NodeTag[];
-  disabled?: boolean;
-  isTemplatedNode?: boolean;
-  templatedNodeInstructions?: string;
-  areTemplatedNodeInstructionsRequired?: boolean;
-}> = ({
-  handleSubmit,
-  text = "",
-  flowId = "",
-  flows = [],
-  tags = [],
-  notes = "",
-  disabled,
-  isTemplatedNode = false,
-  templatedNodeInstructions = "",
-  areTemplatedNodeInstructionsRequired = false,
-}) => {
-  const formik = useFormik({
-    initialValues: {
-      text,
-      flowId,
-      tags,
-      notes,
-      isTemplatedNode,
-      templatedNodeInstructions,
-      areTemplatedNodeInstructionsRequired,
-    },
+type CreateNewPortalArgs = { type: TYPES; data: InternalPortal };
+type ReferToExistingPortalArgs = NodeId;
+
+export type Props = EditorProps<TYPES.InternalPortal, InternalPortal, ExtraProps> & {
+  handleSubmit?: (data: CreateNewPortalArgs | ReferToExistingPortalArgs) => void
+};
+
+const InternalPortalForm: React.FC<Props> = (props) => {
+  const formik = useFormik<InternalPortal>({
+    initialValues: parseInternalPortal(props.node?.data),
     validate: (values) => {
       const errors: Record<string, string> = {};
       if (!values.flowId && !values.text) {
         errors.text =
-          flows.length > 0
+          props.flows?.length  && props.flows?.length > 0
             ? "Enter a portal name or select an existing portal"
             : "Enter a portal name";
       }
@@ -69,21 +43,24 @@ const InternalPortalForm: React.FC<{
       const payload = values.flowId
         ? values.flowId
         : { type: TYPES.InternalPortal, data: values };
-      if (handleSubmit) {
-        handleSubmit(payload);
+      if (props.handleSubmit) {
+        props.handleSubmit(payload);
       } else {
         alert(JSON.stringify(payload, null, 2));
       }
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
     <form id="modal" onSubmit={formik.handleSubmit} data-testid="form">
       <TemplatedNodeInstructions
-        isTemplatedNode={isTemplatedNode}
-        templatedNodeInstructions={templatedNodeInstructions}
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
         areTemplatedNodeInstructionsRequired={
-          areTemplatedNodeInstructionsRequired
+          formik.values.areTemplatedNodeInstructionsRequired
         }
       />
       <ModalSection>
@@ -98,12 +75,12 @@ const InternalPortalForm: React.FC<{
               placeholder="Enter a portal name"
               rows={2}
               value={formik.values.text}
-              disabled={disabled || !!formik.values.flowId}
+              disabled={props.disabled || !!formik.values.flowId}
               id="portalFlowId"
             />
           </ErrorWrapper>
         </ModalSectionContent>
-        {flows?.length > 0 && (
+        {props.flows && props.flows?.length > 0 && (
           <ModalSectionContent subtitle="Use an existing portal">
             <InputLabel
               label="Use an existing portal"
@@ -119,9 +96,9 @@ const InternalPortalForm: React.FC<{
               name="flowId"
               value={formik.values.flowId}
               onChange={formik.handleChange}
-              disabled={disabled || !!formik.values.text}
+              disabled={props.disabled || !!formik.values.text}
             >
-              {flows.map((flow) => (
+              {props.flows?.map((flow) => (
                 <MenuItem key={flow.id} value={flow.id}>
                   {flow.text}
                 </MenuItem>
@@ -133,7 +110,7 @@ const InternalPortalForm: React.FC<{
       <ModalFooter
         formik={formik}
         showMoreInformation={false}
-        disabled={disabled}
+        disabled={props.disabled}
       />
     </form>
   );

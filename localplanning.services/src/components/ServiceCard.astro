@@ -3,15 +3,30 @@ import type { Service } from "@lib/lpa-api";
 import { PUBLIC_PLANX_EDITOR_URL } from "astro:env/client";
 import Button from "./Button.astro";
 
-type Props = Service;
+type Props = {
+  service: Service;
+  team: {
+    domain: string | null;
+  };
+};
 
-const { name, slug, summary } = Astro.props;
+const {
+  service: { name, slug, summary },
+  team: { domain },
+} = Astro.props;
 const { lpa } = Astro.params;
+
+// Use custom domain if available or fall back to PlanX URL
+const serviceURL = domain
+  ? `https://${domain}/${slug}`
+  : `${PUBLIC_PLANX_EDITOR_URL}/${lpa}/${slug}/published`;
 
 if (!lpa) return;
 ---
 
-<li class="flex flex-col lg:flex-row clamp-[gap,2,4] clamp-[py,5,8] clamp-[px,4,8] rounded my-4 bg-bg-light w-full justify-between items-start lg:items-center">
+<li
+  class="flex flex-col lg:flex-row clamp-[gap,2,4] clamp-[py,5,8] clamp-[px,4,8] rounded my-4 bg-bg-light w-full justify-between items-start lg:items-center"
+>
   <div class="lg:w-2/3">
     <h3 class="font-semibold mb-2 text-heading-xs">{name}</h3>
     <p class="text-text-secondary text-body-md lg:mb-0">
@@ -21,12 +36,7 @@ if (!lpa) return;
       }
     </p>
   </div>
-  <!-- TODO: custom subdomains -->
-  <Button
-    href=`${PUBLIC_PLANX_EDITOR_URL}/${lpa}/${slug}/preview`
-    variant="primary"
-    external
-  >
+  <Button href={serviceURL} variant="primary" external>
     Start your application
   </Button>
 </li>

@@ -12,7 +12,7 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { ICONS } from "../shared/icons";
-import { parseContent, PropertyInformation } from "./model";
+import { parseContent, PropertyInformation, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.PropertyInformation, PropertyInformation>;
 
@@ -27,6 +27,9 @@ function PropertyInformationComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema: validationSchema,
+    validateOnChange: false,
+    validateOnBlur: false,
   });
 
   return (
@@ -51,6 +54,7 @@ function PropertyInformationComponent(props: Props) {
               value={formik.values.title}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -60,6 +64,7 @@ function PropertyInformationComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <InputRow>
