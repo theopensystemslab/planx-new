@@ -21,7 +21,7 @@ export const RenderOptionCheckbox = ({
     <ListItem key={key} {...restListProps}>
       <CustomCheckbox
         aria-hidden="true"
-        aria-selected={state.selected ? "true" : "false"}
+        aria-selected={state.selected}
         className={state.selected ? "selected" : ""}
         {...checkboxProps}
       />
