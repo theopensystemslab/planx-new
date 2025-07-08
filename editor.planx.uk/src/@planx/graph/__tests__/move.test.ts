@@ -1,45 +1,72 @@
 import { move } from "..";
 
-test("move within same parent", () => {
-  const [graph, ops] = move("b", "_root", { toBefore: "a" })({
-    _root: {
-      edges: ["a", "b"],
-    },
-    a: {},
-    b: {},
+describe("same parent", () => {
+  test("move within same parent", () => {
+    const [graph, ops] = move("b", "_root", { toBefore: "a" })({
+      _root: {
+        edges: ["a", "b"],
+      },
+      a: {},
+      b: {},
+    });
+    expect(graph).toEqual({
+      _root: {
+        edges: ["b", "a"],
+      },
+      a: {},
+      b: {},
+    });
+    expect(ops).toEqual([
+      { p: ["_root", "edges", 0], ld: "a", li: "b" },
+      { p: ["_root", "edges", 1], ld: "b", li: "a" },
+    ]);
   });
-  expect(graph).toEqual({
-    _root: {
-      edges: ["b", "a"],
-    },
-    a: {},
-    b: {},
-  });
-  expect(ops).toEqual([
-    { p: ["_root", "edges", 0], ld: "a", li: "b" },
-    { p: ["_root", "edges", 1], ld: "b", li: "a" },
-  ]);
-});
 
-test("move sections within same root parent", () => {
-  const [graph, ops] = move("sectionNodeId", "_root", { toBefore: "a" })({
-    _root: {
-      edges: ["a", "sectionNodeId"],
-    },
-    a: { type: 100 },
-    sectionNodeId: { type: 360 },
+  test("move sections within same root parent", () => {
+    const [graph, ops] = move("sectionNodeId", "_root", { toBefore: "a" })({
+      _root: {
+        edges: ["a", "sectionNodeId"],
+      },
+      a: { type: 100 },
+      sectionNodeId: { type: 360 },
+    });
+    expect(graph).toEqual({
+      _root: {
+        edges: ["sectionNodeId", "a"],
+      },
+      a: { type: 100 },
+      sectionNodeId: { type: 360 },
+    });
+    expect(ops).toEqual([
+      { ld: "a", li: "sectionNodeId", p: ["_root", "edges", 0] },
+      { ld: "sectionNodeId", li: "a", p: ["_root", "edges", 1] },
+    ]);
   });
-  expect(graph).toEqual({
-    _root: {
-      edges: ["sectionNodeId", "a"],
-    },
-    a: { type: 100 },
-    sectionNodeId: { type: 360 },
+
+  test("move sections within same root folder", () => {
+    const [graph, ops] = move("sectionNodeId", "internalPortalId", {
+      toBefore: "a",
+    })({
+      _root: {
+        edges: ["internalPortalId"],
+      },
+      internalPortalId: { type: 300, edges: ["a", "sectionNodeId"] },
+      sectionNodeId: { type: 360 },
+      a: {},
+    });
+
+    expect(graph).toEqual({
+      _root: { edges: ["internalPortalId"] },
+      internalPortalId: { type: 300, edges: ["sectionNodeId", "a"] },
+      sectionNodeId: { type: 360 },
+      a: {},
+    });
+
+    expect(ops).toEqual([
+      { ld: "a", li: "sectionNodeId", p: ["internalPortalId", "edges", 0] },
+      { ld: "sectionNodeId", li: "a", p: ["internalPortalId", "edges", 1] },
+    ]);
   });
-  expect(ops).toEqual([
-    { ld: "a", li: "sectionNodeId", p: ["_root", "edges", 0] },
-    { ld: "sectionNodeId", li: "a", p: ["_root", "edges", 1] },
-  ]);
 });
 
 describe("different parent", () => {
@@ -180,7 +207,7 @@ describe("error handling", () => {
     ).toThrow("same parent");
   });
 
-  test("cannot move a section onto non-root parent", () => {
+  test("cannot move a section onto a branch", () => {
     expect(() =>
       move("sectionNodeId", "_root", { toParent: "a" })({
         _root: {
@@ -188,6 +215,18 @@ describe("error handling", () => {
         },
         a: {},
         sectionNodeId: { type: 360 },
+      }),
+    ).toThrow("cannot move sections onto branches, must be on center of graph");
+  });
+
+  test("cannot move a section onto a branch within a folder", () => {
+    expect(() =>
+      move("sectionNodeId", "internalPortalId", { toParent: "b" })({
+        _root: { edges: ["internalPortalId"] },
+        internalPortalId: { type: 300, edges: ["a", "sectionNodeId"] },
+        sectionNodeId: { type: 360 },
+        a: { edges: ["b"] },
+        b: {},
       }),
     ).toThrow("cannot move sections onto branches, must be on center of graph");
   });

@@ -227,16 +227,39 @@ test("can add sections on the root of the graph", () => {
     a: {},
     b: {},
   });
+
   expect(graph).toEqual({
     _root: { edges: ["a", "sectionNodeId", "b"] },
     a: {},
     b: {},
     sectionNodeId: { type: 360 },
   });
+
   expect(ops).toEqual([
     { ld: "b", li: "sectionNodeId", p: ["_root", "edges", 1] },
     { li: "b", p: ["_root", "edges", 2] },
     { oi: { type: 360 }, p: ["sectionNodeId"] },
+  ]);
+});
+
+test("can add sections inside of folders on the root of the graph", () => {
+  const [graph, ops] = add(
+    { id: "sectionNodeId", type: 360 },
+    { parent: "internalPortalId" },
+  )({
+    _root: { edges: ["internalPortalId"] },
+    internalPortalId: { type: 300 },
+  });
+
+  expect(graph).toEqual({
+    _root: { edges: ["internalPortalId"] },
+    internalPortalId: { type: 300, edges: ["sectionNodeId"] },
+    sectionNodeId: { type: 360 },
+  });
+
+  expect(ops).toEqual([
+    { p: ["internalPortalId", "edges"], oi: ["sectionNodeId"] },
+    { p: ["sectionNodeId"], oi: { type: 360 } },
   ]);
 });
 
@@ -268,7 +291,7 @@ describe("error handling", () => {
     ).toThrow("before not found");
   });
 
-  test("cannot add sections in positions with non-root parents", () => {
+  test("cannot add sections on branches", () => {
     expect(() =>
       add(
         { type: 360, data: { title: "Section 1" } },
@@ -277,6 +300,19 @@ describe("error handling", () => {
         _root: { edges: ["a", "b"] },
         a: {},
         b: {},
+      }),
+    ).toThrow("cannot add sections on branches");
+  });
+
+  test("cannot add sections inside of folders on branches", () => {
+    expect(() =>
+      add(
+        { type: 360, data: { title: "Section 1" } },
+        { parent: "b" },
+      )({
+        _root: { edges: ["a"] },
+        a: { edges: ["b"] },
+        b: { type: 300, data: { title: "Folder on branch" } },
       }),
     ).toThrow("cannot add sections on branches");
   });
