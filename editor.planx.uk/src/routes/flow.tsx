@@ -28,11 +28,11 @@ const sorter = natsort({ insensitive: true });
 const sortFlows = (a: { text: string }, b: { text: string }) =>
   sorter(a.text.replace(/\W|\s/g, ""), b.text.replace(/\W|\s/g, ""));
 
-const getExternalPortals = async () => {
+const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
   const { data } = await client.query({
     query: gql`
       query GetFlows {
-        flows(order_by: { slug: asc }) {
+        flows(order_by: { slug: asc }, where: { is_template: { _eq: false } }) {
           id
           slug
           name
@@ -49,7 +49,7 @@ const getExternalPortals = async () => {
     .filter(
       (flow: Flow) =>
         flow.team &&
-        !window.location.pathname.includes(`${flow.team.slug}/${flow.slug}`),
+        `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`,
     )
     .map(({ id, team, slug, name }: Flow) => ({
       id,
@@ -68,6 +68,8 @@ const newNode = route(async (req) => {
     type = "question",
     before = undefined,
     parent = undefined,
+    team,
+    flow,
   } = req.params;
 
   const extraProps = {} as any;
@@ -75,7 +77,7 @@ const newNode = route(async (req) => {
   // Pass in list of relevant flows for portals
   // This makes testing and mocking simpler
   if (type === "external-portal") {
-    extraProps.flows = await getExternalPortals();
+    extraProps.flows = await getExternalPortals(team, flow);
   } else if (type === "internal-portal") {
     extraProps.flows = Object.entries(useStore.getState().flow)
       .filter(
@@ -113,7 +115,13 @@ const validateNodeRoute = (route: Matcher<object, object>) =>
 
 const editNode = validateNodeRoute(
   route(async (req) => {
-    const { id, before = undefined, parent = undefined } = req.params;
+    const {
+      id,
+      before = undefined,
+      parent = undefined,
+      team,
+      flow,
+    } = req.params;
 
     const node = useStore.getState().getNode(id) as {
       type: TYPES;
@@ -123,7 +131,7 @@ const editNode = validateNodeRoute(
     const extraProps = {} as any;
 
     if (node.type === TYPES.ExternalPortal)
-      extraProps.flows = await getExternalPortals();
+      extraProps.flows = await getExternalPortals(team, flow);
 
     const type = SLUGS[node.type];
 
