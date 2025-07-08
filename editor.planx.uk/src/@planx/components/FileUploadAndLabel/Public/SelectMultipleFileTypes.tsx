@@ -3,6 +3,7 @@ import {
   AutocompleteProps,
 } from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
+import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
 import React, { forwardRef, PropsWithChildren, useMemo } from "react";
 import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
@@ -73,6 +74,7 @@ const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
       ref={ref}
       {...props}
       role="listbox"
+      aria-multiselectable="true"
       sx={{ paddingY: "0px !important" }}
     >
       {children}
@@ -153,7 +155,14 @@ export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
       id={`select-multiple-file-tags-${uploadedFile.id}`}
       isOptionEqualToValue={(option, value) => option.name === value.name}
       key={`form-${uploadedFile.id}`}
-      label="What does this file show? (select all that apply)"
+      label={
+        <>
+          What does this file show? (select all that apply)
+          <Box component="span" sx={{ visuallyHidden }}>
+            This question refers to file: {uploadedFile.file.name}
+          </Box>
+        </>
+      }
       ListboxComponent={ListboxComponent}
       onChange={handleChange}
       options={options}
