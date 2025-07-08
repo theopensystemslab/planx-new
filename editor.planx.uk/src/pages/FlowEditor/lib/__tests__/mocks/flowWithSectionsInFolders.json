@@ -1,0 +1,83 @@
+{
+  "_root": {
+    "edges": [
+      "FirstSection",
+      "Question",
+      "FolderOnRoot",
+      "FinalSection",
+      "Notice"
+    ]
+  },
+  "MiddleSectionInFolder": {
+    "data": {
+      "tags": [],
+      "title": "Middle"
+    },
+    "type": 360
+  },
+  "FolderContent": {
+    "data": {
+      "content": "<h1>Folder content</h1>"
+    },
+    "type": 250
+  },
+  "LeftOption": {
+    "data": {
+      "text": "Left"
+    },
+    "type": 200
+  },
+  "FolderOnBranch": {
+    "data": {
+      "text": "Folders on branches do not support sections"
+    },
+    "type": 300
+  },
+  "FinalSection": {
+    "data": {
+      "tags": [],
+      "title": "Final"
+    },
+    "type": 360
+  },
+  "Notice": {
+    "data": {
+      "color": "#EFEFEF",
+      "title": "End of test",
+      "resetButton": true
+    },
+    "type": 8
+  },
+  "Question": {
+    "data": {
+      "tags": [],
+      "text": "Which direction?",
+      "neverAutoAnswer": false,
+      "alwaysAutoAnswerBlank": false
+    },
+    "type": 100,
+    "edges": ["LeftOption", "RightOption"]
+  },
+  "FirstSection": {
+    "data": {
+      "tags": [],
+      "title": "First"
+    },
+    "type": 360
+  },
+  "FolderOnRoot": {
+    "data": {
+      "tags": [],
+      "text": "Folders on the root do support sections"
+    },
+    "type": 300,
+    "edges": ["MiddleSectionInFolder", "FolderContent"]
+  },
+  "RightOption": {
+    "data": {
+      "text": "Right"
+    },
+    "type": 200,
+    "edges": ["FolderOnBranch"]
+  }
+}
