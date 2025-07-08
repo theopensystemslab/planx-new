@@ -1,6 +1,7 @@
-import { object, string } from "yup";
+import { richText } from "lib/yupExtensions";
+import { mixed, object, string } from "yup";
 
-import { BaseNodeData, parseBaseNodeData } from "../shared";
+import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
 
 export type UserData = string;
 
@@ -36,8 +37,19 @@ export const emailRegex =
   // eslint-disable-next-line
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export const editorValidationSchema = () =>
+export const editorValidationSchema = baseNodeDataValidationSchema.concat(
   object({
+    title: string().required(),
+    description: richText(),
+    fn: string().nullable(),
+    type: mixed().oneOf([
+      "short",
+      "long",
+      "extraLong",
+      "email",
+      "phone",
+      "custom"
+    ]),
     customLength: string().when("type", {
       is: "custom",
       then: string()
@@ -52,7 +64,7 @@ export const editorValidationSchema = () =>
           },
         }),
     }),
-  });
+  }));
 
 export const textInputValidationSchema = ({
   data: { type, customLength },
