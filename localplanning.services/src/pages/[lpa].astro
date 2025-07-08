@@ -73,7 +73,7 @@ if (!lpaData) return Astro.redirect("/404");
   </Container>
 </Layout>
 <script is:inline type="module" data-astro-rerun>
-  import { $action } from "./src/stores/action.ts";
+  import { $action } from "./src/stores/action.js";
 
   const openAccordion = () => {
     const action = $action.get();
