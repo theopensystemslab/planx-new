@@ -6,7 +6,8 @@ import flowWithSectionsInFolders from "./mocks/flowWithSectionsInFolders.json";
 import flowWithThreeSections from "./mocks/flowWithThreeSections.json";
 
 const { getState, setState } = useStore;
-const { filterFlowByType, initNavigationStore, record } = getState();
+const { filterFlowByType, initNavigationStore, record, upcomingCardIds } =
+  getState();
 
 let initialState: FullStore;
 
@@ -191,9 +192,40 @@ describe("updateSectionData() on forwards navigation", () => {
     expect(currentSectionTitle).toEqual("Third section");
   });
 
-  test.todo(
-    "updates section title and index correctly for a flow with sections in folders",
-  );
+  test("updates section title and index correctly for a flow with sections in folders", () => {
+    let currentSectionTitle, currentSectionIndex;
+    setState({ flow: flowWithSectionsInFolders });
+    initNavigationStore();
+
+    // Navigate into first section
+    record("FirstSection", { auto: false });
+
+    // First section is set correctly
+    ({ currentSectionTitle, currentSectionIndex } = getState());
+    expect(currentSectionIndex).toBe(1);
+    expect(currentSectionTitle).toEqual("First");
+
+    // Navigate into section section which is within a folder
+    record("Question", { answers: ["LeftOption"] });
+    expect(upcomingCardIds()?.[0]).toEqual("MiddleSectionInFolder"); // folder node itself is omitted from upcomingCardIds()
+    record("MiddleSectionInFolder", { auto: false });
+
+    // Second section in folder is set correctly
+    ({ currentSectionTitle, currentSectionIndex } = getState());
+    expect(currentSectionIndex).toBe(2);
+    expect(currentSectionTitle).toEqual("Middle");
+
+    // Navigate through folder back to root & final section
+    expect(upcomingCardIds()?.[0]).toEqual("FolderContent");
+    record("FolderContent", { auto: false });
+    expect(upcomingCardIds()?.[0]).toEqual("FinalSection");
+    record("FinalSection", { auto: false });
+
+    // Final section is set correctly
+    ({ currentSectionTitle, currentSectionIndex } = getState());
+    expect(currentSectionIndex).toBe(3);
+    expect(currentSectionTitle).toEqual("Final");
+  });
 });
 
 describe("updateSectionData() on backwards navigation", () => {
