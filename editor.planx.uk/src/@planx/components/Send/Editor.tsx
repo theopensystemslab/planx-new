@@ -17,18 +17,17 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
-import { array, object } from "yup";
 
 import { ICONS } from "../shared/icons";
 import { WarningContainer } from "../shared/Preview/WarningContainer";
 import { EditorProps } from "../shared/types";
-import { parseContent, Send } from "./model";
+import { parseSend, Send, validationSchema } from "./model";
 
 export type Props = EditorProps<TYPES.Send, Send>;
 
 const SendComponent: React.FC<Props> = (props) => {
   const formik = useFormik<Send>({
-    initialValues: parseContent(props.node?.data),
+    initialValues: parseSend(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.Send, data: newValues });
@@ -36,17 +35,7 @@ const SendComponent: React.FC<Props> = (props) => {
     },
     validateOnBlur: false,
     validateOnChange: true,
-    validationSchema: object({
-      destinations: array()
-        .required()
-        .test({
-          name: "atLeastOneChecked",
-          message: "Select at least one destination",
-          test: (destinations?: Array<SendIntegration>) => {
-            return Boolean(destinations && destinations.length > 0);
-          },
-        }),
-    }),
+    validationSchema,
   });
 
   const [teamSlug, flowSlug, submissionEmail] = useStore((state) => [
