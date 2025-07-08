@@ -9,6 +9,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { arrayMoveImmutable } from "array-move";
+import { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useRef, useState } from "react";
@@ -26,6 +27,7 @@ import { insertAt, removeAt, setAt } from "../../../utils";
 
 export interface EditorProps<T> {
   index: number;
+  errors: string | string[] | FormikErrors<T> | undefined
   value: T;
   onChange: (newValue: T) => void;
   disabled?: boolean;
@@ -33,6 +35,7 @@ export interface EditorProps<T> {
 
 export interface Props<T, EditorExtraProps = {}> {
   values: Array<T>;
+  errors?: string | string[] | FormikErrors<T>[] | undefined
   onChange: (newValues: Array<T>) => void;
   newValue: () => T;
   newValueLabel?: string;
@@ -134,6 +137,7 @@ export default function ListManager<T, EditorExtraProps>(
                     }}
                     {...(props.editorExtraProps || {})}
                     disabled={disabled}
+                    errors={props.errors?.[index]}
                   />
                 </Item>
               </Collapse>
@@ -161,6 +165,7 @@ export default function ListManager<T, EditorExtraProps>(
                     }}
                     {...(props.editorExtraProps || {})}
                     disabled={disabled}
+                    errors={props.errors?.[index]}
                   />
                   <Box sx={{ display: "flex", alignItems: "flex-start" }}>
                     <IconButton
@@ -281,6 +286,7 @@ export default function ListManager<T, EditorExtraProps>(
                             }}
                             {...(props.editorExtraProps || {})}
                             disabled={disabled}
+                            errors={props.errors?.[index]}
                           />
                           <Box>
                             <IconButton

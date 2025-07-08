@@ -2,14 +2,15 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
+import { richText } from "lib/yupExtensions";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import type { TextContent } from "types";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
-import ListManager from "ui/editor/ListManager/ListManager";
+import ListManager, { EditorProps } from "ui/editor/ListManager/ListManager";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
@@ -17,6 +18,15 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowItem from "ui/shared/InputRowItem";
 import { slugify } from "utils";
+import { array, boolean,object, string } from "yup";
+
+const validationSchema = object({
+  footerContent: array(object({
+    heading: string().required("Page title is required"),
+    content: richText().required("Page content is required"),
+    show: boolean().required()
+  }))
+})
 
 function Component() {
   const [globalSettings, updateGlobalSettings] = useStore((state) => [
@@ -25,13 +35,16 @@ function Component() {
   ]);
   const toast = useToast();
 
-  const formik = useFormik({
+  const formik = useFormik<{ footerContent: TextContent[] }>({
     initialValues: {
       footerContent:
         (globalSettings?.footerContent &&
           Object.values(globalSettings?.footerContent)) ||
         [],
     },
+    validateOnBlur: false,
+    validateOnChange: false,
+    validationSchema,
     onSubmit: ({ footerContent }) => {
       const formatted = footerContent.reduce(
         (
@@ -83,6 +96,7 @@ function Component() {
                   }) as TextContent
                 }
                 Editor={ContentEditor}
+                errors={formik.errors.footerContent}
               />
             </Box>
           </InputGroup>
@@ -95,10 +109,7 @@ function Component() {
   );
 }
 
-function ContentEditor(props: {
-  value: TextContent;
-  onChange: (newVal: TextContent) => void;
-}) {
+const ContentEditor: React.FC<EditorProps<TextContent>> = (props) => {
   return (
     <Box width="100%">
       <InputRow>
@@ -113,6 +124,7 @@ function ContentEditor(props: {
                 heading: ev.target.value,
               });
             }}
+            errorMessage={getIn(props.errors, "heading")}
           />
         </InputRowItem>
       </InputRow>
@@ -129,6 +141,7 @@ function ContentEditor(props: {
                 content: ev.target.value,
               });
             }}
+            errorMessage={getIn(props.errors, "content")}
           />
         </InputRowItem>
       </InputRow>

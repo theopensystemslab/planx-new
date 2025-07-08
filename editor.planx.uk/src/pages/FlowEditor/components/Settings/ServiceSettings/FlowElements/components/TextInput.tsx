@@ -14,8 +14,8 @@ export const TextInput: React.FC<{
   richText?: boolean;
   description?: string;
   switchProps?: SwitchProps;
-  headingInputProps?: InputProps;
-  contentInputProps?: InputProps;
+  headingInputProps: InputProps;
+  contentInputProps: InputProps;
 }> = ({
   title,
   richText = false,
@@ -52,6 +52,7 @@ export const TextInput: React.FC<{
               placeholder="Text"
               multiline
               rows={6}
+              errorMessage={contentInputProps.errorMessage || ""}
               {...contentInputProps}
             />
           ) : (
