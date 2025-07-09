@@ -3,7 +3,9 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useState } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { ValidationError } from "yup";
@@ -30,6 +32,9 @@ export const FileTaggingModal = ({
   removeFile,
 }: FileTaggingModalProps) => {
   const [errors, setErrors] = useState<Record<string, string> | undefined>();
+  const fullScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("md"),
+  );
 
   const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
@@ -57,6 +62,7 @@ export const FileTaggingModal = ({
       data-testid="file-tagging-dialog"
       maxWidth="xl"
       aria-labelledby="dialog-heading"
+      fullScreen={fullScreen}
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
