@@ -158,7 +158,7 @@ export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
       label={
         <>
           What does this file show? (select all that apply)
-          <Box component="span" sx={{ visuallyHidden }}>
+          <Box component="span" sx={visuallyHidden}>
             This question refers to file: {uploadedFile.file.name}
           </Box>
         </>
