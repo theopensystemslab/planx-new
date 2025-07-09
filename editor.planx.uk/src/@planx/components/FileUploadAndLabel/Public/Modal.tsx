@@ -13,6 +13,8 @@ import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCar
 import { FileList } from "../model";
 import { fileLabelSchema, formatFileLabelSchemaErrors } from "../schema";
 import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
+import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
@@ -30,6 +32,8 @@ export const FileTaggingModal = ({
   removeFile,
 }: FileTaggingModalProps) => {
   const [errors, setErrors] = useState<Record<string, string> | undefined>();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
 
   const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
@@ -57,6 +61,7 @@ export const FileTaggingModal = ({
       data-testid="file-tagging-dialog"
       maxWidth="xl"
       aria-labelledby="dialog-heading"
+      fullScreen={fullScreen}
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
