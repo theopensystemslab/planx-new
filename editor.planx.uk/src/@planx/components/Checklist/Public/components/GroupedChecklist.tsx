@@ -103,7 +103,7 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
             spacing={layout === ChecklistLayout.Images ? 2 : 0}
             component="fieldset"
           >
-            <legend style={visuallyHidden}>{text}</legend>
+            <legend style={visuallyHidden} id="whole-group-heading">{text}</legend>
             {nonExclusiveOptionGroups && (
               <GroupedChecklistOptions
                 groupedOptions={nonExclusiveOptionGroups}
