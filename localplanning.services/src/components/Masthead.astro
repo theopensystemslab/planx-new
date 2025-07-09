@@ -1,11 +1,34 @@
 ---
 import Container from "@components/Container.astro";
-const { title } = Astro.props;
+
+interface Props {
+  title: string;
+  variant?: "default" | "large";
+}
+
+const {
+  title,
+  variant = "default",
+} = Astro.props as Props;
+
+const baseClasses = " bg-bg-main";
+
+const variantClasses = {
+  default: "clamp-[py,10,20] clamp-[pb,5,10]",
+  large: "clamp-[py,10,20]",
+};
+
+const h1Classes = {
+  default: "text-heading-lg",
+  large: "text-heading-xl",
+};
+
+const classes = `${baseClasses} ${variantClasses[variant]}`;
 ---
 
-<section class="clamp-[py,10,20] bg-bg-main">
+<section class={classes}>
   <Container class="text-center">
-    <h1 class="text-heading-xl text-action-secondary">{title}</h1>
+    <h1 class={`${h1Classes[variant]} text-action-secondary`}>{title}</h1>
     <div class="text-text-secondary text-body-lg max-w-2xl">
       <slot />
     </div>
