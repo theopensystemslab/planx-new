@@ -9,6 +9,15 @@ const legalCollection = defineCollection({
   }),
 });
 
+const genericCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    subheading: z.string().optional(),
+  }),
+});
+
 export const collections = {
   legal: legalCollection,
+  generic: genericCollection,
 };
