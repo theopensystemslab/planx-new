@@ -82,6 +82,7 @@ const TagRoot = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.main}`,
   display: "flex",
   justifyContent: "space-between",
+  flexWrap: "wrap",
   alignItems: "center",
   padding: theme.spacing(1),
 }));
@@ -161,17 +162,22 @@ export const UploadedFileCard: React.FC<Props> = ({
                 </ListItem>
               ))}
             </List>
-            <Link
-              onClick={() => onChange && onChange()}
-              sx={{ fontFamily: "inherit", fontSize: "inherit" }}
-              component="button"
-              variant="body2"
-            >
-              Change
-              <Box sx={visuallyHidden} component="span">
-                the list of what file {file.name} shows
-              </Box>
-            </Link>
+            <Box sx={{ marginLeft: "auto" }}>
+              <Link
+                onClick={() => onChange && onChange()}
+                sx={{
+                  fontFamily: "inherit",
+                  fontSize: "inherit",
+                }}
+                component="button"
+                variant="body2"
+              >
+                Change
+                <Box sx={visuallyHidden} component="span">
+                  the list of what file {file.name} shows
+                </Box>
+              </Link>
+            </Box>
           </TagRoot>
         )}
       </>
