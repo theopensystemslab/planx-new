@@ -67,15 +67,18 @@
     @apply font-bold clamp-[text,2xl,4xl];
     margin-bottom: 0.5em;
   }
-  .text-heading-md {
+  .text-heading-md,
+  .markdown-content h2 {
     @apply font-semibold clamp-[text,xl,3xl];
     margin-bottom: 0.5em;
   }
-  .text-heading-sm {
+  .text-heading-sm,
+  .markdown-content h3 {
     @apply font-semibold clamp-[text,xl,2xl];
     margin-bottom: 0.5em;
   }
-  .text-heading-xs {
+  .text-heading-xs,
+  .markdown-content h4 {
     @apply font-semibold clamp-[text,base,xl];
     margin-bottom: 0.5em;
   }
@@ -101,6 +104,15 @@
     @apply clamp-[text,xs,sm];
     margin-bottom: 0.5em;
   }
+  .markdown-content p,
+  .markdown-content ul,
+  .markdown-content ol {
+    @apply text-text-secondary;
+  }
+  .markdown-content p a {
+    @apply text-text-main;
+  }
+
 
   .paragraph-link {
     @apply underline underline-offset-6;
@@ -170,4 +182,3 @@
   --postcode__input__width: var(--input-width);
   --postcode__input__max-width: var(--input-max-width);
 }
-

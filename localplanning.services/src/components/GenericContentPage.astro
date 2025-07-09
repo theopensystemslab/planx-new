@@ -1,0 +1,25 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Masthead from "@components/Masthead.astro";
+import Container from "@components/Container.astro";
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+
+interface Props {
+  page: CollectionEntry<"generic">;
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<Layout>
+  <Masthead title={page.data.title}>
+    <p>{page.data.subheading}</p>
+  </Masthead>
+  <Container paddingY>
+    <section class="markdown-content max-w-3xl text-body-lg">
+      <Content />
+    </section>
+  </Container>
+</Layout>
