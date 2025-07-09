@@ -79,23 +79,12 @@ export function useFormErrorFocus<T>({
 
     if (alertElements.length > 0) {
       const errorEl = alertElements[0];
-      const errorWrapper = errorEl.closest('[data-testid="error-wrapper"]');
-      let inputToFocus: HTMLElement | null = null;
-
-      if (errorWrapper) {
-        inputToFocus = errorWrapper.querySelector(
-          "input, textarea, select",
-        ) as HTMLElement;
-
-        if (inputToFocus) {
-          return inputToFocus;
-        }
+      if (errorEl) {
+        errorEl.setAttribute("tabindex", "-1");
+        return errorEl;
       }
-      errorEl.setAttribute("tabindex", "-1");
-      return errorEl;
+      return null;
     }
-
-    return null;
   }, []);
 
   useLayoutEffect(() => {
