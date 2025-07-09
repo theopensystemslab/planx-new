@@ -1,4 +1,4 @@
-import { FlagSet } from "@opensystemslab/planx-core/types";
+import { FLAG_SETS, FlagSet } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { mapValues } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -49,15 +49,7 @@ const overridesSchema = lazy(obj =>
 );
 
 export const validationSchema = baseNodeDataValidationSchema.concat(object({
-  flagSet: mixed().oneOf([
-    "Planning permission", 
-    "Works to listed buildings", 
-    "Works to trees & hedges", 
-    "Demolition in a conservation area", 
-    "Planning policy", 
-    "Community infrastructure levy", 
-    "Material change of use",
-  ]),
+  flagSet: mixed().oneOf([...FLAG_SETS]),
   overrides: overridesSchema,
   resetButton: boolean().optional(),
 }))
