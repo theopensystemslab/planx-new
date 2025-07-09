@@ -33,7 +33,7 @@ export const FileTaggingModal = ({
 }: FileTaggingModalProps) => {
   const [errors, setErrors] = useState<Record<string, string> | undefined>();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("lg"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
