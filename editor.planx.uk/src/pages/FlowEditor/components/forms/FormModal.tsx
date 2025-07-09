@@ -10,7 +10,6 @@ import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
-import { useToast } from "hooks/useToast";
 import { hasFeatureFlag } from "lib/featureFlags";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -115,32 +114,6 @@ const NodeTypeSelect: React.FC<{
   );
 };
 
-const containsMadeLink = (data?: Record<string, unknown>): boolean => {
-  if (!data) return false;
-
-  return Object.values(data).some((value) => {
-    if (typeof value !== "string") return false;
-
-    const anchorTags = value.match(/<a[^>]*href=["'].*?["'][^>]*>/g);
-    if (!anchorTags) return false;
-
-    return anchorTags.some((anchorTag) => {
-      const hrefMatch = anchorTag.match(/href=["'](.+?)["']/);
-      if (!hrefMatch) return false;
-
-      try {
-        const url = new URL(hrefMatch[1]);
-        const allowedHosts = ["legislation.gov.uk", "www.legislation.gov.uk"];
-        return (
-          allowedHosts.includes(url.hostname) && url.pathname.endsWith("/made")
-        );
-      } catch {
-        return false;
-      }
-    });
-  });
-};
-
 const FormModal: React.FC<{
   type: string;
   handleDelete?: () => void;
@@ -207,8 +180,6 @@ const FormModal: React.FC<{
     ? !canUserEditTemplatedNode
     : !canUserEditNode(teamSlug);
 
-  const toast = useToast();
-
   return (
     <StyledDialog
       open
@@ -252,13 +223,6 @@ const FormModal: React.FC<{
               data: { data?: Record<string, unknown> },
               children: Array<any> | undefined = undefined,
             ) => {
-              // TODO: Remove this!
-              if (containsMadeLink(data.data)) {
-                toast.error(
-                  'Legislation GOV UK links incorrectly ending in "/made" detected in your content. Please fix before continuing.',
-                );
-                return;
-              }
               // Handle internal portals
               if (typeof data === "string") {
                 connect(parent, data, { before });
