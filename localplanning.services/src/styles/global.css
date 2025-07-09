@@ -104,6 +104,15 @@
     @apply clamp-[text,xs,sm];
     margin-bottom: 0.5em;
   }
+  .markdown-content p,
+  .markdown-content ul,
+  .markdown-content ol {
+    @apply text-text-secondary;
+  }
+  .markdown-content p a {
+    @apply text-text-main;
+  }
+
 
   .paragraph-link {
     @apply underline underline-offset-6;
@@ -173,6 +182,3 @@
   --postcode__input__width: var(--input-width);
   --postcode__input__max-width: var(--input-max-width);
 }
-
-
-
