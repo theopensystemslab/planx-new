@@ -1,17 +1,63 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
+import { richText } from "lib/yupExtensions";
 import React from "react";
 import InputGroup from "ui/editor/InputGroup";
 import InputLegend from "ui/editor/InputLegend";
 import SettingsSection from "ui/editor/SettingsSection";
 import InputRow from "ui/shared/InputRow";
+import { boolean, object, string } from "yup";
 
 import type { FlowSettings } from "../../../../../../types";
 import { useStore } from "../../../../lib/store";
 import { TextInput } from "./components/TextInput";
+
+const validationSchema = object({
+  elements: object({
+    legalDisclaimer: object({
+      heading: string().when("show", {
+        is: true,
+        then: string().required("Heading is required"),
+        otherwise: string().optional()
+      }),
+      content: string().when("show", {
+        is: true,
+        then: string().required("Content is required"),
+        otherwise: string().optional()
+      }),
+      show: boolean(),
+    }).optional(),
+    help: object({
+      heading: string().when("show", {
+        is: true,
+        then: string().required("Heading is required"),
+        otherwise: string().optional()
+      }),
+      content: richText().when("show", {
+        is: true,
+        then: richText().required("Content is required"),
+        otherwise: richText().optional()
+      }),
+      show: boolean(),
+    }).optional(),
+    privacy: object({
+      heading: string().when("show", {
+        is: true,
+        then: string().required("Heading is required"),
+        otherwise: string().optional()
+      }),
+      content: richText().when("show", {
+        is: true,
+        then: richText().required("Content is required"),
+        otherwise: richText().optional()
+      }),
+      show: boolean(),
+    }).optional(),
+  }).optional()
+})
 
 export const FooterLinksAndLegalDisclaimer = () => {
   const [flowStatus, flowSettings, updateFlowSettings, setFlowSettings] =
@@ -50,7 +96,9 @@ export const FooterLinksAndLegalDisclaimer = () => {
       toast.success("Service settings updated successfully");
       resetForm({ values });
     },
-    validate: () => {},
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
   return (
     <Box component="form" onSubmit={elementsForm.handleSubmit} mb={2}>
@@ -75,11 +123,13 @@ export const FooterLinksAndLegalDisclaimer = () => {
             name: "elements.legalDisclaimer.heading",
             value: elementsForm.values.elements?.legalDisclaimer?.heading,
             onChange: elementsForm.handleChange,
+            errorMessage: getIn(elementsForm.errors, "elements.legalDisclaimer.heading")
           }}
           contentInputProps={{
             name: "elements.legalDisclaimer.content",
             value: elementsForm.values.elements?.legalDisclaimer?.content,
             onChange: elementsForm.handleChange,
+            errorMessage: getIn(elementsForm.errors, "elements.legalDisclaimer.content")
           }}
         />
       </SettingsSection>
@@ -100,11 +150,13 @@ export const FooterLinksAndLegalDisclaimer = () => {
                 name: "elements.help.heading",
                 value: elementsForm.values.elements?.help?.heading,
                 onChange: elementsForm.handleChange,
+                errorMessage: getIn(elementsForm.errors, "elements.help.heading")
               }}
               contentInputProps={{
                 name: "elements.help.content",
                 value: elementsForm.values.elements?.help?.content,
                 onChange: elementsForm.handleChange,
+                errorMessage: getIn(elementsForm.errors, "elements.help.content")
               }}
             />
           </InputRow>
@@ -133,11 +185,13 @@ export const FooterLinksAndLegalDisclaimer = () => {
                 name: "elements.privacy.heading",
                 value: elementsForm.values.elements?.privacy?.heading,
                 onChange: elementsForm.handleChange,
+                errorMessage: getIn(elementsForm.errors, "elements.privacy.heading")
               }}
               contentInputProps={{
                 name: "elements.privacy.content",
                 value: elementsForm.values.elements?.privacy?.content,
                 onChange: elementsForm.handleChange,
+                errorMessage: getIn(elementsForm.errors, "elements.privacy.content")
               }}
             />
           </InputRow>
