@@ -14,7 +14,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
-import { parseSetValue, SetValue } from "./model";
+import { parseSetValue, SetValue, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.SetValue, SetValue>;
 
@@ -87,6 +87,9 @@ function SetValueComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {

@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import type { Task, TaskList } from "@planx/components/TaskList/model";
-import { parseTaskList } from "@planx/components/TaskList/model";
-import { useFormik } from "formik";
+import { parseTaskList, validationSchema } from "@planx/components/TaskList/model";
+import { Form, Formik, getIn, useFormikContext } from "formik";
 import React, { ChangeEvent } from "react";
 import ListManager, {
   EditorProps as ListManagerEditorProps,
@@ -26,11 +26,12 @@ const newTask = (): Task => ({
 });
 
 const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
+  const { errors } = useFormikContext<Task>();
+
   return (
     <Box sx={{ flex: 1 }}>
       <InputRow>
         <Input
-          required
           name="title"
           value={props.value.title}
           onChange={(ev: ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +42,7 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
           }}
           placeholder="Title"
           disabled={props.disabled}
+          errorMessage={getIn(errors, `tasks[${props.index}].title`)}
         />
       </InputRow>
       <InputRow>
@@ -56,69 +58,74 @@ const TaskEditor: React.FC<ListManagerEditorProps<Task>> = (props) => {
           }}
           placeholder="Description"
           disabled={props.disabled}
+          errorMessage={getIn(errors, `tasks[${props.index}].description`)}
         />
       </InputRow>
     </Box>
   );
 };
 
-const TaskListComponent: React.FC<Props> = (props) => {
-  const formik = useFormik({
-    initialValues: parseTaskList(props.node?.data),
-    onSubmit: (newValues) => {
+const TaskListComponent: React.FC<Props> = (props) => (
+  <Formik
+    initialValues={parseTaskList(props.node?.data)}
+    onSubmit={(newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.TaskList, data: newValues });
       }
-    },
-    validate: () => {},
-  });
-  return (
-    <form onSubmit={formik.handleSubmit} id="modal">
-      <TemplatedNodeInstructions
-        isTemplatedNode={formik.values.isTemplatedNode}
-        templatedNodeInstructions={formik.values.templatedNodeInstructions}
-        areTemplatedNodeInstructionsRequired={
-          formik.values.areTemplatedNodeInstructionsRequired
-        }
-      />
-      <ModalSection>
-        <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
-          <Box mb="1rem">
-            <InputRow>
-              <Input
-                name="title"
-                value={formik.values.title}
-                onChange={formik.handleChange}
-                placeholder="Main title"
-                format="large"
-                disabled={props.disabled}
-              />
-            </InputRow>
-            <InputRow>
-              <RichTextInput
-                name="description"
-                value={formik.values.description}
-                onChange={formik.handleChange}
-                placeholder="Main description"
-                disabled={props.disabled}
-              />
-            </InputRow>
-          </Box>
-          <ListManager
-            values={formik.values.tasks}
-            onChange={(tasks: Array<Task>) => {
-              formik.setFieldValue("tasks", tasks);
-            }}
-            Editor={TaskEditor}
-            newValue={newTask}
-            disabled={props.disabled}
-            isTemplatedNode={props.node?.data?.isTemplatedNode}
-          />
-        </ModalSectionContent>
-      </ModalSection>
-      <ModalFooter formik={formik} disabled={props.disabled} />
-    </form>
-  );
-};
+    }}
+    validationSchema={validationSchema}
+    validateOnChange={false}
+    validateOnBlur={false}
+  >
+    {(formik) => (
+      <Form id="modal">
+        <TemplatedNodeInstructions
+          isTemplatedNode={formik.values.isTemplatedNode}
+          templatedNodeInstructions={formik.values.templatedNodeInstructions}
+          areTemplatedNodeInstructionsRequired={
+            formik.values.areTemplatedNodeInstructionsRequired
+          }
+        />
+        <ModalSection>
+          <ModalSectionContent title="Task list" Icon={ICONS[TYPES.TaskList]}>
+            <Box mb="1rem">
+              <InputRow>
+                <Input
+                  name="title"
+                  value={formik.values.title}
+                  onChange={formik.handleChange}
+                  placeholder="Main title"
+                  format="large"
+                  disabled={props.disabled}
+                />
+              </InputRow>
+              <InputRow>
+                <RichTextInput
+                  name="description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  placeholder="Main description"
+                  disabled={props.disabled}
+                  errorMessage={formik.errors.description}
+                />
+              </InputRow>
+            </Box>
+            <ListManager
+              values={formik.values.tasks}
+              onChange={(tasks: Array<Task>) => {
+                formik.setFieldValue("tasks", tasks);
+              }}
+              Editor={TaskEditor}
+              newValue={newTask}
+              disabled={props.disabled}
+              isTemplatedNode={props.node?.data?.isTemplatedNode}
+            />
+          </ModalSectionContent>
+        </ModalSection>
+        <ModalFooter formik={formik} disabled={props.disabled} />
+      </Form>
+    )}
+  </Formik>
+);
 
 export default TaskListComponent;

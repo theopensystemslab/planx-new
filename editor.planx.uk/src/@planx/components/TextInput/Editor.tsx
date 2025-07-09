@@ -32,7 +32,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
       }
     },
     validateOnChange: false,
-    validationSchema: editorValidationSchema(),
+    validationSchema: editorValidationSchema,
   });
 
   const handleRadioChange = (event: React.SyntheticEvent<Element, Event>) => {
@@ -59,6 +59,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
               placeholder="Title"
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
           <InputRow>
@@ -68,6 +69,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <DataFieldAutocomplete
