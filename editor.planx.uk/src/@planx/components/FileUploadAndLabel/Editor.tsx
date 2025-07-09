@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { getValidSchemaValues } from "@opensystemslab/planx-core";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
-import { useFormik } from "formik";
+import { getIn, useFormik } from "formik";
 import { lowerCase, merge, upperFirst } from "lodash";
 import React from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
@@ -80,7 +80,7 @@ function FileUploadAndLabelComponent(props: Props) {
         >
           <InputRow>
             <Input
-              required
+              errorMessage={formik.errors.title}
               format="large"
               name="title"
               placeholder={formik.values.title}
@@ -97,6 +97,7 @@ function FileUploadAndLabelComponent(props: Props) {
               value={formik.values.description}
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.description}
             />
           </InputRow>
           <InputRow>
@@ -125,6 +126,7 @@ function FileUploadAndLabelComponent(props: Props) {
             newValue={newFileType}
             disabled={props.disabled}
             isTemplatedNode={props.node?.data?.isTemplatedNode}
+            errors={formik.errors.fileTypes}
           />
         </ModalSectionContent>
       </ModalSection>
@@ -148,7 +150,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
       <ModalSubtitle title="File" />
       <InputRow>
         <Input
-          required
+          errorMessage={getIn(props.errors, "title")}
           name="name"
           value={props.value.name}
           onChange={(e) =>
@@ -159,7 +161,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
         />
       </InputRow>
       <DataFieldAutocomplete
-        required
+        errorMessage={getIn(props.errors, "fn")}
         schema={schema}
         value={props.value.fn}
         disabled={props.disabled}
@@ -236,6 +238,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           }}
           placeholder="Why it matters"
           disabled={props.disabled}
+          errorMessage={getIn(props.errors, "moreInformation.info")}
         />
       </InputRow>
       <InputRow>
@@ -252,6 +255,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           }}
           placeholder="Policy source"
           disabled={props.disabled}
+          errorMessage={getIn(props.errors, "moreInformation.policyRef")}
         />
       </InputRow>
       <InputRow>
@@ -268,6 +272,7 @@ function FileTypeEditor(props: ListManagerEditorProps<FileType>) {
           }}
           placeholder="How is it defined?"
           disabled={props.disabled}
+          errorMessage={getIn(props.errors, "moreInformation.howMeasured")}
         />
         <InputRowItem width={50}>
           <ImgInput
