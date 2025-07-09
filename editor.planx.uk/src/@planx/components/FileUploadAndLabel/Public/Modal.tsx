@@ -3,7 +3,9 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useState } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { ValidationError } from "yup";
@@ -13,8 +15,6 @@ import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCar
 import { FileList } from "../model";
 import { fileLabelSchema, formatFileLabelSchemaErrors } from "../schema";
 import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
-import { useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
