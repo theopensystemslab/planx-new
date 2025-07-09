@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { useTheme } from "@mui/material/styles";
+import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import React, { useState } from "react";
@@ -32,8 +32,9 @@ export const FileTaggingModal = ({
   removeFile,
 }: FileTaggingModalProps) => {
   const [errors, setErrors] = useState<Record<string, string> | undefined>();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const fullScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("md"),
+  );
 
   const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
