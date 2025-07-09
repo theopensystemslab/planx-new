@@ -1,5 +1,5 @@
 import { BaseNodeData } from "@planx/components/shared";
-import { useFormik } from "formik";
+import { FormikProps, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { InternalNotes } from "ui/editor/InternalNotes";
@@ -9,7 +9,7 @@ import { ComponentTagSelect } from "./ComponentTagSelect";
 import { TemplatedNodeConfiguration } from "./TemplatedNodeConfiguration";
 
 interface Props<T extends BaseNodeData> {
-  formik: ReturnType<typeof useFormik<T>>;
+  formik: ReturnType<typeof useFormik<T>> | FormikProps<T>;
   showMoreInformation?: boolean;
   showInternalNotes?: boolean;
   showTags?: boolean;
