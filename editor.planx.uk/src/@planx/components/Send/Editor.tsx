@@ -76,6 +76,7 @@ const SendComponent: React.FC<Props> = (props) => {
               placeholder="Editor title"
               onChange={formik.handleChange}
               disabled={props.disabled}
+              errorMessage={formik.errors.title}
             />
           </InputRow>
         </ModalSectionContent>

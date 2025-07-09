@@ -1,6 +1,5 @@
-import { SEND_INTEGRATIONS, SendIntegration } from "@opensystemslab/planx-core/types";
-import { string } from "mathjs";
-import { array, mixed, object, SchemaOf } from "yup";
+import { SendIntegration } from "@opensystemslab/planx-core/types";
+import { array, mixed, object, SchemaOf, string } from "yup";
 
 import type { Store } from "../../../pages/FlowEditor/lib/store";
 import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
@@ -15,7 +14,7 @@ interface EventPayload {
 }
 
 export interface Send extends BaseNodeData {
-  title?: string;
+  title: string;
   destinations: SendIntegration[];
 }
 
@@ -80,7 +79,7 @@ export function getCombinedEventsPayload({
 
 export const validationSchema: SchemaOf<Send> = baseNodeDataValidationSchema.concat(
   object({
-    title: string(),
+    title: string().required(),
     destinations: array(
       mixed().oneOf(["email", "bops", "uniform", "s3", "idox"])
     ).min(1, "Select at least one destination"),
