@@ -10,7 +10,7 @@
   "packageManager": "pnpm@10.10.0",
   "keywords": [],
   "dependencies": {
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#bf8852b",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#b594e17",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3"
   },
