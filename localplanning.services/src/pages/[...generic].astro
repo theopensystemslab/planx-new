@@ -1,0 +1,14 @@
+---
+import GenericContentPage from "@components/GenericContentPage.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const genericPages = await getCollection("generic");
+  return genericPages.map((page) => ({
+    params: { generic: page.slug },
+    props: { page },
+  }));
+}
+---
+
+<GenericContentPage {...Astro.props} />

@@ -3,6 +3,6 @@ import { object, string } from "yup";
 
 export const validationSchema = baseNodeDataValidationSchema.concat(
   object({
-    flowId: string().required("Add a flow to submit"),
+    flowId: string().nullable().required("Add a flow to submit"),
   }),
 );

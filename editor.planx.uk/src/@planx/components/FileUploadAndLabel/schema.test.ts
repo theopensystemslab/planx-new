@@ -53,7 +53,7 @@ describe("fileTypeSchema", () => {
         name: "Test key",
         rule: mockRules.AlwaysRequired,
       }),
-    ).rejects.toThrow(/fn is a required field/);
+    ).rejects.toThrow(/Required field/);
   });
 
   it("requires a rule", async () => {

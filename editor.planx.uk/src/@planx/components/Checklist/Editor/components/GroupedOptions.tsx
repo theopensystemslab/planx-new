@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
+import { getIn } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import adjust from "ramda/src/adjust";
 import compose from "ramda/src/compose";
@@ -51,7 +52,7 @@ export const GroupedOptions = ({
             <Box display="flex" pb={1}>
               <InputRow>
                 <Input
-                  errorMessage={`formik.errors[${groupIndex}].title`}
+                  errorMessage={getIn(formik.errors, `groupedOptions[${groupIndex}].title`)}
                   format="bold"
                   name={`groupedOptions[${groupIndex}].title`}
                   value={groupedOption.title}

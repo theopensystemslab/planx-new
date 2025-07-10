@@ -15,11 +15,9 @@ import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
 import { defaultContent } from "../components/defaultContent";
-import { Feedback, parseFeedback } from "../model";
+import { Feedback, parseFeedback, validationSchema } from "../model";
 
 type FeedbackEditorProps = EditorProps<TYPES.Feedback, Feedback>;
-
-const HTML_TAG_REGEX = /<[^>]*>/g;
 
 export const FeedbackEditor = (props: FeedbackEditorProps) => {
   const formik = useFormik<Feedback>({
@@ -32,6 +30,9 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
         });
       }
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -97,6 +98,7 @@ export const FeedbackEditor = (props: FeedbackEditorProps) => {
                   value={formik.values.disclaimer}
                   onChange={formik.handleChange}
                   disabled
+                  errorMessage={formik.errors.disclaimer}
                 />
               </InputLabel>
             </InputRow>

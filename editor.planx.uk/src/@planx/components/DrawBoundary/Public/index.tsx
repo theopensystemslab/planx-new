@@ -55,6 +55,8 @@ export default function Component(props: Props) {
     state.computePassport(),
     state.teamSlug,
   ]);
+  const drawViewRef = useRef<HTMLDivElement>(null);
+  const uploadViewRef = useRef<HTMLDivElement>(null);
 
   const previousBoundary =
     props.previouslySubmittedData?.data?.[props.fn] ||
@@ -91,6 +93,16 @@ export default function Component(props: Props) {
       Number(passport?.data?._address?.latitude),
     ]);
   const environment = useStore((state) => state.previewEnvironment);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if (page === "draw" && drawViewRef.current) {
+        drawViewRef.current.focus();
+      } else if (page === "upload" && uploadViewRef.current) {
+        uploadViewRef.current.focus();
+      }
+    }
+  }, [page]);
 
   useEffect(() => {
     if (isMounted.current) setSlots([]);
@@ -233,7 +245,15 @@ export default function Component(props: Props) {
   function getBody(mapValidationError?: string, fileValidationError?: string) {
     if (page === "draw") {
       return (
-        <>
+        <Box
+          ref={drawViewRef}
+          tabIndex={-1}
+          sx={{
+            "&:focus": {
+              outline: "none",
+            },
+          }}
+        >
           <CardHeader
             title={props.title}
             description={props.description}
@@ -312,11 +332,19 @@ export default function Component(props: Props) {
               )}
             </MapFooter>
           </FullWidthWrapper>
-        </>
+        </Box>
       );
     } else if (page === "upload") {
       return (
-        <>
+        <Box
+          ref={uploadViewRef}
+          tabIndex={-1}
+          sx={{
+            "&:focus": {
+              outline: "none",
+            },
+          }}
+        >
           <CardHeader
             title={props.titleForUploading}
             description={props.descriptionForUploading}
@@ -339,7 +367,7 @@ export default function Component(props: Props) {
               </Typography>
             </Link>
           </Box>
-        </>
+        </Box>
       );
     }
   }

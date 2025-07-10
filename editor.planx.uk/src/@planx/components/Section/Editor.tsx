@@ -11,7 +11,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { parseSection, Section } from "./model";
+import { parseSection, Section, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.Section, Section>;
 
@@ -26,6 +26,9 @@ function SectionComponent(props: Props) {
         data: newValues,
       });
     },
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
   });
 
   return (
@@ -58,6 +61,7 @@ function SectionComponent(props: Props) {
               onChange={formik.handleChange}
               disabled={props.disabled}
               variant="paragraphContent"
+              errorMessage={formik.errors.description}
             />
           </InputRow>
         </ModalSectionContent>

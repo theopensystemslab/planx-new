@@ -51,7 +51,7 @@ export interface Props extends InputBaseProps {
   className?: string;
   onChange?: (ev: ChangeEvent<HTMLInputElement>) => void;
   bordered?: boolean;
-  errorMessage?: string;
+  errorMessage: string | undefined;
   disabled?: boolean;
   variant?: Variant;
   classname?: string;

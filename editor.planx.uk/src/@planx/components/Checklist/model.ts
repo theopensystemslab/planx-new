@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, object } from "yup";
+import { array, object, string } from "yup";
 
 import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
@@ -157,5 +157,8 @@ export const checklistInputValidationSchema = ({
 export const validationSchema = baseNodeDataValidationSchema.concat(
   object({
     description: richText(),
+    groupedOptions: array(object({
+      title: string().required("Section title is a required field")
+    }).required()).optional()
   }),
 );

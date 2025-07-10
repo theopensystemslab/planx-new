@@ -1,4 +1,5 @@
-import { NODE_TAGS, TemplatedNodeData } from "@opensystemslab/planx-core/types";
+import { baseNodeDataValidationSchema, moreInformationSchema } from '@planx/components/shared';
+import { richText } from "lib/yupExtensions";
 import {
   array,
   boolean,
@@ -11,7 +12,6 @@ import {
 } from "yup";
 
 import { FileUploadSlot } from "../FileUpload/model";
-import { BaseNodeData, MoreInformation } from "../shared";
 import {
   checkIfConditionalRule,
   Condition,
@@ -23,26 +23,6 @@ import {
   Rule,
   UserFile,
 } from "./model";
-
-const moreInformationSchema: SchemaOf<MoreInformation> = object({
-  howMeasured: string(),
-  policyRef: string(),
-  info: string(),
-  notes: string(),
-  definitionImg: string(),
-});
-
-const templatedNodeSchema: SchemaOf<TemplatedNodeData> = object({
-  isTemplatedNode: boolean(),
-  templatedNodeInstructions: string(),
-  areTemplatedNodeInstructionsRequired: boolean(),
-});
-
-const baseNodeDataSchema: SchemaOf<BaseNodeData> = object({
-  tags: array(mixed().oneOf([...NODE_TAGS])),
-})
-  .concat(moreInformationSchema)
-  .concat(templatedNodeSchema);
 
 const valFnSchema = mixed().when("condition", {
   is: checkIfConditionalRule,
@@ -65,18 +45,18 @@ export const ruleSchema: SchemaOf<Rule> = object({
 
 export const fileTypeSchema: SchemaOf<FileType> = object({
   name: string().required(),
-  fn: string().required(),
+  fn: string().required("Required field"),
   rule: ruleSchema,
   moreInformation: moreInformationSchema.optional(),
 });
 
-export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = object({
+export const fileUploadAndLabelSchema: SchemaOf<FileUploadAndLabel> = baseNodeDataValidationSchema.concat(object({
   title: string().required(),
-  description: string(),
+  description: richText(),
   fn: string(),
   fileTypes: array().of(fileTypeSchema).required().min(1),
   hideDropZone: boolean(),
-}).concat(baseNodeDataSchema);
+}));
 
 interface SlotsSchemaTestContext extends TestContext {
   fileList: FileList;
