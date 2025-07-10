@@ -72,21 +72,26 @@ if (!lpaData) return Astro.redirect("/404");
     </div>
   </Container>
 </Layout>
-<script is:inline type="module" data-astro-rerun>
-  import { $action } from "./src/stores/action.js";
 
+<script is:inline data-astro-rerun type="module">
+  /**
+   * Open accordion by "action" search param in URL
+   * Defaults to all accordions closed
+   */
   const openAccordion = () => {
-    const action = $action.get();
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get("action");
+
     if (!action) return;
 
     const detailsEl = document.getElementById(`${action}-accordion`);
     if (!detailsEl) return;
 
     detailsEl.open = true;
-    // TODO: Scroll to summary (title), not list of services
-    // This might be an animation delay issue (?)
     detailsEl.scrollIntoView({ behavior: "smooth" });
   };
 
-  openAccordion();
+  document.addEventListener("astro:page-load", () => {
+    openAccordion();
+  });
 </script>
