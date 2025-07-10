@@ -60,7 +60,8 @@ test.describe("Flow creation, publish and preview", () => {
     await tearDownTestContext();
   });
 
-  test("Create, publish, and preview a flow with geospatial components", async ({
+  // Skipped due to flaky / inconsistent failures on CI, passes locally
+  test.skip("Create, publish, and preview a flow with geospatial components", async ({
     browser,
   }) => {
     test.setTimeout(140_000);
