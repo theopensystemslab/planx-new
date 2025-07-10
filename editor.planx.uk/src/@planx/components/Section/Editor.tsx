@@ -61,6 +61,7 @@ function SectionComponent(props: Props) {
               onChange={formik.handleChange}
               disabled={props.disabled}
               variant="paragraphContent"
+              errorMessage={formik.errors.description}
             />
           </InputRow>
         </ModalSectionContent>

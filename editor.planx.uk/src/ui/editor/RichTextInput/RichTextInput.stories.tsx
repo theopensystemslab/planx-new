@@ -47,6 +47,7 @@ export const Basic = () => {
               onChange={(ev) => {
                 setValue(ev.target.value);
               }}
+              errorMessage={undefined}
             />
           </Box>
           <Box>
