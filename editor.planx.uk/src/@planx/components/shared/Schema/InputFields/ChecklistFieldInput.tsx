@@ -1,8 +1,7 @@
 import Grid from "@mui/material/Grid";
-import { visuallyHidden } from "@mui/utils";
+import Typography from "@mui/material/Typography";
 import type { ChecklistField } from "@planx/components/shared/Schema/model";
 import React from "react";
-import InputLabel from "ui/public/InputLabel";
 import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -35,25 +34,25 @@ export const ChecklistFieldInput: React.FC<Props<ChecklistField>> = (props) => {
     };
 
   return (
-    <InputLabel label={title} id={`checklist-label-${id}`}>
-      {data.description && (
-        <FieldInputDescription description={data.description} />
-      )}
-      <ErrorWrapper error={errorMessage} id={id}>
-        <Grid container component="fieldset">
-          <legend style={visuallyHidden}>{title}</legend>
-          {data.options.map((option) => (
-            <Grid item xs={12} key={option.id}>
-              <ChecklistItem
-                onChange={changeCheckbox(option.id)}
-                label={option.data.text}
-                id={option.id}
-                checked={value.includes(option.id)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </ErrorWrapper>
-    </InputLabel>
+    <ErrorWrapper error={errorMessage} id={id}>
+      <Grid container component="fieldset">
+        <Typography component="legend" sx={{ pb: 1 }} variant="body1">
+          {title}
+        </Typography>
+        {data.description && (
+          <FieldInputDescription description={data.description} />
+        )}
+        {data.options.map((option) => (
+          <Grid item xs={12} key={option.id}>
+            <ChecklistItem
+              onChange={changeCheckbox(option.id)}
+              label={option.data.text}
+              id={option.id}
+              checked={value.includes(option.id)}
+            />
+          </Grid>
+        ))}
+      </Grid>
+    </ErrorWrapper>
   );
 };
