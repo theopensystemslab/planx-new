@@ -29,8 +29,13 @@ export interface LPSApplication {
   url: string;
 }
 
-interface ApplicationsResponse {
+interface Success {
   applications: LPSApplication[];
+}
+
+interface Failure {
+  error: "LINK_INVALID" | "LINK_CONSUMED" | "LINK_EXPIRED";
+  message: string;
 }
 
 export const applicationsSchema = z.object({
@@ -42,5 +47,5 @@ export const applicationsSchema = z.object({
 
 export type Applications = ValidatedRequestHandler<
   typeof applicationsSchema,
-  ApplicationsResponse
+  Success | Failure
 >;
