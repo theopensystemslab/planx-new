@@ -32,7 +32,6 @@ export const useFetchApplications = () => {
   const urlParams = new URLSearchParams(window.location.search)
   const token = urlParams.get("token");
   const email = urlParams.get("email");
-  const hasUsedMagicLink = Boolean(token && email);
 
   const { data: applications = { drafts: [], submitted: [] }, isLoading, error } = useQuery<ApplicationsResponse>({
     queryKey: ["fetchApplications"],
@@ -44,14 +43,13 @@ export const useFetchApplications = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to fetch applications: ${response.status} ${response.statusText} - ${errorText}`);
+        const { error = "UNHANDLED_ERROR" } = await response.json();
+        throw new Error(error);
       }
 
       const applications = await response.json();
       return applications;
     },
-    enabled: hasUsedMagicLink,
     // Retain cache of applications for whilst tab remains open
     // Data could only be refetch with a new magic link
     staleTime: Infinity,
@@ -62,7 +60,6 @@ export const useFetchApplications = () => {
   return {
     applications,
     isLoading,
-    hasUsedMagicLink,
     error,
   };
 };
