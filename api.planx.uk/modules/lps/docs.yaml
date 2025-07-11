@@ -105,7 +105,7 @@ components:
               message:
                 type: string
                 example: success
-    ApplicationsResponse:
+    ApplicationsResponseSuccess:
       description: Applications retrieved successfully
       content:
         application/json:
@@ -123,6 +123,14 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/SubmittedLPSApplication"
+    ApplicationsResponseError:
+      type: object
+      properties:
+        error:
+          type: string
+          enum: ["LINK_INVALID", "LINK_CONSUMED", "LINK_EXPIRED"]
+        message:
+          type: string
 paths:
   /lps/login:
     post:
@@ -151,6 +159,19 @@ paths:
               $ref: "#/components/schemas/ApplicationsRequest"
       responses:
         "200":
-          $ref: "#/components/responses/ApplicationsResponse"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/ApplicationsResponse"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/ApplicationsResponseError"
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/ApplicationsResponseError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

@@ -179,6 +179,141 @@ describe("fetching applications", () => {
     });
   });
 
+  describe("magic link validation", () => {
+    test("invalid token", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {
+          // No matching token found
+          magicLink: null,
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.error).toMatch(/LINK_INVALID/);
+        });
+    });
+
+    test("expired token", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {
+          magicLink: {
+            // Link created a long time ago
+            usedAt: null,
+            createdAt: new Date("1970-1-1").toString(),
+          },
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(410)
+        .then((res) => {
+          expect(res.body.error).toMatch(/LINK_EXPIRED/);
+        });
+    });
+
+    test("consumed token", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {
+          magicLink: {
+            // Link consumed a long time ago
+            usedAt: new Date("1970-2-2").toString(),
+            createdAt: new Date("1970-1-1").toString(),
+          },
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(410)
+        .then((res) => {
+          expect(res.body.error).toMatch(/LINK_CONSUMED/);
+        });
+    });
+
+    it("handles errors", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {},
+        graphqlErrors: [
+          {
+            message: "Something went wrong",
+          },
+        ],
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to validate LPS magic link/);
+        });
+    });
+  });
+});
+
+describe("fetching applications", () => {
+  const ENDPOINT = "/lps/applications";
+
+  const mockLowcalSession: Omit<RawApplication, "id"> = {
+    updatedAt: "updatedAtTime",
+    submittedAt: "submittedAtTime",
+    service: {
+      name: "Service Name",
+      slug: "service-slug",
+      team: {
+        name: "Team Name",
+        slug: "team-slug",
+        domain: null,
+      },
+    },
+  };
+
+  beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetMagicLinkStatus",
+      matchOnVariables: false,
+      data: {
+        magicLink: {
+          usedAt: null,
+          createdAt: Date.now().toString(),
+        },
+      },
+    });
+
+    queryMock.mockQuery({
+      name: "ConsumeMagicLinkToken",
+      matchOnVariables: false,
+      data: {
+        updateMagicLinks: {
+          returning: [
+            {
+              applications: [
+                { id: "1", ...mockLowcalSession },
+                { id: "2", ...mockLowcalSession },
+                { id: "3", ...mockLowcalSession },
+              ],
+            },
+          ],
+        },
+      },
+    });
+  });
+
   // Functional test coverage added via E2E tests
   // File: e2e/tests/api-driven/src/lps/getApplications.feature
   describe("fetching applications", () => {
