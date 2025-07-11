@@ -32,10 +32,11 @@ const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
   const { data } = await client.query({
     query: gql`
       query GetFlows {
-        flows(order_by: { slug: asc }, where: { is_template: { _eq: false } }) {
+        flows(order_by: { slug: asc }) {
           id
           slug
           name
+          isTemplate: is_template
           team {
             slug
             name
@@ -49,7 +50,8 @@ const getExternalPortals = async (currentTeam: string, currentFlow: string) => {
     .filter(
       (flow: Flow) =>
         flow.team &&
-        `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}`,
+        `${currentTeam}/${currentFlow}` !== `${flow.team.slug}/${flow.slug}` &&
+        !flow.isTemplate,
     )
     .map(({ id, team, slug, name }: Flow) => ({
       id,
