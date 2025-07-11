@@ -81,6 +81,19 @@ export const setup = async ({
     }),
   ]);
 
+  // Mark one session as submitted to populate "submitted" applications
+  $admin.client.request(
+    `
+    mutation MarkSessionAsSubmitted($id: uuid!) {
+      update_lowcal_sessions_by_pk(pk_columns: {id: $id}, _set: {submitted_at: "now()"}) {
+        id
+      }
+    }
+  `,
+    {
+      id: sessionIds[0],
+    },
+  );
   return sessionIds;
 };
 
@@ -170,7 +183,7 @@ export const getApplications = async (email: string, token: string) => {
     assert.fail("Failed to get applications via /lps/applications endpoint");
   }
 
-  const { applications }: CustomWorld = await response.json();
+  const applications: CustomWorld["applications"] = await response.json();
 
   return applications;
 };
