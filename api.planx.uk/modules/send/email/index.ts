@@ -127,12 +127,7 @@ const getSubmitEmailConfig = async ({
 
     const flowName = flow.name;
 
-    // Make application files download magic link
-    const params = new URLSearchParams({
-      email: teamSettings.submissionEmail,
-      localAuthority,
-    });
-    const applicationFilesDownloadLink = `${process.env.API_URL_EXT}/download-application-files/${sessionId}?${params}`;
+    const downloadLink = `${process.env.EDITOR_URL_EXT}/${localAuthority}/${flow.slug}/${sessionId}/download-application`;
 
     // Prepare email template
     const config: TemplateRegistry["submit"]["config"] = {
@@ -140,7 +135,7 @@ const getSubmitEmailConfig = async ({
         serviceName: flowName,
         sessionId,
         applicantEmail: email,
-        downloadLink: applicationFilesDownloadLink,
+        downloadLink,
         address: addressLine || "Address not submitted",
         projectType: projectType || "Project type not submitted",
         applicantName,
