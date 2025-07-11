@@ -3,6 +3,7 @@ import "vitest-axe/extend-expect";
 
 import { FadeProps } from "@mui/material/Fade";
 import React from "react";
+import server from "test/mockServer";
 import { vi } from "vitest";
 
 /**
@@ -13,10 +14,16 @@ import { vi } from "vitest";
  */
 const mockFade = vi.fn(({ children }: FadeProps) => <div>{children}</div>);
 
-vi.mock("@mui/material/Fade", () => ({
+vi.doMock("@mui/material/Fade", () => ({
   default: mockFade,
 }));
 
 beforeEach(() => {
   mockFade.mockClear();
 });
+
+beforeAll(() => server.listen());
+
+afterEach(() => server.resetHandlers());
+
+afterAll(() => server.close());
