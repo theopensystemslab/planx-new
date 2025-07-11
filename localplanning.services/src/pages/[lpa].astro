@@ -88,7 +88,11 @@ if (!lpaData) return Astro.redirect("/404");
     if (!detailsEl) return;
 
     detailsEl.open = true;
-    detailsEl.scrollIntoView({ behavior: "smooth" });
+
+    // Wait for the accordion animation to complete
+    setTimeout(() => {
+      detailsEl.scrollIntoView({ behavior: "smooth" });
+    }, 400);
   };
 
   document.addEventListener("astro:page-load", () => {
