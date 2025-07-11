@@ -15,7 +15,7 @@ import { cards } from "@content/index/cards";
     <div class="flex flex-col lg:flex-row justify-center clamp-[gap,4,6]">
       {
         cards.map((card) => (
-          <OptionCard title={card.title} description={card.description} />
+          <OptionCard title={card.title} description={card.description} action={card.action}/>
         ))
       }
     </div>
