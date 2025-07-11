@@ -161,7 +161,7 @@ export function Presentational(props: PresentationalProps) {
           geojsonColor="#0010A4"
           geojsonBuffer={30}
           osCopyright={`Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
-          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
+          geojsonDataCopyright={`<a href="https://www.planning.data.gov.uk/dataset/title-boundary" target="_blank" style="color:#0010A4;">Title boundary (opens in a new tab)</a> subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100026316`}
           collapseAttributions={window.innerWidth < 500 ? true : undefined}
         />
       </MapContainer>

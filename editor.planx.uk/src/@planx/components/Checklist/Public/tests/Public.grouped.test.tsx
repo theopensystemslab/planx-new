@@ -103,20 +103,20 @@ describe("Checklist Component - Grouped Layout", () => {
 
     const nonExclusiveOption = screen.getByLabelText("S1 Option1");
     await user.click(nonExclusiveOption);
-    expect(nonExclusiveOption).toHaveAttribute("checked");
+    expect(nonExclusiveOption).toBeChecked();
 
     const exclusiveOption = screen.getByLabelText("Exclusive");
     await user.click(exclusiveOption);
 
-    expect(nonExclusiveOption).not.toHaveAttribute("checked");
-    expect(exclusiveOption).toHaveAttribute("checked");
+    expect(nonExclusiveOption).not.toBeChecked();
+    expect(exclusiveOption).toBeChecked();
 
     await user.click(screen.getByText("Section 2"));
     const exclusiveOptionInSection2 = screen.getByLabelText("S2 Option1");
     await user.click(exclusiveOptionInSection2);
 
-    expect(exclusiveOptionInSection2).toHaveAttribute("checked");
-    expect(exclusiveOption).not.toHaveAttribute("checked");
+    expect(exclusiveOptionInSection2).toBeChecked();
+    expect(exclusiveOption).not.toBeChecked();
 
     // user presses two more non-exclusive options
     await user.click(screen.getByText("S1 Option1"));
