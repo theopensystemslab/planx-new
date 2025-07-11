@@ -1,4 +1,4 @@
-import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import type { FlowGraph, Node } from "@opensystemslab/planx-core/types";
 import { ComponentType } from "@opensystemslab/planx-core/types";
 import intersection from "lodash/intersection.js";
 
@@ -51,9 +51,27 @@ const sectionIsInFirstPosition = (flowGraph: FlowGraph): boolean => {
 };
 
 const allSectionsOnRoot = (flowData: FlowGraph): boolean => {
+  // Sections can only be on the root directly, or within the first-level of an internal portal on its' root
+  //   Note that flattening has converted all external portals to internals - so we distinguish "original" internal portals via `node.data.flattenedFromExternalPortal` = false/undefined
+  const rootEdgeIds = flowData["_root"].edges;
+  const internalPortalNodeIds = Object.entries(flowData)
+    .filter(
+      ([nodeId, nodeData]) =>
+        nodeId !== "_root" &&
+        (nodeData as Node)?.type === ComponentType.InternalPortal &&
+        !(nodeData as Node)?.data?.flattenedFromExternalPortal &&
+        rootEdgeIds.includes(nodeId),
+    )
+    ?.flatMap(([nodeId, _nodeData]) => nodeId);
+  const internalPortalEdgeIds = internalPortalNodeIds.flatMap(
+    (nodeId) => flowData[nodeId]?.edges || [],
+  );
+
+  const validSectionPositions = rootEdgeIds.concat(internalPortalEdgeIds);
+
   const sectionTypeNodeIds = getSectionNodeIds(flowData);
   const intersectingNodeIds = intersection(
-    flowData["_root"].edges,
+    validSectionPositions,
     sectionTypeNodeIds,
   );
   return intersectingNodeIds.length === sectionTypeNodeIds.length;

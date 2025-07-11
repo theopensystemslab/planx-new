@@ -417,6 +417,7 @@ const dataMerged = async (
         type: ComponentType.InternalPortal,
         data: {
           text: `${team.slug}/${slug}`,
+          flattenedFromExternalPortal: true,
           // add extra metadata about latest published version when applicable
           ...(!draftDataOnly && {
             publishedFlowId: publishedFlows?.[0]?.id,
@@ -433,6 +434,9 @@ const dataMerged = async (
       ob[nodeId] = {
         type: ComponentType.InternalPortal,
         edges: [node.data?.flowId],
+        data: {
+          flattenedFromExternalPortal: true,
+        },
       };
 
       // recursively merge flow

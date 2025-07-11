@@ -21,6 +21,7 @@ export interface Flow {
   team: Team;
   settings?: FlowSettings;
   status?: FlowStatus;
+  isTemplate?: boolean;
 }
 export interface GlobalSettings {
   footerContent?: { [key: string]: TextContent };
