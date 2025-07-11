@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
-import { ApplicationsDisplay } from "@components/applications/ApplicationsDisplay";
+import { ApplicationsAuth } from "@components/applications/ApplicationsAuth";
 ---
 
 <Layout>
@@ -10,6 +10,6 @@ import { ApplicationsDisplay } from "@components/applications/ApplicationsDispla
     <p>View applications in progress, and download sent applications.</p>
   </Masthead>
   <Container paddingY>
-    <ApplicationsDisplay client:only="react"/>
+    <ApplicationsAuth client:only="react" />
   </Container>
 </Layout>
