@@ -1,4 +1,5 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { Section } from "@planx/components/Section/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { findLast, pick } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
@@ -8,9 +9,7 @@ import { PreviewStore } from "./preview";
 import { SharedStore } from "./shared";
 
 export interface SectionNode extends Store.Node {
-  data: {
-    title: string;
-  };
+  data: Section;
 }
 
 export interface NavigationStore {
@@ -47,21 +46,10 @@ export const navigationStore: StateCreator<
    * Called by setFlow() as we require a flow from the DB before proceeding
    */
   initNavigationStore: () => {
-    const unorderedSectionNodes = get().filterFlowByType(
-      TYPES.Section,
-    ) as Record<string, SectionNode>;
-
-    // Because sections can be located in internal portals, ensure they're ordered depth-first
-    const sectionNodeIds = sortIdsDepthFirst(get().flow)(
-      new Set(Object.keys(unorderedSectionNodes)),
-    );
-    const sectionNodes: Record<string, SectionNode> = {};
-    Object.entries(unorderedSectionNodes)
-      .sort((a, b) =>
-        sectionNodeIds.indexOf(a[0]) < sectionNodeIds.indexOf(b[0]) ? -1 : 1,
-      )
-      .map((i) => (sectionNodes[i[0]] = i[1]));
-
+    const sectionNodes = get().filterFlowByType(TYPES.Section) as Record<
+      string,
+      SectionNode
+    >;
     const sectionCount = Object.keys(sectionNodes).length;
     const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
@@ -102,20 +90,31 @@ export const navigationStore: StateCreator<
   },
 
   /**
-   * Get a subset of the full flow, by type
-   * Returned in correct order, based on _root node's edges
+   * Get a subset of the full flow by type
+   * Returned in depth-first order
    */
   filterFlowByType: (type: TYPES): Store.Flow => {
+    // Filter the full flow
     const flow = get().flow;
-    const rootEdges = flow._root.edges || [];
     const filteredFlow = Object.fromEntries(
-      Object.entries(flow)
-        .filter(([_key, value]) => value.type === type)
-        .sort(
-          ([idA], [idB]) => rootEdges.indexOf(idA) - rootEdges.indexOf(idB),
-        ),
+      Object.entries(flow).filter(([_key, value]) => value.type === type),
     );
-    return filteredFlow;
+
+    // Sort IDs-only depth-first
+    const filteredNodeIds = Object.entries(filteredFlow).map(
+      (entry) => entry[0],
+    );
+    const sortedFilteredNodeIds = sortIdsDepthFirst(flow)(
+      new Set(filteredNodeIds),
+    );
+
+    // Reconstruct the full node objects preserving depth-first sorted order
+    const sortedFilteredFlow: { [k: string]: Store.Node } = {};
+    sortedFilteredNodeIds.forEach(
+      (id) => (sortedFilteredFlow[id] = filteredFlow[id]),
+    );
+
+    return sortedFilteredFlow;
   },
 
   // if this flow has sections, split the breadcrumbs up by sections,
