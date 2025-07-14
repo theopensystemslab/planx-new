@@ -11,7 +11,6 @@ This guide will walk through the process of setting a custom domain for a new te
     > ⚠️ **Requirements**
     >
     > AWS CloudFront has a few restrictions which are listed in the public documentation above which are shared with the IT Team, notably - 
-    >  - Keys can be a maximum of 2048-bit ([AWS Docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html))
     >  - Self signed certificates are not accepted ([AWS Docs](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-cloudfront-to-custom-origin.html))
     >
     > The steps below will show how to validate the above.
@@ -20,7 +19,7 @@ This guide will walk through the process of setting a custom domain for a new te
 
     **How to generate a CSR**
     ```shell
-    openssl req -new -newkey rsa:2048 -nodes -keyout <TEAM_NAME>.key -out <TEAM_NAME>.csr
+    openssl req -new -newkey rsa:4096 -nodes -keyout <TEAM_NAME>.key -out <TEAM_NAME>.csr
     ```
 
     The `<TEAM_NAME>.csr` file can then passed along to the IT team who should respond with a certificate and intermediary/chain certificate (next step). 
@@ -66,7 +65,6 @@ This guide will walk through the process of setting a custom domain for a new te
       - Import certificate (copy cert, key and chain into form)
       - Check the following after import - 
         - Subdomain is correct ✅
-        - Key algorithm is RSA 2048 ✅
         - CloudFront is listed under "Can be used with" heading ✅
       - If the above checks pass, delete the test certificate from the AWS Certificate Manager dashboard, and proceed to the next step
 

@@ -668,6 +668,7 @@ export = async () => {
         },
         {
           provider: usEast1,
+          replaceOnChanges: ["privateKey"],
         }
       );
       const cdn = createCdn({ domain, acmCertificateArn: certificate.arn });
