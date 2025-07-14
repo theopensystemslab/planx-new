@@ -66,6 +66,31 @@ describe("flow template edits", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query templated_flow_edits", () => {
+      expect(i.queries).toContain("templated_flow_edits");
+    });
+
+    test("can create templated_flow_edits", () => {
+      expect(i.mutations).toContain("insert_templated_flow_edits");
+    });
+
+    test("can update templated_flow_edits", () => {
+      expect(i.mutations).toContain("update_templated_flow_edits");
+      expect(i.mutations).toContain("update_templated_flow_edits_by_pk");
+    });
+
+    test("cannot delete templated_flow_edits", () => {
+      expect(i.mutations).not.toContain("delete_templated_flow_edits");
+      expect(i.mutations).not.toContain("delete_templated_flow_edits_by_pk");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
@@ -90,7 +115,7 @@ describe("flow template edits", () => {
       expect(i.mutations).not.toContain("delete_templated_flow_edits_by_pk");
     });
   });
-  
+
   describe("demoUser", () => {
     let i;
     beforeAll(async () => {

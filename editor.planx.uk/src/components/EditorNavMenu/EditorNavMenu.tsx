@@ -1,5 +1,6 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -99,31 +100,37 @@ function EditorNavMenu() {
       title: "Settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/general-settings`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
     },
     {
       title: "Design",
       Icon: PaletteIcon,
       route: `/${teamSlug}/design`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
     },
     {
       title: "Team members",
       Icon: GroupIcon,
       route: `/${teamSlug}/members`,
-      accessibleBy: ["platformAdmin", "teamEditor"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor"],
+    },
+    {
+      title: "Subscription",
+      Icon: CurrencyPoundIcon,
+      route: `/${teamSlug}/subscription`,
+      accessibleBy: ["platformAdmin", "teamAdmin"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/feedback`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/submissions`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor", "demoUser"],
     },
     {
       title: referenceCode
@@ -155,19 +162,19 @@ function EditorNavMenu() {
       title: "Service settings",
       Icon: TuneIcon,
       route: `/${teamSlug}/${flowSlug}/service`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Feedback",
       Icon: RateReviewIcon,
       route: `/${teamSlug}/${flowSlug}/feedback`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor", "demoUser"],
     },
     {
       title: "Submissions",
       Icon: FactCheckIcon,
       route: `/${teamSlug}/${flowSlug}/submissions`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
+      accessibleBy: ["platformAdmin", "teamAdmin", "teamEditor", "demoUser"],
     },
     {
       title: flowAnalyticsLink
@@ -175,7 +182,13 @@ function EditorNavMenu() {
         : `Analytics page unavailable`,
       Icon: LeaderboardIcon,
       route: flowAnalyticsLink ? flowAnalyticsLink : `#`,
-      accessibleBy: ["platformAdmin", "teamEditor", "demoUser", "analyst"],
+      accessibleBy: [
+        "platformAdmin",
+        "teamAdmin",
+        "teamEditor",
+        "demoUser",
+        "analyst",
+      ],
       disabled: !flowAnalyticsLink,
     },
   ];

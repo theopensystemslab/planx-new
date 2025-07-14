@@ -69,6 +69,33 @@ describe("feedback", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query feedback", () => {
+      expect(i.queries).toContain("feedback");
+    });
+
+    test("cannot insert feedback", async () => {
+      expect(i.mutations).not.toContain("insert_feedback");
+      expect(i.mutations).not.toContain("insert_feedback_one");
+    });
+
+    test("cannot delete feedback", async () => {
+      expect(i.mutations).not.toContain("delete_feedback");
+      expect(i.mutations).not.toContain("delete_feedback_by_pk");
+    });
+
+    test("can update feedback", async () => {
+      expect(i.mutations).toContain("update_feedback");
+      expect(i.mutations).toContain("update_feedback_by_pk");
+      expect(i.mutations).toContain("update_feedback_many");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

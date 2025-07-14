@@ -47,6 +47,21 @@ describe("lps_magic_links", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query lps_magic_links", () => {
+      expect(i.queries).not.toContain("lps_magic_links");
+    });
+
+    test("cannot create, update, or delete lps_magic_links", () => {
+      expect(i).toHaveNoMutationsFor("lps_magic_links");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

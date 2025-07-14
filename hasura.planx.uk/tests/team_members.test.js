@@ -44,6 +44,23 @@ describe("team_members", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    // Row-level permissions tested in e2e/tests/api-driven
+    // teamEditors can only query their own record
+    test("can query teams", () => {
+      expect(i.queries).toContain("team_members");
+    });
+
+    test("cannot create, update, or delete team_members", () => {
+      expect(i).toHaveNoMutationsFor("team_members");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

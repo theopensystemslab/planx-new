@@ -47,7 +47,8 @@ export const TeamMembers = () => {
         </Typography>
         <Typography variant="body1">
           Editors have access to edit your services, whilst viewers can only
-          browse your services.
+          browse your services. Admins can edit your services as well as manage
+          other team members and view information related to your subscription.
         </Typography>
         <MembersTable
           members={activeMembers}
@@ -58,7 +59,7 @@ export const TeamMembers = () => {
       </SettingsSection>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          Admins
+          Platform admins
         </Typography>
         <Typography variant="body1">
           Admins have editor access across all teams.

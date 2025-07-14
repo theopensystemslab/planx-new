@@ -49,6 +49,21 @@ describe("global_settings", () => {
     });
   });
 
+    describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query global_settings view", () => {
+      expect(i.queries).toContain("global_settings");
+    });
+
+    test("cannot create, update, or delete global_settings", () => {
+      expect(i).toHaveNoMutationsFor("global_settings");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

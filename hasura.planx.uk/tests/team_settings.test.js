@@ -59,6 +59,30 @@ describe("team_settings", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query team_settings", () => {
+      expect(i.queries).toContain("team_settings");
+    });
+
+    test("can update team_settings", () => {
+      expect(i.mutations).toContain("update_team_settings");
+      expect(i.mutations).toContain("update_team_settings_by_pk");
+    });
+
+    test("cannot delete team_settings", async () => {
+      expect(i.mutations).not.toContain("delete_team_settings");
+    });
+
+    test("cannot insert team_settings", async () => {
+      expect(i.mutations).not.toContain("insert_team_settings");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

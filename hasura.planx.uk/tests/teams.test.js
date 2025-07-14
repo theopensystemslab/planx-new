@@ -49,6 +49,30 @@ describe("teams", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query teams", () => {
+      expect(i.queries).toContain("teams");
+    });
+
+    test("cannot update teams", () => {
+      expect(i.mutations).not.toContain("update_teams");
+      expect(i.mutations).not.toContain("update_teams_by_pk");
+    });
+
+    test("cannot delete teams", async () => {
+      expect(i.mutations).not.toContain("delete_teams");
+    });
+
+    test("cannot insert teams", async () => {
+      expect(i.mutations).not.toContain("insert_teams");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
@@ -98,14 +122,14 @@ describe("teams", () => {
       expect(i.queries).toContain("teams");
     });
 
-    test("can update teams", () => { 
+    test("can update teams", () => {
       expect(i.mutations).toContain("update_teams");
-      expect(i.mutations).toContain("update_teams_by_pk"); 
-      expect(i.mutations).toContain("update_teams_many"); 
-    }); 
+      expect(i.mutations).toContain("update_teams_by_pk");
+      expect(i.mutations).toContain("update_teams_many");
+    });
 
     test("cannot create or delete teams", () => {
-      expect(i.mutations).not.toContain("insert_teams"); 
+      expect(i.mutations).not.toContain("insert_teams");
       expect(i.mutations).not.toContain("delete_teams");
     });
   });

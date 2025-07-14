@@ -53,10 +53,11 @@ export const MembersTable = ({
   const [initialValues, setInitialValues] = useState<TeamMember | undefined>();
 
   const roleLabels: Record<Role, string> = {
-    platformAdmin: "Admin",
+    platformAdmin: "Platform admin",
+    teamAdmin: "Team admin",
     teamEditor: "Editor",
     teamViewer: "Viewer",
-    demoUser: "Demo User",
+    demoUser: "Demo user",
     public: "Public",
     analyst: "Analyst",
   };
