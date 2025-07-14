@@ -117,6 +117,6 @@ Then<CustomWorld>(
       this.demoClient,
       this.currentTeamId,
     );
-    assert.ok(!canUpdateSettings, "Demo User can update the team settings");
+    assert.ok(!canUpdateSettings, "Demo user can update the team settings");
   },
 );
