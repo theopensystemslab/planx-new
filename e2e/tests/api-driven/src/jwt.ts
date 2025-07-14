@@ -48,7 +48,7 @@ const getAllowedRolesForUser = (user: User): Role[] => {
  */
 const getDefaultRoleForUser = (user: User): Role => {
   if (user.isPlatformAdmin) return "platformAdmin";
-  
+
   const teamRoles = user.teams.map((teamRole) => teamRole.role);
   if (teamRoles.includes("teamAdmin")) return "teamAdmin";
   if (teamRoles.includes("teamEditor")) return "teamEditor";

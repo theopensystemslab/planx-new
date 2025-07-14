@@ -15,12 +15,9 @@ We use [Playwright](https://playwright.dev/docs/api/class-test) to run UI driven
 3. Run `pnpm exec playwright install` to install the Playwright test browsers.
 4. Run the tests with `pnpm test`
 
-
-
 ## API driven tests
 
 We use [Gherkin](https://cucumber.io/docs/gherkin/reference) to run API tests where interactions are simulated via automated network requests. For more details please see [our README here](https://github.com/theopensystemslab/planx-new/blob/main/e2e/tests/api-driven/README.md)).
-
 
 # Running Tests
 

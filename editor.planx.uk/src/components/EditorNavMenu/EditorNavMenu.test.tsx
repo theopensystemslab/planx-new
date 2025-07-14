@@ -86,7 +86,7 @@ describe("teamLayoutRoutes", () => {
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
   });
 
-  it.only("displays for teamAdmins", () => {
+  it("displays for teamAdmins", () => {
     mockGetUserRoleForCurrentTeam.mockReturnValue("teamAdmin");
 
     const { getAllByRole } = setup(<EditorNavMenu />);

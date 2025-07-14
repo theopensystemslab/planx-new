@@ -10,12 +10,9 @@
     "noImplicitAny": false,
     "target": "es2021",
     "noEmit": true,
-    "lib": [
-      "DOM",
-      "ESNext"
-    ],
+    "lib": ["DOM", "ESNext"],
     "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "nodenext"
   },
   "exclude": ["node_modules"]
 }
