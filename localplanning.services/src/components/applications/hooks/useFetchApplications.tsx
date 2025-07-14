@@ -1,6 +1,7 @@
 import { queryClient } from "@lib/queryClient";
 import { useQuery } from "@tanstack/react-query";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
+import { useSearchParams } from "./useSearchParams";
 
 interface Application {
   id: string;
@@ -29,9 +30,7 @@ export interface ApplicationsResponse {
 }
 
 export const useFetchApplications = () => {  
-  const urlParams = new URLSearchParams(window.location.search)
-  const token = urlParams.get("token");
-  const email = urlParams.get("email");
+  const { token, email } = useSearchParams();
 
   const { data: applications = { drafts: [], submitted: [] }, isLoading, error } = useQuery<ApplicationsResponse>({
     queryKey: ["fetchApplications"],
