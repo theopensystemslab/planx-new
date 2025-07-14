@@ -74,6 +74,19 @@ select_permissions:
         - last_name
         - updated_at
       filter: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - created_at
+        - email
+        - first_name
+        - id
+        - is_analyst
+        - is_platform_admin
+        - last_name
+        - updated_at
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:

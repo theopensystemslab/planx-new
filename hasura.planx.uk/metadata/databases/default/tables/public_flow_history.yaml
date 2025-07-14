@@ -30,6 +30,20 @@ select_permissions:
         - flow_id
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - id
+        - actor_id
+        - data
+        - comment
+        - first_name
+        - last_name
+        - type
+        - created_at
+        - flow_id
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:

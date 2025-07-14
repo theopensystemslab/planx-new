@@ -51,6 +51,25 @@ insert_permissions:
         - id
         - publisher_id
         - summary
+  - role: teamAdmin
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
+        - id
+        - publisher_id
+        - summary
   - role: teamEditor
     permission:
       check:
@@ -108,6 +127,18 @@ select_permissions:
       filter: {}
       allow_aggregations: true
   - role: public
+    permission:
+      columns:
+        - created_at
+        - data
+        - flow_id
+        - has_send_component
+        - id
+        - publisher_id
+        - summary
+      filter: {}
+      allow_aggregations: true
+  - role: teamAdmin
     permission:
       columns:
         - created_at

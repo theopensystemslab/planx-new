@@ -45,6 +45,16 @@ select_permissions:
         - role
         - id
       filter: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - team_id
+        - user_id
+        - role
+        - id
+      filter:
+        user_id:
+          _eq: x-hasura-user-id
   - role: teamEditor
     permission:
       columns:

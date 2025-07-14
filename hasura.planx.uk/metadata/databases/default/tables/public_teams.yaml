@@ -97,6 +97,16 @@ select_permissions:
         - slug
         - updated_at
       filter: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - created_at
+        - domain
+        - id
+        - name
+        - slug
+        - updated_at
+      filter: {}
   - role: teamEditor
     permission:
       columns:

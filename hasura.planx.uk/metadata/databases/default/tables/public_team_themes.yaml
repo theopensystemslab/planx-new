@@ -67,6 +67,18 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - action_colour
+        - favicon
+        - id
+        - link_colour
+        - logo
+        - primary_colour
+        - team_id
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:
@@ -89,6 +101,24 @@ update_permissions:
         - logo
         - primary_colour
       filter: {}
+      check: null
+    comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - action_colour
+        - favicon
+        - link_colour
+        - logo
+        - primary_colour
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
       check: null
     comment: ""
   - role: teamEditor
