@@ -31,7 +31,7 @@ export type CreateFlow = {
 export const CREATE_FLOW_MODES = [
   {
     mode: "new",
-    title: "New flow",
+    title: "From scratch",
   },
   {
     mode: "template",
