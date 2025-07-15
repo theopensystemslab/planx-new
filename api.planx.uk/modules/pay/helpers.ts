@@ -1,9 +1,9 @@
 import { getFeeBreakdown } from "@opensystemslab/planx-core";
-import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
+import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
+
 import airbrake from "../../airbrake.js";
 import { $api } from "../../client/index.js";
-import { getSessionData } from "../send/email/service.js";
 
 /**
  * Gracefully handle GovPay errors
@@ -41,11 +41,16 @@ export async function logPaymentStatus({
   } else {
     try {
       // get fee breakdown for this session
-      const sessionData = await getSessionData(sessionId);
-      const passportData = sessionData?.passport?.data;
+      const passportData = await getPassportData(sessionId);
+      if (!passportData) {
+        reportError({
+          error:
+            "Could not log the payment status due to missing passport data",
+          context: { sessionId, flowId, teamSlug },
+        });
+      }
 
-      let feeBreakdown: FeeBreakdown | undefined;
-      if (passportData) feeBreakdown = getFeeBreakdown(passportData);
+      const feeBreakdown = getFeeBreakdown(passportData);
 
       // log payment status response
       await insertPaymentStatus({
@@ -66,7 +71,27 @@ export async function logPaymentStatus({
   }
 }
 
-// TODO: this would ideally live in planx-client
+interface GetPassportData {
+  session: Partial<{ passportData: Session["data"]["passport"]["data"] }>;
+}
+
+async function getPassportData(sessionId: string) {
+  const response = await $api.client.request<GetPassportData>(
+    gql`
+      query GetSessionData($id: uuid!) {
+        session: lowcal_sessions_by_pk(id: $id) {
+          passportData: data(path: "passport.data")
+        }
+      }
+    `,
+    {
+      id: sessionId,
+    },
+  );
+
+  return response?.session?.passportData;
+}
+
 async function insertPaymentStatus({
   flowId,
   sessionId,
@@ -82,7 +107,7 @@ async function insertPaymentStatus({
   teamSlug: string;
   status: string;
   amount: number;
-  feeBreakdown?: FeeBreakdown | undefined;
+  feeBreakdown: FeeBreakdown;
 }): Promise<void> {
   const _response = await $api.client.request(
     gql`
@@ -93,7 +118,7 @@ async function insertPaymentStatus({
         $teamSlug: String!
         $status: payment_status_enum_enum
         $amount: Int!
-        $feeBreakdown: jsonb
+        $feeBreakdown: jsonb!
       ) {
         insert_payment_status(
           objects: {
