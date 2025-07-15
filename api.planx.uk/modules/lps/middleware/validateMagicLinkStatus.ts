@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 import type { Applications } from "../types.js";
 import { $admin } from "../../../client/index.js";
-import { getExpiry } from "../service/getApplications.js";
+import { getExpiry } from "../service/getApplications/index.js";
 import { ServerError } from "../../../errors/serverError.js";
 
 export const validateMagicLinkStatus: Applications = async (

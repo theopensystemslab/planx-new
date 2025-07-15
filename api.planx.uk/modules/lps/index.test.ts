@@ -101,58 +101,7 @@ describe("logging into LPS applications", () => {
   });
 });
 
-describe("fetching applications", () => {
-  const mockLowcalSession: Omit<Application, "id"> = {
-    createdAt: "createdAtTime",
-    addressLine: null,
-    addressTitle: null,
-    service: {
-      name: "Service Name",
-      slug: "service-slug",
-      team: {
-        name: "Team Name",
-        slug: "team-slug",
-        domain: null,
-      },
-    },
-  };
-
-  beforeEach(() => {
-    queryMock.mockQuery({
-      name: "ConsumeMagicLinkToken",
-      matchOnVariables: false,
-      data: {
-        updateMagicLinks: {
-          returning: [
-            {
-              drafts: [
-                {
-                  ...mockLowcalSession,
-                  id: "1",
-                  addressLine: "1, Bag End, The Shire, Eriador",
-                  addressTitle: null,
-                },
-                {
-                  ...mockLowcalSession,
-                  id: "2",
-                  addressLine: null,
-                  addressTitle: "Bag End",
-                },
-              ],
-              submitted: [
-                {
-                  ...mockLowcalSession,
-                  id: "3",
-                  submittedAt: "submittedAtTime",
-                },
-              ],
-            },
-          ],
-        },
-      },
-    });
-  });
-
+describe("fetching applications - validation", () => {
   const ENDPOINT = "/lps/applications";
 
   describe("payload validation", () => {
@@ -269,9 +218,10 @@ describe("fetching applications", () => {
 describe("fetching applications", () => {
   const ENDPOINT = "/lps/applications";
 
-  const mockLowcalSession: Omit<RawApplication, "id"> = {
-    updatedAt: "updatedAtTime",
-    submittedAt: "submittedAtTime",
+  const mockLowcalSession: Omit<Application, "id"> = {
+    createdAt: "createdAtTime",
+    addressLine: null,
+    addressTitle: null,
     service: {
       name: "Service Name",
       slug: "service-slug",
@@ -302,10 +252,26 @@ describe("fetching applications", () => {
         updateMagicLinks: {
           returning: [
             {
-              applications: [
-                { id: "1", ...mockLowcalSession },
-                { id: "2", ...mockLowcalSession },
-                { id: "3", ...mockLowcalSession },
+              drafts: [
+                {
+                  ...mockLowcalSession,
+                  id: "1",
+                  addressLine: "1, Bag End, The Shire, Eriador",
+                  addressTitle: null,
+                },
+                {
+                  ...mockLowcalSession,
+                  id: "2",
+                  addressLine: null,
+                  addressTitle: "Bag End",
+                },
+              ],
+              submitted: [
+                {
+                  ...mockLowcalSession,
+                  id: "3",
+                  submittedAt: "submittedAtTime",
+                },
               ],
             },
           ],
@@ -363,6 +329,7 @@ describe("fetching applications", () => {
           expect(res.body.submitted).toHaveLength(1);
           expect(res.body.submitted[0]).toMatchObject({
             id: "3",
+            address: null,
             createdAt: "createdAtTime",
             submittedAt: "submittedAtTime",
             service: {

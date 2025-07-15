@@ -7,7 +7,7 @@ import { ConsumedLink } from "./errors/ConsumedLink";
 import { UnhandledError } from "./errors/UnhandledError";
 
 export const ApplicationsList: React.FC = () => {
-  const { applications, isLoading, error } = useFetchApplications();
+  const { applications: { drafts, submitted }, isLoading, error } = useFetchApplications();
 
   // TODO: Better UI - skeleton or spinner?
   if (isLoading) return <p>Loading your applications...</p>;
@@ -21,24 +21,36 @@ export const ApplicationsList: React.FC = () => {
       case "LINK_EXPIRED":
         return <ExpiredLink />
       default:
-        return <UnhandledError/>
+        return <UnhandledError />
     }
   }
 
-  if (!applications.length) {
+  if (!drafts.length && !submitted.length) {
     return <p>TODO: Landing page for user with no applications</p>;
   }
 
   return (
     <div className="flex flex-col gap-8 max-w-3xl">
-      <h2 className="text-heading-lg">Draft applications</h2>
-      <ul className="flex flex-col gap-8">
-        {applications.map((application) =>
-          <ApplicationCard application={application} variant="draft" key={application.id} />
-        )}
-      </ul>
-      <h2 className="text-heading-lg">Submitted applications</h2>
-      <p>TODO</p>
+      {Boolean(drafts.length) && (
+        <>
+          <h2 className="text-heading-lg">Draft applications</h2>
+          <ul className="flex flex-col gap-8">
+            {drafts.map((draft) =>
+              <ApplicationCard application={draft} variant="draft" key={draft.id} />
+            )}
+          </ul>
+        </>
+      )}
+      {Boolean(submitted.length) && (
+        <>
+          <h2 className="text-heading-lg">Submitted applications</h2>
+          <ul className="flex flex-col gap-8">
+            {submitted.map((submitted) =>
+              <ApplicationCard application={submitted} variant="submitted" key={submitted.id} />
+            )}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

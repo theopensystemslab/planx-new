@@ -1,6 +1,6 @@
 import type {
   DraftLPSApplication,
-  LPSApplicationsResponse,
+  Success,
   SubmittedLPSApplication,
 } from "../../types.js";
 import { $api } from "../../../../client/index.js";
@@ -91,7 +91,7 @@ export const convertToSubmittedLPSApplication = (
 export const getApplications = async (
   email: string,
   token: string,
-): Promise<LPSApplicationsResponse> => {
+): Promise<Success> => {
   const { drafts, submitted } = await fetchApplicationsAndConsumeToken(
     email,
     token,
