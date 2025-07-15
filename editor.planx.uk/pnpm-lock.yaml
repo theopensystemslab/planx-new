@@ -55,8 +55,8 @@ importers:
         specifier: 1.0.0-alpha.5
         version: 1.0.0-alpha.5
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#a2dc2a7
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a2dc2a7(@types/react@18.3.23)
+        specifier: git+https://github.com/theopensystemslab/planx-core#ad790bc
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ad790bc(@types/react@18.3.23)
       '@tiptap/core':
         specifier: ^2.4.0
         version: 2.25.0(@tiptap/pm@2.25.0)
@@ -2122,8 +2122,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.5':
     resolution: {integrity: sha512-VeNESA+ME+gM/APLFqCPShhlFK/xyQpur3EUtYXSqC6en72IRWkWgkSIO6vc7rTVxo7BFezuSXGLjtT3Ml/UFA==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a2dc2a7':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a2dc2a7}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ad790bc':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ad790bc}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -9535,7 +9535,7 @@ snapshots:
       proj4: 2.19.5
       rambda: 9.4.2
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a2dc2a7(@types/react@18.3.23)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/ad790bc(@types/react@18.3.23)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.23)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1)
