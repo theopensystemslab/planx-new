@@ -37,12 +37,13 @@ const Root = styled(Box, {
 const Input = styled("input")<{ variant?: "default" | "compact" }>(
   ({ variant }) => ({
     opacity: 0,
-    width: 24,
-    height: 24,
+    margin: "-2px",
+    width: 44,
+    height: 44,
     cursor: "pointer",
     ...(variant === "compact" && {
-      width: 16,
-      height: 16,
+      width: 24,
+      height: 24,
     }),
   }),
 );

@@ -12,14 +12,13 @@ const Root = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   display: "flex",
   alignItems: "center",
-  cursor: "pointer",
 }));
 
 const Label = styled(Typography)(({ theme }) => ({
   display: "flex",
-  flexGrow: 2,
   cursor: "pointer",
   padding: theme.spacing(0.75, 1.5),
+  alignSelf: "flex-start",
 })) as typeof Typography;
 
 interface Props {
@@ -54,7 +53,7 @@ export default function ChecklistItem({
         disabled={disabled}
       />
       {description ? (
-        <Box>
+        <Box display="flex" flexDirection="column" width="100%">
           <Label
             variant="body1"
             color="text.primary"
