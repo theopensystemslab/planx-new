@@ -1,22 +1,21 @@
+export const ACTIONS = ["apply", "notify", "guidance"] as const;
 
+export type Action = typeof ACTIONS[number];
 
-export const cards = [
-  {
+export const actions: Record<Action, { title: string, description: string }> = {
+  apply: {
     title: "Start a planning application",
     description:
       "Send a planning application directly to your local planning authority.",
-    action: "apply"
   },
-  {
+  notify: {
     title: "Notify your authority",
     description:
       "Inform the planning authority enforcement team about changes you think may be a planning breach.",
-    action: "notify"
   },
-  {
+  guidance:  {
     title: "Get planning guidance",
     description:
       "Find out if you need planning permission, and other guidance services.",
-    action: "guidance"
-  },
-] as const;
+  }
+} as const;

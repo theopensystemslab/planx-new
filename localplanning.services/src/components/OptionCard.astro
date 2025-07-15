@@ -1,13 +1,14 @@
 ---
 import Button from "@components/Button.astro";
+import { actions, type Action } from "@content/actions";
 
 interface Props {
-  title: string;
-  description: string;
-  action: "apply" | "notify" | "guidance";
+  action: Action;
 }
 
-const { title, description, action } = Astro.props;
+const { action } = Astro.props;
+
+const { title, description } = actions[action];
 ---
 
 <div class="w-full lg:w-1/3 bg-bg-light clamp-[py,5,8] clamp-[px,4,8] rounded">

@@ -3,19 +3,30 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import OptionCard from "@components/OptionCard.astro";
 import Masthead from "@components/Masthead.astro";
-import { cards } from "@content/index/cards";
+import { ACTIONS } from "@content/actions";
 ---
 
 <Layout>
   <Masthead title="Find local planning services" size="large">
-    <p>Modern digital services  to send planning applications, reports and notices directly to local planning authorities.</p>
-    <p>A project by <a class="paragraph-link paragraph-link--external" href="https://opendigitalplanning.org/">Open Digital Planning</a>, powered by <a class="paragraph-link paragraph-link--external" href="https://www.planx.uk/">PlanX</a>.</p>
+    <p>
+      Modern digital services to send planning applications, reports and notices
+      directly to local planning authorities.
+    </p>
+    <p>
+      A project by <a
+        class="paragraph-link paragraph-link--external"
+        href="https://opendigitalplanning.org/">Open Digital Planning</a
+      >, powered by <a
+        class="paragraph-link paragraph-link--external"
+        href="https://www.planx.uk/">PlanX</a
+      >.
+    </p>
   </Masthead>
   <Container paddingY>
     <div class="flex flex-col lg:flex-row justify-center clamp-[gap,4,6]">
       {
-        cards.map((card) => (
-          <OptionCard title={card.title} description={card.description} action={card.action}/>
+        ACTIONS.map((action) => (
+          <OptionCard action={action} />
         ))
       }
     </div>
