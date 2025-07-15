@@ -33,7 +33,7 @@ export const validationSchema: SchemaOf<SetFee> = baseNodeDataValidationSchema.c
   object({
     applyCalculatedVAT: boolean().required(),
     fastTrackFeeAmount: number()
-      .positive()
+      .min(0)
       .required("Fast Track fee amount must be positive"),
     applyServiceCharge: boolean().required(),
     serviceChargeAmount: number().required(),

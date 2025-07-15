@@ -1,6 +1,9 @@
+import { getFeeBreakdown } from "@opensystemslab/planx-core";
+import type { FeeBreakdown } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import airbrake from "../../airbrake.js";
 import { $api } from "../../client/index.js";
+import { getSessionData } from "../send/email/service.js";
 
 /**
  * Gracefully handle GovPay errors
@@ -36,8 +39,15 @@ export async function logPaymentStatus({
       context: { sessionId, flowId, teamSlug },
     });
   } else {
-    // log payment status response
     try {
+      // get fee breakdown for this session
+      const sessionData = await getSessionData(sessionId);
+      const passportData = sessionData?.passport?.data;
+
+      let feeBreakdown: FeeBreakdown | undefined;
+      if (passportData) feeBreakdown = getFeeBreakdown(passportData);
+
+      // log payment status response
       await insertPaymentStatus({
         sessionId,
         flowId,
@@ -45,6 +55,7 @@ export async function logPaymentStatus({
         paymentId: govUkResponse.payment_id,
         status: govUkResponse.state?.status || "unknown",
         amount: govUkResponse.amount,
+        feeBreakdown,
       });
     } catch (e) {
       reportError({
@@ -63,6 +74,7 @@ async function insertPaymentStatus({
   teamSlug,
   status,
   amount,
+  feeBreakdown,
 }: {
   flowId: string;
   sessionId: string;
@@ -70,6 +82,7 @@ async function insertPaymentStatus({
   teamSlug: string;
   status: string;
   amount: number;
+  feeBreakdown?: FeeBreakdown | undefined;
 }): Promise<void> {
   const _response = await $api.client.request(
     gql`
@@ -80,6 +93,7 @@ async function insertPaymentStatus({
         $teamSlug: String!
         $status: payment_status_enum_enum
         $amount: Int!
+        $feeBreakdown: jsonb
       ) {
         insert_payment_status(
           objects: {
@@ -89,6 +103,7 @@ async function insertPaymentStatus({
             team_slug: $teamSlug
             status: $status
             amount: $amount
+            fee_breakdown: $feeBreakdown
           }
         ) {
           affected_rows
@@ -102,6 +117,7 @@ async function insertPaymentStatus({
       paymentId,
       status,
       amount,
+      feeBreakdown,
     },
   );
 }
