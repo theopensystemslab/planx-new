@@ -2,7 +2,7 @@ import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
 
 export const UnoccupiedBuildingsCIL: Schema = {
-  type: "Building",
+  type: "Temporary or unoccupied building",
   fields: [
     {
       type: "text",

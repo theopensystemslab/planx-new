@@ -22,11 +22,8 @@ const TextLabelRoot = styled(Box)(({ theme }) => ({
   borderTop: "none",
   display: "flex",
   flexGrow: 1,
-  alignItems: "center",
+  alignItems: "flex-start",
   padding: theme.spacing(1.5),
-  "& > p": {
-    color: theme.palette.text.secondary,
-  },
 }));
 
 const TextLabel = (props: Props): FCReturn => {
@@ -54,7 +51,7 @@ const TextLabel = (props: Props): FCReturn => {
       border={(theme) => borderStyle(theme, selected)}
     >
       <Checkbox id={id} checked={selected} onChange={onClick} />
-      <Typography variant="body1" ml={1.5}>
+      <Typography variant="body1" ml={1.5} mt={0.9}>
         {title}
       </Typography>
     </TextLabelRoot>

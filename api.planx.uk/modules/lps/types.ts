@@ -13,24 +13,38 @@ export const loginSchema = z.object({
 
 export type Login = ValidatedRequestHandler<typeof loginSchema, LoginResponse>;
 
-export interface LPSApplication {
+/**
+ * Formatted data for consumption by LPS frontend
+ */
+interface LPSApplication {
   id: string;
-  updatedAt: string;
-  submittedAt: string | null;
   service: {
     name: string;
-    slug: string;
   };
   team: {
     name: string;
-    slug: string;
-    domain: string | null;
   };
-  url: string;
+  address: string | null;
+  createdAt: string;
 }
 
-interface ApplicationsResponse {
-  applications: LPSApplication[];
+export type DraftLPSApplication = LPSApplication & {
+  expiresAt: string;
+  serviceUrl: string;
+};
+
+export type SubmittedLPSApplication = LPSApplication & {
+  submittedAt: string;
+};
+
+export interface Success {
+  drafts: DraftLPSApplication[];
+  submitted: SubmittedLPSApplication[];
+}
+
+interface Failure {
+  error: "LINK_INVALID" | "LINK_CONSUMED" | "LINK_EXPIRED";
+  message: string;
 }
 
 export const applicationsSchema = z.object({
@@ -42,5 +56,5 @@ export const applicationsSchema = z.object({
 
 export type Applications = ValidatedRequestHandler<
   typeof applicationsSchema,
-  ApplicationsResponse
+  Success | Failure
 >;

@@ -7,14 +7,84 @@ tags:
     description: Endpoints used by the localplanning.services site
 components:
   schemas:
+    LPSApplication:
+      type: object
+      required:
+        - id
+        - service
+        - team
+        - address
+        - createdAt
+      properties:
+        id:
+          type: string
+        service:
+          type: object
+          required:
+            - name
+            - slug
+          properties:
+            name:
+              type: string
+            slug:
+              type: string
+        team:
+          type: object
+          required:
+            - name
+            - slug
+            - domain
+          properties:
+            name:
+              type: string
+            slug:
+              type: string
+            domain:
+              type: string
+              nullable: true
+        address:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+    DraftLPSApplication:
+      allOf:
+        - $ref: "#/components/schemas/LPSApplication"
+        - type: object
+          required:
+            - expiresAt
+            - serviceUrl
+          properties:
+            expiresAt:
+              type: string
+              format: date-time
+            serviceUrl:
+              type: string
+              format: uri
+    SubmittedLPSApplication:
+      allOf:
+        - $ref: "#/components/schemas/LPSApplication"
+        - type: object
+          required:
+            - submittedAt
+          properties:
+            submittedAt:
+              type: string
+              format: date-time
     LoginRequest:
       type: object
+      required:
+        - email
       properties:
         email:
           type: string
           format: email
     ApplicationsRequest:
       type: object
+      required:
+        - email
+        - token
       properties:
         email:
           type: string
@@ -24,60 +94,43 @@ components:
           format: uuid
   responses:
     LoginResponse:
+      description: Email sent successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - message
+            properties:
+              message:
+                type: string
+                example: success
+    ApplicationsResponseSuccess:
+      description: Applications retrieved successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - drafts
+              - submitted
+            properties:
+              drafts:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DraftLPSApplication"
+              submitted:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubmittedLPSApplication"
+    ApplicationsResponseError:
       type: object
       properties:
+        error:
+          type: string
+          enum: ["LINK_INVALID", "LINK_CONSUMED", "LINK_EXPIRED"]
         message:
           type: string
-          example: success
-    ApplicationsResponse:
-      type: object
-      properties:
-        applications:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              updatedAt:
-                type: string
-                format: date-time
-              submittedAt:
-                type: string
-                format: date-time
-              service:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  slug:
-                    type: string
-                required:
-                  - name
-                  - slug
-              team:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  slug:
-                    type: string
-                required:
-                  - name
-                  - slug
-              url:
-                type: string
-                format: uri
-            required:
-              - id
-              - updatedAt
-              - submittedAt
-              - service
-              - team
-              - url
-      required:
-        - applications
 paths:
   /lps/login:
     post:
@@ -91,11 +144,7 @@ paths:
               $ref: "#/components/schemas/LoginRequest"
       responses:
         "200":
-          description: Email sent successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/responses/LoginResponse"
+          $ref: "#/components/responses/LoginResponse"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /lps/applications:
@@ -114,5 +163,15 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/responses/ApplicationsResponse"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/ApplicationsResponseError"
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/ApplicationsResponseError"
         "500":
           $ref: "#/components/responses/ErrorMessage"

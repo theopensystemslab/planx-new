@@ -19,6 +19,7 @@ const ALLOW_LIST = [
   "applicant.researchOptIn",
   "application.declaration.connection",
   "application.fastTrack",
+  "application.fee.serviceCharge",
   "application.information.harmful",
   "application.information.sensitive",
   "application.type",
