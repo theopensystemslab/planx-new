@@ -37,9 +37,14 @@ export type SubmittedLPSApplication = LPSApplication & {
   submittedAt: string;
 };
 
-export interface LPSApplicationsResponse {
+export interface Success {
   drafts: DraftLPSApplication[];
   submitted: SubmittedLPSApplication[];
+}
+
+interface Failure {
+  error: "LINK_INVALID" | "LINK_CONSUMED" | "LINK_EXPIRED";
+  message: string;
 }
 
 export const applicationsSchema = z.object({
@@ -51,5 +56,5 @@ export const applicationsSchema = z.object({
 
 export type Applications = ValidatedRequestHandler<
   typeof applicationsSchema,
-  LPSApplicationsResponse
+  Success | Failure
 >;

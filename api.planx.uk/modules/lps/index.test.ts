@@ -101,7 +101,123 @@ describe("logging into LPS applications", () => {
   });
 });
 
+describe("fetching applications - validation", () => {
+  const ENDPOINT = "/lps/applications";
+
+  describe("payload validation", () => {
+    it("requires an email address", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4() })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+        });
+    });
+
+    it("requires a token", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ email: NOTIFY_TEST_EMAIL })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+        });
+    });
+  });
+
+  describe("magic link validation", () => {
+    test("invalid token", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {
+          // No matching token found
+          magicLink: null,
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.error).toMatch(/LINK_INVALID/);
+        });
+    });
+
+    test("expired token", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {
+          magicLink: {
+            // Link created a long time ago
+            usedAt: null,
+            createdAt: new Date("1970-1-1").toString(),
+          },
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(410)
+        .then((res) => {
+          expect(res.body.error).toMatch(/LINK_EXPIRED/);
+        });
+    });
+
+    test("consumed token", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {
+          magicLink: {
+            // Link consumed a long time ago
+            usedAt: new Date("1970-2-2").toString(),
+            createdAt: new Date("1970-1-1").toString(),
+          },
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(410)
+        .then((res) => {
+          expect(res.body.error).toMatch(/LINK_CONSUMED/);
+        });
+    });
+
+    it("handles errors", async () => {
+      queryMock.mockQuery({
+        name: "GetMagicLinkStatus",
+        matchOnVariables: false,
+        data: {},
+        graphqlErrors: [
+          {
+            message: "Something went wrong",
+          },
+        ],
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ token: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to validate LPS magic link/);
+        });
+    });
+  });
+});
+
 describe("fetching applications", () => {
+  const ENDPOINT = "/lps/applications";
+
   const mockLowcalSession: Omit<Application, "id"> = {
     createdAt: "createdAtTime",
     addressLine: null,
@@ -118,6 +234,17 @@ describe("fetching applications", () => {
   };
 
   beforeEach(() => {
+    queryMock.mockQuery({
+      name: "GetMagicLinkStatus",
+      matchOnVariables: false,
+      data: {
+        magicLink: {
+          usedAt: null,
+          createdAt: Date.now().toString(),
+        },
+      },
+    });
+
     queryMock.mockQuery({
       name: "ConsumeMagicLinkToken",
       matchOnVariables: false,
@@ -150,32 +277,6 @@ describe("fetching applications", () => {
           ],
         },
       },
-    });
-  });
-
-  const ENDPOINT = "/lps/applications";
-
-  describe("payload validation", () => {
-    it("requires an email address", async () => {
-      await supertest(app)
-        .post(ENDPOINT)
-        .send({ token: uuidV4() })
-        .expect(400)
-        .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-        });
-    });
-
-    it("requires a token", async () => {
-      await supertest(app)
-        .post(ENDPOINT)
-        .send({ email: NOTIFY_TEST_EMAIL })
-        .expect(400)
-        .then((res) => {
-          expect(res.body).toHaveProperty("issues");
-          expect(res.body).toHaveProperty("name", "ZodError");
-        });
     });
   });
 
@@ -228,6 +329,7 @@ describe("fetching applications", () => {
           expect(res.body.submitted).toHaveLength(1);
           expect(res.body.submitted[0]).toMatchObject({
             id: "3",
+            address: null,
             createdAt: "createdAtTime",
             submittedAt: "submittedAtTime",
             service: {
