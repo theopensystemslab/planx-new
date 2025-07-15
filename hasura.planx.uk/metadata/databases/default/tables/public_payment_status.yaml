@@ -16,17 +16,19 @@ insert_permissions:
     permission:
       check: {}
       columns:
+        - amount
+        - created_at
+        - fee_breakdown
+        - flow_id
         - payment_id
+        - session_id
         - status
         - team_slug
-        - created_at
-        - flow_id
-        - session_id
-        - amount
 select_permissions:
   - role: api
     permission:
       columns:
+        - fee_breakdown
         - payment_id
         - status
         - team_slug

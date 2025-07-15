@@ -1,4 +1,7 @@
+import { getFeeBreakdown } from "@opensystemslab/planx-core";
+import type { FeeBreakdown, Session } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
+
 import airbrake from "../../airbrake.js";
 import { $api } from "../../client/index.js";
 
@@ -36,8 +39,20 @@ export async function logPaymentStatus({
       context: { sessionId, flowId, teamSlug },
     });
   } else {
-    // log payment status response
     try {
+      // get fee breakdown for this session
+      const passportData = await getPassportData(sessionId);
+      if (!passportData) {
+        reportError({
+          error:
+            "Could not log the payment status due to missing passport data",
+          context: { sessionId, flowId, teamSlug },
+        });
+      }
+
+      const feeBreakdown = getFeeBreakdown(passportData);
+
+      // log payment status response
       await insertPaymentStatus({
         sessionId,
         flowId,
@@ -45,6 +60,7 @@ export async function logPaymentStatus({
         paymentId: govUkResponse.payment_id,
         status: govUkResponse.state?.status || "unknown",
         amount: govUkResponse.amount,
+        feeBreakdown,
       });
     } catch (e) {
       reportError({
@@ -55,7 +71,27 @@ export async function logPaymentStatus({
   }
 }
 
-// TODO: this would ideally live in planx-client
+interface GetPassportData {
+  session: Partial<{ passportData: Session["data"]["passport"]["data"] }>;
+}
+
+async function getPassportData(sessionId: string) {
+  const response = await $api.client.request<GetPassportData>(
+    gql`
+      query GetSessionData($id: uuid!) {
+        session: lowcal_sessions_by_pk(id: $id) {
+          passportData: data(path: "passport.data")
+        }
+      }
+    `,
+    {
+      id: sessionId,
+    },
+  );
+
+  return response?.session?.passportData;
+}
+
 async function insertPaymentStatus({
   flowId,
   sessionId,
@@ -63,6 +99,7 @@ async function insertPaymentStatus({
   teamSlug,
   status,
   amount,
+  feeBreakdown,
 }: {
   flowId: string;
   sessionId: string;
@@ -70,6 +107,7 @@ async function insertPaymentStatus({
   teamSlug: string;
   status: string;
   amount: number;
+  feeBreakdown: FeeBreakdown;
 }): Promise<void> {
   const _response = await $api.client.request(
     gql`
@@ -80,6 +118,7 @@ async function insertPaymentStatus({
         $teamSlug: String!
         $status: payment_status_enum_enum
         $amount: Int!
+        $feeBreakdown: jsonb!
       ) {
         insert_payment_status(
           objects: {
@@ -89,6 +128,7 @@ async function insertPaymentStatus({
             team_slug: $teamSlug
             status: $status
             amount: $amount
+            fee_breakdown: $feeBreakdown
           }
         ) {
           affected_rows
@@ -102,6 +142,7 @@ async function insertPaymentStatus({
       paymentId,
       status,
       amount,
+      feeBreakdown,
     },
   );
 }
