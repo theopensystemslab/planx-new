@@ -12,6 +12,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
+    "@fontsource-variable/inter": "^5.2.6",
     "@opensystemslab/map": "1.0.0-alpha.5",
     "@tailwindcss/vite": "^4.1.7",
     "@tanstack/react-query": "^5.81.5",
