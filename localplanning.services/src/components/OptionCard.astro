@@ -17,7 +17,7 @@ const { title, description, action } = Astro.props;
       {description}
     </p>
   </div>
-  <Button href=`./search?action=${action}` variant="primary">
+  <Button href=`./search/${action}` variant="primary">
     Find local planning services
   </Button>
 </div>
