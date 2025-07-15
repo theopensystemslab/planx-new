@@ -2,20 +2,30 @@ import { queryClient } from "@lib/queryClient";
 import { useQuery } from "@tanstack/react-query";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 
-export interface Application {
+interface Application {
   id: string;
-  updatedAt: string;
-  submittedAt: string | null;
   service: {
     name: string;
-    slug: string;
   };
   team: {
     name: string;
-    slug: string;
-    domain: string | null;
   };
-  url: string;
+  address: string | null;
+  createdAt: string;
+}
+
+export type DraftApplication = Application & {
+  expiresAt: string;
+  serviceUrl: string;
+};
+
+export type SubmittedApplication = Application & {
+  submittedAt: string;
+};
+
+export interface ApplicationsResponse {
+  drafts: DraftApplication[];
+  submitted: SubmittedApplication[];
 }
 
 export const useFetchApplications = () => {  
@@ -24,7 +34,7 @@ export const useFetchApplications = () => {
   const email = urlParams.get("email");
   const hasUsedMagicLink = Boolean(token && email);
 
-  const { data: applications = [], isLoading, error } = useQuery<Application[]>({
+  const { data: applications = { drafts: [], submitted: [] }, isLoading, error } = useQuery<ApplicationsResponse>({
     queryKey: ["fetchApplications"],
     queryFn: async () => {
       const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lps/applications`, {
@@ -38,7 +48,7 @@ export const useFetchApplications = () => {
         throw new Error(`Failed to fetch applications: ${response.status} ${response.statusText} - ${errorText}`);
       }
 
-      const { applications } = await response.json();
+      const applications = await response.json();
       return applications;
     },
     enabled: hasUsedMagicLink,
