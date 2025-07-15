@@ -3,42 +3,43 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
 import Accordion from "@components/Accordion.astro";
+import { fetchAllLPAs } from "@lib/lpa-api";
+import AccordionSection from "@components/directory/AccordionSection.astro";
+
+const lpas = await fetchAllLPAs();
 ---
 
 <Layout>
-  <Masthead title="Local planning services directory">
-  </Masthead>
+  <Masthead title="Local planning services directory" />
   <Container paddingY>
     <section class="flex flex-col mb-6">
-      <label for="search" class="text-body-lg">Search for a local planning authority</label>
-      <input
-        type="search"
-        id="search"
-        placeholder="Type to search"
-      />
+      <label for="search" class="text-body-lg"
+        >Search for a local planning authority</label
+      >
+      <input type="search" id="search" placeholder="Type to search" />
     </section>
     <section class="flex flex-col gap-6">
-      <Accordion title="London Borough of Lambeth">
-        <section>
-          <p class="text-heading-xs">Start a planning application</p>
-          <ul>
-            <li><a href="#" class="underline text-body-lg">Apply for prior approval</a></li>
-            <li><a href="#" class="underline text-body-lg">Apply for planning permission</a></li>
-          </ul>
-        </section>
-        <section>
-          <p class="text-heading-xs">Notify your authority</p>
-          <ul>
-            <li><a href="#" class="underline text-body-lg">Report a planning breach</a></li>
-          </ul>
-        </section>
-        <section>
-          <p class="text-heading-xs">Get planning guidance</p>
-          <ul>
-            <li><a href="#" class="underline text-body-lg">Find out if you need planning permission</a></li>
-          </ul>
-        </section>
-      </Accordion>
+      {
+        lpas.map((lpa) => (
+          <Accordion title={lpa.name}>
+            <AccordionSection
+              title="Start a planning application"
+              services={lpa.applyServices}
+              lpa={lpa}
+            />
+            <AccordionSection
+              title="Notify your authority"
+              services={lpa.notifyServices}
+              lpa={lpa}
+            />
+            <AccordionSection
+              title="Get planning guidance"
+              services={lpa.guidanceServices}
+              lpa={lpa}
+            />
+          </Accordion>
+        ))
+      }
     </section>
   </Container>
 </Layout>
