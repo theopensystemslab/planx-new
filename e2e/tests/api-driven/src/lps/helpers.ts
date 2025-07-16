@@ -170,7 +170,7 @@ export const getLatestMagicLink = async () => {
   return magicLinkRecord;
 };
 
-export const getApplications = async (email: string, token: string) => {
+export const getApplications = async (email: string, token: string): Promise<CustomWorld["response"]> => {
   const response = await fetch(`${process.env.API_URL_EXT}/lps/applications`, {
     method: "POST",
     headers: {
@@ -179,11 +179,8 @@ export const getApplications = async (email: string, token: string) => {
     body: JSON.stringify({ email, token }),
   });
 
-  if (!response.ok) {
-    assert.fail("Failed to get applications via /lps/applications endpoint");
-  }
+  const body = await response.json();
+  const status = response.status;
 
-  const applications: CustomWorld["applications"] = await response.json();
-
-  return applications;
+  return { ...body, status };
 };

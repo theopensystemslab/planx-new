@@ -4,7 +4,7 @@ Feature: Magic link validation and expiration for localplanning.services
   Scenario Outline: Fetching applications with an invalid token
     Given a magic link is generated
     When an invalid token is provided
-    Then applications can't be accessed
+    Then an invalid link error message is returned
 
   @regression @lps-magic-links
   Scenario Outline: Fetching applications with an invalid email address
@@ -16,7 +16,7 @@ Feature: Magic link validation and expiration for localplanning.services
   Scenario Outline: Fetching applications with an expired token
     Given a magic link is generated
     When the expiry time has passed
-    Then applications can't be accessed
+    Then an expired link error message is returned
 
   @regression @lps-magic-links
   Scenario Outline: Fetching applications successfully
@@ -28,4 +28,6 @@ Feature: Magic link validation and expiration for localplanning.services
   Scenario Outline: Fetching applications a single time per-link
     Given a magic link is generated
     When the correct details are provided
-    Then the link cannot be reused
+    And the link is reused
+    Then a consumed link error message is returned
+    And the link is marked as consumed in the database
