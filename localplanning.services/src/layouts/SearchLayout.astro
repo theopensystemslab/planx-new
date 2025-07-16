@@ -1,0 +1,26 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import Masthead from "@components/Masthead.astro";
+import PostcodeSearch from "@components/PostcodeSearch.tsx";
+import type { Action } from "@content/actions";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const { action }: { action?: Action }= Astro.params;
+---
+
+<Layout>
+  <Masthead title={title}>
+    <p>{description}</p>
+  </Masthead>
+  <Container paddingY>
+    <section class="mb-4">
+      <PostcodeSearch client:load action={action}/>
+    </section>
+  </Container>
+</Layout>
