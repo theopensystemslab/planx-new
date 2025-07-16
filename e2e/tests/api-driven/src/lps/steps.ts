@@ -17,7 +17,7 @@ interface Success {
 interface Error {
   status: 404 | 410 | 500;
   error: string;
-  message: string
+  message: string;
 }
 
 export class CustomWorld extends World {
@@ -59,10 +59,7 @@ When<CustomWorld>("an invalid token is provided", async function () {
 });
 
 When<CustomWorld>("an invalid email address is provided", async function () {
-  this.response = await getApplications(
-    "wrongEmail@example.com",
-    this.token,
-  );
+  this.response = await getApplications("wrongEmail@example.com", this.token);
 });
 
 When<CustomWorld>("the expiry time has passed", async function () {
@@ -87,7 +84,7 @@ Then<CustomWorld>("applications can't be accessed", function () {
 });
 
 Then<CustomWorld>("an invalid link error message is returned", function () {
-  assert.equal(this.response.status,  404);
+  assert.equal(this.response.status, 404);
   assert.equal(this.response.error, "LINK_INVALID");
   assert.equal(this.response.message, "Magic link not found or invalid");
 });
@@ -121,9 +118,9 @@ Then<CustomWorld>(
     assert.equal(this.response.error, "LINK_CONSUMED");
     assert.equal(
       this.response.message,
-      "This magic link has already been used"
+      "This magic link has already been used",
     );
-  }
+  },
 );
 
 Then<CustomWorld>(
@@ -131,5 +128,5 @@ Then<CustomWorld>(
   async function () {
     const { usedAt } = await getLatestMagicLink();
     assert.notEqual(usedAt, null, "Magic link should be marked as consumed");
-  }
+  },
 );

@@ -170,7 +170,10 @@ export const getLatestMagicLink = async () => {
   return magicLinkRecord;
 };
 
-export const getApplications = async (email: string, token: string): Promise<CustomWorld["response"]> => {
+export const getApplications = async (
+  email: string,
+  token: string,
+): Promise<CustomWorld["response"]> => {
   const response = await fetch(`${process.env.API_URL_EXT}/lps/applications`, {
     method: "POST",
     headers: {
