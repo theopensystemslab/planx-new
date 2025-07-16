@@ -249,6 +249,7 @@ export default function Component(props: Props) {
           ref={drawViewRef}
           tabIndex={-1}
           sx={{
+            maxWidth: "none",
             "&:focus": {
               outline: "none",
             },
@@ -325,7 +326,7 @@ export default function Component(props: Props) {
                   onClick={() => setPage("upload")}
                   data-testid="upload-file-button"
                 >
-                  <Typography variant="body1">
+                  <Typography variant="body1" align="right">
                     Upload a location plan instead
                   </Typography>
                 </Link>
