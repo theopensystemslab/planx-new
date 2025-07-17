@@ -1,7 +1,7 @@
 ---
 import type { Service } from "@lib/lpa-api";
-import { PUBLIC_PLANX_EDITOR_URL } from "astro:env/client";
 import Button from "./Button.astro";
+import { getServiceURL } from "@lib/utils";
 
 type Props = {
   service: Service;
@@ -16,12 +16,9 @@ const {
 } = Astro.props;
 const { lpa } = Astro.params;
 
-// Use custom domain if available or fall back to PlanX URL
-const serviceURL = domain
-  ? `https://${domain}/${slug}`
-  : `${PUBLIC_PLANX_EDITOR_URL}/${lpa}/${slug}/published`;
-
 if (!lpa) return;
+
+const serviceURL = getServiceURL({ domain, lpaSlug: lpa, serviceSlug: slug })
 ---
 
 <li

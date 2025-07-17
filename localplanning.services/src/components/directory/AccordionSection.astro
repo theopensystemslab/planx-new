@@ -1,0 +1,36 @@
+---
+import type { LPA, Service } from "@lib/lpa-api";
+import { getServiceURL } from "@lib/utils";
+
+interface Props {
+  title: string;
+  services: Service[];
+  lpa: LPA;
+}
+
+const { title, services, lpa } = Astro.props;
+
+if (!services.length) return;
+---
+
+<section>
+  <h3 class="text-heading-xs">{title}</h3>
+  <ul>
+    {
+      services.map((service) => (
+        <li>
+          <a
+            class="underline text-body-lg"
+            href={getServiceURL({
+              domain: lpa.domain,
+              lpaSlug: lpa.slug,
+              serviceSlug: service.slug,
+            })}
+          >
+            {service.name}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

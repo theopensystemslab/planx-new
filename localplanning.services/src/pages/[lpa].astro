@@ -36,7 +36,7 @@ if (!lpaData) return Astro.redirect("/404");
       <Accordion title="Start a planning application" id="apply-accordion">
         <ul class="max-w-6xl">
           {
-            lpaData.services.map((service) => (
+            lpaData.applyServices.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
@@ -48,7 +48,7 @@ if (!lpaData) return Astro.redirect("/404");
       <Accordion title="Notify your authority" id="notify-accordion">
         <ul class="max-w-6xl">
           {
-            lpaData.services.map((service) => (
+            lpaData.notifyServices.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
@@ -60,7 +60,7 @@ if (!lpaData) return Astro.redirect("/404");
       <Accordion title="Get planning guidance" id="guidance-accordion">
         <ul class="max-w-6xl">
           {
-            lpaData.services.map((service) => (
+            lpaData.guidanceServices.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
