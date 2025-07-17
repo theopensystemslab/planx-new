@@ -42,7 +42,9 @@ describe("Editor validation", () => {
           },
         ],
       })
-    ).rejects.toThrow('Cannot configure exclusive "or" option alongside "all required" setting');
+    ).rejects.toThrow(
+      'Cannot configure exclusive "or" option alongside "all required" setting'
+    );
   });
 
   test("only one exclusive option is permitted", async () => {
@@ -64,5 +66,25 @@ describe("Editor validation", () => {
     ).rejects.toThrow(
       "There should be a maximum of one exclusive option configured"
     );
+  });
+
+  test("options must set data values if the component does", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        title: "Test",
+        fn: "topLevelFn",
+        allRequired: false,
+        options: [
+          {
+            id: "a",
+            data: { text: "Option A" },
+          },
+          {
+            id: "b",
+            data: { text: "Option B" },
+          },
+        ],
+      })
+    ).rejects.toThrow("At least one option must also set a data field");
   });
 });
