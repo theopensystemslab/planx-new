@@ -44,4 +44,25 @@ describe("Editor validation", () => {
       })
     ).rejects.toThrow('Cannot configure exclusive "or" option alongside "all required" setting');
   });
+
+  test("only one exclusive option is permitted", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        title: "Test",
+        allRequired: false,
+        options: [
+          {
+            id: "a",
+            data: { text: "Option A", exclusive: true },
+          },
+          {
+            id: "b",
+            data: { text: "Option B", exclusive: true },
+          },
+        ],
+      })
+    ).rejects.toThrow(
+      "There should be a maximum of one exclusive option configured"
+    );
+  });
 });

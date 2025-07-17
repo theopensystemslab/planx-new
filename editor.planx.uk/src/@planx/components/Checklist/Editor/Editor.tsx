@@ -82,16 +82,9 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       // Account for flat or expandable Checklist options
       options = options || groupedOptions?.flatMap((group) => group.children);
 
-      const exclusiveOptions: Option[] | undefined = options?.filter(
-        (option) => option.data.exclusive,
-      );
 
       if (values.fn && !options?.some((option) => option.data.val)) {
         errors.fn = "At least one option must also set a data field";
-      }
-      if (exclusiveOptions && exclusiveOptions.length > 1) {
-        errors.options =
-          "There should be a maximum of one exclusive option configured";
       }
       if (values.alwaysAutoAnswerBlank && !values.fn) {
         errors.alwaysAutoAnswerBlank =
