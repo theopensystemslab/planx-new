@@ -76,22 +76,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: ({ options, groupedOptions, ...values }) => {
-      const errors: FormikErrors<FormikValues> = {};
-
-      // Account for flat or expandable Checklist options
-      options = options || groupedOptions?.flatMap((group) => group.children);
-
-      if (
-        values.alwaysAutoAnswerBlank &&
-        values.fn &&
-        options?.filter((option) => !option.data.val).length !== 1
-      ) {
-        errors.alwaysAutoAnswerBlank =
-          "Exactly one option should have a blank data field when never putting to user";
-      }
-      return errors;
-    },
     validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
