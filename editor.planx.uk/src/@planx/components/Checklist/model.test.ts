@@ -109,4 +109,30 @@ describe("Editor validation", () => {
       "Set a data field for the Checklist and all options but one when never putting to user"
     );
   });
+
+  test("alwaysAutoAnswerBlank allows only one blank value", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        title: "Test",
+        alwaysAutoAnswerBlank: true,
+        fn: "test",
+        options: [
+          {
+            id: "a",
+            data: { text: "Option A", val: "A" },
+          },
+          {
+            id: "b",
+            data: { text: "Option B" },
+          },
+          {
+            id: "c",
+            data: { text: "Option C" },
+          },
+        ],
+      })
+    ).rejects.toThrow(
+      "Exactly one option should have a blank data field when never putting to user"
+    );
+  });
 });

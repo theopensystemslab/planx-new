@@ -269,4 +269,27 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
         });
       },
     })
+    .test({
+      name: "onlyOneBlank",
+      test: function ({ alwaysAutoAnswerBlank, options, groupedOptions, fn }) {
+        if (!alwaysAutoAnswerBlank && !fn) return true;
+
+        const allOptions =
+          options || groupedOptions?.flatMap((group) => group.children);
+
+        if (!allOptions) return true;
+
+        const optionsWithoutDataValues = allOptions?.filter(
+          (option) => !option?.data.val
+        );
+
+        if (optionsWithoutDataValues.length === 1) return true;
+
+        return this.createError({
+          path: "alwaysAutoAnswerBlank",
+          message:
+            "Exactly one option should have a blank data field when never putting to user",
+        });
+      },
+    })
 );
