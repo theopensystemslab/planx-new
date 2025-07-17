@@ -11,15 +11,6 @@ const legalPages = await getCollection("legal");
 <footer class="bg-bg-dark text-white pb-20">
   <Container paddingY>
     <div class="flex flex-col gap-8">
-      <div class="flex gap-8">
-        {
-          legalPages.map((page) => (
-            <a class="underline capitalize text-body-md" href={`/${page.slug}`}>
-              {page.slug}
-            </a>
-          ))
-        }
-      </div>
       <div class="flex flex-col gap-1">
         <p class="text-body-md">Supported by:</p>
         <div class="flex flex-row items-center gap-8">
@@ -34,6 +25,15 @@ const legalPages = await getCollection("legal");
             class="clamp-[w,30,36]"
           />
         </div>
+      </div>
+       <div class="flex gap-8">
+        {
+          legalPages.map((page) => (
+            <a class="underline capitalize text-body-md" href={`/${page.slug}`}>
+              {page.slug}
+            </a>
+          ))
+        }
       </div>
       <p class="text-body-md">
         All content is available under the <a
