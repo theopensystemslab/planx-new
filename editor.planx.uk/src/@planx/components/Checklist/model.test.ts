@@ -1,4 +1,4 @@
-import { checklistInputValidationSchema } from "./model";
+import { checklistInputValidationSchema, validationSchema } from "./model";
 
 describe("Checklist - validation", () => {
   describe("optional checklist fields in schema", () => {
@@ -26,5 +26,22 @@ describe("Checklist - validation", () => {
         /All options must be checked/
       );
     });
+  });
+});
+
+describe("Editor validation", () => {
+  test("both 'allRequired' and 'exclusiveOr' cannot be toggled on together", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        title: "Test",
+        allRequired: true,
+        options: [
+          {
+            id: "a",
+            data: { text: "Option A", exclusive: true },
+          },
+        ],
+      })
+    ).rejects.toThrow('Cannot configure exclusive "or" option alongside "all required" setting');
   });
 });

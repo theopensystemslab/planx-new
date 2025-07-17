@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, object, string } from "yup";
+import { array, boolean, mixed, number,object, SchemaOf, string } from "yup";
 
 import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
@@ -154,11 +154,72 @@ export const checklistInputValidationSchema = ({
     });
 };
 
-export const validationSchema = baseNodeDataValidationSchema.concat(
-  object({
-    description: richText(),
-    groupedOptions: array(object({
-      title: string().required("Section title is a required field")
-    }).required()).optional()
+//  // Labels must be unique if options do not have associated values
+//   .test({
+//     name: "uniqueLabelsNoValues",
+//     message: "Labels must be unique",
+//     test: (checked) => {
+//       if (!checked?.length) return true;
+//       if (!allRequired) return true;
+
+//       const allChecked = checked && checked.length === flatOptions.length;
+//       return Boolean(allChecked);
+//     },
+//   });
+
+const optionValidationSchema: SchemaOf<Option> = object({
+  id: string().required(),
+  data: object({
+    description: string(),
+    flags: array(string()),
+    img: string(),
+    text: string().required(),
+    val: string(),
+    exclusive: mixed().oneOf([true, undefined]),
   }),
-);
+});
+
+export const validationSchema =
+  baseNodeDataValidationSchema.concat(
+    object({
+      description: richText(),
+      groupedOptions: array(
+        object({
+          title: string().required("Section title is a required field"),
+          // exclusive: boolean().optional(),
+          children: array(optionValidationSchema).required(),
+        }).required()
+      ).optional(),
+      allRequired: boolean(),
+      options: array(optionValidationSchema).optional(),
+      fn: string(),
+      text: string(),
+      img: string(),
+      categories: array(
+        object({
+          title: string(),
+          count: number(),
+        })
+      ),
+      neverAutoAnswer: boolean(),
+      alwaysAutoAnswerBlank: boolean(),
+      autoAnswers: array(string()),
+    })
+    .test({
+      name: "notExclusiveAndAllRequired",
+      test: function({ allRequired, options }) {
+        if (!allRequired) return true;
+        
+        const exclusiveOptions = options?.filter(
+          ({ data }) => data.exclusive,
+        );
+
+        if (!exclusiveOptions || !exclusiveOptions.length) return true;
+
+        return this.createError({
+          path: "allRequired",
+          message: 'Cannot configure exclusive "or" option alongside "all required" setting',
+        });
+      },
+    })
+  );

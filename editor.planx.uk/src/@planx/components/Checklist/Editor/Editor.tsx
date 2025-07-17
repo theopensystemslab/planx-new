@@ -76,7 +76,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: ({ options, groupedOptions, allRequired, ...values }) => {
+    validate: ({ options, groupedOptions, ...values }) => {
       const errors: FormikErrors<FormikValues> = {};
 
       // Account for flat or expandable Checklist options
@@ -85,10 +85,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       const exclusiveOptions: Option[] | undefined = options?.filter(
         (option) => option.data.exclusive,
       );
-      if (allRequired && exclusiveOptions && exclusiveOptions.length > 0) {
-        errors.allRequired =
-          'Cannot configure exclusive "or" option alongside "all required" setting';
-      }
+
       if (values.fn && !options?.some((option) => option.data.val)) {
         errors.fn = "At least one option must also set a data field";
       }
