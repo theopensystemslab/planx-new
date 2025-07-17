@@ -30,6 +30,9 @@ const styles = (theme: Theme) => ({
       fontWeight: "inherit",
     },
   },
+  "&": {
+    wordBreak: "break-word",
+  },
 });
 
 const HTMLRoot = styled(Box)(({ theme }) => styles(theme));
