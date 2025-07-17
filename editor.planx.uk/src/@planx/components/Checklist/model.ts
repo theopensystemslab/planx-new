@@ -237,16 +237,35 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     })
     .test({
       name: "atLeastOneDataField",
-      test: function ({ fn, options }) {
+      test: function ({ fn, options, groupedOptions }) {
         if (!fn) return true;
+        const allOptions =
+          options || groupedOptions?.flatMap((group) => group.children);
 
-        const optionsWithDataValues = options?.filter(({ data }) => data.val)
+        if (!allOptions) return true;
+
+        const optionsWithDataValues = allOptions?.filter(
+          (option) => option?.data.val
+        );
 
         if (optionsWithDataValues?.length) return true;
 
         return this.createError({
           path: "fn",
           message: "At least one option must also set a data field",
+        });
+      },
+    })
+    .test({
+      name: "",
+      test: function ({ alwaysAutoAnswerBlank, fn }) {
+        if (!alwaysAutoAnswerBlank) return true;
+        if (fn) return true;
+
+        return this.createError({
+          path: "alwaysAutoAnswerBlank",
+          message:
+            "Set a data field for the Checklist and all options but one when never putting to user",
         });
       },
     })
