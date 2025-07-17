@@ -18,7 +18,6 @@ import { ICONS } from "../shared/icons";
 import {
   Confirmation,
   parseConfirmation,
-  parseNextSteps,
   Step,
   validationSchema,
 } from "./model";
