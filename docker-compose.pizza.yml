@@ -54,7 +54,7 @@ services:
     image: pierrezemb/gostatic
     volumes:
       - ./localplanning.services/dist:/srv/http
-    entrypoint: "/goStatic -fallback /index.html"
+    entrypoint: "/goStatic -fallback /404.html"
     labels:
       virtual.host: localplanning.${ROOT_DOMAIN}
       virtual.port: 8043
