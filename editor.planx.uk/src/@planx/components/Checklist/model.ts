@@ -225,13 +225,28 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
       test: function ({ options }) {
         const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
 
-        if (!exclusiveOptions) return true;
+        if (!exclusiveOptions?.length) return true;
         if (exclusiveOptions.length === 1) return true;
 
         return this.createError({
           path: "options",
           message:
             "There should be a maximum of one exclusive option configured",
+        });
+      },
+    })
+    .test({
+      name: "atLeastOneDataField",
+      test: function ({ fn, options }) {
+        if (!fn) return true;
+
+        const optionsWithDataValues = options?.filter(({ data }) => data.val)
+
+        if (optionsWithDataValues?.length) return true;
+
+        return this.createError({
+          path: "fn",
+          message: "At least one option must also set a data field",
         });
       },
     })
