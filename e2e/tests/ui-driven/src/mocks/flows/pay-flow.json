@@ -1,6 +1,6 @@
 {
   "_root": {
-    "edges": ["a1ED9farLS", "KzuRf6vqc1", "NNdOGmxgfG", "D5fp40TTUD"]
+    "edges": ["a1ED9farLS", "KzuRf6vqc1", "NNdOGmxgfG", "M9DrZEVSyM", "D5fp40TTUD"]
   },
   "a1ED9farLS": {
     "data": {
@@ -37,6 +37,15 @@
       ]
     },
     "type": 400
+  },
+  "M9DrZEVSyM": {
+    "type": 650,
+    "data": {
+      "title": "Send",
+      "destinations": [
+        "email"
+      ]
+    }
   },
   "D5fp40TTUD": {
     "data": {
