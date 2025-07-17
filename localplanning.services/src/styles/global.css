@@ -4,6 +4,9 @@
 
 @theme {
 
+  /* Custom xs breakpoint */
+  --breakpoint-xs: 26rem;
+
   /*
   / Color palette
   */
