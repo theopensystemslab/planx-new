@@ -1,4 +1,4 @@
-import type { FormikErrors } from "formik";
+import { type FormikErrors, getIn } from "formik";
 import {
   useCallback,
   useEffect,
@@ -31,7 +31,7 @@ export function useFormErrorFocus<T>({
   activeTabIndex,
 }: UseFormErrorFocusProps<T>) {
   const previousSubmitCount = useRef(0);
-  const previousErrors = useRef<FormikErrors<T>>({} as FormikErrors<T>);
+  const previousErrors = useRef<FormikErrors<T>>({});
   const [elementToFocus, setElementToFocus] = useState<HTMLElement | null>(
     null,
   );
@@ -42,25 +42,7 @@ export function useFormErrorFocus<T>({
     if (!tabErrorMapping || !onErrorInTab) return null;
 
     for (const mapping of tabErrorMapping) {
-      const pathSegments = mapping.fieldPath.split(".");
-      let currentObj: any = errors;
-      let hasError = true;
-
-      for (const segment of pathSegments) {
-        const arrayMatch = segment.match(/(\w+)\[(\d+)\]/);
-        if (arrayMatch) {
-          const [_, arrayName, indexStr] = arrayMatch;
-          const index = parseInt(indexStr);
-          currentObj = currentObj[arrayName]?.[index];
-        } else {
-          currentObj = currentObj[segment];
-        }
-
-        if (currentObj === undefined) {
-          hasError = false;
-          break;
-        }
-      }
+      const hasError = getIn(errors, mapping.fieldPath);
 
       if (hasError) {
         return mapping.tabIndex;
