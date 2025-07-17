@@ -15,7 +15,13 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { Confirmation, parseNextSteps, Step, validationSchema } from "./model";
+import {
+  Confirmation,
+  parseConfirmation,
+  parseNextSteps,
+  Step,
+  validationSchema,
+} from "./model";
 
 export type Props = EditorProps<TYPES.Confirmation, Confirmation>;
 
@@ -59,26 +65,7 @@ function NextStepEditor(props: ListManagerEditorProps<Step>) {
 export default function ConfirmationEditor(props: Props) {
   const type = TYPES.Confirmation;
   const formik = useFormik<Confirmation>({
-    initialValues: {
-      heading: props.node?.data?.heading || "Application sent",
-      description:
-        props.node?.data?.description ||
-        `<p>A payment receipt has been emailed to you. You will also receive an email to confirm when your application has been received.</p>`,
-      moreInfo:
-        props.node?.data?.moreInfo ||
-        `<h2>You will be contacted</h2>
-        <ul>
-        <li>if there is anything missing from the information you have provided so far</li>
-        <li>if any additional information is required</li>
-        <li>to arrange a site visit, if required</li>
-        </ul>`,
-      contactInfo:
-        props.node?.data?.contactInfo ||
-        `You can contact us at <em>ADD YOUR COUNCIL CONTACT</em>
-          <br><br>
-          <p><strong>What did you think of this service? Please give us your feedback on the next page.</strong></p>`,
-      ...parseNextSteps(props.node?.data),
-    },
+    initialValues: parseConfirmation(props.node?.data),
     onSubmit: (values) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type, data: values });
