@@ -30,7 +30,7 @@ const subscriptionRoutes = compose(
           query: gql`
             query GetServiceChargesForTeam($teamSlug: String!) {
               serviceCharges: service_charges(
-                order_by: { paid_at_timestamp: desc }
+                order_by: { paid_at: desc }
                 where: { team_slug: { _eq: $teamSlug } }
               ) {
                 flowName: flow_name
