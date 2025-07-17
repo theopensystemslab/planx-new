@@ -10,3 +10,7 @@ export interface ServiceCharge {
   paidAtQuarter: number;
   paidAtYear: number;
 }
+
+export interface SubscriptionProps {
+  serviceCharges: ServiceCharge[];
+}
