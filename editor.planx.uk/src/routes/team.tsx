@@ -1,5 +1,14 @@
 import gql from "graphql-tag";
-import { compose, lazy, map, mount, NotFoundError, route, withContext, withData } from "navi";
+import {
+  compose,
+  lazy,
+  map,
+  mount,
+  NotFoundError,
+  route,
+  withContext,
+  withData,
+} from "navi";
 import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 import GeneralSettings from "pages/FlowEditor/components/Settings/GeneralSettings";
 import Team from "pages/Team";
@@ -110,6 +119,7 @@ const routes = compose(
     "/submissions": lazy(() => import("./submissions")),
 
     "/members": lazy(() => import("./teamMembers")),
+
     "/design": compose(
       route(async (req) => ({
         title: makeTitle(
@@ -118,7 +128,9 @@ const routes = compose(
         view: DesignSettings,
       })),
     ),
+
     "/feedback": lazy(() => import("./feedback")),
+
     "/general-settings": compose(
       route(async (req) => ({
         title: makeTitle(
@@ -127,6 +139,8 @@ const routes = compose(
         view: GeneralSettings,
       })),
     ),
+
+    "/subscription": lazy(() => import("./subscription")),
   }),
 );
 

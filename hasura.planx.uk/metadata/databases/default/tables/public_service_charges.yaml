@@ -1,0 +1,21 @@
+table:
+  name: service_charges
+  schema: public
+select_permissions:
+  - role: platformAdmin
+    permission:
+      columns:
+        - paid_at_date
+        - service_charge_amount
+        - paid_at_month
+        - paid_at_quarter
+        - paid_at_year
+        - flow_name
+        - flow_slug
+        - paid_at_month_text
+        - payment_id
+        - team_slug
+        - paid_at_timestamp
+        - session_id
+      filter: {}
+    comment: ""
