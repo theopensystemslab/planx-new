@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, boolean, mixed, number,object, SchemaOf, string } from "yup";
+import { array, boolean, mixed, number, object, SchemaOf, string } from "yup";
 
 import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
@@ -50,7 +50,7 @@ export const toggleExpandableChecklist = ({
   if (options !== undefined && options.length > 0) {
     const [exclusiveOptions, nonExclusiveOptions]: Option[][] = partition(
       options,
-      (option) => option.data.exclusive,
+      (option) => option.data.exclusive
     );
 
     const newGroupedOptions = [
@@ -179,47 +179,60 @@ const optionValidationSchema: SchemaOf<Option> = object({
   }),
 });
 
-export const validationSchema =
-  baseNodeDataValidationSchema.concat(
-    object({
-      description: richText(),
-      groupedOptions: array(
-        object({
-          title: string().required("Section title is a required field"),
-          // exclusive: boolean().optional(),
-          children: array(optionValidationSchema).required(),
-        }).required()
-      ).optional(),
-      allRequired: boolean(),
-      options: array(optionValidationSchema).optional(),
-      fn: string(),
-      text: string(),
-      img: string(),
-      categories: array(
-        object({
-          title: string(),
-          count: number(),
-        })
-      ),
-      neverAutoAnswer: boolean(),
-      alwaysAutoAnswerBlank: boolean(),
-      autoAnswers: array(string()),
-    })
+export const validationSchema = baseNodeDataValidationSchema.concat(
+  object({
+    description: richText(),
+    groupedOptions: array(
+      object({
+        title: string().required("Section title is a required field"),
+        // exclusive: boolean().optional(),
+        children: array(optionValidationSchema).required(),
+      }).required()
+    ).optional(),
+    allRequired: boolean(),
+    options: array(optionValidationSchema).optional(),
+    fn: string(),
+    text: string(),
+    img: string(),
+    categories: array(
+      object({
+        title: string(),
+        count: number(),
+      })
+    ),
+    neverAutoAnswer: boolean(),
+    alwaysAutoAnswerBlank: boolean(),
+    autoAnswers: array(string()),
+  })
     .test({
       name: "notExclusiveAndAllRequired",
-      test: function({ allRequired, options }) {
+      test: function ({ allRequired, options }) {
         if (!allRequired) return true;
-        
-        const exclusiveOptions = options?.filter(
-          ({ data }) => data.exclusive,
-        );
+
+        const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
 
         if (!exclusiveOptions || !exclusiveOptions.length) return true;
 
         return this.createError({
           path: "allRequired",
-          message: 'Cannot configure exclusive "or" option alongside "all required" setting',
+          message:
+            'Cannot configure exclusive "or" option alongside "all required" setting',
         });
       },
     })
-  );
+    .test({
+      name: "onlyOneExclusiveOption",
+      test: function ({ options }) {
+        const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
+
+        if (!exclusiveOptions) return true;
+        if (exclusiveOptions.length === 1) return true;
+
+        return this.createError({
+          path: "options",
+          message:
+            "There should be a maximum of one exclusive option configured",
+        });
+      },
+    })
+);
