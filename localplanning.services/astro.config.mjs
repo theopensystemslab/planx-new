@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -18,5 +18,17 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()]
+  },
+  experimental: {
+    fonts: [
+      {
+        name: "Inter",
+        cssVariable: "--font-inter",
+        provider: fontProviders.google(),
+        weights: [400, 500, 600, 700],
+        styles: ["normal"],
+        subsets: ["latin"],
+      },
+    ]
   }
 });
