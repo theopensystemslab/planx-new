@@ -87,4 +87,26 @@ describe("Editor validation", () => {
       })
     ).rejects.toThrow("At least one option must also set a data field");
   });
+
+  test("fn is required for alwaysAutoAnswerBlank", async () => {
+    await expect(() =>
+      validationSchema.validate({
+        title: "Test",
+        alwaysAutoAnswerBlank: true,
+        fn: null,
+        options: [
+          {
+            id: "a",
+            data: { text: "Option A" },
+          },
+          {
+            id: "b",
+            data: { text: "Option B" },
+          },
+        ],
+      })
+    ).rejects.toThrow(
+      "Set a data field for the Checklist and all options but one when never putting to user"
+    );
+  });
 });

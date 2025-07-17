@@ -82,10 +82,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
       // Account for flat or expandable Checklist options
       options = options || groupedOptions?.flatMap((group) => group.children);
 
-      if (values.alwaysAutoAnswerBlank && !values.fn) {
-        errors.alwaysAutoAnswerBlank =
-          "Set a data field for the Checklist and all options but one when never putting to user";
-      }
       if (
         values.alwaysAutoAnswerBlank &&
         values.fn &&
