@@ -14,12 +14,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
-import sumBy from "lodash/sumBy";
+import { getQuarter } from "date-fns";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SettingsSection from "ui/editor/SettingsSection";
 
-import { ServiceCharge, SubscriptionProps } from "../types";
+import { SubscriptionProps } from "../types";
+import { quarterlyInvoiceDates, sumServiceCharges } from "../utils";
 
 export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
   return (
@@ -45,6 +46,7 @@ const InactiveServiceCharges = () => (
 );
 
 const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
+  // "Active year" is the latest year for which your team has collected service charges
   const years = Array.from(new Set(serviceCharges.map((sc) => sc.paidAtYear)));
   const [activeYear, setActiveYear] = useState<number>(years[0]);
 
@@ -55,11 +57,9 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
   return (
     <>
       <Typography variant="h4" component="h5" mt={2} gutterBottom>
-        Service charges due this quarter
+        Service charges this quarter
       </Typography>
-      <Typography variant="body1" gutterBottom>
-        [Coming soon]
-      </Typography>
+      <ThisQuarterServiceChargeCard serviceCharges={serviceCharges} />
       <Typography variant="h4" component="h5" mt={2} gutterBottom>
         Total service charges collected
       </Typography>
@@ -69,7 +69,13 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
         activeYear={activeYear}
         setActiveYear={setActiveYear}
       />
-      <Box mt={2}>
+      <Box
+        mt={2}
+        sx={{
+          border: (theme) => `1px solid ${theme.palette.border.main}`,
+          backgroundColor: (theme) => theme.palette.background.default,
+        }}
+      >
         <ServiceChargesByQuarterAccordion
           serviceCharges={serviceChargesInActiveYear}
         />
@@ -80,7 +86,7 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
           serviceCharges={serviceChargesInActiveYear}
         />
       </Box>
-      <Box sx={{ marginTop: (theme) => theme.spacing(1), textAlign: "right" }}>
+      <Box mt={2} sx={{ textAlign: "right" }}>
         <Link component="button" onClick={() => console.log("todo")}>
           <Typography variant="body2">
             {"Download service charge payment records (.csv)"}
@@ -88,6 +94,51 @@ const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
         </Link>
       </Box>
     </>
+  );
+};
+
+const ThisQuarterServiceChargeCard = ({
+  serviceCharges,
+}: SubscriptionProps) => {
+  // "This quarter" is relative to when you access this page
+  const thisQuarter = getQuarter(new Date());
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(min(180px, 100%), 1fr))",
+        gap: 2,
+      }}
+    >
+      <Card>
+        <CardActionArea
+          sx={{
+            height: "100%",
+            border: (theme) => `1px solid ${theme.palette.border.main}`,
+            backgroundColor: (theme) => theme.palette.background.default,
+          }}
+          disabled
+        >
+          <CardContent sx={{ height: "100%" }}>
+            <Typography variant="h3" component="div" gutterBottom>
+              {`Q${thisQuarter} ${new Date().getFullYear()}`}
+            </Typography>
+            <Typography variant="body2" mt={2}>
+              <strong>
+                {sumServiceCharges(
+                  serviceCharges.filter(
+                    (sc) => sc.paidAtQuarter === thisQuarter,
+                  ),
+                )}
+              </strong>
+              {` to-date due ${quarterlyInvoiceDates[thisQuarter]}`}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Box>
   );
 };
 
@@ -170,7 +221,7 @@ const ServiceChargesByQuarterAccordion = ({
       <AccordionDetails>
         <TableContainer>
           <StyledTable>
-            <Header unit={"Quarter"} />
+            <Header />
             {quarters.map((q) => (
               <StyledTableRow>
                 <TableCell>{`Q${q}`}</TableCell>
@@ -212,7 +263,7 @@ const ServiceChargesByMonthAccordion = ({
       <AccordionDetails>
         <TableContainer>
           <StyledTable>
-            <Header unit={"Month"} />
+            <Header />
             {months.map((m) => (
               <StyledTableRow>
                 <TableCell>{m}</TableCell>
@@ -252,7 +303,7 @@ const ServiceChargeByFlowAccordion = ({
       <AccordionDetails>
         <TableContainer>
           <StyledTable>
-            <Header unit={"Service"} />
+            <Header />
             {flows.map((f) => (
               <StyledTableRow>
                 <TableCell>{f}</TableCell>
@@ -273,15 +324,14 @@ const ServiceChargeByFlowAccordion = ({
   );
 };
 
-const StyledTable = styled(Table)(({ theme }) => ({
-  maxWidth: theme.breakpoints.values.contentWrap,
+const StyledTable = styled(Table)(() => ({
   [`& .${tableCellClasses.root}`]: {
     paddingLeft: 0,
     paddingRight: 0,
   },
 }));
 
-const BoldTableRow = styled(TableRow)(({ theme }) => ({
+const StyledHeaderRow = styled(TableRow)(({ theme }) => ({
   background: theme.palette.background.paper,
   [`& .${tableCellClasses.root}`]: {
     fontWeight: FONT_WEIGHT_SEMI_BOLD,
@@ -295,12 +345,12 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const Header = ({ unit }: { unit: string }) => (
+const Header = () => (
   <TableHead>
-    <BoldTableRow>
+    <StyledHeaderRow>
       <TableCell></TableCell>
       <TableCell align="right">Amount (excl VAT)</TableCell>
-    </BoldTableRow>
+    </StyledHeaderRow>
   </TableHead>
 );
 
@@ -314,11 +364,3 @@ const TotalRow = ({ serviceCharges }: SubscriptionProps) => (
     </TableCell>
   </StyledTableRow>
 );
-
-const sumServiceCharges = (serviceCharges: ServiceCharge[]) => {
-  const sum = sumBy(serviceCharges, "amount");
-  return new Intl.NumberFormat("en-GB", {
-    style: "currency",
-    currency: "GBP",
-  }).format(sum);
-};

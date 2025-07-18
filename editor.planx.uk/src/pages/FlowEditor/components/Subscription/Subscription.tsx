@@ -6,7 +6,6 @@ import SettingsSection from "ui/editor/SettingsSection";
 import { Contract } from "./components/Contract";
 import { Discount } from "./components/Discount";
 import { ServiceCharges } from "./components/ServiceCharges";
-import { SSLRenewal } from "./components/SSL";
 import { SubscriptionProps } from "./types";
 
 export const Subscription = ({ serviceCharges }: SubscriptionProps) => (
@@ -22,6 +21,6 @@ export const Subscription = ({ serviceCharges }: SubscriptionProps) => (
     <ServiceCharges serviceCharges={serviceCharges} />
     <Contract />
     <Discount />
-    <SSLRenewal />
+    {/* <SSLRenewal /> */}
   </Container>
 );
