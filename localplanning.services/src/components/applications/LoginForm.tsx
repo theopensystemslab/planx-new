@@ -17,17 +17,19 @@ const LoginForm: React.FC = () => {
   return (
     <div className="max-w-3xl text-body-lg">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-start">
-        <label htmlFor="email" className="font-semibold text-md">
-          Enter your email address to log in
-        </label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          required
-          disabled={isLoading}
-          onChange={clearError}
-        />
+        <div>
+          <label htmlFor="email" className="text-body-lg inline-block">
+            Enter your email address to log in
+          </label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            required
+            disabled={isLoading}
+            onChange={clearError}
+          />
+        </div>
 
         {error && (
           <div className="text-red-600 mt-2" role="alert">

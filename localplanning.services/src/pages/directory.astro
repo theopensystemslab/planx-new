@@ -18,7 +18,7 @@ const lpas = await fetchAllLPAs();
       >
       <input type="search" id="search" placeholder="Type to search" />
     </section>
-    <section class="flex flex-col gap-6">
+    <section class="flex flex-col gap-4">
       {
         lpas.map((lpa) => (
           <Accordion title={lpa.name}>
