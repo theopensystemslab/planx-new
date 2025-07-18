@@ -1,4 +1,6 @@
 ---
+import type { AstroBuiltinAttributes } from "astro";
+
 interface Props {
   href?: string;
   variant?: "primary" | "secondary";
@@ -28,9 +30,15 @@ const sizeClasses = {
 
 const externalClasses = external ? "after:content-['_↗']" : "";
 
-const classes = `button ${variantClasses[variant]} ${sizeClasses[size]} ${externalClasses} ${className}`.trim();
+const classes: AstroBuiltinAttributes["class:list"] = [
+  "button",
+  variantClasses[variant],
+  sizeClasses[size],
+  externalClasses,
+  className,
+];
 ---
 
-<a href={href} class={classes}>
+<a href={href} class:list={classes}>
   <slot />
 </a>
