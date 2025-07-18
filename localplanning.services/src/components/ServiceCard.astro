@@ -22,7 +22,7 @@ const serviceURL = getServiceURL({ domain, lpaSlug: lpa, serviceSlug: slug })
 ---
 
 <li
-  class="flex flex-col lg:flex-row clamp-[gap,2,4] clamp-[py,5,8] clamp-[px,4,8] rounded my-4 bg-white w-full justify-between items-start lg:items-center"
+  class="flex flex-col lg:flex-row clamp-[gap,2,4] clamp-[py,4,6] clamp-[px,3,6] rounded bg-white w-full justify-between items-start lg:items-center"
 >
   <div class="lg:w-2/3">
     <h3 class="font-semibold mb-2 text-heading-xs">{name}</h3>
@@ -33,7 +33,7 @@ const serviceURL = getServiceURL({ domain, lpaSlug: lpa, serviceSlug: slug })
       }
     </p>
   </div>
-  <Button href={serviceURL} variant="primary" external>
+  <Button href={serviceURL} variant="primary" external class="m-0">
     Go to service
   </Button>
 </li>
