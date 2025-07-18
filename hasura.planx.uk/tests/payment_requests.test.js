@@ -115,6 +115,21 @@ describe("payment_requests", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query payment_requests", () => {
+      expect(i.queries).not.toContain("payment_requests");
+    });
+
+    test("cannot create, update, or delete payment_requests", () => {
+      expect(i).toHaveNoMutationsFor("payment_requests");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
@@ -232,8 +247,8 @@ const deleteSessions = async (sessionIds) => {
   const res = await gqlAdmin(`
     mutation {
       delete_lowcal_sessions(where: {id: {_in: ${JSON.stringify(
-        sessionIds
-      )}}}) {
+    sessionIds
+  )}}}) {
         affected_rows
       }
     }

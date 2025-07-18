@@ -47,6 +47,21 @@ describe("team_integrations", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("can query team_integrations", () => {
+      expect(i.queries).toContain("team_integrations");
+    });
+
+    test("cannot create, update, or delete team_integrations", () => {
+      expect(i).toHaveNoMutationsFor("team_integrations");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

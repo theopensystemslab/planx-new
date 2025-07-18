@@ -49,6 +49,21 @@ describe("revoked_tokens", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query revoked_tokens", () => {
+      expect(i.queries).not.toContain("revoked_tokens");
+    });
+
+    test("cannot create, update, or delete revoked_tokens", () => {
+      expect(i).toHaveNoMutationsFor("revoked_tokens");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

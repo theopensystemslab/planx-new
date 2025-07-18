@@ -57,6 +57,33 @@ insert_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
     comment: ""
+  - role: teamAdmin
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      columns:
+        - created_at
+        - flow_id
+        - id
+        - data
+        - updated_at
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+    comment: teamEditors can only insert nodes for templated flows which they can edit
   - role: teamEditor
     permission:
       check:
@@ -109,6 +136,16 @@ select_permissions:
             _eq: x-hasura-user-id
     comment: Demo users can only view records associated with flows they have created
   - role: platformAdmin
+    permission:
+      columns:
+        - created_at
+        - flow_id
+        - id
+        - data
+        - updated_at
+      filter: {}
+    comment: ""
+  - role: teamAdmin
     permission:
       columns:
         - created_at
@@ -183,6 +220,34 @@ update_permissions:
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - created_at
+        - flow_id
+        - id
+        - data
+        - updated_at
+      filter:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      check: null
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+    comment: teamEditors can only update customisations for flows which they can edit
   - role: teamEditor
     permission:
       columns:

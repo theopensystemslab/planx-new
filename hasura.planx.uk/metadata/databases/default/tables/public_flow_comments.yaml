@@ -50,6 +50,22 @@ insert_permissions:
         - comment
         - flow_id
     comment: ""
+  - role: teamAdmin
+    permission:
+      check:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
+      columns:
+        - actor_id
+        - comment
+        - flow_id
+    comment: ""
   - role: teamEditor
     permission:
       check:
@@ -97,6 +113,16 @@ select_permissions:
         - flow_id
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - actor_id
+        - id
+        - comment
+        - created_at
+        - flow_id
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:
@@ -118,6 +144,18 @@ delete_permissions:
   - role: platformAdmin
     permission:
       filter: {}
+    comment: ""
+  - role: teamAdmin
+    permission:
+      filter:
+        flow:
+          team:
+            members:
+              _and:
+                - user_id:
+                    _eq: x-hasura-user-id
+                - role:
+                    _eq: teamEditor
     comment: ""
   - role: teamEditor
     permission:

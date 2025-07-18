@@ -87,6 +87,44 @@ select_permissions:
         - user_context
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - address
+        - application_type
+        - created_at
+        - device
+        - editor_notes
+        - feedback_id
+        - feedback_score
+        - feedback_type
+        - flow_id
+        - help_definition
+        - help_sources
+        - help_text
+        - intersecting_constraints
+        - node_data
+        - node_id
+        - node_text
+        - node_title
+        - node_type
+        - project_type
+        - service_name
+        - service_slug
+        - status
+        - team_slug
+        - uprn
+        - user_comment
+        - user_context
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
+    comment: ""
   - role: teamEditor
     permission:
       columns:

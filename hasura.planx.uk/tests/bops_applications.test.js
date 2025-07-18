@@ -45,6 +45,21 @@ describe("bops_applications", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query bops_applications", () => {
+      expect(i.queries).not.toContain("bops_applications");
+    });
+
+    test("cannot create, update, or delete bops_applications", () => {
+      expect(i).toHaveNoMutationsFor("bops_applications");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

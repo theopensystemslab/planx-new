@@ -106,6 +106,26 @@ select_permissions:
         - team_id
       filter: {}
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - boundary_bbox
+        - boundary_url
+        - email_reply_to_id
+        - external_planning_site_name
+        - external_planning_site_url
+        - has_article4_schema
+        - help_email
+        - help_opening_hours
+        - help_phone
+        - homepage
+        - id
+        - is_trial
+        - reference_code
+        - submission_email
+        - team_id
+      filter: {}
+    comment: ""
   - role: teamEditor
     permission:
       columns:
@@ -146,6 +166,30 @@ update_permissions:
         - submission_email
         - team_id
       filter: {}
+      check: null
+    comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - boundary_bbox
+        - boundary_url
+        - email_reply_to_id
+        - external_planning_site_name
+        - external_planning_site_url
+        - help_email
+        - help_opening_hours
+        - help_phone
+        - homepage
+        - reference_code
+        - submission_email
+      filter:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
       check: null
     comment: ""
   - role: teamEditor

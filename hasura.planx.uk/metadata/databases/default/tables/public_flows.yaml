@@ -177,6 +177,44 @@ insert_permissions:
           timeout: 10
           url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
         type: http
+  - role: teamAdmin
+    permission:
+      check:
+        team:
+          members:
+            _and:
+              - user_id:
+                  _eq: x-hasura-user-id
+              - role:
+                  _eq: teamEditor
+      set:
+        creator_id: x-hasura-user-id
+      columns:
+        - copied_from
+        - created_at
+        - creator_id
+        - data
+        - description
+        - id
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
   - role: teamEditor
     permission:
       check:
@@ -339,6 +377,33 @@ select_permissions:
           _is_null: true
       allow_aggregations: true
     comment: ""
+  - role: teamAdmin
+    permission:
+      columns:
+        - can_create_from_copy
+        - created_at
+        - creator_id
+        - data
+        - deleted_at
+        - description
+        - id
+        - is_template
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+        - templated_from
+        - updated_at
+        - version
+      computed_fields:
+        - data_merged
+      filter:
+        deleted_at:
+          _is_null: true
+      allow_aggregations: true
   - role: teamEditor
     permission:
       columns:
@@ -489,6 +554,59 @@ update_permissions:
                 team_settings:
                   is_trial:
                     _eq: true
+      validate_input:
+        definition:
+          forward_client_headers: false
+          headers:
+            - name: authorization
+              value: '{{HASURA_PLANX_API_KEY}}'
+          timeout: 10
+          url: '{{HASURA_PLANX_API_URL}}/webhooks/hasura/validate-input/jsonb/clean-html'
+        type: http
+  - role: teamAdmin
+    permission:
+      columns:
+        - can_create_from_copy
+        - data
+        - deleted_at
+        - description
+        - limitations
+        - name
+        - settings
+        - slug
+        - status
+        - summary
+        - team_id
+      filter:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+          - deleted_at:
+              _is_null: true
+          - is_template:
+              _eq: false
+      check:
+        _and:
+          - team:
+              members:
+                _and:
+                  - user_id:
+                      _eq: x-hasura-user-id
+                  - role:
+                      _eq: teamEditor
+          - _not:
+              _and:
+                - status:
+                    _eq: online
+                - team:
+                    team_settings:
+                      is_trial:
+                        _eq: true
       validate_input:
         definition:
           forward_client_headers: false

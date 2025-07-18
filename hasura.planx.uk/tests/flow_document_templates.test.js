@@ -50,6 +50,21 @@ describe("flow_document_templates", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query flow_document_templates", () => {
+      expect(i.queries).not.toContain("flow_document_templates");
+    });
+
+    test("cannot create, update, or delete flow_document_templates", () => {
+      expect(i).toHaveNoMutationsFor("flow_document_templates");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {
@@ -64,7 +79,7 @@ describe("flow_document_templates", () => {
       expect(i).toHaveNoMutationsFor("flow_document_templates");
     });
   });
-  
+
   describe("demoUser", () => {
     let i;
     beforeAll(async () => {

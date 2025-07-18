@@ -49,6 +49,21 @@ describe("reconciliation_requests", () => {
     });
   });
 
+  describe("teamAdmin", () => {
+    let i;
+    beforeAll(async () => {
+      i = await introspectAs("teamAdmin");
+    });
+
+    test("cannot query reconciliation_requests", () => {
+      expect(i.queries).not.toContain("reconciliation_requests");
+    });
+
+    test("cannot create, update, or delete reconciliation_requests", () => {
+      expect(i).toHaveNoMutationsFor("reconciliation_requests");
+    });
+  });
+
   describe("teamEditor", () => {
     let i;
     beforeAll(async () => {

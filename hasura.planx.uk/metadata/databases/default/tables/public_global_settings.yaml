@@ -34,6 +34,12 @@ select_permissions:
       columns:
         - footer_content
       filter: {}
+  - role: teamAdmin
+    permission:
+      columns:
+        - footer_content
+        - id
+      filter: {}
   - role: teamEditor
     permission:
       columns:
