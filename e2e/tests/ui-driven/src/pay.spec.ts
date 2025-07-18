@@ -16,6 +16,7 @@ import {
 } from "./helpers/globalHelpers.js";
 import {
   fillGovUkCardDetails,
+  fillInEmail,
   submitCardDetails,
 } from "./helpers/userActions.js";
 import payFlow from "./mocks/flows/pay-flow.json" with { type: "json" };
@@ -53,7 +54,7 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a successful payment", async ({ page }) => {
-    const sessionId = await navigateToPayComponent(page);
+    const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
@@ -86,7 +87,7 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a retry attempt for a failed GOV.UK payment", async ({ page }) => {
-    const sessionId = await navigateToPayComponent(page);
+    const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
@@ -145,7 +146,7 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a retry attempt for a cancelled GOV.UK payment", async ({ page }) => {
-    const sessionId = await navigateToPayComponent(page);
+    const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
@@ -196,7 +197,13 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a retry attempt for an abandoned GOV.UK payment", async ({ page }) => {
-    const sessionId = await navigateToPayComponent(page);
+    await page.addInitScript(() => {
+      Object.defineProperty(document, "referrer", {
+        get: () => "https://card.payments.service.gov.uk/",
+      });
+    });
+
+    const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
@@ -225,7 +232,10 @@ test.describe("Gov Pay integration @regression", async () => {
       }),
     ).toBe(true);
 
-    // retry the payment
+    // resume the session via a magic link
+    await page.goto(`${previewURL}&sessionId=${sessionId}`);
+    await page.locator("#email").fill(context.user.email);
+    await page.getByTestId("continue-button").click();
     await page.getByText("Retry payment").click();
     await page.getByText("Continue with your payment").click();
     await submitCardDetails(page);
@@ -256,7 +266,13 @@ test.describe("Gov Pay integration @regression", async () => {
   test("a retry attempt for an abandoned and then cancelled GOV.UK payment", async ({
     page,
   }) => {
-    const sessionId = await navigateToPayComponent(page);
+    await page.addInitScript(() => {
+      Object.defineProperty(document, "referrer", {
+        get: () => "https://card.payments.service.gov.uk/",
+      });
+    });
+
+    const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
     // begin a payment
@@ -266,8 +282,10 @@ test.describe("Gov Pay integration @regression", async () => {
       cardNumber: cards.successful_card_number,
     });
 
-    // abandon the payment and return to PlanX
-    await page.goto(previewURL);
+    // abandon the payment and return to PlanX via a magic link
+    await page.goto(`${previewURL}&sessionId=${sessionId}`);
+    await page.locator("#email").fill(context.user.email);
+    await page.getByTestId("continue-button").click();
 
     // resume the payment and cancel it
     await page.getByText("Retry payment").click();
@@ -299,7 +317,7 @@ test.describe("Gov Pay integration @regression", async () => {
   test("navigating back to the pay component after a successful payment", async ({
     page,
   }) => {
-    const sessionId = await navigateToPayComponent(page);
+    const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
     await page.getByText(payButtonText).click();
@@ -323,14 +341,20 @@ test.describe("Gov Pay integration @regression", async () => {
     ).toBeVisible();
     // ...with a link back to PlanX
     await page.locator("a").getByText("View your payment summary").click();
+    // As the application is submitted, we can't view the confirmation page again and see a generic error
     await expect(
-      page.locator("h1").getByText("Application sent"),
+      page.locator("h1").getByText("We can't find your application"),
     ).toBeVisible();
   });
 });
 
-async function navigateToPayComponent(page: Page): Promise<string> {
+async function navigateToPayComponent(
+  page: Page,
+  context: TestContext,
+): Promise<string> {
   await page.goto(previewURL);
+  await fillInEmail({ page, context });
+  await page.getByTestId("continue-button").click();
   await page.getByLabel("Pay test").fill("Test");
   await page.getByTestId("continue-button").click();
   return getSessionId(page);
