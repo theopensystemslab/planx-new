@@ -65,6 +65,7 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
       "open-digital-planning",
       "opensystemslab",
       "planx",
+      "planx-university",
       "templates",
       "testing",
       "wikihouse",

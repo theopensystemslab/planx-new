@@ -1,10 +1,10 @@
 import gql from "graphql-tag";
 
 export const GET_LPAS_QUERY = gql`
-  query GetLPAs($excludedTeamSlugs: [String!], $notifyServiceSlugs: [String!]) {
+  query GetLPAs($teamSlugs: [String!], $notifyServiceSlugs: [String!]) {
     lpas: teams(
       order_by: { name: asc }
-      where: { slug: { _nin: $excludedTeamSlugs } }
+      where: { slug: { _in: $teamSlugs } }
     ) {
       name
       slug

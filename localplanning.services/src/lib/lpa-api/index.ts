@@ -22,13 +22,29 @@ export interface LPA {
   domain: string | null;
 }
 
-const EXCLUDED_TEAM_SLUGS = [
-  "open-digital-planning",
-  "opensystemslab",
-  "planx",
-  "templates",
-  "testing",
-  "wikihouse",
+const TEAMS_ALLOW_LIST = [
+  "barking-and-dagenham",
+  "barnet",
+  "birmingham",
+  "braintree",
+  "bromley",
+  "buckinghamshire",
+  "camden",
+  "canterbury",
+  "doncaster",
+  "epsom-and-ewell",
+  "gateshead",
+  "gloucester",
+  "horsham",
+  "kingston",
+  "lambeth",
+  "medway",
+  "newcastle",
+  "south-gloucestershire",
+  "southwark",
+  "st-albans",
+  "tewkesbury",
+  "west-berkshire",
 ] as const;
 
 const NOTIFY_SERVICE_SLUGS = [
@@ -44,7 +60,7 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
       body: JSON.stringify({
         query: print(GET_LPAS_QUERY),
         variables: {
-          excludedTeamSlugs: EXCLUDED_TEAM_SLUGS,
+          teamSlugs: TEAMS_ALLOW_LIST,
           notifyServiceSlugs: NOTIFY_SERVICE_SLUGS,
         },
       }),

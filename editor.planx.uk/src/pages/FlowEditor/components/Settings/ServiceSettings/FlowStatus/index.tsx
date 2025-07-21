@@ -87,6 +87,7 @@ const FlowStatus = () => {
       "open-digital-planning",
       "opensystemslab",
       "planx",
+      "planx-university",
       "templates",
       "testing",
       "wikihouse",
