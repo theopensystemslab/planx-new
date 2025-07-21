@@ -86,7 +86,6 @@ const FlowStatus = () => {
     const skipTeamSlugs = [
       "open-digital-planning",
       "opensystemslab",
-      "planx",
       "planx-university",
       "templates",
       "testing",

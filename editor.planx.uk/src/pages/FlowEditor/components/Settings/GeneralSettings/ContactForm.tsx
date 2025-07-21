@@ -64,7 +64,6 @@ export default function ContactForm({ formikConfig, onSuccess }: FormProps) {
     const skipTeamSlugs = [
       "open-digital-planning",
       "opensystemslab",
-      "planx",
       "planx-university",
       "templates",
       "testing",
