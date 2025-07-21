@@ -3,12 +3,11 @@ export interface ServiceCharge {
   sessionId: string;
   paymentId: string;
   amount: number;
-  paidAtTimestamp: string;
-  paidAtDate: string;
-  paidAtMonth: number;
-  paidAtMonthText: string;
-  paidAtQuarter: number;
-  paidAtYear: number;
+  paidAt: string; // timestamp
+  month: number;
+  monthText: string;
+  quarter: number;
+  fiscalYear: number;
 }
 
 export interface SubscriptionProps {

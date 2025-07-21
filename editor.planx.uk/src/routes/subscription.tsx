@@ -30,7 +30,11 @@ const subscriptionRoutes = compose(
           query: gql`
             query GetServiceChargesForTeam($teamSlug: String!) {
               serviceCharges: service_charges(
-                order_by: { paid_at: desc }
+                order_by: {
+                  fiscal_year: desc
+                  fiscal_year_quarter: desc
+                  paid_at: desc
+                }
                 where: { team_slug: { _eq: $teamSlug } }
               ) {
                 flowName: flow_name
@@ -38,10 +42,10 @@ const subscriptionRoutes = compose(
                 paymentId: payment_id
                 amount: service_charge_amount
                 paidAt: paid_at
-                paidAtMonth: paid_at_month
-                paidAtMonthText: paid_at_month_text
-                paidAtQuarter: paid_at_quarter
-                paidAtYear: paid_at_year
+                month
+                monthText: month_text
+                quarter: fiscal_year_quarter
+                fiscalYear: fiscal_year
               }
             }
           `,

@@ -20,7 +20,7 @@ export const Subscription = ({ serviceCharges }: SubscriptionProps) => (
     </SettingsSection>
     <ServiceCharges serviceCharges={serviceCharges} />
     <Contract />
-    <Discount />
+    <Discount serviceCharges={serviceCharges} />
     {/* <SSLRenewal /> */}
   </Container>
 );

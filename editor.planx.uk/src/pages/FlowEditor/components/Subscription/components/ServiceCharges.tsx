@@ -20,7 +20,12 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SettingsSection from "ui/editor/SettingsSection";
 
 import { SubscriptionProps } from "../types";
-import { quarterlyInvoiceDates, sumServiceCharges } from "../utils";
+import {
+  getUKFiscalYear,
+  getUKFiscalYearQuarter,
+  quarterlyInvoiceDates,
+  sumServiceCharges,
+} from "../utils";
 
 export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
   return (
@@ -35,29 +40,25 @@ export const ServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
       {serviceCharges.length > 0 ? (
         <ActiveServiceCharges serviceCharges={serviceCharges} />
       ) : (
-        <InactiveServiceCharges />
+        <Typography variant="body1">No service charges found.</Typography>
       )}
     </SettingsSection>
   );
 };
 
-const InactiveServiceCharges = () => (
-  <Typography variant="body1">No service charges found.</Typography>
-);
-
 const ActiveServiceCharges = ({ serviceCharges }: SubscriptionProps) => {
   // "Active year" is the latest year for which your team has collected service charges
-  const years = Array.from(new Set(serviceCharges.map((sc) => sc.paidAtYear)));
+  const years = Array.from(new Set(serviceCharges.map((sc) => sc.fiscalYear)));
   const [activeYear, setActiveYear] = useState<number>(years[0]);
 
   const serviceChargesInActiveYear = serviceCharges.filter(
-    (sc) => sc.paidAtYear === activeYear,
+    (sc) => sc.fiscalYear === activeYear,
   );
 
   return (
     <>
       <Typography variant="h4" component="h5" mt={2} gutterBottom>
-        Service charges this quarter
+        Service charges due this quarter
       </Typography>
       <ThisQuarterServiceChargeCard serviceCharges={serviceCharges} />
       <Typography variant="h4" component="h5" mt={2} gutterBottom>
@@ -101,7 +102,8 @@ const ThisQuarterServiceChargeCard = ({
   serviceCharges,
 }: SubscriptionProps) => {
   // "This quarter" is relative to when you access this page
-  const thisQuarter = getQuarter(new Date());
+  const thisQuarter = getUKFiscalYearQuarter(getQuarter(new Date()));
+  const thisFiscalYear = getUKFiscalYear(thisQuarter, new Date().getFullYear());
 
   return (
     <Box
@@ -123,14 +125,12 @@ const ThisQuarterServiceChargeCard = ({
         >
           <CardContent sx={{ height: "100%" }}>
             <Typography variant="h3" component="div" gutterBottom>
-              {`Q${thisQuarter} ${new Date().getFullYear()}`}
+              {`Q${thisQuarter} FY ${thisFiscalYear}`}
             </Typography>
             <Typography variant="body2" mt={2}>
               <strong>
                 {sumServiceCharges(
-                  serviceCharges.filter(
-                    (sc) => sc.paidAtQuarter === thisQuarter,
-                  ),
+                  serviceCharges.filter((sc) => sc.quarter === thisQuarter),
                 )}
               </strong>
               {` to-date due ${quarterlyInvoiceDates[thisQuarter]}`}
@@ -183,12 +183,12 @@ const AnnualServiceChargeCards = ({
         >
           <CardContent sx={{ height: "100%" }}>
             <Typography variant="h3" component="div" gutterBottom>
-              {year}
+              {`FY ${year}`}
             </Typography>
             <Typography variant="body2" mt={2}>
               <strong>
                 {sumServiceCharges(
-                  serviceCharges.filter((sc) => sc.paidAtYear === year),
+                  serviceCharges.filter((sc) => sc.fiscalYear === year),
                 )}
               </strong>
               {` ${new Date().getFullYear() === year ? `year-to-date` : `total`}`}
@@ -203,9 +203,7 @@ const AnnualServiceChargeCards = ({
 const ServiceChargesByQuarterAccordion = ({
   serviceCharges,
 }: SubscriptionProps) => {
-  const quarters = Array.from(
-    new Set(serviceCharges.map((sc) => sc.paidAtQuarter)),
-  );
+  const quarters = Array.from(new Set(serviceCharges.map((sc) => sc.quarter)));
 
   return (
     <Accordion defaultExpanded>
@@ -226,11 +224,9 @@ const ServiceChargesByQuarterAccordion = ({
               <StyledTableRow>
                 <TableCell>{`Q${q}`}</TableCell>
                 <TableCell align="right">
-                  <strong>
-                    {sumServiceCharges(
-                      serviceCharges.filter((sc) => sc.paidAtQuarter === q),
-                    )}
-                  </strong>
+                  {sumServiceCharges(
+                    serviceCharges.filter((sc) => sc.quarter === q),
+                  )}
                 </TableCell>
               </StyledTableRow>
             ))}
@@ -245,9 +241,7 @@ const ServiceChargesByQuarterAccordion = ({
 const ServiceChargesByMonthAccordion = ({
   serviceCharges,
 }: SubscriptionProps) => {
-  const months = Array.from(
-    new Set(serviceCharges.map((sc) => sc.paidAtMonthText)),
-  );
+  const months = Array.from(new Set(serviceCharges.map((sc) => sc.monthText)));
 
   return (
     <Accordion>
@@ -268,11 +262,9 @@ const ServiceChargesByMonthAccordion = ({
               <StyledTableRow>
                 <TableCell>{m}</TableCell>
                 <TableCell align="right">
-                  <strong>
-                    {sumServiceCharges(
-                      serviceCharges.filter((sc) => sc.paidAtMonthText === m),
-                    )}
-                  </strong>
+                  {sumServiceCharges(
+                    serviceCharges.filter((sc) => sc.monthText === m),
+                  )}
                 </TableCell>
               </StyledTableRow>
             ))}
@@ -308,11 +300,9 @@ const ServiceChargeByFlowAccordion = ({
               <StyledTableRow>
                 <TableCell>{f}</TableCell>
                 <TableCell align="right">
-                  <strong>
-                    {sumServiceCharges(
-                      serviceCharges.filter((sc) => sc.flowName === f),
-                    )}
-                  </strong>
+                  {sumServiceCharges(
+                    serviceCharges.filter((sc) => sc.flowName === f),
+                  )}
                 </TableCell>
               </StyledTableRow>
             ))}
