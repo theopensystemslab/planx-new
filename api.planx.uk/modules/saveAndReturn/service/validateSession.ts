@@ -34,7 +34,11 @@ export async function validateSession(
   const flowId = fetchedSession.flow_id!;
 
   // if a user has paid, skip reconciliation
-  const userHasPaid = sessionData?.govUkPayment?.state?.status === "created";
+  // Docs: https://docs.payments.service.gov.uk/api_reference/#payment-status-meanings
+  const paymentStartedStatuses = ["created", "submitted", "success"];
+  const userStatus = sessionData?.govUkPayment?.state?.status;
+  const userHasPaid = userStatus && paymentStartedStatuses.includes(userStatus);
+
   if (userHasPaid) {
     const responseData: ValidationResponse = {
       message: "Payment process initiated, skipping reconciliation",
