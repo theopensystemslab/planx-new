@@ -23,7 +23,7 @@ describe("Checklist - validation", () => {
 
     it("validates optional fields with a value", async () => {
       await expect(() => validationSchema.validate(["test1"])).rejects.toThrow(
-        /All options must be checked/
+        /All options must be checked/,
       );
     });
   });
@@ -41,9 +41,9 @@ describe("Editor validation", () => {
             data: { text: "Option A", exclusive: true },
           },
         ],
-      })
+      }),
     ).rejects.toThrow(
-      'Cannot configure exclusive "or" option alongside "all required" setting'
+      'Cannot configure exclusive "or" option alongside "all required" setting',
     );
   });
 
@@ -62,9 +62,9 @@ describe("Editor validation", () => {
             data: { text: "Option B", exclusive: true },
           },
         ],
-      })
+      }),
     ).rejects.toThrow(
-      "There should be a maximum of one exclusive option configured"
+      "There should be a maximum of one exclusive option configured",
     );
   });
 
@@ -84,7 +84,7 @@ describe("Editor validation", () => {
             data: { text: "Option B" },
           },
         ],
-      })
+      }),
     ).rejects.toThrow("At least one option must also set a data field");
   });
 
@@ -104,9 +104,9 @@ describe("Editor validation", () => {
             data: { text: "Option B" },
           },
         ],
-      })
+      }),
     ).rejects.toThrow(
-      "Set a data field for the Checklist and all options but one when never putting to user"
+      "Set a data field for the Checklist and all options but one when never putting to user",
     );
   });
 
@@ -130,9 +130,30 @@ describe("Editor validation", () => {
             data: { text: "Option C" },
           },
         ],
-      })
+      }),
     ).rejects.toThrow(
-      "Exactly one option should have a blank data field when never putting to user"
+      "Exactly one option should have a blank data field when never putting to user",
     );
+  });
+
+  describe("unique labels", () => {
+    describe("options without data values", () => {
+      test.todo("checklists - unique labels must be used for each option");
+      test.todo("grouped checklists - labels must be unique within groups");
+      test.todo("grouped checklists - labels can be repeated across groups");
+    });
+
+    describe("options with data values", () => {
+      test.todo("checklists - unique labels must be used for each option");
+      test.todo("checklists - unique data values must be used for each option");
+      test.todo("grouped checklists - labels must be unique within groups");
+      test.todo(
+        "grouped checklists - data values must be unique within groups",
+      );
+      test.todo("grouped checklists - labels can be repeated across groups");
+      test.todo(
+        "grouped checklists - data values can be repeated across groups",
+      );
+    });
   });
 });
