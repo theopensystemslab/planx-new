@@ -74,7 +74,7 @@ export default function Component(props: Props) {
   let bufferInMeters: number = area && area > 15000 ? 300 : 120;
   if (teamSlug === "tewkesbury") {
     // Tewkesbury services uniquely support "Strategic Local Partnership" boundary which requires larger buffer
-    bufferInMeters = 600;
+    bufferInMeters = 10000;
   }
 
   const previousFile =
