@@ -54,6 +54,8 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a successful payment", async ({ page }) => {
+    await setGovPayReferrer(page);
+
     const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
@@ -87,6 +89,8 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a retry attempt for a failed GOV.UK payment", async ({ page }) => {
+    await setGovPayReferrer(page);
+
     const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
@@ -146,6 +150,8 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a retry attempt for a cancelled GOV.UK payment", async ({ page }) => {
+    await setGovPayReferrer(page);
+
     const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
@@ -197,12 +203,6 @@ test.describe("Gov Pay integration @regression", async () => {
   });
 
   test("a retry attempt for an abandoned GOV.UK payment", async ({ page }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(document, "referrer", {
-        get: () => "https://card.payments.service.gov.uk/",
-      });
-    });
-
     const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
@@ -212,7 +212,7 @@ test.describe("Gov Pay integration @regression", async () => {
       cardNumber: cards.successful_card_number,
     });
 
-    // abandon the payment and return to PlanX
+    // Abandon the payment and navigate back to PlanX
     await page.goto(previewURL);
 
     // ensure that data stored in the session matches the latest payment attempt
@@ -233,11 +233,13 @@ test.describe("Gov Pay integration @regression", async () => {
     ).toBe(true);
 
     // resume the session via a magic link
-    await page.goto(`${previewURL}&sessionId=${sessionId}`);
-    await page.locator("#email").fill(context.user.email);
-    await page.getByTestId("continue-button").click();
+    await resumeSessionViaMagicLink({ page, context });
+
     await page.getByText("Retry payment").click();
     await page.getByText("Continue with your payment").click();
+
+    await setGovPayReferrer(page);
+
     await submitCardDetails(page);
 
     const { paymentId } = await waitForPaymentResponse(page, context);
@@ -266,12 +268,6 @@ test.describe("Gov Pay integration @regression", async () => {
   test("a retry attempt for an abandoned and then cancelled GOV.UK payment", async ({
     page,
   }) => {
-    await page.addInitScript(() => {
-      Object.defineProperty(document, "referrer", {
-        get: () => "https://card.payments.service.gov.uk/",
-      });
-    });
-
     const sessionId = await navigateToPayComponent(page, context);
     context.sessionIds!.push(sessionId);
 
@@ -283,12 +279,13 @@ test.describe("Gov Pay integration @regression", async () => {
     });
 
     // abandon the payment and return to PlanX via a magic link
-    await page.goto(`${previewURL}&sessionId=${sessionId}`);
-    await page.locator("#email").fill(context.user.email);
-    await page.getByTestId("continue-button").click();
+    await resumeSessionViaMagicLink({ page, context });
 
     // resume the payment and cancel it
     await page.getByText("Retry payment").click();
+
+    await setGovPayReferrer(page);
+
     await page.getByText("Cancel and go back to try the payment again").click();
 
     // retry and complete the payment
@@ -297,7 +294,9 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
+
     await submitCardDetails(page);
+
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
       context,
@@ -325,6 +324,9 @@ test.describe("Gov Pay integration @regression", async () => {
       page,
       cardNumber: cards.successful_card_number,
     });
+
+    await setGovPayReferrer(page);
+
     await submitCardDetails(page);
     const { paymentId: actualPaymentId } = await waitForPaymentResponse(
       page,
@@ -341,10 +343,7 @@ test.describe("Gov Pay integration @regression", async () => {
     ).toBeVisible();
     // ...with a link back to PlanX
     await page.locator("a").getByText("View your payment summary").click();
-    // As the application is submitted, we can't view the confirmation page again and see a generic error
-    await expect(
-      page.locator("h1").getByText("We can't find your application"),
-    ).toBeVisible();
+    await expect(page.getByText("Application sent")).toBeVisible();
   });
 });
 
@@ -422,4 +421,35 @@ async function findSession({
       { sessionId },
     );
   return response.lowcal_sessions[0];
+}
+
+async function resumeSessionViaMagicLink({
+  page,
+  context,
+}: {
+  page: Page;
+  context: TestContext;
+}) {
+  await page.goto(`${previewURL}&sessionId=${context.sessionIds?.[0]}`);
+  await page.locator("#email").fill(context.user.email);
+  await page.getByTestId("continue-button").click();
+}
+
+/**
+ * Mock the document.referrer property within this test context
+ *
+ * referrer is not set when running in localhost, but our frontend
+ * depends on this header to skip the reconciliation page for started payments
+ *
+ * Router interception is not a reliable alternative here - it's likely that
+ * GovPay are stripping some headers on redirect
+ *
+ * Ref: editor.planx.uk/src/pages/Preview/ResumePage.tsx
+ */
+async function setGovPayReferrer(page: Page) {
+  await page.addInitScript(() => {
+    Object.defineProperty(document, "referrer", {
+      get: () => "https://card.payments.service.gov.uk/",
+    });
+  });
 }
