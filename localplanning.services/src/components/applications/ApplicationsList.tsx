@@ -5,6 +5,7 @@ import { InvalidLink } from "./errors/InvalidLink";
 import { ExpiredLink } from "./errors/ExpiredLink";
 import { ConsumedLink } from "./errors/ConsumedLink";
 import { UnhandledError } from "./errors/UnhandledError";
+import { NoApplications } from "./errors/NoApplications";
 
 export const ApplicationsList: React.FC = () => {
   const { applications: { drafts, submitted }, isLoading, error } = useFetchApplications();
@@ -26,20 +27,8 @@ export const ApplicationsList: React.FC = () => {
   }
 
   if (!drafts.length && !submitted.length) {
-    return (
-      <section className="styled-content">
-        <h2>You have no submitted or saved applications</h2>
-        <p>This is where you'll see all your progress with planning services. You can track both submitted applications and work on saved drafts.
-        </p>
-        <br />
-        <h3>Ready to get started?</h3>
-        <p>Find your local planning authority to start applications, submit notifications, or get planning guidance.</p>
-        <p><a href="./search/" className="button button--primary button--medium">
-          Find local planning services
-        </a></p>
-      </section>
-    )
-  };
+    return <NoApplications />;
+  }
 
   return (
     <div className="flex flex-col gap-8 max-w-3xl">
