@@ -1,4 +1,3 @@
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -18,9 +17,11 @@ import { getQuarter } from "date-fns";
 import React, { useState } from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import SettingsSection from "ui/editor/SettingsSection";
+import Caret from "ui/icons/Caret";
 
 import { SubscriptionProps } from "../types";
 import {
+  formatUKFiscalYear,
   getUKFiscalYear,
   getUKFiscalYearQuarter,
   quarterlyInvoiceDates,
@@ -125,7 +126,7 @@ const ThisQuarterServiceChargeCard = ({
         >
           <CardContent sx={{ height: "100%" }}>
             <Typography variant="h3" component="div" gutterBottom>
-              {`Q${thisQuarter} FY ${thisFiscalYear}`}
+              {`Q${thisQuarter} ${formatUKFiscalYear(thisFiscalYear)}`}
             </Typography>
             <Typography variant="body2" mt={2}>
               <strong>
@@ -183,7 +184,7 @@ const AnnualServiceChargeCards = ({
         >
           <CardContent sx={{ height: "100%" }}>
             <Typography variant="h3" component="div" gutterBottom>
-              {`FY ${year}`}
+              {formatUKFiscalYear(year)}
             </Typography>
             <Typography variant="body2" mt={2}>
               <strong>
@@ -208,7 +209,7 @@ const ServiceChargesByQuarterAccordion = ({
   return (
     <Accordion defaultExpanded>
       <AccordionSummary
-        expandIcon={<ArrowDropDownIcon />}
+        expandIcon={<Caret />}
         aria-controls="by-quarter-content"
         id="by-quarter-header"
       >
@@ -246,7 +247,7 @@ const ServiceChargesByMonthAccordion = ({
   return (
     <Accordion>
       <AccordionSummary
-        expandIcon={<ArrowDropDownIcon />}
+        expandIcon={<Caret />}
         aria-controls="by-month-content"
         id="by-month-header"
       >
@@ -284,7 +285,7 @@ const ServiceChargeByFlowAccordion = ({
   return (
     <Accordion>
       <AccordionSummary
-        expandIcon={<ArrowDropDownIcon />}
+        expandIcon={<Caret />}
         aria-controls="by-service-content"
         id="by-service-header"
       >
