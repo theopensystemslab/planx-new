@@ -5,6 +5,7 @@ import { InvalidLink } from "./errors/InvalidLink";
 import { ExpiredLink } from "./errors/ExpiredLink";
 import { ConsumedLink } from "./errors/ConsumedLink";
 import { UnhandledError } from "./errors/UnhandledError";
+import { NoApplications } from "./errors/NoApplications";
 
 export const ApplicationsList: React.FC = () => {
   const { applications: { drafts, submitted }, isLoading, error } = useFetchApplications();
@@ -26,7 +27,7 @@ export const ApplicationsList: React.FC = () => {
   }
 
   if (!drafts.length && !submitted.length) {
-    return <p>TODO: Landing page for user with no applications</p>;
+    return <NoApplications />;
   }
 
   return (
