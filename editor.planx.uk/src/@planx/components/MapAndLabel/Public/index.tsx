@@ -11,6 +11,7 @@ import { SiteAddress } from "@planx/components/FindProperty/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { GraphError } from "components/Error/GraphError";
 import { GeoJsonObject } from "geojson";
+import { useFormErrorFocus } from "hooks/useFormErrorFoucs";
 import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -76,6 +77,21 @@ const VerticalFeatureTabs: React.FC = () => {
       return Number(f.properties?.label);
     },
   ]);
+
+  const tabErrorMapping = formik.values.schemaData.map((_, index) => ({
+    tabIndex: index,
+    fieldPath: `schemaData[${index}]`,
+  }));
+
+  useFormErrorFocus({
+    errors: formik.errors,
+    isSubmitting: formik.isSubmitting,
+    isValidating: formik.isValidating,
+    submitCount: formik.submitCount,
+    onErrorInTab: editFeatureInForm,
+    activeTabIndex: activeIndex,
+    tabErrorMapping: tabErrorMapping,
+  });
 
   return (
     <Box

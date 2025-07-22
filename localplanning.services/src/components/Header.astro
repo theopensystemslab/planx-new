@@ -10,20 +10,25 @@ import SkipLink from "./a11y/SkipLink.astro";
   <SkipLink />
   <Container>
     <div
-      class="flex flex-col lg:flex-row justify-between lg:items-center py-6 gap-4"
+      class="flex flex-col sm:flex-row justify-between sm:items-center pt-6 pb-4 sm:py-6 sm:gap-4 relative"
     >
       <a href="/">
         <Image
           src={lpsLogo}
           alt="Local planning services logo"
-          class="clamp-[w,24,32] text-bg-light"
+          class="clamp-[w,24,32] text-bg-light absolute top-5 left-0 sm:relative sm:top-0"
+          loading="eager"
         />
       </a>
-      <nav class="flex items-center clamp-[gap,7,8]">
-        <ul class="flex clamp-[gap,6,8]">
+      <nav class="flex items-end sm:items-center gap-4 sm:clamp-[gap,4,10] flex-col-reverse sm:flex-row">
+        <ul class="flex clamp-[gap,4,6] xs:clamp-[gap,4,10] items-center justify-between xs:justify-end sm:justify-start w-full xs:w-auto">
           <li>
             <a class="paragraph-link font-semibold text-body-md" href="/"
               >Home</a>
+          </li>
+          <li>
+            <a class="paragraph-link font-semibold text-body-md" href="/search"
+              >Find services</a>
           </li>
           <li>
             <a class="paragraph-link font-semibold text-body-md" href="/directory"
@@ -34,7 +39,10 @@ import SkipLink from "./a11y/SkipLink.astro";
               >About</a>
           </li>
         </ul>
-        <Button href="/applications" variant="secondary" size="small"
+        <Button 
+          href="/applications" 
+          variant="secondary" 
+          size="small"
           >Your applications</Button
         >
       </nav>

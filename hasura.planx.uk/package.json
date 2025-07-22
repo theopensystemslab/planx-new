@@ -6,10 +6,7 @@
     "start": "hasura console --envfile ./../.env"
   },
   "packageManager": "pnpm@10.10.0",
-  "onlyBuiltDependencies": ["hasura-cli"],
-  "pnpm": {
-    "overrides": {
-      "follow-redirects@<=1.15.5": ">=1.15.6"
-    }
-  }
+  "onlyBuiltDependencies": [
+    "hasura-cli"
+  ]
 }

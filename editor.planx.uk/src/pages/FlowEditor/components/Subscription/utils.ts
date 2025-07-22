@@ -28,7 +28,9 @@ export const getUKFiscalYear = (fyQuarter: number, calendarYear: number) => {
   return calendarYear;
 };
 
-// Eg 2025 => "FY 2025/26"
+/**
+ * @example 2025 => "FY 2025/26"
+ */
 export const formatUKFiscalYear = (fiscalYear: number): string => {
   const abbreviatedYear = Number(fiscalYear.toString().slice(-2));
   return `FY ${fiscalYear}/${abbreviatedYear + 1}`;

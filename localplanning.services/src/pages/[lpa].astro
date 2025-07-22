@@ -26,17 +26,17 @@ if (!lpaData) return Astro.redirect("/404");
 
 <Layout>
   <LpaMasthead
-    title="Send a planning application to {lpaName}"
+    title="Local planning services offered by {lpaName}"
     lpaName={lpaData.name}
     logo={lpaData.theme.logo}
     backgroundColour={lpaData.theme?.primaryColour}
   />
-  <Container paddingY>
-    <div class="flex flex-col gap-6">
+  <Container>
+    <div class="flex flex-col gap-4 clamp-[py,4,6]">
       <Accordion title="Start a planning application" id="apply-accordion">
-        <ul class="max-w-6xl">
+        <ul class="flex flex-col gap-4">
           {
-            lpaData.services.map((service) => (
+            lpaData.applyServices.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
@@ -46,9 +46,9 @@ if (!lpaData) return Astro.redirect("/404");
         </ul>
       </Accordion>
       <Accordion title="Notify your authority" id="notify-accordion">
-        <ul class="max-w-6xl">
+        <ul class="flex flex-col gap-4">
           {
-            lpaData.services.map((service) => (
+            lpaData.notifyServices.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
@@ -58,9 +58,9 @@ if (!lpaData) return Astro.redirect("/404");
         </ul>
       </Accordion>
       <Accordion title="Get planning guidance" id="guidance-accordion">
-        <ul class="max-w-6xl">
+        <ul class="flex flex-col gap-4">
           {
-            lpaData.services.map((service) => (
+            lpaData.guidanceServices.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
@@ -88,11 +88,6 @@ if (!lpaData) return Astro.redirect("/404");
     if (!detailsEl) return;
 
     detailsEl.open = true;
-
-    // Wait for the accordion animation to complete
-    setTimeout(() => {
-      detailsEl.scrollIntoView({ behavior: "smooth" });
-    }, 400);
   };
 
   document.addEventListener("astro:page-load", () => {

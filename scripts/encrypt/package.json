@@ -4,19 +4,21 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "encrypt": "ts-node encrypt.ts",
-    "decrypt": "ts-node decrypt.ts"
+    "encrypt": "tsx encrypt.ts",
+    "decrypt": "tsx decrypt.ts"
   },
   "packageManager": "pnpm@10.10.0",
   "keywords": [],
   "dependencies": {
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#b594e17",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.4.3"
   },
   "author": "",
   "license": "ISC",
   "pnpm": {
-    "onlyBuiltDependencies": ["@opensystemslab/planx-core"]
+    "onlyBuiltDependencies": [
+      "@opensystemslab/planx-core"
+    ]
   }
 }

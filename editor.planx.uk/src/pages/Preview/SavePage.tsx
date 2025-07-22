@@ -1,3 +1,4 @@
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -25,19 +26,27 @@ export const SaveSuccess: React.FC<{
     buttonText="Start a new application"
     onButtonClick={removeSessionIdSearchParam}
   >
-    <Typography variant="body2">
-      We have sent a link to {saveToEmail}. Use the link to continue your
-      application.
-      <br />
-      <br />
-      You have until {expiryDate} to complete this application.
-      <br />
-      <br />
-      Your application will be deleted if you do not complete it by this date.
-      <br />
-      <br />
-      You may now close this tab.
-    </Typography>
+    <Stack spacing={1}>
+      <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+        We have sent a link to:
+      </Typography>
+      <Typography
+        component="span"
+        variant="body2"
+        sx={{
+          wordBreak: "break-word",
+          overflowWrap: "anywhere",
+        }}
+      >
+        {saveToEmail}.
+      </Typography>
+      <Typography variant="body2">
+        Use the link to continue your application. You have until {expiryDate}{" "}
+        to complete this application. Your application will be deleted if you do
+        not complete it by this date.
+      </Typography>
+      <Typography variant="body2">You may now close this tab.</Typography>
+    </Stack>
   </StatusPage>
 );
 

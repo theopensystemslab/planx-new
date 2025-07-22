@@ -252,14 +252,6 @@ const ResumePage: React.FC = () => {
   };
 
   /**
-   * Check if applicant has initialised the payment process
-   * XXX: Pay component is still responsible for validating payment status and updating passport
-   */
-  const isPaymentCreated = (data: Session): boolean => {
-    return data.govUkPayment?.state?.status === "created";
-  };
-
-  /**
    * Query DB to validate that sessionID & email match
    */
   const validateSessionId = async () => {
@@ -274,8 +266,12 @@ const ResumePage: React.FC = () => {
           const reconciledSessionData = response.data.reconciledSessionData;
           setReconciliationResponse(response.data);
           resumeSession(reconciledSessionData);
+          const shouldSkipReconciliation = response.data.message.match(
+            /Payment process initiated, skipping reconciliation/,
+          );
+
           // Skip reconciliation page if applicant has started payment
-          isPaymentCreated(reconciledSessionData)
+          shouldSkipReconciliation
             ? continueApplication()
             : setPageStatus(Status.Validated);
         }

@@ -15,7 +15,7 @@ import {
   sumServiceCharges,
 } from "../utils";
 
-const DISCOUNT_THRESHOLD = 10000; // £10k
+const DISCOUNT_THRESHOLD = 10_000; // £10k
 
 export const Discount = ({ serviceCharges }: SubscriptionProps) => {
   // "This fiscal year" is relative to when you access this page
@@ -59,16 +59,19 @@ const DiscountProgress = ({ serviceCharges }: SubscriptionProps) => {
     <Box sx={{ width: "100%" }}>
       <Gauge
         height={160}
-        value={percentOfThreshold > 100 ? 100 : percentOfThreshold}
+        value={Math.min(percentOfThreshold, 100)}
         startAngle={-90}
         endAngle={90}
         sx={{
-          ["& .MuiGauge-valueText"]: {
+          [`& .${gaugeClasses.valueText}`]: {
             fontSize: 20,
             transform: "translate(0px,-30px)",
           },
           [`& .${gaugeClasses.valueArc}`]: {
-            fill: (theme) => theme.palette.success.main,
+            fill: (theme) =>
+              percentOfThreshold < 100
+                ? theme.palette.background.dark
+                : theme.palette.success.main,
           },
         }}
         text={() => `${sumServiceCharges(serviceCharges)} / £10k`}
