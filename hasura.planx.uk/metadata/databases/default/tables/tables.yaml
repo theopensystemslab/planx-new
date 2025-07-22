@@ -30,6 +30,7 @@
 - "!include public_reconciliation_requests.yaml"
 - "!include public_revoked_tokens.yaml"
 - "!include public_s3_applications.yaml"
+- "!include public_service_charges.yaml"
 - "!include public_sessions.yaml"
 - "!include public_submission_services_log.yaml"
 - "!include public_submission_services_summary.yaml"
