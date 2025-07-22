@@ -33,7 +33,8 @@ export const Discount = ({ serviceCharges }: SubscriptionProps) => {
       </Typography>
       <Typography variant="body2" color="text.secondary">
         Service charges exceeding £10k per fiscal year count as a discount
-        towards your next renewal cost of Plan✕.
+        towards your next renewal cost of Plan✕. Upon reaching £10k, 50% of the
+        excess amount is applied as a discount.
       </Typography>
       {serviceChargesThisFiscalYear.length > 0 ? (
         <DiscountProgress serviceCharges={serviceChargesThisFiscalYear} />
@@ -51,7 +52,8 @@ const DiscountProgress = ({ serviceCharges }: SubscriptionProps) => {
   const amountToGo = DISCOUNT_THRESHOLD - rawAmountCollected;
   const numberSubmissionsToGo = amountToGo / DEFAULT_SERVICE_CHARGE_AMOUNT;
 
-  const amountExceeded = rawAmountCollected - DISCOUNT_THRESHOLD;
+  // Once threshold is exceeded, only 50% of excess amount is actually eligible for discount
+  const amountExceeded = (rawAmountCollected - DISCOUNT_THRESHOLD) / 2;
 
   return (
     <Box sx={{ width: "100%" }}>

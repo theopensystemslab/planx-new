@@ -1,4 +1,4 @@
-import { getByLabelText, within } from "@testing-library/react";
+import { within } from "@testing-library/react";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";

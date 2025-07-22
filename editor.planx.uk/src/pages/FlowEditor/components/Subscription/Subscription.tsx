@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import React from "react";
 import SettingsSection from "ui/editor/SettingsSection";
 
+import { Contract } from "./components/Contract";
 import { Discount } from "./components/Discount";
 import { ServiceCharges } from "./components/ServiceCharges";
 import { SubscriptionProps } from "./types";
@@ -18,8 +19,7 @@ export const Subscription = ({ serviceCharges }: SubscriptionProps) => (
       </Typography>
     </SettingsSection>
     <ServiceCharges serviceCharges={serviceCharges} />
-    {/* <Contract /> */}
     <Discount serviceCharges={serviceCharges} />
-    {/* <SSLRenewal /> */}
+    <Contract />
   </Container>
 );
