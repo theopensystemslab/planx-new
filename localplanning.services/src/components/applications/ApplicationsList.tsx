@@ -26,8 +26,20 @@ export const ApplicationsList: React.FC = () => {
   }
 
   if (!drafts.length && !submitted.length) {
-    return <p>TODO: Landing page for user with no applications</p>;
-  }
+    return (
+      <section className="markdown-content max-w-3xl text-body-lg">
+        <h2>You have not submitted or saved any services yet</h2>
+        <p>This is where you'll see all your planning services once you start using them. You can track both submitted applications and work on saved drafts.
+        </p>
+        <br />
+        <h2>Ready to get started?</h2>
+        <p>Find your local planning authority to start applications, submit notifications, or get planning guidance.</p>
+        <p><a href="./search/" className="button button--primary button--medium">
+          Find local planning services
+        </a></p>
+      </section>
+    )
+  };
 
   return (
     <div className="flex flex-col gap-8 max-w-3xl">
