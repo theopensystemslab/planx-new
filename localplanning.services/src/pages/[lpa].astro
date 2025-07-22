@@ -22,6 +22,14 @@ const { lpaData } = Astro.props;
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 if (!lpaData) return Astro.redirect("/404");
+
+const testingService = {
+  name: "Testing submission service",
+  slug: "testing-submission-service",
+  summary: "A test service for submissions",
+  description: "A test service for submissions",
+  url: "https://4962.planx.pizza/buckinghamshire/testing-submission-service/published",
+};
 ---
 
 <Layout>
@@ -35,6 +43,10 @@ if (!lpaData) return Astro.redirect("/404");
     <div class="flex flex-col gap-4 clamp-[py,4,6]">
       <Accordion title="Start a planning application" id="apply-accordion">
         <ul class="flex flex-col gap-4">
+           <ServiceCard
+            service={testingService}
+            team={{ domain: lpaData.domain }}
+          />
           {
             lpaData.applyServices.map((service) => (
               <ServiceCard
