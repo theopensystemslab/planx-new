@@ -54,7 +54,7 @@ const nodeTagsSchema: SchemaOf<NodeTags> = object({
     .of(
       string()
         .oneOf([...NODE_TAGS], "Invalid tag")
-        .required("Tag cannot be empty")
+        .required("Tag cannot be empty"),
     )
     .optional()
     .default([]),
@@ -63,10 +63,8 @@ const nodeTagsSchema: SchemaOf<NodeTags> = object({
 /**
  * Yup validation schema describing BaseNodeData fields
  */
-export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> = 
-  nodeTagsSchema
-    .concat(moreInformationSchema)
-    .concat(templatedNodeSchema);
+export const baseNodeDataValidationSchema: SchemaOf<BaseNodeData> =
+  nodeTagsSchema.concat(moreInformationSchema).concat(templatedNodeSchema);
 
 export interface Option {
   id: string;
