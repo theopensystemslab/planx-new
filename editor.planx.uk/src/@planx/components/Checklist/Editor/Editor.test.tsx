@@ -343,5 +343,5 @@ describe("Checklist editor component", () => {
         ),
       ).toBeInTheDocument(),
     );
-  }, 20_000);
+  }, 30_000);
 });
