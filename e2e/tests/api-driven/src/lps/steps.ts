@@ -7,6 +7,7 @@ import {
   login,
   setup,
 } from "./helpers.js";
+import { TEST_EMAIL } from "../globalHelpers.js";
 
 interface Success {
   status: 200;
@@ -28,7 +29,7 @@ export class CustomWorld extends World {
 }
 
 Before<CustomWorld>("@lps-magic-links", async function () {
-  this.email = "me@example.com";
+  this.email = TEST_EMAIL;
 
   const sessionIds = await setup({ email: this.email });
   this.sessionIds = sessionIds;
