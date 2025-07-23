@@ -51,8 +51,8 @@ const PostcodeSearch: React.FC<Props> = ({ action }) => {
     // TODO: Postcode lookup
     // Hardcoded to Bucks for now
     action 
-      ? await navigate(`/buckinghamshire?action=${action}`)
-      : await navigate("/buckinghamshire")
+      ? await navigate(`/barnet?action=${action}`)
+      : await navigate("/barnet")
   };
 
   return (
