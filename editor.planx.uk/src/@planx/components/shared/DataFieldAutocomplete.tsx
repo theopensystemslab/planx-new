@@ -16,6 +16,7 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   errorMessage?: string;
+  "data-testid"?: string;
 }
 
 const renderOptions: AutocompleteProps<
@@ -60,6 +61,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
         <AutocompleteInput
           id="data-field-autocomplete"
           key="data-field-autocomplete"
+          data-testid={props["data-testid"]}
           placeholder="Data field"
           required={Boolean(props.required)}
           onChange={handleChange}

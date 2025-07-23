@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { BaseOptionsEditor } from "@planx/components/shared/BaseOptionsEditor";
 import { getOptionsSchemaByFn } from "@planx/components/shared/utils";
+import { getIn } from "formik";
 import React from "react";
 import { FormikHookReturn } from "types";
 import ListManager from "ui/editor/ListManager/ListManager";
@@ -33,7 +34,7 @@ export const ExclusiveOrOptionManager = ({
 
   return (
     <Box mt={2}>
-      <ErrorWrapper error={formik.errors.allRequired as string}>
+      <ErrorWrapper error={getIn(formik.errors, "allRequired")}>
         <Box mt={1}>
           <ListManager
             values={exclusiveOptions || []}

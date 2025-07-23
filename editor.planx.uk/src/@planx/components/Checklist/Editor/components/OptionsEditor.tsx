@@ -32,6 +32,7 @@ const ChecklistOptionsEditor: React.FC<ChecklistOptionsEditorProps> = ({
       showValueField={showValueField}
       showDescriptionField={true}
       disabled={disabled}
+      index={index}
     >
       {typeof index !== "undefined" && groups && onMoveToGroup && (
         <SimpleMenu
