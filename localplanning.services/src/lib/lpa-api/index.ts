@@ -47,9 +47,33 @@ const TEAMS_ALLOW_LIST = [
   "west-berkshire",
 ] as const;
 
+const APPLICATION_SERVICE_SLUGS = [
+  "apply-for-planning-permission",
+  "camden-apply-for-planning-permission",
+  "apply-for-planning-permission-to-make-changes-to-a-flat",
+  "apply-for-a-lawful-development-certificate",
+  "camden-apply-for-a-lawful-development-certificate",
+  "apply-for-prior-approval",
+  "apply-for-listed-building-consent",
+  "apply-for-pre-application-advice",
+  "apply-for-building-regulations-applications",
+  "apply-for-building-regulations-notice",
+  "apply-for-regularisation",
+];
+
 const NOTIFY_SERVICE_SLUGS = [
   "report-a-planning-breach",
   "camden-report-a-planning-breach",
+  "report-a-derelict-or-empty-building",
+  "report-a-potential-dangerous-structure",
+  "let-the-planning-team-know-about-an-issue",
+];
+
+const GUIDANCE_SERVICE_SLUGS = [
+  "find-out-if-you-need-planning-permission",
+  "check-if-you-need-planning-permission",
+  "check-your-planning-constraints",
+  "check-constraints-on-a-property",
 ];
 
 export async function fetchAllLPAs(): Promise<LPA[]> {
@@ -62,6 +86,8 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
         variables: {
           teamSlugs: TEAMS_ALLOW_LIST,
           notifyServiceSlugs: NOTIFY_SERVICE_SLUGS,
+          applicationServiceSlugs: APPLICATION_SERVICE_SLUGS,
+          guidanceServiceSlugs: GUIDANCE_SERVICE_SLUGS,
         },
       }),
     });

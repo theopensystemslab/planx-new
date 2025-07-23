@@ -1,7 +1,12 @@
 import gql from "graphql-tag";
 
 export const GET_LPAS_QUERY = gql`
-  query GetLPAs($teamSlugs: [String!], $notifyServiceSlugs: [String!]) {
+  query GetLPAs(
+    $teamSlugs: [String!]
+    $notifyServiceSlugs: [String!]
+    $applicationServiceSlugs: [String!]
+    $guidanceServiceSlugs: [String!]
+  ) {
     lpas: teams(
       order_by: { name: asc }
       where: { slug: { _in: $teamSlugs } }
@@ -16,7 +21,7 @@ export const GET_LPAS_QUERY = gql`
       applyServices: flows(
         where: {
           status: { _eq: online }
-          slug: { _nin: $notifyServiceSlugs }
+          slug: { _in: $applicationServiceSlugs }
           published_flows: { has_send_component: { _eq: true } }
         }
         order_by: { name: asc }
@@ -26,6 +31,7 @@ export const GET_LPAS_QUERY = gql`
       guidanceServices: flows(
         where: {
           status: { _eq: online }
+          slug: { _in: $guidanceServiceSlugs }
           published_flows: { has_send_component: { _eq: false } }
         }
         order_by: { name: asc }
