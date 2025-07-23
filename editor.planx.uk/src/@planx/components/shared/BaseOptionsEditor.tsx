@@ -17,6 +17,7 @@ export interface BaseOptionsEditorProps {
   onChange: (newVal: Option) => void;
   children?: ReactNode;
   disabled?: boolean;
+  index: number;
 }
 
 export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
@@ -81,6 +82,7 @@ export const BaseOptionsEditor: React.FC<BaseOptionsEditorProps> = (props) => (
     {props.showValueField && (
       <DataFieldAutocomplete
         key={`${props.value.id}-data-field-autocomplete`}
+        data-testid={`data-field-autocomplete-option-${props.index}`}
         schema={props.schema}
         value={props.value.data.val}
         disabled={props.disabled}
