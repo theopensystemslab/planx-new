@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, boolean, mixed, number, object, SchemaOf, string } from "yup";
+import { array, boolean, mixed, number, object, string } from "yup";
 
 import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
@@ -276,6 +276,91 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
           message:
             "Exactly one option should have a blank data field when never putting to user",
         });
+      },
+    })
+    .test({
+      name: "uniqueLabels",
+      test: function ({ options }) {
+        if (!options) return true;
+
+        const uniqueLabels = new Set(options.map(({ data: { text } }) => text));
+        const allUnique = uniqueLabels.size === options.length;
+        if (allUnique) return true;
+
+        return this.createError({
+          path: "options",
+          message: "Options must have unique labels",
+        });
+      },
+    })
+    .test({
+      name: "uniqueLabelsWithinGroups",
+      test: function ({ groupedOptions }) {
+        if (!groupedOptions) return true;
+
+        for (const group of groupedOptions) {
+          if (!group.children) continue;
+
+          const uniqueLabels = new Set(
+            group.children.map(({ data: { text } }) => text),
+          );
+          const allUnique = uniqueLabels.size === group.children.length;
+
+          if (!allUnique) {
+            return this.createError({
+              path: "options",
+              message: "Options within a single group must have unique labels",
+            });
+          }
+        }
+
+        return true;
+      },
+    })
+    .test({
+      name: "uniqueDataValues",
+      test: function ({ options }) {
+        if (!options) return true;
+
+        const dataValues = options
+          .map(({ data: { val } }) => val)
+          .filter(Boolean);
+
+        const uniqueDataValues = new Set(dataValues);
+
+        const allUnique = uniqueDataValues.size === dataValues.length;
+        if (allUnique) return true;
+
+        return this.createError({
+          path: "options",
+          message: "Options must have unique data values",
+        });
+      },
+    })
+    .test({
+      name: "uniqueDataValuesWithinGroup",
+      test: function ({ groupedOptions }) {
+        if (!groupedOptions) return true;
+
+        for (const group of groupedOptions) {
+          if (!group.children) continue;
+
+          const dataValues = group.children
+            .map(({ data: { val } }) => val)
+            .filter(Boolean);
+
+          const uniqueDataValues = new Set(dataValues);
+          const allUnique = uniqueDataValues.size === dataValues.length;
+
+          if (!allUnique) {
+            return this.createError({
+              path: "options",
+              message: "Data values must be unique within groups",
+            });
+          }
+        }
+
+        return true;
       },
     }),
 );
