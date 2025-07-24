@@ -286,5 +286,44 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
             "Exactly one option should have a blank data field when never putting to user",
         });
       },
+    })
+    .test({
+      name: "uniqueLabels",
+      test: function ({ options }) {
+        if (!options) return true;
+
+        const uniqueLabels = new Set(options.map(({ data: { text } }) => text));
+        const allUnique = uniqueLabels.size === options.length;
+        if (allUnique) return true;
+
+        return this.createError({
+          path: "options",
+          message: "Options must have unique labels",
+        });
+      },
+    })
+    .test({
+      name: "uniqueLabelsWithinGroups",
+      test: function ({ groupedOptions }) {
+        if (!groupedOptions) return true;
+
+        for (const group of groupedOptions) {
+          if (!group.children) continue;
+
+          const uniqueLabels = new Set(
+            group.children.map(({ data: { text } }) => text),
+          );
+          const allUnique = uniqueLabels.size === group.children.length;
+
+          if (!allUnique) {
+            return this.createError({
+              path: "options",
+              message: "Options within a single group must have unique labels",
+            });
+          }
+        }
+
+        return true;
+      },
     }),
 );
