@@ -195,9 +195,84 @@ describe("Editor validation", () => {
 
   describe("unique labels", () => {
     describe("options without data values", () => {
-      test.todo("checklists - unique labels must be used for each option");
-      test.todo("grouped checklists - labels must be unique within groups");
-      test.todo("grouped checklists - labels can be repeated across groups");
+      test("checklists - unique labels must be used for each option", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label" },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
+      test("grouped checklists - labels must be unique within groups", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            groupedOptions: [
+              {
+                title: "Section 1",
+                children: [
+                  {
+                    id: "a",
+                    data: { text: "Non-unique label" },
+                  },
+                  {
+                    id: "b",
+                    data: { text: "Non-unique label" },
+                  },
+                ],
+              },
+            ],
+          }),
+        ).rejects.toThrow(
+          "Options within a single group must have unique labels",
+        );
+      });
+
+      test("grouped checklists - labels can be repeated across groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Foo" },
+                },
+              ],
+            },
+            {
+              title: "Section 2",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Bar" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
     });
 
     describe("options with data values", () => {
