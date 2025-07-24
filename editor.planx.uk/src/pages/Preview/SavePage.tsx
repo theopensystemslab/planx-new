@@ -1,3 +1,4 @@
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
@@ -38,12 +39,21 @@ export const SaveSuccess: React.FC<{
           overflowWrap: "anywhere",
         }}
       >
-        {saveToEmail}.
+        {saveToEmail}
       </Typography>
       <Typography variant="body2">
         Use the link to continue your application. You have until {expiryDate}{" "}
         to complete this application. Your application will be deleted if you do
         not complete it by this date.
+      </Typography>
+      <Typography variant="body2">
+        To see all of your applications visit{" "}
+        <Link
+          href="https://localplanning.4962.planx.pizza/applications/"
+          target="_blank"
+        >
+          Local planning services (opens in a new tab)
+        </Link>
       </Typography>
       <Typography variant="body2">You may now close this tab.</Typography>
     </Stack>
