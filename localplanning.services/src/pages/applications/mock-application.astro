@@ -1,0 +1,74 @@
+---
+import BlankLayout from "@layouts/BlankLayout.astro";
+import Container from "@components/Container.astro";
+import Button from "@components/Button.astro";
+import { Image } from "astro:assets";
+import mockBoundary from "/public/mock-boundary.jpg";
+
+const currentDate = new Date();
+const futureDate = new Date(currentDate);
+futureDate.setDate(currentDate.getDate() + 28);
+
+const dateFormatOptions: Intl.DateTimeFormatOptions = { 
+  day: 'numeric', 
+  month: 'short', 
+  year: 'numeric' 
+};
+
+const formattedCurrentDate = currentDate.toLocaleDateString('en-GB', dateFormatOptions);
+const formattedFutureDate = futureDate.toLocaleDateString('en-GB', dateFormatOptions);
+---
+
+<BlankLayout>
+  <Container paddingY>
+    <div class="max-w-3xl mx-auto">
+      <section class="bg-bg-light p-8">
+        <h1 class="text-heading-md">Apply for planning permission</h3>
+          <div class="py-4">
+            <dl class="grid grid-cols-2 *:border-b *:border-gray-300 *:py-2 *:align-top *:m-0 [&>dt]:font-bold">
+              <dt>Local planning authority</dt>
+              <dd>Barnet</dd>
+              <dt>Address</dt>
+              <dd>1, ARDEN ROAD, FINCHLEY, LONDON, BARNET, N3 3AB</dd>
+              <dt>Application reference</dt>
+              <dd>96f23ad1-bd31-46d7-afb4-f216ea6be536</dd>
+              <dt>Date submitted</dt>
+              <dd>{formattedCurrentDate}</dd>
+            </dl>
+          </div>
+      </section>
+
+      <section class="bg-white p-8 pb-0">
+        <p class="text-body-lg">You have until {formattedFutureDate} to view or print this application data.</p>
+        <Button variant="secondary">Print this page</Button>
+      </section>
+      
+      <section class="bg-white p-8">
+
+        <h2 class="text-heading-sm mt-5">Application</h3>
+        <div class="py-4">
+          <dl class="grid grid-cols-2 *:border-b *:border-gray-300 *:py-2 *:align-top *:m-0 [&>dt]:font-bold">
+            <dt>Property</dt>
+            <dd>1, ARDEN ROAD, FINCHLEY, LONDON, BARNET, N3 3AB</dd>
+            <dt>Site boundary</dt>
+            <dd>  
+              <Image
+                src={mockBoundary}
+                alt="Application site boundary"
+                class="w-full"
+              />
+            </dd>
+            <dt>Project</dt>
+            <dd>Construction of a new outbuilding</dd>
+            <dt>What will the outbuilding be used for?</dt>
+            <dd>Office</dd>
+            <dt>How will the outbuilding be used?</dt>
+            <dd>Personal use</dd>
+            <dt>Have the works already started?</dt>
+            <dd>No</dd>
+          </dl>
+        </div>
+      </section>
+    </div>
+  </Container>
+</BlankLayout>
