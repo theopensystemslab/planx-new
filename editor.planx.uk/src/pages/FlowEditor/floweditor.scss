@@ -42,6 +42,21 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
+@mixin folderStyle($width) {
+  &::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: $width;
+    height: 8px;
+    background-color: #666;
+    clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%);
+    border-top-left-radius: 2px;
+    z-index: -1;
+  }
+}
+
 // ------------------------------------------------
 
 #editor {
@@ -284,7 +299,7 @@ $fontMonospace: "Source Code Pro", monospace;
     content: "";
     position: absolute;
     top: 50%;
-    height: 2px;
+    height: $lineWidth;
     margin-top: -1px;
     width: calc(100% + ($editorPadding * 2));
     z-index: -1;
@@ -295,11 +310,11 @@ $fontMonospace: "Source Code Pro", monospace;
       transparent 40%,
       transparent 100%
     );
-    background-size: 12px 2px;
+    background-size: 12px $lineWidth;
     border: none;
     [data-layout="left-right"] & {
       top: unset;
-      width: 2px;
+      width: $lineWidth;
       height: 100vh;
       left: 50%;
       background-image: linear-gradient(
@@ -309,7 +324,7 @@ $fontMonospace: "Source Code Pro", monospace;
         transparent 50%,
         transparent 100%
       );
-      background-size: 2px 12px;
+      background-size: $lineWidth 12px;
     }
   }
 }
@@ -335,6 +350,30 @@ $fontMonospace: "Source Code Pro", monospace;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
+}
+
+.root-node-link {
+  background-image: $pixel;
+  background-position: top center;
+  background-size: $lineWidth;
+  background-repeat: repeat-y;
+  padding-top: ($padding * 2) !important;
+  &--end {
+    padding-bottom: ($padding * 2) !important;
+  }
+  > a {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+    padding: $padding;
+    color: $black;
+    background: white;
+    border-radius: 3px;
+    border: 1px solid $optionBorder;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    font-size: 14px;
+  }
 }
 
 .option {
@@ -413,6 +452,15 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
+.flow-child-nodes {
+  width: 100%;
+  .nested-decisions & {
+    border: $lineWidth dashed $lockedBorder;
+    margin-top: -$lineWidth;
+    padding: 0 ($padding * 2);
+  }
+}
+
 .portal {
   display: flex;
   flex-direction: column;
@@ -433,24 +481,56 @@ $fontMonospace: "Source Code Pro", monospace;
     background-image: $pixel;
     background-repeat: no-repeat;
     background-color: transparent;
+    min-width: 100%;
+    &--active {
+      min-width: 100%;
+    }
+    &:not(&--first) {
+      border: $lineWidth dashed $lockedBorder;
+      border-width: 0 $lineWidth 0 $lineWidth;
+    }
     [data-layout="top-down"] & {
       background-position: center top;
-      background-size: $lineWidth $padding;
+      background-size: $lineWidth ($padding * 2);
       > a {
-        margin: $padding 0 0;
+        margin: ($padding * 2) 0 0;
+        width: 100%;
         color: #fff;
+        span {
+          max-width: 100%;
+        }
       }
     }
     [data-layout="left-right"] & {
       background-position: left center;
       background-size: $padding $lineWidth;
+
       > a {
         margin: 0 0 0 $padding;
       }
     }
     > a {
-      background: #666;
+      background: $black;
       text-align: center;
+      @include folderStyle(60px);
+      &::before {
+        left: -1px;
+      }
+    }
+  }
+  &.internal-portal {
+    background: $black;
+    @include folderStyle(40px);
+  }
+
+  &.internal-portal.node-card {
+    align-items: flex-start;
+    @include folderStyle(75px);
+    &::before {
+      z-index: 1;
+      top: -10px;
+      height: 6px;
+      left: -4px;
     }
   }
   .portalMenu {
