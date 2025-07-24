@@ -23,7 +23,7 @@ const formattedFutureDate = futureDate.toLocaleDateString('en-GB', dateFormatOpt
   <Container paddingY>
     <div class="max-w-3xl mx-auto">
       <section class="bg-bg-light p-8">
-        <h1 class="text-heading-md">Apply for planning permission</h3>
+        <h1 class="text-heading-md">Apply for planning permission</h1>
           <div class="py-4">
             <dl class="grid grid-cols-2 *:border-b *:border-gray-300 *:py-2 *:align-top *:m-0 [&>dt]:font-bold">
               <dt>Local planning authority</dt>
@@ -40,12 +40,12 @@ const formattedFutureDate = futureDate.toLocaleDateString('en-GB', dateFormatOpt
 
       <section class="bg-white p-8 pb-0">
         <p class="text-body-lg">You have until {formattedFutureDate} to view or print this application data.</p>
-        <Button variant="secondary">Print this page</Button>
+        <button class="button button--secondary button--medium mt-1" id="print-button">Print or save as PDF</button>
       </section>
       
       <section class="bg-white p-8">
 
-        <h2 class="text-heading-sm mt-5">Application</h3>
+        <h2 class="text-heading-sm mt-5">Application</h2>
         <div class="py-4">
           <dl class="grid grid-cols-2 *:border-b *:border-gray-300 *:py-2 *:align-top *:m-0 [&>dt]:font-bold">
             <dt>Property</dt>
@@ -72,3 +72,14 @@ const formattedFutureDate = futureDate.toLocaleDateString('en-GB', dateFormatOpt
     </div>
   </Container>
 </BlankLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    const printButton = document.getElementById('print-button');
+    if (printButton) {
+      printButton.addEventListener('click', function() {
+        window.print();
+      });
+    }
+  });
+</script>
