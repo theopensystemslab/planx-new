@@ -19,6 +19,7 @@
     "@opensystemslab/map": "1.0.0-alpha.5",
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#b594e17",
     "@tiptap/core": "^3.0.7",
+    "@tiptap/extension-emoji": "^3.0.7",
     "@tiptap/extension-image": "^3.0.7",
     "@tiptap/extension-mention": "^3.0.7",
     "@tiptap/extensions": "^3.0.7",
