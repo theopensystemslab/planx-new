@@ -4,6 +4,7 @@ import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
 import PostcodeSearch from "@components/PostcodeSearch.tsx";
 import type { Action } from "@content/actions";
+import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
 interface Props {
   title: string;
@@ -23,4 +24,5 @@ const { action }: { action?: Action }= Astro.params;
       <PostcodeSearch client:load action={action}/>
     </section>
   </Container>
+  <ApplicationsBanner />
 </Layout>

@@ -5,6 +5,7 @@ import Masthead from "@components/Masthead.astro";
 import Accordion from "@components/Accordion.astro";
 import { fetchAllLPAs } from "@lib/lpa-api";
 import AccordionSection from "@components/directory/AccordionSection.astro";
+import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
 const lpas = await fetchAllLPAs();
 ---
@@ -42,4 +43,5 @@ const lpas = await fetchAllLPAs();
       }
     </section>
   </Container>
+  <ApplicationsBanner />
 </Layout>

@@ -6,6 +6,7 @@ import ServiceCard from "@components/ServiceCard.astro";
 import LpaMasthead from "@components/LpaMasthead.astro";
 import Container from "@components/Container.astro";
 import Accordion from "@components/Accordion.astro";
+import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
 export const getStaticPaths = (async () => {
   const lpas = await fetchAllLPAs();
@@ -71,6 +72,7 @@ if (!lpaData) return Astro.redirect("/404");
       </Accordion>
     </div>
   </Container>
+  <ApplicationsBanner />
 </Layout>
 
 <script is:inline data-astro-rerun type="module">
