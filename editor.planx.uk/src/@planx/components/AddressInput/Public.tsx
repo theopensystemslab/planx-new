@@ -64,6 +64,7 @@ export function AddressFields(props: AddressFieldsProps): FCReturn {
     <>
       <InputLabel label="Address line 1">
         <Input
+          autoComplete="address-line1"
           name="line1"
           value={props.values?.line1}
           bordered
@@ -79,6 +80,7 @@ export function AddressFields(props: AddressFieldsProps): FCReturn {
       </InputLabel>
       <InputLabel label="Address line 2 (optional)">
         <Input
+          autoComplete="address-line2"
           name="line2"
           value={props.values?.line2}
           bordered
@@ -88,6 +90,7 @@ export function AddressFields(props: AddressFieldsProps): FCReturn {
       </InputLabel>
       <InputLabel label="Town">
         <Input
+          autoComplete="address-level2"
           name="town"
           value={props.values?.town}
           bordered
@@ -103,6 +106,7 @@ export function AddressFields(props: AddressFieldsProps): FCReturn {
       </InputLabel>
       <InputLabel label="County (optional)">
         <Input
+          autoComplete="address-level1"
           name="county"
           value={props.values?.county}
           bordered
