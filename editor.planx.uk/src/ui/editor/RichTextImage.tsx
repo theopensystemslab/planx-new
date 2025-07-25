@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Image from "@tiptap/extension-image";
+import { Image } from "@tiptap/extension-image";
 import {
   NodeViewProps,
   NodeViewWrapper,

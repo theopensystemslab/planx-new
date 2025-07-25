@@ -1,6 +1,5 @@
 import IconButton from "@mui/material/IconButton";
 import { type Editor } from "@tiptap/core";
-import { Level } from "@tiptap/extension-heading";
 import React from "react";
 
 const HeadingButton = ({
@@ -9,18 +8,14 @@ const HeadingButton = ({
   label,
 }: {
   editor: Editor;
-  level: number;
+  level: 1 | 2 | 3 | 4 | 5 | 6;
   label: React.ReactNode;
 }) => (
   <IconButton
     size="small"
     color={editor.isActive("heading", { level }) ? "primary" : undefined}
     onClick={() => {
-      editor
-        .chain()
-        .focus()
-        .toggleHeading({ level: level as Level })
-        .run();
+      editor.chain().focus().toggleHeading({ level }).run();
     }}
   >
     {label}
