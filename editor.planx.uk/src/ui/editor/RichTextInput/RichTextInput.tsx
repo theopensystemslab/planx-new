@@ -180,6 +180,7 @@ const RichTextInput: FC<Props> = (props) => {
           >
             {addingLink ? (
               <Input
+                sx={{ width: 300 }}
                 ref={urlInputRef}
                 onKeyDown={(ev) => {
                   if (ev.key === "Enter") {
