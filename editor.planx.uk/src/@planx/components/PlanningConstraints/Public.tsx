@@ -226,7 +226,7 @@ function Component(props: Props) {
   const isLoading = isValidating || isValidatingRoads;
   if (isLoading)
     return (
-      <Card handleSubmit={props.handleSubmit} isValid>
+      <Card handleSubmit={props.handleSubmit} isValid={false}>
         <CardHeader title={props.title} description={props.description || ""} />
         <DelayedLoadingIndicator
           variant="ellipses"
