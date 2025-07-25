@@ -1,13 +1,13 @@
 import { screen, within } from "@testing-library/react";
-import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
+// eslint-disable-next-line no-restricted-imports
+import type { UserEvent } from "@testing-library/user-event";
 
 import { userEntersInput } from "./userEntersInput";
 
 export const userTriesToAddNewMember = async (user: UserEvent) => {
   const teamMembersTable = screen.getByTestId("team-members");
-  const addMemberButton = await within(teamMembersTable).findByText(
-    "Add a new member",
-  );
+  const addMemberButton =
+    await within(teamMembersTable).findByText("Add a new member");
   user.click(addMemberButton);
   const addNewEditorModal = await screen.findByTestId("modal-create-user");
   await userEntersInput("First name", "Mickey", addNewEditorModal, user);
