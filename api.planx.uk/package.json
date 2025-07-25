@@ -17,7 +17,7 @@
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
     "axios": "^1.11.0",
-    "body-parser": "^1.20.3",
+    "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cookie-session": "^2.1.1",
     "copyfiles": "^2.4.1",
