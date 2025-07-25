@@ -19,6 +19,6 @@
     "typeRoots": ["src/types"],
     "types": ["vite/client"]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/ui/editor/RichTextInput/components/emoji/suggestion.jsx", "src/ui/editor/RichTextInput/components/emoji/EmojiList.jsx"],
   "exclude": ["node_modules"]
 }

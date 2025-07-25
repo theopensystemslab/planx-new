@@ -1,7 +1,9 @@
+import Emoji from "@tiptap/extension-emoji";
 import Mention from "@tiptap/extension-mention";
 import StarterKit from "@tiptap/starter-kit";
 
 import CustomImage from "../RichTextImage";
+import suggestion from "./components/emoji/suggestion";
 
 export const passportClassName = "passport";
 
@@ -17,6 +19,9 @@ export const commonExtensions = [
     },
   }),
   CustomImage,
+  Emoji.configure({
+    suggestion,
+  }),
 ];
 
 // Tiptap editor extensions used to convert between HTML and Prosemirror document state (used internally by tiptap)
