@@ -4,6 +4,7 @@ import { ReactRenderer } from "@tiptap/react";
 
 import { EmojiList, EmojiListRef } from "./EmojiList.js";
 
+// Implementation taken from https://tiptap.dev/docs/editor/extensions/nodes/emoji
 const EmojiSuggestions: EmojiOptions["suggestion"] = {
   items: ({ editor, query }) => {
     return editor.storage.emoji.emojis

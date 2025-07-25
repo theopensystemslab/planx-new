@@ -52,6 +52,7 @@ const EmojiButton = styled(ButtonBase)(({ theme }) => ({
   },
 }));
 
+// Implementation taken from https://tiptap.dev/docs/editor/extensions/nodes/emoji
 export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
   ({ items, command }, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
