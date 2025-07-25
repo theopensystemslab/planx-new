@@ -1,9 +1,10 @@
 import { computePosition } from "@floating-ui/dom";
+import { EmojiOptions } from "@tiptap/extension-emoji";
 import { ReactRenderer } from "@tiptap/react";
 
 import { EmojiList } from "./EmojiList.jsx";
 
-export default {
+const EmojiSuggestions: EmojiOptions["suggestion"] = {
   items: ({ editor, query }) => {
     return editor.storage.emoji.emojis
       .filter(({ shortcodes, tags }) => {
@@ -19,10 +20,10 @@ export default {
   allowSpaces: false,
 
   render: () => {
-    let component;
+    let component: ReactRenderer;
 
-    function repositionComponent(clientRect) {
-      if (!component || !component.element) {
+    function repositionComponent(clientRect: DOMRect | null) {
+      if (!component || !component.element || !clientRect) {
         return;
       }
 
@@ -32,10 +33,10 @@ export default {
         },
       };
 
-      computePosition(virtualElement, component.element, {
+      computePosition(virtualElement, component.element as HTMLElement, {
         placement: "bottom-start",
       }).then((pos) => {
-        Object.assign(component.element.style, {
+        Object.assign((component.element as HTMLElement).style, {
           left: `${pos.x}px`,
           top: `${pos.y}px`,
           position: pos.strategy === "fixed" ? "fixed" : "absolute",
@@ -50,32 +51,29 @@ export default {
           editor: props.editor,
         });
 
-        // eslint-disable-next-line
         document.body.appendChild(component.element);
-        repositionComponent(props.clientRect());
+        props.clientRect && repositionComponent(props.clientRect());
       },
 
       onUpdate(props) {
         component.updateProps(props);
-        repositionComponent(props.clientRect());
+        props.clientRect && repositionComponent(props.clientRect());
       },
 
       onKeyDown(props) {
         if (props.event.key === "Escape") {
-          // eslint-disable-next-line
           document.body.removeChild(component.element);
           component.destroy();
 
           return true;
         }
 
-        return component.ref?.onKeyDown(props);
+        // return (component.ref as EmojiListRef)?.onKeyDown(props);
+        return (component.ref as any)?.onKeyDown(props);
       },
 
       onExit() {
-        // eslint-disable-next-line
         if (document.body.contains(component.element)) {
-          // eslint-disable-next-line
           document.body.removeChild(component.element);
         }
         component.destroy();
@@ -83,3 +81,5 @@ export default {
     };
   },
 };
+
+export default EmojiSuggestions;
