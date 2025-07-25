@@ -2,7 +2,7 @@ import { computePosition } from "@floating-ui/dom";
 import { EmojiOptions } from "@tiptap/extension-emoji";
 import { ReactRenderer } from "@tiptap/react";
 
-import { EmojiList } from "./EmojiList.jsx";
+import { EmojiList, EmojiListRef } from "./EmojiList.js";
 
 const EmojiSuggestions: EmojiOptions["suggestion"] = {
   items: ({ editor, query }) => {
@@ -68,8 +68,7 @@ const EmojiSuggestions: EmojiOptions["suggestion"] = {
           return true;
         }
 
-        // return (component.ref as EmojiListRef)?.onKeyDown(props);
-        return (component.ref as any)?.onKeyDown(props);
+        return (component.ref as EmojiListRef).onKeyDown(props);
       },
 
       onExit() {
