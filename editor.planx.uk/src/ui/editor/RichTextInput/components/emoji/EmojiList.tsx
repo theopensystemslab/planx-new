@@ -1,5 +1,7 @@
-import "./EmojiList.scss";
-
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import ButtonBase from "@planx/components/shared/Buttons/ButtonBase";
 import React, {
   forwardRef,
   useCallback,
@@ -22,6 +24,33 @@ interface EmojiListProps {
 export interface EmojiListRef {
   onKeyDown: (x: { event: KeyboardEvent }) => boolean;
 }
+
+const Root = styled(Box)(({ theme }) => ({
+  background: theme.palette.background.default,
+  boxShadow: "0 2px 6px 0 rgba(0, 0, 0, 0.2)",
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(0.25),
+  position: "absolute",
+  zIndex: theme.zIndex.tooltip,
+  gap: theme.spacing(0.1),
+  overflow: "auto",
+  flexDirection: "column",
+  minWidth: "400px",
+}));
+
+const EmojiButton = styled(ButtonBase)(({ theme }) => ({
+  alignItems: "center",
+  gap: theme.spacing(1),
+  display: "flex",
+  textAlign: "left",
+  width: "100%",
+  "& img": {
+    width: "2rem",
+    height: "2rem",
+    align: "absmiddle",
+  },
+}));
 
 export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
   ({ items, command }, ref) => {
@@ -76,26 +105,22 @@ export const EmojiList = forwardRef<EmojiListRef, EmojiListProps>(
     }, [upHandler, downHandler, enterHandler]);
 
     return (
-      <div className="dropdown-menu">
+      <Root>
         {items.map((item, index) => (
-          <button
-            className={index === selectedIndex ? "is-selected" : ""}
+          <EmojiButton
+            selected={index === selectedIndex}
             key={index}
             onClick={() => selectItem(index)}
           >
             {item.fallbackImage ? (
-              <img
-                src={item.fallbackImage}
-                // align="absmiddle"
-                alt="TEMP TEST"
-              />
+              <img src={item.fallbackImage} alt={item.name} />
             ) : (
-              item.emoji
+              <Typography style={{ fontSize: "2rem" }}>{item.emoji}</Typography>
             )}
-            :{item.name}:
-          </button>
+            <Typography variant="body2">:{item.name}:</Typography>
+          </EmojiButton>
         ))}
-      </div>
+      </Root>
     );
   },
 );
