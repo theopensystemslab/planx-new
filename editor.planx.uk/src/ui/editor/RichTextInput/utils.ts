@@ -1,5 +1,4 @@
-import { type JSONContent } from "@tiptap/core";
-import { generateHTML, generateJSON } from "@tiptap/html";
+import { generateHTML, generateJSON, type JSONContent } from "@tiptap/core";
 import { map } from "ramda";
 import { create } from "zustand";
 

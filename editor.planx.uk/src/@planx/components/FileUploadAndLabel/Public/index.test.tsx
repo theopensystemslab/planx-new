@@ -1,5 +1,6 @@
 import { act, screen, waitFor, within } from "@testing-library/react";
-import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
+// eslint-disable-next-line no-restricted-imports
+import type { UserEvent } from "@testing-library/user-event";
 import axios from "axios";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

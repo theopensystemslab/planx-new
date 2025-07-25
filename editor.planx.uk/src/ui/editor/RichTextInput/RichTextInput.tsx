@@ -4,9 +4,8 @@ import Delete from "@mui/icons-material/Delete";
 import LinkIcon from "@mui/icons-material/Link";
 import IconButton from "@mui/material/IconButton";
 import { type Editor, EditorOptions } from "@tiptap/core";
-import History from "@tiptap/extension-history";
 import Mention from "@tiptap/extension-mention";
-import ExtensionPlaceholder from "@tiptap/extension-placeholder";
+import { Placeholder } from "@tiptap/extensions";
 import { EditorContent, useEditor } from "@tiptap/react";
 import React, {
   ChangeEvent,
@@ -56,7 +55,6 @@ const RichTextInput: FC<Props> = (props) => {
     editorProps: { attributes },
     extensions: [
       ...commonExtensions,
-      History,
       Mention.configure({
         HTMLAttributes: {
           // Mark mention tags with the 'pass' CSS class (short for passport)
@@ -64,7 +62,7 @@ const RichTextInput: FC<Props> = (props) => {
         },
         suggestion,
       }),
-      ExtensionPlaceholder.configure({
+      Placeholder.configure({
         placeholder: props.placeholder || "",
       }),
     ],
@@ -175,15 +173,14 @@ const RichTextInput: FC<Props> = (props) => {
         {editor && (
           <StyledBubbleMenu
             editor={editor}
-            tippyOptions={{
-              duration: 100,
-              // Hack to "stop" transition of BubbleMenu
-              moveTransition: "transform 600s",
+            options={{
+              placement: "top-start",
+              offset: 50,
             }}
-            className="bubble-menu"
           >
             {addingLink ? (
               <Input
+                sx={{ width: 300 }}
                 ref={urlInputRef}
                 onKeyDown={(ev) => {
                   if (ev.key === "Enter") {

@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-imports */
 import { ThemeProvider } from "@mui/material";
 import { render, RenderResult } from "@testing-library/react";
+import type { UserEvent } from "@testing-library/user-event";
 import userEvent from "@testing-library/user-event";
-import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
 import React from "react";
 
 import { defaultTheme } from "./theme";

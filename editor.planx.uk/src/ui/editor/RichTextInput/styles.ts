@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { BubbleMenu } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
 import { inputFocusStyle } from "theme";
 
 export const RichContentContainer = styled(Box)(({ theme }) => ({
@@ -81,6 +81,8 @@ export const StyledBubbleMenu = styled(BubbleMenu)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   padding: theme.spacing(0.25),
+  position: "absolute",
+  zIndex: theme.zIndex.tooltip,
 }));
 
 export const MentionItems = styled(Box)(({ theme }) => ({

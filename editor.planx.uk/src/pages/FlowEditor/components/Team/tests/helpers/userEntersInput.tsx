@@ -1,5 +1,6 @@
 import { within } from "@testing-library/react";
-import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
+// eslint-disable-next-line no-restricted-imports
+import type { UserEvent } from "@testing-library/user-event";
 
 export const userEntersInput = async (
   labelText: string,
