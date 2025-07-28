@@ -11,7 +11,13 @@ import FileUpload from "./Public";
 test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
-  setup(<FileUpload fn="someKey" handleSubmit={handleSubmit} />);
+  setup(
+    <FileUpload
+      title="Please upload your files"
+      fn="someKey"
+      handleSubmit={handleSubmit}
+    />,
+  );
 
   expect(screen.getByRole("button", { name: "Continue" })).toBeEnabled();
 
@@ -22,7 +28,12 @@ test("shows error if user tries to continue before adding files", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <FileUpload fn="elevations" id="elevations" handleSubmit={handleSubmit} />,
+    <FileUpload
+      title="Please upload your files"
+      fn="elevations"
+      id="elevations"
+      handleSubmit={handleSubmit}
+    />,
   );
 
   await user.click(screen.getByTestId("continue-button"));
@@ -49,6 +60,7 @@ test("recovers previously submitted files when clicking the back button", async 
 
   const { user } = setup(
     <FileUpload
+      title="Please upload your files"
       fn={dataField}
       id={componentId}
       handleSubmit={handleSubmit}
@@ -86,6 +98,7 @@ it("should not have any accessibility violations", async () => {
 
   const { container } = setup(
     <FileUpload
+      title="Please upload your files"
       fn="someKey"
       id={componentId}
       handleSubmit={handleSubmit}
