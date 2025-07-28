@@ -1,15 +1,15 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PublicProps } from "@planx/components/shared/types";
 import { FormikConfig, useFormik } from "formik";
-import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
-import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { flatten } from "../List/utils";
 import Card from "../shared/Preview/Card";
 import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import { useSchema } from "../shared/Schema/hook";
 import { SchemaUserData } from "../shared/Schema/model";
 import { SchemaFields } from "../shared/Schema/SchemaFields";
+import { getRequestedFiles } from "../shared/Schema/utils";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { Page } from "./model";
 
@@ -20,10 +20,6 @@ function PageComponent(props: Props) {
     schema: props.schema,
     previousValues: getPreviouslySubmittedData(props),
   });
-
-  const { required, recommended, optional } = useStore
-    .getState()
-    .requestedFiles();
 
   const onSubmit: FormikConfig<SchemaUserData>["onSubmit"] = (values) => {
     if (!props.handleSubmit) return;
@@ -37,21 +33,18 @@ function PageComponent(props: Props) {
       omitIndexKeys: true,
     });
 
-    // If schema contains FileUpload fields, update passport to include these as required fields
-    const fileUploadFields = props.schema.fields.filter(
-      ({ type, required }) => type === "fileUpload" && required,
-    );
-    const fileUploadDataValues = fileUploadFields.map(({ data }) => data.fn);
+    const requestedFiles = getRequestedFiles({
+      schemaFn: props.fn,
+      schema: props.schema,
+      userData: values.schemaData,
+      context: TYPES.Page,
+    });
 
     const userData = {
       data: {
         ...defaultPassportData,
         ...flattenedData,
-        [PASSPORT_REQUESTED_FILES_KEY]: {
-          required: [...required, ...fileUploadDataValues],
-          recommended,
-          optional,
-        },
+        ...requestedFiles,
       },
     };
 
