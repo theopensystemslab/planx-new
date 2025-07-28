@@ -136,6 +136,26 @@ describe("Editor validation", () => {
     );
   });
 
+  test("Data fields can be set for each option", async () => {
+    const result = validationSchema.validate({
+      title: "Test",
+      alwaysAutoAnswerBlank: false,
+      fn: "test",
+      options: [
+        {
+          id: "a",
+          data: { text: "Option A", val: "A" },
+        },
+        {
+          id: "b",
+          data: { text: "Option B", val: "B" },
+        },
+      ],
+    });
+
+    expect(result).toBeDefined();
+  });
+
   describe("unique labels", () => {
     describe("options without data values", () => {
       test.todo("checklists - unique labels must be used for each option");

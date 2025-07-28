@@ -258,7 +258,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     .test({
       name: "onlyOneBlank",
       test: function ({ alwaysAutoAnswerBlank, options, groupedOptions, fn }) {
-        if (!alwaysAutoAnswerBlank && !fn) return true;
+        if (!alwaysAutoAnswerBlank || !fn) return true;
 
         const allOptions =
           options || groupedOptions?.flatMap((group) => group.children);
