@@ -6,6 +6,7 @@ import {
   Field,
   isAddressFieldResponse,
   isChecklistFieldResponse,
+  isFileUploadFieldResponse,
   isMapFieldResponse,
   isNumberFieldResponse,
   isTextResponse,
@@ -99,7 +100,15 @@ export const formatSchemaDisplayValue = <T extends Field>(
         </>
       );
     case "fileUpload": {
-      return "TODO";
+      if (!isFileUploadFieldResponse(value)) return;
+
+      return (
+        <List>
+          {value.map(({ id, file }) => (
+            <li key={id}>{file.name}</li>
+          ))}
+        </List>
+      );
     }
   }
 };
