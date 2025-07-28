@@ -98,6 +98,9 @@ export const formatSchemaDisplayValue = <T extends Field>(
           />
         </>
       );
+    case "fileUpload": {
+      return "TODO";
+    }
   }
 };
 
