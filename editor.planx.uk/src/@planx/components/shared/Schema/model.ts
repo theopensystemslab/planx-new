@@ -226,7 +226,7 @@ export const isChecklistFieldResponse = (
   response: unknown,
 ): response is ResponseValue<ChecklistField> =>
   Array.isArray(response) &&
-  Object.prototype.hasOwnProperty.call(response[0], "options");
+  response.every((answer) => typeof answer == "string");
 
 export const isAddressFieldResponse = (
   response: unknown,
