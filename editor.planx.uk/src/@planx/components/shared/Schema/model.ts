@@ -180,17 +180,19 @@ export interface Schema {
  * ResponseValues are parsed on submission in planx-core
  * If adding a ResponseValue here, please update `schemaResponsesSchema` (src/export/bops/utils/schema.ts) in planx-core
  */
-export type ResponseValue<T extends Field> = T extends MapField
-  ? Feature[]
-  : T extends ChecklistField
-    ? string[]
-    : T extends NumberField
-      ? number
-      : T extends AddressField
-        ? Address
-        : T extends FileUploadField
-          ? FileUploadSlot[]
-          : string;
+export type ResponseValue<T extends Field> =
+  FieldTypeToResponseValue[T["type"]];
+
+interface FieldTypeToResponseValue {
+  map: Feature[];
+  checklist: string[];
+  number: number;
+  address: Address;
+  fileUpload: FileUploadSlot[];
+  text: string;
+  date: string;
+  question: string;
+}
 
 export type SchemaUserResponse = Record<
   Field["data"]["fn"],
