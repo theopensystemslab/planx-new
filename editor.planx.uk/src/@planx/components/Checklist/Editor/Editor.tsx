@@ -172,6 +172,7 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
             </InputRow>
             <ErrorWrapper error={formik.errors.fn}>
               <DataFieldAutocomplete
+                data-testid="checklist-data-field"
                 value={formik.values.fn}
                 onChange={(value) => formik.setFieldValue("fn", value)}
                 disabled={props.disabled}
