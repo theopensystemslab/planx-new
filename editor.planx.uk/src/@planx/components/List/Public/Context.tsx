@@ -231,3 +231,12 @@ export const useListContext = (): ListContextValue => {
   }
   return context;
 };
+
+export const useOptionalListContext = (): ListContextValue | undefined => {
+  try {
+    const context = useContext(ListContext);
+    return context;
+  } catch (error) {
+    return;
+  }
+};
