@@ -325,51 +325,5 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
 
         return true;
       },
-    })
-    .test({
-      name: "uniqueDataValues",
-      test: function ({ options }) {
-        if (!options) return true;
-
-        const dataValues = options
-          .map(({ data: { val } }) => val)
-          .filter(Boolean);
-
-        const uniqueDataValues = new Set(dataValues);
-
-        const allUnique = uniqueDataValues.size === dataValues.length;
-        if (allUnique) return true;
-
-        return this.createError({
-          path: "options",
-          message: "Options must have unique data values",
-        });
-      },
-    })
-    .test({
-      name: "uniqueDataValuesWithinGroup",
-      test: function ({ groupedOptions }) {
-        if (!groupedOptions) return true;
-
-        for (const group of groupedOptions) {
-          if (!group.children) continue;
-
-          const dataValues = group.children
-            .map(({ data: { val } }) => val)
-            .filter(Boolean);
-
-          const uniqueDataValues = new Set(dataValues);
-          const allUnique = uniqueDataValues.size === dataValues.length;
-
-          if (!allUnique) {
-            return this.createError({
-              path: "options",
-              message: "Data values must be unique within groups",
-            });
-          }
-        }
-
-        return true;
-      },
     }),
 );
