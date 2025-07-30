@@ -1,6 +1,3 @@
-# Pizzas use [caddy-gen](https://hub.docker.com/r/wemakeservices/caddy-gen) as a reverse proxy
-# the "virtual.*" labels configure mapping rules
-
 services:
   postgres:
     volumes:
@@ -26,10 +23,6 @@ services:
     volumes:
       - ./localplanning.services/dist:/srv/http
     entrypoint: "/goStatic -fallback /404.html"
-    labels:
-      virtual.host: localplanning.${ROOT_DOMAIN}
-      virtual.port: 8043
-      virtual.tls-email: ${TLS_EMAIL}
 
   storybook:
     image: pierrezemb/gostatic

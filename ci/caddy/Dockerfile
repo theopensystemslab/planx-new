@@ -1,7 +1,7 @@
 # build Caddy with the Vultr DNS-01 challenge provider
 # see https://caddyserver.com/docs/modules/dns.providers.vultr
 FROM caddy:2.10-builder-alpine AS builder
-RUN xcaddy build --with github.com/caddy-dns/vultr
+RUN xcaddy build --with github.com/caddy-dns/vultr@v0.0.0-20250723121531-55bf3e9768be
 
 # copy only the custom binary into a minimal runtime image
 # TODO: we will definitely want to publish this image somewhere (e.g. AWS ECR), rather than build every time
