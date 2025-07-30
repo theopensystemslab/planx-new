@@ -177,7 +177,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     ).optional(),
     allRequired: boolean(),
     options: array(optionValidationSchema).optional(),
-    fn: string(),
+    fn: string().nullable(),
     text: string(),
     img: string(),
     categories: array(

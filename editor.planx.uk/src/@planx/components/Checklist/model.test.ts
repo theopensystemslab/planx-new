@@ -136,7 +136,44 @@ describe("Editor validation", () => {
     );
   });
 
-  test("Data fields can be set for each option", async () => {
+  test("checklists - data fields can be set for each option", async () => {
+    const result = validationSchema.validate({
+      allRequired: false,
+      neverAutoAnswer: false,
+      alwaysAutoAnswerBlank: false,
+      description: "",
+      fn: "test",
+      groupedOptions: [
+        {
+          title: "Section 1",
+          children: [
+            {
+              data: {
+                val: "abc",
+                text: "ABC",
+              },
+            },
+          ],
+        },
+        {
+          title: "Section 2 ",
+          children: [
+            {
+              data: {
+                val: "def",
+                text: "DEF",
+              },
+            },
+          ],
+        },
+      ],
+      text: "Test",
+    });
+
+    expect(result).toBeDefined();
+  });
+
+  test("grouped checklists - data fields can be set for each option", async () => {
     const result = validationSchema.validate({
       title: "Test",
       alwaysAutoAnswerBlank: false,
