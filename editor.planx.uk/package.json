@@ -225,7 +225,8 @@
       "preact"
     ],
     "overrides": {
-      "micromatch@<4.0.8": ">=4.0.8"
+      "micromatch@<4.0.8": ">=4.0.8",
+      "linkifyjs@<4.3.2": ">=4.3.2"
     }
   }
 }
