@@ -52,8 +52,8 @@ importers:
         specifier: ^7.25.0
         version: 7.29.8(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1))(@mui/material@5.18.0(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@mui/system@5.18.0(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react@18.3.1))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@opensystemslab/map':
-        specifier: 1.0.0-alpha.5
-        version: 1.0.0-alpha.5
+        specifier: 1.0.0-alpha.6
+        version: 1.0.0-alpha.6(preact@8.5.3)
       '@opensystemslab/planx-core':
         specifier: git+https://github.com/theopensystemslab/planx-core#b594e17
         version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b594e17(@types/react@18.3.23)
@@ -2212,8 +2212,8 @@ packages:
   '@open-draft/until@2.1.0':
     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
 
-  '@opensystemslab/map@1.0.0-alpha.5':
-    resolution: {integrity: sha512-VeNESA+ME+gM/APLFqCPShhlFK/xyQpur3EUtYXSqC6en72IRWkWgkSIO6vc7rTVxo7BFezuSXGLjtT3Ml/UFA==}
+  '@opensystemslab/map@1.0.0-alpha.6':
+    resolution: {integrity: sha512-EBOgrgBRFNg8p+7nDFvh+K7N4NFQ7+epBXjE9w7h0u87q4M+nOpBwXNc67+UdDs+j8Mi+vQ2R+uJBIKF25NQ7g==}
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b594e17':
     resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b594e17}
@@ -3589,8 +3589,13 @@ packages:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  accessible-autocomplete@2.0.4:
-    resolution: {integrity: sha512-2p0txrSpvs5wXFUeQJHMheDPTZVSEmiUHWlEPb7vJnv2Dd1xPfoLnBQQMfNbTSit2pL/9sSQYESuD2Yyohd4Yw==}
+  accessible-autocomplete@3.0.1:
+    resolution: {integrity: sha512-xMshgc2LT5addvvfCTGzIkRrvhbOFeylFSnSMfS/PdjvvvElZkakCwxO3/yJYBWyi1hi3tZloqOJQ5kqqJtH4g==}
+    peerDependencies:
+      preact: ^8.0.0
+    peerDependenciesMeta:
+      preact:
+        optional: true
 
   acorn-import-phases@1.0.4:
     resolution: {integrity: sha512-wKmbr/DDiIXzEOiWrTTUcDm24kQ2vGfZQvM2fwg2vXqR5uW6aapr7ObPtj1th32b9u90/Pf4AItvdTh42fBmVQ==}
@@ -6368,8 +6373,8 @@ packages:
   raf@3.4.1:
     resolution: {integrity: sha512-Sq4CW4QhwOHE8ucn6J34MqtZCeWFP2aQSmrlroYgqAV1PjStIhJXxYuTgUIfkEk7zTLjmIjLmU5q+fbD1NnOJA==}
 
-  rambda@9.4.2:
-    resolution: {integrity: sha512-++euMfxnl7OgaEKwXh9QqThOjMeta2HH001N1v4mYQzBjJBnmXBh2BCK6dZAbICFVXOFUVD3xFG0R3ZPU0mxXw==}
+  rambda@10.3.2:
+    resolution: {integrity: sha512-GCM14DK1CG9Fw3YRRoCUc111RA/SZQAGyvrBrdMCBUXIRQ2AVPb1mysON1gOpItuVJ0WQpEb/Eq5FRxU8OxNbg==}
 
   ramda@0.29.1:
     resolution: {integrity: sha512-OfxIeWzd4xdUNxlWhgFazxsA/nl3mS4/jGZI5n00uWOoSSFRhC1b6gl6xvmzUamgmqELraWp0J/qqVlXYPDPyA==}
@@ -9931,12 +9936,12 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@opensystemslab/map@1.0.0-alpha.5':
+  '@opensystemslab/map@1.0.0-alpha.6(preact@8.5.3)':
     dependencies:
       '@turf/helpers': 7.2.0
       '@turf/union': 7.2.0
       '@types/geojson': 7946.0.16
-      accessible-autocomplete: 2.0.4
+      accessible-autocomplete: 3.0.1(preact@8.5.3)
       file-saver: 2.0.5
       govuk-frontend: 5.11.1
       jspdf: 3.0.1
@@ -9946,7 +9951,9 @@ snapshots:
       ol-mapbox-style: 12.6.1(ol@10.6.1)
       postcode: 5.1.0
       proj4: 2.19.10
-      rambda: 9.4.2
+      rambda: 10.3.2
+    transitivePeerDependencies:
+      - preact
 
   '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/b594e17(@types/react@18.3.23)':
     dependencies:
@@ -11549,8 +11556,8 @@ snapshots:
 
   abbrev@2.0.0: {}
 
-  accessible-autocomplete@2.0.4:
-    dependencies:
+  accessible-autocomplete@3.0.1(preact@8.5.3):
+    optionalDependencies:
       preact: 8.5.3
 
   acorn-import-phases@1.0.4(acorn@8.15.0):
@@ -14721,7 +14728,8 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact@8.5.3: {}
+  preact@8.5.3:
+    optional: true
 
   prelude-ls@1.2.1: {}
 
@@ -14904,7 +14912,7 @@ snapshots:
       performance-now: 2.1.0
     optional: true
 
-  rambda@9.4.2: {}
+  rambda@10.3.2: {}
 
   ramda@0.29.1: {}
 
