@@ -274,6 +274,11 @@ const getThemeOptions = ({
           },
         },
       },
+      MuiAutocomplete: {
+        defaultProps: {
+          disablePortal: true,
+        },
+      },
       MuiContainer: {
         styleOverrides: {
           root: {
