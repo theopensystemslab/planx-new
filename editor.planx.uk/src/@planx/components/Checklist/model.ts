@@ -325,5 +325,26 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
 
         return true;
       },
+    })
+    .test({
+      name: "uniqueGroupTitles",
+      test: function ({ groupedOptions }) {
+        if (!groupedOptions) return true;
+
+        const uniqueGroupTitles = new Set(
+          groupedOptions.map(({ title }) => title),
+        );
+
+        const allUnique = uniqueGroupTitles.size === groupedOptions.length;
+
+        if (!allUnique) {
+          return this.createError({
+            path: "options",
+            message: "Groups must have unique titles",
+          });
+        }
+
+        return true;
+      },
     }),
 );
