@@ -223,10 +223,12 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     })
     .test({
       name: "atLeastOneDataField",
-      test: function ({ fn, options, groupedOptions }) {
+      test: function ({ fn, options = [], groupedOptions = [] }) {
         if (!fn) return true;
-        const allOptions =
-          options || groupedOptions?.flatMap((group) => group.children);
+        const allOptions = [
+          ...options,
+          ...groupedOptions.flatMap((group) => group.children),
+        ];
 
         if (!allOptions) return true;
 
@@ -257,11 +259,18 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     })
     .test({
       name: "onlyOneBlank",
-      test: function ({ alwaysAutoAnswerBlank, options, groupedOptions, fn }) {
+      test: function ({
+        alwaysAutoAnswerBlank,
+        options = [],
+        groupedOptions = [],
+        fn,
+      }) {
         if (!alwaysAutoAnswerBlank || !fn) return true;
 
-        const allOptions =
-          options || groupedOptions?.flatMap((group) => group.children);
+        const allOptions = [
+          ...options,
+          ...groupedOptions.flatMap((group) => group.children),
+        ];
 
         if (!allOptions) return true;
 
