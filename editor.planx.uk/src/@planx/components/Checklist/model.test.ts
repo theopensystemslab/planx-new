@@ -194,6 +194,34 @@ describe("Editor validation", () => {
   });
 
   describe("unique labels", () => {
+    test("groups must have unique titles", async () => {
+      await expect(() =>
+        validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Repeated group name",
+              children: [
+                {
+                  id: "abc",
+                  data: { text: "ABC" },
+                },
+              ],
+            },
+            {
+              title: "Repeated group name",
+              children: [
+                {
+                  id: "123",
+                  data: { text: "123" },
+                },
+              ],
+            },
+          ],
+        }),
+      ).rejects.toThrow("Groups must have unique titles");
+    });
+
     describe("options without data values", () => {
       test("checklists - unique labels must be used for each option", async () => {
         await expect(() =>
