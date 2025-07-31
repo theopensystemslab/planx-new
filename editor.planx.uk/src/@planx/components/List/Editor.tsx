@@ -32,6 +32,7 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
+import { Zoo } from "./schemas/mocks/Zoo";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -45,6 +46,7 @@ import { Trees } from "./schemas/Trees";
 type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
+  { name: "Zoo", schema: Zoo },
   { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
   {
     name: "Residential units (LDCE) - Existing",
