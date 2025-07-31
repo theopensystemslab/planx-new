@@ -92,6 +92,14 @@ export const Zoo: Schema = {
         fn: "address",
       },
     },
+    // FileUpload
+    {
+      type: "fileUpload",
+      data: {
+        title: "Upload some photos of the animal",
+        fn: "photos",
+      },
+    },
   ],
   min: 1,
   max: 3,
