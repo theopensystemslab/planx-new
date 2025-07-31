@@ -48,7 +48,10 @@ export default function ChecklistItem({
         checked={checked}
         id={id}
         onChange={onChange}
-        inputProps={inputProps}
+        inputProps={{
+          ...inputProps,
+          "aria-describedby": `checkbox-description-${id}`,
+        }}
         variant={variant}
         disabled={disabled}
       />
@@ -60,7 +63,6 @@ export default function ChecklistItem({
             className="label"
             component={"label"}
             htmlFor={id}
-            aria-describedby={`checkbox-description-${id}`}
             pb={0}
           >
             {label}
