@@ -75,6 +75,7 @@ export const Checklist: React.FC<PublicChecklistProps> = (props) => {
       currentCheckedIds: formik.values.checked,
       exclusiveOrOption,
       toggleExclusiveCheckbox,
+      nonExclusiveOptions,
     });
 
   // Auto-answered Checklists still set a breadcrumb even though they render null
