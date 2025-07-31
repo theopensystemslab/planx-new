@@ -53,6 +53,7 @@ export const ConfirmEmail: React.FC<{
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               type="email"
+              autoComplete="email"
               value={formik.values.email}
             ></Input>
           </InputLabel>
@@ -71,6 +72,7 @@ export const ConfirmEmail: React.FC<{
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               type="email"
+              autoComplete="email"
               value={formik.values.confirmEmail}
             ></Input>
           </InputLabel>
