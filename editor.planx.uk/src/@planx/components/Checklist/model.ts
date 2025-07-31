@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, boolean, mixed, number, object, SchemaOf, string } from "yup";
+import { array, boolean, mixed, number, object, string } from "yup";
 
 import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
@@ -160,7 +160,7 @@ const optionValidationSchema = object({
     description: string(),
     flags: array(string()),
     img: string(),
-    text: string().required(),
+    text: string().required().trim(),
     val: string(),
     exclusive: mixed().oneOf([true, undefined]),
   }),
@@ -171,7 +171,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     description: richText(),
     groupedOptions: array(
       object({
-        title: string().required("Section title is a required field"),
+        title: string().required("Section title is a required field").trim(),
         children: array(optionValidationSchema).required(),
       }).required(),
     ).optional(),
@@ -182,7 +182,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     img: string(),
     categories: array(
       object({
-        title: string(),
+        title: string().trim(),
         count: number(),
       }),
     ),
@@ -285,6 +285,66 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
           message:
             "Exactly one option should have a blank data field when never putting to user",
         });
+      },
+    })
+    .test({
+      name: "uniqueLabels",
+      test: function ({ options }) {
+        if (!options) return true;
+
+        const uniqueLabels = new Set(options.map(({ data: { text } }) => text));
+        const allUnique = uniqueLabels.size === options.length;
+        if (allUnique) return true;
+
+        return this.createError({
+          path: "options",
+          message: "Options must have unique labels",
+        });
+      },
+    })
+    .test({
+      name: "uniqueLabelsWithinGroups",
+      test: function ({ groupedOptions }) {
+        if (!groupedOptions) return true;
+
+        for (const group of groupedOptions) {
+          if (!group.children) continue;
+
+          const uniqueLabels = new Set(
+            group.children.map(({ data: { text } }) => text),
+          );
+          const allUnique = uniqueLabels.size === group.children.length;
+
+          if (!allUnique) {
+            return this.createError({
+              path: "options",
+              message: "Options within a single group must have unique labels",
+            });
+          }
+        }
+
+        return true;
+      },
+    })
+    .test({
+      name: "uniqueGroupTitles",
+      test: function ({ groupedOptions }) {
+        if (!groupedOptions) return true;
+
+        const uniqueGroupTitles = new Set(
+          groupedOptions.map(({ title }) => title),
+        );
+
+        const allUnique = uniqueGroupTitles.size === groupedOptions.length;
+
+        if (!allUnique) {
+          return this.createError({
+            path: "options",
+            message: "Groups must have unique titles",
+          });
+        }
+
+        return true;
       },
     }),
 );

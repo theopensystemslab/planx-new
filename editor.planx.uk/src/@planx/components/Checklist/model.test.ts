@@ -194,23 +194,381 @@ describe("Editor validation", () => {
   });
 
   describe("unique labels", () => {
+    test("groups must have unique titles", async () => {
+      await expect(() =>
+        validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Repeated group name",
+              children: [
+                {
+                  id: "abc",
+                  data: { text: "ABC" },
+                },
+              ],
+            },
+            {
+              title: "Repeated group name",
+              children: [
+                {
+                  id: "123",
+                  data: { text: "123" },
+                },
+              ],
+            },
+          ],
+        }),
+      ).rejects.toThrow("Groups must have unique titles");
+    });
+
+    test("groups must have unique titles - whitespace is stripped before checks", async () => {
+      await expect(() =>
+        validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Whitespace   ",
+              children: [
+                {
+                  id: "abc",
+                  data: { text: "ABC" },
+                },
+              ],
+            },
+            {
+              title: "Whitespace",
+              children: [
+                {
+                  id: "123",
+                  data: { text: "123" },
+                },
+              ],
+            },
+          ],
+        }),
+      ).rejects.toThrow("Groups must have unique titles");
+    });
+
     describe("options without data values", () => {
-      test.todo("checklists - unique labels must be used for each option");
-      test.todo("grouped checklists - labels must be unique within groups");
-      test.todo("grouped checklists - labels can be repeated across groups");
+      test("checklists - unique labels must be used for each option", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label" },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
+      test("checklists - unique labels must be used for each option (inc. whitespace)", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label     " },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
+      test("grouped checklists - labels must be unique within groups", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            groupedOptions: [
+              {
+                title: "Section 1",
+                children: [
+                  {
+                    id: "a",
+                    data: { text: "Non-unique label" },
+                  },
+                  {
+                    id: "b",
+                    data: { text: "Non-unique label" },
+                  },
+                ],
+              },
+            ],
+          }),
+        ).rejects.toThrow(
+          "Options within a single group must have unique labels",
+        );
+      });
+
+      test("grouped checklists - labels must be unique within groups (inc. whitespace)", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            groupedOptions: [
+              {
+                title: "Section 1",
+                children: [
+                  {
+                    id: "a",
+                    data: { text: "Non-unique label    " },
+                  },
+                  {
+                    id: "b",
+                    data: { text: "Non-unique label" },
+                  },
+                ],
+              },
+            ],
+          }),
+        ).rejects.toThrow(
+          "Options within a single group must have unique labels",
+        );
+      });
+
+      test("grouped checklists - labels can be repeated across groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Foo" },
+                },
+              ],
+            },
+            {
+              title: "Section 2",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Bar" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
+
+      test("grouped checklists - labels can be repeated across groups (inc. whitespace)", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label    " },
+                },
+                {
+                  id: "b",
+                  data: { text: "Foo" },
+                },
+              ],
+            },
+            {
+              title: "Section 2",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Bar" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
     });
 
     describe("options with data values", () => {
-      test.todo("checklists - unique labels must be used for each option");
-      test.todo("checklists - unique data values must be used for each option");
-      test.todo("grouped checklists - labels must be unique within groups");
-      test.todo(
-        "grouped checklists - data values must be unique within groups",
-      );
-      test.todo("grouped checklists - labels can be repeated across groups");
-      test.todo(
-        "grouped checklists - data values can be repeated across groups",
-      );
+      test("checklists - unique labels must be used for each option", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label", val: "a" },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label", val: "b" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
+      test("checklists - repeated data values are allowed", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          options: [
+            {
+              id: "a",
+              data: { text: "Flats", val: "residential.flat" },
+            },
+            {
+              id: "b",
+              data: { text: "Maisonettes", val: "residential.flat" },
+            },
+          ],
+        });
+
+        expect(result).toBeDefined();
+      });
+
+      test("grouped checklists - labels must be unique within groups", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            groupedOptions: [
+              {
+                title: "Section 1",
+                children: [
+                  {
+                    id: "a",
+                    data: { text: "Non-unique label", val: "a" },
+                  },
+                  {
+                    id: "b",
+                    data: { text: "Non-unique label", val: "b" },
+                  },
+                ],
+              },
+            ],
+          }),
+        ).rejects.toThrow(
+          "Options within a single group must have unique labels",
+        );
+      });
+
+      test("grouped checklists - data values can be repeated within groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Flats", val: "residential.flat" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Maisonettes", val: "residential.flat" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeDefined();
+      });
+
+      test("grouped checklists - labels can be repeated across groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Common property types",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Houses", val: "residential.house" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Maisonettes", val: "residential.flat" },
+                },
+              ],
+            },
+            {
+              title: "Residential properties",
+              children: [
+                {
+                  id: "c",
+                  data: {
+                    text: "Bungalow",
+                    val: "residential.bungalow",
+                  },
+                },
+                {
+                  id: "d",
+                  data: { text: "Maisonettes", val: "residential.flat" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
+
+      test("grouped checklists - data values can be repeated across groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label", val: "a" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Foo", val: "b" },
+                },
+              ],
+            },
+            {
+              title: "Section 2",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label", val: "c" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Bar", val: "d" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
     });
   });
 });
