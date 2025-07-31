@@ -76,40 +76,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
         alert(JSON.stringify({ type, ...values, options }, null, 2));
       }
     },
-    validate: ({ options, groupedOptions, allRequired, ...values }) => {
-      const errors: FormikErrors<FormikValues> = {};
-
-      // Account for flat or expandable Checklist options
-      options = options || groupedOptions?.flatMap((group) => group.children);
-
-      const exclusiveOptions: Option[] | undefined = options?.filter(
-        (option) => option.data.exclusive,
-      );
-      if (allRequired && exclusiveOptions && exclusiveOptions.length > 0) {
-        errors.allRequired =
-          'Cannot configure exclusive "or" option alongside "all required" setting';
-      }
-      if (values.fn && !options?.some((option) => option.data.val)) {
-        errors.fn = "At least one option must also set a data field";
-      }
-      if (exclusiveOptions && exclusiveOptions.length > 1) {
-        errors.options =
-          "There should be a maximum of one exclusive option configured";
-      }
-      if (values.alwaysAutoAnswerBlank && !values.fn) {
-        errors.alwaysAutoAnswerBlank =
-          "Set a data field for the Checklist and all options but one when never putting to user";
-      }
-      if (
-        values.alwaysAutoAnswerBlank &&
-        values.fn &&
-        options?.filter((option) => !option.data.val).length !== 1
-      ) {
-        errors.alwaysAutoAnswerBlank =
-          "Exactly one option should have a blank data field when never putting to user";
-      }
-      return errors;
-    },
     validationSchema,
     validateOnBlur: false,
     validateOnChange: false,

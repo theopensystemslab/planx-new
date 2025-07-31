@@ -1,6 +1,6 @@
 import { richText } from "lib/yupExtensions";
 import { partition } from "lodash";
-import { array, object, string } from "yup";
+import { array, boolean, mixed, number, object, SchemaOf, string } from "yup";
 
 import { BaseNodeData, baseNodeDataValidationSchema, Option } from "../shared";
 
@@ -154,11 +154,137 @@ export const checklistInputValidationSchema = ({
     });
 };
 
+const optionValidationSchema = object({
+  id: string(),
+  data: object({
+    description: string(),
+    flags: array(string()),
+    img: string(),
+    text: string().required(),
+    val: string(),
+    exclusive: mixed().oneOf([true, undefined]),
+  }),
+});
+
 export const validationSchema = baseNodeDataValidationSchema.concat(
   object({
     description: richText(),
-    groupedOptions: array(object({
-      title: string().required("Section title is a required field")
-    }).required()).optional()
-  }),
+    groupedOptions: array(
+      object({
+        title: string().required("Section title is a required field"),
+        children: array(optionValidationSchema).required(),
+      }).required(),
+    ).optional(),
+    allRequired: boolean(),
+    options: array(optionValidationSchema).optional(),
+    fn: string().nullable(),
+    text: string(),
+    img: string(),
+    categories: array(
+      object({
+        title: string(),
+        count: number(),
+      }),
+    ),
+    neverAutoAnswer: boolean(),
+    alwaysAutoAnswerBlank: boolean(),
+    autoAnswers: array(string()),
+  })
+    .test({
+      name: "notExclusiveAndAllRequired",
+      test: function ({ allRequired, options }) {
+        if (!allRequired) return true;
+
+        const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
+
+        if (!exclusiveOptions || !exclusiveOptions.length) return true;
+
+        return this.createError({
+          path: "allRequired",
+          message:
+            'Cannot configure exclusive "or" option alongside "all required" setting',
+        });
+      },
+    })
+    .test({
+      name: "onlyOneExclusiveOption",
+      test: function ({ options }) {
+        const exclusiveOptions = options?.filter(({ data }) => data.exclusive);
+
+        if (!exclusiveOptions?.length) return true;
+        if (exclusiveOptions.length === 1) return true;
+
+        return this.createError({
+          path: "options",
+          message:
+            "There should be a maximum of one exclusive option configured",
+        });
+      },
+    })
+    .test({
+      name: "atLeastOneDataField",
+      test: function ({ fn, options = [], groupedOptions = [] }) {
+        if (!fn) return true;
+        const allOptions = [
+          ...options,
+          ...groupedOptions.flatMap((group) => group.children),
+        ];
+
+        if (!allOptions) return true;
+
+        const optionsWithDataValues = allOptions?.filter(
+          (option) => option?.data.val,
+        );
+
+        if (optionsWithDataValues?.length) return true;
+
+        return this.createError({
+          path: "fn",
+          message: "At least one option must also set a data field",
+        });
+      },
+    })
+    .test({
+      name: "",
+      test: function ({ alwaysAutoAnswerBlank, fn }) {
+        if (!alwaysAutoAnswerBlank) return true;
+        if (fn) return true;
+
+        return this.createError({
+          path: "alwaysAutoAnswerBlank",
+          message:
+            "Set a data field for the Checklist and all options but one when never putting to user",
+        });
+      },
+    })
+    .test({
+      name: "onlyOneBlank",
+      test: function ({
+        alwaysAutoAnswerBlank,
+        options = [],
+        groupedOptions = [],
+        fn,
+      }) {
+        if (!alwaysAutoAnswerBlank || !fn) return true;
+
+        const allOptions = [
+          ...options,
+          ...groupedOptions.flatMap((group) => group.children),
+        ];
+
+        if (!allOptions) return true;
+
+        const optionsWithoutDataValues = allOptions?.filter(
+          (option) => !option?.data.val,
+        );
+
+        if (optionsWithoutDataValues.length === 1) return true;
+
+        return this.createError({
+          path: "alwaysAutoAnswerBlank",
+          message:
+            "Exactly one option should have a blank data field when never putting to user",
+        });
+      },
+    }),
 );
