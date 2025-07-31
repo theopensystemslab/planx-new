@@ -1,20 +1,16 @@
 import {
   BaseNodeData,
   baseNodeDataValidationSchema,
+  parseBaseNodeData,
 } from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
-import { Store } from "pages/FlowEditor/lib/store";
-import type { HandleSubmit } from "pages/Preview/Node";
 import { FileWithPath } from "react-dropzone";
 import { array, object } from "yup";
 
 export interface FileUpload extends BaseNodeData {
-  id?: string;
   title?: string;
   fn: string;
   description?: string;
-  handleSubmit: HandleSubmit;
-  previouslySubmittedData?: Store.UserData;
 }
 
 export interface FileUploadSlot {
@@ -25,6 +21,20 @@ export interface FileUploadSlot {
   url?: string;
   cachedSlot?: Omit<FileUploadSlot, "cachedSlot">;
 }
+
+export const parseFileUpload = (
+  data: Record<string, any> | undefined,
+): FileUpload => ({
+  definitionImg: data?.definitionImg,
+  description: data?.description || "",
+  fn: data?.fn || "",
+  howMeasured: data?.howMeasured,
+  info: data?.info,
+  notes: data?.notes || "",
+  policyRef: data?.policyRef,
+  title: data?.title || "",
+  ...parseBaseNodeData(data),
+});
 
 export const slotsSchema = array()
   .required()
