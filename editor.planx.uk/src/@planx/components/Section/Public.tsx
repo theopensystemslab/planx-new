@@ -8,7 +8,8 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { SectionNode, SectionStatus } from "types";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import { SectionNode, SectionStatus as SectionStatusEnum } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
 import Card from "../shared/Preview/Card";
@@ -67,7 +68,6 @@ interface RootProps
   sectionCount: number;
 }
 
-// Stateless component to simplify testing of the "Section" component
 export const Root = ({
   currentSectionIndex,
   flowName,
@@ -153,71 +153,112 @@ export function SectionsOverviewList({
     }
   };
 
-  const getTag = (section: SectionStatus, sectionTitle: string) => {
-    const tagTypes: Record<SectionStatus, TagType> = {
-      [SectionStatus.NeedsUpdated]: TagType.Alert,
-      [SectionStatus.ReadyToStart]: TagType.Active,
-      [SectionStatus.ReadyToContinue]: TagType.Active,
-      [SectionStatus.Started]: TagType.Notice,
-      [SectionStatus.NotStarted]: TagType.Notice,
-      [SectionStatus.Completed]: TagType.Success,
+  const getClickHandler = (sectionId: string, status: SectionStatusEnum) => {
+    if (showChange && status === SectionStatusEnum.Completed) {
+      return () => changeFirstAnswerInSection(sectionId);
+    }
+    if (
+      status === SectionStatusEnum.NeedsUpdated ||
+      status === SectionStatusEnum.ReadyToStart ||
+      status === SectionStatusEnum.ReadyToContinue
+    ) {
+      return () => nextQuestion();
+    }
+    return undefined;
+  };
+
+  const getTag = (section: SectionStatusEnum, sectionTitle: string) => {
+    const tagTypes: Record<SectionStatusEnum, TagType> = {
+      [SectionStatusEnum.NeedsUpdated]: TagType.Alert,
+      [SectionStatusEnum.ReadyToStart]: TagType.Active,
+      [SectionStatusEnum.ReadyToContinue]: TagType.Active,
+      [SectionStatusEnum.Started]: TagType.Notice,
+      [SectionStatusEnum.NotStarted]: TagType.Notice,
+      [SectionStatusEnum.Completed]: TagType.Success,
     };
     const tagType = tagTypes[section];
 
-    const onClick =
-      tagType == TagType.Alert || tagType == TagType.Active
-        ? () => nextQuestion()
-        : () => {}; // no-op
-
-    return (
-      <Tag tagType={tagType} onClick={onClick} sectionTitle={sectionTitle}>
-        {section}
-      </Tag>
-    );
+    return <Tag tagType={tagType}>{section}</Tag>;
   };
 
   return (
     <DescriptionList>
-      {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
-        <SectionRow key={sectionId}>
-          <SectionTitle>
-            {showChange &&
-            sectionStatuses[sectionId] === SectionStatus.Completed ? (
-              <Link
-                onClick={() => changeFirstAnswerInSection(sectionId)}
-                component="button"
-              >
-                <Typography
-                  variant="subtitle1"
-                  component="h4"
-                  color="primary"
-                  align="left"
-                >
-                  <span style={visuallyHidden}>{`Change `}</span>
-                  <strong>{sectionNode.data.title}</strong>
-                </Typography>
-              </Link>
-            ) : (
-              <Typography variant="subtitle1" component="h4" color="inherit">
-                <strong>{sectionNode.data.title}</strong>
-              </Typography>
-            )}
-            <ReactMarkdownOrHtml
-              source={sectionNode.data.description}
-              openLinksOnNewTab
-            />
-          </SectionTitle>
-          <SectionState>
-            {getTag(sectionStatuses[sectionId], sectionNode.data.title)}
-          </SectionState>
-        </SectionRow>
-      ))}
+      {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => {
+        const status = sectionStatuses[sectionId];
+        const clickHandler = getClickHandler(sectionId, status);
+        const isClickable = clickHandler !== undefined;
+        const statusId = `section-${sectionId}-status`;
+        const hintId = `section-${sectionId}-hint`;
+
+        return (
+          <SectionRowWrapper
+            key={sectionId}
+            isClickable={isClickable}
+            onClick={
+              isClickable
+                ? (e) => {
+                    if (
+                      e.target === e.currentTarget ||
+                      !e.currentTarget
+                        .querySelector("a")
+                        ?.contains(e.target as Node)
+                    ) {
+                      clickHandler?.();
+                    }
+                  }
+                : undefined
+            }
+          >
+            <SectionContent>
+              <SectionDescription>
+                {isClickable ? (
+                  <SectionTitleLink variant="subtitle1" component="h4">
+                    <Link
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        clickHandler?.();
+                      }}
+                      aria-describedby={
+                        sectionNode.data.description
+                          ? `${hintId} ${statusId}`
+                          : statusId
+                      }
+                    >
+                      {showChange && status === SectionStatusEnum.Completed && (
+                        <span style={visuallyHidden}>{`Change `}</span>
+                      )}
+                      {sectionNode.data.title}
+                    </Link>
+                  </SectionTitleLink>
+                ) : (
+                  <SectionTitleText variant="subtitle1" component="h4">
+                    {sectionNode.data.title}
+                  </SectionTitleText>
+                )}
+                {sectionNode.data.description && (
+                  <SectionHint id={hintId}>
+                    <ReactMarkdownOrHtml
+                      source={sectionNode.data.description}
+                      openLinksOnNewTab
+                    />
+                  </SectionHint>
+                )}
+              </SectionDescription>
+              <SectionStatus id={statusId}>
+                {getTag(status, sectionNode.data.title)}
+              </SectionStatus>
+            </SectionContent>
+          </SectionRowWrapper>
+        );
+      })}
     </DescriptionList>
   );
 }
 
-const Table = styled("dl")(({ theme }) => ({
+const Table = styled("ul")(({ theme }) => ({
   padding: theme.spacing(1, 0),
+  listStyle: "none",
   "& ul, & ol": {
     padding: "0 0 0 1em",
     "& p": {
@@ -229,28 +270,69 @@ const Table = styled("dl")(({ theme }) => ({
   },
 }));
 
-const SectionRow = styled(Box)(({ theme }) => ({
+const SectionRowWrapper = styled("li", {
+  shouldForwardProp: (prop) => prop !== "isClickable",
+})<{ isClickable?: boolean }>(({ theme, isClickable }) => ({
   display: "flex",
   flexDirection: "column",
   width: "100%",
   padding: theme.spacing(2, 0),
   borderBottom: `1px solid ${theme.palette.border.main}`,
+  listStyle: "none",
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+  },
+  ...(isClickable && {
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: theme.palette.background.paper,
+      "& a": {
+        textDecorationThickness: "3px",
+      },
+    },
+  }),
+}));
+
+const SectionContent = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
   [theme.breakpoints.up("md")]: {
     flexDirection: "row",
   },
 }));
 
-const SectionTitle = styled("dt")(({ theme }) => ({
+const SectionTitleText = styled(Typography)(({ theme }) => ({
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+  color: theme.palette.text.primary,
+})) as typeof Typography;
+
+const SectionTitleLink = styled(Typography)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  fontSize: theme.typography.body1.fontSize,
+  fontWeight: FONT_WEIGHT_SEMI_BOLD,
+})) as typeof Typography;
+
+const SectionDescription = styled(Box)(({ theme }) => ({
   margin: 0,
   paddingBottom: theme.spacing(2),
   [theme.breakpoints.up("md")]: {
     padding: theme.spacing(0.33, 1, 0, 0),
     flexBasis: `calc(100% - 220px)`,
     flexShrink: 1,
+    paddingBottom: 0,
   },
 }));
 
-const SectionState = styled("dd")(({ theme }) => ({
+const SectionHint = styled(Box)(({ theme }) => ({
+  marginTop: theme.spacing(0.5),
+  color: theme.palette.text.secondary,
+  "& ul": {
+    listStyleType: "disc",
+  },
+}));
+
+const SectionStatus = styled(Box)(({ theme }) => ({
   margin: 0,
   [theme.breakpoints.up("md")]: {
     display: "flex",
@@ -260,8 +342,9 @@ const SectionState = styled("dd")(({ theme }) => ({
     justifyContent: "flex-end",
     alignItems: "flex-start",
   },
-  "& > button": {
+  "& > *": {
     width: "auto",
+    pointerEvents: "none",
   },
 }));
 

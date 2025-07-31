@@ -1,7 +1,5 @@
 import Box from "@mui/material/Box";
-import MuiButtonBase, { ButtonBaseProps } from "@mui/material/ButtonBase";
-import { darken, styled } from "@mui/material/styles";
-import { visuallyHidden } from "@mui/utils";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 
@@ -16,29 +14,25 @@ const BG_ALERT = "#FAFF00";
 const BG_ACTIVE = "#E5F1EB";
 const BG_NOTICE = "#F3F2F1";
 
-const Root = styled(MuiButtonBase, {
+const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "tagType",
-})<ButtonBaseProps & Props>(({ theme, tagType }) => ({
+})<Props>(({ theme, tagType }) => ({
   fontSize: theme.typography.body2.fontSize,
   fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  width: "100%",
+  width: "auto",
   paddingTop: theme.spacing(0.75),
   paddingBottom: theme.spacing(0.75),
   paddingLeft: theme.spacing(1.25),
   paddingRight: theme.spacing(1.25),
+  display: "inline-block",
+  textAlign: "center",
   ...(tagType === TagType.Alert && {
     color: theme.palette.text.primary,
     backgroundColor: BG_ALERT,
-    "&:hover": {
-      backgroundColor: darken(BG_ALERT, 0.05),
-    },
   }),
   ...(tagType === TagType.Active && {
     backgroundColor: BG_ACTIVE,
     color: theme.palette.success.dark,
-    "&:hover": {
-      backgroundColor: darken(BG_ACTIVE, 0.05),
-    },
   }),
   ...(tagType === TagType.Notice && {
     backgroundColor: BG_NOTICE,
@@ -53,26 +47,14 @@ const Root = styled(MuiButtonBase, {
 export interface Props {
   id?: string;
   tagType: TagType;
-  sectionTitle?: string;
-  onClick: (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   children?: React.ReactNode;
 }
 
 export default function Tag(props: Props): FCReturn {
-  const { id, tagType, onClick, children, sectionTitle } = props;
+  const { id, tagType, children } = props;
 
   return (
-    <Root
-      disabled={tagType == TagType.Notice || tagType == TagType.Success}
-      onClick={onClick}
-      id={id}
-      tagType={tagType}
-    >
-      <Box sx={visuallyHidden} component="span">
-        {sectionTitle
-          ? `section ${sectionTitle}`
-          : "The status of this section of the application is:"}
-      </Box>
+    <Root id={id} tagType={tagType}>
       {children}
     </Root>
   );
