@@ -107,6 +107,12 @@ export default forwardRef((props: Props, ref): FCReturn => {
           "aria-label": ariaLabel,
           "aria-describedby": ariaDescribedBy,
           "aria-labelledby": ariaLabelledBy,
+          // Disable autofill using common browser password managers, unless an autocomplete value is provided
+          "data-1p-ignore": !props.autoComplete,
+          "data-op-ignore": !props.autoComplete,
+          "data-lpignore": !props.autoComplete,
+          "data-form-type": props.autoComplete || "other",
+          "data-bwignore": !props.autoComplete,
         }}
         id={id}
         inputRef={ref}
