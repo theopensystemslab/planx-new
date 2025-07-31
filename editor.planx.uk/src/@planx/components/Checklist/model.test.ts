@@ -429,6 +429,24 @@ describe("Editor validation", () => {
         ).rejects.toThrow("Options must have unique labels");
       });
 
+      test("checklists - repeated data values are allowed", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          options: [
+            {
+              id: "a",
+              data: { text: "Flats", val: "residential.flat" },
+            },
+            {
+              id: "b",
+              data: { text: "Maisonettes", val: "residential.flat" },
+            },
+          ],
+        });
+
+        expect(result).toBeDefined();
+      });
+
       test("grouped checklists - labels must be unique within groups", async () => {
         await expect(() =>
           validationSchema.validate({
@@ -454,7 +472,69 @@ describe("Editor validation", () => {
         );
       });
 
+      test("grouped checklists - data values can be repeated within groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Flats", val: "residential.flat" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Maisonettes", val: "residential.flat" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeDefined();
+      });
+
       test("grouped checklists - labels can be repeated across groups", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Common property types",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Houses", val: "residential.house" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Maisonettes", val: "residential.flat" },
+                },
+              ],
+            },
+            {
+              title: "Residential properties",
+              children: [
+                {
+                  id: "c",
+                  data: {
+                    text: "Bungalow",
+                    val: "residential.bungalow",
+                  },
+                },
+                {
+                  id: "d",
+                  data: { text: "Maisonettes", val: "residential.flat" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
+
+      test("grouped checklists - data values can be repeated across groups", async () => {
         const result = validationSchema.validate({
           title: "Test",
           groupedOptions: [
