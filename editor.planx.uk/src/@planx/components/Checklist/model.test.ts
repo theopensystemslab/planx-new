@@ -222,6 +222,34 @@ describe("Editor validation", () => {
       ).rejects.toThrow("Groups must have unique titles");
     });
 
+    test("groups must have unique titles - whitespace is stripped before checks", async () => {
+      await expect(() =>
+        validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Whitespace   ",
+              children: [
+                {
+                  id: "abc",
+                  data: { text: "ABC" },
+                },
+              ],
+            },
+            {
+              title: "Whitespace",
+              children: [
+                {
+                  id: "123",
+                  data: { text: "123" },
+                },
+              ],
+            },
+          ],
+        }),
+      ).rejects.toThrow("Groups must have unique titles");
+    });
+
     describe("options without data values", () => {
       test("checklists - unique labels must be used for each option", async () => {
         await expect(() =>
@@ -231,6 +259,24 @@ describe("Editor validation", () => {
               {
                 id: "a",
                 data: { text: "Non-unique label" },
+              },
+              {
+                id: "b",
+                data: { text: "Non-unique label" },
+              },
+            ],
+          }),
+        ).rejects.toThrow("Options must have unique labels");
+      });
+
+      test("checklists - unique labels must be used for each option (inc. whitespace)", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            options: [
+              {
+                id: "a",
+                data: { text: "Non-unique label     " },
               },
               {
                 id: "b",
@@ -266,6 +312,31 @@ describe("Editor validation", () => {
         );
       });
 
+      test("grouped checklists - labels must be unique within groups (inc. whitespace)", async () => {
+        await expect(() =>
+          validationSchema.validate({
+            title: "Test",
+            groupedOptions: [
+              {
+                title: "Section 1",
+                children: [
+                  {
+                    id: "a",
+                    data: { text: "Non-unique label    " },
+                  },
+                  {
+                    id: "b",
+                    data: { text: "Non-unique label" },
+                  },
+                ],
+              },
+            ],
+          }),
+        ).rejects.toThrow(
+          "Options within a single group must have unique labels",
+        );
+      });
+
       test("grouped checklists - labels can be repeated across groups", async () => {
         const result = validationSchema.validate({
           title: "Test",
@@ -276,6 +347,42 @@ describe("Editor validation", () => {
                 {
                   id: "a",
                   data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Foo" },
+                },
+              ],
+            },
+            {
+              title: "Section 2",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label" },
+                },
+                {
+                  id: "b",
+                  data: { text: "Bar" },
+                },
+              ],
+            },
+          ],
+        });
+
+        expect(result).toBeTruthy();
+      });
+
+      test("grouped checklists - labels can be repeated across groups (inc. whitespace)", async () => {
+        const result = validationSchema.validate({
+          title: "Test",
+          groupedOptions: [
+            {
+              title: "Section 1",
+              children: [
+                {
+                  id: "a",
+                  data: { text: "Non-unique label    " },
                 },
                 {
                   id: "b",

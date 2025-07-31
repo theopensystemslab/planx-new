@@ -160,7 +160,7 @@ const optionValidationSchema = object({
     description: string(),
     flags: array(string()),
     img: string(),
-    text: string().required(),
+    text: string().required().trim(),
     val: string(),
     exclusive: mixed().oneOf([true, undefined]),
   }),
@@ -171,7 +171,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     description: richText(),
     groupedOptions: array(
       object({
-        title: string().required("Section title is a required field"),
+        title: string().required("Section title is a required field").trim(),
         children: array(optionValidationSchema).required(),
       }).required(),
     ).optional(),
@@ -182,7 +182,7 @@ export const validationSchema = baseNodeDataValidationSchema.concat(
     img: string(),
     categories: array(
       object({
-        title: string(),
+        title: string().trim(),
         count: number(),
       }),
     ),
