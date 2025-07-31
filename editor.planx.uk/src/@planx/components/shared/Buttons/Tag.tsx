@@ -54,7 +54,7 @@ export default function Tag(props: Props): FCReturn {
   const { id, tagType, children } = props;
 
   return (
-    <Root id={id} tagType={tagType}>
+    <Root id={id} tagType={tagType} component="span">
       {children}
     </Root>
   );
