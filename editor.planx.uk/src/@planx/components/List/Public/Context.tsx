@@ -1,9 +1,11 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useSchema } from "@planx/components/shared/Schema/hook";
 import {
   Schema,
   SchemaUserData,
   SchemaUserResponse,
 } from "@planx/components/shared/Schema/model";
+import { getRequestedFiles } from "@planx/components/shared/Schema/utils";
 import { PublicProps } from "@planx/components/shared/types";
 import {
   getPreviouslySubmittedData,
@@ -84,11 +86,19 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
           totalUnitsByDevelopmentType),
       };
 
+      const requestedFiles = getRequestedFiles({
+        schemaFn: props.fn,
+        userData: values.schemaData,
+        schema: props.schema,
+        context: TYPES.List,
+      });
+
       handleSubmit?.({
         data: {
           ...defaultPassportData,
           ...flattenedPassportData,
           ...summaries,
+          ...requestedFiles,
         },
       });
     },
@@ -220,4 +230,13 @@ export const useListContext = (): ListContextValue => {
     throw new Error("useListContext must be used within a ListProvider");
   }
   return context;
+};
+
+export const useOptionalListContext = (): ListContextValue | undefined => {
+  try {
+    const context = useContext(ListContext);
+    return context;
+  } catch (error) {
+    return;
+  }
 };

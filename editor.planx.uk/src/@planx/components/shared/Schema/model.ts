@@ -3,17 +3,28 @@ import {
   AddressInput,
   addressValidationSchema,
 } from "@planx/components/AddressInput/model";
+import { checklistInputValidationSchema } from "@planx/components/Checklist/model";
+import {
+  DateInput,
+  dateInputValidationSchema,
+} from "@planx/components/DateInput/model";
+import {
+  FileUpload,
+  FileUploadSlot,
+  fileUploadValidationSchema,
+} from "@planx/components/FileUpload/model";
+import {
+  NumberInput,
+  numberInputValidationSchema,
+} from "@planx/components/NumberInput/model";
+import {
+  TextInput,
+  textInputValidationSchema,
+} from "@planx/components/TextInput/model";
 import { Feature } from "geojson";
 import { exhaustiveCheck } from "utils";
 import { array, BaseSchema, object, ObjectSchema, string } from "yup";
 
-import { checklistInputValidationSchema } from "../../Checklist/model";
-import { DateInput, dateInputValidationSchema } from "../../DateInput/model";
-import {
-  NumberInput,
-  numberInputValidationSchema,
-} from "../../NumberInput/model";
-import { TextInput, textInputValidationSchema } from "../../TextInput/model";
 import { Option } from "..";
 
 /**
@@ -136,6 +147,10 @@ export interface MapField extends BaseField<MapInput> {
   type: "map";
 }
 
+export interface FileUploadField extends BaseField<FileUpload> {
+  type: "fileUpload";
+}
+
 /**
  * Represents the input types available in the List component
  * Existing models are used to allow to us to re-use existing components, maintaining consistend UX/UI
@@ -147,7 +162,8 @@ export type Field =
   | ChecklistField
   | DateField
   | AddressField
-  | MapField;
+  | MapField
+  | FileUploadField;
 
 /**
  * Models the form displayed to the user
@@ -164,15 +180,19 @@ export interface Schema {
  * ResponseValues are parsed on submission in planx-core
  * If adding a ResponseValue here, please update `schemaResponsesSchema` (src/export/bops/utils/schema.ts) in planx-core
  */
-export type ResponseValue<T extends Field> = T extends MapField
-  ? Feature[]
-  : T extends ChecklistField
-  ? string[]
-  : T extends NumberField
-  ? number
-  : T extends AddressField
-  ? Address
-  : string;
+export type ResponseValue<T extends Field> =
+  FieldTypeToResponseValue[T["type"]];
+
+interface FieldTypeToResponseValue {
+  map: Feature[];
+  checklist: string[];
+  number: number;
+  address: Address;
+  fileUpload: FileUploadSlot[];
+  text: string;
+  date: string;
+  question: string;
+}
 
 export type SchemaUserResponse = Record<
   Field["data"]["fn"],
@@ -205,12 +225,19 @@ export const isMapFieldResponse = (
 export const isChecklistFieldResponse = (
   response: unknown,
 ): response is ResponseValue<ChecklistField> =>
-  Array.isArray(response) && !isMapFieldResponse(response);
+  Array.isArray(response) &&
+  response.every((answer) => typeof answer == "string");
 
 export const isAddressFieldResponse = (
   response: unknown,
 ): response is ResponseValue<AddressField> =>
   typeof response === "object" && response !== null && "line1" in response;
+
+export const isFileUploadFieldResponse = (
+  response: unknown,
+): response is ResponseValue<FileUploadField> =>
+  Array.isArray(response) &&
+  Object.prototype.hasOwnProperty.call(response[0], "status");
 
 /**
  * For each field in schema, return a map of Yup validation schema
@@ -256,6 +283,9 @@ const generateValidationSchemaForFields = (
       case "map":
         fieldSchemas[data.fn] = mapInputValidationSchema({ data, required });
         break;
+      case "fileUpload":
+        fieldSchemas[data.fn] = fileUploadValidationSchema({ required });
+        break;
       default:
         return exhaustiveCheck(type);
     }
@@ -287,6 +317,7 @@ export const generateInitialValues = (schema: Schema): SchemaUserResponse => {
     switch (field.type) {
       case "checklist":
       case "map":
+      case "fileUpload":
         initialValues[field.data.fn] = [];
         break;
       case "address":

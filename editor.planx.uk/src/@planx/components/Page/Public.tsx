@@ -1,3 +1,4 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { PublicProps } from "@planx/components/shared/types";
 import { FormikConfig, useFormik } from "formik";
 import React from "react";
@@ -8,6 +9,7 @@ import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import { useSchema } from "../shared/Schema/hook";
 import { SchemaUserData } from "../shared/Schema/model";
 import { SchemaFields } from "../shared/Schema/SchemaFields";
+import { getRequestedFiles } from "../shared/Schema/utils";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { Page } from "./model";
 
@@ -31,10 +33,18 @@ function PageComponent(props: Props) {
       omitIndexKeys: true,
     });
 
+    const requestedFiles = getRequestedFiles({
+      schemaFn: props.fn,
+      schema: props.schema,
+      userData: values.schemaData,
+      context: TYPES.Page,
+    });
+
     const userData = {
       data: {
         ...defaultPassportData,
         ...flattenedData,
+        ...requestedFiles,
       },
     };
 
