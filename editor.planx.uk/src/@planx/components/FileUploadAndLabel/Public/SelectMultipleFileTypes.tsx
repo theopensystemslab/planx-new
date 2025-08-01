@@ -1,14 +1,12 @@
-import {
-  AutocompleteChangeReason,
-  AutocompleteProps,
-} from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
-import React, { forwardRef, PropsWithChildren, useMemo } from "react";
-import { RenderGroupHeaderBlock } from "ui/shared/Autocomplete/components/RenderGroupHeaderBlock";
-import { RenderOptionCheckbox } from "ui/shared/Autocomplete/components/RenderOptionCheckbox";
-import { SelectMultiple } from "ui/shared/SelectMultiple";
+import React, { useMemo } from "react";
+import { FONT_WEIGHT_SEMI_BOLD } from "theme";
+import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 
 import { FileUploadSlot } from "../../FileUpload/model";
 import {
@@ -19,7 +17,7 @@ import {
   UserFile,
 } from "../model";
 
-interface SelectMultipleProps {
+interface ChecklistProps {
   uploadedFile: FileUploadSlot;
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
@@ -29,66 +27,15 @@ interface Option extends UserFile {
   category: keyof FileList;
 }
 
-/**
- * Function which returns the groups (ul elements) used by Autocomplete
- */
-const renderGroup: AutocompleteProps<
-  Option,
-  true,
-  true,
-  false,
-  "div"
->["renderGroup"] = (params) => (
-  <RenderGroupHeaderBlock
-    key={params.key}
-    params={params}
-    displayName={`${capitalize(params.group)} information`}
-  />
-);
-
-/**
- * Function which returns the options (li elements) used by Autocomplete
- */
-const renderOption: AutocompleteProps<
-  Option,
-  true,
-  true,
-  false,
-  "div"
->["renderOption"] = (props, option, state) => (
-  <RenderOptionCheckbox
-    key={props.key}
-    listProps={props}
-    displayName={option.name}
-    state={state}
-  />
-);
-
-/**
- * Custom Listbox component
- * Used to wrap options within the autocomplete and append a custom element above the option list
- */
-const ListboxComponent = forwardRef<typeof Box, PropsWithChildren>(
-  ({ children, ...props }, ref) => (
-    <Box
-      ref={ref}
-      {...props}
-      role="listbox"
-      aria-multiselectable="true"
-      sx={{ paddingY: "0px !important" }}
-    >
-      {children}
-    </Box>
-  ),
-);
-
-export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
+export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   const { uploadedFile, fileList, setFileList } = props;
 
   const initialTags = getTagsForSlot(uploadedFile.id, fileList);
 
+  const titleId = `file-selection-title-${uploadedFile.id}`;
+
   /**
-   * Options for autocomplete
+   * Options for checklist
    * FileList with appended "category" property for grouping
    */
   const options: Option[] = useMemo(
@@ -102,73 +49,99 @@ export const SelectMultipleFileTypes = (props: SelectMultipleProps) => {
   );
 
   /**
-   * Previous values to pre-populate autocomplete
+   * Group options by category for rendering
    */
-  const value: Option[] = useMemo(
-    () =>
-      initialTags.flatMap((tag) => options.filter(({ name }) => name === tag)),
-    [initialTags, options],
-  );
+  const groupedOptions = useMemo(() => {
+    const groups: Record<string, Option[]> = {};
+    options.forEach((option) => {
+      if (!groups[option.category]) {
+        groups[option.category] = [];
+      }
+      groups[option.category].push(option);
+    });
+    return groups;
+  }, [options]);
 
   /**
-   * Update FileList (from main Public.tsx component) when values are added or removed from Autocomplete
+   * Handle individual checkbox change
    */
-  const handleChange = (
-    _event: React.SyntheticEvent,
-    value: Option[],
-    reason: AutocompleteChangeReason,
-  ) => {
-    const selectedTags = value.map(({ name }) => name);
+  const handleCheckboxChange =
+    (option: Option) =>
+    (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const isCurrentlyChecked = initialTags.includes(option.name);
+      const newCheckedState = !isCurrentlyChecked;
 
-    switch (reason) {
-      case "selectOption": {
-        const updatedTags = selectedTags.filter(
-          (tag) => !initialTags?.includes(tag),
-        );
+      if (newCheckedState) {
+        // Add the tag
         const updatedFileList = addOrAppendSlots(
-          updatedTags,
+          [option.name],
           uploadedFile,
           fileList,
         );
         setFileList(updatedFileList);
-        break;
-      }
-      case "removeOption": {
-        const removedTags = initialTags?.filter(
-          (tag) => !selectedTags?.includes(tag),
-        );
+      } else {
+        // Remove the tag
         const updatedFileList = removeSlots(
-          removedTags,
+          [option.name],
           uploadedFile,
           fileList,
         );
         setFileList(updatedFileList);
-        break;
       }
-    }
-  };
+    };
 
   return (
-    <SelectMultiple
-      getOptionLabel={(option) => option.name}
-      groupBy={(option) => option.category}
-      id={`select-multiple-file-tags-${uploadedFile.id}`}
-      isOptionEqualToValue={(option, value) => option.name === value.name}
-      key={`form-${uploadedFile.id}`}
-      label={
-        <>
-          What does this file show? (select all that apply)
-          <Box component="span" sx={visuallyHidden}>
-            This question refers to file: {uploadedFile.file.name}
+    <Box
+      sx={(theme) => ({
+        width: "100%",
+        backgroundColor: theme.palette.background.default,
+        borderColor: theme.palette.border.main,
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderTopColor: theme.palette.border.light,
+        padding: theme.spacing(2),
+      })}
+    >
+      <Typography variant="h3" mb={3} id={titleId}>
+        What does this file show? (select all that apply)
+        <Box component="span" sx={visuallyHidden}>
+          This question refers to file: {uploadedFile.file.name}
+        </Box>
+      </Typography>
+
+      {Object.entries(groupedOptions).map(([category, categoryOptions]) => (
+        <FormControl
+          key={category}
+          component="fieldset"
+          sx={{
+            width: "100%",
+            mb: 1,
+          }}
+          aria-describedby={titleId}
+        >
+          <FormLabel
+            component="legend"
+            sx={{
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              color: "text.primary",
+            }}
+          >
+            {capitalize(category)} information
+          </FormLabel>
+
+          <Box>
+            {categoryOptions.map((option) => (
+              <ChecklistItem
+                key={`${category}-${option.name}`}
+                id={`${uploadedFile.id}-${category}-${option.name}`}
+                label={option.name}
+                checked={initialTags.includes(option.name)}
+                onChange={handleCheckboxChange(option)}
+              />
+            ))}
           </Box>
-        </>
-      }
-      ListboxComponent={ListboxComponent}
-      onChange={handleChange}
-      options={options}
-      renderGroup={renderGroup}
-      renderOption={renderOption}
-      value={value}
-    />
+        </FormControl>
+      ))}
+    </Box>
   );
 };
