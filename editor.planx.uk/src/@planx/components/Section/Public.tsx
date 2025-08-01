@@ -274,21 +274,17 @@ export function SectionsOverviewList({
 
   return (
     <DescriptionList>
-      {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => {
-        const status = sectionStatuses[sectionId];
-
-        return (
-          <SectionRow
-            key={sectionId}
-            sectionId={sectionId}
-            sectionNode={sectionNode}
-            status={status}
-            showChange={showChange}
-            changeFirstAnswerInSection={changeFirstAnswerInSection}
-            nextQuestion={nextQuestion}
-          />
-        );
-      })}
+      {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => (
+        <SectionRow
+          key={sectionId}
+          sectionId={sectionId}
+          sectionNode={sectionNode}
+          status={sectionStatuses[sectionId]}
+          showChange={showChange}
+          changeFirstAnswerInSection={changeFirstAnswerInSection}
+          nextQuestion={nextQuestion}
+        />
+      ))}
     </DescriptionList>
   );
 }
