@@ -72,7 +72,6 @@ const FeatureTabs: React.FC = () => {
     throw new Error("Cannot render MapAndLabel tabs without features");
   }
 
-  // TODO: Preview panel?
   const isSmallScreen = useMediaQuery<Theme>((theme) => theme.breakpoints.down("lg"))
 
   // Features is inherently sorted by recently added/modified, order tabs by stable labels (labels are integers stored as strings)

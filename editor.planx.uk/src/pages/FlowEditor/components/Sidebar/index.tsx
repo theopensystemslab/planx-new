@@ -4,7 +4,6 @@ import LanguageIcon from "@mui/icons-material/Language";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import OpenInNewOffIcon from "@mui/icons-material/OpenInNewOff";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
@@ -14,13 +13,12 @@ import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
-import Reset from "ui/icons/Reset";
 
-import Questions from "../../../Preview/Questions";
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
 import { DebugConsole } from "./DebugConsole";
 import EditHistory from "./EditHistory";
+import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Search from "./Search";
 import StyledTab from "./StyledTab";
@@ -108,15 +106,6 @@ const Icons = styled(Box)(() => ({
   },
 }));
 
-const ResetToggle = styled(Button)(({ theme }) => ({
-  position: "absolute",
-  top: 0,
-  right: theme.spacing(3),
-  padding: theme.spacing(1, 1, 1, 0),
-  textDecorationStyle: "solid",
-  color: theme.palette.text.primary,
-}));
-
 const TabList = styled(Box)(({ theme }) => ({
   position: "relative",
   "&::after": {
@@ -139,13 +128,11 @@ const TabList = styled(Box)(({ theme }) => ({
 
 const Sidebar: React.FC = React.memo(() => {
   const [
-    resetPreview,
     isFlowPublished,
     toggleSidebar,
     showSidebar,
     isTemplatedFrom,
   ] = useStore((state) => [
-    state.resetPreview,
     state.isFlowPublished,
     state.toggleSidebar,
     state.showSidebar,
@@ -253,16 +240,7 @@ const Sidebar: React.FC = React.memo(() => {
           )}
           {activeTab === "PreviewBrowser" && (
             <SidebarContainer>
-              <ResetToggle
-                variant="link"
-                onClick={() => {
-                  resetPreview();
-                }}
-              >
-                <Reset fontSize="small" />
-                Restart
-              </ResetToggle>
-              <Questions previewEnvironment="editor" />
+             <PreviewBrowser/>
             </SidebarContainer>
           )}
           {activeTab === "History" && (
