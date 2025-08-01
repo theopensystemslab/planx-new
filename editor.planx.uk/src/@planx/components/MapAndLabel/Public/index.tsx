@@ -3,15 +3,16 @@ import TabContext from "@mui/lab/TabContext";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { lighten, styled } from "@mui/material/styles";
+import { lighten, styled, Theme } from "@mui/material/styles";
 import Tab, { tabClasses, TabProps } from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { SiteAddress } from "@planx/components/FindProperty/model";
 import { SchemaFields } from "@planx/components/shared/Schema/SchemaFields";
 import { GraphError } from "components/Error/GraphError";
 import { GeoJsonObject } from "geojson";
-import { useFormErrorFocus } from "hooks/useFormErrorFoucs";
+import { useFormErrorFocus } from "hooks/useFormErrorFocus";
 import sortBy from "lodash/sortBy";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -56,7 +57,7 @@ const StyledTab = styled((props: TabProps) => (
   },
 })) as typeof Tab;
 
-const VerticalFeatureTabs: React.FC = () => {
+const FeatureTabs: React.FC = () => {
   const {
     schema,
     activeIndex,
@@ -70,6 +71,8 @@ const VerticalFeatureTabs: React.FC = () => {
   if (!features) {
     throw new Error("Cannot render MapAndLabel tabs without features");
   }
+
+  const isSmallScreen = useMediaQuery<Theme>((theme) => theme.breakpoints.down("lg"))
 
   // Features is inherently sorted by recently added/modified, order tabs by stable labels (labels are integers stored as strings)
   const sortedFeatures = sortBy(features, [
@@ -99,12 +102,13 @@ const VerticalFeatureTabs: React.FC = () => {
         flexGrow: 1,
         bgcolor: "background.paper",
         display: "flex",
+        flexDirection: { xs: "column", lg: "row" },
         maxHeight: "fit-content",
       }}
     >
       <TabContext value={activeIndex.toString()}>
         <Tabs
-          orientation="vertical"
+          orientation={isSmallScreen ? "horizontal" : "vertical"}
           variant="scrollable"
           value={activeIndex.toString()}
           onChange={(_e, newValue) => {
@@ -112,12 +116,15 @@ const VerticalFeatureTabs: React.FC = () => {
           }}
           aria-label="Select a feature to enter data"
           TabIndicatorProps={{
-            style: {
-              width: "4px",
+            sx: {
+              height: { xs: "4px", lg: "2px" },
+              width: { xs: "2px", lg: "4px" },
+              transition: "none",
             },
           }}
           sx={{
-            borderRight: 1,
+            borderBottom: { xs: 1, lg: 0 },
+            borderRight: { xs: 0, lg: 1 },
             borderColor: (theme) => theme.palette.border.main,
           }}
         >
@@ -131,7 +138,8 @@ const VerticalFeatureTabs: React.FC = () => {
               {...a11yProps(i)}
               {...(isFeatureInvalid(i) && {
                 sx: (theme) => ({
-                  borderLeft: `5px solid ${theme.palette.error.main}`,
+                  borderBottom: { xs: `5px solid ${theme.palette.error.main}`, lg: 0 },
+                  borderLeft: { xs: 0, lg: `5px solid ${theme.palette.error.main}` },
                 }),
               })}
             />
@@ -150,8 +158,8 @@ const VerticalFeatureTabs: React.FC = () => {
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "flex-start",
-                height: "90px",
+                alignItems: { xs: "stretch", md: "flex-start" },
+                flexDirection: { xs: "column-reverse", md: "row" },
               }}
             >
               <Box>
@@ -162,14 +170,15 @@ const VerticalFeatureTabs: React.FC = () => {
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
-                        coord.toFixed(5),
-                      )})`
-                    : ` (area ${
-                        feature.properties?.["area.squareMetres"] || 0
-                      } m²)`}
+                      coord.toFixed(5),
+                    )})`
+                    : ` (area ${feature.properties?.["area.squareMetres"] || 0
+                    } m²)`}
                 </Typography>
               </Box>
-              <CopyFeature features={features} destinationIndex={i} />
+              <Box sx={{ alignSelf: { xs: "flex-end", md: "flex-start" }, pb: { xs: 2, md: 0 } }}>
+                <CopyFeature features={features} destinationIndex={i} />
+              </Box>
             </Box>
             <SchemaFields
               sx={(theme) => ({
@@ -297,9 +306,8 @@ const Root = () => {
               maxZoom={23}
               latitude={latitude}
               longitude={longitude}
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               osCopyright={
                 basemap === "OSVectorTile"
                   ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
@@ -312,7 +320,7 @@ const Root = () => {
           </MapContainer>
         </ErrorWrapper>
         {features && features?.length > 0 ? (
-          <VerticalFeatureTabs />
+          <FeatureTabs />
         ) : (
           <PlotFeatureToBegin />
         )}

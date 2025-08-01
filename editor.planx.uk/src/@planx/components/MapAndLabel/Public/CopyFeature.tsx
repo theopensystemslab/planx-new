@@ -53,7 +53,7 @@ export const CopyFeature: React.FC<Props> = ({
             value={formik.values.sourceLabel}
             onChange={formik.handleChange}
             name={"sourceLabel"}
-            style={{ width: "200px" }}
+            sx={{ width: { xs: "150px", md: "200px" } }}
           >
             <span id="copy-feature-description" style={visuallyHidden}>
               Please add at least two features to the map in order to enable
