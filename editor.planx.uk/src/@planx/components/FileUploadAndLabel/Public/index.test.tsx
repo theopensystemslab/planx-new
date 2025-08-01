@@ -407,7 +407,7 @@ describe("Adding tags and syncing state", () => {
     // Find the "Roof plan" checkbox using data-testid which includes the file ID
     // The pattern is: ${fileId}-${category}-${optionName}
     const roofPlanCheckbox =
-      within(fileTaggingModal).getByTestId(/.*-.*-Roof plan$/);
+      within(fileTaggingModal).getByTestId(/.*-.*-roof-plan$/);
     expect(roofPlanCheckbox).toBeInTheDocument();
 
     // Apply tag to this file
@@ -815,7 +815,7 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
 
   // Find the "Roof plan" checkbox using data-testid
   const roofPlanCheckbox =
-    within(fileTaggingModal).getByTestId(/.*-.*-Roof plan$/);
+    within(fileTaggingModal).getByTestId(/.*-.*-roof-plan$/);
   expect(roofPlanCheckbox).toBeInTheDocument();
   await user.click(roofPlanCheckbox);
 
