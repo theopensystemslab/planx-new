@@ -65,6 +65,7 @@ export function SelectMultiple<T>(props: Props<T>) {
             {...params}
             InputProps={{
               ...params.InputProps,
+              onBlur: undefined,
               notched: false,
             }}
             label={props.label}

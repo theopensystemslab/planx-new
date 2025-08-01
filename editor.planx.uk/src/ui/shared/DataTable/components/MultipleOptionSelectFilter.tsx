@@ -35,6 +35,7 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
             variant="standard"
             InputProps={{
               ...params.InputProps,
+              onBlur: undefined,
             }}
           />
         )}

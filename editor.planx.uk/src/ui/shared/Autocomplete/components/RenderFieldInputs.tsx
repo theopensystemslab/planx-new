@@ -21,6 +21,7 @@ export const RenderDataFieldInput = ({
       {...params}
       InputProps={{
         ...params.InputProps,
+        onBlur: undefined,
         notched: false,
       }}
       label={label}
@@ -42,6 +43,7 @@ export const RenderTextFieldInput = ({
       InputProps={{
         ...params.InputProps,
         notched: false,
+        onBlur: undefined,
       }}
       label={label}
       placeholder={placeholder}
