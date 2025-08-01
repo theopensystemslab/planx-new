@@ -41,19 +41,17 @@ const Feedback: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<FeedbackView | null>(null);
   const previousFeedbackView = usePrevious(currentFeedbackView);
-  const breadcrumbs = useStore((state) => state.breadcrumbs);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  useEffect(() => {
-    if (currentFeedbackView === "thanks") {
-      setCurrentFeedbackView("banner");
-    }
-  }, [breadcrumbs, currentFeedbackView]);
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setCurrentFeedbackView(null);
+  }
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
       case "close":
-        setIsDrawerOpen(false);
+        closeDrawer();
         break;
       case "back":
         setCurrentFeedbackView("triage");
@@ -122,14 +120,7 @@ const Feedback: React.FC = () => {
   }
 
   function ReportAnIssueTopBar(): FCReturn {
-    if (previousFeedbackView === "banner") {
-      return (
-        <TitleAndCloseFeedbackHeader
-          Icon={WarningIcon}
-          title="Report an issue with this service"
-        />
-      );
-    } else
+    if (previousFeedbackView === "triage") {
       return (
         <>
           <BackAndCloseFeedbackHeader />
@@ -140,7 +131,15 @@ const Feedback: React.FC = () => {
             </Typography>
           </FeedbackTitle>
         </>
-      );
+      )
+    }
+
+    return (
+      <TitleAndCloseFeedbackHeader
+        Icon={WarningIcon}
+        title="Report an issue with this service"
+      />
+    );
   }
 
   function FeedbackPhaseBannerView(): FCReturn {
