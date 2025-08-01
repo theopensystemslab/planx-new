@@ -161,8 +161,8 @@ export async function expectSections({
     status: string;
   }[];
 }) {
-  const pageSections = page.locator("dl dt");
-  const pageStatuses = page.locator("dl dd");
+  const pageSections = page.locator("ul li");
+  const pageStatuses = page.locator("ul li span");
   await expect(pageSections).toContainText(sections.map((s) => s.title));
   await expect(pageStatuses).toContainText(sections.map((s) => s.status));
 }
@@ -244,8 +244,8 @@ export async function answerNumberInput(
     continueToNext: boolean;
   },
 ) {
-  await expect(page.locator("p", { hasText: expectedQuestion })).toBeVisible();
-  await page.locator("label div input[type='number']").fill(answer.toString());
+  await expect(page.locator("h1", { hasText: expectedQuestion })).toBeVisible();
+  await page.locator("div input[type='number']").fill(answer.toString());
   if (continueToNext) {
     await clickContinue({ page });
   }

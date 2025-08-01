@@ -33,12 +33,62 @@ export function getInitialExpandedGroups(
 export const toggleCheckbox = (
   thisCheckboxId: string,
   currentlyCheckedOptionIds: string[],
+  nonExclusiveOptions: Option[],
 ) => {
-  const toggleOff = currentlyCheckedOptionIds.filter(
-    (id) => id !== thisCheckboxId,
-  );
+  const matchById = (id: string) => id === thisCheckboxId;
 
-  const toggleOn = [...currentlyCheckedOptionIds, thisCheckboxId];
+  const matchByLabelAndDataValue = (currentId: string) => {
+    const selectedOption = nonExclusiveOptions.find(
+      ({ id }) => id === thisCheckboxId,
+    );
+    
+    // Type narrowing - there will always be a selected option
+    if (!selectedOption) {
+      throw Error(`Selected option with id ${thisCheckboxId} not found`);
+    }
+
+    const {
+      data: { text: selectedLabel, val: selectedVal },
+    } = selectedOption;
+
+    if (!selectedVal) return false;
+
+    const currentOption = nonExclusiveOptions.find(
+      ({ id }) => id === currentId,
+    );
+
+    // Current option must be the exclusive option
+    if (!currentOption) return false;
+
+    const {
+      data: { text: currentLabel, val: currentVal },
+    } = currentOption;
+
+    const isMatch =
+      currentLabel === selectedLabel && currentVal === selectedVal;
+    return isMatch;
+  };
+
+  const toggleOff = currentlyCheckedOptionIds
+    // Remove current
+    .filter((id) => !matchById(id))
+    // Remove matches
+    .filter((id) => !matchByLabelAndDataValue(id));
+
+  const matches = nonExclusiveOptions
+    .map(({ id }) => id)
+    .filter(matchByLabelAndDataValue);
+
+  const toggleOn = [
+    ...new Set([
+      // Retain existing
+      ...currentlyCheckedOptionIds,
+      // Add current
+      thisCheckboxId,
+      // Add matches
+      ...matches,
+    ]),
+  ];
 
   return currentlyCheckedOptionIds.includes(thisCheckboxId)
     ? toggleOff
@@ -49,10 +99,12 @@ export const toggleNonExclusiveCheckbox = (
   thisCheckboxId: string,
   currentlyCheckedOptionIds: string[],
   exclusiveOrOption: Option,
+  nonExclusiveOptions: Option[],
 ) => {
   const newCheckedOptionIds = toggleCheckbox(
     thisCheckboxId,
     currentlyCheckedOptionIds,
+    nonExclusiveOptions,
   );
   if (exclusiveOrOption) {
     return newCheckedOptionIds.filter(
@@ -81,12 +133,14 @@ export const changeCheckbox =
     currentCheckedIds,
     exclusiveOrOption,
     toggleExclusiveCheckbox,
+    nonExclusiveOptions,
   }: {
     id: string;
     setCheckedFieldValue: (optionIds: string[]) => void;
     currentCheckedIds: string[];
     exclusiveOrOption: Option;
     toggleExclusiveCheckbox: (checkboxId: string) => string[];
+    nonExclusiveOptions: Option[];
   }) =>
   () => {
     const currentCheckboxIsExclusiveOption =
@@ -101,6 +155,7 @@ export const changeCheckbox =
       id,
       currentCheckedIds,
       exclusiveOrOption,
+      nonExclusiveOptions,
     );
     setCheckedFieldValue(newCheckedIds);
   };

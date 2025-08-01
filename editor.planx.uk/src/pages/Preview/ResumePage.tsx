@@ -79,6 +79,7 @@ export const EmailRequired: React.FC<{ setEmail: (email: string) => void }> = ({
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
               type="email"
+              autoComplete="email"
               value={formik.values.email}
             ></Input>
           </InputLabel>

@@ -93,10 +93,12 @@ describe("SectionsOverviewList component", () => {
   it("renders correctly", () => {
     setup(<SectionsOverviewList {...defaultProps} />);
 
-    const changeLink = screen.getByText("Section one");
-    expect(
-      screen.getByRole("button", { name: "Change Section one" }),
-    ).toContainElement(changeLink);
+    const sectionOneLink = screen.getByRole("link", {
+      name: "Change Section one",
+    });
+    expect(sectionOneLink).toBeInTheDocument();
+    expect(sectionOneLink).toHaveTextContent("Section one");
+
     expect(screen.getByText(SectionStatus.Completed)).toBeInTheDocument();
 
     expect(screen.getByText("Section two")).toBeInTheDocument();
@@ -110,7 +112,53 @@ describe("SectionsOverviewList component", () => {
     setup(<SectionsOverviewList {...defaultProps} showChange={false} />);
 
     expect(screen.getByText("Section one")).toBeInTheDocument();
-    expect(screen.queryByText("Change Section one")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Change Section one" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Section one" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("creates clickable links for completed sections when showChange is true", () => {
+    const mockChangeAnswer = vi.fn();
+    setup(
+      <SectionsOverviewList
+        {...defaultProps}
+        changeAnswer={mockChangeAnswer}
+      />,
+    );
+
+    const sectionOneLink = screen.getByRole("link", {
+      name: "Change Section one",
+    });
+    expect(sectionOneLink).toBeInTheDocument();
+    expect(sectionOneLink.getAttribute("href")).toBe("#");
+    expect(sectionOneLink).toHaveTextContent("Section one");
+  });
+
+  it("creates clickable links for sections that are ready to start or continue", () => {
+    const mockNextQuestion = vi.fn();
+    setup(
+      <SectionsOverviewList
+        {...defaultProps}
+        nextQuestion={mockNextQuestion}
+      />,
+    );
+
+    const sectionTwoLink = screen.getByRole("link", { name: "Section two" });
+    expect(sectionTwoLink).toBeInTheDocument();
+    expect(sectionTwoLink.getAttribute("href")).toBe("#");
+    expect(sectionTwoLink).toHaveTextContent("Section two");
+  });
+
+  it("does not create links for non-actionable sections", () => {
+    setup(<SectionsOverviewList {...defaultProps} />);
+
+    expect(screen.getByText("Section three")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Section three" }),
+    ).not.toBeInTheDocument();
   });
 
   it("should not have any accessibility violations", async () => {

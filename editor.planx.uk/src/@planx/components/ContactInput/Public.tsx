@@ -67,6 +67,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       <InputLabel label="Title (optional)">
         <InputRowItem width="40%">
           <Input
+            autoComplete="honorific-prefix"
             name="title"
             value={formik.values.title}
             bordered
@@ -77,6 +78,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       </InputLabel>
       <InputLabel label="First name">
         <Input
+          autoComplete="given-name"
           name="firstName"
           value={formik.values.firstName}
           bordered
@@ -92,6 +94,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       </InputLabel>
       <InputLabel label="Last name">
         <Input
+          autoComplete="family-name"
           name="lastName"
           value={formik.values.lastName}
           bordered
@@ -107,6 +110,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       </InputLabel>
       <InputLabel label="Organisation (optional)">
         <Input
+          autoComplete="organization"
           name="organisation"
           value={formik.values.organisation}
           bordered
@@ -116,6 +120,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       </InputLabel>
       <InputLabel label="Phone number">
         <Input
+          autoComplete="tel"
           name="phone"
           type="phone"
           value={formik.values.phone}
@@ -133,6 +138,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
       <InputLabel label="Email address">
         <InputRowItem>
           <Input
+            autoComplete="email"
             name="email"
             type="email"
             value={formik.values.email}

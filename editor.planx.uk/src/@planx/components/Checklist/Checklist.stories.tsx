@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 
 import Checklist from "./Public/Public";
+import { mockWithRepeatedOptions } from "./Public/tests/mockOptions";
 
 const meta = {
   title: "PlanX Components/Checklist",
@@ -158,6 +159,10 @@ export const AllRequired = {
     ],
     allRequired: true,
   },
+} satisfies Story;
+
+export const WithRepeatedOptions = {
+  args: mockWithRepeatedOptions
 } satisfies Story;
 
 // Similar to Question stories here, Checklist's editor atyipcally expects props so the Wrapper throws a type error - come back to!

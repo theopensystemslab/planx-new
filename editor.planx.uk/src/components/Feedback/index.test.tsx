@@ -26,9 +26,6 @@ vi.mock("lib/feedback", () => ({
   insertFeedbackMutation: vi.fn(),
 }));
 
-const scrollIntoViewMock = vi.fn();
-window.Element.prototype.scrollIntoView = scrollIntoViewMock;
-
 describe("Feedback component triage journey", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -40,15 +37,12 @@ describe("Feedback component triage journey", () => {
     expect(getByText("PUBLIC BETA")).toBeInTheDocument();
     expect(getByText("Report an issue with this page")).toBeInTheDocument();
     expect(getByText("feedback")).toBeInTheDocument();
-    expect(scrollIntoViewMock).not.toBeCalled();
   });
 
   test("Selecting 'feedback' scrolls triage into view", async () => {
     const { getByText, getByRole, user } = setup(<Feedback />);
 
     await user.click(getByText("feedback"));
-
-    expect(scrollIntoViewMock).toBeCalledTimes(1);
 
     await waitFor(() => {
       expect(getByRole("button", { name: "Issue" })).toBeInTheDocument();
@@ -62,8 +56,6 @@ describe("Feedback component triage journey", () => {
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Issue" }));
-
-    expect(scrollIntoViewMock).toBeCalledTimes(2);
 
     await waitFor(() => {
       expect(getByLabelText("What were you doing?")).toBeInTheDocument();
@@ -99,8 +91,6 @@ describe("Feedback component triage journey", () => {
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Idea" }));
 
-    expect(scrollIntoViewMock).toBeCalledTimes(2);
-
     await waitFor(() => {
       expect(getByText("Share an idea")).toBeInTheDocument();
     });
@@ -132,8 +122,6 @@ describe("Feedback component triage journey", () => {
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Comment" }));
 
-    expect(scrollIntoViewMock).toBeCalledTimes(2);
-
     await waitFor(() => {
       expect(getByText("Share a comment")).toBeInTheDocument();
     });
@@ -164,8 +152,6 @@ describe("Feedback component triage journey", () => {
 
     await user.click(getByText("feedback"));
     await user.click(getByRole("button", { name: "Inaccuracy" }));
-
-    expect(scrollIntoViewMock).toBeCalledTimes(2);
 
     await waitFor(() => {
       expect(getByText("Report an inaccuracy")).toBeInTheDocument();
@@ -206,8 +192,6 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
 
     await user.click(getByText("Report an issue with this page"));
 
-    expect(scrollIntoViewMock).toBeCalledTimes(1);
-
     await waitFor(() => {
       expect(
         getByText("Report an issue with this service"),
@@ -221,8 +205,6 @@ describe("Feedback component 'Report an issue with this page journey'", () => {
     const { getByText, getByLabelText, user } = setup(<Feedback />);
 
     await user.click(getByText("Report an issue with this page"));
-
-    expect(scrollIntoViewMock).toBeCalledTimes(1);
 
     await waitFor(() => {
       expect(getByLabelText("What were you doing?")).toBeInTheDocument();

@@ -12,31 +12,14 @@ import InputRow from "ui/shared/InputRow";
 
 import { DataFieldAutocomplete } from "../shared/DataFieldAutocomplete";
 import { ICONS } from "../shared/icons";
-import { validationSchema } from "./model";
+import { EditorProps } from "../shared/types";
+import { FileUpload, parseFileUpload, validationSchema } from "./model";
 
-function Component(props: any) {
-  const formik = useFormik<{
-    color: string;
-    definitionImg: string;
-    description: string;
-    fn?: string;
-    howMeasured: string;
-    info: string;
-    notes: string;
-    policyRef: string;
-    title: string;
-  }>({
-    initialValues: {
-      color: props.node?.data?.color || "#EFEFEF",
-      definitionImg: props.node?.data?.definitionImg,
-      description: props.node?.data?.description || "",
-      fn: props.node?.data?.fn || "",
-      howMeasured: props.node?.data?.howMeasured,
-      info: props.node?.data?.info,
-      notes: props.node?.data?.notes || "",
-      policyRef: props.node?.data?.policyRef,
-      title: props.node?.data?.title || "",
-    },
+type Props = EditorProps<TYPES.FileUpload, FileUpload>;
+
+function Component(props: Props) {
+  const formik = useFormik<FileUpload>({
+    initialValues: parseFileUpload(props.node?.data),
     onSubmit: (newValues) => {
       if (props.handleSubmit) {
         props.handleSubmit({ type: TYPES.FileUpload, data: newValues });
@@ -57,10 +40,10 @@ function Component(props: any) {
   return (
     <form onSubmit={formik.handleSubmit} id="modal">
       <TemplatedNodeInstructions
-        isTemplatedNode={props.isTemplatedNode}
-        templatedNodeInstructions={props.templatedNodeInstructions}
+        isTemplatedNode={formik.values.isTemplatedNode}
+        templatedNodeInstructions={formik.values.templatedNodeInstructions}
         areTemplatedNodeInstructionsRequired={
-          props.areTemplatedNodeInstructionsRequired
+          formik.values.areTemplatedNodeInstructionsRequired
         }
       />
       <ModalSection>

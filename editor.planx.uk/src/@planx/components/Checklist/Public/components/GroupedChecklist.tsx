@@ -69,6 +69,9 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
       currentCheckedIds: formik.values.checked,
       exclusiveOrOption: exclusiveOrOptionGroup?.children[0],
       toggleExclusiveCheckbox,
+      nonExclusiveOptions: nonExclusiveOptionGroups.flatMap(
+        ({ children }) => children,
+      ),
     });
 
   // Auto-answered Checklists still set a breadcrumb even though they render null
@@ -103,7 +106,9 @@ export const GroupedChecklist: React.FC<PublicChecklistProps> = (props) => {
             spacing={layout === ChecklistLayout.Images ? 2 : 0}
             component="fieldset"
           >
-            <legend style={visuallyHidden} id="whole-group-heading">{text}</legend>
+            <legend style={visuallyHidden} id="whole-group-heading">
+              {text}
+            </legend>
             {nonExclusiveOptionGroups && (
               <GroupedChecklistOptions
                 groupedOptions={nonExclusiveOptionGroups}

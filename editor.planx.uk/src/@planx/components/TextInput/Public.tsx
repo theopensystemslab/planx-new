@@ -48,6 +48,11 @@ const TextInputComponent: React.FC<Props> = (props) => {
       <InputRow>
         <InputLabel label={props.title} hidden htmlFor={props.id}>
           <Input
+            autoComplete={((type) => {
+              if (type === "email") return "email";
+              else if (type === "phone") return "tel";
+              return "off";
+            })(props.type)}
             type={((type) => {
               if (type === "email") return "email";
               else if (type === "phone") return "tel";

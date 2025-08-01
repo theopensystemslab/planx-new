@@ -6,7 +6,7 @@ import { getFlatOptions, getLayout, Group } from "../../model";
 export const useSortedOptions = (
   options: Option[] | undefined,
   groupedOptions: Group<Option>[] | undefined,
-  formik: FormikProps<{ checked: Array<string> }>
+  formik: FormikProps<{ checked: Array<string> }>,
 ) => {
   const setCheckedFieldValue = (optionIds: string[]) => {
     const sortedCheckedIds = sortCheckedIds(optionIds);
