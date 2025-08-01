@@ -8,14 +8,14 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useEffect, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
 
@@ -38,14 +38,27 @@ import {
 } from "./types";
 
 const Feedback: React.FC = () => {
+  const theme = useTheme();
   const [currentFeedbackView, setCurrentFeedbackView] =
     useState<FeedbackView | null>(null);
   const previousFeedbackView = usePrevious(currentFeedbackView);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // Track how the drawer was opened so that we can return focus
+  const feedbackButtonRef = useRef<HTMLAnchorElement>(null);
+  const reportIssueButtonRef = useRef<HTMLButtonElement>(null);
+  const [focusTargetRef, setFocusTargetRef] = useState<RefObject<HTMLAnchorElement | HTMLButtonElement> | null>(null);
+
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setCurrentFeedbackView(null);
+    
+    // Manually reset focus once drawer has closed
+    setTimeout(() => {
+      if (focusTargetRef && focusTargetRef.current) {
+        focusTargetRef.current.focus()
+      }
+    }, theme.transitions.duration.leavingScreen);
   }
 
   function handleFeedbackViewClick(event: ClickEvents) {
@@ -146,8 +159,16 @@ const Feedback: React.FC = () => {
     return (
       <FeedbackWrapper>
         <FeedbackPhaseBanner
-          handleFeedbackClick={() => handleFeedbackViewClick("triage")}
-          handleReportAnIssueClick={() => handleFeedbackViewClick("issue")}
+          handleFeedbackClick={() => {
+            setFocusTargetRef(feedbackButtonRef)
+            handleFeedbackViewClick("triage")}
+          }
+          handleReportAnIssueClick={() => {
+            setFocusTargetRef(reportIssueButtonRef)
+            handleFeedbackViewClick("issue")}
+          }
+          feedbackButtonRef={feedbackButtonRef}
+          reportIssueButtonRef={reportIssueButtonRef}
         />
       </FeedbackWrapper>
     );
