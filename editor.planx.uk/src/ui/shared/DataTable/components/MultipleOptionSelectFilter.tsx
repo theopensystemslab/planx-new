@@ -1,7 +1,7 @@
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { GridFilterFormProps } from "@mui/x-data-grid";
-import React from "react";
+import React, { FocusEvent } from "react";
 import {
   OptionalAutocompleteProps,
   RequiredAutocompleteProps,
@@ -35,7 +35,10 @@ export function MultipleOptionSelectFilter<T>(props: Props<T>) {
             variant="standard"
             InputProps={{
               ...params.InputProps,
-              onBlur: undefined,
+              onBlur: (e) =>
+                setTimeout(() => {
+                  params.inputProps.onBlur?.(e as FocusEvent<HTMLInputElement>);
+                }, 0),
             }}
           />
         )}

@@ -1,7 +1,7 @@
 import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
 import FormControl from "@mui/material/FormControl";
 import { styled } from "@mui/material/styles";
-import React from "react";
+import React, { FocusEvent } from "react";
 
 import { StyledTextField } from "./Autocomplete/styles";
 import { PopupIcon } from "./PopUpIcon";
@@ -65,7 +65,10 @@ export function SelectMultiple<T>(props: Props<T>) {
             {...params}
             InputProps={{
               ...params.InputProps,
-              onBlur: undefined,
+              onBlur: (e) =>
+                setTimeout(() => {
+                  params.inputProps.onBlur?.(e as FocusEvent<HTMLInputElement>);
+                }, 0),
               notched: false,
             }}
             label={props.label}

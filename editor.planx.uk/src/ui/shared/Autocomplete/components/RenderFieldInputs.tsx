@@ -1,5 +1,5 @@
 import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete";
-import React from "react";
+import React, { FocusEvent } from "react";
 
 import { StyledDataField, StyledTextField } from "../styles";
 
@@ -21,7 +21,10 @@ export const RenderDataFieldInput = ({
       {...params}
       InputProps={{
         ...params.InputProps,
-        onBlur: undefined,
+        onBlur: (e) =>
+          setTimeout(() => {
+            params.inputProps.onBlur?.(e as FocusEvent<HTMLInputElement>);
+          }, 0),
         notched: false,
       }}
       label={label}
@@ -43,7 +46,10 @@ export const RenderTextFieldInput = ({
       InputProps={{
         ...params.InputProps,
         notched: false,
-        onBlur: undefined,
+        onBlur: (e) =>
+          setTimeout(() => {
+            params.inputProps.onBlur?.(e as FocusEvent<HTMLInputElement>);
+          }, 0),
       }}
       label={label}
       placeholder={placeholder}
