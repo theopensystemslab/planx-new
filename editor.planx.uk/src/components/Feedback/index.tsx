@@ -359,6 +359,7 @@ const Feedback: React.FC = () => {
       <Drawer 
         aria-label="Feedback triage and submission form"
         open={isDrawerOpen} 
+        onClose={closeDrawer}
       >
         <Feedback />
       </Drawer>
