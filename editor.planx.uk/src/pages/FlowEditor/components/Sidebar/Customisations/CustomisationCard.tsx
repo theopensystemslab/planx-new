@@ -23,6 +23,7 @@ export const CustomisationCard: React.FC<Props> = ({
   const [flow] = useStore((state) => [state.flow]);
   const node = flow[nodeId];
 
+  // Keep this logic in sync with `haveAllRequiredTemplatedNodesBeenUpdated` in the API flows/validate module !
   const hasNodeBeenUpdated = useCallback(() => {
     // This node has been directly edited
     if (nodeEdits) return true;

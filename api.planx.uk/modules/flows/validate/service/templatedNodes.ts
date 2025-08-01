@@ -34,8 +34,9 @@ const validateTemplatedNodes = async (
   );
 
   // For each required templated node, check if itself or its' children have been edited
-  const allRequiredTemplatedNodesEdited = allRequiredTemplatedNodeIds.every(
-    (nodeId) => {
+  //   Keep this logic in sync with customisation card `hasNodeBeenUpdated` in the frontend !
+  const haveAllRequiredTemplatedNodesBeenEdited =
+    allRequiredTemplatedNodeIds.every((nodeId) => {
       // The required node has been directly edited
       if (allEditedTemplatedNodedIds.includes(nodeId)) return true;
 
@@ -60,10 +61,9 @@ const validateTemplatedNodes = async (
 
       // Required node has not been edited
       return false;
-    },
-  );
+    });
 
-  if (!allRequiredTemplatedNodesEdited) {
+  if (!haveAllRequiredTemplatedNodesBeenEdited) {
     return {
       title: "Templated nodes",
       status: "Fail",
