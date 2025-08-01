@@ -114,6 +114,125 @@ type SectionsOverviewListProps = {
   alteredSectionIds?: string[];
 };
 
+const getClickHandler = (
+  sectionId: string,
+  status: SectionStatusEnum,
+  showChange: boolean,
+  changeFirstAnswerInSection: (sectionId: string) => void,
+  nextQuestion: () => void,
+) => {
+  if (showChange && status === SectionStatusEnum.Completed) {
+    return () => changeFirstAnswerInSection(sectionId);
+  }
+  if (
+    status === SectionStatusEnum.NeedsUpdated ||
+    status === SectionStatusEnum.ReadyToStart ||
+    status === SectionStatusEnum.ReadyToContinue
+  ) {
+    return () => nextQuestion();
+  }
+  return undefined;
+};
+
+const getTag = (section: SectionStatusEnum) => {
+  const tagTypes: Record<SectionStatusEnum, TagType> = {
+    [SectionStatusEnum.NeedsUpdated]: TagType.Alert,
+    [SectionStatusEnum.ReadyToStart]: TagType.Active,
+    [SectionStatusEnum.ReadyToContinue]: TagType.Active,
+    [SectionStatusEnum.Started]: TagType.Notice,
+    [SectionStatusEnum.NotStarted]: TagType.Notice,
+    [SectionStatusEnum.Completed]: TagType.Success,
+  };
+  const tagType = tagTypes[section];
+
+  return <Tag tagType={tagType}>{section}</Tag>;
+};
+
+interface SectionRowProps {
+  sectionId: string;
+  sectionNode: SectionNode;
+  status: SectionStatusEnum;
+  showChange: boolean;
+  changeFirstAnswerInSection: (sectionId: string) => void;
+  nextQuestion: () => void;
+}
+
+const SectionRow: React.FC<SectionRowProps> = ({
+  sectionId,
+  sectionNode,
+  status,
+  showChange,
+  changeFirstAnswerInSection,
+  nextQuestion,
+}) => {
+  const clickHandler = getClickHandler(
+    sectionId,
+    status,
+    showChange,
+    changeFirstAnswerInSection,
+    nextQuestion,
+  );
+  const isClickable = clickHandler !== undefined;
+  const statusId = `section-${sectionId}-status`;
+  const hintId = `section-${sectionId}-hint`;
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (
+      isClickable &&
+      (e.target === e.currentTarget ||
+        !e.currentTarget.querySelector("a")?.contains(e.target as Node))
+    ) {
+      clickHandler?.();
+    }
+  };
+
+  return (
+    <SectionRowWrapper
+      isClickable={isClickable}
+      onClick={isClickable ? handleClick : undefined}
+    >
+      <SectionContent>
+        <SectionDescription>
+          {isClickable ? (
+            <SectionTitleLink variant="subtitle1" component="h4">
+              <Link
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  clickHandler?.();
+                }}
+                aria-describedby={
+                  sectionNode.data.description
+                    ? `${hintId} ${statusId}`
+                    : statusId
+                }
+              >
+                {showChange && status === SectionStatusEnum.Completed && (
+                  <span style={visuallyHidden}>{`Change `}</span>
+                )}
+                {sectionNode.data.title}
+              </Link>
+            </SectionTitleLink>
+          ) : (
+            <SectionTitleText variant="subtitle1" component="h4">
+              {sectionNode.data.title}
+            </SectionTitleText>
+          )}
+          {sectionNode.data.description && (
+            <SectionHint id={hintId}>
+              <ReactMarkdownOrHtml
+                source={sectionNode.data.description}
+                openLinksOnNewTab
+              />
+            </SectionHint>
+          )}
+        </SectionDescription>
+        <SectionStatus id={statusId}>{getTag(status)}</SectionStatus>
+      </SectionContent>
+    </SectionRowWrapper>
+  );
+};
+
 export function SectionsOverviewList({
   flow,
   showChange,
@@ -153,110 +272,28 @@ export function SectionsOverviewList({
     }
   };
 
-  const getClickHandler = (sectionId: string, status: SectionStatusEnum) => {
-    if (showChange && status === SectionStatusEnum.Completed) {
-      return () => changeFirstAnswerInSection(sectionId);
-    }
-    if (
-      status === SectionStatusEnum.NeedsUpdated ||
-      status === SectionStatusEnum.ReadyToStart ||
-      status === SectionStatusEnum.ReadyToContinue
-    ) {
-      return () => nextQuestion();
-    }
-    return undefined;
-  };
-
-  const getTag = (section: SectionStatusEnum, sectionTitle: string) => {
-    const tagTypes: Record<SectionStatusEnum, TagType> = {
-      [SectionStatusEnum.NeedsUpdated]: TagType.Alert,
-      [SectionStatusEnum.ReadyToStart]: TagType.Active,
-      [SectionStatusEnum.ReadyToContinue]: TagType.Active,
-      [SectionStatusEnum.Started]: TagType.Notice,
-      [SectionStatusEnum.NotStarted]: TagType.Notice,
-      [SectionStatusEnum.Completed]: TagType.Success,
-    };
-    const tagType = tagTypes[section];
-
-    return <Tag tagType={tagType}>{section}</Tag>;
-  };
-
   return (
     <DescriptionList>
       {Object.entries(sectionNodes).map(([sectionId, sectionNode]) => {
         const status = sectionStatuses[sectionId];
-        const clickHandler = getClickHandler(sectionId, status);
-        const isClickable = clickHandler !== undefined;
-        const statusId = `section-${sectionId}-status`;
-        const hintId = `section-${sectionId}-hint`;
 
         return (
-          <SectionRowWrapper
+          <SectionRow
             key={sectionId}
-            isClickable={isClickable}
-            onClick={
-              isClickable
-                ? (e) => {
-                    if (
-                      e.target === e.currentTarget ||
-                      !e.currentTarget
-                        .querySelector("a")
-                        ?.contains(e.target as Node)
-                    ) {
-                      clickHandler?.();
-                    }
-                  }
-                : undefined
-            }
-          >
-            <SectionContent>
-              <SectionDescription>
-                {isClickable ? (
-                  <SectionTitleLink variant="subtitle1" component="h4">
-                    <Link
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        clickHandler?.();
-                      }}
-                      aria-describedby={
-                        sectionNode.data.description
-                          ? `${hintId} ${statusId}`
-                          : statusId
-                      }
-                    >
-                      {showChange && status === SectionStatusEnum.Completed && (
-                        <span style={visuallyHidden}>{`Change `}</span>
-                      )}
-                      {sectionNode.data.title}
-                    </Link>
-                  </SectionTitleLink>
-                ) : (
-                  <SectionTitleText variant="subtitle1" component="h4">
-                    {sectionNode.data.title}
-                  </SectionTitleText>
-                )}
-                {sectionNode.data.description && (
-                  <SectionHint id={hintId}>
-                    <ReactMarkdownOrHtml
-                      source={sectionNode.data.description}
-                      openLinksOnNewTab
-                    />
-                  </SectionHint>
-                )}
-              </SectionDescription>
-              <SectionStatus id={statusId}>
-                {getTag(status, sectionNode.data.title)}
-              </SectionStatus>
-            </SectionContent>
-          </SectionRowWrapper>
+            sectionId={sectionId}
+            sectionNode={sectionNode}
+            status={status}
+            showChange={showChange}
+            changeFirstAnswerInSection={changeFirstAnswerInSection}
+            nextQuestion={nextQuestion}
+          />
         );
       })}
     </DescriptionList>
   );
 }
 
-const Table = styled("ul")(({ theme }) => ({
+const SectionList = styled("ul")(({ theme }) => ({
   padding: theme.spacing(1, 0),
   listStyle: "none",
   "& ul, & ol": {
@@ -353,5 +390,5 @@ interface DescriptionListProps {
 }
 
 const DescriptionList: React.FC<DescriptionListProps> = ({ children }) => {
-  return <Table>{children}</Table>;
+  return <SectionList>{children}</SectionList>;
 };
