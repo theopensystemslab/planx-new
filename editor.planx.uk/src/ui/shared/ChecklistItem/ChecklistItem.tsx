@@ -50,7 +50,9 @@ export default function ChecklistItem({
         onChange={onChange}
         inputProps={{
           ...inputProps,
-          "aria-describedby": `checkbox-description-${id}`,
+          ...(description && {
+            "aria-describedby": `checkbox-description-${id}`,
+          }),
         }}
         variant={variant}
         disabled={disabled}
