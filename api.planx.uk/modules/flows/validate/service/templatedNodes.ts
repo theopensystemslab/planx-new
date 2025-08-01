@@ -1,4 +1,7 @@
-import type { FlowGraph } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  type FlowGraph,
+} from "@opensystemslab/planx-core/types";
 import isNull from "lodash/isNull.js";
 
 import { getTemplatedFlowEdits } from "../../../../helpers.js";
@@ -30,12 +33,37 @@ const validateTemplatedNodes = async (
     templatedFlowEdits.edits?.data || {},
   );
 
-  // Check if allRequiredTemplatedNodesIds are contained within allEditedTemplatedNodeIds
-  //   allEditedTemplatedNodeIds will also contain "optional" templated node updates, which do not impact validation checks
-  const everyRequiredNodeHasBeenEdited = allRequiredTemplatedNodeIds.every(
-    (requiredId) => allEditedTemplatedNodedIds.includes(requiredId),
+  // For each required templated node, check if itself or its' children have been edited
+  const allRequiredTemplatedNodesEdited = allRequiredTemplatedNodeIds.every(
+    (nodeId) => {
+      // The required node has been directly edited
+      if (allEditedTemplatedNodedIds.includes(nodeId)) return true;
+
+      const node = flowGraph[nodeId];
+      const isNodeWithChildren =
+        node.type &&
+        [
+          ComponentType.Question,
+          ComponentType.Checklist,
+          ComponentType.ResponsiveQuestion,
+          ComponentType.ResponsiveChecklist,
+          ComponentType.InternalPortal,
+        ].includes(node.type);
+
+      // The "children" of the required node have been updated
+      if (isNodeWithChildren) {
+        const isChildEdited = node.edges?.some((edgeId) =>
+          allEditedTemplatedNodedIds.includes(edgeId),
+        );
+        return isChildEdited;
+      }
+
+      // Required node has not been edited
+      return false;
+    },
   );
-  if (!everyRequiredNodeHasBeenEdited) {
+
+  if (!allRequiredTemplatedNodesEdited) {
     return {
       title: "Templated nodes",
       status: "Fail",
