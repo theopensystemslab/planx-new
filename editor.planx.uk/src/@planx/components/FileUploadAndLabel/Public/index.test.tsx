@@ -475,7 +475,7 @@ describe("Adding tags and syncing state", () => {
 
     // Find the "Heritage statement" checkbox using data-testid
     const heritageStatementCheckbox = within(fileTaggingModal).getByTestId(
-      /.*-.*-Heritage statement$/,
+      /.*-.*-Heritage-statement$/,
     );
     expect(heritageStatementCheckbox).toBeInTheDocument();
 
@@ -646,7 +646,7 @@ describe("Error handling", () => {
       "file-tagging-dialog",
     );
     const utilityBillCheckbox =
-      within(fileTaggingModal).getByTestId(/.*-.*-Utility bill$/);
+      within(fileTaggingModal).getByTestId(/.*-.*-Utility-bill$/);
     expect(utilityBillCheckbox).toBeInTheDocument();
 
     // Apply tag to this file
