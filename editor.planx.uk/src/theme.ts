@@ -547,6 +547,36 @@ const getThemeOptions = ({
           }),
         },
       },
+      MuiDrawer: {
+        defaultProps: {
+          anchor: "right",
+          "aria-modal": true,
+          role: "dialog",
+        },
+        styleOverrides: {
+          root: ({ theme, open }) => ({
+            width: 600,
+            flexShrink: 0,
+            color: theme.palette.text.primary,
+            transition: theme.transitions.create("margin", {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginRight: open ? 0 : -600,
+            [theme.breakpoints.only("xs")]: {
+              width: "100%",
+              marginRight: "-100%",
+            },
+          }),
+          paper: ({ theme }) => ({
+            width: "100%",
+            maxWidth: 600,
+            backgroundColor: theme.palette.background.paper,
+            border: 0,
+            boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
+          }),
+        },
+      },
       MuiFormControlLabel: {
         styleOverrides: {
           root: {
@@ -820,7 +850,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  },
+  }
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });

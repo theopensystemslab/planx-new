@@ -357,7 +357,10 @@ const Feedback: React.FC = () => {
   return (
     <Box>
       <FeedbackPhaseBannerView />
-      <Drawer open={isDrawerOpen} anchor="right">
+      <Drawer 
+        aria-label="Feedback triage and submission form"
+        open={isDrawerOpen} 
+      >
         <Feedback />
       </Drawer>
     </Box>

@@ -149,3 +149,10 @@ declare module "@mui/material/Typography" {
     data: true;
   }
 }
+
+declare module "@mui/material/Drawer" {
+  interface DrawerProps {
+    // a11y: Make aria-label required for all instances of Drawer
+    "aria-label": string;
+  }
+}
