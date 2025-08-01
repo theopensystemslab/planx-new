@@ -1,6 +1,6 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { DataFieldAutocomplete } from "@planx/components/shared/DataFieldAutocomplete";
-import { FormikErrors, FormikValues, useFormik } from "formik";
+import { useFormik } from "formik";
 import React, { useEffect, useRef } from "react";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -14,7 +14,7 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import { Switch } from "ui/shared/Switch";
 
-import { Option, parseBaseNodeData } from "../../shared";
+import { parseBaseNodeData } from "../../shared";
 import { ICONS } from "../../shared/icons";
 import type { Checklist } from "../model";
 import { toggleExpandableChecklist, validationSchema } from "../model";
