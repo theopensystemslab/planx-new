@@ -24,7 +24,6 @@ const Root = styled(Button, {
   justifyContent: "flex-start",
   ...(showArrow && {
     width: "100%",
-    maxWidth: "460px",
   }),
   ...(format === "positive" && {
     "& .buttonIcon": {
