@@ -18,10 +18,10 @@ interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
   tags?: string[];
+  sx?: React.CSSProperties;
 }
 
 const Root = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(0.5),
   marginTop: theme.spacing(5),
 }));
 
@@ -95,6 +95,7 @@ export const UploadedFileCard: React.FC<Props> = ({
   onChange,
   tags,
   status,
+  sx,
 }) => (
   <Root>
     <ErrorWrapper
@@ -105,7 +106,7 @@ export const UploadedFileCard: React.FC<Props> = ({
       }
     >
       <>
-        <FileCard>
+        <FileCard sx={{ ...sx }}>
           <ProgressBar
             width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
             role="progressbar"
