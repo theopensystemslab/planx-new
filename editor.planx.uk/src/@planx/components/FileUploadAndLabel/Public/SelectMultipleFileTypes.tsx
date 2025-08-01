@@ -27,6 +27,11 @@ interface Option extends UserFile {
   category: keyof FileList;
 }
 
+// Sanitize function to create valid IDs (no spaces)
+const sanitizeId = (str: string): string => {
+  return str.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-_]/g, "");
+};
+
 export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   const { uploadedFile, fileList, setFileList } = props;
 
@@ -133,7 +138,7 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
             {categoryOptions.map((option) => (
               <ChecklistItem
                 key={`${category}-${option.name}`}
-                id={`${uploadedFile.id}-${category}-${option.name}`}
+                id={`${sanitizeId(uploadedFile.id)}-${sanitizeId(category)}-${sanitizeId(option.name)}`}
                 label={option.name}
                 checked={initialTags.includes(option.name)}
                 onChange={handleCheckboxChange(option)}
