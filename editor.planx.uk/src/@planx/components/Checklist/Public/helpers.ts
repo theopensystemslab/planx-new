@@ -35,7 +35,7 @@ export const toggleCheckbox = (
   currentlyCheckedOptionIds: string[],
   nonExclusiveOptions: Option[],
 ) => {
-  const matchById = (id: string) => id !== thisCheckboxId;
+  const matchById = (id: string) => id === thisCheckboxId;
 
   const matchByLabelAndDataValue = (currentId: string) => {
     const selectedOption = nonExclusiveOptions.find(
@@ -69,13 +69,13 @@ export const toggleCheckbox = (
 
   const toggleOff = currentlyCheckedOptionIds
     // Remove current
-    .filter(matchById)
+    .filter((id) => !matchById(id))
     // Remove matches
     .filter((id) => !matchByLabelAndDataValue(id));
 
   const matches = nonExclusiveOptions
-    .filter(({ id }) => matchByLabelAndDataValue(id))
-    .map(({ id }) => id);
+    .map(({ id }) => id)
+    .filter(matchByLabelAndDataValue);
 
   const toggleOn = [
     ...new Set([
