@@ -6,6 +6,7 @@ import RuleIcon from "@mui/icons-material/Rule";
 import WarningIcon from "@mui/icons-material/Warning";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import {
@@ -14,7 +15,7 @@ import {
 } from "lib/feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
 
@@ -38,52 +39,33 @@ import {
 
 const Feedback: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
-    useState<FeedbackView>("banner");
+    useState<FeedbackView | null>(null);
   const previousFeedbackView = usePrevious(currentFeedbackView);
-  const breadcrumbs = useStore((state) => state.breadcrumbs);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  useEffect(() => {
-    if (currentFeedbackView === "thanks") {
-      setCurrentFeedbackView("banner");
-    }
-  }, [breadcrumbs]);
-
-  const feedbackComponentRef = useRef<HTMLDivElement | null>(null);
-
-  const shouldScrollToView = () => {
-    switch (currentFeedbackView) {
-      case "banner":
-      case "thanks":
-        return false;
-      default:
-        return true;
-    }
-  };
-
-  useEffect(() => {
-    if (shouldScrollToView()) {
-      feedbackComponentRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [currentFeedbackView]);
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+    setCurrentFeedbackView(null);
+  }
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
       case "close":
-        setCurrentFeedbackView("banner");
+        closeDrawer();
         break;
       case "back":
         setCurrentFeedbackView("triage");
         break;
       default:
+        setIsDrawerOpen(true);
         setCurrentFeedbackView(event);
         break;
     }
   }
 
   async function handleFeedbackFormSubmit(values: UserFeedback) {
+    if (!currentFeedbackView) throw Error("Cannot submit feedback in current view");
+
     const metadata = await getInternalFeedbackMetadata();
     const feedbackType = { feedbackType: currentFeedbackView };
     const data = { ...metadata, ...feedbackType, ...values };
@@ -138,14 +120,7 @@ const Feedback: React.FC = () => {
   }
 
   function ReportAnIssueTopBar(): FCReturn {
-    if (previousFeedbackView === "banner") {
-      return (
-        <TitleAndCloseFeedbackHeader
-          Icon={WarningIcon}
-          title="Report an issue with this service"
-        />
-      );
-    } else
+    if (previousFeedbackView === "triage") {
       return (
         <>
           <BackAndCloseFeedbackHeader />
@@ -156,7 +131,15 @@ const Feedback: React.FC = () => {
             </Typography>
           </FeedbackTitle>
         </>
-      );
+      )
+    }
+
+    return (
+      <TitleAndCloseFeedbackHeader
+        Icon={WarningIcon}
+        title="Report an issue with this service"
+      />
+    );
   }
 
   function FeedbackPhaseBannerView(): FCReturn {
@@ -355,8 +338,6 @@ const Feedback: React.FC = () => {
 
   function Feedback(): FCReturn {
     switch (currentFeedbackView) {
-      case "banner":
-        return <FeedbackPhaseBannerView />;
       case "triage":
         return <Triage />;
       case "issue":
@@ -373,10 +354,16 @@ const Feedback: React.FC = () => {
   }
 
   return (
-    <Box ref={feedbackComponentRef}>
-      <Feedback />
+    <Box>
+      <FeedbackPhaseBannerView />
+      <Drawer 
+        aria-label="Feedback triage and submission form"
+        open={isDrawerOpen} 
+      >
+        <Feedback />
+      </Drawer>
     </Box>
-  );
-};
+  )
+}
 
 export default Feedback;

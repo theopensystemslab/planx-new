@@ -1,48 +1,13 @@
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Drawer, { DrawerProps } from "@mui/material/Drawer";
+import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import MoreInfoFeedbackComponent from "components/Feedback/MoreInfoFeedback/MoreInfoFeedback";
 import React from "react";
-
-const PREFIX = "MoreInfo";
-
-const classes = {
-  drawerPaper: `${PREFIX}-drawerPaper`,
-};
-
-interface StyledDrawerProps extends DrawerProps {
-  drawerWidth: number;
-}
-
-const Root = styled(Drawer, {
-  shouldForwardProp: (prop) => prop !== "drawerWidth",
-})<StyledDrawerProps>(({ theme, drawerWidth, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  color: theme.palette.text.primary,
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.easeOut,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  marginRight: open ? 0 : -drawerWidth,
-  [theme.breakpoints.only("xs")]: {
-    width: "100%",
-    marginRight: "-100%",
-  },
-
-  [`& .${classes.drawerPaper}`]: {
-    width: "100%",
-    maxWidth: drawerWidth,
-    backgroundColor: theme.palette.background.paper,
-    border: 0,
-    boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
-  },
-}));
 
 const DrawerContent = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2.5, 4, 2, 0),
@@ -71,17 +36,10 @@ interface IMoreInfo {
 }
 
 const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
-  <Root
-    anchor="right"
-    drawerWidth={600}
-    aria-modal="true"
-    role="dialog"
+  <Drawer
     aria-label="Further information about this question and the policies pertaining to it"
     open={open}
     onClose={() => handleClose()}
-    classes={{
-      paper: classes.drawerPaper,
-    }}
   >
     <CloseButton>
       <IconButton
@@ -102,7 +60,7 @@ const MoreInfo: React.FC<IMoreInfo> = ({ open, children, handleClose }) => (
       <DrawerContent>{children}</DrawerContent>
     </Container>
     <MoreInfoFeedbackComponent />
-  </Root>
+  </Drawer>
 );
 
 export default MoreInfo;
