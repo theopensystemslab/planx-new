@@ -365,7 +365,6 @@ describe("Adding tags and syncing state", () => {
       getByRole,
       getByTestId,
       getByText,
-      queryByRole,
       user,
     } = setup(
       <FileUploadAndLabelComponent
@@ -396,26 +395,23 @@ describe("Adding tags and syncing state", () => {
       "file-tagging-dialog",
     );
 
-    // The number of autocompletes in the modal matches the number of uploaded files
-    const autocompleteInputs = getAllByRole("combobox", {
+    // The number of file cards in the modal matches the number of uploaded files
+    const uploadedFileCards = getAllByRole("heading", {
       name: /What does this file show/,
     });
-    expect(autocompleteInputs).toHaveLength(1);
+    expect(uploadedFileCards).toHaveLength(1);
 
     const submitModalButton = getByRole("button", { name: /Done/ });
     expect(submitModalButton).toBeVisible();
 
-    // Autocomplete is close, option unavailable
-    let roofPlanOption = queryByRole("option", { name: /Roof plan/ });
-    expect(roofPlanOption).toBeNull();
-
-    // Open dropdown
-    await user.click(autocompleteInputs[0]);
-    roofPlanOption = getByRole("option", { name: /Roof plan/ });
-    expect(roofPlanOption).toBeVisible();
+    // Find the "Roof plan" checkbox using data-testid which includes the file ID
+    // The pattern is: ${fileId}-${category}-${optionName}
+    const roofPlanCheckbox =
+      within(fileTaggingModal).getByTestId(/.*-.*-Roof plan$/);
+    expect(roofPlanCheckbox).toBeInTheDocument();
 
     // Apply tag to this file
-    await user.click(roofPlanOption);
+    await user.click(roofPlanCheckbox);
 
     // Close modal
     await user.click(submitModalButton);
@@ -441,20 +437,14 @@ describe("Adding tags and syncing state", () => {
 
   test("Cannot continue when only an optional file type is uploaded and tagged", async () => {
     const handleSubmit = vi.fn();
-    const {
-      getAllByRole,
-      getAllByTestId,
-      getByTestId,
-      getByRole,
-      getByText,
-      user,
-    } = setup(
-      <FileUploadAndLabelComponent
-        title="Test title"
-        handleSubmit={handleSubmit}
-        fileTypes={mockFileTypesUniqueKeys}
-      />,
-    );
+    const { getAllByRole, getAllByTestId, getByTestId, getByText, user } =
+      setup(
+        <FileUploadAndLabelComponent
+          title="Test title"
+          handleSubmit={handleSubmit}
+          fileTypes={mockFileTypesUniqueKeys}
+        />,
+      );
 
     // No file requirements have been satisfied yet
     let incompleteIcons = getAllByTestId("incomplete-icon");
@@ -477,22 +467,20 @@ describe("Adding tags and syncing state", () => {
       "file-tagging-dialog",
     );
 
-    // The number of autocompletes in the modal matches the number of uploaded files
-    const autocompleteInputs = getAllByRole("combobox", {
+    // The number of file cards in the modal matches the number of uploaded files
+    const uploadedFileCards = getAllByRole("heading", {
       name: /What does this file show/,
     });
-    expect(autocompleteInputs).toHaveLength(1);
+    expect(uploadedFileCards).toHaveLength(1);
 
-    // Apply multiple tags to this file
-    await user.click(autocompleteInputs[0]);
-    const heritageStatementOption = getByRole("option", {
-      name: /Heritage statement/,
-    });
-    expect(heritageStatementOption).toBeVisible();
+    // Find the "Heritage statement" checkbox using data-testid
+    const heritageStatementCheckbox = within(fileTaggingModal).getByTestId(
+      /.*-.*-Heritage statement$/,
+    );
+    expect(heritageStatementCheckbox).toBeInTheDocument();
 
-    // Apply tag to this file, and close autocomplete dropdown
-    await user.click(heritageStatementOption);
-    await user.keyboard("{Esc}");
+    // Apply tag to this file
+    await user.click(heritageStatementCheckbox);
 
     // Close modal
     await user.keyboard("{Esc}");
@@ -618,7 +606,7 @@ describe("Error handling", () => {
   test("An error is thrown in the main component if a user does not tag all files", async () => {
     const handleSubmit = vi.fn();
 
-    const { getAllByRole, getByTestId, getByRole, findByText, user } = setup(
+    const { getByTestId, getByRole, getAllByRole, findByText, user } = setup(
       <FileUploadAndLabelComponent
         handleSubmit={handleSubmit}
         title="Test title"
@@ -648,18 +636,21 @@ describe("Error handling", () => {
 
     // Re-open modal and tag file
     await user.click(getByRole("button", { name: /Change/ }));
-    const autocompleteInputs = getAllByRole("combobox", {
+    const uploadedFileCards = getAllByRole("heading", {
       name: /What does this file show/,
     });
-    expect(autocompleteInputs).toHaveLength(1);
-    await user.click(autocompleteInputs[0]);
+    expect(uploadedFileCards).toHaveLength(1);
 
-    const utilityBillOption = getByRole("option", { name: /Utility bill/ });
-    expect(utilityBillOption).toBeVisible();
+    // Find the "Utility bill" checkbox using data-testid
+    const fileTaggingModal = await within(document.body).findByTestId(
+      "file-tagging-dialog",
+    );
+    const utilityBillCheckbox =
+      within(fileTaggingModal).getByTestId(/.*-.*-Utility bill$/);
+    expect(utilityBillCheckbox).toBeInTheDocument();
 
-    // Apply tag to this file, and close autocomplete dropdown
-    await user.click(utilityBillOption);
-    await user.keyboard("{Esc}");
+    // Apply tag to this file
+    await user.click(utilityBillCheckbox);
 
     await user.click(getByRole("button", { name: /Done/ }));
 
@@ -677,7 +668,7 @@ describe("Submitting data", () => {
 
   it("records the user uploaded files", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, getByLabelText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -705,7 +696,7 @@ describe("Submitting data", () => {
 
   it("records the full file type list presented to the user", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, getByLabelText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -778,7 +769,7 @@ describe("Submitting data", () => {
     act(() => setState({ flow, breadcrumbs }));
 
     const handleSubmit = vi.fn();
-    const { getByText, user } = setup(
+    const { getByText, getByLabelText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -822,14 +813,11 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
     "file-tagging-dialog",
   );
 
-  const autocompleteInputs = screen.getAllByRole("combobox", {
-    name: /What does this file show/,
-  });
-
-  await user.click(autocompleteInputs[0]);
-  const roofPlanOption = screen.getByRole("option", { name: /Roof plan/ });
-  expect(roofPlanOption).toBeVisible();
-  await user.click(roofPlanOption);
+  // Find the "Roof plan" checkbox using data-testid
+  const roofPlanCheckbox =
+    within(fileTaggingModal).getByTestId(/.*-.*-Roof plan$/);
+  expect(roofPlanCheckbox).toBeInTheDocument();
+  await user.click(roofPlanCheckbox);
 
   const submitModalButton = await within(fileTaggingModal).findByText("Done");
   user.click(submitModalButton);
