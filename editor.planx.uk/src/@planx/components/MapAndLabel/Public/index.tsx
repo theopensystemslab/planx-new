@@ -159,8 +159,8 @@ const FeatureTabs: React.FC = () => {
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "flex-start",
-                height: "90px",
+                alignItems: { xs: "stretch", md: "flex-start" },
+                flexDirection: { xs: "column-reverse", md: "row" },
               }}
             >
               <Box>
@@ -171,14 +171,15 @@ const FeatureTabs: React.FC = () => {
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
-                        coord.toFixed(5),
-                      )})`
-                    : ` (area ${
-                        feature.properties?.["area.squareMetres"] || 0
-                      } m²)`}
+                      coord.toFixed(5),
+                    )})`
+                    : ` (area ${feature.properties?.["area.squareMetres"] || 0
+                    } m²)`}
                 </Typography>
               </Box>
-              <CopyFeature features={features} destinationIndex={i} />
+              <Box sx={{ alignSelf: { xs: "flex-end", md: "flex-start" }, pb: { xs: 2, md: 0 } }}>
+                <CopyFeature features={features} destinationIndex={i} />
+              </Box>
             </Box>
             <SchemaFields
               sx={(theme) => ({
@@ -306,9 +307,8 @@ const Root = () => {
               maxZoom={23}
               latitude={latitude}
               longitude={longitude}
-              osProxyEndpoint={`${
-                import.meta.env.VITE_APP_API_URL
-              }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
+                }/proxy/ordnance-survey`}
               osCopyright={
                 basemap === "OSVectorTile"
                   ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
