@@ -41,6 +41,8 @@ export const toggleCheckbox = (
     const selectedOption = nonExclusiveOptions.find(
       ({ id }) => id === thisCheckboxId,
     );
+    
+    // Type narrowing - there will always be a selected option
     if (!selectedOption) {
       throw Error(`Selected option with id ${thisCheckboxId} not found`);
     }
@@ -54,9 +56,9 @@ export const toggleCheckbox = (
     const currentOption = nonExclusiveOptions.find(
       ({ id }) => id === currentId,
     );
-    if (!currentOption) {
-      throw Error(`Current option with id ${currentId} not found`);
-    }
+
+    // Current option must be the exclusive option
+    if (!currentOption) return false;
 
     const {
       data: { text: currentLabel, val: currentVal },

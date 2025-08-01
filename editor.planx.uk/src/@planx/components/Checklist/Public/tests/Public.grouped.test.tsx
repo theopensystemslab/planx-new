@@ -337,6 +337,62 @@ describe("toggling options by matching data values and labels", () => {
     expect(second).not.toBeChecked();
   });
 
+  it("ignore the exclusive ('or') option, regardless of label and data value", async () => {
+    const mockProps = cloneDeep({...mockWithRepeatedOptions, });
+    
+    // Replace current exclusive option to one with matching data value and label
+    // Should not happen in well-authored content
+    mockProps.groupedOptions![11] = {
+      title: "Or",
+      children: [
+        {
+          id: "V69z8B4VQW",
+          data: {
+            val: "alter.equipment.cctv",
+            text: "CCTV cameras",
+            exclusive: true,
+          },
+        },
+      ],
+    };
+
+    const { user } = setup(
+      <Checklist {...mockProps} />,
+    );
+
+    await user.click(screen.getByText("Electricals"));
+
+    const repeatedOptions = screen.getAllByLabelText("CCTV cameras");
+
+    expect(repeatedOptions).toHaveLength(2);
+
+    const [ groupedOption, exclusiveOption ] = repeatedOptions;
+
+    expect(groupedOption).not.toBeChecked();
+    expect(exclusiveOption).not.toBeChecked();
+
+    // Toggle grouped option on
+    await user.click(groupedOption)
+    expect(groupedOption).toBeChecked();
+
+    // Exclusive option not toggled, despite matching label and data value
+    expect(exclusiveOption).not.toBeChecked();
+
+    // Toggle exclusive option on
+    await user.click(exclusiveOption)
+    expect(exclusiveOption).toBeChecked();
+
+    // Normal behaviour - all other options toggled off 
+    expect(groupedOption).not.toBeChecked();
+
+    // Toggle grouped option on
+    await user.click(groupedOption)
+    expect(groupedOption).toBeChecked();
+
+    // Normal behaviour - exclusive option toggled off 
+    expect(exclusiveOption).not.toBeChecked();
+  });
+
   it("adds all checked options to the passport", async () => {
     const handleSubmit = vi.fn();
 
