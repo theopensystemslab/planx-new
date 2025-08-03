@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import capitalize from "lodash/capitalize";
@@ -26,6 +27,16 @@ interface ChecklistProps {
 interface Option extends UserFile {
   category: keyof FileList;
 }
+
+const Root = styled(Box)(({ theme }) => ({
+  width: "100%",
+  backgroundColor: theme.palette.background.default,
+  borderColor: theme.palette.border.main,
+  borderStyle: "solid",
+  borderWidth: "1px",
+  borderTopColor: theme.palette.border.light,
+  padding: theme.spacing(2),
+}));
 
 // Sanitize function to create valid IDs (no spaces)
 const sanitizeId = (str: string): string => {
@@ -56,57 +67,39 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
   /**
    * Group options by category for rendering
    */
-  const groupedOptions = useMemo(() => {
-    const groups: Record<string, Option[]> = {};
-    options.forEach((option) => {
-      if (!groups[option.category]) {
-        groups[option.category] = [];
-      }
-      groups[option.category].push(option);
-    });
-    return groups;
-  }, [options]);
+  const groupedOptions = useMemo(
+    () => Object.groupBy(options, ({ category }) => category),
+    [options],
+  );
 
   /**
    * Handle individual checkbox change
    */
-  const handleCheckboxChange =
-    (option: Option) =>
-    (event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      const isCurrentlyChecked = initialTags.includes(option.name);
-      const newCheckedState = !isCurrentlyChecked;
+  const handleCheckboxChange = (option: Option) => {
+    const isCurrentlyChecked = initialTags.includes(option.name);
+    const newCheckedState = !isCurrentlyChecked;
 
-      if (newCheckedState) {
-        // Add the tag
-        const updatedFileList = addOrAppendSlots(
-          [option.name],
-          uploadedFile,
-          fileList,
-        );
-        setFileList(updatedFileList);
-      } else {
-        // Remove the tag
-        const updatedFileList = removeSlots(
-          [option.name],
-          uploadedFile,
-          fileList,
-        );
-        setFileList(updatedFileList);
-      }
-    };
+    if (newCheckedState) {
+      // Add the tag
+      const updatedFileList = addOrAppendSlots(
+        [option.name],
+        uploadedFile,
+        fileList,
+      );
+      setFileList(updatedFileList);
+    } else {
+      // Remove the tag
+      const updatedFileList = removeSlots(
+        [option.name],
+        uploadedFile,
+        fileList,
+      );
+      setFileList(updatedFileList);
+    }
+  };
 
   return (
-    <Box
-      sx={(theme) => ({
-        width: "100%",
-        backgroundColor: theme.palette.background.default,
-        borderColor: theme.palette.border.main,
-        borderStyle: "solid",
-        borderWidth: "1px",
-        borderTopColor: theme.palette.border.light,
-        padding: theme.spacing(2),
-      })}
-    >
+    <Root>
       <Typography variant="h3" mb={3} id={titleId}>
         What does this file show? (select all that apply)
         <Box component="span" sx={visuallyHidden}>
@@ -138,15 +131,15 @@ export const SelectMultipleFileTypes = (props: ChecklistProps) => {
             {categoryOptions.map((option) => (
               <ChecklistItem
                 key={`${category}-${option.name}`}
-                id={`${sanitizeId(uploadedFile.id)}-${sanitizeId(category)}-${sanitizeId(option.name)}`}
+                id={sanitizeId(`${uploadedFile.id}-${category}-${option.name}`)}
                 label={option.name}
                 checked={initialTags.includes(option.name)}
-                onChange={handleCheckboxChange(option)}
+                onChange={() => handleCheckboxChange(option)}
               />
             ))}
           </Box>
         </FormControl>
       ))}
-    </Box>
+    </Root>
   );
 };

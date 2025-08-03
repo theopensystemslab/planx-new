@@ -404,11 +404,9 @@ describe("Adding tags and syncing state", () => {
     const submitModalButton = getByRole("button", { name: /Done/ });
     expect(submitModalButton).toBeVisible();
 
-    // Find the "Roof plan" checkbox using data-testid which includes the file ID
-    // The pattern is: ${fileId}-${category}-${optionName}
+    // Find the "Roof plan" checkbox using label text
     const roofPlanCheckbox =
-      within(fileTaggingModal).getByTestId(/.*-.*-Roof-plan$/);
-    expect(roofPlanCheckbox).toBeInTheDocument();
+      within(fileTaggingModal).getByLabelText("Roof plan");
 
     // Apply tag to this file
     await user.click(roofPlanCheckbox);
@@ -474,10 +472,8 @@ describe("Adding tags and syncing state", () => {
     expect(uploadedFileCards).toHaveLength(1);
 
     // Find the "Heritage statement" checkbox using data-testid
-    const heritageStatementCheckbox = within(fileTaggingModal).getByTestId(
-      /.*-.*-Heritage-statement$/,
-    );
-    expect(heritageStatementCheckbox).toBeInTheDocument();
+    const heritageStatementCheckbox =
+      within(fileTaggingModal).getByLabelText("Heritage statement");
 
     // Apply tag to this file
     await user.click(heritageStatementCheckbox);
@@ -646,8 +642,7 @@ describe("Error handling", () => {
       "file-tagging-dialog",
     );
     const utilityBillCheckbox =
-      within(fileTaggingModal).getByTestId(/.*-.*-Utility-bill$/);
-    expect(utilityBillCheckbox).toBeInTheDocument();
+      within(fileTaggingModal).getByLabelText("Utility bill");
 
     // Apply tag to this file
     await user.click(utilityBillCheckbox);
@@ -668,7 +663,7 @@ describe("Submitting data", () => {
 
   it("records the user uploaded files", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, getByLabelText, user } = setup(
+    const { getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -696,7 +691,7 @@ describe("Submitting data", () => {
 
   it("records the full file type list presented to the user", async () => {
     const handleSubmit = vi.fn();
-    const { getByText, getByLabelText, user } = setup(
+    const { getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -769,7 +764,7 @@ describe("Submitting data", () => {
     act(() => setState({ flow, breadcrumbs }));
 
     const handleSubmit = vi.fn();
-    const { getByText, getByLabelText, user } = setup(
+    const { getByText, user } = setup(
       <FileUploadAndLabelComponent
         title="Test title"
         handleSubmit={handleSubmit}
@@ -813,10 +808,8 @@ const uploadAndTagSingleFile = async (user: UserEvent) => {
     "file-tagging-dialog",
   );
 
-  // Find the "Roof plan" checkbox using data-testid
-  const roofPlanCheckbox =
-    within(fileTaggingModal).getByTestId(/.*-.*-Roof-plan$/);
-  expect(roofPlanCheckbox).toBeInTheDocument();
+  // Find the "Roof plan" checkbox using label text
+  const roofPlanCheckbox = within(fileTaggingModal).getByLabelText("Roof plan");
   await user.click(roofPlanCheckbox);
 
   const submitModalButton = await within(fileTaggingModal).findByText("Done");

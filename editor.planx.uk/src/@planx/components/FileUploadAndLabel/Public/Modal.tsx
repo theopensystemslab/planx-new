@@ -102,7 +102,9 @@ export const FileTaggingModal = ({
                   {...slot}
                   key={slot.id}
                   removeFile={() => removeFile(slot)}
-                  sx={{ borderBottom: "none" }}
+                  FileCardProps={{
+                    sx: { borderBottom: "none" },
+                  }}
                 />
                 <SelectMultipleFileTypes
                   uploadedFile={slot}
