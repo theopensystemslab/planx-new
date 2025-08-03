@@ -471,7 +471,7 @@ describe("Adding tags and syncing state", () => {
     });
     expect(uploadedFileCards).toHaveLength(1);
 
-    // Find the "Heritage statement" checkbox using data-testid
+    // Find the "Heritage statement" checkbox using label text
     const heritageStatementCheckbox =
       within(fileTaggingModal).getByLabelText("Heritage statement");
 
@@ -637,7 +637,7 @@ describe("Error handling", () => {
     });
     expect(uploadedFileCards).toHaveLength(1);
 
-    // Find the "Utility bill" checkbox using data-testid
+    // Find the "Utility bill" checkbox using label text
     const fileTaggingModal = await within(document.body).findByTestId(
       "file-tagging-dialog",
     );
