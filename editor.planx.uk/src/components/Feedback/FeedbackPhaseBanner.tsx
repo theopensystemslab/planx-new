@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import React, { RefObject } from "react";
+import React from "react";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -56,8 +56,6 @@ const BetaFlag = styled(Box)(({ theme }) => ({
 interface Props {
   handleFeedbackClick: () => void;
   handleReportAnIssueClick: () => void;
-  feedbackButtonRef: RefObject<HTMLAnchorElement>
-  reportIssueButtonRef: RefObject<HTMLButtonElement>
 }
 
 export default function PhaseBanner(props: Props): FCReturn {
@@ -97,14 +95,13 @@ export default function PhaseBanner(props: Props): FCReturn {
                 href="#"
                 sx={{ verticalAlign: "top" }}
                 onClick={handleFeedbackClick}
-                ref={props.feedbackButtonRef}
               >
                 feedback
               </Link>{" "}
               will help us improve it.
             </Typography>
           </PhaseWrap>
-          <ReportButton onClick={() => props.handleReportAnIssueClick()} ref={props.reportIssueButtonRef}>
+          <ReportButton onClick={() => props.handleReportAnIssueClick()}>
             Report an issue with this page
           </ReportButton>
         </Inner>

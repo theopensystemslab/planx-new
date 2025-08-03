@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
@@ -18,8 +18,6 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
-        feedbackButtonRef={createRef()}
-        reportIssueButtonRef={createRef()}
       />,
     );
 
@@ -33,8 +31,6 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
-        feedbackButtonRef={createRef()}
-        reportIssueButtonRef={createRef()}
       />,
     );
 
@@ -47,8 +43,6 @@ describe("FeedbackPhaseBanner presentation and functionality", () => {
       <FeedbackPhaseBanner
         handleFeedbackClick={handleFeedbackClick}
         handleReportAnIssueClick={handleReportAnIssueClick}
-        feedbackButtonRef={createRef()}
-        reportIssueButtonRef={createRef()}
       />,
     );
 
@@ -63,8 +57,6 @@ describe("FeedbackPhaseBanner accessibility", () => {
       <FeedbackPhaseBanner
         handleFeedbackClick={vi.fn()}
         handleReportAnIssueClick={vi.fn()}
-        feedbackButtonRef={createRef()}
-        reportIssueButtonRef={createRef()}
       />,
     );
 
