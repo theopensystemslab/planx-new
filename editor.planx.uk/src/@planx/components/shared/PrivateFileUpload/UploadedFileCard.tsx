@@ -1,6 +1,6 @@
 import FileIcon from "@mui/icons-material/AttachFile";
 import DeleteIcon from "@mui/icons-material/DeleteOutline";
-import Box from "@mui/material/Box";
+import Box, { BoxProps } from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Link from "@mui/material/Link";
@@ -18,10 +18,10 @@ interface Props extends FileUploadSlot {
   removeFile: () => void;
   onChange?: () => void;
   tags?: string[];
+  FileCardProps?: BoxProps;
 }
 
 const Root = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(0.5),
   marginTop: theme.spacing(5),
 }));
 
@@ -95,6 +95,7 @@ export const UploadedFileCard: React.FC<Props> = ({
   onChange,
   tags,
   status,
+  FileCardProps,
 }) => (
   <Root>
     <ErrorWrapper
@@ -105,7 +106,7 @@ export const UploadedFileCard: React.FC<Props> = ({
       }
     >
       <>
-        <FileCard>
+        <FileCard {...FileCardProps}>
           <ProgressBar
             width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
             role="progressbar"

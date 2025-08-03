@@ -71,6 +71,11 @@ export const FileTaggingModal = ({
       maxWidth="xl"
       aria-labelledby="dialog-heading"
       fullScreen={fullScreen}
+      PaperProps={{
+        sx: {
+          overflow: "hidden",
+        },
+      }}
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
@@ -102,6 +107,9 @@ export const FileTaggingModal = ({
                   {...slot}
                   key={slot.id}
                   removeFile={() => removeFile(slot)}
+                  FileCardProps={{
+                    sx: { borderBottom: "none" },
+                  }}
                 />
                 <SelectMultipleFileTypes
                   uploadedFile={slot}
