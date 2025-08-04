@@ -1,5 +1,6 @@
-import { screen, within } from "@testing-library/react";
-import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup";
+import { screen } from "@testing-library/react";
+// eslint-disable-next-line no-restricted-imports
+import type { UserEvent } from "@testing-library/user-event";
 import { Feature, Point, Polygon } from "geojson";
 import { act } from "react-dom/test-utils";
 

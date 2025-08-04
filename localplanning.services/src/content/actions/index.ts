@@ -11,7 +11,7 @@ export const actions: Record<Action, { title: string, description: string }> = {
   notify: {
     title: "Notify your authority",
     description:
-      "Inform the planning authority enforcement team about changes you think may be a planning breach.",
+      "Inform your local planning authority about changes you think may be a planning breach.",
   },
   guidance:  {
     title: "Get planning guidance",

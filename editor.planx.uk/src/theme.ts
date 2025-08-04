@@ -274,69 +274,6 @@ const getThemeOptions = ({
           },
         },
       },
-      MuiContainer: {
-        styleOverrides: {
-          root: {
-            zIndex: 1,
-            "@media (min-width: 500px)": {
-              padding: "0 20px",
-            },
-            "@media (min-width: 768px)": {
-              padding: "0 30px",
-            },
-          },
-        },
-      },
-      MuiCssBaseline: {
-        styleOverrides: {
-          strong: {
-            fontWeight: FONT_WEIGHT_SEMI_BOLD,
-          },
-          b: {
-            fontWeight: FONT_WEIGHT_SEMI_BOLD,
-          },
-          body: {
-            backgroundColor: palette.background.default,
-            lineHeight: LINE_HEIGHT_BASE,
-          },
-          hr: {
-            marginLeft: 0,
-          },
-          fieldset: {
-            minInlineSize: "unset",
-            padding: 0,
-            border: 0,
-          },
-          img: {
-            // a11y: Ensure images are visible in Windows high contrast mode
-            "@media (forced-colors: active)": {
-              forcedColorAdjust: "none",
-              backgroundColor: "white",
-            },
-          },
-        },
-      },
-      MuiButtonBase: {
-        styleOverrides: {
-          root: {
-            fontFamily: "inherit",
-            "&:focus-visible": {
-              ...focusStyle,
-              // !important is required here as setting disableElevation = true removes boxShadow
-              boxShadow: `inset 0 -4px 0 ${DEFAULT_PALETTE.text?.primary} !important`,
-              // Hover should not overwrite focus
-              "&:hover": focusStyle,
-            },
-          },
-        },
-      },
-      MuiListItemIcon: {
-        styleOverrides: {
-          root: {
-            color: "inherit",
-          },
-        },
-      },
       MuiButton: {
         variants: [
           {
@@ -442,63 +379,17 @@ const getThemeOptions = ({
           },
         },
       },
-      MuiDialog: {
-        styleOverrides: {
-          paper: ({ theme }) => ({
-            width: "100%",
-            maxWidth: theme.breakpoints.values.md,
-            borderRadius: 0,
-            borderTop: `20px solid ${palette.primary.main}`,
-            background: theme.palette.background.paper,
-            margin: theme.spacing(2),
-          }),
-        },
-      },
-      MuiIconButton: {
-        defaultProps: {
-          disableFocusRipple: true,
-        },
+      MuiButtonBase: {
         styleOverrides: {
           root: {
-            borderRadius: 0,
+            fontFamily: "inherit",
             "&:focus-visible": {
-              "& svg, div": {
-                color: palette.common.black,
-                borderColor: palette.common.black,
-              },
-              "&>*:hover": {
-                backgroundColor: "transparent",
-              },
+              ...focusStyle,
+              // !important is required here as setting disableElevation = true removes boxShadow
+              boxShadow: `inset 0 -4px 0 ${DEFAULT_PALETTE.text?.primary} !important`,
+              // Hover should not overwrite focus
+              "&:hover": focusStyle,
             },
-          },
-        },
-      },
-      MuiPaper: {
-        defaultProps: {
-          elevation: 0,
-        },
-        styleOverrides: {
-          root: {
-            borderRadius: 0,
-          },
-        },
-      },
-      MuiLink: {
-        styleOverrides: {
-          root: {
-            ...linkStyle(palette.link.main),
-            "&:disabled": {
-              color: palette.text.disabled,
-              cursor: "default",
-              textDecoration: "none",
-            },
-          },
-        },
-      },
-      MuiListItem: {
-        styleOverrides: {
-          root: {
-            lineHeight: LINE_HEIGHT_BASE,
           },
         },
       },
@@ -522,27 +413,168 @@ const getThemeOptions = ({
           },
         ],
       },
-      MuiInputBase: {
+      MuiContainer: {
         styleOverrides: {
           root: {
-            "&.Mui-disabled": {
-              backgroundColor: palette.background.disabled,
+            zIndex: 1,
+            "@media (min-width: 500px)": {
+              padding: "0 20px",
+            },
+            "@media (min-width: 768px)": {
+              padding: "0 30px",
             },
           },
         },
       },
-      MuiSelect: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          strong: {
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
+          b: {
+            fontWeight: FONT_WEIGHT_SEMI_BOLD,
+          },
+          body: {
+            backgroundColor: palette.background.default,
+            lineHeight: LINE_HEIGHT_BASE,
+          },
+          hr: {
+            marginLeft: 0,
+          },
+          fieldset: {
+            minInlineSize: "unset",
+            padding: 0,
+            border: 0,
+          },
+          img: {
+            // a11y: Ensure images are visible in Windows high contrast mode
+            "@media (forced-colors: active)": {
+              forcedColorAdjust: "none",
+              backgroundColor: "white",
+            },
+          },
+        },
+      },
+      MuiDataGrid: {
         styleOverrides: {
           root: {
-            "&.Mui-disabled": {
-              backgroundColor: palette.background.disabled,
+            margin: 1,
+            backgroundColor: palette.background.default,
+            borderColor: palette.border.main,
+            [`& .${gridClasses.cell}`]: {
+              display: "flex",
+              alignItems: "flex-start",
+              "&:focus": {
+                ...inputFocusStyle,
+                boxShadow: "none",
+              },
+            },
+            // Set cell padding based on density setting
+            [`&.${gridClasses.root}--densityCompact .${gridClasses.cell}`]: {
+              padding: "5px 10px",
+            },
+            [`&.${gridClasses.root}--densityStandard .${gridClasses.cell}`]: {
+              padding: "10px 10px",
+            },
+            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]:
+              {
+                padding: "20px 10px",
+              },
+            [`& .${gridClasses.cell}.${gridClasses.cellCheckbox}`]: {
+              paddingTop: "1px",
+            },
+            [`& .${gridClasses.toolbarContainer}`]: {
+              borderBottom: `1px solid ${palette.border.main}`,
+              background: palette.secondary.dark,
+              paddingBottom: "5px",
+              [`& .${buttonClasses.root}`]: {
+                background: palette.background.default,
+                "&:focus-visible": {
+                  ...focusStyle,
+                },
+                // Ensure SVG icons are equal size
+                "& svg": {
+                  width: "18px",
+                  height: "18px",
+                },
+              },
+            },
+            [`& .${gridClasses.columnHeader}.${gridClasses.withBorderColor}`]: {
+              borderColor: palette.border.main,
+            },
+            [`& .${gridClasses.columnHeader}`]: {
+              "&:focus": {
+                ...inputFocusStyle,
+                boxShadow: "none",
+              },
+              // Hide right-side border for final column header
+              [`&--last .${gridClasses.columnSeparator} svg`]: {
+                visibility: "hidden",
+              },
+            },
+            [`& .${gridClasses.columnHeaderTitle}`]: {
+              fontWeight: FONT_WEIGHT_SEMI_BOLD,
+            },
+            ".MuiDataGrid-row:hover": {
+              backgroundColor: "transparent",
+            },
+            [`& .${gridClasses.row}.odd`]: {
+              backgroundColor: lighten(palette.background.paper, 0.2),
+            },
+            [`& .${gridClasses.row}`]: {
+              "&.Mui-selected, &.Mui-selected:hover": {
+                backgroundColor: palette.info.light,
+              },
+            },
+            [`& .${gridClasses.footerContainer}`]: {
+              borderColor: palette.border.main,
+            },
+            [`& .${tablePaginationClasses.root}`]: {
+              maxHeight: "none",
             },
           },
-          icon: {
-            "&.Mui-disabled": {
-              color: palette.grey[400],
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: ({ theme }) => ({
+            width: "100%",
+            maxWidth: theme.breakpoints.values.md,
+            borderRadius: 0,
+            borderTop: `20px solid ${palette.primary.main}`,
+            background: theme.palette.background.paper,
+            margin: theme.spacing(2),
+          }),
+        },
+      },
+      MuiDrawer: {
+        defaultProps: {
+          anchor: "right",
+          "aria-modal": true,
+          role: "dialog",
+        },
+        styleOverrides: {
+          root: ({ theme, open }) => ({
+            width: 600,
+            flexShrink: 0,
+            color: theme.palette.text.primary,
+            transition: theme.transitions.create("margin", {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginRight: open ? 0 : -600,
+            [theme.breakpoints.only("xs")]: {
+              width: "100%",
+              marginRight: "-100%",
             },
-          },
+          }),
+          paper: ({ theme }) => ({
+            width: "100%",
+            maxWidth: 600,
+            backgroundColor: theme.palette.background.paper,
+            border: 0,
+            boxShadow: "-4px 0 0 rgba(0,0,0,0.1)",
+          }),
         },
       },
       MuiFormControlLabel: {
@@ -552,70 +584,67 @@ const getThemeOptions = ({
           },
         },
       },
-      MuiSwitch: {
+      MuiIconButton: {
+        defaultProps: {
+          disableFocusRipple: true,
+        },
         styleOverrides: {
           root: {
-            width: "76px",
-            height: "44px",
-            padding: "8px",
-            left: "-8px",
-            marginRight: "-4px",
-            [`& .${switchClasses.switchBase}`]: {
-              padding: "11px",
-              borderRadius: "50%",
-              [`&.${switchClasses.checked}`]: {
-                transform: "translateX(32px)",
+            borderRadius: 0,
+            "&:focus-visible": {
+              "& svg, div": {
+                color: palette.common.black,
+                borderColor: palette.common.black,
+              },
+              "&>*:hover": {
+                backgroundColor: "transparent",
               },
             },
-            [`& .${switchClasses.thumb}`]: {
-              background: palette.common.white,
-              width: "22px",
-              height: "22px",
+          },
+        },
+      },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              backgroundColor: palette.background.disabled,
             },
-            [`& .${switchClasses.track}`]: {
-              background: palette.background.dark,
-              borderRadius: "20px",
-              position: "relative",
-              opacity: 1,
-              "&::before, &::after": {
-                display: "inline-block",
-                position: "absolute",
-                top: "50%",
-                width: "50%",
-                transform: "translateY(-50%)",
-                color: palette.common.white,
-                textAlign: "center",
-                fontSize: "0.75rem",
-                fontWeight: FONT_WEIGHT_SEMI_BOLD,
-              },
-              "&::before": {
-                content: "'ON'",
-                left: "4px",
-                opacity: 0,
-              },
-              "&::after": {
-                content: "'OFF'",
-                right: "4px",
-              },
+          },
+        },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            ...linkStyle(palette.link.main),
+            "&:disabled": {
+              color: palette.text.disabled,
+              cursor: "default",
+              textDecoration: "none",
             },
-            [`& .${switchClasses.switchBase}.${switchClasses.checked}`]: {
-              [`& + .${switchClasses.track}`]: {
-                background: palette.success.dark,
-                opacity: 1,
-                "&::before": {
-                  opacity: 1,
-                },
-                "&::after": {
-                  opacity: 0,
-                },
-              },
-            },
-            [`& .${switchClasses.switchBase}.${switchClasses.disabled}`]: {
-              [`& + .${switchClasses.track}`]: {
-                opacity: 1,
-                background: palette.text.disabled,
-              },
-            },
+          },
+        },
+      },
+      MuiListItem: {
+        styleOverrides: {
+          root: {
+            lineHeight: LINE_HEIGHT_BASE,
+          },
+        },
+      },
+      MuiListItemIcon: {
+        styleOverrides: {
+          root: {
+            color: "inherit",
+          },
+        },
+      },
+      MuiPaper: {
+        defaultProps: {
+          elevation: 0,
+        },
+        styleOverrides: {
+          root: {
+            borderRadius: 0,
           },
         },
       },
@@ -704,6 +733,87 @@ const getThemeOptions = ({
           },
         ],
       },
+      MuiSelect: {
+        styleOverrides: {
+          root: {
+            "&.Mui-disabled": {
+              backgroundColor: palette.background.disabled,
+            },
+          },
+          icon: {
+            "&.Mui-disabled": {
+              color: palette.grey[400],
+            },
+          },
+        },
+      },
+      MuiSwitch: {
+        styleOverrides: {
+          root: {
+            width: "76px",
+            height: "44px",
+            padding: "8px",
+            left: "-8px",
+            marginRight: "-4px",
+            [`& .${switchClasses.switchBase}`]: {
+              padding: "11px",
+              borderRadius: "50%",
+              [`&.${switchClasses.checked}`]: {
+                transform: "translateX(32px)",
+              },
+            },
+            [`& .${switchClasses.thumb}`]: {
+              background: palette.common.white,
+              width: "22px",
+              height: "22px",
+            },
+            [`& .${switchClasses.track}`]: {
+              background: palette.background.dark,
+              borderRadius: "20px",
+              position: "relative",
+              opacity: 1,
+              "&::before, &::after": {
+                display: "inline-block",
+                position: "absolute",
+                top: "50%",
+                width: "50%",
+                transform: "translateY(-50%)",
+                color: palette.common.white,
+                textAlign: "center",
+                fontSize: "0.75rem",
+                fontWeight: FONT_WEIGHT_SEMI_BOLD,
+              },
+              "&::before": {
+                content: "'ON'",
+                left: "4px",
+                opacity: 0,
+              },
+              "&::after": {
+                content: "'OFF'",
+                right: "4px",
+              },
+            },
+            [`& .${switchClasses.switchBase}.${switchClasses.checked}`]: {
+              [`& + .${switchClasses.track}`]: {
+                background: palette.success.dark,
+                opacity: 1,
+                "&::before": {
+                  opacity: 1,
+                },
+                "&::after": {
+                  opacity: 0,
+                },
+              },
+            },
+            [`& .${switchClasses.switchBase}.${switchClasses.disabled}`]: {
+              [`& + .${switchClasses.track}`]: {
+                opacity: 1,
+                background: palette.text.disabled,
+              },
+            },
+          },
+        },
+      },
       MuiTooltip: {
         defaultProps: {
           arrow: true,
@@ -722,86 +832,6 @@ const getThemeOptions = ({
             },
             [`&.${tooltipClasses.tooltipPlacementBottom}`]: {
               top: "-3px",
-            },
-          },
-        },
-      },
-      MuiDataGrid: {
-        styleOverrides: {
-          root: {
-            margin: 1,
-            backgroundColor: palette.background.default,
-            borderColor: palette.border.main,
-            [`& .${gridClasses.cell}`]: {
-              display: "flex",
-              alignItems: "flex-start",
-              "&:focus": {
-                ...inputFocusStyle,
-                boxShadow: "none",
-              },
-            },
-            // Set cell padding based on density setting
-            [`&.${gridClasses.root}--densityCompact .${gridClasses.cell}`]: {
-              padding: "5px 10px",
-            },
-            [`&.${gridClasses.root}--densityStandard .${gridClasses.cell}`]: {
-              padding: "10px 10px",
-            },
-            [`&.${gridClasses.root}--densityComfortable .${gridClasses.cell}`]:
-              {
-                padding: "20px 10px",
-              },
-            [`& .${gridClasses.cell}.${gridClasses.cellCheckbox}`]: {
-              paddingTop: "1px",
-            },
-            [`& .${gridClasses.toolbarContainer}`]: {
-              borderBottom: `1px solid ${palette.border.main}`,
-              background: palette.secondary.dark,
-              paddingBottom: "5px",
-              [`& .${buttonClasses.root}`]: {
-                background: palette.background.default,
-                "&:focus-visible": {
-                  ...focusStyle,
-                },
-                // Ensure SVG icons are equal size
-                "& svg": {
-                  width: "18px",
-                  height: "18px",
-                },
-              },
-            },
-            [`& .${gridClasses.columnHeader}.${gridClasses.withBorderColor}`]: {
-              borderColor: palette.border.main,
-            },
-            [`& .${gridClasses.columnHeader}`]: {
-              "&:focus": {
-                ...inputFocusStyle,
-                boxShadow: "none",
-              },
-              // Hide right-side border for final column header
-              [`&--last .${gridClasses.columnSeparator} svg`]: {
-                visibility: "hidden",
-              },
-            },
-            [`& .${gridClasses.columnHeaderTitle}`]: {
-              fontWeight: FONT_WEIGHT_SEMI_BOLD,
-            },
-            ".MuiDataGrid-row:hover": {
-              backgroundColor: "transparent",
-            },
-            [`& .${gridClasses.row}.odd`]: {
-              backgroundColor: lighten(palette.background.paper, 0.2),
-            },
-            [`& .${gridClasses.row}`]: {
-              "&.Mui-selected, &.Mui-selected:hover": {
-                backgroundColor: palette.info.light,
-              },
-            },
-            [`& .${gridClasses.footerContainer}`]: {
-              borderColor: palette.border.main,
-            },
-            [`& .${tablePaginationClasses.root}`]: {
-              maxHeight: "none",
             },
           },
         },

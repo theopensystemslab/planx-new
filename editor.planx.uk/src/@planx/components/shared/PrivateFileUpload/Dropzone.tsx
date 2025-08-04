@@ -8,6 +8,7 @@ import { uploadPrivateFile } from "api/upload";
 import { nanoid } from "nanoid";
 import React from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
+import { borderedFocusStyle } from "theme";
 
 interface Props {
   setSlots: React.Dispatch<React.SetStateAction<FileUploadSlot[]>>;
@@ -63,6 +64,11 @@ const Root = styled(Box, {
         duration: "0.2s",
       }),
     ],
+  },
+  "&:focus": {
+    ...borderedFocusStyle,
+    boxShadow: "none",
+    borderStyle: "solid",
   },
 }));
 

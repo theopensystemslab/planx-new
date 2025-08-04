@@ -6,7 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import React, { useState } from "react";
+import { visuallyHidden } from "@mui/utils";
+import React, { useEffect, useRef, useState } from "react";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { ValidationError } from "yup";
 
@@ -35,6 +36,13 @@ export const FileTaggingModal = ({
   const fullScreen = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down("md"),
   );
+  const initialFocusRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (initialFocusRef.current) {
+      initialFocusRef.current.focus();
+    }
+  }, []);
 
   const closeModal = (_event: any, reason?: string) => {
     if (reason && reason == "backdropClick") {
@@ -63,11 +71,32 @@ export const FileTaggingModal = ({
       maxWidth="xl"
       aria-labelledby="dialog-heading"
       fullScreen={fullScreen}
+      PaperProps={{
+        sx: {
+          overflow: "hidden",
+        },
+      }}
     >
       <DialogContent>
         <Box sx={{ mt: 1, mb: 4 }}>
-          <Typography variant="h3" component="h2" id="dialog-heading">
+          <Typography
+            variant="h3"
+            component="h2"
+            id="dialog-heading"
+            ref={initialFocusRef}
+            tabIndex={-1}
+            sx={{ outline: "none" }}
+          >
             Tell us what these files show
+            <Typography
+              component="span"
+              id="dialog-description"
+              sx={visuallyHidden}
+            >
+              . You are in a dialog, for each uploaded file, select what type of
+              information it contains. You can close this dialog by pressing
+              escape.
+            </Typography>
           </Typography>
         </Box>
         {uploadedFiles.map((slot) => (
@@ -78,6 +107,9 @@ export const FileTaggingModal = ({
                   {...slot}
                   key={slot.id}
                   removeFile={() => removeFile(slot)}
+                  FileCardProps={{
+                    sx: { borderBottom: "none" },
+                  }}
                 />
                 <SelectMultipleFileTypes
                   uploadedFile={slot}

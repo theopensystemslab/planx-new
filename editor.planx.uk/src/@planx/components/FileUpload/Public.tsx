@@ -6,10 +6,13 @@ import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { PASSPORT_REQUESTED_FILES_KEY } from "../FileUploadAndLabel/model";
 import { PrivateFileUpload } from "../shared/PrivateFileUpload/PrivateFileUpload";
+import { PublicProps } from "../shared/types";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { FileUpload, FileUploadSlot, slotsSchema } from "./model";
 
-const FileUploadComponent: React.FC<FileUpload> = (props) => {
+type Props = PublicProps<FileUpload>;
+
+const FileUploadComponent: React.FC<Props> = (props) => {
   const recoveredSlots = getPreviouslySubmittedData(props)?.map(
     (slot: FileUploadSlot) => slot.cachedSlot,
   );
@@ -52,12 +55,13 @@ const FileUploadComponent: React.FC<FileUpload> = (props) => {
     slotsSchema
       .validate(slots)
       .then(() => {
-        props.handleSubmit({
-          data: {
-            ...uploadedFiles(slots).data,
-            ...updatedRequestedFiles(),
-          },
-        });
+        props.handleSubmit &&
+          props.handleSubmit({
+            data: {
+              ...uploadedFiles(slots).data,
+              ...updatedRequestedFiles(),
+            },
+          });
       })
       .catch((err) => {
         setValidationError(err.message);

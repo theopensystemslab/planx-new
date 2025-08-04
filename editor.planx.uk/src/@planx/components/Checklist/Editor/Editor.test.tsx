@@ -1,11 +1,13 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 // eslint-disable-next-line no-restricted-imports
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { setup } from "testUtils";
+import { vi } from "vitest";
 
+import { ChecklistProps } from "../types";
 import { ChecklistEditor } from "./Editor";
 
 const { getState } = useStore;
@@ -122,7 +124,7 @@ describe("Checklist editor component", () => {
         screen.getByText(
           /Cannot configure exclusive "or" option alongside "all required" setting/,
         ),
-      ).toBeInTheDocument()
+      ).toBeInTheDocument(),
     );
   }, 10_000);
 
@@ -148,7 +150,198 @@ describe("Checklist editor component", () => {
     );
   });
 
-  it.todo(
-    "shows an error if 'never put to user' is toggled on and more than one option has a blank data field",
-  );
+  it("shows an error if no options set a data field, but one is set at the top level", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} />
+      </DndProvider>,
+    );
+
+    const autocompleteComponent = screen.getByTestId("checklist-data-field");
+    const autocompleteInput = within(autocompleteComponent).getByRole(
+      "combobox",
+    );
+
+    // Set a top-level data field
+    await user.click(autocompleteInput);
+    await user.type(autocompleteInput, "my.data.value");
+    await user.keyboard("{Enter}");
+
+    // An an option without a data field
+    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.type(screen.getByPlaceholderText("Option"), "First");
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/At least one option must also set a data field/),
+      ).toBeInTheDocument(),
+    );
+  }, 20_000);
+
+  it("does not show an error if at least one option sets a data field", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} handleSubmit={handleSubmit} />
+      </DndProvider>,
+    );
+
+    const autocompleteComponent = screen.getByTestId("checklist-data-field");
+    const autocompleteInput = within(autocompleteComponent).getByRole(
+      "combobox",
+    );
+
+    // Set a top-level data field
+    await user.click(autocompleteInput);
+    await user.type(autocompleteInput, "my.data.value");
+    await user.keyboard("{Enter}");
+
+    // An an option without a data field
+    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.type(screen.getByPlaceholderText("Option"), "First");
+
+    // An another option, this time with a data field
+    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.type(screen.getAllByPlaceholderText("Option")[1], "Second");
+    const autocompleteComponentOption = screen.getByTestId(
+      "data-field-autocomplete-option-1",
+    );
+    const autocompleteInputOption = within(
+      autocompleteComponentOption,
+    ).getByRole("combobox");
+    await user.click(autocompleteInputOption);
+    await user.type(autocompleteInputOption, "my.option.data.value");
+    await user.keyboard("{Enter}");
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() => expect(handleSubmit).toHaveBeenCalled());
+  }, 50_000);
+
+  it("only allows a single exclusive option to be added", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text={""} />
+      </DndProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: /add new option/i }));
+    await user.type(screen.getByPlaceholderText("Option"), "First");
+
+    const addExclusiveOptionButton = screen.getByRole("button", {
+      name: /add "or" option/i,
+    });
+    expect(addExclusiveOptionButton).toBeEnabled();
+
+    await user.click(addExclusiveOptionButton);
+    expect(screen.getByPlaceholderText("Exclusive 'or' option")).toBeVisible();
+    expect(addExclusiveOptionButton).toBeDisabled();
+  });
+
+  /**
+   * The UI does not allow many exclusive options to be added (see prior test)
+   * Set up mock data to trigger this state and test the validation schema
+   */
+  it("shows an error if multiple exclusive options are configured", async () => {
+    const props: ChecklistProps = {
+      node: {
+        data: {
+          text: "Many exclusive options",
+          allRequired: false,
+          neverAutoAnswer: false,
+          alwaysAutoAnswerBlank: false,
+        },
+      },
+      text: "Many exclusive options",
+      allRequired: false,
+      neverAutoAnswer: false,
+      alwaysAutoAnswerBlank: false,
+      options: [
+        {
+          id: "AF4400H41Z",
+          data: {
+            text: "A regular option",
+          },
+        },
+        {
+          id: "0WeNTfghL4",
+          data: {
+            text: "First exclusive option",
+            exclusive: true,
+          },
+        },
+        {
+          id: "0WeNTfghL5",
+          data: {
+            text: "Second exclusive option",
+            exclusive: true,
+          },
+        },
+      ],
+      disabled: false,
+    };
+
+    const handleSubmit = vi.fn();
+
+    setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor handleSubmit={handleSubmit} {...props} />
+      </DndProvider>,
+    );
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    expect(handleSubmit).not.toHaveBeenCalled();
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /There should be a maximum of one exclusive option configured/,
+        ),
+      ).toBeInTheDocument(),
+    );
+  });
+
+  it("shows an error if 'never put to user' is toggled on and more than one option has a blank data field", async () => {
+    const { user } = setup(
+      <DndProvider backend={HTML5Backend}>
+        <ChecklistEditor text="" />
+      </DndProvider>,
+    );
+
+    // Set a top-level data field
+    const autocompleteComponent = screen.getByTestId("checklist-data-field");
+    const autocompleteInput = within(autocompleteComponent).getByRole(
+      "combobox",
+    );
+    await user.click(autocompleteInput);
+    await user.type(autocompleteInput, "my.data.value");
+    await user.keyboard("{Enter}");
+
+    user.click(screen.getByLabelText(/Never put to user/));
+
+    const addNewOptionButton = screen.getByRole("button", {
+      name: /add new option/i,
+    });
+    await user.click(addNewOptionButton);
+    await user.click(addNewOptionButton);
+
+    const [first, second] = screen.getAllByPlaceholderText("Option");
+
+    await user.type(first, "First");
+    await user.type(second, "Second");
+
+    fireEvent.submit(screen.getByTestId("checklistEditorForm"));
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /Exactly one option should have a blank data field when never putting to user/,
+        ),
+      ).toBeInTheDocument(),
+    );
+  }, 30_000);
 });

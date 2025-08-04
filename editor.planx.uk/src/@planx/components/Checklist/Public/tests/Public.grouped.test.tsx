@@ -1,4 +1,5 @@
 import { screen } from "@testing-library/react";
+import { cloneDeep } from "lodash";
 import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
@@ -8,6 +9,7 @@ import Checklist from "../Public";
 import {
   groupedOptions,
   groupedOptionsWithExclusiveOption,
+  mockWithRepeatedOptions,
 } from "./mockOptions";
 
 describe("Checklist Component - Grouped Layout", () => {
@@ -193,6 +195,217 @@ describe("Checklist Component - Grouped Layout", () => {
     await user.keyboard("[Space]");
     expect(handleSubmit).toHaveBeenCalledWith({
       answers: ["S2_Option1", "S2_Option2"],
+    });
+  });
+});
+
+describe("toggling options by matching data values and labels", () => {
+  it("toggles and and off options in another group when both the label and data value match", async () => {
+    const { user } = setup(<Checklist {...mockWithRepeatedOptions} />);
+
+    await user.click(screen.getByText("Common projects for homes"));
+    await user.click(screen.getByText("Extensions"));
+
+    const repeatedOptions = screen.getAllByLabelText("Roof extension");
+
+    expect(repeatedOptions).toHaveLength(2);
+
+    const [first, second] = repeatedOptions;
+
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+
+    // Toggle on by first
+    await user.click(first);
+    expect(first).toBeChecked();
+    expect(second).toBeChecked();
+
+    // Toggle off by second
+    await user.click(first);
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+
+    // Toggle on by second
+    await user.click(second);
+    expect(first).toBeChecked();
+    expect(second).toBeChecked();
+
+    // Toggle off by first
+    await user.click(first);
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+  });
+
+  it("does not toggle on and off options in another group when only the labels match", async () => {
+    const mockProps = cloneDeep(mockWithRepeatedOptions);
+
+    mockProps.groupedOptions?.[1].children.push({
+      id: "2zIVEYaAza",
+      data: {
+        val: "unique.data.val",
+        // Repeated label
+        text: "Rear or side extension (or conservatory)",
+      },
+    });
+
+    const { user } = setup(<Checklist {...mockProps} />);
+
+    await user.click(screen.getByText("Common projects for homes"));
+    await user.click(screen.getByText("Extensions"));
+
+    const repeatedOptions = screen.getAllByLabelText(
+      "Rear or side extension (or conservatory)",
+    );
+
+    expect(repeatedOptions).toHaveLength(2);
+
+    const [first, second] = repeatedOptions;
+
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+
+    // Toggling on first has no effect on second
+    await user.click(first);
+    expect(first).toBeChecked();
+    expect(second).not.toBeChecked();
+
+    // Toggling on second has no effect on second
+    await user.click(second);
+    expect(first).toBeChecked();
+    expect(second).toBeChecked();
+
+    // Toggling off first has no effect on second
+    await user.click(first);
+    expect(first).not.toBeChecked();
+    expect(second).toBeChecked();
+
+    // Toggling off second has no effect on first
+    await user.click(second);
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+  });
+
+  it("does not toggle on and off options in another group when only the data values match", async () => {
+    const mockProps = cloneDeep(mockWithRepeatedOptions);
+
+    mockProps.groupedOptions?.[1].children.push({
+      id: "2zIVEYaAza",
+      data: {
+        text: "Unique label",
+        // Repeated data value
+        val: "extend.rear",
+      },
+    });
+
+    const { user } = setup(<Checklist {...mockProps} />);
+
+    await user.click(screen.getByText("Common projects for homes"));
+    await user.click(screen.getByText("Extensions"));
+
+    const first = screen.getByLabelText(
+      "Rear or side extension (or conservatory)",
+      { exact: true },
+    );
+    const second = screen.getByLabelText("Unique label");
+
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+
+    // Toggling on first has no effect on second
+    await user.click(first);
+    expect(first).toBeChecked();
+    expect(second).not.toBeChecked();
+
+    // Toggling on second has no effect on second
+    await user.click(second);
+    expect(first).toBeChecked();
+    expect(second).toBeChecked();
+
+    // Toggling off first has no effect on second
+    await user.click(first);
+    expect(first).not.toBeChecked();
+    expect(second).toBeChecked();
+
+    // Toggling off second has no effect on first
+    await user.click(second);
+    expect(first).not.toBeChecked();
+    expect(second).not.toBeChecked();
+  });
+
+  it("ignore the exclusive ('or') option, regardless of label and data value", async () => {
+    const mockProps = cloneDeep({ ...mockWithRepeatedOptions });
+
+    // Replace current exclusive option to one with matching data value and label
+    // Should not happen in well-authored content
+    mockProps.groupedOptions![11] = {
+      title: "Or",
+      children: [
+        {
+          id: "V69z8B4VQW",
+          data: {
+            val: "alter.equipment.cctv",
+            text: "CCTV cameras",
+            exclusive: true,
+          },
+        },
+      ],
+    };
+
+    const { user } = setup(<Checklist {...mockProps} />);
+
+    await user.click(screen.getByText("Electricals"));
+
+    const repeatedOptions = screen.getAllByLabelText("CCTV cameras");
+
+    expect(repeatedOptions).toHaveLength(2);
+
+    const [groupedOption, exclusiveOption] = repeatedOptions;
+
+    expect(groupedOption).not.toBeChecked();
+    expect(exclusiveOption).not.toBeChecked();
+
+    // Toggle grouped option on
+    await user.click(groupedOption);
+    expect(groupedOption).toBeChecked();
+
+    // Exclusive option not toggled, despite matching label and data value
+    expect(exclusiveOption).not.toBeChecked();
+
+    // Toggle exclusive option on
+    await user.click(exclusiveOption);
+    expect(exclusiveOption).toBeChecked();
+
+    // Normal behaviour - all other options toggled off
+    expect(groupedOption).not.toBeChecked();
+
+    // Toggle grouped option on
+    await user.click(groupedOption);
+    expect(groupedOption).toBeChecked();
+
+    // Normal behaviour - exclusive option toggled off
+    expect(exclusiveOption).not.toBeChecked();
+  });
+
+  it("adds all checked options to the passport", async () => {
+    const handleSubmit = vi.fn();
+
+    const { user } = setup(
+      <Checklist {...mockWithRepeatedOptions} handleSubmit={handleSubmit} />,
+    );
+
+    await user.click(screen.getByText("Common projects for homes"));
+    await user.click(screen.getByText("Extensions"));
+
+    const repeatedOptions = screen.getAllByLabelText("Roof extension");
+    expect(repeatedOptions).toHaveLength(2);
+
+    await user.click(repeatedOptions[0]);
+
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(handleSubmit).toHaveBeenCalledWith({
+      // Node IDs for both "roof extension" options
+      answers: ["Uw3nlbQHu1", "9r1IjubH9a"],
     });
   });
 });

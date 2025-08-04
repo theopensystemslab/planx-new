@@ -14,8 +14,8 @@ const {
 const baseClasses = "bg-bg-main";
 
 const sizeClasses = {
-  default: "clamp-[py,10,20] clamp-[pb,5,10]",
-  large: "clamp-[py,10,20]",
+  default: "clamp-[py,10,20] clamp-[pb,5,8]",
+  large: "clamp-[py,10,20] xl:py-10",
 };
 
 const h1Classes = {
@@ -28,9 +28,18 @@ const classes = `${baseClasses} ${sizeClasses[size]}`;
 
 <section class={classes}>
   <Container class="text-center">
-    <h1 class={`${h1Classes[size]} text-action-secondary`}>{title}</h1>
-    <div class="text-text-secondary text-body-lg max-w-2xl">
-      <slot />
+    <div class="flex flex-col gap-5 xl:flex-row xl:items-center">
+      <div class="w-full xl:max-w-7/12">
+        <h1 class={`${h1Classes[size]} text-action-secondary`}>{title}</h1>
+        <div class="text-text-secondary text-body-lg max-w-2xl">
+          <slot />
+        </div>
+      </div>
+      {size === "large" && (
+        <div class="w-full xl:max-w-5/12">
+          <slot name="map" />
+        </div>
+       )}
     </div>
   </Container> 
 </section>

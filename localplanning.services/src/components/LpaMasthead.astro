@@ -21,8 +21,7 @@ const { title, lpaName, backgroundColour, logo } = Astro.props;
       {logo && (
         <Image
           src={logo}
-          width={40}
-          height={40}
+          inferSize={true}
           alt={`${lpaName} logo`}
           class="clamp-[w,28,40]"
         />
