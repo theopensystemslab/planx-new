@@ -22,7 +22,6 @@ export const FileUploadInput: React.FC<Props<FileUploadField>> = (props) => {
   }, [slots]);
 
   return (
-    // TODO: Check a11y - fieldset?
     <Box component="fieldset">
       <InputLegend>
         <Typography variant="body1" pb={1}>

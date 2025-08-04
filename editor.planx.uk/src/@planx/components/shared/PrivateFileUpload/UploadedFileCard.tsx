@@ -128,6 +128,7 @@ export const UploadedFileCard: React.FC<Props> = ({
           >
             <Box mr={2}>
               <Typography
+                data-testid={`file-upload-card-title-${file.name}`}
                 variant="body1"
                 pb="0.25em"
                 sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}

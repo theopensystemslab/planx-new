@@ -46,8 +46,9 @@ import { Trees } from "./schemas/Trees";
 type Props = EditorProps<TYPES.List, List>;
 
 export const SCHEMAS = [
-  { name: "Zoo", schema: Zoo },
   { name: "Residential units - Existing", schema: ResidentialUnitsExisting },
+  // TEMP: Remove this!
+  { name: "Zoo", schema: Zoo },
   {
     name: "Residential units (LDCE) - Existing",
     schema: ResidentialUnitsExistingLDCE,

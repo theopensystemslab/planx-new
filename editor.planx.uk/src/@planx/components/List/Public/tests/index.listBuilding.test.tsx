@@ -1,8 +1,9 @@
 import { within } from "@testing-library/react";
+import { uploadPrivateFile } from "api/upload";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { setup } from "testUtils";
-import { it, test, vi } from "vitest";
+import { it, Mock, test, vi } from "vitest";
 
 import { mockMaxOneProps } from "../../schemas/mocks/MaxOne";
 import { mockZooProps } from "../../schemas/mocks/Zoo";
@@ -10,6 +11,21 @@ import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
+
+const mocks = vi.hoisted(() => {
+  return {
+    uploadPrivateFile: vi.fn((file, { onProgress }) => {
+      onProgress?.({ progress: 100 });
+      return Promise.resolve(`https://mock-url/${file.name}`);
+    }),
+  };
+});
+
+vi.mock("api/upload", () => ({
+  uploadPrivateFile: mocks.uploadPrivateFile,
+}));
+
+const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
 
 describe("Building a list", () => {
   it("does not display a default item if the schema has no required minimum", () => {
@@ -72,7 +88,7 @@ describe("Building a list", () => {
     let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     const addItemButton = getByTestId("list-add-button");
     await user.click(addItemButton);
@@ -101,15 +117,15 @@ describe("Building a list", () => {
       <ListComponent {...mockZooProps} />,
     );
 
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     const addItemButton = getByTestId("list-add-button");
 
     await user.click(addItemButton);
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     await user.click(addItemButton);
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
@@ -159,15 +175,15 @@ describe("Building a list", () => {
         queryAllByTestId,
       } = setup(<ListComponent {...mockZooProps} />);
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       let cards = getAllByTestId(/list-card/);
       expect(cards).toHaveLength(3);
@@ -234,7 +250,7 @@ describe("Building a list", () => {
         <ListComponent {...mockZooProps} />,
       );
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
 
@@ -273,7 +289,7 @@ describe("Building a list", () => {
       expect(cards).toHaveLength(1);
 
       // "Cancel" is hidden from initial item, so fill out an item first
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
       await user.click(addItemButton);
@@ -307,7 +323,7 @@ describe("Building a list", () => {
         getAllByText,
       } = setup(<ListComponent {...mockZooProps} />);
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
       await user.click(addItemButton);
@@ -320,7 +336,7 @@ describe("Building a list", () => {
       ).toBeInTheDocument();
 
       // "Cancel" button was hidden on first item, so fill in second item
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const secondEmail = getAllByText("richard.parker@pi.com")[1];
       expect(secondEmail).toBeInTheDocument();
