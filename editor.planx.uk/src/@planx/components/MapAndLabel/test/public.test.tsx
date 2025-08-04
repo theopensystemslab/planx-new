@@ -187,7 +187,7 @@ it("does not trigger handleSubmit when errors exist", async () => {
 
   await checkErrorMessagesPopulated();
 
-  expect(handleSubmit).not.toBeCalled();
+  expect(handleSubmit).not.toHaveBeenCalled();
 });
 
 test.todo("an error displays if the maximum number of items is exceeded");

@@ -71,8 +71,8 @@ describe.each([
     });
 
     it("should call the handleSubmit function with the correct data", async () => {
-      expect(getInternalFeedbackMetadata).toBeCalled();
-      expect(insertFeedbackMutation).toBeCalledWith(expectedData);
+      expect(getInternalFeedbackMetadata).toHaveBeenCalled();
+      expect(insertFeedbackMutation).toHaveBeenCalledWith(expectedData);
     });
   },
 );

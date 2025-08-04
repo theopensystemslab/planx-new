@@ -49,8 +49,8 @@ describe("when the Feedback component is rendered", async () => {
     expect(screen.getByTestId("continue-button")).toHaveFocus();
     await user.keyboard("[Space]"); // submits
 
-    expect(getInternalFeedbackMetadata).toBeCalled();
-    expect(insertFeedbackMutation).toBeCalledWith({
+    expect(getInternalFeedbackMetadata).toHaveBeenCalled();
+    expect(insertFeedbackMutation).toHaveBeenCalledWith({
       feedbackScore: 5,
       feedbackType: "component",
       userComment: "",
