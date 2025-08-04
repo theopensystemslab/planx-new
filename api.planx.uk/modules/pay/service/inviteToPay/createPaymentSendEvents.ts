@@ -49,7 +49,7 @@ const createPaymentSendEvents = async (
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
     const destinations: SendIntegration[] = sendNode?.[1]?.data?.destinations;
 
-    let teamSlug = await getTeamSlugByFlowId(session.flow.id);
+    const teamSlug = await getTeamSlugByFlowId(session.flow.id);
     const eventPayload = { sessionId: payload.sessionId };
 
     if (destinations.includes("bops")) {
