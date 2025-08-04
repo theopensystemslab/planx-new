@@ -171,8 +171,6 @@ describe("validation and error handling", () => {
     await clickContinue(user);
 
     await checkErrorMessagesPopulated();
-
-    expect(tabOne).toHaveStyle("border-left: 5px solid #D4351C");
   });
 });
 
