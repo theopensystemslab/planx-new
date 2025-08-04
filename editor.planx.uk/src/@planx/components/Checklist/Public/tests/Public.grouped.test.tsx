@@ -76,9 +76,9 @@ describe("Checklist Component - Grouped Layout", () => {
       />,
     );
 
-    expect(screen.getByTestId("group-0-expanded")).toBeTruthy();
+    expect(screen.getByTestId("group-0-expanded")).toBeInTheDocument();
     expect(screen.queryAllByTestId("group-1-expanded")).toHaveLength(0);
-    expect(screen.getByTestId("group-2-expanded")).toBeTruthy();
+    expect(screen.getByTestId("group-2-expanded")).toBeInTheDocument();
 
     await user.click(screen.getByTestId("continue-button"));
 
@@ -201,9 +201,7 @@ describe("Checklist Component - Grouped Layout", () => {
 
 describe("toggling options by matching data values and labels", () => {
   it("toggles and and off options in another group when both the label and data value match", async () => {
-    const { user } = setup(
-      <Checklist {...mockWithRepeatedOptions} />,
-    );
+    const { user } = setup(<Checklist {...mockWithRepeatedOptions} />);
 
     await user.click(screen.getByText("Common projects for homes"));
     await user.click(screen.getByText("Extensions"));
@@ -212,7 +210,7 @@ describe("toggling options by matching data values and labels", () => {
 
     expect(repeatedOptions).toHaveLength(2);
 
-    const [ first, second ] = repeatedOptions;
+    const [first, second] = repeatedOptions;
 
     expect(first).not.toBeChecked();
     expect(second).not.toBeChecked();
@@ -223,7 +221,7 @@ describe("toggling options by matching data values and labels", () => {
     expect(second).toBeChecked();
 
     // Toggle off by second
-    await user.click(first); 
+    await user.click(first);
     expect(first).not.toBeChecked();
     expect(second).not.toBeChecked();
 
@@ -240,26 +238,24 @@ describe("toggling options by matching data values and labels", () => {
 
   it("does not toggle on and off options in another group when only the labels match", async () => {
     const mockProps = cloneDeep(mockWithRepeatedOptions);
-    
-    mockProps.groupedOptions?.[1].children.push(
-      {
-        id: "2zIVEYaAza",
-        data: {
-          val: "unique.data.val",
-          // Repeated label
-          text: "Rear or side extension (or conservatory)",
-        },
-      },
-    )
 
-    const { user } = setup(
-      <Checklist {...mockProps} />,
-    );
+    mockProps.groupedOptions?.[1].children.push({
+      id: "2zIVEYaAza",
+      data: {
+        val: "unique.data.val",
+        // Repeated label
+        text: "Rear or side extension (or conservatory)",
+      },
+    });
+
+    const { user } = setup(<Checklist {...mockProps} />);
 
     await user.click(screen.getByText("Common projects for homes"));
     await user.click(screen.getByText("Extensions"));
 
-    const repeatedOptions = screen.getAllByLabelText("Rear or side extension (or conservatory)");
+    const repeatedOptions = screen.getAllByLabelText(
+      "Rear or side extension (or conservatory)",
+    );
 
     expect(repeatedOptions).toHaveLength(2);
 
@@ -292,25 +288,24 @@ describe("toggling options by matching data values and labels", () => {
   it("does not toggle on and off options in another group when only the data values match", async () => {
     const mockProps = cloneDeep(mockWithRepeatedOptions);
 
-    mockProps.groupedOptions?.[1].children.push(
-      {
-        id: "2zIVEYaAza",
-        data: {
-          text: "Unique label",
-          // Repeated data value
-          val: "extend.rear",
-        },
+    mockProps.groupedOptions?.[1].children.push({
+      id: "2zIVEYaAza",
+      data: {
+        text: "Unique label",
+        // Repeated data value
+        val: "extend.rear",
       },
-    )
+    });
 
-    const { user } = setup(
-      <Checklist {...mockProps} />,
-    );
+    const { user } = setup(<Checklist {...mockProps} />);
 
     await user.click(screen.getByText("Common projects for homes"));
     await user.click(screen.getByText("Extensions"));
 
-    const first = screen.getByLabelText("Rear or side extension (or conservatory)", { exact: true });
+    const first = screen.getByLabelText(
+      "Rear or side extension (or conservatory)",
+      { exact: true },
+    );
     const second = screen.getByLabelText("Unique label");
 
     expect(first).not.toBeChecked();
@@ -338,8 +333,8 @@ describe("toggling options by matching data values and labels", () => {
   });
 
   it("ignore the exclusive ('or') option, regardless of label and data value", async () => {
-    const mockProps = cloneDeep({...mockWithRepeatedOptions, });
-    
+    const mockProps = cloneDeep({ ...mockWithRepeatedOptions });
+
     // Replace current exclusive option to one with matching data value and label
     // Should not happen in well-authored content
     mockProps.groupedOptions![11] = {
@@ -356,9 +351,7 @@ describe("toggling options by matching data values and labels", () => {
       ],
     };
 
-    const { user } = setup(
-      <Checklist {...mockProps} />,
-    );
+    const { user } = setup(<Checklist {...mockProps} />);
 
     await user.click(screen.getByText("Electricals"));
 
@@ -366,30 +359,30 @@ describe("toggling options by matching data values and labels", () => {
 
     expect(repeatedOptions).toHaveLength(2);
 
-    const [ groupedOption, exclusiveOption ] = repeatedOptions;
+    const [groupedOption, exclusiveOption] = repeatedOptions;
 
     expect(groupedOption).not.toBeChecked();
     expect(exclusiveOption).not.toBeChecked();
 
     // Toggle grouped option on
-    await user.click(groupedOption)
+    await user.click(groupedOption);
     expect(groupedOption).toBeChecked();
 
     // Exclusive option not toggled, despite matching label and data value
     expect(exclusiveOption).not.toBeChecked();
 
     // Toggle exclusive option on
-    await user.click(exclusiveOption)
+    await user.click(exclusiveOption);
     expect(exclusiveOption).toBeChecked();
 
-    // Normal behaviour - all other options toggled off 
+    // Normal behaviour - all other options toggled off
     expect(groupedOption).not.toBeChecked();
 
     // Toggle grouped option on
-    await user.click(groupedOption)
+    await user.click(groupedOption);
     expect(groupedOption).toBeChecked();
 
-    // Normal behaviour - exclusive option toggled off 
+    // Normal behaviour - exclusive option toggled off
     expect(exclusiveOption).not.toBeChecked();
   });
 

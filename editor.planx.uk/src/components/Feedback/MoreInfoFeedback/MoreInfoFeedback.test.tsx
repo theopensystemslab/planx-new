@@ -1,4 +1,4 @@
-import { waitFor } from "@testing-library/react";
+import { getByLabelText, waitFor } from "@testing-library/react";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -96,16 +96,19 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
     validation.
   */
   test("Feedback form requires a comment before submitting", async () => {
-    const { getByTestId, getByText, user } = setup(
+    const { getByLabelText, queryByLabelText, getByText, user } = setup(
       <MoreInfoFeedbackComponent />,
     );
 
-    user.click(getByText("Yes"));
-    await waitFor(() => {
-      expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
-    });
+    expect(queryByLabelText("What's your feedback?")).not.toBeInTheDocument();
 
-    expect(getByTestId("userCommentTextarea")).toHaveAttribute("required");
+    user.click(getByText("Yes"));
+
+    await waitFor(() =>
+      expect(getByLabelText("What's your feedback?")).toBeInTheDocument(),
+    );
+
+    expect(getByLabelText("What's your feedback?")).toBeRequired();
   });
 });
 

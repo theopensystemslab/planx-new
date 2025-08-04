@@ -133,7 +133,7 @@ describe("SectionsOverviewList component", () => {
       name: "Change Section one",
     });
     expect(sectionOneLink).toBeInTheDocument();
-    expect(sectionOneLink.getAttribute("href")).toBe("#");
+    expect(sectionOneLink).toHaveAttribute("href", "#");
     expect(sectionOneLink).toHaveTextContent("Section one");
   });
 
@@ -148,7 +148,7 @@ describe("SectionsOverviewList component", () => {
 
     const sectionTwoLink = screen.getByRole("link", { name: "Section two" });
     expect(sectionTwoLink).toBeInTheDocument();
-    expect(sectionTwoLink.getAttribute("href")).toBe("#");
+    expect(sectionTwoLink).toHaveAttribute("href", "#");
     expect(sectionTwoLink).toHaveTextContent("Section two");
   });
 

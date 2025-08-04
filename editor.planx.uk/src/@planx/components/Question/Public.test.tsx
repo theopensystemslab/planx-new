@@ -174,7 +174,7 @@ describe("Question component", () => {
 
         const continueButton = getByTestId("continue-button");
 
-        expect(continueButton).not.toBeDisabled();
+        expect(continueButton).toBeEnabled();
         expect(queryByText(errorMessage)).not.toBeInTheDocument();
 
         await user.click(continueButton);

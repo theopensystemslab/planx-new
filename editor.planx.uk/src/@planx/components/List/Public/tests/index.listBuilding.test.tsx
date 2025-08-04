@@ -25,12 +25,12 @@ describe("Building a list", () => {
       level: 2,
       name: "Animal 1",
     });
-    expect(activeListHeading).toBeNull();
+    expect(activeListHeading).not.toBeInTheDocument();
 
     // Button is present allow additional items to be added
     const addItemButton = getByTestId("list-add-button");
     expect(addItemButton).toBeInTheDocument();
-    expect(addItemButton).not.toBeDisabled();
+    expect(addItemButton).toBeEnabled();
   });
 
   it("displays a default item if the schema has a required minimum", () => {
@@ -48,7 +48,7 @@ describe("Building a list", () => {
     // ...with active fields
     const inputField = queryByLabelText(/What's their name?/);
     expect(inputField).toBeInTheDocument();
-    expect(inputField).not.toBeDisabled();
+    expect(inputField).toBeEnabled();
   });
 
   it("hides the index number in the card header and the 'add another' button if the schema has a max of 1", () => {
@@ -83,13 +83,13 @@ describe("Building a list", () => {
 
     // Old item is inactive
     const [firstCard, secondCard] = cards;
-    expect(firstCard).not.toBeNull();
+    expect(firstCard).toBeInTheDocument();
     expect(
       within(firstCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
 
     // New item is active
-    expect(secondCard).not.toBeNull();
+    expect(secondCard).toBeInTheDocument();
     expect(
       within(secondCard!).getByLabelText(/What's their name?/),
     ).toBeInTheDocument();
@@ -119,13 +119,13 @@ describe("Building a list", () => {
     // No cards currently active
     expect(
       within(firstCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
     expect(
       within(secondCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
     expect(
       within(thirdCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
 
     // All card in view only / summary mode
     expect(within(firstCard!).getByText(/What's their name?/)).toBeVisible();
@@ -188,10 +188,10 @@ describe("Building a list", () => {
       // Previous items remain inactive
       expect(
         within(firstCard!).queryByLabelText(/What's their name?/),
-      ).toBeNull();
+      ).not.toBeInTheDocument();
       expect(
         within(secondCard!).queryByLabelText(/What's their name?/),
-      ).toBeNull();
+      ).not.toBeInTheDocument();
 
       // Remove second card
       const secondCardRemoveButton = within(secondCard!).getByRole("button", {
@@ -206,7 +206,7 @@ describe("Building a list", () => {
       // Previous items remain inactive
       expect(
         within(firstCard!).queryByLabelText(/What's their name?/),
-      ).toBeNull();
+      ).not.toBeInTheDocument();
 
       // Remove first card
       const firstCardRemoveButton = within(firstCard!).getByRole("button", {
