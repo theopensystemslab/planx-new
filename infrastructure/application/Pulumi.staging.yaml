@@ -76,16 +76,12 @@ config:
     secure: AAABAPkO1mBzTkXVWjpzAeP9ZbkifOiBwxj+rL5OONBu6DY87Pw1FualS6jSmQ5yeoGovZowNy3iMsArq4lxSX2BnBAur4O4a90Qou5zGUFACSTfLkZOgsyImvbdwRRnFPBBskfQ+bqwX9OZjO5AAXkEa9bqu3ViFQ==
   application:slack-webhook-url:
     secure: AAABALzK5KLP5po8giGePS/+ZpcWQHf8LfvCcdlY/oSv6NvC3y6D44CeIAiUdDXTB7VeUX5JFeaceDyZ9C1N5CAWFOLPCCKvuLjuDtk7QZe/rczqd2QnMDLh+Q9wPlQSb4PIoK8jWNEmvQC3QMgq
-  application:uniform-client-aylesbury-vale:
-    secure: AAABAMYcpm1hTYJfIMPWiB2/PXpGqFao06z0Ou4WHFavhJY/rPmEjFt5Mi9QyUHee8FvfU0VWu+tJ85MJ2DU
-  application:uniform-client-chiltern:
-    secure: AAABAIimitDScyWDrmnC049KLGWrjgA4iQXyOnI2z0zIkqfqyrStqfOyHMjYqBrFv1PZ8wRdK8hlIk/BeWE=
+  application:uniform-client-buckinghamshire:
+    secure: AAABAPJ3rc8HnuLMUhYQF0/8wVsakM42etWUDET4BuGYnsLxAx5tXz7L1aKZ7yzkhnDRaUUT6AU77RBDD1Y=
   application:uniform-client-lambeth:
     secure: AAABAA5D9I/HLWmzyqq+mK6wjyagZgne4akWVCtGaoR4HPkw1M8WqlM26RM5o6KjwPTjFkLH55ltHLZHdA==
   application:uniform-client-southwark:
     secure: AAABALWeaw3/BHLqTXaV4YWbC4f6YF4R3uOq0KPM4a23K5tYiTNOPjGE458CM7TIYiPX0R58Xf/8rIml3sfN
-  application:uniform-client-wycombe:
-    secure: AAABAMigmJJU65iKBBR5l0H5iwP/oPFRPgkEHyLzJTVW9uZP2tHhAQzy+nQxHYzKwUKw6btpIOhceu9jzw==
   application:uniform-submission-url: https://staging.identity.idoxgroup.com/agw/submission-api
   application:uniform-token-url: https://staging.identity.idoxgroup.com/uaa/oauth/token
   aws:region: eu-west-2
