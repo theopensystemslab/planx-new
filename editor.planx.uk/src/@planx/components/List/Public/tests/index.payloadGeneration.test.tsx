@@ -1,7 +1,8 @@
 import { screen } from "@testing-library/react";
+import { uploadPrivateFile } from "api/upload";
 import React from "react";
 import { setup } from "testUtils";
-import { it, vi } from "vitest";
+import { it, Mock, vi } from "vitest";
 
 import {
   mockUnitsPayload,
@@ -12,6 +13,21 @@ import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
+
+const mocks = vi.hoisted(() => {
+  return {
+    uploadPrivateFile: vi.fn((file, { onProgress }) => {
+      onProgress?.({ progress: 100 });
+      return Promise.resolve(`https://mock-url/${file.name}`);
+    }),
+  };
+});
+
+vi.mock("api/upload", () => ({
+  uploadPrivateFile: mocks.uploadPrivateFile,
+}));
+
+const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
 
 describe("Payload generation", () => {
   it(
@@ -24,10 +40,10 @@ describe("Payload generation", () => {
       );
       const addItemButton = getByTestId("list-add-button");
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(screen.getByTestId("continue-button"));
 

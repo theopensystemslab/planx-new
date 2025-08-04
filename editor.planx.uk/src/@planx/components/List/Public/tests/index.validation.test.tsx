@@ -1,8 +1,10 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { uploadPrivateFile } from "api/upload";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { setup } from "testUtils";
 import { test, vi } from "vitest";
+import { Mock } from "vitest";
 
 import { mockZooProps } from "../../schemas/mocks/Zoo";
 import ListComponent from "..";
@@ -10,7 +12,24 @@ import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
 
+const mocks = vi.hoisted(() => {
+  return {
+    uploadPrivateFile: vi.fn((file, { onProgress }) => {
+      onProgress?.({ progress: 100 });
+      return Promise.resolve(`https://mock-url/${file.name}`);
+    }),
+  };
+});
+
+vi.mock("api/upload", () => ({
+  uploadPrivateFile: mocks.uploadPrivateFile,
+}));
+
+const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
+
 describe("Form validation and error handling", () => {
+  afterEach(() => mockUpload.mockReset());
+
   test(
     "form validation is triggered when saving an item",
     { timeout: 35_000 },
@@ -52,10 +71,10 @@ describe("Form validation and error handling", () => {
       errorMessages = getAllByTestId(/error-message-input/);
       expect(errorMessages).toHaveLength(numberOfErrors);
 
-      // Each field is in an error state, ignoring individual date and address input fields
+      // Each field is in an error state, ignoring additional error wrappers for date, address, and fileUpload components
       const fieldErrors = errorMessages.slice(
         0,
-        mockZooProps.schema.fields.length - 1,
+        mockZooProps.schema.fields.length - 2,
       );
 
       fieldErrors.forEach((message) => {
@@ -187,6 +206,22 @@ describe("Form validation and error handling", () => {
         /Enter the first line of an address/,
       );
     });
+
+    test("file upload fields", { timeout: 20_000 }, async () => {
+      const { user, getByRole, getByTestId } = setup(
+        <ListComponent {...mockZooProps} />,
+      );
+
+      await user.click(getByRole("button", { name: /Save/ }));
+
+      const sizeInputErrorMessage = getByTestId(
+        /error-message-input-fileUpload/,
+      );
+
+      expect(sizeInputErrorMessage).toHaveTextContent(
+        /Upload at least one file/,
+      );
+    });
   });
 
   test(
@@ -204,7 +239,7 @@ describe("Form validation and error handling", () => {
       expect(minNumberOfItems).toEqual(2);
 
       // Fill in one response only
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(getByTestId("continue-button"));
 
@@ -228,22 +263,23 @@ describe("Form validation and error handling", () => {
       expect(maxNumberOfItems).toEqual(3);
 
       // Complete three items
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const cards = getAllByTestId(/list-card/);
-      expect(cards).toHaveLength(3);
+      waitFor(() => expect(cards).toHaveLength(3));
 
       // Try to add a fourth
       await user.click(getByTestId(/list-add-button/));
-
-      const maxItemsErrorMessage = getByText(
-        `Error: You can provide at most ${maxNumberOfItems} response(s)`,
-      );
-      expect(maxItemsErrorMessage).toBeVisible();
+      waitFor(() => {
+        const maxItemsErrorMessage = getByText(
+          `Error: You can provide at most ${maxNumberOfItems} response(s)`,
+        );
+        expect(maxItemsErrorMessage).toBeVisible();
+      });
     },
   );
 
