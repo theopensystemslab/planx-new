@@ -55,8 +55,8 @@ describe("FeedbackPhaseBanner accessibility", () => {
   test("should have no accessibility violations", async () => {
     const { container } = setup(
       <FeedbackPhaseBanner
-        handleFeedbackClick={() => {}}
-        handleReportAnIssueClick={() => {}}
+        handleFeedbackClick={vi.fn()}
+        handleReportAnIssueClick={vi.fn()}
       />,
     );
 

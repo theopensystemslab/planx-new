@@ -13,9 +13,8 @@ import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
 } from "lib/feedback";
-import { useStore } from "pages/FlowEditor/lib/store";
 import { BackButton } from "pages/Preview/Questions";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { usePrevious } from "react-use";
 import FeedbackOption from "ui/public/FeedbackOption";
 
@@ -36,6 +35,23 @@ import {
   TitleAndCloseProps,
   UserFeedback,
 } from "./types";
+
+const FeedbackPhaseBannerView: React.FC<{ 
+  handleFeedbackViewClick: (event: ClickEvents) => void }
+  > = ({ handleFeedbackViewClick }) => {
+  return (
+    <FeedbackWrapper>
+      <FeedbackPhaseBanner
+        handleFeedbackClick={() =>
+          handleFeedbackViewClick("triage")
+        }
+        handleReportAnIssueClick={() =>
+          handleFeedbackViewClick("issue")
+        }
+      />
+    </FeedbackWrapper>
+  );
+}
 
 const Feedback: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
@@ -139,17 +155,6 @@ const Feedback: React.FC = () => {
         Icon={WarningIcon}
         title="Report an issue with this service"
       />
-    );
-  }
-
-  function FeedbackPhaseBannerView(): FCReturn {
-    return (
-      <FeedbackWrapper>
-        <FeedbackPhaseBanner
-          handleFeedbackClick={() => handleFeedbackViewClick("triage")}
-          handleReportAnIssueClick={() => handleFeedbackViewClick("issue")}
-        />
-      </FeedbackWrapper>
     );
   }
 
@@ -355,10 +360,11 @@ const Feedback: React.FC = () => {
 
   return (
     <Box>
-      <FeedbackPhaseBannerView />
-      <Drawer 
+      <FeedbackPhaseBannerView handleFeedbackViewClick={handleFeedbackViewClick}/>
+      <Drawer
         aria-label="Feedback triage and submission form"
-        open={isDrawerOpen} 
+        open={isDrawerOpen}
+        onClose={closeDrawer}
       >
         <Feedback />
       </Drawer>
