@@ -1,3 +1,4 @@
+import Stack from "@mui/material/Stack";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
 import { Dropzone } from "@planx/components/shared/PrivateFileUpload/Dropzone";
 import { UploadedFileCard } from "@planx/components/shared/PrivateFileUpload/UploadedFileCard";
@@ -31,20 +32,22 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
           maxFiles={maxFiles}
         />
       )}
-      {slots.map((slot) => {
-        return (
-          <UploadedFileCard
-            {...slot}
-            key={slot.id}
-            removeFile={() => {
-              setSlots(
-                slots.filter((currentSlot) => currentSlot.file !== slot.file),
-              );
-              setFileUploadStatus(`${slot.file.path} was deleted`);
-            }}
-          />
-        );
-      })}
+      <Stack spacing={2} sx={{ marginTop: 2 }}>
+        {slots.map((slot) => {
+          return (
+            <UploadedFileCard
+              {...slot}
+              key={slot.id}
+              removeFile={() => {
+                setSlots(
+                  slots.filter((currentSlot) => currentSlot.file !== slot.file),
+                );
+                setFileUploadStatus(`${slot.file.path} was deleted`);
+              }}
+            />
+          );
+        })}
+      </Stack>
       <FileStatus status={fileUploadStatus} />
     </>
   );

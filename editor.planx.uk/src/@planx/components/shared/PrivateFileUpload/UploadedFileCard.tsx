@@ -1,5 +1,5 @@
 import FileIcon from "@mui/icons-material/AttachFile";
-import DeleteIcon from "@mui/icons-material/DeleteOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Box, { BoxProps } from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
@@ -21,16 +21,18 @@ interface Props extends FileUploadSlot {
   FileCardProps?: BoxProps;
 }
 
-const Root = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(5),
-}));
-
 const FileCard = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.border.main}`,
   position: "relative",
   height: "auto",
   display: "flex",
-  alignItems: "center",
+  flexDirection: "column",
+  alignItems: "flex-end",
+  gap: theme.spacing(1),
+  [theme.breakpoints.up("md")]: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   padding: theme.spacing(0.5, 1.5),
   "& > *": {
     zIndex: 1,
@@ -41,7 +43,6 @@ const FilePreview = styled(Box)(({ theme }) => ({
   height: theme.spacing(10),
   width: theme.spacing(10),
   marginLeft: theme.spacing(-1),
-  marginRight: theme.spacing(1.5),
   opacity: 0.75,
   position: "relative",
   overflow: "hidden",
@@ -79,7 +80,8 @@ const FileSize = styled(Typography)(({ theme }) => ({
 
 const TagRoot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  borderTop: `1px solid ${theme.palette.border.main}`,
+  border: `1px solid ${theme.palette.border.main}`,
+  borderTop: "none",
   display: "flex",
   justifyContent: "space-between",
   flexWrap: "wrap",
@@ -97,7 +99,7 @@ export const UploadedFileCard: React.FC<Props> = ({
   status,
   FileCardProps,
 }) => (
-  <Root>
+  <Box>
     <ErrorWrapper
       error={
         status === "error"
@@ -113,20 +115,22 @@ export const UploadedFileCard: React.FC<Props> = ({
             aria-valuenow={progress * 100 || 0}
             aria-label={file.name}
           />
-          <FilePreview>
-            {file instanceof File && file?.type?.includes("image") ? (
-              <ImagePreview file={file} url={url} />
-            ) : (
-              <FileIcon />
-            )}
-          </FilePreview>
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
+              gap: 1,
+              alignItems: "center",
               width: "100%",
             }}
           >
+            <FilePreview>
+              {file instanceof File && file?.type?.includes("image") ? (
+                <ImagePreview file={file} url={url} />
+              ) : (
+                <FileIcon />
+              )}
+            </FilePreview>
             <Box mr={2}>
               <Typography
                 variant="body1"
@@ -137,17 +141,19 @@ export const UploadedFileCard: React.FC<Props> = ({
               </Typography>
               <FileSize variant="body2">{formatBytes(file.size)}</FileSize>
             </Box>
-            {removeFile && (
-              <IconButton
-                size="small"
-                aria-label={`Delete ${file.name}`}
-                title={`Delete ${file.name}`}
-                onClick={removeFile}
-              >
-                <DeleteIcon />
-              </IconButton>
-            )}
           </Box>
+          {removeFile && (
+            <IconButton
+              size="small"
+              aria-label={`Delete ${file.name}`}
+              title={`Delete ${file.name}`}
+              onClick={removeFile}
+              sx={{ gap: "3px" }}
+            >
+              <DeleteIcon color="warning" />
+              Delete
+            </IconButton>
+          )}
         </FileCard>
         {tags && (
           <TagRoot>
@@ -183,7 +189,7 @@ export const UploadedFileCard: React.FC<Props> = ({
         )}
       </>
     </ErrorWrapper>
-  </Root>
+  </Box>
 );
 
 function formatBytes(a: number, b = 2) {

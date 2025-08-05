@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Stack from "@mui/material/Stack";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -99,27 +100,29 @@ export const FileTaggingModal = ({
             </Typography>
           </Typography>
         </Box>
-        {uploadedFiles.map((slot) => (
-          <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
-            <ErrorWrapper error={errors?.[slot.id]}>
-              <>
-                <UploadedFileCard
-                  {...slot}
-                  key={slot.id}
-                  removeFile={() => removeFile(slot)}
-                  FileCardProps={{
-                    sx: { borderBottom: "none" },
-                  }}
-                />
-                <SelectMultipleFileTypes
-                  uploadedFile={slot}
-                  fileList={fileList}
-                  setFileList={setFileList}
-                />
-              </>
-            </ErrorWrapper>
-          </Box>
-        ))}
+        <Stack spacing={2}>
+          {uploadedFiles.map((slot) => (
+            <Box key={`tags-per-file-container-${slot.id}`}>
+              <ErrorWrapper error={errors?.[slot.id]}>
+                <>
+                  <UploadedFileCard
+                    {...slot}
+                    key={slot.id}
+                    removeFile={() => removeFile(slot)}
+                    FileCardProps={{
+                      sx: { borderBottom: "none" },
+                    }}
+                  />
+                  <SelectMultipleFileTypes
+                    uploadedFile={slot}
+                    fileList={fileList}
+                    setFileList={setFileList}
+                  />
+                </>
+              </ErrorWrapper>
+            </Box>
+          ))}
+        </Stack>
       </DialogContent>
       <DialogActions
         sx={{
