@@ -19,7 +19,8 @@ import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 export type Props = PublicProps<DateInput>;
 
 const DateInputPublic: React.FC<Props> = (props) => {
-  const componentId = useId();
+  const uniqueId = useId();
+  const componentId = props.id ? props.id : uniqueId;
 
   const formik = useFormik({
     initialValues: {
