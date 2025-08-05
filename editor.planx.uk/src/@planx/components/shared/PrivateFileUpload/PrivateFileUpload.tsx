@@ -33,20 +33,18 @@ export const PrivateFileUpload: React.FC<PrivateFileUploadProps> = ({
         />
       )}
       <Stack spacing={2} sx={{ marginTop: 2 }}>
-        {slots.map((slot) => {
-          return (
-            <UploadedFileCard
-              {...slot}
-              key={slot.id}
-              removeFile={() => {
-                setSlots(
-                  slots.filter((currentSlot) => currentSlot.file !== slot.file),
-                );
-                setFileUploadStatus(`${slot.file.path} was deleted`);
-              }}
-            />
-          );
-        })}
+        {slots.map((slot) => (
+          <UploadedFileCard
+            {...slot}
+            key={slot.id}
+            removeFile={() => {
+              setSlots(
+                slots.filter((currentSlot) => currentSlot.file !== slot.file),
+              );
+              setFileUploadStatus(`${slot.file.path} was deleted`);
+            }}
+          />
+        ))}
       </Stack>
       <FileStatus status={fileUploadStatus} />
     </>

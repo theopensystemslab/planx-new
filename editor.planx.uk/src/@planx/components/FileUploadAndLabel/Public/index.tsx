@@ -240,22 +240,20 @@ function Component(props: Props) {
               />
             )}
             <Stack spacing={2}>
-              {slots.map((slot) => {
-                return (
-                  <ErrorWrapper
-                    error={fileLabelErrors?.[slot.id]}
-                    id={slot.id}
-                    key={slot.id}
-                  >
-                    <UploadedFileCard
-                      {...slot}
-                      tags={getTagsForSlot(slot.id, fileList)}
-                      onChange={onUploadedFileCardChange}
-                      removeFile={() => removeFile(slot)}
-                    />
-                  </ErrorWrapper>
-                );
-              })}
+              {slots.map((slot) => (
+                <ErrorWrapper
+                  error={fileLabelErrors?.[slot.id]}
+                  id={slot.id}
+                  key={slot.id}
+                >
+                  <UploadedFileCard
+                    {...slot}
+                    tags={getTagsForSlot(slot.id, fileList)}
+                    onChange={onUploadedFileCardChange}
+                    removeFile={() => removeFile(slot)}
+                  />
+                </ErrorWrapper>
+              ))}
             </Stack>
           </Box>
         </ErrorWrapper>
