@@ -41,7 +41,7 @@ export const toggleCheckbox = (
     const selectedOption = nonExclusiveOptions.find(
       ({ id }) => id === thisCheckboxId,
     );
-    
+
     // Type narrowing - there will always be a selected option
     if (!selectedOption) {
       throw Error(`Selected option with id ${thisCheckboxId} not found`);

@@ -36,22 +36,18 @@ import {
   UserFeedback,
 } from "./types";
 
-const FeedbackPhaseBannerView: React.FC<{ 
-  handleFeedbackViewClick: (event: ClickEvents) => void }
-  > = ({ handleFeedbackViewClick }) => {
+const FeedbackPhaseBannerView: React.FC<{
+  handleFeedbackViewClick: (event: ClickEvents) => void;
+}> = ({ handleFeedbackViewClick }) => {
   return (
     <FeedbackWrapper>
       <FeedbackPhaseBanner
-        handleFeedbackClick={() =>
-          handleFeedbackViewClick("triage")
-        }
-        handleReportAnIssueClick={() =>
-          handleFeedbackViewClick("issue")
-        }
+        handleFeedbackClick={() => handleFeedbackViewClick("triage")}
+        handleReportAnIssueClick={() => handleFeedbackViewClick("issue")}
       />
     </FeedbackWrapper>
   );
-}
+};
 
 const Feedback: React.FC = () => {
   const [currentFeedbackView, setCurrentFeedbackView] =
@@ -62,7 +58,7 @@ const Feedback: React.FC = () => {
   const closeDrawer = () => {
     setIsDrawerOpen(false);
     setCurrentFeedbackView(null);
-  }
+  };
 
   function handleFeedbackViewClick(event: ClickEvents) {
     switch (event) {
@@ -80,7 +76,8 @@ const Feedback: React.FC = () => {
   }
 
   async function handleFeedbackFormSubmit(values: UserFeedback) {
-    if (!currentFeedbackView) throw Error("Cannot submit feedback in current view");
+    if (!currentFeedbackView)
+      throw Error("Cannot submit feedback in current view");
 
     const metadata = await getInternalFeedbackMetadata();
     const feedbackType = { feedbackType: currentFeedbackView };
@@ -147,7 +144,7 @@ const Feedback: React.FC = () => {
             </Typography>
           </FeedbackTitle>
         </>
-      )
+      );
     }
 
     return (
@@ -360,7 +357,9 @@ const Feedback: React.FC = () => {
 
   return (
     <Box>
-      <FeedbackPhaseBannerView handleFeedbackViewClick={handleFeedbackViewClick}/>
+      <FeedbackPhaseBannerView
+        handleFeedbackViewClick={handleFeedbackViewClick}
+      />
       <Drawer
         aria-label="Feedback triage and submission form"
         open={isDrawerOpen}
@@ -369,7 +368,7 @@ const Feedback: React.FC = () => {
         <Feedback />
       </Drawer>
     </Box>
-  )
-}
+  );
+};
 
 export default Feedback;

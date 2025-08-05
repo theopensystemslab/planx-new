@@ -127,17 +127,13 @@ const TabList = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar: React.FC = React.memo(() => {
-  const [
-    isFlowPublished,
-    toggleSidebar,
-    showSidebar,
-    isTemplatedFrom,
-  ] = useStore((state) => [
-    state.isFlowPublished,
-    state.toggleSidebar,
-    state.showSidebar,
-    state.isTemplatedFrom,
-  ]);
+  const [isFlowPublished, toggleSidebar, showSidebar, isTemplatedFrom] =
+    useStore((state) => [
+      state.isFlowPublished,
+      state.toggleSidebar,
+      state.showSidebar,
+      state.isTemplatedFrom,
+    ]);
 
   const defaultActiveTab = isTemplatedFrom ? "Customise" : "PreviewBrowser";
   const [activeTab, setActiveTab] = useState<SidebarTabs>(defaultActiveTab);
@@ -240,7 +236,7 @@ const Sidebar: React.FC = React.memo(() => {
           )}
           {activeTab === "PreviewBrowser" && (
             <SidebarContainer>
-             <PreviewBrowser/>
+              <PreviewBrowser />
             </SidebarContainer>
           )}
           {activeTab === "History" && (

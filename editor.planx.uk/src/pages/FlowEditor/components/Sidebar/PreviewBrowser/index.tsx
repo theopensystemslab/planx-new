@@ -1,6 +1,10 @@
-
 import Button from "@mui/material/Button";
-import { createTheme, styled, ThemeProvider, useTheme } from "@mui/material/styles";
+import {
+  createTheme,
+  styled,
+  ThemeProvider,
+  useTheme,
+} from "@mui/material/styles";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 import Reset from "ui/icons/Reset";
@@ -38,14 +42,11 @@ export const PreviewBrowser: React.FC = () => {
 
   return (
     <ThemeProvider theme={mobileTheme}>
-      <ResetToggle
-        variant="link"
-        onClick={() => resetPreview()}
-      >
+      <ResetToggle variant="link" onClick={() => resetPreview()}>
         <Reset fontSize="small" />
         Restart
       </ResetToggle>
       <Questions previewEnvironment="editor" />
     </ThemeProvider>
-  )
-}
+  );
+};

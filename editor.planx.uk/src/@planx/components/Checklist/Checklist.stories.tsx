@@ -162,7 +162,7 @@ export const AllRequired = {
 } satisfies Story;
 
 export const WithRepeatedOptions = {
-  args: mockWithRepeatedOptions
+  args: mockWithRepeatedOptions,
 } satisfies Story;
 
 // Similar to Question stories here, Checklist's editor atyipcally expects props so the Wrapper throws a type error - come back to!
