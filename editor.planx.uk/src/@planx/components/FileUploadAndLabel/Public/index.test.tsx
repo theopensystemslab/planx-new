@@ -249,7 +249,9 @@ describe("Modal trigger", () => {
     );
     expect(fileTaggingModal).toBeVisible();
 
-    expect(await within(fileTaggingModal).findByText("test.png")).toBeVisible();
+    expect(
+      await within(fileTaggingModal).findByTestId("test.png"),
+    ).toBeVisible();
   });
 
   test("Modal opens when multiple files are uploaded", async () => {
@@ -290,10 +292,10 @@ describe("Modal trigger", () => {
       "file-tagging-dialog",
     );
     expect(
-      await within(fileTaggingModal).findByText("test1.png"),
+      await within(fileTaggingModal).findByTestId("test1.png"),
     ).toBeVisible();
     expect(
-      await within(fileTaggingModal).findByText("test2.png"),
+      await within(fileTaggingModal).findByTestId("test2.png"),
     ).toBeVisible();
   });
 
@@ -340,11 +342,11 @@ describe("Modal trigger", () => {
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded files displayed as cards
-    expect(getByText("test1.png")).toBeVisible();
-    expect(getByText("test2.png")).toBeVisible();
+    expect(getByTestId("test1.png")).toBeVisible();
+    expect(getByTestId("test2.png")).toBeVisible();
 
     // Delete the second file
-    user.click(getByLabelText("Delete test2.png"));
+    user.click(getByTestId("delete-test2.png"));
 
     // Card removed from screen
     await waitFor(() =>
@@ -416,7 +418,7 @@ describe("Adding tags and syncing state", () => {
     expect(fileTaggingModal).not.toBeVisible();
 
     // Uploaded file displayed as card with chip tags
-    expect(getByText("test1.png")).toBeVisible();
+    expect(getByTestId("test1.png")).toBeVisible();
     const chips = getAllByTestId("uploaded-file-chip");
     expect(chips).toHaveLength(1);
     expect(chips[0]).toHaveTextContent("Roof plan");
@@ -483,7 +485,7 @@ describe("Adding tags and syncing state", () => {
     await waitFor(() => expect(fileTaggingModal).not.toBeVisible());
 
     // Uploaded file displayed as card with chip tags
-    expect(getByText("test1.png")).toBeVisible();
+    expect(getByTestId("test1.png")).toBeVisible();
     const chips = getAllByTestId("uploaded-file-chip");
     expect(chips).toHaveLength(1);
     expect(chips[0]).toHaveTextContent("Heritage statement");

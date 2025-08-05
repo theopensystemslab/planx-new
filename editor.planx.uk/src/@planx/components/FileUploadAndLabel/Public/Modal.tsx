@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Stack from "@mui/material/Stack";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -99,9 +100,12 @@ export const FileTaggingModal = ({
             </Typography>
           </Typography>
         </Box>
-        {uploadedFiles.map((slot) => (
-          <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
-            <ErrorWrapper error={errors?.[slot.id]}>
+        <Stack spacing={2}>
+          {uploadedFiles.map((slot) => (
+            <ErrorWrapper
+              error={errors?.[slot.id]}
+              key={`tags-per-file-container-${slot.id}`}
+            >
               <>
                 <UploadedFileCard
                   {...slot}
@@ -118,8 +122,8 @@ export const FileTaggingModal = ({
                 />
               </>
             </ErrorWrapper>
-          </Box>
-        ))}
+          ))}
+        </Stack>
       </DialogContent>
       <DialogActions
         sx={{

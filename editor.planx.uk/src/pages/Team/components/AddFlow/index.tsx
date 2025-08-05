@@ -105,9 +105,9 @@ export const AddFlow: React.FC = () => {
                 >
                   <BaseFormSection />
                 </DialogContent>
-                <DialogActions sx={{ paddingX: 2 }}>
-                  <Button 
-                    disableRipple 
+                <DialogActions>
+                  <Button
+                    disableRipple
                     onClick={() => setDialogOpen(false)}
                     disabled={isSubmitting}
                   >

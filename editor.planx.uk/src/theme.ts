@@ -543,7 +543,28 @@ const getThemeOptions = ({
             borderRadius: 0,
             borderTop: `20px solid ${palette.primary.main}`,
             background: theme.palette.background.paper,
-            margin: theme.spacing(2),
+            margin: theme.spacing(1),
+          }),
+        },
+      },
+      MuiDialogContent: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
+          }),
+        },
+      },
+      MuiDialogActions: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
+          }),
+        },
+      },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
           }),
         },
       },
@@ -850,7 +871,7 @@ const generateTeamTheme = (
     linkColour: DEFAULT_PRIMARY_COLOR,
     logo: null,
     favicon: null,
-  }
+  },
 ): MUITheme => {
   const themeOptions = getThemeOptions(teamTheme);
   const theme = responsiveFontSizes(createTheme(themeOptions), { factor: 3 });

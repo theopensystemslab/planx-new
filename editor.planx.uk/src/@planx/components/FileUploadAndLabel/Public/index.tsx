@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/shared/types";
@@ -238,8 +239,8 @@ function Component(props: Props) {
                 removeFile={removeFile}
               />
             )}
-            {slots.map((slot) => {
-              return (
+            <Stack spacing={2}>
+              {slots.map((slot) => (
                 <ErrorWrapper
                   error={fileLabelErrors?.[slot.id]}
                   id={slot.id}
@@ -252,8 +253,8 @@ function Component(props: Props) {
                     removeFile={() => removeFile(slot)}
                   />
                 </ErrorWrapper>
-              );
-            })}
+              ))}
+            </Stack>
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>
