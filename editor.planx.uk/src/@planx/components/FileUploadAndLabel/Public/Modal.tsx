@@ -102,25 +102,26 @@ export const FileTaggingModal = ({
         </Box>
         <Stack spacing={2}>
           {uploadedFiles.map((slot) => (
-            <Box key={`tags-per-file-container-${slot.id}`}>
-              <ErrorWrapper error={errors?.[slot.id]}>
-                <>
-                  <UploadedFileCard
-                    {...slot}
-                    key={slot.id}
-                    removeFile={() => removeFile(slot)}
-                    FileCardProps={{
-                      sx: { borderBottom: "none" },
-                    }}
-                  />
-                  <SelectMultipleFileTypes
-                    uploadedFile={slot}
-                    fileList={fileList}
-                    setFileList={setFileList}
-                  />
-                </>
-              </ErrorWrapper>
-            </Box>
+            <ErrorWrapper
+              error={errors?.[slot.id]}
+              key={`tags-per-file-container-${slot.id}`}
+            >
+              <>
+                <UploadedFileCard
+                  {...slot}
+                  key={slot.id}
+                  removeFile={() => removeFile(slot)}
+                  FileCardProps={{
+                    sx: { borderBottom: "none" },
+                  }}
+                />
+                <SelectMultipleFileTypes
+                  uploadedFile={slot}
+                  fileList={fileList}
+                  setFileList={setFileList}
+                />
+              </>
+            </ErrorWrapper>
           ))}
         </Stack>
       </DialogContent>
