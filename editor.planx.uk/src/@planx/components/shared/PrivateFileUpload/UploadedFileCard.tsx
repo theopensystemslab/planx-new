@@ -145,13 +145,12 @@ export const UploadedFileCard: React.FC<Props> = ({
           {removeFile && (
             <IconButton
               size="small"
-              aria-label={`Delete ${file.name}`}
               title={`Delete ${file.name}`}
               onClick={removeFile}
               sx={{ gap: "3px" }}
             >
               <DeleteIcon color="warning" />
-              Delete
+              Delete <span style={visuallyHidden}>{file.name}</span>
             </IconButton>
           )}
         </FileCard>
