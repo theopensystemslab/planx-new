@@ -101,7 +101,7 @@ export const Root = ({
   </Card>
 );
 
-type SectionsOverviewListProps = {
+export type SectionsOverviewListProps = {
   flow: Store.Flow;
   showChange: boolean;
   changeAnswer: (sectionId: string) => void;
