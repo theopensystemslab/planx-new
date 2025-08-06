@@ -36,8 +36,8 @@ describe("DateInputComponent - Editor Modal", () => {
     });
     const [minYear, maxYear] = screen.getAllByRole("textbox", { name: "Year" });
 
-    expect(screen.queryByText(minError)).toBeNull();
-    expect(screen.queryByText(maxError)).toBeNull();
+    expect(screen.queryByText(minError)).not.toBeInTheDocument();
+    expect(screen.queryByText(maxError)).not.toBeInTheDocument();
 
     await user.type(minDay, "01");
     await user.type(minMonth, "01");
@@ -66,8 +66,8 @@ describe("DateInputComponent - Editor Modal", () => {
     const [minMonth, maxMonth] = screen.getAllByLabelText("Month");
     const [minYear, maxYear] = screen.getAllByLabelText("Year");
 
-    expect(screen.queryByText(minError)).toBeNull();
-    expect(screen.queryByText(maxError)).toBeNull();
+    expect(screen.queryByText(minError)).not.toBeInTheDocument();
+    expect(screen.queryByText(maxError)).not.toBeInTheDocument();
 
     await user.type(minDay, "01");
     await user.type(minMonth, "01");
@@ -79,8 +79,8 @@ describe("DateInputComponent - Editor Modal", () => {
 
     fireEvent.submit(screen.getByRole("form"));
 
-    expect(screen.queryByText(minError)).toBeNull();
-    expect(screen.queryByText(maxError)).toBeNull();
+    expect(screen.queryByText(minError)).not.toBeInTheDocument();
+    expect(screen.queryByText(maxError)).not.toBeInTheDocument();
     await act(async () => await promise);
   });
 

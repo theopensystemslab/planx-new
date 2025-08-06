@@ -56,6 +56,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
         />
         {isSearching && (
           <CircularProgress
+            aria-label="search-progress-bar"
             size={25}
             sx={(theme) => ({
               position: "absolute",

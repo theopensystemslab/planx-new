@@ -173,7 +173,7 @@ describe("Navigating back", () => {
     expect(cards).toHaveLength(2);
 
     // Both inactive
-    expect(queryByLabelText(/What's their name?/)).toBeNull();
+    expect(queryByLabelText(/What's their name?/)).not.toBeInTheDocument();
     expect(getAllByText(/What's their name?/)).toHaveLength(2);
 
     // With the correct previous data

@@ -69,7 +69,7 @@ describe("Basic state and setup", () => {
       />,
     );
     const printButton = queryByText("Print this page");
-    expect(printButton).toBeNull();
+    expect(printButton).not.toBeInTheDocument();
   });
 
   test("shows help buttons for header and applicable file", async () => {
@@ -97,7 +97,9 @@ describe("Basic state and setup", () => {
       />,
     );
 
-    expect(queryByRole("heading", { name: /Optional information/ })).toBeNull();
+    expect(
+      queryByRole("heading", { name: /Optional information/ }),
+    ).not.toBeInTheDocument();
   });
 
   it("shows optional files if there are no other types", () => {
