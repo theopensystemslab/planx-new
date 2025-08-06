@@ -1,11 +1,11 @@
 import { screen } from "@testing-library/react";
 import React from "react";
 import { setup } from "testUtils";
-import { SectionStatus } from "types";
+import { SectionNode, SectionStatus } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Section, { SectionsOverviewList } from "./Public";
+import Section, { SectionsOverviewList, SectionsOverviewListProps } from ".";
 
 describe("Section component", () => {
   it("renders correctly", () => {
@@ -15,6 +15,7 @@ describe("Section component", () => {
         title="Section one"
         description="Description of section one"
         handleSubmit={handleSubmit}
+        size={"medium"}
       />,
     );
 
@@ -31,6 +32,7 @@ describe("Section component", () => {
         title="Section one"
         description="Description of section one"
         handleSubmit={handleSubmit}
+        size="medium"
       />,
     );
 
@@ -40,12 +42,13 @@ describe("Section component", () => {
 });
 
 describe("SectionsOverviewList component", () => {
-  const mockSectionNodes = {
+  const mockSectionNodes: Record<string, SectionNode> = {
     section1: {
       type: 360,
       data: {
         title: "Section one",
         description: "Description of section one",
+        size: "medium",
       },
     },
     section2: {
@@ -53,6 +56,7 @@ describe("SectionsOverviewList component", () => {
       data: {
         title: "Section two",
         description: "Description of section two",
+        size: "medium",
       },
     },
     section3: {
@@ -60,10 +64,12 @@ describe("SectionsOverviewList component", () => {
       data: {
         title: "Section three",
         description: "Description of section three",
+        size: "medium",
       },
     },
   };
-  const defaultProps = {
+
+  const defaultProps: SectionsOverviewListProps = {
     flow: {
       _root: {
         edges: ["section1", "section2", "section3"],
