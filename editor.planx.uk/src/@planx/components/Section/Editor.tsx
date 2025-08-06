@@ -1,17 +1,23 @@
+import MoreTimeIcon from "@mui/icons-material/MoreTime";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
+import { upperFirst } from "lodash";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
 import ModalSectionContent from "ui/editor/ModalSectionContent";
 import RichTextInput from "ui/editor/RichTextInput/RichTextInput";
+import SelectInput from "ui/editor/SelectInput/SelectInput";
 import { TemplatedNodeInstructions } from "ui/editor/TemplatedNodeInstructions";
+import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { parseSection, Section, validationSchema } from "./model";
+import { parseSection, Section, SECTION_SIZE, validationSchema } from "./model";
 
 type Props = EditorProps<TYPES.Section, Section>;
 
@@ -64,6 +70,25 @@ function SectionComponent(props: Props) {
               errorMessage={formik.errors.description}
             />
           </InputRow>
+        </ModalSectionContent>
+        <ModalSectionContent title="Section size" Icon={MoreTimeIcon}>
+          <Typography variant="subtitle2" sx={{ mb: 2 }}>
+            Please estimate the relative size (length) of this section. This
+            will be used to calculate a user's progress through your service.
+          </Typography>
+          <InputLabel label="Size" />
+          <SelectInput
+            name="size"
+            value={formik.values.size}
+            onChange={formik.handleChange}
+            disabled={props.disabled}
+          >
+            {SECTION_SIZE.map((size) => (
+              <MenuItem key={size} value={size}>
+                {upperFirst(size)}
+              </MenuItem>
+            ))}
+          </SelectInput>
         </ModalSectionContent>
       </ModalSection>
       <ModalFooter

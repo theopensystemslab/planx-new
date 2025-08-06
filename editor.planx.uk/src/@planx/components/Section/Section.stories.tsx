@@ -1,8 +1,11 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Meta, StoryObj } from "@storybook/react";
 import { ComponentProps } from "react";
+import React from "react";
 import { SectionNode } from "types";
 
+import Wrapper from "../fixtures/Wrapper";
+import Editor from "./Editor";
 import { Root as Public } from "./Public";
 
 const meta = {
@@ -87,3 +90,9 @@ export const WithNewInformationNeeded = {
     alteredSectionIds: ["firstSection"],
   },
 } satisfies Story;
+
+export const WithEditor = () => {
+  return (
+    <Wrapper Editor={Editor} Public={() => <Public {...defaultProps} />} />
+  );
+};
