@@ -28,25 +28,35 @@ const SectionCount = styled(Typography)(() => ({
 }));
 
 export const SectionNavBar: React.FC = () => {
-  const [index, sectionCount, title, hasSections, saveToEmail, path, node] =
-    useStore((state) => [
-      state.currentSectionIndex,
-      state.sectionCount,
-      state.currentSectionTitle,
-      state.hasSections,
-      state.saveToEmail,
-      state.path,
-      state.currentCard,
-    ]);
+  const [
+    index,
+    sectionCount,
+    title,
+    hasSections,
+    saveToEmail,
+    path,
+    node,
+    isFinalCard,
+  ] = useStore((state) => [
+    state.currentSectionIndex,
+    state.sectionCount,
+    state.currentSectionTitle,
+    state.hasSections,
+    state.saveToEmail,
+    state.path,
+    state.currentCard,
+    state.isFinalCard(),
+  ]);
   const isSaveAndReturnLandingPage =
     path !== ApplicationPath.SingleSession && !saveToEmail;
   const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const isSectionCard = node?.type == TYPES.Section;
+  // const isSectionCard = node?.type == TYPES.Section;
   const isVisible =
     hasSections &&
     !isSaveAndReturnLandingPage &&
     !isContentPage &&
-    !isSectionCard;
+    // !isSectionCard &&
+    !isFinalCard;
 
   if (!isVisible) return null;
 

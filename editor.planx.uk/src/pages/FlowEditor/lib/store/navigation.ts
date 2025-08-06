@@ -177,8 +177,6 @@ export const navigationStore: StateCreator<
     const currentWeight = sectionWeights[index];
     const currentPercentage = (currentWeight / totalWeight) * 100;
 
-    if (!index) return { completed: 0, current: currentPercentage };
-
     const completedWeight = sum(sectionWeights.slice(0, index));
     const completedPercentage = (completedWeight / totalWeight) * 100;
 
