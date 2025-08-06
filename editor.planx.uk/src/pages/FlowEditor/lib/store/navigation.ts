@@ -79,6 +79,20 @@ export const navigationStore: StateCreator<
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
 
+    const hasPassedFirstSection = Boolean(
+      findLast(breadcrumbIds, (breadcrumbId: string) =>
+        sectionIds.includes(breadcrumbId),
+      ),
+    );
+
+    // No sections in breadcrumbs, first section values already set in store
+    if (!hasPassedFirstSection) return;
+
+    // Transition to a new section index as soon as a section is reached
+    // It won't yet be in the breadcrumbs but should count as the starting point of the next section
+    const isSectionCardReached = currentCard?.type === TYPES.Section;
+    if (isSectionCardReached) breadcrumbIds.push(currentCard.id);
+
     const mostRecentSectionId = findLast(
       breadcrumbIds,
       (breadcrumbId: string) => sectionIds.includes(breadcrumbId),
@@ -88,12 +102,7 @@ export const navigationStore: StateCreator<
     if (!mostRecentSectionId) return;
 
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
-    let currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
-
-    // Transition to a new section index as soon as a section is reached
-    // It won't yet be in the breadcrumbs but should count as the starting point of the next section
-    const isSectionCardReached = currentCard?.type === TYPES.Section;
-    if (isSectionCardReached) currentSectionIndex++;
+    const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
 
     set({ currentSectionTitle, currentSectionIndex });
     console.debug("section state updated"); // used as a transition trigger in e2e tests
