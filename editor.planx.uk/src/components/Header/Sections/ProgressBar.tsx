@@ -6,21 +6,22 @@ import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
 
 const Root = styled(LinearProgress)(({ theme }) => ({
-  marginTop: theme.spacing(0.5),
-  height: theme.spacing(1),
+  height: theme.spacing(2),
   // Background
   [`& .${linearProgressClasses.dashed}`]: {
     animation: "none",
     backgroundImage: "none",
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: `rgba(255, 255, 255, 0.3)`,
   },
   // Completed
   [`& .${linearProgressClasses.bar1Buffer}`]: {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.common.white,
   },
   // Current
   [`& .${linearProgressClasses.bar2Buffer}`]: {
-    backgroundColor: theme.palette.action,
+    backgroundColor: "transparent",
+    backgroundImage: `linear-gradient(135deg, rgba(255, 255, 255, 0.9) 12.50%, transparent 12.50%, transparent 50%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.9) 62.50%, transparent 62.50%, transparent 100%)`,
+    backgroundSize: "4.24px 4.24px",
   },
 }));
 

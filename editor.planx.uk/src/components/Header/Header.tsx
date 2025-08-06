@@ -312,7 +312,7 @@ const PublicToolbar: React.FC<{
     <>
       <SkipLink />
       <PublicHeader disableGutters>
-        <Container maxWidth={false}>
+        <Container maxWidth="contentWrap">
           <InnerContainer>
             <LeftBox>
               {teamTheme?.logo ? <TeamLogo /> : <Breadcrumbs />}

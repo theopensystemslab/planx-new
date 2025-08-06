@@ -1,7 +1,7 @@
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { capitalize } from "lodash";
 import React from "react";
 import { useCurrentRoute } from "react-navi";
@@ -13,18 +13,7 @@ import { ProgressBar } from "./ProgressBar";
 
 const StyledNavBar = styled("nav")(({ theme }) => ({
   backgroundColor: theme.palette.primary.dark,
-  fontSize: 16,
-  paddingTop: theme.spacing(1),
-  paddingBottom: theme.spacing(1),
-}));
-
-const SectionName = styled(Typography)(() => ({
-  fontSize: "inherit",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-}));
-
-const SectionCount = styled(Typography)(() => ({
-  fontSize: "inherit",
+  padding: theme.spacing(1.5, 0),
 }));
 
 export const SectionNavBar: React.FC = () => {
@@ -49,15 +38,29 @@ export const SectionNavBar: React.FC = () => {
   return (
     <StyledNavBar data-testid="navigation-bar">
       <Container
-        maxWidth={false}
+        maxWidth="contentWrap"
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          gap: 0.5,
         }}
       >
-        <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
-        <SectionName>{capitalize(title)}</SectionName>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 1,
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{ whiteSpace: "nowrap" }}
+          >{`Section ${index} of ${sectionCount}`}</Typography>
+          <Typography component="span">—</Typography>
+          <Typography variant="body2" fontWeight={FONT_WEIGHT_SEMI_BOLD}>
+            {capitalize(title)}
+          </Typography>
+        </Box>
         <ProgressBar />
       </Container>
     </StyledNavBar>
