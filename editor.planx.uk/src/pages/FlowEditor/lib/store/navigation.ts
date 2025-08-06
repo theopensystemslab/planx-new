@@ -72,7 +72,7 @@ export const navigationStore: StateCreator<
    * Triggered when going backwards, forwards, or changing answer
    */
   updateSectionData: () => {
-    const { breadcrumbs, sectionNodes, hasSections } = get();
+    const { breadcrumbs, sectionNodes, hasSections, currentCard } = get();
     // Sections not being used, do not proceed
     if (!hasSections) return;
 
@@ -87,9 +87,14 @@ export const navigationStore: StateCreator<
     // No sections in breadcrumbs, first section values already set in store
     if (!mostRecentSectionId) return;
 
-    // Update section
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
-    const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
+    let currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
+
+    // Transition to a new section index as soon as a section is reached
+    // It won't yet be in the breadcrumbs but should count as the starting point of the next section
+    const isSectionCardReached = currentCard?.type === TYPES.Section;
+    if (isSectionCardReached) currentSectionIndex++;
+
     set({ currentSectionTitle, currentSectionIndex });
     console.debug("section state updated"); // used as a transition trigger in e2e tests
   },
@@ -166,7 +171,9 @@ export const navigationStore: StateCreator<
   },
 
   getSectionProgress: () => {
-    const { sectionNodes, currentSectionIndex } = get();
+    const { sectionNodes, currentSectionIndex, isFinalCard } = get();
+    if (isFinalCard()) return { completed: 100, current: 100 };
+
     // Account for offset index
     const index = currentSectionIndex - 1;
 
