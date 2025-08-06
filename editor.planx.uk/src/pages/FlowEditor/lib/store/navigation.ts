@@ -1,10 +1,11 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Section } from "@planx/components/Section/model";
 import { sortIdsDepthFirst } from "@planx/graph";
-import { findLast, pick } from "lodash";
+import { findLast, pick, sum } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
+import { SECTION_WEIGHTS } from "./../../../../@planx/components/Section/model";
 import { PreviewStore } from "./preview";
 import { SharedStore } from "./shared";
 
@@ -23,6 +24,10 @@ export interface NavigationStore {
   filterFlowByType: (type: TYPES) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
+  getSectionProgress: () => {
+    completed: number;
+    current: number;
+  };
 }
 
 export const navigationStore: StateCreator<
@@ -158,5 +163,25 @@ export const navigationStore: StateCreator<
     const sectionId = Object.keys(sectionNodes)[sectionIndex];
     const section = sectionNodes[sectionId];
     return section;
+  },
+
+  getSectionProgress: () => {
+    const { sectionNodes, currentSectionIndex } = get();
+    // Account for offset index
+    const index = currentSectionIndex - 1;
+
+    const sectionWeights = Object.values(sectionNodes).map(
+      ({ data: { size } }) => SECTION_WEIGHTS[size],
+    );
+    const totalWeight = sum(sectionWeights);
+    const currentWeight = sectionWeights[index];
+    const currentPercentage = (currentWeight / totalWeight) * 100;
+
+    if (!index) return { completed: 0, current: currentPercentage };
+
+    const completedWeight = sum(sectionWeights.slice(0, index));
+    const completedPercentage = (completedWeight / totalWeight) * 100;
+
+    return { completed: completedPercentage, current: currentPercentage };
   },
 });
