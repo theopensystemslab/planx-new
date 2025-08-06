@@ -92,7 +92,7 @@ export function computeSectionStatuses({
   return sectionStatuses;
 }
 
-const SECTION_SIZE = ["small", "medium", "large"] as const;
+export const SECTION_SIZE = ["small", "medium", "large"] as const;
 export type SectionSize = (typeof SECTION_SIZE)[number];
 
 export const SECTION_WEIGHTS: Record<SectionSize, number> = {
