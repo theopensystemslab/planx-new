@@ -5,10 +5,7 @@ import { SectionNode, SectionStatus } from "types";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import Section, {
-  SectionsOverviewList,
-  SectionsOverviewListProps,
-} from "./Public";
+import Section, { SectionsOverviewList, SectionsOverviewListProps } from ".";
 
 describe("Section component", () => {
   it("renders correctly", () => {

@@ -12,10 +12,10 @@ import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SectionNode, SectionStatus as SectionStatusEnum } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
-import Card from "../shared/Preview/Card";
-import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
-import type { Section } from "./model";
-import { computeSectionStatuses } from "./model";
+import Card from "../../shared/Preview/Card";
+import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
+import type { Section } from "../model";
+import { computeSectionStatuses } from "../model";
 
 export type Props = PublicProps<Section>;
 
