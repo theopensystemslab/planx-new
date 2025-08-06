@@ -1,11 +1,6 @@
 # initial block determines global options
 {
 	email {$TLS_EMAIL}
-
-	# TODO: write README and document the debug/staging stuff there
-	# dev / debugging options (comment out for main / in version control)
-	# debug
-	# acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
 
 # see https://caddyserver.com/docs/caddyfile/patterns
@@ -13,10 +8,9 @@
 	# wilcard certs require a DNS challenge
 	tls {
 		dns vultr {$VULTR_API_KEY}
-		# read like: wait for propagation_delay before starting poll of DNS records (after put), then keep trying for propagation_timeout
 		propagation_delay 30s # default 0s (NB. Vultr gives 300s as DNS record TTL)
 		propagation_timeout 5m # default 2mins (-1 indicates to not conduct propagation check, just handover to ACME after delay)
-		resolvers 1.1.1.1 8.8.8.8 # Docker's embedded DNS breaks CertMagic polling, so we explicitly set public resolvers (Cloudflare/Google) 
+		resolvers 1.1.1.1 8.8.8.8
 	}
 
 	@root host {$ROOT_DOMAIN} www.{$ROOT_DOMAIN}

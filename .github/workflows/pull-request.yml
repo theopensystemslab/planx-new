@@ -347,7 +347,7 @@ jobs:
     steps:
       - name: Create Pizza (if it doesn't exist)
         id: create
-        uses: theopensystemslab/vultr-action@v2.3
+        uses: theopensystemslab/vultr-action@v2.3.1
         with:
           action: create
           api_key: ${{ secrets.VULTR_API_KEY }}
