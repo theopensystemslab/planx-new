@@ -30,11 +30,11 @@ export const ProgressBar: React.FC = () => {
   );
 
   return (
-    // TODO: a11y
     <Root
       variant="buffer"
       value={completed}
       valueBuffer={current + completed}
+      aria-label="Section progress bar"
     />
   );
 };
