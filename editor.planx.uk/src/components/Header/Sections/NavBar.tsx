@@ -62,6 +62,7 @@ export const SectionNavBar: React.FC = () => {
       >
         <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
         <SectionName>{capitalize(title)}</SectionName>
+        <ProgressBar />
       </Container>
     </StyledNavBar>
   );
