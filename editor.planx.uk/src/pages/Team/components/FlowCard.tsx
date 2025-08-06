@@ -198,14 +198,14 @@ const FlowCard: React.FC<FlowCardProps> = ({
     <>
       {isArchiveDialogOpen && (
         <ArchiveDialog
-          title="Archive service"
+          title={`Archive "${flow.name}"`}
           open={isArchiveDialogOpen}
-          content={`Archiving this service will remove it from PlanX. Services can be restored by an admin`}
+          content={`Are you sure you want to archive "${flow.name}"? Once archived, a flow is no longer able to be viewed in the editor and can only be restored by a developer.`}
           onClose={() => {
             setIsArchiveDialogOpen(false);
           }}
           onConfirm={handleArchive}
-          submitLabel="Archive Service"
+          submitLabel="Archive this flow"
         />
       )}
       {isCopyDialogOpen && (
