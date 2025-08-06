@@ -92,13 +92,13 @@ export function computeSectionStatuses({
   return sectionStatuses;
 }
 
-export const SECTION_SIZE = ["small", "medium", "large"] as const;
+export const SECTION_SIZE = ["short", "medium", "long"] as const;
 export type SectionSize = (typeof SECTION_SIZE)[number];
 
 export const SECTION_WEIGHTS: Record<SectionSize, number> = {
-  small: 4,
+  short: 4,
   medium: 8,
-  large: 16,
+  long: 16,
 } as const;
 
 export const validationSchema: SchemaOf<Section> =
