@@ -171,7 +171,7 @@ export const navigationStore: StateCreator<
     const index = currentSectionIndex - 1;
 
     const sectionWeights = Object.values(sectionNodes).map(
-      ({ data: { size } }) => SECTION_WEIGHTS[size],
+      ({ data: { size = "medium" } }) => SECTION_WEIGHTS[size],
     );
     const totalWeight = sum(sectionWeights);
     const currentWeight = sectionWeights[index];
