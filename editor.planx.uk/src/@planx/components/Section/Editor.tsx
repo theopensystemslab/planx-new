@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { EditorProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import { upperFirst } from "lodash";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
 import ModalSection from "ui/editor/ModalSection";
@@ -84,8 +83,12 @@ function SectionComponent(props: Props) {
             disabled={props.disabled}
           >
             {SECTION_SIZE.map((size) => (
-              <MenuItem key={size} value={size}>
-                {upperFirst(size)}
+              <MenuItem
+                key={size}
+                value={size}
+                sx={{ textTransform: "capitalize" }}
+              >
+                {size}
               </MenuItem>
             ))}
           </SelectInput>
