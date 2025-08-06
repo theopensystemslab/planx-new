@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 import Tag, { TagType } from "@planx/components/shared/Buttons/Tag";
@@ -8,7 +7,6 @@ import type { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
-import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { SectionNode, SectionStatus as SectionStatusEnum } from "types";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -16,6 +14,16 @@ import Card from "../../shared/Preview/Card";
 import { CardHeader } from "../../shared/Preview/CardHeader/CardHeader";
 import type { Section } from "../model";
 import { computeSectionStatuses } from "../model";
+import {
+  SectionContent,
+  SectionDescription,
+  SectionHint,
+  SectionList,
+  SectionRowWrapper,
+  SectionStatus,
+  SectionTitleLink,
+  SectionTitleText,
+} from "./styles";
 
 export type Props = PublicProps<Section>;
 
@@ -288,98 +296,6 @@ export function SectionsOverviewList({
     </DescriptionList>
   );
 }
-
-const SectionList = styled("ul")(({ theme }) => ({
-  padding: theme.spacing(1, 0),
-  listStyle: "none",
-  "& ul, & ol": {
-    padding: "0 0 0 1em",
-    "& p": {
-      marginTop: "0.5em",
-    },
-    "&:last-of-type": {
-      marginBottom: 0,
-    },
-  },
-}));
-
-const SectionRowWrapper = styled("li", {
-  shouldForwardProp: (prop) => prop !== "isClickable",
-})<{ isClickable?: boolean }>(({ theme, isClickable }) => ({
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-  padding: theme.spacing(2, 0),
-  borderBottom: `1px solid ${theme.palette.border.main}`,
-  listStyle: "none",
-  [theme.breakpoints.up("md")]: {
-    flexDirection: "row",
-  },
-  ...(isClickable && {
-    cursor: "pointer",
-    "&:hover": {
-      backgroundColor: theme.palette.background.paper,
-      "& a": {
-        textDecorationThickness: "3px",
-      },
-    },
-  }),
-}));
-
-const SectionContent = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-  [theme.breakpoints.up("md")]: {
-    flexDirection: "row",
-  },
-}));
-
-const SectionTitleText = styled(Typography)(({ theme }) => ({
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-  color: theme.palette.text.primary,
-})) as typeof Typography;
-
-const SectionTitleLink = styled(Typography)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  fontSize: theme.typography.body1.fontSize,
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-})) as typeof Typography;
-
-const SectionDescription = styled(Box)(({ theme }) => ({
-  margin: 0,
-  paddingBottom: theme.spacing(2),
-  [theme.breakpoints.up("md")]: {
-    padding: theme.spacing(0.33, 1, 0, 0),
-    flexBasis: `calc(100% - 220px)`,
-    flexShrink: 1,
-    paddingBottom: 0,
-  },
-}));
-
-const SectionHint = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(0.5),
-  color: theme.palette.text.secondary,
-  "& ul": {
-    listStyleType: "disc",
-  },
-}));
-
-const SectionStatus = styled(Box)(({ theme }) => ({
-  margin: 0,
-  [theme.breakpoints.up("md")]: {
-    display: "flex",
-    flexBasis: "220px",
-    flexShrink: 0,
-    flexGrow: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-start",
-  },
-  "& > *": {
-    width: "auto",
-    pointerEvents: "none",
-  },
-}));
 
 interface DescriptionListProps {
   children: React.ReactNode;
