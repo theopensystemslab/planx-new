@@ -68,6 +68,7 @@ export const FileTaggingModal = ({
 
   return (
     <Dialog
+      scroll={"paper"}
       open
       onClose={closeModal}
       data-testid="file-tagging-dialog"
@@ -76,7 +77,7 @@ export const FileTaggingModal = ({
       fullScreen={fullScreen}
       PaperProps={{
         sx: {
-          overflow: "hidden",
+          position: "unset",
         },
       }}
     >
