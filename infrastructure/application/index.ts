@@ -161,7 +161,6 @@ export = async () => {
     external: true,
     vpc,
     subnets: networking.requireOutput("publicSubnetIds"),
-    idleTimeout: 120,
     securityGroups: [
       new awsx.ec2.SecurityGroup("metabase-custom-port", {
         vpc,
