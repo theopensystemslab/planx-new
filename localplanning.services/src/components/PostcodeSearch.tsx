@@ -51,18 +51,19 @@ const PostcodeSearch: React.FC<Props> = ({ action }) => {
     // TODO: Postcode lookup
     // Hardcoded to Bucks for now
     action 
-      ? await navigate(`/buckinghamshire?action=${action}`)
-      : await navigate("/buckinghamshire")
+      ? await navigate(`/barnet?action=${action}`)
+      : await navigate("/barnet")
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-start">
       {/* @ts-ignore-error */}
-      <postcode-search
-        ref={postcodeSearchRef}
-        label="Enter a postcode"
-        hintText="For example, NW3 7PH"
-      />
+      <div className="flex flex-col">
+        <label className="text-body-lg" htmlFor="address">
+          Enter an address to find the local planning authority
+        </label>
+        <input type="text" id="address" />
+      </div>
       <button type="submit" className="button button--primary button--medium">
         Find the local planning authority
       </button>
