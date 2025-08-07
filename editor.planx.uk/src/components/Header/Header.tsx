@@ -22,7 +22,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import { clearLocalFlow } from "lib/local";
+import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -353,7 +353,7 @@ const PublicToolbar: React.FC<{
         flowDirection: "reset",
       });
       if (path === ApplicationPath.SingleSession) {
-        clearLocalFlow(id);
+        clearLocalFlowIdb(id);
         window.location.reload();
       } else {
         // Save & Return flow
