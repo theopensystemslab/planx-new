@@ -111,10 +111,12 @@
   .styled-content ol {
     @apply text-text-secondary;
   }
+  .styled-content p {
+     margin-bottom: 0.5em;
+  }
   .styled-content p a {
     @apply text-text-main;
   }
-
   .styled-content {
     @apply max-w-3xl;
     @apply clamp-[text,base,lg];
