@@ -13,6 +13,7 @@
 		resolvers 1.1.1.1 8.8.8.8
 	}
 
+	# since caddy is inside docker network, ports given here should match right side of host:container in compose files
 	@root host {$ROOT_DOMAIN} www.{$ROOT_DOMAIN}
 	handle @root {
 		reverse_proxy editor:8043
@@ -35,12 +36,12 @@
 
 	@postgres host postgres.{$ROOT_DOMAIN}
 	handle @postgres {
-		reverse_proxy postgres:{$PG_PORT}
+		reverse_proxy postgres:5432
 	}
 
 	@sharedb host sharedb.{$ROOT_DOMAIN}
 	handle @sharedb {
-		reverse_proxy sharedb:{$SHAREDB_PORT}
+		reverse_proxy sharedb:8000
 	}
 
 	@storybook host storybook.{$ROOT_DOMAIN}

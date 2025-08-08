@@ -1,13 +1,11 @@
 services:
   postgres:
-    container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   api:
     build:
       target: production
-    container_name: api
     volumes:
       - "/api/node_modules"
       - "/api/dist"
@@ -45,8 +43,8 @@ services:
       - caddy_data:/data  # certs + keys
       - caddy_config:/config  # autosaved JSON config
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     environment:
       - TLS_EMAIL=${TLS_EMAIL}
       - ROOT_DOMAIN=${ROOT_DOMAIN}
