@@ -33,7 +33,7 @@ const FileCard = styled(Box)(({ theme }) => ({
     flexDirection: "row",
     alignItems: "center",
   },
-  padding: theme.spacing(0.5, 1.5),
+  padding: theme.spacing(1, 1.5, 0.5),
   "& > *": {
     zIndex: 1,
   },
@@ -65,10 +65,10 @@ const FilePreview = styled(Box)(({ theme }) => ({
 
 const ProgressBar = styled(Box)(({ theme }) => ({
   position: "absolute",
-  height: "100%",
+  height: theme.spacing(0.4),
   left: 0,
   top: 0,
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.border.input,
   zIndex: 0,
 }));
 
@@ -113,7 +113,7 @@ export const UploadedFileCard: React.FC<Props> = ({
             width={`${Math.min(Math.ceil(progress * 100), 100)}%`}
             role="progressbar"
             aria-valuenow={progress * 100 || 0}
-            aria-label={file.name}
+            aria-label={`Upload progress of file ${file.name}`}
           />
           <Box
             sx={{
