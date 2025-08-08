@@ -11,6 +11,7 @@ import { exhaustiveCheck } from "utils";
 import { AddressFieldInput } from "./AddressFieldInput";
 import { ChecklistFieldInput } from "./ChecklistFieldInput";
 import { DateFieldInput } from "./DateFieldInput";
+import { FileUploadInput } from "./FileUploadInput";
 import { MapFieldInput } from "./MapFieldInput";
 import { NumberFieldInput } from "./NumberFieldInput";
 import { RadioFieldInput } from "./RadioFieldInput";
@@ -73,6 +74,8 @@ export const InputFields: React.FC<Props<Field>> = (props) => {
       return <MapFieldInput {...props} />;
     case "address":
       return <AddressFieldInput {...props} />;
+    case "fileUpload":
+      return <FileUploadInput {...props} />;
     default:
       return exhaustiveCheck(type);
   }
