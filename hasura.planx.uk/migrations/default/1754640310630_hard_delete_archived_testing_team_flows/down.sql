@@ -1,0 +1,2 @@
+-- Intentionally no equivalent down migration
+-- See this Trello ticket for context https://trello.com/c/OQhyVSjp/3372-templates-remove-customisation-tags
