@@ -41,31 +41,39 @@ export const FiltersColumn = <T extends object>(
           icon={<CancelIcon fontSize="small" />}
         />
       ) : (
-        <SelectInput
-          value={selectedValue}
-          name={props.name}
-          onChange={(event) =>
-            props.handleChange(
-              props.optionKey,
-              event.target.value as FilterValues,
-            )
-          }
-          fullWidth
-          displayEmpty
-          sx={{ height: 40, maxWidth: "200px" }}
-        >
-          <MenuItem value="" disabled style={visuallyHidden}>
-            {props.title}
-          </MenuItem>
-          {props.optionValues.map((value) => (
-            <MenuItem
-              key={`${props.optionKey.toString()}-${value}`}
-              value={value}
-            >
-              {capitalize(`${value}`)}
+        <>
+          <label
+            id={`${props.name?.replaceAll(" ", "-")}-label`}
+            style={visuallyHidden}
+          >
+            {props.name}
+          </label>
+          <SelectInput
+            value={selectedValue}
+            name={props.name}
+            onChange={(event) =>
+              props.handleChange(
+                props.optionKey,
+                event.target.value as FilterValues,
+              )
+            }
+            fullWidth
+            displayEmpty
+            sx={{ height: 40, maxWidth: "200px" }}
+          >
+            <MenuItem value="" disabled style={visuallyHidden}>
+              {props.title}
             </MenuItem>
-          ))}
-        </SelectInput>
+            {props.optionValues.map((value) => (
+              <MenuItem
+                key={`${props.optionKey.toString()}-${value}`}
+                value={value}
+              >
+                {capitalize(`${value}`)}
+              </MenuItem>
+            ))}
+          </SelectInput>
+        </>
       )}
     </Box>
   );
