@@ -1,7 +1,6 @@
 - "!include public_analytics.yaml"
 - "!include public_analytics_logs.yaml"
 - "!include public_analytics_summary.yaml"
-- "!include public_applicant_research_opt_in_view.yaml"
 - "!include public_blpu_codes.yaml"
 - "!include public_bops_applications.yaml"
 - "!include public_document_template.yaml"

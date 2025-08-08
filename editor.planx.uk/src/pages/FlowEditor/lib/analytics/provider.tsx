@@ -45,7 +45,6 @@ import {
  *  so that Metabase picks up the new columns
  */
 export const ALLOW_LIST = [
-  "applicant.researchOptIn",
   "application.declaration.connection",
   "application.fastTrack",
   "application.fee.serviceCharge",
