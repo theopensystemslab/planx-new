@@ -22,7 +22,7 @@ const sectionNodes: { [key: string]: SectionNode } = {
     data: {
       title: "First section",
       description: "Description of first section",
-      size: "medium",
+      length: "medium",
     },
     type: TYPES.Section,
   },
@@ -30,7 +30,7 @@ const sectionNodes: { [key: string]: SectionNode } = {
     data: {
       title: "Second section",
       description: "Description of second section",
-      size: "medium",
+      length: "medium",
     },
     type: TYPES.Section,
   },
@@ -38,7 +38,7 @@ const sectionNodes: { [key: string]: SectionNode } = {
     data: {
       title: "Third section",
       description: "Description of third section",
-      size: "medium",
+      length: "medium",
     },
     type: TYPES.Section,
   },
@@ -62,7 +62,7 @@ const defaultProps: ComponentProps<typeof Public> = {
   title: "The property",
   description: "Short description of the property section",
   sectionCount: 3,
-  size: "medium",
+  length: "medium",
 };
 
 export const Basic = {

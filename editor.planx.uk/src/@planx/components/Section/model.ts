@@ -12,7 +12,7 @@ import {
 export interface Section extends BaseNodeData {
   title: string;
   description?: string;
-  size: SectionSize;
+  length: SectionLength;
 }
 
 export const parseSection = (
@@ -20,7 +20,7 @@ export const parseSection = (
 ): Section => ({
   title: data?.title || "",
   description: data?.description,
-  size: data?.size || "medium",
+  length: data?.length || "medium",
   ...parseBaseNodeData(data),
 });
 
@@ -92,13 +92,20 @@ export function computeSectionStatuses({
   return sectionStatuses;
 }
 
-export const SECTION_SIZE = ["short", "medium", "long"] as const;
-export type SectionSize = (typeof SECTION_SIZE)[number];
+export const SECTION_LENGTH = ["short", "medium", "long"] as const;
+export type SectionLength = (typeof SECTION_LENGTH)[number];
 
-export const SECTION_WEIGHTS: Record<SectionSize, number> = {
+export const SECTION_WEIGHTS: Record<SectionLength, number> = {
   short: 4,
   medium: 8,
   long: 16,
+} as const;
+
+export const SECTION_LENGTH_DESCRIPTIONS: Record<SectionLength, string> = {
+  short: "A fixed amount of questions amounting to a maximum of 5",
+  medium:
+    "A longer fixed-length section with some level of complex user-interaction, i.e. Upload and label",
+  long: "A non-determinable length of questions i.e. Permitted Development",
 } as const;
 
 export const validationSchema: SchemaOf<Section> =
@@ -106,8 +113,8 @@ export const validationSchema: SchemaOf<Section> =
     object({
       title: string().required(),
       description: richText(),
-      size: mixed()
-        .oneOf([...SECTION_SIZE])
+      length: mixed()
+        .oneOf([...SECTION_LENGTH])
         .required(),
     }),
   );
