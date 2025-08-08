@@ -1,25 +1,7 @@
-# Pizzas use [caddy-gen](https://hub.docker.com/r/wemakeservices/caddy-gen) as a reverse proxy
-# the "virtual.*" labels configure mapping rules
-
 services:
   postgres:
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    labels:
-      virtual.host: postgres.${ROOT_DOMAIN}
-      virtual.port: 5432
-      virtual.tls-email: ${TLS_EMAIL}
-
-  hasura:
-    labels:
-      virtual.port: 8080
-      virtual.tls-email: ${TLS_EMAIL}
-
-  hasura-proxy:
-    labels:
-      virtual.host: hasura.${ROOT_DOMAIN}
-      virtual.port: ${HASURA_PROXY_PORT}
-      virtual.tls-email: ${TLS_EMAIL}
 
   api:
     build:
@@ -27,58 +9,50 @@ services:
     volumes:
       - "/api/node_modules"
       - "/api/dist"
-    labels:
-      virtual.host: api.${ROOT_DOMAIN}
-      virtual.port: ${API_PORT}
-      virtual.tls-email: ${TLS_EMAIL}
     environment:
       NODE_ENV: "pizza"
 
-  sharedb:
-    labels:
-      virtual.host: sharedb.${ROOT_DOMAIN}
-      virtual.port: 8000
-      virtual.tls-email: ${TLS_EMAIL}
-
   editor:
+    container_name: editor
     image: pierrezemb/gostatic
     volumes:
       - ./editor.planx.uk/build:/srv/http
     entrypoint: "/goStatic -fallback /index.html"
-    labels:
-      virtual.host: ${ROOT_DOMAIN}
-      virtual.port: 8043
-      virtual.tls-email: ${TLS_EMAIL}
 
   localplanning:
+    container_name: localplanning
     image: pierrezemb/gostatic
     volumes:
       - ./localplanning.services/dist:/srv/http
     entrypoint: "/goStatic -fallback /404.html"
-    labels:
-      virtual.host: localplanning.${ROOT_DOMAIN}
-      virtual.port: 8043
-      virtual.tls-email: ${TLS_EMAIL}
 
   storybook:
+    container_name: storybook
     image: pierrezemb/gostatic
     volumes:
       - ./editor.planx.uk/build/storybook:/srv/http
     entrypoint: "/goStatic -port 8044 -fallback /index.html"
-    labels:
-      virtual.host: storybook.${ROOT_DOMAIN}
-      virtual.port: 8044
-      virtual.tls-email: ${TLS_EMAIL}
 
-  caddy-gen:
-    image: wemakeservices/caddy-gen:latest
-    restart: always
+  caddy:
+    build:
+      context: ./ci/caddy
+    container_name: caddy
+    restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - caddy_data:/data/caddy # to back up certificates
+      - ./ci/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data  # certs + keys
+      - caddy_config:/config  # autosaved JSON config
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
+    environment:
+      - TLS_EMAIL=${TLS_EMAIL}
+      - ROOT_DOMAIN=${ROOT_DOMAIN}
+      - VULTR_API_KEY=${VULTR_API_KEY}
+      - API_PORT=${API_PORT}
+      - HASURA_PROXY_PORT=${HASURA_PROXY_PORT}
+      - PG_PORT=${PG_PORT}
+      - SHAREDB_PORT=${SHAREDB_PORT}
 
 volumes:
   postgres_data:
