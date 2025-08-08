@@ -152,7 +152,7 @@ describe("render states", () => {
     // autocomplete does not exist in the DOM on initial render
     expect(
       screen.queryByTestId("address-autocomplete-web-component"),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
 
     // type a valid postcode
     await user.type(await screen.findByLabelText("Postcode"), "SE5 0HU");
@@ -162,7 +162,7 @@ describe("render states", () => {
       "address-autocomplete-web-component",
     );
     expect(autocomplete).toBeInTheDocument();
-    expect(autocomplete.getAttribute("postcode")).toEqual("SE5 0HU");
+    expect(autocomplete).toHaveAttribute("postcode", "SE5 0HU");
     expect(autocomplete.getAttribute("initialAddress")).toBeFalsy();
 
     // expect continue to be disabled because an address has not been selected
@@ -339,10 +339,8 @@ describe("picking an OS address", () => {
       screen.getByTestId("address-autocomplete-web-component"),
     ).toBeInTheDocument();
     expect(
-      screen
-        .getByTestId("address-autocomplete-web-component")
-        .getAttribute("postcode"),
-    ).toEqual("SE5 0HU");
+      screen.getByTestId("address-autocomplete-web-component"),
+    ).toHaveAttribute("postcode", "SE5 0HU");
 
     // Now go back and change the postcode
     await user.clear(screen.getByLabelText("Postcode"));
@@ -350,10 +348,8 @@ describe("picking an OS address", () => {
 
     // Expect autocomplete to be rendered with the new postcode prop
     expect(
-      screen
-        .getByTestId("address-autocomplete-web-component")
-        .getAttribute("postcode"),
-    ).toEqual("SE5 0HX");
+      screen.getByTestId("address-autocomplete-web-component"),
+    ).toHaveAttribute("postcode", "SE5 0HX");
 
     // User is unable to continue and to submit incomplete data
     const continueButton = screen.getByTestId("continue-button");

@@ -79,7 +79,7 @@ export const AddCommentDialog = ({
             </InputLabel>
           </Box>
         </DialogContent>
-        <DialogActions sx={{ paddingX: 2 }}>
+        <DialogActions>
           <Button disableRipple onClick={() => setDialogOpen(false)}>
             BACK
           </Button>

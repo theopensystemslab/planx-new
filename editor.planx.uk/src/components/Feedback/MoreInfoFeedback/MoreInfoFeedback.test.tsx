@@ -1,4 +1,4 @@
-import { waitFor } from "@testing-library/react";
+import { getByLabelText, waitFor } from "@testing-library/react";
 import {
   getInternalFeedbackMetadata,
   insertFeedbackMutation,
@@ -34,14 +34,14 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
   test("Does not scroll into view on initial render", () => {
     setup(<MoreInfoFeedbackComponent />);
-    expect(scrollIntoView).not.toBeCalled();
+    expect(scrollIntoView).not.toHaveBeenCalled();
   });
 
   // Sentiment selection
   test("Clicking Yes input form scrolls into view", async () => {
     const { getByText, user } = setup(<MoreInfoFeedbackComponent />);
     await user.click(getByText("Yes"));
-    expect(scrollIntoView).toBeCalled();
+    expect(scrollIntoView).toHaveBeenCalled();
     await waitFor(() => {
       expect(
         getByText("Please help us to improve this service by sharing feedback"),
@@ -53,7 +53,7 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
     const { getByText, user } = setup(<MoreInfoFeedbackComponent />);
 
     await user.click(getByText("No"));
-    expect(scrollIntoView).toBeCalled();
+    expect(scrollIntoView).toHaveBeenCalled();
     await waitFor(() => {
       expect(
         getByText("Please help us to improve this service by sharing feedback"),
@@ -76,8 +76,8 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
 
     user.click(getByText("Send feedback"));
     await waitFor(() => {
-      expect(getInternalFeedbackMetadata).toBeCalled();
-      expect(insertFeedbackMutation).toBeCalled();
+      expect(getInternalFeedbackMetadata).toHaveBeenCalled();
+      expect(insertFeedbackMutation).toHaveBeenCalled();
     });
 
     await waitFor(() => {
@@ -96,16 +96,19 @@ describe("MoreInfoFeedbackComponent presentation and functionality", () => {
     validation.
   */
   test("Feedback form requires a comment before submitting", async () => {
-    const { getByTestId, getByText, user } = setup(
+    const { getByLabelText, queryByLabelText, getByText, user } = setup(
       <MoreInfoFeedbackComponent />,
     );
 
-    user.click(getByText("Yes"));
-    await waitFor(() => {
-      expect(getByTestId("userCommentTextarea")).toBeInTheDocument();
-    });
+    expect(queryByLabelText("What's your feedback?")).not.toBeInTheDocument();
 
-    expect(getByTestId("userCommentTextarea")).toHaveAttribute("required");
+    user.click(getByText("Yes"));
+
+    await waitFor(() =>
+      expect(getByLabelText("What's your feedback?")).toBeInTheDocument(),
+    );
+
+    expect(getByLabelText("What's your feedback?")).toBeRequired();
   });
 });
 

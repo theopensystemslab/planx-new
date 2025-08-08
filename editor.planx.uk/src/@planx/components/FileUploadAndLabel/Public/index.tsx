@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListSubheader from "@mui/material/ListSubheader";
+import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { PublicProps } from "@planx/components/shared/types";
@@ -111,6 +112,7 @@ function Component(props: Props) {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isUserReturningToNode, setIsUserReturningToNode] =
     useState<boolean>(false);
+  const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
 
   const validateAndSubmit = () => {
     Promise.all([
@@ -141,9 +143,10 @@ function Component(props: Props) {
       });
   };
 
-  const onUploadedFileCardChange = () => {
+  const onUploadedFileCardChange = (slotId: string) => {
     setFileListError(undefined);
     setFileLabelErrors(undefined);
+    setSelectedSlotId(slotId);
     setShowModal(true);
   };
 
@@ -170,6 +173,14 @@ function Component(props: Props) {
       fileList,
     );
     setFileList(updatedFileList);
+  };
+
+  const closeModal = (_event: unknown, reason?: string) => {
+    if (reason && reason == "backdropClick") {
+      return;
+    }
+    setShowModal(false);
+    setSelectedSlotId(null);
   };
 
   return (
@@ -234,12 +245,13 @@ function Component(props: Props) {
                 uploadedFiles={slots}
                 fileList={fileList}
                 setFileList={setFileList}
-                setShowModal={setShowModal}
+                closeModal={closeModal}
                 removeFile={removeFile}
+                selectedSlotId={selectedSlotId}
               />
             )}
-            {slots.map((slot) => {
-              return (
+            <Stack spacing={2}>
+              {slots.map((slot) => (
                 <ErrorWrapper
                   error={fileLabelErrors?.[slot.id]}
                   id={slot.id}
@@ -248,12 +260,12 @@ function Component(props: Props) {
                   <UploadedFileCard
                     {...slot}
                     tags={getTagsForSlot(slot.id, fileList)}
-                    onChange={onUploadedFileCardChange}
+                    onChange={() => onUploadedFileCardChange(slot.id)}
                     removeFile={() => removeFile(slot)}
                   />
                 </ErrorWrapper>
-              );
-            })}
+              ))}
+            </Stack>
           </Box>
         </ErrorWrapper>
       </FullWidthWrapper>

@@ -90,7 +90,7 @@ it("allows users to navigate to the external portals", async () => {
 it("should not have any accessibility violations on initial load", async () => {
   act(() => setState({ externalPortals }));
 
-  const { container, getByLabelText, user, findByTestId } = setup(
+  const { container, getByLabelText, user, getByTestId } = setup(
     <VirtuosoWrapper>
       <Search />
     </VirtuosoWrapper>,
@@ -100,7 +100,7 @@ it("should not have any accessibility violations on initial load", async () => {
   user.type(searchInput, "ind");
 
   await waitFor(() =>
-    expect(findByTestId("searchExternalPortalList")).toBeDefined(),
+    expect(getByTestId("searchExternalPortalList")).toBeInTheDocument(),
   );
 
   const results = await axe(container);

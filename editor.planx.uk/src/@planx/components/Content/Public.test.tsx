@@ -55,5 +55,5 @@ test("should display and open more information link if help text is provided", a
   expect(screen.getByTestId("more-info-button")).toBeInTheDocument();
 
   await user.click(screen.getByTestId("more-info-button"));
-  expect(screen.findByText("Why does it matter?")).toBeTruthy();
+  expect(screen.getByText("Why does it matter?")).toBeInTheDocument();
 });

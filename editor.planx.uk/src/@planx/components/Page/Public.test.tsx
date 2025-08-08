@@ -78,7 +78,9 @@ it("handles PageSchema errors", async () => {
 
   // No error messages present initially
   let errorMessages = queryAllByTestId(/error-message-input-number/);
-  expect(queryByText("Enter your answer before continuing")).toBeNull();
+  expect(
+    queryByText("Enter your answer before continuing"),
+  ).not.toBeInTheDocument();
   errorMessages.forEach((message) => expect(message).toBeEmptyDOMElement());
 
   // User hits "Continue" without populating fields

@@ -3,34 +3,38 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import Stack from "@mui/material/Stack";
 import { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { visuallyHidden } from "@mui/utils";
 import React, { useEffect, useRef, useState } from "react";
-import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { ValidationError } from "yup";
 
 import { FileUploadSlot } from "../../FileUpload/model";
-import { UploadedFileCard } from "../../shared/PrivateFileUpload/UploadedFileCard";
 import { FileList } from "../model";
 import { fileLabelSchema, formatFileLabelSchemaErrors } from "../schema";
-import { SelectMultipleFileTypes } from "./SelectMultipleFileTypes";
+import { FileCard } from "./FileCard";
 
 interface FileTaggingModalProps {
   uploadedFiles: FileUploadSlot[];
   fileList: FileList;
   setFileList: (value: React.SetStateAction<FileList>) => void;
-  setShowModal: (value: React.SetStateAction<boolean>) => void;
+  closeModal: (
+    _event: unknown,
+    reason?: "backdropClick" | "escapeKeyDown",
+  ) => void;
   removeFile: (slot: FileUploadSlot) => void;
+  selectedSlotId: string | null;
 }
 
 export const FileTaggingModal = ({
   uploadedFiles,
   fileList,
   setFileList,
-  setShowModal,
+  closeModal,
   removeFile,
+  selectedSlotId,
 }: FileTaggingModalProps) => {
   const [errors, setErrors] = useState<Record<string, string> | undefined>();
   const fullScreen = useMediaQuery((theme: Theme) =>
@@ -44,12 +48,11 @@ export const FileTaggingModal = ({
     }
   }, []);
 
-  const closeModal = (_event: any, reason?: string) => {
-    if (reason && reason == "backdropClick") {
-      return;
+  useEffect(() => {
+    if (initialFocusRef.current) {
+      initialFocusRef.current.focus();
     }
-    setShowModal(false);
-  };
+  }, []);
 
   const handleValidation = () => {
     fileLabelSchema
@@ -65,6 +68,7 @@ export const FileTaggingModal = ({
 
   return (
     <Dialog
+      scroll={"paper"}
       open
       onClose={closeModal}
       data-testid="file-tagging-dialog"
@@ -73,7 +77,7 @@ export const FileTaggingModal = ({
       fullScreen={fullScreen}
       PaperProps={{
         sx: {
-          overflow: "hidden",
+          position: "unset",
         },
       }}
     >
@@ -99,27 +103,19 @@ export const FileTaggingModal = ({
             </Typography>
           </Typography>
         </Box>
-        {uploadedFiles.map((slot) => (
-          <Box sx={{ mb: 4 }} key={`tags-per-file-container-${slot.id}`}>
-            <ErrorWrapper error={errors?.[slot.id]}>
-              <>
-                <UploadedFileCard
-                  {...slot}
-                  key={slot.id}
-                  removeFile={() => removeFile(slot)}
-                  FileCardProps={{
-                    sx: { borderBottom: "none" },
-                  }}
-                />
-                <SelectMultipleFileTypes
-                  uploadedFile={slot}
-                  fileList={fileList}
-                  setFileList={setFileList}
-                />
-              </>
-            </ErrorWrapper>
-          </Box>
-        ))}
+        <Stack spacing={2}>
+          {uploadedFiles.map((slot) => (
+            <FileCard
+              key={`tags-per-file-container-${slot.id}`}
+              slot={slot}
+              errors={errors}
+              fileList={fileList}
+              setFileList={setFileList}
+              removeFile={removeFile}
+              selectedSlotId={selectedSlotId}
+            />
+          ))}
+        </Stack>
       </DialogContent>
       <DialogActions
         sx={{

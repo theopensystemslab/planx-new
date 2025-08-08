@@ -22,6 +22,9 @@ const { action }: { action?: Action }= Astro.params;
   <Container paddingY>
     <section class="mb-4">
       <PostcodeSearch client:load action={action}/>
+      <div class="styled-content mt-8">
+        <p>or see the <a href="/directory" class="paragraph-link">directory of local planning authorities</a></p>
+      </div>
     </section>
   </Container>
   <ApplicationsBanner />

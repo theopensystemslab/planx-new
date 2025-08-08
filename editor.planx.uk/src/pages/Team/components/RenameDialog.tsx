@@ -26,10 +26,10 @@ interface Props {
   isDialogOpen: boolean;
   handleClose: () => void;
   flow: {
-    name: string,
-    slug: string,
-    id: string,
-  }
+    name: string;
+    slug: string;
+    id: string;
+  };
 }
 
 const validationSchema = object().shape({
@@ -37,10 +37,17 @@ const validationSchema = object().shape({
   flowSlug: string().trim().required("Slug is required"),
 });
 
-export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow }) => {
+export const RenameDialog: React.FC<Props> = ({
+  isDialogOpen,
+  handleClose,
+  flow,
+}) => {
   const toast = useToast();
 
-  const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async ({ flowName, flowSlug }, { setFieldError, setSubmitting }) => {
+  const onSubmit: FormikConfig<RenameFlow>["onSubmit"] = async (
+    { flowName, flowSlug },
+    { setFieldError, setSubmitting },
+  ) => {
     try {
       await client.mutate({
         mutation: gql`
@@ -64,12 +71,12 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
         },
       });
       handleClose();
-      toast.success(`Renamed flow to "${flowName}"`)
+      toast.success(`Renamed flow to "${flowName}"`);
     } catch (error) {
-      const isUniqueSlugError = 
-        error instanceof Error 
-        && isApolloError(error)
-        && error.message.includes("Uniqueness violation");
+      const isUniqueSlugError =
+        error instanceof Error &&
+        isApolloError(error) &&
+        error.message.includes("Uniqueness violation");
 
       if (isUniqueSlugError) {
         setFieldError("flowName", "Flow name must be unique");
@@ -90,7 +97,14 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ resetForm, isSubmitting, getFieldProps, setFieldValue, errors, values }) => (
+      {({
+        resetForm,
+        isSubmitting,
+        getFieldProps,
+        setFieldValue,
+        errors,
+        values,
+      }) => (
         <Dialog
           open={isDialogOpen}
           onClose={() => {
@@ -136,7 +150,7 @@ export const RenameDialog: React.FC<Props> = ({ isDialogOpen, handleClose, flow 
                   />
                 </InputLabel>
               </DialogContent>
-              <DialogActions sx={{ paddingX: 2 }}>
+              <DialogActions>
                 <Button
                   disableRipple
                   onClick={handleClose}

@@ -44,7 +44,7 @@ test("data field checkbox is unchecked and enabled by default", () => {
 
   expect(checkbox).toBeInTheDocument();
   expect(checkbox).not.toBeChecked();
-  expect(checkbox).not.toBeDisabled();
+  expect(checkbox).toBeEnabled();
 });
 
 test("entering a search term displays a series of cards", async () => {

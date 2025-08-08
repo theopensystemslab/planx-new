@@ -19,7 +19,7 @@ let mockTeamName: string | undefined = undefined;
 let mockFlowName: string | undefined = undefined;
 let mockAnalyticsLink: string | undefined = undefined;
 const mockGetUserRoleForCurrentTeam = vi.fn();
-let mockGetTeam = vi.fn();
+const mockGetTeam = vi.fn();
 
 vi.mock("pages/FlowEditor/lib/store", async () => ({
   useStore: vi.fn(() => [
@@ -62,7 +62,7 @@ describe("teamLayoutRoutes", () => {
       url: { href: "/test-team" },
     } as ReturnType<typeof mockNavi.useCurrentRoute>);
     mockTeamName = "test-team";
-    mockGetTeam.mockReturnValue({ settings: { referenceCode: null }});
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
   });
 
   it("only displays the 'planning data' route for teamViewers", () => {
@@ -72,7 +72,9 @@ describe("teamLayoutRoutes", () => {
     const menuItems = queryAllByRole("listitem");
     expect(menuItems).toHaveLength(2);
     expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
-    expect(within(menuItems[1]).getByText("Planning Data unavailable")).toBeInTheDocument();
+    expect(
+      within(menuItems[1]).getByText("Planning Data unavailable"),
+    ).toBeInTheDocument();
   });
 
   it("displays for teamEditors", () => {
@@ -103,17 +105,17 @@ describe("teamPlanningDataRoute", () => {
   });
 
   it("is disabled without a reference code", () => {
-    mockGetTeam.mockReturnValue({ settings: { referenceCode: null }});
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: null } });
 
     const { getByRole } = setup(<EditorNavMenu />);
     expect(getByRole("button", { name: /Planning Data/ })).toBeDisabled();
   });
 
   it("is enabled with a reference code", () => {
-    mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" }});
+    mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" } });
 
     const { getByRole } = setup(<EditorNavMenu />);
-    expect(getByRole("button", { name: /Planning Data/ })).not.toBeDisabled();
+    expect(getByRole("button", { name: /Planning Data/ })).toBeEnabled();
   });
 });
 
@@ -174,7 +176,7 @@ describe("flowAnalyticsRoute", () => {
     mockAnalyticsLink = "https://link-to-metabase";
 
     const { getByRole } = setup(<EditorNavMenu />);
-    expect(getByRole("button", { name: /Analytics/ })).not.toBeDisabled();
+    expect(getByRole("button", { name: /Analytics/ })).toBeEnabled();
   });
 });
 

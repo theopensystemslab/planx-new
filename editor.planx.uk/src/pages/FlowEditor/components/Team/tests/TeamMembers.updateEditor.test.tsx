@@ -24,9 +24,8 @@ describe("when a user presses 'edit button'", () => {
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton = await within(teamMembersTable).findByTestId(
-      "edit-button-3",
-    );
+    const addMemberButton =
+      await within(teamMembersTable).findByTestId("edit-button-3");
 
     user.click(addMemberButton);
     // Start each test with an open modal
@@ -65,9 +64,8 @@ describe("when a user deletes an input value", () => {
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton = await within(teamMembersTable).findByTestId(
-      "edit-button-3",
-    );
+    const addMemberButton =
+      await within(teamMembersTable).findByTestId("edit-button-3");
     await user.click(addMemberButton);
 
     const modal = await screen.findByRole("dialog");
@@ -99,9 +97,8 @@ describe("when a user updates a field correctly", () => {
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton = await within(teamMembersTable).findByTestId(
-      "edit-button-3",
-    );
+    const addMemberButton =
+      await within(teamMembersTable).findByTestId("edit-button-3");
     await user.click(addMemberButton);
 
     const modal = await screen.findByRole("dialog");
@@ -123,7 +120,7 @@ describe("when a user updates a field correctly", () => {
     const updateUserButton = await screen.findByRole("button", {
       name: "Update user",
     });
-    expect(updateUserButton).not.toBeDisabled();
+    expect(updateUserButton).toBeEnabled();
   });
 });
 
@@ -133,9 +130,8 @@ describe("when a user correctly updates an Editor", () => {
     const { user } = await setupTeamMembersScreen();
 
     const teamMembersTable = screen.getByTestId("team-members");
-    const addMemberButton = await within(teamMembersTable).findByTestId(
-      "edit-button-3",
-    );
+    const addMemberButton =
+      await within(teamMembersTable).findByTestId("edit-button-3");
     await user.click(addMemberButton);
 
     const firstNameInput = await screen.findByLabelText("First name");

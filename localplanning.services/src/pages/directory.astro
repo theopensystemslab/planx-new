@@ -11,14 +11,8 @@ const lpas = await fetchAllLPAs();
 ---
 
 <Layout>
-  <Masthead title="Local planning services directory" />
+  <Masthead title="Directory of local planning authorities" />
   <Container paddingY>
-    <section class="flex flex-col mb-6">
-      <label for="search" class="text-body-lg"
-        >Search for a local planning authority</label
-      >
-      <input type="search" id="search" placeholder="Type to search" />
-    </section>
     <section class="flex flex-col gap-4">
       {
         lpas.map((lpa) => (

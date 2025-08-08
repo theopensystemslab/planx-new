@@ -79,9 +79,9 @@ describe("Simple flow", () => {
       />,
     );
 
-    expect(screen.getByText("This is a text")).toBeTruthy();
-    expect(screen.getByText("356")).toBeTruthy();
-    expect(screen.getByText("Option 2")).toBeTruthy();
+    expect(screen.getByText("This is a text")).toBeInTheDocument();
+    expect(screen.getByText("356")).toBeInTheDocument();
+    expect(screen.getByText("Option 2")).toBeInTheDocument();
     expect(screen.queryAllByText("undefined")).toHaveLength(0);
   });
 

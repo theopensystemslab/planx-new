@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import { visuallyHidden } from "@mui/utils";
 import {
   DateInput,
   dateInputValidationSchema,
@@ -9,7 +8,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useId } from "react";
 import DateInputComponent from "ui/shared/DateInput/DateInput";
 import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
@@ -20,6 +19,9 @@ import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 export type Props = PublicProps<DateInput>;
 
 const DateInputPublic: React.FC<Props> = (props) => {
+  const uniqueId = useId();
+  const componentId = props.id ? props.id : uniqueId;
+
   const formik = useFormik({
     initialValues: {
       date: getPreviouslySubmittedData(props) ?? "",
@@ -37,7 +39,6 @@ const DateInputPublic: React.FC<Props> = (props) => {
   return (
     <Card handleSubmit={formik.handleSubmit}>
       <Box
-        component="fieldset"
         role="group"
         aria-describedby={[
           props.description ? DESCRIPTION_TEXT : "",
@@ -46,7 +47,6 @@ const DateInputPublic: React.FC<Props> = (props) => {
           .filter(Boolean)
           .join(" ")}
       >
-        <legend style={visuallyHidden}>{props.title}</legend>
         <CardHeader
           title={props.title}
           description={props.description}
@@ -63,7 +63,7 @@ const DateInputPublic: React.FC<Props> = (props) => {
               formik.setFieldValue("date", paddedDate(newDate, eventType));
             }}
             error={formik.errors.date as string}
-            id={props.id}
+            id={componentId}
           />
         </InputRow>
       </Box>

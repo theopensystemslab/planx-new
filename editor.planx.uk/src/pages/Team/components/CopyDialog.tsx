@@ -21,13 +21,17 @@ interface Props {
   isDialogOpen: boolean;
   handleClose: () => void;
   sourceFlow: {
-    name: string,
-    slug: string,
-    id: string,
-  }
+    name: string;
+    slug: string;
+    id: string;
+  };
 }
 
-export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceFlow }) => {
+export const CopyDialog: React.FC<Props> = ({
+  isDialogOpen,
+  handleClose,
+  sourceFlow,
+}) => {
   const { teamId, createFlowFromCopy } = useStore();
 
   const initialValues: CreateFlow = {
@@ -42,11 +46,14 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
 
   const toast = useToast();
 
-  const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async ({ flow }, { setFieldError }) => {
+  const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
+    { flow },
+    { setFieldError },
+  ) => {
     try {
       await createFlowFromCopy(flow);
       handleClose();
-      toast.success(`Created new flow "${flow.name}"`)
+      toast.success(`Created new flow "${flow.name}"`);
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
@@ -67,7 +74,14 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
       validateOnChange={false}
       validationSchema={validationSchema}
     >
-      {({ resetForm, isSubmitting, getFieldProps, setFieldValue, errors, values }) => (
+      {({
+        resetForm,
+        isSubmitting,
+        getFieldProps,
+        setFieldValue,
+        errors,
+        values,
+      }) => (
         <Dialog
           open={isDialogOpen}
           onClose={() => {
@@ -113,7 +127,7 @@ export const CopyDialog: React.FC<Props> = ({ isDialogOpen, handleClose, sourceF
                   />
                 </InputLabel>
               </DialogContent>
-              <DialogActions sx={{ paddingX: 2 }}>
+              <DialogActions>
                 <Button
                   disableRipple
                   onClick={handleClose}
