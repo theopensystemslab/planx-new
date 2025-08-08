@@ -15,7 +15,7 @@ describe("Section component", () => {
         title="Section one"
         description="Description of section one"
         handleSubmit={handleSubmit}
-        size={"medium"}
+        length={"medium"}
       />,
     );
 
@@ -32,7 +32,7 @@ describe("Section component", () => {
         title="Section one"
         description="Description of section one"
         handleSubmit={handleSubmit}
-        size="medium"
+        length="medium"
       />,
     );
 
@@ -48,7 +48,7 @@ describe("SectionsOverviewList component", () => {
       data: {
         title: "Section one",
         description: "Description of section one",
-        size: "medium",
+        length: "medium",
       },
     },
     section2: {
@@ -56,7 +56,7 @@ describe("SectionsOverviewList component", () => {
       data: {
         title: "Section two",
         description: "Description of section two",
-        size: "medium",
+        length: "medium",
       },
     },
     section3: {
@@ -64,7 +64,7 @@ describe("SectionsOverviewList component", () => {
       data: {
         title: "Section three",
         description: "Description of section three",
-        size: "medium",
+        length: "medium",
       },
     },
   };

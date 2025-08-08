@@ -16,7 +16,12 @@ import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 
 import { ICONS } from "../shared/icons";
-import { parseSection, Section, SECTION_SIZE, validationSchema } from "./model";
+import {
+  parseSection,
+  Section,
+  SECTION_LENGTH,
+  validationSchema,
+} from "./model";
 
 type Props = EditorProps<TYPES.Section, Section>;
 
@@ -70,25 +75,25 @@ function SectionComponent(props: Props) {
             />
           </InputRow>
         </ModalSectionContent>
-        <ModalSectionContent title="Section size" Icon={MoreTimeIcon}>
+        <ModalSectionContent title="Section length" Icon={MoreTimeIcon}>
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
-            Please estimate the relative size (length) of this section. This
-            will be used to calculate a user's progress through your service.
+            Please estimate the relative length of this section. This will be
+            used to calculate a user's progress through your service.
           </Typography>
-          <InputLabel label="Size" />
+          <InputLabel label="Length" />
           <SelectInput
-            name="size"
-            value={formik.values.size}
+            name="length"
+            value={formik.values.length}
             onChange={formik.handleChange}
             disabled={props.disabled}
           >
-            {SECTION_SIZE.map((size) => (
+            {SECTION_LENGTH.map((length) => (
               <MenuItem
-                key={size}
-                value={size}
+                key={length}
+                value={length}
                 sx={{ textTransform: "capitalize" }}
               >
-                {size}
+                {length}
               </MenuItem>
             ))}
           </SelectInput>

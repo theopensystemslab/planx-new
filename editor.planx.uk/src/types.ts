@@ -4,7 +4,7 @@ import {
   Team,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
-import { SectionSize } from "@planx/components/Section/model";
+import { SectionLength } from "@planx/components/Section/model";
 import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
 
@@ -96,7 +96,7 @@ export interface SectionNode extends Store.Node {
   data: {
     title: string;
     description?: string;
-    size: SectionSize;
+    length: SectionLength;
   };
 }
 
