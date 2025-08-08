@@ -49,7 +49,7 @@ const createPaymentSendEvents = async (
     ).find(([_nodeId, nodeData]) => nodeData.type === ComponentType.Send);
     const destinations: SendIntegration[] = sendNode?.[1]?.data?.destinations;
 
-    let teamSlug = await getTeamSlugByFlowId(session.flow.id);
+    const teamSlug = await getTeamSlugByFlowId(session.flow.id);
     const eventPayload = { sessionId: payload.sessionId };
 
     if (destinations.includes("bops")) {
@@ -73,23 +73,6 @@ const createPaymentSendEvents = async (
     }
 
     if (destinations.includes("uniform")) {
-      // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
-      if (teamSlug === "buckinghamshire") {
-        const localAuthorities: string[] = session.data?.passport?.data?.[
-          "property.localAuthorityDistrict"
-        ] as string[];
-
-        teamSlug = localAuthorities
-          ?.filter((name: string) => name !== "Buckinghamshire")[0]
-          ?.toLowerCase()
-          ?.replace(/\W+/g, "-");
-
-        // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
-        if (teamSlug === "south-bucks") {
-          teamSlug = "chiltern";
-        }
-      }
-
       const uniformEvent = await createScheduledEvent({
         webhook: `{{HASURA_PLANX_API_URL}}/uniform/${teamSlug}`,
         schedule_at: new Date(now.getTime() + 30 * 1000),

@@ -10,7 +10,6 @@ import { it, vi } from "vitest";
 import { axe } from "vitest-axe";
 
 import hasuraEventsResponseMock from "./mocks/hasuraEventsResponseMock";
-import { flow } from "./mocks/simpleFlow";
 import SendComponent from "./Public";
 
 const { getState, setState } = useStore;
@@ -127,93 +126,30 @@ it("generates a valid payload for the API", async () => {
   });
 });
 
-describe("Uniform overrides for Buckinghamshire", () => {
-  it("converts property.localAuthorityDistrict to the correct format", async () => {
-    act(() =>
-      setState({
-        teamSlug: "buckinghamshire",
-        flow,
-        breadcrumbs: {
-          findProperty: {
-            data: {
-              "property.localAuthorityDistrict": [
-                "Buckinghamshire",
-                "Historic district name",
-              ],
-            },
-          },
-        },
-      }),
-    );
+// Flaky test in CI so setting `retry` option
+it("generates a valid breadcrumb", { retry: 1 }, async () => {
+  const handleSubmit = vi.fn();
 
-    setup(<SendComponent title="Send" destinations={["bops", "uniform"]} />);
+  setup(
+    <SendComponent
+      title="Send"
+      destinations={["bops", "uniform"]}
+      handleSubmit={handleSubmit}
+    />,
+  );
 
-    await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
+  expect(handleSubmit).toHaveBeenCalledTimes(1);
 
-    const apiPayload = mockAxios.post.mock.calls[0][1] as any;
+  const breadcrumb = handleSubmit.mock.calls[0][0];
 
-    // BOPS event not modified
-    expect(apiPayload?.bops?.localAuthority).toEqual("buckinghamshire");
-
-    // Uniform event has read property.localAuthorityDistrict from the passport
-    expect(apiPayload?.uniform?.localAuthority).toEqual(
-      "historic-district-name",
-    );
-  });
-
-  it("maps requests for South Bucks to Chiltern", async () => {
-    act(() =>
-      setState({
-        teamSlug: "buckinghamshire",
-        flow,
-        breadcrumbs: {
-          findProperty: {
-            data: {
-              "property.localAuthorityDistrict": ["South Bucks"],
-            },
-          },
-        },
-      }),
-    );
-
-    setup(<SendComponent title="Send" destinations={["bops", "uniform"]} />);
-
-    await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
-
-    const apiPayload = mockAxios.post.mock.calls[0][1] as any;
-
-    expect(apiPayload?.uniform?.localAuthority).toEqual("chiltern");
-  });
+  expect(breadcrumb.data).toEqual(
+    expect.objectContaining({
+      bopsSendEventId: hasuraEventsResponseMock.bops.event_id,
+      uniformSendEventId: hasuraEventsResponseMock.uniform.event_id,
+    }),
+  );
 });
-
-it(
-  "generates a valid breadcrumb",
-  async () => {
-    const handleSubmit = vi.fn();
-
-    setup(
-      <SendComponent
-        title="Send"
-        destinations={["bops", "uniform"]}
-        handleSubmit={handleSubmit}
-      />,
-    );
-
-    await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
-    expect(handleSubmit).toHaveBeenCalledTimes(1);
-
-    const breadcrumb = handleSubmit.mock.calls[0][0];
-
-    expect(breadcrumb.data).toEqual(
-      expect.objectContaining({
-        bopsSendEventId: hasuraEventsResponseMock.bops.event_id,
-        uniformSendEventId: hasuraEventsResponseMock.uniform.event_id,
-      }),
-    );
-    // Flaky test in CI
-  },
-  { retry: 1 },
-);
 
 it("should not have any accessibility violations", async () => {
   const { container } = setup(
@@ -231,6 +167,7 @@ describe("demo state", () => {
       }),
     );
   });
+
   it("should render an error when teamSlug is demo", async () => {
     const { queryByText } = setup(
       <SendComponent title="Send" destinations={["bops", "uniform"]} />,
@@ -246,6 +183,7 @@ describe("demo state", () => {
     expect(errorHeader).toBeInTheDocument();
     expect(errorGuidance).toBeInTheDocument();
   });
+
   it("should allow the user to continue with their application", async () => {
     const handleSubmit = vi.fn();
 

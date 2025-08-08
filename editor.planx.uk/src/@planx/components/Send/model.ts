@@ -2,7 +2,11 @@ import { SendIntegration } from "@opensystemslab/planx-core/types";
 import { array, mixed, object, SchemaOf, string } from "yup";
 
 import type { Store } from "../../../pages/FlowEditor/lib/store";
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 type CombinedEventsPayload = Partial<Record<SendIntegration, EventPayload>>;
 
@@ -53,35 +57,15 @@ export function getCombinedEventsPayload({
     };
   });
 
-  // Bucks has 3 instances of Uniform for 4 legacy councils, set teamSlug to pre-merger council name
-  const isUniformOverrideRequired =
-    isSendingToUniform(payload) && teamSlug === "buckinghamshire";
-
-  if (isUniformOverrideRequired) {
-    let uniformTeamSlug = teamSlug;
-
-    uniformTeamSlug = passport.data?.["property.localAuthorityDistrict"]
-      ?.filter((name: string) => name !== "Buckinghamshire")[0]
-      ?.toLowerCase()
-      ?.replace(/\W+/g, "-");
-
-    // South Bucks & Chiltern share an Idox connector, route addresses in either to Chiltern
-    if (uniformTeamSlug === "south-bucks") {
-      uniformTeamSlug = "chiltern";
-    }
-
-    // Apply override
-    payload["uniform"].localAuthority = uniformTeamSlug;
-  }
-
   return payload;
 }
 
-export const validationSchema: SchemaOf<Send> = baseNodeDataValidationSchema.concat(
-  object({
-    title: string().required(),
-    destinations: array(
-      mixed().oneOf(["email", "bops", "uniform", "s3", "idox"])
-    ).min(1, "Select at least one destination"),
-  })
-);
+export const validationSchema: SchemaOf<Send> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      destinations: array(
+        mixed().oneOf(["email", "bops", "uniform", "s3", "idox"]),
+      ).min(1, "Select at least one destination"),
+    }),
+  );
