@@ -104,7 +104,7 @@ export const SECTION_WEIGHTS: Record<SectionLength, number> = {
 export const SECTION_LENGTH_DESCRIPTIONS: Record<SectionLength, string> = {
   short: "A fixed amount of questions amounting to a maximum of 5",
   medium:
-    "A longer fixed-length section with or with some level of complex user-interaction, i.e. Upload and label",
+    "A longer fixed-length section with some level of complex user-interaction, i.e. Upload and label",
   long: "A non-determinable length of questions i.e. Permitted Development",
 } as const;
 
