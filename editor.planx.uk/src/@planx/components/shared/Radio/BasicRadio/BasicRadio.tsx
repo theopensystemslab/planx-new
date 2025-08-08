@@ -7,7 +7,7 @@ import React from "react";
 
 export interface Props {
   id?: string;
-  title: string;
+  label: FormControlLabelProps["label"];
   onChange: FormControlLabelProps["onChange"];
   variant?: "default" | "compact";
   value?: string;
@@ -17,7 +17,7 @@ export interface Props {
 const BasicRadio: React.FC<Props> = ({
   id,
   onChange,
-  title,
+  label,
   variant = "default",
   disabled,
 }) => (
@@ -25,7 +25,7 @@ const BasicRadio: React.FC<Props> = ({
     value={id}
     onChange={onChange}
     control={<Radio variant={variant} />}
-    label={title}
+    label={label}
     disabled={disabled}
     sx={(theme) => ({
       ml: theme.spacing(-1),

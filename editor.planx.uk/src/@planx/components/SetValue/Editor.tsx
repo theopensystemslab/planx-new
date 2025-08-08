@@ -138,7 +138,7 @@ function SetValueComponent(props: Props) {
                 <BasicRadio
                   key={option.value}
                   id={option.value}
-                  title={option.label}
+                  label={option.label}
                   variant="compact"
                   value={option.value}
                   onChange={handleRadioChange}
