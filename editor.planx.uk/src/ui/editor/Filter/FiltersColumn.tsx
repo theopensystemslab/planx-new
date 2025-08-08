@@ -1,6 +1,7 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import { SelectProps } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { capitalize, get } from "lodash";
@@ -17,6 +18,7 @@ interface FiltersColumnProps<T> {
   filters?: Filters<T> | null;
   handleChange: (key: FilterKey<T>, value: FilterValues | "") => void;
   name: string;
+  SelectProps: SelectProps;
 }
 
 export const FiltersColumn = <T extends object>(
@@ -42,12 +44,6 @@ export const FiltersColumn = <T extends object>(
         />
       ) : (
         <>
-          <label
-            id={`${props.name?.replaceAll(" ", "-")}-label`}
-            style={visuallyHidden}
-          >
-            {props.name}
-          </label>
           <SelectInput
             value={selectedValue}
             name={props.name}

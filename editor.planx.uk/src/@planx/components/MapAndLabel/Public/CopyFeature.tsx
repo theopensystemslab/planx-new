@@ -43,9 +43,10 @@ export const CopyFeature: React.FC<Props> = ({
       onSubmit={formik.handleSubmit}
     >
       <Box>
-        <InputLabel label="Copy from" id={`select-${destinationIndex}`}>
+        <InputLabel label="Copy from" id={`select-${destinationIndex}-label`}>
           <SelectInput
             disabled={isDisabled}
+            name={`select-${destinationIndex}`}
             aria-describedby="copy-feature-description"
             bordered
             required
