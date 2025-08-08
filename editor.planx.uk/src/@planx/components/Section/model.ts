@@ -101,6 +101,13 @@ export const SECTION_WEIGHTS: Record<SectionLength, number> = {
   long: 16,
 } as const;
 
+export const SECTION_LENGTH_DESCRIPTIONS: Record<SectionLength, string> = {
+  short: "A fixed amount of questions amounting to a maximum of 5",
+  medium:
+    "A longer fixed-length section with or with some level of complex user-interaction, i.e. Upload and label",
+  long: "A non-determinable length of questions i.e. Permitted Development",
+} as const;
+
 export const validationSchema: SchemaOf<Section> =
   baseNodeDataValidationSchema.concat(
     object({
