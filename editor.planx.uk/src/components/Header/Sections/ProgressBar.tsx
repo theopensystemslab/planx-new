@@ -7,6 +7,7 @@ import React from "react";
 
 const Root = styled(LinearProgress)(({ theme }) => ({
   height: theme.spacing(2),
+  borderRadius: theme.spacing(2),
   // Background
   [`& .${linearProgressClasses.dashed}`]: {
     animation: "none",
