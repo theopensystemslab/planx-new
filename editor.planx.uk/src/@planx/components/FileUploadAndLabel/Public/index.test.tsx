@@ -21,6 +21,8 @@ const mockedAxios = vi.mocked(axios, true);
 
 window.URL.createObjectURL = vi.fn();
 
+Element.prototype.scrollIntoView = vi.fn();
+
 describe("Basic state and setup", () => {
   test("renders correctly", async () => {
     const { getAllByRole, getByTestId, getByText } = setup(
