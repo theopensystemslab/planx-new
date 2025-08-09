@@ -7,7 +7,10 @@ import { FONT_WEIGHT_SEMI_BOLD, linkStyle } from "theme";
 
 const styles = (theme: Theme) => ({
   "& a": linkStyle(theme.palette.link.main),
-  "& h1": theme.typography.h2,
+  "& h1": {
+    ...theme.typography.h2,
+    outline: "none",
+  },
   "& h2": theme.typography.h3,
   "& h3": theme.typography.h4,
   "& strong": {

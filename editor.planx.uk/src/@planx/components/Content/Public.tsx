@@ -7,7 +7,7 @@ import type { Content } from "@planx/components/Content/model";
 import Card from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React from "react";
+import React, { useEffect } from "react";
 import { getContrastTextColor } from "styleUtils";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
@@ -57,6 +57,18 @@ const ContentComponent: React.FC<Props> = (props) => {
     setOpen(true);
     trackEvent({ event: "helpClick", metadata: {} }); // This returns a promise but we don't need to await for it
   };
+
+  // a11y: On navigation (change of card title) take initial focus to the main heading
+  useEffect(() => {
+    const contentEl = document.querySelector('[data-testid="content"]');
+    if (!contentEl) return;
+
+    const firstH1 = contentEl.querySelector("h1");
+    if (firstH1 instanceof HTMLElement) {
+      firstH1.setAttribute("tabindex", "-1");
+      firstH1.focus();
+    }
+  }, []);
 
   return (
     <Card handleSubmit={handleSubmit} isValid>

@@ -11,7 +11,7 @@ import Card, {
 } from "@planx/components/shared/Preview/Card";
 import { PublicProps } from "@planx/components/shared/types";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { getContrastTextColor } from "styleUtils";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
@@ -106,6 +106,15 @@ const NoticeComponent: React.FC<Props> = (props) => {
     props.resetPreview && props.resetPreview();
   };
 
+  // a11y: When this card is reached, take initial focus to the main heading
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.setAttribute("tabindex", "-1");
+      titleRef.current.focus();
+    }
+  }, []);
+
   return (
     <Card handleSubmit={handleSubmit} isValid>
       <>
@@ -113,7 +122,12 @@ const NoticeComponent: React.FC<Props> = (props) => {
           <Content>
             <TitleWrap>
               <ErrorOutline sx={{ width: 34, height: 34 }} />
-              <Title variant="h3" component="h1">
+              <Title
+                variant="h3"
+                component="h1"
+                ref={titleRef}
+                sx={{ outline: "none" }}
+              >
                 {props.title}
               </Title>
             </TitleWrap>
