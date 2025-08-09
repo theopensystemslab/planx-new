@@ -1,6 +1,7 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Select, { selectClasses, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
+import { visuallyHidden } from "@mui/utils";
 import React, { ReactNode } from "react";
 
 import Input from "../../shared/Input/Input";
@@ -10,6 +11,7 @@ export type Props = SelectProps & {
   children?: ReactNode;
   onChange?: SelectProps["onChange"];
   bordered?: boolean;
+  visuallyHiddenLabel?: boolean;
 };
 
 const PREFIX = "SelectInput";
@@ -79,38 +81,49 @@ export default function SelectInput({
   name,
   onChange,
   bordered,
+  visuallyHiddenLabel,
   ...props
 }: Props): FCReturn {
   return (
-    <Root
-      variant="standard"
-      value={value}
-      labelId={`${name?.replaceAll(" ", "-")}-label`}
-      classes={{
-        select: classes.rootSelect,
-        icon: classes.icon,
-      }}
-      onChange={onChange}
-      IconComponent={ArrowIcon}
-      input={<Input bordered={bordered} />}
-      inputProps={{
-        name,
-        classes: {
-          select: classes.inputSelect,
-        },
-      }}
-      MenuProps={{
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        classes: {
-          paper: classes.menuPaper,
-        },
-      }}
-      {...props}
-    >
-      {children}
-    </Root>
+    <>
+      {visuallyHiddenLabel && (
+        <label
+          id={`${name?.replaceAll(" ", "-")}-label`}
+          style={visuallyHidden}
+        >
+          {name}
+        </label>
+      )}
+      <Root
+        variant="standard"
+        value={value}
+        labelId={`${name?.replaceAll(" ", "-")}-label`}
+        classes={{
+          select: classes.rootSelect,
+          icon: classes.icon,
+        }}
+        onChange={onChange}
+        IconComponent={ArrowIcon}
+        input={<Input bordered={bordered} />}
+        inputProps={{
+          name,
+          classes: {
+            select: classes.inputSelect,
+          },
+        }}
+        MenuProps={{
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          classes: {
+            paper: classes.menuPaper,
+          },
+        }}
+        {...props}
+      >
+        {children}
+      </Root>
+    </>
   );
 }
