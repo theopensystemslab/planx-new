@@ -1,7 +1,7 @@
 import HelpIcon from "@mui/icons-material/Help";
 import Typography from "@mui/material/Typography";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { emptyContent } from "ui/editor/RichTextInput/utils";
 import ReactMarkdownOrHtml from "ui/shared/ReactMarkdownOrHtml/ReactMarkdownOrHtml";
 
@@ -28,6 +28,15 @@ export const CardHeader: React.FC<ICardHeader> = ({
 }) => {
   const [open, setOpen] = React.useState(false);
   const { trackEvent } = useAnalyticsTracking();
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  // a11y: On navigation (change of card title) take initial focus to the main heading
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.setAttribute("tabindex", "-1");
+      titleRef.current.focus();
+    }
+  }, [title]);
 
   const handleHelpClick = () => {
     setOpen(true);
@@ -43,7 +52,8 @@ export const CardHeader: React.FC<ICardHeader> = ({
             role="heading"
             aria-level={1}
             component="h1"
-            sx={{ textWrap: "balance" }}
+            sx={{ textWrap: "balance", outline: "none" }}
+            ref={titleRef}
           >
             {title}
           </Typography>
