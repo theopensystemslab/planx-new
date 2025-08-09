@@ -1,6 +1,7 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import { SelectProps } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { visuallyHidden } from "@mui/utils";
 import { capitalize, get } from "lodash";
@@ -17,6 +18,7 @@ interface FiltersColumnProps<T> {
   filters?: Filters<T> | null;
   handleChange: (key: FilterKey<T>, value: FilterValues | "") => void;
   name: string;
+  SelectProps: SelectProps;
 }
 
 export const FiltersColumn = <T extends object>(
@@ -41,31 +43,33 @@ export const FiltersColumn = <T extends object>(
           icon={<CancelIcon fontSize="small" />}
         />
       ) : (
-        <SelectInput
-          value={selectedValue}
-          name={props.name}
-          onChange={(event) =>
-            props.handleChange(
-              props.optionKey,
-              event.target.value as FilterValues,
-            )
-          }
-          fullWidth
-          displayEmpty
-          sx={{ height: 40, maxWidth: "200px" }}
-        >
-          <MenuItem value="" disabled style={visuallyHidden}>
-            {props.title}
-          </MenuItem>
-          {props.optionValues.map((value) => (
-            <MenuItem
-              key={`${props.optionKey.toString()}-${value}`}
-              value={value}
-            >
-              {capitalize(`${value}`)}
+        <>
+          <SelectInput
+            value={selectedValue}
+            name={props.name}
+            onChange={(event) =>
+              props.handleChange(
+                props.optionKey,
+                event.target.value as FilterValues,
+              )
+            }
+            fullWidth
+            displayEmpty
+            sx={{ height: 40, maxWidth: "200px" }}
+          >
+            <MenuItem value="" disabled style={visuallyHidden}>
+              {props.title}
             </MenuItem>
-          ))}
-        </SelectInput>
+            {props.optionValues.map((value) => (
+              <MenuItem
+                key={`${props.optionKey.toString()}-${value}`}
+                value={value}
+              >
+                {capitalize(`${value}`)}
+              </MenuItem>
+            ))}
+          </SelectInput>
+        </>
       )}
     </Box>
   );

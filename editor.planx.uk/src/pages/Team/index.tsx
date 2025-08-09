@@ -224,13 +224,20 @@ const Team: React.FC = () => {
               />
               {teamHasFlows && matchingFlows && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                  <Typography variant="body2">
+                  <Typography
+                    variant="body2"
+                    component={"label"}
+                    id="sort-flows-label"
+                  >
                     <strong>Sort by</strong>
                   </Typography>
                   <SortControl<FlowSummary>
                     records={matchingFlows}
                     setRecords={setSortedFlows}
                     sortOptions={sortOptions}
+                    SelectProps={{
+                      "aria-labelledby": "sort-flows-label",
+                    }}
                   />
                 </Box>
               )}

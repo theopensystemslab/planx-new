@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
+import { SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import get from "lodash/get";
 import orderBy from "lodash/orderBy";
@@ -45,10 +46,12 @@ export const SortControl = <T extends object>({
   records,
   setRecords,
   sortOptions,
+  SelectProps,
 }: {
   records: T[];
   setRecords: React.Dispatch<React.SetStateAction<T[] | null>>;
   sortOptions: SortableFields<T>[];
+  SelectProps: SelectProps;
 }) => {
   const route = useCurrentRoute();
 
@@ -108,6 +111,7 @@ export const SortControl = <T extends object>({
           if (!matchingSortOption) return;
           setSelectedSort(matchingSortOption?.[0]);
         }}
+        {...SelectProps}
       >
         {sortOptions.map(({ displayName }) => (
           <MenuItem key={slugify(displayName)} value={slugify(displayName)}>

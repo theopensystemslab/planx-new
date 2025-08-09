@@ -1,3 +1,4 @@
+import { SelectProps } from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { get, isEmpty, omit } from "lodash";
@@ -169,7 +170,12 @@ export const Filters = <T extends object>({
         aria-label="Filter options"
         style={{ display: "flex", alignItems: "center", gap: "10px" }}
       >
-        <Typography variant="body2" sx={{ flexShrink: 0 }}>
+        <Typography
+          variant="body2"
+          sx={{ flexShrink: 0 }}
+          component="label"
+          id="filter-flows-label"
+        >
           <strong>Filter by</strong>
         </Typography>
         {optionsToFilter.map((option) => (
@@ -194,6 +200,9 @@ export const Filters = <T extends object>({
               filters={values.filters}
               handleChange={handleChange}
               name={option.displayName}
+              SelectProps={{
+                "aria-labelledby": "filter-flows-label",
+              }}
             />
           </fieldset>
         ))}
