@@ -1,7 +1,6 @@
 import ArrowIcon from "@mui/icons-material/KeyboardArrowDown";
 import Select, { selectClasses, SelectProps } from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
-import { visuallyHidden } from "@mui/utils";
 import React, { ReactNode } from "react";
 
 import Input from "../../shared/Input/Input";
@@ -83,40 +82,35 @@ export default function SelectInput({
   ...props
 }: Props): FCReturn {
   return (
-    <>
-      <label id={`${name?.replaceAll(" ", "-")}-label`} style={visuallyHidden}>
-        {name}
-      </label>
-      <Root
-        variant="standard"
-        value={value}
-        labelId={`${name?.replaceAll(" ", "-")}-label`}
-        classes={{
-          select: classes.rootSelect,
-          icon: classes.icon,
-        }}
-        onChange={onChange}
-        IconComponent={ArrowIcon}
-        input={<Input bordered={bordered} />}
-        inputProps={{
-          name,
-          classes: {
-            select: classes.inputSelect,
-          },
-        }}
-        MenuProps={{
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          classes: {
-            paper: classes.menuPaper,
-          },
-        }}
-        {...props}
-      >
-        {children}
-      </Root>
-    </>
+    <Root
+      variant="standard"
+      value={value}
+      labelId={`${name?.replaceAll(" ", "-")}-label`}
+      classes={{
+        select: classes.rootSelect,
+        icon: classes.icon,
+      }}
+      onChange={onChange}
+      IconComponent={ArrowIcon}
+      input={<Input bordered={bordered} />}
+      inputProps={{
+        name,
+        classes: {
+          select: classes.inputSelect,
+        },
+      }}
+      MenuProps={{
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        classes: {
+          paper: classes.menuPaper,
+        },
+      }}
+      {...props}
+    >
+      {children}
+    </Root>
   );
 }
