@@ -25,6 +25,7 @@ export const CardHeader: React.FC<ICardHeader> = ({
   howMeasured,
   definitionImg,
   img,
+  titleId,
 }) => {
   const [open, setOpen] = React.useState(false);
   const { trackEvent } = useAnalyticsTracking();
@@ -39,6 +40,7 @@ export const CardHeader: React.FC<ICardHeader> = ({
       {title && (
         <TitleWrapper mr={1} pt={0.5}>
           <Typography
+            id={titleId}
             variant="h2"
             role="heading"
             aria-level={1}
