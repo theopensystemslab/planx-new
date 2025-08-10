@@ -270,9 +270,9 @@ export async function answerDateInput(
   },
 ) {
   await expect(page.locator("h1", { hasText: expectedQuestion })).toBeVisible();
-  await page.getByLabel("Day").fill(day.toString());
-  await page.getByLabel("Month").fill(month.toString());
-  await page.getByLabel("Year").fill(year.toString());
+  await page.getByRole("textbox", { name: "Day" }).fill(day.toString());
+  await page.getByRole("textbox", { name: "Month" }).fill(month.toString());
+  await page.getByRole("textbox", { name: "Year" }).fill(year.toString());
 
   if (continueToNext) {
     await clickContinue({ page });
