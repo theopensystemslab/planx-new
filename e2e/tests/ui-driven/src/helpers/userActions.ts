@@ -244,8 +244,8 @@ export async function answerNumberInput(
     continueToNext: boolean;
   },
 ) {
-  await expect(page.locator("h1", { hasText: expectedQuestion })).toBeVisible();
-  await page.locator("div input[type='number']").fill(answer.toString());
+  await expect(page.locator("p", { hasText: expectedQuestion })).toBeVisible();
+  await page.locator("label div input[type='number']").fill(answer.toString());
   if (continueToNext) {
     await clickContinue({ page });
   }

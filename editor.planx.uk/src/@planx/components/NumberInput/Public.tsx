@@ -3,12 +3,13 @@ import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHead
 import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
 import isNil from "lodash/isNil";
-import React, { useEffect, useId, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRow from "ui/shared/InputRow";
 import InputRowLabel from "ui/shared/InputRowLabel";
 
-import { ERROR_MESSAGE } from "../shared/constants";
+import { DESCRIPTION_TEXT, ERROR_MESSAGE } from "../shared/constants";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import type { NumberInput } from "./model";
 import { parseNumber, publicValidationSchema } from "./model";
@@ -16,10 +17,6 @@ import { parseNumber, publicValidationSchema } from "./model";
 export type Props = PublicProps<NumberInput>;
 
 export default function NumberInputComponent(props: Props): FCReturn {
-  const uniqueId = useId();
-  const inputId = `number-input-${uniqueId}`;
-  const labelId = `input-label-${uniqueId}`;
-
   const formik = useFormik({
     initialValues: {
       value: getPreviouslySubmittedData(props) ?? "",
@@ -53,27 +50,27 @@ export default function NumberInputComponent(props: Props): FCReturn {
         howMeasured={props.howMeasured}
       />
       <InputRow>
-        <Input
-          ref={inputRef}
-          bordered
-          name="value"
-          type="number"
-          value={formik.values.value}
-          onChange={formik.handleChange}
-          errorMessage={formik.errors.value as string}
-          inputProps={{
-            "aria-describedby": formik.errors.value
-              ? `${ERROR_MESSAGE}-${props.id}`
-              : "",
-            "aria-labelledby": labelId,
-          }}
-          id={inputId}
-        />
-        {props.units && (
-          <InputRowLabel inputProps={{ id: labelId }}>
-            {props.units}
-          </InputRowLabel>
-        )}
+        <InputLabel label={props.title} hidden htmlFor="number-input">
+          <Input
+            ref={inputRef}
+            bordered
+            name="value"
+            type="number"
+            value={formik.values.value}
+            onChange={formik.handleChange}
+            errorMessage={formik.errors.value as string}
+            inputProps={{
+              "aria-describedby": [
+                props.description ? DESCRIPTION_TEXT : "",
+                formik.errors.value ? `${ERROR_MESSAGE}-${props.id}` : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
+            }}
+            id="number-input"
+          />
+        </InputLabel>
+        {props.units && <InputRowLabel>{props.units}</InputRowLabel>}
       </InputRow>
     </Card>
   );
