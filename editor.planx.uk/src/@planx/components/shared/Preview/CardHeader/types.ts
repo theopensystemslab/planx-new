@@ -6,4 +6,5 @@ export interface ICardHeader {
   howMeasured?: string;
   definitionImg?: string;
   img?: string;
+  titleId?: string;
 }
