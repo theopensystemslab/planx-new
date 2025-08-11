@@ -3,6 +3,7 @@ import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { FileUploadSlot } from "@planx/components/FileUpload/model";
+import { useOptionalListContext } from "@planx/components/List/Public/Context";
 import handleRejectedUpload from "@planx/components/shared/handleRejectedUpload";
 import { uploadPrivateFile } from "api/upload";
 import { nanoid } from "nanoid";
@@ -19,6 +20,7 @@ interface Props {
 
 interface RootProps extends BoxProps {
   isDragActive: boolean;
+  isWithinListCard: boolean;
 }
 
 const FauxLink = styled(Box)(({ theme }) => ({
@@ -28,12 +30,13 @@ const FauxLink = styled(Box)(({ theme }) => ({
 }));
 
 const Root = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "isDragActive",
-})<RootProps>(({ theme, isDragActive }) => ({
+  shouldForwardProp: (prop) =>
+    !["isWithinListCard", "isDragActive"].includes(prop as string),
+})<RootProps>(({ theme, isDragActive, isWithinListCard }) => ({
   height: "100%",
   cursor: "pointer",
   minHeight: theme.spacing(14),
-  backgroundColor: isDragActive
+  backgroundColor: isWithinListCard
     ? theme.palette.background.default
     : theme.palette.background.paper,
   display: "flex",
@@ -58,7 +61,9 @@ const Root = styled(Box, {
     transform: isDragActive ? "scale(1)" : "scale(0.8)",
     zIndex: -1,
     transformOrigin: "center center",
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: isWithinListCard
+      ? theme.palette.background.default
+      : theme.palette.background.paper,
     transition: [
       theme.transitions.create(["opacity", "transform"], {
         duration: "0.2s",
@@ -79,6 +84,8 @@ export const Dropzone: React.FC<Props> = ({
   maxFiles = 0,
 }) => {
   const MAX_UPLOAD_SIZE_MB = 30;
+
+  const isWithinListCard = Boolean(useOptionalListContext());
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -144,7 +151,11 @@ export const Dropzone: React.FC<Props> = ({
   });
 
   return (
-    <Root isDragActive={isDragActive} {...getRootProps()}>
+    <Root
+      isDragActive={isDragActive}
+      isWithinListCard={isWithinListCard}
+      {...getRootProps()}
+    >
       <input
         data-testid="upload-input"
         {...getInputProps()}
