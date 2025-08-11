@@ -1,0 +1,35 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "@styles/global.css";
+import Analytics from "@components/Analytics.astro";
+import { Font } from "astro:assets";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Font cssVariable="--font-inter" preload />
+    <ClientRouter />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>localplanning.services</title>
+    <Analytics />
+  </head>
+  <body>
+    <main class="bg-white" id="main-content">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--color-text-main);
+  }
+</style>
