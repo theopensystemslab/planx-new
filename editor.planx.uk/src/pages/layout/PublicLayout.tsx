@@ -101,7 +101,7 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={teamMUITheme}>
-        <Box data-testid="content">
+        <Box data-testid="document-start">
           <Header />
           <MainContainer>
             <ErrorBoundary FallbackComponent={ErrorFallback}>

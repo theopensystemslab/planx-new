@@ -171,7 +171,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
 
   // manage focus on form step changes
   useEffect(() => {
-    const contentEl = document.querySelector('[data-testid="content"]');
+    const contentEl = document.querySelector('[data-testid="document-start"]');
     if (!contentEl) return;
 
     if (contentEl instanceof HTMLElement) {
