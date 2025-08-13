@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/Error/ErrorFallback";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { PropsWithChildren, useEffect, useRef } from "react";
+import React, { PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
