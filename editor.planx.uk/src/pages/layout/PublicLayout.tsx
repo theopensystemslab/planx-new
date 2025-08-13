@@ -19,6 +19,13 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { FOOTER_ITEMS } from "../../types";
 
+const RootContainer = styled(Box)(() => ({
+  flexGrow: "1",
+  display: "grid",
+  gridTemplateRows: "auto 1fr auto",
+  gridTemplateColumns: "100%",
+}));
+
 const MainContainer = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.border.light}`,
   display: "flex",
@@ -101,7 +108,7 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={teamMUITheme}>
-        <Box data-testid="document-start">
+        <RootContainer data-testid="document-start">
           <Header />
           <MainContainer>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -109,7 +116,7 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
             </ErrorBoundary>
           </MainContainer>
           <PublicFooter />
-        </Box>
+        </RootContainer>
       </ThemeProvider>
     </StyledEngineProvider>
   );
