@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import ErrorFallback from "components/Error/ErrorFallback";
 import Feedback from "components/Feedback";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect, useRef } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useCurrentRoute } from "react-navi";
 import { generateTeamTheme } from "theme";
@@ -101,13 +101,15 @@ const PublicLayout: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={teamMUITheme}>
-        <Header />
-        <MainContainer>
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            {children}
-          </ErrorBoundary>
-        </MainContainer>
-        <PublicFooter />
+        <Box data-testid="content">
+          <Header />
+          <MainContainer>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              {children}
+            </ErrorBoundary>
+          </MainContainer>
+          <PublicFooter />
+        </Box>
       </ThemeProvider>
     </StyledEngineProvider>
   );
