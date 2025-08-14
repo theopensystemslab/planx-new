@@ -1,32 +1,33 @@
 import type { NextFunction, Request, Response } from "express";
 import fetch from "isomorphic-fetch";
 
-type LocalPlanningAuthorityFeature = {
+export type LocalPlanningAuthorityFeature = {
   name: string;
   entity: number;
   reference: string;
   "organisation-entity": string;
 };
 
-// assuming there's a more robust way to do this
-// .. but for the sake of a working example
-const lpaReferenceLookup: Record<string, string> = {
-  E60000203: "barnet",
-  E60000331: "buckinghamshire",
-  E60000188: "camden",
-  E60000065: "doncaster",
-  E60000271: "epsom-and-ewell",
-  E60000008: "gateshead",
-  E60000311: "gloucester",
-  E60000195: "lambeth",
-  E60000224: "medway",
-  E60000009: "newcastle",
-  E60000198: "southwark",
-  E60000171: "st-albans",
-  E60000313: "tewkesbury",
-  E60000230: "west-berkshire",
-};
-
+/**
+ * @swagger
+ * /lpa:
+ *  get:
+ *    summary: Get LPAs at a given lat/lon
+ *    description: Retrieves the Local Planning Authorities whose boundaries intersect a given point
+ *    tags:
+ *      - gis
+ *    parameters:
+ *      - in: query
+ *        name: lat
+ *        type: number
+ *        required: true
+ *        description: Latitude of the intersecting point
+ *      - in: query
+ *        name: lon
+ *        type: number
+ *        required: true
+ *        description: Longitude of the intersecting point
+ */
 export const localPlanningAuthorityLookup = async (
   req: Request,
   res: Response,
@@ -68,20 +69,9 @@ export const localPlanningAuthorityLookup = async (
       sourceRequest: url.split("dataset=")[0],
     };
 
-    let matchingLpa: string | null = null;
-
-    // sometimes there are multiple intersecting LPAs
-    // do we need more sophisticated match logic here?
-    for (const entity of entities) {
-      if (Object.keys(lpaReferenceLookup).indexOf(entity.reference) > -1) {
-        matchingLpa = lpaReferenceLookup[entity.reference];
-      }
-    }
-
     return res.json({
       ...baseResponse,
       entities: entities,
-      matchingLpa: matchingLpa,
     });
   } catch (error: any) {
     return next({
