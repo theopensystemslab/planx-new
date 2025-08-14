@@ -40,14 +40,18 @@ const DateInputPublic: React.FC<Props> = (props) => {
     <Card handleSubmit={formik.handleSubmit}>
       <Box
         role="group"
-        aria-describedby={[
-          props.description ? DESCRIPTION_TEXT : "",
-          formik.errors.date ? ERROR_MESSAGE : "",
-        ]
-          .filter(Boolean)
-          .join(" ")}
+        aria-labelledby="group-label"
+        aria-describedby={
+          [
+            props.description ? DESCRIPTION_TEXT : "",
+            formik.errors.date ? ERROR_MESSAGE : "",
+          ]
+            .filter(Boolean)
+            .join(" ") || undefined
+        }
       >
         <CardHeader
+          titleId="group-label"
           title={props.title}
           description={props.description}
           info={props.info}
