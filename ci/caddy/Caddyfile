@@ -4,7 +4,7 @@
 }
 
 # see https://caddyserver.com/docs/caddyfile/patterns
-*.{$ROOT_DOMAIN}, {$ROOT_DOMAIN} {
+*.{$ROOT_DOMAIN} {$ROOT_DOMAIN} {
 	# wilcard certs require a DNS challenge
 	tls {
 		dns vultr {$VULTR_API_KEY}
