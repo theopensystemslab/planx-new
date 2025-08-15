@@ -35,9 +35,27 @@ export const localPlanningAuthorityLookup = async (
 ) => {
   if (!req.query.lat || !req.query.lon)
     return next({
-      status: 401,
+      status: 400,
       message: "Missing required query params `lat` or `lon`",
     });
+
+  const lat = Number(req.query.lat);
+  const lon = Number(req.query.lon);
+
+  // UK: https://spelunker.whosonfirst.org/id/85633159
+  const UK_BBOX: number[] = [-8.649996, 49.864632, 1.768975, 60.860867];
+
+  if (
+    lat > UK_BBOX[3] ||
+    lat < UK_BBOX[1] ||
+    lon > UK_BBOX[2] ||
+    lon < UK_BBOX[0]
+  ) {
+    return next({
+      status: 400,
+      message: "Latitude or longitude is out of UK bounding box",
+    });
+  }
 
   const params: Record<string, string> = {
     dataset: "local-planning-authority",
@@ -46,7 +64,7 @@ export const localPlanningAuthorityLookup = async (
     exclude_field: "geometry",
   };
 
-  // call Planning Data API
+  // call Planning Data API's entity endpoint
   // https://www.planning.data.gov.uk/docs
   try {
     const url = `https://www.planning.data.gov.uk/entity.json?${new URLSearchParams(
