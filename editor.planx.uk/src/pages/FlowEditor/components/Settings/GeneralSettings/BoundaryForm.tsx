@@ -47,7 +47,7 @@ const PreviewMap: React.FC<{ geojsonData?: GeoJsonObject }> = ({
         hideResetControl
         staticMode
         style={{ width: "100%", height: "30vh" }}
-        osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+        osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
         collapseAttributions
       />
     </>
@@ -58,11 +58,12 @@ const BoundaryDescription: React.FC = () => (
   <>
     <p>
       The boundary URL is used to retrieve the outer boundary of your council
-      area. The bounding box of your boundary (shown below) limits the area 
+      area. The bounding box of your boundary (shown below) limits the area
       applicants can access via the map within your services.
     </p>
     <p>
-      The detailed boundary is still referenced when planning constraints are checked.
+      The detailed boundary is still referenced when planning constraints are
+      checked.
     </p>
     <p>
       The boundary should be given as a link from:{" "}
@@ -155,7 +156,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
 
   // Cheltenham, Gloucester and Tewkesbury share a Strategic Local Plan
   // All SLP services are hosted on the Tewkesbury PlanX team
-  const isSLPTeam = teamSlug === "tewkesbury"
+  const isSLPTeam = teamSlug === "tewkesbury";
 
   if (isSLPTeam) return <SLPInfo geojsonData={formik.values.boundaryBBox} />;
 

@@ -70,7 +70,7 @@ config:
   application:microsoft-client-secret:
     secure: AAABAPPYmoB9WG1IcquEsIzJ7n8YtN/FPLsBzrCuULUfU1JC5oW/YV1oUu3bSE5Kd1/EpAdUVZG2tpVs2/n4H7YTq0r28wFL
   application:ordnance-survey-api-key:
-    secure: AAABAE+wD6ahxO45tq/JWp6odrHX9jOhdjlMsCqS6kFqBgJ+3T56fOSgpZ26nEftv9IwWZQh/v93tRtTDEb+uw==
+    secure: AAABANmVR/iyxoja6JGBOBjhlijbMiqdqpNRwqS2p+ZusuwiYdKBACIi5y/vi2HMg7+ydXWR0SPVqtQuK5O/tA==
   application:session-secret:
     secure: AAABACeZpncVIdwarlb/J9qtaPqUob0YwbaOVDNEgfhSJ71aq0pkZml1EP+JqMKvyhkG483LcIiGzEh/ZDJehMu2
   application:skip-rate-limit-secret:

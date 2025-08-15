@@ -90,7 +90,7 @@ export const formatSchemaDisplayValue = <T extends Field>(
             style={{ width: "100%", height: "30vh" }}
             osCopyright={
               field.data.mapOptions?.basemap === "OSVectorTile"
-                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                 : ``
             }
             mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
