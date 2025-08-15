@@ -19,7 +19,7 @@ services:
   metabase:
     container_name: metabase
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.55.10
+    image: metabase/metabase:v0.56.2
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
