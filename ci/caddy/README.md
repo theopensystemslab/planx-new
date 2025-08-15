@@ -25,3 +25,9 @@ To see verbose logs for the caddy container, add the `debug` directive to the gl
 The propagation knobs should be understood like so: wait for `propagation_delay` before starting poll of DNS records (after attempting to write them to Vultr), then keep trying to verify success for `propagation_timeout`, before handing over to the ACME server.
 
 Note also that Docker's embedded DNS breaks CertMagic polling, meaning Caddy can't verify the successful writing of appropriate DNS records, so we explicitly set public [resolvers](https://caddyserver.com/docs/caddyfile/directives/tls#resolvers) (specifically Cloudflare and Google).
+
+## Building the image
+
+We bake the caddy-dns/vultr plugin into a standard caddy image using [xcaddy](https://caddyserver.com/docs/build#xcaddy), as per the `Dockerfile`. This means the final image doesn't require a Go installation, saving several GB.
+
+See also comprehensive documentation and examples from Vultr [here](https://docs.vultr.com/how-to-build-a-docker-image).
