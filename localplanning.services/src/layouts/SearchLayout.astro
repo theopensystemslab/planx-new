@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
-import PostcodeSearch from "@components/PostcodeSearch.tsx";
+import AddressSearch from "@components/AddressSearch.tsx";
 import type { Action } from "@content/actions";
 import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
@@ -21,7 +21,7 @@ const { action }: { action?: Action }= Astro.params;
   </Masthead>
   <Container paddingY>
     <section class="mb-4">
-      <PostcodeSearch client:load action={action}/>
+      <AddressSearch client:load action={action}/>
       <div class="styled-content mt-8">
         <p>or see the <a href="/directory" class="paragraph-link">directory of local planning authorities</a></p>
       </div>
