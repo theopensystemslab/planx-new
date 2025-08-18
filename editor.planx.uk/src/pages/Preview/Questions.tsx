@@ -9,7 +9,13 @@ import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath, Session } from "types";
 import Main from "ui/shared/Main";
@@ -76,6 +82,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
+  const isInitialLoad = useRef(true);
 
   useEffect(
     () => setPreviewEnvironment(previewEnvironment),
@@ -162,6 +169,21 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     window.scrollTo(0, 0);
   }, [breadcrumbs]);
 
+  // manage focus on form step changes
+  useEffect(() => {
+    const contentEl = document.querySelector('[data-testid="document-start"]');
+    if (!contentEl) return;
+
+    if (contentEl instanceof HTMLElement) {
+      contentEl.setAttribute("tabindex", "-1");
+
+      if (!isInitialLoad.current) {
+        contentEl.focus();
+      }
+    }
+    isInitialLoad.current = false;
+  }, [node?.id]);
+
   const handleSubmit =
     (id: string): HandleSubmit =>
     (userData) => {
@@ -207,7 +229,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   return (
     <Box width="100%">
       <BackBar hidden={!showBackBar}>
-        <Container maxWidth={false}>
+        <Container maxWidth="contentWrap">
           <BackButton
             variant="link"
             hidden={!showBackButton}

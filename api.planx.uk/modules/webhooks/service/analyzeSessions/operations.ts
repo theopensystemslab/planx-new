@@ -32,6 +32,7 @@ const ALLOW_LIST = [
   "property.type",
   "property.type.userProvided",
   "propertyInformation.action",
+  "proposal.description",
   "proposal.projectType",
   "rab.exitReason",
   "send.analytics.userAgent",
