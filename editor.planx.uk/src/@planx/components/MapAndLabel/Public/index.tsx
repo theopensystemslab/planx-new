@@ -72,7 +72,9 @@ const FeatureTabs: React.FC = () => {
     throw new Error("Cannot render MapAndLabel tabs without features");
   }
 
-  const isSmallScreen = useMediaQuery<Theme>((theme) => theme.breakpoints.down("lg"))
+  const isSmallScreen = useMediaQuery<Theme>((theme) =>
+    theme.breakpoints.down("lg"),
+  );
 
   // Features is inherently sorted by recently added/modified, order tabs by stable labels (labels are integers stored as strings)
   const sortedFeatures = sortBy(features, [
@@ -138,8 +140,14 @@ const FeatureTabs: React.FC = () => {
               {...a11yProps(i)}
               {...(isFeatureInvalid(i) && {
                 sx: (theme) => ({
-                  borderBottom: { xs: `5px solid ${theme.palette.error.main}`, lg: 0 },
-                  borderLeft: { xs: 0, lg: `5px solid ${theme.palette.error.main}` },
+                  borderBottom: {
+                    xs: `5px solid ${theme.palette.error.main}`,
+                    lg: 0,
+                  },
+                  borderLeft: {
+                    xs: 0,
+                    lg: `5px solid ${theme.palette.error.main}`,
+                  },
                 }),
               })}
             />
@@ -170,13 +178,19 @@ const FeatureTabs: React.FC = () => {
                   {`${feature.geometry.type}`}
                   {feature.geometry.type === "Point"
                     ? ` (${feature.geometry.coordinates.map((coord) =>
-                      coord.toFixed(5),
-                    )})`
-                    : ` (area ${feature.properties?.["area.squareMetres"] || 0
-                    } m²)`}
+                        coord.toFixed(5),
+                      )})`
+                    : ` (area ${
+                        feature.properties?.["area.squareMetres"] || 0
+                      } m²)`}
                 </Typography>
               </Box>
-              <Box sx={{ alignSelf: { xs: "flex-end", md: "flex-start" }, pb: { xs: 2, md: 0 } }}>
+              <Box
+                sx={{
+                  alignSelf: { xs: "flex-end", md: "flex-start" },
+                  pb: { xs: 2, md: 0 },
+                }}
+              >
                 <CopyFeature features={features} destinationIndex={i} />
               </Box>
             </Box>
@@ -306,11 +320,12 @@ const Root = () => {
               maxZoom={23}
               latitude={latitude}
               longitude={longitude}
-              osProxyEndpoint={`${import.meta.env.VITE_APP_API_URL
-                }/proxy/ordnance-survey`}
+              osProxyEndpoint={`${
+                import.meta.env.VITE_APP_API_URL
+              }/proxy/ordnance-survey`}
               osCopyright={
                 basemap === "OSVectorTile"
-                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                   : ``
               }
               clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}
