@@ -80,7 +80,7 @@ describe("string replacement", () => {
     },
     vcTgmVQAre: {
       data: {
-        text: "internal-portal-test",
+        text: "folder-test",
       },
       type: 300,
       edges: ["8AWcYxZgBw"],
@@ -141,7 +141,7 @@ describe("string replacement", () => {
     },
     vcTgmVQAre: {
       data: {
-        text: "internal-portal-test",
+        text: "folder-test",
       },
       type: 300,
       edges: ["8AWcYxZgBw"],

@@ -291,9 +291,9 @@ const Node: React.FC<Props> = (props) => {
 
     // These types are never seen by users, nor do they leave their own breadcrumbs entry
     case TYPES.Answer:
-    case TYPES.ExternalPortal:
+    case TYPES.NestedFlow:
     case TYPES.Flow:
-    case TYPES.InternalPortal:
+    case TYPES.Folder:
     case undefined:
       return null;
 

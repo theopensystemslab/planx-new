@@ -48,7 +48,7 @@ const validateTemplatedNodes = async (
           ComponentType.Checklist,
           ComponentType.ResponsiveQuestion,
           ComponentType.ResponsiveChecklist,
-          ComponentType.InternalPortal,
+          ComponentType.Folder,
         ].includes(node.type);
 
       // The "children" of the required node have been updated

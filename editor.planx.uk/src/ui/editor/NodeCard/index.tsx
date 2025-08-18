@@ -45,7 +45,7 @@ const InternalPortalHeader: React.FC<{ portalId: string }> = ({ portalId }) => {
   const portalName = useStore((state) => state.flow)[portalId].data?.text;
 
   return (
-    <HeaderRoot className="node-card portal internal-portal">
+    <HeaderRoot className="node-card portal folder">
       <Typography
         variant="body2"
         fontSize={14}

@@ -18,7 +18,7 @@ import Hanger from "./Hanger";
 import Question from "./Question";
 import { Tag } from "./Tag";
 
-const ExternalPortal: React.FC<any> = (props) => {
+const NestedFlow: React.FC<any> = (props) => {
   const [href, setHref] = useState("Loading...");
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(href);
@@ -97,7 +97,7 @@ const ExternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box
-          className={classNames("card", "portal", "external-portal", {
+          className={classNames("card", "portal", "nested-flow", {
             isDragging,
           })}
         >
@@ -124,7 +124,7 @@ const ExternalPortal: React.FC<any> = (props) => {
   );
 };
 
-const InternalPortal: React.FC<any> = (props) => {
+const Folder: React.FC<any> = (props) => {
   const href = props.data.href || `${rootFlowPath(true)},${props.id}`;
 
   const parent = getParentId(props.parent);
@@ -157,7 +157,7 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
-  const Icon = ICONS[ComponentType.InternalPortal];
+  const Icon = ICONS[ComponentType.Folder];
 
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
@@ -166,7 +166,7 @@ const InternalPortal: React.FC<any> = (props) => {
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li ref={ref}>
         <Box
-          className={classNames("card", "portal", "internal-portal", {
+          className={classNames("card", "portal", "folder", {
             isDragging,
           })}
         >
@@ -206,9 +206,9 @@ const InternalPortal: React.FC<any> = (props) => {
 
 const Portal: React.FC<any> = (props) => {
   if (props.data.flowId) {
-    return <ExternalPortal {...props} />;
+    return <NestedFlow {...props} />;
   } else {
-    return <InternalPortal {...props} />;
+    return <Folder {...props} />;
   }
 };
 

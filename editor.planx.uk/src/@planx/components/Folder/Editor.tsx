@@ -1,5 +1,8 @@
 import MenuItem from "@mui/material/MenuItem";
-import { ComponentType as TYPES,NodeId } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType as TYPES,
+  NodeId,
+} from "@opensystemslab/planx-core/types";
 import { useFormik } from "formik";
 import React from "react";
 import { ModalFooter } from "ui/editor/ModalFooter";
@@ -13,36 +16,38 @@ import Input from "ui/shared/Input/Input";
 
 import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
-import { Flow, InternalPortal, parseInternalPortal, validationSchema } from "./model";
+import { Flow, Folder, parseFolder, validationSchema } from "./model";
 
 type ExtraProps = {
   flows?: Flow[];
-}
-
-type CreateNewPortalArgs = { type: TYPES; data: InternalPortal };
-type ReferToExistingPortalArgs = NodeId;
-
-export type Props = EditorProps<TYPES.InternalPortal, InternalPortal, ExtraProps> & {
-  handleSubmit?: (data: CreateNewPortalArgs | ReferToExistingPortalArgs) => void
 };
 
-const InternalPortalForm: React.FC<Props> = (props) => {
-  const formik = useFormik<InternalPortal>({
-    initialValues: parseInternalPortal(props.node?.data),
+type CreateNewFolderArgs = { type: TYPES; data: Folder };
+type ReferToExistingFolderArgs = NodeId;
+
+export type Props = EditorProps<TYPES.Folder, Folder, ExtraProps> & {
+  handleSubmit?: (
+    data: CreateNewFolderArgs | ReferToExistingFolderArgs,
+  ) => void;
+};
+
+const FolderForm: React.FC<Props> = (props) => {
+  const formik = useFormik<Folder>({
+    initialValues: parseFolder(props.node?.data),
     validate: (values) => {
       const errors: Record<string, string> = {};
       if (!values.flowId && !values.text) {
         errors.text =
-          props.flows?.length  && props.flows?.length > 0
-            ? "Enter a portal name or select an existing portal"
-            : "Enter a portal name";
+          props.flows?.length && props.flows?.length > 0
+            ? "Enter a folder name or select an existing folder"
+            : "Enter a folder name";
       }
       return errors;
     },
     onSubmit: (values) => {
       const payload = values.flowId
         ? values.flowId
-        : { type: TYPES.InternalPortal, data: values };
+        : { type: TYPES.Folder, data: values };
       if (props.handleSubmit) {
         props.handleSubmit(payload);
       } else {
@@ -64,26 +69,23 @@ const InternalPortalForm: React.FC<Props> = (props) => {
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="Internal portal"
-          Icon={ICONS[TYPES.InternalPortal]}
-        >
+        <ModalSectionContent title="Folder" Icon={ICONS[TYPES.Folder]}>
           <ErrorWrapper error={formik.errors.text}>
             <Input
               name="text"
               onChange={formik.handleChange}
-              placeholder="Enter a portal name"
+              placeholder="Enter a folder name"
               rows={2}
               value={formik.values.text}
               disabled={props.disabled || !!formik.values.flowId}
-              id="portalFlowId"
+              id="folderFlowId"
             />
           </ErrorWrapper>
         </ModalSectionContent>
         {props.flows && props.flows?.length > 0 && (
-          <ModalSectionContent subtitle="Use an existing portal">
+          <ModalSectionContent subtitle="Select an existing folder">
             <InputLabel
-              label="Use an existing portal"
+              label="Select an existing folder"
               id="flowId-label"
               hidden
               htmlFor="flowId"
@@ -116,4 +118,4 @@ const InternalPortalForm: React.FC<Props> = (props) => {
   );
 };
 
-export default InternalPortalForm;
+export default FolderForm;

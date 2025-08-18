@@ -43,7 +43,7 @@ test("The children of selected answers are queued up", () => {
   expect(upcomingCardIds()).not.toContain("OrangeFollowup");
 });
 
-test("Root nodes nested within internal portals are queued up", () => {
+test("Root nodes nested within folders are queued up", () => {
   setState({ flow: flowWithInternalPortal });
 
   expect(upcomingCardIds()).toEqual([
@@ -51,10 +51,10 @@ test("Root nodes nested within internal portals are queued up", () => {
     "FruitChecklistInPortal",
     "EndNotice",
   ]);
-  expect(upcomingCardIds()).not.toContain("InternalPortal");
+  expect(upcomingCardIds()).not.toContain("Folder");
 });
 
-test("The children of selected answers within an internal portal are queued up", () => {
+test("The children of selected answers within a folder are queued up", () => {
   setState({ flow: flowWithInternalPortal });
 
   // Step through first Content node
@@ -157,7 +157,7 @@ const flowWithoutPortal: Store.Flow = {
 
 const flowWithInternalPortal: Store.Flow = {
   _root: {
-    edges: ["StartContent", "InternalPortal", "EndNotice"],
+    edges: ["StartContent", "Folder", "EndNotice"],
   },
   EndNotice: {
     data: {
@@ -173,7 +173,7 @@ const flowWithInternalPortal: Store.Flow = {
     },
     type: 250,
   },
-  InternalPortal: {
+  Folder: {
     type: 300,
     data: {
       text: "Folder",

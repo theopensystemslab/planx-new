@@ -17,7 +17,7 @@ import { HistoryItem } from "../EditHistory";
 import { isAutoComment } from "../utils";
 import {
   AlteredExternalPortalsSummary,
-  ExternalPortal,
+  NestedFlow,
 } from "./AlteredExternalPortals";
 import {
   PublishModalAccordion,
@@ -84,7 +84,7 @@ export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
 
 interface AlteredNodesSummary {
   title: string;
-  portals: ExternalPortal[];
+  portals: NestedFlow[];
   updated: number;
   deleted: number;
 }
@@ -114,7 +114,7 @@ export const AlteredNodesSummaryContent = (props: {
         "You are publishing the main service for the first time.";
     } else if (node.id && Object.keys(node).length === 1) {
       changeSummary["deleted"] += 1;
-    } else if (node.type === TYPES.InternalPortal) {
+    } else if (node.type === TYPES.Folder) {
       if (node.data?.text?.includes("/") && !node.data?.text?.includes(" ")) {
         changeSummary["portals"].push({ ...node.data, flowId: node.id });
       }

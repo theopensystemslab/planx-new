@@ -653,9 +653,7 @@ export const editorStore: StateCreator<
     if (!flow) throw Error("Missing ordered flow!");
 
     const path = getPathForNode({ nodeId, flow });
-    const internalPortals = path.filter(
-      ({ type }) => type === TYPES.InternalPortal,
-    );
+    const internalPortals = path.filter(({ type }) => type === TYPES.Folder);
     const [node, parent, grandparent] = path;
 
     // Construct the internal portal path if applicable

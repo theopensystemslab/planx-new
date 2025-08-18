@@ -56,7 +56,7 @@
   },
   "externalFlowId": {
     "data": {
-      "text": "daf-external-portal-test"
+      "text": "daf-nested-flow-test"
     },
     "type": 300,
     "edges": ["withinExternalPortal"]

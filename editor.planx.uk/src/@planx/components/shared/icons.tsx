@@ -7,9 +7,9 @@ import ContactPage from "@mui/icons-material/ContactPage";
 import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
 import CurrencyPound from "@mui/icons-material/CurrencyPound";
-import DoorFrontOutlined from "@mui/icons-material/DoorFrontOutlined";
 import Event from "@mui/icons-material/Event";
 import FilterAltOutlined from "@mui/icons-material/FilterAltOutlined";
+import Folder from "@mui/icons-material/Folder";
 import FunctionsIcon from "@mui/icons-material/Functions";
 import Home from "@mui/icons-material/Home";
 import List from "@mui/icons-material/List";
@@ -44,13 +44,13 @@ export const ICONS: {
   [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
-  [TYPES.ExternalPortal]: CopyAll,
+  [TYPES.NestedFlow]: CopyAll,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.FileUploadAndLabel]: CloudUpload,
   [TYPES.Filter]: FilterAltOutlined,
   [TYPES.FindProperty]: SearchOutlined,
   [TYPES.Flow]: undefined,
-  [TYPES.InternalPortal]: DoorFrontOutlined,
+  [TYPES.Folder]: Folder,
   [TYPES.List]: ListAlt,
   [TYPES.MapAndLabel]: ShapeLine,
   [TYPES.Notice]: ReportProblemOutlined,

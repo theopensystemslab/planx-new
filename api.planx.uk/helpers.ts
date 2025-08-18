@@ -407,14 +407,14 @@ const dataMerged = async (
   for (const [nodeId, node] of Object.entries(data)) {
     const isExternalPortalRoot =
       nodeId === "_root" && Object.keys(ob).length > 0;
-    const isExternalPortal = node.type === ComponentType.ExternalPortal;
+    const isExternalPortal = node.type === ComponentType.NestedFlow;
     const isMerged = ob[node.data?.flowId];
 
     // merge external portal _root node as a new node in the graph using its' flowId as nodeId
     if (isExternalPortalRoot) {
       ob[id] = {
         ...node, // includes _root edges for navigation to all child nodes in this portal
-        type: ComponentType.InternalPortal,
+        type: ComponentType.Folder,
         data: {
           text: `${team.slug}/${slug}`,
           flattenedFromExternalPortal: true,
@@ -432,7 +432,7 @@ const dataMerged = async (
     // merge external portal type node as an internal portal type node, with an edge pointing to flowId (to navigate to the externalPortalRoot set above)
     else if (isExternalPortal) {
       ob[nodeId] = {
-        type: ComponentType.InternalPortal,
+        type: ComponentType.Folder,
         edges: [node.data?.flowId],
         data: {
           flattenedFromExternalPortal: true,
@@ -450,7 +450,7 @@ const dataMerged = async (
   }
 
   // for every external portal that has been merged, confirm its' latest version was merged. If not, overwrite older snapshot with newest version
-  //   ** this is a final/separate step because older snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.ExternalPortal above)
+  //   ** this is a final/separate step because older snapshots can be nested in _already_ flattened data (eg not picked up as ComponentType.NestedFlow above)
   if (!draftDataOnly) {
     for (const [nodeId, node] of Object.entries(ob).filter(
       ([_nodeId, node]) => node.data?.publishedFlowId,

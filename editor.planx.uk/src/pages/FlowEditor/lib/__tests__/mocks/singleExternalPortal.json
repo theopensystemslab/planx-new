@@ -45,7 +45,7 @@
   },
   "externalFlowId": {
     "data": {
-      "text": "test-external-portal"
+      "text": "test-nested-flow"
     },
     "type": 300,
     "edges": ["withinExternalPortal"]

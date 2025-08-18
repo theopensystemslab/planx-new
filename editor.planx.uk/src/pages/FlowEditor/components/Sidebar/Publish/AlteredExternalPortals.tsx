@@ -12,7 +12,7 @@ import BlockQuote from "ui/editor/BlockQuote";
 
 import { useStore } from "../../../lib/store";
 
-export interface ExternalPortal {
+export interface NestedFlow {
   text: string;
   flowId: string;
   publishedFlowId: number;
@@ -21,7 +21,7 @@ export interface ExternalPortal {
   publishedAt: string;
 }
 
-const AlteredExternalPortalListItem = (props: ExternalPortal) => {
+const AlteredExternalPortalListItem = (props: NestedFlow) => {
   const { text, flowId, publishedFlowId, summary, publishedAt } = props;
 
   const [externalPortalLastPublishedTitle, setNestedFlowLastPublishedTitle] =
@@ -95,7 +95,7 @@ const AlteredExternalPortalListItem = (props: ExternalPortal) => {
 };
 
 export const AlteredExternalPortalsSummary = (props: {
-  portals: ExternalPortal[];
+  portals: NestedFlow[];
 }) => {
   const { portals } = props;
 

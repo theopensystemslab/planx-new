@@ -7,15 +7,15 @@ import ContactInput from "@planx/components/ContactInput/Editor";
 import Content from "@planx/components/Content/Editor";
 import DateInput from "@planx/components/DateInput/Editor";
 import DrawBoundary from "@planx/components/DrawBoundary/Editor";
-import ExternalPortal from "@planx/components/ExternalPortal/Editor";
 import { FeedbackEditor } from "@planx/components/Feedback/Editor/Editor";
 import FileUpload from "@planx/components/FileUpload/Editor";
 import FileUploadAndLabel from "@planx/components/FileUploadAndLabel/Editor";
 import Filter from "@planx/components/Filter/Editor";
 import FindProperty from "@planx/components/FindProperty/Editor";
-import InternalPortal from "@planx/components/InternalPortal/Editor";
+import Folder from "@planx/components/Folder/Editor";
 import List from "@planx/components/List/Editor";
 import MapAndLabel from "@planx/components/MapAndLabel/Editor";
+import NestedFlow from "@planx/components/NestedFlow/Editor";
 import NextSteps from "@planx/components/NextSteps/Editor";
 import Notice from "@planx/components/Notice/Editor";
 import NumberInput from "@planx/components/NumberInput/Editor";
@@ -51,13 +51,13 @@ const components: {
   content: Content,
   "date-input": DateInput,
   "draw-boundary": DrawBoundary,
-  "external-portal": ExternalPortal,
+  "nested-flow": NestedFlow,
   feedback: FeedbackEditor,
   "file-upload": FileUpload,
   filter: Filter,
   "find-property": FindProperty,
   flow: EmptyComponent,
-  "internal-portal": InternalPortal,
+  folder: Folder,
   "file-upload-and-label": FileUploadAndLabel,
   list: List,
   "map-and-label": MapAndLabel,

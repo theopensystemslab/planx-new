@@ -77,7 +77,7 @@ describe("dataMerged() function", () => {
       name: "GetFlowData",
       matchOnVariables: true,
       variables: {
-        id: "parent-flow-with-external-portal",
+        id: "parent-flow-with-nested-flow",
       },
       data: {
         flow: {
@@ -113,12 +113,12 @@ describe("dataMerged() function", () => {
       },
     });
 
-    const result = await dataMerged("parent-flow-with-external-portal");
+    const result = await dataMerged("parent-flow-with-nested-flow");
     const nodeTypes = Object.values(result).map((node) =>
       "type" in node ? node.type : undefined,
     );
 
-    expect(nodeTypes.includes(ComponentType.ExternalPortal)).toBe(false);
+    expect(nodeTypes.includes(ComponentType.NestedFlow)).toBe(false);
   });
 
   it("throws an error when an external portal is not published", async () => {
@@ -141,9 +141,7 @@ describe("dataMerged() function", () => {
       },
     });
 
-    await expect(
-      dataMerged("parent-flow-with-external-portal"),
-    ).rejects.toThrow();
+    await expect(dataMerged("parent-flow-with-nested-flow")).rejects.toThrow();
   });
 
   it("flattens any published or draft external portal nodes when isDraftData only is set to true", async () => {
@@ -167,7 +165,7 @@ describe("dataMerged() function", () => {
     });
 
     const result = await dataMerged(
-      "parent-flow-with-external-portal",
+      "parent-flow-with-nested-flow",
       {},
       false,
       true,

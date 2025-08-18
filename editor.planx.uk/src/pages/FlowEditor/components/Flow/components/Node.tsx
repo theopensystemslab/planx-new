@@ -51,9 +51,9 @@ const Node: React.FC<any> = (props) => {
       return (
         <Question {...allProps} text={node?.data?.title ?? "Draw boundary"} />
       );
-    case TYPES.ExternalPortal:
+    case TYPES.NestedFlow:
       return <Portal {...allProps} />;
-    case TYPES.InternalPortal:
+    case TYPES.Folder:
       return props.href ? (
         <Breadcrumb {...allProps} />
       ) : (

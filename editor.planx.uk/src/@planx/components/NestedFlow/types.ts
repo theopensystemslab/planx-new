@@ -1,6 +1,6 @@
 import { AutocompleteProps } from "@mui/material/Autocomplete";
 
-export interface Flow {
+export interface NestedFlow {
   id: string;
   slug: string;
   name: string;
@@ -8,7 +8,7 @@ export interface Flow {
 }
 
 export type FlowAutocompleteListProps = AutocompleteProps<
-  Flow,
+  NestedFlow,
   false,
   false,
   true,

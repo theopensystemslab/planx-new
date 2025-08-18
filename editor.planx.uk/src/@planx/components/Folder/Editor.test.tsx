@@ -5,14 +5,14 @@ import { setup } from "testUtils";
 import { vi } from "vitest";
 import { axe } from "vitest-axe";
 
-import InternalPortalForm from "./Editor";
+import FolderForm from "./Editor";
 
-describe("adding an internal portal", () => {
-  test("creating a new internal portal", async () => {
+describe("adding a folder", () => {
+  test("creating a new folder", async () => {
     const handleSubmit = vi.fn();
 
     const { user, getByTestId } = setup(
-      <InternalPortalForm
+      <FolderForm
         flows={[{ id: "ignore", text: "ignore" }]}
         handleSubmit={handleSubmit}
       />,
@@ -24,8 +24,8 @@ describe("adding an internal portal", () => {
     expect(flowSelect).toBeEnabled();
 
     await user.type(
-      screen.getByPlaceholderText("Enter a portal name"),
-      "new internal portal",
+      screen.getByPlaceholderText("Enter a folder name"),
+      "new folder",
     );
 
     expect(flowSelect).toHaveAttribute("aria-disabled", "true");
@@ -34,28 +34,28 @@ describe("adding an internal portal", () => {
 
     await waitFor(() => {
       expect(handleSubmit).toHaveBeenCalledWith({
-        type: TYPES.InternalPortal,
+        type: TYPES.Folder,
         data: expect.objectContaining({
           flowId: "", // will be removed when saving the data
-          text: "new internal portal",
+          text: "new folder",
           tags: [],
         }),
       });
     });
   });
 
-  test("selecting an existing internal portal", async () => {
+  test("selecting an existing folder", async () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <InternalPortalForm
+      <FolderForm
         flows={[{ id: "portal", text: "portal" }]}
         handleSubmit={handleSubmit}
       />,
     );
 
     const dropdown = await screen.findByRole("combobox", {
-      name: "Use an existing portal",
+      name: "Use an existing folder",
     });
     expect(dropdown).toBeInTheDocument();
 
@@ -77,14 +77,14 @@ describe("adding an internal portal", () => {
     const handleSubmit = vi.fn();
 
     const { user } = setup(
-      <InternalPortalForm
+      <FolderForm
         flows={[{ id: "portal", text: "portal text" }]}
         handleSubmit={handleSubmit}
       />,
     );
 
     const dropdown = await screen.findByRole("combobox", {
-      name: "Use an existing portal",
+      name: "Use an existing folder",
     });
     expect(dropdown).toBeInTheDocument();
 
@@ -102,21 +102,25 @@ describe("adding an internal portal", () => {
   });
 });
 
-test("do not display select field when there are no flows to select", () => {
-  setup(<InternalPortalForm />);
+test("do not display select field when there are no folders to select", () => {
+  setup(<FolderForm />);
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 });
 
-test("updating an internal portal", async () => {
+test("updating a folder", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <InternalPortalForm id="test" node={{ data: { text: "val" } }} handleSubmit={handleSubmit} />,
+    <FolderForm
+      id="test"
+      node={{ data: { text: "val" } }}
+      handleSubmit={handleSubmit}
+    />,
   );
 
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 
-  const textInput = screen.getByPlaceholderText("Enter a portal name");
+  const textInput = screen.getByPlaceholderText("Enter a folder name");
 
   expect(textInput).toHaveValue("val");
 
@@ -126,7 +130,7 @@ test("updating an internal portal", async () => {
 
   await waitFor(() => {
     expect(handleSubmit).toHaveBeenCalledWith({
-      type: TYPES.InternalPortal,
+      type: TYPES.Folder,
       data: {
         flowId: "", // will be removed when saving the data
         text: "new val",
@@ -139,22 +143,22 @@ test("updating an internal portal", async () => {
 describe("validations", () => {
   describe("if no flowId is chosen", () => {
     const scenarios = [
-      { action: "adding without flows", error: /Enter a portal name/ },
+      { action: "adding without flows", error: /Enter a folder name/ },
       {
         action: "updating without flows",
         id: "test",
-        error: /Enter a portal name/,
+        error: /Enter a folder name/,
       },
       {
         action: "adding with flows",
         flows: [{ id: "portal", text: "portal" }],
-        error: /Enter a portal name or select an existing portal/,
+        error: /Enter a folder name or select an existing folder/,
       },
       {
         action: "updating with flows",
         flows: [{ id: "portal", text: "portal" }],
         id: "test",
-        error: /Enter a portal name or select an existing portal/,
+        error: /Enter a folder name or select an existing folder/,
       },
     ];
     for (const scenario of scenarios) {
@@ -162,7 +166,7 @@ describe("validations", () => {
         const handleSubmit = vi.fn();
 
         setup(
-          <InternalPortalForm
+          <FolderForm
             id={scenario.id}
             flows={scenario.flows}
             handleSubmit={handleSubmit}
@@ -182,7 +186,7 @@ it("should not have any accessibility violations", async () => {
   const handleSubmit = vi.fn();
 
   const { container } = setup(
-    <InternalPortalForm
+    <FolderForm
       flows={[{ id: "portal", text: "portal" }]}
       handleSubmit={handleSubmit}
     />,

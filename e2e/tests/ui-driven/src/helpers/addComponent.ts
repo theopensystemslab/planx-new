@@ -157,10 +157,10 @@ const createBaseComponent = async (
       break;
     case ComponentType.Feedback:
       break;
-    case ComponentType.InternalPortal:
-      await page.getByPlaceholder("Portal name").fill(title || "");
+    case ComponentType.Folder:
+      await page.getByPlaceholder("Folder name").fill(title || "");
       break;
-    case ComponentType.ExternalPortal:
+    case ComponentType.NestedFlow:
       page.getByTestId("flowId").click();
 
       // wait until we can see the group header of the autocomplete
@@ -481,7 +481,7 @@ export const createInternalPortal = async (
   await createBaseComponent(
     page,
     locatingNode,
-    ComponentType.InternalPortal,
+    ComponentType.Folder,
     portalName,
   );
 };
@@ -494,5 +494,5 @@ export const createExternalPortal = async (
   page: Page,
   locatingNode: Locator,
 ) => {
-  await createBaseComponent(page, locatingNode, ComponentType.ExternalPortal);
+  await createBaseComponent(page, locatingNode, ComponentType.NestedFlow);
 };

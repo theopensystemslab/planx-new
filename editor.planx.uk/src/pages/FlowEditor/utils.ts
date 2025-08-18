@@ -64,7 +64,7 @@ export const nodeIsTemplatedInternalPortal = (
 ): boolean => {
   if (node) {
     return (
-      node.type === TYPES.InternalPortal &&
+      node.type === TYPES.Folder &&
       Boolean(flow[node.id]?.data?.isTemplatedNode)
     );
   } else {
@@ -85,7 +85,7 @@ export const nodeIsChildOfTemplatedInternalPortal = (
 ): boolean => {
   if (node && node?.parentId && node?.internalPortalId) {
     return (
-      (flow[node.parentId]?.type === TYPES.InternalPortal &&
+      (flow[node.parentId]?.type === TYPES.Folder &&
         Boolean(flow[node.parentId]?.data?.isTemplatedNode)) ||
       Boolean(flow[node.internalPortalId]?.data?.isTemplatedNode)
     );

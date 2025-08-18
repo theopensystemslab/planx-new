@@ -5,7 +5,7 @@ export const serviceProps = {
 
 export const externalPortalServiceProps = {
   name: "An External Portal Service",
-  slug: "an-external-portal-service",
+  slug: "an-nested-flow-service",
 };
 
 export const externalPortalFlowData = {

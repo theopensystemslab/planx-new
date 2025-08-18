@@ -13,7 +13,7 @@ describe("error handling", () => {
           edges: ["a", "b"],
         },
         a: {
-          type: TYPES.InternalPortal,
+          type: TYPES.Folder,
           edges: ["c"],
         },
         b: {

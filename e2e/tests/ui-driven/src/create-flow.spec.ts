@@ -190,7 +190,7 @@ test.describe("Flow creation, publish and preview", () => {
     await createExternalPortal(page, page.locator("li.hanger > a").nth(6));
 
     await expect(
-      page.getByRole("link", { name: "E2E/an-external-portal-service" }),
+      page.getByRole("link", { name: "E2E/an-nested-flow-service" }),
     ).toBeVisible();
 
     // publish the changes we've made to the original service
@@ -210,7 +210,7 @@ test.describe("Flow creation, publish and preview", () => {
     await navigateToService(page, serviceProps.slug);
 
     await expect(
-      page.getByRole("link", { name: "E2E/an-external-portal-service" }),
+      page.getByRole("link", { name: "E2E/an-nested-flow-service" }),
     ).toBeVisible();
 
     const previewLink = page.getByRole("link", {

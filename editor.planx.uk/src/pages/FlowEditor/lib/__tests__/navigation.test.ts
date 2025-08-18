@@ -64,7 +64,7 @@ describe("filterFlowByType()", () => {
     );
 
     // Two folders in test flow
-    const folderResult = filterFlowByType(TYPES.InternalPortal);
+    const folderResult = filterFlowByType(TYPES.Folder);
     expect(Object.keys(folderResult)).toEqual(
       expect.arrayContaining(["FolderOnBranch", "FolderOnRoot"]),
     );

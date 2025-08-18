@@ -33,7 +33,7 @@ beforeEach(() => {
     name: "GetFlowData",
     matchOnVariables: true,
     variables: {
-      id: "parent-flow-with-external-portal",
+      id: "parent-flow-with-nested-flow",
     },
     data: {
       flow: {
@@ -94,7 +94,7 @@ it("returns the expected result for a flow with published external portals", asy
   });
 
   await supertest(app)
-    .get("/flows/parent-flow-with-external-portal/flatten-data")
+    .get("/flows/parent-flow-with-nested-flow/flatten-data")
     .expect(200)
     .then((res) => expect(res.body).toEqual(flattenedParentFlow));
 });
@@ -120,7 +120,7 @@ it("throws an error for a flow with unpublished external portals", async () => {
   });
 
   await supertest(app)
-    .get("/flows/parent-flow-with-external-portal/flatten-data")
+    .get("/flows/parent-flow-with-nested-flow/flatten-data")
     .expect(500);
 });
 
@@ -145,7 +145,7 @@ it("returns the expected draft result for a flow with unpublished external porta
   });
 
   await supertest(app)
-    .get("/flows/parent-flow-with-external-portal/flatten-data?draft=true")
+    .get("/flows/parent-flow-with-nested-flow/flatten-data?draft=true")
     .expect(200)
     .then((res) => expect(res.body).toEqual(flattenedParentFlow));
 });

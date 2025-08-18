@@ -42,12 +42,12 @@ const isSectionNodeType = (id: string, graph: Graph): boolean =>
   graph[id]?.type === TYPES.Section;
 
 const isExternalPortalNodeType = (id: string, graph: Graph): boolean =>
-  graph[id]?.type === TYPES.ExternalPortal;
+  graph[id]?.type === TYPES.NestedFlow;
 
 // Sections can only be placed directly on the center of the graph, or within the first-level of a folder that is on the center of the graph
 const isValidSectionPosition = (parent: string, graph: Graph): boolean =>
   parent === ROOT_NODE_KEY ||
-  (graph[parent]?.type === TYPES.InternalPortal &&
+  (graph[parent]?.type === TYPES.Folder &&
     Boolean(graph[ROOT_NODE_KEY]?.edges?.includes(parent)));
 
 const sanitize = (x: any) => {

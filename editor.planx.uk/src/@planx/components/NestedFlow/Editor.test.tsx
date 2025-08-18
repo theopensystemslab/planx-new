@@ -4,13 +4,13 @@ import React from "react";
 import { setup } from "testUtils";
 import { vi } from "vitest";
 
-import ExternalPortalForm from "./Editor";
+import NestedFlowForm from "./Editor";
 
-test("adding an external portal", async () => {
+test("adding a nested flow", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <ExternalPortalForm
+    <NestedFlowForm
       flows={[
         { id: "a", name: "flow a", slug: "flow-a", team: "team" },
         { id: "b", name: "flow b", slug: "flow-b", team: "team" },
@@ -33,7 +33,7 @@ test("adding an external portal", async () => {
 
   await waitFor(() =>
     expect(handleSubmit).toHaveBeenCalledWith({
-      type: TYPES.ExternalPortal,
+      type: TYPES.NestedFlow,
       data: {
         flow: { id: "b", name: "flow b", slug: "flow-b", team: "team" },
         flowId: "b",
@@ -47,11 +47,11 @@ test("adding an external portal", async () => {
   );
 });
 
-test("changing an external portal", async () => {
+test("changing a nested flow", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <ExternalPortalForm
+    <NestedFlowForm
       flowId="b"
       flows={[
         { id: "a", name: "flow a", slug: "flow-a", team: "team" },
@@ -78,7 +78,7 @@ test("changing an external portal", async () => {
 
   await waitFor(() =>
     expect(handleSubmit).toHaveBeenCalledWith({
-      type: TYPES.ExternalPortal,
+      type: TYPES.NestedFlow,
       data: {
         flow: { id: "a", name: "flow a", slug: "flow-a", team: "team" },
         flowId: "a",
@@ -92,6 +92,4 @@ test("changing an external portal", async () => {
   );
 });
 
-test.todo(
-  "don't add external portal if same external portal already in parent",
-);
+test.todo("throws an error when adding if same nested flow already on parent");

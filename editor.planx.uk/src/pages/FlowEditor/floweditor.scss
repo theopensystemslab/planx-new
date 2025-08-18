@@ -518,12 +518,12 @@ $fontMonospace: "Source Code Pro", monospace;
       }
     }
   }
-  &.internal-portal {
+  &.folder {
     background: $black;
     @include folderStyle(40px);
   }
 
-  &.internal-portal.node-card {
+  &.folder.node-card {
     align-items: flex-start;
     @include folderStyle(75px);
     &::before {

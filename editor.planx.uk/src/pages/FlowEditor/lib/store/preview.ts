@@ -472,7 +472,7 @@ export const previewStore: StateCreator<
           const node = flow[id];
 
           // Recursively get children in internal portals
-          if (node.type === TYPES.InternalPortal) {
+          if (node.type === TYPES.Folder) {
             return nodeIdsConnectedFrom(id);
           }
 

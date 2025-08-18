@@ -16,7 +16,7 @@ import { PopupIcon } from "ui/shared/PopUpIcon";
 
 import { ICONS } from "../shared/icons";
 import { validationSchema } from "./model";
-import { Flow, FlowAutocompleteListProps } from "./types";
+import { FlowAutocompleteListProps,NestedFlow } from "./types";
 
 const renderOption: FlowAutocompleteListProps["renderOption"] = (
   props,
@@ -46,11 +46,11 @@ const renderGroup: FlowAutocompleteListProps["renderGroup"] = (params) => {
   );
 };
 
-const ExternalPortalForm: React.FC<{
+const NestedFlowForm: React.FC<{
   flowId?: string;
   notes?: string;
   handleSubmit?: (val: any) => void;
-  flows?: Array<Flow>;
+  flows?: Array<NestedFlow>;
   tags?: NodeTag[];
   disabled?: boolean;
   isTemplatedNode?: boolean;
@@ -79,7 +79,7 @@ const ExternalPortalForm: React.FC<{
     },
     onSubmit: (data) => {
       if (handleSubmit) {
-        handleSubmit({ type: TYPES.ExternalPortal, data });
+        handleSubmit({ type: TYPES.NestedFlow, data });
       }
     },
     validationSchema,
@@ -97,19 +97,15 @@ const ExternalPortalForm: React.FC<{
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="External portal"
-          Icon={ICONS[TYPES.ExternalPortal]}
-        >
+        <ModalSectionContent title="Flow" Icon={ICONS[TYPES.NestedFlow]}>
           <span>
-            External portals let you reference all content from another flow
-            inline within this service. Deleting this node does NOT delete the
-            flow that it references.
+            Nest all content from another flow inline within this service.
+            Deleting this node does NOT delete the flow that it references.
           </span>
         </ModalSectionContent>
         <ModalSectionContent key={"flow-section"} title="Pick a flow">
           <ErrorWrapper error={formik.errors.flowId}>
-            <AutocompleteInput<Flow>
+            <AutocompleteInput<NestedFlow>
               data-testid="flowId"
               id="flowId"
               role="status"
@@ -126,7 +122,7 @@ const ExternalPortalForm: React.FC<{
                 }),
               }}
               value={formik.values.flow}
-              onChange={(_event, value: string | Flow | null) => {
+              onChange={(_event, value: string | NestedFlow | null) => {
                 if (typeof value !== "string") {
                   formik.setFieldValue("flow", value);
                   value?.id && formik.setFieldValue("flowId", value.id);
@@ -134,7 +130,7 @@ const ExternalPortalForm: React.FC<{
               }}
               options={flows}
               groupBy={(option) => option && option.team}
-              getOptionLabel={(option: string | Flow | null) => {
+              getOptionLabel={(option: string | NestedFlow | null) => {
                 if (typeof option !== "string" && option) {
                   return `${option.team} - ${option?.name}`;
                 } else {
@@ -167,4 +163,4 @@ const ExternalPortalForm: React.FC<{
   );
 };
 
-export default ExternalPortalForm;
+export default NestedFlowForm;
