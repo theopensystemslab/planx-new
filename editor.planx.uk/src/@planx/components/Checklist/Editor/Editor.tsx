@@ -83,14 +83,6 @@ export const ChecklistEditor: React.FC<ChecklistProps> = (props) => {
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
-  // horrible hack to remove focus from Rich Text Editor
-  useEffect(() => {
-    setTimeout(() => {
-      (document.activeElement as any).blur();
-      focusRef.current?.focus();
-    }, 50);
-  }, []);
-
   return (
     <form
       onSubmit={formik.handleSubmit}
