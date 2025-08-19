@@ -166,7 +166,7 @@ export default function PlotNewAddress(props: PlotNewAddressProps): FCReturn {
                 import.meta.env.VITE_APP_API_URL
               }/proxy/ordnance-survey`}
               clipGeojsonData={JSON.stringify(boundaryBBox)}
-              osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`}
+              osCopyright={`© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`}
               collapseAttributions={window.innerWidth < 500 ? true : undefined}
             />
           </MapContainer>

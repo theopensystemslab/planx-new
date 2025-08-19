@@ -86,7 +86,7 @@ export const NodeCard: React.FC<Props> = ({
   const { iconKey, componentType, title } = getDisplayDetailsForNodeCard(node);
   const Icon = ICONS[iconKey];
 
-  const portalId = node.internalPortalId;
+  const portalId = node.folderId;
 
   const handleClick = () => {
     const url = getURLForNode(node.id);

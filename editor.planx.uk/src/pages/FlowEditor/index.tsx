@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
-import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
+import { parentNodeIsTemplatedFolder } from "pages/FlowEditor/utils";
 import React, { useRef } from "react";
 import { rootFlowPath } from "routes/utils";
 
@@ -57,7 +57,7 @@ const FlowEditor = () => {
   const parentId = getParentId(undefined);
 
   const indexedParent = orderedFlow?.find(({ id }) => id === parentId);
-  const parentIsTemplatedInternalPortal = parentNodeIsTemplatedInternalPortal(
+  const parentIsTemplatedInternalPortal = parentNodeIsTemplatedFolder(
     flowObject,
     indexedParent,
   );

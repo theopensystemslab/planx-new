@@ -245,20 +245,20 @@ test("can add sections on the root of the graph", () => {
 test("can add sections inside of folders on the root of the graph", () => {
   const [graph, ops] = add(
     { id: "sectionNodeId", type: 360 },
-    { parent: "internalPortalId" },
+    { parent: "folderId" },
   )({
-    _root: { edges: ["internalPortalId"] },
-    internalPortalId: { type: 300 },
+    _root: { edges: ["folderId"] },
+    folderId: { type: 300 },
   });
 
   expect(graph).toEqual({
-    _root: { edges: ["internalPortalId"] },
-    internalPortalId: { type: 300, edges: ["sectionNodeId"] },
+    _root: { edges: ["folderId"] },
+    folderId: { type: 300, edges: ["sectionNodeId"] },
     sectionNodeId: { type: 360 },
   });
 
   expect(ops).toEqual([
-    { p: ["internalPortalId", "edges"], oi: ["sectionNodeId"] },
+    { p: ["folderId", "edges"], oi: ["sectionNodeId"] },
     { p: ["sectionNodeId"], oi: { type: 360 } },
   ]);
 });

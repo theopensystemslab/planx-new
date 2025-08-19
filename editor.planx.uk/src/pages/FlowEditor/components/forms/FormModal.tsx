@@ -12,8 +12,8 @@ import { parseFormValues } from "@planx/components/shared";
 import ErrorFallback from "components/Error/ErrorFallback";
 import { hasFeatureFlag } from "lib/featureFlags";
 import {
-  nodeIsChildOfTemplatedInternalPortal,
-  nodeIsTemplatedInternalPortal,
+  nodeIsChildOfTemplatedFolder,
+  nodeIsTemplatedFolder,
 } from "pages/FlowEditor/utils";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
@@ -157,12 +157,14 @@ const FormModal: React.FC<{
   };
 
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedFolder(
     flow,
     indexedParent,
   );
-  const parentIsChildOfTemplatedInternalPortal =
-    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+  const parentIsChildOfTemplatedInternalPortal = nodeIsChildOfTemplatedFolder(
+    flow,
+    indexedParent,
+  );
 
   const canUserEditTemplatedNode =
     canUserEditNode(teamSlug) &&

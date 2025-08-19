@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import {
-  nodeIsChildOfTemplatedInternalPortal,
-  nodeIsTemplatedInternalPortal,
+  nodeIsChildOfTemplatedFolder,
+  nodeIsTemplatedFolder,
 } from "pages/FlowEditor/utils";
 import React, { useEffect } from "react";
 import { useDrop } from "react-dnd";
@@ -59,12 +59,14 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   // When working in a templated flow, if any internal portal is marked as "isTemplatedNode", then the Hanger should be visible to add children
   const indexedParent = orderedFlow?.find(({ id }) => id === parent);
-  const parentIsTemplatedInternalPortal = nodeIsTemplatedInternalPortal(
+  const parentIsTemplatedInternalPortal = nodeIsTemplatedFolder(
     flow,
     indexedParent,
   );
-  const parentIsChildOfTemplatedInternalPortal =
-    nodeIsChildOfTemplatedInternalPortal(flow, indexedParent);
+  const parentIsChildOfTemplatedInternalPortal = nodeIsChildOfTemplatedFolder(
+    flow,
+    indexedParent,
+  );
 
   const hideHangerInTemplatedFlow = !(
     parentIsTemplatedInternalPortal || parentIsChildOfTemplatedInternalPortal

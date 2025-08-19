@@ -54,6 +54,7 @@ export const MembersTable = ({
 
   const roleLabels: Record<Role, string> = {
     platformAdmin: "Admin",
+    teamAdmin: "Team admin",
     teamEditor: "Editor",
     teamViewer: "Viewer",
     demoUser: "Demo User",

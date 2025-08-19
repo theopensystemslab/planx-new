@@ -60,6 +60,7 @@ export const ALLOW_LIST = [
   "property.constraints.planning",
   "property.type",
   "propertyInformation.action",
+  "proposal.description",
   "proposal.projectType",
   "rab.exitReason",
   "send.analytics.userAgent",

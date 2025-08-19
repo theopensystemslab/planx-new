@@ -58,7 +58,7 @@ export const formatServiceLastUpdated = (date: string): string => {
   return `Service last updated ${formattedDate}`;
 };
 
-export const nodeIsTemplatedInternalPortal = (
+export const nodeIsTemplatedFolder = (
   flow: Store.Flow,
   node?: IndexedNode,
 ): boolean => {
@@ -72,22 +72,22 @@ export const nodeIsTemplatedInternalPortal = (
   }
 };
 
-export const parentNodeIsTemplatedInternalPortal = (
+export const parentNodeIsTemplatedFolder = (
   flow: Store.Flow,
   parentNode?: IndexedNode,
 ): boolean => {
-  return parentNode ? nodeIsTemplatedInternalPortal(flow, parentNode) : false;
+  return parentNode ? nodeIsTemplatedFolder(flow, parentNode) : false;
 };
 
-export const nodeIsChildOfTemplatedInternalPortal = (
+export const nodeIsChildOfTemplatedFolder = (
   flow: Store.Flow,
   node?: IndexedNode,
 ): boolean => {
-  if (node && node?.parentId && node?.internalPortalId) {
+  if (node && node?.parentId && node?.folderId) {
     return (
       (flow[node.parentId]?.type === TYPES.Folder &&
         Boolean(flow[node.parentId]?.data?.isTemplatedNode)) ||
-      Boolean(flow[node.internalPortalId]?.data?.isTemplatedNode)
+      Boolean(flow[node.folderId]?.data?.isTemplatedNode)
     );
   } else {
     return false;

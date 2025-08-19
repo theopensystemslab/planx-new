@@ -44,27 +44,27 @@ describe("same parent", () => {
   });
 
   test("move sections within same root folder", () => {
-    const [graph, ops] = move("sectionNodeId", "internalPortalId", {
+    const [graph, ops] = move("sectionNodeId", "folderId", {
       toBefore: "a",
     })({
       _root: {
-        edges: ["internalPortalId"],
+        edges: ["folderId"],
       },
-      internalPortalId: { type: 300, edges: ["a", "sectionNodeId"] },
+      folderId: { type: 300, edges: ["a", "sectionNodeId"] },
       sectionNodeId: { type: 360 },
       a: {},
     });
 
     expect(graph).toEqual({
-      _root: { edges: ["internalPortalId"] },
-      internalPortalId: { type: 300, edges: ["sectionNodeId", "a"] },
+      _root: { edges: ["folderId"] },
+      folderId: { type: 300, edges: ["sectionNodeId", "a"] },
       sectionNodeId: { type: 360 },
       a: {},
     });
 
     expect(ops).toEqual([
-      { ld: "a", li: "sectionNodeId", p: ["internalPortalId", "edges", 0] },
-      { ld: "sectionNodeId", li: "a", p: ["internalPortalId", "edges", 1] },
+      { ld: "a", li: "sectionNodeId", p: ["folderId", "edges", 0] },
+      { ld: "sectionNodeId", li: "a", p: ["folderId", "edges", 1] },
     ]);
   });
 });
@@ -221,9 +221,9 @@ describe("error handling", () => {
 
   test("cannot move a section onto a branch within a folder", () => {
     expect(() =>
-      move("sectionNodeId", "internalPortalId", { toParent: "b" })({
-        _root: { edges: ["internalPortalId"] },
-        internalPortalId: { type: 300, edges: ["a", "sectionNodeId"] },
+      move("sectionNodeId", "folderId", { toParent: "b" })({
+        _root: { edges: ["folderId"] },
+        folderId: { type: 300, edges: ["a", "sectionNodeId"] },
         sectionNodeId: { type: 360 },
         a: { edges: ["b"] },
         b: {},
