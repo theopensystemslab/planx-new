@@ -23,8 +23,8 @@ export const ExternalPortalList: Components<Data, Context>["Footer"] = ({
   return (
     <Box mx={3} pb={2} data-testid="searchExternalPortalList">
       <Typography variant="body1" mb={2}>
-        Your service also contains the following external portals, which have
-        not been searched:
+        Your flow also contains the following nested flows, which have not been
+        searched:
       </Typography>
       <ExternalPortals externalPortals={externalPortals} />
     </Box>

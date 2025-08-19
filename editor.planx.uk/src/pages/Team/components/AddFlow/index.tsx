@@ -70,9 +70,7 @@ export const AddFlow: React.FC = () => {
 
   return (
     <Box>
-      <AddButton onClick={() => setDialogOpen(true)}>
-        Add a new service
-      </AddButton>
+      <AddButton onClick={() => setDialogOpen(true)}>Add a new flow</AddButton>
       <Formik<CreateFlow>
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -94,7 +92,7 @@ export const AddFlow: React.FC = () => {
             <DialogTitle variant="h3" component="h1">
               <Box sx={{ mt: 1, mb: 4 }}>
                 <Typography variant="h3" component="h2" id="dialog-heading">
-                  Add a new service
+                  Add a new flow
                 </Typography>
               </Box>
             </DialogTitle>
@@ -120,7 +118,7 @@ export const AddFlow: React.FC = () => {
                     disableRipple
                     disabled={isSubmitting}
                   >
-                    Add service
+                    Add flow
                   </Button>
                 </DialogActions>
               </Form>

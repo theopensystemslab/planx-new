@@ -135,8 +135,8 @@ const FlowStatus = () => {
           <WarningContainer>
             <PendingActionsIcon sx={{ mr: 1 }} />
             <Typography variant="body2">
-              Source templates are discoverable from the "Add a new service"
-              modal when they are online.
+              Source templates are discoverable from the "Add a new flow" modal
+              when they are online.
             </Typography>
           </WarningContainer>
         )}

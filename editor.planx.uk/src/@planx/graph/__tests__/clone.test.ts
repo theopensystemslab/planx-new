@@ -128,6 +128,6 @@ describe("error handling", () => {
         a: {},
         externalPortalNodeId: { type: 310 },
       }),
-    ).toThrow("cannot clone external portals");
+    ).toThrow("cannot clone nested flows");
   });
 });

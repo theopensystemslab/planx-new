@@ -233,7 +233,7 @@ export const clone =
       else if (isSectionNodeType(id, graph))
         throw new Error("cannot clone sections");
       else if (isExternalPortalNodeType(id, graph))
-        throw new Error("cannot clone external portals");
+        throw new Error("cannot clone nested flows");
 
       const toParentNode = draft[toParent];
 
