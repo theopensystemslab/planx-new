@@ -66,9 +66,7 @@ test.describe("Login", () => {
     await page.route("**/graphql", (route) => {
       route.continue();
     });
-    await expect(
-      page.locator("h1").filter({ hasText: "Flows" }),
-    ).toBeVisible();
+    await expect(page.locator("h1").filter({ hasText: "Flows" })).toBeVisible();
     await expect(page.getByText(toastText)).toBeHidden();
   });
 });
