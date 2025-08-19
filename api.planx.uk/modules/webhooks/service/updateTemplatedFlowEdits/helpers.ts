@@ -1,4 +1,8 @@
-import type { Node, NodeId } from "@opensystemslab/planx-core/types";
+import {
+  ComponentType,
+  type Node,
+  type NodeId,
+} from "@opensystemslab/planx-core/types";
 import type * as jsondiffpatch from "jsondiffpatch";
 import isEmpty from "lodash/isEmpty.js";
 import type { Flow } from "../../../../types.js";
@@ -19,11 +23,13 @@ export const transformDeltaToTemplatedFlowEditsData = (
       updatedNodeData[updatedKey] = data[nodeId]?.["data"]?.[updatedKey];
     });
 
-    const updatedEdges = nodeData?.edges;
+    // Always preserve a templated folders' "edges", even if it's been "emptied" out
+    const updatedEdges =
+      nodeData?.edges || nodeData?.type === ComponentType.InternalPortal;
 
     templatedFlowEditsData[nodeId] = {
       ...(Object.keys(updatedNodeData).length > 0 && { data: updatedNodeData }),
-      ...(updatedEdges && { edges: data[nodeId]?.["edges"] }),
+      ...(updatedEdges && { edges: data[nodeId]?.["edges"] || [] }),
     };
 
     // If it's an entirely new node (Option type) that has been added, it won't
