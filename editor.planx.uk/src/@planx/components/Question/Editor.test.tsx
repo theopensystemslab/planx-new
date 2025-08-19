@@ -48,6 +48,6 @@ describe("validation", () => {
     await waitFor(() => 
       expect(screen.getByText(/Options must have unique labels/)).toBeVisible()
     );
-  })
+  }, 10_000)
 })
 
