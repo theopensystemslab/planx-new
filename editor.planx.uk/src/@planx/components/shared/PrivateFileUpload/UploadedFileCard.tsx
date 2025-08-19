@@ -137,7 +137,6 @@ export const UploadedFileCard: React.FC<Props> = ({
                 variant="body1"
                 pb="0.25em"
                 sx={{ overflowWrap: "break-word", wordBreak: "break-all" }}
-                data-testid={file.name}
               >
                 {file.name}
               </Typography>

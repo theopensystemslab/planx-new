@@ -1,5 +1,6 @@
 import { Schema } from "@planx/components/shared/Schema/model";
 import { TextInputType } from "@planx/components/TextInput/model";
+import { expect } from "vitest";
 
 import { Props } from "../../Public";
 
@@ -97,7 +98,7 @@ export const Zoo: Schema = {
       type: "fileUpload",
       data: {
         title: "Upload some photos of the animal",
-        fn: "photos",
+        fn: "photographs.existing",
       },
     },
   ],
@@ -106,7 +107,7 @@ export const Zoo: Schema = {
 } as const;
 
 export const mockZooProps: Props = {
-  fn: "mockFn",
+  fn: "mockFn", 
   schema: Zoo,
   schemaName: "Zoo",
   title: "Mock Title",
@@ -132,6 +133,29 @@ export const mockZooPayload = {
           postcode: "EH12 6TS",
           country: "Scotland",
         },
+        "photographs.existing": [
+          {
+            file: {
+              path: "./test1.png",
+              relativePath: "./test1.png",
+            },
+            // IDs are generated at runtime and cannot be pre-determined
+            id: expect.any(String),
+            progress: 0,
+            status: "success",
+            url: "https://mock-url/test1.png",
+          },
+          {
+            file: {
+              path: "./test2.png",
+              relativePath: "./test2.png",
+            },
+            id: expect.any(String),
+            progress: 0,
+            status: "success",
+            url: "https://mock-url/test2.png",
+          },
+        ],
       },
       {
         age: 10,
@@ -149,6 +173,28 @@ export const mockZooPayload = {
           postcode: "EH12 6TS",
           country: "Scotland",
         },
+        "photographs.existing": [
+          {
+            file: {
+              path: "./test1.png",
+              relativePath: "./test1.png",
+            },
+            id: expect.any(String),
+            progress: 0,
+            status: "success",
+            url: "https://mock-url/test1.png",
+          },
+          {
+            file: {
+              path: "./test2.png",
+              relativePath: "./test2.png",
+            },
+            id: expect.any(String),
+            progress: 0,
+            status: "success",
+            url: "https://mock-url/test2.png",
+          },
+        ],
       },
     ],
     "mockFn.one.age": 10,
@@ -166,6 +212,28 @@ export const mockZooPayload = {
       postcode: "EH12 6TS",
       country: "Scotland",
     },
+    "mockFn.one.photographs.existing": [
+      {
+        file: {
+          path: "./test1.png",
+          relativePath: "./test1.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test1.png",
+      },
+      {
+        file: {
+          path: "./test2.png",
+          relativePath: "./test2.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test2.png",
+      },
+    ],
     "mockFn.two.age": 10,
     "mockFn.two.cuteness.amount": "Very",
     "mockFn.two.email.address": "richard.parker@pi.com",
@@ -181,6 +249,70 @@ export const mockZooPayload = {
       postcode: "EH12 6TS",
       country: "Scotland",
     },
+    "mockFn.two.photographs.existing": [
+      {
+        file: {
+          path: "./test1.png",
+          relativePath: "./test1.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test1.png",
+      },
+      {
+        file: {
+          path: "./test2.png",
+          relativePath: "./test2.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test2.png",
+      },
+    ],
     "mockFn.total.listItems": 2,
+    "photographs.existing": [
+      {
+        file: {
+          path: "./test1.png",
+          relativePath: "./test1.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test1.png",
+      },
+      {
+        file: {
+          path: "./test2.png",
+          relativePath: "./test2.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test2.png",
+      },
+      {
+        file: {
+          path: "./test1.png",
+          relativePath: "./test1.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test1.png",
+      },
+      {
+        file: {
+          path: "./test2.png",
+          relativePath: "./test2.png",
+        },
+        id: expect.any(String),
+        progress: 0,
+        status: "success",
+        url: "https://mock-url/test2.png",
+      },
+    ],
   },
 };

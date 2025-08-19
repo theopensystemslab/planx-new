@@ -5,7 +5,7 @@ import {
   SchemaUserData,
   SchemaUserResponse,
 } from "@planx/components/shared/Schema/model";
-import { getRequestedFiles } from "@planx/components/shared/Schema/utils";
+import { extractSchemaFileTypes, getRequestedFiles } from "@planx/components/shared/Schema/utils";
 import { PublicProps } from "@planx/components/shared/types";
 import {
   getPreviouslySubmittedData,
@@ -65,6 +65,11 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // flattenedPassportData makes individual list items compatible with Calculate components
       const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
 
+      const schemaFileTypes = extractSchemaFileTypes({
+        userData: values.schemaData,
+        schema: props.schema,
+      });
+
       // basic example of general summary stats we can add onSubmit:
       //   1. count of items/responses
       //   2. if the schema includes a field that sets fn = "identicalUnits", sum of total units
@@ -99,6 +104,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
           ...flattenedPassportData,
           ...summaries,
           ...requestedFiles,
+          ...schemaFileTypes,
         },
       });
     },

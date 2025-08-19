@@ -9,7 +9,7 @@ import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import { useSchema } from "../shared/Schema/hook";
 import { SchemaUserData } from "../shared/Schema/model";
 import { SchemaFields } from "../shared/Schema/SchemaFields";
-import { getRequestedFiles } from "../shared/Schema/utils";
+import { extractSchemaFileTypes, getRequestedFiles } from "../shared/Schema/utils";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { Page } from "./model";
 
@@ -40,11 +40,17 @@ function PageComponent(props: Props) {
       context: TYPES.Page,
     });
 
+    const schemaFileTypes = extractSchemaFileTypes({
+      userData: values.schemaData,
+      schema: props.schema,
+    });
+
     const userData = {
       data: {
         ...defaultPassportData,
         ...flattenedData,
         ...requestedFiles,
+        ...schemaFileTypes,
       },
     };
 
