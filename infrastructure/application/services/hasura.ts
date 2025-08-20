@@ -156,7 +156,7 @@ export const createHasuraService = async ({
             // extend timeout for migrations during setup to 3 mins (default is 30s)
             {
               name: "HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT",
-              value: "180",
+              value: "360",
             },
             // ensure migrations run sequentially (to manage CPU load)
             {
