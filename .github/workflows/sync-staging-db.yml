@@ -13,7 +13,7 @@ jobs:
     name: Seed Database
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install pulumi
         uses: pulumi/setup-pulumi@v2
       - run: |
