@@ -71,8 +71,8 @@ export type Session = {
   // TODO: replace `id` with `flow: { id, published_flow_id }`
   id: SharedStore["id"];
   govUkPayment?: GovUKPayment;
-  // Only present on sessions for flow which utilise "Section" components
-  progress?: Progress
+  /** Only present on sessions for flow which utilise "Section" components */
+  progress?: Progress;
 };
 
 export interface ReconciliationResponse {
