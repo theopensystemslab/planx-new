@@ -92,7 +92,7 @@ export const VerifySubmissionEmail = ({
               <>
                 <CardHeader
                   title="Verify your submission email address"
-                  description="We will use this to confirm that you have access to the submission email inbox that is set up for your team. Entering the correct email address will start the file download automatically."
+                  description="This is the submission email set in your team settings. We will use this to confirm that you have access to the submission email inbox that is set up for your team. Entering the correct email address will start the file download automatically."
                 />
                 <InputRow>
                   <InputLabel
