@@ -66,8 +66,8 @@ export const fillInResponse = async (
 
   expect(newUploadCount).toEqual(previousUploadCount + 2);
 
-  const mockFile1 = screen.getByTestId("file-upload-card-title-test1.png");
-  const mockFile2 = screen.getByTestId("file-upload-card-title-test2.png");
+  const mockFile1 = screen.getByTestId("test1.png");
+  const mockFile2 = screen.getByTestId("test2.png");
 
   expect(mockFile1).toBeVisible();
   expect(mockFile2).toBeVisible();
