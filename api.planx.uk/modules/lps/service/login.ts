@@ -39,7 +39,7 @@ const createMagicLinkToken = async (email: string): Promise<string> => {
   }
 };
 
-export const generateMagicLink = async (email: string) => {
+const generateMagicLink = async (email: string) => {
   const token = await createMagicLinkToken(email);
   const url = new URL("/applications", process.env.LPS_URL_EXT!);
   // TODO: Maybe base64 encode these as a single param?
