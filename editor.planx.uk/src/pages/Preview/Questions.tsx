@@ -62,6 +62,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     getType,
     node,
     setCurrentCard,
+    progress,
   ] = useStore((state) => [
     state.previousCard,
     state.record,
@@ -76,6 +77,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
     state.currentCard,
     state.setCurrentCard,
+    state.getSectionProgress(),
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, trackEvent } = useAnalyticsTracking();
@@ -136,6 +138,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       passport,
       sessionId,
       govUkPayment,
+      progress,
     };
 
     const saveFlowData = async () => {
@@ -162,6 +165,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     govUkPayment,
     isStandalone,
     isUsingLocalStorage,
+    progress,
   ]);
 
   // scroll to top on any update to breadcrumbs
