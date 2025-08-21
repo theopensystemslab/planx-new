@@ -5,7 +5,8 @@ import { it, test, vi } from "vitest";
 import { Mock } from "vitest";
 import { axe } from "vitest-axe";
 
-import { mockZooPayload, mockZooProps } from "../../schemas/mocks/Zoo";
+import { mockZooPayload } from "../../schemas/mocks/Zoo/payload";
+import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
 

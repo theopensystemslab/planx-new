@@ -32,7 +32,7 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
-import { Zoo } from "./schemas/mocks/Zoo";
+import { Zoo } from "./schemas/mocks/Zoo/schema";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";

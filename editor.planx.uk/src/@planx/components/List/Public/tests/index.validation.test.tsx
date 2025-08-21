@@ -6,7 +6,7 @@ import { setup } from "testUtils";
 import { test, vi } from "vitest";
 import { Mock } from "vitest";
 
-import { mockZooProps } from "../../schemas/mocks/Zoo";
+import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
 
