@@ -33,10 +33,13 @@ INSERT INTO
   )
 SELECT
   id,
-  data,
+  CASE 
+    WHEN data ? 'id' THEN jsonb_build_object('id', data->>'id')
+    ELSE '{}'::jsonb
+  END as data,
   created_at,
   updated_at,
-  email,
+  'anon@example.com' as email,
   flow_id,
   deleted_at,
   submitted_at,
