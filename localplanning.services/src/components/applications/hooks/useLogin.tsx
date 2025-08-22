@@ -27,16 +27,6 @@ export const useLogin: UseLogin = () => {
       if (!response.ok) {
         throw new Error(`Failed to submit: ${response.status}`);
       }
-      
-      // TEMP - remove after UR
-      const body = await response.json();
-      if (body.magicLink) {
-        const url = new URL(body.magicLink)
-        const searchParams = url.searchParams
-        navigate(`/mock-email?${searchParams.toString()}`)
-        return;
-      }
-
       navigate("/applications/check-your-inbox");
     } catch (err) {
       const message = err instanceof Error ? err.message : "An unexpected error occurred";

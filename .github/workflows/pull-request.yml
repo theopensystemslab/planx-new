@@ -204,15 +204,15 @@ jobs:
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml"
+          cache: 'pnpm'
+          cache-dependency-path: './${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml'
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - run: pnpm build --mode pizza
-        env: 
+        env:
           ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
@@ -376,6 +376,7 @@ jobs:
             rc-update add docker default
             service docker start
             apk add docker-cli-compose
+            docker login ${{ secrets.VULTR_CR_URN }} -u ${{ secrets.VULTR_CR_ID }} -p ${{ secrets.VULTR_CR_API_KEY }}
 
             apk add git
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
@@ -412,6 +413,7 @@ jobs:
             rc-update add docker default
             service docker start
             apk add docker-cli-compose
+            docker login ${{ secrets.VULTR_CR_URN }} -u ${{ secrets.VULTR_CR_ID }} -p ${{ secrets.VULTR_CR_API_KEY }}
 
             apk add git
             git clone "${{ secrets.AUTHENTICATED_REPO_URL }}"
@@ -538,7 +540,7 @@ jobs:
         run: pnpm install --frozen-lockfile
         working-directory: e2e
       - name: Code checks
-        run:  pnpm check
+        run: pnpm check
         working-directory: e2e
       - name: Install Playwright Dependencies
         run: pnpm playwright install --with-deps
@@ -546,7 +548,7 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: End-to-end Tests
-        run:  pnpm test
+        run: pnpm test
         working-directory: e2e
       - name: Archive Playwright Test Results
         if: ${{ failure() }}

@@ -1,7 +1,7 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
-import { FormikErrors, FormikValues, useFormik } from "formik";
+import { FormikErrors, FormikValues, getIn, useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { ComponentTagSelect } from "ui/editor/ComponentTagSelect";
 import ImgInput from "ui/editor/ImgInput/ImgInput";
 import InputGroup from "ui/editor/InputGroup";
@@ -102,18 +102,10 @@ export const Question: React.FC<Props> = (props) => {
 
   const focusRef = useRef<HTMLInputElement | null>(null);
 
-  // horrible hack to remove focus from Rich Text Editor
-  useEffect(() => {
-    setTimeout(() => {
-      (document.activeElement as any).blur();
-      focusRef.current?.focus();
-    }, 50);
-  }, []);
-
   const isTemplate = useStore.getState().isTemplate;
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal">
+    <form onSubmit={formik.handleSubmit} id="modal" data-testid="question-component-form">
       <TemplatedNodeInstructions
         isTemplatedNode={formik.values.isTemplatedNode}
         templatedNodeInstructions={formik.values.templatedNodeInstructions}
@@ -191,32 +183,34 @@ export const Question: React.FC<Props> = (props) => {
           </InputGroup>
         </ModalSectionContent>
         <ModalSectionContent subtitle="Options">
-          <ListManager
-            values={formik.values.options}
-            disabled={props.disabled}
-            onChange={(newOptions) => {
-              formik.setFieldValue("options", newOptions);
-            }}
-            newValue={() => ({
-              id: "",
-              data: {
-                text: "",
-                description: "",
-                val: "",
-                flags: [],
-              },
-            })}
-            Editor={QuestionOptionsEditor}
-            editorExtraProps={{
-              showValueField: !!formik.values.fn,
-              schema: getOptionsSchemaByFn(
-                formik.values.fn,
-                schema?.options,
-                currentOptionVals,
-              ),
-            }}
-            isTemplatedNode={props.node?.data?.isTemplatedNode}
-          />
+          <ErrorWrapper error={getIn(formik.errors, "options")}>
+            <ListManager
+              values={formik.values.options}
+              disabled={props.disabled}
+              onChange={(newOptions) => {
+                formik.setFieldValue("options", newOptions);
+              }}
+              newValue={() => ({
+                id: "",
+                data: {
+                  text: "",
+                  description: "",
+                  val: "",
+                  flags: [],
+                },
+              })}
+              Editor={QuestionOptionsEditor}
+              editorExtraProps={{
+                showValueField: !!formik.values.fn,
+                schema: getOptionsSchemaByFn(
+                  formik.values.fn,
+                  schema?.options,
+                  currentOptionVals,
+                ),
+              }}
+              isTemplatedNode={props.node?.data?.isTemplatedNode}
+            />
+          </ErrorWrapper>
         </ModalSectionContent>
       </ModalSection>
       <MoreInformation formik={formik} disabled={props.disabled} />

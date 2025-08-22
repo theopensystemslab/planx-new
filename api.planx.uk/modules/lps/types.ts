@@ -3,10 +3,6 @@ import type { ValidatedRequestHandler } from "../../shared/middleware/validate.j
 
 interface LoginResponse {
   message: string;
-  /**
-   * @deprecated Remove property after UR
-   */
-  magicLink?: string;
 }
 
 export const loginSchema = z.object({

@@ -25,3 +25,20 @@ To see verbose logs for the caddy container, add the `debug` directive to the gl
 The propagation knobs should be understood like so: wait for `propagation_delay` before starting poll of DNS records (after attempting to write them to Vultr), then keep trying to verify success for `propagation_timeout`, before handing over to the ACME server.
 
 Note also that Docker's embedded DNS breaks CertMagic polling, meaning Caddy can't verify the successful writing of appropriate DNS records, so we explicitly set public [resolvers](https://caddyserver.com/docs/caddyfile/directives/tls#resolvers) (specifically Cloudflare and Google).
+
+## Building the image
+
+We bake the caddy-dns/vultr plugin into a standard caddy image using [xcaddy](https://caddyserver.com/docs/build#xcaddy), as per the `Dockerfile`. This means the final image doesn't require a Go installation, saving several GB.
+
+See also comprehensive documentation and examples from Vultr [here](https://docs.vultr.com/how-to-build-a-docker-image).
+
+Should you make any changes to the Dockerfile, the following commands should suffice to rebuild the image from scratch and push it to the Vultr container registry (assuming your working directory is `/ci/caddy/`):
+
+```
+docker login $VULTR_CR_URN -u $VULTR_CR_ID -p $VULTR_CR_API_KEY
+docker build --no-cache -t caddy-vultr:latest .
+docker tag caddy-vultr:latest "$VULTR_CR_URN/caddy-vultr:latest"
+docker push "$VULTR_CR_URN/caddy-vultr:latest"
+```
+
+NB. The `%VULTR...` env vars should be available in your `.env`! `$VULTR_CR_URN` is not a secret (at time of writing, it is `lhr.vultrcr.com/planx`), but we use the variable in case it changes later.

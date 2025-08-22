@@ -96,7 +96,7 @@ export const MapFieldInput: React.FC<Props<MapField>> = (props) => {
               }/proxy/ordnance-survey`}
               osCopyright={
                 mapOptions?.basemap === "OSVectorTile"
-                  ? `Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  ? `Basemap subject to Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                   : ``
               }
               clipGeojsonData={
