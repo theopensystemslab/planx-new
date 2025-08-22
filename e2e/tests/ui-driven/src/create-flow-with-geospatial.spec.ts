@@ -111,7 +111,7 @@ test.describe("Flow creation, publish and preview", () => {
     await publishService(page);
 
     let previewLink = page.getByRole("link", {
-      name: "Open published service",
+      name: "Open published flow",
     });
     await expect(previewLink).toBeVisible();
 
@@ -121,7 +121,7 @@ test.describe("Flow creation, publish and preview", () => {
     // Exit back to main Editor page
     page.locator('[aria-label="Editor"]').click();
     previewLink = page.getByRole("link", {
-      name: "Open published service",
+      name: "Open published flow",
     });
     await expect(previewLink).toBeVisible();
 
