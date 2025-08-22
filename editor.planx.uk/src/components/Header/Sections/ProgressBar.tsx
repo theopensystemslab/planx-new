@@ -27,9 +27,13 @@ const Root = styled(LinearProgress)(({ theme }) => ({
 }));
 
 export const ProgressBar: React.FC = () => {
-  const { completed, current } = useStore((state) =>
+  const progress = useStore((state) =>
     state.getSectionProgress(),
   );
+
+  if (!progress) return;
+
+  const { completed, current } = progress;
 
   return (
     <Root

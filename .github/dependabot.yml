@@ -30,6 +30,20 @@ updates:
         patterns:
           - "@tiptap/*"
 
+  # localplanning.services
+  - package-ecosystem: "npm"
+    directory: "/localplanning.services"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "lps"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "theopensystemslab/planx"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+
   # Hasura
   - package-ecosystem: "npm"
     directory: "/hasura.planx.uk"

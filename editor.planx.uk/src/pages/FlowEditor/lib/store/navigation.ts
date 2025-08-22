@@ -13,6 +13,11 @@ export interface SectionNode extends Store.Node {
   data: Section;
 }
 
+export interface Progress { 
+  completed: number;
+  current: number;
+}
+
 export interface NavigationStore {
   currentSectionIndex: number;
   sectionCount: number;
@@ -24,10 +29,7 @@ export interface NavigationStore {
   filterFlowByType: (type: TYPES) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
-  getSectionProgress: () => {
-    completed: number;
-    current: number;
-  };
+  getSectionProgress: () => Progress | undefined;
 }
 
 export const navigationStore: StateCreator<
@@ -180,7 +182,10 @@ export const navigationStore: StateCreator<
   },
 
   getSectionProgress: () => {
-    const { sectionNodes, currentSectionIndex, isFinalCard } = get();
+    const { sectionNodes, currentSectionIndex, isFinalCard, sectionCount } =
+      get();
+    if (!sectionCount) return;
+
     if (isFinalCard()) return { completed: 100, current: 100 };
 
     // Account for offset index
