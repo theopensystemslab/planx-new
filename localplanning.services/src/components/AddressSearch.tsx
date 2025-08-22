@@ -111,8 +111,8 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
         // sometimes there are multiple intersecting LPAs..
         // do we need more sophisticated match logic here?
         for (const entity of data.entities) {
-          if (Object.keys(lpaReferenceLookup).indexOf(entity.reference) > -1) {
-            let matchingLpaRoute = lpaReferenceLookup[entity.reference];
+          if (entity.reference in lpaReferenceLookup) {
+            const matchingLpaRoute = lpaReferenceLookup[entity.reference];
             action
               ? navigate(`/${matchingLpaRoute}?action=${action}`)
               : navigate(`/${matchingLpaRoute}`);

@@ -80,7 +80,7 @@ export const localPlanningAuthorityLookup = async (
           return [];
         }
 
-        return data.entities as LocalPlanningAuthorityFeature[];
+        return data.entities;
       });
 
     const baseResponse = {
