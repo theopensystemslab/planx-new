@@ -128,13 +128,9 @@ export default function MakePayment({
   const resolvePaymentResponse = (responseData: GovUKPayment): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    const resolvedPayment: GovUKPayment = {
-      ...responseData,
-      amount: toDecimal(responseData.amount),
-    };
-    setPayment(resolvedPayment);
+    setPayment(responseData);
     // useState is async, so we also pass the resolved value to the chained promise
-    return resolvedPayment;
+    return responseData;
   };
 
   const readyAction = async () => {
