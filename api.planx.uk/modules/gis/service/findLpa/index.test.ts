@@ -1,21 +1,15 @@
 import supertest from "supertest";
 
-import app from "../../../server.js";
-import type { LocalPlanningAuthorityFeature } from "./lpa.js";
-
-interface EntitiesResponse {
-  sourceRequest: string;
-  entities: LocalPlanningAuthorityFeature[];
-}
+import app from "../../../../server.js";
+import type { LocalPlanningAuthorityFeature, Success } from "./types.js";
 
 it("returns an error if required query parameters are missing", async () => {
   await supertest(app)
     .get("/lpa")
     .expect(400)
     .then((res) => {
-      expect(res.body).toEqual({
-        error: "Missing required query params `lat` or `lon`",
-      });
+      expect(res.body).toHaveProperty("issues");
+      expect(res.body).toHaveProperty("name", "ZodError");
     });
 });
 
@@ -57,7 +51,7 @@ describe("checking several points against local planning authority lookup API", 
         .then((res) => {
           // check that the LPA returned matches the expected point
           expect(
-            (res.body as EntitiesResponse)["entities"].map(
+            (res.body as Success)["entities"].map(
               (e: LocalPlanningAuthorityFeature) => e.name,
             ),
           ).toEqual(location.lpas);
