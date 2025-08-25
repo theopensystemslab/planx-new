@@ -13,7 +13,7 @@ import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
 
 import { makeData } from "../../shared/utils";
-import { createPayload, getDefaultContent, Pay, toDecimal } from "../model";
+import { createPayload, getDefaultContent, Pay } from "../model";
 import Confirm from "./Confirm";
 import { getGovUkPayUrlForTeam } from "./utils";
 
