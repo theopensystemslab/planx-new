@@ -448,7 +448,11 @@ export const previewStore: StateCreator<
   },
 
   resumeSession(session: Session) {
-    set({ ...session });
+    // TODO: Explain the importance of this
+    // TODO: Explain computePassport() relies on **sorted** breadcrumbs
+    const sortedBreadcrumbs = sortBreadcrumbs(session.breadcrumbs, get().flow);
+
+    set({ ...session, breadcrumbs: sortedBreadcrumbs });
     get().setCurrentCard();
     get().updateSectionData();
   },
