@@ -47,7 +47,7 @@ const baseFilterOptions: FilterOptions<FlowSummary>[] = [
     validationFn: checkFlowStatus,
   },
   {
-    displayName: "Service type",
+    displayName: "Type",
     optionKey: `publishedFlows.0.hasSendComponent`,
     optionValue: ["submission"],
     validationFn: checkFlowServiceType,

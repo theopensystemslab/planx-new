@@ -78,9 +78,9 @@ const newNode = route(async (req) => {
 
   // Pass in list of relevant flows for portals
   // This makes testing and mocking simpler
-  if (type === "external-portal") {
+  if (type === "nested-flow") {
     extraProps.flows = await getExternalPortals(team, flow);
-  } else if (type === "internal-portal") {
+  } else if (type === "folder") {
     extraProps.flows = Object.entries(useStore.getState().flow)
       .filter(
         ([id, v]: any) =>

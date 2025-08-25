@@ -247,7 +247,7 @@ const Breadcrumbs: React.FC = () => {
           {useStore.getState().canUserEditTeam(team.slug) ? (
             <Button
               variant="link"
-              href={`/${team.slug}/${route.data.flow}/service`}
+              href={`/${team.slug}/${route.data.flow}/settings`}
               title="Update service status"
               sx={{ textDecoration: "none" }}
             >

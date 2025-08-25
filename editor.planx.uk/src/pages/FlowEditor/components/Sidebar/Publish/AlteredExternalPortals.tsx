@@ -102,7 +102,7 @@ export const AlteredExternalPortalsSummary = (props: {
   return (
     <Box py={1}>
       <Typography variant="h4" component="h3" gutterBottom>
-        {`Nested services`}
+        {`Nested flows`}
       </Typography>
       <List>
         {portals.map((portal) => (

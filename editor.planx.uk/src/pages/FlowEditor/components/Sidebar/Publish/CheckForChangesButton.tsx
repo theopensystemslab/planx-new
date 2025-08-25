@@ -85,7 +85,7 @@ export const CheckForChangesToPublishButton: React.FC<{
         logger.notify(error);
       } else {
         alert(
-          `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all external portals are valid. \n${error}`,
+          `Error checking for changes to publish. Confirm that your graph does not have any corrupted nodes and that all nested flows are valid. \n${error}`,
         );
       }
     }
@@ -158,7 +158,6 @@ export const CheckForChangesToPublishButton: React.FC<{
                 </strong>
               </Typography>
             </Box>
-
           </Box>
         )}
         <Button

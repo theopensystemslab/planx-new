@@ -113,7 +113,7 @@ In the down file, un-comment the lines and preserve the original query (this is 
 
   Now you can begin testing your a service where your new passport variable is set, and as it is populated in the passport, it should come through to your new view.column. 
 
-  With both Hasura and the Editor running locally, choose a relevant service and "Open published service" (making sure that you use the normal link and not the one with analytics turned off). Go through a user journey that should create analytics with your expected values. Check that the table is populated as expected in Hasura.
+  With both Hasura and the Editor running locally, choose a relevant service and "Open published flow" (making sure that you use the normal link and not the one with analytics turned off). Go through a user journey that should create analytics with your expected values. Check that the table is populated as expected in Hasura.
 
   Key to ensure that it is coming through in the right format, and with the expected value. A typical issue may be that it comes through as something like `['your value']` which will be read as `jsonb` by metabase and only allow boolean based filtering when creating dashboards, *does it exist or not*
 

@@ -23,7 +23,7 @@ it("Displays a warning if no results are returned", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "Timbuktu");
 
   await waitFor(() =>
@@ -39,7 +39,7 @@ it("Displays the count for a single result", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "Spain");
 
   await waitFor(() => expect(getByText("1 result:")).toBeInTheDocument());
@@ -54,7 +54,7 @@ it("Displays the count for multiple results", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   // Matches "India" and "Indonesia"
   user.type(searchInput, "Ind");
 

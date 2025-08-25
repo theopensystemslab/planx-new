@@ -51,9 +51,9 @@ export const AlteredNodeListItem = (props: { node: AlteredNode }) => {
   let text, data;
 
   if (node.id === "_root") {
-    text = "Changed _root service by adding, deleting or re-ordering nodes";
+    text = "Changed _root flow by adding, deleting or re-ordering nodes";
   } else if (node.id === "0") {
-    text = `The entire _root service will be published for the first time`;
+    text = `The entire _root flow will be published for the first time`;
   } else if (node.id && Object.keys(node).length === 1) {
     text = `Deleted node ${node.id}`;
   } else if (node.type && node.data) {
@@ -111,7 +111,7 @@ export const AlteredNodesSummaryContent = (props: {
   alteredNodes.map((node) => {
     if (node.id === "0") {
       changeSummary["title"] =
-        "You are publishing the main service for the first time.";
+        "You are publishing this flow for the first time.";
     } else if (node.id && Object.keys(node).length === 1) {
       changeSummary["deleted"] += 1;
     } else if (node.type === TYPES.InternalPortal) {
@@ -128,7 +128,7 @@ export const AlteredNodesSummaryContent = (props: {
   return (
     <Box>
       <Typography variant="h3" component="h2" gutterBottom pt={1}>
-        {`Changes to your service since last publish`}
+        {`Changes to your flow since last publish`}
       </Typography>
       {comments.length > 0 && (
         <List sx={{ listStyleType: "none" }}>

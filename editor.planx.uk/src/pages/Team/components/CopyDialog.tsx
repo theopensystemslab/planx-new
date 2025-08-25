@@ -104,7 +104,7 @@ export const CopyDialog: React.FC<Props> = ({
               <DialogContent
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
-                <InputLabel label="Service name" htmlFor="flow.name">
+                <InputLabel label="Flow name" htmlFor="flow.name">
                   <Input
                     {...getFieldProps("flow.name")}
                     id="flow.name"
@@ -142,7 +142,7 @@ export const CopyDialog: React.FC<Props> = ({
                   disableRipple
                   disabled={isSubmitting}
                 >
-                  Copy service
+                  Copy flow
                 </Button>
               </DialogActions>
             </Form>
