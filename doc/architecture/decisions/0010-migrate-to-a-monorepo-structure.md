@@ -1,7 +1,7 @@
 # 10. Migrate to a monorepo structure
 
 ## Status
-Approved
+Accepted
 
 ## Context
 Our current repository structure in planx-new consists of - 
