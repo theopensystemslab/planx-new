@@ -90,7 +90,7 @@ function EditorNavMenu() {
 
   const teamLayoutRoutes: Route[] = [
     {
-      title: "Services",
+      title: "Flows",
       Icon: FormatListBulletedIcon,
       route: `/${teamSlug}`,
       accessibleBy: "*",
@@ -146,15 +146,15 @@ function EditorNavMenu() {
       accessibleBy: "*",
     },
     {
-      title: "About this service",
+      title: "About this flow",
       Icon: Info,
       route: `/${teamSlug}/${flowSlug}/about`,
       accessibleBy: "*",
     },
     {
-      title: "Service settings",
+      title: "Flow settings",
       Icon: TuneIcon,
-      route: `/${teamSlug}/${flowSlug}/service`,
+      route: `/${teamSlug}/${flowSlug}/settings`,
       accessibleBy: ["platformAdmin", "teamEditor", "demoUser"],
     },
     {

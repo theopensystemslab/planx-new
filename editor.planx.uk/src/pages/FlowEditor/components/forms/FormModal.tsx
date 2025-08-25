@@ -97,8 +97,8 @@ const NodeTypeSelect: React.FC<{
       </optgroup>
       <optgroup label="Navigation">
         <option value={TYPES.Filter}>Filter</option>
-        <option value={TYPES.InternalPortal}>Internal portal</option>
-        <option value={TYPES.ExternalPortal}>External portal</option>
+        <option value={TYPES.ExternalPortal}>Flow</option>
+        <option value={TYPES.InternalPortal}>Folder</option>
         <option value={TYPES.Section}>Section</option>
         <option value={TYPES.SetValue}>Set value</option>
       </optgroup>

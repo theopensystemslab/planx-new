@@ -97,14 +97,10 @@ const ExternalPortalForm: React.FC<{
         }
       />
       <ModalSection>
-        <ModalSectionContent
-          title="External portal"
-          Icon={ICONS[TYPES.ExternalPortal]}
-        >
+        <ModalSectionContent title="Flow" Icon={ICONS[TYPES.ExternalPortal]}>
           <span>
-            External portals let you reference all content from another flow
-            inline within this service. Deleting this node does NOT delete the
-            flow that it references.
+            Nest all content from another flow inline within this flow. Deleting
+            this node does NOT delete the flow that it references.
           </span>
         </ModalSectionContent>
         <ModalSectionContent key={"flow-section"} title="Pick a flow">

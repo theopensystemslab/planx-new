@@ -56,7 +56,7 @@ test("entering a search term displays a series of cards", async () => {
 
   expect(queryByRole("list")).toBeEmptyDOMElement();
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "ind");
 
   await waitFor(() => expect(getByRole("list")).toBeInTheDocument());
@@ -70,7 +70,7 @@ test("cards link to their associated nodes", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "ind");
 
   await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(2));
@@ -113,7 +113,7 @@ test("setOrderedFlow is only called once on initial render", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "ind");
 
   await waitFor(() => expect(getAllByRole("listitem")).toHaveLength(2));
@@ -147,7 +147,7 @@ describe("rich text fields", () => {
       </VirtuosoWrapper>,
     );
 
-    const searchInput = getByLabelText("Search this flow and internal portals");
+    const searchInput = getByLabelText("Search this flow");
     user.type(searchInput, "rich text");
 
     // Search has completed

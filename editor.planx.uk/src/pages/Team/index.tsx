@@ -199,7 +199,7 @@ const Team: React.FC = () => {
             }}
           >
             <Typography variant="h2" component="h1" pr={1}>
-              Services
+              Flows
             </Typography>
             {isTrial && <InfoChip label="Trial account" />}
             {showAddFlowButton && <AddFlow />}

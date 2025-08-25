@@ -46,8 +46,8 @@ export const TeamMembers = () => {
           Team members
         </Typography>
         <Typography variant="body1">
-          Editors have access to edit your services, whilst viewers can only
-          browse your services.
+          Editors have access to edit your flows, whilst viewers can only browse
+          your flows.
         </Typography>
         <MembersTable
           members={activeMembers}
@@ -75,7 +75,7 @@ export const TeamMembers = () => {
           </Typography>
           <Typography variant="body1">
             Past team members who no longer have access to the Editor, but may
-            be part of the edit history of your services.
+            still appear in the edit history of your flows.
           </Typography>
           <MembersTable members={archivedMembers} />
         </SettingsSection>

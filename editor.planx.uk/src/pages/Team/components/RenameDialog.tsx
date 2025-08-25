@@ -127,7 +127,7 @@ export const RenameDialog: React.FC<Props> = ({
               <DialogContent
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
-                <InputLabel label="Service name" htmlFor="flowName">
+                <InputLabel label="Flow name" htmlFor="flowName">
                   <Input
                     {...getFieldProps("flowName")}
                     id="flowName"
@@ -165,7 +165,7 @@ export const RenameDialog: React.FC<Props> = ({
                   disableRipple
                   disabled={isSubmitting}
                 >
-                  Rename service
+                  Rename flow
                 </Button>
               </DialogActions>
             </Form>

@@ -20,7 +20,7 @@ export const BaseFormSection: React.FC = () => {
   return (
     <>
       <InputLabel
-        label="How do you want to create a new service?"
+        label="How do you want to create a new flow?"
         id="create-flow-mode"
       >
         <SelectInput
@@ -28,7 +28,7 @@ export const BaseFormSection: React.FC = () => {
           name="mode"
           bordered
           required={true}
-          title={"How do you want to create a new service?"}
+          title={"How do you want to create a new flow?"}
           labelId="create-flow-mode"
           onChange={(e) => {
             setFieldValue("mode", e.target.value);
@@ -44,7 +44,7 @@ export const BaseFormSection: React.FC = () => {
       </InputLabel>
       <CreateFromTemplateFormSection />
       <CreateFromCopyFormSection />
-      <InputLabel label="Service name" htmlFor="flow.name">
+      <InputLabel label="Flow name" htmlFor="flow.name">
         <Input
           {...getFieldProps("flow.name")}
           id="flow.name"
