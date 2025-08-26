@@ -1,3 +1,4 @@
+import { logger } from "airbrake";
 import { toast, ToastOptions } from "react-toastify";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import type { Doc } from "sharedb";
@@ -36,17 +37,9 @@ const createWSConnection = () => {
   /** Fallback for unhandled ShareDB errors - log user out to prevent silent failures */
   socket.addEventListener("error", ({ error, message }) => {
     console.error("Unhandled ShareDB error: ", { error, message });
-
-    // Only display a single toast at a time
-    if (toast.isActive("sharedb_jwt_expiry")) return;
-
-    toast.error(
-      "[ShareDB error]: Unhandled error, redirecting to login page...",
-      {
-        toastId: "sharedb_error",
-        ...toastConfig,
-      },
-    );
+    // Take no user action, allow them to remain logged in
+    // Report to Airbrake in order to further debug this issue, as it appears that "error" is triggering frequently
+    logger.notify(`Unhandled ShareDB error: ${message}. Error: ${error}.`);
   });
 
   return socket;
