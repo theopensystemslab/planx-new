@@ -98,28 +98,6 @@ export const mockZooPayload = {
       postcode: "EH12 6TS",
       country: "Scotland",
     },
-    "mockFn.one.photographs.existing": [
-      {
-        file: {
-          path: "./test1.png",
-          relativePath: "./test1.png",
-        },
-        id: expect.any(String),
-        progress: 0,
-        status: "success",
-        url: "https://mock-url/test1.png",
-      },
-      {
-        file: {
-          path: "./test2.png",
-          relativePath: "./test2.png",
-        },
-        id: expect.any(String),
-        progress: 0,
-        status: "success",
-        url: "https://mock-url/test2.png",
-      },
-    ],
     "mockFn.two.age": 10,
     "mockFn.two.cuteness.amount": "Very",
     "mockFn.two.email.address": "richard.parker@pi.com",
@@ -135,28 +113,6 @@ export const mockZooPayload = {
       postcode: "EH12 6TS",
       country: "Scotland",
     },
-    "mockFn.two.photographs.existing": [
-      {
-        file: {
-          path: "./test1.png",
-          relativePath: "./test1.png",
-        },
-        id: expect.any(String),
-        progress: 0,
-        status: "success",
-        url: "https://mock-url/test1.png",
-      },
-      {
-        file: {
-          path: "./test2.png",
-          relativePath: "./test2.png",
-        },
-        id: expect.any(String),
-        progress: 0,
-        status: "success",
-        url: "https://mock-url/test2.png",
-      },
-    ],
     "mockFn.total.listItems": 2,
     "photographs.existing": [
       {

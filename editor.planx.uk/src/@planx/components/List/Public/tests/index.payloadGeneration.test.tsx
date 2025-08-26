@@ -55,7 +55,7 @@ describe("Payload generation", () => {
       // All FileUploadField values are merged (2 files for each of the 2 list items)
       expect(result.data["photographs.existing"]).toHaveLength(4);
 
-      // Schema "FileTypes" are extracted to the root level of the passport
+      // Responses from FileUploadFields are extracted to the root level of the passport
       expect(result.data["photographs.existing"][0].id).toEqual(
         result.data.mockFn[0]["photographs.existing"][0].id,
       );
@@ -67,20 +67,6 @@ describe("Payload generation", () => {
       );
       expect(result.data["photographs.existing"][3].id).toEqual(
         result.data.mockFn[1]["photographs.existing"][1].id,
-      );
-
-      // Schema "FileTypes" are still kept as flattened values within the passport
-      expect(result.data["photographs.existing"][0].id).toEqual(
-        result.data["mockFn.one.photographs.existing"][0].id,
-      );
-      expect(result.data["photographs.existing"][1].id).toEqual(
-        result.data["mockFn.one.photographs.existing"][1].id,
-      );
-      expect(result.data["photographs.existing"][2].id).toEqual(
-        result.data["mockFn.two.photographs.existing"][0].id,
-      );
-      expect(result.data["photographs.existing"][3].id).toEqual(
-        result.data["mockFn.two.photographs.existing"][1].id,
       );
     },
   );

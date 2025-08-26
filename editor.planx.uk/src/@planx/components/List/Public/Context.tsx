@@ -5,7 +5,7 @@ import {
   SchemaUserData,
   SchemaUserResponse,
 } from "@planx/components/shared/Schema/model";
-import { extractSchemaFileTypes, getRequestedFiles } from "@planx/components/shared/Schema/utils";
+import { flattenFileUpload, getRequestedFiles, partitionSchemaData } from "@planx/components/shared/Schema/utils";
 import { PublicProps } from "@planx/components/shared/types";
 import {
   getPreviouslySubmittedData,
@@ -62,13 +62,15 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // defaultPassportData (array) is used when coming "back"
       const defaultPassportData = makeData(props, values.schemaData)?.["data"];
 
-      // flattenedPassportData makes individual list items compatible with Calculate components
-      const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
+      // Partition out responses from file upload fields as these are handled separately
+      const [fileUploadResponses, restResponses] = partitionSchemaData(values.schemaData, schema);
 
-      const schemaFileTypes = extractSchemaFileTypes({
-        userData: values.schemaData,
-        schema: props.schema,
-      });
+      // flattenedPassportData makes individual list items compatible with Calculate components
+      const restPassportData = makeData(props, restResponses)?.["data"];
+      const flattenedPassportData = flatten(restPassportData, { depth: 2 });
+      
+      // FileUploadField responses are omitted and stored at the passport root
+      const flattenedFileUploadResponses = flattenFileUpload(fileUploadResponses)
 
       // basic example of general summary stats we can add onSubmit:
       //   1. count of items/responses
@@ -104,7 +106,7 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
           ...flattenedPassportData,
           ...summaries,
           ...requestedFiles,
-          ...schemaFileTypes,
+          ...flattenedFileUploadResponses
         },
       });
     },
