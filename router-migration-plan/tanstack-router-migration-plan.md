@@ -106,36 +106,6 @@ export default defineConfig({
 }
 ```
 
-### Router Setup
-
-```typescript
-// src/index.tsx
-import { createRouter, RouterProvider as TanstackRouteProvider } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-//...rest of imports
-
-const routeTree = rootRoute.addChildren([indexRoute, aboutRoute])
-
-const router = createRouter({ routeTree })
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router
-  }
-}
-
-//... rest of index.tsx
-//
-  root.render(
-    //...previous providers
-    <Router context={{ currentUser: hasJWT() }} navigation={navigation}> //Existing navi router provider
-    <TanstackRouterProvider router={router} />
-    //... rest of providers
-  )
-}
-```
-
 ## Migration Timeline: 8-Week Gradual Approach
 
 ### Phase 1: Foundation & Public Routes (Weeks 1-2)
@@ -296,8 +266,10 @@ export const Route = createFileRoute('/authenticated')({
   component: AuthenticatedLayout,
 })
 
+import { Outlet } from '@tanstack/react-router';
+
 function AuthenticatedLayout() {
-  return <Outlet />
+  return <Outlet />;
 }
 ```
 
@@ -465,40 +437,6 @@ export const Route = createFileRoute("/authenticated/$team/$flow/")({
 
 ## Migration Utilities
 
-### Route Migration Tracker
-
-```typescript
-// utils/migration-tracker.ts
-interface MigratedRoute {
-  path: string;
-  status: "pending" | "in-progress" | "completed" | "tested";
-  originalFile: string;
-  newFile: string;
-  complexity: "low" | "medium" | "high";
-  dependencies: string[];
-}
-
-export const MIGRATION_ROUTES: MigratedRoute[] = [
-  {
-    path: "/login",
-    status: "pending",
-    originalFile: "routes/index.tsx",
-    newFile: "routes-tanstack/login.tsx",
-    complexity: "low",
-    dependencies: [],
-  },
-  // ... more routes
-];
-
-export function trackMigrationProgress() {
-  const completed = MIGRATION_ROUTES.filter(
-    (r) => r.status === "completed",
-  ).length;
-  const total = MIGRATION_ROUTES.length;
-  return { completed, total, percentage: (completed / total) * 100 };
-}
-```
-
 ### Router Bridge Utility
 
 ```typescript
@@ -541,161 +479,6 @@ export function migrateLinkComponent(originalPath: string) {
     }
   }
 }
-```
-
-## Testing Strategy
-
-### Testing Framework Setup
-
-```typescript
-// tests/setup/router-test-utils.tsx
-import { createMemoryHistory } from '@tanstack/react-router'
-import { render } from '@testing-library/react'
-
-export function renderWithTanStackRouter(
-  component: React.ReactElement,
-  { initialEntries = ['/'] } = {}
-) {
-  const router = createRouter({
-    routeTree,
-    history: createMemoryHistory({ initialEntries }),
-  })
-
-  return render(
-    <RouterProvider router={router}>
-      {component}
-    </RouterProvider>
-  )
-}
-```
-
-### Migration Test Suite
-
-```typescript
-// tests/migration/route-migration.test.tsx
-describe('Route Migration', () => {
-  describe('Authentication Routes', () => {
-    test('should redirect unauthenticated users to login', async () => {
-      const { getByText } = renderWithTanStackRouter(<App />, {
-        initialEntries: ['/authenticated/global-settings'],
-      })
-
-      await waitFor(() => {
-        expect(window.location.pathname).toBe('/login')
-      })
-    })
-  })
-
-  describe('Team Routes', () => {
-    test('should load team data correctly', async () => {
-      const { getByText } = renderWithTanStackRouter(<App />, {
-        initialEntries: ['/authenticated/test-team'],
-      })
-
-      await waitFor(() => {
-        expect(getByText('Test Team')).toBeInTheDocument()
-      })
-    })
-  })
-})
-```
-
-### Performance Testing
-
-```typescript
-// tests/performance/bundle-size.test.ts
-describe("Bundle Size Impact", () => {
-  test("should not increase bundle size by more than 10%", () => {
-    const currentSize = getBundleSize();
-    const maxAllowedSize = BASELINE_SIZE * 1.1;
-    expect(currentSize).toBeLessThan(maxAllowedSize);
-  });
-});
-```
-
-## Error Handling & Rollback Strategy
-
-### Error Boundaries
-
-```typescript
-// components/MigrationErrorBoundary.tsx
-export function MigrationErrorBoundary({ children }: { children: React.ReactNode }) {
-  return (
-    <ErrorBoundary
-      fallback={({ error, reset }) => (
-        <div>
-          <h2>Migration Error Detected</h2>
-          <p>Route: {window.location.pathname}</p>
-          <p>Error: {error.message}</p>
-          <button onClick={reset}>Try Again</button>
-          <button onClick={() => window.location.reload()}>
-            Fallback to Legacy Router
-          </button>
-        </div>
-      )}
-    >
-      {children}
-    </ErrorBoundary>
-  )
-}
-```
-
-### Rollback Procedure
-
-1. **Route-Level Rollback**: Revert specific routes to react-navi
-2. **Feature Flags**: Use feature flags to enable/disable TanStack routes
-3. **Full Rollback**: Complete reversion to react-navi if critical issues occur
-
-```typescript
-// utils/feature-flags.ts
-export const MIGRATION_FLAGS = {
-  enableTanStackAuth: false,
-  enableTanStackTeamRoutes: false,
-  enableTanStackFlowRoutes: false,
-} as const;
-
-export function shouldUseTanStackRouter(path: string): boolean {
-  if (
-    path.startsWith("/authenticated") &&
-    !MIGRATION_FLAGS.enableTanStackAuth
-  ) {
-    return false;
-  }
-  // ... more checks
-  return true;
-}
-```
-
-## Performance Optimizations
-
-### Code Splitting
-
-```typescript
-// routes-tanstack/authenticated/$team/$flow/index.lazy.tsx
-import { createLazyFileRoute } from '@tanstack/react-router'
-
-export const Route = createLazyFileRoute('/authenticated/$team/$flow/')({
-  component: () => {
-    const FlowEditor = lazy(() => import('@/pages/FlowEditor'))
-    return (
-      <Suspense fallback={<LoadingSpinner />}>
-        <FlowEditor />
-      </Suspense>
-    )
-  },
-})
-```
-
-### Preloading Strategy
-
-```typescript
-// Configure aggressive preloading for editor routes
-const router = createRouter({
-  routeTree,
-  defaultPreload: "intent",
-  defaultPreloadStaleTime: 0,
-  defaultPreloadGcTime: 1000 * 60 * 10, // 10 minutes
-});
 ```
 
 ### Data Caching
