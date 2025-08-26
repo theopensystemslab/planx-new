@@ -1,5 +1,5 @@
 import { SendIntegration } from "@opensystemslab/planx-core/types";
-import { waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { FullStore, useStore } from "pages/FlowEditor/lib/store";
 import React from "react";
@@ -38,11 +38,11 @@ beforeAll(() => (initialState = getState()));
 beforeEach(() => {
   act(() => setState({ teamSlug: "testTeam" }));
   mockAxios.post.mockReset();
-  mockAxios.post.mockResolvedValue({
-    data: hasuraEventsResponseMock,
-    status: 200,
-    statusText: "OK",
-  });
+  // mockAxios.post.mockResolvedValue({
+  //   data: hasuraEventsResponseMock,
+  //   status: 200,
+  //   statusText: "OK",
+  // });
 });
 
 afterEach(() => {
@@ -107,6 +107,29 @@ it("calls the /create-send-event endpoint", async () => {
   await waitFor(() => expect(mockAxios.post).toHaveBeenCalledTimes(1));
 
   expect(mockAxios.post).toHaveBeenCalledTimes(1);
+});
+
+it.only("handles errors returned by the API", async () => {
+  mockAxios.post.mockRejectedValueOnce({
+    message: "Request failed with status code 500",
+    response: {
+      data: { message: "Internal Server Error" },
+      status: 500,
+    },
+  });
+
+  setup(<SendComponent title="Send" destinations={["bops", "uniform"]} />);
+
+  // Wait for the async operation to complete and the error UI to appear
+  await waitFor(() => {
+    // Assert that the mocked function was called
+    expect(mockAxios.post).toHaveBeenCalledTimes(1);
+
+    // Assert the error UI is visible
+    expect(
+      screen.getByText(/Oops! Something went wrong./i)
+    ).toBeInTheDocument();
+  });
 });
 
 it("generates a valid payload for the API", async () => {

@@ -1,11 +1,12 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { SendIntegration } from "@opensystemslab/planx-core/types";
 import axios, { AxiosResponse } from "axios";
 import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAsync } from "react-use";
 import { AsyncState } from "react-use/lib/useAsyncFn";
 
@@ -81,10 +82,15 @@ const CreateSendEvents: React.FC<Props> = ({
     state.teamSlug,
   ]);
 
+  const [retryCount, setRetryCount] = useState(0);
+  const handleRetry = () => {
+    console.log("RETRY")
+    setRetryCount(prev => prev + 1);
+  }
+
   // Send makes a single request to create scheduled events in Hasura, then those events make the actual submission requests with retries etc
-  const url = `${
-    import.meta.env.VITE_APP_API_URL
-  }/create-send-events/${sessionId}`;
+  const url = `${import.meta.env.VITE_APP_API_URL
+    }/create-send-events/${sessionId}`;
   const { loading, error, value }: SendRequestState = useAsync(async () => {
     const combinedEventsPayload = getCombinedEventsPayload({
       destinations,
@@ -94,7 +100,7 @@ const CreateSendEvents: React.FC<Props> = ({
     });
 
     return axios.post(url, combinedEventsPayload);
-  });
+  }, [retryCount]);
 
   useEffect(() => {
     const isReady = !loading && !error && value;
@@ -121,7 +127,21 @@ const CreateSendEvents: React.FC<Props> = ({
   }, [loading, error, value, destinations, props]);
 
   // Throw errors so that they're caught by our error boundaries and Airbrake
-  if (error) throw error;
+  if (error) {
+    return (
+      <Card handleSubmit={props.handleSubmit}>
+        <ErrorSummaryContainer role="status">
+          <Typography variant="h4" ml={2} mb={1}>
+            Something went wrong
+          </Typography>
+          <Typography variant="body2" ml={2}>
+            There was an issue submitting your application. Please try again.
+          </Typography>
+          <Button onClick={handleRetry}>Retry</Button>
+        </ErrorSummaryContainer>
+      </Card>
+    );
+  }
 
   if (loading) {
     return (
@@ -131,11 +151,15 @@ const CreateSendEvents: React.FC<Props> = ({
     );
   }
 
-  return (
-    <Card>
-      <DelayedLoadingIndicator text="Finalising your submission..." />
-    </Card>
-  );
+  if (value) {
+    return (
+      <Card>
+        <DelayedLoadingIndicator text="Finalising your submission..." />
+      </Card>
+    );
+  }
+
+  return null;
 };
 
 export default SendComponent;
