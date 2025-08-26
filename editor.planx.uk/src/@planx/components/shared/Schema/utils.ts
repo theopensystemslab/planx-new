@@ -38,12 +38,15 @@ export const getRequestedFiles = ({
   const { required, recommended, optional } = useStore
     .getState()
     .requestedFiles();
+  
+  const uniqueRequired = [...new Set([...required, ...responseDataValues.required])];
+  const uniqueOptional = [...new Set([...optional, ...responseDataValues.optional])];
 
   // Return updated requested files state
   return {
     [PASSPORT_REQUESTED_FILES_KEY]: {
-      required: [...required, ...responseDataValues.required],
-      optional: [...optional, ...responseDataValues.optional],
+      required: uniqueRequired,
+      optional: uniqueOptional,
       recommended,
     },
   };
