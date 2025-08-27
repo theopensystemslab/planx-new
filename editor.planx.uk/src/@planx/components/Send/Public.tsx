@@ -98,16 +98,21 @@ const CreateSendEvents: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    const isReady = !loading && !error && value;
+    // Allow user to proceed in the event of an error
+    const isReady = value || error;
     if (!isReady) return;
 
+    let data = {};
+
     // Construct breadcrumb containing IDs of each send event generated
-    const data = Object.fromEntries(
-      destinations.map((destination) => [
-        `${destination}SendEventId`,
-        value.data[destination]?.event_id,
-      ]),
-    );
+    if (value) { 
+      data = Object.fromEntries(
+        destinations.map((destination) => [
+          `${destination}SendEventId`,
+          value.data[destination]?.event_id,
+        ]),
+      );
+    }
 
     const userAgent = Bowser.parse(window.navigator.userAgent); // This is a weird workaround so that we can include platform in `allow_list_answers` in order to pull it through easily in the `submission_services_summary` table
     const referrer = document.referrer || null;
@@ -117,6 +122,8 @@ const CreateSendEvents: React.FC<Props> = ({
           ...data,
           "send.analytics.userAgent": userAgent,
           "send.analytics.referrer": referrer,
+          // In case of error, log to breadcrumbs in addition to throwing Airbrake error for debugging purposes
+          ...(error && { "send.error": `Failed to create send events. Error: ${error.message}` }),
         },
       });
   }, [loading, error, value, destinations, props]);
