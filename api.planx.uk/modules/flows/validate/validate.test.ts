@@ -169,6 +169,11 @@ describe("sections validation on diff", () => {
               "Found Sections in one or more External Portals, but Sections are only allowed in main flow",
           },
           {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
+          },
+          {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
@@ -238,6 +243,11 @@ describe("sections validation on diff", () => {
             message: "When using Sections, your flow must start with a Section",
           },
           {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
+          },
+          {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
@@ -296,6 +306,11 @@ describe("invite to pay validation on diff", () => {
             title: "Invite to Pay",
             status: "Fail",
             message: "When using Invite to Pay, your flow must have a Send",
+          },
+          {
+            title: "Fees",
+            status: "Pass",
+            message: "Your flow has valid Pay using SetFee",
           },
           {
             title: "Project types",
@@ -368,6 +383,11 @@ describe("invite to pay validation on diff", () => {
               "When using Invite to Pay, your flow must have exactly ONE Send. It can select many destinations",
           },
           {
+            title: "Fees",
+            status: "Pass",
+            message: "Your flow has valid Pay using SetFee",
+          },
+          {
             title: "Project types",
             status: "Pass",
             message:
@@ -432,6 +452,11 @@ describe("invite to pay validation on diff", () => {
             status: "Fail",
             message:
               "When using Invite to Pay, your flow must have a FindProperty",
+          },
+          {
+            title: "Fees",
+            status: "Pass",
+            message: "Your flow has valid Pay using SetFee",
           },
           {
             title: "Project types",
@@ -500,6 +525,77 @@ describe("invite to pay validation on diff", () => {
             status: "Fail",
             message:
               "When using Invite to Pay, your flow must have exactly ONE Pay",
+          },
+          {
+            title: "Fees",
+            status: "Pass",
+            message: "Your flow has valid Pay using SetFee",
+          },
+          {
+            title: "Project types",
+            status: "Pass",
+            message:
+              "Project types set via Checklists are all supported by the ODP Schema",
+          },
+          {
+            title: "Sections",
+            status: "Not applicable",
+            message: "Your flow is not using Sections",
+          },
+          {
+            title: "File types",
+            status: "Not applicable",
+            message: "Your flow is not using FileUpload or UploadAndLabel",
+          },
+          {
+            title: "Planning Constraints",
+            status: "Not applicable",
+            message: "Your flow is not using Planning Constraints",
+          },
+          {
+            title: "Templated nodes",
+            status: "Not applicable",
+            message: "This is not a templated flow",
+          },
+        ]);
+      });
+  });
+});
+
+describe("set fees validation on diff", () => {
+  it("does not update if there is a Pay component, but there is not a SetFee component", async () => {
+    const { SetFee: _SetFee, ...invalidatedFlow } = flowWithInviteToPay;
+    invalidatedFlow["_root"].edges?.splice(
+      invalidatedFlow["_root"].edges?.indexOf("SetFee"),
+    );
+
+    queryMock.mockQuery({
+      name: "GetFlowData",
+      matchOnVariables: false,
+      data: {
+        flow: {
+          data: invalidatedFlow,
+        },
+      },
+    });
+
+    await supertest(app)
+      .post("/flows/1/diff")
+      .set(auth)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.message).toEqual("Changes queued to publish");
+        expect(res.body.validationChecks).toEqual([
+          {
+            title: "Fees",
+            status: "Fail",
+            message:
+              "When using Pay, your flow must also have a SetFee to generate an accurate fee breakdown",
+          },
+          {
+            title: "Invite to Pay",
+            status: "Pass",
+            message: "Your flow has valid Invite to Pay",
           },
           {
             title: "Project types",
@@ -604,6 +700,11 @@ describe("ODP Schema file type validation on diff", () => {
             message: "Your flow has valid Sections",
           },
           {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
+          },
+          {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
@@ -692,6 +793,11 @@ describe("ODP Schema file type validation on diff", () => {
               "Files collected via FileUpload or UploadAndLabel are all supported by the ODP Schema",
           },
           {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
+          },
+          {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
@@ -762,6 +868,11 @@ describe("planning constraints validation on diff", () => {
             title: "Planning Constraints",
             status: "Pass",
             message: "Your flow has valid Planning Constraints",
+          },
+          {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
           },
           {
             title: "Invite to Pay",
@@ -840,6 +951,11 @@ describe("planning constraints validation on diff", () => {
             title: "Sections",
             status: "Pass",
             message: "Your flow has valid Sections",
+          },
+          {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
           },
           {
             title: "Invite to Pay",
@@ -942,6 +1058,11 @@ describe("templated node requirements validation on diff", () => {
             message: "Your flow has valid Planning Constraints",
           },
           {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
+          },
+          {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
@@ -1033,6 +1154,11 @@ describe("templated node requirements validation on diff", () => {
             title: "Templated nodes",
             status: "Pass",
             message: `All "Required" nodes in your templated flow have been customised`,
+          },
+          {
+            title: "Fees",
+            status: "Not applicable",
+            message: "Your flow is not using Pay",
           },
           {
             title: "Invite to Pay",
