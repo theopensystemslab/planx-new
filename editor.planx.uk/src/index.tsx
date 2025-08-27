@@ -6,6 +6,10 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
+import {
+  createRouter,
+  RouterProvider as TanStackRouterProvider,
+} from "@tanstack/react-router";
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import { initFeatureFlags } from "lib/featureFlags";
@@ -21,6 +25,8 @@ import { ToastContainer } from "react-toastify";
 import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
 import navigation from "./lib/navigation";
+// Import the generated route tree
+import { routeTree } from "./routeTree.gen";
 import { defaultTheme } from "./theme";
 
 if (import.meta.env.VITE_APP_ENV !== "production") {
@@ -61,6 +67,16 @@ const hasJWT = (): boolean | void => {
   window.location.href = "/";
 };
 
+// Create a new router instance
+const tanstackRouter = createRouter({ routeTree });
+
+// Register the router instance for type safety
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof tanstackRouter;
+  }
+}
+
 const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -100,6 +116,9 @@ root.render(
   <ToastContextProvider>
     <ApolloProvider client={client}>
       <AnalyticsProvider>
+        {/* TanStack Router for migrated routes */}
+        <TanStackRouterProvider router={tanstackRouter} />
+        {/* React Navi for legacy routes */}
         <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
           <HelmetProvider>
             <Layout>
