@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect, useState } from "react";
 import { useCurrentRoute, useNavigation } from "react-navi";
-import { isPreviewOnlyDomain } from "routes/utils";
+import { isPreviewOnlyDomain } from "routes-navi/utils";
 import { ApplicationPath } from "types";
 import InputLabel from "ui/public/InputLabel";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
