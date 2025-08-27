@@ -1,11 +1,11 @@
 import supertest from "supertest";
-
 import app from "../../../../server.js";
 import type { LocalPlanningAuthorityFeature, Success } from "./types.js";
 
 it("returns an error if required query parameters are missing", async () => {
   await supertest(app)
     .get("/lpa")
+    .query({})
     .expect(400)
     .then((res) => {
       expect(res.body).toHaveProperty("issues");
@@ -15,7 +15,8 @@ it("returns an error if required query parameters are missing", async () => {
 
 it("returns an error if the given lat/lng falls outside of the UK", async () => {
   await supertest(app)
-    .get("/lpa?lat=42&lon=-83")
+    .get("/lpa")
+    .query({ lon: -83, lat: 42 })
     .expect(400)
     .then((res) => {
       expect(res.body).toEqual({
