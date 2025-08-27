@@ -42,7 +42,7 @@ esc env set application/staging pulumiConfig.application:someVar someValue --sec
 pulumi config get someVar --stack {stack}
 
 # Alternatively...
-esc env get {layer}/{stack} pulumiConfig.application:someVar --showSecret
+esc env get {layer}/{stack} pulumiConfig.application:someVar --show-secret
 ```
 
 # Provisioning the first three layers manually
