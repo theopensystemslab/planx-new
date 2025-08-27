@@ -1,6 +1,7 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import { SendIntegration } from "@opensystemslab/planx-core/types";
+import { logger } from "airbrake";
 import axios, { AxiosResponse } from "axios";
 import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -121,7 +122,12 @@ const CreateSendEvents: React.FC<Props> = ({
   }, [loading, error, value, destinations, props]);
 
   // Throw errors so that they're caught by our error boundaries and Airbrake
-  if (error) throw error;
+  // User will not be blocked, and will proceed to next node (Confirmation)
+  if (error) {
+    logger.notify(
+      `Failed to create send events for session ${sessionId}. Error: ${error}`
+    )
+  }
 
   if (loading) {
     return (
