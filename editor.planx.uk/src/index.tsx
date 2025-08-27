@@ -68,7 +68,10 @@ const hasJWT = (): boolean | void => {
 };
 
 // Create a new router instance
-const tanstackRouter = createRouter({ routeTree });
+const tanstackRouter = createRouter({
+  routeTree,
+  context: { currentUser: hasJWT() },
+});
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
