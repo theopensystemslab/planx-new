@@ -10,7 +10,7 @@ import { ConfirmationDialog } from "components/ConfirmationDialog";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React, { useEffect, useState } from "react";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "routes-navi/utils";
 import { FONT_WEIGHT_BOLD } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import SettingsDescription from "ui/editor/SettingsDescription";

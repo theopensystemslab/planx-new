@@ -10,7 +10,7 @@ import {
   throttleTime,
 } from "rxjs/operators";
 
-import { rootFlowPath } from "../../../routes/utils";
+import { rootFlowPath } from "../../../routes-navi/utils";
 
 const useScrollControlsAndRememberPosition = (
   scrollContainerRef: React.RefObject<HTMLDivElement>,

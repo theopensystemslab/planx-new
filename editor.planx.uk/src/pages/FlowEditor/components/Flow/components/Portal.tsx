@@ -12,7 +12,7 @@ import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
 
-import { rootFlowPath } from "../../../../../routes/utils";
+import { rootFlowPath } from "../../../../../routes-navi/utils";
 import { getParentId } from "../lib/utils";
 import Hanger from "./Hanger";
 import Question from "./Question";

@@ -11,7 +11,7 @@ import Tabs from "@mui/material/Tabs";
 import ToggleButton from "@mui/material/ToggleButton";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "routes-navi/utils";
 import Permission from "ui/editor/Permission";
 
 import { useStore } from "../../lib/store";

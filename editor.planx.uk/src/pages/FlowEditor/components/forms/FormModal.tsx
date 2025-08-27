@@ -18,7 +18,7 @@ import {
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "routes-navi/utils";
 
 import { fromSlug, SLUGS } from "../../data/types";
 import { useStore } from "../../lib/store";

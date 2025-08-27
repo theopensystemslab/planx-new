@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { Link } from "react-navi";
 
-import { rootFlowPath } from "../../../../../routes/utils";
+import { rootFlowPath } from "../../../../../routes-navi/utils";
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
 

@@ -42,7 +42,7 @@ import { FlowTagType } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
-import { rootFlowPath } from "../../routes/utils";
+import { rootFlowPath } from "../../routes-navi/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SectionNavBar } from "./Sections/NavBar";

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 import { Link } from "react-navi";
-import { rootFlowPath } from "routes/utils";
+import { rootFlowPath } from "routes-navi/utils";
 
 import { useStore } from "../../lib/store";
 import EndPoint from "./components/EndPoint";

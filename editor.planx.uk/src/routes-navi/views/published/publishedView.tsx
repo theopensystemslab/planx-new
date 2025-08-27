@@ -5,7 +5,7 @@ import PublicLayout from "pages/layout/PublicLayout";
 import SaveAndReturnLayout from "pages/layout/SaveAndReturnLayout";
 import React from "react";
 import { View } from "react-navi";
-import { getTeamFromDomain, setPath } from "routes/utils";
+import { getTeamFromDomain, setPath } from "routes-navi/utils";
 import { Flow, GlobalSettings } from "types";
 import WatermarkBackground from "ui/shared/WatermarkBackground";
 
