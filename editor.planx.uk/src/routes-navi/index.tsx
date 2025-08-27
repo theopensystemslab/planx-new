@@ -17,18 +17,18 @@ const editorRoutes = mount({
     view: <ErrorPage title="Network error" />,
   }),
 
-  "/login": map(async (req, context: RoutingContext) =>
-    context.currentUser
-      ? redirect(
-          req.params.redirectTo
-            ? decodeURIComponent(req.params.redirectTo)
-            : "/",
-        )
-      : route({
-          title: makeTitle("Login"),
-          view: <Login />,
-        }),
-  ),
+  // "/login": map(async (req, context: RoutingContext) =>
+  //   context.currentUser
+  //     ? redirect(
+  //         req.params.redirectTo
+  //           ? decodeURIComponent(req.params.redirectTo)
+  //           : "/",
+  //       )
+  //     : route({
+  //         title: makeTitle("Login"),
+  //         view: <Login />,
+  //       }),
+  // ),
 
   "/logout": map((): any => {
     try {
