@@ -61,9 +61,9 @@ Steps:
 3. Install the [Pulumi ESC CLI](https://www.pulumi.com/docs/esc/download-install/)
 4. Setup AWS credentials for Pulumi IAM role. Profile names should have the format `planx-<STACK>-pulumi`.
 5. Log in to the Pulumi CLI using your PAT (`pulumi login`)
-5. Log in to the Pulumi ESC CLI using your PAT (`esc login`)
-6. Install project dependencies at root (`pnpm i`), this will install dependencies for all layers
-7. Provision layers manually (`cd <LAYER_DIR> && pulumi up --stack <STACK>`)
+6. Log in to the Pulumi ESC CLI using your PAT (`esc login`)
+7. Install project dependencies at root (`pnpm i`), this will install dependencies for all layers
+8. Provision layers manually (`cd <LAYER_DIR> && pulumi up --stack <STACK>`)
 
 ### What about the secrets?
 
