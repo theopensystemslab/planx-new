@@ -310,7 +310,7 @@ describe("invite to pay validation on diff", () => {
           {
             title: "Fees",
             status: "Pass",
-            message: "Your flow has valid Pay using SetFee",
+            message: "Your flow has valid Pay using Set Fees",
           },
           {
             title: "Project types",
@@ -385,7 +385,7 @@ describe("invite to pay validation on diff", () => {
           {
             title: "Fees",
             status: "Pass",
-            message: "Your flow has valid Pay using SetFee",
+            message: "Your flow has valid Pay using Set Fees",
           },
           {
             title: "Project types",
@@ -456,7 +456,7 @@ describe("invite to pay validation on diff", () => {
           {
             title: "Fees",
             status: "Pass",
-            message: "Your flow has valid Pay using SetFee",
+            message: "Your flow has valid Pay using Set Fees",
           },
           {
             title: "Project types",
@@ -529,7 +529,7 @@ describe("invite to pay validation on diff", () => {
           {
             title: "Fees",
             status: "Pass",
-            message: "Your flow has valid Pay using SetFee",
+            message: "Your flow has valid Pay using Set Fees",
           },
           {
             title: "Project types",
@@ -590,7 +590,7 @@ describe("set fees validation on diff", () => {
             title: "Fees",
             status: "Fail",
             message:
-              "When using Pay, your flow must also have a SetFee to generate an accurate fee breakdown",
+              "When using Pay, your flow must also use Set Fees to generate an accurate fee breakdown",
           },
           {
             title: "Invite to Pay",

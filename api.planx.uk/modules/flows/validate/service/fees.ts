@@ -14,13 +14,13 @@ const validateFees = (flowGraph: FlowGraph): FlowValidationResponse => {
         title: "Fees",
         status: "Fail",
         message:
-          "When using Pay, your flow must also have a SetFee to generate an accurate fee breakdown",
+          "When using Pay, your flow must also use Set Fees to generate an accurate fee breakdown",
       };
     } else {
       return {
         title: "Fees",
         status: "Pass",
-        message: "Your flow has valid Pay using SetFee",
+        message: "Your flow has valid Pay using Set Fees",
       };
     }
   } else {
