@@ -8,9 +8,9 @@
 	# wilcard certs require a DNS challenge
 	tls {
 		dns vultr {$VULTR_API_KEY}
-		propagation_delay 120s # default 0s (NB. Vultr gives 300s as DNS record TTL)
+		propagation_delay 300s # default 0s (NB. Vultr gives 300s as DNS record TTL)
 		propagation_timeout 5m # default 2mins (-1 indicates to not conduct propagation check, just handover to ACME after delay)
-		resolvers 1.1.1.1 8.8.8.8
+		resolvers 1.1.1.1 8.8.8.8 8.8.4.4
 	}
 
 	# since caddy is inside docker network, ports given here should match right side of host:container in compose files
