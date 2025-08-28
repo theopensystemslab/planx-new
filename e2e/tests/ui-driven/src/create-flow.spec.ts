@@ -145,7 +145,7 @@ test.describe("Flow creation, publish and preview", () => {
     page.locator('[aria-label="Editor"]').click();
 
     const previewLink = page.getByRole("link", {
-      name: "Open published service",
+      name: "Open published flow",
     });
     await expect(previewLink).toBeVisible();
   });
@@ -214,7 +214,7 @@ test.describe("Flow creation, publish and preview", () => {
     ).toBeVisible();
 
     const previewLink = page.getByRole("link", {
-      name: "Open published service",
+      name: "Open published flow",
     });
     await expect(previewLink).toBeVisible();
 

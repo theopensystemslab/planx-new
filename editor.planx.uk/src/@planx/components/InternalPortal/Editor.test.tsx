@@ -24,7 +24,7 @@ describe("adding an internal portal", () => {
     expect(flowSelect).toBeEnabled();
 
     await user.type(
-      screen.getByPlaceholderText("Enter a portal name"),
+      screen.getByPlaceholderText("Enter a folder name"),
       "new internal portal",
     );
 
@@ -55,7 +55,7 @@ describe("adding an internal portal", () => {
     );
 
     const dropdown = await screen.findByRole("combobox", {
-      name: "Use an existing portal",
+      name: "Select an existing folder",
     });
     expect(dropdown).toBeInTheDocument();
 
@@ -84,7 +84,7 @@ describe("adding an internal portal", () => {
     );
 
     const dropdown = await screen.findByRole("combobox", {
-      name: "Use an existing portal",
+      name: "Select an existing folder",
     });
     expect(dropdown).toBeInTheDocument();
 
@@ -111,12 +111,16 @@ test("updating an internal portal", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <InternalPortalForm id="test" node={{ data: { text: "val" } }} handleSubmit={handleSubmit} />,
+    <InternalPortalForm
+      id="test"
+      node={{ data: { text: "val" } }}
+      handleSubmit={handleSubmit}
+    />,
   );
 
   expect(screen.queryByTestId("flowId")).not.toBeInTheDocument();
 
-  const textInput = screen.getByPlaceholderText("Enter a portal name");
+  const textInput = screen.getByPlaceholderText("Enter a folder name");
 
   expect(textInput).toHaveValue("val");
 
@@ -139,22 +143,22 @@ test("updating an internal portal", async () => {
 describe("validations", () => {
   describe("if no flowId is chosen", () => {
     const scenarios = [
-      { action: "adding without flows", error: /Enter a portal name/ },
+      { action: "adding without flows", error: /Enter a folder name/ },
       {
         action: "updating without flows",
         id: "test",
-        error: /Enter a portal name/,
+        error: /Enter a folder name/,
       },
       {
         action: "adding with flows",
         flows: [{ id: "portal", text: "portal" }],
-        error: /Enter a portal name or select an existing portal/,
+        error: /Enter a folder name or select an existing folder/,
       },
       {
         action: "updating with flows",
         flows: [{ id: "portal", text: "portal" }],
         id: "test",
-        error: /Enter a portal name or select an existing portal/,
+        error: /Enter a folder name or select an existing folder/,
       },
     ];
     for (const scenario of scenarios) {

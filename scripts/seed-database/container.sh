@@ -23,7 +23,6 @@ tables=(
   flows 
   users 
   teams 
-  flow_document_templates 
   team_members 
   team_themes
   team_settings

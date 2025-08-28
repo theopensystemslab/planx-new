@@ -85,7 +85,7 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
           if (!descriptionResult) {
             setFieldError(
               "serviceDescription",
-              "Unable to update the flow description. Please try again.",
+              "Unable to update the service description. Please try again.",
             );
           }
           if (!summaryResult) {
@@ -239,8 +239,8 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
       <Box pt={2}>
         <SimpleExpand
           buttonText={{
-            open: "Show external portals",
-            closed: "Hide external portals",
+            open: "Show nested flows",
+            closed: "Hide nested flows",
           }}
           id="externalPortalsToggle"
         >
@@ -249,12 +249,12 @@ export const ReadMePage: React.FC<ReadMePageProps> = ({
               <Box data-testid="searchExternalPortalList">
                 <InputLegend>External Portals</InputLegend>
                 <Typography variant="body1" my={2}>
-                  Your service contains the following external portals:
+                  Your service contains the following nested flows:
                 </Typography>
                 <ExternalPortals externalPortals={externalPortals} />
               </Box>
             ) : (
-              <Typography>This service has no external portals.</Typography>
+              <Typography>This flow does not have any nested flows.</Typography>
             )}
           </Box>
         </SimpleExpand>

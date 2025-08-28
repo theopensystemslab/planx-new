@@ -66,7 +66,7 @@ export class PlaywrightEditor {
     mode?: "new" | "copy" | "template";
   }) {
     const openModalButton = this.page.locator("button", {
-      hasText: "Add a new service",
+      hasText: "Add a new flow",
     });
     await openModalButton.click();
 
@@ -74,8 +74,8 @@ export class PlaywrightEditor {
       throw Error("Unsupported mode for create flow");
     }
 
-    this.page.getByLabel("Service name").fill(name);
-    this.page.getByRole("button", { name: "Add service " }).click();
+    this.page.getByLabel("Flow name").fill(name);
+    this.page.getByRole("button", { name: "Add flow " }).click();
   }
 
   async createQuestion() {

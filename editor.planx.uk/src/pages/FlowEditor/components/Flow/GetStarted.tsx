@@ -31,7 +31,7 @@ export const GetStarted: React.FC = () => (
     <SchoolIcon />
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
       <Typography variant="body1">
-        <strong>Starting a new service?</strong>
+        <strong>Starting a new flow?</strong>
       </Typography>
       <Typography variant="body2">
         Visit the <Link href="../../tutorials">guides and tutorials</Link> to

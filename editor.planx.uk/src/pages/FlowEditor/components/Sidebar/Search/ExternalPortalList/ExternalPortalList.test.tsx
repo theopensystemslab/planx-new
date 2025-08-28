@@ -56,7 +56,7 @@ it("displays a list of external portals if present in the flow, and a search ter
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "ind");
 
   const externalPortalList = await waitFor(() =>
@@ -77,7 +77,7 @@ it("allows users to navigate to the external portals", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "ind");
 
   const [first, second] = await waitFor(
@@ -96,7 +96,7 @@ it("should not have any accessibility violations on initial load", async () => {
     </VirtuosoWrapper>,
   );
 
-  const searchInput = getByLabelText("Search this flow and internal portals");
+  const searchInput = getByLabelText("Search this flow");
   user.type(searchInput, "ind");
 
   await waitFor(() =>

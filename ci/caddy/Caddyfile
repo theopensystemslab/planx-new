@@ -4,11 +4,11 @@
 }
 
 # see https://caddyserver.com/docs/caddyfile/patterns
-*.{$ROOT_DOMAIN}, {$ROOT_DOMAIN} {
+*.{$ROOT_DOMAIN} {$ROOT_DOMAIN} {
 	# wilcard certs require a DNS challenge
 	tls {
 		dns vultr {$VULTR_API_KEY}
-		propagation_delay 30s # default 0s (NB. Vultr gives 300s as DNS record TTL)
+		propagation_delay 120s # default 0s (NB. Vultr gives 300s as DNS record TTL)
 		propagation_timeout 5m # default 2mins (-1 indicates to not conduct propagation check, just handover to ACME after delay)
 		resolvers 1.1.1.1 8.8.8.8
 	}
