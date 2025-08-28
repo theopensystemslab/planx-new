@@ -1,9 +1,10 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
-import merge from "lodash/merge.js";
+import isArray from "lodash/isArray.js";
+import mergeWith from "lodash/mergeWith.js";
 import { $api } from "../../../client/index.js";
 import { getFlowData } from "../../../helpers.js";
-import type { Flow } from "../../../types.js";
+import type { Flow, Node } from "../../../types.js";
 
 interface GetTemplatedFlowEdits {
   edits: {
@@ -47,8 +48,8 @@ export const updateTemplatedFlow = async (
     );
   const edits = templatedFlowEditsResponse.edits?.[0]?.data || {};
 
-  // Apply templated flow edits on top of source data using Lodash's deep merge (order of args matters!)
-  const data = merge(sourceData, edits);
+  // Apply templated flow edits on top of source data using Lodash's mergeWith (order of args matters!)
+  const data = customMerge(sourceData, edits);
 
   // Set merged data as `flows.data` for templatedFlowId
   const updateFlowResponse = await $api.client.request<UpdateTemplatedFlowData>(
@@ -94,4 +95,20 @@ export const updateTemplatedFlow = async (
     templatedFlowData: updateFlowResponse.flow.data,
     commentId: insertCommentResponse.comment.id,
   };
+};
+
+export const customMerge = (
+  sourceData: { [key: string]: Node },
+  edits: { [key: string]: Node },
+): { [key: string]: Node } => {
+  // Preserves edited empty arrays (eg if a templated folder is emptied)
+  return mergeWith(sourceData, edits, function (sourceData, edits) {
+    if (isArray(sourceData)) {
+      if (edits) {
+        return edits;
+      } else {
+        return sourceData;
+      }
+    }
+  });
 };
