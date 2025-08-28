@@ -22,7 +22,6 @@ vi.mock("@opensystemslab/planx-core", async () => {
   const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
     constructor() {
       super();
-      this.getDocumentTemplateNamesForSession = vi.fn();
       this.export.csvData = () => mockGenerateCSVData();
     }
   };
