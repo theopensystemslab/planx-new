@@ -291,7 +291,6 @@ export const previewStore: StateCreator<
   // record() notably handles removing cachedBreadcrumbs for dependent component types
   //   ie if you 'go back' to change your address, `DEPENDENT_TYPES` shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
   record(id, userData) {
-    console.time("record");
     const {
       breadcrumbs,
       flow,
@@ -321,16 +320,13 @@ export const previewStore: StateCreator<
           breadcrumb.override = filteredOverride;
       }
 
-      console.time(`removeOrphansFromBreadcrumbs (nodeId: ${id}`);
       let cacheWithoutOrphans = removeOrphansFromBreadcrumbs({
         id,
         flow,
         userData: breadcrumb,
         breadcrumbs: cachedBreadcrumbs,
       });
-      console.timeEnd(`removeOrphansFromBreadcrumbs (nodeId: ${id}`);
 
-      console.time("handleNodesWithPassport");
       const { newBreadcrumbs, nodesPendingEdit } = handleNodesWithPassport({
         id,
         flow,
@@ -339,7 +335,6 @@ export const previewStore: StateCreator<
         currentNodesPendingEdit: _nodesPendingEdit,
         breadcrumbs,
       });
-      console.timeEnd("handleNodesWithPassport");
 
       cacheWithoutOrphans = newBreadcrumbs;
       delete cacheWithoutOrphans?.[id];
@@ -351,19 +346,16 @@ export const previewStore: StateCreator<
       };
 
       // Key order matters because it's the order in which components are displayed in the Review component
-      console.time("sortBreadcrumbs");
       const sortedBreadcrumbs = sortBreadcrumbs(
         nextBreadcrumbs,
         flow,
         nodesPendingEdit,
       );
-      console.timeEnd("sortBreadcrumbs");
 
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
         (key) => flow[key]?.type === TYPES.Review,
       );
 
-      console.time("set");
       set({
         breadcrumbs: sortedBreadcrumbs,
         cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed their answer)
@@ -371,7 +363,6 @@ export const previewStore: StateCreator<
         _nodesPendingEdit: nodesPendingEdit,
         changedNode: shouldRemovedChangedNode ? undefined : changedNode,
       });
-      console.timeEnd("set");
     } else {
       // remove breadcrumbs that were stored from id onwards because user has 'gone back'
       const breadcrumbIds = Object.keys(breadcrumbs);
@@ -392,15 +383,10 @@ export const previewStore: StateCreator<
         });
       }
     }
-    console.time("setCurrentCard");
     setCurrentCard();
-    console.timeEnd("setCurrentCard");
 
-    console.time("updateSectionData");
     updateSectionData();
-    console.timeEnd("updateSectionData");
 
-    console.timeEnd("record");
   },
 
   resultData(flagSet, overrides) {
