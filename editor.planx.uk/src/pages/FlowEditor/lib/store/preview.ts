@@ -61,7 +61,7 @@ export interface PreviewStore extends Store.Store {
   hasPaid: () => boolean;
   previousCard: (
     node: Store.Node | null,
-    upcomingCardIds?: NodeId[],
+    upcomingCardIds?: NodeId[]
   ) => NodeId | undefined;
   canGoBack: (node: Store.Node | null) => boolean;
   getType: (node: Store.Node | null) => TYPES | undefined;
@@ -71,7 +71,7 @@ export interface PreviewStore extends Store.Store {
     flagSet?: string,
     overrides?: {
       [flagId: string]: { heading?: string; description?: string };
-    },
+    }
   ) => ResultData;
   resumeSession: (session: Session) => void;
   sessionId: string;
@@ -94,6 +94,7 @@ export interface PreviewStore extends Store.Store {
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;
   setHasAcknowledgedWarning: () => void;
+  getNextCardId: () => NodeId | null;
 }
 
 export const previewStore: StateCreator<
@@ -126,13 +127,13 @@ export const previewStore: StateCreator<
       const flagValues = collectedFlagValuesByCategory(
         category,
         breadcrumbs,
-        flow,
+        flow
       );
       let flagText: (string | undefined)[] = [];
       if (flagValues.length > 0) {
         flagText = flagValues.map(
           (flagValue) =>
-            flatFlags.find((flag) => flag.value === flagValue)?.text,
+            flatFlags.find((flag) => flag.value === flagValue)?.text
         );
       }
       collectedFlags[category] = flagText;
@@ -142,22 +143,19 @@ export const previewStore: StateCreator<
   },
 
   setCurrentCard() {
-    const { upcomingCardIds, flow } = get();
-    const upcoming = upcomingCardIds();
+    const { getNextCardId, flow } = get();
+    const id = getNextCardId();
 
-    if (upcoming.length > 0) {
-      const id = upcoming[0];
-      set({ currentCard: { id, ...flow[id] } });
-    } else {
-      set({ currentCard: null });
-    }
+    if (!id) return set({ currentCard: null });
+
+    set({ currentCard: { id, ...flow[id] } });
   },
 
   hasPaid: () => {
     const { breadcrumbs, flow } = get();
 
     return Object.entries(breadcrumbs).some(
-      ([id, userData]) => flow[id]?.type === TYPES.Pay && !userData.auto,
+      ([id, userData]) => flow[id]?.type === TYPES.Pay && !userData.auto
     );
   },
 
@@ -220,7 +218,7 @@ export const previewStore: StateCreator<
             .map((id: string) => flow[id]?.data?.val)
             .filter(
               (val) =>
-                val !== undefined && val !== null && String(val).trim() !== "",
+                val !== undefined && val !== null && String(val).trim() !== ""
             );
 
           if (passportValue.length > 0) {
@@ -236,7 +234,7 @@ export const previewStore: StateCreator<
                         acc: string[],
                         curr: string,
                         _i: number,
-                        arr: string[],
+                        arr: string[]
                       ) => {
                         if (
                           !arr.some((x) => x !== curr && x?.startsWith(curr))
@@ -245,7 +243,7 @@ export const previewStore: StateCreator<
                         }
                         return acc;
                       },
-                      [],
+                      []
                     );
 
             passportData[key] = uniq(combined);
@@ -257,7 +255,7 @@ export const previewStore: StateCreator<
             _acc![id] = value;
             return _acc;
           },
-          {} as Store.Passport["data"],
+          {} as Store.Passport["data"]
         );
 
         let passport: Store.Passport = {
@@ -282,7 +280,7 @@ export const previewStore: StateCreator<
       },
       {
         data: {},
-      } as Store.Passport,
+      } as Store.Passport
     );
 
     return passport;
@@ -291,6 +289,7 @@ export const previewStore: StateCreator<
   // record() notably handles removing cachedBreadcrumbs for dependent component types
   //   ie if you 'go back' to change your address, `DEPENDENT_TYPES` shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
   record(id, userData) {
+    // console.time("record");
     const {
       breadcrumbs,
       flow,
@@ -320,13 +319,16 @@ export const previewStore: StateCreator<
           breadcrumb.override = filteredOverride;
       }
 
+      console.time(`removeOrphansFromBreadcrumbs (nodeId: ${id}`);
       let cacheWithoutOrphans = removeOrphansFromBreadcrumbs({
         id,
         flow,
         userData: breadcrumb,
         breadcrumbs: cachedBreadcrumbs,
       });
+      console.timeEnd(`removeOrphansFromBreadcrumbs (nodeId: ${id}`);
 
+      // console.time("handleNodesWithPassport");
       const { newBreadcrumbs, nodesPendingEdit } = handleNodesWithPassport({
         id,
         flow,
@@ -335,6 +337,7 @@ export const previewStore: StateCreator<
         currentNodesPendingEdit: _nodesPendingEdit,
         breadcrumbs,
       });
+      // console.timeEnd("handleNodesWithPassport");
 
       cacheWithoutOrphans = newBreadcrumbs;
       delete cacheWithoutOrphans?.[id];
@@ -346,29 +349,34 @@ export const previewStore: StateCreator<
       };
 
       // Key order matters because it's the order in which components are displayed in the Review component
+      // console.time("sortBreadcrumbs");
       const sortedBreadcrumbs = sortBreadcrumbs(
         nextBreadcrumbs,
         flow,
-        nodesPendingEdit,
+        nodesPendingEdit
       );
+      // console.timeEnd("sortBreadcrumbs");
 
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
-        (key) => flow[key]?.type === TYPES.Review,
+        (key) => flow[key]?.type === TYPES.Review
       );
+
+      // console.time("set");
       set({
         breadcrumbs: sortedBreadcrumbs,
-        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed his answer)
+        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed their answer)
         restore: false,
         _nodesPendingEdit: nodesPendingEdit,
         changedNode: shouldRemovedChangedNode ? undefined : changedNode,
       });
+      // console.timeEnd("set");
     } else {
       // remove breadcrumbs that were stored from id onwards because user has 'gone back'
       const breadcrumbIds = Object.keys(breadcrumbs);
       const idx = breadcrumbIds.indexOf(id);
       const remainingBreadcrumbs = pick(
         breadcrumbs,
-        breadcrumbIds.slice(0, idx),
+        breadcrumbIds.slice(0, idx)
       );
       const removedBreadcrumbs = pick(breadcrumbs, breadcrumbIds.slice(idx));
 
@@ -382,8 +390,15 @@ export const previewStore: StateCreator<
         });
       }
     }
+    // console.time("setCurrentCard");
     setCurrentCard();
+    // console.timeEnd("setCurrentCard");
+
+    // console.time("updateSectionData");
     updateSectionData();
+    // console.timeEnd("updateSectionData");
+
+    // console.timeEnd("record");
   },
 
   resultData(flagSet, overrides) {
@@ -391,12 +406,12 @@ export const previewStore: StateCreator<
     const category = flagSet || DEFAULT_FLAG_CATEGORY;
 
     const possibleFlags: Flag[] = flatFlags.filter(
-      (flag) => flag.category === category,
+      (flag) => flag.category === category
     );
     const collectedFlags = collectedFlagValuesByCategory(
       category,
       breadcrumbs,
-      flow,
+      flow
     );
 
     // The highest order flag collected in this category is our result, else mock "No result"
@@ -418,7 +433,7 @@ export const previewStore: StateCreator<
         }));
         const hidden = !selections.some(
           (selection) =>
-            selection.data?.flags && selection.data.flags.includes(flag?.value),
+            selection.data?.flags && selection.data.flags.includes(flag?.value)
         );
 
         return {
@@ -460,6 +475,43 @@ export const previewStore: StateCreator<
 
   sessionId: uuidV4(),
 
+  getNextCardId(): NodeId | null {
+    const { flow, breadcrumbs } = get();
+
+    const nodeIdsConnectedFrom = (source: NodeId): NodeId | null => {
+      // Return an ID directly when a valid, unvisited node is found
+      for (const id of flow[source]?.edges ?? []) {
+        const node = flow[id];
+        if (node && !breadcrumbs[id]) {
+          // Recursively check internal portals
+          if (node.type === TYPES.InternalPortal) {
+            const nextId = nodeIdsConnectedFrom(id);
+            if (nextId) return nextId; // Pass the found ID up the call stack
+          } else {
+            // Found a non-portal card, return it immediately
+            return id;
+          }
+        }
+      }
+      return null;
+    };
+
+    // Find the most recent answer from breadcrumbs
+    const recentAnswers = Object.values(breadcrumbs)
+      .flatMap(({ answers }) => answers as Array<NodeId>)
+      .filter(Boolean)
+      .reverse();
+
+    // Check the recent answers first
+    for (const answerId of recentAnswers) {
+      const nextId = nodeIdsConnectedFrom(answerId);
+      if (nextId) return nextId; // Found it, exit early!
+    }
+
+    // If no card was found from recent answers, check the root
+    return nodeIdsConnectedFrom("_root");
+  },
+
   upcomingCardIds() {
     const { flow, breadcrumbs } = get();
 
@@ -494,7 +546,7 @@ export const previewStore: StateCreator<
         // .filter(Boolean)
         .reverse()
         // ending with _root
-        .concat("_root"),
+        .concat("_root")
       // run nodeIdsConnectedFrom(answerId)
     ).forEach(nodeIdsConnectedFrom);
 
@@ -531,7 +583,7 @@ export const previewStore: StateCreator<
       ([nodeId, _breadcrumb]) =>
         flow[nodeId]?.data?.fn === data.fn ||
         // Account for nodes like FindProperty that don't have `data.fn` prop but still set passport vars like `property.region` etc
-        Object.keys(passport?.data || {}).includes(data.fn),
+        Object.keys(passport?.data || {}).includes(data.fn)
     );
     if (!visitedFns.length && !data?.alwaysAutoAnswerBlank) return;
 
@@ -555,15 +607,15 @@ export const previewStore: StateCreator<
         (a, b) =>
           // Sort by the most to least number of dot-separated items in data.val (most granular to least)
           String(b.data?.val).split(".").length -
-          String(a.data?.val).split(".").length,
+          String(a.data?.val).split(".").length
       )
       // Only keep options with a data value set (remove blanks)
       .filter((option) => option.data?.val);
     const sortedOptionVals: string[] = sortedOptions.map(
-      (option) => option.data?.val,
+      (option) => option.data?.val
     );
     const hasVisitedEveryOption = sortedOptionVals.every((value) =>
-      visitedOptionVals.includes(value),
+      visitedOptionVals.includes(value)
     );
     const blankOption = options.find((option) => !option.data?.val);
 
@@ -584,8 +636,8 @@ export const previewStore: StateCreator<
       const matchingPassportValues = passportValues.filter(
         (passportValue: any) =>
           sortedOptions.some((option) =>
-            passportValue?.startsWith(option.data?.val),
-          ),
+            passportValue?.startsWith(option.data?.val)
+          )
       );
 
       if (matchingPassportValues.length > 0) {
@@ -619,10 +671,10 @@ export const previewStore: StateCreator<
       //   - Another for not-intersections aka `_nots`
       const matchingIntersectingConstraints = passportValues?.filter(
         (passportValue: any) =>
-          sortedOptions.some((option) => passportValue === option.data?.val),
+          sortedOptions.some((option) => passportValue === option.data?.val)
       );
       const matchingNots = nots?.filter((not) =>
-        sortedOptions.some((option) => not === option.data?.val),
+        sortedOptions.some((option) => not === option.data?.val)
       );
 
       if (matchingIntersectingConstraints?.length > 0) {
@@ -707,7 +759,7 @@ export const previewStore: StateCreator<
     const collectedFlags = collectedFlagValuesByCategory(
       filterCategory,
       breadcrumbs,
-      flow,
+      flow
     );
 
     // Starting from the left of the Filter options, check for matches against collectedFlags
@@ -753,9 +805,9 @@ export const previewStore: StateCreator<
 
     // The first nodeId that set the passport value (fn) being changed (eg FindProperty)
     const originalNodeId: Node["id"] | undefined = Object.entries(
-      sortedBreadcrumbs,
+      sortedBreadcrumbs
     ).find(
-      ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data,
+      ([_nodeId, breadcrumb]) => breadcrumb.data && fn in breadcrumb.data
     )?.[0];
 
     if (originalNodeId) {
@@ -772,10 +824,10 @@ export const previewStore: StateCreator<
     // The first nodeId that is configured by an editor to manually set the passport value being changed (eg Question "What type of property is it?").
     //   This node has likely been auto-answered by the originalNodeId and we leave its' breadcrumbs.data intact so that the original answer is highlighted later
     const overrideNodeId: Node["id"] | undefined = Object.entries(
-      sortedBreadcrumbs,
+      sortedBreadcrumbs
     ).find(
       ([nodeId, _breadcrumb]) =>
-        flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn,
+        flow[nodeId].data?.fn === fn || flow[nodeId].data?.val === fn
     )?.[0];
 
     if (overrideNodeId) {
@@ -806,7 +858,7 @@ export const previewStore: StateCreator<
   setHasAcknowledgedWarning: () => set({ hasAcknowledgedWarning: true }),
 });
 
-interface RemoveOrphansFromBreadcrumbsProps {
+export interface RemoveOrphansFromBreadcrumbsProps {
   id: string;
   flow: Store.Flow;
   userData: Store.UserData;
@@ -821,31 +873,41 @@ export const removeOrphansFromBreadcrumbs = ({
 }: RemoveOrphansFromBreadcrumbsProps):
   | Store.CachedBreadcrumbs
   | Store.Breadcrumbs => {
-  // this will prevent a user from "Continuing", therefore log error don't throw it
   if (!flow[id]) {
     logger.notify(
-      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`,
+      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`
     );
   }
 
-  const idsToRemove =
-    flow[id]?.edges?.filter(
-      (edge) => !(userData?.answers ?? []).includes(edge),
-    ) ?? [];
+  const result: Store.Breadcrumbs = { ...breadcrumbs };
+  const userAnswers = new Set(userData?.answers ?? []);
+  const edges = flow[id]?.edges ?? [];
 
-  return idsToRemove.reduce(
-    (acc, id) => {
-      delete acc?.[id];
-      // recursion to remove orphans from tree
-      return removeOrphansFromBreadcrumbs({
-        id,
-        flow,
-        userData: flow[id],
-        breadcrumbs: acc,
-      });
-    },
-    { ...breadcrumbs } as Store.CachedBreadcrumbs | Store.Breadcrumbs,
-  );
+  const orphanedEdges = edges.filter((edge) => !userAnswers.has(edge));
+
+  // Use a stack to iteratively remove each orphan and all its descendants
+  const toRemove = [...orphanedEdges];
+  const visited = new Set<string>();
+
+  while (toRemove.length > 0) {
+    const currentId = toRemove.pop()!;
+
+    if (visited.has(currentId) || !flow[currentId]) continue;
+
+    visited.add(currentId);
+
+    if (result[currentId]) delete result[currentId];
+
+    const childEdges = flow[currentId]?.edges ?? [];
+
+    for (const childId of childEdges) {
+      if (!visited.has(childId)) {
+        toRemove.push(childId);
+      }
+    }
+  }
+
+  return result;
 };
 
 export const sortBreadcrumbs = (
