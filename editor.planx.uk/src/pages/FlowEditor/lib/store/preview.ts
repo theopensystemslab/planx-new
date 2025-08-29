@@ -291,6 +291,7 @@ export const previewStore: StateCreator<
   // record() notably handles removing cachedBreadcrumbs for dependent component types
   //   ie if you 'go back' to change your address, `DEPENDENT_TYPES` shouldn't be retained because they reference the property site passport, but answers to other questions can be retained
   record(id, userData) {
+    console.time("record");
     const {
       breadcrumbs,
       flow,
@@ -320,13 +321,16 @@ export const previewStore: StateCreator<
           breadcrumb.override = filteredOverride;
       }
 
+      console.time(`removeOrphansFromBreadcrumbs (nodeId: ${id}`);
       let cacheWithoutOrphans = removeOrphansFromBreadcrumbs({
         id,
         flow,
         userData: breadcrumb,
         breadcrumbs: cachedBreadcrumbs,
       });
+      console.timeEnd(`removeOrphansFromBreadcrumbs (nodeId: ${id}`);
 
+      console.time("handleNodesWithPassport");
       const { newBreadcrumbs, nodesPendingEdit } = handleNodesWithPassport({
         id,
         flow,
@@ -335,6 +339,7 @@ export const previewStore: StateCreator<
         currentNodesPendingEdit: _nodesPendingEdit,
         breadcrumbs,
       });
+      console.timeEnd("handleNodesWithPassport");
 
       cacheWithoutOrphans = newBreadcrumbs;
       delete cacheWithoutOrphans?.[id];
@@ -346,22 +351,27 @@ export const previewStore: StateCreator<
       };
 
       // Key order matters because it's the order in which components are displayed in the Review component
+      console.time("sortBreadcrumbs");
       const sortedBreadcrumbs = sortBreadcrumbs(
         nextBreadcrumbs,
         flow,
         nodesPendingEdit,
       );
+      console.timeEnd("sortBreadcrumbs");
 
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
         (key) => flow[key]?.type === TYPES.Review,
       );
+
+      console.time("set");
       set({
         breadcrumbs: sortedBreadcrumbs,
-        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed his answer)
+        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed their answer)
         restore: false,
         _nodesPendingEdit: nodesPendingEdit,
         changedNode: shouldRemovedChangedNode ? undefined : changedNode,
       });
+      console.timeEnd("set");
     } else {
       // remove breadcrumbs that were stored from id onwards because user has 'gone back'
       const breadcrumbIds = Object.keys(breadcrumbs);
@@ -382,8 +392,15 @@ export const previewStore: StateCreator<
         });
       }
     }
+    console.time("setCurrentCard");
     setCurrentCard();
+    console.timeEnd("setCurrentCard");
+
+    console.time("updateSectionData");
     updateSectionData();
+    console.timeEnd("updateSectionData");
+
+    console.timeEnd("record");
   },
 
   resultData(flagSet, overrides) {
@@ -585,7 +602,7 @@ export const previewStore: StateCreator<
         (passportValue: any) =>
           sortedOptions.some((option) =>
             passportValue?.startsWith(option.data?.val),
-          ),
+          )
       );
 
       if (matchingPassportValues.length > 0) {
@@ -821,31 +838,42 @@ export const removeOrphansFromBreadcrumbs = ({
 }: RemoveOrphansFromBreadcrumbsProps):
   | Store.CachedBreadcrumbs
   | Store.Breadcrumbs => {
-  // this will prevent a user from "Continuing", therefore log error don't throw it
-  if (!flow[id]) {
-    logger.notify(
-      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`,
-    );
+  const result: Store.Breadcrumbs = { ...breadcrumbs };
+  const userAnswers = new Set(userData?.answers ?? []);
+  const edges = flow[id].edges ?? [];
+  const orphanedEdges = edges.filter((edge) => !userAnswers.has(edge));
+
+  // Use a stack to iteratively remove each orphan and all its descendants
+  const toRemove = [...orphanedEdges];
+  const visited = new Set<string>();
+
+  while (toRemove.length > 0) {
+    const currentId = toRemove.pop()!;
+    if (visited.has(currentId)) continue;
+
+    if (!flow[currentId]) {
+        logger.notify(
+          `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`
+        );
+      continue;
+    }
+
+    // Track node
+    visited.add(currentId);
+
+    // Remove orphaned node from new breadcrumbs
+    if (result[currentId]) delete result[currentId];
+
+    // Add all child edges to stack for processing
+    const childEdges = flow[currentId].edges ?? [];
+    for (const childId of childEdges) {
+      if (!visited.has(childId)) {
+        toRemove.push(childId);
+      }
+    }
   }
 
-  const idsToRemove =
-    flow[id]?.edges?.filter(
-      (edge) => !(userData?.answers ?? []).includes(edge),
-    ) ?? [];
-
-  return idsToRemove.reduce(
-    (acc, id) => {
-      delete acc?.[id];
-      // recursion to remove orphans from tree
-      return removeOrphansFromBreadcrumbs({
-        id,
-        flow,
-        userData: flow[id],
-        breadcrumbs: acc,
-      });
-    },
-    { ...breadcrumbs } as Store.CachedBreadcrumbs | Store.Breadcrumbs,
-  );
+  return result;
 };
 
 export const sortBreadcrumbs = (
