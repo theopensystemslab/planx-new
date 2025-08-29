@@ -1,9 +1,11 @@
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { useSchema } from "@planx/components/shared/Schema/hook";
 import {
   Schema,
   SchemaUserData,
   SchemaUserResponse,
 } from "@planx/components/shared/Schema/model";
+import { flattenFileUpload, getRequestedFiles, partitionSchemaData } from "@planx/components/shared/Schema/utils";
 import { PublicProps } from "@planx/components/shared/types";
 import {
   getPreviouslySubmittedData,
@@ -60,8 +62,15 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
       // defaultPassportData (array) is used when coming "back"
       const defaultPassportData = makeData(props, values.schemaData)?.["data"];
 
+      // Partition out responses from file upload fields as these are handled separately
+      const [fileUploadResponses, restResponses] = partitionSchemaData(values.schemaData, schema);
+
       // flattenedPassportData makes individual list items compatible with Calculate components
-      const flattenedPassportData = flatten(defaultPassportData, { depth: 2 });
+      const restPassportData = makeData(props, restResponses)?.["data"];
+      const flattenedPassportData = flatten(restPassportData, { depth: 2 });
+      
+      // FileUploadField responses are omitted and stored at the passport root
+      const flattenedFileUploadResponses = flattenFileUpload(fileUploadResponses)
 
       // basic example of general summary stats we can add onSubmit:
       //   1. count of items/responses
@@ -84,11 +93,20 @@ export const ListProvider: React.FC<ListProviderProps> = (props) => {
           totalUnitsByDevelopmentType),
       };
 
+      const requestedFiles = getRequestedFiles({
+        schemaFn: props.fn,
+        userData: values.schemaData,
+        schema: props.schema,
+        context: TYPES.List,
+      });
+
       handleSubmit?.({
         data: {
           ...defaultPassportData,
           ...flattenedPassportData,
           ...summaries,
+          ...requestedFiles,
+          ...flattenedFileUploadResponses
         },
       });
     },
@@ -220,4 +238,13 @@ export const useListContext = (): ListContextValue => {
     throw new Error("useListContext must be used within a ListProvider");
   }
   return context;
+};
+
+export const useOptionalListContext = (): ListContextValue | undefined => {
+  try {
+    const context = useContext(ListContext);
+    return context;
+  } catch (error) {
+    return;
+  }
 };

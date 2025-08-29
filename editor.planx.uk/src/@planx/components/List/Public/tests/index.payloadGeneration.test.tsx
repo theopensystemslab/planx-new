@@ -1,17 +1,34 @@
 import { screen } from "@testing-library/react";
+import { uploadPrivateFile } from "api/upload";
 import React from "react";
 import { setup } from "testUtils";
-import { it, vi } from "vitest";
+import { it, Mock, vi } from "vitest";
 
 import {
   mockUnitsPayload,
   mockUnitsProps,
 } from "../../schemas/mocks/GenericUnits";
-import { mockZooPayload, mockZooProps } from "../../schemas/mocks/Zoo";
+import { mockZooPayload } from "../../schemas/mocks/Zoo/payload";
+import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
+
+const mocks = vi.hoisted(() => {
+  return {
+    uploadPrivateFile: vi.fn((file, { onProgress }) => {
+      onProgress?.({ progress: 100 });
+      return Promise.resolve(`https://mock-url/${file.name}`);
+    }),
+  };
+});
+
+vi.mock("api/upload", () => ({
+  uploadPrivateFile: mocks.uploadPrivateFile,
+}));
+
+const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
 
 describe("Payload generation", () => {
   it(
@@ -24,15 +41,33 @@ describe("Payload generation", () => {
       );
       const addItemButton = getByTestId("list-add-button");
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(screen.getByTestId("continue-button"));
 
       expect(handleSubmit).toHaveBeenCalled();
-      expect(handleSubmit.mock.calls[0][0]).toMatchObject(mockZooPayload);
+      const result: typeof mockZooPayload = handleSubmit.mock.calls[0][0];
+      expect(result).toMatchObject(mockZooPayload);
+
+      // All FileUploadField values are merged (2 files for each of the 2 list items)
+      expect(result.data["photographs.existing"]).toHaveLength(4);
+
+      // Responses from FileUploadFields are extracted to the root level of the passport
+      expect(result.data["photographs.existing"][0].id).toEqual(
+        result.data.mockFn[0]["photographs.existing"][0].id,
+      );
+      expect(result.data["photographs.existing"][1].id).toEqual(
+        result.data.mockFn[0]["photographs.existing"][1].id,
+      );
+      expect(result.data["photographs.existing"][2].id).toEqual(
+        result.data.mockFn[1]["photographs.existing"][0].id,
+      );
+      expect(result.data["photographs.existing"][3].id).toEqual(
+        result.data.mockFn[1]["photographs.existing"][1].id,
+      );
     },
   );
 
