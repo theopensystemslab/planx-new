@@ -4,12 +4,11 @@ export const mockFlowData: FlowGraph = {
   _root: {
     edges: [
       "SectionOne",
+      "FindPropertyNode",
       "QuestionOne",
       "InternalPortalNode",
-      "FindPropertyNode",
-      "PayNode",
-      "SendNode",
       "ResultNode",
+      "SendNode",
       "ConfirmationNode",
     ],
   },
@@ -65,17 +64,6 @@ export const mockFlowData: FlowGraph = {
     },
     type: 100,
     edges: ["AnswerOne", "AnswerTwo"],
-  },
-  PayNode: {
-    data: {
-      fn: "application.fee.payable",
-      url: "http://localhost:7002/pay",
-      color: "#EFEFEF",
-      title: "Pay for your application",
-      description:
-        '<p>The planning fee covers the cost of processing your application.         Find out more about how planning fees are calculated          <a href="https://www.gov.uk/guidance/fees-for-planning-applications" target="_self">here</a>.</p>',
-    },
-    type: 400,
   },
   AnswerInPortalOne: {
     data: {
