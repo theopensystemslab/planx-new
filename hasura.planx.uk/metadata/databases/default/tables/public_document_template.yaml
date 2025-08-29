@@ -1,4 +1,0 @@
-table:
-  name: document_template
-  schema: public
-is_enum: true

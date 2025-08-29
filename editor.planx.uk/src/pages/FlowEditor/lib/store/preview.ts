@@ -448,7 +448,12 @@ export const previewStore: StateCreator<
   },
 
   resumeSession(session: Session) {
-    set({ ...session });
+    // Hasura sorts JSONB data alphabetically by key value on insert/update
+    // It is vital that we always re-sort breadcrumbs data (by flow depth) on resume
+    // Without this, the user's passport will not generate correctly
+    const sortedBreadcrumbs = sortBreadcrumbs(session.breadcrumbs, get().flow);
+
+    set({ ...session, breadcrumbs: sortedBreadcrumbs });
     get().setCurrentCard();
     get().updateSectionData();
   },

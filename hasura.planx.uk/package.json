@@ -6,7 +6,9 @@
     "start": "hasura console --envfile ./../.env"
   },
   "packageManager": "pnpm@10.10.0",
-  "onlyBuiltDependencies": [
-    "hasura-cli"
-  ]
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "hasura-cli"
+    ]
+  }
 }

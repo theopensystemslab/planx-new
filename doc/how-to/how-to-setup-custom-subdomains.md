@@ -83,11 +83,11 @@ This guide will walk through the process of setting a custom domain for a new te
         ```bash
         cd infrastructure/application
 
-        cat council.key | pulumi config set ssl-{team}-key --stack production --secret
+        cat council.key | esc env set application/production pulumiConfig.application:ssl-{team}-key --secret
 
-        cat council.cert | pulumi config set ssl-{team}-cert --stack production --secret
+        cat council.cert | esc env set application/production pulumiConfig.application:ssl-{team}-cert --secret
 
-        cat chain.cert | pulumi config set ssl-{team}-chain --stack production --secret
+        cat chain.cert | esc env set application/production pulumiConfig.application:ssl-{team}-chain --secret
         ```
 
         To validate that you have successfully added the secrets to Pulumi, check `infrastructure/application/Pulumi.production.yaml` which will list the above secrets for the team in an encrypted format.

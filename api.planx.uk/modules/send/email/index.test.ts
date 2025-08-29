@@ -22,7 +22,6 @@ vi.mock("@opensystemslab/planx-core", async () => {
   const mockCoreDomainClient = class extends actualCore.CoreDomainClient {
     constructor() {
       super();
-      this.getDocumentTemplateNamesForSession = vi.fn();
       this.export.csvData = () => mockGenerateCSVData();
     }
   };
@@ -322,20 +321,6 @@ describe(`downloading application data received by email`, () => {
         expect(res.body.error).toMatch(
           /Failed to find session data for this sessionId/,
         );
-      });
-  });
-
-  it("calls addTemplateFilesToZip()", async () => {
-    await supertest(app)
-      .get(
-        "/download-application-files/33d373d4-fff2-4ef7-a5f2-2a36e39ccc49?email=planning.office.example@council.gov.uk&localAuthority=southwark",
-      )
-      .expect(200)
-      .then((_res) => {
-        expect(mockBuildSubmissionExportZip).toHaveBeenCalledWith({
-          sessionId: "33d373d4-fff2-4ef7-a5f2-2a36e39ccc49",
-          includeDigitalPlanningJSON: true,
-        });
       });
   });
 });

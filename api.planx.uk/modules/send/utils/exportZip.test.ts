@@ -15,6 +15,7 @@ vi.mock("fs", () => ({
 
 const mockAddFile = vi.fn();
 const mockAddLocalFile = vi.fn();
+
 vi.mock("adm-zip", () => ({
   default: vi.fn().mockImplementation(() => ({
     addFile: mockAddFile,
@@ -22,6 +23,7 @@ vi.mock("adm-zip", () => ({
     writeZip: vi.fn(),
   })),
 }));
+
 const mockPipe = {
   pipe: vi.fn().mockImplementation(() => ({
     on: (event: string, cb: () => void) => {
@@ -29,24 +31,24 @@ const mockPipe = {
     },
   })),
 };
+
 vi.mock("csv-stringify", () => {
   return {
     stringify: vi.fn().mockImplementation(() => mockPipe),
   };
 });
+
 vi.mock("string-to-stream", () => ({
   default: vi.fn().mockImplementation(() => mockPipe),
 }));
 
 const mockGetSessionById = vi.fn().mockResolvedValue(mockLowcalSession);
-const mockHasRequiredDataForTemplate = vi.fn(() => true);
+
 vi.mock("@opensystemslab/planx-core", () => {
   return {
     Passport: vi.fn().mockImplementation(() => ({
       files: vi.fn().mockImplementation(() => []),
     })),
-    hasRequiredDataForTemplate: vi.fn(() => mockHasRequiredDataForTemplate()),
-    generateDocxTemplateStream: vi.fn().mockImplementation(() => mockPipe),
     generateApplicationHTML: vi
       .fn()
       .mockImplementation(() => "<p>application</p>"),
@@ -56,9 +58,11 @@ vi.mock("@opensystemslab/planx-core", () => {
       .mockImplementation(() => ["ldc", "ldc.p", "ldc.e", "pp", "pa"]),
   };
 });
+
 const mockGenerateOneAppXML = vi
   .fn()
   .mockResolvedValue({ trim: () => "<dummy:xml></dummy:xml>" });
+
 const mockGenerateDigitalPlanningDataPayload = vi
   .fn()
   .mockResolvedValue(expectedPlanningPermissionPayload);
@@ -66,7 +70,6 @@ const mockGenerateDigitalPlanningDataPayload = vi
 vi.mock("../../../client", () => {
   return {
     $api: {
-      getDocumentTemplateNamesForSession: vi.fn().mockResolvedValue(["X", "Y"]),
       session: {
         find: () => mockGetSessionById(),
       },
@@ -165,29 +168,6 @@ describe("buildSubmissionExportZip", () => {
     expect(mockAddFile).not.toHaveBeenCalledWith(
       "LocationPlanGeoJSON.geojson",
       expect.anything(),
-    );
-  });
-
-  test("a document template is added when the template is supported", async () => {
-    await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/X\.doc$/),
-    );
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/Y\.doc$/),
-    );
-  });
-
-  test("a document template is not added when the template is not supported", async () => {
-    mockHasRequiredDataForTemplate
-      .mockReturnValueOnce(false)
-      .mockReturnValueOnce(true);
-    await buildSubmissionExportZip({ sessionId: "1234" });
-    expect(mockAddLocalFile).not.toHaveBeenCalledWith(
-      expect.stringMatching(/X\.doc$/),
-    );
-    expect(mockAddLocalFile).toHaveBeenCalledWith(
-      expect.stringMatching(/Y\.doc$/),
     );
   });
 

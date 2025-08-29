@@ -1,5 +1,5 @@
+environment:
+  - certificates/staging
 config:
   certificates:cloudflare-zone-id: dc27ac531ff8862559ed9ab5016c4953
   certificates:domain: editor.planx.dev
-  cloudflare:apiToken:
-    secure: AAABAAPX+GV6gNIqpZkxiNn/wdukrC1iyxXJJzL6GSk6f4DQu4T7Whg33nxhjIqaSbpLZyu5DIY/NNA8+CkQj8YlWXq7wnjn

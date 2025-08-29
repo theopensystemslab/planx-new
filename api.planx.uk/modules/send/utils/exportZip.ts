@@ -1,8 +1,6 @@
 import {
   generateApplicationHTML,
-  generateDocxTemplateStream,
   generateMapHTML,
-  hasRequiredDataForTemplate,
   Passport,
 } from "@opensystemslab/planx-core";
 import type { PlanXExportData } from "@opensystemslab/planx-core/types";
@@ -12,13 +10,12 @@ import fs from "fs";
 import type { Stream } from "node:stream";
 import os from "os";
 import path from "path";
+import sanitize from "sanitize-filename";
 import str from "string-to-stream";
-import { fileURLToPath } from "url";
 import { $api } from "../../../client/index.js";
 import type { Passport as IPassport } from "../../../types.js";
 import { getFileFromS3 } from "../../file/service/getFile.js";
 import { isApplicationTypeSupported } from "./helpers.js";
-import sanitize from "sanitize-filename";
 
 export async function buildSubmissionExportZip({
   sessionId,
@@ -118,33 +115,6 @@ export async function buildSubmissionExportZip({
     throw new Error(
       `Failed to generate CSV for ${sessionId} zip. Error - ${error}`,
     );
-  }
-
-  // add template files to zip if specified in table `flow_document_templates`
-  const templateNames =
-    await $api.getDocumentTemplateNamesForSession(sessionId);
-  for (const templateName of templateNames || []) {
-    try {
-      const isTemplateSupported = hasRequiredDataForTemplate({
-        passport,
-        templateName,
-      });
-      if (isTemplateSupported) {
-        const templateStream = generateDocxTemplateStream({
-          passport,
-          templateName,
-        });
-        await zip.addStream({
-          name: `${templateName}.doc`,
-          stream: templateStream,
-        });
-      }
-    } catch (error) {
-      console.log(
-        `Template "${templateName}" could not be generated so has been skipped. Error - ${error}`,
-      );
-      continue;
-    }
   }
 
   const boundingBox = passport.data["proposal.site.buffered"];
