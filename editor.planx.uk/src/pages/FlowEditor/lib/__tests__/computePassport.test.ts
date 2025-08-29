@@ -34,7 +34,9 @@ describe("breadcrumbs where multiple nodes set the same passport value", () => {
 
     const output = computePassport();
     expect(output.data).toHaveProperty(duplicateKey);
-    expect(output.data?.[duplicateKey]).toEqual(expect.arrayContaining(["test", "true"]));
+    expect(output.data?.[duplicateKey]).toEqual(
+      expect.arrayContaining(["test", "true"]),
+    );
   });
 
   it.skip("returns an array of both values, irrespective of the order of the breadcrumbs", () => {
@@ -58,11 +60,11 @@ describe("breadcrumbs where multiple nodes set the same passport value", () => {
     expect(output.data).toHaveProperty(duplicateKey);
 
     // Currently returning this value
-    expect(output.data?.[duplicateKey]).toEqual("test")
+    expect(output.data?.[duplicateKey]).toEqual("test");
 
     // But I think we should expect this?
     expect(output.data?.[duplicateKey]).toEqual(
-      expect.arrayContaining(["test", "true"])
+      expect.arrayContaining(["test", "true"]),
     );
   });
 });
@@ -70,11 +72,11 @@ describe("breadcrumbs where multiple nodes set the same passport value", () => {
 /**
  * computePassport() does not sort breadcrumbs by flow depth before each calculation
  * This would be both expensive and redundant (as breadcrumbs are ordered within the Zustand store)
- * 
+ *
  * Hasura sorts JSONB data alphabetically by key value on insert/update to lowcal_session.data
  * When fetching breadcrumb data from the DB, it is vital that we always re-sort breadcrumbs by flow depth on resume
  * Otherwise, computePassport() will return inconsistent results (see tests below)
- * 
+ *
  * See: resumeSession() - https://github.com/theopensystemslab/planx-new/blob/main/editor.planx.uk/src/pages/FlowEditor/lib/store/preview.ts#L450
  */
 describe("breadcrumb order is significant when computing the passport", () => {
