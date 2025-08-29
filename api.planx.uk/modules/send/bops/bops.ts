@@ -36,17 +36,19 @@ const sendToBOPS: SendIntegrationController = async (_req, res, next) => {
     process.env.APP_ENVIRONMENT === "production" ? "production" : "staging";
 
   try {
-    let { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
+    const { bopsSubmissionURL, bopsToken } = await $api.team.getIntegrations({
       slug: localAuthority,
       encryptionKey: process.env.ENCRYPTION_KEY!,
       env,
     });
+
     const exportData = await $api.export.digitalPlanningDataPayload(sessionId);
+    const applicationType = exportData?.data?.application?.type?.value;
 
     // Enforcement submissions use a different BOPS endpoint than planning applications (in future all planned to use `/submissions`)
-    const applicationType = exportData?.data?.application?.type?.value;
+    let bopsSubmissionURLByAppType = bopsSubmissionURL;
     if (applicationType === "breach") {
-      bopsSubmissionURL = bopsSubmissionURL?.replace(
+      bopsSubmissionURLByAppType = bopsSubmissionURL?.replace(
         "/planning_applications",
         "/submissions",
       );
@@ -54,7 +56,7 @@ const sendToBOPS: SendIntegrationController = async (_req, res, next) => {
 
     const bopsResponse = await axios({
       method: "POST",
-      url: bopsSubmissionURL,
+      url: bopsSubmissionURLByAppType,
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +97,7 @@ const sendToBOPS: SendIntegrationController = async (_req, res, next) => {
           `,
           {
             bops_id: res.data.id,
-            destination_url: bopsSubmissionURL,
+            destination_url: bopsSubmissionURLByAppType,
             request: exportData,
             response: res.data,
             response_headers: res.headers,
