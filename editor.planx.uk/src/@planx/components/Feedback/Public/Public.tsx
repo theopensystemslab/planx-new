@@ -66,7 +66,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   });
 
   const handleFeedbackChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newValue: string | null,
   ) => {
     if (newValue !== null) {

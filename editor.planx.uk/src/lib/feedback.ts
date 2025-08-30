@@ -95,7 +95,10 @@ export async function insertFeedbackMutation(data: {
         }
       }
     `,
-    variables: data,
+    variables: {
+      ...data,
+      feedbackScore: data.feedbackScore || null,
+    }
   });
 
   return result.data.insert_feedback.affected_rows;
