@@ -16,9 +16,10 @@ export interface Feedback extends BaseNodeData {
   disclaimer?: string;
   feedbackRequired: boolean;
 }
+
 export interface FormProps {
-  feedbackScore: 1 | 2 | 3 | 4 | 5;
-  userComment: string;
+  feedbackScore?: 1 | 2 | 3 | 4 | 5;
+  userComment?: string;
 }
 
 export const parseFeedback = (
