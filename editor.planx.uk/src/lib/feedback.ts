@@ -56,7 +56,7 @@ export async function insertFeedbackMutation(data: {
   device?: Bowser.Parser.ParsedResult;
   userData?: UserData;
   userContext?: string;
-  userComment: string;
+  userComment?: string;
   feedbackScore?: number;
   feedbackType: FeedbackView | Sentiment;
   nodeData?: Store.Node["data"];
@@ -72,7 +72,7 @@ export async function insertFeedbackMutation(data: {
         $userData: jsonb
         $userContext: String
         $feedbackScore: Int
-        $userComment: String!
+        $userComment: String
         $feedbackType: feedback_type_enum_enum!
         $nodeData: jsonb
       ) {
@@ -95,7 +95,11 @@ export async function insertFeedbackMutation(data: {
         }
       }
     `,
-    variables: data,
+    variables: {
+      ...data,
+      feedbackScore: data.feedbackScore || null,
+      userComment: data.userComment || null,
+    },
   });
 
   return result.data.insert_feedback.affected_rows;

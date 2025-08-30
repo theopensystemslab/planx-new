@@ -7,6 +7,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { WarningContainer } from "@planx/components/shared/Preview/WarningContainer";
 import type { PublicProps } from "@planx/components/shared/types";
+import { logger } from "airbrake";
 import { FeedbackView } from "components/Feedback/types";
 import { useFormik } from "formik";
 import {
@@ -36,22 +37,25 @@ export const PASSPORT_FEEDBACK_KEY = "_feedback";
 const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   const feedbackDataSchema = createFeedbackSchema(props.feedbackRequired);
 
-  const handleSubmitFeedback = async (values: FormProps) => {
+  const logFeedback = async (values: FormProps) => {
     const metadata = await getInternalFeedbackMetadata();
     const data = {
       ...metadata,
       ...values,
       feedbackType: "component" as FeedbackView,
     };
-    const submitFeedbackResult = await insertFeedbackMutation(data).catch(
-      (err) => {
-        console.error(err);
-      },
-    );
-    props.handleSubmit?.(makeData(props, values, PASSPORT_FEEDBACK_KEY));
-    if (!submitFeedbackResult) {
-      return;
+    try {
+      await insertFeedbackMutation(data)
+    } catch (error) {
+      // Don't block user, but do log error and associated feedback so that we can manually resolve this and capture the feedback
+      logger.notify({ error, session: values })
     }
+  }
+
+  const handleSubmitFeedback = async (values: FormProps) => {
+    await logFeedback(values);
+    const data = makeData(props, values, PASSPORT_FEEDBACK_KEY);
+    props.handleSubmit && props.handleSubmit(data);
   };
 
   const formik = useFormik<FormProps>({
@@ -66,7 +70,7 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
   });
 
   const handleFeedbackChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newValue: string | null,
   ) => {
     if (newValue !== null) {
