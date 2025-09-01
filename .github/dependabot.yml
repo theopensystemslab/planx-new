@@ -1,4 +1,14 @@
 version: 2
+multi-ecosystem-groups:
+  # Sync versions of ShareDB between the Editor and ShareDB service 
+  sharedb-sync:
+    schedule:
+      interval: "monthly"
+    labels:
+      - "sharedb-sync"
+    reviewers:
+      - "theopensystemslab/planx"
+
 updates:
   # Root
   - package-ecosystem: "docker"
@@ -25,10 +35,17 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+      - dependency-name: "sharedb"  # Ignore sharedb here, handled by sharedb-sync group
     groups:
       tiptap:
         patterns:
           - "@tiptap/*"
+
+  # Editor - sharedb-sync group
+  - package-ecosystem: "npm"
+    directory: "/editor.planx.uk"
+    patterns: ["sharedb"]
+    multi-ecosystem-group: "sharedb-sync"
 
   # localplanning.services
   - package-ecosystem: "npm"
@@ -109,6 +126,13 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch", "version-update:semver-minor"]
+      - dependency-name: "sharedb"  # Ignore sharedb here, handled by sharedb-sync group
+  
+  # ShareDB - sharedb-sync group
+  - package-ecosystem: "npm"
+    directory: "/sharedb.planx.uk"
+    patterns: ["sharedb"]
+    multi-ecosystem-group: "sharedb-sync"
 
   - package-ecosystem: "docker"
     directory: "/sharedb.planx.uk"
