@@ -41,13 +41,6 @@ array_relationships:
         remote_table:
           name: flow_comments
           schema: public
-  - name: document_templates
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          name: flow_document_templates
-          schema: public
   - name: feedback
     using:
       foreign_key_constraint_on:

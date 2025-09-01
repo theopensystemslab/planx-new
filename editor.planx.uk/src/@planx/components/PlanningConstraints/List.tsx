@@ -53,6 +53,7 @@ const StyledAccordion = styled(Accordion, {
       "content",
       "data",
       "inaccurateConstraints",
+      "setInaccurateConstraints",
     ].includes(prop as string),
 })<StyledAccordionProps>(({ theme, category }) => ({
   borderLeft: `5px solid ${CATEGORY_COLORS[category]}`,

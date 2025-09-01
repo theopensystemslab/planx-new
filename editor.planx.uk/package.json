@@ -17,7 +17,7 @@
     "@mui/utils": "^5.15.11",
     "@mui/x-data-grid": "^7.25.0",
     "@opensystemslab/map": "1.0.0-alpha.6",
-    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#9bdb62d",
+    "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#107792a",
     "@tiptap/core": "^3.0.7",
     "@tiptap/extension-emoji": "^3.0.7",
     "@tiptap/extension-image": "^3.0.7",

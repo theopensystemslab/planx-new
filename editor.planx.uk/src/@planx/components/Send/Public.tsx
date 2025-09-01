@@ -1,6 +1,7 @@
 import ErrorOutline from "@mui/icons-material/ErrorOutline";
 import Typography from "@mui/material/Typography";
 import { SendIntegration } from "@opensystemslab/planx-core/types";
+import { logger } from "airbrake";
 import axios, { AxiosResponse } from "axios";
 import Bowser from "bowser";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -97,16 +98,21 @@ const CreateSendEvents: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    const isReady = !loading && !error && value;
+    // Allow user to proceed in the event of an error
+    const isReady = value || error;
     if (!isReady) return;
 
+    let data = {};
+
     // Construct breadcrumb containing IDs of each send event generated
-    const data = Object.fromEntries(
-      destinations.map((destination) => [
-        `${destination}SendEventId`,
-        value.data[destination]?.event_id,
-      ]),
-    );
+    if (value) { 
+      data = Object.fromEntries(
+        destinations.map((destination) => [
+          `${destination}SendEventId`,
+          value.data[destination]?.event_id,
+        ]),
+      );
+    }
 
     const userAgent = Bowser.parse(window.navigator.userAgent); // This is a weird workaround so that we can include platform in `allow_list_answers` in order to pull it through easily in the `submission_services_summary` table
     const referrer = document.referrer || null;
@@ -116,12 +122,19 @@ const CreateSendEvents: React.FC<Props> = ({
           ...data,
           "send.analytics.userAgent": userAgent,
           "send.analytics.referrer": referrer,
+          // In case of error, log to breadcrumbs in addition to throwing Airbrake error for debugging purposes
+          ...(error && { "send.error": `Failed to create send events. Error: ${error.message}` }),
         },
       });
   }, [loading, error, value, destinations, props]);
 
   // Throw errors so that they're caught by our error boundaries and Airbrake
-  if (error) throw error;
+  // User will not be blocked, and will proceed to next node (Confirmation)
+  if (error) {
+    logger.notify(
+      `Failed to create send events for session ${sessionId}. Error: ${error}`
+    )
+  }
 
   if (loading) {
     return (
