@@ -55,7 +55,7 @@ export const localAuthorityMetadata: Record<string, LocalAuthorityMetadata> = {
   lambeth,
   medway,
   newcastle,
-  southGloucestershire,
+  "south-gloucestershire": southGloucestershire,
   southwark,
   "st-albans": stAlbans,
   tewkesbury,
