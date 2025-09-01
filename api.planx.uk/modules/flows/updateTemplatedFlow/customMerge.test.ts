@@ -1,4 +1,5 @@
 import type { FlowGraph } from "@opensystemslab/planx-core/types";
+
 import type { Flow } from "../../../types.js";
 import { customMerge } from "./service.js";
 
@@ -188,11 +189,100 @@ it("handles templated folders where all nodes have been removed", () => {
           "You can empty this folder if you don't want to ask these questions",
       },
     },
-    // TODO further handle removal of "orphaned" node here for correct graph display
-    Content: {
-      type: 250,
+  });
+});
+
+it("handles templated upload and label nodes where rules have been removed, added, and re-ordered", () => {
+  const sourceTemplate: FlowGraph = {
+    _root: {
+      edges: ["UploadAndLabel"],
+    },
+    UploadAndLabel: {
+      type: 145,
       data: {
-        content: "<h1>Test</h1><p>This is some example content</p>",
+        title: "Upload and label",
+        fileTypes: [
+          {
+            name: "Site plan",
+            fn: "sitePlan.proposed",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+          {
+            name: "Design and access statement",
+            fn: "designAndAccessStatement",
+            rule: {
+              condition: "AlwaysRecommended",
+            },
+          },
+        ],
+        hideDropZone: false,
+        tags: [],
+        isTemplatedNode: true,
+        templatedNodeInstructions: "Set your local file requirements",
+      },
+    },
+  };
+
+  // Remove design & access, add heritage statement, re-order so site plan is last
+  const templatedFlowEdits: Flow["data"] = {
+    UploadAndLabel: {
+      data: {
+        fileTypes: [
+          {
+            fn: "heritageStatement",
+            name: "Heritage statement",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+          {
+            fn: "sitePlan.proposed",
+            name: "Site plan",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+            moreInformation: {
+              info: "<p>It shows where the work is happening</p>",
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  expect(customMerge(sourceTemplate, templatedFlowEdits)).toEqual({
+    _root: {
+      edges: ["UploadAndLabel"],
+    },
+    UploadAndLabel: {
+      type: 145,
+      data: {
+        title: "Upload and label",
+        fileTypes: [
+          {
+            fn: "heritageStatement",
+            name: "Heritage statement",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+          },
+          {
+            fn: "sitePlan.proposed",
+            name: "Site plan",
+            rule: {
+              condition: "AlwaysRequired",
+            },
+            moreInformation: {
+              info: "<p>It shows where the work is happening</p>",
+            },
+          },
+        ],
+        hideDropZone: false,
+        tags: [],
+        isTemplatedNode: true,
+        templatedNodeInstructions: "Set your local file requirements",
       },
     },
   });

@@ -2,9 +2,10 @@ import type { FlowGraph } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
 import isArray from "lodash/isArray.js";
 import mergeWith from "lodash/mergeWith.js";
+
 import { $api } from "../../../client/index.js";
 import { getFlowData } from "../../../helpers.js";
-import type { Flow, Node } from "../../../types.js";
+import type { Flow } from "../../../types.js";
 
 interface GetTemplatedFlowEdits {
   edits: {
@@ -98,11 +99,11 @@ export const updateTemplatedFlow = async (
 };
 
 export const customMerge = (
-  sourceData: { [key: string]: Node },
-  edits: { [key: string]: Node },
-): { [key: string]: Node } => {
+  sourceData: Flow["data"], // FlowGraph ??
+  edits: Flow["data"],
+): Flow["data"] => {
   // Preserves edited empty arrays (eg if a templated folder is emptied)
-  return mergeWith(sourceData, edits, function (sourceData, edits) {
+  const mergedData = mergeWith(sourceData, edits, function (sourceData, edits) {
     if (isArray(sourceData)) {
       if (edits) {
         return edits;
@@ -111,4 +112,17 @@ export const customMerge = (
       }
     }
   });
+
+  // Check for orphaned nodes IDS (deleted edges) and remove them to ensure graph displays correctly
+  const validEdges = Object.values(mergedData).flatMap(
+    (nodeData) => nodeData.edges,
+  );
+  const orphanedNodeIds = Object.keys(mergedData).filter(
+    (nodeId) => nodeId !== "_root" && !validEdges.includes(nodeId),
+  );
+  orphanedNodeIds.forEach((nodeId) => {
+    delete mergedData[nodeId];
+  });
+
+  return mergedData;
 };
