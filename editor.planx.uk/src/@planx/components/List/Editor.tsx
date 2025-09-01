@@ -32,6 +32,7 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
+import { Zoo } from "./schemas/mocks/Zoo/schema";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -81,6 +82,8 @@ export const SCHEMAS = [
   { name: "Unoccupied buildings (CIL)", schema: UnoccupiedBuildingsCIL },
   { name: "Mezzanine floors (CIL)", schema: MezzanineCIL },
   { name: "Interest in land (LDC)", schema: InterestInLandLDC },
+  // TEMP: Remove this!
+  { name: "Zoo", schema: Zoo },
   {
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,

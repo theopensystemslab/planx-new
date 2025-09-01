@@ -184,9 +184,8 @@ export const OverrideEntitiesModal = ({
                 </Typography>
                 {Boolean(entities?.length) &&
                   entities?.map((e) => (
-                    <Grid item xs={12} sx={{ pointerEvents: "auto" }}>
+                    <Grid item xs={12} sx={{ pointerEvents: "auto" }} key={`${e.entity}`}>
                       <ChecklistItem
-                        key={`${e.entity}`}
                         id={`entity-checkbox-${e.entity}`}
                         label={formatEntityName(e, metadata)}
                         checked={
