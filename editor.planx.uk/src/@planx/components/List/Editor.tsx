@@ -83,8 +83,6 @@ export const SCHEMAS = [
   { name: "Unoccupied buildings (CIL)", schema: UnoccupiedBuildingsCIL },
   { name: "Mezzanine floors (CIL)", schema: MezzanineCIL },
   { name: "Interest in land (LDC)", schema: InterestInLandLDC },
-  // TEMP: Remove this!
-  { name: "Zoo", schema: Zoo },
   {
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,
