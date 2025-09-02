@@ -19,6 +19,7 @@ import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
 import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
 import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
@@ -88,6 +89,7 @@ export const SCHEMAS = [
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,
   },
+  { name: "Amend documents", schema: AmendDocuments },
   { name: "Sketch Plan (testing only)", schema: Trees },
 ];
 
