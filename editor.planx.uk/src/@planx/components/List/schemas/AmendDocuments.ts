@@ -17,7 +17,7 @@ export const AmendDocuments: Schema = {
       data: {
         title: "Previous document reference",
         description:
-          "If you are amending a previously submitted document, provide its reference here",
+          "If you are amending a previously submitted document, add its reference here.",
         fn: "previousReference",
         type: TextInputType.Short,
       },
@@ -27,7 +27,7 @@ export const AmendDocuments: Schema = {
       data: {
         title: "New document reference",
         description:
-          "This is the reference for the document you are submitting",
+          "This is the reference for the document you are submitting.",
         fn: "newReference",
         type: TextInputType.Short,
       },
