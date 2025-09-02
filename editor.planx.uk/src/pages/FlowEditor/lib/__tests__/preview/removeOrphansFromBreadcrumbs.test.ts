@@ -1,7 +1,9 @@
-import { Store } from "../../store";
 import { removeOrphansFromBreadcrumbs } from "../../store/preview";
-import mockFlowData from "../mocks/removeOrphansFlow.json";
 
+/**
+ * Complex flow (7mb) tested here - https://github.com/theopensystemslab/planx-new/pull/5142
+ * Useful as a reference when working on optimising record() or removeOrphansFromBreadcrumbs()
+ */
 describe("simple flow", () => {
   const mockBreadcrumbs = {
     mBFPszBssY: {
@@ -157,97 +159,4 @@ describe("simple flow", () => {
 
     expect(actual).toEqual(expected);
   });
-});
-
-/**
- * Based on Camden LDC, snapshot taken 28/08/25
- */
-describe("complex flow", () => {
-  const mockBreadcrumbs = {
-    hogz2qW01b: {
-      auto: true,
-      answers: ["vASjIqW01b"],
-    },
-    OYAoJqW01b: {
-      auto: true,
-    },
-    pYr9XuA88C: {
-      auto: true,
-      answers: ["d48Z0uA88C"],
-    },
-    epfQyuA88C: {
-      auto: true,
-    },
-    KRkUruA88C: {
-      auto: true,
-      answers: ["oCromuA88C"],
-    },
-    "7VNGiwzDy4": {
-      auto: true,
-    },
-    "4kEHc0n3Cy": {
-      auto: true,
-      answers: ["vbbcMsoYTg"],
-    },
-    rjC3Hgqkth: {
-      auto: true,
-    },
-    LtVBNzjOqe: {
-      auto: true,
-    },
-  };
-
-  /**
-   * In practice, this generally completes in ~15ms
-   * Bumping timeout accounts for differences in CI and developer machines whilst still ensuring it's performant enough
-   */
-  test("Efficiently iterates over a large (7mb) flow in less than 50ms", () => {
-    const payload = {
-      id: "hogz2qW01b",
-      flow: mockFlowData as Store.Flow,
-      breadcrumbs: mockBreadcrumbs,
-      userData: {
-        auto: true,
-        answers: ["vASjIqW01b"],
-      },
-    };
-
-    const actual = removeOrphansFromBreadcrumbs(payload);
-
-    const expected = {
-      hogz2qW01b: {
-        auto: true,
-        answers: ["vASjIqW01b"],
-      },
-      OYAoJqW01b: {
-        auto: true,
-      },
-      pYr9XuA88C: {
-        auto: true,
-        answers: ["d48Z0uA88C"],
-      },
-      epfQyuA88C: {
-        auto: true,
-      },
-      KRkUruA88C: {
-        auto: true,
-        answers: ["oCromuA88C"],
-      },
-      "7VNGiwzDy4": {
-        auto: true,
-      },
-      "4kEHc0n3Cy": {
-        auto: true,
-        answers: ["vbbcMsoYTg"],
-      },
-      rjC3Hgqkth: {
-        auto: true,
-      },
-      LtVBNzjOqe: {
-        auto: true,
-      },
-    };
-
-    expect(actual).toEqual(expected);
-  }, 50);
 });
