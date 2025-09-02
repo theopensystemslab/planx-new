@@ -105,7 +105,7 @@ const CreateSendEvents: React.FC<Props> = ({
     let data = {};
 
     // Construct breadcrumb containing IDs of each send event generated
-    if (value) { 
+    if (value) {
       data = Object.fromEntries(
         destinations.map((destination) => [
           `${destination}SendEventId`,
@@ -123,7 +123,9 @@ const CreateSendEvents: React.FC<Props> = ({
           "send.analytics.userAgent": userAgent,
           "send.analytics.referrer": referrer,
           // In case of error, log to breadcrumbs in addition to throwing Airbrake error for debugging purposes
-          ...(error && { "send.error": `Failed to create send events. Error: ${error.message}` }),
+          ...(error && {
+            "send.error": `Failed to create send events. Error: ${error.message}`,
+          }),
         },
       });
   }, [loading, error, value, destinations, props]);
@@ -132,8 +134,8 @@ const CreateSendEvents: React.FC<Props> = ({
   // User will not be blocked, and will proceed to next node (Confirmation)
   if (error) {
     logger.notify(
-      `Failed to create send events for session ${sessionId}. Error: ${error}`
-    )
+      `Failed to create send events for session ${sessionId}. Error: ${error}`,
+    );
   }
 
   if (loading) {
