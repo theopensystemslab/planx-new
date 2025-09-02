@@ -19,6 +19,7 @@ import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
 import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
 import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
@@ -82,12 +83,11 @@ export const SCHEMAS = [
   { name: "Unoccupied buildings (CIL)", schema: UnoccupiedBuildingsCIL },
   { name: "Mezzanine floors (CIL)", schema: MezzanineCIL },
   { name: "Interest in land (LDC)", schema: InterestInLandLDC },
-  // TEMP: Remove this!
-  { name: "Zoo", schema: Zoo },
   {
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,
   },
+  { name: "Amend documents", schema: AmendDocuments },
   { name: "Sketch Plan (testing only)", schema: Trees },
 ];
 
