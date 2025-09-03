@@ -11,8 +11,7 @@ import { TEST_EMAIL } from "../globalHelpers.js";
 
 interface Success {
   status: 200;
-  drafts: { id: string }[];
-  submitted: { id: string }[];
+  applications: { id: string }[];
 }
 
 interface Error {
@@ -80,8 +79,7 @@ When<CustomWorld>("the link is reused", async function () {
 
 Then<CustomWorld>("applications can't be accessed", function () {
   assert.equal(this.response.status, 200);
-  assert.equal(this.response.drafts.length, 0);
-  assert.equal(this.response.submitted.length, 0);
+  assert.equal(this.response.applications.length, 0);
 });
 
 Then<CustomWorld>("an invalid link error message is returned", function () {
@@ -99,15 +97,10 @@ Then<CustomWorld>("an expired link error message is returned", function () {
 Then<CustomWorld>("applications can be accessed", async function () {
   assert.equal(this.response.status, 200);
 
-  assert.equal(this.response.drafts.length, 2);
-  assert.equal(this.response.submitted.length, 1);
+  assert.equal(this.response.applications.length, 3);
 
   // Each application returned corresponds with the user's sessions
-  this.response.drafts.forEach(({ id }) => {
-    assert.equal(this.sessionIds.includes(id), true);
-  });
-
-  this.response.submitted.forEach(({ id }) => {
+  this.response.applications.forEach(({ id }) => {
     assert.equal(this.sessionIds.includes(id), true);
   });
 });
