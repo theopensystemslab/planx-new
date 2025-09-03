@@ -41,7 +41,7 @@ export const RadioFieldInput: React.FC<Props<QuestionField>> = (props) => {
             <BasicRadio
               key={id}
               id={data.val || data.text}
-              title={data.text}
+              label={data.text}
               onChange={formik.handleChange}
             />
           ))}

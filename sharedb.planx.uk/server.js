@@ -109,7 +109,18 @@ async function validateJWT(authToken) {
     throw Error("API rate limit exceeded");
   }
 
-  throw Error("Invalid JWT. Please log in again.");
+  let errorBody;
+  try {
+    errorBody = await response.json();
+  } catch (error) {
+    errorBody = await response.text();
+  }
+
+  const error = new Error("Invalid JWT. Please log in again", {
+    cause: { status: response.status, body: errorBody },
+  });
+  
+  throw error;
 };
 
 const wss = new Server({
@@ -133,18 +144,6 @@ const wss = new Server({
 });
 
 wss.on("connection", function (ws, req) {
-  // JWTs expire every 24hrs
-  // Check status every minute - client side will logout on expiry
-  // const tokenCheckInterval = setInterval(async () => {
-  //   try {
-  //     await validateJWT(req.authToken)
-  //   } catch (error) {
-  //     console.error("Token validation error:", error);
-  //     ws.close(TOKEN_EXPIRY_CODE, "Token validation error");
-  //     clearInterval(tokenCheckInterval);
-  //   }
-  // }, ONE_MINUTE_IN_MS);
-
   const stream = new WebSocketJSONStream(ws);
   sharedb.listen(stream, req);
 });

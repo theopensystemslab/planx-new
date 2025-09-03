@@ -42,6 +42,7 @@ export const FiltersColumn = <T extends object>(
         />
       ) : (
         <SelectInput
+          visuallyHiddenLabel
           value={selectedValue}
           name={props.name}
           onChange={(event) =>

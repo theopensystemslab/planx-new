@@ -11,17 +11,12 @@ test("renders correctly", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <NumberInput
-      fn="num"
-      title="Numberwang!"
-      units="wangs"
-      handleSubmit={handleSubmit}
-    />,
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
 
-  await user.type(screen.getByLabelText("wangs"), "3");
+  await user.type(screen.getByLabelText("Numberwang!"), "3");
   await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 3 } });
@@ -31,17 +26,12 @@ test("allows 0 to be input as a valid number", async () => {
   const handleSubmit = vi.fn();
 
   const { user } = setup(
-    <NumberInput
-      fn="num"
-      title="Numberwang!"
-      units="wangs"
-      handleSubmit={handleSubmit}
-    />,
+    <NumberInput fn="num" title="Numberwang!" handleSubmit={handleSubmit} />,
   );
 
   expect(screen.getByRole("heading")).toHaveTextContent("Numberwang!");
 
-  await user.type(screen.getByLabelText("wangs"), "0");
+  await user.type(screen.getByLabelText("Numberwang!"), "0");
   await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { num: 0 } });
@@ -55,7 +45,6 @@ test("requires a positive number to be input by default", async () => {
       fn="doors"
       title="How many doors are you adding?"
       handleSubmit={handleSubmit}
-      units="units"
     />,
   );
 
@@ -63,7 +52,10 @@ test("requires a positive number to be input by default", async () => {
     "How many doors are you adding?",
   );
 
-  await user.type(screen.getByLabelText("units"), "-1");
+  await user.type(
+    screen.getByLabelText("How many doors are you adding?"),
+    "-1",
+  );
   await user.click(screen.getByTestId("continue-button"));
 
   expect(screen.getByText(/Enter a positive number/)).toBeInTheDocument();
@@ -79,7 +71,6 @@ test("allows negative numbers to be input when toggled on by editor", async () =
       title="What's the temperature?"
       handleSubmit={handleSubmit}
       allowNegatives={true}
-      units="degrees"
     />,
   );
 
@@ -87,7 +78,7 @@ test("allows negative numbers to be input when toggled on by editor", async () =
     "What's the temperature?",
   );
 
-  await user.type(screen.getByLabelText("degrees"), "-10");
+  await user.type(screen.getByLabelText("What's the temperature?"), "-10");
   await user.click(screen.getByTestId("continue-button"));
 
   expect(handleSubmit).toHaveBeenCalledWith({ data: { fahrenheit: -10 } });
@@ -102,7 +93,6 @@ test("a clear error is shown if decimal value added when onlyWholeNumbers is tog
       title="What's the temperature?"
       handleSubmit={handleSubmit}
       isInteger={true}
-      units="degrees"
     />,
   );
 
@@ -110,7 +100,7 @@ test("a clear error is shown if decimal value added when onlyWholeNumbers is tog
     "What's the temperature?",
   );
 
-  const textArea = screen.getByLabelText("degrees");
+  const textArea = screen.getByLabelText("What's the temperature?");
 
   await user.type(textArea, "10.06");
   await user.click(screen.getByTestId("continue-button"));
@@ -128,7 +118,6 @@ test("allows only whole numbers to be submitted when toggled on by editor", asyn
       title="What's the temperature?"
       handleSubmit={handleSubmit}
       isInteger={true}
-      units="degrees"
     />,
   );
 
@@ -136,7 +125,7 @@ test("allows only whole numbers to be submitted when toggled on by editor", asyn
     "What's the temperature?",
   );
 
-  const textArea = screen.getByLabelText("degrees");
+  const textArea = screen.getByLabelText("What's the temperature?");
 
   await user.type(textArea, "10");
   await user.click(screen.getByTestId("continue-button"));
@@ -202,9 +191,7 @@ test("recovers previously submitted number when clicking the back button even if
 });
 
 it("should not have any accessibility violations", async () => {
-  const { container } = setup(
-    <NumberInput fn="num" title="Numberwang!" units="wangs" />,
-  );
+  const { container } = setup(<NumberInput fn="num" title="Numberwang!" />);
   const results = await axe(container);
   expect(results).toHaveNoViolations();
 });

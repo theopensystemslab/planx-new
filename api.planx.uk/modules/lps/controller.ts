@@ -1,20 +1,11 @@
 import { ServerError } from "../../errors/serverError.js";
 import { getApplications } from "./service/getApplications/index.js";
-import { generateMagicLink, login } from "./service/login.js";
+import { login } from "./service/login.js";
 import type { Applications, Login } from "./types.js";
 
 export const loginController: Login = async (_req, res, next) => {
   const { email } = res.locals.parsedReq.body;
   try {
-    // TEMP - remove after UR is completed
-    if (email === "test@example.com") {
-      const magicLink = await generateMagicLink(email);
-      return res.status(200).json({
-        message: "success",
-        magicLink,
-      });
-    }
-
     await login(email);
     return res.status(200).json({ message: "success" });
   } catch (error) {

@@ -76,9 +76,9 @@ describe("Checklist Component - Grouped Layout", () => {
       />,
     );
 
-    expect(screen.getByTestId("group-0-expanded")).toBeTruthy();
+    expect(screen.getByTestId("group-0-expanded")).toBeInTheDocument();
     expect(screen.queryAllByTestId("group-1-expanded")).toHaveLength(0);
-    expect(screen.getByTestId("group-2-expanded")).toBeTruthy();
+    expect(screen.getByTestId("group-2-expanded")).toBeInTheDocument();
 
     await user.click(screen.getByTestId("continue-button"));
 

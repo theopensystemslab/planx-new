@@ -19,6 +19,7 @@ import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
 import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
 import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
@@ -32,6 +33,7 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
+import { Zoo } from "./schemas/mocks/Zoo/schema";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -85,6 +87,7 @@ export const SCHEMAS = [
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,
   },
+  { name: "Amend documents", schema: AmendDocuments },
   { name: "Sketch Plan (testing only)", schema: Trees },
 ];
 

@@ -33,10 +33,10 @@ export const ArchiveDialog = ({
         <DialogContentText>{content}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="secondary" variant="contained">
           Cancel
         </Button>
-        <Button onClick={onConfirm} color="primary">
+        <Button onClick={onConfirm} color="warning" variant="contained">
           {submitLabel}
         </Button>
       </DialogActions>

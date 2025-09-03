@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import "vitest-axe/extend-expect";
+import "@testing-library/jest-dom/vitest";
 
 import { FadeProps } from "@mui/material/Fade";
 import React from "react";

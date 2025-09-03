@@ -129,6 +129,7 @@ const QuestionComponent: React.FC<Question> = (props) => {
                             <BasicRadio
                               {...buttonProps}
                               {...response}
+                              label={response.title}
                               data-testid="basic-radio"
                               key={`basic-radio-${response.id}`}
                             />

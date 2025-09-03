@@ -71,7 +71,7 @@ describe("teamLayoutRoutes", () => {
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
     expect(menuItems).toHaveLength(2);
-    expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
+    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
     expect(
       within(menuItems[1]).getByText("Planning Data unavailable"),
     ).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe("teamLayoutRoutes", () => {
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(8);
-    expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
+    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
   it("displays for platformAdmins", () => {
@@ -92,7 +92,7 @@ describe("teamLayoutRoutes", () => {
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
     expect(menuItems).toHaveLength(8);
-    expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
+    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 });
 
@@ -115,7 +115,7 @@ describe("teamPlanningDataRoute", () => {
     mockGetTeam.mockReturnValue({ settings: { referenceCode: "TEST" } });
 
     const { getByRole } = setup(<EditorNavMenu />);
-    expect(getByRole("button", { name: /Planning Data/ })).not.toBeDisabled();
+    expect(getByRole("button", { name: /Planning Data/ })).toBeEnabled();
   });
 });
 
@@ -133,7 +133,7 @@ describe("flowLayoutRoutes", () => {
 
     const { queryAllByRole } = setup(<EditorNavMenu />);
     const menuItems = queryAllByRole("listitem");
-    expect(menuItems).toHaveLength(2); // Flow and About this service
+    expect(menuItems).toHaveLength(2); // Flow and About this flow
   });
 
   it("displays for teamEditors", () => {
@@ -176,7 +176,7 @@ describe("flowAnalyticsRoute", () => {
     mockAnalyticsLink = "https://link-to-metabase";
 
     const { getByRole } = setup(<EditorNavMenu />);
-    expect(getByRole("button", { name: /Analytics/ })).not.toBeDisabled();
+    expect(getByRole("button", { name: /Analytics/ })).toBeEnabled();
   });
 });
 
@@ -208,10 +208,10 @@ describe("layout", () => {
     const menuItems = queryAllByRole("listitem");
 
     // Tooltip not present
-    expect(queryByLabelText("Services")).not.toBeInTheDocument();
+    expect(queryByLabelText("Flows")).not.toBeInTheDocument();
 
     // Full text present
-    expect(within(menuItems[0]).getByText("Services")).toBeInTheDocument();
+    expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
   it("displays in a compact mode on flow routes", () => {

@@ -10,6 +10,15 @@ echo "root:$SSH_PASSWORD" | chpasswd
 # https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
 swapon --show
 
+# caddy runs up against kernel buffer limits of host OS, so we increase them
+# see https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+sysctl -w net.core.rmem_max=7500000
+sysctl -w net.core.wmem_max=7500000
+
+# ensure docker does not pull caddy image via ipv6 (no subnet configured, it will fail)
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+
 # set env for this shell
 set -o allexport
 source .env.pizza

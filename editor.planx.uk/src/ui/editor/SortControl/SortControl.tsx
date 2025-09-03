@@ -101,6 +101,7 @@ export const SortControl = <T extends object>({
   return (
     <Box display={"flex"} gap={1}>
       <StyledSelectInput
+        visuallyHiddenLabel
         value={selectedDisplaySlug}
         onChange={(e) => {
           const targetKey = e.target.value as string;

@@ -33,20 +33,9 @@ const createWSConnection = () => {
     }
   });
 
-  /** Fallback for unhandled ShareDB errors - log user out to prevent silent failures */
-  socket.addEventListener("error", ({ error, message }) => {
-    console.error("Unhandled ShareDB error: ", { error, message });
-
-    // Only display a single toast at a time
-    if (toast.isActive("sharedb_jwt_expiry")) return;
-
-    toast.error(
-      "[ShareDB error]: Unhandled error, redirecting to login page...",
-      {
-        toastId: "sharedb_error",
-        ...toastConfig,
-      },
-    );
+  /** Fallback for unhandled ShareDB errors */
+  socket.addEventListener("error", (errorEvent) => {
+    console.error("Unhandled ShareDB error: ", { errorEvent });
   });
 
   return socket;

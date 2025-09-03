@@ -355,9 +355,10 @@ export const previewStore: StateCreator<
       const shouldRemovedChangedNode = Object.keys(nextBreadcrumbs).some(
         (key) => flow[key]?.type === TYPES.Review,
       );
+
       set({
         breadcrumbs: sortedBreadcrumbs,
-        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed his answer)
+        cachedBreadcrumbs: { ...(restore ? {} : cacheWithoutOrphans) }, // clean cache if restore is true (i.e. if user has changed their answer)
         restore: false,
         _nodesPendingEdit: nodesPendingEdit,
         changedNode: shouldRemovedChangedNode ? undefined : changedNode,
@@ -383,6 +384,7 @@ export const previewStore: StateCreator<
       }
     }
     setCurrentCard();
+
     updateSectionData();
   },
 
@@ -448,7 +450,12 @@ export const previewStore: StateCreator<
   },
 
   resumeSession(session: Session) {
-    set({ ...session });
+    // Hasura sorts JSONB data alphabetically by key value on insert/update
+    // It is vital that we always re-sort breadcrumbs data (by flow depth) on resume
+    // Without this, the user's passport will not generate correctly
+    const sortedBreadcrumbs = sortBreadcrumbs(session.breadcrumbs, get().flow);
+
+    set({ ...session, breadcrumbs: sortedBreadcrumbs });
     get().setCurrentCard();
     get().updateSectionData();
   },
@@ -816,31 +823,42 @@ export const removeOrphansFromBreadcrumbs = ({
 }: RemoveOrphansFromBreadcrumbsProps):
   | Store.CachedBreadcrumbs
   | Store.Breadcrumbs => {
-  // this will prevent a user from "Continuing", therefore log error don't throw it
-  if (!flow[id]) {
-    logger.notify(
-      `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`,
-    );
+  const result: Store.Breadcrumbs = { ...breadcrumbs };
+  const userAnswers = new Set(userData?.answers ?? []);
+  const edges = flow[id].edges ?? [];
+  const orphanedEdges = edges.filter((edge) => !userAnswers.has(edge));
+
+  // Use a stack to iteratively remove each orphan and all its descendants
+  const toRemove = [...orphanedEdges];
+  const visited = new Set<string>();
+
+  while (toRemove.length > 0) {
+    const currentId = toRemove.pop()!;
+    if (visited.has(currentId)) continue;
+
+    if (!flow[currentId]) {
+      logger.notify(
+        `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`,
+      );
+      continue;
+    }
+
+    // Track node
+    visited.add(currentId);
+
+    // Remove orphaned node from new breadcrumbs
+    if (result[currentId]) delete result[currentId];
+
+    // Add all child edges to stack for processing
+    const childEdges = flow[currentId].edges ?? [];
+    for (const childId of childEdges) {
+      if (!visited.has(childId)) {
+        toRemove.push(childId);
+      }
+    }
   }
 
-  const idsToRemove =
-    flow[id]?.edges?.filter(
-      (edge) => !(userData?.answers ?? []).includes(edge),
-    ) ?? [];
-
-  return idsToRemove.reduce(
-    (acc, id) => {
-      delete acc?.[id];
-      // recursion to remove orphans from tree
-      return removeOrphansFromBreadcrumbs({
-        id,
-        flow,
-        userData: flow[id],
-        breadcrumbs: acc,
-      });
-    },
-    { ...breadcrumbs } as Store.CachedBreadcrumbs | Store.Breadcrumbs,
-  );
+  return result;
 };
 
 export const sortBreadcrumbs = (

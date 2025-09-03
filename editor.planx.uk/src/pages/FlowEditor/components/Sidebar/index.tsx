@@ -172,7 +172,7 @@ const Sidebar: React.FC = React.memo(() => {
               <input type="text" disabled value={urls.preview} />
 
               <Permission.IsPlatformAdmin>
-                <Tooltip title="Open draft service">
+                <Tooltip title="Open draft flow">
                   <Link
                     href={urls.draft}
                     target="_blank"
@@ -196,7 +196,7 @@ const Sidebar: React.FC = React.memo(() => {
               </Tooltip>
 
               {isFlowPublished ? (
-                <Tooltip title="Open published service">
+                <Tooltip title="Open published flow">
                   <Link
                     href={urls.analytics}
                     target="_blank"

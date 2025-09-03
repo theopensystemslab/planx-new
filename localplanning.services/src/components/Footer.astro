@@ -27,9 +27,12 @@ const legalPages = await getCollection("legal");
         </div>
       </div>
        <div class="flex gap-8">
+          <a class="paragraph-link text-body-md" href="/directory">
+            Directory of local planning authorities
+          </a>
         {
           legalPages.map((page) => (
-            <a class="underline capitalize text-body-md" href={`/${page.slug}`}>
+            <a class="paragraph-link capitalize text-body-md" href={`/${page.slug}`}>
               {page.slug}
             </a>
           ))

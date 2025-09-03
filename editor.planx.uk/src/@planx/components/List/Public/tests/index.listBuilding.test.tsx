@@ -1,15 +1,31 @@
 import { within } from "@testing-library/react";
+import { uploadPrivateFile } from "api/upload";
 import { cloneDeep, merge } from "lodash";
 import React from "react";
 import { setup } from "testUtils";
-import { it, test, vi } from "vitest";
+import { it, Mock, test, vi } from "vitest";
 
 import { mockMaxOneProps } from "../../schemas/mocks/MaxOne";
-import { mockZooProps } from "../../schemas/mocks/Zoo";
+import { mockZooProps } from "../../schemas/mocks/Zoo/props";
 import ListComponent from "..";
 import { fillInResponse } from "./testUtils";
 
 Element.prototype.scrollIntoView = vi.fn();
+
+const mocks = vi.hoisted(() => {
+  return {
+    uploadPrivateFile: vi.fn((file, { onProgress }) => {
+      onProgress?.({ progress: 100 });
+      return Promise.resolve(`https://mock-url/${file.name}`);
+    }),
+  };
+});
+
+vi.mock("api/upload", () => ({
+  uploadPrivateFile: mocks.uploadPrivateFile,
+}));
+
+const mockUpload: Mock<typeof uploadPrivateFile> = mocks.uploadPrivateFile;
 
 describe("Building a list", () => {
   it("does not display a default item if the schema has no required minimum", () => {
@@ -25,12 +41,12 @@ describe("Building a list", () => {
       level: 2,
       name: "Animal 1",
     });
-    expect(activeListHeading).toBeNull();
+    expect(activeListHeading).not.toBeInTheDocument();
 
     // Button is present allow additional items to be added
     const addItemButton = getByTestId("list-add-button");
     expect(addItemButton).toBeInTheDocument();
-    expect(addItemButton).not.toBeDisabled();
+    expect(addItemButton).toBeEnabled();
   });
 
   it("displays a default item if the schema has a required minimum", () => {
@@ -48,7 +64,7 @@ describe("Building a list", () => {
     // ...with active fields
     const inputField = queryByLabelText(/What's their name?/);
     expect(inputField).toBeInTheDocument();
-    expect(inputField).not.toBeDisabled();
+    expect(inputField).toBeEnabled();
   });
 
   it("hides the index number in the card header and the 'add another' button if the schema has a max of 1", () => {
@@ -72,7 +88,7 @@ describe("Building a list", () => {
     let cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(1);
 
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     const addItemButton = getByTestId("list-add-button");
     await user.click(addItemButton);
@@ -83,13 +99,13 @@ describe("Building a list", () => {
 
     // Old item is inactive
     const [firstCard, secondCard] = cards;
-    expect(firstCard).not.toBeNull();
+    expect(firstCard).toBeInTheDocument();
     expect(
       within(firstCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
 
     // New item is active
-    expect(secondCard).not.toBeNull();
+    expect(secondCard).toBeInTheDocument();
     expect(
       within(secondCard!).getByLabelText(/What's their name?/),
     ).toBeInTheDocument();
@@ -101,15 +117,15 @@ describe("Building a list", () => {
       <ListComponent {...mockZooProps} />,
     );
 
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     const addItemButton = getByTestId("list-add-button");
 
     await user.click(addItemButton);
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     await user.click(addItemButton);
-    await fillInResponse(user);
+    await fillInResponse(user, mockUpload);
 
     const cards = getAllByTestId(/list-card/);
     expect(cards).toHaveLength(3);
@@ -119,13 +135,13 @@ describe("Building a list", () => {
     // No cards currently active
     expect(
       within(firstCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
     expect(
       within(secondCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
     expect(
       within(thirdCard!).queryByLabelText(/What's their name?/),
-    ).toBeNull();
+    ).not.toBeInTheDocument();
 
     // All card in view only / summary mode
     expect(within(firstCard!).getByText(/What's their name?/)).toBeVisible();
@@ -159,15 +175,15 @@ describe("Building a list", () => {
         queryAllByTestId,
       } = setup(<ListComponent {...mockZooProps} />);
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       await user.click(addItemButton);
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       let cards = getAllByTestId(/list-card/);
       expect(cards).toHaveLength(3);
@@ -188,10 +204,10 @@ describe("Building a list", () => {
       // Previous items remain inactive
       expect(
         within(firstCard!).queryByLabelText(/What's their name?/),
-      ).toBeNull();
+      ).not.toBeInTheDocument();
       expect(
         within(secondCard!).queryByLabelText(/What's their name?/),
-      ).toBeNull();
+      ).not.toBeInTheDocument();
 
       // Remove second card
       const secondCardRemoveButton = within(secondCard!).getByRole("button", {
@@ -206,7 +222,7 @@ describe("Building a list", () => {
       // Previous items remain inactive
       expect(
         within(firstCard!).queryByLabelText(/What's their name?/),
-      ).toBeNull();
+      ).not.toBeInTheDocument();
 
       // Remove first card
       const firstCardRemoveButton = within(firstCard!).getByRole("button", {
@@ -234,7 +250,7 @@ describe("Building a list", () => {
         <ListComponent {...mockZooProps} />,
       );
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
 
@@ -273,7 +289,7 @@ describe("Building a list", () => {
       expect(cards).toHaveLength(1);
 
       // "Cancel" is hidden from initial item, so fill out an item first
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
       await user.click(addItemButton);
@@ -307,7 +323,7 @@ describe("Building a list", () => {
         getAllByText,
       } = setup(<ListComponent {...mockZooProps} />);
 
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const addItemButton = getByTestId("list-add-button");
       await user.click(addItemButton);
@@ -320,7 +336,7 @@ describe("Building a list", () => {
       ).toBeInTheDocument();
 
       // "Cancel" button was hidden on first item, so fill in second item
-      await fillInResponse(user);
+      await fillInResponse(user, mockUpload);
 
       const secondEmail = getAllByText("richard.parker@pi.com")[1];
       expect(secondEmail).toBeInTheDocument();

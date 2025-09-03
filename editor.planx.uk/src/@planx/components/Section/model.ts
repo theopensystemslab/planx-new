@@ -1,13 +1,18 @@
 import { richText } from "lib/yupExtensions";
 import type { Store } from "pages/FlowEditor/lib/store";
 import { SectionNode, SectionStatus } from "types";
-import { object,SchemaOf, string } from "yup";
+import { mixed, object, SchemaOf, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export interface Section extends BaseNodeData {
   title: string;
   description?: string;
+  length: SectionLength;
 }
 
 export const parseSection = (
@@ -15,6 +20,7 @@ export const parseSection = (
 ): Section => ({
   title: data?.title || "",
   description: data?.description,
+  length: data?.length || "medium",
   ...parseBaseNodeData(data),
 });
 
@@ -86,7 +92,29 @@ export function computeSectionStatuses({
   return sectionStatuses;
 }
 
-export const validationSchema: SchemaOf<Section> = baseNodeDataValidationSchema.concat(object({
-  title: string().required(),
-  description: richText(),
-}))
+export const SECTION_LENGTH = ["short", "medium", "long"] as const;
+export type SectionLength = (typeof SECTION_LENGTH)[number];
+
+export const SECTION_WEIGHTS: Record<SectionLength, number> = {
+  short: 4,
+  medium: 8,
+  long: 16,
+} as const;
+
+export const SECTION_LENGTH_DESCRIPTIONS: Record<SectionLength, string> = {
+  short: "A fixed amount of questions amounting to a maximum of 5",
+  medium:
+    "A longer fixed-length section with some level of complex user-interaction, i.e. Upload and label",
+  long: "A non-determinable length of questions i.e. Permitted Development",
+} as const;
+
+export const validationSchema: SchemaOf<Section> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      title: string().required(),
+      description: richText(),
+      length: mixed()
+        .oneOf([...SECTION_LENGTH])
+        .required(),
+    }),
+  );

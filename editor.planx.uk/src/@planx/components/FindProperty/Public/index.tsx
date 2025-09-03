@@ -185,6 +185,7 @@ function Component(props: Props) {
 
   return (
     <Card
+      sx={{ marginBottom: "220px" }}
       handleSubmit={validateAndSubmit}
       isValid={
         page === "new-address" && !isValidating

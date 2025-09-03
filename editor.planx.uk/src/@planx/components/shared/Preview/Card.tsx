@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
-import { styled, Theme, useTheme } from "@mui/material/styles";
+import { styled, SxProps, Theme, useTheme } from "@mui/material/styles";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";
@@ -13,6 +13,7 @@ interface Props {
   children: React.ReactNode;
   isValid?: boolean;
   handleSubmit?: (data?: any) => void;
+  sx?: SxProps<Theme>;
 }
 
 export const contentFlowSpacing = (theme: Theme): React.CSSProperties => ({
@@ -45,6 +46,7 @@ const Card: React.FC<Props> = ({
   children,
   isValid = true,
   handleSubmit,
+  sx,
   ...props
 }) => {
   const theme = useTheme();
@@ -63,7 +65,7 @@ const Card: React.FC<Props> = ({
       mountOnEnter={true}
       unmountOnExit={true}
     >
-      <Container maxWidth="contentWrap">
+      <Container maxWidth="contentWrap" sx={sx}>
         <InnerContainer
           bgcolor="background.default"
           mt={{ xs: 4, md: 6 }}

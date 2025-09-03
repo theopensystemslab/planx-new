@@ -8,8 +8,8 @@ export const ShowingServicesHeader = ({
 }) => {
   const showingServicesMessage =
     matchedFlowsCount !== 1
-      ? `Showing ${matchedFlowsCount} services`
-      : `Showing ${matchedFlowsCount} service`;
+      ? `Showing ${matchedFlowsCount} flows`
+      : `Showing ${matchedFlowsCount} flow`;
 
   return (
     <Typography variant="h4" component="h2">

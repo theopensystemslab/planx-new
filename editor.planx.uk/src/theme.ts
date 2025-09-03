@@ -543,7 +543,28 @@ const getThemeOptions = ({
             borderRadius: 0,
             borderTop: `20px solid ${palette.primary.main}`,
             background: theme.palette.background.paper,
-            margin: theme.spacing(2),
+            margin: theme.spacing(1),
+          }),
+        },
+      },
+      MuiDialogContent: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
+          }),
+        },
+      },
+      MuiDialogActions: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
+          }),
+        },
+      },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            padding: theme.spacing(2),
           }),
         },
       },

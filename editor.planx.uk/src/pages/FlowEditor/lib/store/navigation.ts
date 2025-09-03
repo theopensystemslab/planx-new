@@ -1,15 +1,21 @@
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import { Section } from "@planx/components/Section/model";
 import { sortIdsDepthFirst } from "@planx/graph";
-import { findLast, pick } from "lodash";
+import { findLast, pick, sum } from "lodash";
 import { Store } from "pages/FlowEditor/lib/store";
 import type { StateCreator } from "zustand";
 
+import { SECTION_WEIGHTS } from "./../../../../@planx/components/Section/model";
 import { PreviewStore } from "./preview";
 import { SharedStore } from "./shared";
 
 export interface SectionNode extends Store.Node {
   data: Section;
+}
+
+export interface Progress {
+  completed: number;
+  current: number;
 }
 
 export interface NavigationStore {
@@ -23,6 +29,10 @@ export interface NavigationStore {
   filterFlowByType: (type: TYPES) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
+  _calculateSectionProgress: (
+    currentSectionIndex: number,
+  ) => Progress | undefined;
+  sectionProgress: Progress | undefined;
 }
 
 export const navigationStore: StateCreator<
@@ -54,11 +64,15 @@ export const navigationStore: StateCreator<
     const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
 
+    const { currentSectionIndex, _calculateSectionProgress } = get();
+    const sectionProgress = _calculateSectionProgress(currentSectionIndex);
+
     set({
       sectionNodes,
       sectionCount,
       hasSections,
       currentSectionTitle,
+      sectionProgress,
     });
   },
 
@@ -67,25 +81,43 @@ export const navigationStore: StateCreator<
    * Triggered when going backwards, forwards, or changing answer
    */
   updateSectionData: () => {
-    const { breadcrumbs, sectionNodes, hasSections } = get();
+    const {
+      breadcrumbs,
+      sectionNodes,
+      hasSections,
+      currentCard,
+      _calculateSectionProgress,
+    } = get();
     // Sections not being used, do not proceed
     if (!hasSections) return;
 
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
+    const sectionIdsSet = new Set(sectionIds);
+
+    // Transition to a new section index as soon as a section is reached
+    // It won't yet be in the breadcrumbs but should count as the starting point of the next section
+    const isSectionCardReached = currentCard?.type === TYPES.Section;
+    if (isSectionCardReached) breadcrumbIds.push(currentCard.id);
 
     const mostRecentSectionId = findLast(
       breadcrumbIds,
-      (breadcrumbId: string) => sectionIds.includes(breadcrumbId),
+      (breadcrumbId: string) => sectionIdsSet.has(breadcrumbId),
     );
+
+    const hasPassedFirstSection = Boolean(mostRecentSectionId);
+
+    // No sections in breadcrumbs, first section values already set in store
+    if (!hasPassedFirstSection) return;
 
     // No sections in breadcrumbs, first section values already set in store
     if (!mostRecentSectionId) return;
 
-    // Update section
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
     const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
-    set({ currentSectionTitle, currentSectionIndex });
+    const sectionProgress = _calculateSectionProgress(currentSectionIndex);
+
+    set({ currentSectionTitle, currentSectionIndex, sectionProgress });
     console.debug("section state updated"); // used as a transition trigger in e2e tests
   },
 
@@ -158,5 +190,29 @@ export const navigationStore: StateCreator<
     const sectionId = Object.keys(sectionNodes)[sectionIndex];
     const section = sectionNodes[sectionId];
     return section;
+  },
+
+  sectionProgress: undefined,
+
+  _calculateSectionProgress: (currentSectionIndex: number) => {
+    const { sectionNodes, isFinalCard, sectionCount } = get();
+    if (!sectionCount) return;
+
+    if (isFinalCard()) return { completed: 100, current: 100 };
+
+    // Account for offset index
+    const index = currentSectionIndex - 1;
+
+    const sectionWeights = Object.values(sectionNodes).map(
+      ({ data: { length = "medium" } }) => SECTION_WEIGHTS[length],
+    );
+    const totalWeight = sum(sectionWeights);
+    const currentWeight = sectionWeights[index];
+    const currentPercentage = (currentWeight / totalWeight) * 100;
+
+    const completedWeight = sum(sectionWeights.slice(0, index));
+    const completedPercentage = (completedWeight / totalWeight) * 100;
+
+    return { completed: completedPercentage, current: currentPercentage };
   },
 });

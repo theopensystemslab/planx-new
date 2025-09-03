@@ -45,7 +45,6 @@ import {
  *  so that Metabase picks up the new columns
  */
 export const ALLOW_LIST = [
-  "applicant.researchOptIn",
   "application.declaration.connection",
   "application.fastTrack",
   "application.fee.serviceCharge",
@@ -60,6 +59,7 @@ export const ALLOW_LIST = [
   "property.constraints.planning",
   "property.type",
   "propertyInformation.action",
+  "proposal.description",
   "proposal.projectType",
   "rab.exitReason",
   "send.analytics.userAgent",

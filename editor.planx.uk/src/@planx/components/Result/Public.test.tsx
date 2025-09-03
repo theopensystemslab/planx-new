@@ -66,12 +66,12 @@ describe("showing and hiding change capabilities", () => {
             selections: [],
           },
         ]}
-        handleSubmit={() => { }}
+        handleSubmit={() => {}}
         headingColor={{ text: "pink", background: "white" }}
       />,
     );
 
-    expect(screen.queryByText("Change")).toBeFalsy();
+    expect(screen.queryByText("Change")).not.toBeInTheDocument();
   });
 
   describe("change button scenarios", () => {
@@ -154,21 +154,23 @@ describe("showing and hiding change capabilities", () => {
     ];
 
     scenarios.forEach(({ allowChanges, autoAnswered, shouldBeChangeable }) => {
-      it(`${shouldBeChangeable ? "shows" : "hides"
-        } the change button when allowChanges is ${allowChanges} and question ${autoAnswered ? "was" : "wasn't"
-        } auto-answered`, () => {
-          setup(
-            <Presentational
-              {...{ allowChanges, responses }}
-              handleSubmit={() => { }}
-              headingColor={{ text: "pink", background: "white" }}
-            />,
-          );
+      it(`${
+        shouldBeChangeable ? "shows" : "hides"
+      } the change button when allowChanges is ${allowChanges} and question ${
+        autoAnswered ? "was" : "wasn't"
+      } auto-answered`, () => {
+        setup(
+          <Presentational
+            {...{ allowChanges, responses }}
+            handleSubmit={() => {}}
+            headingColor={{ text: "pink", background: "white" }}
+          />,
+        );
 
-          expect(Boolean(screen.queryByText("Change"))).toEqual(
-            shouldBeChangeable,
-          );
-        });
+        expect(Boolean(screen.queryByText("Change"))).toEqual(
+          shouldBeChangeable,
+        );
+      });
     });
   });
 });

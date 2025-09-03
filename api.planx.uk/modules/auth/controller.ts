@@ -108,7 +108,14 @@ export const logout: RequestHandler = async (_req, res, next) => {
 
 export const isJWTRevoked: RequestHandler = async (req, res) => {
   const token = getToken(req);
-  if (!token) return res.status(401).send();
+  if (!token) {
+    console.error("No token found in request");
+    console.error({
+      authorization: req.get("authorization") ? "present" : "missing",
+      cookie: req.get("cookie") ? "present" : "missing",
+    });
+    return res.status(401).send();
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
@@ -116,6 +123,7 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
     const isRevoked = await isTokenRevoked(tokenDigest);
 
     if (isRevoked) {
+      console.error("Token is revoked", { tokenDigest });
       res.set("Cache-Control", "no-store");
       return res.status(401).send();
     }
@@ -127,6 +135,7 @@ export const isJWTRevoked: RequestHandler = async (req, res) => {
 
     return res.status(200).json(decoded);
   } catch (error) {
+    console.error("Unhandled error in JWT validation", { error });
     return res.status(401).send();
   }
 };

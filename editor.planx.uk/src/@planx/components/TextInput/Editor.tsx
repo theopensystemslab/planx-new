@@ -92,7 +92,7 @@ const TextInputComponent: React.FC<Props> = (props) => {
                 <BasicRadio
                   key={type.id}
                   id={type.id}
-                  title={type.title}
+                  label={type.title}
                   variant="compact"
                   value={type.id}
                   onChange={handleRadioChange}

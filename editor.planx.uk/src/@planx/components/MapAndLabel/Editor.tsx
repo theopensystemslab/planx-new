@@ -115,7 +115,7 @@ function MapAndLabelComponent(props: Props) {
                       <BasicRadio
                         key={type.id}
                         id={type.id}
-                        title={type.title}
+                        label={type.title}
                         variant="compact"
                         value={type.id}
                         onChange={(e: React.SyntheticEvent<Element, Event>) => {
@@ -143,7 +143,7 @@ function MapAndLabelComponent(props: Props) {
                       <BasicRadio
                         key={type.id}
                         id={type.id}
-                        title={type.title}
+                        label={type.title}
                         variant="compact"
                         value={type.id}
                         onChange={(e: React.SyntheticEvent<Element, Event>) => {

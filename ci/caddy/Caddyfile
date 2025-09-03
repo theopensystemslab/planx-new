@@ -1,0 +1,59 @@
+# initial block determines global options
+{
+	email {$TLS_EMAIL}
+}
+
+# see https://caddyserver.com/docs/caddyfile/patterns
+*.{$ROOT_DOMAIN} {$ROOT_DOMAIN} {
+	# wilcard certs require a DNS challenge
+	tls {
+		dns vultr {$VULTR_API_KEY}
+		propagation_delay 300s # default 0s (NB. Vultr gives 300s as DNS record TTL)
+		propagation_timeout 5m # default 2mins (-1 indicates to not conduct propagation check, just handover to ACME after delay)
+		resolvers 1.1.1.1 8.8.8.8 8.8.4.4
+	}
+
+	# since caddy is inside docker network, ports given here should match right side of host:container in compose files
+	@root host {$ROOT_DOMAIN} www.{$ROOT_DOMAIN}
+	handle @root {
+		reverse_proxy editor:8043
+	}
+
+	@api host api.{$ROOT_DOMAIN}
+	handle @api {
+		reverse_proxy api:{$API_PORT}
+	}
+
+	@hasura host hasura.{$ROOT_DOMAIN}
+	handle @hasura {
+		reverse_proxy hasura-proxy:{$HASURA_PROXY_PORT}
+	}
+
+	@localplanning host localplanning.{$ROOT_DOMAIN}
+	handle @localplanning {
+		reverse_proxy localplanning:8043
+	}
+
+	@postgres host postgres.{$ROOT_DOMAIN}
+	handle @postgres {
+		reverse_proxy postgres:5432
+	}
+
+	@sharedb host sharedb.{$ROOT_DOMAIN}
+	handle @sharedb {
+		reverse_proxy sharedb:8000
+	}
+
+	@storybook host storybook.{$ROOT_DOMAIN}
+	handle @storybook {
+		reverse_proxy storybook:8044
+	}
+
+	# abort for unhandled domains
+	handle {
+		abort
+	}
+
+	# log requests
+	log
+}

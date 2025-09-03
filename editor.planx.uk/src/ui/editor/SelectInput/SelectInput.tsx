@@ -11,6 +11,7 @@ export type Props = SelectProps & {
   children?: ReactNode;
   onChange?: SelectProps["onChange"];
   bordered?: boolean;
+  visuallyHiddenLabel?: boolean;
 };
 
 const PREFIX = "SelectInput";
@@ -80,13 +81,19 @@ export default function SelectInput({
   name,
   onChange,
   bordered,
+  visuallyHiddenLabel,
   ...props
 }: Props): FCReturn {
   return (
     <>
-      <label id={`${name?.replaceAll(" ", "-")}-label`} style={visuallyHidden}>
-        {name}
-      </label>
+      {visuallyHiddenLabel && (
+        <label
+          id={`${name?.replaceAll(" ", "-")}-label`}
+          style={visuallyHidden}
+        >
+          {name}
+        </label>
+      )}
       <Root
         variant="standard"
         value={value}

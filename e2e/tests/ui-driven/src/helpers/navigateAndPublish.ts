@@ -27,7 +27,7 @@ export const publishService = async (page: Page) => {
 };
 
 export const turnServiceOnline = async (page: Page) => {
-  page.locator('[aria-label="Service settings"]').click();
+  page.locator('[aria-label="Flow settings"]').click();
   page.getByTestId("set-status-button").click();
 
   await expect(

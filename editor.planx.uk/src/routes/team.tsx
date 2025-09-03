@@ -108,7 +108,7 @@ const routes = compose(
 
     "/:flow/about": setFlowAndLazyLoad(() => import("./readMePage")),
 
-    "/:flow/service": setFlowAndLazyLoad(() => import("./serviceSettings")),
+    "/:flow/settings": setFlowAndLazyLoad(() => import("./serviceSettings")),
 
     "/:flow/feedback": setFlowAndLazyLoad(() => import("./serviceFeedback")),
 

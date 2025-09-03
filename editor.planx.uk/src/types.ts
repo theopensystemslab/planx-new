@@ -4,8 +4,10 @@ import {
   Team,
   TeamContactSettings,
 } from "@opensystemslab/planx-core/types";
+import { SectionLength } from "@planx/components/Section/model";
 import { OT } from "@planx/graph/types";
 import { useFormik } from "formik";
+import { Progress } from "pages/FlowEditor/lib/store/navigation";
 
 import { Store } from "./pages/FlowEditor/lib/store/index";
 import { SharedStore } from "./pages/FlowEditor/lib/store/shared";
@@ -69,6 +71,8 @@ export type Session = {
   // TODO: replace `id` with `flow: { id, published_flow_id }`
   id: SharedStore["id"];
   govUkPayment?: GovUKPayment;
+  /** Only present on sessions for flow which utilise "Section" components */
+  progress?: Progress;
 };
 
 export interface ReconciliationResponse {
@@ -95,6 +99,7 @@ export interface SectionNode extends Store.Node {
   data: {
     title: string;
     description?: string;
+    length: SectionLength;
   };
 }
 

@@ -1,9 +1,10 @@
 services:
   postgres:
+    container_name: postgres
     image: postgis/postgis:16-3.5-alpine
     restart: unless-stopped
     ports:
-      - ${PG_PORT}:5432
+      - "${PG_PORT}:5432"
     command: "postgres -c listen_addresses='*'"
     healthcheck:
       test: pg_isready --username=${PG_USERNAME} --dbname=${PG_DATABASE} --quiet
@@ -16,8 +17,9 @@ services:
       POSTGRES_USER: ${PG_USERNAME}
 
   metabase:
+    container_name: metabase
     # if changing, also check infrastructure/application/index.ts
-    image: metabase/metabase:v0.53.7
+    image: metabase/metabase:v0.56.2
     profiles: ["analytics"]
     ports:
       - "${METABASE_PORT}:${METABASE_PORT}"
@@ -43,6 +45,7 @@ services:
       MB_JETTY_PORT: "${METABASE_PORT}"
 
   hasura:
+    container_name: hasura
     build:
       context: ./hasura.planx.uk
     depends_on:
@@ -76,6 +79,7 @@ services:
       HASURA_PLANX_API_URL: ${HASURA_PLANX_API_URL}
 
   hasura-proxy:
+    container_name: hasura-proxy
     build:
       context: ./hasura.planx.uk/proxy
     depends_on:
@@ -83,7 +87,7 @@ services:
         condition: service_healthy
     restart: always
     ports:
-      - ${HASURA_PROXY_PORT}:${HASURA_PROXY_PORT}
+      - "${HASURA_PROXY_PORT}:${HASURA_PROXY_PORT}"
     environment:
       HASURA_PROXY_PORT: ${HASURA_PROXY_PORT}
       HASURA_NETWORK_LOCATION: "hasura"
@@ -94,6 +98,7 @@ services:
       retries: 3
 
   api:
+    container_name: api
     restart: unless-stopped
     build:
       context: ./api.planx.uk
@@ -102,7 +107,7 @@ services:
       hasura-proxy:
         condition: service_healthy
     ports:
-      - ${API_PORT}:${API_PORT}
+      - "${API_PORT}:${API_PORT}"
     healthcheck:
       test:
         ["CMD", "wget", "--spider", "--quiet", "http://localhost:${API_PORT}"]
@@ -160,16 +165,12 @@ services:
       UNIFORM_SUBMISSION_URL: ${UNIFORM_SUBMISSION_URL}
       UNIFORM_TOKEN_URL: ${UNIFORM_TOKEN_URL}
       # Local authority config
-      # Lambeth
       UNIFORM_CLIENT_LAMBETH: ${UNIFORM_CLIENT_LAMBETH}
-      # Southwark
       UNIFORM_CLIENT_SOUTHWARK: ${UNIFORM_CLIENT_SOUTHWARK}
-      # Buckinghamshire
-      UNIFORM_CLIENT_AYLESBURY_VALE: ${UNIFORM_CLIENT_AYLESBURY_VALE}
-      UNIFORM_CLIENT_CHILTERN: ${UNIFORM_CLIENT_CHILTERN}
-      UNIFORM_CLIENT_WYCOMBE: ${UNIFORM_CLIENT_WYCOMBE}
+      UNIFORM_CLIENT_BUCKINGHAMSHIRE: ${UNIFORM_CLIENT_BUCKINGHAMSHIRE}
 
   sharedb:
+    container_name: sharedb
     restart: unless-stopped
     build:
       context: ./sharedb.planx.uk
@@ -181,7 +182,7 @@ services:
       hasura-proxy:
         condition: service_healthy
     ports:
-      - ${SHAREDB_PORT}:8000
+      - "${SHAREDB_PORT}:8000"
     environment:
       JWT_SECRET: ${JWT_SECRET}
       PG_URL: postgres://${PG_USERNAME}:${PG_PASSWORD}@postgres/${PG_DATABASE}
@@ -189,11 +190,12 @@ services:
 
   # used as an S3 service mock
   minio:
+    container_name: minio
     image: minio/minio:RELEASE.2021-08-31T05-46-54Z
     profiles: ["mock-services"]
     ports:
-      - ${MINIO_PORT}:9000
-      - ${MINIO_ADMIN_PORT}:9001
+      - "${MINIO_PORT}:9000"
+      - "${MINIO_ADMIN_PORT}:9001"
     volumes:
       - ./minio-data:/data
     environment:

@@ -169,7 +169,7 @@ describe("Pay component - Editor Modal", () => {
       const deleteButtons = getAllByLabelText("Delete");
       expect(deleteButtons).toHaveLength(4);
       const finalDeleteButton = deleteButtons[3];
-      expect(finalDeleteButton).toBeDefined();
+      expect(finalDeleteButton).toBeInTheDocument();
 
       await user.click(finalDeleteButton);
       await waitFor(() => {
@@ -275,7 +275,7 @@ describe("Pay component - Editor Modal", () => {
 
       await user.type(keyInput, "flow");
 
-      expect(valueInput).not.toBeDisabled();
+      expect(valueInput).toBeEnabled();
       await user.type(valueInput, "myNewValue");
 
       // Required to trigger submission outside the context of FormModal component
@@ -291,7 +291,7 @@ describe("Pay component - Editor Modal", () => {
       const duplicateKeyDeleteIcon = getAllByLabelText("Delete")[3];
 
       // This tests that the user is able to fix their mistake
-      expect(duplicateKeyDeleteIcon).not.toBeDisabled();
+      expect(duplicateKeyDeleteIcon).toBeEnabled();
     }, 10_000);
   });
 });

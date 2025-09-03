@@ -325,7 +325,7 @@ const Root = () => {
               }/proxy/ordnance-survey`}
               osCopyright={
                 basemap === "OSVectorTile"
-                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                  ? `© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                   : ``
               }
               clipGeojsonData={boundaryBBox && JSON.stringify(boundaryBBox)}

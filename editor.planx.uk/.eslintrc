@@ -13,7 +13,8 @@
     "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:@vitest/legacy-recommended"
+    "plugin:@vitest/legacy-recommended",
+    "plugin:jest-dom/recommended"
   ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",

@@ -13,7 +13,7 @@ export default meta;
 
 export const Basic = {
   args: {
-    title: "Prior approval",
+    label: "Prior approval",
     onChange: () => console.log("Radio changed"),
     id: "1",
   },

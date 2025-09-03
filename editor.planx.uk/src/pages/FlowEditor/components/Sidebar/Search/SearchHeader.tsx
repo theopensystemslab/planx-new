@@ -41,7 +41,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
         mb={1}
         display={"block"}
       >
-        Search this flow and internal portals
+        Search this flow
       </Typography>
       <Box sx={{ display: "flex", position: "relative", alignItems: "center" }}>
         <Input
@@ -56,6 +56,7 @@ export const SearchHeader: Components<Data, Context>["Header"] = ({
         />
         {isSearching && (
           <CircularProgress
+            aria-label="search-progress-bar"
             size={25}
             sx={(theme) => ({
               position: "absolute",

@@ -13,7 +13,7 @@ import React, { useEffect, useReducer } from "react";
 import { useErrorHandler } from "react-error-boundary";
 
 import { makeData } from "../../shared/utils";
-import { createPayload, getDefaultContent, Pay, toDecimal } from "../model";
+import { createPayload, getDefaultContent, Pay } from "../model";
 import Confirm from "./Confirm";
 import { getGovUkPayUrlForTeam } from "./utils";
 
@@ -156,16 +156,16 @@ function Component(props: Props) {
       props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
   };
 
-  const normalizePaymentResponse = (responseData: any): GovUKPayment => {
+  const normalizePaymentResponse = (
+    responseData: GovUKPayment,
+  ): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
-    const payment: GovUKPayment = { ...responseData };
-    payment.amount = toDecimal(payment.amount);
-    return payment;
+    return responseData;
   };
 
   const resolvePaymentResponse = async (
-    responseData: any,
+    responseData: GovUKPayment,
   ): Promise<GovUKPayment> => {
     const payment = normalizePaymentResponse(responseData);
     setGovUkPayment(payment);

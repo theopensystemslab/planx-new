@@ -20,9 +20,8 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
 import axios from "axios";
-import { clearLocalFlow } from "lib/local";
+import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -46,6 +45,7 @@ import { useStore } from "../../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../../routes/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
+import { SectionNavBar } from "./Sections/NavBar";
 import SkipLink from "./SkipLink";
 
 export const HEADER_HEIGHT_PUBLIC = 74;
@@ -169,22 +169,6 @@ const ServiceTitleRoot = styled("span")(({ theme }) => ({
   },
 }));
 
-const StyledNavBar = styled("nav")(({ theme }) => ({
-  backgroundColor: theme.palette.primary.dark,
-  fontSize: 16,
-  paddingTop: theme.spacing(1),
-  paddingBottom: theme.spacing(1),
-}));
-
-const SectionName = styled(Typography)(() => ({
-  fontSize: "inherit",
-  fontWeight: FONT_WEIGHT_SEMI_BOLD,
-}));
-
-const SectionCount = styled(Typography)(() => ({
-  fontSize: "inherit",
-}));
-
 const TeamLogo: React.FC = () => {
   const [teamSettings, teamName, teamTheme] = useStore((state) => [
     state.teamSettings,
@@ -263,7 +247,7 @@ const Breadcrumbs: React.FC = () => {
           {useStore.getState().canUserEditTeam(team.slug) ? (
             <Button
               variant="link"
-              href={`/${team.slug}/${route.data.flow}/service`}
+              href={`/${team.slug}/${route.data.flow}/settings`}
               title="Update service status"
               sx={{ textDecoration: "none" }}
             >
@@ -277,48 +261,6 @@ const Breadcrumbs: React.FC = () => {
             </FlowTag>
           )}
         </Box>
-      )}
-    </>
-  );
-};
-
-const NavBar: React.FC = () => {
-  const [index, sectionCount, title, hasSections, saveToEmail, path, node] =
-    useStore((state) => [
-      state.currentSectionIndex,
-      state.sectionCount,
-      state.currentSectionTitle,
-      state.hasSections,
-      state.saveToEmail,
-      state.path,
-      state.currentCard,
-    ]);
-  const isSaveAndReturnLandingPage =
-    path !== ApplicationPath.SingleSession && !saveToEmail;
-  const isContentPage = useCurrentRoute()?.data?.isContentPage;
-  const isSectionCard = node?.type == TYPES.Section;
-  const isVisible =
-    hasSections &&
-    !isSaveAndReturnLandingPage &&
-    !isContentPage &&
-    !isSectionCard;
-
-  return (
-    <>
-      {isVisible && (
-        <StyledNavBar data-testid="navigation-bar">
-          <Container
-            maxWidth={false}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-            }}
-          >
-            <SectionCount>{`Section ${index} of ${sectionCount}`}</SectionCount>
-            <SectionName>{capitalize(title)}</SectionName>
-          </Container>
-        </StyledNavBar>
       )}
     </>
   );
@@ -353,7 +295,7 @@ const PublicToolbar: React.FC<{
         flowDirection: "reset",
       });
       if (path === ApplicationPath.SingleSession) {
-        clearLocalFlow(id);
+        clearLocalFlowIdb(id);
         window.location.reload();
       } else {
         // Save & Return flow
@@ -370,7 +312,7 @@ const PublicToolbar: React.FC<{
     <>
       <SkipLink />
       <PublicHeader disableGutters>
-        <Container maxWidth={false}>
+        <Container maxWidth="contentWrap">
           <InnerContainer>
             <LeftBox>
               {teamTheme?.logo ? <TeamLogo /> : <Breadcrumbs />}
@@ -407,7 +349,7 @@ const PublicToolbar: React.FC<{
           <ServiceTitle />
         </Container>
       )}
-      <NavBar />
+      <SectionNavBar />
       <AnalyticsDisabledBanner />
       <ConfirmationDialog
         open={isDialogOpen}

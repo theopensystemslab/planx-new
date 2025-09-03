@@ -9,7 +9,13 @@ import { getLocalFlowIdb, setLocalFlowIdb } from "lib/local.idb";
 import * as NEW from "lib/local.new";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { PreviewEnvironment } from "pages/FlowEditor/lib/store/shared";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ApplicationPath, Session } from "types";
 import Main from "ui/shared/Main";
@@ -56,6 +62,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     getType,
     node,
     setCurrentCard,
+    progress,
   ] = useStore((state) => [
     state.previousCard,
     state.record,
@@ -70,12 +77,14 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
     state.currentCard,
     state.setCurrentCard,
+    state.sectionProgress,
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, trackEvent } = useAnalyticsTracking();
   const [gotFlow, setGotFlow] = useState(false);
   const isUsingLocalStorage =
     useStore((state) => state.path) === ApplicationPath.SingleSession;
+  const isInitialLoad = useRef(true);
 
   useEffect(
     () => setPreviewEnvironment(previewEnvironment),
@@ -129,6 +138,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
       passport,
       sessionId,
       govUkPayment,
+      progress,
     };
 
     const saveFlowData = async () => {
@@ -155,12 +165,28 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     govUkPayment,
     isStandalone,
     isUsingLocalStorage,
+    progress,
   ]);
 
   // scroll to top on any update to breadcrumbs
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [breadcrumbs]);
+
+  // manage focus on form step changes
+  useEffect(() => {
+    const contentEl = document.querySelector('[data-testid="document-start"]');
+    if (!contentEl) return;
+
+    if (contentEl instanceof HTMLElement) {
+      contentEl.setAttribute("tabindex", "-1");
+
+      if (!isInitialLoad.current) {
+        contentEl.focus();
+      }
+    }
+    isInitialLoad.current = false;
+  }, [node?.id]);
 
   const handleSubmit =
     (id: string): HandleSubmit =>
@@ -207,7 +233,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
   return (
     <Box width="100%">
       <BackBar hidden={!showBackBar}>
-        <Container maxWidth={false}>
+        <Container maxWidth="contentWrap">
           <BackButton
             variant="link"
             hidden={!showBackButton}

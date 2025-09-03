@@ -6,6 +6,7 @@ import {
   Field,
   isAddressFieldResponse,
   isChecklistFieldResponse,
+  isFileUploadFieldResponse,
   isMapFieldResponse,
   isNumberFieldResponse,
   isTextResponse,
@@ -90,7 +91,7 @@ export const formatSchemaDisplayValue = <T extends Field>(
             style={{ width: "100%", height: "30vh" }}
             osCopyright={
               field.data.mapOptions?.basemap === "OSVectorTile"
-                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS (0)100024857`
+                ? `© Crown copyright and database rights ${new Date().getFullYear()} OS AC0000812160`
                 : ``
             }
             mapboxAccessToken={import.meta.env.VITE_APP_MAPBOX_ACCESS_TOKEN}
@@ -98,6 +99,17 @@ export const formatSchemaDisplayValue = <T extends Field>(
           />
         </>
       );
+    case "fileUpload": {
+      if (!isFileUploadFieldResponse(value)) return;
+
+      return (
+        <List>
+          {value.map(({ id, file }) => (
+            <li key={id}>{file.name}</li>
+          ))}
+        </List>
+      );
+    }
   }
 };
 
@@ -278,7 +290,7 @@ function convertTens(num: number): string {
  * Convert a whole number up to 99 to a spelled-out word (eg 34 => 'thirtyfour')
  *   Adapted from https://stackoverflow.com/questions/5529934/javascript-numbers-to-words
  */
-function convertNumberToText(num: number): string {
+export function convertNumberToText(num: number): string {
   if (num == 0) {
     return "zero";
   } else {
