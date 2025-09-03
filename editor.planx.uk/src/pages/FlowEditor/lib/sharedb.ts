@@ -35,24 +35,8 @@ const createWSConnection = () => {
   });
 
   /** Fallback for unhandled ShareDB errors */
-  socket.addEventListener("error", ({ error, message }) => {
-    console.error("Unhandled ShareDB error: ", { error, message });
-    // Take no user action, allow them to remain logged in
-    // Report to Airbrake in order to further debug this issue, as it appears that "error" is triggering frequently
-    logger.notify({
-      error: {
-        name: error.constructor?.name || "ShareDB error",
-        message: error.message || error?.toString(),
-        stack: error.stack,
-        cause: error.cause,
-      },
-      context: {
-        socketState: socket.readyState,
-        socketUrl: socket.url,
-        timestamp: new Date().toISOString(),
-        rawError: JSON.stringify(error),
-      },
-    });
+  socket.addEventListener("error", (errorEvent) => {
+    console.error("Unhandled ShareDB error: ", { errorEvent });
   });
 
   return socket;
