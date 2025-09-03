@@ -170,7 +170,9 @@ export interface FlowSummary {
 
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: any) => void;
-  archiveFlow: (flow: FlowSummary) => Promise<{ id: string; name: string } | void>;
+  archiveFlow: (
+    flow: FlowSummary,
+  ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => Promise<void>;
   copyNode: (id: NodeId) => void;

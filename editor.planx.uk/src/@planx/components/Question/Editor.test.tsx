@@ -9,7 +9,7 @@ import Question from "./Editor";
 it("renders without error", () => {
   setup(
     <DndProvider backend={HTML5Backend}>
-      <Question node={{}}/>
+      <Question node={{}} />
     </DndProvider>,
   );
   expect(screen.getByText("Question")).toBeInTheDocument();
@@ -32,22 +32,29 @@ describe("validation", () => {
   test("labels for options must be unique", async () => {
     const { user } = setup(
       <DndProvider backend={HTML5Backend}>
-        <Question node={{}}/>
+        <Question node={{}} />
       </DndProvider>,
     );
     await user.click(screen.getByRole("button", { name: /add new/i }));
-    await user.type(screen.getAllByPlaceholderText("Option")[0], "Non unique label");
+    await user.type(
+      screen.getAllByPlaceholderText("Option")[0],
+      "Non unique label",
+    );
 
     await user.click(screen.getByRole("button", { name: /add new/i }));
-    await user.type(screen.getAllByPlaceholderText("Option")[1], "Non unique label");
+    await user.type(
+      screen.getAllByPlaceholderText("Option")[1],
+      "Non unique label",
+    );
 
-    expect(screen.queryByText("Error: Options must have unique labels")).not.toBeInTheDocument();
-    
+    expect(
+      screen.queryByText("Error: Options must have unique labels"),
+    ).not.toBeInTheDocument();
+
     fireEvent.submit(screen.getByTestId("question-component-form"));
 
-    await waitFor(() => 
-      expect(screen.getByText(/Options must have unique labels/)).toBeVisible()
+    await waitFor(() =>
+      expect(screen.getByText(/Options must have unique labels/)).toBeVisible(),
     );
-  }, 10_000)
-})
-
+  }, 10_000);
+});

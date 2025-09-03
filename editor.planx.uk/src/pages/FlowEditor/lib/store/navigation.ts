@@ -13,7 +13,7 @@ export interface SectionNode extends Store.Node {
   data: Section;
 }
 
-export interface Progress { 
+export interface Progress {
   completed: number;
   current: number;
 }
@@ -29,7 +29,9 @@ export interface NavigationStore {
   filterFlowByType: (type: TYPES) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
-  _calculateSectionProgress: (currentSectionIndex: number) => Progress | undefined;
+  _calculateSectionProgress: (
+    currentSectionIndex: number,
+  ) => Progress | undefined;
   sectionProgress: Progress | undefined;
 }
 
@@ -100,7 +102,7 @@ export const navigationStore: StateCreator<
 
     const mostRecentSectionId = findLast(
       breadcrumbIds,
-      (breadcrumbId: string) => sectionIdsSet.has(breadcrumbId)
+      (breadcrumbId: string) => sectionIdsSet.has(breadcrumbId),
     );
 
     const hasPassedFirstSection = Boolean(mostRecentSectionId);

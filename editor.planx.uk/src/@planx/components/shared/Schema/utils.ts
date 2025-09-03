@@ -31,7 +31,7 @@ export const getRequestedFiles = ({
   context,
 }: GetRequestedFilesArgs) => {
   const fileUploadFields = schema.fields.filter(
-    (field): field is FileUploadField => field.type === "fileUpload"
+    (field): field is FileUploadField => field.type === "fileUpload",
   );
 
   const responseDataValues = getResponseDataValues({
@@ -135,8 +135,8 @@ export const getPath = (args: ListPathArgs | PagePathArgs) => {
  */
 export const partitionSchemaData = (
   data: SchemaUserResponse[],
-  schema: Schema
- ) => {
+  schema: Schema,
+) => {
   const fileUploadFns = schema.fields
     .filter(({ type }) => type === "fileUpload")
     .map(({ data }) => data.fn);
@@ -145,7 +145,7 @@ export const partitionSchemaData = (
     const entries = Object.entries(obj);
 
     const [matchingEntries, restEntries] = partition(entries, ([key]) =>
-      fileUploadFns.includes(key)
+      fileUploadFns.includes(key),
     );
 
     const matchingProperties = Object.fromEntries(matchingEntries);
@@ -154,10 +154,10 @@ export const partitionSchemaData = (
     return [matchingProperties, restProperties];
   };
 
-  const partitioned = data.map((partitionFileUploadFields));
+  const partitioned = data.map(partitionFileUploadFields);
 
   // Regroup responses - one array of FileUploadFields, one array of the remaining responses
-  const result = unzip(partitioned)
+  const result = unzip(partitioned);
 
   return result;
 };
@@ -165,13 +165,18 @@ export const partitionSchemaData = (
 /**
  * Group all FileUploadField respones by key, to be stored at passport root
  */
-export const flattenFileUpload = (data: Record<string, ResponseValue<Field>>[]) =>
+export const flattenFileUpload = (
+  data: Record<string, ResponseValue<Field>>[],
+) =>
   mergeWith(
     {},
     ...data,
-    (objValue: ResponseValue<Field>[] | undefined, srcValue: ResponseValue<Field>[]) => {
+    (
+      objValue: ResponseValue<Field>[] | undefined,
+      srcValue: ResponseValue<Field>[],
+    ) => {
       if (Array.isArray(objValue)) {
         return objValue.concat(srcValue);
       }
-    }
+    },
   );

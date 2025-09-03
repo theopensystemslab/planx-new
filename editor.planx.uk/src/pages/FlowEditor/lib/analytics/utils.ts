@@ -133,17 +133,20 @@ export function getAnswers(
   return answers;
 }
 
-const sanitiseAllowListValues = ([ key, value ]: [key: string, value: unknown]): [string, unknown] => {
+const sanitiseAllowListValues = ([key, value]: [key: string, value: unknown]): [
+  string,
+  unknown,
+] => {
   if (!isObject(value)) return [key, value];
 
   // Strip out empty values - we do not need to store these as allow list answers
   const sanitisedObject = Object.fromEntries(
-    Object.entries(value).filter(([_key, value]) => Boolean(value))
+    Object.entries(value).filter(([_key, value]) => Boolean(value)),
   );
   if (isEmpty(sanitisedObject)) return [key, undefined];
 
   return [key, sanitisedObject];
-}
+};
 
 /**
  * Extract allowlist answers from breadcrumb data
@@ -157,7 +160,7 @@ export function getData(
 
   const filteredEntries = Object.entries(dataSetByNode)
     .map(sanitiseAllowListValues)
-    .filter(([key, value]) => isAllowListKey(key) && Boolean(value))
+    .filter(([key, value]) => isAllowListKey(key) && Boolean(value));
 
   if (!filteredEntries.length) return;
   const answerValues = Object.fromEntries(filteredEntries);

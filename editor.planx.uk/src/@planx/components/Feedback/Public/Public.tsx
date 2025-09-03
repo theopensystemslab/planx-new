@@ -45,12 +45,12 @@ const FeedbackComponent = (props: PublicProps<Feedback>): FCReturn => {
       feedbackType: "component" as FeedbackView,
     };
     try {
-      await insertFeedbackMutation(data)
+      await insertFeedbackMutation(data);
     } catch (error) {
       // Don't block user, but do log error and associated feedback so that we can manually resolve this and capture the feedback
-      logger.notify({ error, session: values })
+      logger.notify({ error, session: values });
     }
-  }
+  };
 
   const handleSubmitFeedback = async (values: FormProps) => {
     await logFeedback(values);

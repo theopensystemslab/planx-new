@@ -105,7 +105,11 @@ export const Question: React.FC<Props> = (props) => {
   const isTemplate = useStore.getState().isTemplate;
 
   return (
-    <form onSubmit={formik.handleSubmit} id="modal" data-testid="question-component-form">
+    <form
+      onSubmit={formik.handleSubmit}
+      id="modal"
+      data-testid="question-component-form"
+    >
       <TemplatedNodeInstructions
         isTemplatedNode={formik.values.isTemplatedNode}
         templatedNodeInstructions={formik.values.templatedNodeInstructions}

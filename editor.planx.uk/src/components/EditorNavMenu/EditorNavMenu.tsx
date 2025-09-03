@@ -1,5 +1,6 @@
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import CurrencyPoundIcon from "@mui/icons-material/CurrencyPound";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import GroupIcon from "@mui/icons-material/Group";
@@ -111,6 +112,12 @@ function EditorNavMenu() {
       title: "Team members",
       Icon: GroupIcon,
       route: `/${teamSlug}/members`,
+      accessibleBy: ["platformAdmin", "teamEditor"],
+    },
+    {
+      title: "Subscription",
+      Icon: CurrencyPoundIcon,
+      route: `/${teamSlug}/subscription`,
       accessibleBy: ["platformAdmin", "teamEditor"],
     },
     {

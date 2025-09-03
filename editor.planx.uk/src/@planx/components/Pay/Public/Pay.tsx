@@ -156,7 +156,9 @@ function Component(props: Props) {
       props.handleSubmit(makeData(props, govUkPayment, GOV_PAY_PASSPORT_KEY));
   };
 
-  const normalizePaymentResponse = (responseData: GovUKPayment): GovUKPayment => {
+  const normalizePaymentResponse = (
+    responseData: GovUKPayment,
+  ): GovUKPayment => {
     if (!responseData?.state?.status)
       throw new Error("Corrupted response from GOV.UK");
     return responseData;

@@ -9,7 +9,11 @@ import { CardHeader } from "../shared/Preview/CardHeader/CardHeader";
 import { useSchema } from "../shared/Schema/hook";
 import { SchemaUserData } from "../shared/Schema/model";
 import { SchemaFields } from "../shared/Schema/SchemaFields";
-import { flattenFileUpload, getRequestedFiles, partitionSchemaData } from "../shared/Schema/utils";
+import {
+  flattenFileUpload,
+  getRequestedFiles,
+  partitionSchemaData,
+} from "../shared/Schema/utils";
 import { getPreviouslySubmittedData, makeData } from "../shared/utils";
 import { Page } from "./model";
 
@@ -28,10 +32,13 @@ function PageComponent(props: Props) {
     const defaultPassportData = makeData(props, values.schemaData)?.["data"];
 
     // Partition out responses from file upload fields as these are handled separately
-    const [fileUploadResponses, restResponses] = partitionSchemaData(values.schemaData, props.schema);
+    const [fileUploadResponses, restResponses] = partitionSchemaData(
+      values.schemaData,
+      props.schema,
+    );
 
     const restPassportData = makeData(props, restResponses)?.["data"];
-    const flattenedFileUploadResponses = flattenFileUpload(fileUploadResponses)
+    const flattenedFileUploadResponses = flattenFileUpload(fileUploadResponses);
 
     // Flattened data - used for access via automation, SetValue etc
     const flattenedData = flatten(restPassportData, {

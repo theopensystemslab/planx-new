@@ -386,7 +386,6 @@ export const previewStore: StateCreator<
     setCurrentCard();
 
     updateSectionData();
-
   },
 
   resultData(flagSet, overrides) {
@@ -588,7 +587,7 @@ export const previewStore: StateCreator<
         (passportValue: any) =>
           sortedOptions.some((option) =>
             passportValue?.startsWith(option.data?.val),
-          )
+          ),
       );
 
       if (matchingPassportValues.length > 0) {
@@ -838,9 +837,9 @@ export const removeOrphansFromBreadcrumbs = ({
     if (visited.has(currentId)) continue;
 
     if (!flow[currentId]) {
-        logger.notify(
-          `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`
-        );
+      logger.notify(
+        `Error removing orphans from breadcrumbs, nodeId "${id}" is missing from flow and likely corrupted`,
+      );
       continue;
     }
 
