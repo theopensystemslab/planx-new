@@ -293,8 +293,6 @@ export const editorStore: StateCreator<
   },
 
   connectTo: async (id) => {
-    if (id === get().id) return; // already connected to this ID
-
     console.log("connecting to", id, get().id);
 
     doc = getFlowConnection(id);

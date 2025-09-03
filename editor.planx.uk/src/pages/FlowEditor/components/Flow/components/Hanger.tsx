@@ -1,4 +1,5 @@
 import classnames from "classnames";
+import isEmpty from "lodash/isEmpty";
 import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
@@ -51,8 +52,11 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   ]);
 
   useEffect(() => {
+    // Flow might not be loaded via ShareDB (e.g. user has navigated directly to :flow/somePage)
+    if (isEmpty(flow)) return;
+
     if (!orderedFlow) setOrderedFlow();
-  }, [orderedFlow, setOrderedFlow]);
+  }, [orderedFlow, setOrderedFlow, flow]);
 
   // useStore.getState().getTeam().slug undefined here, use window instead
   const teamSlug = window.location.pathname.split("/")[1];
