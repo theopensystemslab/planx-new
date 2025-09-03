@@ -1,7 +1,7 @@
 /**
  * Mirrors structure of lowcal_sessions table and relationships
  */
-export interface Application {
+export interface BaseApplication {
   id: string;
   addressLine: string | null;
   addressTitle: string | null;
@@ -17,19 +17,27 @@ export interface Application {
   };
 }
 
-export type Draft = Application & {
+export type Draft = BaseApplication & {
+  status: "draft";
   expiresAt: string;
 };
 
-export type Submitted = Application & {
+export type AwaitingPayment = BaseApplication & {
+  status: "awaiting-payment";
   submittedAt: string;
 };
+
+export type Submitted = BaseApplication & {
+  status: "submitted";
+  submittedAt: string;
+};
+
+export type Application = Draft | AwaitingPayment | Submitted;
 
 export interface ConsumeMagicLink {
   updateMagicLinks: {
     returning: {
-      drafts: Draft[];
-      submitted: Submitted[];
+      applications: Application[];
     }[];
   };
 }

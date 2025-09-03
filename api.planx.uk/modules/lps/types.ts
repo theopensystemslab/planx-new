@@ -33,14 +33,17 @@ export type DraftLPSApplication = LPSApplication & {
   serviceUrl: string;
 };
 
+export type AwaitingPaymentLPSApplication = LPSApplication & {
+  expiresAt: string;
+};
+
 export type SubmittedLPSApplication = LPSApplication & {
   submittedAt: string;
 };
 
-export interface Success {
-  drafts: DraftLPSApplication[];
-  submitted: SubmittedLPSApplication[];
-}
+export type Success = Array<
+  DraftLPSApplication | AwaitingPaymentLPSApplication | SubmittedLPSApplication
+>;
 
 interface Failure {
   error: "LINK_INVALID" | "LINK_CONSUMED" | "LINK_EXPIRED";
