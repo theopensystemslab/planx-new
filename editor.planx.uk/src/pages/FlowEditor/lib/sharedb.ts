@@ -1,4 +1,3 @@
-import { logger } from "airbrake";
 import { toast, ToastOptions } from "react-toastify";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import type { Doc } from "sharedb";
