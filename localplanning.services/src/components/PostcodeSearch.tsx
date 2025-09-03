@@ -63,7 +63,7 @@ const PostcodeSearch: React.FC<Props> = ({ action }) => {
         label="Enter a postcode"
         hintText="For example, NW3 7PH"
       />
-      <button type="submit" className="button button--primary button--medium">
+      <button type="submit" className="button button--primary button--medium button-focus-style">
         Find the local planning authority
       </button>
     </form>
