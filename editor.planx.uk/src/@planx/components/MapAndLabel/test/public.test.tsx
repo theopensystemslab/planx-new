@@ -371,22 +371,21 @@ describe("copy feature select", () => {
     const { getByTitle, user, getByLabelText, getByRole, getByTestId } = setup(
       <MapAndLabel {...props} />,
     );
-    addMultipleFeatures([point1, point2]);
-    const tabOne = getByRole("tab", { name: /Tree 1/ });
+    addMultipleFeatures([point1, point2, point3]);
+    const tabTwo = getByRole("tab", { name: /Tree 2/ });
 
     await fillOutForm(user);
 
-    await user.click(tabOne);
-
+    await user.click(tabTwo);
     const copyTitle = getByTitle("Copy from");
     const copyInput = getByRole("combobox", copyTitle);
 
     await user.click(copyInput);
 
-    const listItemTwo = getByRole("option", { name: "Tree 2" });
+    const listItemThree = getByRole("option", { name: "Tree 3" });
     const copyButton = getByTestId("copyButton");
 
-    await user.click(listItemTwo);
+    await user.click(listItemThree);
     await user.click(copyButton);
 
     expect(getByLabelText("Species")).toHaveDisplayValue(mockTreeData.species);
