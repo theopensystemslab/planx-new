@@ -14,19 +14,11 @@ export const SketchPlanFullDescriptionCA: Schema = {
     },
     {
       type: "text",
+      required: false,
       data: {
-        title: "Description of location",
-        description: "For example 'rear garden'.",
-        fn: "locationDescription",
-        type: TextInputType.Short,
-      },
-    },
-    {
-      type: "text",
-      data: {
-        title: "Size or age class",
-        description: "For example 'mature (80cm diameter)'.",
-        fn: "sizeOrAgeClass",
+        title: "Tree description",
+        description: "For example 'rear garden, mature (80cm diameter)'.",
+        fn: "description",
         type: TextInputType.Short,
       },
     },
