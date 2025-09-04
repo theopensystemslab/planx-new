@@ -40,6 +40,7 @@
 - "!include public_teams_summary.yaml"
 - "!include public_temp_data_migrations_audit.yaml"
 - "!include public_templated_flow_edits.yaml"
+- "!include public_templated_flow_update_requests.yaml"
 - "!include public_uniform_applications.yaml"
 - "!include public_user_roles.yaml"
 - "!include public_users.yaml"
