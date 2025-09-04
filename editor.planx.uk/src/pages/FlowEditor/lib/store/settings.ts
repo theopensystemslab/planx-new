@@ -45,6 +45,8 @@ export interface SettingsStore {
   updateGlobalSettings: (newSettings: { [key: string]: TextContent }) => void;
   adminPanelData?: AdminPanelData[];
   setAdminPanelData: (adminPanelData: AdminPanelData[]) => void;
+  isFlowListedOnLPS?: boolean;
+  setIsFlowListedOnLPS: (isAvailable: boolean) => Promise<boolean>;
 }
 
 export const settingsStore: StateCreator<
@@ -142,6 +144,7 @@ export const settingsStore: StateCreator<
             limitations,
             canCreateFromCopy,
             publishedFlows,
+            isListedOnLPS,
           },
         ],
       },
@@ -165,6 +168,7 @@ export const settingsStore: StateCreator<
             ) {
               hasSendComponent: has_send_component
             }
+            isListedOnLPS: is_listed_on_lps
           }
         }
       `,
@@ -203,6 +207,7 @@ export const settingsStore: StateCreator<
       flowLimitations: limitations,
       flowCanCreateFromCopy: canCreateFromCopy,
       flowAnalyticsLink: analyticsLink,
+      isFlowListedOnLPS: isListedOnLPS,
     });
 
     return {
@@ -284,4 +289,39 @@ export const settingsStore: StateCreator<
   adminPanelData: undefined,
 
   setAdminPanelData: (adminPanelData) => set({ adminPanelData }),
+
+  isFlowListedOnLPS: undefined,
+
+  setIsFlowListedOnLPS: async (isListed) => {
+    const { id } = get();
+
+    try {
+      const { data } = await client.mutate<{ flow: { id: string }}>({
+        mutation: gql`
+          mutation UpdateIsFlowListedOnLPS(
+            $id: uuid!
+            $is_listed_on_lps: Boolean!
+          ) {
+            flow: update_flows_by_pk(
+              pk_columns: { id: $id }
+              _set: { is_listed_on_lps: $is_listed_on_lps }
+            ) {
+              id
+            }
+          }
+        `,
+        variables: {
+          id,
+          is_listed_on_lps: isListed,
+        },
+      });
+
+      if (!data?.flow?.id) throw Error("Failed to update flow listing for localplanning.services");
+      set({ isFlowListedOnLPS: isListed });
+      return Boolean(data.flow.id);
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  },
 });
