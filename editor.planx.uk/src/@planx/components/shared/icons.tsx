@@ -27,12 +27,18 @@ import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
-import { type SvgIconProps } from "@mui/material/SvgIcon";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import * as React from "react";
 import EditorIcon from "ui/icons/Editor";
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves
-type Icon = typeof CheckBoxOutlined | React.ComponentType<SvgIconProps>;
+type MuiIcon = OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
+  muiName: string;
+};
+type CustomIcon = React.ComponentType<SvgIconProps>;
+type Icon = MuiIcon | CustomIcon;
 
 export const ICONS: {
   [key in TYPES]: Icon | undefined;

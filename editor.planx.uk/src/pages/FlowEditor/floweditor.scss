@@ -476,8 +476,10 @@ $fontMonospace: "Source Code Pro", monospace;
     .flow-locked & {
       background: #555;
     }
+    // Smaller icon for portal nodes
     svg {
       margin-top: 0;
+      padding: 0.05em;
     }
   }
   &.breadcrumb {
