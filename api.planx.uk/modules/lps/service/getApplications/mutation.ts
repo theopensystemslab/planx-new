@@ -29,7 +29,7 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
           id
           addressLine: data(path: "passport.data._address.single_line_address")
           addressTitle: data(path: "passport.data._address.title")
-          status
+          status: user_status
           createdAt: created_at
           updatedAt: updated_at
           submittedAt: submitted_at
