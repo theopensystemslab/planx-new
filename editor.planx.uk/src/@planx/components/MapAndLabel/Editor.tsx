@@ -24,6 +24,8 @@ import BasicRadio from "../shared/Radio/BasicRadio/BasicRadio";
 import { EditorProps } from "../shared/types";
 import { MapAndLabel, parseContent, validationSchema } from "./model";
 import { SketchPlanCA } from "./schemas/SketchPlanCA";
+import { SketchPlanFullDescriptionCA } from "./schemas/SketchPlanFullDescriptionCA";
+import { SketchPlanFullDescriptionTPO } from "./schemas/SketchPlanFullDescriptionTPO";
 import { SketchPlanTPO } from "./schemas/SketchPlanTPO";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
@@ -31,6 +33,14 @@ type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
 export const SCHEMAS = [
   { name: "Sketch plan - Conservation areas", schema: SketchPlanCA },
   { name: "Sketch plan - TPO", schema: SketchPlanTPO },
+  {
+    name: "Sketch plan (full description) - Conservation areas",
+    schema: SketchPlanFullDescriptionCA,
+  },
+  {
+    name: "Sketch plan (full description) - TPO",
+    schema: SketchPlanFullDescriptionTPO,
+  },
 ];
 
 export default MapAndLabelComponent;
