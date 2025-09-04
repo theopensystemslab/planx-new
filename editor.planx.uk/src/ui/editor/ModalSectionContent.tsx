@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { styled } from "@mui/material/styles";
-import SvgIcon from "@mui/material/SvgIcon";
+import { SvgIconProps, SvgIconTypeMap } from "@mui/material/SvgIcon";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { FONT_WEIGHT_SEMI_BOLD } from "theme";
@@ -10,7 +11,9 @@ interface Props {
   subtitle?: string;
   children?: JSX.Element[] | JSX.Element;
   author?: string;
-  Icon?: typeof SvgIcon;
+  Icon?:
+    | React.ComponentType<SvgIconProps>
+    | (OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string });
 }
 
 const SectionContentGrid = styled(Grid)(({ theme }) => ({
