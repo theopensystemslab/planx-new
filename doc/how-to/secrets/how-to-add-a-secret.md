@@ -77,8 +77,9 @@ These values are set using the [Pulumi CLI](https://www.pulumi.com/docs/referenc
 Here's an example of adding a secret to the `application` layer of the staging and production environments - 
 
 ```sh
-esc env set application/staging pulumiConfig.application:your-new-secret abc123 --secret
-esc env set application/production pulumiConfig.application:your-new-secret xyz789 --secret
+cd infrastructure/application
+pulumi config set your-new-secret abc123 --secret --stack staging
+pulumi config set your-new-secret xyz789 --secret --stack production
 ```
 
 > ⚠️ Secrets should not be shared across multiple environments
