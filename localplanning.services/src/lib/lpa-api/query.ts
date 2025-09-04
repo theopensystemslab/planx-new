@@ -16,7 +16,7 @@ export const GET_LPAS_QUERY = gql`
       applyServices: flows(
         where: {
           status: { _eq: online }
-          is_listed_on_lps: { _eq: true }
+          # is_listed_on_lps: { _eq: true }
           slug: { _nin: $notifyServiceSlugs }
           published_flows: { has_send_component: { _eq: true } }
         }
@@ -27,7 +27,7 @@ export const GET_LPAS_QUERY = gql`
       guidanceServices: flows(
         where: {
           status: { _eq: online }
-          is_listed_on_lps: { _eq: true }
+          # is_listed_on_lps: { _eq: true }
           published_flows: { has_send_component: { _eq: false } }
         }
         order_by: { name: asc }
@@ -37,7 +37,7 @@ export const GET_LPAS_QUERY = gql`
       notifyServices: flows(
         where: {
           status: { _eq: online }
-          is_listed_on_lps: { _eq: true }
+          # is_listed_on_lps: { _eq: true }
           slug: { _in: $notifyServiceSlugs }
           published_flows: { has_send_component: { _eq: true } }
         }

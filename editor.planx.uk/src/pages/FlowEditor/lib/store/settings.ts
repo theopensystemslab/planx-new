@@ -217,6 +217,7 @@ export const settingsStore: StateCreator<
       summary,
       limitations,
       analyticsLink,
+      isListedOnLPS,
     };
   },
 
@@ -296,7 +297,7 @@ export const settingsStore: StateCreator<
     const { id } = get();
 
     try {
-      const { data } = await client.mutate<{ flow: { id: string }}>({
+      const { data } = await client.mutate<{ flow: { id: string } }>({
         mutation: gql`
           mutation UpdateIsFlowListedOnLPS(
             $id: uuid!
@@ -316,7 +317,8 @@ export const settingsStore: StateCreator<
         },
       });
 
-      if (!data?.flow?.id) throw Error("Failed to update flow listing for localplanning.services");
+      if (!data?.flow?.id)
+        throw Error("Failed to update flow listing for localplanning.services");
       set({ isFlowListedOnLPS: isListed });
       return Boolean(data.flow.id);
     } catch (error) {
