@@ -1,0 +1,3 @@
+table:
+  name: templated_flow_update_requests
+  schema: public
