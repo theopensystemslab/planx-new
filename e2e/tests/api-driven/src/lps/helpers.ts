@@ -185,7 +185,7 @@ export const getApplications = async (
   const status = response.status;
   const body = await response.json();
 
-  if (status === 200) return { applications: body, status }
+  if (status === 200) return { applications: body, status };
 
   return { ...body, status };
 };
