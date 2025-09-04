@@ -476,6 +476,9 @@ $fontMonospace: "Source Code Pro", monospace;
     .flow-locked & {
       background: #555;
     }
+    svg {
+      margin-top: 0;
+    }
   }
   &.breadcrumb {
     background-image: $pixel;

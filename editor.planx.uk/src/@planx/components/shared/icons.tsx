@@ -4,7 +4,6 @@ import CallSplit from "@mui/icons-material/CallSplit";
 import CheckBoxOutlined from "@mui/icons-material/CheckBoxOutlined";
 import CloudUpload from "@mui/icons-material/CloudUpload";
 import ContactPage from "@mui/icons-material/ContactPage";
-import CopyAll from "@mui/icons-material/CopyAll";
 import Create from "@mui/icons-material/Create";
 import CurrencyPound from "@mui/icons-material/CurrencyPound";
 import Event from "@mui/icons-material/Event";
@@ -28,10 +27,12 @@ import Send from "@mui/icons-material/Send";
 import ShapeLine from "@mui/icons-material/ShapeLine";
 import SquareFoot from "@mui/icons-material/SquareFoot";
 import TextFields from "@mui/icons-material/TextFields";
+import { type SvgIconProps } from "@mui/material/SvgIcon";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import EditorIcon from "ui/icons/Editor";
 
 // XXX: We define the Icon type in terms of one of the Icons so as not to have to repeat ourselves
-type Icon = typeof CheckBoxOutlined;
+type Icon = typeof CheckBoxOutlined | React.ComponentType<SvgIconProps>;
 
 export const ICONS: {
   [key in TYPES]: Icon | undefined;
@@ -44,7 +45,7 @@ export const ICONS: {
   [TYPES.Confirmation]: TextFields,
   [TYPES.DateInput]: Event,
   [TYPES.DrawBoundary]: SquareFoot,
-  [TYPES.ExternalPortal]: CopyAll,
+  [TYPES.ExternalPortal]: EditorIcon,
   [TYPES.FileUpload]: CloudUpload,
   [TYPES.FileUploadAndLabel]: CloudUpload,
   [TYPES.Filter]: FilterAltOutlined,
