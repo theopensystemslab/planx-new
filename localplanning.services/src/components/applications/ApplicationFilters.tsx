@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 type FilterState = {
+  search: string;
   draft: boolean;
   awaitingPayment: boolean;
   sent: boolean;
@@ -12,12 +13,22 @@ type Props = {
 
 export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
   const [filters, setFilters] = useState<FilterState>({
+    search: '',
     draft: true,
     awaitingPayment: true,
     sent: true,
   });
 
-  const handleFilterChange = (filterType: keyof FilterState) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newFilters = {
+      ...filters,
+      search: event.target.value,
+    };
+    setFilters(newFilters);
+    onFilterChange(newFilters);
+  };
+
+  const handleFilterChange = (filterType: keyof Omit<FilterState, 'search'>) => {
     const newFilters = {
       ...filters,
       [filterType]: !filters[filterType],
@@ -34,6 +45,22 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
 
   return (
     <div className="bg-bg-light clamp-[p,4,6] rounded">
+      {/* Search Box */}
+      <div className="mb-6">
+        <label htmlFor="search-applications" className="text-heading-xs block mb-0.5">
+          Search applications
+        </label>
+        <legend className="text-text-secondary text-body-md">by address, service or local planning authority</legend>
+        <input
+          type="text"
+          id="search-applications"
+          value={filters.search}
+          onChange={handleSearchChange}
+          className="w-full"
+        />
+      </div>
+
+      {/* Status Filters */}
       <h3 className="text-heading-xs mb-6">Application status</h3>
       <div className="space-y-4">
         {filterOptions.map(({ key, label, count }) => (
@@ -79,8 +106,6 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
           </div>
         ))}
       </div>
-      
-     
     </div>
   );
 };

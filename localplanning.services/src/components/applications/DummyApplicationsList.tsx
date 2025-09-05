@@ -104,6 +104,7 @@ const mockApplications: ApplicationWithStatus[] = [
 
 export const DummyApplicationsList: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({
+    search: '',
     draft: true,
     awaitingPayment: true,
     sent: true,
@@ -111,8 +112,18 @@ export const DummyApplicationsList: React.FC = () => {
 
   const filteredApplications = useMemo(() => {
     return mockApplications.filter(application => {
+      // Filter by status
       const displayStatus = getApplicationDisplayStatus(application);
-      return filters[displayStatus];
+      const statusMatch = filters[displayStatus];
+      
+      // Filter by search term
+      const searchTerm = filters.search.toLowerCase().trim();
+      const searchMatch = searchTerm === '' || 
+        application.team.name.toLowerCase().includes(searchTerm) ||
+        application.service.name.toLowerCase().includes(searchTerm) ||
+        (application.address && application.address.toLowerCase().includes(searchTerm));
+    
+      return statusMatch && searchMatch;
     });
   }, [filters]);
 
