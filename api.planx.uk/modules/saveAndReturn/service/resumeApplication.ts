@@ -52,10 +52,7 @@ const validateRequest = async (
         lowcalSessions: lowcal_sessions(
           where: {
             email: { _eq: $email }
-            deleted_at: { _is_null: true }
-            locked_at: { _is_null: true }
-            submitted_at: { _is_null: true }
-            sanitised_at: { _is_null: true }
+            user_status: { _eq: "draft" }
             flow: { team: { slug: { _eq: $teamSlug } } }
           }
           order_by: { flow: { slug: asc }, created_at: asc }
