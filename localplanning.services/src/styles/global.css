@@ -185,6 +185,16 @@
     box-shadow: var(--input-focus-box-shadow);
   }
 
+  .govuk-checkboxes__input:focus + .govuk-checkboxes__label .govuk-checkboxes__indicator {
+      outline: 3px solid #ffdd00;
+      outline-offset: 0;
+      box-shadow: inset 0 0 0 2px;
+    }
+    
+  .govuk-checkboxes__input:hover + .govuk-checkboxes__label .govuk-checkboxes__indicator {
+    border-color: #0b0c0c;
+  }
+
   /*
   /  Focus styles
   */
