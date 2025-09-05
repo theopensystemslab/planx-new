@@ -212,21 +212,31 @@ interface UserFileWithSlots extends UserFile {
   slots: NonNullable<UserFile["slots"]>;
 }
 
-const formatUserFiles = (userFile: UserFileWithSlots): FormattedUserFile[] =>
-  userFile.slots.map((slot) => ({
-    rule: userFile.rule,
-    url: slot.url,
-    filename: slot.file.name,
-    cachedSlot: {
-      ...slot,
-      file: {
-        name: slot.file.name,
-        path: slot.file.path,
-        type: slot.file.type,
-        size: slot.file.size,
+const formatUserFiles = (
+  userFile: UserFileWithSlots,
+  slots: FileUploadSlot[],
+): FormattedUserFile[] =>
+  userFile.slots.map((userSlot) => {
+    // Get the up to date, validated, slot
+    // When a slot is assigned to a UserFile it may not have finished uploading
+    const slot = slots.find(({ id }) => id === userSlot.id);
+    if (!slot) throw Error(`Unable to find matching slot ${userSlot.id}`);
+
+    return {
+      rule: userFile.rule,
+      url: slot.url,
+      filename: slot.file.name,
+      cachedSlot: {
+        ...slot,
+        file: {
+          name: slot.file.name,
+          path: slot.file.path,
+          type: slot.file.type,
+          size: slot.file.size,
+        },
       },
-    },
-  }));
+    };
+  });
 
 /**
  * Type guard to coerce UserFile -> UserFileWithSlot
@@ -255,7 +265,10 @@ const getUpdatedRequestedFiles = (fileList: FileList) => {
  * Generate payload for FileUploadAndLabel breadcrumb
  * Not responsible for validation - this happens at the component level
  */
-export const generatePayload = (fileList: FileList): Store.UserData => {
+export const generatePayload = (
+  fileList: FileList,
+  slots: FileUploadSlot[],
+): Store.UserData => {
   const newPassportData: Store.UserData["data"] = {};
 
   const uploadedFiles = [
@@ -265,7 +278,7 @@ export const generatePayload = (fileList: FileList): Store.UserData => {
   ].filter(hasSlots);
 
   uploadedFiles.forEach((userFile) => {
-    newPassportData[userFile.fn] = formatUserFiles(userFile);
+    newPassportData[userFile.fn] = formatUserFiles(userFile, slots);
   });
 
   const requestedFiles = getUpdatedRequestedFiles(fileList);

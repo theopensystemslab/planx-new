@@ -121,7 +121,7 @@ function Component(props: Props) {
       fileListSchema.validate(fileList, { context: { slots } }),
     ])
       .then(() => {
-        const payload = generatePayload(fileList);
+        const payload = generatePayload(fileList, slots);
         props.handleSubmit?.(payload);
       })
       .catch((err) => {

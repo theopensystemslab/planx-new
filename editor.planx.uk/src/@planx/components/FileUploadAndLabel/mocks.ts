@@ -100,6 +100,37 @@ export const mockFileTypesUniqueKeys: FileType[] = [
   },
 ];
 
+export const mockSlots = [
+  {
+    file: {
+      path: "./PXL_20230511_093922923.jpg",
+      name: "PXL_20230511_093922923.jpg",
+    },
+    status: "success",
+    progress: 1,
+    id: "EFGI1yU8s5s_cSBxnnYau",
+    url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
+  },
+  {
+    file: {
+      path: "PXL_20230507_150205350~2.jpg",
+    },
+    status: "success",
+    progress: 1,
+    id: "ZrGNE4siV36zvA7u1QZQD",
+    url: "http://localhost:7002/file/private/82wo7bev/PXL_20230507_150205350~2.jpg",
+  },
+  {
+    file: {
+      path: "PXL_20230511_093922923.jpg",
+    },
+    status: "success",
+    progress: 1,
+    id: "6bZBneLnY-L6qiqOblu8t",
+    url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
+  },
+] as FileUploadSlot[];
+
 export const mockFileList = {
   required: [
     {
@@ -108,18 +139,7 @@ export const mockFileList = {
       rule: {
         condition: "AlwaysRequired",
       },
-      slots: [
-        {
-          file: {
-            path: "./PXL_20230511_093922923.jpg",
-            name: "PXL_20230511_093922923.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "EFGI1yU8s5s_cSBxnnYau",
-          url: "http://localhost:7002/file/private/jjpmkz8g/PXL_20230511_093922923.jpg",
-        },
-      ],
+      slots: [mockSlots[0]],
     },
   ],
   recommended: [
@@ -129,17 +149,7 @@ export const mockFileList = {
       rule: {
         condition: "AlwaysRecommended",
       },
-      slots: [
-        {
-          file: {
-            path: "PXL_20230507_150205350~2.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "ZrGNE4siV36zvA7u1QZQD",
-          url: "http://localhost:7002/file/private/82wo7bev/PXL_20230507_150205350~2.jpg",
-        },
-      ],
+      slots: [mockSlots[1]],
     },
   ],
   optional: [
@@ -149,20 +159,43 @@ export const mockFileList = {
       rule: {
         condition: "NotRequired",
       },
-      slots: [
-        {
-          file: {
-            path: "PXL_20230511_093922923.jpg",
-          },
-          status: "success",
-          progress: 1,
-          id: "6bZBneLnY-L6qiqOblu8t",
-          url: "http://localhost:7002/file/private/truap5az/PXL_20230511_093922923.jpg",
-        },
-      ],
+      slots: [mockSlots[2]],
     },
   ],
 } as FileList;
+
+export const mockSlotsMultiple = [
+  {
+    file: {
+      name: "first.jpg",
+      path: "./first.jpg",
+    },
+    status: "success",
+    progress: 1,
+    id: "001",
+    url: "http://localhost:7002/file/private/jjpmkz8g/first.jpg",
+  },
+  {
+    file: {
+      name: "second.jpg",
+      path: "./second.jpg",
+    },
+    status: "success",
+    progress: 1,
+    id: "002",
+    url: "http://localhost:7002/file/private/jjpmkz8g/second.jpg",
+  },
+  {
+    file: {
+      name: "third.jpg",
+      path: "./third.jpg",
+    },
+    status: "success",
+    progress: 1,
+    id: "003",
+    url: "http://localhost:7002/file/private/jjpmkz8g/third.jpg",
+  },
+] as FileUploadSlot[];
 
 export const mockFileListMultiple = {
   required: [
