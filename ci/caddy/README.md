@@ -10,13 +10,14 @@ In order to allow the caddy container to solve the [DNS-01 challenge](https://le
 
 ## Debugging
 
-To see verbose logs for the caddy container, add the `debug` directive to the global options. If testing the setup, you can also make use of the LetsEncrypt's staging server using the `acme_ca` directive. For example:
+To see verbose logs for the caddy container, add the `debug` directive to the global options. If testing the setup, you can also make use of the LetsEncrypt's staging server using the `acme_ca` directive. To access the admin API from the pizza (but outside the container), use the `admin` directive. For example:
 
 ```
 {
-	email {$TLS_EMAIL}
-	debug
-	acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+  email {$TLS_EMAIL}
+  debug
+  acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+  admin 0.0.0.0:2019
 }
 ```
 

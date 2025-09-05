@@ -46,6 +46,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "2019:2019"
     environment:
       - TLS_EMAIL=${TLS_EMAIL}
       - ROOT_DOMAIN=${ROOT_DOMAIN}
