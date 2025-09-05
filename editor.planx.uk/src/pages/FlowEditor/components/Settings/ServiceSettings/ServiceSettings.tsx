@@ -5,6 +5,7 @@ import React from "react";
 import { FooterLinksAndLegalDisclaimer } from "./FlowElements/FooterLinksAndLegalDisclaimer";
 import FlowStatus from "./FlowStatus";
 import { FlowVisibility } from "./FlowVisibility/FlowVisibilitySection";
+import { LPSListing } from "./LPS/LPSListingSection";
 import { TemplatedFlowStatus } from "./TemplatedFlowStatus/TemplatedFlowStatusSection";
 
 const ServiceSettings: React.FC = () => {
@@ -21,6 +22,7 @@ const ServiceSettings: React.FC = () => {
       <FlowStatus />
       {!isTemplatedFrom && !isTemplate && <FlowVisibility />}
       <FooterLinksAndLegalDisclaimer />
+      <LPSListing/>
       {isTemplatedFrom && <TemplatedFlowStatus />}
     </Container>
   );
