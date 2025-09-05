@@ -4,17 +4,23 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useToast } from "hooks/useToast";
 import React from "react";
+import { Link } from "react-navi";
 import SettingsDescription from "ui/editor/SettingsDescription";
 import SettingsSection from "ui/editor/SettingsSection";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 import { Switch } from "ui/shared/Switch";
 
 import { useStore } from "../../../../lib/store";
 
 export const LPSListing = () => {
-  const [isListedOnLPS, setIsListedOnLPS] = useStore((state) => [
-    state.isFlowListedOnLPS,
-    state.setIsFlowListedOnLPS,
-  ]);
+  const [isListedOnLPS, setIsListedOnLPS, description, summary] = useStore(
+    (state) => [
+      state.isFlowListedOnLPS,
+      state.setIsFlowListedOnLPS,
+      state.flowDescription,
+      state.flowSummary,
+    ],
+  );
 
   const toast = useToast();
 
@@ -22,7 +28,18 @@ export const LPSListing = () => {
     initialValues: {
       isListedOnLPS: isListedOnLPS ?? false,
     },
-    // TODO: Validation - must be online, must have description...
+    validate: () => {
+      if (!description)
+        return {
+          isListedOnLPS:
+            "Service description required - please set via the 'About this flow' tab",
+        };
+      if (!summary)
+        return {
+          isListedOnLPS:
+            "Service summary required  - please set via the 'About this flow' tab",
+        };
+    },
     onSubmit: async (values, { resetForm }) => {
       const isSuccess = await setIsListedOnLPS(values.isListedOnLPS);
       if (isSuccess) {
@@ -37,10 +54,10 @@ export const LPSListing = () => {
     <Box component="form" onSubmit={form.handleSubmit} mb={2}>
       <SettingsSection>
         <Typography variant="h2" component="h3" gutterBottom>
-          LocalPlanning.services
+          Listings
         </Typography>
         <Typography variant="body1">
-          Manage how this service is listed on localplanning.services
+          Manage how this service is listed and indexed
         </Typography>
       </SettingsSection>
       <SettingsSection background>
@@ -54,30 +71,45 @@ export const LPSListing = () => {
           variant="editorPage"
           checked={form.values.isListedOnLPS}
           onChange={() =>
-            form.setFieldValue(
-              "isListedOnLPS",
-              !form.values.isListedOnLPS,
-            )
+            form.setFieldValue("isListedOnLPS", !form.values.isListedOnLPS)
           }
         />
         <SettingsDescription>
-          <p>Control if this service will be listed on localplanning.services. By listing your service you allow applicants and agents to browse the services which you offer via PlanX.</p>
+          <p>
+            Control if this service will be listed on{" "}
+            <a href="https://www.localplanning.services">
+              localplanning.service (opens in a new tab)
+            </a>
+            . By listing your service you allow applicants and agents to browse
+            the services which you offer via PlanX.
+          </p>
+          <p>
+            Listing your service requires a description and summary. These can
+            we provided on{" "}
+            <Link href="../about">the "About this flow" page</Link>.
+          </p>
         </SettingsDescription>
-        <Box>
-          <Button type="submit" variant="contained" disabled={!form.dirty}>
-            Save
-          </Button>
-          <Button
-            onClick={() => form.resetForm()}
-            type="reset"
-            variant="contained"
-            disabled={!form.dirty}
-            color="secondary"
-            sx={{ ml: 1.5 }}
-          >
-            Reset changes
-          </Button>
-        </Box>
+        <ErrorWrapper
+          error={
+            (form.dirty && form.submitCount && form.errors.isListedOnLPS) || ""
+          }
+        >
+          <Box>
+            <Button type="submit" variant="contained" disabled={!form.dirty}>
+              Save
+            </Button>
+            <Button
+              onClick={() => form.resetForm()}
+              type="reset"
+              variant="contained"
+              disabled={!form.dirty}
+              color="secondary"
+              sx={{ ml: 1.5 }}
+            >
+              Reset changes
+            </Button>
+          </Box>
+        </ErrorWrapper>
       </SettingsSection>
     </Box>
   );
