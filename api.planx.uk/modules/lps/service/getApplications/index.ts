@@ -2,6 +2,7 @@ import type {
   DraftLPSApplication,
   Success,
   SubmittedLPSApplication,
+  AwaitingPaymentLPSApplication,
 } from "../../types.js";
 import { $api } from "../../../../client/index.js";
 import { addDays, subMinutes } from "date-fns";
@@ -12,6 +13,7 @@ import type {
   Draft,
   Application,
   Submitted,
+  AwaitingPayment,
 } from "./types.js";
 import { CONSUME_MAGIC_LINK_MUTATION } from "./mutation.js";
 
@@ -35,7 +37,7 @@ const fetchApplicationsAndConsumeToken = async (
       { token, email, expiry: getExpiry() },
     );
 
-    if (!returning.length) return { drafts: [], submitted: [] };
+    if (!returning.length) return { applications: [] };
 
     return returning[0];
   } catch (error) {
@@ -61,7 +63,8 @@ export const generateResumeLink = ({ service, id }: Application) => {
   return `${serviceURL}?sessionId=${id}`;
 };
 
-const mapSharedFields = (raw: Draft | Submitted) => ({
+const mapSharedFields = (raw: Application) => ({
+  status: raw.status,
   id: raw.id,
   createdAt: raw.createdAt,
   service: {
@@ -88,17 +91,30 @@ export const convertToSubmittedLPSApplication = (
   submittedAt: raw.submittedAt,
 });
 
+export const convertToAwaitingPaymentLPSApplication = (
+  raw: AwaitingPayment,
+): AwaitingPaymentLPSApplication => ({
+  ...mapSharedFields(raw),
+  // TODO: other fields like payment link?
+  expiresAt: addDays(Date.parse(raw.createdAt), DAYS_UNTIL_EXPIRY).toString(),
+});
+
 export const getApplications = async (
   email: string,
   token: string,
 ): Promise<Success> => {
-  const { drafts, submitted } = await fetchApplicationsAndConsumeToken(
-    email,
-    token,
-  );
-  const response = {
-    drafts: drafts.map(convertToDraftLPSApplication),
-    submitted: submitted.map(convertToSubmittedLPSApplication),
-  };
-  return response;
+  const { applications } = await fetchApplicationsAndConsumeToken(email, token);
+
+  const formattedApplications = applications.map((application) => {
+    switch (application.status) {
+      case "draft":
+        return convertToDraftLPSApplication(application);
+      case "awaiting-payment":
+        return convertToAwaitingPaymentLPSApplication(application);
+      case "submitted":
+        return convertToSubmittedLPSApplication(application);
+    }
+  });
+
+  return formattedApplications;
 };
