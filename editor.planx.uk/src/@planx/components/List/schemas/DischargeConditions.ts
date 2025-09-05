@@ -6,7 +6,6 @@ export const DischargeConditions: Schema = {
   fields: [
     {
       type: "text",
-      required: false,
       data: {
         title: "Condition number",
         description:
