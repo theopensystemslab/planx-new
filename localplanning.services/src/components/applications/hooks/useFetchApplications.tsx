@@ -13,15 +13,19 @@ interface Application {
   };
   address: string | null;
   createdAt: string;
+  percentageComplete: number;
+  inviteToPay: boolean;
 }
 
 export type DraftApplication = Application & {
   expiresAt: string;
   serviceUrl: string;
+  completedAt: string;
 };
 
 export type SubmittedApplication = Application & {
   submittedAt: string;
+  downloadExpiresAt: string;
 };
 
 export interface ApplicationsResponse {

@@ -1,0 +1,15 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/Container.astro";
+import Masthead from "@components/Masthead.astro";
+import { DummyApplicationsList } from "../components/applications/DummyApplicationsList.tsx";
+---
+
+<Layout>
+  <Masthead title="Your applications">
+    <p>View applications in progress, and download sent applications.</p>
+  </Masthead>
+  <Container paddingY>
+    <DummyApplicationsList client:load />
+  </Container>
+</Layout>
