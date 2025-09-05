@@ -23,6 +23,7 @@ import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
 import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
 import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
+import { DischargeConditions } from "./schemas/DischargeConditions";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
@@ -88,6 +89,7 @@ export const SCHEMAS = [
     schema: OwnershipCertificateOwners,
   },
   { name: "Amend documents", schema: AmendDocuments },
+  { name: "Discharge conditions", schema: DischargeConditions },
   { name: "Sketch Plan (testing only)", schema: Trees },
 ];
 
