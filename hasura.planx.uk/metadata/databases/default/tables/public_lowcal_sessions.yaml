@@ -28,6 +28,17 @@ array_relationships:
         remote_table:
           name: payment_status
           schema: public
+computed_fields:
+  - name: user_status
+    definition:
+      function:
+        name: lowcal_sessions_user_status
+        schema: public
+  - name: system_status
+    definition:
+      function:
+        name: lowcal_sessions_system_status
+        schema: public
 insert_permissions:
   - role: public
     permission:
@@ -55,6 +66,9 @@ select_permissions:
         - allow_list_answers
         - has_user_saved
         - sanitised_at
+      computed_fields:
+        - user_status
+        - system_status
       filter: {}
   - role: public
     permission:
@@ -66,6 +80,9 @@ select_permissions:
         - id
         - submitted_at
         - updated_at
+      computed_fields:
+        - user_status
+        - system_status
       filter:
         _and:
           - id:
