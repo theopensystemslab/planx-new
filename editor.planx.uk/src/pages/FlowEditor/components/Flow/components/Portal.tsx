@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
+import EditorIcon from "ui/icons/Editor";
 
 import { rootFlowPath } from "../../../../../routes/utils";
 import { getParentId } from "../lib/utils";
@@ -104,6 +105,7 @@ const ExternalPortal: React.FC<any> = (props) => {
           <Box className="card-wrapper">
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link href={`/${href}`} prefetch={false} ref={drag}>
+                <EditorIcon />
                 <span>{href}</span>
               </Link>
               <Link href={editHref} prefetch={false} className="portalMenu">

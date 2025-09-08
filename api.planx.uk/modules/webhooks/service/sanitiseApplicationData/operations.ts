@@ -108,8 +108,8 @@ export const deleteApplicationFiles: Operation = async () => {
     if (!session) {
       throw Error(`Unable to find session matching id ${sessionId}`);
     }
-    const files = new Passport(session.data.passport).files;
-    if (files.length) {
+    const files = new Passport(session.data.passport)?.files;
+    if (files?.length) {
       const fileURLs = files.map((file) => file.url);
       const deleted = await deleteFilesByURL(fileURLs);
       deletedFiles.push(...deleted);
