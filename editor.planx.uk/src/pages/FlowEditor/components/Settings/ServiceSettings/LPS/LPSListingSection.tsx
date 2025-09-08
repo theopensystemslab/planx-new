@@ -85,7 +85,7 @@ export const LPSListing = () => {
           </p>
           <p>
             Listing your service requires a description and summary. These can
-            we provided on{" "}
+            be provided on{" "}
             <Link href="../about">the "About this flow" page</Link>.
           </p>
         </SettingsDescription>
