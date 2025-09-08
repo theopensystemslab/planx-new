@@ -14,7 +14,7 @@ export const createCdn = ({
 }) => {
   // Generate Origin Access Identity to access the private s3 bucket.
   const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity(
-    "originAccessIdentity",
+    `${domain.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
     {
       comment: "This is needed to setup s3 polices and make s3 not public.",
     }
