@@ -81,7 +81,6 @@ vi.mock("../../../client", () => {
             metadata: {},
           },
         ]),
-        csvDataRedacted: vi.fn().mockResolvedValue([]),
         oneAppPayload: () => mockGenerateOneAppXML(),
         digitalPlanningDataPayload: () =>
           mockGenerateDigitalPlanningDataPayload(),

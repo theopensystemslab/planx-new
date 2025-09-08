@@ -99,7 +99,6 @@ export async function buildSubmissionExportZip({
 
   // generate csv data
   const responses = await $api.export.csvData(sessionId);
-  const redactedResponses = await $api.export.csvDataRedacted(sessionId);
 
   // write csv to the zip
   try {
@@ -129,17 +128,6 @@ export async function buildSubmissionExportZip({
   zip.addFile({
     name: "Overview.htm",
     buffer: Buffer.from(overviewHTML),
-  });
-
-  // generate and add a redacted HTML overview document for the submission to zip
-  const redactedOverviewHTML = generateApplicationHTML({
-    planXExportData: redactedResponses as PlanXExportData[],
-    boundingBox,
-    userAction,
-  });
-  zip.addFile({
-    name: "RedactedOverview.htm",
-    buffer: Buffer.from(redactedOverviewHTML),
   });
 
   // add an optional GeoJSON file to zip
