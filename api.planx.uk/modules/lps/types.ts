@@ -26,15 +26,20 @@ interface LPSApplication {
   };
   address: string | null;
   createdAt: string;
+  updatedAt: string;
+  /** Only services which use Section components will have values for progress */
+  progress?: {
+    completed: number;
+  };
+  expiresAt: string;
 }
 
 export type DraftLPSApplication = LPSApplication & {
-  expiresAt: string;
   serviceUrl: string;
 };
 
 export type AwaitingPaymentLPSApplication = LPSApplication & {
-  expiresAt: string;
+  paymentUrl: string;
 };
 
 export type SubmittedLPSApplication = LPSApplication & {

@@ -13,6 +13,11 @@ interface BaseApplication {
   };
   address: string | null;
   createdAt: string;
+  updatedAt: string;
+  /** Only services which use Section components will have values for progress */
+  progress?: {
+    completed: number;
+  }
 }
 
 export type DraftApplication = BaseApplication & {
@@ -31,14 +36,14 @@ export type SubmittedApplication = BaseApplication & {
   submittedAt: string;
 };
 
-type Application = DraftApplication | AwaitingPaymentApplication | SubmittedApplication;
+export type Application = DraftApplication | AwaitingPaymentApplication | SubmittedApplication;
 
 export type ApplicationsResponse = Application[];
 
 export const useFetchApplications = () => {  
   const { token, email } = useSearchParams();
 
-  const { data: applications = { drafts: [], submitted: [] }, isLoading, error } = useQuery<ApplicationsResponse>({
+  const { data: applications = [], isLoading, error } = useQuery<ApplicationsResponse>({
     queryKey: ["fetchApplications"],
     queryFn: async () => {
       const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lps/applications`, {

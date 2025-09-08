@@ -15,6 +15,8 @@ components:
         - team
         - address
         - createdAt
+        - updatedAt
+        - expiresAt
       properties:
         id:
           type: string
@@ -48,17 +50,26 @@ components:
         createdAt:
           type: string
           format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        progress:
+          type: object
+          required:
+            - completed
+          properties:
+            completed:
+              type: number
     DraftLPSApplication:
       allOf:
         - $ref: "#/components/schemas/LPSApplication"
         - type: object
           required:
-            - expiresAt
             - serviceUrl
           properties:
-            expiresAt:
-              type: string
-              format: date-time
             serviceUrl:
               type: string
               format: uri
@@ -67,11 +78,11 @@ components:
         - $ref: "#/components/schemas/LPSApplication"
         - type: object
           required:
-            - expiresAt
+            - paymentUrl
           properties:
-            expiresAt:
+            paymentUrl:
               type: string
-              format: date-time
+              format: uri
     SubmittedLPSApplication:
       allOf:
         - $ref: "#/components/schemas/LPSApplication"

@@ -6,6 +6,7 @@ export interface BaseApplication {
   addressLine: string | null;
   addressTitle: string | null;
   createdAt: string;
+  updatedAt: string;
   service: {
     name: string;
     slug: string;
@@ -19,7 +20,6 @@ export interface BaseApplication {
 
 export type Draft = BaseApplication & {
   status: "draft";
-  expiresAt: string;
 };
 
 export type AwaitingPayment = BaseApplication & {

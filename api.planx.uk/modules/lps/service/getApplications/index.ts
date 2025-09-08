@@ -5,7 +5,7 @@ import type {
   AwaitingPaymentLPSApplication,
 } from "../../types.js";
 import { $api } from "../../../../client/index.js";
-import { addDays, subMinutes } from "date-fns";
+import { addDays, addMonths, subMinutes } from "date-fns";
 import { ServerError } from "../../../../errors/serverError.js";
 import { DAYS_UNTIL_EXPIRY } from "../../../saveAndReturn/service/utils.js";
 import type {
@@ -17,6 +17,7 @@ import type {
 } from "./types.js";
 import { CONSUME_MAGIC_LINK_MUTATION } from "./mutation.js";
 import { URLSearchParams } from "url";
+import { RETENTION_PERIOD_MONTHS } from "../../../webhooks/service/sanitiseApplicationData/operations.js";
 
 const MAGIC_LINK_EXPIRY_MINUTES =
   process.env.NODE_ENV === "test"
@@ -72,6 +73,7 @@ const mapSharedFields = (raw: Application) => ({
   status: raw.status,
   id: raw.id,
   createdAt: raw.createdAt,
+  updatedAt: raw.updatedAt,
   service: {
     name: raw.service.name,
   },
@@ -95,12 +97,18 @@ export const convertToSubmittedLPSApplication = (
 ): SubmittedLPSApplication => ({
   ...mapSharedFields(raw),
   submittedAt: raw.submittedAt,
+  // The expiry date of a submitted payment is the date which we'll sanitise the data. Beyond this, the application data cannot be retrieved.
+  expiresAt: addMonths(
+    Date.parse(raw.submittedAt),
+    RETENTION_PERIOD_MONTHS,
+  ).toString(),
 });
 
 export const convertToAwaitingPaymentLPSApplication = (
   raw: AwaitingPayment,
 ): AwaitingPaymentLPSApplication => ({
   ...mapSharedFields(raw),
+  paymentUrl: "TODO",
   // The expiry date of a session awaiting payment is derived from the creation of the associated payment request
   expiresAt: addDays(
     Date.parse(raw.paymentRequest[0].createdAt),
