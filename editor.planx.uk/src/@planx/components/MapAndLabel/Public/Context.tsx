@@ -96,18 +96,18 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
       // Add extra context to breadcrumb `data` so we can produce
       //   payload docs based on session alone without fetching/joining to whole flow later
       const extraPassportData: Store.UserData["data"] = {};
-      const priorComponents = passportData?.["_mapAndLabelNodes"] as
+
+      const priorComponents = passportData?.["_mapAndLabelVisitedNodes"] as
         | string[]
         | undefined;
-      extraPassportData["_mapAndLabelNodes"] =
+      extraPassportData["_mapAndLabelVisitedNodes"] =
         props.id && priorComponents?.length
           ? priorComponents.concat([props.id])
           : [props.id];
 
-      // These keys will only be referenced at the individual breadcrumb level,
-      //   it's okay if they overwrite eachother when the passport is computed
-      extraPassportData["_fn"] = props.fn;
-      extraPassportData["_schemaName"] = props.schemaName;
+      // This key will only be referenced at the individual breadcrumb level,
+      //   it's okay if multiple MapAndLabels overwrite eachother when the passport is computed
+      extraPassportData["_mapAndLabelNodeData"] = props;
 
       handleSubmit?.({
         data: {

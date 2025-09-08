@@ -1,5 +1,6 @@
 import {
   generateApplicationHTML,
+  generateMapAndLabelHTML,
   generateMapHTML,
   Passport,
 } from "@opensystemslab/planx-core";
@@ -169,12 +170,12 @@ export async function buildSubmissionExportZip({
   }
 
   // If MapAndLabel(s), then add GeoJSON and HTML boundary files to zip for each
-  const mapAndLabelNodes = passport?.data?.["_mapAndLabelNodes"];
+  const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
   if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
     mapAndLabelNodes.forEach((nodeId: string) => {
-      const breadcrumbData = breadcrumbs[nodeId]?.data;
-      const fn = breadcrumbData?.["_fn"] as string;
-      const schemaName = breadcrumbData?.["_schemaName"];
+      const breadcrumbData: any = breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
+      const fn = breadcrumbData?.["fn"] as string;
+      const schemaName = breadcrumbData?.["schemaName"] as string;
 
       const geojson = passport?.data?.[fn];
       if (geojson && schemaName) {
@@ -184,7 +185,18 @@ export async function buildSubmissionExportZip({
           buffer: geoBuff,
         });
 
-        // TODO HTML
+        const mapAndLabelHTML = generateMapAndLabelHTML({
+          geojson: geojson,
+          boundingBox: breadcrumbData?.["boundaryBBox"],
+          drawColor: breadcrumbData?.["drawColor"],
+          schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map((field: any) => field.data?.fn),
+          schemaName: schemaName,
+          osApiKey: process.env.ORDNANCE_SURVEY_API_KEY || "",
+        });
+        zip.addFile({
+          name: `${schemaName}.html`,
+          buffer: Buffer.from(mapAndLabelHTML),
+        });
       }
     });
   }

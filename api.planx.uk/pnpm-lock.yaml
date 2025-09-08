@@ -21,8 +21,8 @@ importers:
         specifier: ^3.701.0
         version: 3.876.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#107792a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a(@types/react@19.1.11)
+        specifier: git+https://github.com/theopensystemslab/planx-core#00f0666
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/00f0666(@types/react@19.1.11)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -1015,8 +1015,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/00f0666':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/00f0666}
     version: 1.0.0
 
   '@paralleldrive/cuid2@2.2.2':
@@ -2966,8 +2966,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  marked@16.2.0:
-    resolution: {integrity: sha512-LbbTuye+0dWRz2TS9KJ7wsnD4KAtpj0MVkWc90XvBa6AslXsT0hTBVH5k32pcSyHH1fst9XEFJunXHktVy0zlg==}
+  marked@16.2.1:
+    resolution: {integrity: sha512-r3UrXED9lMlHF97jJByry90cwrZBBvZmjG1L68oYfuPMW+uDTnuMbyJDymCWwbTE+f+3LhpNDKfpR3a3saFyjA==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -5244,7 +5244,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a(@types/react@19.1.11)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/00f0666(@types/react@19.1.11)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.11)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.11)(react@18.3.1))(@types/react@19.1.11)(react@18.3.1)
@@ -5261,7 +5261,7 @@ snapshots:
       graphql-request: 6.1.0(graphql@16.11.0)
       json-schema-to-typescript: 15.0.4
       lodash-es: 4.17.21
-      marked: 16.2.0
+      marked: 16.2.1
       prettier: 3.6.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -7569,7 +7569,7 @@ snapshots:
     dependencies:
       semver: 7.7.2
 
-  marked@16.2.0: {}
+  marked@16.2.1: {}
 
   math-intrinsics@1.1.0: {}
 
