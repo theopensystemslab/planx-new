@@ -21,6 +21,7 @@ export const Basic = {
       summary: "A short blurb",
       limitations: "",
       settings: {},
+      isListedOnLPS: false,
     },
   },
 } satisfies Story;
