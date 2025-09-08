@@ -186,16 +186,28 @@ export const LockedSession: React.FC<{
 
 /**
  * If an email is passed in as a query param, do not prompt a user for this
- * Currently only used for redirects back from GovUK Pay
+ *
+ * This means there's not an additional step of friction from logging into LPS,
+ * or redirecting back from GOV.UK Pay
+ *
  * XXX: Won't work locally as referrer is stripped from the browser when navigating from HTTPS to HTTP (localhost)
  */
 const getInitialEmailValue = (emailQueryParam?: string) => {
-  const isRedirectFromGovPay = [
+  const trustedAddresses = [
     "https://www.payments.service.gov.uk/",
     "https://card.payments.service.gov.uk/",
-  ].includes(document.referrer);
+    "https://www.localplanning.services/",
+  ];
 
-  if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
+  const trustedPatterns = [
+    /^https:\/\/localplanning\.\d{4,5}\.planx\.pizza\/$/,
+  ];
+
+  const isRedirectFromTrustedSource =
+    trustedAddresses.includes(document.referrer) ||
+    trustedPatterns.some((pattern) => pattern.test(document.referrer));
+
+  if (isRedirectFromTrustedSource && emailQueryParam) return emailQueryParam;
   return "";
 };
 
