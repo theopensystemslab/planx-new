@@ -77,7 +77,7 @@ const Questions = ({ previewEnvironment }: QuestionsProps) => {
     state.getType,
     state.currentCard,
     state.setCurrentCard,
-    state.getSectionProgress(),
+    state.sectionProgress,
   ]);
   const isStandalone = previewEnvironment === "standalone";
   const { createAnalytics, trackEvent } = useAnalyticsTracking();

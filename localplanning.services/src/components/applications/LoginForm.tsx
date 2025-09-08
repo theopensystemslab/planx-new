@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
         <button 
           type="submit" 
           disabled={isLoading} 
-          className="button button--primary button--medium"
+          className="button button--primary button--medium button-focus-style"
         >
           {isLoading ? "Submitting..." : "Submit"}
         </button>

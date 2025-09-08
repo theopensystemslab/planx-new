@@ -3,6 +3,8 @@ import {
   DEFAULT_FLAG_CATEGORY,
   FlowStatus,
 } from "@opensystemslab/planx-core/types";
+import isEmpty from "lodash/isEmpty";
+import isObject from "lodash/isObject";
 
 import { Store } from "../store";
 import { ALLOW_LIST } from "./provider";
@@ -99,7 +101,7 @@ export function getNodeMetadata(
  * Check whether the key is in the ALLOW_LIST and ensure it's of the correct
  * type to avoid repeated casting.
  */
-export function isAllowListKey(key: any): key is AllowListKey {
+export function isAllowListKey(key: string): key is AllowListKey {
   return (ALLOW_LIST as readonly string[]).includes(key);
 }
 
@@ -131,22 +133,37 @@ export function getAnswers(
   return answers;
 }
 
+const sanitiseAllowListValues = ([key, value]: [key: string, value: unknown]): [
+  string,
+  unknown,
+] => {
+  if (!isObject(value)) return [key, value];
+
+  // Strip out empty values - we do not need to store these as allow list answers
+  const sanitisedObject = Object.fromEntries(
+    Object.entries(value).filter(([_key, value]) => Boolean(value)),
+  );
+  if (isEmpty(sanitisedObject)) return [key, undefined];
+
+  return [key, sanitisedObject];
+};
+
 /**
  * Extract allowlist answers from breadcrumb data
  * e.g. data set automatically by components such as DrawBoundary
  */
 export function getData(
   breadcrumb: Store.UserData,
-): Partial<Record<AllowListKey, any>> | undefined {
+): Partial<Record<AllowListKey, unknown>> | undefined {
   const dataSetByNode = breadcrumb.data;
   if (!dataSetByNode) return;
 
   const filteredEntries = Object.entries(dataSetByNode)
-    .filter(([key, value]) => isAllowListKey(key) && Boolean(value))
-    .map(([key, value]) => ({ [key]: value }));
+    .map(sanitiseAllowListValues)
+    .filter(([key, value]) => isAllowListKey(key) && Boolean(value));
 
   if (!filteredEntries.length) return;
-  const answerValues = Object.assign({}, ...filteredEntries);
+  const answerValues = Object.fromEntries(filteredEntries);
 
   return answerValues;
 }
@@ -184,7 +201,7 @@ export function getAllowListAnswers(
   breadcrumb: Store.UserData,
   flow: Store.Flow,
   breadcrumbs: Store.Breadcrumbs,
-): Partial<Record<AllowListKey, any>> | undefined {
+): Partial<Record<AllowListKey, unknown>> | undefined {
   const answers = getAnswers(nodeId, flow, breadcrumbs);
   const data = getData(breadcrumb);
 

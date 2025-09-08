@@ -21,7 +21,7 @@ export type FeedbackCategory =
   | "comment"
   | "inaccuracy"
   | "component";
-  
+
 export type FeedbackView = "triage" | FeedbackCategory | "thanks";
 export type ClickEvents = "close" | "back" | "triage" | FeedbackCategory;
 

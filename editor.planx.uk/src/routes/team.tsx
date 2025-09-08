@@ -119,6 +119,7 @@ const routes = compose(
     "/submissions": lazy(() => import("./submissions")),
 
     "/members": lazy(() => import("./teamMembers")),
+
     "/design": compose(
       route(async (req) => ({
         title: makeTitle(
@@ -127,7 +128,9 @@ const routes = compose(
         view: DesignSettings,
       })),
     ),
+
     "/feedback": lazy(() => import("./feedback")),
+
     "/general-settings": compose(
       route(async (req) => ({
         title: makeTitle(
@@ -136,6 +139,8 @@ const routes = compose(
         view: GeneralSettings,
       })),
     ),
+
+    "/subscription": lazy(() => import("./subscription")),
   }),
 );
 

@@ -1,0 +1,1 @@
+alter table "public"."feedback" alter column "user_comment" set not null;
