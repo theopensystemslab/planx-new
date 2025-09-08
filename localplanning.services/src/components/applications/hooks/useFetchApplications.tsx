@@ -14,6 +14,7 @@ interface BaseApplication {
   address: string | null;
   createdAt: string;
   updatedAt: string;
+  expiresAt: string;
   /** Only services which use Section components will have values for progress */
   progress?: {
     completed: number;
@@ -22,13 +23,12 @@ interface BaseApplication {
 
 export type DraftApplication = BaseApplication & {
   status: "draft",
-  expiresAt: string;
   serviceUrl: string;
 };
 
 export type AwaitingPaymentApplication = BaseApplication & {
   status: "awaiting-payment"
-  expiresAt: string;
+  paymentUrl: string;
 };
 
 export type SubmittedApplication = BaseApplication & {
