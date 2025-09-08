@@ -62,6 +62,16 @@ components:
             serviceUrl:
               type: string
               format: uri
+    AwaitingPaymentLPSApplication:
+      allOf:
+        - $ref: "#/components/schemas/LPSApplication"
+        - type: object
+          required:
+            - expiresAt
+          properties:
+            expiresAt:
+              type: string
+              format: date-time
     SubmittedLPSApplication:
       allOf:
         - $ref: "#/components/schemas/LPSApplication"
@@ -110,19 +120,12 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - drafts
-              - submitted
-            properties:
-              drafts:
-                type: array
-                items:
-                  $ref: "#/components/schemas/DraftLPSApplication"
-              submitted:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SubmittedLPSApplication"
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/components/schemas/DraftLPSApplication"
+                - $ref: "#/components/schemas/SubmittedLPSApplication"
+                - $ref: "#/components/schemas/AwaitingPaymentLPSApplication"
     ApplicationsResponseError:
       type: object
       properties:
