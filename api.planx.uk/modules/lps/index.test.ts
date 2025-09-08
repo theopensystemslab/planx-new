@@ -222,6 +222,7 @@ describe("fetching applications", () => {
     createdAt: "createdAtTime",
     addressLine: null,
     addressTitle: null,
+    updatedAt: "updatedAtTime",
     service: {
       name: "Service Name",
       slug: "service-slug",
