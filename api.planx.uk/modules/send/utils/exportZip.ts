@@ -173,7 +173,8 @@ export async function buildSubmissionExportZip({
   const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
   if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
     mapAndLabelNodes.forEach((nodeId: string) => {
-      const breadcrumbData: any = breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
+      const breadcrumbData: any =
+        breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
       const fn = breadcrumbData?.["fn"] as string;
       const schemaName = breadcrumbData?.["schemaName"] as string;
 
@@ -189,7 +190,9 @@ export async function buildSubmissionExportZip({
           geojson: geojson,
           boundingBox: breadcrumbData?.["boundaryBBox"],
           drawColor: breadcrumbData?.["drawColor"],
-          schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map((field: any) => field.data?.fn),
+          schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
+            (field: any) => field.data?.fn,
+          ),
           schemaName: schemaName,
           osApiKey: process.env.ORDNANCE_SURVEY_API_KEY || "",
         });
