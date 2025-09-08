@@ -19,9 +19,8 @@ it("returns an error if the given lat/lng falls outside of the UK", async () => 
     .query({ lon: -83, lat: 42 })
     .expect(400)
     .then((res) => {
-      expect(res.body).toEqual({
-        error: "Latitude or longitude is out of UK bounding box",
-      });
+      expect(res.body).toHaveProperty("issues");
+      expect(res.body).toHaveProperty("name", "ZodError");
     });
 });
 
