@@ -35,7 +35,7 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
       entryFilter: (e) => !e.dirent.isDirectory(),
     })
     .forEach(({ path }) => {
-      const relativeFilePath = `../../localplanning.services/build/${path}`;
+      const relativeFilePath = `../../localplanning.services/dist/${path}`;
       const contentType = mime.getType(relativeFilePath) || "";
       const contentFile = new aws.s3.BucketObject(
         relativeFilePath,
