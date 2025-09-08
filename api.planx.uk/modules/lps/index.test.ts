@@ -323,7 +323,7 @@ describe("fetching applications", () => {
               name: "Team Name",
             },
             serviceUrl:
-              "https://www.example.com/team-slug/service-slug/published?sessionId=1",
+              "https://www.example.com/team-slug/service-slug/published?sessionId=1&email=simulate-delivered%40notifications.service.gov.uk",
           });
 
           expect(res.body.submitted).toHaveLength(1);

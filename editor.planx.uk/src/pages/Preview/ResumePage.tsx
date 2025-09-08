@@ -213,17 +213,18 @@ const getInitialEmailValue = (emailQueryParam?: string) => {
 
 /**
  * Component which handles the "Resume" page used for Save & Return
- * The user can access this page via three "paths"
+ * The user can access this page via four "paths"
  * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
  * 2. Magic link in email with a sessionId, user enters email to continue application
  * 3. Redirect back from GovPay - sessionId and email come from query params
+ * 4. Redirect from localplanning.services - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
   const route = useCurrentRoute();
 
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(
-    getInitialEmailValue(route.url.query.email),
+    getInitialEmailValue(decodeURIComponent(route.url.query.email)),
   );
   const [paymentRequest, setPaymentRequest] = useState<MinPaymentRequest>();
   const sessionId = useCurrentRoute().url.query.sessionId;
