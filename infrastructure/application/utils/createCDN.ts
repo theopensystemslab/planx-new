@@ -8,7 +8,7 @@ export const createCdn = ({
   logsBucket,
 }: {
   domain: string;
-  acmCertificateArn: pulumi.Input<string>;
+  acmCertificateArn?: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
 }) => {
