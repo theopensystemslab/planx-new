@@ -101,8 +101,11 @@ export const convertToAwaitingPaymentLPSApplication = (
   raw: AwaitingPayment,
 ): AwaitingPaymentLPSApplication => ({
   ...mapSharedFields(raw),
-  // TODO: other fields like payment link?
-  expiresAt: addDays(Date.parse(raw.createdAt), DAYS_UNTIL_EXPIRY).toString(),
+  // The expiry date of a session awaiting payment is derived from the creation of the associated payment request
+  expiresAt: addDays(
+    Date.parse(raw.paymentRequest[0].createdAt),
+    DAYS_UNTIL_EXPIRY,
+  ).toString(),
 });
 
 export const getApplications = async (

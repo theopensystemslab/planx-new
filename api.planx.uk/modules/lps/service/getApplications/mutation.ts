@@ -23,7 +23,7 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
     ) {
       returning {
         applications: lowcal_sessions(
-          where: { status: { _neq: "expired" } }
+          where: { user_status: { _neq: "expired" } }
           order_by: { updated_at: asc }
         ) {
           id
@@ -34,6 +34,9 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
           updatedAt: updated_at
           submittedAt: submitted_at
           sanitisedAt: sanitised_at
+          paymentRequest: payment_requests {
+            createdAt: created_at
+          }
           service: flow {
             name
             slug
