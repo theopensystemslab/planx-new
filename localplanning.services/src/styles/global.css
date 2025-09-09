@@ -213,4 +213,6 @@
   --postcode__input__border: var(--input-border-width) solid var(--input-border-color);
   --postcode__input__width: var(--input-width);
   --postcode__input__max-width: var(--input-max-width);
+
+  --autocomplete__input__height: var(--input-height);
 }

@@ -123,14 +123,16 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* @ts-ignore-error */}
-      <geocode-autocomplete
-        ref={addressSearchRef}
-        label="Enter an address"
-        osProxyEndpoint={
-          `${PUBLIC_PLANX_REST_API_URL}/proxy/ordnance-survey`
-        }
-      />
+      <div className="max-w-2xl">
+        {/* @ts-ignore-error */}
+        <geocode-autocomplete
+          ref={addressSearchRef}
+          label="Enter an address"
+          osProxyEndpoint={
+            `${PUBLIC_PLANX_REST_API_URL}/proxy/ordnance-survey`
+          }
+        />
+      </div>
       <button type="submit" className="button button--primary button--medium mt-2">
         Find the local planning authority
       </button>
