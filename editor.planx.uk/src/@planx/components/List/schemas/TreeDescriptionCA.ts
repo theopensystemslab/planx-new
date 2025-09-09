@@ -6,7 +6,6 @@ export const TreeDescriptionCA: Schema = {
   fields: [
     {
       type: "text",
-      required: false,
       data: {
         title: "Tree reference number",
         description: "This is the tree's number as shown on your sketch plan.",
