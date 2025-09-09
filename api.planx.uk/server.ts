@@ -3,8 +3,6 @@ import assert from "assert";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cookieSession from "cookie-session";
-import type { CorsOptions } from "cors";
-import cors from "cors";
 import express from "express";
 import pinoLogger from "express-pino-logger";
 import helmet from "helmet";
@@ -34,6 +32,7 @@ import userRoutes from "./modules/user/routes.js";
 import webhookRoutes from "./modules/webhooks/routes.js";
 import { apiLimiter } from "./rateLimit.js";
 import { registerSessionStubs } from "./session.js";
+import { apiCors } from "./cors.js";
 
 const app = express();
 
@@ -41,37 +40,7 @@ useSwaggerDocs(app);
 
 app.set("trust proxy", 1);
 
-const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
-  if (!origin) return callback(null, true);
-
-  const isTest = process.env.NODE_ENV === "test";
-  const localDevEnvs =
-    /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007|4321)$/;
-  const isDevelopment =
-    process.env.APP_ENVIRONMENT === "development" || localDevEnvs.test(origin);
-  const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];
-  const isAllowed = Boolean(allowList.includes(origin));
-  const isMapDocs = Boolean(origin.endsWith("oslmap.netlify.app"));
-
-  isTest || isDevelopment || isAllowed || isMapDocs
-    ? callback(null, true)
-    : callback(new Error(`Not allowed by CORS. Origin: ${origin}`));
-};
-
-app.use(
-  cors({
-    credentials: true,
-    methods: "*",
-    origin: checkAllowedOrigins,
-    allowedHeaders: [
-      "Accept",
-      "Authorization",
-      "Content-Type",
-      "Origin",
-      "X-Requested-With",
-    ],
-  }),
-);
+app.use(apiCors);
 
 app.use(bodyParser.json({ limit: "100mb" }));
 
