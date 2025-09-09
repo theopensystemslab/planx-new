@@ -6,5 +6,9 @@ declare namespace JSX {
       React.HTMLAttributes<HTMLElement>,
       HTMLElement
     >;
+    "geocode-autocomplete": React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLElement>,
+      HTMLElement
+    >;
   }
 }
