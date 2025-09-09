@@ -46,7 +46,7 @@ const checkAllowedOrigins: CorsOptions["origin"] = (origin, callback) => {
 
   const isTest = process.env.NODE_ENV === "test";
   const localDevEnvs =
-    /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007)$/;
+    /^http:\/\/(127\.0\.0\.1|localhost):(3000|5173|6006|7007|4321)$/;
   const isDevelopment =
     process.env.APP_ENVIRONMENT === "development" || localDevEnvs.test(origin);
   const allowList = process.env.CORS_ALLOWLIST?.split(", ") || [];

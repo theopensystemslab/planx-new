@@ -57,9 +57,7 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
 };
 
 export const createLocalPlanningServices = () => {
-  const domain = config.get("lps-domain");
-  if (!domain) return;
-
+  const domain = config.require("lps-domain");
   const lpsBucket = createLPSBucket(domain);
   const logsBucket = createLogsBucket(domain);
 
