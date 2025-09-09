@@ -722,7 +722,7 @@ export = async () => {
 };
 
 // ------------------- LocalPlanning.services
-createLocalPlanningServices();
+// createLocalPlanningServices();
 
 new aws.budgets.Budget("general-budget", {
   budgetType: "COST",

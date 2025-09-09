@@ -118,7 +118,10 @@ export const createCdn = ({
       },
     },
     viewerCertificate: {
-      acmCertificateArn,
+      ...(acmCertificateArn 
+        ? { acmCertificateArn } 
+        : { cloudfrontDefaultCertificate: true }
+      ),
       sslSupportMethod: "sni-only",
       minimumProtocolVersion: "TLSv1.2_2021",
     },
