@@ -16,6 +16,23 @@ const createLPSBucket = (domain: string) => {
     },
   });
 
+  new aws.s3.BucketPolicy("lpsBucketPolicy", {
+    bucket: lpsBucket.id,
+    policy: pulumi.all([lpsBucket.arn, lpsBucket.id]).apply(([ arn ]) =>
+      JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: "*",
+            Action: "s3:GetObject",
+            Resource: `${arn}/*`,
+          },
+        ],
+      })
+    ),
+  });
+
   return lpsBucket;
 };
 
@@ -41,7 +58,6 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
         relativeFilePath,
         {
           key: path,
-          acl: "public-read",
           bucket,
           contentType,
           source: new pulumi.asset.FileAsset(relativeFilePath),
