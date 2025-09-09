@@ -3,7 +3,7 @@ CREATE TEMPORARY TABLE sync_templated_flow_edits (
   flow_id uuid,
   data jsonb,
   created_at timestamptz,
-  updated_at timestamptz,
+  updated_at timestamptz
 );
 
 \copy sync_templated_flow_edits from '/tmp/templated_flow_edits.csv' WITH (FORMAT csv, DELIMITER ';');
