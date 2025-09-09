@@ -103,9 +103,7 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
 };
 
 export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
-  const domain = config.get("lps-domain");
-  if (!domain) return;
-
+  const domain = config.require("lps-domain");
   const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
     comment: `OAI for LPS CloudFront distribution`,
   });
