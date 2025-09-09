@@ -19,6 +19,7 @@ import {
   usEast1,
 } from "./utils";
 import { createHasuraService } from "./services/hasura";
+import { createLocalPlanningServices } from "./services/lps";
 import { CustomDomains } from "../common/teams";
 
 const config = new pulumi.Config();
@@ -593,7 +594,7 @@ export = async () => {
     proxied: true,
   });
 
-  // ------------------- Frontend
+  // ------------------- PlanX Frontend
   const frontendBucket = new aws.s3.Bucket(`${DOMAIN}`, {
     bucket: DOMAIN,
     website: {
@@ -719,6 +720,9 @@ export = async () => {
     customDomains,
   };
 };
+
+// ------------------- LocalPlanning.services
+createLocalPlanningServices();
 
 new aws.budgets.Budget("general-budget", {
   budgetType: "COST",

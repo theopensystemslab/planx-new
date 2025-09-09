@@ -8,13 +8,13 @@ export const createCdn = ({
   logsBucket,
 }: {
   domain: string;
-  acmCertificateArn: pulumi.Input<string>;
+  acmCertificateArn?: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
 }) => {
   // Generate Origin Access Identity to access the private s3 bucket.
   const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity(
-    "originAccessIdentity",
+    `${domain.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
     {
       comment: "This is needed to setup s3 polices and make s3 not public.",
     }

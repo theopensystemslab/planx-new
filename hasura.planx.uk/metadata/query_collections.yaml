@@ -10,3 +10,10 @@
               usersLast30Days: users_last_30_days
             }
           }
+      - name: LPS - Delete application
+        query: |
+          mutation SoftDeleteLowcalSessionLPS ($applicationId: uuid!) {
+            applications: update_lowcal_sessions_by_pk(pk_columns: {id:$applicationId}, _set: {deleted_at:"now()"}) {
+              id
+            }
+          }
