@@ -15,3 +15,4 @@ export const getServiceURL = ({
   domain
     ? `https://${domain}/${serviceSlug}`
     : `${PUBLIC_PLANX_EDITOR_URL}/${lpaSlug}/${serviceSlug}/published`;
+

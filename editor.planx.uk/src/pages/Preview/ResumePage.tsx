@@ -186,32 +186,45 @@ export const LockedSession: React.FC<{
 
 /**
  * If an email is passed in as a query param, do not prompt a user for this
- * Currently only used for redirects back from GovUK Pay
+ *
+ * This means there's not an additional step of friction from logging into LPS,
+ * or redirecting back from GOV.UK Pay
+ *
  * XXX: Won't work locally as referrer is stripped from the browser when navigating from HTTPS to HTTP (localhost)
  */
 const getInitialEmailValue = (emailQueryParam?: string) => {
-  const isRedirectFromGovPay = [
+  const trustedAddresses = [
     "https://www.payments.service.gov.uk/",
     "https://card.payments.service.gov.uk/",
-  ].includes(document.referrer);
+    "https://www.localplanning.services/",
+  ];
 
-  if (isRedirectFromGovPay && emailQueryParam) return emailQueryParam;
+  const trustedPatterns = [
+    /^https:\/\/localplanning\.\d{4,5}\.planx\.pizza\/$/,
+  ];
+
+  const isRedirectFromTrustedSource =
+    trustedAddresses.includes(document.referrer) ||
+    trustedPatterns.some((pattern) => pattern.test(document.referrer));
+
+  if (isRedirectFromTrustedSource && emailQueryParam) return emailQueryParam;
   return "";
 };
 
 /**
  * Component which handles the "Resume" page used for Save & Return
- * The user can access this page via three "paths"
+ * The user can access this page via four "paths"
  * 1. Directly via PlanX, user enters email to trigger "dashboard" email with resume magic links
  * 2. Magic link in email with a sessionId, user enters email to continue application
  * 3. Redirect back from GovPay - sessionId and email come from query params
+ * 4. Redirect from localplanning.services - sessionId and email come from query params
  */
 const ResumePage: React.FC = () => {
   const route = useCurrentRoute();
 
   const [pageStatus, setPageStatus] = useState<Status>(Status.EmailRequired);
   const [email, setEmail] = useState<string>(
-    getInitialEmailValue(route.url.query.email),
+    getInitialEmailValue(decodeURIComponent(route.url.query.email)),
   );
   const [paymentRequest, setPaymentRequest] = useState<MinPaymentRequest>();
   const sessionId = useCurrentRoute().url.query.sessionId;

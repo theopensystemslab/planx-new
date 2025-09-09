@@ -14,6 +14,7 @@ import type {
   Submitted,
 } from "./types.js";
 import { CONSUME_MAGIC_LINK_MUTATION } from "./mutation.js";
+import { URLSearchParams } from "url";
 
 const MAGIC_LINK_EXPIRY_MINUTES =
   process.env.NODE_ENV === "test"
@@ -47,7 +48,10 @@ const fetchApplicationsAndConsumeToken = async (
   }
 };
 
-export const generateResumeLink = ({ service, id }: Application) => {
+export const generateResumeLink = (
+  { service, id }: Application,
+  email: string,
+) => {
   const {
     team: { slug: teamSlug, domain },
     slug: flowSlug,
@@ -58,7 +62,8 @@ export const generateResumeLink = ({ service, id }: Application) => {
     ? `https://${domain}/${flowSlug}`
     : `${process.env.EDITOR_URL_EXT}/${teamSlug}/${flowSlug}/published`;
 
-  return `${serviceURL}?sessionId=${id}`;
+  const params = new URLSearchParams({ sessionId: id, email });
+  return `${serviceURL}?${params.toString()}`;
 };
 
 const mapSharedFields = (raw: Draft | Submitted) => ({
@@ -75,9 +80,10 @@ const mapSharedFields = (raw: Draft | Submitted) => ({
 
 export const convertToDraftLPSApplication = (
   raw: Draft,
+  email: string,
 ): DraftLPSApplication => ({
   ...mapSharedFields(raw),
-  serviceUrl: generateResumeLink(raw),
+  serviceUrl: generateResumeLink(raw, email),
   expiresAt: addDays(Date.parse(raw.createdAt), DAYS_UNTIL_EXPIRY).toString(),
 });
 
@@ -97,7 +103,7 @@ export const getApplications = async (
     token,
   );
   const response = {
-    drafts: drafts.map(convertToDraftLPSApplication),
+    drafts: drafts.map((draft) => convertToDraftLPSApplication(draft, email)),
     submitted: submitted.map(convertToSubmittedLPSApplication),
   };
   return response;
