@@ -37,7 +37,10 @@ export const ApplicationsList: React.FC = () => {
           <h2 className="text-heading-lg">Draft applications</h2>
           <ul className="flex flex-col gap-8">
             {drafts.map((draft) =>
-              <ApplicationCard application={draft} variant="draft" key={draft.id} />
+              <ApplicationCard 
+                application={{ ...draft, status: "draft" as const }} 
+                key={draft.id} 
+              />
             )}
           </ul>
         </>
@@ -46,8 +49,11 @@ export const ApplicationsList: React.FC = () => {
         <>
           <h2 className="text-heading-lg">Submitted applications</h2>
           <ul className="flex flex-col gap-8">
-            {submitted.map((submitted) =>
-              <ApplicationCard application={submitted} variant="submitted" key={submitted.id} />
+            {submitted.map((submittedApp) =>
+              <ApplicationCard 
+                application={{ ...submittedApp, status: "submitted" as const }} 
+                key={submittedApp.id} 
+              />
             )}
           </ul>
         </>
