@@ -43,6 +43,8 @@ import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/PreviousLDCE";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+import { TreeDescriptionCA } from "./schemas/TreeDescriptionCA";
+import { TreeDescriptionTPO } from "./schemas/TreeDescriptionTPO";
 import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.List, List>;
@@ -90,7 +92,8 @@ export const SCHEMAS = [
   },
   { name: "Amend documents", schema: AmendDocuments },
   { name: "Discharge conditions", schema: DischargeConditions },
-  { name: "Sketch Plan (testing only)", schema: Trees },
+  { name: "Tree description - Conservation Area", schema: TreeDescriptionCA },
+  { name: "Tree description - TPO", schema: TreeDescriptionTPO },
 ];
 
 function ListComponent(props: Props) {
