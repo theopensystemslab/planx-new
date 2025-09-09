@@ -80,7 +80,7 @@ SET
   limitations = EXCLUDED.limitations,
   is_template = EXCLUDED.is_template,
   deleted_at = EXCLUDED.deleted_at,
-  can_create_from_copy = EXCLUDED.can_create_from_copy
+  can_create_from_copy = EXCLUDED.can_create_from_copy,
   is_listed_on_lps = EXCLUDED.is_listed_on_lps;
 
 -- ensure that original flows.version is overwritten to match new operation inserted below, else sharedb will fail
