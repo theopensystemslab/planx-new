@@ -7,7 +7,7 @@ import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-navi";
-import { TeamSummary } from "routes/authenticated";
+import { TeamSummary } from "routes/_authenticated/index";
 import { focusStyle } from "theme";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
