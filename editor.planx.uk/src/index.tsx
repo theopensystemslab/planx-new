@@ -17,14 +17,11 @@ import ErrorPage from "pages/ErrorPage/ErrorPage";
 import { AnalyticsProvider } from "pages/FlowEditor/lib/analytics/provider";
 import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { NotFoundBoundary, Router, View } from "react-navi";
-import HelmetProvider from "react-navi-helmet-async";
 import { ToastContainer } from "react-toastify";
 
 // init airbrake before everything else
 import * as airbrake from "./airbrake";
 import { client } from "./lib/graphql";
-import navigation from "./lib/navigation";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { defaultTheme } from "./theme";
@@ -111,11 +108,7 @@ const Layout: React.FC<{
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={defaultTheme}>
-        <NotFoundBoundary render={() => <ErrorPage title="Not found" />}>
-          {children}
-        </NotFoundBoundary>
-      </ThemeProvider>
+      <ThemeProvider theme={defaultTheme}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
@@ -127,7 +120,9 @@ root.render(
         {/* Use only TanStack Router during initial migration */}
         <Layout>
           <CssBaseline />
-          <TanStackRouterProvider router={tanstackRouter} />
+          <Suspense fallback={null}>
+            <TanStackRouterProvider router={tanstackRouter} />
+          </Suspense>
         </Layout>
 
         {/* React Navi temporarily disabled for testing TanStack Router
