@@ -1,5 +1,6 @@
 import {
   generateApplicationHTML,
+  generateMapAndLabelHTML,
   generateMapHTML,
   Passport,
 } from "@opensystemslab/planx-core";
@@ -12,6 +13,7 @@ import os from "os";
 import path from "path";
 import sanitize from "sanitize-filename";
 import str from "string-to-stream";
+
 import { $api } from "../../../client/index.js";
 import type { Passport as IPassport } from "../../../types.js";
 import { getFileFromS3 } from "../../file/service/getFile.js";
@@ -36,7 +38,8 @@ export async function buildSubmissionExportZip({
     );
   }
   const passport = sessionData.data?.passport as IPassport;
-  const flowSlug = sessionData?.flow.slug;
+  const breadcrumbs = sessionData.data?.breadcrumbs;
+  const flowSlug = sessionData.flow.slug;
 
   // create empty zip
   const zip = new ExportZip(sessionId, flowSlug);
@@ -142,7 +145,7 @@ export async function buildSubmissionExportZip({
     buffer: Buffer.from(redactedOverviewHTML),
   });
 
-  // add an optional GeoJSON file to zip
+  // If DrawBoundary, then add `LocationPlan` GeoJSON and HTML boundary files to zip
   const geojson = passport?.data?.["proposal.site"];
   if (geojson) {
     if (userAction) {
@@ -155,7 +158,6 @@ export async function buildSubmissionExportZip({
       buffer: geoBuff,
     });
 
-    // generate and add an HTML boundary document for the submission to zip
     const boundaryHTML = generateMapHTML({
       geojson,
       boundingBox,
@@ -164,6 +166,40 @@ export async function buildSubmissionExportZip({
     zip.addFile({
       name: "LocationPlan.htm",
       buffer: Buffer.from(boundaryHTML),
+    });
+  }
+
+  // If MapAndLabel(s), then add GeoJSON and HTML boundary files to zip for each
+  const mapAndLabelNodes = passport?.data?.["_mapAndLabelVisitedNodes"];
+  if (mapAndLabelNodes && mapAndLabelNodes?.length > 0) {
+    mapAndLabelNodes.forEach((nodeId: string) => {
+      const breadcrumbData: any =
+        breadcrumbs[nodeId]?.data?.["_mapAndLabelNodeData"];
+      const fn = breadcrumbData?.["fn"] as string;
+      const schemaName = breadcrumbData?.["schemaName"] as string;
+
+      const geojson = passport?.data?.[fn];
+      if (geojson && schemaName) {
+        const geoBuff = Buffer.from(JSON.stringify(geojson, null, 2));
+        zip.addFile({
+          name: `${schemaName}.geojson`,
+          buffer: geoBuff,
+        });
+
+        const mapAndLabelHTML = generateMapAndLabelHTML({
+          geojson: geojson,
+          boundingBox: breadcrumbData?.["boundaryBBox"],
+          drawColor: breadcrumbData?.["drawColor"],
+          schemaFieldValues: breadcrumbData?.["schema"]?.["fields"]?.map(
+            (field: any) => field.data?.fn,
+          ),
+          schemaName: schemaName,
+        });
+        zip.addFile({
+          name: `${schemaName}.html`,
+          buffer: Buffer.from(mapAndLabelHTML),
+        });
+      }
     });
   }
 

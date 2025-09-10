@@ -12,6 +12,7 @@ import { FormikProps, useFormik } from "formik";
 import { Feature, FeatureCollection } from "geojson";
 import { GeoJSONChange, GeoJSONChangeEvent, useGeoJSONChange } from "lib/gis";
 import { get } from "lodash";
+import { Store, useStore } from "pages/FlowEditor/lib/store";
 import React, {
   createContext,
   PropsWithChildren,
@@ -56,6 +57,7 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
     schema,
     previousValues: getPreviouslySubmittedData(props),
   });
+  const passportData = useStore().computePassport()?.data;
 
   // Deconstruct GeoJSON saved to passport back into form data and map data
   const previousGeojson = previouslySubmittedData?.data?.[
@@ -91,9 +93,26 @@ export const MapAndLabelProvider: React.FC<MapAndLabelProviderProps> = (
 
       const defaultPassportData = makeData(props, geojson)?.["data"];
 
+      // Add extra context to breadcrumb `data` so we can produce
+      //   payload docs based on session alone without fetching/joining to whole flow later
+      const extraPassportData: Store.UserData["data"] = {};
+
+      const priorComponents = passportData?.["_mapAndLabelVisitedNodes"] as
+        | string[]
+        | undefined;
+      extraPassportData["_mapAndLabelVisitedNodes"] =
+        props.id && priorComponents?.length
+          ? priorComponents.concat([props.id])
+          : [props.id];
+
+      // This key will only be referenced at the individual breadcrumb level,
+      //   it's okay if multiple MapAndLabels overwrite eachother when the passport is computed
+      extraPassportData["_mapAndLabelNodeData"] = props;
+
       handleSubmit?.({
         data: {
           ...defaultPassportData,
+          ...extraPassportData,
         },
       });
     },
