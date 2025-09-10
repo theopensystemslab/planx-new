@@ -83,7 +83,7 @@ const ExternalPortal: React.FC<any> = (props) => {
         id={props.id}
         text="Corrupted external portal: flow no longer exists"
         lockedFlow
-        showTemplatedNodeStatus
+        showTemplatedNodeStatus={props.showTemplatedNodeStatus}
       />
     );
   }
@@ -102,7 +102,13 @@ const ExternalPortal: React.FC<any> = (props) => {
             isDragging,
           })}
         >
-          <Box className="card-wrapper">
+          <TemplatedNodeContainer
+            isTemplatedNode={props.data?.isTemplatedNode}
+            areTemplatedNodeInstructionsRequired={
+              props.data?.areTemplatedNodeInstructionsRequired
+            }
+            showStatus={props.showTemplatedNodeStatus}
+          >
             <Box sx={{ display: "flex", alignItems: "stretch" }}>
               <Link href={`/${href}`} prefetch={false} ref={drag}>
                 <EditorIcon />
@@ -112,7 +118,7 @@ const ExternalPortal: React.FC<any> = (props) => {
                 <MoreVert titleAccess="Edit Portal" />
               </Link>
             </Box>
-          </Box>
+          </TemplatedNodeContainer>
           {showTags && props.data?.tags?.length > 0 && (
             <Box className="card-tag-list">
               {props.data.tags.map((tag: NodeTag) => (
