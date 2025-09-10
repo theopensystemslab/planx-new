@@ -78,7 +78,7 @@ const NodeTypeSelect: React.FC<{
         <option value={TYPES.ContactInput}>Contact input</option>
         <option value={TYPES.List}>List</option>
         <option value={TYPES.Page}>Page</option>
-        <option value={TYPES.MapAndLabel}>Map and label (testing only)</option>
+        <option value={TYPES.MapAndLabel}>Map and label</option>
         <option value={TYPES.Feedback}>Feedback</option>
       </optgroup>
       <optgroup label="Information">
