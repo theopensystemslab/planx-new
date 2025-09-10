@@ -2,7 +2,7 @@ import { useTheme } from "@mui/material/styles";
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import * as React from "react";
 
-export default function EditorIcon(props: SvgIconProps) {
+export default function ToggleOverlay(props: SvgIconProps) {
   const theme = useTheme();
   const inactiveColor = theme.palette.text.disabled;
   const overlayColor = theme.palette.background.paper;

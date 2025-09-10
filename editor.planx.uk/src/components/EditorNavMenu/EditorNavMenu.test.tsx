@@ -1,4 +1,4 @@
-import { getByLabelText, within } from "@testing-library/react";
+import { within } from "@testing-library/react";
 import React from "react";
 import * as ReactNavi from "react-navi";
 import { setup } from "testUtils";
@@ -82,7 +82,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(7);
+    expect(menuItems).toHaveLength(8);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 
@@ -91,7 +91,7 @@ describe("teamLayoutRoutes", () => {
 
     const { getAllByRole } = setup(<EditorNavMenu />);
     const menuItems = getAllByRole("listitem");
-    expect(menuItems).toHaveLength(7);
+    expect(menuItems).toHaveLength(8);
     expect(within(menuItems[0]).getByText("Flows")).toBeInTheDocument();
   });
 });

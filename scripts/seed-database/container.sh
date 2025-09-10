@@ -23,18 +23,19 @@ tables=(
   flows 
   users 
   teams 
-  flow_document_templates 
   team_members 
   team_themes
   team_settings
+  templated_flow_edits
   # Optional tables
   # Please comment in if working on a feature and you require example data locally
   # You will need to manually grant select permissions to the github_actions on production, and update main.sql
   # feedback
   # flow_comments
+  # lowcal_sessions
 )
 
-# run copy commands on remote  db
+# run copy commands on remote db
 for table in "${tables[@]}"; do
   target=/tmp/${table}.csv
   read_cmd="\\copy (SELECT * FROM ${table}) TO ${target} WITH (FORMAT csv, DELIMITER ';');"

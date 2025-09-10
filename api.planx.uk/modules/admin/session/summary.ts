@@ -71,7 +71,7 @@ interface SessionSummary {
     >[];
     invitations_to_pay?: Pick<
       PaymentRequest,
-      "createdAt" | "govPayPaymentId" | "paymentAmount" | "paidAt"
+      "id" | "createdAt" | "govPayPaymentId" | "paymentAmount" | "paidAt"
     >[];
   };
 }
@@ -107,6 +107,7 @@ const getSessionSummaryById = async (
             status
           }
           invitations_to_pay: payment_requests(order_by: { created_at: desc }) {
+            id
             created_at
             govpay_payment_id
             payment_amount

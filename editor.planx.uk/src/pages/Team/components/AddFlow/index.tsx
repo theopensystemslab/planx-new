@@ -5,11 +5,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import { logger } from "airbrake";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import React, { useState } from "react";
 import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
+import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { useStore } from "../../../FlowEditor/lib/store";
 import { BaseFormSection } from "./BaseFormSection";
@@ -38,7 +40,7 @@ export const AddFlow: React.FC = () => {
 
   const onSubmit: FormikConfig<CreateFlow>["onSubmit"] = async (
     { mode, flow },
-    { setFieldError },
+    { setFieldError, setStatus },
   ) => {
     try {
       switch (mode) {
@@ -59,10 +61,19 @@ export const AddFlow: React.FC = () => {
         const message = error?.response?.data?.error;
         if (message?.includes("Uniqueness violation")) {
           setFieldError("flow.name", "Flow name must be unique");
+          return;
+        }
+        if (message?.includes("Invalid HTML")) {
+          logger.notify(`Invalid HTML content found in flow ${flow.sourceId}`);
+          setStatus({
+            error:
+              "Failed to create new flow due to a content issue with the source flow, please contact PlanX support. This error has been logged.",
+          });
+          return;
         }
       }
 
-      throw error;
+      setStatus({ error: "Failed to create flow, please try again." });
     }
   };
 
@@ -78,7 +89,7 @@ export const AddFlow: React.FC = () => {
         validateOnChange={false}
         validationSchema={validationSchema}
       >
-        {({ resetForm, isSubmitting }) => (
+        {({ resetForm, isSubmitting, status }) => (
           <Dialog
             open={dialogOpen}
             onClose={() => {
@@ -98,10 +109,18 @@ export const AddFlow: React.FC = () => {
             </DialogTitle>
             <Box>
               <Form>
-                <DialogContent
-                  sx={{ gap: 2, display: "flex", flexDirection: "column" }}
-                >
-                  <BaseFormSection />
+                <DialogContent>
+                  <ErrorWrapper error={status?.error}>
+                    <Box
+                      sx={{
+                        gap: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <BaseFormSection />
+                    </Box>
+                  </ErrorWrapper>
                 </DialogContent>
                 <DialogActions>
                   <Button

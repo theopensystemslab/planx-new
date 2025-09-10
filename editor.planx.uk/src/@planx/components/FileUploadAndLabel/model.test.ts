@@ -9,6 +9,8 @@ import {
   mockFileListWithoutSlots,
   mockFileTypes,
   mockSlot,
+  mockSlots,
+  mockSlotsMultiple,
 } from "./mocks";
 import {
   addOrAppendSlots,
@@ -372,7 +374,7 @@ describe("createFileList function", () => {
 
 describe("generatePayload function", () => {
   it("maps the FileList to the correct format", () => {
-    const result = generatePayload(mockFileList);
+    const result = generatePayload(mockFileList, mockSlots);
 
     // Passport data constructed
     expect(result).toHaveProperty("data");
@@ -405,19 +407,39 @@ describe("generatePayload function", () => {
       ],
     } as FileList;
 
-    const result = generatePayload(mockFileListWithEmptySlot);
+    const result = generatePayload(mockFileListWithEmptySlot, mockSlots);
     expect(result.data).toHaveProperty("requiredFileFn");
     expect(result.data).toHaveProperty("recommendedFileFn");
     expect(result.data).not.toHaveProperty("optionalFileFn");
   });
 
   it("maps multiple different user uploaded files, tagged as the same fileType, to a single passport key", () => {
-    const result = generatePayload(mockFileListMultiple);
+    const result = generatePayload(mockFileListMultiple, mockSlotsMultiple);
     expect(result.data).toHaveProperty("fileFn");
     expect(result.data?.fileFn).toHaveLength(3);
     expect(result.data?.fileFn?.[0].filename).toEqual("first.jpg");
     expect(result.data?.fileFn?.[1].filename).toEqual("second.jpg");
     expect(result.data?.fileFn?.[2].filename).toEqual("third.jpg");
+  });
+
+  it("maps the most recent validated slot into the payload", () => {
+    // Setup mock of a file list which was tagged whilst the upload was in progress
+    const fileListWithUploadingFiles = structuredClone(mockFileList);
+    fileListWithUploadingFiles.required[0].slots![0].url = undefined;
+    fileListWithUploadingFiles.required[0].slots![0].status = "uploading";
+    fileListWithUploadingFiles.required[0].slots![0].progress = 0.5;
+
+    // mockSlots is always validated before generatePayload() is called - it will always contain validates (uploaded) files
+    const result = generatePayload(fileListWithUploadingFiles, mockSlots);
+
+    // The validated slot is mapped to the payload, not the state of the slot when it was tagged
+    expect(result.data?.requiredFileFn[0].url).toEqual(mockSlots[0].url);
+    expect(result.data?.requiredFileFn[0].cachedSlot.status).toEqual(
+      mockSlots[0].status,
+    );
+    expect(result.data?.requiredFileFn[0].cachedSlot.progress).toEqual(
+      mockSlots[0].progress,
+    );
   });
 });
 

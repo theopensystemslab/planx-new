@@ -1,7 +1,8 @@
-import type {
-  Session,
-  PaymentRequest,
-  FlowGraph,
+import {
+  type Session,
+  type PaymentRequest,
+  type FlowGraph,
+  ComponentType,
 } from "@opensystemslab/planx-core/types";
 import type { Flow } from "../../types.js";
 
@@ -145,11 +146,11 @@ export const flowGraph: FlowGraph = {
 
 export const flowWithInviteToPay: Flow["data"] = {
   _root: {
-    edges: ["FindProperty", "Checklist", "SetValue", "Pay", "Send"],
+    edges: ["FindProperty", "Checklist", "Calculate", "SetFee", "Pay", "Send"],
   },
   Pay: {
     data: {
-      fn: "fee",
+      fn: "application.fee.payable",
       title: "Pay for your application",
       bannerTitle: "The planning fee for this application is",
       description:
@@ -163,30 +164,48 @@ export const flowWithInviteToPay: Flow["data"] = {
       instructionsDescription:
         "<p>You can pay for your application by using GOV.UK Pay.</p>         <p>Your application will be sent after you have paid the fee.          Wait until you see an application sent message before closing your browser.</p>",
     },
-    type: 400,
+    type: ComponentType.Pay,
   },
-  SetValue: {
-    type: 380,
+  Calculate: {
+    type: ComponentType.Calculate,
     data: {
-      fn: "fee",
-      val: "1",
+      fn: "application.fee.calculated",
+      tags: [],
+      title: "Initial fee = 200",
+      formula: "200",
+      samples: {},
+      defaults: {},
+      formatOutputForAutomations: false,
+    },
+  },
+  SetFee: {
+    type: ComponentType.SetFee,
+    data: {
+      fn: "application.fee.payable",
+      tags: [],
+      applyCalculatedVAT: false,
+      applyServiceCharge: false,
+      fastTrackFeeAmount: 0,
+      serviceChargeAmount: 40,
+      applyPaymentProcessingFee: false,
+      paymentProcessingFeePercentage: 0.01,
     },
   },
   FindProperty: {
-    type: 9,
+    type: ComponentType.FindProperty,
     data: {
       allowNewAddresses: false,
     },
   },
   Send: {
-    type: 650,
+    type: ComponentType.Send,
     data: {
       title: "Send",
       destinations: ["email"],
     },
   },
   Checklist: {
-    type: 105,
+    type: ComponentType.Checklist,
     data: {
       allRequired: false,
       fn: "proposal.projectType",
@@ -199,13 +218,13 @@ export const flowWithInviteToPay: Flow["data"] = {
       text: "Alter",
       val: "alter",
     },
-    type: 200,
+    type: ComponentType.Answer,
   },
   ChecklistOptionTwo: {
     data: {
       text: "Build new",
       val: "new",
     },
-    type: 200,
+    type: ComponentType.Answer,
   },
 };

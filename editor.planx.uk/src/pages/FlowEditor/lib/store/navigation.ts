@@ -13,7 +13,7 @@ export interface SectionNode extends Store.Node {
   data: Section;
 }
 
-export interface Progress { 
+export interface Progress {
   completed: number;
   current: number;
 }
@@ -29,7 +29,10 @@ export interface NavigationStore {
   filterFlowByType: (type: TYPES) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
-  getSectionProgress: () => Progress | undefined;
+  _calculateSectionProgress: (
+    currentSectionIndex: number,
+  ) => Progress | undefined;
+  sectionProgress: Progress | undefined;
 }
 
 export const navigationStore: StateCreator<
@@ -61,11 +64,15 @@ export const navigationStore: StateCreator<
     const hasSections = Boolean(sectionCount);
     const currentSectionTitle = Object.values(sectionNodes)[0]?.data.title;
 
+    const { currentSectionIndex, _calculateSectionProgress } = get();
+    const sectionProgress = _calculateSectionProgress(currentSectionIndex);
+
     set({
       sectionNodes,
       sectionCount,
       hasSections,
       currentSectionTitle,
+      sectionProgress,
     });
   },
 
@@ -74,21 +81,19 @@ export const navigationStore: StateCreator<
    * Triggered when going backwards, forwards, or changing answer
    */
   updateSectionData: () => {
-    const { breadcrumbs, sectionNodes, hasSections, currentCard } = get();
+    const {
+      breadcrumbs,
+      sectionNodes,
+      hasSections,
+      currentCard,
+      _calculateSectionProgress,
+    } = get();
     // Sections not being used, do not proceed
     if (!hasSections) return;
 
     const breadcrumbIds = Object.keys(breadcrumbs);
     const sectionIds = Object.keys(sectionNodes);
-
-    const hasPassedFirstSection = Boolean(
-      findLast(breadcrumbIds, (breadcrumbId: string) =>
-        sectionIds.includes(breadcrumbId),
-      ),
-    );
-
-    // No sections in breadcrumbs, first section values already set in store
-    if (!hasPassedFirstSection) return;
+    const sectionIdsSet = new Set(sectionIds);
 
     // Transition to a new section index as soon as a section is reached
     // It won't yet be in the breadcrumbs but should count as the starting point of the next section
@@ -97,16 +102,22 @@ export const navigationStore: StateCreator<
 
     const mostRecentSectionId = findLast(
       breadcrumbIds,
-      (breadcrumbId: string) => sectionIds.includes(breadcrumbId),
+      (breadcrumbId: string) => sectionIdsSet.has(breadcrumbId),
     );
+
+    const hasPassedFirstSection = Boolean(mostRecentSectionId);
+
+    // No sections in breadcrumbs, first section values already set in store
+    if (!hasPassedFirstSection) return;
 
     // No sections in breadcrumbs, first section values already set in store
     if (!mostRecentSectionId) return;
 
     const currentSectionTitle = sectionNodes[mostRecentSectionId].data.title;
     const currentSectionIndex = sectionIds.indexOf(mostRecentSectionId) + 1;
+    const sectionProgress = _calculateSectionProgress(currentSectionIndex);
 
-    set({ currentSectionTitle, currentSectionIndex });
+    set({ currentSectionTitle, currentSectionIndex, sectionProgress });
     console.debug("section state updated"); // used as a transition trigger in e2e tests
   },
 
@@ -181,9 +192,10 @@ export const navigationStore: StateCreator<
     return section;
   },
 
-  getSectionProgress: () => {
-    const { sectionNodes, currentSectionIndex, isFinalCard, sectionCount } =
-      get();
+  sectionProgress: undefined,
+
+  _calculateSectionProgress: (currentSectionIndex: number) => {
+    const { sectionNodes, isFinalCard, sectionCount } = get();
     if (!sectionCount) return;
 
     if (isFinalCard()) return { completed: 100, current: 100 };

@@ -52,7 +52,9 @@ export const CopyFeature: React.FC<Props> = ({
             required
             title={"Copy from"}
             value={formik.values.sourceLabel}
-            onChange={formik.handleChange}
+            onChange={(e) =>
+              formik.setFieldValue("sourceLabel", e.target.value)
+            }
             sx={{ width: { xs: "150px", md: "200px" } }}
           >
             <span id="copy-feature-description" style={visuallyHidden}>

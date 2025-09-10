@@ -41,13 +41,6 @@ array_relationships:
         remote_table:
           name: flow_comments
           schema: public
-  - name: document_templates
-    using:
-      foreign_key_constraint_on:
-        column: flow_id
-        table:
-          name: flow_document_templates
-          schema: public
   - name: feedback
     using:
       foreign_key_constraint_on:
@@ -121,6 +114,7 @@ insert_permissions:
         - data
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -186,6 +180,7 @@ insert_permissions:
         - data
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -224,6 +219,7 @@ insert_permissions:
         - data
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -255,6 +251,7 @@ select_permissions:
         - deleted_at
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -323,6 +320,7 @@ select_permissions:
         - deleted_at
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -349,6 +347,7 @@ select_permissions:
         - data
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -377,6 +376,7 @@ select_permissions:
         - deleted_at
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -405,6 +405,7 @@ update_permissions:
         - data
         - description
         - id
+        - is_listed_on_lps
         - limitations
         - name
         - settings
@@ -497,6 +498,7 @@ update_permissions:
         - data
         - deleted_at
         - description
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
@@ -533,6 +535,7 @@ update_permissions:
         - data
         - deleted_at
         - description
+        - is_listed_on_lps
         - limitations
         - name
         - settings

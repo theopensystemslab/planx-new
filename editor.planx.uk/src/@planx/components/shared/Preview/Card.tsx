@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
-import { styled, SxProps,Theme, useTheme } from "@mui/material/styles";
+import { styled, SxProps, Theme, useTheme } from "@mui/material/styles";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React, { useEffect } from "react";

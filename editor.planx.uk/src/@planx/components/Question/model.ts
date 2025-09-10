@@ -33,9 +33,9 @@ export const validationSchema = baseNodeDataValidationSchema
           data: object({
             text: string().required().trim(),
           }),
-        })
+        }),
       ),
-    })
+    }),
   )
   .test({
     name: "uniqueLabels",

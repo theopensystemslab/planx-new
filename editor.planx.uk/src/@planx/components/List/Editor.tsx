@@ -19,9 +19,11 @@ import { ICONS } from "../shared/icons";
 import { EditorProps } from "../shared/types";
 import { List, parseContent, validationSchema } from "./model";
 import { ProposedAdvertisements } from "./schemas/Adverts";
+import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
 import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
 import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
+import { DischargeConditions } from "./schemas/DischargeConditions";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
 import { CommunalSpaceGLA } from "./schemas/GLA/CommunalSpace";
@@ -32,6 +34,7 @@ import { ProtectedSpaceGLA } from "./schemas/GLA/ProtectedSpace";
 import { InterestInLandLDC } from "./schemas/InterestInLandLDC";
 import { MaterialDetails } from "./schemas/Materials";
 import { MaterialDetailsLBC } from "./schemas/MaterialsLBC";
+import { Zoo } from "./schemas/mocks/Zoo/schema";
 import { OwnershipCertificateOwners } from "./schemas/OwnershipCertificateOwners";
 import { Parking } from "./schemas/Parking";
 import { ResidentialUnitsExisting } from "./schemas/ResidentialUnits/Existing";
@@ -40,6 +43,8 @@ import { ResidentialUnitsGLAGained } from "./schemas/ResidentialUnits/GLA/Gained
 import { ResidentialUnitsGLALost } from "./schemas/ResidentialUnits/GLA/Lost";
 import { ResidentialUnitsPreviousLDCE } from "./schemas/ResidentialUnits/PreviousLDCE";
 import { ResidentialUnitsProposed } from "./schemas/ResidentialUnits/Proposed";
+import { TreeDescriptionCA } from "./schemas/TreeDescriptionCA";
+import { TreeDescriptionTPO } from "./schemas/TreeDescriptionTPO";
 import { Trees } from "./schemas/Trees";
 
 type Props = EditorProps<TYPES.List, List>;
@@ -85,7 +90,10 @@ export const SCHEMAS = [
     name: "Ownership certificate - Owners",
     schema: OwnershipCertificateOwners,
   },
-  { name: "Sketch Plan (testing only)", schema: Trees },
+  { name: "Amend documents", schema: AmendDocuments },
+  { name: "Discharge conditions", schema: DischargeConditions },
+  { name: "Tree description - Conservation Area", schema: TreeDescriptionCA },
+  { name: "Tree description - TPO", schema: TreeDescriptionTPO },
 ];
 
 function ListComponent(props: Props) {

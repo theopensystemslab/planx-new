@@ -5,10 +5,10 @@ import {
 } from "@planx/components/shared";
 import { richText } from "lib/yupExtensions";
 import { FileWithPath } from "react-dropzone";
-import { array, object } from "yup";
+import { array, object, SchemaOf, string } from "yup";
 
 export interface FileUpload extends BaseNodeData {
-  title?: string;
+  title: string;
   fn: string;
   description?: string;
 }
@@ -69,8 +69,22 @@ export const slotsSchema = array()
     },
   });
 
-export const validationSchema = baseNodeDataValidationSchema.concat(
-  object({
-    description: richText(),
-  }),
-);
+export const validationSchema: SchemaOf<FileUpload> =
+  baseNodeDataValidationSchema.concat(
+    object({
+      description: richText(),
+      title: string().required(),
+      fn: string().required(),
+    }),
+  );
+
+export const fileUploadValidationSchema = ({
+  required,
+}: {
+  required: boolean;
+}) =>
+  array().when([], {
+    is: () => required,
+    then: slotsSchema,
+    otherwise: array().optional(),
+  });
