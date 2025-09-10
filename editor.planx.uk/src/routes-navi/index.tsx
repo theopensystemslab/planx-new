@@ -7,54 +7,51 @@ import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Login from "../pages/Login/Login";
 import { isPreviewOnlyDomain, makeTitle } from "./utils";
 
-type RoutingContext = {
-  currentUser?: any;
-};
+// type RoutingContext = {
+//   currentUser?: any;
+// };
 
 const editorRoutes = mount({
-  "/network-error": route({
-    title: makeTitle("Network Error"),
-    view: <ErrorPage title="Network error" />,
-  }),
-
-  // "/login": map(async (req, context: RoutingContext) =>
-  //   context.currentUser
-  //     ? redirect(
-  //         req.params.redirectTo
-  //           ? decodeURIComponent(req.params.redirectTo)
-  //           : "/",
-  //       )
-  //     : route({
-  //         title: makeTitle("Login"),
-  //         view: <Login />,
-  //       }),
-  // ),
-
-  "/logout": map((): any => {
-    try {
-      client.resetStore();
-    } catch (err) {
-      console.error(err);
-    } finally {
-      const cookieString = `auth=; jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      // remove jwt cookie for non planx domains (netlify preview urls)
-      document.cookie = cookieString;
-      // remove jwt cookie for planx domains (staging and production)
-      document.cookie = cookieString.concat(
-        ` domain=.${window.location.host};`,
-      );
-      // redirect to editor landing page with no jwt cookie set
-      window.location.href = "/";
-    }
-  }),
-
-  "*": map(async (req, context: RoutingContext) =>
-    context.currentUser
-      ? lazy(() => import("./authenticated"))
-      : redirect(`/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`, {
-          exact: false,
-        }),
-  ),
+  // "/network-error": route({
+  //   title: makeTitle("Network Error"),
+  //   view: <ErrorPage title="Network error" />,
+  // }),
+  //   // "/login": map(async (req, context: RoutingContext) =>
+  //   //   context.currentUser
+  //   //     ? redirect(
+  //   //         req.params.redirectTo
+  //   //           ? decodeURIComponent(req.params.redirectTo)
+  //   //           : "/",
+  //   //       )
+  //   //     : route({
+  //   //         title: makeTitle("Login"),
+  //   //         view: <Login />,
+  //   //       }),
+  //   // ),
+  //   "/logout": map((): any => {
+  //     try {
+  //       client.resetStore();
+  //     } catch (err) {
+  //       console.error(err);
+  //     } finally {
+  //       const cookieString = `auth=; jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  //       // remove jwt cookie for non planx domains (netlify preview urls)
+  //       document.cookie = cookieString;
+  //       // remove jwt cookie for planx domains (staging and production)
+  //       document.cookie = cookieString.concat(
+  //         ` domain=.${window.location.host};`,
+  //       );
+  //       // redirect to editor landing page with no jwt cookie set
+  //       window.location.href = "/";
+  //     }
+  //   }),
+  //   "*": map(async (req, context: RoutingContext) =>
+  //     context.currentUser
+  //       ? lazy(() => import("./authenticated"))
+  //       : redirect(`/login/?redirectTo=${encodeURIComponent(req.originalUrl)}`, {
+  //           exact: false,
+  //         }),
+  //   ),
 });
 
 const loadSendToEmailRoutes = () =>
