@@ -1,6 +1,5 @@
 import StarIcon from "@mui/icons-material/Star";
 import { useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import { BaseNodeData } from "@planx/components/shared";
 import { useStore } from "pages/FlowEditor/lib/store";
 import React from "react";

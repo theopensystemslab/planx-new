@@ -71,7 +71,11 @@ const Filter: React.FC<Props> = React.memo((props) => {
         </Link>
         <ol className="options">
           {childNodes.map((child: any) => (
-            <Node key={child.id} {...child} />
+            <Node
+              key={child.id}
+              {...child}
+              showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+            />
           ))}
         </ol>
       </li>
