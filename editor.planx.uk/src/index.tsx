@@ -119,9 +119,13 @@ root.render(
   <ToastContextProvider>
     <ApolloProvider client={client}>
       <AnalyticsProvider>
-        {/* TanStack Router for migrated routes */}
-        <TanStackRouterProvider router={tanstackRouter} />
-        {/* React Navi for legacy routes */}
+        {/* Use only TanStack Router during initial migration */}
+        <Layout>
+          <CssBaseline />
+          <TanStackRouterProvider router={tanstackRouter} />
+        </Layout>
+
+        {/* React Navi temporarily disabled for testing TanStack Router
         <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
           <HelmetProvider>
             <Layout>
@@ -132,6 +136,7 @@ root.render(
             </Layout>
           </HelmetProvider>
         </Router>
+        */}
       </AnalyticsProvider>
     </ApolloProvider>
     <ToastContainer icon={false} theme="colored" />
