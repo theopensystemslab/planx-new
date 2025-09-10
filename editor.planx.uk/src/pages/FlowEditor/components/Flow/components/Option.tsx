@@ -19,8 +19,8 @@ const Option: React.FC<any> = (props) => {
   try {
     // Question & Checklist Options set zero or many flag values under "data.flags"
     if (props.data?.flags) {
-      flags = flatFlags.filter(
-        ({ value }) => props.data?.flags?.includes(value),
+      flags = flatFlags.filter(({ value }) =>
+        props.data?.flags?.includes(value),
       );
     }
 
@@ -31,7 +31,7 @@ const Option: React.FC<any> = (props) => {
         flags = flatFlags.filter(({ value }) => props.data.val === value);
       }
     }
-  } catch (e) { }
+  } catch (e) {}
 
   return (
     <li
@@ -57,7 +57,14 @@ const Option: React.FC<any> = (props) => {
         )}
       </Link>
       <ol className="decisions">
-        {childNodes.map((child: any) => (<Node key={child.id} parent={props.id} {...child} />))}
+        {childNodes.map((child: any) => (
+          <Node
+            key={child.id}
+            parent={props.id}
+            {...child}
+            showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+          />
+        ))}
         <Hanger parent={props.id} />
       </ol>
     </li>

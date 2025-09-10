@@ -142,7 +142,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
                 <span>{title}</span>
                 <ol className="options">
                   {children.map((child: any) => (
-                    <Node key={child.id} {...child} />
+                    <Node
+                      key={child.id}
+                      {...child}
+                      showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+                    />
                   ))}
                 </ol>
               </li>
@@ -151,7 +155,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
         ) : (
           <ol className="options">
             {childNodes.map((child: any) => (
-              <Node key={child.id} {...child} />
+              <Node
+                key={child.id}
+                {...child}
+                showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+              />
             ))}
           </ol>
         )}
