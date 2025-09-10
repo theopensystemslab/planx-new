@@ -194,7 +194,6 @@ export async function buildSubmissionExportZip({
             (field: any) => field.data?.fn,
           ),
           schemaName: schemaName,
-          osApiKey: process.env.ORDNANCE_SURVEY_API_KEY || "",
         });
         zip.addFile({
           name: `${schemaName}.html`,
