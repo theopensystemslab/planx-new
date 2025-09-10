@@ -1,6 +1,7 @@
 import {
   ComponentType,
   type FlowGraph,
+
   type Node,
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
@@ -43,6 +44,7 @@ export const publishFlow = async (
   if (!delta) return null;
 
   const hasSendComponent = hasComponentType(flattenedFlow, ComponentType.Send);
+  const hasSections = hasComponentType(flattenedFlow, ComponentType.Section);
 
   const { client: $client } = getClient();
   const response = await $client.request<PublishFlow>(
@@ -53,6 +55,7 @@ export const publishFlow = async (
         $publisher_id: Int
         $summary: String
         $has_send_component: Boolean
+        $has_sections: Boolean
       ) {
         publishedFlow: insert_published_flows_one(
           object: {
@@ -61,6 +64,7 @@ export const publishFlow = async (
             publisher_id: $publisher_id
             summary: $summary
             has_send_component: $has_send_component
+            has_sections: $has_sections
           }
         ) {
           id
@@ -77,6 +81,7 @@ export const publishFlow = async (
       publisher_id: parseInt(userId),
       summary: summary,
       has_send_component: hasSendComponent,
+      has_sections: hasSections
     },
   );
 
