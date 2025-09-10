@@ -17,6 +17,7 @@ export interface GetFlowDataResponse {
   limitations: string | null;
   team_id: number;
   team: { slug: string };
+  templatedFrom: string | null;
   publishedFlows:
     | {
         data: Flow["data"];
@@ -46,6 +47,7 @@ const getFlowData = async (id: string): Promise<GetFlowDataResponse> => {
           team {
             slug
           }
+          templatedFrom: templated_from
           publishedFlows: published_flows(
             limit: 1
             order_by: { created_at: desc }
@@ -418,6 +420,7 @@ const dataMerged = async (
         data: {
           text: `${team.slug}/${slug}`,
           flattenedFromExternalPortal: true,
+          templatedFrom: response.templatedFrom,
           // add extra metadata about latest published version when applicable
           ...(!draftDataOnly && {
             publishedFlowId: publishedFlows?.[0]?.id,
