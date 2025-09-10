@@ -62,9 +62,14 @@ const hasJWT = (): boolean | void => {
 
   // Remove JWT from URL, and re-run this function
   setCookie("jwt", jwtSearchParams);
-  setCookie("auth", { loggedIn: true });
-  // TODO: observe any redirect in secure fashion
-  window.location.href = "/";
+  setCookie("auth", JSON.stringify({ loggedIn: true }));
+  // Remove the jwt param from the URL
+  const url = new URL(window.location.href);
+  url.searchParams.delete("jwt");
+  window.history.replaceState({}, document.title, url.pathname + url.search);
+
+  // Return true to indicate authenticated state
+  return true;
 };
 
 // Create a new router instance
