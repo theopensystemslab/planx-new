@@ -15,6 +15,8 @@ components:
         - team
         - address
         - createdAt
+        - updatedAt
+        - expiresAt
       properties:
         id:
           type: string
@@ -48,18 +50,37 @@ components:
         createdAt:
           type: string
           format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        progress:
+          type: object
+          required:
+            - completed
+          properties:
+            completed:
+              type: number
     DraftLPSApplication:
       allOf:
         - $ref: "#/components/schemas/LPSApplication"
         - type: object
           required:
-            - expiresAt
             - serviceUrl
           properties:
-            expiresAt:
-              type: string
-              format: date-time
             serviceUrl:
+              type: string
+              format: uri
+    AwaitingPaymentLPSApplication:
+      allOf:
+        - $ref: "#/components/schemas/LPSApplication"
+        - type: object
+          required:
+            - paymentUrl
+          properties:
+            paymentUrl:
               type: string
               format: uri
     SubmittedLPSApplication:
@@ -110,19 +131,12 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - drafts
-              - submitted
-            properties:
-              drafts:
-                type: array
-                items:
-                  $ref: "#/components/schemas/DraftLPSApplication"
-              submitted:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SubmittedLPSApplication"
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/components/schemas/DraftLPSApplication"
+                - $ref: "#/components/schemas/SubmittedLPSApplication"
+                - $ref: "#/components/schemas/AwaitingPaymentLPSApplication"
     ApplicationsResponseError:
       type: object
       properties:

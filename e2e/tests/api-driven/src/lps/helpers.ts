@@ -182,8 +182,10 @@ export const getApplications = async (
     body: JSON.stringify({ email, token }),
   });
 
-  const body = await response.json();
   const status = response.status;
+  const body = await response.json();
+
+  if (status === 200) return { applications: body, status };
 
   return { ...body, status };
 };
