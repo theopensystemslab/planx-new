@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW "public"."analytics_aggregated_materialized";
