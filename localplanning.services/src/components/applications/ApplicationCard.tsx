@@ -18,11 +18,12 @@ export const ApplicationCard: React.FC<Props> = ({ application }) => {
   
   return (
     <li className="bg-bg-light rounded overflow-hidden">
-      <div className="clamp-[p,4,6]">
+      <div className="clamp-[p,4,6] clamp-[pb,2,4]">
         <h3 className="text-heading-sm">{address || "—"}</h3>
-        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center">
-          <span className="text-body-lg">{team.name}</span>
-          <span className="text-body-lg">{service.name}</span>
+        <div className="flex flex-col lg:flex-row lg:justify-start lg:gap-2 lg:items-center">
+          <span className="text-body-lg mb-0">{team.name}</span>
+          <span className="hidden lg:inline">•</span>
+          <span className="text-body-lg mb-0">{service.name}</span>
         </div>
         
         <div className="my-2">

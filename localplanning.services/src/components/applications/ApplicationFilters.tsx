@@ -19,6 +19,14 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
     sent: true,
   });
 
+  // Default filter state
+  const defaultFilters: FilterState = {
+    search: '',
+    draft: true,
+    awaitingPayment: true,
+    sent: true,
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFilters = {
       ...filters,
@@ -37,11 +45,28 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
     onFilterChange(newFilters);
   };
 
+  const handleResetFilters = () => {
+    setFilters(defaultFilters);
+    onFilterChange(defaultFilters);
+  };
+
+  // Determine if filters are active
+  const isFiltersActive = () => {
+    return (
+      filters.search !== defaultFilters.search ||
+      filters.draft !== defaultFilters.draft ||
+      filters.awaitingPayment !== defaultFilters.awaitingPayment ||
+      filters.sent !== defaultFilters.sent
+    );
+  };
+
   const filterOptions = [
     { key: 'draft' as const, label: 'Draft applications', count: 2 },
     { key: 'awaitingPayment' as const, label: 'Awaiting payment', count: 1 },
     { key: 'sent' as const, label: 'Sent applications', count: 2 },
   ];
+
+  const isActive = isFiltersActive();
 
   return (
     <div className="bg-bg-light clamp-[p,4,6] rounded">
@@ -61,8 +86,8 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
       </div>
 
       {/* Status Filters */}
-      <h3 className="text-heading-xs mb-6">Application status</h3>
-      <div className="space-y-4">
+      <h3 className="text-heading-xs mb-4">Application status</h3>
+      <div className="space-y-4 mb-6">
         {filterOptions.map(({ key, label, count }) => (
           <div key={key} className="govuk-checkboxes__item relative">
             <input
@@ -98,14 +123,25 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange }) => {
                 )}
               </span>
               
-                <span className="text-body-lg mb-0 mt-1">
-                  {label} <span className="text-gray-600 text-body-md ml-0.5 mb-0">({count})</span>
-                </span>
-              
+              <span className="text-body-lg mb-0 mt-1">
+                {label} <span className="text-gray-600 text-body-md ml-0.5 mb-0">({count})</span>
+              </span>
             </label>
           </div>
         ))}
       </div>
+
+      <button
+        onClick={handleResetFilters}
+        disabled={!isActive}
+        className={`button button--secondary button--small button-focus-style ${
+          isActive 
+            ? '' 
+            : 'button--disabled'
+        }`}
+      >
+        Reset filters
+      </button>
     </div>
   );
 };

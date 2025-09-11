@@ -150,6 +150,9 @@
   .button--secondary {
     @apply bg-action-secondary hover:bg-action-secondary-hover text-white;
   }
+  .button--disabled {
+    @apply bg-gray-300 text-gray-500 hover:bg-gray-300 cursor-default;
+  }
 
   /* Button sizes */
   .button--large {
@@ -205,16 +208,13 @@
     background-color: var(--color-focus-yellow);
     box-shadow: 0 4px var(--color-focus-black);
   }
-
   .button-focus-style:focus {
     @apply outline-none text-[var(--color-focus-black)] no-underline;
     background-color: var(--color-focus-yellow) !important;
     box-shadow: inset 0 -4px var(--color-focus-black);
     border-radius: 0.25rem 0.25rem 0 0;
   }
-
 }
-
 
 :root {
   --postcode__input__height: var(--input-height);
