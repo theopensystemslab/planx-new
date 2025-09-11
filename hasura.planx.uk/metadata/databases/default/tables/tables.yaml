@@ -2,6 +2,7 @@
 - "!include public_analytics_action_nodes.yaml"
 - "!include public_analytics_aggregated_mini.yaml"
 - "!include public_analytics_exits.yaml"
+- "!include public_analytics_journey_results.yaml"
 - "!include public_analytics_logs.yaml"
 - "!include public_analytics_sessions.yaml"
 - "!include public_analytics_summary.yaml"
