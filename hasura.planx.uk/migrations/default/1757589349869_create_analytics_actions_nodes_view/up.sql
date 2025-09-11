@@ -5,6 +5,7 @@ SELECT
     a.id AS analytics_id,
     (al.allow_list_answers -> 'drawBoundary.action'::text)::text AS draw_boundary_action,
     al.node_type,
+    al.node_title,
     al.input_errors,
     al.has_clicked_save,
     al.has_clicked_help
