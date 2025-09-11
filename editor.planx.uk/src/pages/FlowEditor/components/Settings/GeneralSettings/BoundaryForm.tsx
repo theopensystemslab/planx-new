@@ -156,7 +156,7 @@ export default function BoundaryForm({ formikConfig, onSuccess }: FormProps) {
 
   // Cheltenham, Gloucester and Tewkesbury share a Strategic Local Plan
   //  This joint boundary is not hosted on PD, so we override the usual self-service input
-  const isSLPTeam = ["strategic-local-plan", "tewkesbury"].includes(teamSlug);
+  const isSLPTeam = ["strategic-and-local-plan", "tewkesbury"].includes(teamSlug);
 
   if (isSLPTeam) return <SLPInfo geojsonData={formik.values.boundaryBBox} />;
 
