@@ -72,8 +72,8 @@ export default function Component(props: Props) {
   // Buffer applied to the address point to clip this map extent
   //   and applied to the site boundary and written to the passport to later clip the map extent in overview documents
   let bufferInMeters: number = area && area > 15000 ? 300 : 120;
-  if (teamSlug === "tewkesbury") {
-    // Tewkesbury services uniquely support "Strategic Local Partnership" boundary which requires larger buffer
+  if (["strategic-local-plan", "tewkesbury"].includes(teamSlug)) {
+    // "Strategic Local Plan" teams uniquely support a joint boundary which requires larger buffer
     bufferInMeters = 10000;
   }
 
