@@ -204,8 +204,8 @@ jobs:
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
-          cache: 'pnpm'
-          cache-dependency-path: './${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml'
+          cache: "pnpm"
+          cache-dependency-path: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml"
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
@@ -461,7 +461,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
             ${{ runner.os }}-
-  
+
       - name: upload built localplanning.services
         uses: appleboy/scp-action@master
         with:
@@ -494,8 +494,8 @@ jobs:
     needs: [create_or_update_vultr_instance]
     runs-on: ubuntu-22.04
     steps:
-      - name: Wait for Vultr to warm up
-        run: bash -c "sleep 30s"
+      - name: Wait for caddy reverse-proxy server to provision TLS certs for pizza
+        run: bash -c "sleep 180s"
       - name: API healthcheck
         run: |
           timeout 150s bash -c "until curl --fail https://api.${{ env.FULL_DOMAIN }}; do sleep 1; done"
