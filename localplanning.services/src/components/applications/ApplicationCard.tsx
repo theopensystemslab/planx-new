@@ -16,6 +16,16 @@ export const ApplicationCard: React.FC<Props> = ({ application }) => {
   const isDownloadExpired = status === "submitted" && isExpired(application.downloadExpiresAt);
   const isDraftCompleteAwaitingPayment = status === "draft" && percentageComplete === 100 && inviteToPay === true;
   
+  const getProgressLabel = () => {
+    if (status === "submitted") {
+      return "Application submitted and complete";
+    } else if (isDraftCompleteAwaitingPayment) {
+      return "Application completed, awaiting payment";
+    } else {
+      return `Application progress: ${percentageComplete}% complete`;
+    }
+  };
+
   return (
     <li className="bg-bg-light rounded overflow-hidden">
       <div className="clamp-[p,4,6] clamp-[pb,2,4]">
@@ -27,13 +37,20 @@ export const ApplicationCard: React.FC<Props> = ({ application }) => {
         </div>
         
         <div className="my-2">
-          <div className="w-full bg-white rounded-full h-3 overflow-hidden border border-gray-300">
+          <div 
+            className="w-full bg-white rounded-full h-3 overflow-hidden border border-gray-300"
+            role="progressbar"
+            aria-valuenow={percentageComplete}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={getProgressLabel()}
+          >
             <div 
               className={`h-3 transition-all duration-300 ${
                 status === "submitted" ? "bg-green-600" : "bg-black"
               }`}
               style={{ width: `${percentageComplete}%` }}
-            ></div>
+            />
           </div>
         </div>
         
@@ -99,7 +116,6 @@ export const ApplicationCard: React.FC<Props> = ({ application }) => {
           </>
         )}
       </div>
-     
     </li>
   );
 };
