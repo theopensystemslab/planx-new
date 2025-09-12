@@ -123,26 +123,30 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* @ts-ignore-error */}
-      <geocode-autocomplete
-        ref={addressSearchRef}
-        label="Enter an address"
-        osProxyEndpoint={
-          `${PUBLIC_PLANX_REST_API_URL}/proxy/ordnance-survey`
-        }
-      />
-      <button type="submit" className="button button--primary button--medium mt-2">
-        Find the local planning authority
-      </button>
-      {matchingLpas?.length === 0 && (
-        <p className="mt-2">We couldn't find a local planning authority for this address.</p>
-      )}
-      {matchingLpas && matchingLpas?.length > 0 && (
-        <p className="mt-2">
-          Your local planning authorities are:{" "}
-          {matchingLpas?.map((e) => e.name)}
-        </p>
-      )}
+      <div className="flex flex-col gap-4 items-start">
+        <div className="max-w-3xl w-full">
+          {/* @ts-ignore-error */}
+          <geocode-autocomplete
+            ref={addressSearchRef}
+            label="Enter an address to search"
+            osProxyEndpoint={
+              `${PUBLIC_PLANX_REST_API_URL}/proxy/ordnance-survey`
+            }
+          />
+        </div>
+        <button type="submit" className="button button--primary button--medium button-focus-style">
+          Find the local planning authority
+        </button>
+        {matchingLpas?.length === 0 && (
+          <p className="mt-2">We couldn't find a local planning authority for this address.</p>
+        )}
+        {matchingLpas && matchingLpas?.length > 0 && (
+          <p className="mt-2">
+            Your local planning authorities are:{" "}
+            {matchingLpas?.map((e) => e.name)}
+          </p>
+        )}
+      </div>
     </form>
   );
 };

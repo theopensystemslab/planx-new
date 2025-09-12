@@ -49,6 +49,7 @@
   --input-padding-y: clamp(0.5rem, 2vw, 0.75rem);
   --input-padding-x: clamp(0.5rem, 2vw, 0.75rem);
   --input-font-size: clamp(1rem, 2vw, 1.125rem);
+  --input-label-font-size: clamp(1rem, 2vw, 1.125rem);
   --input-border-width: 2px;
   --input-border-color: var(--color-focus-black);
 
@@ -213,4 +214,7 @@
   --postcode__input__border: var(--input-border-width) solid var(--input-border-color);
   --postcode__input__width: var(--input-width);
   --postcode__input__max-width: var(--input-max-width);
+
+  --autocomplete__label__font-size: var(--input-label-font-size);
+  --autocomplete__font-family: var(--default-font-family);
 }
