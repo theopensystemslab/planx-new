@@ -19,6 +19,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
     props.previouslySubmittedData?.data?.[`_contact.${props.fn}`]?.[
       `${props.fn}`
     ];
+
   const formik = useFormik<Contact>({
     initialValues: previouslySubmittedData ?? {
       title: "",
@@ -54,6 +55,8 @@ export default function ContactInputComponent(props: Props): FCReturn {
     validateOnChange: false,
     validationSchema: userDataSchema,
   });
+
+  // TODO autoAnswer handling
 
   return (
     <Card handleSubmit={formik.handleSubmit}>

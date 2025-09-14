@@ -1,7 +1,12 @@
+import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { mixed, object, string } from "yup";
 
-import { BaseNodeData, baseNodeDataValidationSchema, parseBaseNodeData } from "../shared";
+import {
+  BaseNodeData,
+  baseNodeDataValidationSchema,
+  parseBaseNodeData,
+} from "../shared";
 
 export type UserData = string;
 
@@ -48,7 +53,7 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
       "extraLong",
       "email",
       "phone",
-      "custom"
+      "custom",
     ]),
     customLength: string().when("type", {
       is: "custom",
@@ -64,7 +69,9 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
           },
         }),
     }),
-  }));
+    autoAnswer: string().nullable(),
+  }),
+);
 
 export const textInputValidationSchema = ({
   data: { type, customLength },
@@ -119,6 +126,7 @@ export interface TextInput extends BaseNodeData {
   fn?: string;
   type?: TextInputType;
   customLength?: number;
+  autoAnswer?: Value;
 }
 
 export const parseTextInput = (

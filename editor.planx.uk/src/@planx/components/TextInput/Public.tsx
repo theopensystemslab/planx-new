@@ -2,7 +2,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import { CharacterCounter } from "ui/shared/CharacterCounter";
 import Input from "ui/shared/Input/Input";
@@ -35,6 +35,21 @@ const TextInputComponent: React.FC<Props> = (props) => {
   const characterCountLimit = getTextLimit(props.type, props.customLength);
   const displayCharacterCount =
     characterCountLimit > 120 && props.type !== "email";
+
+  // Auto-answered TextInputs still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (props.autoAnswer) {
+      props.handleSubmit?.({
+        ...makeData(props, props.autoAnswer),
+        auto: true,
+      });
+    }
+  }, [props.autoAnswer, props.handleSubmit]);
+
+  // Auto-answered TextInputs are not publicly visible
+  if (props.autoAnswer) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>

@@ -8,7 +8,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import { PublicProps } from "@planx/components/shared/types";
 import { useFormik } from "formik";
-import React, { useId } from "react";
+import React, { useEffect, useId } from "react";
 import DateInputComponent from "ui/shared/DateInput/DateInput";
 import InputRow from "ui/shared/InputRow";
 import { object } from "yup";
@@ -35,6 +35,21 @@ const DateInputPublic: React.FC<Props> = (props) => {
       date: dateInputValidationSchema({ data: props, required: true }),
     }),
   });
+
+  // Auto-answered DateInputs still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (props.autoAnswer) {
+      props.handleSubmit?.({
+        ...makeData(props, props.autoAnswer),
+        auto: true,
+      });
+    }
+  }, [props.autoAnswer, props.handleSubmit]);
+
+  // Auto-answered DateInputs are not publicly visible
+  if (props.autoAnswer) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit}>
