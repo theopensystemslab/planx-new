@@ -2,7 +2,7 @@ config:
   application:airbrake-project-id:
     secure: AAABABxcp8r3CZAw1kXuXkwPZ8cKRDQyOg4+gVvqzKuCFWb8BEU=
   application:airbrake-project-key:
-    secure: AAABABujxMHxU8Abj4QpyQTz7bLt3AP2wBFaypVkDZ2khzc6eh6lHLljTEkzpLUncno3gNNDXnrmxzXvqKnQdQ==
+    secure: AAABAJ0llO2jfZjF0MsWRzA2gpcp/FyZg8tBe8ZwPCOvZy4EepGkUH74GoBzAiroVh1Om5uAoGmVWirlLhJ7cA==
   application:cloudflare-zone-id:
     secure: AAABAPZz/bzFCZEZd+jzPpYP4HXAOLYQmLGf2YLQE2YPfMBUtDC83KCo2l2DJ4AL4OKL+jFFx8wrrJc6DDwXJQ==
   application:db-host:
