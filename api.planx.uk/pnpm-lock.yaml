@@ -268,7 +268,7 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0
       vite:
-        specifier: ^6.3.4
+        specifier: ^6.3.6
         version: 6.3.6(@types/node@22.14.1)(tsx@4.20.5)(yaml@2.8.1)
       vitest:
         specifier: ^3.1.2
@@ -2854,6 +2854,7 @@ packages:
     resolution: {integrity: sha512-Quz3MvAwHxVYNXsOByL7xI5EB2WYOeFswqaHIA3qOK3isRWTxiplBEocmmru6XmxDB2L7jDNYtYA4FyimoAFEw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
+    bundledDependencies: []
 
   jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==}
