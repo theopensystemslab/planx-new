@@ -59,7 +59,10 @@ export const handleSetFees: HandleSetFees = ({
   const addFastTrack = fastTrackFeeAmount > 0;
   if (addFastTrack) {
     // The fastTrackFeeAmount applies if `application.fastTrack` is present in the passport (any value is okay/expected, checking presence only)
-    if (passport.data && Object.hasOwn(passport.data, "application.fastTrack")) {
+    if (
+      passport.data &&
+      Object.hasOwn(passport.data, "application.fastTrack")
+    ) {
       const fastTrackVAT = fastTrackFeeAmount * VAT_PERCENTAGE;
 
       fees["application.fee.fastTrack"] = fastTrackFeeAmount;
@@ -67,22 +70,28 @@ export const handleSetFees: HandleSetFees = ({
       fees[payable] = fees[payable] + fastTrackFeeAmount + fastTrackVAT;
       fees[payableVAT] = fees[payableVAT] + fastTrackVAT;
     } else {
-      // If this flow set a fastTrackFeeAmount, but `application.fastTrack` does not apply, still capture 0 for Gov Pay metadata reporting
+      // If a fastTrackFeeAmount is set, but `application.fastTrack` does not apply, still capture 0 for Gov Pay metadata reporting
       fees["application.fee.fastTrack"] = 0;
       fees["application.fee.fastTrack.VAT"] = 0;
     }
   }
 
-  const addServiceCharge =
-    applyServiceCharge && fees[payable] >= DEFAULT_SERVICE_CHARGE_THRESHOLD;
-  if (addServiceCharge) {
-    const serviceChargeAmount = DEFAULT_SERVICE_CHARGE_AMOUNT;
-    const serviceChargeVAT = serviceChargeAmount * VAT_PERCENTAGE;
+  if (applyServiceCharge) {
+    if (fees[payable] >= DEFAULT_SERVICE_CHARGE_THRESHOLD) {
+      // When payable inclusive of VAT after FT before payment processing fees is >= treshold,
+      //   then apply the default service charge amount plus VAT and re-calculate payable
+      const serviceChargeAmount = DEFAULT_SERVICE_CHARGE_AMOUNT;
+      const serviceChargeVAT = serviceChargeAmount * VAT_PERCENTAGE;
 
-    fees["application.fee.serviceCharge"] = serviceChargeAmount;
-    fees["application.fee.serviceCharge.VAT"] = serviceChargeVAT;
-    fees[payable] = fees[payable] + serviceChargeAmount + serviceChargeVAT;
-    fees[payableVAT] = fees[payableVAT] + serviceChargeVAT;
+      fees["application.fee.serviceCharge"] = serviceChargeAmount;
+      fees["application.fee.serviceCharge.VAT"] = serviceChargeVAT;
+      fees[payable] = fees[payable] + serviceChargeAmount + serviceChargeVAT;
+      fees[payableVAT] = fees[payableVAT] + serviceChargeVAT;
+    } else {
+      // If toggled `on` but below threshold, still capture 0 for Gov Pay metadata reporting
+      fees["application.fee.serviceCharge"] = 0;
+      fees["application.fee.serviceCharge.VAT"] = 0;
+    }
   }
 
   if (applyPaymentProcessingFee) {

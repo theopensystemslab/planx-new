@@ -201,7 +201,7 @@ describe("handleSetFees() function", () => {
       });
     });
 
-    it("does not add service charge if total payable after Fast Track is less than £100", () => {
+    it("adds £0 service charge if the SetFee toggle is `on` and total payable inclusive of VAT after Fast Track is less than £100", () => {
       const incomingPassport: Store.Passport = {
         data: {
           "application.fee.calculated": 200,
@@ -225,6 +225,8 @@ describe("handleSetFees() function", () => {
         "application.fee.payable.VAT": 10,
         "application.fee.fastTrack": 50,
         "application.fee.fastTrack.VAT": 10,
+        "application.fee.serviceCharge": 0,
+        "application.fee.serviceCharge.VAT": 0,
       });
     });
 
