@@ -6,20 +6,14 @@ export const createCdn = ({
   acmCertificateArn,
   bucket,
   logsBucket,
+  oai,
 }: {
   domain: string;
-  acmCertificateArn?: pulumi.Input<string>;
+  acmCertificateArn: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
+  oai: aws.cloudfront.OriginAccessIdentity,
 }) => {
-  // Generate Origin Access Identity to access the private s3 bucket.
-  const originAccessIdentity = new aws.cloudfront.OriginAccessIdentity(
-    `${domain.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
-    {
-      comment: "This is needed to setup s3 polices and make s3 not public.",
-    }
-  );
-
   const cdn = new aws.cloudfront.Distribution(`${domain}-cdn`, {
     enabled: true,
     // Could include `www.${domain}` here if the `www` subdomain is desired
@@ -29,12 +23,10 @@ export const createCdn = ({
         originId: bucket.arn,
         domainName: bucket.bucketRegionalDomainName,
         s3OriginConfig: {
-          originAccessIdentity:
-            originAccessIdentity.cloudfrontAccessIdentityPath,
+          originAccessIdentity: oai.cloudfrontAccessIdentityPath,
         },
       },
     ],
-
     defaultRootObject: "index.html",
 
     // A CloudFront distribution can configure different cache behaviors based on the request path.
@@ -118,10 +110,7 @@ export const createCdn = ({
       },
     },
     viewerCertificate: {
-      ...(acmCertificateArn 
-        ? { acmCertificateArn } 
-        : { cloudfrontDefaultCertificate: true }
-      ),
+      acmCertificateArn,
       sslSupportMethod: "sni-only",
       minimumProtocolVersion: "TLSv1.2_2021",
     },

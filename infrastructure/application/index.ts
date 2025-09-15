@@ -663,7 +663,16 @@ export = async () => {
           replaceOnChanges: ["privateKey"],
         }
       );
-      const cdn = createCdn({ domain, acmCertificateArn: certificate.arn, bucket: frontendBucket, logsBucket });
+
+      const oai = new aws.cloudfront.OriginAccessIdentity(
+        `${DOMAIN.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
+        {
+          comment:
+            "This is needed to setup s3 polices and make s3 not public.",
+        }
+      );
+
+      const cdn = createCdn({ domain, acmCertificateArn: certificate.arn, bucket: frontendBucket, logsBucket, oai });
       return { domain, cname: cdn.domainName };
     }
   })();
@@ -705,7 +714,21 @@ export = async () => {
     },
     { provider: usEast1 }
   );
-  const cdn = createCdn({ domain: DOMAIN, acmCertificateArn: sslCert.arn, bucket: frontendBucket, logsBucket });
+
+  const oai = new aws.cloudfront.OriginAccessIdentity(
+    `${DOMAIN.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
+    {
+      comment: "This is needed to setup s3 polices and make s3 not public.",
+    }
+  );
+  
+  const cdn = createCdn({
+    domain: DOMAIN,
+    acmCertificateArn: sslCert.arn,
+    bucket: frontendBucket,
+    logsBucket,
+    oai,
+  });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
     name: tldjs.getSubdomain(DOMAIN) || "@",
@@ -716,13 +739,13 @@ export = async () => {
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
 
+  // ------------------- LocalPlanning.services
+  createLocalPlanningServices(sslCert);
+
   return {
     customDomains,
   };
 };
-
-// ------------------- LocalPlanning.services
-// createLocalPlanningServices();
 
 new aws.budgets.Budget("general-budget", {
   budgetType: "COST",
