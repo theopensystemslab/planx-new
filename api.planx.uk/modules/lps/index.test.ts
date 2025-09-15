@@ -218,10 +218,11 @@ describe("fetching applications - validation", () => {
 describe("fetching applications", () => {
   const ENDPOINT = "/lps/applications";
 
-  const mockLowcalSession: Omit<Application, "id"> = {
+  const mockLowcalSession: Omit<Application, "id" | "status"> = {
     createdAt: "createdAtTime",
     addressLine: null,
     addressTitle: null,
+    updatedAt: "updatedAtTime",
     service: {
       name: "Service Name",
       slug: "service-slug",
@@ -252,23 +253,24 @@ describe("fetching applications", () => {
         updateMagicLinks: {
           returning: [
             {
-              drafts: [
+              applications: [
                 {
                   ...mockLowcalSession,
+                  status: "draft",
                   id: "1",
                   addressLine: "1, Bag End, The Shire, Eriador",
                   addressTitle: null,
                 },
                 {
                   ...mockLowcalSession,
+                  status: "draft",
                   id: "2",
                   addressLine: null,
                   addressTitle: "Bag End",
                 },
-              ],
-              submitted: [
                 {
                   ...mockLowcalSession,
+                  status: "submitted",
                   id: "3",
                   submittedAt: "submittedAtTime",
                 },
@@ -301,8 +303,7 @@ describe("fetching applications", () => {
         .send({ token, email: NOTIFY_TEST_EMAIL })
         .expect(200)
         .then((res) => {
-          expect(res.body.drafts).toHaveLength(0);
-          expect(res.body.submitted).toHaveLength(0);
+          expect(res.body).toHaveLength(0);
         });
     });
 
@@ -312,9 +313,11 @@ describe("fetching applications", () => {
         .send({ token, email: NOTIFY_TEST_EMAIL })
         .expect(200)
         .then((res) => {
-          expect(res.body.drafts).toHaveLength(2);
-          expect(res.body.drafts[0]).toMatchObject({
+          expect(res.body).toHaveLength(3);
+
+          expect(res.body[0]).toMatchObject({
             id: "1",
+            status: "draft",
             createdAt: "createdAtTime",
             service: {
               name: "Service Name",
@@ -325,10 +328,9 @@ describe("fetching applications", () => {
             serviceUrl:
               "https://www.example.com/team-slug/service-slug/published?sessionId=1&email=simulate-delivered%40notifications.service.gov.uk",
           });
-
-          expect(res.body.submitted).toHaveLength(1);
-          expect(res.body.submitted[0]).toMatchObject({
+          expect(res.body[2]).toMatchObject({
             id: "3",
+            status: "submitted",
             address: null,
             createdAt: "createdAtTime",
             submittedAt: "submittedAtTime",
@@ -349,15 +351,13 @@ describe("fetching applications", () => {
         .expect(200)
         .then((res) => {
           // Prefers single line address
-          expect(res.body.drafts[0].address).toBe(
-            "1, Bag End, The Shire, Eriador",
-          );
+          expect(res.body[0].address).toBe("1, Bag End, The Shire, Eriador");
 
           // Falls back to title
-          expect(res.body.drafts[1].address).toBe("Bag End");
+          expect(res.body[1].address).toBe("Bag End");
 
           // Will return null if no address available
-          expect(res.body.submitted[0].address).toBeNull();
+          expect(res.body[2].address).toBeNull();
         });
     });
   });

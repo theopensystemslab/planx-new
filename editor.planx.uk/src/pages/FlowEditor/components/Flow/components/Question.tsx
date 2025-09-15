@@ -127,7 +127,11 @@ const Question: React.FC<Props> = React.memo((props) => {
         </TemplatedNodeContainer>
         <ol className="options">
           {childNodes.map((child: any) => (
-            <Node key={child.id} {...child} />
+            <Node
+              key={child.id}
+              {...child}
+              showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+            />
           ))}
         </ol>
       </li>

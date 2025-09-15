@@ -1,11 +1,12 @@
 /**
  * Mirrors structure of lowcal_sessions table and relationships
  */
-export interface Application {
+export interface BaseApplication {
   id: string;
   addressLine: string | null;
   addressTitle: string | null;
   createdAt: string;
+  updatedAt: string;
   service: {
     name: string;
     slug: string;
@@ -17,19 +18,29 @@ export interface Application {
   };
 }
 
-export type Draft = Application & {
-  expiresAt: string;
+export type Draft = BaseApplication & {
+  status: "draft";
 };
 
-export type Submitted = Application & {
+export type AwaitingPayment = BaseApplication & {
+  status: "awaiting-payment";
+  submittedAt: string;
+  paymentRequest: {
+    createdAt: string;
+  }[];
+};
+
+export type Submitted = BaseApplication & {
+  status: "submitted";
   submittedAt: string;
 };
+
+export type Application = Draft | AwaitingPayment | Submitted;
 
 export interface ConsumeMagicLink {
   updateMagicLinks: {
     returning: {
-      drafts: Draft[];
-      submitted: Submitted[];
+      applications: Application[];
     }[];
   };
 }

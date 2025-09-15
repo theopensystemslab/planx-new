@@ -58,8 +58,8 @@ importers:
         specifier: 1.0.0-alpha.6
         version: 1.0.0-alpha.6
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#107792a
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a(@types/react@18.3.24)
+        specifier: git+https://github.com/theopensystemslab/planx-core#c65efb0
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c65efb0(@types/react@18.3.24)
       '@tiptap/core':
         specifier: ^3.0.7
         version: 3.4.0(@tiptap/pm@3.4.0)
@@ -2259,8 +2259,8 @@ packages:
   '@opensystemslab/map@1.0.0-alpha.6':
     resolution: {integrity: sha512-EBOgrgBRFNg8p+7nDFvh+K7N4NFQ7+epBXjE9w7h0u87q4M+nOpBwXNc67+UdDs+j8Mi+vQ2R+uJBIKF25NQ7g==}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c65efb0':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c65efb0}
     version: 1.0.0
 
   '@parcel/watcher-android-arm64@2.5.1':
@@ -7673,6 +7673,10 @@ packages:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
     hasBin: true
 
+  uuid@12.0.0:
+    resolution: {integrity: sha512-USe1zesMYh4fjCA8ZH5+X5WIVD0J4V1Jksm1bFTVBX2F/cwSXt0RO5w/3UXbdLKmZX65MiWV+hwhSS8p6oBTGA==}
+    hasBin: true
+
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
@@ -10175,7 +10179,7 @@ snapshots:
     transitivePeerDependencies:
       - preact
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/107792a(@types/react@18.3.24)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/c65efb0(@types/react@18.3.24)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@18.3.24)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
@@ -10197,7 +10201,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       type-fest: 4.41.0
-      uuid: 11.1.0
+      uuid: 12.0.0
       zod: 3.25.76
     transitivePeerDependencies:
       - '@types/react'
@@ -16477,6 +16481,8 @@ snapshots:
     optional: true
 
   uuid@11.1.0: {}
+
+  uuid@12.0.0: {}
 
   uuid@9.0.1: {}
 

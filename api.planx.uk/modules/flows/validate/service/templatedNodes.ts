@@ -12,15 +12,36 @@ const validateTemplatedNodes = async (
   flowId: string,
   flowGraph: FlowGraph,
 ): Promise<FlowValidationResponse> => {
-  const templatedFlowEdits = await getTemplatedFlowEdits(flowId);
-
-  if (isNull(templatedFlowEdits.templatedFrom)) {
+  const primaryTemplatedFlowEdits = await getTemplatedFlowEdits(flowId);
+  if (isNull(primaryTemplatedFlowEdits.templatedFrom)) {
     return {
       title: "Templated nodes",
       status: "Not applicable",
       message: "This is not a templated flow",
     };
   }
+
+  // Because we have a flattened flow here, we'll need to get templated flow edits for this flow id and any nested templated flow IDs
+  const nestedTemplatedFlowIds = Object.entries(flowGraph as Flow["data"])
+    .filter(
+      ([_nodeId, node]) =>
+        node.type === ComponentType.InternalPortal &&
+        node.data?.flattenedFromExternalPortal === true &&
+        Boolean(node.data?.templatedFrom),
+    )
+    .map(([nodeId, _node]) => nodeId);
+
+  const editedNestedTemplatedNodeIds = await Promise.all(
+    nestedTemplatedFlowIds.map((nestedFlowId) =>
+      getTemplatedFlowEdits(nestedFlowId),
+    ),
+  ).then((values) => {
+    return values.flatMap((value) => Object.keys(value.edits?.data || {}));
+  });
+
+  const allEditedTemplatedNodeIds = Object.keys(
+    primaryTemplatedFlowEdits.edits?.data || {},
+  ).concat(editedNestedTemplatedNodeIds);
 
   const allRequiredTemplatedNodeIds = Object.entries(flowGraph as Flow["data"])
     .filter(
@@ -29,16 +50,13 @@ const validateTemplatedNodes = async (
         Boolean(node.data?.areTemplatedNodeInstructionsRequired),
     )
     .map(([nodeId, _node]) => nodeId);
-  const allEditedTemplatedNodedIds = Object.keys(
-    templatedFlowEdits.edits?.data || {},
-  );
 
   // For each required templated node, check if itself or its' children have been edited
   //   Keep this logic in sync with customisation card `hasNodeBeenUpdated` in the frontend !
   const haveAllRequiredTemplatedNodesBeenEdited =
     allRequiredTemplatedNodeIds.every((nodeId) => {
       // The required node has been directly edited
-      if (allEditedTemplatedNodedIds.includes(nodeId)) return true;
+      if (allEditedTemplatedNodeIds.includes(nodeId)) return true;
 
       const node = flowGraph[nodeId];
       const isNodeWithChildren =
@@ -54,7 +72,7 @@ const validateTemplatedNodes = async (
       // The "children" of the required node have been updated
       if (isNodeWithChildren) {
         const isChildEdited = node.edges?.some((edgeId) =>
-          allEditedTemplatedNodedIds.includes(edgeId),
+          allEditedTemplatedNodeIds.includes(edgeId),
         );
         return isChildEdited;
       }

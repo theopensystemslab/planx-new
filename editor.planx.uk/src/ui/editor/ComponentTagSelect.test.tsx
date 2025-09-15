@@ -68,7 +68,7 @@ describe("Checklist Component for a non Platform Admin", () => {
     ),
   );
 
-  it("renders all tags except Customisation with none selected", async () => {
+  it("renders all tags with none selected", async () => {
     const { getByRole, user } = setup(
       <DndProvider backend={HTML5Backend}>
         <ChecklistComponent text="" />
@@ -80,8 +80,12 @@ describe("Checklist Component for a non Platform Admin", () => {
 
     const optionsList = getByRole("listbox", { name: /tag this component/i });
     const options = within(optionsList).getAllByRole("option");
+
+    const tagDisplayNames = Object.values(TAG_DISPLAY_VALUES).map(
+      (tag) => tag.displayName,
+    );
     const optionTexts = options.map((option) => option.textContent);
 
-    expect(optionTexts).not.toContain(/customisation/i);
+    expect(optionTexts).toEqual(expect.arrayContaining(tagDisplayNames));
   });
 });

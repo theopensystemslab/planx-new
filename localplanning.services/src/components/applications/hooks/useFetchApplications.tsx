@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 import { useSearchParams } from "./useSearchParams";
 
-interface Application {
+interface BaseApplication {
   id: string;
   service: {
     name: string;
@@ -13,26 +13,37 @@ interface Application {
   };
   address: string | null;
   createdAt: string;
+  updatedAt: string;
+  /** Only services which use Section components will have values for progress */
+  progress?: {
+    completed: number;
+  }
 }
 
-export type DraftApplication = Application & {
+export type DraftApplication = BaseApplication & {
+  status: "draft",
   expiresAt: string;
   serviceUrl: string;
 };
 
-export type SubmittedApplication = Application & {
+export type AwaitingPaymentApplication = BaseApplication & {
+  status: "awaiting-payment"
+  expiresAt: string;
+};
+
+export type SubmittedApplication = BaseApplication & {
+  status: "submitted"
   submittedAt: string;
 };
 
-export interface ApplicationsResponse {
-  drafts: DraftApplication[];
-  submitted: SubmittedApplication[];
-}
+export type Application = DraftApplication | AwaitingPaymentApplication | SubmittedApplication;
+
+export type ApplicationsResponse = Application[];
 
 export const useFetchApplications = () => {  
   const { token, email } = useSearchParams();
 
-  const { data: applications = { drafts: [], submitted: [] }, isLoading, error } = useQuery<ApplicationsResponse>({
+  const { data: applications = [], isLoading, error } = useQuery<ApplicationsResponse>({
     queryKey: ["fetchApplications"],
     queryFn: async () => {
       const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lps/applications`, {

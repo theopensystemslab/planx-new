@@ -12,7 +12,7 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.2.7",
-    "@opensystemslab/map": "1.0.0-alpha.9",
+    "@opensystemslab/map": "1.0.0-alpha.10",
     "@tailwindcss/vite": "^4.1.7",
     "@tanstack/react-query": "^5.81.5",
     "@types/react": "^19.1.5",

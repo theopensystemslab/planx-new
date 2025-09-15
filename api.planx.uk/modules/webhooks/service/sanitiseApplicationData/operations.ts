@@ -7,7 +7,7 @@ import { deleteFilesByURL } from "../../../file/service/deleteFile.js";
 import { $api } from "../../../../client/index.js";
 import { Passport } from "@opensystemslab/planx-core";
 
-const RETENTION_PERIOD_MONTHS = 6;
+export const RETENTION_PERIOD_MONTHS = 6;
 export const getRetentionPeriod = () =>
   subMonths(new Date(), RETENTION_PERIOD_MONTHS);
 

@@ -25,5 +25,6 @@ export const defaultProps = {
   },
 } as ReadMePageProps;
 
+// 122 characters
 export const longInput =
-  "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my who"; // 122 characters
+  "A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my who";
