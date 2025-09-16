@@ -4,6 +4,8 @@ import { InvalidLink } from "./errors/InvalidLink";
 import { ExpiredLink } from "./errors/ExpiredLink";
 import { ConsumedLink } from "./errors/ConsumedLink";
 import { UnhandledError } from "./errors/UnhandledError";
+import { NoApplications } from "./errors/NoApplications";
+import { ApplicationCard } from "./ApplicationCard";
 
 export const ApplicationsList: React.FC = () => {
   const { applications, isLoading, error } = useFetchApplications();
@@ -24,34 +26,25 @@ export const ApplicationsList: React.FC = () => {
     }
   }
 
-  return <pre>{ JSON.stringify(applications, null, 4) }</pre>
+  if (!applications.length) return <NoApplications />;
 
-  // if (!drafts.length && !submitted.length) {
-  //   return <NoApplications />;
-  // }
-
-  // return (
-  //   <div className="flex flex-col gap-8 max-w-3xl">
-  //     {Boolean(drafts.length) && (
-  //       <>
-  //         <h2 className="text-heading-lg">Draft applications</h2>
-  //         <ul className="flex flex-col gap-8">
-  //           {drafts.map((draft) =>
-  //             <ApplicationCard application={draft} variant="draft" key={draft.id} />
-  //           )}
-  //         </ul>
-  //       </>
-  //     )}
-  //     {Boolean(submitted.length) && (
-  //       <>
-  //         <h2 className="text-heading-lg">Submitted applications</h2>
-  //         <ul className="flex flex-col gap-8">
-  //           {submitted.map((submitted) =>
-  //             <ApplicationCard application={submitted} variant="submitted" key={submitted.id} />
-  //           )}
-  //         </ul>
-  //       </>
-  //     )}
-  //   </div>
-  // );
+  return (
+    <div className="w-full flex flex-col lg:flex-row gap-[20px] justify-between">
+      <div className="basis-full lg:basis-320">
+        <div className="bg-bg-light clamp-[p,4,6] rounded">TODO: Filters</div>
+      </div>
+      <div className="basis-full lg:basis-660">
+        <div className="flex flex-col gap-8 max-w-full">
+          <ul className="flex flex-col gap-8">
+            {applications.map((application) => (
+              <ApplicationCard
+                key={application.id}
+                {...application}
+              />
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 };
