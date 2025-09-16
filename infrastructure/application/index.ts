@@ -664,13 +664,18 @@ export = async () => {
         }
       );
 
+      const oai = new aws.cloudfront.OriginAccessIdentity(`${domain}-OAI`, {
+        comment: `OAI for ${domain} CloudFront distribution`,
+      });
+
       const cdn = createCdn({ 
         domain, 
         acmCertificateArn: certificate.arn, 
         bucket: frontendBucket, 
         logsBucket,
+        oai,
       });
-      
+
       return { domain, cname: cdn.domainName };
     }
   })();
@@ -713,11 +718,16 @@ export = async () => {
     { provider: usEast1 }
   );
 
+  const oai = new aws.cloudfront.OriginAccessIdentity(`${DOMAIN}-OAI`, {
+    comment: `OAI for ${DOMAIN} CloudFront distribution`,
+  });
+
   const cdn = createCdn({
     domain: DOMAIN,
     acmCertificateArn: sslCert.arn,
     bucket: frontendBucket,
     logsBucket,
+    oai,
   });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {

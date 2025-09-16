@@ -4,46 +4,38 @@ import * as fsWalk from "@nodelib/fs.walk";
 import * as mime from "mime";
 import * as cloudflare from "@pulumi/cloudflare";
 
-import { createCdn } from "../utils"
+import { createCdn } from "../utils";
 
 const config = new pulumi.Config();
 
-const createLPSBucket = (domain: string) => {
+const createLPSBucket = (
+  domain: string,
+  oai: aws.cloudfront.OriginAccessIdentity
+) => {
   const lpsBucket = new aws.s3.Bucket(domain, {
     bucket: domain,
-    website: {
-      indexDocument: "index.html",
-      errorDocument: "404.html",
-    },
   });
 
-  // Allow public access to bucket as these assets will be served as a static site
-  new aws.s3.BucketPublicAccessBlock(
-    "myPublicAccessBlock",
-    {
-      bucket: lpsBucket.id,
-      blockPublicAcls: false,
-      blockPublicPolicy: false,
-      ignorePublicAcls: false,
-      restrictPublicBuckets: false,
-    }
-  );
-
+  // Set bucket policy to allow the OAI to read objects.
   new aws.s3.BucketPolicy("lpsBucketPolicy", {
     bucket: lpsBucket.id,
-    policy: pulumi.all([lpsBucket.arn]).apply((arn) =>
-      JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Effect: "Allow",
-            Principal: "*",
-            Action: "s3:GetObject",
-            Resource: `${arn}/*`,
-          },
-        ],
-      })
-    ),
+    policy: pulumi
+      .all([lpsBucket.arn, oai.iamArn])
+      .apply(([bucketArn, oaiArn]) =>
+        JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Principal: {
+                AWS: oaiArn,
+              },
+              Action: "s3:GetObject",
+              Resource: `${bucketArn}/*`,
+            },
+          ],
+        })
+      ),
   });
 
   return lpsBucket;
@@ -54,17 +46,24 @@ const createLogsBucket = (domain: string) => {
     bucket: `${domain}-logs`,
   });
 
-  new aws.s3.BucketOwnershipControls("lpsRequestLogsOwnershipControls", {
-    bucket: logsBucket.id,
-    rule: {
-      objectOwnership: "ObjectWriter",
-    },
-  });
+  const ownershipControls = new aws.s3.BucketOwnershipControls(
+    "lpsRequestLogsOwnershipControls",
+    {
+      bucket: logsBucket.id,
+      rule: {
+        objectOwnership: "ObjectWriter",
+      },
+    }
+  );
 
-  new aws.s3.BucketAclV2("lpsRequestLogsAcl", {
-    bucket: logsBucket.id,
-    acl: "log-delivery-write",
-  });
+  new aws.s3.BucketAclV2(
+    "lpsRequestLogsAcl",
+    {
+      bucket: logsBucket.id,
+      acl: "log-delivery-write",
+    },
+    { dependsOn: [ownershipControls] }
+  );
 
   return logsBucket;
 };
@@ -85,7 +84,7 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
         s3Key = path.replace(/\.html$/, "");
       }
 
-      const contentFile = new aws.s3.BucketObject(
+      new aws.s3.BucketObject(
         relativeFilePath,
         {
           key: s3Key,
@@ -94,7 +93,7 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
           source: new pulumi.asset.FileAsset(relativeFilePath),
           cacheControl: contentType.includes("html")
             ? "no-cache"
-            : `max-age=${1}, stale-while-revalidate=${60 * 60 * 24}`,
+            : `max-age=${60 * 60 * 24}, stale-while-revalidate=${60 * 60 * 24}`,
         },
         {
           parent: bucket,
@@ -107,7 +106,11 @@ export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
   const domain = config.get("lps-domain");
   if (!domain) return;
 
-  const lpsBucket = createLPSBucket(domain);
+  const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
+    comment: `OAI for LPS CloudFront distribution`,
+  });
+
+  const lpsBucket = createLPSBucket(domain, oai);
   const logsBucket = createLogsBucket(domain);
 
   uploadBuildSiteToBucket(lpsBucket);
@@ -117,6 +120,7 @@ export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
     logsBucket,
     domain,
     acmCertificateArn: sslCert.arn,
+    oai,
     mode: "static",
   });
 

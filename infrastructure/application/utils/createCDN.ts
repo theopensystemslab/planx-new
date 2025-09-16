@@ -32,18 +32,16 @@ export const createCdn = ({
   acmCertificateArn,
   bucket,
   logsBucket,
+  oai,
   mode = "spa",
 }: {
   domain: string;
   acmCertificateArn: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
+  oai: aws.cloudfront.OriginAccessIdentity,
   mode?: "static" | "spa"
 }) => {
-  const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
-    comment: `OAI for ${domain} CloudFront distribution`,
-  });
-
   const cdn = new aws.cloudfront.Distribution(`${domain}-cdn`, {
     enabled: true,
     // Could include `www.${domain}` here if the `www` subdomain is desired
