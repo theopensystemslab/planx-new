@@ -305,7 +305,7 @@ jobs:
           path: ./${{ env.EDITOR_DIRECTORY }}/build
           key: ${{ runner.os }}-${{ hashFiles('editor.planx.uk/**', '!editor.planx/build/**') }}
       - name: Download LPS build assets
-        id: cache-lps-build-assets
+        id: cache-localplanning-build-assets
         uses: actions/cache@v4
         with:
           path: ./localplanning.services/dist
