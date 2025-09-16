@@ -14,7 +14,6 @@ const mockGenerateHTMLData = vi.fn().mockResolvedValue({
       metadata: {},
     },
   ],
-  redactedResponses: [],
 });
 
 vi.mock("@opensystemslab/planx-core", async (importOriginal) => {

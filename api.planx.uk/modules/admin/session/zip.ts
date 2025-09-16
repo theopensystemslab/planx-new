@@ -37,10 +37,10 @@ export async function generateZip(
   try {
     const zip = await buildSubmissionExportZip({
       sessionId: req.params.sessionId,
-      includeOneAppXML: req.query.includeOneAppXML === "false",
+      includeOneAppXML: req.query.includeOneAppXML === "true",
       includeDigitalPlanningJSON:
-        req.query.includeDigitalPlanningJSON === "false",
-      onlyDigitalPlanningJSON: req.query.onlyDigitalPlanningJSON === "false",
+        req.query.includeDigitalPlanningJSON === "true",
+      onlyDigitalPlanningJSON: req.query.onlyDigitalPlanningJSON === "true",
     });
     res.download(zip.filename, () => {
       zip.remove();

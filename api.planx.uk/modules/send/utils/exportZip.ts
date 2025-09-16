@@ -102,7 +102,6 @@ export async function buildSubmissionExportZip({
 
   // generate csv data
   const responses = await $api.export.csvData(sessionId);
-  const redactedResponses = await $api.export.csvDataRedacted(sessionId);
 
   // write csv to the zip
   try {
@@ -134,18 +133,7 @@ export async function buildSubmissionExportZip({
     buffer: Buffer.from(overviewHTML),
   });
 
-  // generate and add a redacted HTML overview document for the submission to zip
-  const redactedOverviewHTML = generateApplicationHTML({
-    planXExportData: redactedResponses as PlanXExportData[],
-    boundingBox,
-    userAction,
-  });
-  zip.addFile({
-    name: "RedactedOverview.htm",
-    buffer: Buffer.from(redactedOverviewHTML),
-  });
-
-  // If DrawBoundary, then add `LocationPlan` GeoJSON and HTML boundary files to zip
+  // add an optional GeoJSON file to zip
   const geojson = passport?.data?.["proposal.site"];
   if (geojson) {
     if (userAction) {
