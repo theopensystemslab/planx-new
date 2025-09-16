@@ -11,8 +11,11 @@ FROM analytics a
     LEFT JOIN analytics_logs al ON (a.id = al.analytics_id)
     LEFT JOIN flows f ON (a.flow_id = f.id)
     LEFT JOIN LATERAL (
-        SELECT jsonb_array_elements_text((al.allow_list_answers -> 'proposal.projectType'::text)::jsonb) AS project_type
-    ) pt ON (al.allow_list_answers -> 'proposal.projectType'::text IS NOT NULL)
+        SELECT jsonb_array_elements_text(al.allow_list_answers -> 'proposal.projectType') AS project_type
+        WHERE al.allow_list_answers IS NOT NULL 
+          AND al.allow_list_answers -> 'proposal.projectType' IS NOT NULL
+          AND jsonb_typeof(al.allow_list_answers -> 'proposal.projectType') = 'array'
+    ) pt ON (true)
 GROUP BY a.id
 ORDER BY a.id;
 
