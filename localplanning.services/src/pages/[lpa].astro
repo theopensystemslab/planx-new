@@ -23,6 +23,40 @@ const { lpaData } = Astro.props;
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 if (!lpaData) return Astro.redirect("/404");
+
+const serviceTypes = [
+  {
+    key: 'apply',
+    services: lpaData.applyServices,
+    title: 'Start a planning application',
+    displayName: 'planning application',
+    accordionId: 'apply-accordion'
+  },
+  {
+    key: 'notify',
+    services: lpaData.notifyServices,
+    title: 'Notify your authority',
+    displayName: 'notification',
+    accordionId: 'notify-accordion'
+  },
+  {
+    key: 'guidance',
+    services: lpaData.guidanceServices,
+    title: 'Get planning guidance',
+    displayName: 'planning guidance',
+    accordionId: 'guidance-accordion'
+  }
+];
+
+const urlAction = Astro.url.searchParams.get('action');
+
+const serviceTypesWithServices = serviceTypes.filter(serviceType => 
+  serviceType.services && serviceType.services.length > 0
+);
+
+const urlActionServiceType = serviceTypes.find(serviceType => serviceType.key === urlAction);
+const showEmptyMessage = urlAction && urlActionServiceType && 
+  (!urlActionServiceType.services || urlActionServiceType.services.length === 0);
 ---
 
 <Layout>
@@ -34,42 +68,26 @@ if (!lpaData) return Astro.redirect("/404");
   />
   <Container>
     <div class="flex flex-col gap-4 clamp-[py,4,6]">
-      <Accordion title="Start a planning application" id="apply-accordion">
-        <ul class="flex flex-col gap-4">
-          {
-            lpaData.applyServices.map((service) => (
+      {showEmptyMessage && (
+        <div class="px-4">
+          <p class="text-heading-xs">
+            Currently there are no {urlActionServiceType.displayName} services offered by {lpaData.name}.
+          </p>
+        </div>
+      )}
+      
+      {serviceTypesWithServices.map((serviceType) => (
+        <Accordion title={serviceType.title} id={serviceType.accordionId}>
+          <ul class="flex flex-col gap-4">
+            {serviceType.services.map((service) => (
               <ServiceCard
                 service={service}
                 team={{ domain: lpaData.domain }}
               />
-            ))
-          }
-        </ul>
-      </Accordion>
-      <Accordion title="Notify your authority" id="notify-accordion">
-        <ul class="flex flex-col gap-4">
-          {
-            lpaData.notifyServices.map((service) => (
-              <ServiceCard
-                service={service}
-                team={{ domain: lpaData.domain }}
-              />
-            ))
-          }
-        </ul>
-      </Accordion>
-      <Accordion title="Get planning guidance" id="guidance-accordion">
-        <ul class="flex flex-col gap-4">
-          {
-            lpaData.guidanceServices.map((service) => (
-              <ServiceCard
-                service={service}
-                team={{ domain: lpaData.domain }}
-              />
-            ))
-          }
-        </ul>
-      </Accordion>
+            ))}
+          </ul>
+        </Accordion>
+      ))}
     </div>
   </Container>
   <ApplicationsBanner />
