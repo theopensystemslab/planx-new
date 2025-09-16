@@ -187,7 +187,7 @@ jobs:
     if: "${{ !contains(needs.changes.outputs.commit, '[skip pizza]') }}"
     steps:
       - uses: actions/checkout@v4
-      - name: Cache build assets
+      - name: Cache localplanning build assets
         id: cache-localplanning-build-assets
         uses: actions/cache@v4
         with:
@@ -309,7 +309,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./localplanning.services/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/**', '!localplanning.services/dist/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-
       - uses: pulumi/actions@v5
         with:
           command: preview
