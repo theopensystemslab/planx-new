@@ -31,5 +31,10 @@ export default defineConfig({
         subsets: ["latin"],
       },
     ]
+  },
+  build: {
+    // This generates directory.html instead of directory/index.astro
+    // Required for AWS Cloudfront
+    format: "file"
   }
 });
