@@ -16,7 +16,7 @@
     "@opensystemslab/planx-core": "git+https://github.com/theopensystemslab/planx-core#c65efb0",
     "@types/isomorphic-fetch": "^0.0.36",
     "adm-zip": "^0.5.10",
-    "axios": "^1.11.0",
+    "axios": "^1.12.2",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cookie-session": "^2.1.1",
@@ -117,7 +117,7 @@
     "tsx": "^4.19.3",
     "typescript": "^5.5.2",
     "uuid": "^11.1.0",
-    "vite": "^6.3.4",
+    "vite": "^6.3.6",
     "vitest": "^3.1.2"
   },
   "pnpm": {
@@ -129,9 +129,6 @@
         "react",
         "react-dom"
       ]
-    },
-    "overrides": {
-      "axios@=1.10.0": ">=1.11.0"
     }
   }
 }
