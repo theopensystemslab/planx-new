@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedTutorialsRouteImport } from './routes/_authenticated/tutorials'
+import { Route as AuthenticatedResourcesRouteImport } from './routes/_authenticated/resources'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedGlobalSettingsRouteImport } from './routes/_authenticated/global-settings'
+import { Route as AuthenticatedAdminPanelRouteImport } from './routes/_authenticated/admin-panel'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -22,6 +27,32 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTutorialsRoute = AuthenticatedTutorialsRouteImport.update({
+  id: '/tutorials',
+  path: '/tutorials',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedResourcesRoute = AuthenticatedResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGlobalSettingsRoute =
+  AuthenticatedGlobalSettingsRouteImport.update({
+    id: '/global-settings',
+    path: '/global-settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminPanelRoute = AuthenticatedAdminPanelRouteImport.update({
+  id: '/admin-panel',
+  path: '/admin-panel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
   path: '/login',
@@ -30,24 +61,62 @@ const authLoginRoute = authLoginRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
+  '/admin-panel': typeof AuthenticatedAdminPanelRoute
+  '/global-settings': typeof AuthenticatedGlobalSettingsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/resources': typeof AuthenticatedResourcesRoute
+  '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
+  '/admin-panel': typeof AuthenticatedAdminPanelRoute
+  '/global-settings': typeof AuthenticatedGlobalSettingsRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/resources': typeof AuthenticatedResourcesRoute
+  '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
+  '/_authenticated/admin-panel': typeof AuthenticatedAdminPanelRoute
+  '/_authenticated/global-settings': typeof AuthenticatedGlobalSettingsRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/resources': typeof AuthenticatedResourcesRoute
+  '/_authenticated/tutorials': typeof AuthenticatedTutorialsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/'
+  fullPaths:
+    | '/login'
+    | '/admin-panel'
+    | '/global-settings'
+    | '/onboarding'
+    | '/resources'
+    | '/tutorials'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/'
-  id: '__root__' | '/_authenticated' | '/(auth)/login' | '/_authenticated/'
+  to:
+    | '/login'
+    | '/admin-panel'
+    | '/global-settings'
+    | '/onboarding'
+    | '/resources'
+    | '/tutorials'
+    | '/'
+  id:
+    | '__root__'
+    | '/_authenticated'
+    | '/(auth)/login'
+    | '/_authenticated/admin-panel'
+    | '/_authenticated/global-settings'
+    | '/_authenticated/onboarding'
+    | '/_authenticated/resources'
+    | '/_authenticated/tutorials'
+    | '/_authenticated/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -71,6 +140,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tutorials': {
+      id: '/_authenticated/tutorials'
+      path: '/tutorials'
+      fullPath: '/tutorials'
+      preLoaderRoute: typeof AuthenticatedTutorialsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/resources': {
+      id: '/_authenticated/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof AuthenticatedResourcesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/global-settings': {
+      id: '/_authenticated/global-settings'
+      path: '/global-settings'
+      fullPath: '/global-settings'
+      preLoaderRoute: typeof AuthenticatedGlobalSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin-panel': {
+      id: '/_authenticated/admin-panel'
+      path: '/admin-panel'
+      fullPath: '/admin-panel'
+      preLoaderRoute: typeof AuthenticatedAdminPanelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/(auth)/login': {
       id: '/(auth)/login'
       path: '/login'
@@ -82,10 +186,20 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminPanelRoute: typeof AuthenticatedAdminPanelRoute
+  AuthenticatedGlobalSettingsRoute: typeof AuthenticatedGlobalSettingsRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedResourcesRoute: typeof AuthenticatedResourcesRoute
+  AuthenticatedTutorialsRoute: typeof AuthenticatedTutorialsRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminPanelRoute: AuthenticatedAdminPanelRoute,
+  AuthenticatedGlobalSettingsRoute: AuthenticatedGlobalSettingsRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedResourcesRoute: AuthenticatedResourcesRoute,
+  AuthenticatedTutorialsRoute: AuthenticatedTutorialsRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
