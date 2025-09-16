@@ -8,7 +8,6 @@ import gql from "graphql-tag";
 import { useStore } from "pages/FlowEditor/lib/store";
 import Teams from "pages/Teams";
 import React from "react";
-import { makeTitle } from "routes-navi/utils";
 
 import { client } from "../../lib/graphql";
 
@@ -50,7 +49,6 @@ export const Route = createFileRoute("/_authenticated/")({
     useStore.getState().clearTeamStore();
 
     return {
-      title: makeTitle("Teams"),
       teams: data.teams,
     };
   },
