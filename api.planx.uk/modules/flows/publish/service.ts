@@ -1,7 +1,6 @@
 import {
   ComponentType,
   type FlowGraph,
-
   type Node,
 } from "@opensystemslab/planx-core/types";
 import { gql } from "graphql-request";
@@ -81,7 +80,7 @@ export const publishFlow = async (
       publisher_id: parseInt(userId),
       summary: summary,
       has_send_component: hasSendComponent,
-      has_sections: hasSections
+      has_sections: hasSections,
     },
   );
 
