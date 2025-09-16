@@ -1,19 +1,49 @@
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
 
+const spaErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponses"] = [
+  {
+    errorCode: 404,
+    responseCode: 200,
+    responsePagePath: "/index.html",
+  },
+  {
+    errorCode: 403,
+    responseCode: 200,
+    responsePagePath: "/index.html",
+  },
+];
+
+const staticErrorResponses: aws.cloudfront.DistributionArgs["customErrorResponses"] = [
+  {
+    errorCode: 404,
+    responseCode: 404,
+    responsePagePath: "/404",
+  },
+  {
+    errorCode: 403,
+    responseCode: 404,
+    responsePagePath: "/404",
+  },
+];
+
 export const createCdn = ({
   domain,
   acmCertificateArn,
   bucket,
   logsBucket,
-  oai,
+  mode = "spa",
 }: {
   domain: string;
   acmCertificateArn: pulumi.Input<string>;
   bucket: aws.s3.Bucket;
   logsBucket: aws.s3.Bucket;
-  oai: aws.cloudfront.OriginAccessIdentity,
+  mode?: "static" | "spa"
 }) => {
+  const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
+    comment: `OAI for ${domain} CloudFront distribution`,
+  });
+
   const cdn = new aws.cloudfront.Distribution(`${domain}-cdn`, {
     enabled: true,
     // Could include `www.${domain}` here if the `www` subdomain is desired
@@ -27,7 +57,7 @@ export const createCdn = ({
         },
       },
     ],
-    defaultRootObject: "index.html",
+    defaultRootObject: mode === "spa" ? "index.html" : "index",
 
     // A CloudFront distribution can configure different cache behaviors based on the request path.
     // Here we just specify a single, default cache behavior which is just read-only requests to S3.
@@ -88,22 +118,8 @@ export const createCdn = ({
     // "All" is the most broad distribution, and also the most expensive.
     // "100" is the least broad, and also the least expensive.
     priceClass: "PriceClass_100",
-
-    // You can customize error responses. When CloudFront receives an error from the origin (e.g. S3 or some other
-    // web service) it can return a different error code, and return the response for a different resource.
-    customErrorResponses: [
-      {
-        errorCode: 404,
-        responseCode: 200,
-        responsePagePath: "/index.html",
-      },
-      // XXX: CloudFront seems to be returning `403 AccessDenied` when files aren't found. Because the front-end is a Single Page Application (SPA) we need to redirect those errors to `index.html`.
-      {
-        errorCode: 403,
-        responseCode: 200,
-        responsePagePath: "/index.html",
-      },
-    ],
+    customErrorResponses:
+      mode === "spa" ? spaErrorResponses : staticErrorResponses,
     restrictions: {
       geoRestriction: {
         restrictionType: "none",

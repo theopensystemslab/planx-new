@@ -8,24 +8,38 @@ import { createCdn } from "../utils"
 
 const config = new pulumi.Config();
 
-const createLPSBucket = (domain: string, oai: aws.cloudfront.OriginAccessIdentity) => {
+const createLPSBucket = (domain: string) => {
   const lpsBucket = new aws.s3.Bucket(domain, {
     bucket: domain,
+    website: {
+      indexDocument: "index.html",
+      errorDocument: "404.html",
+    },
   });
+
+  // Allow public access to bucket as these assets will be served as a static site
+  new aws.s3.BucketPublicAccessBlock(
+    "myPublicAccessBlock",
+    {
+      bucket: lpsBucket.id,
+      blockPublicAcls: false,
+      blockPublicPolicy: false,
+      ignorePublicAcls: false,
+      restrictPublicBuckets: false,
+    }
+  );
 
   new aws.s3.BucketPolicy("lpsBucketPolicy", {
     bucket: lpsBucket.id,
-    policy: pulumi.all([lpsBucket.arn, oai.iamArn]).apply(([bucketArn, oaiArn]) =>
+    policy: pulumi.all([lpsBucket.arn]).apply((arn) =>
       JSON.stringify({
         Version: "2012-10-17",
         Statement: [
           {
             Effect: "Allow",
-            Principal: {
-              AWS: oaiArn,
-            },
+            Principal: "*",
             Action: "s3:GetObject",
-            Resource: `${bucketArn}/*`,
+            Resource: `${arn}/*`,
           },
         ],
       })
@@ -64,10 +78,17 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
     .forEach(({ path }) => {
       const relativeFilePath = `../../localplanning.services/dist/${path}`;
       const contentType = mime.getType(relativeFilePath) || "";
+
+      // Strip .html extension from the S3 key, but keep index.html as is
+      let s3Key = path;
+      if (path.endsWith(".html")) {
+        s3Key = path.replace(/\.html$/, "");
+      }
+
       const contentFile = new aws.s3.BucketObject(
         relativeFilePath,
         {
-          key: path,
+          key: s3Key,
           bucket,
           contentType,
           source: new pulumi.asset.FileAsset(relativeFilePath),
@@ -86,11 +107,7 @@ export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
   const domain = config.get("lps-domain");
   if (!domain) return;
 
-  const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
-    comment: `OAI for ${domain} CloudFront distribution`,
-  });
-
-  const lpsBucket = createLPSBucket(domain, oai);
+  const lpsBucket = createLPSBucket(domain);
   const logsBucket = createLogsBucket(domain);
 
   uploadBuildSiteToBucket(lpsBucket);
@@ -100,7 +117,7 @@ export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
     logsBucket,
     domain,
     acmCertificateArn: sslCert.arn,
-    oai,
+    mode: "static",
   });
 
   new cloudflare.Record("localplanningservices", {

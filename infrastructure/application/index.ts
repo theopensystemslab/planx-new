@@ -664,15 +664,13 @@ export = async () => {
         }
       );
 
-      const oai = new aws.cloudfront.OriginAccessIdentity(
-        `${DOMAIN.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
-        {
-          comment:
-            "This is needed to setup s3 polices and make s3 not public.",
-        }
-      );
-
-      const cdn = createCdn({ domain, acmCertificateArn: certificate.arn, bucket: frontendBucket, logsBucket, oai });
+      const cdn = createCdn({ 
+        domain, 
+        acmCertificateArn: certificate.arn, 
+        bucket: frontendBucket, 
+        logsBucket,
+      });
+      
       return { domain, cname: cdn.domainName };
     }
   })();
@@ -715,19 +713,11 @@ export = async () => {
     { provider: usEast1 }
   );
 
-  const oai = new aws.cloudfront.OriginAccessIdentity(
-    `${DOMAIN.replace(/[^a-z0-9_-]/g, "_")}-originAccessIdentity`,
-    {
-      comment: "This is needed to setup s3 polices and make s3 not public.",
-    }
-  );
-  
   const cdn = createCdn({
     domain: DOMAIN,
     acmCertificateArn: sslCert.arn,
     bucket: frontendBucket,
     logsBucket,
-    oai,
   });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
