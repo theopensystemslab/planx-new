@@ -34,7 +34,7 @@ export default defineConfig({
       },
     ]
   },
-  ...(MODE === "production" && {
+  ...(["staging", "production"].includes(MODE) && {
     // This generates directory.html instead of directory/index.html
     // Required for AWS Cloudfront
     build: {
