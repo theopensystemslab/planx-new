@@ -213,7 +213,7 @@ export = async () => {
       }),
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.56.2",
+        image: "metabase/metabase:v0.56.6",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
@@ -512,6 +512,13 @@ export = async () => {
             name: "METABASE_URL_EXT",
             value: `https://metabase.${DOMAIN}`,
           },
+          {
+            name: "LPS_URL_EXT",
+            // TODO: Simplify once production CDN is configured
+            value: config.get("lps-domain") 
+              ? pulumi.interpolate`https://${config.requireSecret("lps-domain")}`
+              : ""
+          },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),
         ],
@@ -663,7 +670,19 @@ export = async () => {
           replaceOnChanges: ["privateKey"],
         }
       );
-      const cdn = createCdn({ domain, acmCertificateArn: certificate.arn, bucket: frontendBucket, logsBucket });
+
+      const oai = new aws.cloudfront.OriginAccessIdentity(`${domain}-OAI`, {
+        comment: `OAI for ${domain} CloudFront distribution`,
+      });
+
+      const cdn = createCdn({ 
+        domain, 
+        acmCertificateArn: certificate.arn, 
+        bucket: frontendBucket, 
+        logsBucket,
+        oai,
+      });
+
       return { domain, cname: cdn.domainName };
     }
   })();
@@ -705,7 +724,18 @@ export = async () => {
     },
     { provider: usEast1 }
   );
-  const cdn = createCdn({ domain: DOMAIN, acmCertificateArn: sslCert.arn, bucket: frontendBucket, logsBucket });
+
+  const oai = new aws.cloudfront.OriginAccessIdentity(`${DOMAIN}-OAI`, {
+    comment: `OAI for ${DOMAIN} CloudFront distribution`,
+  });
+
+  const cdn = createCdn({
+    domain: DOMAIN,
+    acmCertificateArn: sslCert.arn,
+    bucket: frontendBucket,
+    logsBucket,
+    oai,
+  });
 
   const frontendDnsRecord = new cloudflare.Record("frontend", {
     name: tldjs.getSubdomain(DOMAIN) || "@",
@@ -716,13 +746,13 @@ export = async () => {
     proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
   });
 
+  // ------------------- LocalPlanning.services
+  createLocalPlanningServices(sslCert);
+
   return {
     customDomains,
   };
 };
-
-// ------------------- LocalPlanning.services
-// createLocalPlanningServices();
 
 new aws.budgets.Budget("general-budget", {
   budgetType: "COST",
