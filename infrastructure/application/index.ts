@@ -516,7 +516,7 @@ export = async () => {
             name: "LPS_URL_EXT",
             // TODO: Simplify once production CDN is configured
             value: config.get("lps-domain") 
-              ? `https://${config.requireSecret("lps-domain")}`
+              ? pulumi.interpolate`https://${config.requireSecret("lps-domain")}`
               : ""
           },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
