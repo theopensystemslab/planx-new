@@ -1,0 +1,1 @@
+ALTER TABLE "public"."lps_magic_links" DROP column "session_id";
