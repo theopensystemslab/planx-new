@@ -17,6 +17,16 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedGlobalSettingsRouteImport } from './routes/_authenticated/global-settings'
 import { Route as AuthenticatedAdminPanelRouteImport } from './routes/_authenticated/admin-panel'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as AuthenticatedTeamRouteRouteImport } from './routes/_authenticated/$team/route'
+import { Route as AuthenticatedTeamIndexRouteImport } from './routes/_authenticated/$team/index'
+import { Route as AuthenticatedTeamSubscriptionRouteImport } from './routes/_authenticated/$team/subscription'
+import { Route as AuthenticatedTeamSubmissionsRouteImport } from './routes/_authenticated/$team/submissions'
+import { Route as AuthenticatedTeamMembersRouteImport } from './routes/_authenticated/$team/members'
+import { Route as AuthenticatedTeamGeneralSettingsRouteImport } from './routes/_authenticated/$team/general-settings'
+import { Route as AuthenticatedTeamFeedbackRouteImport } from './routes/_authenticated/$team/feedback'
+import { Route as AuthenticatedTeamDesignRouteImport } from './routes/_authenticated/$team/design'
+import { Route as AuthenticatedTeamFlowRouteRouteImport } from './routes/_authenticated/$team/$flow/route'
+import { Route as AuthenticatedTeamFlowIndexRouteImport } from './routes/_authenticated/$team/$flow/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -58,8 +68,66 @@ const authLoginRoute = authLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedTeamRouteRoute = AuthenticatedTeamRouteRouteImport.update({
+  id: '/$team',
+  path: '/$team',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTeamIndexRoute = AuthenticatedTeamIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedTeamRouteRoute,
+} as any)
+const AuthenticatedTeamSubscriptionRoute =
+  AuthenticatedTeamSubscriptionRouteImport.update({
+    id: '/subscription',
+    path: '/subscription',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
+const AuthenticatedTeamSubmissionsRoute =
+  AuthenticatedTeamSubmissionsRouteImport.update({
+    id: '/submissions',
+    path: '/submissions',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
+const AuthenticatedTeamMembersRoute =
+  AuthenticatedTeamMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
+const AuthenticatedTeamGeneralSettingsRoute =
+  AuthenticatedTeamGeneralSettingsRouteImport.update({
+    id: '/general-settings',
+    path: '/general-settings',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
+const AuthenticatedTeamFeedbackRoute =
+  AuthenticatedTeamFeedbackRouteImport.update({
+    id: '/feedback',
+    path: '/feedback',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
+const AuthenticatedTeamDesignRoute = AuthenticatedTeamDesignRouteImport.update({
+  id: '/design',
+  path: '/design',
+  getParentRoute: () => AuthenticatedTeamRouteRoute,
+} as any)
+const AuthenticatedTeamFlowRouteRoute =
+  AuthenticatedTeamFlowRouteRouteImport.update({
+    id: '/$flow',
+    path: '/$flow',
+    getParentRoute: () => AuthenticatedTeamRouteRoute,
+  } as any)
+const AuthenticatedTeamFlowIndexRoute =
+  AuthenticatedTeamFlowIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedTeamFlowRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
+  '/$team': typeof AuthenticatedTeamRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/admin-panel': typeof AuthenticatedAdminPanelRoute
   '/global-settings': typeof AuthenticatedGlobalSettingsRoute
@@ -67,6 +135,15 @@ export interface FileRoutesByFullPath {
   '/resources': typeof AuthenticatedResourcesRoute
   '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
+  '/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
+  '/$team/design': typeof AuthenticatedTeamDesignRoute
+  '/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
+  '/$team/general-settings': typeof AuthenticatedTeamGeneralSettingsRoute
+  '/$team/members': typeof AuthenticatedTeamMembersRoute
+  '/$team/submissions': typeof AuthenticatedTeamSubmissionsRoute
+  '/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
+  '/$team/': typeof AuthenticatedTeamIndexRoute
+  '/$team/$flow/': typeof AuthenticatedTeamFlowIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
@@ -76,10 +153,19 @@ export interface FileRoutesByTo {
   '/resources': typeof AuthenticatedResourcesRoute
   '/tutorials': typeof AuthenticatedTutorialsRoute
   '/': typeof AuthenticatedIndexRoute
+  '/$team/design': typeof AuthenticatedTeamDesignRoute
+  '/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
+  '/$team/general-settings': typeof AuthenticatedTeamGeneralSettingsRoute
+  '/$team/members': typeof AuthenticatedTeamMembersRoute
+  '/$team/submissions': typeof AuthenticatedTeamSubmissionsRoute
+  '/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
+  '/$team': typeof AuthenticatedTeamIndexRoute
+  '/$team/$flow': typeof AuthenticatedTeamFlowIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/$team': typeof AuthenticatedTeamRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/_authenticated/admin-panel': typeof AuthenticatedAdminPanelRoute
   '/_authenticated/global-settings': typeof AuthenticatedGlobalSettingsRoute
@@ -87,10 +173,20 @@ export interface FileRoutesById {
   '/_authenticated/resources': typeof AuthenticatedResourcesRoute
   '/_authenticated/tutorials': typeof AuthenticatedTutorialsRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/$team/$flow': typeof AuthenticatedTeamFlowRouteRouteWithChildren
+  '/_authenticated/$team/design': typeof AuthenticatedTeamDesignRoute
+  '/_authenticated/$team/feedback': typeof AuthenticatedTeamFeedbackRoute
+  '/_authenticated/$team/general-settings': typeof AuthenticatedTeamGeneralSettingsRoute
+  '/_authenticated/$team/members': typeof AuthenticatedTeamMembersRoute
+  '/_authenticated/$team/submissions': typeof AuthenticatedTeamSubmissionsRoute
+  '/_authenticated/$team/subscription': typeof AuthenticatedTeamSubscriptionRoute
+  '/_authenticated/$team/': typeof AuthenticatedTeamIndexRoute
+  '/_authenticated/$team/$flow/': typeof AuthenticatedTeamFlowIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/$team'
     | '/login'
     | '/admin-panel'
     | '/global-settings'
@@ -98,6 +194,15 @@ export interface FileRouteTypes {
     | '/resources'
     | '/tutorials'
     | '/'
+    | '/$team/$flow'
+    | '/$team/design'
+    | '/$team/feedback'
+    | '/$team/general-settings'
+    | '/$team/members'
+    | '/$team/submissions'
+    | '/$team/subscription'
+    | '/$team/'
+    | '/$team/$flow/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -107,9 +212,18 @@ export interface FileRouteTypes {
     | '/resources'
     | '/tutorials'
     | '/'
+    | '/$team/design'
+    | '/$team/feedback'
+    | '/$team/general-settings'
+    | '/$team/members'
+    | '/$team/submissions'
+    | '/$team/subscription'
+    | '/$team'
+    | '/$team/$flow'
   id:
     | '__root__'
     | '/_authenticated'
+    | '/_authenticated/$team'
     | '/(auth)/login'
     | '/_authenticated/admin-panel'
     | '/_authenticated/global-settings'
@@ -117,6 +231,15 @@ export interface FileRouteTypes {
     | '/_authenticated/resources'
     | '/_authenticated/tutorials'
     | '/_authenticated/'
+    | '/_authenticated/$team/$flow'
+    | '/_authenticated/$team/design'
+    | '/_authenticated/$team/feedback'
+    | '/_authenticated/$team/general-settings'
+    | '/_authenticated/$team/members'
+    | '/_authenticated/$team/submissions'
+    | '/_authenticated/$team/subscription'
+    | '/_authenticated/$team/'
+    | '/_authenticated/$team/$flow/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,10 +305,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/$team': {
+      id: '/_authenticated/$team'
+      path: '/$team'
+      fullPath: '/$team'
+      preLoaderRoute: typeof AuthenticatedTeamRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/$team/': {
+      id: '/_authenticated/$team/'
+      path: '/'
+      fullPath: '/$team/'
+      preLoaderRoute: typeof AuthenticatedTeamIndexRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/subscription': {
+      id: '/_authenticated/$team/subscription'
+      path: '/subscription'
+      fullPath: '/$team/subscription'
+      preLoaderRoute: typeof AuthenticatedTeamSubscriptionRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/submissions': {
+      id: '/_authenticated/$team/submissions'
+      path: '/submissions'
+      fullPath: '/$team/submissions'
+      preLoaderRoute: typeof AuthenticatedTeamSubmissionsRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/members': {
+      id: '/_authenticated/$team/members'
+      path: '/members'
+      fullPath: '/$team/members'
+      preLoaderRoute: typeof AuthenticatedTeamMembersRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/general-settings': {
+      id: '/_authenticated/$team/general-settings'
+      path: '/general-settings'
+      fullPath: '/$team/general-settings'
+      preLoaderRoute: typeof AuthenticatedTeamGeneralSettingsRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/feedback': {
+      id: '/_authenticated/$team/feedback'
+      path: '/feedback'
+      fullPath: '/$team/feedback'
+      preLoaderRoute: typeof AuthenticatedTeamFeedbackRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/design': {
+      id: '/_authenticated/$team/design'
+      path: '/design'
+      fullPath: '/$team/design'
+      preLoaderRoute: typeof AuthenticatedTeamDesignRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/$flow': {
+      id: '/_authenticated/$team/$flow'
+      path: '/$flow'
+      fullPath: '/$team/$flow'
+      preLoaderRoute: typeof AuthenticatedTeamFlowRouteRouteImport
+      parentRoute: typeof AuthenticatedTeamRouteRoute
+    }
+    '/_authenticated/$team/$flow/': {
+      id: '/_authenticated/$team/$flow/'
+      path: '/'
+      fullPath: '/$team/$flow/'
+      preLoaderRoute: typeof AuthenticatedTeamFlowIndexRouteImport
+      parentRoute: typeof AuthenticatedTeamFlowRouteRoute
+    }
   }
 }
 
+interface AuthenticatedTeamFlowRouteRouteChildren {
+  AuthenticatedTeamFlowIndexRoute: typeof AuthenticatedTeamFlowIndexRoute
+}
+
+const AuthenticatedTeamFlowRouteRouteChildren: AuthenticatedTeamFlowRouteRouteChildren =
+  {
+    AuthenticatedTeamFlowIndexRoute: AuthenticatedTeamFlowIndexRoute,
+  }
+
+const AuthenticatedTeamFlowRouteRouteWithChildren =
+  AuthenticatedTeamFlowRouteRoute._addFileChildren(
+    AuthenticatedTeamFlowRouteRouteChildren,
+  )
+
+interface AuthenticatedTeamRouteRouteChildren {
+  AuthenticatedTeamFlowRouteRoute: typeof AuthenticatedTeamFlowRouteRouteWithChildren
+  AuthenticatedTeamDesignRoute: typeof AuthenticatedTeamDesignRoute
+  AuthenticatedTeamFeedbackRoute: typeof AuthenticatedTeamFeedbackRoute
+  AuthenticatedTeamGeneralSettingsRoute: typeof AuthenticatedTeamGeneralSettingsRoute
+  AuthenticatedTeamMembersRoute: typeof AuthenticatedTeamMembersRoute
+  AuthenticatedTeamSubmissionsRoute: typeof AuthenticatedTeamSubmissionsRoute
+  AuthenticatedTeamSubscriptionRoute: typeof AuthenticatedTeamSubscriptionRoute
+  AuthenticatedTeamIndexRoute: typeof AuthenticatedTeamIndexRoute
+}
+
+const AuthenticatedTeamRouteRouteChildren: AuthenticatedTeamRouteRouteChildren =
+  {
+    AuthenticatedTeamFlowRouteRoute:
+      AuthenticatedTeamFlowRouteRouteWithChildren,
+    AuthenticatedTeamDesignRoute: AuthenticatedTeamDesignRoute,
+    AuthenticatedTeamFeedbackRoute: AuthenticatedTeamFeedbackRoute,
+    AuthenticatedTeamGeneralSettingsRoute:
+      AuthenticatedTeamGeneralSettingsRoute,
+    AuthenticatedTeamMembersRoute: AuthenticatedTeamMembersRoute,
+    AuthenticatedTeamSubmissionsRoute: AuthenticatedTeamSubmissionsRoute,
+    AuthenticatedTeamSubscriptionRoute: AuthenticatedTeamSubscriptionRoute,
+    AuthenticatedTeamIndexRoute: AuthenticatedTeamIndexRoute,
+  }
+
+const AuthenticatedTeamRouteRouteWithChildren =
+  AuthenticatedTeamRouteRoute._addFileChildren(
+    AuthenticatedTeamRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedTeamRouteRoute: typeof AuthenticatedTeamRouteRouteWithChildren
   AuthenticatedAdminPanelRoute: typeof AuthenticatedAdminPanelRoute
   AuthenticatedGlobalSettingsRoute: typeof AuthenticatedGlobalSettingsRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -195,6 +433,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedTeamRouteRoute: AuthenticatedTeamRouteRouteWithChildren,
   AuthenticatedAdminPanelRoute: AuthenticatedAdminPanelRoute,
   AuthenticatedGlobalSettingsRoute: AuthenticatedGlobalSettingsRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
