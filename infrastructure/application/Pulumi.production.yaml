@@ -175,3 +175,5 @@ config:
   cloudflare:apiToken:
     secure: AAABAMbIBX9N21ModHyDYCQCGZXkRUP62NIUMhsxkK+/YUPRQr6PEqgZX9LRP2UuVwvVHd2RxvKGT8lpq8oAgyeDYP1eZSUl
   application:lps-domain: localplanning.services
+  application:lps-cloudflare-zone-id:
+    secure: AAABAH+7QupNP8cRQRnFKSufAxT0Fd3BpC2rMnamjDNfPCJfJZ68AJ4CtE6Rc2ZNF9olgrF6zzsH2nzj2wNdzg==

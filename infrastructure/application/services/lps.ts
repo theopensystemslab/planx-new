@@ -4,8 +4,12 @@ import * as fsWalk from "@nodelib/fs.walk";
 import * as mime from "mime";
 import * as cloudflare from "@pulumi/cloudflare";
 
-import { createCdn } from "../utils";
+import { createCdn, usEast1 } from "../utils";
 
+// The @pulumi/cloudflare package doesn't generate errors so this is here just to create a warning in case the CloudFlare API token is missing.
+new pulumi.Config("cloudflare").requireSecret("apiToken");
+
+const env = pulumi.getStack();
 const config = new pulumi.Config();
 
 const createLPSBucket = (
@@ -102,7 +106,77 @@ const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
     });
 };
 
-export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
+export const createLPSCertificate = (
+  domain: string,
+  planXCert: aws.acm.Certificate
+): aws.acm.Certificate["arn"] => {
+  // On the staging environment, LPS is hosted on a subdomain of planx.dev
+  // Do not proceed to create an ACM record
+  if (env === "staging") return planXCert.arn;
+
+  // https://docs.aws.amazon.com/acm/latest/userguide/setup-caa.html
+  const caaRecordRoot = new cloudflare.Record(`lps-caa-record-root`, {
+    name: domain,
+    ttl: 600,
+    type: "CAA",
+    zoneId: config.require("lps-cloudflare-zone-id"),
+    data: {
+      flags: "0",
+      tag: "issue",
+      value: "amazon.com",
+    },
+  });
+
+  const sslCert = new aws.acm.Certificate(
+    `lps-sslCert`,
+    {
+      domainName: domain,
+      validationMethod: "DNS",
+      subjectAlternativeNames: [domain],
+    },
+    {
+      provider: usEast1,
+      dependsOn: [caaRecordRoot],
+    }
+  );
+
+  const sslCertValidationRecord = new cloudflare.Record(
+    `lps-sslCertValidationRecord`,
+    {
+      name: sslCert.domainValidationOptions[0].resourceRecordName,
+      ttl: 3600,
+      type: sslCert.domainValidationOptions[0].resourceRecordType,
+      value: sslCert.domainValidationOptions[0].resourceRecordValue,
+      zoneId: config.require("lps-cloudflare-zone-id"),
+    }
+  );
+
+  const sslCertValidation = new aws.acm.CertificateValidation(
+    `lps-sslCertValidation`,
+    {
+      certificateArn: sslCert.arn,
+      validationRecordFqdns: [sslCertValidationRecord.name],
+    },
+    {
+      provider: usEast1,
+    }
+  );
+
+  return sslCertValidation.certificateArn;
+};
+
+const createCNAMERecord = (domain: string, cdn: aws.cloudfront.Distribution) => {
+  new cloudflare.Record("localplanningservices", {
+    name: domain,
+    type: "CNAME",
+    zoneId: config.require("cloudflare-zone-id"),
+    value: cdn.domainName,
+    ttl: 1,
+    proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
+  });
+}
+
+export const createLocalPlanningServices = (planXCert: aws.acm.Certificate) => {
   const domain = config.require("lps-domain");
   const oai = new aws.cloudfront.OriginAccessIdentity("lpsOAI", {
     comment: `OAI for LPS CloudFront distribution`,
@@ -113,24 +187,19 @@ export const createLocalPlanningServices = (sslCert: aws.acm.Certificate) => {
 
   uploadBuildSiteToBucket(lpsBucket);
 
+  const acmCertificateArn = createLPSCertificate(domain, planXCert);
+
   const cdn = createCdn({
     bucket: lpsBucket,
     logsBucket,
     domain,
-    acmCertificateArn: sslCert.arn,
+    acmCertificateArn,
     oai,
     mode: "static",
   });
 
-  new cloudflare.Record("localplanningservices", {
-    // TODO: Update for production!
-    name: "localplanning.editor.planx.dev",
-    type: "CNAME",
-    zoneId: config.require("cloudflare-zone-id"),
-    value: cdn.domainName,
-    ttl: 1,
-    proxied: false, // This was causing infinite HTTPS redirects, so let's just use CloudFront only
-  });
+  // We only require a CNAME record for staging
+  if (env === "staging") createCNAMERecord(domain, cdn);
 
   return cdn;
 };
