@@ -1,4 +1,4 @@
-import { PUBLIC_PLANX_GRAPHQL_API_URL } from "astro:env/client";
+import { PUBLIC_PLANX_HASURA_GRAPHQL_API_URL } from "astro:env/client";
 import { GET_LPAS_QUERY } from "@lib/lpa-api/query";
 import { print } from "graphql";
 
@@ -54,7 +54,7 @@ const NOTIFY_SERVICE_SLUGS = [
 
 export async function fetchAllLPAs(): Promise<LPA[]> {
   try {
-    const response = await fetch(PUBLIC_PLANX_GRAPHQL_API_URL, {
+    const response = await fetch(PUBLIC_PLANX_HASURA_GRAPHQL_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
