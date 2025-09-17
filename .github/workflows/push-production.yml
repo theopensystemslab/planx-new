@@ -109,7 +109,7 @@ jobs:
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
         working-directory: localplanning.services
-      - run: pnpm build --mode production
+      - run: pnpm build --mode production --site https://localplanning.services
         working-directory: localplanning.services
       - name: Upload LocalPlanning.services build artifact
         uses: actions/upload-artifact@v4
