@@ -6,11 +6,67 @@ import { ConsumedLink } from "./errors/ConsumedLink";
 import { UnhandledError } from "./errors/UnhandledError";
 import { NoApplications } from "./errors/NoApplications";
 import { ApplicationCard } from "./ApplicationCard";
+import { ApplicationFilters, type FilterState } from "./ApplicationFilters";
+import { useState, useMemo } from "react";
 
 export const ApplicationsList: React.FC = () => {
   const { applications, isLoading, error } = useFetchApplications();
 
-  // TODO: Better UI - skeleton or spinner?
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    draft: true,
+    awaitingPayment: true,
+    sent: true,
+  });
+
+  const getDisplayStatus = (application: any) => {
+    if (application.status === 'submitted') {
+      return { filterKey: 'sent' as const, cardStatus: 'submitted' as const };
+    } else if (application.status === 'awaiting-payment' || (application.status === 'draft' && application.progress?.completed === 100)) {
+      return { filterKey: 'awaitingPayment' as const, cardStatus: 'awaiting-payment' as const };
+    } else {
+      return { filterKey: 'draft' as const, cardStatus: 'draft' as const };
+    }
+  };
+
+  const { filteredApplications, statusCounts } = useMemo(() => {
+    const applicationsWithStatus = applications.map(application => ({
+      ...application,
+      ...getDisplayStatus(application)
+    }));
+
+    const counts = applicationsWithStatus.reduce((acc, application) => {
+      acc[application.filterKey]++;
+      return acc;
+    }, {
+      draft: 0,
+      awaitingPayment: 0,
+      sent: 0
+    });
+
+    const filtered = applicationsWithStatus.filter(application => {
+      const statusMatch = filters[application.filterKey];
+
+      const searchTerm = filters.search.toLowerCase().trim();
+      const searchMatch = searchTerm === '' || 
+        application.team.name.toLowerCase().includes(searchTerm) ||
+        application.service.name.toLowerCase().includes(searchTerm) ||
+        (application.address && application.address.toLowerCase().includes(searchTerm));
+
+      return statusMatch && searchMatch;
+    });
+
+    return {
+      filteredApplications: filtered,
+      statusCounts: counts
+    };
+  }, [applications, filters]);
+
+  const handleFilterChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+  };
+
+  // TODO: Better UI - skeleton or spinner? 
   if (isLoading) return <p>Loading your applications...</p>;
 
   if (error) {
@@ -31,18 +87,28 @@ export const ApplicationsList: React.FC = () => {
   return (
     <div className="w-full flex flex-col lg:flex-row gap-[20px] justify-between">
       <div className="basis-full lg:basis-320">
-        <div className="bg-bg-light clamp-[p,4,6] rounded">TODO: Filters</div>
+        <ApplicationFilters 
+          onFilterChange={handleFilterChange} 
+          statusCounts={statusCounts} 
+        />
       </div>
       <div className="basis-full lg:basis-660">
         <div className="flex flex-col gap-8 max-w-full">
-          <ul className="flex flex-col gap-8">
-            {applications.map((application) => (
-              <ApplicationCard
-                key={application.id}
-                {...application}
-              />
-            ))}
-          </ul>
+          {filteredApplications.length > 0 ? (
+            <ul className="flex flex-col gap-8">
+              {filteredApplications.map((application) => (
+                <ApplicationCard
+                  key={application.id}
+                  {...application}
+                  status={application.cardStatus}
+                />
+              ))}
+            </ul>
+          ) : (
+            <div className="bg-bg-light rounded clamp-[p,4,6] text-center">
+              <p className="text-body-lg mb-0">No applications match the selected filters.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

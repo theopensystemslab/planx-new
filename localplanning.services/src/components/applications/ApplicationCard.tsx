@@ -1,7 +1,7 @@
-import type { Application } from "./hooks/useFetchApplications";
 import { formatDate } from "@lib/date";
+import type { ApplicationCardProps } from "./hooks/useFetchApplications";
 
-const ProgressText: React.FC<Application> = (application) => {
+const ProgressText: React.FC<ApplicationCardProps> = (application) => {
   const progressText = (() => {
     switch (application.status) {
       case "draft":
@@ -22,7 +22,7 @@ const ProgressText: React.FC<Application> = (application) => {
         return (
           <>
             Application sent
-            <strong className="font-semibold"> {formatDate(application.submittedAt)}</strong>
+            <strong className="font-semibold"> {formatDate(application.submittedAt!)}</strong>
           </>
         );
     }
@@ -36,7 +36,7 @@ const ProgressText: React.FC<Application> = (application) => {
 };
 
 // TODO: How should we handle applications without progress indicators?
-const ProgressBar: React.FC<Application> = (application) => {
+const ProgressBar: React.FC<ApplicationCardProps> = (application) => {
   const progressColour = (() => {
     switch (application.status) {
       case "submitted":
@@ -72,14 +72,14 @@ const ProgressBar: React.FC<Application> = (application) => {
       aria-label={getProgressLabel()}
     >
       <div 
-        className={`h-3 transition-all duration-300 ${progressColour}`}
+        className={`h-3 ${progressColour}`}
         style={{ width: `${progressValue}%` }}
       />
     </div>
   );
 };
 
-const ActionText: React.FC<Application> = (application) => {
+const ActionText: React.FC<ApplicationCardProps> = (application) => {
   const actionText = (() => {
     switch (application.status) {
       case "draft":
@@ -110,7 +110,7 @@ const ActionText: React.FC<Application> = (application) => {
   );
 };
 
-const ActionButtons: React.FC<Application> = (application) => {
+const ActionButtons: React.FC<ApplicationCardProps> = (application) => {
   const buttons = (() => {
     switch (application.status) {
       case "draft":
@@ -165,7 +165,7 @@ const ActionButtons: React.FC<Application> = (application) => {
   );
 };
 
-export const ApplicationCard: React.FC<Application> = (application) => (
+export const ApplicationCard: React.FC<ApplicationCardProps> = (application) => (
   <li className="bg-bg-light rounded overflow-hidden">
     <div className="clamp-[p,4,6] clamp-[pb,2,4]">
       <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
