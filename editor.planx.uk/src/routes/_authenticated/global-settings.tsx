@@ -1,10 +1,25 @@
-import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
+import { createFileRoute, notFound, rootRouteId } from "@tanstack/react-router";
+import { gql } from "graphql-tag";
+import { client } from "lib/graphql";
+import { useStore } from "pages/FlowEditor/lib/store";
+
+import GlobalSettingsView from "../../pages/GlobalSettings";
 
 export const Route = createFileRoute("/_authenticated/global-settings")({
-  component: RouteComponent,
-});
+  loader: async ({ context }) => {
+    const isAuthorised = context.user?.isPlatformAdmin;
+    if (!isAuthorised) throw notFound({ routeId: rootRouteId });
 
-function RouteComponent() {
-  return <div>Hello "/_authenticated/global-settings"!</div>;
-}
+    const { data } = await client.query({
+      query: gql`
+        query {
+          globalSettings: global_settings {
+            footerContent: footer_content
+          }
+        }
+      `,
+    });
+    useStore.getState().setGlobalSettings(data.globalSettings[0]);
+  },
+  component: GlobalSettingsView,
+});
