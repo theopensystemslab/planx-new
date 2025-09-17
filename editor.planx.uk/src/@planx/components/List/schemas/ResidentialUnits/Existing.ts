@@ -4,16 +4,6 @@ export const ResidentialUnitsExisting: Schema = {
   type: "Existing residential unit type",
   fields: [
     {
-      type: "number",
-      data: {
-        title: "Number of units of this type",
-        description:
-          "This is the number of units of this type that currently exist on the site.",
-        fn: "identicalUnits",
-        allowNegatives: false,
-      },
-    },
-    {
       type: "question",
       data: {
         title: "What best describes this unit?",
@@ -35,9 +25,17 @@ export const ResidentialUnitsExisting: Schema = {
       },
     },
     {
+      type: "number",
+      data: {
+        title: "How many of this type of units are there?",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
       type: "question",
       data: {
-        title: "What best describes the tenure of this unit?",
+        title: "Select how the unit is owned or rented",
         fn: "tenure",
         options: [
           { id: "MH", data: { text: "Market housing", val: "MH" } },
