@@ -1,6 +1,6 @@
 DROP VIEW "public"."planx_website_stats";
 
-CREATE VIEW "public"."planx_website_stats" AS
+CREATE OR REPLACE VIEW "public"."planx_website_stats" AS
 SELECT
   (
     SELECT
