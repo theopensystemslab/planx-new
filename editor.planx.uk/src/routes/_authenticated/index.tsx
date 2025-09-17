@@ -26,7 +26,6 @@ const AuthenticatedHomeRoute = () => {
 
 export const Route = createFileRoute("/_authenticated/")({
   loader: async () => {
-    await useStore.getState().initUserStore();
     const { data } = await client.query<{ teams: TeamSummary[] }>({
       query: gql`
         query GetTeamSummaries {
