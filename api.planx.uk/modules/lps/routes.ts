@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { validate } from "../../shared/middleware/validate.js";
-import { applicationsSchema, loginSchema } from "./types.js";
+import { applicationsSchema } from "./types/applications.js";
+import { loginSchema } from "./types/login.js";
 import { applicationsController, loginController } from "./controller.js";
 import { validateMagicLinkStatus } from "./middleware/validateMagicLinkStatus.js";
 

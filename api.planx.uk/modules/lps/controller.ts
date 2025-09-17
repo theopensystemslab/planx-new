@@ -1,7 +1,8 @@
 import { ServerError } from "../../errors/serverError.js";
 import { getApplications } from "./service/getApplications/index.js";
 import { login } from "./service/login.js";
-import type { Applications, Login } from "./types.js";
+import type { Applications } from "./types/applications.js";
+import type { Login } from "./types/login.js";
 
 export const loginController: Login = async (_req, res, next) => {
   const { email } = res.locals.parsedReq.body;
