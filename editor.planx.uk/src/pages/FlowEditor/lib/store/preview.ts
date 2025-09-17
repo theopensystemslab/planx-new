@@ -7,6 +7,7 @@ import type {
   Value,
 } from "@opensystemslab/planx-core/types";
 import {
+  ComponentType,
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
@@ -523,8 +524,8 @@ export const previewStore: StateCreator<
     const { type, data } = node;
     if (!type || !SUPPORTED_INPUT_TYPES.includes(type) || !data?.fn) return;
 
-    // Input component types when another component of the exact same type and data field
-    //   has been previously seen by the user
+    // Auto-answer supported input component types when another component of
+    //   the exact same type and data field has been previously seen by the user
     const visitedNodes = Object.entries(breadcrumbs)
       .filter(
         ([nodeId, breadcrumb]) =>
@@ -537,7 +538,10 @@ export const previewStore: StateCreator<
     if (!visitedNodes.length) return;
 
     const autoAnswerableInputValue =
-      breadcrumbs[visitedNodes[0]].data?.[data.fn];
+      type === ComponentType.ContactInput
+        ? breadcrumbs[visitedNodes[0]].data?.[`_contact.${data.fn}`]?.[data.fn]
+        : breadcrumbs[visitedNodes[0]].data?.[data.fn];
+
     return autoAnswerableInputValue;
   },
 
