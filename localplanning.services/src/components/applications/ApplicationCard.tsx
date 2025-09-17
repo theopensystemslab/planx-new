@@ -36,23 +36,45 @@ const ProgressText: React.FC<Application> = (application) => {
 };
 
 // TODO: How should we handle applications without progress indicators?
-// a11y: Use a <progress/> bar here
 const ProgressBar: React.FC<Application> = (application) => {
   const progressColour = (() => {
     switch (application.status) {
       case "submitted":
         return "bg-green-600";
+      case "awaiting-payment":
+        return "bg-red-900";
       default:
         return "bg-black";
     }
   })();
 
+  const progressValue = application.progress?.completed ?? 0;
+  
+  const getProgressLabel = () => {
+    switch (application.status) {
+      case "submitted":
+        return "Application submitted";
+      case "awaiting-payment":
+        return "Application completed, awaiting payment";
+      case "draft":
+      default:
+        return `Application progress: ${progressValue}% complete`;
+    }
+  };
+
   return (
-    <div className="w-full bg-white rounded-full h-3 overflow-hidden border border-gray-300 my-2">
-      <div
+    <div 
+      className="w-full bg-white rounded-full h-3 overflow-hidden border border-gray-300 my-2"
+      role="progressbar"
+      aria-valuenow={progressValue}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={getProgressLabel()}
+    >
+      <div 
         className={`h-3 transition-all duration-300 ${progressColour}`}
-        style={{ width: `${application.progress?.completed ?? 0}%` }}
-      ></div>
+        style={{ width: `${progressValue}%` }}
+      />
     </div>
   );
 };
