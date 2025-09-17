@@ -23,6 +23,7 @@ import { AmendDocuments } from "./schemas/AmendDocuments";
 import { ExistingBuildingsCIL } from "./schemas/CIL/ExistingCIL";
 import { MezzanineCIL } from "./schemas/CIL/MezzanineCIL";
 import { UnoccupiedBuildingsCIL } from "./schemas/CIL/UnoccupiedCIL";
+import { DescribeDocuments } from "./schemas/DescribeDocuments";
 import { DischargeConditions } from "./schemas/DischargeConditions";
 import { NonResidentialFloorspace } from "./schemas/Floorspace";
 import { BuildingDetailsGLA } from "./schemas/GLA/BuildingDetails";
@@ -91,6 +92,7 @@ export const SCHEMAS = [
     schema: OwnershipCertificateOwners,
   },
   { name: "Amend documents", schema: AmendDocuments },
+  { name: "Describe documents", schema: DescribeDocuments },
   { name: "Discharge conditions", schema: DischargeConditions },
   { name: "Tree description - Conservation Area", schema: TreeDescriptionCA },
   { name: "Tree description - TPO", schema: TreeDescriptionTPO },
