@@ -1,0 +1,3 @@
+table:
+  name: analytics_action_nodes
+  schema: public
