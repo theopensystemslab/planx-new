@@ -1,10 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import React from "react";
+import NotionEmbed from "ui/editor/NotionEmbed";
 
 export const Route = createFileRoute("/_authenticated/tutorials")({
-  component: RouteComponent,
+  component: () => <NotionEmbed page="tutorials" title="Tutorials" />,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/tutorials"!</div>;
-}
