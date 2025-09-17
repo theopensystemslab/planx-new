@@ -435,7 +435,30 @@ describe("generating a download token", () => {
       });
   });
 
+  it("requires a valid sessionId", async () => {
+    queryMock.mockQuery({
+      name: "CheckSessionExists",
+      matchOnVariables: false,
+      // Mock no results found
+      data: { lowcalSessions: [] },
+    });
+
+    await supertest(app)
+      .post(ENDPOINT)
+      .send({ email: NOTIFY_TEST_EMAIL, sessionId: uuidV4() })
+      .expect(403)
+      .then((res) => {
+        expect(res.body.error).toMatch(/Unauthorised/);
+      });
+  });
+
   it("handles GraphQL errors", async () => {
+    queryMock.mockQuery({
+      name: "CheckSessionExists",
+      matchOnVariables: false,
+      data: { lowcalSessions: [{ sessionId: uuidV4() }] },
+    });
+
     queryMock.mockQuery({
       name: "CreateLPSDownloadToken",
       matchOnVariables: false,
@@ -457,6 +480,12 @@ describe("generating a download token", () => {
   });
 
   it("handles uncaught errors", async () => {
+    queryMock.mockQuery({
+      name: "CheckSessionExists",
+      matchOnVariables: false,
+      data: { lowcalSessions: [{ sessionId: uuidV4() }] },
+    });
+
     vi.spyOn(
       generateDownloadTokenService,
       "generateDownloadToken",
@@ -473,6 +502,12 @@ describe("generating a download token", () => {
   });
 
   it("returns a token on success", async () => {
+    queryMock.mockQuery({
+      name: "CheckSessionExists",
+      matchOnVariables: false,
+      data: { lowcalSessions: [{ sessionId: uuidV4() }] },
+    });
+
     const testToken = uuidV4();
 
     queryMock.mockQuery({

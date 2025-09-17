@@ -9,6 +9,7 @@ import {
 } from "./controller.js";
 import { validateMagicLinkStatus } from "./middleware/validateMagicLinkStatus.js";
 import { generateDownloadTokenSchema } from "./types/downloadToken.js";
+import { validateSessionStatus } from "./middleware/validateSessionStatus.js";
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.post(
 router.post(
   "/lps/download/token",
   validate(generateDownloadTokenSchema),
+  validateSessionStatus,
   generateDownloadTokenController,
 );
 

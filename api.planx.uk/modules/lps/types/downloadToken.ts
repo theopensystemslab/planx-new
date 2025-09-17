@@ -1,8 +1,12 @@
 import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 
-interface GenerateDownloadTokenResponse {
+interface Success {
   token: string;
+}
+
+interface Error {
+  error: string;
 }
 
 export const generateDownloadTokenSchema = z.object({
@@ -14,5 +18,5 @@ export const generateDownloadTokenSchema = z.object({
 
 export type GenerateDownloadToken = ValidatedRequestHandler<
   typeof generateDownloadTokenSchema,
-  GenerateDownloadTokenResponse
+  Success | Error
 >;
