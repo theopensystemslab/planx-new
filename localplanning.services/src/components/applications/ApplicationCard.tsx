@@ -11,7 +11,7 @@ const ProgressText: React.FC<Application> = (application) => {
             <strong className="font-semibold"> {formatDate(application.createdAt)}</strong>
           </>
         );
-      case "awaiting-payment":
+      case "awaitingPayment":
         return (
           <>
             Application completed
@@ -41,7 +41,7 @@ const ProgressBar: React.FC<Application> = (application) => {
     switch (application.status) {
       case "submitted":
         return "bg-green-600";
-      case "awaiting-payment":
+      case "awaitingPayment":
         return "bg-red-900";
       default:
         return "bg-black";
@@ -54,7 +54,7 @@ const ProgressBar: React.FC<Application> = (application) => {
     switch (application.status) {
       case "submitted":
         return "Application submitted";
-      case "awaiting-payment":
+      case "awaitingPayment":
         return "Application completed, awaiting payment";
       case "draft":
       default:
@@ -88,7 +88,7 @@ const ActionText: React.FC<Application> = (application) => {
             You have until <strong className="font-semibold">{formatDate(application.expiresAt)}</strong> to complete this application
           </>
         );
-      case "awaiting-payment":
+      case "awaitingPayment":
         return (
           <>
             This application must be paid by <strong className="font-semibold">{formatDate(application.expiresAt)}</strong>
@@ -130,7 +130,7 @@ const ActionButtons: React.FC<Application> = (application) => {
             </a>
           </>
         )
-      case "awaiting-payment":
+      case "awaitingPayment":
         return (
           <>
             <button

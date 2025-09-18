@@ -204,7 +204,7 @@ export async function findSession({
           where: {
             id: { _eq: $sessionId }
             email: { _eq: $email }
-            user_status: { _in: ["draft", "awaiting-payment"] }
+            user_status: { _in: ["draft", "awaitingPayment"] }
           }
           limit: 1
         ) {
