@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 type FilterState = {
   search: string;
   draft: boolean;
-  awaitingPayment: boolean;
-  sent: boolean;
+  "awaiting-payment": boolean;
+  submitted: boolean;
 };
 
 export type StatusCounts = {
   draft: number;
-  awaitingPayment: number;
-  sent: number;
+  "awaiting-payment": number;
+  submitted: number;
 };
 
 type Props = {
@@ -20,17 +20,17 @@ type Props = {
 
 export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCounts }) => {
   const [filters, setFilters] = useState<FilterState>({
-    search: '',
+    search: "",
     draft: true,
-    awaitingPayment: true,
-    sent: true,
+    "awaiting-payment": true,
+    submitted: true,
   });
 
   const defaultFilters: FilterState = {
-    search: '',
+    search: "",
     draft: true,
-    awaitingPayment: true,
-    sent: true,
+    "awaiting-payment": true,
+    submitted: true,
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
     onFilterChange(newFilters);
   };
 
-  const handleFilterChange = (filterType: keyof Omit<FilterState, 'search'>) => {
+  const handleFilterChange = (filterType: keyof Omit<FilterState, "search">) => {
     const newFilters = {
       ...filters,
       [filterType]: !filters[filterType],
@@ -60,15 +60,15 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
     return (
       filters.search !== defaultFilters.search ||
       filters.draft !== defaultFilters.draft ||
-      filters.awaitingPayment !== defaultFilters.awaitingPayment ||
-      filters.sent !== defaultFilters.sent
+      filters["awaiting-payment"] !== defaultFilters["awaiting-payment"] ||
+      filters.submitted !== defaultFilters.submitted
     );
   };
 
   const filterOptions = [
-    { key: 'draft' as const, label: 'Draft applications', count: statusCounts.draft },
-    { key: 'awaitingPayment' as const, label: 'Awaiting payment', count: statusCounts.awaitingPayment },
-    { key: 'sent' as const, label: 'Sent applications', count: statusCounts.sent },
+    { key: "draft" as const, label: "Draft applications", count: statusCounts.draft },
+    { key: "awaiting-payment" as const, label: "Awaiting payment", count: statusCounts["awaiting-payment"] },
+    { key: "submitted" as const, label: "Submitted applications", count: statusCounts.submitted },
   ];
 
   const isActive = isFiltersActive();
@@ -138,8 +138,8 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
         disabled={!isActive}
         className={`button button--secondary button--small button-focus-style ${
           isActive 
-            ? '' 
-            : 'button--disabled'
+            ? "" 
+            : "button--disabled"
         }`}
       >
         Reset filters

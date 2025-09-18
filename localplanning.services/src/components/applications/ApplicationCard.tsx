@@ -1,7 +1,7 @@
 import { formatDate } from "@lib/date";
-import type { ApplicationCardProps } from "./hooks/useFetchApplications";
+import type { Application } from "./hooks/useFetchApplications";
 
-const ProgressText: React.FC<ApplicationCardProps> = (application) => {
+const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
     switch (application.status) {
       case "draft":
@@ -36,7 +36,7 @@ const ProgressText: React.FC<ApplicationCardProps> = (application) => {
 };
 
 // TODO: How should we handle applications without progress indicators?
-const ProgressBar: React.FC<ApplicationCardProps> = (application) => {
+const ProgressBar: React.FC<Application> = (application) => {
   const progressColour = (() => {
     switch (application.status) {
       case "submitted":
@@ -79,7 +79,7 @@ const ProgressBar: React.FC<ApplicationCardProps> = (application) => {
   );
 };
 
-const ActionText: React.FC<ApplicationCardProps> = (application) => {
+const ActionText: React.FC<Application> = (application) => {
   const actionText = (() => {
     switch (application.status) {
       case "draft":
@@ -110,7 +110,7 @@ const ActionText: React.FC<ApplicationCardProps> = (application) => {
   );
 };
 
-const ActionButtons: React.FC<ApplicationCardProps> = (application) => {
+const ActionButtons: React.FC<Application> = (application) => {
   const buttons = (() => {
     switch (application.status) {
       case "draft":
@@ -165,7 +165,7 @@ const ActionButtons: React.FC<ApplicationCardProps> = (application) => {
   );
 };
 
-export const ApplicationCard: React.FC<ApplicationCardProps> = (application) => (
+export const ApplicationCard: React.FC<Application> = (application) => (
   <li className="bg-bg-light rounded overflow-hidden">
     <div className="clamp-[p,4,6] clamp-[pb,2,4]">
       <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
