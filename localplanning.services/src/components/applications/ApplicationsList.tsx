@@ -15,37 +15,22 @@ export const ApplicationsList: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     draft: true,
-    awaitingPayment: true,
-    sent: true,
+    "awaiting-payment": true,
+    submitted: true,
   });
 
-  const getDisplayStatus = (application: any) => {
-    if (application.status === 'submitted') {
-      return { filterKey: 'sent' as const, cardStatus: 'submitted' as const };
-    } else if (application.status === 'awaiting-payment' || (application.status === 'draft' && application.progress?.completed === 100)) {
-      return { filterKey: 'awaitingPayment' as const, cardStatus: 'awaiting-payment' as const };
-    } else {
-      return { filterKey: 'draft' as const, cardStatus: 'draft' as const };
-    }
-  };
-
   const { filteredApplications, statusCounts } = useMemo(() => {
-    const applicationsWithStatus = applications.map(application => ({
-      ...application,
-      ...getDisplayStatus(application)
-    }));
-
-    const counts = applicationsWithStatus.reduce((acc, application) => {
-      acc[application.filterKey]++;
+    const counts = applications.reduce((acc, application) => {
+      acc[application.status]++;
       return acc;
     }, {
       draft: 0,
-      awaitingPayment: 0,
-      sent: 0
+      ["awaiting-payment"]: 0,
+      submitted: 0
     });
 
-    const filtered = applicationsWithStatus.filter(application => {
-      const statusMatch = filters[application.filterKey];
+    const filtered = applications.filter(application => {
+      const statusMatch = filters[application.status];
 
       const searchTerm = filters.search.toLowerCase().trim();
       const searchMatch = searchTerm === '' || 
@@ -100,7 +85,6 @@ export const ApplicationsList: React.FC = () => {
                 <ApplicationCard
                   key={application.id}
                   {...application}
-                  status={application.cardStatus}
                 />
               ))}
             </ul>
