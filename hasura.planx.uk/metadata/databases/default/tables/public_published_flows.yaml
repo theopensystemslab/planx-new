@@ -16,7 +16,6 @@ insert_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -36,7 +35,6 @@ insert_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -49,7 +47,6 @@ insert_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -69,7 +66,6 @@ insert_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -81,7 +77,6 @@ select_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -94,7 +89,6 @@ select_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -107,7 +101,6 @@ select_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -120,7 +113,6 @@ select_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
@@ -133,7 +125,6 @@ select_permissions:
         - created_at
         - data
         - flow_id
-        - has_sections
         - has_send_component
         - id
         - publisher_id
