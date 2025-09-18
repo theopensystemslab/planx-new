@@ -7,6 +7,7 @@ import { sendEmail } from "../../lib/notify/index.js";
 import * as getApplicationsService from "./service/getApplications/index.js";
 import * as loginService from "./service/login.js";
 import * as generateDownloadTokenService from "./service/generateDownloadToken.js";
+import * as generateHTMLService from "./service/generateHTML.js";
 import type { Application } from "./service/getApplications/types.js";
 
 vi.mock("../../lib/notify/index.js", () => ({
@@ -527,5 +528,201 @@ describe("generating a download token", () => {
       .then((res) => {
         expect(res.body).toHaveProperty("token", testToken);
       });
+  });
+});
+
+describe("requesting HTML for a session ID", () => {
+  const ENDPOINT = "/lps/download/HTML";
+
+  describe("payload validation", () => {
+    it("requires an email address", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ sessionId: uuidV4() })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+        });
+    });
+
+    it("requires a sessionId", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .send({ email: NOTIFY_TEST_EMAIL })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+        });
+    });
+
+    it("requires an auth header", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ some: "otherHeaders" })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues[0].message).toMatch(
+            /Authorization headers are required/,
+          );
+        });
+    });
+
+    it("requires an auth header in the correct format", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: "abc123" })
+        .expect(400)
+        .then((res) => {
+          console.log(res.body);
+          expect(res.body).toHaveProperty("issues");
+          expect(res.body).toHaveProperty("name", "ZodError");
+          expect(res.body.issues[0].message).toMatch(/Invalid token format/);
+        });
+    });
+  });
+
+  describe("download token validation", () => {
+    test("invalid token", async () => {
+      queryMock.mockQuery({
+        name: "GetDownloadTokenStatus",
+        matchOnVariables: false,
+        data: {
+          // No matching download token found
+          downloadToken: [],
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.error).toMatch(/DOWNLOAD_TOKEN_INVALID/);
+        });
+    });
+
+    test("expired token", async () => {
+      queryMock.mockQuery({
+        name: "GetDownloadTokenStatus",
+        matchOnVariables: false,
+        data: {
+          downloadToken: [
+            {
+              // Link created a long time ago
+              usedAt: null,
+              createdAt: new Date("1970-1-1").toString(),
+            },
+          ],
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(410)
+        .then((res) => {
+          expect(res.body.error).toMatch(/DOWNLOAD_TOKEN_EXPIRED/);
+        });
+    });
+
+    test("consumed token", async () => {
+      queryMock.mockQuery({
+        name: "GetDownloadTokenStatus",
+        matchOnVariables: false,
+        data: {
+          downloadToken: [
+            {
+              // Link consumed a long time ago
+              usedAt: new Date("1970-2-2").toString(),
+              createdAt: new Date("1970-1-1").toString(),
+            },
+          ],
+        },
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(410)
+        .then((res) => {
+          expect(res.body.error).toMatch(/DOWNLOAD_TOKEN_CONSUMED/);
+        });
+    });
+
+    it("handles errors", async () => {
+      queryMock.mockQuery({
+        name: "GetDownloadTokenStatus",
+        matchOnVariables: false,
+        data: {},
+        graphqlErrors: [
+          {
+            message: "Something went wrong",
+          },
+        ],
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to validate download token/);
+        });
+    });
+  });
+
+  describe("downloading HTML", async () => {
+    beforeEach(() => {
+      // Successfully validate token
+      queryMock.mockQuery({
+        name: "GetDownloadTokenStatus",
+        matchOnVariables: false,
+        data: {
+          downloadToken: [
+            {
+              usedAt: null,
+              createdAt: Date.now().toString(),
+            },
+          ],
+        },
+      });
+    });
+
+    it("handles uncaught errors", async () => {
+      vi.spyOn(generateHTMLService, "generateHTML").mockRejectedValueOnce(
+        new Error("Unhandled error!"),
+      );
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to generate HTML for session/);
+          expect(res.body.error).toMatch(/Unhandled error!/);
+        });
+    });
+
+    it("successfully downloads HTML when valid detail are provided", async () => {
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(200)
+        .then((res) => {
+          expect(res.headers["content-type"]).toMatch(/text\/html/);
+          expect(res).toHaveProperty("text");
+          expect(res.text).toMatch(/<!DOCTYPE html>/);
+        });
+    });
   });
 });
