@@ -211,7 +211,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
-      - run: pnpm build --mode pizza --site "https://localplanning.${{ env.FULL_DOMAIN }}"
+      - run: pnpm build --site "https://localplanning.${{ env.FULL_DOMAIN }}" --mode pizza
         env:
           ROOT_DOMAIN: ${{ env.FULL_DOMAIN }}
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
