@@ -167,11 +167,12 @@ const ActionButtons: React.FC<Application> = (application) => {
 
 export const ApplicationCard: React.FC<Application> = (application) => (
   <li className="bg-bg-light rounded overflow-hidden">
-    <div className="clamp-[p,4,6]">
-      <h3 className="text-heading-sm">{application.address || "—"}</h3>
-      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center">
-        <span className="text-body-lg">{application.team.name}</span>
-        <span className="text-body-lg">{application.service.name}</span>
+    <div className="clamp-[p,4,6] clamp-[pb,2,4]">
+      <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
+      <div className="flex flex-col lg:flex-row lg:justify-start lg:gap-2 lg:items-center">
+        <span className="text-body-lg mb-0">{application.team.name}</span>
+        <span className="hidden lg:inline">•</span>
+        <span className="text-body-lg mb-0">{application.service.name}</span>
       </div>
       <div className="my-2">
         <ProgressBar {...application} />
