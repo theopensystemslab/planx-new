@@ -68,6 +68,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
             />
           </InputRow>
           <DataFieldAutocomplete
+            required
             value={formik.values.fn}
             onChange={(value) => formik.setFieldValue("fn", value)}
             disabled={props.disabled}

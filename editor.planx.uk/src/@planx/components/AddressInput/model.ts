@@ -41,9 +41,9 @@ export const formatAsSingleLineAddress = (address: Address) =>
 export const validationSchema: SchemaOf<AddressInput> =
   baseNodeDataValidationSchema.concat(
     object({
-      fn: string().nullable().required(),
       title: string().required(),
       description: richText(),
+      fn: string().nullable().required(),
       autoAnswer: addressValidationSchema().nullable(),
     }),
   );
