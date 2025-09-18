@@ -10,6 +10,34 @@ import * as generateDownloadTokenService from "./service/generateDownloadToken.j
 import * as validateDownloadTokenMiddleware from "./middleware/validateDownloadToken.js";
 import * as generateHTMLService from "./service/generateHTML.js";
 import type { Application } from "./service/getApplications/types.js";
+import type * as planxCore from "@opensystemslab/planx-core";
+
+const mockGenerateCSVData = vi.fn().mockResolvedValue([
+  {
+    question: "Planning Application Reference",
+    responses: "56841432-b654-4d64-ab54-5d23d007a034",
+  },
+  { question: "Property Address", responses: "" },
+  {
+    question: "application_type",
+    responses: "Request a building control quote",
+  },
+  { question: "result", responses: {} },
+]);
+
+vi.mock("@opensystemslab/planx-core", async (importOriginal) => {
+  const originalModule = await importOriginal<typeof planxCore>();
+
+  return {
+    ...originalModule,
+    CoreDomainClient: class extends originalModule.CoreDomainClient {
+      constructor() {
+        super();
+        this.export.csvData = () => mockGenerateCSVData();
+      }
+    },
+  };
+});
 
 vi.mock("../../lib/notify/index.js", () => ({
   sendEmail: vi.fn(),
@@ -760,6 +788,28 @@ describe("requesting HTML for a session ID", () => {
           token: uuidV4(),
         },
       });
+
+      // Get session details
+      queryMock.mockQuery({
+        name: "GetSessionById",
+        matchOnVariables: false,
+        data: {
+          session: {
+            id: "56841432-b654-4d64-ab54-5d23d007a034",
+            data: {
+              id: "cc1a89cb-c552-4a52-a3b5-5a32ecadf18e",
+              passport: {},
+              sessionId: "56841432-b654-4d64-ab54-5d23d007a034",
+              breadcrumbs: {},
+            },
+            flow: {
+              id: "cc1a89cb-c552-4a52-a3b5-5a32ecadf18e",
+              slug: "request-a-building-control-quote",
+              name: "Request a building control quote",
+            },
+          },
+        },
+      });
     });
 
     it("handles uncaught errors", async () => {
@@ -795,10 +845,13 @@ describe("requesting HTML for a session ID", () => {
             ]),
           );
 
-          // HTML returned
+          // HTML response returned
           expect(res.headers["content-type"]).toMatch(/text\/html/);
           expect(res).toHaveProperty("text");
-          expect(res.text).toMatch(/<!DOCTYPE html>/);
+
+          // Expected HTML document
+          expect(res.text).toMatch(/^<html>.*<\/html>$/s);
+          expect(res.text).toMatch(/PlanX Submission Overview/);
         });
     });
   });
