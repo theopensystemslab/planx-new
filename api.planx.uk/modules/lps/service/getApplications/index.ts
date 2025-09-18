@@ -126,7 +126,7 @@ export const getApplications = async (
     switch (application.status) {
       case "draft":
         return convertToDraftLPSApplication(application, email);
-      case "awaiting-payment":
+      case "awaitingPayment":
         return convertToAwaitingPaymentLPSApplication(application);
       case "submitted":
         return convertToSubmittedLPSApplication(application);

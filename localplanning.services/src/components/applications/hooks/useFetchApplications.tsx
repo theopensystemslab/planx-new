@@ -27,7 +27,7 @@ export type DraftApplication = BaseApplication & {
 };
 
 export type AwaitingPaymentApplication = BaseApplication & {
-  status: "awaiting-payment"
+  status: "awaitingPayment"
   paymentUrl: string;
 };
 
