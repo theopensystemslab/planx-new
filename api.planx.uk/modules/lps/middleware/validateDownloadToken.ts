@@ -8,8 +8,6 @@ export const validateDownloadToken: DownloadHTML = async (_req, res, next) => {
   const { sessionId } = res.locals.parsedReq.body;
   const { authorization: token } = res.locals.parsedReq.headers;
 
-  console.log({ sessionId, token });
-
   try {
     const { isValid, isExpired, isConsumed } = await getDownloadTokenStatus(
       token,
@@ -36,6 +34,8 @@ export const validateDownloadToken: DownloadHTML = async (_req, res, next) => {
         message: "This download token has expired",
       });
     }
+
+    await consumeDownloadToken(token);
 
     return next();
   } catch (error) {
@@ -87,4 +87,26 @@ const getDownloadTokenStatus = async (userToken: string, sessionId: string) => {
   const isConsumed = Boolean(token.usedAt);
 
   return { isValid: true, isExpired, isConsumed };
+};
+
+export const consumeDownloadToken = async (token: string) => {
+  const CONSUME_DOWNLOAD_TOKEN_MUTATION = gql`
+    mutation ConsumeDownloadToken($token: uuid!) {
+      downloadToken: update_lps_magic_links_by_pk(
+        pk_columns: { token: $token }
+        _set: { used_at: "now()" }
+      ) {
+        token
+      }
+    }
+  `;
+
+  try {
+    await $admin.client.request(CONSUME_DOWNLOAD_TOKEN_MUTATION, { token });
+  } catch (error) {
+    throw new ServerError({
+      message: "Failed to consume download token",
+      cause: (error as Error).cause,
+    });
+  }
 };

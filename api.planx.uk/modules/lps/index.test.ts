@@ -7,6 +7,7 @@ import { sendEmail } from "../../lib/notify/index.js";
 import * as getApplicationsService from "./service/getApplications/index.js";
 import * as loginService from "./service/login.js";
 import * as generateDownloadTokenService from "./service/generateDownloadToken.js";
+import * as validateDownloadTokenMiddleware from "./middleware/validateDownloadToken.js";
 import * as generateHTMLService from "./service/generateHTML.js";
 import type { Application } from "./service/getApplications/types.js";
 
@@ -679,6 +680,62 @@ describe("requesting HTML for a session ID", () => {
     });
   });
 
+  describe("download token consumption", () => {
+    beforeEach(() => {
+      // Successfully validate token
+      queryMock.mockQuery({
+        name: "GetDownloadTokenStatus",
+        matchOnVariables: false,
+        data: {
+          downloadToken: [
+            {
+              usedAt: null,
+              createdAt: Date.now().toString(),
+            },
+          ],
+        },
+      });
+    });
+
+    it("handles GraphQL errors", async () => {
+      queryMock.mockQuery({
+        name: "ConsumeDownloadToken",
+        matchOnVariables: false,
+        data: {},
+        graphqlErrors: [
+          {
+            message: "Something went wrong",
+          },
+        ],
+      });
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to consume download token/);
+        });
+    });
+
+    it("handles uncaught errors", async () => {
+      vi.spyOn(
+        validateDownloadTokenMiddleware,
+        "consumeDownloadToken",
+      ).mockRejectedValueOnce(new Error("Unhandled error!"));
+
+      await supertest(app)
+        .post(ENDPOINT)
+        .set({ authorization: `Bearer ${uuidV4()}` })
+        .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
+        .expect(500)
+        .then((res) => {
+          expect(res.body.error).toMatch(/Failed to consume download token/);
+        });
+    });
+  });
+
   describe("downloading HTML", async () => {
     beforeEach(() => {
       // Successfully validate token
@@ -692,6 +749,15 @@ describe("requesting HTML for a session ID", () => {
               createdAt: Date.now().toString(),
             },
           ],
+        },
+      });
+
+      // Consume token
+      queryMock.mockQuery({
+        name: "ConsumeDownloadToken",
+        matchOnVariables: false,
+        data: {
+          token: uuidV4(),
         },
       });
     });
@@ -719,6 +785,17 @@ describe("requesting HTML for a session ID", () => {
         .send({ sessionId: uuidV4(), email: NOTIFY_TEST_EMAIL })
         .expect(200)
         .then((res) => {
+          // Token has been consumed
+          const graphQLCalls = queryMock.getCalls();
+          expect(graphQLCalls).toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({
+                id: "ConsumeDownloadToken",
+              }),
+            ]),
+          );
+
+          // HTML returned
           expect(res.headers["content-type"]).toMatch(/text\/html/);
           expect(res).toHaveProperty("text");
           expect(res.text).toMatch(/<!DOCTYPE html>/);
