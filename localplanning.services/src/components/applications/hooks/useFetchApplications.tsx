@@ -64,7 +64,9 @@ export const useFetchApplications = () => {
     // Data could only be refetch with a new magic link
     staleTime: Infinity,
     gcTime: Infinity,
-    retry: 2,
+    // Do not allow retries - this is a single use endpoint
+    // Failures on retry may return a false error message, not matching the original reason for failure
+    retry: false,
   }, queryClient);
 
   return {
