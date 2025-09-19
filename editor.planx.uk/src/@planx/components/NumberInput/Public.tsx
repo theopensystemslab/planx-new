@@ -40,6 +40,24 @@ export default function NumberInputComponent(props: Props): FCReturn {
     props.autoFocus && inputRef.current?.focus();
   }, [props.autoFocus]);
 
+  // Auto-answered NumberInputs still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (props.autoAnswer) {
+      const parsed = parseNumber(props.autoAnswer as string);
+      if (!isNil(parsed)) {
+        props.handleSubmit?.({
+          ...makeData(props, parsed),
+          auto: true,
+        });
+      }
+    }
+  }, [props.autoAnswer, props.handleSubmit]);
+
+  // Auto-answered NumberInputs are not publicly visible
+  if (props.autoAnswer) {
+    return null;
+  }
+
   return (
     <Card handleSubmit={formik.handleSubmit} isValid>
       <CardHeader
