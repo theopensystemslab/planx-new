@@ -196,6 +196,7 @@ const getInitialEmailValue = (emailQueryParam?: string) => {
   const trustedAddresses = [
     "https://www.payments.service.gov.uk/",
     "https://card.payments.service.gov.uk/",
+    "https://localplanning.editor.planx.dev/",
     "https://www.localplanning.services/",
   ];
 
