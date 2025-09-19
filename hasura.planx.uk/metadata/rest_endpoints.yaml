@@ -1,15 +1,3 @@
-- comment: |-
-    Allows a user to abandon their LPS application via a REST endpoint.
-
-    Requires the x-hasura-lowcal-session-id and x-hasura-lowcal-email headers in order for the public role to have permission to execute this route.
-  definition:
-    query:
-      collection_name: allowed-queries
-      query_name: LPS - Delete application
-  methods:
-    - DELETE
-  name: LPS - Delete application
-  url: lps/application/:applicationId
 - comment: ""
   definition:
     query:
