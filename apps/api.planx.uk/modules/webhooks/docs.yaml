@@ -139,6 +139,12 @@ components:
             email:
               type: string
               format: email
+    DeleteSessionPayload:
+      type: object
+      properties:
+        sessionId:
+          required: true
+          type: string
     UpdateTemplatedFlowEditsEvent:
       type: object
       properties:
@@ -383,6 +389,41 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-delete-event:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Create session delete event
+      description: Setup a one-off event in Hasura which will trigger the given session to be soft deleted
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSessionEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/delete-session:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Soft delete a session
+      description: Mark a session as deleted in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteSessionPayload"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/sanitise-application-data:

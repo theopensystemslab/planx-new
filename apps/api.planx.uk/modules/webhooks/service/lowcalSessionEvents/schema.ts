@@ -20,3 +20,20 @@ export type CreateSessionEventController = ValidatedRequestHandler<
   typeof createSessionEventSchema,
   ScheduledEventResponse[]
 >;
+
+interface DeleteSessionResponse {
+  message: string;
+}
+
+export const deleteSessionSchema = z.object({
+  body: z.object({
+    payload: z.object({
+      sessionId: z.string(),
+    }),
+  }),
+});
+
+export type DeleteSessionController = ValidatedRequestHandler<
+  typeof deleteSessionSchema,
+  DeleteSessionResponse
+>;
