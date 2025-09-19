@@ -1,6 +1,7 @@
-import { formatDate } from "@lib/date";
+import React from "react";
 import type { Application } from "./hooks/useFetchApplications";
 import { useDeleteApplication } from "./hooks/useDeleteApplication";
+import { formatDate } from "@lib/date";
 
 const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
@@ -158,13 +159,7 @@ const ActionButtons: React.FC<Application> = (application) => {
           </>
         )
       case "submitted":
-        return (
-          <>
-            <a href="#" className="button button--primary button--small button-focus-style paragraph-link--external">
-              View application
-            </a>
-          </>
-        )
+       return <ViewApplicationButton {...application}/>
     }
   })();
 
