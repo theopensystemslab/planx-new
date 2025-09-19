@@ -40,27 +40,6 @@ export type Application = DraftApplication | AwaitingPaymentApplication | Submit
 
 export type ApplicationsResponse = Application[];
 
-export type ApplicationCardProps = {
-  id: string;
-  status: "draft" | "awaitingPayment" | "submitted";
-  service: {
-    name: string;
-  };
-  team: {
-    name: string;
-  };
-  address: string | null;
-  createdAt: string;
-  updatedAt: string;
-  expiresAt: string;
-  progress?: {
-    completed: number;
-  };
-  serviceUrl?: string;
-  paymentUrl?: string;
-  submittedAt?: string;
-};
-
 export const useFetchApplications = () => {  
   const { token, email } = useSearchParams();
 
