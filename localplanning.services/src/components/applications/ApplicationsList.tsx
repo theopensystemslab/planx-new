@@ -15,7 +15,7 @@ export const ApplicationsList: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     draft: true,
-    "awaiting-payment": true,
+    awaitingPayment: true,
     submitted: true,
   });
 
@@ -25,7 +25,7 @@ export const ApplicationsList: React.FC = () => {
       return acc;
     }, {
       draft: 0,
-      ["awaiting-payment"]: 0,
+      awaitingPayment: 0,
       submitted: 0
     });
 

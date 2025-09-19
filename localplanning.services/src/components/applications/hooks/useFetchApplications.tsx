@@ -42,7 +42,7 @@ export type ApplicationsResponse = Application[];
 
 export type ApplicationCardProps = {
   id: string;
-  status: "draft" | "awaiting-payment" | "submitted";
+  status: "draft" | "awaitingPayment" | "submitted";
   service: {
     name: string;
   };

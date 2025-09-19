@@ -3,13 +3,13 @@ import React, { useState } from "react";
 type FilterState = {
   search: string;
   draft: boolean;
-  "awaiting-payment": boolean;
+  awaitingPayment: boolean;
   submitted: boolean;
 };
 
 export type StatusCounts = {
   draft: number;
-  "awaiting-payment": number;
+  awaitingPayment: number;
   submitted: number;
 };
 
@@ -22,14 +22,14 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     draft: true,
-    "awaiting-payment": true,
+    awaitingPayment: true,
     submitted: true,
   });
 
   const defaultFilters: FilterState = {
     search: "",
     draft: true,
-    "awaiting-payment": true,
+    awaitingPayment: true,
     submitted: true,
   };
 
@@ -60,14 +60,14 @@ export const ApplicationFilters: React.FC<Props> = ({ onFilterChange, statusCoun
     return (
       filters.search !== defaultFilters.search ||
       filters.draft !== defaultFilters.draft ||
-      filters["awaiting-payment"] !== defaultFilters["awaiting-payment"] ||
+      filters.awaitingPayment !== defaultFilters.awaitingPayment ||
       filters.submitted !== defaultFilters.submitted
     );
   };
 
   const filterOptions = [
     { key: "draft" as const, label: "Draft applications", count: statusCounts.draft },
-    { key: "awaiting-payment" as const, label: "Awaiting payment", count: statusCounts["awaiting-payment"] },
+    { key: "awaitingPayment" as const, label: "Awaiting payment", count: statusCounts.awaitingPayment },
     { key: "submitted" as const, label: "Submitted applications", count: statusCounts.submitted },
   ];
 
