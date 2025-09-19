@@ -3,11 +3,16 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
 import Accordion from "@components/Accordion.astro";
-import { fetchAllLPAs } from "@lib/lpa-api";
+import { fetchAllLPAs, type LPA } from "@lib/lpa-api";
 import AccordionSection from "@components/directory/AccordionSection.astro";
 import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
 const lpas = await fetchAllLPAs();
+
+const hasListedServices = (lpa: LPA) =>
+  lpa.applyServices.length ||
+  lpa.guidanceServices.length ||
+  lpa.notifyServices.length;
 ---
 
 <Layout>
@@ -32,6 +37,9 @@ const lpas = await fetchAllLPAs();
               services={lpa.guidanceServices}
               lpa={lpa}
             />
+            {!hasListedServices(lpa) && (
+              <p>{lpa.name} doesn't yet have any services listed.</p>
+            )}
           </Accordion>
         ))
       }

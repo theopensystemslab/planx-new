@@ -79,24 +79,10 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
       throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
     }
 
-    const allLPAs: LPA[] = json.data.lpas;
+    const lpas: LPA[] = json.data.lpas;
 
-    if (!allLPAs || !allLPAs.length) {
+    if (!lpas || !lpas.length) {
       throw Error("No LPAs found - please check GraphQL API and database.");
-    }
-
-    // Remove LPAs with no active services
-    const lpas = allLPAs.filter(
-      (lpa) =>
-        lpa.applyServices.length ||
-        lpa.guidanceServices.length ||
-        lpa.notifyServices.length
-    );
-
-    if (!allLPAs || !allLPAs.length) {
-      throw Error(
-        "No LPAs with services found - please check GraphQL API and database."
-      );
     }
 
     return lpas;
