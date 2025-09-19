@@ -12,10 +12,8 @@ import { ApplicationFilters, type FilterState } from "./ApplicationFilters";
 export const ApplicationsList: React.FC = () => {
   const { applications, isLoading, error } = useFetchApplications();
 
-  // Use the custom hook to manage all filtering logic and state
   const { setFilters, filteredApplications, statusCounts } = useApplicationFilters(applications);
 
-  // Helper function to pass into <ApplicationFilters/> allowing it to set filter state
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
   };
