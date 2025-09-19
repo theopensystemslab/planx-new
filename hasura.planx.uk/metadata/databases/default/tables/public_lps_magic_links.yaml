@@ -16,32 +16,35 @@ insert_permissions:
     permission:
       check: {}
       columns:
+        - created_at
         - email
         - operation
-        - created_at
-        - used_at
+        - session_id
         - token
+        - used_at
     comment: ""
 select_permissions:
   - role: api
     permission:
       columns:
+        - created_at
         - email
         - operation
-        - created_at
-        - used_at
+        - session_id
         - token
+        - used_at
       filter: {}
     comment: ""
 update_permissions:
   - role: api
     permission:
       columns:
+        - created_at
         - email
         - operation
-        - created_at
-        - used_at
+        - session_id
         - token
+        - used_at
       filter: {}
       check: {}
     comment: ""
