@@ -1,5 +1,6 @@
 import { formatDate } from "@lib/date";
 import type { Application } from "./hooks/useFetchApplications";
+import { useDeleteApplication } from "./hooks/useDeleteApplication";
 
 const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
@@ -110,18 +111,32 @@ const ActionText: React.FC<Application> = (application) => {
   );
 };
 
+const DeleteButton: React.FC<Application> = ({ id }) => {
+  const deleteApplication = useDeleteApplication();
+
+  const handleDelete = () => {
+    if (confirm("Are you sure you want to delete this application?")) {
+      deleteApplication(id);
+    }
+  };
+  
+  return (
+    <button
+      onClick={handleDelete}
+      className="button button--small button-focus-style button--secondary"
+    >
+      Delete
+    </button>
+  )
+}
+
 const ActionButtons: React.FC<Application> = (application) => {
   const buttons = (() => {
     switch (application.status) {
       case "draft":
         return (
           <>
-            <button
-              onClick={() => console.log("Delete!")}
-              className="button button--small button-focus-style button--secondary"
-            >
-              Delete
-            </button>
+            <DeleteButton {...application}/>
             <a
               href={application.serviceUrl}
               className="button button--primary button--small button-focus-style paragraph-link--external"
@@ -133,12 +148,7 @@ const ActionButtons: React.FC<Application> = (application) => {
       case "awaitingPayment":
         return (
           <>
-            <button
-              onClick={() => console.log("Delete!")}
-              className="button button--small button-focus-style button--secondary"
-            >
-              Delete
-            </button>
+            <DeleteButton {...application}/>
             <a
               href={application.paymentUrl}
               className="button button--primary button--small button-focus-style paragraph-link--external"
