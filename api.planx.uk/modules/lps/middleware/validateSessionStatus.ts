@@ -2,12 +2,15 @@ import { gql } from "graphql-request";
 import type { GenerateDownloadToken } from "../types/downloadToken.js";
 import { $public } from "../../../client/index.js";
 
-interface CheckSessionExists {
+interface CheckDownloadableSessionExists {
   lowcalSessions: { id: string }[];
 }
 
 /**
- * Ensure that a session exist before generating a download token
+ * Ensure that a valid session exist before generating a download token
+ * A valid session is one where -
+ *  - system_status = "active" (data exists for download)
+ *  - user_stats = "submitted" (we have a fully populated and validated passport to generate the HTML)
  */
 export const validateSessionStatus: GenerateDownloadToken = async (
   _req,
@@ -24,10 +27,15 @@ export const validateSessionStatus: GenerateDownloadToken = async (
 
   const {
     lowcalSessions: [session],
-  } = await $public.client.request<CheckSessionExists>(
+  } = await $public.client.request<CheckDownloadableSessionExists>(
     gql`
-      query CheckSessionExists {
-        lowcalSessions: lowcal_sessions {
+      query CheckDownloadableSessionExists {
+        lowcalSessions: lowcal_sessions(
+          where: {
+            system_status: { _eq: "active" }
+            user_stats: { _eq: "submitted" }
+          }
+        ) {
           id
         }
       }

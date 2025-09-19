@@ -437,7 +437,7 @@ describe("generating a download token", () => {
 
   it("requires a valid sessionId", async () => {
     queryMock.mockQuery({
-      name: "CheckSessionExists",
+      name: "CheckDownloadableSessionExists",
       matchOnVariables: false,
       // Mock no results found
       data: { lowcalSessions: [] },
@@ -454,7 +454,7 @@ describe("generating a download token", () => {
 
   it("handles GraphQL errors", async () => {
     queryMock.mockQuery({
-      name: "CheckSessionExists",
+      name: "CheckDownloadableSessionExists",
       matchOnVariables: false,
       data: { lowcalSessions: [{ sessionId: uuidV4() }] },
     });
@@ -481,7 +481,7 @@ describe("generating a download token", () => {
 
   it("handles uncaught errors", async () => {
     queryMock.mockQuery({
-      name: "CheckSessionExists",
+      name: "CheckDownloadableSessionExists",
       matchOnVariables: false,
       data: { lowcalSessions: [{ sessionId: uuidV4() }] },
     });
@@ -503,7 +503,7 @@ describe("generating a download token", () => {
 
   it("returns a token on success", async () => {
     queryMock.mockQuery({
-      name: "CheckSessionExists",
+      name: "CheckDownloadableSessionExists",
       matchOnVariables: false,
       data: { lowcalSessions: [{ sessionId: uuidV4() }] },
     });
