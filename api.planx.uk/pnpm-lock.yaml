@@ -18,8 +18,8 @@ importers:
         specifier: ^3.701.0
         version: 3.888.0
       '@opensystemslab/planx-core':
-        specifier: git+https://github.com/theopensystemslab/planx-core#dd0c34c
-        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dd0c34c(@types/react@19.1.13)
+        specifier: git+https://github.com/theopensystemslab/planx-core#a92c2d3
+        version: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a92c2d3(@types/react@19.1.13)
       '@types/isomorphic-fetch':
         specifier: ^0.0.36
         version: 0.0.36
@@ -1018,8 +1018,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dd0c34c':
-    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dd0c34c}
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a92c2d3':
+    resolution: {tarball: https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a92c2d3}
     version: 1.0.0
 
   '@paralleldrive/cuid2@2.2.2':
@@ -5261,7 +5261,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/dd0c34c(@types/react@19.1.13)':
+  '@opensystemslab/planx-core@https://codeload.github.com/theopensystemslab/planx-core/tar.gz/a92c2d3(@types/react@19.1.13)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.13)(react@18.3.1)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.13)(react@18.3.1))(@types/react@19.1.13)(react@18.3.1)
