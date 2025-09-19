@@ -1,3 +1,5 @@
+import { JSDOM } from "jsdom";
+import createDOMPurify, { type WindowLike } from "dompurify";
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import type {
   DrawBoundaryUserAction,
@@ -38,8 +40,13 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
       userAction,
     });
 
+    // Sanitise output
+    const window = new JSDOM("").window;
+    const DOMPurify = createDOMPurify(window as unknown as WindowLike);
+    const cleanHTML = DOMPurify.sanitize(html, { WHOLE_DOCUMENT: true });
+
     res.header("Content-type", "text/html");
-    res.send(html);
+    res.send(cleanHTML);
   } catch (error) {
     return next({
       message: "Failed to build HTML: " + (error as Error).message,
