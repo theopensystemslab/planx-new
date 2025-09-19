@@ -1,5 +1,6 @@
 import type React from "react";
 import { useFetchApplications } from "./hooks/useFetchApplications";
+import { useApplicationFilters } from "./hooks/useFilters"; 
 import { InvalidLink } from "./errors/InvalidLink";
 import { ExpiredLink } from "./errors/ExpiredLink";
 import { ConsumedLink } from "./errors/ConsumedLink";
@@ -7,46 +8,14 @@ import { UnhandledError } from "./errors/UnhandledError";
 import { NoApplications } from "./errors/NoApplications";
 import { ApplicationCard } from "./ApplicationCard";
 import { ApplicationFilters, type FilterState } from "./ApplicationFilters";
-import { useState, useMemo } from "react";
 
 export const ApplicationsList: React.FC = () => {
   const { applications, isLoading, error } = useFetchApplications();
 
-  const [filters, setFilters] = useState<FilterState>({
-    search: '',
-    draft: true,
-    awaitingPayment: true,
-    submitted: true,
-  });
+  // Use the custom hook to manage all filtering logic and state
+  const { setFilters, filteredApplications, statusCounts } = useApplicationFilters(applications);
 
-  const { filteredApplications, statusCounts } = useMemo(() => {
-    const counts = applications.reduce((acc, application) => {
-      acc[application.status]++;
-      return acc;
-    }, {
-      draft: 0,
-      awaitingPayment: 0,
-      submitted: 0
-    });
-
-    const filtered = applications.filter(application => {
-      const statusMatch = filters[application.status];
-
-      const searchTerm = filters.search.toLowerCase().trim();
-      const searchMatch = searchTerm === '' || 
-        application.team.name.toLowerCase().includes(searchTerm) ||
-        application.service.name.toLowerCase().includes(searchTerm) ||
-        (application.address && application.address.toLowerCase().includes(searchTerm));
-
-      return statusMatch && searchMatch;
-    });
-
-    return {
-      filteredApplications: filtered,
-      statusCounts: counts
-    };
-  }, [applications, filters]);
-
+  // Helper function to pass into <ApplicationFilters/> allowing it to set filter state
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
   };
