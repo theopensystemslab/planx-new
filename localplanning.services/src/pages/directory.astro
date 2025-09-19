@@ -38,7 +38,9 @@ const hasListedServices = (lpa: LPA) =>
               lpa={lpa}
             />
             {!hasListedServices(lpa) && (
-              <p>{lpa.name} doesn't yet have any services listed.</p>
+              <p class="text-body-xl m-0 clamp-[px,1,2] py-4">
+                Currently {lpa.name} doesn't have any services listed.
+              </p>
             )}
           </Accordion>
         ))
