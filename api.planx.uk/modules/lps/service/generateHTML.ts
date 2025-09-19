@@ -1,3 +1,5 @@
+import { JSDOM } from "jsdom";
+import createDOMPurify, { type WindowLike } from "dompurify";
 import { subMinutes } from "date-fns";
 import { $api, $public } from "../../../client/index.js";
 import type {
@@ -55,5 +57,10 @@ export const generateHTML = async (sessionId: string, email: string) => {
     userAction,
   });
 
-  return html;
+  // Sanitise output
+  const window = new JSDOM("").window;
+  const DOMPurify = createDOMPurify(window as unknown as WindowLike);
+  const cleanHTML = DOMPurify.sanitize(html, { WHOLE_DOCUMENT: true });
+
+  return cleanHTML;
 };
