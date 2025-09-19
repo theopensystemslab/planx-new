@@ -1,5 +1,5 @@
-import type { Application } from "./hooks/useFetchApplications";
 import { formatDate } from "@lib/date";
+import type { Application } from "./hooks/useFetchApplications";
 
 const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
@@ -22,7 +22,7 @@ const ProgressText: React.FC<Application> = (application) => {
         return (
           <>
             Application sent
-            <strong className="font-semibold"> {formatDate(application.submittedAt)}</strong>
+            <strong className="font-semibold"> {formatDate(application.submittedAt!)}</strong>
           </>
         );
     }
@@ -72,7 +72,7 @@ const ProgressBar: React.FC<Application> = (application) => {
       aria-label={getProgressLabel()}
     >
       <div 
-        className={`h-3 transition-all duration-300 ${progressColour}`}
+        className={`h-3 ${progressColour}`}
         style={{ width: `${progressValue}%` }}
       />
     </div>
