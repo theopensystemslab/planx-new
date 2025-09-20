@@ -1,6 +1,4 @@
-export const ACTIONS = ["apply", "notify", "guidance"] as const;
-
-export type Action = typeof ACTIONS[number];
+import type { Action } from "@stores/action";
 
 export const actions: Record<Action, { title: string, description: string }> = {
   apply: {
