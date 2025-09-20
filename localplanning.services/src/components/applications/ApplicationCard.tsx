@@ -112,9 +112,9 @@ const ActionText: React.FC<Application> = (application) => {
   );
 };
 
-const ViewApplicationButton: React.FC<Application> = ({ id }) => {
+const ViewApplicationButton: React.FC<Application> = (application) => {
   const { email } = useSearchParams();
-  const url = `applications/viewer?applicationId=${id}&email=${email}`;
+  const url = `applications/${application.team.slug}?applicationId=${application.id}&email=${email}`;
   
   return (
     <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external">

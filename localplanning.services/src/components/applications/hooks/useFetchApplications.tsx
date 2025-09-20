@@ -9,6 +9,7 @@ interface BaseApplication {
     name: string;
   };
   team: {
+    slug: string;
     name: string;
   };
   address: string | null;
