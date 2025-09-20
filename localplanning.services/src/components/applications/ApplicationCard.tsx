@@ -1,5 +1,7 @@
-import { formatDate } from "@lib/date";
+import type React from "react";
 import type { Application } from "./hooks/useFetchApplications";
+import { formatDate } from "@lib/date";
+import { useSearchParams } from "./hooks/useSearchParams";
 
 const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
@@ -110,6 +112,17 @@ const ActionText: React.FC<Application> = (application) => {
   );
 };
 
+const ViewApplicationButton: React.FC<Application> = (application) => {
+  const { email } = useSearchParams();
+  const url = `applications/${application.team.slug}?applicationId=${application.id}&email=${email}`;
+  
+  return (
+    <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external">
+      View application
+    </a>
+  )
+}
+
 const ActionButtons: React.FC<Application> = (application) => {
   const buttons = (() => {
     switch (application.status) {
@@ -148,13 +161,7 @@ const ActionButtons: React.FC<Application> = (application) => {
           </>
         )
       case "submitted":
-        return (
-          <>
-            <a href="#" className="button button--primary button--small button-focus-style paragraph-link--external">
-              View application
-            </a>
-          </>
-        )
+       return <ViewApplicationButton {...application}/>
     }
   })();
 
