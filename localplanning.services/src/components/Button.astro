@@ -1,20 +1,19 @@
 ---
 import type { AstroBuiltinAttributes } from "astro";
+import type { HTMLAttributes } from "astro/types";
 
-interface Props {
-  href?: string;
+interface Props extends HTMLAttributes<"a"> {
   variant?: "primary" | "secondary";
   size?: "small" | "medium" | "large";
   external?: boolean;
-  class?: string;
 }
 
 const {
-  href = "#",
   variant = "primary",
   size = "medium",
   external = false,
   class: className = "",
+  ...rest
 } = Astro.props;
 
 const variantClasses = {
@@ -40,6 +39,6 @@ const classes: AstroBuiltinAttributes["class:list"] = [
 ];
 ---
 
-<a href={href} class:list={classes}>
+<a class:list={classes} {...rest}>
   <slot />
 </a>
