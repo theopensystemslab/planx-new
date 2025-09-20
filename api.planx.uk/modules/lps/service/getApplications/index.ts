@@ -79,6 +79,7 @@ const mapSharedFields = (raw: Application) => ({
   },
   team: {
     name: raw.service.team.name,
+    slug: raw.service.team.slug,
   },
   address: raw.addressLine || raw.addressTitle,
 });
