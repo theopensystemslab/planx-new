@@ -1,10 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { navigate } from "astro:transitions/client";
-import type { Action } from "@content/actions";
-
-interface Props { 
-  action: Action | undefined;
-};
 
 interface PostcodeChangeEventDetail {
   postcode: string;
@@ -23,7 +18,7 @@ interface PostcodeSearchElement extends HTMLElement {
   ): void;
 }
 
-const PostcodeSearch: React.FC<Props> = ({ action }) => {
+const PostcodeSearch: React.FC = () => {
   const postcodeSearchRef = useRef<PostcodeSearchElement>(null);
 
   useEffect(() => {
@@ -50,9 +45,7 @@ const PostcodeSearch: React.FC<Props> = ({ action }) => {
     event.preventDefault();
     // TODO: Postcode lookup
     // Hardcoded to Bucks for now
-    action 
-      ? await navigate(`/buckinghamshire?action=${action}`)
-      : await navigate("/buckinghamshire")
+    await navigate("/buckinghamshire")
   };
 
   return (
