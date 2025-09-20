@@ -8,9 +8,6 @@ export const useHtmlDownload = (sessionId: string | null) => {
   const [ isPending, startTransition ] = useTransition();
   const { email } = useSearchParams();
 
-  if (!email) setError("Missing email parameter");
-  if (!sessionId) setError("Missing applicationId parameter");
-
   const fetchHtml = async () => {
     startTransition(async () => {
       setError(null);
@@ -56,8 +53,18 @@ export const useHtmlDownload = (sessionId: string | null) => {
   };
 
   useEffect(() => {
-    if (sessionId && email) fetchHtml();
-  }, []);
+    if (!email) {
+      setError("Missing email parameter");
+      return;
+    }
+
+    if (!sessionId) {
+      setError("Missing applicationId parameter");
+      return;
+    }
+
+    fetchHtml();
+  }, [sessionId, email]);
 
   return {
     htmlContent,
