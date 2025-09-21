@@ -32,8 +32,18 @@ const uniqueId = customAlphabet(en)(
 const numberOfEdgesTo = (id: string, graph: Graph): number =>
   Object.values(graph).filter(({ edges = [] }) => edges.includes(id)).length;
 
-export const isClone = (id: string, graph: Graph): boolean =>
-  numberOfEdgesTo(id, graph) > 1;
+export const isClone = (id: string, graph: Graph): boolean => {
+  let count = 0;
+  for (const node of Object.values(graph)) {
+    if (node.edges?.includes(id)) {
+      count++;
+      // Return early once we know the node is a clone, no need to iterate over entire graph
+      if (count > 1) return true;
+    }
+  }
+
+  return false;
+}
 
 const isSomething = (x: any): boolean =>
   x !== null && x !== undefined && x !== "";
