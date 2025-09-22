@@ -18,7 +18,7 @@ interface Node {
   type?: number;
 }
 
-type Child = Record<string, any>;
+export type Child = Record<string, any>;
 
 export type Graph = Record<string, Node>;
 
@@ -195,9 +195,14 @@ const _add = (
 };
 
 type NodeDataWithId = { id?: string; type?: number; data?: object };
-type AddContext = {
+
+export type Relationships = {
   children?: Child[];
   parent?: string;
+  /**
+   * NodeId of the older sibling of this node
+   * Used to insert a new node in the correct location within it's parents' edges
+   */
   before?: string;
 };
 
@@ -208,7 +213,7 @@ export const add =
       children = [],
       parent = ROOT_NODE_KEY,
       before = undefined,
-    }: AddContext = {},
+    }: Relationships = {},
   ) =>
   (graph: Graph = {}): [Graph, Array<OT.Op>] =>
     wrap(graph, (draft) => {
@@ -459,7 +464,7 @@ export const makeUnique =
       const _makeUnique = (
         id: string,
         parent: string,
-        { idFn }: { idFn: Function },
+        { idFn }: { idFn: () => string },
         firstCall: boolean,
       ) => {
         const { edges = [], ...nodeData } = draft[id];
@@ -469,13 +474,23 @@ export const makeUnique =
           node.edges.push(id);
         } else {
           const newId = idFn();
-          _add(draft, { id: newId, ...nodeData }, { parent });
+          const relationships = { 
+            parent, 
+            // Only define a `before` value when adding the original node, not its edges
+            ...(firstCall && { before: id }),
+          }
+          _add(draft, { id: newId, ...nodeData }, relationships);
           edges.forEach((tgt: string) => {
             _makeUnique(tgt, newId, { idFn }, false);
           });
         }
       };
+
+      // Insert a new, unique, node (and all children)
       _makeUnique(id, parent, { idFn }, true);
+
+      // Remove original cloned node (and all children)
+      _remove(draft, id, parent);
     });
 
 /**
