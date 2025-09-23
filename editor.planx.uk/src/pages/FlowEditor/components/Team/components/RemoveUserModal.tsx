@@ -50,15 +50,15 @@ export const RemoveUserModal = ({
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid={`dialog-${actionType}-user`}
+      data-testid={`modal-${actionType}-user`}
       open={showModal || false}
       onClose={() => setShowModal(false)}
       fullWidth
     >
       <DialogTitle variant="h3" component="h1" id="dialog-heading">
-        Remove user
+        Remove a user
       </DialogTitle>
-      <DialogContent dividers data-testid={"modal-remove-user"}>
+      <DialogContent dividers>
         <Box sx={{}}>
           <Typography variant="body1" component="p" id="dialog-body">
             {`Do you want to remove ${initialValues?.firstName} ${initialValues?.lastName}?`}
