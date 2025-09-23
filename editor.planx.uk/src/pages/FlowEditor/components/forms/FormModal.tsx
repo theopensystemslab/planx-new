@@ -15,7 +15,7 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React from "react";
+import React, { useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
@@ -134,6 +134,7 @@ const FormModal: React.FC<{
     teamSlug,
     isTemplatedFrom,
     orderedFlow,
+    isClone,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
@@ -143,6 +144,7 @@ const FormModal: React.FC<{
     store.getTeam().slug,
     store.isTemplatedFrom,
     store.orderedFlow,
+    store.isClone,
   ]);
   const node = flow[id];
   const handleClose = () => navigate(rootFlowPath(true));
@@ -170,11 +172,14 @@ const FormModal: React.FC<{
       parentIsTemplatedInternalPortal ||
       parentIsChildOfTemplatedInternalPortal);
 
-  const hideMakeUniqueDeleteButtons =
-    isTemplatedFrom &&
+  const isDisabledTemplatedNode = isTemplatedFrom &&
     Boolean(node?.data?.isTemplatedNode) &&
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
+
+  const showDeleteButton = handleDelete && !isDisabledTemplatedNode;
+
+  const showMakeUniqueButton = useMemo(() => isClone(id) && !isDisabledTemplatedNode, [isClone, id, isDisabledTemplatedNode]);
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
@@ -254,9 +259,10 @@ const FormModal: React.FC<{
       </DialogContent>
       <DialogActions sx={{ p: 0 }}>
         <Grid container justifyContent="flex-end">
-          {handleDelete && !hideMakeUniqueDeleteButtons && (
+          {showDeleteButton && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
+                sx={{ height: "100%" }}
                 fullWidth
                 size="medium"
                 onClick={() => {
@@ -269,9 +275,10 @@ const FormModal: React.FC<{
               </Button>
             </Grid>
           )}
-          {handleDelete && !hideMakeUniqueDeleteButtons && (
+          {showMakeUniqueButton && (
             <Grid item xs={6} sm={4} md={3}>
               <Button
+                sx={{ height: "100%" }}
                 fullWidth
                 size="medium"
                 onClick={() => {
