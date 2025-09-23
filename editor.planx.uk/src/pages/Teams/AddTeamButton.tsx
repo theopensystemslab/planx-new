@@ -80,16 +80,13 @@ export const AddTeamButton: React.FC = () => {
             aria-describedby="alert-dialog-description"
             fullWidth
           >
-            <DialogTitle variant="h3" component="h1">
-              <Box sx={{ mt: 1, mb: 4 }}>
-                <Typography variant="h3" component="h2" id="dialog-heading">
-                  Add a new team
-                </Typography>
-              </Box>
+            <DialogTitle variant="h3" component="h1" id="dialog-heading">
+              Add a new team
             </DialogTitle>
             <Box>
               <Form>
                 <DialogContent
+                  dividers
                   sx={{ gap: 2, display: "flex", flexDirection: "column" }}
                 >
                   <InputLabel label="Team name" htmlFor="name">
@@ -131,9 +128,11 @@ export const AddTeamButton: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                   <Button
-                    disableRipple
                     disabled={isSubmitting}
                     onClick={() => setDialogOpen(false)}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ backgroundColor: "background.default" }}
                   >
                     Back
                   </Button>

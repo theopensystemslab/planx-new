@@ -28,12 +28,19 @@ export const ArchiveDialog = ({
         onClose();
       }}
     >
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
+      <DialogTitle variant="h3" component="h1">
+        {title}
+      </DialogTitle>
+      <DialogContent dividers>
         <DialogContentText>{content}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary" variant="contained">
+        <Button
+          onClick={onClose}
+          color="secondary"
+          variant="contained"
+          sx={{ backgroundColor: "background.default" }}
+        >
           Cancel
         </Button>
         <Button onClick={onConfirm} color="warning" variant="contained">

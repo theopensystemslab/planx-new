@@ -81,7 +81,7 @@ export const FileTaggingModal = ({
         },
       }}
     >
-      <DialogContent>
+      <DialogContent dividers>
         <Box sx={{ mt: 1, mb: 4 }}>
           <Typography
             variant="h3"
@@ -117,32 +117,24 @@ export const FileTaggingModal = ({
           ))}
         </Stack>
       </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          padding: 2,
-        }}
-      >
-        <Box>
-          <Button
-            variant="contained"
-            color="prompt"
-            onClick={handleValidation}
-            data-testid="modal-done-button"
-          >
-            Done
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ ml: 1.5 }}
-            onClick={closeModal}
-            data-testid="modal-cancel-button"
-          >
-            Cancel
-          </Button>
-        </Box>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ backgroundColor: "background.default" }}
+          onClick={closeModal}
+          data-testid="modal-cancel-button"
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="prompt"
+          onClick={handleValidation}
+          data-testid="modal-done-button"
+        >
+          Done
+        </Button>
       </DialogActions>
     </Dialog>
   );

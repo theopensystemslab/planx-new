@@ -37,8 +37,6 @@ const DialogFooterActions = styled(DialogActions)(({ theme }) => ({
   bottom: 0,
   left: 0,
   width: "100%",
-  padding: theme.spacing(2, 3),
-  background: theme.palette.background.paper,
   borderTop: `1px solid ${theme.palette.border.main}`,
   justifyContent: "space-between",
 }));
@@ -61,7 +59,14 @@ export const NoChangesDialog = ({
       <Typography variant="body2">{`No new changes to publish`}</Typography>
     </DialogContent>
     <DialogActions>
-      <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
+      <Button
+        onClick={() => setDialogOpen(false)}
+        variant="contained"
+        color="secondary"
+        sx={{ backgroundColor: "background.default" }}
+      >
+        Keep editing
+      </Button>
       <Button color="primary" variant="contained" disabled={true}>
         Publish
       </Button>
@@ -138,7 +143,14 @@ export const ChangesDialog = (props: ChangesDialogProps) => {
           </>
         </DialogContent>
         <DialogFooterActions>
-          <Button onClick={() => setDialogOpen(false)}>Keep editing</Button>
+          <Button
+            onClick={() => setDialogOpen(false)}
+            variant="contained"
+            color="secondary"
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Keep editing
+          </Button>
           <Button
             data-testid="next-step-test-button"
             color="primary"

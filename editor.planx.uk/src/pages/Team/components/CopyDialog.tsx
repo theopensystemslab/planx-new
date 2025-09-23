@@ -92,16 +92,13 @@ export const CopyDialog: React.FC<Props> = ({
           aria-describedby="alert-dialog-description"
           fullWidth
         >
-          <DialogTitle variant="h3" component="h1">
-            <Box sx={{ mt: 1, mb: 4 }}>
-              <Typography variant="h3" component="h2" id="dialog-heading">
-                Copy "{sourceFlow.name}"
-              </Typography>
-            </Box>
+          <DialogTitle variant="h3" component="h1" id="dialog-heading">
+            Copy "{sourceFlow.name}"
           </DialogTitle>
           <Box>
             <Form>
               <DialogContent
+                dividers
                 sx={{ gap: 2, display: "flex", flexDirection: "column" }}
               >
                 <InputLabel label="Flow name" htmlFor="flow.name">
@@ -132,6 +129,9 @@ export const CopyDialog: React.FC<Props> = ({
                   disableRipple
                   onClick={handleClose}
                   disabled={isSubmitting}
+                  variant="contained"
+                  color="secondary"
+                  sx={{ backgroundColor: "background.default" }}
                 >
                   Back
                 </Button>

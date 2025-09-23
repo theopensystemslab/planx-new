@@ -1,11 +1,11 @@
 import Close from "@mui/icons-material/CloseOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -262,60 +262,53 @@ const FormModal: React.FC<{
           />
         </ErrorBoundary>
       </DialogContent>
-      <DialogActions sx={{ p: 1 }}>
-        <Grid container justifyContent="space-between">
-          {showDeleteButton && (
-            <Grid item>
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => {
-                  handleDelete();
-                  navigate(rootFlowPath(true));
-                }}
-                disabled={disabled}
-                sx={{ backgroundColor: "background.default", gap: 1 }}
-              >
-                <DeleteIcon color="warning" fontSize="medium" />
-                Delete
-              </Button>
-            </Grid>
-          )}
-          <Grid
-            item
-            sx={{ display: "flex", marginLeft: "auto" }}
-            gap={1}
-            justifyContent="space-between"
+      <DialogActions
+        disableSpacing
+        sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
+      >
+        {showDeleteButton && (
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => {
+              handleDelete();
+              navigate(rootFlowPath(true));
+            }}
+            disabled={disabled}
+            sx={{ backgroundColor: "background.default", gap: 1 }}
           >
-            {showMakeUniqueButton && (
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    makeUnique(id, parent);
-                    navigate(rootFlowPath(true));
-                  }}
-                  disabled={disabled}
-                  sx={{ backgroundColor: "background.default" }}
-                >
-                  Make unique
-                </Button>
-              </Grid>
-            )}
-            <Grid item>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                form="modal"
-                disabled={disabled}
-              >
-                {handleDelete ? `Update` : `Create`}
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
+            <DeleteIcon color="warning" fontSize="medium" />
+            Delete
+          </Button>
+        )}
+        <Box
+          sx={{ display: "flex", alignItems: "stretch", marginLeft: "auto" }}
+          gap={1}
+        >
+          {showMakeUniqueButton && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                makeUnique(id, parent);
+                navigate(rootFlowPath(true));
+              }}
+              disabled={disabled}
+              sx={{ backgroundColor: "background.default" }}
+            >
+              Make unique
+            </Button>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="modal"
+            disabled={disabled}
+          >
+            {handleDelete ? `Update` : `Create`}
+          </Button>
+        </Box>
       </DialogActions>
     </StyledDialog>
   );

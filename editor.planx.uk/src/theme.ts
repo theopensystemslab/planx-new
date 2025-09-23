@@ -557,7 +557,9 @@ const getThemeOptions = ({
       MuiDialogActions: {
         styleOverrides: {
           root: ({ theme }) => ({
-            padding: theme.spacing(2),
+            background: theme.palette.secondary.main,
+            padding: theme.spacing(1, 2),
+            gap: theme.spacing(0.5),
           }),
         },
       },
