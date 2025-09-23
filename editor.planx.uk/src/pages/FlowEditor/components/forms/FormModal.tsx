@@ -172,14 +172,14 @@ const FormModal: React.FC<{
       parentIsTemplatedInternalPortal ||
       parentIsChildOfTemplatedInternalPortal);
 
-  const isProtectedTemplateNode = isTemplatedFrom &&
+  const isDisabledTemplatedNode = isTemplatedFrom &&
     Boolean(node?.data?.isTemplatedNode) &&
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
 
-  const showDeleteButton = handleDelete && !isProtectedTemplateNode;
+  const showDeleteButton = handleDelete && !isDisabledTemplatedNode;
 
-  const showMakeUniqueButton = useMemo(() => isClone(id) && !isProtectedTemplateNode, [isClone, id, isProtectedTemplateNode]);
+  const showMakeUniqueButton = useMemo(() => isClone(id) && !isDisabledTemplatedNode, [isClone, id, isDisabledTemplatedNode]);
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
