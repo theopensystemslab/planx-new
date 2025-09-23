@@ -1,4 +1,5 @@
 import Close from "@mui/icons-material/CloseOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -172,14 +173,18 @@ const FormModal: React.FC<{
       parentIsTemplatedInternalPortal ||
       parentIsChildOfTemplatedInternalPortal);
 
-  const isDisabledTemplatedNode = isTemplatedFrom &&
+  const isDisabledTemplatedNode =
+    isTemplatedFrom &&
     Boolean(node?.data?.isTemplatedNode) &&
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
 
   const showDeleteButton = handleDelete && !isDisabledTemplatedNode;
 
-  const showMakeUniqueButton = useMemo(() => isClone(id) && !isDisabledTemplatedNode, [isClone, id, isDisabledTemplatedNode]);
+  const showMakeUniqueButton = useMemo(
+    () => isClone(id) && !isDisabledTemplatedNode,
+    [isClone, id, isDisabledTemplatedNode],
+  );
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
@@ -257,52 +262,58 @@ const FormModal: React.FC<{
           />
         </ErrorBoundary>
       </DialogContent>
-      <DialogActions sx={{ p: 0 }}>
-        <Grid container justifyContent="flex-end">
+      <DialogActions sx={{ p: 1 }}>
+        <Grid container justifyContent="space-between">
           {showDeleteButton && (
-            <Grid item xs={6} sm={4} md={3}>
+            <Grid item>
               <Button
-                sx={{ height: "100%" }}
-                fullWidth
-                size="medium"
+                color="secondary"
+                variant="contained"
                 onClick={() => {
                   handleDelete();
                   navigate(rootFlowPath(true));
                 }}
                 disabled={disabled}
+                sx={{ backgroundColor: "background.default", gap: 1 }}
               >
-                delete
+                <DeleteIcon color="warning" fontSize="medium" />
+                Delete
               </Button>
             </Grid>
           )}
-          {showMakeUniqueButton && (
-            <Grid item xs={6} sm={4} md={3}>
+          <Grid
+            item
+            sx={{ display: "flex", marginLeft: "auto" }}
+            gap={1}
+            justifyContent="space-between"
+          >
+            {showMakeUniqueButton && (
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    makeUnique(id, parent);
+                    navigate(rootFlowPath(true));
+                  }}
+                  disabled={disabled}
+                  sx={{ backgroundColor: "background.default" }}
+                >
+                  Make unique
+                </Button>
+              </Grid>
+            )}
+            <Grid item>
               <Button
-                sx={{ height: "100%" }}
-                fullWidth
-                size="medium"
-                onClick={() => {
-                  makeUnique(id, parent);
-                  navigate(rootFlowPath(true));
-                }}
+                type="submit"
+                variant="contained"
+                color="primary"
+                form="modal"
                 disabled={disabled}
               >
-                make unique
+                {handleDelete ? `Update` : `Create`}
               </Button>
             </Grid>
-          )}
-          <Grid item xs={6} sm={4} md={3}>
-            <Button
-              fullWidth
-              size="medium"
-              type="submit"
-              variant="contained"
-              color="primary"
-              form="modal"
-              disabled={disabled}
-            >
-              {handleDelete ? `Update ${type}` : `Create ${type}`}
-            </Button>
           </Grid>
         </Grid>
       </DialogActions>

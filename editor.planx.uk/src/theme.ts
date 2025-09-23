@@ -541,7 +541,7 @@ const getThemeOptions = ({
             width: "100%",
             maxWidth: theme.breakpoints.values.md,
             borderRadius: 0,
-            borderTop: `20px solid ${palette.primary.main}`,
+            borderTop: `10px solid ${palette.primary.main}`,
             background: theme.palette.background.paper,
             margin: theme.spacing(1),
           }),
