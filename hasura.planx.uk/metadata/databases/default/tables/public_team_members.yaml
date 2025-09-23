@@ -52,9 +52,7 @@ select_permissions:
         - user_id
         - role
         - id
-      filter:
-        user_id:
-          _eq: x-hasura-user-id
+      filter: {}
 update_permissions:
   - role: platformAdmin
     permission:
