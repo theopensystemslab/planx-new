@@ -191,7 +191,6 @@ const FormModal: React.FC<{
       fullWidth
       maxWidth="md"
       disableScrollLock
-      onClose={handleClose}
     >
       <DialogTitle
         sx={{
