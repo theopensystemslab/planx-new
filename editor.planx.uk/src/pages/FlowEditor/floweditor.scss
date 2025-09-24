@@ -57,6 +57,22 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 }
 
+@mixin cloneStyle {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  border: $lineWidth dashed $nodeBorder;
+  z-index: -1;
+  .flow-locked & {
+    border-color: $lockedBorder;
+    background: transparent;
+  }
+}
+
 // ------------------------------------------------
 
 #editor {
@@ -177,19 +193,7 @@ $fontMonospace: "Source Code Pro", monospace;
     margin-top: 3px;
     position: relative;
     a::before {
-      content: "";
-      position: absolute;
-      left: -4px;
-      top: -4px;
-      width: 100%;
-      height: 100%;
-      background: white;
-      border: $nodeBorderWidth dashed $nodeBorder;
-      z-index: -1;
-      .flow-locked & {
-        border-color: $lockedBorder;
-        background: transparent;
-      }
+      @include cloneStyle;
     }
   }
 
@@ -325,6 +329,19 @@ $fontMonospace: "Source Code Pro", monospace;
         transparent 100%
       );
       background-size: $lineWidth 12px;
+    }
+  }
+}
+
+// Dedicated clone styling for folders
+.folder {
+  position: relative;
+  &.isClone {
+    &::before {
+      @include cloneStyle;
+      z-index: 0;
+      left: -3px;
+      top: -4px;
     }
   }
 }
