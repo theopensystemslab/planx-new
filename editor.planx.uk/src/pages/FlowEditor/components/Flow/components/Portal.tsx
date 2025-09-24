@@ -166,8 +166,6 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
-  const Icon = ICONS[ComponentType.InternalPortal];
-
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
   return (
