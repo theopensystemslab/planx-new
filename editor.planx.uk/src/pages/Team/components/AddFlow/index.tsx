@@ -4,7 +4,6 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
 import { logger } from "airbrake";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
@@ -100,16 +99,12 @@ export const AddFlow: React.FC = () => {
             aria-describedby="alert-dialog-description"
             fullWidth
           >
-            <DialogTitle variant="h3" component="h1">
-              <Box sx={{ mt: 1, mb: 4 }}>
-                <Typography variant="h3" component="h2" id="dialog-heading">
-                  Add a new flow
-                </Typography>
-              </Box>
+            <DialogTitle variant="h3" component="h1" id="dialog-heading">
+              Add a new flow
             </DialogTitle>
             <Box>
               <Form>
-                <DialogContent>
+                <DialogContent dividers>
                   <ErrorWrapper error={status?.error}>
                     <Box
                       sx={{
@@ -124,9 +119,11 @@ export const AddFlow: React.FC = () => {
                 </DialogContent>
                 <DialogActions>
                   <Button
-                    disableRipple
                     onClick={() => setDialogOpen(false)}
                     disabled={isSubmitting}
+                    variant="contained"
+                    color="secondary"
+                    sx={{ backgroundColor: "background.default" }}
                   >
                     Back
                   </Button>
@@ -134,7 +131,6 @@ export const AddFlow: React.FC = () => {
                     type="submit"
                     color="primary"
                     variant="contained"
-                    disableRipple
                     disabled={isSubmitting}
                   >
                     Add flow
