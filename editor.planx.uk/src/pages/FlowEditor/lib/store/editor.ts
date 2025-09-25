@@ -176,6 +176,7 @@ export interface EditorStore extends Store.Store {
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => Promise<void>;
+  cloneNode: (id: NodeId) => void;
   copyNode: (id: NodeId) => void;
   createFlow: (newFlow: NewFlow) => Promise<string>;
   createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
@@ -212,6 +213,7 @@ export interface EditorStore extends Store.Store {
     toBefore?: NodeId,
     toParent?: NodeId,
   ) => void;
+  pasteClonedNode: (toParent: NodeId, toBefore: NodeId) => void;
   pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
   publishFlow: (
     flowId: string,
@@ -328,8 +330,17 @@ export const editorStore: StateCreator<
     );
   },
 
+  cloneNode(id) {
+    localStorage.setItem("clonedNodeId", id);
+  },
+
   copyNode(id) {
-    localStorage.setItem("clipboard", id);
+    const { flow } = get();
+    const node = flow[id];
+    const children: Store.Node[] = node.edges?.map((id) => flow[id]) || [];
+
+    const payload = JSON.stringify({ node, children });
+    localStorage.setItem("copiedNode", payload);
   },
 
   createFlow: async (newFlow) => {
@@ -574,15 +585,27 @@ export const editorStore: StateCreator<
     }
   },
 
-  pasteNode(toParent, toBefore) {
+  pasteClonedNode(toParent, toBefore) {
     try {
-      const id = localStorage.getItem("clipboard");
+      const id = localStorage.getItem("clonedNodeId");
       if (id) {
         const [, ops] = clone(id, { toParent, toBefore })(get().flow);
         send(ops);
       }
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  },
+
+  pasteNode(parent, before) {
+    const payload = localStorage.getItem("copiedNode");
+    if (!payload) return;
+
+    try {
+      const { node, children } = JSON.parse(payload);
+      if (node) get().addNode(node, { parent, before, children });
+    } catch (err) {
+      alert((err as Error).message);
     }
   },
 
