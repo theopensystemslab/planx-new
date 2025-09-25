@@ -3,7 +3,7 @@ import Card from "@planx/components/shared/Preview/Card";
 import { CardHeader } from "@planx/components/shared/Preview/CardHeader/CardHeader";
 import type { PublicProps } from "@planx/components/shared/types";
 import { FormikErrors, useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import InputLabel from "ui/public/InputLabel";
 import Input from "ui/shared/Input/Input";
 import InputRowItem from "ui/shared/InputRowItem";
@@ -32,6 +32,21 @@ export default function AddressInputComponent(props: Props): FCReturn {
     validateOnChange: false,
     validationSchema: addressValidationSchema,
   });
+
+  // Auto-answered AddressInputs still set a breadcrumb even though they render null
+  useEffect(() => {
+    if (props.autoAnswer) {
+      props.handleSubmit?.({
+        ...makeData(props, props.autoAnswer),
+        auto: true,
+      });
+    }
+  }, [props.autoAnswer, props.handleSubmit]);
+
+  // Auto-answered AddressInputs are not publicly visible
+  if (props.autoAnswer) {
+    return null;
+  }
 
   return (
     <Card handleSubmit={formik.handleSubmit}>

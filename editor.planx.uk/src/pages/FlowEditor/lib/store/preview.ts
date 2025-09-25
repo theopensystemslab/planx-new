@@ -4,8 +4,10 @@ import type {
   GovUKPayment,
   Node,
   NodeId,
+  Value,
 } from "@opensystemslab/planx-core/types";
 import {
+  ComponentType,
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   flatFlags,
@@ -32,6 +34,14 @@ import { NavigationStore } from "./navigation";
 import type { SharedStore } from "./shared";
 
 const SUPPORTED_DECISION_TYPES = [TYPES.Checklist, TYPES.Question];
+const SUPPORTED_INPUT_TYPES = [
+  TYPES.AddressInput,
+  TYPES.ContactInput,
+  TYPES.DateInput,
+  TYPES.NumberInput,
+  TYPES.TextInput,
+];
+
 let memoizedPreviousCardId: string | undefined = undefined;
 let memoizedBreadcrumb: Store.Breadcrumbs | undefined = undefined;
 
@@ -90,6 +100,7 @@ export interface PreviewStore extends Store.Store {
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
   requestedFiles: () => FileList;
+  autoAnswerableInputs: (id: NodeId) => Value | undefined;
   autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;
@@ -502,6 +513,36 @@ export const previewStore: StateCreator<
 
     // Then return an array of the upcoming node ids, in depth-first order
     return sortIdsDepthFirst(flow)(ids);
+  },
+
+  autoAnswerableInputs: (id: NodeId) => {
+    const { breadcrumbs, flow } = get();
+
+    const node = flow[id];
+    if (!node) return;
+
+    const { type, data } = node;
+    if (!type || !SUPPORTED_INPUT_TYPES.includes(type) || !data?.fn) return;
+
+    // Auto-answer supported input component types when another component of
+    //   the exact same type and data field has been previously seen by the user
+    const visitedNodes = Object.entries(breadcrumbs)
+      .filter(
+        ([nodeId, breadcrumb]) =>
+          flow[nodeId]?.type === type &&
+          flow[nodeId]?.data?.fn === data.fn &&
+          breadcrumb.auto === false,
+      )
+      .map(([nodeId, _breadcrumb]) => nodeId);
+
+    if (!visitedNodes.length) return;
+
+    const autoAnswerableInputValue =
+      type === ComponentType.ContactInput
+        ? breadcrumbs[visitedNodes[0]].data?.[`_contact.${data.fn}`]?.[data.fn]
+        : breadcrumbs[visitedNodes[0]].data?.[data.fn];
+
+    return autoAnswerableInputValue;
   },
 
   /**

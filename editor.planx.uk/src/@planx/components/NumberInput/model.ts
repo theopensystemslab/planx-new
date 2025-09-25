@@ -1,5 +1,6 @@
+import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
-import { boolean, object, string } from "yup";
+import { boolean, number, object, string } from "yup";
 
 import {
   BaseNodeData,
@@ -15,6 +16,7 @@ export interface NumberInput extends BaseNodeData {
   units?: string;
   allowNegatives?: boolean;
   isInteger?: boolean;
+  autoAnswer?: Value;
 }
 
 export type UserData = number;
@@ -28,7 +30,7 @@ export const parseNumber = (raw: string): number | null => {
 };
 
 export const parseNumberInput = (
-  data: Record<string, any> | undefined
+  data: Record<string, any> | undefined,
 ): NumberInput => ({
   title: data?.title || "",
   description: data?.description,
@@ -80,7 +82,9 @@ export const numberInputValidationSchema = ({
       },
     });
 
-export const publicValidationSchema = (args: FieldValidationSchema<NumberInput>) =>
+export const publicValidationSchema = (
+  args: FieldValidationSchema<NumberInput>,
+) =>
   object({
     value: numberInputValidationSchema(args),
   });
@@ -93,5 +97,6 @@ export const editorValidationSchema = baseNodeDataValidationSchema.concat(
     units: string(),
     allowNegatives: boolean(),
     isInteger: boolean(),
-  })
+    autoAnswer: number().nullable(),
+  }),
 );
