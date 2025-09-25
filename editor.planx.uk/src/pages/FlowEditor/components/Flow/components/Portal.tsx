@@ -137,7 +137,8 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const { copyNode, showTags } = useStore((state) => ({
+  const { isClone, copyNode, showTags } = useStore((state) => ({
+    isClone: state.isClone,
     copyNode: state.copyNode,
     showTags: state.showTags,
   }));
@@ -165,14 +166,17 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
-  const Icon = ICONS[ComponentType.InternalPortal];
-
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li ref={ref}>
+      <li 
+        className={classNames("folder", {
+          isClone: isClone(props.id),
+        })}
+        ref={ref}
+      >
         <Box
           className={classNames("card", "portal", "internal-portal", {
             isDragging,
