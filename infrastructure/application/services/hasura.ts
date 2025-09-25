@@ -127,7 +127,7 @@ export const createHasuraService = async ({
               value: [...CUSTOM_DOMAINS.map((x: any) => x.domain), DOMAIN]
                 .map((x) => `https://*.${x}, https://${x}`)
                 .concat(
-                  "https://localplanning.services",
+                  config.require("lps-domain"),
                   "https://planx-website.webflow.io",
                   "https://www.planx.uk",
                 )
