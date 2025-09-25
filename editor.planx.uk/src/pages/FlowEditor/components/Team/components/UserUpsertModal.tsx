@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { FormikHelpers, useFormik } from "formik";
 import { useToast } from "hooks/useToast";
@@ -141,16 +142,15 @@ export const UserUpsertModal = ({
       onClose={() => setShowModal(false)}
     >
       <form onSubmit={formik.handleSubmit}>
+        <DialogTitle variant="h3" component="h1" id="dialog-heading">
+          {actionType === "add" ? "Add a new member" : "Edit member"}
+        </DialogTitle>
         <DialogContent
+          dividers
           data-testid={
             actionType === "add" ? "modal-create-user" : "modal-edit-user"
           }
         >
-          <Box sx={{ mt: 1, mb: 4 }}>
-            <Typography variant="h3" component="h2" id="dialog-heading">
-              Add a new member
-            </Typography>
-          </Box>
           <InputGroup flowSpacing>
             <InputLabel label="First name" htmlFor="firstName">
               <Input
@@ -193,13 +193,7 @@ export const UserUpsertModal = ({
             </InputLabel>
           </InputGroup>
         </DialogContent>
-        <DialogActions
-          sx={{
-            display: "flex",
-            justifyContent: "flex-start",
-            padding: 2,
-          }}
-        >
+        <DialogActions>
           <ErrorWrapper
             error={
               showUserAlreadyExistsError
@@ -207,32 +201,36 @@ export const UserUpsertModal = ({
                 : undefined
             }
           >
-            <Box>
-              <>
-                <Button
-                  variant="contained"
-                  color="prompt"
-                  type="submit"
-                  data-testid={
-                    actionType === "add"
-                      ? "modal-create-user-button"
-                      : "modal-edit-user-button"
-                  }
-                  disabled={!formik.dirty || !formik.isValid}
-                >
-                  {actionType === "add" ? "Create user" : "Update user"}
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  type="reset"
-                  sx={{ ml: 1.5 }}
-                  onClick={() => setShowModal(false)}
-                  data-testid="modal-cancel-button"
-                >
-                  Cancel
-                </Button>
-              </>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 1.5,
+              }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                type="reset"
+                onClick={() => setShowModal(false)}
+                data-testid="modal-cancel-button"
+                sx={{ backgroundColor: "background.default" }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                color="prompt"
+                type="submit"
+                data-testid={
+                  actionType === "add"
+                    ? "modal-create-user-button"
+                    : "modal-edit-user-button"
+                }
+                disabled={!formik.dirty || !formik.isValid}
+              >
+                {actionType === "add" ? "Create user" : "Update user"}
+              </Button>
             </Box>
           </ErrorWrapper>
         </DialogActions>

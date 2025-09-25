@@ -213,7 +213,7 @@ export = async () => {
       }),
       container: {
         // if changing, also check docker-compose.yml
-        image: "metabase/metabase:v0.56.2",
+        image: "metabase/metabase:v0.56.6",
         portMappings: [metabaseListenerHttp],
         // When changing `memory`, also update `JAVA_OPTS` below
         memory: 4096 /*MB*/,
@@ -511,6 +511,13 @@ export = async () => {
           {
             name: "METABASE_URL_EXT",
             value: `https://metabase.${DOMAIN}`,
+          },
+          {
+            name: "LPS_URL_EXT",
+            // TODO: Simplify once production CDN is configured
+            value: config.get("lps-domain") 
+              ? pulumi.interpolate`https://${config.requireSecret("lps-domain")}`
+              : ""
           },
           generateCORSAllowList(CUSTOM_DOMAINS, DOMAIN),
           ...generateTeamSecrets(config, env),

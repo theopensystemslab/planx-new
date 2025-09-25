@@ -23,7 +23,12 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
     ) {
       returning {
         applications: lowcal_sessions(
-          where: { user_status: { _neq: "expired" } }
+          where: {
+            # Fetch non-expired sessions...
+            user_status: { _neq: "expired" }
+            # ..for services which still exist
+            flow: { id: { _is_null: false } }
+          }
           order_by: { updated_at: asc }
         ) {
           id

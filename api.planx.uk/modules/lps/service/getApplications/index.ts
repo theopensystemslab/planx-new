@@ -3,7 +3,7 @@ import type {
   Success,
   SubmittedLPSApplication,
   AwaitingPaymentLPSApplication,
-} from "../../types.js";
+} from "../../types/applications.js";
 import { $api } from "../../../../client/index.js";
 import { addDays, addMonths, subMinutes } from "date-fns";
 import { ServerError } from "../../../../errors/serverError.js";
@@ -126,7 +126,7 @@ export const getApplications = async (
     switch (application.status) {
       case "draft":
         return convertToDraftLPSApplication(application, email);
-      case "awaiting-payment":
+      case "awaitingPayment":
         return convertToAwaitingPaymentLPSApplication(application);
       case "submitted":
         return convertToSubmittedLPSApplication(application);

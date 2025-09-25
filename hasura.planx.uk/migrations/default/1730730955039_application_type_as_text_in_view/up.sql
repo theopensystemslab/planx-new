@@ -1,6 +1,6 @@
 DROP VIEW IF EXISTS "public"."submission_services_summary";
 
-CREATE VIEW "public"."submission_services_summary" AS 
+CREATE OR REPLACE VIEW "public"."submission_services_summary" AS 
  WITH resumes_per_session AS (
          SELECT reconciliation_requests.session_id,
             count(reconciliation_requests.id) AS number_times_resumed
@@ -102,7 +102,7 @@ CREATE VIEW "public"."submission_services_summary" AS
 
 DROP VIEW IF EXISTS "public"."analytics_summary";
 
-CREATE VIEW "public"."analytics_summary" AS 
+CREATE OR REPLACE VIEW "public"."analytics_summary" AS 
  SELECT a.id AS analytics_id,
     al.id AS analytics_log_id,
     f.slug AS service_slug,

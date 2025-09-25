@@ -1,0 +1,3 @@
+table:
+  name: analytics_aggregated_materialized
+  schema: public

@@ -78,15 +78,22 @@ export const TemplatedFlowStatus = () => {
       </SettingsSection>
       {isOpen && (
         <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-          <DialogTitle>Opt-out of templated flow updates</DialogTitle>
-          <DialogContent>
+          <DialogTitle component="h1" variant="h3">
+            Opt-out of templated flow updates
+          </DialogTitle>
+          <DialogContent dividers>
             <DialogContentText>
               Are you sure you want to opt-out of templated flow updates and
               manage the content of this service manually?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setIsOpen(false)} color="secondary">
+            <Button
+              onClick={() => setIsOpen(false)}
+              color="secondary"
+              variant="contained"
+              sx={{ backgroundColor: "background.default" }}
+            >
               Cancel
             </Button>
             <Button

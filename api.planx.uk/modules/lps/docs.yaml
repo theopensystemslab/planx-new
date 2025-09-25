@@ -101,6 +101,18 @@ components:
         email:
           type: string
           format: email
+    DownloadTokenRequest:
+      type: object
+      required:
+        - email
+        - sessionId
+      properties:
+        email:
+          type: string
+          format: email
+        sessionId:
+          type: string
+          format: uuid
     ApplicationsRequest:
       type: object
       required:
@@ -126,6 +138,18 @@ components:
               message:
                 type: string
                 example: success
+    DownloadTokenResponse:
+      description: Token generated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - token
+            properties:
+              token:
+                type: string
+                format: uuid
     ApplicationsResponseSuccess:
       description: Applications retrieved successfully
       content:
@@ -187,5 +211,22 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/responses/ApplicationsResponseError"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /lps/download/token:
+    post:
+      tags: [localplanning.services]
+      summary: Generate a one-time download token
+      description: |
+        Generates a secure, short-lived, single-use token for downloading specific application data. This endpoint is part of a token vending machine pattern, acting as a secure method of granting access to the `/lps/download` endpoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DownloadTokenRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/DownloadTokenResponse"
         "500":
           $ref: "#/components/responses/ErrorMessage"

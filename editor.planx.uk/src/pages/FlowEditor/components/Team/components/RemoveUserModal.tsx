@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
@@ -49,17 +50,15 @@ export const RemoveUserModal = ({
   return (
     <Dialog
       aria-labelledby="dialog-heading"
-      data-testid={`dialog-${actionType}-user`}
+      data-testid={`modal-${actionType}-user`}
       open={showModal || false}
       onClose={() => setShowModal(false)}
       fullWidth
     >
-      <DialogContent data-testid={"modal-remove-user"} sx={{ p: 2.5 }}>
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h3" component="h2" id="dialog-heading">
-            Remove a user
-          </Typography>
-        </Box>
+      <DialogTitle variant="h3" component="h1" id="dialog-heading">
+        Remove a user
+      </DialogTitle>
+      <DialogContent dividers>
         <Box sx={{}}>
           <Typography variant="body1" component="p" id="dialog-body">
             {`Do you want to remove ${initialValues?.firstName} ${initialValues?.lastName}?`}
@@ -70,35 +69,26 @@ export const RemoveUserModal = ({
           </Typography>
         </Box>
       </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          pl: 2.5,
-          pb: 2.5,
-        }}
-      >
-        <Box>
-          <Button
-            variant="contained"
-            color="prompt"
-            type="submit"
-            data-testid={"modal-remove-user-button"}
-            onClick={handleClick}
-          >
-            Remove user
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            type="reset"
-            sx={{ ml: 1.5 }}
-            onClick={() => setShowModal(false)}
-            data-testid="modal-cancel-button"
-          >
-            Cancel
-          </Button>
-        </Box>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="secondary"
+          type="reset"
+          sx={{ backgroundColor: "background.default" }}
+          onClick={() => setShowModal(false)}
+          data-testid="modal-cancel-button"
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          color="warning"
+          type="submit"
+          data-testid={"modal-remove-user-button"}
+          onClick={handleClick}
+        >
+          Remove user
+        </Button>
       </DialogActions>
     </Dialog>
   );

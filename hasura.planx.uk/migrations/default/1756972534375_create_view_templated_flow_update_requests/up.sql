@@ -1,4 +1,4 @@
-CREATE VIEW templated_flow_update_requests AS (
+CREATE OR REPLACE VIEW "public"."templated_flow_update_requests" AS (
     SELECT 
       hse.payload ->> 'sourceFlowId' as source_template_id,
       hse.payload ->> 'templatedFlowId' as templated_flow_id,

@@ -37,7 +37,7 @@ const subscriptionRoutes = compose(
                 }
                 where: { 
                   team_slug: { _eq: $teamSlug }, 
-                  service_charge_amount: { _gt: 0 }}
+                  service_charge_amount: { _gt: 0 }
                 }
               ) {
                 flowName: flow_name

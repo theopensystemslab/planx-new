@@ -58,7 +58,7 @@ export const AddCommentDialog = ({
         <DialogTitle variant="h3" component="h1">
           {`Add a comment`}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent dividers>
           {`History reflects the individual edits to your flow. Insert a custom comment into the timeline to add context. This will help other editors understand what's changed on next publish.`}
           <Box mt={2} component="form" onSubmit={formik.handleSubmit}>
             <InputLabel label="Comment">
@@ -80,17 +80,21 @@ export const AddCommentDialog = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button disableRipple onClick={() => setDialogOpen(false)}>
-            BACK
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => setDialogOpen(false)}
+            sx={{ backgroundColor: "background.default" }}
+          >
+            Back
           </Button>
           <Button
             type="submit"
             color="primary"
             variant="contained"
-            disableRipple
             onClick={() => formik.handleSubmit()}
           >
-            ADD COMMENT
+            Add comment
           </Button>
         </DialogActions>
       </Dialog>

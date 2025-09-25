@@ -8,7 +8,7 @@ import isEmpty from "lodash/isEmpty.js";
 import type { Flow } from "../../../../types.js";
 
 export const transformDeltaToTemplatedFlowEditsData = (
-  delta: jsondiffpatch.Delta,
+  delta: NonNullable<jsondiffpatch.Delta>,
   data: Flow["data"],
 ): Record<NodeId, Partial<Node>> => {
   const templatedFlowEditsData: Record<NodeId, Partial<Node>> = {};

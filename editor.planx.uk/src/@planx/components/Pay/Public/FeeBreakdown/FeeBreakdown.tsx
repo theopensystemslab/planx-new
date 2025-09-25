@@ -33,6 +33,7 @@ type FeeBreakdownRow = React.FC<IFeeBreakdown>;
 const exemptionsReductionLookup: Record<string, string> = {
   resubmission: "Resubmission",
   disability: "Access for disabled persons",
+  demolition: "Relevant demolition in a conservation area",
   parishCouncil: "Parish or community council",
   alternative: "Alternative proposal",
   sports: "Sports club",

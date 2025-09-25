@@ -14,6 +14,7 @@ interface BaseApplication {
   address: string | null;
   createdAt: string;
   updatedAt: string;
+  expiresAt: string;
   /** Only services which use Section components will have values for progress */
   progress?: {
     completed: number;
@@ -22,13 +23,12 @@ interface BaseApplication {
 
 export type DraftApplication = BaseApplication & {
   status: "draft",
-  expiresAt: string;
   serviceUrl: string;
 };
 
 export type AwaitingPaymentApplication = BaseApplication & {
-  status: "awaiting-payment"
-  expiresAt: string;
+  status: "awaitingPayment"
+  paymentUrl: string;
 };
 
 export type SubmittedApplication = BaseApplication & {
@@ -64,7 +64,9 @@ export const useFetchApplications = () => {
     // Data could only be refetch with a new magic link
     staleTime: Infinity,
     gcTime: Infinity,
-    retry: 2,
+    // Do not allow retries - this is a single use endpoint
+    // Failures on retry may return a false error message, not matching the original reason for failure
+    retry: false,
   }, queryClient);
 
   return {

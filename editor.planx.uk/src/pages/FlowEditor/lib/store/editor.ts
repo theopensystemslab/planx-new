@@ -14,6 +14,7 @@ import {
   isClone,
   makeUnique,
   move,
+  Relationships,
   remove,
   ROOT_NODE_KEY,
   update,
@@ -169,7 +170,7 @@ export interface FlowSummary {
 }
 
 export interface EditorStore extends Store.Store {
-  addNode: (node: any, relationships?: any) => void;
+  addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
     flow: FlowSummary,
   ) => Promise<{ id: string; name: string } | void>;
