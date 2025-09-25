@@ -4,16 +4,6 @@ export const ResidentialUnitsProposed: Schema = {
   type: "Proposed residential unit type",
   fields: [
     {
-      type: "number",
-      data: {
-        title: "Number of units of this type",
-        description:
-          "This is the total number of units of this type that will be on the site after the changes.",
-        fn: "identicalUnits",
-        allowNegatives: false,
-      },
-    },
-    {
       type: "question",
       data: {
         title: "What best describes this unit?",
@@ -35,9 +25,17 @@ export const ResidentialUnitsProposed: Schema = {
       },
     },
     {
+      type: "number",
+      data: {
+        title: "How many of this type of units will there be?",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
       type: "question",
       data: {
-        title: "What best describes the tenure of this unit?",
+        title: "Select how the unit is owned or rented",
         fn: "tenure",
         options: [
           { id: "MH", data: { text: "Market housing", val: "MH" } },

@@ -4,18 +4,9 @@ export const ResidentialUnitsGLALost: Schema = {
   type: "Lost residential unit type",
   fields: [
     {
-      type: "number",
-      data: {
-        title: "Number of units of this type",
-        description: "This is the number of units of this type that are lost.",
-        fn: "identicalUnits",
-        allowNegatives: false,
-      },
-    },
-    {
       type: "question",
       data: {
-        title: "What best describes this unit?",
+        title: "What type of residential unit is it?",
         fn: "type",
         options: [
           { id: "terraced", data: { text: "Terraced home", val: "terraced" } },
@@ -31,7 +22,7 @@ export const ResidentialUnitsGLALost: Schema = {
           { id: "LW", data: { text: "Live/work unit", val: "LW" } },
           { id: "cluster", data: { text: "Cluster flat", val: "cluster" } },
           { id: "studio", data: { text: "Studio or bedsit", val: "studio" } },
-          { id: "coLiving", data: { text: "Co living unit", val: "coLiving" } },
+          { id: "coLiving", data: { text: "Co-living unit", val: "coLiving" } },
           { id: "hostel", data: { text: "Hostel room", val: "hostel" } },
           { id: "HMO", data: { text: "HMO", val: "HMO" } },
           {
@@ -45,7 +36,15 @@ export const ResidentialUnitsGLALost: Schema = {
     {
       type: "number",
       data: {
-        title: "What is the Gross Internal Floor Area (GIA) of this unit?",
+        title: "How many of this type of units are lost?",
+        fn: "identicalUnits",
+        allowNegatives: false,
+      },
+    },
+    {
+      type: "number",
+      data: {
+        title: "What's the gross internal floor area of this unit?",
         units: "m²",
         fn: "area",
         allowNegatives: false,
@@ -55,6 +54,7 @@ export const ResidentialUnitsGLALost: Schema = {
       type: "number",
       data: {
         title: "How many habitable rooms does this unit have?",
+        description: "A habitable room is a room used for living purposes.",
         fn: "habitable",
         allowNegatives: false,
       },
@@ -70,7 +70,7 @@ export const ResidentialUnitsGLALost: Schema = {
     {
       type: "question",
       data: {
-        title: "What best describes the tenure of this unit?",
+        title: "Select how the unit is owned or rented",
         fn: "tenure",
         options: [
           { id: "LAR", data: { text: "London Affordable Rent", val: "LAR" } },
@@ -120,7 +120,7 @@ export const ResidentialUnitsGLALost: Schema = {
     {
       type: "question",
       data: {
-        title: "What best describes the provider of this unit?",
+        title: "Select the provider of the unit",
         fn: "provider",
         options: [
           { id: "private", data: { text: "Private", val: "private" } },
@@ -181,7 +181,7 @@ export const ResidentialUnitsGLALost: Schema = {
     {
       type: "question",
       data: {
-        title: "Is this unit built on garden land?",
+        title: "Is this unit built on a garden?",
         fn: "garden",
         options: [
           { id: "true", data: { text: "Yes", val: "true" } },
