@@ -16,10 +16,9 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode] = useStore((state) => [
+  const [isClone, childNodes] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
-    state.copyNode,
   ]);
 
   const parent = getParentId(props.parent);
@@ -41,17 +40,18 @@ const Filter: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
 
   const Icon = ICONS[props.type];
 
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger 
+        hidden={isDragging} 
+        before={props.id} 
+        parent={parent} 
+        handleContext={props.handleContext}
+        contextMenuA11yProps={props.contextMenuA11yProps} 
+      />
       <li
         className={classNames("card", "decision", "type-Filter", {
           isDragging,
@@ -63,7 +63,14 @@ const Filter: React.FC<Props> = React.memo((props) => {
         <Link
           href={href}
           prefetch={false}
-          onContextMenu={handleContext}
+          onContextMenu={(e) => 
+            props.handleContext(e, { 
+              parent, 
+              before: props.id,
+              nodeId: props.id,
+            })
+          }
+          {...props.contextMenuA11yProps}
           ref={drag}
         >
           {Icon && <Icon />}
@@ -75,6 +82,8 @@ const Filter: React.FC<Props> = React.memo((props) => {
               key={child.id}
               {...child}
               showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+              handleContext={props.handleContext}
+              contextMenuA11yProps={props.contextMenuA11yProps}
             />
           ))}
         </ol>
