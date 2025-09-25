@@ -1,10 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
+import Submissions from "pages/FlowEditor/components/Submissions/Submissions";
 
 export const Route = createFileRoute("/_authenticated/$team/submissions")({
-  component: RouteComponent,
+  loader: ({ params }) => {},
+  component: Submissions,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/$team/submissions"!</div>;
-}
