@@ -61,7 +61,7 @@ $fontMonospace: "Source Code Pro", monospace;
   content: "";
   position: absolute;
   left: -5px;
-  top: -5px;
+  bottom: -5px;
   width: 100%;
   height: 100%;
   background: white;
@@ -190,17 +190,18 @@ $fontMonospace: "Source Code Pro", monospace;
   }
 
   &.isClone > div {
-    margin-top: 3px;
+    margin-bottom: 3px;
     position: relative;
     a::before {
       @include cloneStyle;
     }
   }
 
-  // Increase offset of clone styling when visit styling is also applied
-  &.isClone.wasVisited a::before {
+  // Increase offset of clone styling when visited or focused
+  &.isClone.wasVisited a::before,
+  &.isClone a:focus::before {
     left: -8px;
-    top: -8px;
+    bottom: -8px;
   }
 
   &.hasFailed {
@@ -340,8 +341,12 @@ $fontMonospace: "Source Code Pro", monospace;
     &::before {
       @include cloneStyle;
       z-index: 0;
-      left: -3px;
-      top: -4px;
+      left: -4px;
+      bottom: -4px;
+    }
+    &:focus-within::before {
+      left: -8px;
+      bottom: -8px;
     }
   }
 }
