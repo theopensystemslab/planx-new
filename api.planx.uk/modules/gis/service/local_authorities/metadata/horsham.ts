@@ -36,7 +36,7 @@ const planningConstraints: LocalAuthorityMetadata["planningConstraints"] = {
       "articleFour.horsham.gerrardsRough": "ART4025",
       "articleFour.horsham.newStreet": "ART4026",
       "articleFour.horsham.smithersRough": "ART4027",
-      "articleFour.horsham.sedgwickPark" : "ART4030",
+      "articleFour.horsham.sedgwickPark": "ART4030",
       "articleFour.horsham.southdownHouse": "ART4031",
       "articleFour.horsham.fiveOaksElectricalSubStation": "ART4032/001",
       "articleFour.horsham.amberleyConservationArea": "ART4033",
