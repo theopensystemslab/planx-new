@@ -4,11 +4,11 @@ import React from "react";
 import { AdminPanelData } from "types";
 
 import { client } from "../../lib/graphql";
-import { PlatformAdminPanel } from "../../pages/PlatformAdminPanel/PlatformAdminPanel";
 import {
   PRODUCTION_ADMIN_PANEL_QUERY,
   STAGING_ADMIN_PANEL_QUERY,
-} from "../utils";
+} from "../../lib/utils";
+import { PlatformAdminPanel } from "../../pages/PlatformAdminPanel/PlatformAdminPanel";
 
 const AdminPanelRoute = () => {
   return <PlatformAdminPanel />;
