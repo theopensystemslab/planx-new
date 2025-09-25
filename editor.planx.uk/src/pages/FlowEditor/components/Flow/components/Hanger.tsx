@@ -1,3 +1,4 @@
+import { NodeId } from "@opensystemslab/planx-core/types";
 import classnames from "classnames";
 import isEmpty from "lodash/isEmpty";
 import {
@@ -11,11 +12,14 @@ import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
+import { ContextMenuA11yProps, HandleContextMenu } from "./ContextMenu";
 
 interface HangerProps {
   hidden?: boolean;
-  parent?: any;
-  before?: any;
+  parent?: NodeId;
+  before?: NodeId;
+  contextMenuA11yProps?: ContextMenuA11yProps;
+  handleContext?: HandleContextMenu;
 }
 
 interface Item {
@@ -32,19 +36,17 @@ const buildHref = (before: any, parent: any) => {
   return hrefParts.concat(["nodes", "new", before]).filter(Boolean).join("/");
 };
 
-const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
+const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false, contextMenuA11yProps, handleContext }) => {
   parent = getParentId(parent);
 
   const [
     moveNode,
-    pasteNode,
     isTemplatedFrom,
     flow,
     orderedFlow,
     setOrderedFlow,
   ] = useStore((state) => [
     state.moveNode,
-    state.pasteNode,
     state.isTemplatedFrom,
     state.flow,
     state.orderedFlow,
@@ -91,11 +93,6 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     }),
   });
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    pasteNode(parent || undefined, before || undefined);
-  };
-
   return (
     <li
       className={classnames("hanger", { hidden: hidden || hideHangerFromUser })}
@@ -104,7 +101,8 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       <Link
         href={buildHref(before, parent)}
         prefetch={false}
-        onContextMenu={handleContext}
+        onContextMenu={(e) => handleContext && handleContext(e, { parent, before})}
+        {...contextMenuA11yProps}
       >
         {canDrop && item && item.text}
       </Link>

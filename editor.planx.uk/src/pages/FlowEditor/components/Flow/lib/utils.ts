@@ -1,6 +1,6 @@
 import { ROOT_NODE_KEY } from "@planx/graph";
 
-export const getParentId = (parent: any) => {
+export const getParentId = (parent: any): string => {
   const [, ...ids] = window.location.pathname.split(",");
   let correctParent = parent;
   if (!correctParent && ids.length > 0) {

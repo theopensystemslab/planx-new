@@ -57,12 +57,6 @@ const Question: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
-
   const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
   // If there is an error, the icon has a semantic meaning and needs a title
   const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
@@ -72,7 +66,13 @@ const Question: React.FC<Props> = React.memo((props) => {
 
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger 
+        hidden={isDragging} 
+        before={props.id} 
+        parent={parent} 
+        handleContext={props.handleContext}
+        contextMenuA11yProps={props.contextMenuA11yProps}
+      />
       <li
         className={classNames(
           "card",
@@ -97,7 +97,14 @@ const Question: React.FC<Props> = React.memo((props) => {
           <Link
             href={href}
             prefetch={false}
-            onContextMenu={handleContext}
+            onContextMenu={(e) =>
+              props.handleContext(e, {
+                parent,
+                before: props.id,
+                nodeId: props.id,
+              })
+            }
+            {...props.contextMenuA11yProps}
             ref={drag}
           >
             {props.data?.img && (
@@ -131,6 +138,8 @@ const Question: React.FC<Props> = React.memo((props) => {
               key={child.id}
               {...child}
               showTemplatedNodeStatus={props.showTemplatedNodeStatus}
+              handleContext={props.handleContext}
+              contextMenuA11yProps={props.contextMenuA11yProps}
             />
           ))}
         </ol>
