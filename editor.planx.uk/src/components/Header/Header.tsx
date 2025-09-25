@@ -10,7 +10,6 @@ import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
-import Link from "@mui/material/Link";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
@@ -20,17 +19,12 @@ import { styled, Theme } from "@mui/material/styles";
 import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
 import axios from "axios";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
-import { Route } from "navi";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React, { RefObject, useRef, useState } from "react";
-import {
-  Link as ReactNaviLink,
-  useCurrentRoute,
-  useNavigation,
-} from "react-navi";
+import React, { RefObject, useEffect, useRef, useState } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -40,6 +34,7 @@ import { ApplicationPath } from "types";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType } from "ui/editor/FlowTag/types";
 import Reset from "ui/icons/Reset";
+import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
 import { rootFlowPath } from "../../routes-navi/utils";
@@ -63,11 +58,11 @@ const BreadcrumbsRoot = styled(Box)(() => ({
   alignItems: "center",
 }));
 
-const BreadcrumbsLink = styled(Link)(({ theme }) => ({
+const BreadcrumbsLink = styled(CustomLink)(({ theme }) => ({
   color: theme.palette.common.white,
   textDecoration: "none",
   borderBottom: "1px solid rgba(255, 255, 255, 0.75)",
-})) as typeof Link;
+})) as typeof CustomLink;
 
 const PublicHeader = styled(MuiToolbar)(() => ({
   height: HEADER_HEIGHT_PUBLIC,
@@ -147,7 +142,7 @@ const Logo = styled("img")(() => ({
   },
 }));
 
-const LogoLink = styled(Link)(() => ({
+const LogoLink = styled(CustomLink)(() => ({
   display: "flex",
   alignItems: "center",
   "&:focus-visible": borderedFocusStyle,
@@ -181,16 +176,14 @@ const TeamLogo: React.FC = () => {
     : `${teamName} Logo`;
   const logo = <Logo alt={altText} src={teamTheme?.logo ?? undefined} />;
   return teamSettings?.homepage ? (
-    <LogoLink href={teamSettings?.homepage} target="_blank">
-      {logo}
-    </LogoLink>
+    <LogoLink to={teamSettings?.homepage}>{logo}</LogoLink>
   ) : (
     logo
   );
 };
 
 const Breadcrumbs: React.FC = () => {
-  const route = useCurrentRoute();
+  const params = useParams({ strict: false });
   const [team, isStandalone] = useStore((state) => [
     state.getTeam(),
     state.previewEnvironment === "standalone",
@@ -202,9 +195,7 @@ const Breadcrumbs: React.FC = () => {
     <>
       <BreadcrumbsRoot>
         <BreadcrumbsLink
-          component={ReactNaviLink}
-          href={"/"}
-          prefetch={false}
+          to="/"
           {...(isStandalone && { target: "_blank" })}
           variant="body1"
         >
@@ -214,9 +205,10 @@ const Breadcrumbs: React.FC = () => {
           <>
             {" / "}
             <BreadcrumbsLink
-              component={ReactNaviLink}
-              href={`/${team.slug}`}
-              prefetch={false}
+              to="/$team"
+              params={{
+                team: team.slug,
+              }}
               {...(isStandalone && { target: "_blank" })}
               variant="body1"
             >
@@ -224,25 +216,23 @@ const Breadcrumbs: React.FC = () => {
             </BreadcrumbsLink>
           </>
         )}
-        {route.data.flow && (
+        {/*{params.flow && (
           <>
             {" / "}
-            <Link
+            <CustomLink
               style={{
                 color: "#fff",
                 textDecoration: "none",
               }}
-              component={ReactNaviLink}
-              href={rootFlowPath(false)}
-              prefetch={false}
               variant="body1"
+              to="/"
             >
               {route.data.flow}
-            </Link>
+            </CustomLink>
           </>
-        )}
+        )}*/}
       </BreadcrumbsRoot>
-      {route.data.flow && (
+      {/*{route.data.flow && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
           {useStore.getState().canUserEditTeam(team.slug) ? (
             <Button
@@ -261,7 +251,7 @@ const Breadcrumbs: React.FC = () => {
             </FlowTag>
           )}
         </Box>
-      )}
+      )}*/}
     </>
   );
 };
@@ -369,8 +359,8 @@ const PublicToolbar: React.FC<{
 
 const ServiceTitle: React.FC = () => {
   const flowName = useStore((state) => state.flowName);
-  const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0];
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(-1)[0];
 
   return (
     <ServiceTitleRoot data-testid="service-title">
@@ -396,9 +386,8 @@ const ServiceTitle: React.FC = () => {
 
 const EditorToolbar: React.FC<{
   headerRef: React.RefObject<HTMLElement>;
-  route: Route;
 }> = ({ headerRef }) => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [user, token] = useStore((state) => [state.getUser(), state.jwt]);
 
@@ -415,7 +404,7 @@ const EditorToolbar: React.FC<{
     await axios.post(`${import.meta.env.VITE_APP_API_URL}/auth/logout`, null, {
       headers: authRequestHeader,
     });
-    navigate("/logout");
+    navigate({ to: "/logout" });
   };
 
   return (
@@ -496,8 +485,8 @@ interface ToolbarProps {
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
-  const route = useCurrentRoute();
-  const path = route.url.pathname.split("/").slice(-1)[0] || undefined;
+  const location = useLocation();
+  const path = location.pathname.split("/").slice(-1)[0] || undefined;
   const [flowSlug, previewEnvironment] = useStore((state) => [
     state.flowSlug,
     state.previewEnvironment,
@@ -509,7 +498,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    return <EditorToolbar headerRef={headerRef} route={route}></EditorToolbar>;
+    console.log("Rendering EditorToolbar");
+    return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
   }
 
   switch (path) {
@@ -527,6 +517,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
 const Header: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
   const teamTheme = useStore((state) => state.teamTheme);
+
   return (
     <Root
       position="static"
