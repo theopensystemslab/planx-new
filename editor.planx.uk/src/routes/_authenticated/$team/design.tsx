@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import React from "react";
+import DesignSettings from "pages/FlowEditor/components/Settings/DesignSettings";
 
 export const Route = createFileRoute("/_authenticated/$team/design")({
-  component: RouteComponent,
+  component: DesignSettings,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/$team/design"!</div>;
-}
