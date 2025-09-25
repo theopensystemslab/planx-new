@@ -91,9 +91,7 @@ const AddressSearch: React.FC = () => {
     event.preventDefault();
 
     // address coords => LPA lookup
-    if (!address) {
-      return;
-    }
+    if (!address) return;
 
     const { LAT, LNG } = address.LPI;
 
@@ -110,30 +108,22 @@ const AddressSearch: React.FC = () => {
       }
 
       // Case 2: Check if any LPA matches our lookup table
-      let matchFound = false;
       for (const entity of data.entities) {
         if (entity.reference in lpaReferenceLookup) {
           const matchingLpaRoute = lpaReferenceLookup[entity.reference];
-          navigate(`/${matchingLpaRoute}`);
-          matchFound = true;
-          break; // Exit after first match
+          return navigate(`/${matchingLpaRoute}`);
         }
       }
 
       // Case 3: LPAs found but none match our lookup table
-      if (!matchFound) {
-        // Use the first LPA name, or combine multiple if needed
-        const lpaName = data.entities[0].name;
-        const encodedLpaName = encodeURIComponent(lpaName);
-        const route = action 
-          ? `/lpa-not-supported?lpa=${encodedLpaName}&action=${action}` 
-          : `/lpa-not-supported?lpa=${encodedLpaName}`;
-        navigate(route);
-      }
-
+      // Use the first LPA name, or combine multiple if needed
+      const lpaName = data.entities[0].name;
+      const encodedLpaName = encodeURIComponent(lpaName);
+      const route = `/lpa-not-supported?lpa=${encodedLpaName}`;
+      return navigate(route);
     } catch (error) {
-      console.error('Error fetching LPA data:', error);
-      const route = action ? `/lpa-not-found?action=${action}` : '/lpa-not-found';
+      console.error("Error fetching LPA data:", error);
+      const route = "/lpa-not-found";
       navigate(route);
     }
   };

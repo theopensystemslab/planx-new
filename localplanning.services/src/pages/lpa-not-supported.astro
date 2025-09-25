@@ -23,17 +23,16 @@ import Container from "@components/Container.astro";
   const updateLpaName = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const lpaName = urlParams.get("lpa");
-    const action = urlParams.get("action");
 
     if (lpaName) {
-      const lpaNameElements = document.querySelectorAll('#lpa-name, #lpa-name-2, #lpa-name-3, #lpa-name-4');
+      const lpaNameElements = document.querySelectorAll("#lpa-name, #lpa-name-2, #lpa-name-3, #lpa-name-4");
       lpaNameElements.forEach(element => {
         element.textContent = decodeURIComponent(lpaName);
       });
     } else {
-      const lpaNameElements = document.querySelectorAll('#lpa-name, #lpa-name-2');
+      const lpaNameElements = document.querySelectorAll("#lpa-name, #lpa-name-2");
       lpaNameElements.forEach(element => {
-        element.textContent = 'Unknown Local Planning Authority';
+        element.textContent = "Unknown Local Planning Authority";
       });
     }
   };
