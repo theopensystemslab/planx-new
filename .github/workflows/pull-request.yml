@@ -177,7 +177,7 @@ jobs:
         working-directory: ${{ env.EDITOR_DIRECTORY }}
       - run: pnpm build
         working-directory: ${{ env.EDITOR_DIRECTORY }}
-      - run: pnpm test:silent --retry 1
+      - run: pnpm test:silent --retry=1
         working-directory: ${{ env.EDITOR_DIRECTORY }}
 
   build_localplanning_services:
