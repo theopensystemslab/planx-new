@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
+import { NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-navi";
 import { rootFlowPath } from "routes/utils";
 
 import { useStore } from "../../lib/store";
+import { ContextMenu, ContextMenuA11yProps, ContextMenuPosition } from "./components/ContextMenu";
 import EndPoint from "./components/EndPoint";
 import Hanger from "./components/Hanger";
 import Node from "./components/Node";
@@ -13,6 +15,12 @@ import { GetStarted } from "./GetStarted";
 export enum FlowLayout {
   TOP_DOWN = "top-down",
   LEFT_RIGHT = "left-right",
+}
+
+export interface Relationships {
+  nodeId?: NodeId;
+  parent: NodeId;
+  before?: NodeId;
 }
 
 const Flow = ({
@@ -25,6 +33,35 @@ const Flow = ({
     state.getNode,
     state.flowLayout,
   ]);
+
+  const [relationships, setRelationships] = useState<Relationships>({ nodeId: undefined, parent: ROOT_NODE_KEY, before: undefined })
+
+  const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null);
+
+  const handleContext = (event: React.MouseEvent, relationships: Relationships) => {
+    event.preventDefault();
+    setContextMenu(
+      contextMenu === null
+        ? {
+          mouseX: event.clientX + 2,
+          mouseY: event.clientY - 6,
+        }
+        : null,
+    );
+    setRelationships(relationships)
+  };
+
+  const isContextMenuOpen = contextMenu !== null;
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
+
+  const contextMenuA11yProps: ContextMenuA11yProps = {
+    "aria-controls": isContextMenuOpen ? "basic-menu" : undefined,
+    "aria-haspopup": "true",
+    "aria-expanded": isContextMenuOpen ? "true" : undefined,
+}
 
   breadcrumbs = breadcrumbs.map((id: any) => ({
     id,
@@ -77,6 +114,8 @@ const Flow = ({
               lockedFlow={lockedFlow}
               showTemplatedNodeStatus={showTemplatedNodeStatus}
               className={className}
+              handleContext={handleContext}
+              contextMenuA11yProps={contextMenuA11yProps}
             />
           );
         })}
@@ -88,10 +127,15 @@ const Flow = ({
               {...node}
               lockedFlow={lockedFlow}
               showTemplatedNodeStatus={showTemplatedNodeStatus}
+              handleContext={handleContext}
+              contextMenuA11yProps={contextMenuA11yProps}
             />
           ))}
 
-          <Hanger />
+          <Hanger 
+            handleContext={handleContext}
+            contextMenuA11yProps={contextMenuA11yProps}
+          />
         </Box>
         {breadcrumbs.length ? (
           <li className="root-node-link root-node-link--end">
@@ -102,6 +146,12 @@ const Flow = ({
         ) : null}
         <EndPoint text="end" />
       </ol>
+      <ContextMenu
+        relationships={relationships}
+        open={isContextMenuOpen}
+        handleClose={handleClose}
+        contextMenu={contextMenu}
+      />
     </>
   );
 };

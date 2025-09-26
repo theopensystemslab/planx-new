@@ -95,7 +95,13 @@ const ExternalPortal: React.FC<any> = (props) => {
 
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger 
+        hidden={isDragging} 
+        before={props.id} 
+        parent={parent} 
+        handleContext={props.handleContext}
+        contextMenuA11yProps={props.contextMenuA11yProps}
+      />
       <li ref={ref}>
         <Box
           className={classNames("card", "portal", "external-portal", {
@@ -171,7 +177,13 @@ const InternalPortal: React.FC<any> = (props) => {
 
   return (
     <>
-      <Hanger hidden={isDragging} before={props.id} parent={parent} />
+      <Hanger 
+        hidden={isDragging} 
+        before={props.id} 
+        parent={parent} 
+        handleContext={props.handleContext}
+        contextMenuA11yProps={props.contextMenuA11yProps}
+      />
       <li ref={ref}>
         <Box
           className={classNames("card", "portal", "internal-portal", {

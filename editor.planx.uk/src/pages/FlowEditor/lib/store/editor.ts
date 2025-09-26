@@ -172,11 +172,14 @@ export interface FlowSummary {
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
-    flow: FlowSummary,
+    flow: FlowSummary
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => Promise<void>;
+  cloneNode: (id: NodeId) => void;
+  getClonedNodeId: () => string | null;
   copyNode: (id: NodeId) => void;
+  getCopiedNode: () => { node: Store.Node; children: Store.Node[] };
   createFlow: (newFlow: NewFlow) => Promise<string>;
   createFlowFromTemplate: (newFlow: NewFlow) => Promise<string>;
   createFlowFromCopy: (newFlow: NewFlow) => Promise<string>;
@@ -204,19 +207,20 @@ export interface EditorStore extends Store.Store {
   moveFlow: (
     flowId: string,
     teamSlug: string,
-    flowName: string,
+    flowName: string
   ) => Promise<any>;
   moveNode: (
     id: NodeId,
     parent?: NodeId,
     toBefore?: NodeId,
-    toParent?: NodeId,
+    toParent?: NodeId
   ) => void;
-  pasteNode: (toParent: NodeId, toBefore: NodeId) => void;
+  pasteClonedNode: (toParent: NodeId, toBefore?: NodeId) => void;
+  pasteNode: (toParent: NodeId, toBefore?: NodeId) => void;
   publishFlow: (
     flowId: string,
     summary: string,
-    templatedFlowIds?: string[],
+    templatedFlowIds?: string[]
   ) => Promise<PublishFlowResponse>;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
@@ -234,7 +238,7 @@ export interface EditorStore extends Store.Store {
   addFlowComment: (
     flowId: string,
     actorId: number,
-    comment: string,
+    comment: string
   ) => Promise<object>;
   deleteFlowComment: (commentId: number) => Promise<object>;
 }
@@ -328,8 +332,28 @@ export const editorStore: StateCreator<
     );
   },
 
+  cloneNode(id) {
+    localStorage.removeItem("copiedNode");
+    localStorage.setItem("clonedNodeId", id);
+  },
+
+  getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
+
   copyNode(id) {
-    localStorage.setItem("clipboard", id);
+    const { flow } = get();
+    const node = flow[id];
+    const children: Store.Node[] = node.edges?.map((id) => flow[id]) || [];
+
+    const payload = JSON.stringify({ node, children });
+    localStorage.removeItem("clonedNodeId");
+    localStorage.setItem("copiedNode", payload);
+  },
+
+  getCopiedNode: () => {
+    const payload = localStorage.getItem("copiedNode");
+    if (!payload) return;
+
+    return JSON.parse(payload);
   },
 
   createFlow: async (newFlow) => {
@@ -574,15 +598,27 @@ export const editorStore: StateCreator<
     }
   },
 
-  pasteNode(toParent, toBefore) {
+  pasteClonedNode(toParent, toBefore) {
     try {
-      const id = localStorage.getItem("clipboard");
+      const id = get().getClonedNodeId();
       if (id) {
         const [, ops] = clone(id, { toParent, toBefore })(get().flow);
         send(ops);
       }
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      alert((err as Error).message);
+    }
+  },
+
+  pasteNode(parent, before) {
+    const copiedNode = get().getCopiedNode();
+    if (!copiedNode) return;
+
+    try {
+      const { node, children } = copiedNode;
+      if (node) get().addNode(node, { parent, before, children });
+    } catch (err) {
+      alert((err as Error).message);
     }
   },
 
