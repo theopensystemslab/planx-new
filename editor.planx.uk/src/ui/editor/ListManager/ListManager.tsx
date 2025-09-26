@@ -1,6 +1,9 @@
 import AddIcon from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 import DragHandle from "@mui/icons-material/DragHandle";
+import { Accordion } from "@mui/material";
+import { AccordionSummary } from "@mui/material";
+import { AccordionDetails } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ButtonBase from "@mui/material/ButtonBase";
@@ -8,6 +11,7 @@ import Collapse from "@mui/material/Collapse";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import { GridArrowDownwardIcon } from "@mui/x-data-grid";
 import { arrayMoveImmutable } from "array-move";
 import { FormikErrors } from "formik";
 import { nanoid } from "nanoid";
@@ -203,6 +207,7 @@ export default function ListManager<T, EditorExtraProps>(
       </>
     );
   }
+  console.log({ items: props.values })
 
   // Default ListManager supports reordering, adding, and deleting options
   return (
@@ -235,81 +240,94 @@ export default function ListManager<T, EditorExtraProps>(
           <Box ref={provided.innerRef} {...provided.droppableProps}>
             <TransitionGroup>
               {props.values.map((item, index) => (
-                <Collapse key={itemKeys[index]}>
-                  <Box>
-                    {Boolean(index) && (
-                      <InsertButton
-                        disabled={disabled || isMaxLength}
-                        handleClick={() => {
-                          props.onChange(
-                            insertAt(index, props.newValue(), props.values),
-                          );
-                          setItemKeys((prev) => {
-                            const newKeys = [...prev];
-                            newKeys.splice(index, 0, nanoid());
-                            return newKeys;
-                          });
-                        }}
-                        isDragging={isDragging}
-                      />
-                    )}
-                    <Draggable
-                      draggableId={String(index)}
-                      index={index}
-                      key={index}
-                    >
-                      {(provided: DraggableProvided) => (
-                        <Item
-                          {...provided.draggableProps}
-                          ref={provided.innerRef}
-                        >
-                          <Box>
-                            <IconButton
-                              disableRipple
-                              {...(props.noDragAndDrop
-                                ? { disabled: true || disabled }
-                                : provided.dragHandleProps)}
-                              aria-label="Drag"
-                              size="large"
-                              disabled={disabled}
-                            >
-                              <DragHandle />
-                            </IconButton>
-                          </Box>
-                          <Editor
-                            index={index}
-                            value={item}
-                            onChange={(newItem) => {
-                              props.onChange(
-                                setAt(index, newItem, props.values),
-                              );
-                            }}
-                            {...(props.editorExtraProps || {})}
+                <Collapse key={itemKeys[index]} sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+                  <Draggable
+                    draggableId={String(index)}
+                    index={index}
+                    key={index}
+                  >
+                    {(provided: DraggableProvided) => (
+                      <Item
+                        {...provided.draggableProps}
+                        ref={provided.innerRef}
+                        sx={{ width: "100%" }}
+                      >
+                        <Box>
+                          <IconButton
+                            disableRipple
+                            {...(props.noDragAndDrop
+                              ? { disabled: true || disabled }
+                              : provided.dragHandleProps)}
+                            aria-label="Drag"
+                            size="large"
                             disabled={disabled}
-                            errors={props.errors?.[index]}
-                          />
-                          <Box>
-                            <IconButton
-                              onClick={() => {
-                                props.onChange(removeAt(index, props.values));
-                                setItemKeys((prev) =>
-                                  prev.filter((_, i) => i !== index),
+                          >
+                            <DragHandle />
+                          </IconButton>
+                        </Box>
+                        <Accordion sx={{ width: "100%"}}>
+                        <AccordionSummary
+                          expandIcon={<GridArrowDownwardIcon />}
+                          aria-controls={`panel-${index}-content`}
+                          id={`panel-${index}-header`}
+                         
+                        >
+                          {item?.data?.text}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {Boolean(index) && (
+                            <InsertButton
+                              disabled={disabled || isMaxLength}
+                              handleClick={() => {
+                                props.onChange(
+                                  insertAt(index, props.newValue(), props.values),
+                                );
+                                setItemKeys((prev) => {
+                                  const newKeys = [...prev];
+                                  newKeys.splice(index, 0, nanoid());
+                                  return newKeys;
+                                });
+                              }}
+                              isDragging={isDragging}
+                            />
+                          )}
+
+                            <Editor
+                              index={index}
+                              value={item}
+                              onChange={(newItem) => {
+                                props.onChange(
+                                  setAt(index, newItem, props.values),
                                 );
                               }}
-                              aria-label="Delete"
-                              size="large"
-                              disabled={
-                                disabled ||
-                                props?.isFieldDisabled?.(item, index)
-                              }
-                            >
-                              <Delete />
-                            </IconButton>
-                          </Box>
-                        </Item>
-                      )}
-                    </Draggable>
-                  </Box>
+                              {...(props.editorExtraProps || {})}
+                              disabled={disabled}
+                              errors={props.errors?.[index]}
+                            />
+
+                        </AccordionDetails>
+                      </Accordion>
+                        <Box>
+                          <IconButton
+                            onClick={() => {
+                              props.onChange(removeAt(index, props.values));
+                              setItemKeys((prev) =>
+                                prev.filter((_, i) => i !== index),
+                              );
+                            }}
+                            aria-label="Delete"
+                            size="large"
+                            disabled={
+                              disabled ||
+                              props?.isFieldDisabled?.(item, index)
+                            }
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Box>
+                      </Item>
+                    )}
+                  </Draggable>
                 </Collapse>
               ))}
               {provided.placeholder}
