@@ -7,7 +7,7 @@ import classNames from "classnames";
 import gql from "graphql-tag";
 import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
@@ -44,19 +44,24 @@ const ExternalPortal: React.FC<any> = (props) => {
     `,
     {
       variables: { id: props.data.flowId },
-      onCompleted: (data) => {
-        const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
-          "/",
-        );
-        setHref(href);
-        addExternalPortal({
-          id: props.data.flowId,
-          name: data.flows_by_pk.name,
-          href,
-        });
-      },
     },
   );
+
+  // Construct and store external portal details
+  useEffect(() => {
+    if (!data) return;
+
+    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
+      "/",
+    );
+    setHref(href);
+    addExternalPortal({
+      id: props.data.flowId,
+      name: data.flows_by_pk.name,
+      href,
+    });
+  }, [data, addExternalPortal, props.data.flowId])
+  
 
   const parent = getParentId(props.parent);
 
