@@ -113,6 +113,18 @@ components:
         sessionId:
           type: string
           format: uuid
+    DownloadHTMLRequest:
+      type: object
+      required:
+        - email
+        - sessionId
+      properties:
+        email:
+          type: string
+          format: email
+        sessionId:
+          type: string
+          format: uuid
     ApplicationsRequest:
       type: object
       required:
@@ -169,6 +181,19 @@ components:
           enum: ["LINK_INVALID", "LINK_CONSUMED", "LINK_EXPIRED"]
         message:
           type: string
+    DownloadHTMLResponseError:
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+            [
+              "DOWNLOAD_TOKEN_INVALID",
+              "DOWNLOAD_TOKEN_CONSUMED",
+              "DOWNLOAD_TOKEN_EXPIRED",
+            ]
+        message:
+          type: string
 paths:
   /lps/login:
     post:
@@ -218,7 +243,7 @@ paths:
       tags: [localplanning.services]
       summary: Generate a one-time download token
       description: |
-        Generates a secure, short-lived, single-use token for downloading specific application data. This endpoint is part of a token vending machine pattern, acting as a secure method of granting access to the `/lps/download` endpoint.
+        Generates a secure, short-lived, single-use token for downloading specific application data. This endpoint is part of a token vending machine pattern, acting as a secure method of granting access to the `/lps/download/html` endpoint.
       requestBody:
         required: true
         content:
@@ -228,5 +253,38 @@ paths:
       responses:
         "200":
           $ref: "#/components/responses/DownloadTokenResponse"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /lps/download/html:
+    post:
+      tags: [localplanning.services]
+      summary: Download a HTML overview of a session
+      description: |
+        Access session data by providing a token. This endpoint is part of a token vending machine pattern.
+      security:
+        - downloadTokenAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DownloadHTMLRequest"
+      responses:
+        "200":
+          content:
+            text/html:
+              schema:
+                type: string
+                format: HTML
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/DownloadHTMLResponseError"
+        "410":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/DownloadHTMLResponseError"
         "500":
           $ref: "#/components/responses/ErrorMessage"
