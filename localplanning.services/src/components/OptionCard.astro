@@ -1,6 +1,7 @@
 ---
 import Button from "@components/Button.astro";
-import { actions, type Action } from "@content/actions";
+import { actions } from "@content/actions";
+import type { Action } from "@stores/action";
 
 interface Props {
   action: Action;
@@ -18,7 +19,29 @@ const { title, description } = actions[action];
       {description}
     </p>
   </div>
-  <Button href=`./search/${action}` variant="primary">
+  <Button
+    href=`./search/${action}`
+    variant="primary"
+    data-action-button
+    data-action={action}
+  >
     Find local planning services
   </Button>
 </div>
+
+<script>
+  import { $action, type Action } from "@stores/action";
+
+  document.addEventListener("astro:page-load", () => {
+    const buttons = document.querySelectorAll("[data-action-button]");
+    
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const action = button.getAttribute("data-action");
+        if (!action) return;
+
+        $action.set(action as Action);
+      });
+    });
+  });
+</script>

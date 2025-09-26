@@ -1,11 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { navigate } from "astro:transitions/client";
-import type { Action } from "@content/actions";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
-
-interface Props {
-  action: Action | undefined;
-}
 
 interface Address {
   LPI: {
@@ -54,7 +49,7 @@ interface AddressSearchElement extends HTMLElement {
   ): void;
 }
 
-const AddressSearch: React.FC<Props> = ({ action }) => {
+const AddressSearch: React.FC = () => {
   const addressSearchRef = useRef<AddressSearchElement>(null);
 
   const [address, setAddress] = useState<Address | null>(null);
@@ -96,9 +91,7 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
     event.preventDefault();
 
     // address coords => LPA lookup
-    if (!address) {
-      return;
-    }
+    if (!address) return;
 
     const { LAT, LNG } = address.LPI;
 
@@ -115,33 +108,22 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
       }
 
       // Case 2: Check if any LPA matches our lookup table
-      let matchFound = false;
       for (const entity of data.entities) {
         if (entity.reference in lpaReferenceLookup) {
           const matchingLpaRoute = lpaReferenceLookup[entity.reference];
-          const route = action 
-            ? `/${matchingLpaRoute}?action=${action}` 
-            : `/${matchingLpaRoute}`;
-          navigate(route);
-          matchFound = true;
-          break; // Exit after first match
+          return navigate(`/${matchingLpaRoute}`);
         }
       }
 
       // Case 3: LPAs found but none match our lookup table
-      if (!matchFound) {
-        // Use the first LPA name, or combine multiple if needed
-        const lpaName = data.entities[0].name;
-        const encodedLpaName = encodeURIComponent(lpaName);
-        const route = action 
-          ? `/lpa-not-supported?lpa=${encodedLpaName}&action=${action}` 
-          : `/lpa-not-supported?lpa=${encodedLpaName}`;
-        navigate(route);
-      }
-
+      // Use the first LPA name, or combine multiple if needed
+      const lpaName = data.entities[0].name;
+      const encodedLpaName = encodeURIComponent(lpaName);
+      const route = `/lpa-not-supported?lpa=${encodedLpaName}`;
+      return navigate(route);
     } catch (error) {
-      console.error('Error fetching LPA data:', error);
-      const route = action ? `/lpa-not-found?action=${action}` : '/lpa-not-found';
+      console.error("Error fetching LPA data:", error);
+      const route = "/lpa-not-found";
       navigate(route);
     }
   };
