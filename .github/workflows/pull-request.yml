@@ -17,7 +17,7 @@ env:
   FULL_DOMAIN: ${{ github.event.number }}.planx.pizza
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
-  LOCALPLANNING_SERVICES_DIRECTORY: localplanning.services
+  LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
 
 jobs:
   changes:
@@ -59,7 +59,7 @@ jobs:
             sharedb:
               - 'sharedb.planx.uk/**'
             localplanning:
-              - 'localplanning.services/**'
+              - 'apps/localplanning.services/**'
 
   integration_tests:
     name: Run Integration tests
@@ -192,9 +192,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('apps/localplanning.services/pnpm-lock.yaml', 'apps/localplanning.services/src/**', 'apps/localplanning.services/public/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles('apps/localplanning.services/pnpm-lock.yaml', 'apps/localplanning.services/src/**', 'apps/localplanning.services/public/**') }}
             ${{ runner.os }}-
       - uses: pnpm/action-setup@v4.1.0
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
@@ -205,7 +205,7 @@ jobs:
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
-          cache-dependency-path: "./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/pnpm-lock.yaml"
+          cache-dependency-path: "./pnpm-lock.yaml"
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
       - run: pnpm install --frozen-lockfile
@@ -308,10 +308,10 @@ jobs:
         id: cache-localplanning-build-assets
         uses: actions/cache@v4
         with:
-          path: ./localplanning.services/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          path: ./apps/apps/localplanning.services/dist
+          key: ${{ runner.os }}-${{ hashFiles('apps/localplanning.services/pnpm-lock.yaml', 'apps/localplanning.services/src/**', 'apps/localplanning.services/public/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles('apps/localplanning.services/pnpm-lock.yaml', 'apps/localplanning.services/src/**', 'apps/localplanning.services/public/**') }}
             ${{ runner.os }}-
       - uses: pulumi/actions@v5
         with:
@@ -466,9 +466,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ./${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}/dist
-          key: ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+          key: ${{ runner.os }}-${{ hashFiles('apps/localplanning.services/pnpm-lock.yaml', 'apps/localplanning.services/src/**', 'apps/localplanning.services/public/**') }}
           restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('localplanning.services/pnpm-lock.yaml', 'localplanning.services/src/**', 'localplanning.services/public/**') }}
+            ${{ runner.os }}-${{ hashFiles('apps/localplanning.services/pnpm-lock.yaml', 'apps/localplanning.services/src/**', 'apps/localplanning.services/public/**') }}
             ${{ runner.os }}-
 
       - name: upload built localplanning.services

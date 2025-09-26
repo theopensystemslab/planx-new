@@ -23,7 +23,7 @@ services:
     container_name: localplanning
     image: pierrezemb/gostatic
     volumes:
-      - ./localplanning.services/dist:/srv/http
+      - ./apps/localplanning.services/dist:/srv/http
     entrypoint: "/goStatic -fallback /404.html"
 
   storybook:

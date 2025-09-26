@@ -115,7 +115,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: localplanning_services_build
-          path: ./localplanning.services/dist
+          path: ./apps/localplanning.services/dist
           if-no-files-found: error
 
   preview:
@@ -148,7 +148,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: localplanning_services_build
-          path: ./localplanning.services/dist
+          path: ./apps/localplanning.services/dist
       - uses: pulumi/actions@v5
         with:
           command: up
