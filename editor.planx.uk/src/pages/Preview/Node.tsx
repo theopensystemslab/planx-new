@@ -87,12 +87,14 @@ const Node: React.FC<Props> = (props) => {
     resetPreview,
     cachedBreadcrumbs,
     autoAnswerableFlag,
+    autoAnswerableInputs,
     autoAnswerableOptions,
   ] = useStore((state) => [
     state.childNodesOf,
     state.resetPreview,
     state.cachedBreadcrumbs,
     state.autoAnswerableFlag,
+    state.autoAnswerableInputs,
     state.autoAnswerableOptions,
   ]);
 
@@ -111,8 +113,15 @@ const Node: React.FC<Props> = (props) => {
   });
 
   switch (props.node.type) {
-    case TYPES.AddressInput:
-      return <AddressInputComponent {...getComponentProps<AddressInput>()} />;
+    case TYPES.AddressInput: {
+      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
+      return (
+        <AddressInputComponent
+          {...getComponentProps<AddressInput>()}
+          autoAnswer={autoAnswer}
+        />
+      );
+    }
 
     case TYPES.Calculate:
       return <CalculateComponent {...getComponentProps<Calculate>()} />;
@@ -155,14 +164,28 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Confirmation:
       return <ConfirmationComponent {...getComponentProps<Confirmation>()} />;
 
-    case TYPES.ContactInput:
-      return <ContactInputComponent {...getComponentProps<ContactInput>()} />;
+    case TYPES.ContactInput: {
+      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
+      return (
+        <ContactInputComponent
+          {...getComponentProps<ContactInput>()}
+          autoAnswer={autoAnswer}
+        />
+      );
+    }
 
     case TYPES.Content:
       return <ContentComponent {...getComponentProps<Content>()} />;
 
-    case TYPES.DateInput:
-      return <DateInputComponent {...getComponentProps<DateInput>()} />;
+    case TYPES.DateInput: {
+      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
+      return (
+        <DateInputComponent
+          {...getComponentProps<DateInput>()}
+          autoAnswer={autoAnswer}
+        />
+      );
+    }
 
     case TYPES.DrawBoundary:
       return <DrawBoundaryComponent {...getComponentProps<DrawBoundary>()} />;
@@ -202,8 +225,15 @@ const Node: React.FC<Props> = (props) => {
     case TYPES.Notice:
       return <NoticeComponent {...getComponentProps<Notice>()} />;
 
-    case TYPES.NumberInput:
-      return <NumberInputComponent {...getComponentProps<NumberInput>()} />;
+    case TYPES.NumberInput: {
+      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
+      return (
+        <NumberInputComponent
+          {...getComponentProps<NumberInput>()}
+          autoAnswer={autoAnswer}
+        />
+      );
+    }
 
     case TYPES.Page:
       return <PageComponent {...getComponentProps<Page>()} />;
@@ -286,8 +316,15 @@ const Node: React.FC<Props> = (props) => {
       );
     }
 
-    case TYPES.TextInput:
-      return <TextInputComponent {...getComponentProps<TextInput>()} />;
+    case TYPES.TextInput: {
+      const autoAnswer = nodeId ? autoAnswerableInputs(nodeId) : undefined;
+      return (
+        <TextInputComponent
+          {...getComponentProps<TextInput>()}
+          autoAnswer={autoAnswer}
+        />
+      );
+    }
 
     // These types are never seen by users, nor do they leave their own breadcrumbs entry
     case TYPES.Answer:
