@@ -124,14 +124,23 @@ export const createHasuraService = async ({
             },
             {
               name: "HASURA_GRAPHQL_CORS_DOMAIN",
-              value: [...CUSTOM_DOMAINS.map((x: any) => x.domain), DOMAIN]
-                .map((x) => `https://*.${x}, https://${x}`)
-                .concat(
-                  // TODO: Simplify once production CDN is configured
-                  config.get("lps-domain")?.toString() || "",
-                  "https://planx-website.webflow.io",
-                  "https://www.planx.uk",
-                )
+              value: [
+                // Wildcard and exact domains for custom domains
+                ...CUSTOM_DOMAINS.flatMap((x: any) => [
+                  `https://*.${x.domain}`,
+                  `https://${x.domain}`,
+                ]),
+                // Wildcard and exact domains for main PlanX site
+                `https://*.${DOMAIN}`,
+                `https://${DOMAIN}`,
+                // Additional domains
+                // TODO: Simplify once prod CDN is set up
+                config.get("lps-domain") 
+                  ? pulumi.interpolate`https://${config.requireSecret("lps-domain")}`
+                  : "",
+                "https://planx-website.webflow.io",
+                "https://www.planx.uk",
+              ]
                 .filter(Boolean)
                 .join(", "),
             },
