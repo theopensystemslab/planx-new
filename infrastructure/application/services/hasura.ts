@@ -127,10 +127,12 @@ export const createHasuraService = async ({
               value: [...CUSTOM_DOMAINS.map((x: any) => x.domain), DOMAIN]
                 .map((x) => `https://*.${x}, https://${x}`)
                 .concat(
-                  config.require("lps-domain").toString(),
+                  // TODO: Simplify once production CDN is configured
+                  config.get("lps-domain")?.toString() || "",
                   "https://planx-website.webflow.io",
                   "https://www.planx.uk",
                 )
+                .filter(Boolean)
                 .join(", "),
             },
             {
