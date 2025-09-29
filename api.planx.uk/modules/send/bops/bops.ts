@@ -41,11 +41,22 @@ const sendToBOPS: SendIntegrationController = async (_req, res, next) => {
       encryptionKey: process.env.ENCRYPTION_KEY!,
       env,
     });
+
     const exportData = await $api.export.digitalPlanningDataPayload(sessionId);
+    const applicationType = exportData?.data?.application?.type?.value;
+
+    // Enforcement submissions use a different BOPS endpoint than planning applications (in future all planned to use `/submissions`)
+    let bopsSubmissionURLByAppType = bopsSubmissionURL;
+    if (applicationType === "breach") {
+      bopsSubmissionURLByAppType = bopsSubmissionURL?.replace(
+        "/planning_applications",
+        "/submissions",
+      );
+    }
 
     const bopsResponse = await axios({
       method: "POST",
-      url: bopsSubmissionURL,
+      url: bopsSubmissionURLByAppType,
       adapter: "http",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +97,7 @@ const sendToBOPS: SendIntegrationController = async (_req, res, next) => {
           `,
           {
             bops_id: res.data.id,
-            destination_url: bopsSubmissionURL,
+            destination_url: bopsSubmissionURLByAppType,
             request: exportData,
             response: res.data,
             response_headers: res.headers,
@@ -144,7 +155,7 @@ async function checkBOPSAuditTable(
   sessionId: string,
   version: "v1" | "v2",
 ): Promise<Record<string, string>> {
-  const searchString = `%/api/${version}/planning_applications`;
+  const searchString = `%/api/${version}/%`;
   const application = await $api.client.request<FindApplication>(
     gql`
       query FindApplication($session_id: String = "", $search_string: String) {

@@ -25,8 +25,15 @@ describe("isApplicationTypeSupported", () => {
     expect(isApplicationTypeSupported(mockPassport)).toEqual(true);
   });
 
-  test("returns false for discretionary types", () => {
+  test("returns true for enforcement types", () => {
     const mockPassport: Passport = { data: { "application.type": ["breach"] } };
+    expect(isApplicationTypeSupported(mockPassport)).toEqual(true);
+  });
+
+  test("returns false for discretionary types", () => {
+    const mockPassport: Passport = {
+      data: { "application.type": ["buildingRegs"] },
+    };
     expect(isApplicationTypeSupported(mockPassport)).toEqual(false);
   });
 

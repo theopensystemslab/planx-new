@@ -12,9 +12,11 @@ export function isApplicationTypeSupported(passport: Passport): boolean {
 
   const statutoryApplicationTypes = getValidSchemaValues("ApplicationType");
   const preApplicationType = "preApp";
-  const supportedApplicationTypes = (statutoryApplicationTypes || []).concat(
-    preApplicationType,
-  );
+  const enforcementType = "breach";
+
+  const supportedApplicationTypes = (statutoryApplicationTypes || [])
+    .concat(preApplicationType)
+    .concat(enforcementType);
 
   return supportedApplicationTypes.includes(userApplicationType);
 }
