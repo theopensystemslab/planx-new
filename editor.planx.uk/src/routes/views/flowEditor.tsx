@@ -6,12 +6,7 @@ import React from "react";
 import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
-import {
-  generateAnalyticsLink,
-  getAnalyticsDashboardId,
-} from "../../pages/FlowEditor/lib/analytics/utils";
 import { useStore } from "../../pages/FlowEditor/lib/store";
-import { settingsStore } from "../../pages/FlowEditor/lib/store/settings";
 
 interface FlowEditorData {
   id: string;
