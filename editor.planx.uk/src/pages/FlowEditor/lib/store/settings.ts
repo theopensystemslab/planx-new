@@ -11,6 +11,7 @@ import {
 } from "types";
 import type { StateCreator } from "zustand";
 
+import { getHistoricalOnlineStatus } from "../analytics/utils";
 import {
   generateAnalyticsLink,
   getAnalyticsDashboardId,
@@ -183,11 +184,14 @@ export const settingsStore: StateCreator<
 
     const environment = import.meta.env.VITE_APP_ENV;
 
-    const dashboardId = getAnalyticsDashboardId({
-      flowStatus: status,
-      flowSlug,
-      isSubmissionService,
-    });
+    const flowOnlineHistorical = await getHistoricalOnlineStatus(id);
+
+    const dashboardId = flowOnlineHistorical
+      ? getAnalyticsDashboardId({
+          flowSlug,
+          isSubmissionService,
+        })
+      : undefined;
 
     const analyticsLink =
       environment === "production" && dashboardId

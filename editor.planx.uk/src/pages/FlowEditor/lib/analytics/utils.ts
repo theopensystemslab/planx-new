@@ -1,8 +1,10 @@
+import { gql } from "@apollo/client";
 import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   FlowStatus,
 } from "@opensystemslab/planx-core/types";
+import { client } from "lib/graphql";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 
@@ -243,16 +245,12 @@ const submissionDashboard = {
 };
 
 export const getAnalyticsDashboardId = ({
-  flowStatus,
   flowSlug,
   isSubmissionService,
 }: {
-  flowStatus: FlowStatus;
   flowSlug: string;
   isSubmissionService: boolean;
 }): string | undefined => {
-  if (flowStatus === "offline") return undefined;
-
   if (foiynppDashboard.slugs.includes(flowSlug)) return foiynppDashboard.id;
   if (rabDashboard.slugs.includes(flowSlug)) return rabDashboard.id;
   if (discretionaryDashboard.slugs.includes(flowSlug))
@@ -279,4 +277,29 @@ export const generateAnalyticsLink = ({
   url.search = search;
 
   return url.toString();
+};
+
+export const getHistoricalOnlineStatus = async (
+  flowId: string,
+): Promise<boolean> => {
+  const { data } = await client.query({
+    query: gql`
+      query get_flow_online_history($flow_id: uuid!) {
+        flow_status_history(
+          where: { flow_id: { _eq: $flow_id }, status: { _eq: "online" } }
+        ) {
+          flow_id
+          status
+        }
+      }
+    `,
+    variables: { flow_id: flowId },
+    fetchPolicy: "network-only",
+  });
+
+  // We want to know if any 'online' status was found
+  return (
+    Array.isArray(data?.flow_status_history) &&
+    data.flow_status_history.length > 0
+  );
 };
