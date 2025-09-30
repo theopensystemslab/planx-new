@@ -158,7 +158,7 @@ export const editorUIStore: StateCreator<
       set({
         contextMenuPosition: null,
         contextMenuRelationships: {
-          nodeId: undefined,
+          self: undefined,
           parent: ROOT_NODE_KEY,
           before: undefined,
         },

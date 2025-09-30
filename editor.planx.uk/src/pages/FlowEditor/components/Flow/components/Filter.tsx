@@ -63,7 +63,7 @@ const Filter: React.FC<Props> = React.memo((props) => {
             handleContextMenu(e, {
               parent,
               before: props.id,
-              nodeId: props.id,
+              self: props.id,
             })
           }
           {...contextMenuA11yProps}

@@ -6,10 +6,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
+import { Relationships, ROOT_NODE_KEY } from "@planx/graph";
 import { useStore } from "pages/FlowEditor/lib/store";
 import * as React from "react";
-
-import { Relationships } from "..";
 
 export interface ContextMenuA11yProps {
   "aria-controls": "basic-menu" | undefined;
@@ -30,7 +29,7 @@ export type HandleContextMenu = (
 export const ContextMenu: React.FC = () => {
   const [
     position,
-    { nodeId, parent, before = undefined },
+    { self, parent = ROOT_NODE_KEY, before = undefined },
     closeMenu,
     clonedNodeId,
     copiedNode,
@@ -51,12 +50,12 @@ export const ContextMenu: React.FC = () => {
   ]);
 
   const handleCopy = () => {
-    copyNode(nodeId!);
+    copyNode(self!);
     closeMenu();
   };
 
   const handleClone = () => {
-    cloneNode(nodeId!);
+    cloneNode(self!);
     closeMenu();
   };
 
@@ -67,7 +66,7 @@ export const ContextMenu: React.FC = () => {
     closeMenu();
   };
 
-  const isPasteDisabled = Boolean(nodeId || (!clonedNodeId && !copiedNode));
+  const isPasteDisabled = Boolean(self || (!clonedNodeId && !copiedNode));
 
   return (
     <Menu
@@ -82,13 +81,13 @@ export const ContextMenu: React.FC = () => {
     >
       <Paper sx={{ width: 320, maxWidth: "100%" }}>
         <MenuList dense>
-          <MenuItem disabled={!nodeId} onClick={handleCopy}>
+          <MenuItem disabled={!self} onClick={handleCopy}>
             <ListItemIcon>
               <ContentCopy fontSize="small" />
             </ListItemIcon>
             <ListItemText>Copy</ListItemText>
           </MenuItem>
-          <MenuItem disabled={!nodeId} onClick={handleClone}>
+          <MenuItem disabled={!self} onClick={handleClone}>
             <ListItemIcon>
               <ContentCopy fontSize="small" />
             </ListItemIcon>

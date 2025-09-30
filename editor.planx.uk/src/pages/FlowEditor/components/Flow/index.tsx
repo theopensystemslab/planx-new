@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import { NodeId } from "@opensystemslab/planx-core/types";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import React from "react";
 import { Link } from "react-navi";
@@ -15,12 +14,6 @@ import { GetStarted } from "./GetStarted";
 export enum FlowLayout {
   TOP_DOWN = "top-down",
   LEFT_RIGHT = "left-right",
-}
-
-export interface Relationships {
-  nodeId?: NodeId;
-  parent: NodeId;
-  before?: NodeId;
 }
 
 const Flow = ({

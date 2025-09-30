@@ -1,4 +1,4 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES, NodeId } from "@opensystemslab/planx-core/types";
 import { enablePatches, produceWithPatches } from "immer";
 import { isEqual } from "lodash";
 import difference from "lodash/difference";
@@ -208,12 +208,13 @@ type NodeDataWithId = { id?: string; type?: number; data?: object };
 
 export type Relationships = {
   children?: Child[];
-  parent?: string;
+  parent?: NodeId;
   /**
    * NodeId of the older sibling of this node
    * Used to insert a new node in the correct location within it's parents' edges
    */
-  before?: string;
+  before?: NodeId;
+  self?: NodeId;
 };
 
 export const add =
