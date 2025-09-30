@@ -211,20 +211,20 @@ export function getAllowListAnswers(
   return allowListAnswers;
 }
 
-export const getFOIYNPP = () => ({
+const foiynppDashboard = {
   id: "d55b0362-3a21-4153-a53d-c1d6a55ff5e2",
   slugs: [
     "check-if-you-need-planning-permission",
     "find-out-if-you-need-planning-permission",
   ],
-});
+};
 
-export const getRAB = () => ({
+const rabDashboard = {
   id: "f3da39ec-bb4f-4ee0-8950-afcb5765d686",
   slugs: ["camden-report-a-planning-breach", "report-a-planning-breach"],
-});
+};
 
-export const getDiscretionary = () => ({
+const discretionaryDashboard = {
   id: "34e5a17c-2f20-4543-be0b-4af8364dceee",
   slugs: [
     "check-constraints-on-a-property",
@@ -236,12 +236,10 @@ export const getDiscretionary = () => ({
     "request-a-building-control-quote",
     "validation-requirements-live",
   ],
-});
+};
 
-export const getSubmission = (): { id: string } => {
-  return {
-    id: "040dad13-6783-4e48-9edc-be1b03aa5247",
-  };
+const submissionDashboard = {
+  id: "040dad13-6783-4e48-9edc-be1b03aa5247",
 };
 
 export const getAnalyticsDashboardId = ({
@@ -255,16 +253,12 @@ export const getAnalyticsDashboardId = ({
 }): string | undefined => {
   if (flowStatus === "offline") return undefined;
 
-  const foiynpp = getFOIYNPP();
-  const rab = getRAB();
-  const discretionary = getDiscretionary();
-  const submission = getSubmission();
-
-  if (foiynpp.slugs.includes(flowSlug)) return foiynpp.id;
-  if (rab.slugs.includes(flowSlug)) return rab.id;
-  if (discretionary.slugs.includes(flowSlug)) return discretionary.id;
+  if (foiynppDashboard.slugs.includes(flowSlug)) return foiynppDashboard.id;
+  if (rabDashboard.slugs.includes(flowSlug)) return rabDashboard.id;
+  if (discretionaryDashboard.slugs.includes(flowSlug))
+    return discretionaryDashboard.id;
   // Finally, fallback to check general submission services
-  if (isSubmissionService) return submission.id;
+  if (isSubmissionService) return submissionDashboard.id;
 
   return undefined;
 };
