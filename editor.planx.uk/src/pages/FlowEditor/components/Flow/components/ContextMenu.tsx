@@ -6,24 +6,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
-import { NodeId } from "@opensystemslab/planx-core/types";
 import { useStore } from "pages/FlowEditor/lib/store";
 import * as React from "react";
 
 import { Relationships } from "..";
 
-interface Props {
-  nodeId?: NodeId;
-  relationships: Relationships;
-  open: boolean;
-  handleClose: () => void;
-  contextMenu: ContextMenuPosition | null;
-}
-
 export interface ContextMenuA11yProps {
-  "aria-controls": "basic-menu" | undefined
-  "aria-haspopup": "true"
-  "aria-expanded": "true" | undefined
+  "aria-controls": "basic-menu" | undefined;
+  "aria-haspopup": "true";
+  "aria-expanded": "true" | undefined;
 }
 
 export interface ContextMenuPosition {
@@ -31,57 +22,61 @@ export interface ContextMenuPosition {
   mouseY: number;
 }
 
-export type HandleContextMenu = (event: React.MouseEvent, relationships: Relationships) => void;
+export type HandleContextMenu = (
+  event: React.MouseEvent,
+  relationships: Relationships,
+) => void;
 
-export const ContextMenu: React.FC<Props> = ({ 
-  relationships: { nodeId, parent, before = undefined }, 
-  open, 
-  handleClose,
-  contextMenu,
-}) => {
+export const ContextMenu: React.FC = () => {
   const [
-    clonedNodeId, 
-    copiedNode, 
-    copyNode, 
-    cloneNode, 
-    pasteNode, 
-    pasteClonedNode
-  ] = useStore(state => [
-    state.getClonedNodeId(), 
-    state.getCopiedNode(), 
-    state.copyNode, 
-    state.cloneNode, 
-    state.pasteNode, 
-    state.pasteClonedNode
+    position,
+    { nodeId, parent, before = undefined },
+    closeMenu,
+    clonedNodeId,
+    copiedNode,
+    copyNode,
+    cloneNode,
+    pasteNode,
+    pasteClonedNode,
+  ] = useStore((state) => [
+    state.contextMenuPosition,
+    state.contextMenuRelationships,
+    state.closeContextMenu,
+    state.getClonedNodeId(),
+    state.getCopiedNode(),
+    state.copyNode,
+    state.cloneNode,
+    state.pasteNode,
+    state.pasteClonedNode,
   ]);
 
   const handleCopy = () => {
     copyNode(nodeId!);
-    handleClose();
-  }
+    closeMenu();
+  };
 
   const handleClone = () => {
     cloneNode(nodeId!);
-    handleClose();
-  }
+    closeMenu();
+  };
 
   const handlePaste = () => {
     if (copiedNode) pasteNode(parent, before);
     if (clonedNodeId) pasteClonedNode(parent, before);
 
-    handleClose();
-  }
+    closeMenu();
+  };
 
   const isPasteDisabled = Boolean(nodeId || (!clonedNodeId && !copiedNode));
 
   return (
     <Menu
-      open={open}
-      onClose={handleClose}
+      open={Boolean(position)}
+      onClose={closeMenu}
       anchorReference="anchorPosition"
       anchorPosition={
-        contextMenu !== null
-          ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+        position !== null
+          ? { top: position.mouseY, left: position.mouseX }
           : undefined
       }
     >
@@ -109,4 +104,4 @@ export const ContextMenu: React.FC<Props> = ({
       </Paper>
     </Menu>
   );
-}
+};

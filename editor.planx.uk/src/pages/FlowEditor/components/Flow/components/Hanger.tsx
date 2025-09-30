@@ -12,14 +12,11 @@ import { Link } from "react-navi";
 import { rootFlowPath } from "../../../../../routes/utils";
 import { useStore } from "../../../lib/store";
 import { getParentId } from "../lib/utils";
-import { ContextMenuA11yProps, HandleContextMenu } from "./ContextMenu";
 
 interface HangerProps {
   hidden?: boolean;
   parent?: NodeId;
   before?: NodeId;
-  contextMenuA11yProps?: ContextMenuA11yProps;
-  handleContext?: HandleContextMenu;
 }
 
 interface Item {
@@ -36,7 +33,7 @@ const buildHref = (before: any, parent: any) => {
   return hrefParts.concat(["nodes", "new", before]).filter(Boolean).join("/");
 };
 
-const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false, contextMenuA11yProps, handleContext }) => {
+const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
   parent = getParentId(parent);
 
   const [
@@ -45,12 +42,16 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false, context
     flow,
     orderedFlow,
     setOrderedFlow,
+    handleContext,
+    contextMenuA11yProps,
   ] = useStore((state) => [
     state.moveNode,
     state.isTemplatedFrom,
     state.flow,
     state.orderedFlow,
     state.setOrderedFlow,
+    state.handleContextMenu,
+    state.getContextMenuA11yProps(),
   ]);
 
   useEffect(() => {
@@ -101,7 +102,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false, context
       <Link
         href={buildHref(before, parent)}
         prefetch={false}
-        onContextMenu={(e) => handleContext && handleContext(e, { parent, before})}
+        onContextMenu={(e) => handleContext(e, { parent, before })}
         {...contextMenuA11yProps}
       >
         {canDrop && item && item.text}

@@ -16,10 +16,13 @@ type Props = {
 };
 
 const Filter: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes] = useStore((state) => [
-    state.isClone,
-    state.childNodesOf(props.id),
-  ]);
+  const [isClone, childNodes, handleContextMenu, contextMenuA11yProps] =
+    useStore((state) => [
+      state.isClone,
+      state.childNodesOf(props.id),
+      state.handleContextMenu,
+      state.getContextMenuA11yProps(),
+    ]);
 
   const parent = getParentId(props.parent);
 
@@ -40,18 +43,11 @@ const Filter: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-
   const Icon = ICONS[props.type];
 
   return (
     <>
-      <Hanger 
-        hidden={isDragging} 
-        before={props.id} 
-        parent={parent} 
-        handleContext={props.handleContext}
-        contextMenuA11yProps={props.contextMenuA11yProps} 
-      />
+      <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
         className={classNames("card", "decision", "type-Filter", {
           isDragging,
@@ -63,14 +59,14 @@ const Filter: React.FC<Props> = React.memo((props) => {
         <Link
           href={href}
           prefetch={false}
-          onContextMenu={(e) => 
-            props.handleContext(e, { 
-              parent, 
+          onContextMenu={(e) =>
+            handleContextMenu(e, {
+              parent,
               before: props.id,
               nodeId: props.id,
             })
           }
-          {...props.contextMenuA11yProps}
+          {...contextMenuA11yProps}
           ref={drag}
         >
           {Icon && <Icon />}
@@ -82,8 +78,6 @@ const Filter: React.FC<Props> = React.memo((props) => {
               key={child.id}
               {...child}
               showTemplatedNodeStatus={props.showTemplatedNodeStatus}
-              handleContext={props.handleContext}
-              contextMenuA11yProps={props.contextMenuA11yProps}
             />
           ))}
         </ol>

@@ -36,6 +36,7 @@ const Option: React.FC<any> = (props) => {
   return (
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
         {props.data?.img && (
@@ -63,15 +64,9 @@ const Option: React.FC<any> = (props) => {
             parent={props.id}
             {...child}
             showTemplatedNodeStatus={props.showTemplatedNodeStatus}
-            handleContext={props.handleContext}
-            contextMenuA11yProps={props.contextMenuA11yProps}
           />
         ))}
-        <Hanger 
-          parent={props.id} 
-          handleContext={props.handleContext}
-          contextMenuA11yProps={props.contextMenuA11yProps}
-        />
+        <Hanger parent={props.id} />
       </ol>
     </li>
   );

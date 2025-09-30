@@ -28,15 +28,21 @@ type Props = {
 };
 
 const Question: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, showTags] = useStore(
-    (state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-      state.copyNode,
-      state.showHelpText,
-      state.showTags,
-    ],
-  );
+  const [
+    isClone,
+    childNodes,
+    showHelpText,
+    showTags,
+    handleContextMenu,
+    contextMenuA11yProps,
+  ] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+    state.showHelpText,
+    state.showTags,
+    state.handleContextMenu,
+    state.getContextMenuA11yProps(),
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -66,13 +72,7 @@ const Question: React.FC<Props> = React.memo((props) => {
 
   return (
     <>
-      <Hanger 
-        hidden={isDragging} 
-        before={props.id} 
-        parent={parent} 
-        handleContext={props.handleContext}
-        contextMenuA11yProps={props.contextMenuA11yProps}
-      />
+      <Hanger hidden={isDragging} before={props.id} parent={parent} />
       <li
         className={classNames(
           "card",
@@ -98,13 +98,13 @@ const Question: React.FC<Props> = React.memo((props) => {
             href={href}
             prefetch={false}
             onContextMenu={(e) =>
-              props.handleContext(e, {
+              handleContextMenu(e, {
                 parent,
                 before: props.id,
                 nodeId: props.id,
               })
             }
-            {...props.contextMenuA11yProps}
+            {...contextMenuA11yProps}
             ref={drag}
           >
             {props.data?.img && (
@@ -138,8 +138,6 @@ const Question: React.FC<Props> = React.memo((props) => {
               key={child.id}
               {...child}
               showTemplatedNodeStatus={props.showTemplatedNodeStatus}
-              handleContext={props.handleContext}
-              contextMenuA11yProps={props.contextMenuA11yProps}
             />
           ))}
         </ol>

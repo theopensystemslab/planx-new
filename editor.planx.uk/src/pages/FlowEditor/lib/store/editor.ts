@@ -27,11 +27,13 @@ import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
+import { ContextMenuPosition } from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { FlowLayout } from "../../components/Flow";
+import { FlowLayout, Relationships } from "../../components/Flow";
+import { ContextMenuA11yProps } from "./../../components/Flow/components/ContextMenu";
 import { connectToDB, getFlowConnection } from "./../sharedb";
 import { type Store } from ".";
 import type { SharedStore } from "./shared";
@@ -65,6 +67,14 @@ export interface EditorUIStore {
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
+  handleContextMenu: (
+    event: React.MouseEvent,
+    relationships: Relationships,
+  ) => void;
+  contextMenuRelationships: Relationships;
+  contextMenuPosition: ContextMenuPosition | null;
+  closeContextMenu: () => void;
+  getContextMenuA11yProps: () => ContextMenuA11yProps;
 }
 
 export const editorUIStore: StateCreator<
@@ -119,6 +129,50 @@ export const editorUIStore: StateCreator<
         }));
       });
     },
+
+    contextMenuPosition: null,
+
+    handleContextMenu: (event, relationships) => {
+      // Don't open browser context menu
+      event.preventDefault();
+
+      const isOpen = Boolean(get().contextMenuPosition);
+      if (isOpen) return get().closeContextMenu();
+
+      set({
+        contextMenuPosition: {
+          mouseX: event.clientX + 2,
+          mouseY: event.clientY - 6,
+        },
+        contextMenuRelationships: relationships,
+      });
+    },
+
+    contextMenuRelationships: {
+      nodeId: undefined,
+      parent: ROOT_NODE_KEY,
+      before: undefined,
+    },
+
+    closeContextMenu: () =>
+      set({
+        contextMenuPosition: null,
+        contextMenuRelationships: {
+          nodeId: undefined,
+          parent: ROOT_NODE_KEY,
+          before: undefined,
+        },
+      }),
+
+    getContextMenuA11yProps: () => {
+      const isOpen = Boolean(get().contextMenuPosition);
+
+      return {
+        "aria-controls": isOpen ? "basic-menu" : undefined,
+        "aria-haspopup": "true",
+        "aria-expanded": isOpen ? "true" : undefined,
+      };
+    },
   }),
   {
     name: "editorUIStore",
@@ -172,7 +226,7 @@ export interface FlowSummary {
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
-    flow: FlowSummary
+    flow: FlowSummary,
   ) => Promise<{ id: string; name: string } | void>;
   connect: (src: NodeId, tgt: NodeId, object?: any) => void;
   connectTo: (id: NodeId) => Promise<void>;
@@ -207,20 +261,20 @@ export interface EditorStore extends Store.Store {
   moveFlow: (
     flowId: string,
     teamSlug: string,
-    flowName: string
+    flowName: string,
   ) => Promise<any>;
   moveNode: (
     id: NodeId,
     parent?: NodeId,
     toBefore?: NodeId,
-    toParent?: NodeId
+    toParent?: NodeId,
   ) => void;
   pasteClonedNode: (toParent: NodeId, toBefore?: NodeId) => void;
   pasteNode: (toParent: NodeId, toBefore?: NodeId) => void;
   publishFlow: (
     flowId: string,
     summary: string,
-    templatedFlowIds?: string[]
+    templatedFlowIds?: string[],
   ) => Promise<PublishFlowResponse>;
   removeNode: (id: NodeId, parent: NodeId) => void;
   updateNode: (node: any, relationships?: any) => void;
@@ -238,7 +292,7 @@ export interface EditorStore extends Store.Store {
   addFlowComment: (
     flowId: string,
     actorId: number,
-    comment: string
+    comment: string,
   ) => Promise<object>;
   deleteFlowComment: (commentId: number) => Promise<object>;
 }
