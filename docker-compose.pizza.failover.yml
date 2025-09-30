@@ -1,0 +1,4 @@
+services:
+  caddy:
+    # build custom caddy from scratch when pull from registry fails
+    pull_policy: missing
