@@ -7,7 +7,6 @@ import { View } from "react-navi";
 
 import { client } from "../../lib/graphql";
 import {
-  Environment,
   generateAnalyticsLink,
   getAnalyticsDashboardId,
 } from "../../pages/FlowEditor/lib/analytics/utils";
