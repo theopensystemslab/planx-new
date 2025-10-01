@@ -310,15 +310,15 @@ export async function answerListInput(
   page: Page,
   {
     unitType,
+    numUnits,
     tenure,
     numBedrooms,
-    numUnits,
     continueToNext,
   }: {
     unitType: string;
+    numUnits: number;
     tenure: string;
     numBedrooms: number;
-    numUnits: number;
     continueToNext: boolean;
   },
 ) {
@@ -331,8 +331,12 @@ export async function answerListInput(
   await page.getByRole("option", { name: unitType, exact: true }).click();
 
   await page
+    .getByLabel("How many identical units of this type are there?")
+    .fill(numUnits.toString());
+
+  await page
     .getByRole("combobox", {
-      name: "What best describes the tenure of this unit?",
+      name: "Select how the unit is owned or rented",
     })
     .click();
   await page.getByRole("option", { name: tenure, exact: true }).click();
@@ -340,9 +344,6 @@ export async function answerListInput(
   await page
     .getByLabel("How many bedrooms does this unit have?")
     .fill(numBedrooms.toString());
-  await page
-    .getByLabel("Number of units of this type")
-    .fill(numUnits.toString());
 
   const saveButton = page.getByTestId("save-item-button");
   await saveButton.click();
