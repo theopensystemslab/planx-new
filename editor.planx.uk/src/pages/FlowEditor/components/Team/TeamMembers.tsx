@@ -14,11 +14,8 @@ import {
 import { MembersTable } from "./components/MembersTable";
 import { TeamMember } from "./types";
 
-export const TeamMembers = () => {
-  const [teamMembers, teamSlug] = useStore((state) => [
-    state.teamMembers,
-    state.teamSlug,
-  ]);
+export const TeamMembers = ({ teamMembers }: { teamMembers: TeamMember[] }) => {
+  const [teamSlug] = useStore((state) => [state.teamSlug]);
 
   // All users are automatically added to Templates team via a db trigger, we never want to manually add/edit them
   const isNotTemplatesTeam = teamSlug !== "templates";
