@@ -110,7 +110,6 @@ const getFallbackMessage = (serviceType: string) =>
     if (!detailsEl) return;
 
     detailsEl.open = true;
-    detailsEl.scrollIntoView({ behavior: "smooth" });
 
     // Clear store - we've now used this action, it can only be reset by landing page cards
     $action.set(null);
