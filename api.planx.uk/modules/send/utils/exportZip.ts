@@ -100,24 +100,8 @@ export async function buildSubmissionExportZip({
     }
   }
 
-  // generate csv data
-  const responses = await $api.export.csvData(sessionId);
-
-  // write csv to the zip
-  try {
-    const csvStream = stringify(responses, {
-      columns: ["question", "responses", "metadata"],
-      header: true,
-    });
-    await zip.addStream({
-      name: "application.csv",
-      stream: csvStream,
-    });
-  } catch (error) {
-    throw new Error(
-      `Failed to generate CSV for ${sessionId} zip. Error - ${error}`,
-    );
-  }
+  // generate json data
+  const responses = await $api.export.digitalPlanningDataPayload(sessionId);
 
   const boundingBox = passport.data["proposal.site.buffered"];
   const userAction = passport.data?.["drawBoundary.action"];
