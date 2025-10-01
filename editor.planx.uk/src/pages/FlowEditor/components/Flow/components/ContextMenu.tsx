@@ -61,10 +61,16 @@ export const ContextMenu: React.FC = () => {
   };
 
   const handlePaste = () => {
-    if (copiedNode) pasteNode(parent, before);
-    if (clonedNodeId) pasteClonedNode(parent, before);
+    if (copiedNode) {
+      pasteNode(parent, before);
+      return closeMenu();
 
-    closeMenu();
+    }
+    
+    if (clonedNodeId) {
+      pasteClonedNode(parent, before);
+      return closeMenu();
+    }
   };
 
   // Define available actions based on source
