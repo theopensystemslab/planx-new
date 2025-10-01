@@ -5,16 +5,14 @@ import Container from "@components/Container.astro";
 ---
 
 <Layout>
-  <Masthead title="Your local planning authority is not supported">
-    <p><strong><span id="lpa-name">Loading...</span></strong> is not currently not offering any local planning services.</p>
+  <Masthead title="Planning services are not available here">
+    <p><strong><span id="lpa-name">Loading...</span></strong> does not currently provide its planning services on this platform.</p>
   </Masthead>
   <Container paddingY>
     <section class="styled-content">
       <h2>What does this mean?</h2>
-      <p>
-        We've successfully identified your local planning authority as <strong><span id="lpa-name-2">Loading...</span></strong>, 
-        but we don't currently provide planning services for this area.
-      </p>
+        <p>We've identified your local planning authority as <strong><span id="lpa-name-2">Loading...</span></strong>, but they're not offering their planning services directly here right now.</p>
+        <p>More local planning authorities are joining <a href="https://opendigitalplanning.org/" class="paragraph-link paragraph-link--external">Open Digital Planning</a>, so check back in the future to see if <span id="lpa-name-3">Loading...</span> becomes available.</p>
     </section>
   </Container>
 </Layout>
@@ -30,7 +28,7 @@ import Container from "@components/Container.astro";
         element.textContent = decodeURIComponent(lpaName);
       });
     } else {
-      const lpaNameElements = document.querySelectorAll("#lpa-name, #lpa-name-2");
+      const lpaNameElements = document.querySelectorAll('#lpa-name, #lpa-name-2, #lpa-name-3');
       lpaNameElements.forEach(element => {
         element.textContent = "Unknown Local Planning Authority";
       });
