@@ -87,7 +87,7 @@ jobs:
       - uses: pnpm/action-setup@v4.1.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -130,7 +130,7 @@ jobs:
       - uses: pnpm/action-setup@v4.1.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -166,7 +166,7 @@ jobs:
       - uses: pnpm/action-setup@v4.1.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -200,7 +200,7 @@ jobs:
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         if: steps.cache-localplanning-build-assets.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -233,7 +233,7 @@ jobs:
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         if: steps.cache-planx-frontend-build-assets.outputs.cache-hit != 'true'
         with:
           node-version: ${{ vars.NODE_VERSION }}
@@ -291,7 +291,7 @@ jobs:
       - uses: pnpm/action-setup@v4.1.0
         with:
           version: ${{ vars.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
@@ -538,7 +538,7 @@ jobs:
         with:
           version: ${{ vars.PNPM_VERSION }}
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ vars.NODE_VERSION }}
           cache: "pnpm"
