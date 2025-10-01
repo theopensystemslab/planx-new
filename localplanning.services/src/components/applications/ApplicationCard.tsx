@@ -51,7 +51,9 @@ const ProgressBar: React.FC<Application> = (application) => {
     }
   })();
 
-  const progressValue = application.progress?.completed ?? 0;
+  const progressValue = ["submitted", "awaitingPayment"].includes(application.status) 
+    ? 100
+    : (application.progress?.completed ?? 0);
   
   const getProgressLabel = () => {
     switch (application.status) {
