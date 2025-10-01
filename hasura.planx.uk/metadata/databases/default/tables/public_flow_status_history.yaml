@@ -1,3 +1,39 @@
 table:
   name: flow_status_history
   schema: public
+select_permissions:
+  - role: analyst
+    permission:
+      columns:
+        - flow_id
+        - status
+      filter: {}
+    comment: ""
+  - role: api
+    permission:
+      columns:
+        - flow_id
+        - status
+      filter: {}
+    comment: ""
+  - role: demoUser
+    permission:
+      columns:
+        - flow_id
+        - status
+      filter: {}
+    comment: ""
+  - role: platformAdmin
+    permission:
+      columns:
+        - flow_id
+        - status
+      filter: {}
+    comment: ""
+  - role: teamEditor
+    permission:
+      columns:
+        - flow_id
+        - status
+      filter: {}
+    comment: ""
