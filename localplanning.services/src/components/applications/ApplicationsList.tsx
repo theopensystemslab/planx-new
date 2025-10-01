@@ -8,6 +8,7 @@ import { UnhandledError } from "./errors/UnhandledError";
 import { NoApplications } from "./errors/NoApplications";
 import { ApplicationCard } from "./ApplicationCard";
 import { ApplicationFilters, type FilterState } from "./ApplicationFilters";
+import { $applicationId } from "@stores/applicationId";
 
 export const ApplicationsList: React.FC = () => {
   const { applications, isLoading, error } = useFetchApplications();
@@ -17,6 +18,9 @@ export const ApplicationsList: React.FC = () => {
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
   };
+
+  // Clear any existing application ID from the store
+  $applicationId.set(null);
 
   // TODO: Better UI - skeleton or spinner? 
   if (isLoading) return <p>Loading your applications...</p>;
