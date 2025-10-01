@@ -1,6 +1,7 @@
 import { User } from "@opensystemslab/planx-core/types";
 import {
   createRootRouteWithContext,
+  HeadContent,
   Outlet,
   redirect,
 } from "@tanstack/react-router";
@@ -56,6 +57,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   },
   component: () => (
     <>
+      <HeadContent />
       <Outlet />
       {import.meta.env.DEV && <TanStackRouterDevtools />}
     </>
