@@ -402,7 +402,7 @@ jobs:
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
-            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} ./scripts/pullrequest/create.sh
+            SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} VULTR_CR_URN=${{ secrets.VULTR_CR_URN }} ./scripts/pullrequest/create.sh
 
       # UPDATE STEPS
 
@@ -440,7 +440,7 @@ jobs:
             echo -e "\nROOT_DOMAIN=${{ env.FULL_DOMAIN }}\n" > .env.temp
             cat .env .env.temp .env.staging > .env.pizza
 
-            ./scripts/pullrequest/update.sh
+            VULTR_CR_URN=${{ secrets.VULTR_CR_URN }} ./scripts/pullrequest/update.sh
 
       # CREATE & UPDATE STEPS
 
