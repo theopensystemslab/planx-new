@@ -15,15 +15,6 @@ export type TeamSummary = Pick<Team, "id" | "name" | "slug"> & {
   settings: Pick<TeamSettings, "isTrial">;
 } & { theme: Pick<TeamTheme, "primaryColour" | "logo"> };
 
-const AuthenticatedHomeRoute = () => {
-  const data = Route.useLoaderData();
-  return (
-    <>
-      <Teams teams={data.teams} />
-    </>
-  );
-};
-
 export const Route = createFileRoute("/_authenticated/")({
   loader: async () => {
     const { data } = await client.query<{ teams: TeamSummary[] }>({
@@ -53,3 +44,12 @@ export const Route = createFileRoute("/_authenticated/")({
   },
   component: AuthenticatedHomeRoute,
 });
+
+function AuthenticatedHomeRoute() {
+  const data = Route.useLoaderData();
+  return (
+    <>
+      <Teams teams={data.teams} />
+    </>
+  );
+}
