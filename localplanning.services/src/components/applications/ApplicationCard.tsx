@@ -133,11 +133,11 @@ const DeleteButton: React.FC<Application> = ({ id }) => {
 }
 
 const ViewApplicationButton: React.FC<Application> = (application) => {
-  $applicationId.set(application.id)
+  const handleClick = () => $applicationId.set(application.id);
   const url = `applications/${application.team.slug}`
 
   return (
-    <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external">
+    <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external" onClick={handleClick}>
       View application
     </a>
   )
