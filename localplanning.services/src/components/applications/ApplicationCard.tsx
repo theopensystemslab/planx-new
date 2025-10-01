@@ -154,6 +154,7 @@ const ActionButtons: React.FC<Application> = (application) => {
             <DeleteButton {...application}/>
             <a
               href={application.serviceUrl}
+              target="_blank"
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Resume
@@ -166,6 +167,7 @@ const ActionButtons: React.FC<Application> = (application) => {
             <DeleteButton {...application}/>
             <a
               href={application.paymentUrl}
+              target="_blank"
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Go to payment URL
