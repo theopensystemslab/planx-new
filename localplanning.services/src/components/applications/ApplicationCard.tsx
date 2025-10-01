@@ -2,7 +2,7 @@ import React from "react";
 import type { Application } from "./hooks/useFetchApplications";
 import { useDeleteApplication } from "./hooks/useDeleteApplication";
 import { formatDate } from "@lib/date";
-import { useSearchParams } from "./hooks/useSearchParams";
+import { $applicationId } from "@stores/applicationId";
 
 const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
@@ -133,9 +133,8 @@ const DeleteButton: React.FC<Application> = ({ id }) => {
 }
 
 const ViewApplicationButton: React.FC<Application> = (application) => {
-  // TODO: Nanostores!
-  const { email } = useSearchParams();
-  const url = `applications/${application.team.slug}?applicationId=${application.id}&email=${email}`;
+  $applicationId.set(application.id)
+  const url = `applications/${application.team.slug}`
 
   return (
     <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external">

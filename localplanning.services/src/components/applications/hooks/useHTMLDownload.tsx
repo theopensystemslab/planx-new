@@ -1,12 +1,15 @@
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
 import { useState, useEffect, useTransition } from "react";
-import { useSearchParams } from "./useSearchParams";
+import { useStore } from "@nanostores/react";
+import { $session } from "@stores/session";
+import { $applicationId } from "@stores/applicationId";
 
-export const useHtmlDownload = (sessionId: string | null) => {
+export const useHtmlDownload = () => {
   const [ htmlContent, setHtmlContent ] = useState("");
   const [ error, setError ] = useState<string | null>(null);
   const [ isPending, startTransition ] = useTransition();
-  const { email } = useSearchParams();
+  const { email } = useStore($session);
+  const applicationId = useStore($applicationId);
 
   const fetchHtml = async () => {
     startTransition(async () => {
@@ -19,7 +22,7 @@ export const useHtmlDownload = (sessionId: string | null) => {
           { 
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ email, sessionId }) 
+            body: JSON.stringify({ email, sessionId: applicationId }) 
           }
         );
         if (!tokenResponse.ok) {
@@ -35,7 +38,7 @@ export const useHtmlDownload = (sessionId: string | null) => {
             "Authorization": `Bearer ${token}`,
             "content-type": "application/json"
           },
-          body: JSON.stringify({ email, sessionId })
+          body: JSON.stringify({ email, sessionId: applicationId })
         });
 
         if (!htmlResponse.ok) {
@@ -54,17 +57,17 @@ export const useHtmlDownload = (sessionId: string | null) => {
 
   useEffect(() => {
     if (!email) {
-      setError("Missing email parameter");
+      setError("Missing email value from store");
       return;
     }
 
-    if (!sessionId) {
-      setError("Missing applicationId parameter");
+    if (!applicationId) {
+      setError("Missing applicationId value from store");
       return;
     }
 
     fetchHtml();
-  }, [sessionId, email]);
+  }, [applicationId, email]);
 
   return {
     htmlContent,
