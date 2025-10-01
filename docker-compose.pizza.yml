@@ -38,7 +38,6 @@ services:
       context: ./ci/caddy
     image: lhr.vultrcr.com/planx/caddy-vultr:latest
     # default to always pulling image from private Vultr registry
-    pull_policy: always
     container_name: caddy
     restart: unless-stopped
     volumes:
