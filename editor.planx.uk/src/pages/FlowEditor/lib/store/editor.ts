@@ -10,6 +10,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import {
   add,
+  buildGraphFromNodes,
   clone,
   isClone,
   makeUnique,
@@ -17,6 +18,7 @@ import {
   Relationships,
   remove,
   ROOT_NODE_KEY,
+  uniqueId,
   update,
 } from "@planx/graph";
 import { OT } from "@planx/graph/types";
@@ -212,6 +214,11 @@ export interface FlowSummary {
   };
 }
 
+interface CopiedPayload {
+  rootId: string;
+  nodes: { originalId: string; nodeData: Store.Node }[];
+}
+
 export interface EditorStore extends Store.Store {
   addNode: (node: any, relationships?: Relationships) => void;
   archiveFlow: (
@@ -259,6 +266,11 @@ export interface EditorStore extends Store.Store {
     toParent?: NodeId,
   ) => void;
   pasteClonedNode: (toParent: NodeId, toBefore?: NodeId) => void;
+  /**
+   * Paste a new node from the clipboard
+   * Generates new IDs for all new nodes
+   * Recursively inserts all nested children
+   */
   pasteNode: (toParent: NodeId, toBefore?: NodeId) => void;
   publishFlow: (
     flowId: string,
@@ -382,14 +394,37 @@ export const editorStore: StateCreator<
 
   getClonedNodeId: () => localStorage.getItem("clonedNodeId"),
 
-  copyNode(id) {
+  copyNode(id: string) {
     const { flow } = get();
-    const node = flow[id];
-    const children: Store.Node[] = node.edges?.map((id) => flow[id]) || [];
+    const rootNode = flow[id];
+    if (!rootNode) return;
 
-    const payload = JSON.stringify({ node, children });
-    localStorage.removeItem("clonedNodeId");
-    localStorage.setItem("copiedNode", payload);
+    const nodesToCopy: CopiedPayload["nodes"] = [];
+    const visited = new Set<string>();
+
+    // Recursively crawl all descendants, allowing us to "deep copy" a node and all its children
+    const getDescendants = (nodeId: string) => {
+      if (!nodeId || visited.has(nodeId)) return;
+
+      visited.add(nodeId);
+      const currentNode = flow[nodeId];
+      if (!currentNode) return;
+
+      nodesToCopy.push({ originalId: nodeId, nodeData: currentNode });
+
+      currentNode.edges?.forEach((edgeId) => {
+        getDescendants(edgeId);
+      });
+    };
+
+    getDescendants(id);
+
+    const payload: CopiedPayload = {
+      rootId: id,
+      nodes: nodesToCopy,
+    };
+
+    localStorage.setItem("copiedNode", JSON.stringify(payload));
   },
 
   getCopiedNode: () => {
@@ -653,13 +688,55 @@ export const editorStore: StateCreator<
     }
   },
 
-  pasteNode(parent, before) {
-    const copiedNode = get().getCopiedNode();
-    if (!copiedNode) return;
+  pasteNode(parent: string, before?: string) {
+    const copiedString = localStorage.getItem("copiedNode");
+    if (!copiedString) return;
 
     try {
-      const { node, children } = copiedNode;
-      if (node) get().addNode(node, { parent, before, children });
+      const { rootId, nodes: copiedNodes }: CopiedPayload =
+        JSON.parse(copiedString);
+      if (!copiedNodes || copiedNodes.length === 0) return;
+
+      // Keep a map of originalId: newId allowing us to insert unique nodes and maintain our edge relationships
+      const idMap = new Map<string, string>();
+      const newNodes: { [id: string]: Store.Node } = {};
+      let newRootId: string | null = null;
+
+      // 1. First pass: Create new nodes and build the ID map
+      copiedNodes.forEach(({ originalId, nodeData }) => {
+        const newId = uniqueId();
+        idMap.set(originalId, newId);
+        newNodes[newId] = structuredClone(nodeData);
+
+        if (originalId === rootId) {
+          newRootId = newId;
+        }
+      });
+
+      if (!newRootId) {
+        throw new Error("Root node for pasting could not be found.");
+      }
+
+      // 2. Second pass: Re-link edges using the ID map
+      Object.values(newNodes).forEach((node) => {
+        if (node.edges && node.edges.length > 0) {
+          node.edges = node.edges
+            .map((oldEdgeId) => idMap.get(oldEdgeId))
+            .filter((id): id is string => !!id);
+        }
+      });
+
+      // 3. Rebuild the graph structure from our flat node list
+      const { id, children, ...nodeData } = buildGraphFromNodes(
+        newRootId,
+        newNodes
+      );
+
+      // 4. Finally, insert the original pasted node, and all its nested children
+      get().addNode(
+        { id, ...nodeData },
+        { parent, before, children }
+      );
     } catch (err) {
       alert((err as Error).message);
     }
