@@ -6,14 +6,18 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
-import { Relationships, ROOT_NODE_KEY } from "@planx/graph";
+import { ROOT_NODE_KEY } from "@planx/graph";
 import { useStore } from "pages/FlowEditor/lib/store";
 import * as React from "react";
 
-export interface ContextMenuA11yProps {
-  "aria-controls": "basic-menu" | undefined;
-  "aria-haspopup": "true";
-  "aria-expanded": "true" | undefined;
+export type ContextMenuSource = "node" | "hanger" | null;
+
+interface ContextMenuAction {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  disabled: boolean;
+  onClick: () => void;
 }
 
 export interface ContextMenuPosition {
@@ -21,13 +25,9 @@ export interface ContextMenuPosition {
   mouseY: number;
 }
 
-export type HandleContextMenu = (
-  event: React.MouseEvent,
-  relationships: Relationships,
-) => void;
-
 export const ContextMenu: React.FC = () => {
   const [
+    source,
     position,
     { self, parent = ROOT_NODE_KEY, before = undefined },
     closeMenu,
@@ -38,6 +38,7 @@ export const ContextMenu: React.FC = () => {
     pasteNode,
     pasteClonedNode,
   ] = useStore((state) => [
+    state.contextMenuSource,
     state.contextMenuPosition,
     state.contextMenuRelationships,
     state.closeContextMenu,
@@ -66,7 +67,45 @@ export const ContextMenu: React.FC = () => {
     closeMenu();
   };
 
-  const isPasteDisabled = Boolean(self || (!clonedNodeId && !copiedNode));
+  // Define available actions based on source
+  const getActions = (): ContextMenuAction[] => {
+    const hasCopiedContent = Boolean(clonedNodeId || copiedNode);
+
+    if (source === "node") {
+      return [
+        {
+          id: "copy",
+          label: "Copy",
+          icon: <ContentCopy fontSize="small" />,
+          disabled: false,
+          onClick: handleCopy,
+        },
+        {
+          id: "clone",
+          label: "Clone",
+          icon: <ContentCopy fontSize="small" />,
+          disabled: false,
+          onClick: handleClone,
+        },
+      ];
+    }
+
+    if (source === "hanger") {
+      return [
+        {
+          id: "paste",
+          label: "Paste",
+          icon: <ContentPaste fontSize="small" />,
+          disabled: !hasCopiedContent,
+          onClick: handlePaste,
+        },
+      ];
+    }
+
+    return [];
+  };
+
+  const actions = getActions();
 
   return (
     <Menu
@@ -81,24 +120,16 @@ export const ContextMenu: React.FC = () => {
     >
       <Paper sx={{ width: 320, maxWidth: "100%" }}>
         <MenuList dense>
-          <MenuItem disabled={!self} onClick={handleCopy}>
-            <ListItemIcon>
-              <ContentCopy fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Copy</ListItemText>
-          </MenuItem>
-          <MenuItem disabled={!self} onClick={handleClone}>
-            <ListItemIcon>
-              <ContentCopy fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Clone</ListItemText>
-          </MenuItem>
-          <MenuItem disabled={isPasteDisabled} onClick={handlePaste}>
-            <ListItemIcon>
-              <ContentPaste fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Paste</ListItemText>
-          </MenuItem>
+          {actions.map((action) => (
+            <MenuItem
+              key={action.id}
+              disabled={action.disabled}
+              onClick={action.onClick}
+            >
+              <ListItemIcon>{action.icon}</ListItemIcon>
+              <ListItemText>{action.label}</ListItemText>
+            </MenuItem>
+          ))}
         </MenuList>
       </Paper>
     </Menu>

@@ -7,6 +7,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
@@ -33,15 +34,11 @@ const Question: React.FC<Props> = React.memo((props) => {
     childNodes,
     showHelpText,
     showTags,
-    handleContextMenu,
-    contextMenuA11yProps,
   ] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.showHelpText,
     state.showTags,
-    state.handleContextMenu,
-    state.getContextMenuA11yProps(),
   ]);
 
   const parent = getParentId(props.parent);
@@ -70,6 +67,14 @@ const Question: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
+  const handleContextMenu = useContextMenu({
+    source: "node", relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    }
+  });
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -97,14 +102,7 @@ const Question: React.FC<Props> = React.memo((props) => {
           <Link
             href={href}
             prefetch={false}
-            onContextMenu={(e) =>
-              handleContextMenu(e, {
-                parent,
-                before: props.id,
-                self: props.id,
-              })
-            }
-            {...contextMenuA11yProps}
+            onContextMenu={handleContextMenu}
             ref={drag}
           >
             {props.data?.img && (

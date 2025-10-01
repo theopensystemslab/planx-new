@@ -6,6 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
@@ -33,15 +34,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     childNodes,
     showHelpText,
     showTags,
-    handleContextMenu,
-    contextMenuA11yProps,
   ] = useStore((state) => [
     state.isClone,
     state.childNodesOf(props.id),
     state.showHelpText,
     state.showTags,
-    state.handleContextMenu,
-    state.getContextMenuA11yProps(),
   ]);
 
   const parent = getParentId(props.parent);
@@ -51,16 +48,16 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       !props.data?.categories
         ? undefined
         : mapAccum(
-            (index: number, category: { title: string; count: number }) => [
-              index + category.count,
-              {
-                title: category.title,
-                children: childNodes.slice(index, index + category.count),
-              },
-            ],
-            0,
-            props.data.categories,
-          )[1],
+          (index: number, category: { title: string; count: number }) => [
+            index + category.count,
+            {
+              title: category.title,
+              children: childNodes.slice(index, index + category.count),
+            },
+          ],
+          0,
+          props.data.categories,
+        )[1],
     [childNodes],
   );
 
@@ -86,6 +83,14 @@ const Checklist: React.FC<Props> = React.memo((props) => {
   const hasHelpText =
     props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
+  const handleContextMenu = useContextMenu({
+    source: "node", relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    }
+  });
+
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
@@ -107,15 +112,8 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <Link
             href={href}
             prefetch={false}
-            onContextMenu={(e) =>
-              handleContextMenu(e, {
-                parent,
-                before: props.id,
-                self: props.id,
-              })
-            }
+            onContextMenu={handleContextMenu}
             ref={drag}
-            {...contextMenuA11yProps}
           >
             {props.data?.img && (
               <Thumbnail

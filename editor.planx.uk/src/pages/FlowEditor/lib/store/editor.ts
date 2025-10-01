@@ -27,13 +27,12 @@ import debounce from "lodash/debounce";
 import isEmpty from "lodash/isEmpty";
 import omitBy from "lodash/omitBy";
 import { type } from "ot-json0";
-import { ContextMenuPosition } from "pages/FlowEditor/components/Flow/components/ContextMenu";
+import { ContextMenuPosition, ContextMenuSource } from "pages/FlowEditor/components/Flow/components/ContextMenu";
 import { NewFlow } from "pages/Team/components/AddFlow/types";
 import type { StateCreator } from "zustand";
 import { persist } from "zustand/middleware";
 
-import { FlowLayout, Relationships } from "../../components/Flow";
-import { ContextMenuA11yProps } from "./../../components/Flow/components/ContextMenu";
+import { FlowLayout } from "../../components/Flow";
 import { connectToDB, getFlowConnection } from "./../sharedb";
 import { type Store } from ".";
 import type { SharedStore } from "./shared";
@@ -67,14 +66,15 @@ export interface EditorUIStore {
   previousURL?: string;
   currentURL: string;
   initURLTracking: () => void;
-  handleContextMenu: (
-    event: React.MouseEvent,
+  openContextMenu: (
+    position: ContextMenuPosition,
     relationships: Relationships,
+    source: ContextMenuSource,
   ) => void;
   contextMenuRelationships: Relationships;
   contextMenuPosition: ContextMenuPosition | null;
   closeContextMenu: () => void;
-  getContextMenuA11yProps: () => ContextMenuA11yProps;
+  contextMenuSource: ContextMenuSource | null;
 }
 
 export const editorUIStore: StateCreator<
@@ -132,31 +132,28 @@ export const editorUIStore: StateCreator<
 
     contextMenuPosition: null,
 
-    handleContextMenu: (event, relationships) => {
-      // Don't open browser context menu
-      event.preventDefault();
-
-      const isOpen = Boolean(get().contextMenuPosition);
-      if (isOpen) return get().closeContextMenu();
-
-      set({
-        contextMenuPosition: {
-          mouseX: event.clientX + 2,
-          mouseY: event.clientY - 6,
-        },
-        contextMenuRelationships: relationships,
-      });
-    },
-
     contextMenuRelationships: {
       nodeId: undefined,
       parent: ROOT_NODE_KEY,
       before: undefined,
     },
 
+    openContextMenu: (position, relationships, source) => {
+      const isOpen = Boolean(get().contextMenuPosition);
+      if (isOpen) return get().closeContextMenu();
+
+      set({
+        contextMenuPosition: position,
+        contextMenuRelationships: relationships,
+        contextMenuSource: source,
+      });
+    },
+
     closeContextMenu: () =>
       set({
+        contextMenuSource: null,
         contextMenuPosition: null,
+        // TODO: consider MUI animation timing
         contextMenuRelationships: {
           self: undefined,
           parent: ROOT_NODE_KEY,
@@ -164,15 +161,7 @@ export const editorUIStore: StateCreator<
         },
       }),
 
-    getContextMenuA11yProps: () => {
-      const isOpen = Boolean(get().contextMenuPosition);
-
-      return {
-        "aria-controls": isOpen ? "basic-menu" : undefined,
-        "aria-haspopup": "true",
-        "aria-expanded": isOpen ? "true" : undefined,
-      };
-    },
+    contextMenuSource: null,
   }),
   {
     name: "editorUIStore",
@@ -184,7 +173,7 @@ export const editorUIStore: StateCreator<
       showDataFields: state.showDataFields,
       showHelpText: state.showHelpText,
     }),
-  },
+  }
 );
 
 interface PublishFlowResponse {
