@@ -36,7 +36,7 @@ export const ResidentialUnitsGLALost: Schema = {
     {
       type: "number",
       data: {
-        title: "How many of this type of units are lost?",
+        title: "How many identical units of this type are lost?",
         fn: "identicalUnits",
         allowNegatives: false,
       },

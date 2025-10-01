@@ -27,7 +27,7 @@ export const ResidentialUnitsProposed: Schema = {
     {
       type: "number",
       data: {
-        title: "How many of this type of units will there be?",
+        title: "How many identical units of this type will there be?",
         fn: "identicalUnits",
         allowNegatives: false,
       },

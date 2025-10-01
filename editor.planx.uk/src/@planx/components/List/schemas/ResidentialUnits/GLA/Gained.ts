@@ -36,7 +36,7 @@ export const ResidentialUnitsGLAGained: Schema = {
     {
       type: "number",
       data: {
-        title: "How many of this type of units are added?",
+        title: "How many identical units of this type are added?",
         fn: "identicalUnits",
         allowNegatives: false,
       },

@@ -31,7 +31,7 @@ export const ResidentialUnitsPreviousLDCE: Schema = {
     {
       type: "number",
       data: {
-        title: "How many of this type of units were there?",
+        title: "How many identical units of this type were there?",
         fn: "identicalUnits",
         allowNegatives: false,
       },
