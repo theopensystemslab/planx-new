@@ -66,7 +66,13 @@ export const downloadHTMLController: DownloadHTML = async (_req, res, next) => {
   const { sessionId, email } = res.locals.parsedReq.body;
   try {
     const html = await generateHTML(sessionId, email);
-    return res.header("Content-type", "text/html").send(html);
+    return (
+      res
+        // Cache for 2hrs - submitted applications can't change so the data will not become stale
+        .setHeader("Cache-Control", "private, max-age=7200")
+        .header("Content-type", "text/html")
+        .send(html)
+    );
   } catch (error) {
     next(
       new ServerError({
