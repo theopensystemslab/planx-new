@@ -9,6 +9,7 @@ import type {
 } from "@opensystemslab/planx-core/types";
 import { generateApplicationHTML } from "@opensystemslab/planx-core";
 import { gql } from "graphql-request";
+import { MY_MAP_ATTRS } from "../../../lib/map.js";
 
 const DOWNLOAD_TOKEN_EXPIRY_MINUTES =
   process.env.NODE_ENV === "test"
@@ -60,7 +61,19 @@ export const generateHTML = async (sessionId: string, email: string) => {
   // Sanitise output
   const window = new JSDOM("").window;
   const DOMPurify = createDOMPurify(window as unknown as WindowLike);
-  const cleanHTML = DOMPurify.sanitize(html, { WHOLE_DOCUMENT: true });
+  console.log({ html });
+  const cleanHTML = DOMPurify.sanitize(html, {
+    WHOLE_DOCUMENT: true,
+    ADD_TAGS: ["my-map"],
+    ADD_ATTR: MY_MAP_ATTRS,
+    CUSTOM_ELEMENT_HANDLING: {
+      tagNameCheck: (tagName) => tagName === "my-map",
+      attributeNameCheck: (attr, tagName) => {
+        if (tagName === "my-map") return MY_MAP_ATTRS.includes(attr);
+        return false;
+      },
+    },
+  });
 
   return cleanHTML;
 };
