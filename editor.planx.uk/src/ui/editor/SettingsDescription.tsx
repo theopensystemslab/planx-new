@@ -6,8 +6,6 @@ const Description = styled(Typography)(({ theme }) => ({
   width: "100%",
   textAlign: "left",
   color: theme.palette.text.secondary,
-  paddingBottom: theme.spacing(1),
-  paddingTop: theme.spacing(0.5),
   "& p, & a": {
     fontSize: "inherit",
     margin: 0,

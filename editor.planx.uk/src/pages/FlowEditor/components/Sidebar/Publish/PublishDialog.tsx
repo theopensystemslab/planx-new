@@ -21,7 +21,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 import Input from "ui/shared/Input/Input";
 
-import { CopyButton } from "../../Settings/ServiceSettings/FlowStatus/PublicLink";
+import { CopyButton } from "../../Settings/ServiceSettings/FlowVisibility/PublicLink";
 import { HistoryItem } from "../EditHistory";
 import { AlteredNode, AlteredNodesSummaryContent } from "./AlteredNodes";
 import { TemplatedFlows } from "./CheckForChangesButton";

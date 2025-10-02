@@ -19,7 +19,7 @@ import ChecklistItem from "ui/shared/ChecklistItem/ChecklistItem";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
 import { useStore } from "../../../../lib/store";
-import { PublicLink } from "./PublicLink";
+import { PublicLink } from "../FlowVisibility/PublicLink";
 
 const FlowStatus = () => {
   const [
@@ -115,14 +115,14 @@ const FlowStatus = () => {
   return (
     <Box component="form" onSubmit={statusForm.handleSubmit} mb={2}>
       <SettingsSection>
-        <Typography variant="h2" component="h3" gutterBottom>
-          Status
+        <Typography variant="h2" gutterBottom>
+          Online / offline status
         </Typography>
         <Typography variant="body1">
           Manage the status of your service.
         </Typography>
       </SettingsSection>
-      <SettingsSection background>
+      <SettingsSection>
         {isTrial && (
           <WarningContainer>
             <PendingActionsIcon sx={{ mr: 1 }} />

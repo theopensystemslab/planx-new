@@ -38,14 +38,16 @@ const TitledLink: React.FC<{
   helpText: string | undefined;
 }> = ({ link, isActive, helpText }) => {
   return (
-    <Box paddingBottom={0.5} mt={1}>
-      <Typography mb={0.5} variant="h4">
+    <Box>
+      <Typography variant="h4">
         Your public link
         <CopyButton isActive={isActive} link={link} />
       </Typography>
-      <SettingsDescription>
-        <Typography variant="body2">{helpText}</Typography>
-      </SettingsDescription>
+      {helpText ? (
+        <SettingsDescription>
+          <Typography variant="body2">{helpText}</Typography>
+        </SettingsDescription>
+      ) : null}
       {isActive ? (
         <Link
           variant="body2"
