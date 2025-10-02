@@ -36,4 +36,4 @@ docker compose \
   -f docker-compose.yml \
   -f docker-compose.pizza.yml $PIZZA_FAILOVER \
   -f docker-compose.seed.yml \
-  up --build  --wait
+  up --build --wait
