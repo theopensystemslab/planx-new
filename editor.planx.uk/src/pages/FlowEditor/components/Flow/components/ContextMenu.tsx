@@ -37,6 +37,7 @@ export const ContextMenu: React.FC = () => {
     cloneNode,
     pasteNode,
     pasteClonedNode,
+    getNode
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -48,6 +49,7 @@ export const ContextMenu: React.FC = () => {
     state.cloneNode,
     state.pasteNode,
     state.pasteClonedNode,
+    state.getNode
   ]);
 
   const handleCopy = () => {
@@ -80,7 +82,9 @@ export const ContextMenu: React.FC = () => {
 
   // Define available actions based on source
   const getActions = (): ContextMenuAction[] => {
-    const hasCopiedContent = Boolean(clonedNodeId || copiedNode);
+    const hasCopiedNode = Boolean(copiedNode);
+    const hasClonedNode = Boolean(clonedNodeId && getNode(clonedNodeId));
+    const isPasteEnabled = hasCopiedNode || hasClonedNode;
 
     if (source === "node") {
       return [
@@ -107,7 +111,7 @@ export const ContextMenu: React.FC = () => {
           id: "paste",
           label: "Paste",
           icon: <ContentPaste fontSize="small" />,
-          disabled: !hasCopiedContent,
+          disabled: !isPasteEnabled,
           onClick: handlePaste,
         },
       ];
