@@ -51,6 +51,7 @@ export const ContextMenu: React.FC = () => {
   ]);
 
   const handleCopy = () => {
+    // TODO better types for `Relationships`?
     copyNode(self!);
     closeMenu();
   };
@@ -72,6 +73,10 @@ export const ContextMenu: React.FC = () => {
       return closeMenu();
     }
   };
+
+  const anchorPosition = position
+    ? { top: position.mouseY, left: position.mouseX }
+    : undefined;
 
   // Define available actions based on source
   const getActions = (): ContextMenuAction[] => {
@@ -118,11 +123,7 @@ export const ContextMenu: React.FC = () => {
       open={Boolean(position)}
       onClose={closeMenu}
       anchorReference="anchorPosition"
-      anchorPosition={
-        position !== null
-          ? { top: position.mouseY, left: position.mouseX }
-          : undefined
-      }
+      anchorPosition={anchorPosition}
     >
       <Paper sx={{ width: 320, maxWidth: "100%" }}>
         <MenuList dense>

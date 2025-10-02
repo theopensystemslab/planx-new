@@ -155,7 +155,6 @@ export const editorUIStore: StateCreator<
       set({
         contextMenuSource: null,
         contextMenuPosition: null,
-        // TODO: consider MUI animation timing
         contextMenuRelationships: {
           self: undefined,
           parent: ROOT_NODE_KEY,

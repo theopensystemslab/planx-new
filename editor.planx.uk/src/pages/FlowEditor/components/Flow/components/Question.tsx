@@ -60,13 +60,6 @@ const Question: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
-  // If there is an error, the icon has a semantic meaning and needs a title
-  const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
-
-  const hasHelpText =
-    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
-
   const handleContextMenu = useContextMenu({
     source: "node", relationships: {
       parent,
@@ -74,6 +67,13 @@ const Question: React.FC<Props> = React.memo((props) => {
       self: props.id,
     }
   });
+
+  const Icon = props.type === "Error" ? ErrorIcon : ICONS[props.type];
+  // If there is an error, the icon has a semantic meaning and needs a title
+  const iconTitleAccess = props.type === "Error" ? "Error" : undefined;
+
+  const hasHelpText =
+    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
   return (
     <>

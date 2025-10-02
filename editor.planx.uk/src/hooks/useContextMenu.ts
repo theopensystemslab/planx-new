@@ -7,7 +7,10 @@ interface Props {
   relationships: Relationships,
   source: NonNullable<ContextMenuSource>
 }
-// TODO: docs!
+
+/**
+ * Open a context menu which contains a series of node or hanger based actions
+ */
 export const useContextMenu = ({ relationships, source }: Props) => {
   const openContextMenu = useStore((state) => state.openContextMenu);
 

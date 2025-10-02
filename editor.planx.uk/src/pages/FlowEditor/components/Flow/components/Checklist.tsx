@@ -78,11 +78,6 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const Icon = ICONS[props.type];
-
-  const hasHelpText =
-    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
-
   const handleContextMenu = useContextMenu({
     source: "node", relationships: {
       parent,
@@ -90,6 +85,11 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       self: props.id,
     }
   });
+
+  const Icon = ICONS[props.type];
+
+  const hasHelpText =
+    props.data?.policyRef || props.data?.info || props.data?.howMeasured;
 
   return (
     <>

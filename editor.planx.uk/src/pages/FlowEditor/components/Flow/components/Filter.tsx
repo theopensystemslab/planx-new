@@ -42,16 +42,16 @@ const Filter: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const Icon = ICONS[props.type];
-
   const handleContextMenu = useContextMenu({
-    source: "node", 
+    source: "node",
     relationships: {
       parent,
       before: props.id,
       self: props.id,
     }
   });
+
+  const Icon = ICONS[props.type];
 
   return (
     <>
