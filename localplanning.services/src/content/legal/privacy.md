@@ -1,13 +1,39 @@
 ---
 title: Privacy
-subheading: Lorem ipsum dolor sit amet
-lastModified: 2025-06-16
+subheading: How we collect, protect and use data about you
+lastModified: 2025-10-01
 ---
 
-## Heading 2
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+Please note that this privacy policy only applies to the use of this website, localplanning.services. It does not apply to our customers' digital services that are powered by Plan✕.
 
-<br/>
+To find out how a service on Plan✕ uses your data, you should read the privacy notice on that service, which can be found at the bottom of any page.
 
-### Heading 3
-Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit [anim id est laborum](https://www.lipsum.com/).
+<hr/>
+
+Local Planning Services is provided by Open Systems Lab, a non-profit based in the UK. This privacy notice explains how we collect and use any personal data when you are using this website.
+‍
+### When you use this website
+Like most websites, we may gather some basic technical information as you browse localplanning.services. This helps us make sure the website works well and understand how people use it. This information can include:
+
+ - Your IP address
+ - Details about your web browser and your computer or phone's operating system.
+ - Which pages you visit on our site and how long you stay on them.
+ - The website you came from to find us (if you clicked a link)
+
+
+### How we use it
+We use this to see how many people visit, which pages are popular, and to generally improve our website. This information doesn't directly tell us who you are.
+
+### Cookies
+Our website may use small files called 'cookies' that are stored on your device. Unless you have consented to additional cookies, we will only use cookies that are needed for the website to work properly (for example, for security). These are known as 'essential' cookies.
+
+### How long we keep your information
+We only keep your information for as long as we need it to help you.
+
+### Your privacy rights
+You can ask us to:
+
+ - Tell you what information we hold about you.
+ - Correct any wrong information we have.
+ - Delete your personal information.
+ - If you have any questions about your data or want to use these rights, please get in touch with us via [enquiries@localplanning.services](mailto:enquiries@localplanning.services)
