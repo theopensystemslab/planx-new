@@ -1,7 +1,9 @@
 import Box, { BoxProps } from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import { contentFlowSpacing } from "@planx/components/shared/Preview/Card";
+import ErrorFallback from "components/Error/ErrorFallback";
 import React, { ReactNode } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 const Root = styled(Box, {
   shouldForwardProp: (prop) => prop !== "background",
@@ -27,5 +29,11 @@ const Root = styled(Box, {
 export default function SettingsSection(
   props: { children: ReactNode; background?: boolean } & Partial<BoxProps>,
 ) {
-  return <Root {...props}>{props.children}</Root>;
+  return (
+    <Root {...props}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        {props.children}
+      </ErrorBoundary>
+    </Root>
+  );
 }
