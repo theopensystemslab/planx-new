@@ -53,13 +53,16 @@ export const ContextMenu: React.FC = () => {
   ]);
 
   const handleCopy = () => {
-    // TODO better types for `Relationships`?
-    copyNode(self!);
+    if (!self) return alert("Unable to copy, missing value for relationship 'self' (nodeId)")
+
+    copyNode(self);
     closeMenu();
   };
 
   const handleClone = () => {
-    cloneNode(self!);
+    if (!self) return alert("Unable to clone, missing value for relationship 'self' (nodeId)")
+
+    cloneNode(self);
     closeMenu();
   };
 
