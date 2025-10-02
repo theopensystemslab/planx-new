@@ -1,6 +1,6 @@
 import type { Action } from "@stores/action";
 
-export const actions: Record<Action, { title: string, description: string }> = {
+export const actions: Record<Action, { title: string; description: string }> = {
   apply: {
     title: "Start a planning application",
     description:
@@ -9,11 +9,11 @@ export const actions: Record<Action, { title: string, description: string }> = {
   notify: {
     title: "Notify your authority",
     description:
-      "Inform your local planning authority about changes you think may be a planning breach.",
+      "Submit reports, complaints, requests, and notifications directly to your local planning authority.",
   },
-  guidance:  {
+  guidance: {
     title: "Get planning guidance",
     description:
       "Find out if you need planning permission, and other guidance services.",
-  }
+  },
 } as const;
