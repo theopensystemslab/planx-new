@@ -422,8 +422,16 @@ export const editorStore: StateCreator<
       rootId: id,
       nodes: nodesToCopy,
     };
-
-    localStorage.setItem("copiedNode", JSON.stringify(payload));
+    
+    try {
+      localStorage.setItem("copiedNode", JSON.stringify(payload));
+    } catch (error) {
+      if (error instanceof Error && error.name === "QuotaExceededError") {
+        alert("Failed to copy. Please try copying a smaller branch of the graph");
+      } else {
+        alert(`Failed to copy - unknown error. Details: ${error}`);
+      }
+    }
   },
 
   getCopiedNode: () => {
