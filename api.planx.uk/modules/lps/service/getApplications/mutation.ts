@@ -29,7 +29,7 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
             # ..for services which still exist
             flow: { id: { _is_null: false } }
           }
-          order_by: { updated_at: asc }
+          order_by: { updated_at: desc }
         ) {
           id
           addressLine: data(path: "passport.data._address.single_line_address")
