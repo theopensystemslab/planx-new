@@ -18,8 +18,7 @@ import { Font } from "astro:assets";
     <meta name="generator" content={Astro.generator} />
     <title>localplanning.services</title>
     <Analytics />
-    <script src="../scripts/registerWebcomponents.js"
-    ></script>
+    <script src="../scripts/registerWebcomponents.js"></script>
   </head>
   <body class="bg-black">
     <Header />
@@ -39,3 +38,11 @@ import { Font } from "astro:assets";
     color: var(--color-text-main);
   }
 </style>
+
+<script>
+  import { navigate } from "astro:transitions/client";
+  
+  // Force ClientRouter navigation event on browser "back" event
+  // When navigating from /applications/:lpa back to /applications, Astro doesn't always re-render
+  window.addEventListener("popstate", () => navigate(window.location.pathname));
+</script>
