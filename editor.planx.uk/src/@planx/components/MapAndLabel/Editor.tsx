@@ -27,6 +27,7 @@ import { SketchPlanCA } from "./schemas/SketchPlanCA";
 import { SketchPlanFullDescriptionCA } from "./schemas/SketchPlanFullDescriptionCA";
 import { SketchPlanFullDescriptionTPO } from "./schemas/SketchPlanFullDescriptionTPO";
 import { SketchPlanTPO } from "./schemas/SketchPlanTPO";
+import { BreachLocations } from "./schemas/BreachLocations";
 
 type Props = EditorProps<TYPES.MapAndLabel, MapAndLabel>;
 
@@ -40,6 +41,10 @@ export const SCHEMAS = [
   {
     name: "Sketch plan (full description) - TPO",
     schema: SketchPlanFullDescriptionTPO,
+  },
+  {
+    name: "Report a Breach - breach locations",
+    schema: BreachLocations,
   },
 ];
 
