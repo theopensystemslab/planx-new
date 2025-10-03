@@ -32,6 +32,8 @@ export type AllowListKey = (typeof ALLOW_LIST)[number];
  */
 export type HelpClickMetadata = Record<string, string>;
 
+export type NextStepsMetadata = Record<string, string[]>;
+
 export type SelectedUrlsMetadata = Record<"selectedUrls", string[]>;
 
 export type BackwardsNavigationInitiatorType = "change" | "back";
@@ -83,6 +85,7 @@ export type Metadata =
   | BackwardsNavigationMetadata
   | SelectedUrlsMetadata
   | HelpClickMetadata
+  | NextStepsMetadata
   | HelpTextFeedbackMetadata;
 
 /**
