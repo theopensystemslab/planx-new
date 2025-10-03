@@ -82,8 +82,8 @@ describe("flows status history", () => {
       i = await introspectAs("api");
     });
 
-    test("can query flow_status_history", () => {
-      expect(i.queries).toContain("flow_status_history");
+    test("cannot query flow_status_history", () => {
+      expect(i.queries).not.toContain("flow_status_history");
     });
 
     test("cannot create, update, or delete flows or their associated operations", () => {
