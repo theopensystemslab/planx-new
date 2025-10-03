@@ -9,13 +9,6 @@ select_permissions:
         - status
       filter: {}
     comment: ""
-  - role: api
-    permission:
-      columns:
-        - flow_id
-        - status
-      filter: {}
-    comment: ""
   - role: demoUser
     permission:
       columns:
