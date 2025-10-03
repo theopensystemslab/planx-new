@@ -58,10 +58,9 @@ export const generateHTML = async (sessionId: string, email: string) => {
     userAction,
   });
 
-  // Sanitise output
+  // Sanitise output, allowing my-map webcomponent
   const window = new JSDOM("").window;
   const DOMPurify = createDOMPurify(window as unknown as WindowLike);
-  console.log({ html });
   const cleanHTML = DOMPurify.sanitize(html, {
     WHOLE_DOCUMENT: true,
     ADD_TAGS: ["my-map"],

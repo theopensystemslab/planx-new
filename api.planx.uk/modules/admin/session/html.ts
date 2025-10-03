@@ -41,7 +41,7 @@ export const getHTMLExport: HTMLExportHandler = async (req, res, next) => {
       userAction,
     });
 
-    // Sanitise output
+    // Sanitise output, allowing my-map webcomponent
     const window = new JSDOM("").window;
     const DOMPurify = createDOMPurify(window as unknown as WindowLike);
     const cleanHTML = DOMPurify.sanitize(html, {
