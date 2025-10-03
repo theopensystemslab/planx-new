@@ -6,7 +6,7 @@ export const NoApplications: React.FC = () => (
     <h3>Ready to get started?</h3>
     <p>Find your local planning authority to start applications, submit notifications, or get planning guidance.</p>
     <p className="mt-4">
-      <a href="/search/" className="button button--primary button--medium">
+      <a href="/search/" className="button button--primary button--medium button-focus-style">
         Find local planning services
       </a>
     </p>
