@@ -28,7 +28,10 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
             user_status: { _neq: "expired" }
             # ..for services which still exist
             flow: {
-              _or: { id: { _is_null: false }, deleted_at: { _is_null: false } }
+              _and: [
+                { id: { _is_null: false } }
+                { deleted_at: { _is_null: true } }
+              ]
             }
           }
           order_by: { updated_at: desc }
