@@ -11,7 +11,6 @@ import {
 } from "types";
 import type { StateCreator } from "zustand";
 
-import { getHistoricalOnlineStatus } from "../analytics/utils";
 import {
   generateAnalyticsLink,
   getAnalyticsDashboardId,
@@ -179,13 +178,34 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
+    const {
+      data: { onlineHistory },
+    } = await client.query({
+      query: gql`
+        query GetFlowStatusHistory($id: uuid!) {
+          onlineHistory: flow_status_history(
+            where: { flow_id: { _eq: $id }, status: { _eq: online } }
+            limit: 1
+          ) {
+            status
+          }
+        }
+      `,
+      variables: { id: id },
+      fetchPolicy: "no-cache",
+    });
+
     // Default to no send component as not all flows will be in the table, over time as all flows get published we can revise this
-    // Default to no send component since older flows won't be in `published_flows` table
-    const isSubmissionService = Boolean(Boolean(publishedFlows[0]??.hasSendComponent));
+    const isSubmissionService = Boolean(
+      publishedFlows[0]?.hasSendComponent,
+    );
 
     const environment = import.meta.env.VITE_APP_ENV;
 
-    const flowHistoricallyOnline = await getHistoricalOnlineStatus(id);
+    const flowHistoricallyOnline =
+      onlineHistory && onlineHistory.length > 0
+        ? onlineHistory[0].status
+        : undefined;
 
     const dashboardId = flowHistoricallyOnline
       ? getAnalyticsDashboardId({
@@ -195,7 +215,7 @@ export const settingsStore: StateCreator<
       : undefined;
 
     const analyticsLink =
-      environment === "production" && dashboardId
+      environment === "development" && dashboardId
         ? generateAnalyticsLink({
             flowId: id,
             dashboardId,

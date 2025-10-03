@@ -278,28 +278,3 @@ export const generateAnalyticsLink = ({
 
   return url.toString();
 };
-
-export const getHistoricalOnlineStatus = async (
-  flowId: string,
-): Promise<boolean> => {
-  const { data } = await client.query({
-    query: gql`
-      query GetFlowOnlineHistory($flow_id: uuid!) {
-        flow_status_history(
-          where: { flow_id: { _eq: $flow_id }, status: { _eq: online } }
-        ) {
-          flow_id
-          status
-        }
-      }
-    `,
-    variables: { flow_id: flowId },
-  });
-
-  const flowHistoricallyOnline =
-    Array.isArray(data?.flow_status_history) &&
-    data.flow_status_history.length > 0;
-
-  // We want to know if any 'online' status was found
-  return flowHistoricallyOnline;
-};
