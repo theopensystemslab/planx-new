@@ -18,14 +18,16 @@ if (!services.length) return;
   <ul>
     {
       services.map((service) => (
-        <li>
+        <li class="py-1">
           <a
-            class="underline text-body-lg"
+            class="paragraph-link paragraph-link--external text-body-lg"
             href={getServiceURL({
               domain: lpa.domain,
               lpaSlug: lpa.slug,
               serviceSlug: service.slug,
             })}
+            target="_blank"
+            rel="noopener noreferrer nofollow"
           >
             {service.name}
           </a>

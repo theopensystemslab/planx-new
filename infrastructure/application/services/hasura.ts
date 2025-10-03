@@ -124,16 +124,26 @@ export const createHasuraService = async ({
             },
             {
               name: "HASURA_GRAPHQL_CORS_DOMAIN",
-              value: [...CUSTOM_DOMAINS.map((x: any) => x.domain), DOMAIN]
-                .map((x) => `https://*.${x}, https://${x}`)
-                .concat(
-                  // TODO: Simplify once production CDN is configured
-                  config.get("lps-domain")?.toString() || "",
-                  "https://planx-website.webflow.io",
-                  "https://www.planx.uk",
-                )
-                .filter(Boolean)
-                .join(", "),
+              value: pulumi
+                .all([CUSTOM_DOMAINS, DOMAIN, config.get("lps-domain")])
+                .apply(([customDomains, domain, lpsDomain]) => {
+                  const corsUrls = [
+                    // Wildcard and exact domains for custom domains
+                    ...customDomains.flatMap((x: any) => [
+                      `https://*.${x.domain}`,
+                      `https://${x.domain}`,
+                    ]),
+                    // Wildcard and exact domains for main PlanX site
+                    `https://*.${domain}`,
+                    `https://${domain}`,
+                    // Additional domains
+                    lpsDomain ? `https://${lpsDomain}` : "",
+                    "https://planx-website.webflow.io",
+                    "https://www.planx.uk",
+                  ];
+
+                  return corsUrls.filter(Boolean).join(", ");
+                }),
             },
             {
               name: "HASURA_GRAPHQL_ENABLED_LOG_TYPES",

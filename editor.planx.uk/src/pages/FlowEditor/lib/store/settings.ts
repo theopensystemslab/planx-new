@@ -12,7 +12,6 @@ import {
 import type { StateCreator } from "zustand";
 
 import {
-  Environment,
   generateAnalyticsLink,
   getAnalyticsDashboardId,
 } from "../analytics/utils";
@@ -179,25 +178,24 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
-    const isSubmissionService = publishedFlows[0].hasSendComponent;
+    // Default to no send component as not all flows will be in the table, over time as all flows get published we can revise this
+    const isSubmissionService = Boolean(publishedFlows[0]?.hasSendComponent);
 
-    const environment: Environment =
-      import.meta.env.VITE_APP_ENV === "production" ? "production" : "staging";
+    const environment = import.meta.env.VITE_APP_ENV;
 
     const dashboardId = getAnalyticsDashboardId({
       flowStatus: status,
-      environment,
       flowSlug,
       isSubmissionService,
     });
 
-    const analyticsLink = dashboardId
-      ? generateAnalyticsLink({
-          environment,
-          flowId: id,
-          dashboardId,
-        })
-      : undefined;
+    const analyticsLink =
+      environment === "production" && dashboardId
+        ? generateAnalyticsLink({
+            flowId: id,
+            dashboardId,
+          })
+        : undefined;
 
     set({
       flowSettings: settings,

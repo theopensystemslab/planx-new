@@ -38,7 +38,7 @@ describe(`sending an application to BOPS (v2)`, () => {
       },
       variables: {
         session_id: "37e3649b-4854-4249-a5c3-7937c1b952b9",
-        search_string: "%/api/v2/planning_applications",
+        search_string: "%/api/v2/%",
       },
     });
 
@@ -150,7 +150,7 @@ describe(`sending an application to BOPS (v2)`, () => {
       },
       variables: {
         session_id: previouslySubmittedApplicationID,
-        search_string: "%/api/v2/planning_applications",
+        search_string: "%/api/v2/%",
       },
     });
 

@@ -3,7 +3,6 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
 import AddressSearch from "@components/AddressSearch.tsx";
-import type { Action } from "@content/actions";
 import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
 interface Props {
@@ -12,7 +11,6 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const { action }: { action?: Action }= Astro.params;
 ---
 
 <Layout>
@@ -21,7 +19,7 @@ const { action }: { action?: Action }= Astro.params;
   </Masthead>
   <Container paddingY>
     <section class="mb-4">
-      <AddressSearch client:load action={action}/>
+      <AddressSearch client:load/>
       <div class="styled-content mt-8">
         <p>or see the <a href="/directory" class="paragraph-link">directory of local planning authorities</a></p>
       </div>

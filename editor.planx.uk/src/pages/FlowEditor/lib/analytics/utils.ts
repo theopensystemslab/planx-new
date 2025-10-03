@@ -211,39 +211,21 @@ export function getAllowListAnswers(
   return allowListAnswers;
 }
 
-export type Environment = keyof typeof DASHBOARD_PUBLIC_IDS;
-
-// The dashboard links across Metabase staging and production are different, so we need to store and be able to access both
-export const DASHBOARD_PUBLIC_IDS = {
-  production: {
-    discretionary: "34e5a17c-2f20-4543-be0b-4af8364dceee",
-    FOIYNPP: "d55b0362-3a21-4153-a53d-c1d6a55ff5e2",
-    RAB: "f3da39ec-bb4f-4ee0-8950-afcb5765d686",
-    submission: "040dad13-6783-4e48-9edc-be1b03aa5247",
-  },
-  staging: {
-    discretionary: "0c0abafd-e919-4da2-a5b3-1c637f703954",
-    FOIYNPP: "d6303f0b-d6e8-4169-93c0-f988a93e19bc",
-    RAB: "85c120bf-39b0-4396-bf8a-254b885e77f5",
-    submission: "363fd552-8c2b-40d9-8b7a-21634ec182cc",
-  },
-} as const;
-
-export const getFOIYNPP = (environment: Environment) => ({
-  id: DASHBOARD_PUBLIC_IDS[environment].FOIYNPP,
+const foiynppDashboard = {
+  id: "d55b0362-3a21-4153-a53d-c1d6a55ff5e2",
   slugs: [
     "check-if-you-need-planning-permission",
     "find-out-if-you-need-planning-permission",
   ],
-});
+};
 
-export const getRAB = (environment: Environment) => ({
-  id: DASHBOARD_PUBLIC_IDS[environment].RAB,
+const rabDashboard = {
+  id: "f3da39ec-bb4f-4ee0-8950-afcb5765d686",
   slugs: ["camden-report-a-planning-breach", "report-a-planning-breach"],
-});
+};
 
-export const getDiscretionary = (environment: Environment) => ({
-  id: DASHBOARD_PUBLIC_IDS[environment].discretionary,
+const discretionaryDashboard = {
+  id: "34e5a17c-2f20-4543-be0b-4af8364dceee",
   slugs: [
     "check-constraints-on-a-property",
     "check-whether-you-need-a-building-control-application",
@@ -254,54 +236,43 @@ export const getDiscretionary = (environment: Environment) => ({
     "request-a-building-control-quote",
     "validation-requirements-live",
   ],
-});
+};
 
-export const getSubmission = (environment: Environment): { id: string } => {
-  return {
-    id: DASHBOARD_PUBLIC_IDS[environment].submission,
-  };
+const submissionDashboard = {
+  id: "040dad13-6783-4e48-9edc-be1b03aa5247",
 };
 
 export const getAnalyticsDashboardId = ({
   flowStatus,
-  environment,
   flowSlug,
   isSubmissionService,
 }: {
   flowStatus: FlowStatus;
-  environment: Environment;
   flowSlug: string;
   isSubmissionService: boolean;
 }): string | undefined => {
   if (flowStatus === "offline") return undefined;
 
-  const foiynpp = getFOIYNPP(environment);
-  const rab = getRAB(environment);
-  const discretionary = getDiscretionary(environment);
-  const submission = getSubmission(environment);
-
-  if (foiynpp.slugs.includes(flowSlug)) return foiynpp.id;
-  if (rab.slugs.includes(flowSlug)) return rab.id;
-  if (discretionary.slugs.includes(flowSlug)) return discretionary.id;
+  if (foiynppDashboard.slugs.includes(flowSlug)) return foiynppDashboard.id;
+  if (rabDashboard.slugs.includes(flowSlug)) return rabDashboard.id;
+  if (discretionaryDashboard.slugs.includes(flowSlug))
+    return discretionaryDashboard.id;
   // Finally, fallback to check general submission services
-  if (isSubmissionService) return submission.id;
+  if (isSubmissionService) return submissionDashboard.id;
 
   return undefined;
 };
 
 export const generateAnalyticsLink = ({
-  environment,
   flowId,
   dashboardId,
 }: {
-  environment: Environment;
   flowId: string;
   dashboardId: string;
 }): string => {
-  const baseDomain = environment === "production" ? "uk" : "dev";
-  const host = `https://metabase.editor.planx.${baseDomain}`;
-  const pathname = `/public/dashboard/${dashboardId}`;
-  const url = new URL(pathname, host);
+  const url = new URL(
+    `https://metabase.editor.planx.dev/public/dashboard/${dashboardId}`,
+  );
   const search = new URLSearchParams({
     flow_id: flowId,
   }).toString();

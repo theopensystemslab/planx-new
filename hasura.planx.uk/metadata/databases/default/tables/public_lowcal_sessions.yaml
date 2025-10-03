@@ -91,8 +91,6 @@ select_permissions:
               _eq: x-hasura-lowcal-email
           - email:
               _neq: ""
-          - submitted_at:
-              _is_null: true
           - deleted_at:
               _is_null: true
 update_permissions:

@@ -19,6 +19,7 @@ export const validate =
   ) => {
     try {
       const parsedReq = schema.parse({
+        headers: req.headers,
         params: req.params,
         body: req.body,
         query: req.query,

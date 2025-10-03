@@ -26,13 +26,16 @@ const legalPages = await getCollection("legal");
           />
         </div>
       </div>
-       <div class="flex gap-8">
-          <a class="paragraph-link text-body-md" href="/directory">
-            Directory of local planning authorities
-          </a>
+      <div class="flex gap-8">
+        <a class="paragraph-link text-body-md" href="/directory">
+          Directory of local planning authorities
+        </a>
         {
           legalPages.map((page) => (
-            <a class="paragraph-link capitalize text-body-md" href={`/${page.slug}`}>
+            <a
+              class="paragraph-link capitalize text-body-md"
+              href={`/${page.slug}`}
+            >
               {page.slug}
             </a>
           ))
@@ -42,7 +45,8 @@ const legalPages = await getCollection("legal");
         All content is available under the <a
           class="paragraph-link paragraph-link--external"
           href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
-          >Open Government License v3</a
+          target="_blank"
+          rel="noopener noreferrer nofollow">Open Government License v3</a
         >, except where otherwise stated
       </p>
     </div>

@@ -2,9 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@lib/queryClient";
 import type { ApplicationsResponse } from "./useFetchApplications";
 import { PUBLIC_PLANX_GRAPHQL_API_URL } from "astro:env/client";
-import { useSearchParams } from "./useSearchParams";
 import gql from "graphql-tag";
 import { print } from "graphql";
+import { useStore } from "@nanostores/react";
+import { $session } from "@stores/session";
 
 const MUTATION = gql`
   mutation SoftDeleteLowcalSessionLPS($applicationId: uuid!) {
@@ -18,7 +19,7 @@ const MUTATION = gql`
 `;
 
 export const useDeleteApplication = () => {
-  const { email } = useSearchParams();
+  const { email } = useStore($session);
   if (!email) throw Error("Unable to find email in search params");
 
   const { mutate: deleteApplication } = useMutation({

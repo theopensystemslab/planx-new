@@ -93,21 +93,26 @@ const getFallbackMessage = (serviceType: string) =>
   <ApplicationsBanner />
 </Layout>
 
-<script is:inline data-astro-rerun type="module">
+<script>
+  import { $action } from "@stores/action";
+
   /**
-   * Open accordion by "action" search param in URL
+   * Open accordion based on "action" value from nanostore
    * Defaults to all accordions closed
    */
   const openAccordion = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const action = urlParams.get("action");
-
+    const action = $action.get();
     if (!action) return;
 
-    const detailsEl = document.getElementById(`${action}-accordion`);
+    const detailsEl = document.getElementById(
+      `${action}-accordion`
+    ) as HTMLDetailsElement | null;
     if (!detailsEl) return;
 
     detailsEl.open = true;
+
+    // Clear store - we've now used this action, it can only be reset by landing page cards
+    $action.set(null);
   };
 
   document.addEventListener("astro:page-load", () => {

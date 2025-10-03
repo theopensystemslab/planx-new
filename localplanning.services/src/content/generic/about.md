@@ -11,11 +11,11 @@ Built by your local planning team in collaboration with planning professionals, 
 
 ## Open Digital Planning
 
-_'Find Local Planning Services'_ has been developed as part of <a href="https://opendigitalplanning.org/" class="paragraph-link paragraph-link--external">Open Digital Planning</a> - a growing community of innovators, including over 150 Local Planning Authorities in England, planning experts, designers, and technologists. It is driven by a shared ambition to make planning more accessible and consistent for everyone, and create an open data ecosystem.
+_'Find Local Planning Services'_ has been developed as part of <a href="https://opendigitalplanning.org/" class="external" target="_blank" rel="noopener noreferrer nofollow">Open Digital Planning</a> - a growing community of innovators, including over 150 Local Planning Authorities in England, planning experts, designers, and technologists. It is driven by a shared ambition to make planning more accessible and consistent for everyone, and create an open data ecosystem.
 
 <br>
 
 ## Plan✕
 
-The digital services listed on _Find Local Planning Services_ are powered by <a href="https://planx.uk" class="paragraph-link paragraph-link--external">Plan✕</a> - a platform that allows planning authorities to collaboratively create and manage digital planning services for residents, businesses and planning experts. PlanX is open source and designed in close collaboration with central and local government.
+The digital services listed on _Find Local Planning Services_ are powered by <a href="https://planx.uk" class="external" target="_blank" rel="noopener noreferrer nofollow">Plan✕</a> - a platform that allows planning authorities to collaboratively create and manage digital planning services for residents, businesses and planning experts. Plan✕ is open source and designed in close collaboration with central and local government.
 
