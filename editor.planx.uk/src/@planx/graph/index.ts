@@ -1,4 +1,4 @@
-import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES, NodeId } from "@opensystemslab/planx-core/types";
 import { enablePatches, produceWithPatches } from "immer";
 import { isEqual } from "lodash";
 import difference from "lodash/difference";
@@ -6,6 +6,7 @@ import trim from "lodash/trim";
 import zip from "lodash/zip";
 import { customAlphabet } from "nanoid-good";
 import en from "nanoid-good/locale/en";
+import { Store } from "pages/FlowEditor/lib/store";
 
 import { ImmerJSONPatch, OT } from "./types";
 
@@ -24,7 +25,7 @@ export type Graph = Record<string, Node>;
 
 export const ROOT_NODE_KEY = "_root";
 
-const uniqueId = customAlphabet(en)(
+export const uniqueId = customAlphabet(en)(
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
   10,
 );
@@ -173,8 +174,7 @@ const _add = (
     before = undefined,
   }: { children?: Child[]; parent: string; before?: string },
 ) => {
-  if (draft[id]) throw new Error("id exists");
-  else if (!draft[parent]) throw new Error("parent not found");
+  if (!draft[parent]) throw new Error("parent not found");
 
   const parentNode = draft[parent];
 
@@ -208,12 +208,13 @@ type NodeDataWithId = { id?: string; type?: number; data?: object };
 
 export type Relationships = {
   children?: Child[];
-  parent?: string;
+  parent?: NodeId;
   /**
    * NodeId of the older sibling of this node
    * Used to insert a new node in the correct location within it's parents' edges
    */
-  before?: string;
+  before?: NodeId;
+  self?: NodeId;
 };
 
 export const add =
@@ -691,4 +692,39 @@ export const formatOps = (graph: Graph, ops: Array<OT.Op>): string[] => {
   });
 
   return output;
+};
+
+/**
+ * Convert flat list of nodes to a hierarchical graph
+ * 
+ * @description
+ * Our graph is stored as a flat data structure (key:value pairs of nodeId:nodeData)
+ * When we "copy" we also keep a flat structure on the clipboard
+ * In order to re-insert nodes in the correct hierarchical order, we need to re-structure them hierarchically
+ * This allows us to run a single `addNode()` call and keeps our "paste" operation as a single ShareDB transaction
+ */
+export const buildGraphFromNodes = (
+  nodeId: string,
+  allNodes: { [id: string]: Store.Node },
+  visited = new Set<string>()
+): { id: NodeId, children: Store.Node[] } => {
+  // Guard for cycles in the graph
+  if (visited.has(nodeId)) {
+    return { id: nodeId, ...allNodes[nodeId], children: [] };
+  }
+  visited.add(nodeId);
+
+  const nodeData = allNodes[nodeId];
+  const children = (nodeData.edges || []).map((childId: string) =>
+    buildGraphFromNodes(childId, allNodes, visited)
+  );
+  
+  // Strip our the original edges property, these are captured as children when adding a new node
+  const { edges: _edges, ...restOfNodeData } = nodeData;
+
+  return {
+    id: nodeId,
+    ...restOfNodeData,
+    children: children,
+  };
 };

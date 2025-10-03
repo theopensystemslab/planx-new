@@ -6,6 +6,7 @@ import {
 } from "@opensystemslab/planx-core/types";
 import { ICONS } from "@planx/components/shared/icons";
 import classNames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import mapAccum from "ramda/src/mapAccum";
 import React, { useMemo } from "react";
 import { useDrag } from "react-dnd";
@@ -28,15 +29,17 @@ type Props = {
 };
 
 const Checklist: React.FC<Props> = React.memo((props) => {
-  const [isClone, childNodes, copyNode, showHelpText, showTags] = useStore(
-    (state) => [
-      state.isClone,
-      state.childNodesOf(props.id),
-      state.copyNode,
-      state.showHelpText,
-      state.showTags,
-    ],
-  );
+  const [
+    isClone,
+    childNodes,
+    showHelpText,
+    showTags,
+  ] = useStore((state) => [
+    state.isClone,
+    state.childNodesOf(props.id),
+    state.showHelpText,
+    state.showTags,
+  ]);
 
   const parent = getParentId(props.parent);
 
@@ -45,16 +48,16 @@ const Checklist: React.FC<Props> = React.memo((props) => {
       !props.data?.categories
         ? undefined
         : mapAccum(
-            (index: number, category: { title: string; count: number }) => [
-              index + category.count,
-              {
-                title: category.title,
-                children: childNodes.slice(index, index + category.count),
-              },
-            ],
-            0,
-            props.data.categories,
-          )[1],
+          (index: number, category: { title: string; count: number }) => [
+            index + category.count,
+            {
+              title: category.title,
+              children: childNodes.slice(index, index + category.count),
+            },
+          ],
+          0,
+          props.data.categories,
+        )[1],
     [childNodes],
   );
 
@@ -75,11 +78,13 @@ const Checklist: React.FC<Props> = React.memo((props) => {
     href = `${window.location.pathname}/nodes/${parent}/nodes/${props.id}/edit`;
   }
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    copyNode(props.id);
-  };
+  const handleContextMenu = useContextMenu({
+    source: "node", relationships: {
+      parent,
+      before: props.id,
+      self: props.id,
+    }
+  });
 
   const Icon = ICONS[props.type];
 
@@ -107,7 +112,7 @@ const Checklist: React.FC<Props> = React.memo((props) => {
           <Link
             href={href}
             prefetch={false}
-            onContextMenu={handleContext}
+            onContextMenu={handleContextMenu}
             ref={drag}
           >
             {props.data?.img && (

@@ -1,4 +1,6 @@
+import { NodeId } from "@opensystemslab/planx-core/types";
 import classnames from "classnames";
+import { useContextMenu } from "hooks/useContextMenu";
 import isEmpty from "lodash/isEmpty";
 import {
   nodeIsChildOfTemplatedInternalPortal,
@@ -14,8 +16,8 @@ import { getParentId } from "../lib/utils";
 
 interface HangerProps {
   hidden?: boolean;
-  parent?: any;
-  before?: any;
+  parent?: NodeId;
+  before?: NodeId;
 }
 
 interface Item {
@@ -37,14 +39,12 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
 
   const [
     moveNode,
-    pasteNode,
     isTemplatedFrom,
     flow,
     orderedFlow,
     setOrderedFlow,
   ] = useStore((state) => [
     state.moveNode,
-    state.pasteNode,
     state.isTemplatedFrom,
     state.flow,
     state.orderedFlow,
@@ -91,10 +91,10 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
     }),
   });
 
-  const handleContext = (e: React.MouseEvent) => {
-    e.preventDefault();
-    pasteNode(parent || undefined, before || undefined);
-  };
+  const handleContextMenu = useContextMenu({
+    source: "hanger",
+    relationships: { parent, before }
+  });
 
   return (
     <li
@@ -104,7 +104,7 @@ const Hanger: React.FC<HangerProps> = ({ before, parent, hidden = false }) => {
       <Link
         href={buildHref(before, parent)}
         prefetch={false}
-        onContextMenu={handleContext}
+        onContextMenu={handleContextMenu}
       >
         {canDrop && item && item.text}
       </Link>

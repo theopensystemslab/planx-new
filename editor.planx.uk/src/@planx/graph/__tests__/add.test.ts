@@ -270,14 +270,6 @@ describe("error handling", () => {
     );
   });
 
-  test("id already exists", () => {
-    expect(() => add({ id: "_root" })()).toThrow("id exists");
-
-    expect(() => add({ id: "a" })({ _root: { edges: ["a"] }, a: {} })).toThrow(
-      "id exists",
-    );
-  });
-
   test("invalid before item", () => {
     expect(() =>
       add(

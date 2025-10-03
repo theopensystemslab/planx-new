@@ -36,6 +36,7 @@ const Option: React.FC<any> = (props) => {
   return (
     <li
       className={classNames("card", "option", { wasVisited: props.wasVisited })}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <Link href={href} prefetch={false} onClick={(e) => e.preventDefault()}>
         {props.data?.img && (
