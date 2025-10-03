@@ -131,6 +131,16 @@ export const settingsStore: StateCreator<
   },
 
   getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
+    type DetailedFlowInformation = FlowInformation & {
+      id: string;
+      publishedFlows: [{ hasSendComponent: boolean }];
+      onlineHistory: ["online"];
+    };
+
+    interface FlowInformationQuery {
+      flows: [DetailedFlowInformation];
+    }
+
     const {
       data: {
         flows: [
@@ -144,10 +154,11 @@ export const settingsStore: StateCreator<
             canCreateFromCopy,
             publishedFlows,
             isListedOnLPS,
+            onlineHistory,
           },
         ],
       },
-    } = await client.query({
+    } = await client.query<FlowInformationQuery>({
       query: gql`
         query GetFlow($slug: String!, $team_slug: String!) {
           flows(
@@ -168,6 +179,12 @@ export const settingsStore: StateCreator<
               hasSendComponent: has_send_component
             }
             isListedOnLPS: is_listed_on_lps
+            onlineHistory: flow_status_histories(
+              where: { status: { _eq: online } }
+              limit: 1
+            ) {
+              status
+            }
           }
         }
       `,
@@ -178,34 +195,15 @@ export const settingsStore: StateCreator<
       fetchPolicy: "no-cache",
     });
 
-    const {
-      data: { onlineHistory },
-    } = await client.query({
-      query: gql`
-        query GetFlowStatusHistory($id: uuid!) {
-          onlineHistory: flow_status_history(
-            where: { flow_id: { _eq: $id }, status: { _eq: online } }
-            limit: 1
-          ) {
-            status
-          }
-        }
-      `,
-      variables: { id: id },
-      fetchPolicy: "no-cache",
-    });
-
     // Default to no send component as not all flows will be in the table, over time as all flows get published we can revise this
     const isSubmissionService = Boolean(publishedFlows[0]?.hasSendComponent);
 
     const environment = import.meta.env.VITE_APP_ENV;
 
-    const flowHistoricallyOnline =
-      onlineHistory && onlineHistory.length > 0
-        ? onlineHistory[0].status
-        : undefined;
+    // If a flow has ever been online, there will be analytics to show
+    const hasAnalytics = Boolean(onlineHistory?.length)
 
-    const dashboardId = flowHistoricallyOnline
+    const dashboardId = hasAnalytics
       ? getAnalyticsDashboardId({
           flowSlug,
           isSubmissionService,
