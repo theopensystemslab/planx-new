@@ -7,20 +7,20 @@ This website is run by Open Systems Lab. We want as many people as possible to b
 
 You should be able to:
 
- - View all content with sufficient contrast.
- - Zoom up to 300% without the text spilling off the screen.
- - Navigate the website using keyboard or a screen reader.
- - Understand how to find information you need, and all text on this website.
- - Access alt text for all images except decorative graphics.
+ - view all content with sufficient contrast
+ - zoom up to 300% without the text spilling off the screen
+ - navigate the website using keyboard or a screen reader
+ - understand how to find information you need, and all text on this website
+ - access alt text for all images except decorative graphics
 
 <br>
 
 ## Parts of this website that may not be accessible
-There are some parts of this website that may be less accessible. These are the ones we know about.
+There are some parts of this website that may be less accessible. These are the ones we know about:
 
- - You may not be able to alter colours, contrasts or line heights on all pages.
- - Keyboard navigation may not always enable you to skip straight to key content or links.
- - Some links do not contain text, only images with alt text.
+ - you may not be able to alter colours, contrasts or line heights on all pages
+ - keyboard navigation may not always enable you to skip straight to key content or links
+ - some links do not contain text, only images with alt text
 
 <br>
 

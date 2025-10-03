@@ -17,10 +17,10 @@ Local Planning Services is provided by Open Systems Lab, a non-profit based in t
 ## When you use this website
 Like most websites, we may gather some basic technical information as you browse localplanning.services. This helps us make sure the website works well and understand how people use it. This information can include:
 
- - Your IP address
- - Details about your web browser and your computer or phone's operating system.
- - Which pages you visit on our site and how long you stay on them.
- - The website you came from to find us (if you clicked a link)
+ - your IP address
+ - details about your web browser and your computer or phone's operating system
+ - which pages you visit on our site and how long you stay on them
+ - the website you came from to find us (if you clicked a link)
 
 <br>
 
@@ -42,7 +42,8 @@ We only keep your information for as long as we need it to help you.
 ## Your privacy rights
 You can ask us to:
 
- - Tell you what information we hold about you.
- - Correct any wrong information we have.
- - Delete your personal information.
- - If you have any questions about your data or want to use these rights, please get in touch with us via [enquiries@localplanning.services](mailto:enquiries@localplanning.services)
+ - tell you what information we hold about you
+ - correct any wrong information we have
+ - delete your personal information
+
+If you have any questions about your data or want to use these rights, please get in touch with us via [enquiries@localplanning.services](mailto:enquiries@localplanning.services)
