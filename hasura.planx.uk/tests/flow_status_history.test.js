@@ -37,8 +37,8 @@ describe("flows status history", () => {
       i = await introspectAs("platformAdmin");
     });
 
-    test("cannot query flow_status_history", () => {
-      expect(i.queries).not.toContain("flow_status_history");
+    test("can query flow_status_history", () => {
+      expect(i.queries).toContain("flow_status_history");
     });
 
     test("cannot create, update, or delete flows or their associated operations", () => {
@@ -52,8 +52,8 @@ describe("flows status history", () => {
       i = await introspectAs("teamEditor");
     });
 
-    test("cannot query flow_status_history", () => {
-      expect(i.queries).not.toContain("flow_status_history");
+    test("can query flow_status_history", () => {
+      expect(i.queries).toContain("flow_status_history");
     });
 
     test("cannot create, update, or delete flows or their associated operations", () => {
@@ -67,8 +67,8 @@ describe("flows status history", () => {
       i = await introspectAs("demoUser");
     });
 
-    test("cannot query flow_status_history", () => {
-      expect(i.queries).not.toContain("flow_status_history");
+    test("can query flow_status_history", () => {
+      expect(i.queries).toContain("flow_status_history");
     });
 
     test("cannot create, update, or delete flows or their associated operations", () => {
@@ -82,8 +82,8 @@ describe("flows status history", () => {
       i = await introspectAs("api");
     });
 
-    test("cannot query flow_status_history", () => {
-      expect(i.queries).not.toContain("flow_status_history");
+    test("can query flow_status_history", () => {
+      expect(i.queries).toContain("flow_status_history");
     });
 
     test("cannot create, update, or delete flows or their associated operations", () => {
