@@ -1,12 +1,8 @@
-import { useEffect } from "react";
 import { useHtmlDownload } from "./hooks/useHTMLDownload";
-import { $applicationId } from "@stores/applicationId";
+import styles from "./ApplicationViewer.module.css";
 
 export const ApplicationViewer = () => {
   const { htmlContent, loading, error, fetchHtml } = useHtmlDownload();
-
-  // Reset applicationId on unmount
-  useEffect(() => () => $applicationId.set(null), [])  
 
   if (loading) return <p>Loading application...</p>
 
@@ -23,5 +19,10 @@ export const ApplicationViewer = () => {
   }
 
   // HTML content already sanitised using DOMPurify on the backend
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }}/>
+  return (
+    <div
+      className={styles["viewer-overrides"]}
+      dangerouslySetInnerHTML={{ __html: htmlContent }}
+    />
+  )
 };

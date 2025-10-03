@@ -1,0 +1,28 @@
+/* Overrides to style injected HTML */
+.viewer-overrides {
+  :global h1 {
+    visibility: hidden;
+  }
+
+  :global h2 {
+    font-weight: 700;
+    font-size: x-large;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  :global(h2 + span) {
+    margin-bottom: 10px;
+    font-size: large;
+    display: block;
+    width: fit-content;
+  }
+
+  :global(h2 + span + p) {
+    margin-bottom: 10px;
+  }
+
+  :global #boundary-map {
+    margin-bottom: 10px;
+  }
+}
