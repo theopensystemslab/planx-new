@@ -86,6 +86,17 @@ export const UPDATE_FLOW_DIRECTION = gql`
   }
 `;
 
+export const UPDATE_NEXT_STEP_TAKEN = gql`
+  mutation UpdateNextStepTaken($id: bigint!, $metadata: jsonb = {}) {
+    update_analytics_logs_by_pk(
+      pk_columns: { id: $id }
+      _set: { next_step: $metadata }
+    ) {
+      id
+    }
+  }
+`;
+
 export const INSERT_NEW_ANALYTICS = gql`
   mutation InsertNewAnalytics(
     $type: String

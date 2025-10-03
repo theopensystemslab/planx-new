@@ -17,6 +17,7 @@ import {
   UPDATE_HAS_CLICKED_HELP,
   UPDATE_HAS_CLICKED_SAVE,
   UPDATE_NEXT_LOG_CREATED_AT,
+  UPDATE_NEXT_STEP_TAKEN,
 } from "./mutations";
 import {
   AnalyticsLogDirection,
@@ -283,6 +284,8 @@ export const AnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
         updateMetadata(UPDATE_HAS_CLICKED_SAVE);
         return;
       case "nextStepsClick":
+        updateMetadata(UPDATE_NEXT_STEP_TAKEN, eventData.metadata);
+        return;
       case "helpTextFeedback":
         updateMetadata(UPDATE_ANALYTICS_LOG_METADATA, eventData.metadata);
         return;
