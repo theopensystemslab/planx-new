@@ -2,16 +2,16 @@ import { useHtmlDownload } from "./hooks/useHTMLDownload";
 import styles from "./ApplicationViewer.module.css";
 
 export const ApplicationViewer = () => {
-  const { htmlContent, loading, error, fetchHtml } = useHtmlDownload();
+  const { data: htmlContent, isPending, error, refetch } = useHtmlDownload();
 
-  if (loading) return <p>Loading application...</p>
+  if (isPending) return <p>Loading application...</p>
 
-  if (error) {
+  if (error || !htmlContent) {
     return (
       <div className="styled-content">
         <h2>Failed to load application</h2>
-        <p>Error: {error}</p>
-        <button onClick={fetchHtml} className="button button--primary button--medium button-focus-style">
+        <p>Error: {error?.message || "Unknown error"}</p>
+        <button onClick={() => refetch()} className="button button--primary button--medium button-focus-style">
           Retry
         </button>
       </div>
