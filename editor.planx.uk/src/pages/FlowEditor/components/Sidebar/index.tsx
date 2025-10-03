@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
 import { rootFlowPath } from "routes/utils";
 import Permission from "ui/editor/Permission";
+import StyledTab from "ui/editor/StyledTab";
 
 import { useStore } from "../../lib/store";
 import Customisations from "./Customisations";
@@ -21,7 +22,6 @@ import EditHistory from "./EditHistory";
 import { PreviewBrowser } from "./PreviewBrowser";
 import { CheckForChangesToPublishButton } from "./Publish/CheckForChangesButton";
 import Search from "./Search";
-import StyledTab from "./StyledTab";
 
 type SidebarTabs =
   | "PreviewBrowser"
@@ -122,7 +122,8 @@ const TabList = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0, 1.75),
   },
   "& .MuiTabs-indicator": {
-    display: "none",
+    height: "4px",
+    backgroundColor: theme.palette.info.dark,
   },
 }));
 
