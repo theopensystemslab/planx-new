@@ -116,7 +116,7 @@ export const getFlowEditorData = async (
  * View wrapper for all flowEditor routes
  */
 export const flowEditorView = async (req: NaviRequest) => {
-  const [flow] = req.params.flow.split(",");
+  const [flow, ...breadcrumbs] = req.params.flow.split(",");
 
   const {
     id,
@@ -144,7 +144,7 @@ export const flowEditorView = async (req: NaviRequest) => {
   if (templatedFrom) useStore.getState().setOrderedFlow();
 
   return (
-    <FlowEditorLayout>
+    <FlowEditorLayout flow={flow} breadcrumbs={breadcrumbs}>
       <View />
     </FlowEditorLayout>
   );

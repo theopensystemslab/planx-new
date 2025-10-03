@@ -6,7 +6,6 @@ import { styled } from "@mui/material/styles";
 import { HEADER_HEIGHT_EDITOR } from "components/Header/Header";
 import { parentNodeIsTemplatedInternalPortal } from "pages/FlowEditor/utils";
 import React, { useRef } from "react";
-import { rootFlowPath } from "routes/utils";
 
 import Flow from "./components/Flow";
 import { getParentId } from "./components/Flow/lib/utils";
@@ -38,10 +37,7 @@ const EditorVisualControls = styled(ButtonGroup)(({ theme }) => ({
   overflow: "hidden",
 }));
 
-const FlowEditor = () => {
-  const flowPath = rootFlowPath(true).split("/")[2];
-  const [flow, ...breadcrumbs] = flowPath.split(",");
-
+const FlowEditor: React.FC<{ flow: string, breadcrumbs?: string[] }> = ({ flow, breadcrumbs }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   useScrollControlsAndRememberPosition(scrollContainerRef);
 
