@@ -29,15 +29,15 @@ array_relationships:
           name: payment_status
           schema: public
 computed_fields:
-  - name: user_status
-    definition:
-      function:
-        name: lowcal_sessions_user_status
-        schema: public
   - name: system_status
     definition:
       function:
         name: lowcal_sessions_system_status
+        schema: public
+  - name: user_status
+    definition:
+      function:
+        name: lowcal_sessions_user_status
         schema: public
 insert_permissions:
   - role: public
