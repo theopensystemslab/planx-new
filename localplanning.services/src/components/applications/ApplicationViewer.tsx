@@ -8,7 +8,7 @@ export const ApplicationViewer = () => {
 
   if (error) {
     return (
-      <div>
+      <div className="styled-content">
         <h2>Failed to load application</h2>
         <p>Error: {error}</p>
         <button onClick={fetchHtml} className="button button--primary button--medium button-focus-style">
