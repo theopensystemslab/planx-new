@@ -26,9 +26,11 @@ const Reviews = () => {
         {`Nodes with a 'To review' tag`}
       </Typography>
       <List sx={{ mt: 1 }}>
-        {sortedReviewNodeIds.map((nodeId) => (
-          <ReviewCard key={nodeId} nodeId={nodeId} />
-        ))}
+        {sortedReviewNodeIds.map((nodeId) => {
+          const node = flow[nodeId];
+          const notes = node?.data?.notes || "";
+          return <ReviewCard key={nodeId} nodeId={nodeId} notes={notes} />;
+        })}
       </List>
     </Box>
   );
