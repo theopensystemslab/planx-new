@@ -228,7 +228,6 @@ const Sidebar: React.FC = React.memo(() => {
               <StyledTab value="PreviewBrowser" label="Preview" />
               <StyledTab value="History" label="History" />
               <StyledTab value="Search" label="Search" />
-              {/* Hide from templated flows due to tabs width constraints */}
               {!isTemplatedFrom && (
                 <StyledTab value="Review" label="To review" />
               )}

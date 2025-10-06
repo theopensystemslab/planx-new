@@ -28,7 +28,7 @@ const Reviews = () => {
       <List sx={{ mt: 1 }}>
         {sortedReviewNodeIds.map((nodeId) => {
           const node = flow[nodeId];
-          const notes = node?.data?.notes || "";
+          const notes = node?.data?.notes;
           return <ReviewCard key={nodeId} nodeId={nodeId} notes={notes} />;
         })}
       </List>
