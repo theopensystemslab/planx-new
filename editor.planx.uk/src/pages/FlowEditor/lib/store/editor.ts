@@ -88,7 +88,7 @@ export const editorUIStore: StateCreator<
       set({ flowCardView: view });
     },
 
-    showTags: false,
+    showTags: true,
 
     toggleShowTags: () => set({ showTags: !get().showTags }),
 
@@ -96,7 +96,7 @@ export const editorUIStore: StateCreator<
 
     toggleShowImages: () => set({ showImages: !get().showImages }),
 
-    showDataFields: false,
+    showDataFields: true,
 
     toggleShowDataFields: () => set({ showDataFields: !get().showDataFields }),
 
