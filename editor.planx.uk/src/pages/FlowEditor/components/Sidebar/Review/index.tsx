@@ -20,11 +20,17 @@ const Reviews = () => {
       <Typography variant="h4" mb={1}>
         {`Nodes with a 'To review' tag`}
       </Typography>
-      <List sx={{ mt: 1 }}>
-        {sortedReviewNodeIds.map((nodeId) => (
-          <ReviewCard key={nodeId} nodeId={nodeId} />
-        ))}
-      </List>
+      {sortedReviewNodeIds.length ? (
+        <List sx={{ mt: 1 }}>
+          {sortedReviewNodeIds.map((nodeId) => (
+            <ReviewCard key={nodeId} nodeId={nodeId} />
+          ))}
+        </List>
+      ) : (
+        <Typography variant="body1" color="text.secondary" mt={2}>
+          No nodes are currently tagged 'To review'.
+        </Typography>
+      )}
     </Box>
   );
 };
