@@ -3,10 +3,10 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import visuallyHidden from "@mui/utils/visuallyHidden";
 import { Constraint, Metadata } from "@opensystemslab/planx-core/types";
 import omit from "lodash/omit";
 import React, { useState } from "react";
@@ -139,17 +139,11 @@ export const OverrideEntitiesModal = ({
       maxWidth="xl"
       aria-labelledby="dialog-heading"
     >
-      <DialogContent>
+      <DialogTitle variant="h3" component="h1" id="dialog-heading">
+        I don't think this constraint applies to this property
+      </DialogTitle>
+      <DialogContent dividers>
         <Box component="form">
-          <Typography
-            variant="h3"
-            component="h2"
-            id="dialog-heading"
-            gutterBottom
-            mb={2}
-          >
-            I don't think this constraint applies to this property
-          </Typography>
           <Typography variant="body2" gutterBottom>
             Have we identified a planning constraint that you don't think
             applies to this property?
@@ -225,33 +219,25 @@ export const OverrideEntitiesModal = ({
           </Box>
         </Box>
       </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          padding: 2,
-        }}
-      >
-        <Box>
-          <Button
-            type="submit"
-            variant="contained"
-            color="prompt"
-            onClick={validateAndSubmit}
-            data-testid="override-modal-submit-button"
-          >
-            Submit
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ ml: 1.5 }}
-            onClick={closeModal}
-            data-testid="override-modal-cancel-button"
-          >
-            Cancel
-          </Button>
-        </Box>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ backgroundColor: "background.default" }}
+          onClick={closeModal}
+          data-testid="override-modal-cancel-button"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          color="prompt"
+          onClick={validateAndSubmit}
+          data-testid="override-modal-submit-button"
+        >
+          Submit
+        </Button>
       </DialogActions>
     </Dialog>
   );

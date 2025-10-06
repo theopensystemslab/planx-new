@@ -7,7 +7,7 @@ import classNames from "classnames";
 import gql from "graphql-tag";
 import useScrollOnPreviousURLMatch from "hooks/useScrollOnPreviousURLMatch";
 import { useStore } from "pages/FlowEditor/lib/store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDrag } from "react-dnd";
 import { Link } from "react-navi";
 import { TemplatedNodeContainer } from "ui/editor/TemplatedNodeContainer";
@@ -44,19 +44,24 @@ const ExternalPortal: React.FC<any> = (props) => {
     `,
     {
       variables: { id: props.data.flowId },
-      onCompleted: (data) => {
-        const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
-          "/",
-        );
-        setHref(href);
-        addExternalPortal({
-          id: props.data.flowId,
-          name: data.flows_by_pk.name,
-          href,
-        });
-      },
     },
   );
+
+  // Construct and store external portal details
+  useEffect(() => {
+    if (!data) return;
+
+    const href = [data.flows_by_pk.team.slug, data.flows_by_pk.slug].join(
+      "/",
+    );
+    setHref(href);
+    addExternalPortal({
+      id: props.data.flowId,
+      name: data.flows_by_pk.name,
+      href,
+    });
+  }, [data, addExternalPortal, props.data.flowId])
+  
 
   const parent = getParentId(props.parent);
 
@@ -137,7 +142,8 @@ const InternalPortal: React.FC<any> = (props) => {
 
   const parent = getParentId(props.parent);
 
-  const { copyNode, showTags } = useStore((state) => ({
+  const { isClone, copyNode, showTags } = useStore((state) => ({
+    isClone: state.isClone,
     copyNode: state.copyNode,
     showTags: state.showTags,
   }));
@@ -165,14 +171,17 @@ const InternalPortal: React.FC<any> = (props) => {
     copyNode(props.id);
   };
 
-  const Icon = ICONS[ComponentType.InternalPortal];
-
   const ref = useScrollOnPreviousURLMatch<HTMLLIElement>(props.id);
 
   return (
     <>
       <Hanger hidden={isDragging} before={props.id} parent={parent} />
-      <li ref={ref}>
+      <li 
+        className={classNames("folder", {
+          isClone: isClone(props.id),
+        })}
+        ref={ref}
+      >
         <Box
           className={classNames("card", "portal", "internal-portal", {
             isDragging,

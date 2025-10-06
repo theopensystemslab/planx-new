@@ -1,5 +1,8 @@
+import React from "react";
 import type { Application } from "./hooks/useFetchApplications";
+import { useDeleteApplication } from "./hooks/useDeleteApplication";
 import { formatDate } from "@lib/date";
+import { $applicationId } from "@stores/applicationId";
 
 const ProgressText: React.FC<Application> = (application) => {
   const progressText = (() => {
@@ -11,7 +14,7 @@ const ProgressText: React.FC<Application> = (application) => {
             <strong className="font-semibold"> {formatDate(application.createdAt)}</strong>
           </>
         );
-      case "awaiting-payment":
+      case "awaitingPayment":
         return (
           <>
             Application completed
@@ -22,7 +25,7 @@ const ProgressText: React.FC<Application> = (application) => {
         return (
           <>
             Application sent
-            <strong className="font-semibold"> {formatDate(application.submittedAt)}</strong>
+            <strong className="font-semibold"> {formatDate(application.submittedAt!)}</strong>
           </>
         );
     }
@@ -41,20 +44,22 @@ const ProgressBar: React.FC<Application> = (application) => {
     switch (application.status) {
       case "submitted":
         return "bg-green-600";
-      case "awaiting-payment":
+      case "awaitingPayment":
         return "bg-red-900";
       default:
         return "bg-black";
     }
   })();
 
-  const progressValue = application.progress?.completed ?? 0;
+  const progressValue = ["submitted", "awaitingPayment"].includes(application.status) 
+    ? 100
+    : (application.progress?.completed ?? 0);
   
   const getProgressLabel = () => {
     switch (application.status) {
       case "submitted":
         return "Application submitted";
-      case "awaiting-payment":
+      case "awaitingPayment":
         return "Application completed, awaiting payment";
       case "draft":
       default:
@@ -72,7 +77,7 @@ const ProgressBar: React.FC<Application> = (application) => {
       aria-label={getProgressLabel()}
     >
       <div 
-        className={`h-3 transition-all duration-300 ${progressColour}`}
+        className={`h-3 ${progressColour}`}
         style={{ width: `${progressValue}%` }}
       />
     </div>
@@ -88,7 +93,7 @@ const ActionText: React.FC<Application> = (application) => {
             You have until <strong className="font-semibold">{formatDate(application.expiresAt)}</strong> to complete this application
           </>
         );
-      case "awaiting-payment":
+      case "awaitingPayment":
         return (
           <>
             This application must be paid by <strong className="font-semibold">{formatDate(application.expiresAt)}</strong>
@@ -110,37 +115,59 @@ const ActionText: React.FC<Application> = (application) => {
   );
 };
 
+const DeleteButton: React.FC<Application> = ({ id }) => {
+  const deleteApplication = useDeleteApplication();
+
+  const handleDelete = () => {
+    if (confirm("Are you sure you want to delete this application?")) {
+      deleteApplication(id);
+    }
+  };
+  
+  return (
+    <button
+      onClick={handleDelete}
+      className="button button--small button-focus-style button--secondary"
+    >
+      Delete
+    </button>
+  )
+}
+
+const ViewApplicationButton: React.FC<Application> = (application) => {
+  const handleClick = () => $applicationId.set(application.id);
+  const url = `applications/${application.team.slug}`
+
+  return (
+    <a href={url} className="button button--primary button--small button-focus-style paragraph-link--external" onClick={handleClick}>
+      View application
+    </a>
+  )
+}
+
 const ActionButtons: React.FC<Application> = (application) => {
   const buttons = (() => {
     switch (application.status) {
       case "draft":
         return (
           <>
-            <button
-              onClick={() => console.log("Delete!")}
-              className="button button--small button-focus-style button--secondary"
-            >
-              Delete
-            </button>
+            <DeleteButton {...application}/>
             <a
               href={application.serviceUrl}
+              target="_blank"
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Resume
             </a>
           </>
         )
-      case "awaiting-payment":
+      case "awaitingPayment":
         return (
           <>
-            <button
-              onClick={() => console.log("Delete!")}
-              className="button button--small button-focus-style button--secondary"
-            >
-              Delete
-            </button>
+            <DeleteButton {...application}/>
             <a
               href={application.paymentUrl}
+              target="_blank"
               className="button button--primary button--small button-focus-style paragraph-link--external"
             >
               Go to payment URL
@@ -148,13 +175,7 @@ const ActionButtons: React.FC<Application> = (application) => {
           </>
         )
       case "submitted":
-        return (
-          <>
-            <a href="#" className="button button--primary button--small button-focus-style paragraph-link--external">
-              View application
-            </a>
-          </>
-        )
+       return <ViewApplicationButton {...application}/>
     }
   })();
 
@@ -167,11 +188,12 @@ const ActionButtons: React.FC<Application> = (application) => {
 
 export const ApplicationCard: React.FC<Application> = (application) => (
   <li className="bg-bg-light rounded overflow-hidden">
-    <div className="clamp-[p,4,6]">
-      <h3 className="text-heading-sm">{application.address || "—"}</h3>
-      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center">
-        <span className="text-body-lg">{application.team.name}</span>
-        <span className="text-body-lg">{application.service.name}</span>
+    <div className="clamp-[p,4,6] clamp-[pb,2,4]">
+      <h3 className="text-heading-sm">{application.address || "[Address not yet declared]"}</h3>
+      <div className="flex flex-col lg:flex-row lg:justify-start lg:gap-2 lg:items-center">
+        <span className="text-body-lg mb-0">{application.team.name}</span>
+        <span className="hidden lg:inline">•</span>
+        <span className="text-body-lg mb-0">{application.service.name}</span>
       </div>
       <div className="my-2">
         <ProgressBar {...application} />

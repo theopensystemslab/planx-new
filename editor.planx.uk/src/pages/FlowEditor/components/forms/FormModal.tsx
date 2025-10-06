@@ -1,10 +1,11 @@
 import Close from "@mui/icons-material/CloseOutlined";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
@@ -15,7 +16,7 @@ import {
   nodeIsChildOfTemplatedInternalPortal,
   nodeIsTemplatedInternalPortal,
 } from "pages/FlowEditor/utils";
-import React from "react";
+import React, { useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useNavigation } from "react-navi";
 import { rootFlowPath } from "routes/utils";
@@ -134,6 +135,7 @@ const FormModal: React.FC<{
     teamSlug,
     isTemplatedFrom,
     orderedFlow,
+    isClone,
   ] = useStore((store) => [
     store.addNode,
     store.updateNode,
@@ -143,6 +145,7 @@ const FormModal: React.FC<{
     store.getTeam().slug,
     store.isTemplatedFrom,
     store.orderedFlow,
+    store.isClone,
   ]);
   const node = flow[id];
   const handleClose = () => navigate(rootFlowPath(true));
@@ -170,11 +173,18 @@ const FormModal: React.FC<{
       parentIsTemplatedInternalPortal ||
       parentIsChildOfTemplatedInternalPortal);
 
-  const hideMakeUniqueDeleteButtons =
+  const isDisabledTemplatedNode =
     isTemplatedFrom &&
     Boolean(node?.data?.isTemplatedNode) &&
     (!parentIsTemplatedInternalPortal ||
       !parentIsChildOfTemplatedInternalPortal);
+
+  const showDeleteButton = handleDelete && !isDisabledTemplatedNode;
+
+  const showMakeUniqueButton = useMemo(
+    () => isClone(id) && !isDisabledTemplatedNode,
+    [isClone, id, isDisabledTemplatedNode],
+  );
 
   const disabled = isTemplatedFrom
     ? !canUserEditTemplatedNode
@@ -186,7 +196,6 @@ const FormModal: React.FC<{
       fullWidth
       maxWidth="md"
       disableScrollLock
-      onClose={handleClose}
     >
       <DialogTitle
         sx={{
@@ -252,52 +261,53 @@ const FormModal: React.FC<{
           />
         </ErrorBoundary>
       </DialogContent>
-      <DialogActions sx={{ p: 0 }}>
-        <Grid container justifyContent="flex-end">
-          {handleDelete && !hideMakeUniqueDeleteButtons && (
-            <Grid item xs={6} sm={4} md={3}>
-              <Button
-                fullWidth
-                size="medium"
-                onClick={() => {
-                  handleDelete();
-                  navigate(rootFlowPath(true));
-                }}
-                disabled={disabled}
-              >
-                delete
-              </Button>
-            </Grid>
-          )}
-          {handleDelete && !hideMakeUniqueDeleteButtons && (
-            <Grid item xs={6} sm={4} md={3}>
-              <Button
-                fullWidth
-                size="medium"
-                onClick={() => {
-                  makeUnique(id, parent);
-                  navigate(rootFlowPath(true));
-                }}
-                disabled={disabled}
-              >
-                make unique
-              </Button>
-            </Grid>
-          )}
-          <Grid item xs={6} sm={4} md={3}>
+      <DialogActions
+        disableSpacing
+        sx={{ justifyContent: "flex-start", alignItems: "stretch" }}
+      >
+        {showDeleteButton && (
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => {
+              handleDelete();
+              navigate(rootFlowPath(true));
+            }}
+            disabled={disabled}
+            sx={{ backgroundColor: "background.default", gap: 1 }}
+          >
+            <DeleteIcon color="warning" fontSize="medium" />
+            Delete
+          </Button>
+        )}
+        <Box
+          sx={{ display: "flex", alignItems: "stretch", marginLeft: "auto" }}
+          gap={1}
+        >
+          {showMakeUniqueButton && (
             <Button
-              fullWidth
-              size="medium"
-              type="submit"
               variant="contained"
-              color="primary"
-              form="modal"
+              color="secondary"
+              onClick={() => {
+                makeUnique(id, parent);
+                navigate(rootFlowPath(true));
+              }}
               disabled={disabled}
+              sx={{ backgroundColor: "background.default" }}
             >
-              {handleDelete ? `Update ${type}` : `Create ${type}`}
+              Make unique
             </Button>
-          </Grid>
-        </Grid>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            form="modal"
+            disabled={disabled}
+          >
+            {handleDelete ? `Update` : `Create`}
+          </Button>
+        </Box>
       </DialogActions>
     </StyledDialog>
   );

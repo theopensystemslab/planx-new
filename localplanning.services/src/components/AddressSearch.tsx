@@ -1,11 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { navigate } from "astro:transitions/client";
-import type { Action } from "@content/actions";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
-
-interface Props {
-  action: Action | undefined;
-}
 
 interface Address {
   LPI: {
@@ -54,7 +49,7 @@ interface AddressSearchElement extends HTMLElement {
   ): void;
 }
 
-const AddressSearch: React.FC<Props> = ({ action }) => {
+const AddressSearch: React.FC = () => {
   const addressSearchRef = useRef<AddressSearchElement>(null);
 
   const [address, setAddress] = useState<Address | null>(null);
@@ -96,29 +91,41 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
     event.preventDefault();
 
     // address coords => LPA lookup
-    if (!address) {
-      return;
-    }
+    if (!address) return;
 
     const { LAT, LNG } = address.LPI;
 
-    // remove in favor of some better way.. just not sure what that is
-    await fetch(`${PUBLIC_PLANX_REST_API_URL}/lpa?lat=${LAT}&lon=${LNG}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMatchingLpas(data.entities);
+    try {
+      const response = await fetch(`${PUBLIC_PLANX_REST_API_URL}/lpa?lat=${LAT}&lon=${LNG}`);
+      const data = await response.json();
+      
+      setMatchingLpas(data.entities);
 
-        // sometimes there are multiple intersecting LPAs..
-        // do we need more sophisticated match logic here?
-        for (const entity of data.entities) {
-          if (entity.reference in lpaReferenceLookup) {
-            const matchingLpaRoute = lpaReferenceLookup[entity.reference];
-            action
-              ? navigate(`/${matchingLpaRoute}?action=${action}`)
-              : navigate(`/${matchingLpaRoute}`);
-          }
+      // Case 1: No LPAs found
+      if (!data.entities || data.entities.length === 0) {
+        setMatchingLpas([])
+        return;
+      }
+
+      // Case 2: Check if any LPA matches our lookup table
+      for (const entity of data.entities) {
+        if (entity.reference in lpaReferenceLookup) {
+          const matchingLpaRoute = lpaReferenceLookup[entity.reference];
+          return navigate(`/${matchingLpaRoute}`);
         }
-      });
+      }
+
+      // Case 3: LPAs found but none match our lookup table
+      // Use the first LPA name, or combine multiple if needed
+      const lpaName = data.entities[0].name;
+      const encodedLpaName = encodeURIComponent(lpaName);
+      const route = `/lpa-not-supported?lpa=${encodedLpaName}`;
+      return navigate(route);
+    } catch (error) {
+      console.error("Error fetching LPA data:", error);
+      const route = "/lpa-not-found";
+      navigate(route);
+    }
   };
 
   return (
@@ -138,13 +145,7 @@ const AddressSearch: React.FC<Props> = ({ action }) => {
           Find the local planning authority
         </button>
         {matchingLpas?.length === 0 && (
-          <p className="mt-2">We couldn't find a local planning authority for this address.</p>
-        )}
-        {matchingLpas && matchingLpas?.length > 0 && (
-          <p className="mt-2">
-            Your local planning authorities are:{" "}
-            {matchingLpas?.map((e) => e.name)}
-          </p>
+          <p className="mt-2">We couldn't find a local planning authority for this address. At present we support only local planning authorities in England.</p>
         )}
       </div>
     </form>

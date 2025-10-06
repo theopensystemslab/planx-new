@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import type { Applications } from "../types.js";
+import type { Applications } from "../types/applications.js";
 import { $admin } from "../../../client/index.js";
 import { getExpiry } from "../service/getApplications/index.js";
 import { ServerError } from "../../../errors/serverError.js";

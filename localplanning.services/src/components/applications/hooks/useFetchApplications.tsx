@@ -1,7 +1,8 @@
 import { queryClient } from "@lib/queryClient";
 import { useQuery } from "@tanstack/react-query";
 import { PUBLIC_PLANX_REST_API_URL } from "astro:env/client";
-import { useSearchParams } from "./useSearchParams";
+import { useStore } from "@nanostores/react";
+import { $session } from "@stores/session";
 
 interface BaseApplication {
   id: string;
@@ -9,6 +10,7 @@ interface BaseApplication {
     name: string;
   };
   team: {
+    slug: string;
     name: string;
   };
   address: string | null;
@@ -27,7 +29,7 @@ export type DraftApplication = BaseApplication & {
 };
 
 export type AwaitingPaymentApplication = BaseApplication & {
-  status: "awaiting-payment"
+  status: "awaitingPayment"
   paymentUrl: string;
 };
 
@@ -41,7 +43,7 @@ export type Application = DraftApplication | AwaitingPaymentApplication | Submit
 export type ApplicationsResponse = Application[];
 
 export const useFetchApplications = () => {  
-  const { token, email } = useSearchParams();
+  const { token, email } = useStore($session);
 
   const { data: applications = [], isLoading, error } = useQuery<ApplicationsResponse>({
     queryKey: ["fetchApplications"],
@@ -60,11 +62,15 @@ export const useFetchApplications = () => {
       const applications = await response.json();
       return applications;
     },
+    // Only run query once store values are populated
+    enabled: Boolean(token && email),
     // Retain cache of applications for whilst tab remains open
     // Data could only be refetch with a new magic link
     staleTime: Infinity,
     gcTime: Infinity,
-    retry: 2,
+    // Do not allow retries - this is a single use endpoint
+    // Failures on retry may return a false error message, not matching the original reason for failure
+    retry: false,
   }, queryClient);
 
   return {

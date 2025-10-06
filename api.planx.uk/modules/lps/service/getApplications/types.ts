@@ -23,7 +23,7 @@ export type Draft = BaseApplication & {
 };
 
 export type AwaitingPayment = BaseApplication & {
-  status: "awaiting-payment";
+  status: "awaitingPayment";
   submittedAt: string;
   paymentRequest: {
     createdAt: string;

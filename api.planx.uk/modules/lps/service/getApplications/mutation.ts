@@ -23,8 +23,18 @@ export const CONSUME_MAGIC_LINK_MUTATION = gql`
     ) {
       returning {
         applications: lowcal_sessions(
-          where: { user_status: { _neq: "expired" } }
-          order_by: { updated_at: asc }
+          where: {
+            # Fetch non-expired sessions...
+            user_status: { _neq: "expired" }
+            # ..for services which still exist
+            flow: {
+              _and: [
+                { id: { _is_null: false } }
+                { deleted_at: { _is_null: true } }
+              ]
+            }
+          }
+          order_by: { updated_at: desc }
         ) {
           id
           addressLine: data(path: "passport.data._address.single_line_address")

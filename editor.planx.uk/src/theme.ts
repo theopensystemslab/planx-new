@@ -541,7 +541,7 @@ const getThemeOptions = ({
             width: "100%",
             maxWidth: theme.breakpoints.values.md,
             borderRadius: 0,
-            borderTop: `20px solid ${palette.primary.main}`,
+            borderTop: `10px solid ${palette.primary.main}`,
             background: theme.palette.background.paper,
             margin: theme.spacing(1),
           }),
@@ -557,7 +557,9 @@ const getThemeOptions = ({
       MuiDialogActions: {
         styleOverrides: {
           root: ({ theme }) => ({
-            padding: theme.spacing(2),
+            background: theme.palette.secondary.main,
+            padding: theme.spacing(1, 2),
+            gap: theme.spacing(0.5),
           }),
         },
       },

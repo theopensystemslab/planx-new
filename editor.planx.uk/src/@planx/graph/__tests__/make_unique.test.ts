@@ -24,7 +24,7 @@ describe("making unique", () => {
     });
 
     expect(graph).toEqual({
-      _root: { edges: ["foo", "clone", "TEST_ID_0"] },
+      _root: { edges: ["foo", "TEST_ID_0"] },
       foo: {
         edges: ["clone"],
       },
@@ -41,14 +41,18 @@ describe("making unique", () => {
     });
 
     expect(ops).toEqual([
-      { li: "TEST_ID_0", p: ["_root", "edges", 2] },
+      {
+        ld: "clone",
+        li: "TEST_ID_0",
+        p: ["_root", "edges", 1],
+      },
       { oi: { edges: ["TEST_ID_1", "TEST_ID_2"] }, p: ["TEST_ID_0"] },
       { oi: {}, p: ["TEST_ID_1"] },
       { oi: {}, p: ["TEST_ID_2"] },
     ]);
   });
 
-  test("portals, node descendents (except clones) should become unique", () => {
+  test("portals, node descendants (except clones) should become unique", () => {
     const [graph, ops] = makeUnique("portal", "_root", {
       idFn: deterministicId,
     })({
@@ -73,19 +77,7 @@ describe("making unique", () => {
     });
 
     expect(graph).toEqual({
-      _root: { edges: ["portal", "clone", "TEST_ID_0"] },
-      portal: {
-        type: 300,
-        edges: ["x", "clone"],
-      },
-      x: {
-        type: 2,
-        edges: ["y"],
-      },
-      y: {
-        edges: ["z"],
-      },
-      z: {},
+      _root: { edges: ["TEST_ID_0", "clone"] },
       clone: {
         type: 1,
         edges: ["cloneChild"],
@@ -98,11 +90,42 @@ describe("making unique", () => {
     });
 
     expect(ops).toEqual([
-      { li: "TEST_ID_0", p: ["_root", "edges", 2] },
+      // Original node deleted, and replaced with a unique node
+      {
+        ld: "portal",
+        li: "TEST_ID_0",
+        p: ["_root", "edges", 0],
+      },
+      // Replacement edged added
       { oi: { edges: ["TEST_ID_1", "clone"], type: 300 }, p: ["TEST_ID_0"] },
       { oi: { edges: ["TEST_ID_2"], type: 2 }, p: ["TEST_ID_1"] },
       { oi: { edges: ["TEST_ID_3"] }, p: ["TEST_ID_2"] },
       { oi: {}, p: ["TEST_ID_3"] },
+      // Original edged deleted
+      { od: { edges: ["z"] }, p: ["y"] },
+      { od: {}, p: ["z"] },
+      { od: { edges: ["y"], type: 2 }, p: ["x"] },
+      { od: { edges: ["x", "clone"], type: 300 }, p: ["portal"] },
     ]);
+  });
+
+  test("edge order is preserved when making a clone unique", () => {
+    const [graph] = makeUnique("clone", undefined, {
+      idFn: deterministicId,
+    })({
+      _root: { edges: ["foo", "clone", "bar"] },
+      foo: {
+        edges: ["clone"],
+      },
+      bar: {},
+      clone: {
+        edges: ["cloneChild1", "cloneChild2"],
+      },
+      cloneChild1: {},
+      cloneChild2: {},
+    });
+
+    // The new unique node remains in place, and is not appended as the final child edge
+    expect(graph._root.edges).toEqual(["foo", "TEST_ID_0", "bar"]);
   });
 });

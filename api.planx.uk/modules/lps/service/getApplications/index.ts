@@ -3,7 +3,7 @@ import type {
   Success,
   SubmittedLPSApplication,
   AwaitingPaymentLPSApplication,
-} from "../../types.js";
+} from "../../types/applications.js";
 import { $api } from "../../../../client/index.js";
 import { addDays, addMonths, subMinutes } from "date-fns";
 import { ServerError } from "../../../../errors/serverError.js";
@@ -79,6 +79,7 @@ const mapSharedFields = (raw: Application) => ({
   },
   team: {
     name: raw.service.team.name,
+    slug: raw.service.team.slug,
   },
   address: raw.addressLine || raw.addressTitle,
 });
@@ -126,7 +127,7 @@ export const getApplications = async (
     switch (application.status) {
       case "draft":
         return convertToDraftLPSApplication(application, email);
-      case "awaiting-payment":
+      case "awaitingPayment":
         return convertToAwaitingPaymentLPSApplication(application);
       case "submitted":
         return convertToSubmittedLPSApplication(application);

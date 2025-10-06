@@ -1,4 +1,4 @@
-import { PUBLIC_PLANX_GRAPHQL_API_URL } from "astro:env/client";
+import { PUBLIC_PLANX_BUILD_TIME_GRAPHQL_API_URL } from "astro:env/client";
 import { GET_LPAS_QUERY } from "@lib/lpa-api/query";
 import { print } from "graphql";
 
@@ -54,7 +54,7 @@ const NOTIFY_SERVICE_SLUGS = [
 
 export async function fetchAllLPAs(): Promise<LPA[]> {
   try {
-    const response = await fetch(PUBLIC_PLANX_GRAPHQL_API_URL, {
+    const response = await fetch(PUBLIC_PLANX_BUILD_TIME_GRAPHQL_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -79,24 +79,10 @@ export async function fetchAllLPAs(): Promise<LPA[]> {
       throw new Error(`GraphQL errors: ${JSON.stringify(json.errors)}`);
     }
 
-    const allLPAs: LPA[] = json.data.lpas;
+    const lpas: LPA[] = json.data.lpas;
 
-    if (!allLPAs || !allLPAs.length) {
+    if (!lpas || !lpas.length) {
       throw Error("No LPAs found - please check GraphQL API and database.");
-    }
-
-    // Remove LPAs with no active services
-    const lpas = allLPAs.filter(
-      (lpa) =>
-        lpa.applyServices.length ||
-        lpa.guidanceServices.length ||
-        lpa.notifyServices.length
-    );
-
-    if (!allLPAs || !allLPAs.length) {
-      throw Error(
-        "No LPAs with services found - please check GraphQL API and database."
-      );
     }
 
     return lpas;
