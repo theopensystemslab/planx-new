@@ -1,7 +1,5 @@
-import {
-  ComponentType as TYPES,
-  NODE_TAGS,
-} from "@opensystemslab/planx-core/types";
+import { ComponentType as TYPES } from "@opensystemslab/planx-core/types";
+import { NodeTag } from "@opensystemslab/planx-core/types";
 import { Section } from "@planx/components/Section/model";
 import { sortIdsDepthFirst } from "@planx/graph";
 import { findLast, pick, sum } from "lodash";
