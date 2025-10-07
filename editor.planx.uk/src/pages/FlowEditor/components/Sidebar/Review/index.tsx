@@ -7,12 +7,13 @@ import React, { useMemo } from "react";
 import { ReviewCard } from "./ReviewCard";
 
 const Reviews = () => {
-  const flow = useStore((state) => state.flow);
-  const filterFlowByTag = useStore((state) => state.filterFlowByTag);
+  const [flow, filterFlowByTag] = useStore((state) => [state.flow, state.filterFlowByTag]);
 
+ // Only re-run filter when flow changes
   const sortedReviewNodeIds = useMemo(
     () => Object.keys(filterFlowByTag("toReview")),
-    [flow, filterFlowByTag],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [flow],
   );
 
   return (
