@@ -70,12 +70,12 @@ const createLogsBucket = (domain: string) => {
 
 const uploadBuildSiteToBucket = (bucket: aws.s3.Bucket) => {
   fsWalk
-    .walkSync("../../localplanning.services/dist/", {
+    .walkSync("../../apps/localplanning.services/dist/", {
       basePath: "",
       entryFilter: (e) => !e.dirent.isDirectory(),
     })
     .forEach(({ path }) => {
-      const relativeFilePath = `../../localplanning.services/dist/${path}`;
+      const relativeFilePath = `../../apps/localplanning.services/dist/${path}`;
       const contentType = mime.getType(relativeFilePath) || "";
 
       // Strip .html extension from the S3 key, but keep index.html as is
