@@ -157,7 +157,7 @@ export const navigationStore: StateCreator<
    * Get a subset of the full flow by tag
    * Returned in depth-first order
    */
-  filterFlowByTag: (tag: (typeof NODE_TAGS)[number]): Store.Flow => {
+  filterFlowByTag: (tag) => {
     // Filter the full flow
     const flow = get().flow;
     const filteredFlow = Object.fromEntries(
