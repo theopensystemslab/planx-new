@@ -30,7 +30,7 @@ export interface NavigationStore {
   initNavigationStore: () => void;
   updateSectionData: () => void;
   filterFlowByType: (type: TYPES) => Store.Flow;
-  filterFlowByTag: (tag: (typeof NODE_TAGS)[number]) => Store.Flow;
+  filterFlowByTag: (tag: NodeTag) => Store.Flow;
   getSortedBreadcrumbsBySection: () => Store.Breadcrumbs[];
   getSectionForNode: (nodeId: string) => SectionNode;
   _calculateSectionProgress: (
