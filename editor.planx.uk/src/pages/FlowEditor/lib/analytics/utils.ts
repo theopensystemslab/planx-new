@@ -271,7 +271,7 @@ export const generateAnalyticsLink = ({
   dashboardId: string;
 }): string => {
   const url = new URL(
-    `https://metabase.editor.planx.dev/public/dashboard/${dashboardId}`,
+    `https://metabase.editor.planx.uk/public/dashboard/${dashboardId}`,
   );
   const search = new URLSearchParams({
     flow_id: flowId,
