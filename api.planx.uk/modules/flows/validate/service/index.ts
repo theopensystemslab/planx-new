@@ -17,7 +17,6 @@ import { validateFees } from "./fees.js";
 import { validateFileTypes } from "./fileTypes.js";
 import { validateInviteToPay } from "./inviteToPay.js";
 import { validatePlanningConstraints } from "./planningConstraints.js";
-import { validateProjectTypes } from "./projectTypes.js";
 import { validateSections } from "./sections.js";
 import { validateTemplatedNodes } from "./templatedNodes.js";
 
@@ -75,7 +74,6 @@ const validateAndDiffFlow = async (
   const fees = validateFees(flattenedFlow);
   const inviteToPay = validateInviteToPay(flattenedFlow);
   const fileTypes = validateFileTypes(flattenedFlow);
-  const projectTypes = validateProjectTypes(flattenedFlow);
   const planningConstraints = validatePlanningConstraints(flattenedFlow);
   const templatedNodes = await validateTemplatedNodes(flowId, flattenedFlow);
   validationChecks.push(
@@ -83,7 +81,6 @@ const validateAndDiffFlow = async (
     fees,
     inviteToPay,
     fileTypes,
-    projectTypes,
     planningConstraints,
     templatedNodes,
   );

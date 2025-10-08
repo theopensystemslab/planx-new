@@ -184,12 +184,6 @@ describe("sections validation on diff", () => {
             message: "Your flow is not using FileUpload or UploadAndLabel",
           },
           {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
@@ -256,12 +250,6 @@ describe("sections validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
           {
             title: "Planning Constraints",
@@ -710,12 +698,6 @@ describe("ODP Schema file type validation on diff", () => {
             message: "Your flow is not using Invite to Pay",
           },
           {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
@@ -803,12 +785,6 @@ describe("ODP Schema file type validation on diff", () => {
             message: "Your flow is not using Invite to Pay",
           },
           {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
@@ -883,12 +859,6 @@ describe("planning constraints validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
           {
             title: "Templated nodes",
@@ -966,12 +936,6 @@ describe("planning constraints validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
           {
             title: "Templated nodes",
@@ -1072,12 +1036,6 @@ describe("templated node requirements validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
           },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
         ]);
       });
   });
@@ -1169,12 +1127,6 @@ describe("templated node requirements validation on diff", () => {
             title: "File types",
             status: "Not applicable",
             message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
         ]);
       });
