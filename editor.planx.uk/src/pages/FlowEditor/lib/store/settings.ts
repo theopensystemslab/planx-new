@@ -131,6 +131,16 @@ export const settingsStore: StateCreator<
   },
 
   getFlowInformation: async (flowSlug, teamSlug): Promise<FlowInformation> => {
+    type DetailedFlowInformation = FlowInformation & {
+      id: string;
+      publishedFlows: [{ hasSendComponent: boolean }];
+      onlineHistory: ["online"];
+    };
+
+    interface FlowInformationQuery {
+      flows: [DetailedFlowInformation];
+    }
+
     const {
       data: {
         flows: [
@@ -144,10 +154,11 @@ export const settingsStore: StateCreator<
             canCreateFromCopy,
             publishedFlows,
             isListedOnLPS,
+            onlineHistory,
           },
         ],
       },
-    } = await client.query({
+    } = await client.query<FlowInformationQuery>({
       query: gql`
         query GetFlow($slug: String!, $team_slug: String!) {
           flows(
@@ -168,6 +179,12 @@ export const settingsStore: StateCreator<
               hasSendComponent: has_send_component
             }
             isListedOnLPS: is_listed_on_lps
+            onlineHistory: flow_status_histories(
+              where: { status: { _eq: online } }
+              limit: 1
+            ) {
+              status
+            }
           }
         }
       `,
@@ -183,11 +200,15 @@ export const settingsStore: StateCreator<
 
     const environment = import.meta.env.VITE_APP_ENV;
 
-    const dashboardId = getAnalyticsDashboardId({
-      flowStatus: status,
-      flowSlug,
-      isSubmissionService,
-    });
+    // If a flow has ever been online, there will be analytics to show
+    const hasAnalytics = Boolean(onlineHistory?.length)
+
+    const dashboardId = hasAnalytics
+      ? getAnalyticsDashboardId({
+          flowSlug,
+          isSubmissionService,
+        })
+      : undefined;
 
     const analyticsLink =
       environment === "production" && dashboardId

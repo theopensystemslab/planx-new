@@ -1,8 +1,10 @@
+import { gql } from "@apollo/client";
 import {
   ComponentType as TYPES,
   DEFAULT_FLAG_CATEGORY,
   FlowStatus,
 } from "@opensystemslab/planx-core/types";
+import { client } from "lib/graphql";
 import isEmpty from "lodash/isEmpty";
 import isObject from "lodash/isObject";
 
@@ -243,16 +245,12 @@ const submissionDashboard = {
 };
 
 export const getAnalyticsDashboardId = ({
-  flowStatus,
   flowSlug,
   isSubmissionService,
 }: {
-  flowStatus: FlowStatus;
   flowSlug: string;
   isSubmissionService: boolean;
 }): string | undefined => {
-  if (flowStatus === "offline") return undefined;
-
   if (foiynppDashboard.slugs.includes(flowSlug)) return foiynppDashboard.id;
   if (rabDashboard.slugs.includes(flowSlug)) return rabDashboard.id;
   if (discretionaryDashboard.slugs.includes(flowSlug))
