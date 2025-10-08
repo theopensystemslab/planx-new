@@ -111,7 +111,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - run: pnpm build --site https://localplanning.editor.planx.dev --mode staging
-        working-directory: localplanning.services
+        working-directory: ${{ env.LOCALPLANNING_SERVICES_DIRECTORY }}
       - name: Upload LocalPlanning.services build artifact
         uses: actions/upload-artifact@v4
         with:
