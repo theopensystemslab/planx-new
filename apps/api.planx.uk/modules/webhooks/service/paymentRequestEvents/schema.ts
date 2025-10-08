@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
-import type { ScheduledEventResponse } from "../../../../lib/hasura/metadata/index.js";
+import type { CreateScheduledEventResponse } from "../../../../lib/hasura/metadata/types.js";
 
 export const createPaymentEventSchema = z.object({
   body: z.object({
@@ -17,5 +17,5 @@ export type CreatePaymentEvent = z.infer<
 
 export type CreatePaymentEventController = ValidatedRequestHandler<
   typeof createPaymentEventSchema,
-  ScheduledEventResponse[]
+  CreateScheduledEventResponse[]
 >;

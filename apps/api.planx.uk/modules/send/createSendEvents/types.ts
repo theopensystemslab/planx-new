@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { CombinedResponse } from "../../../lib/hasura/metadata/index.js";
+import type { CombinedResponse } from "../../../lib/hasura/metadata/types.js";
 import type { ValidatedRequestHandler } from "../../../shared/middleware/validate.js";
 import {
   SEND_INTEGRATIONS,

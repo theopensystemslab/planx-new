@@ -1,15 +1,16 @@
 import isNull from "lodash/isNull.js";
 import { ServerError } from ".././../errors/index.js";
-import { softDeleteSession } from "../saveAndReturn/service/utils.js";
 import { analyzeSessions } from "./service/analyzeSessions/index.js";
+import { softDeleteSession } from "./service/deleteSession/index.js";
+import type { DeleteSessionController } from "./service/deleteSession/schema.js";
 import {
   createSessionExpiryEvent,
   createSessionReminderEvent,
   createSessionDeleteEvent,
 } from "./service/lowcalSessionEvents/index.js";
 import type {
-  CreateSessionEventController,
-  DeleteSessionController,
+  CreateSessionDeleteEventController,
+  CreateSessionEmailEventController,
 } from "./service/lowcalSessionEvents/schema.js";
 import {
   createPaymentExpiryEvents,
@@ -105,7 +106,7 @@ export const createPaymentExpiryEventsController: CreatePaymentEventController =
     }
   };
 
-export const createSessionReminderEventController: CreateSessionEventController =
+export const createSessionReminderEventController: CreateSessionEmailEventController =
   async (_req, res, next) => {
     try {
       const response = await createSessionReminderEvent(
@@ -122,7 +123,7 @@ export const createSessionReminderEventController: CreateSessionEventController 
     }
   };
 
-export const createSessionExpiryEventController: CreateSessionEventController =
+export const createSessionExpiryEventController: CreateSessionEmailEventController =
   async (_req, res, next) => {
     try {
       const response = await createSessionExpiryEvent(
@@ -139,7 +140,7 @@ export const createSessionExpiryEventController: CreateSessionEventController =
     }
   };
 
-export const createSessionDeleteEventController: CreateSessionEventController =
+export const createSessionDeleteEventController: CreateSessionDeleteEventController =
   async (_req, res, next) => {
     try {
       const response = await createSessionDeleteEvent(
@@ -156,26 +157,23 @@ export const createSessionDeleteEventController: CreateSessionEventController =
     }
   };
 
-export const deleteSessionController: DeleteSessionController = async (
-  _req,
-  res,
-  next,
-) => {
-  const { sessionId } = res.locals.parsedReq.body.payload;
-  try {
-    await softDeleteSession(sessionId);
-    return res
-      .status(200)
-      .send({ message: `Successfully marked session ${sessionId} as deleted` });
-  } catch (error) {
-    return next(
-      new ServerError({
-        message: "Failed to delete session",
-        cause: error,
-      }),
-    );
-  }
-};
+export const deleteSessionController: DeleteSessionController =
+  async (_req, res, next) => {
+    const { sessionId } = res.locals.parsedReq.body.payload;
+    try {
+      await softDeleteSession(sessionId);
+      return res
+        .status(200)
+        .send({ message: `Successfully marked session ${sessionId} as deleted` });
+    } catch (error) {
+      return next(
+        new ServerError({
+          message: "Failed to delete session",
+          cause: error,
+        }),
+      );
+    }
+  };
 
 export const sanitiseApplicationDataController: SanitiseApplicationData =
   async (_req, res, next) => {

@@ -158,18 +158,19 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: '{{$base_url}}/send-email/confirmation'
+      url: "{{$base_url}}/send-email/confirmation"
       version: 2
-  - name: setup_lowcal_delete_events
+  - name: reset_lowcal_delete_events
     definition:
       enable_manual: false
-      insert:
-        columns: '*'
+      update:
+        columns:
+          - locked_at
     retry_conf:
       interval_sec: 10
       num_retries: 3
       timeout_sec: 60
-    webhook: '{{HASURA_PLANX_API_URL}}'
+    webhook: "{{HASURA_PLANX_API_URL}}"
     headers:
       - name: Authorization
         value_from_env: HASURA_PLANX_API_KEY
@@ -178,16 +179,45 @@ event_triggers:
         action: transform
         template: |-
           {
-            "createdAt": {{$body.event.data.new.created_at}},
+            "operation": {{$body.event.op}},
+            "lockedAt": {{$body.event.data.new.locked_at}},
             "payload": {
-              "sessionId": {{$body.event.data.new.id}},
-              "email": {{$body.event.data.new.email}}
+              "sessionId": {{$body.event.data.new.id}}
             }
           }
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: '{{$base_url}}/webhooks/hasura/create-delete-event'
+      url: "{{$base_url}}/webhooks/hasura/create-delete-event"
+      version: 2
+  - name: setup_lowcal_delete_events
+    definition:
+      enable_manual: false
+      insert:
+        columns: "*"
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: "{{HASURA_PLANX_API_URL}}"
+    headers:
+      - name: Authorization
+        value_from_env: HASURA_PLANX_API_KEY
+    request_transform:
+      body:
+        action: transform
+        template: |-
+          {
+            "operation": {{$body.event.op}},
+            "createdAt": {{$body.event.data.new.created_at}},
+            "payload": {
+              "sessionId": {{$body.event.data.new.id}}
+            }
+          }
+      method: POST
+      query_params: {}
+      template_engine: Kriti
+      url: "{{$base_url}}/webhooks/hasura/create-delete-event"
       version: 2
   - name: setup_lowcal_expiry_events
     definition:
@@ -217,7 +247,7 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: '{{$base_url}}/webhooks/hasura/create-expiry-event'
+      url: "{{$base_url}}/webhooks/hasura/create-expiry-event"
       version: 2
   - name: setup_lowcal_reminder_events
     definition:
@@ -247,5 +277,5 @@ event_triggers:
       method: POST
       query_params: {}
       template_engine: Kriti
-      url: '{{$base_url}}/webhooks/hasura/create-reminder-event'
+      url: "{{$base_url}}/webhooks/hasura/create-reminder-event"
       version: 2
