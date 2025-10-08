@@ -196,9 +196,7 @@ export const settingsStore: StateCreator<
     });
 
     // Default to no send component as not all flows will be in the table, over time as all flows get published we can revise this
-    const isSubmissionService = Boolean(
-      publishedFlows[0]?.hasSendComponent,
-    );
+    const isSubmissionService = Boolean(publishedFlows[0]?.hasSendComponent);
 
     const environment = import.meta.env.VITE_APP_ENV;
 
@@ -215,7 +213,7 @@ export const settingsStore: StateCreator<
       : undefined;
 
     const analyticsLink =
-      environment === "development" && dashboardId
+      environment === "production" && dashboardId
         ? generateAnalyticsLink({
             flowId: id,
             dashboardId,
