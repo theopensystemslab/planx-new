@@ -1,40 +1,15 @@
-import type { SendIntegration } from "@opensystemslab/planx-core/types";
 import type { AxiosResponse } from "axios";
 import axios, { isAxiosError } from "axios";
 
-/**
- * Body posted to Hasura Metadata API to create a scheduled event
- * https://hasura.io/docs/latest/api-reference/schema-metadata-api/scheduled-triggers/#schema-metadata-create-scheduled-event
- */
-interface ScheduledEvent {
-  type: string;
-  args: ScheduledEventArgs;
-}
-
-export type CombinedResponse = Partial<
-  Record<SendIntegration, ScheduledEventResponse>
->;
-
-interface ScheduledEventArgs {
-  headers: Record<string, string>[];
-  retry_conf: {
-    num_retries: number;
-  };
-  webhook: string;
-  schedule_at: Date;
-  payload: Record<string, unknown>;
-  comment: string;
-}
-
-type RequiredScheduledEventArgs = Pick<
-  ScheduledEventArgs,
-  "webhook" | "schedule_at" | "comment" | "payload"
->;
-
-export interface ScheduledEventResponse {
-  message: "success";
-  event_id: string;
-}
+import type {
+  CreateScheduledEventResponse,
+  DeleteScheduledEventArgs,
+  DeleteScheduledEventResponse,
+  GetScheduledEventsArgs,
+  GetScheduledEventsResponse,
+  RequiredCreateScheduledEventArgs,
+  ScheduledEvent,
+} from "./types.js";
 
 /**
  * POST a request to the Hasura Metadata API
@@ -42,7 +17,13 @@ export interface ScheduledEventResponse {
  */
 const postToMetadataAPI = async (
   body: ScheduledEvent,
-): Promise<AxiosResponse<ScheduledEventResponse>> => {
+): Promise<
+  AxiosResponse<
+    | CreateScheduledEventResponse
+    | GetScheduledEventsResponse
+    | DeleteScheduledEventResponse
+  >
+> => {
   try {
     return await axios.post(
       process.env.HASURA_METADATA_URL!,
@@ -63,9 +44,11 @@ const postToMetadataAPI = async (
 
 /**
  * Set up a new scheduled event in Hasura
- * https://hasura.io/docs/latest/graphql/core/api-reference/metadata-api/scheduled-triggers/#metadata-create-scheduled-event
+ * https://hasura.io/docs/2.0/api-reference/metadata-api/scheduled-triggers/#metadata-create-scheduled-event
  */
-const createScheduledEvent = async (args: RequiredScheduledEventArgs) => {
+export const createScheduledEvent = async (
+  args: RequiredCreateScheduledEventArgs,
+): Promise<CreateScheduledEventResponse> => {
   try {
     const response = await postToMetadataAPI({
       type: "create_scheduled_event",
@@ -82,10 +65,44 @@ const createScheduledEvent = async (args: RequiredScheduledEventArgs) => {
         },
       },
     });
-    return response.data;
+    return response.data as CreateScheduledEventResponse;
   } catch (error) {
     throw Error((error as Error)?.message);
   }
 };
 
-export { createScheduledEvent, type RequiredScheduledEventArgs };
+/**
+ * Get scheduled events in Hasura
+ * https://hasura.io/docs/2.0/api-reference/metadata-api/scheduled-triggers/#metadata-get-scheduled-events
+ */
+export const getScheduledEvents = async (
+  args: GetScheduledEventsArgs,
+): Promise<GetScheduledEventsResponse> => {
+  try {
+    const response = await postToMetadataAPI({
+      type: "get_scheduled_events",
+      args,
+    });
+    return response.data as GetScheduledEventsResponse;
+  } catch (error) {
+    throw Error((error as Error)?.message);
+  }
+};
+
+/**
+ * Delete an existing scheduled event in Hasura
+ * https://hasura.io/docs/2.0/api-reference/metadata-api/scheduled-triggers/#metadata-delete-scheduled-event
+ */
+export const deleteScheduledEvent = async (
+  args: DeleteScheduledEventArgs,
+): Promise<DeleteScheduledEventResponse> => {
+  try {
+    const response = await postToMetadataAPI({
+      type: "delete_scheduled_event",
+      args,
+    });
+    return response.data as DeleteScheduledEventResponse;
+  } catch (error) {
+    throw Error((error as Error)?.message);
+  }
+};
