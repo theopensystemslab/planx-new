@@ -1,8 +1,8 @@
 import { z } from "zod";
 import type { ValidatedRequestHandler } from "../../../../shared/middleware/validate.js";
-import type { ScheduledEventResponse } from "../../../../lib/hasura/metadata/index.js";
+import type { CreateScheduledEventResponse } from "../../../../lib/hasura/metadata/types.js";
 
-export const createSessionEventSchema = z.object({
+export const createSessionEmailEventSchema = z.object({
   body: z.object({
     createdAt: z.string().pipe(z.coerce.date()),
     payload: z.object({
@@ -12,28 +12,35 @@ export const createSessionEventSchema = z.object({
   }),
 });
 
-export type CreateSessionEvent = z.infer<
-  typeof createSessionEventSchema
+export type CreateSessionEmailEvent = z.infer<
+  typeof createSessionEmailEventSchema
 >["body"];
 
-export type CreateSessionEventController = ValidatedRequestHandler<
-  typeof createSessionEventSchema,
-  ScheduledEventResponse[]
+export type CreateSessionEmailEventController = ValidatedRequestHandler<
+  typeof createSessionEmailEventSchema,
+  CreateScheduledEventResponse[]
 >;
 
-interface DeleteSessionResponse {
-  message: string;
-}
-
-export const deleteSessionSchema = z.object({
+export const createSessionDeleteEventSchema = z.object({
   body: z.object({
+    operation: z.enum(["INSERT", "UPDATE"]),
+    createdAt: z.string().pipe(z.coerce.date()).optional(),
+    lockedAt: z.string().pipe(z.coerce.date()).optional(),
     payload: z.object({
       sessionId: z.string(),
     }),
-  }),
+  })
+  .refine(
+    data => data.createdAt || data.lockedAt,
+    "Either createdAt or lockedAt must be provided"
+  ),
 });
 
-export type DeleteSessionController = ValidatedRequestHandler<
-  typeof deleteSessionSchema,
-  DeleteSessionResponse
+export type CreateSessionDeleteEvent = z.infer<
+  typeof createSessionDeleteEventSchema
+>["body"];
+
+export type CreateSessionDeleteEventController = ValidatedRequestHandler<
+  typeof createSessionDeleteEventSchema,
+  CreateScheduledEventResponse[]
 >;

@@ -162,7 +162,7 @@ describe("Send Email endpoint", () => {
             .expect(401);
         });
 
-        it("returns 401 UNAUTHORIZED if no incorrect auth header is provided", async () => {
+        it("returns 401 UNAUTHORIZED if incorrect auth header is provided", async () => {
           const data = {
             payload: {
               sessionId: "123",
@@ -194,6 +194,7 @@ describe("Send Email endpoint", () => {
     }
   });
 
+  // TODO: remove this / translate the tests for new delete-session webhook
   describe("'Expiry' template", () => {
     it("returns an error if unable to delete the session", async () => {
       queryMock.mockQuery({

@@ -16,9 +16,10 @@ import {
   sendSlackNotificationController,
   updateTemplatedFlowEditsController,
 } from "./controller.js";
+import { deleteSessionSchema } from "./service/deleteSession/schema.js";
 import {
-  createSessionEventSchema,
-  deleteSessionSchema,
+  createSessionDeleteEventSchema,
+  createSessionEmailEventSchema,
 } from "./service/lowcalSessionEvents/schema.js";
 import { createPaymentEventSchema } from "./service/paymentRequestEvents/schema.js";
 import { sendSlackNotificationSchema } from "./service/sendNotification/schema.js";
@@ -50,17 +51,17 @@ router.post(
 );
 router.post(
   "/webhooks/hasura/create-reminder-event",
-  validate(createSessionEventSchema),
+  validate(createSessionEmailEventSchema),
   createSessionReminderEventController,
 );
 router.post(
   "/webhooks/hasura/create-expiry-event",
-  validate(createSessionEventSchema),
+  validate(createSessionEmailEventSchema),
   createSessionExpiryEventController,
 );
 router.post(
   "/webhooks/hasura/create-delete-event",
-  validate(createSessionEventSchema),
+  validate(createSessionDeleteEventSchema),
   createSessionDeleteEventController,
 );
 router.post(
