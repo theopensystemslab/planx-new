@@ -16,6 +16,7 @@ import { Route as AuthenticatedResourcesRouteImport } from './routes/_authentica
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedGlobalSettingsRouteImport } from './routes/_authenticated/global-settings'
 import { Route as AuthenticatedAdminPanelRouteImport } from './routes/_authenticated/admin-panel'
+import { Route as authLogoutRouteImport } from './routes/(auth)/logout'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as AuthenticatedTeamRouteRouteImport } from './routes/_authenticated/$team/route'
 import { Route as AuthenticatedTeamIndexRouteImport } from './routes/_authenticated/$team/index'
@@ -62,6 +63,11 @@ const AuthenticatedAdminPanelRoute = AuthenticatedAdminPanelRouteImport.update({
   id: '/admin-panel',
   path: '/admin-panel',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const authLogoutRoute = authLogoutRouteImport.update({
+  id: '/(auth)/logout',
+  path: '/logout',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
@@ -129,6 +135,7 @@ const AuthenticatedTeamFlowIndexRoute =
 export interface FileRoutesByFullPath {
   '/$team': typeof AuthenticatedTeamRouteRouteWithChildren
   '/login': typeof authLoginRoute
+  '/logout': typeof authLogoutRoute
   '/admin-panel': typeof AuthenticatedAdminPanelRoute
   '/global-settings': typeof AuthenticatedGlobalSettingsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
+  '/logout': typeof authLogoutRoute
   '/admin-panel': typeof AuthenticatedAdminPanelRoute
   '/global-settings': typeof AuthenticatedGlobalSettingsRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_authenticated/$team': typeof AuthenticatedTeamRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
+  '/(auth)/logout': typeof authLogoutRoute
   '/_authenticated/admin-panel': typeof AuthenticatedAdminPanelRoute
   '/_authenticated/global-settings': typeof AuthenticatedGlobalSettingsRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/$team'
     | '/login'
+    | '/logout'
     | '/admin-panel'
     | '/global-settings'
     | '/onboarding'
@@ -206,6 +216,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/logout'
     | '/admin-panel'
     | '/global-settings'
     | '/onboarding'
@@ -225,6 +236,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/_authenticated/$team'
     | '/(auth)/login'
+    | '/(auth)/logout'
     | '/_authenticated/admin-panel'
     | '/_authenticated/global-settings'
     | '/_authenticated/onboarding'
@@ -245,6 +257,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   authLoginRoute: typeof authLoginRoute
+  authLogoutRoute: typeof authLogoutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -297,6 +310,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin-panel'
       preLoaderRoute: typeof AuthenticatedAdminPanelRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/(auth)/logout': {
+      id: '/(auth)/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof authLogoutRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(auth)/login': {
       id: '/(auth)/login'
@@ -448,6 +468,7 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   authLoginRoute: authLoginRoute,
+  authLogoutRoute: authLogoutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
