@@ -291,12 +291,6 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
@@ -361,12 +355,6 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
@@ -425,12 +413,6 @@ describe("invite to pay validation on diff", () => {
             title: "Fees",
             status: "Pass",
             message: "Your flow has valid Pay using Set Fees",
-          },
-          {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
           },
           {
             title: "Sections",
@@ -495,12 +477,6 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
@@ -554,12 +530,6 @@ describe("set fees validation on diff", () => {
             title: "Invite to Pay",
             status: "Pass",
             message: "Your flow has valid Invite to Pay",
-          },
-          {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
           },
           {
             title: "Sections",
