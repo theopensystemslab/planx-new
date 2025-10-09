@@ -8,6 +8,7 @@ import AccordionSection from "@components/directory/AccordionSection.astro";
 import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 
 const lpas = await fetchAllLPAs();
+const title = "Directory of local planning authorities";
 
 const hasListedServices = (lpa: LPA) =>
   lpa.applyServices.length ||
@@ -15,8 +16,8 @@ const hasListedServices = (lpa: LPA) =>
   lpa.notifyServices.length;
 ---
 
-<Layout>
-  <Masthead title="Directory of local planning authorities" />
+<Layout title={title}>
+  <Masthead title={title} />
   <Container paddingY>
     <section class="flex flex-col gap-4">
       {

@@ -19,9 +19,12 @@ const publishDate = new Intl.DateTimeFormat("en-GB", {
 }).format(page.data.lastModified);
 ---
 
-<Layout>
+<Layout
+  title={page.data.title} 
+  {...(page.data.description && { description: page.data.description })}
+>
   <Masthead title={page.data.title}>
-    <p>{page.data.subheading}</p>
+    <p>{page.data.description}</p>
     <p>Published at: {publishDate}</p>
   </Masthead>
   <Container paddingY>

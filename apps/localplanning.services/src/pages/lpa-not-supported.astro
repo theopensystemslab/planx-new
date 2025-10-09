@@ -2,10 +2,12 @@
 import Layout from "@layouts/Layout.astro";
 import Masthead from "@components/Masthead.astro";
 import Container from "@components/Container.astro";
+
+const title = "Planning services are not available here";
 ---
 
-<Layout>
-  <Masthead title="Planning services are not available here">
+<Layout title={title}>
+  <Masthead title={title}>
     <p><strong><span id="lpa-name">Loading...</span></strong> does not currently provide its planning services on this platform.</p>
   </Masthead>
   <Container paddingY>

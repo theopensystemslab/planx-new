@@ -13,9 +13,12 @@ const { page } = Astro.props;
 const { Content } = await render(page);
 ---
 
-<Layout>
+<Layout
+  title={page.data.title} 
+  {...(page.data.description && { description: page.data.description })}
+>
   <Masthead title={page.data.title}>
-    <p>{page.data.subheading}</p>
+    <p>{page.data.description}</p>
   </Masthead>
   <Container paddingY>
     <section class="styled-content">
