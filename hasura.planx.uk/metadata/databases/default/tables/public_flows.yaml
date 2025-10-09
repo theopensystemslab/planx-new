@@ -279,6 +279,7 @@ select_permissions:
         - deleted_at
         - description
         - id
+        - is_listed_on_lps
         - is_template
         - limitations
         - name
