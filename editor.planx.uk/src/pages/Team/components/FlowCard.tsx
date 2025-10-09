@@ -3,13 +3,12 @@ import StarIcon from "@mui/icons-material/Star";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import { Link, useSearch } from "@tanstack/react-router";
 import { useToast } from "hooks/useToast";
 import React, { useState } from "react";
-import { Link, useCurrentRoute } from "react-navi";
 import { FONT_WEIGHT_SEMI_BOLD, inputFocusStyle } from "theme";
 import FlowTag from "ui/editor/FlowTag/FlowTag";
 import { FlowTagType, StatusVariant } from "ui/editor/FlowTag/types";
-import { getSortParams } from "ui/editor/SortControl/utils";
 import { slugify } from "utils";
 
 import SimpleMenu from "../../../ui/editor/SimpleMenu";
@@ -119,7 +118,7 @@ const FlowCard: React.FC<FlowCardProps> = ({
     state.canUserEditTeam,
   ]);
 
-  const route = useCurrentRoute();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
   const toast = useToast();
 
   const handleCopyDialogClose = () => {
@@ -132,9 +131,11 @@ const FlowCard: React.FC<FlowCardProps> = ({
     refreshFlows();
   };
 
-  const {
-    sortObject: { displayName: sortDisplayName },
-  } = getSortParams<FlowSummary>(route.url.query, sortOptions);
+  const sortObject =
+    sortOptions.find(
+      (option) => slugify(option.displayName) === searchParams.sort,
+    ) || sortOptions[0];
+  const sortDisplayName = sortObject.displayName;
 
   const handleArchive = async () => {
     try {
@@ -290,14 +291,15 @@ const FlowCard: React.FC<FlowCardProps> = ({
                 sx={{ "& > a": { position: "relative", zIndex: 2 } }}
               >
                 {`${flow.summary.split(" ").slice(0, 12).join(" ")}... `}
-                <Link href={`./${flow.slug}/about`}>read more</Link>
+                <Link
+                  to="/$team/$flow/about"
+                  params={{ team: teamSlug, flow: flow.slug }}
+                >
+                  read more
+                </Link>
               </Typography>
             )}
-            <DashboardLink
-              aria-label={flow.name}
-              href={`./${flow.slug}`}
-              prefetch={false}
-            />
+            <DashboardLink aria-label={flow.name} href={`./${flow.slug}`} />
           </CardContent>
         </Box>
         {canUserEditTeam(teamSlug) && (
