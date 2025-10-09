@@ -61,7 +61,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
     }
 
     // Selecting or clearing an option
-    props.onChange(value == null ? "" : value);
+    props.onChange(value);
   };
 
   return (

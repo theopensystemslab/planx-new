@@ -74,7 +74,7 @@ export const validationSchema: SchemaOf<FileUpload> =
     object({
       description: richText(),
       title: string().required(),
-      fn: string().required(),
+      fn: string().nullable().required(),
     }),
   );
 
