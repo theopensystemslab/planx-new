@@ -1,10 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ReadMePage } from "pages/FlowEditor/ReadMePage/ReadMePage";
 import React from "react";
 
+import { useStore } from "../../../../pages/FlowEditor/lib/store";
+
 export const Route = createFileRoute("/_authenticated/$team/$flow/about")({
-  component: RouteComponent,
+  loader: async ({ params }) => {
+    const { team: teamSlug, flow: flowSlug } = params;
+    const actualFlowSlug = flowSlug.split(",")[0];
+
+    // Get flow information for ReadMePage
+    const flowInformation = await useStore
+      .getState()
+      .getFlowInformation(actualFlowSlug, teamSlug);
+
+    return {
+      teamSlug,
+      flowSlug: actualFlowSlug,
+      flowInformation,
+    };
+  },
+  component: AboutComponent,
 });
 
-function RouteComponent() {
-  return <div>Hello "/_authenticated/$team/$flow/about"!</div>;
+function AboutComponent() {
+  const { teamSlug, flowSlug, flowInformation } = Route.useLoaderData();
+
+  return (
+    <ReadMePage
+      teamSlug={teamSlug}
+      flowSlug={flowSlug}
+      flowInformation={flowInformation}
+    />
+  );
 }
