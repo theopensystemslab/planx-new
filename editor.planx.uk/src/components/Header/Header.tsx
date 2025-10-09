@@ -5,7 +5,6 @@ import Person from "@mui/icons-material/Person";
 import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { grey } from "@mui/material/colors";
 import Container from "@mui/material/Container";
@@ -24,7 +23,7 @@ import axios from "axios";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, { RefObject, useRef, useState } from "react";
 import {
   borderedFocusStyle,
   FONT_WEIGHT_SEMI_BOLD,
@@ -37,7 +36,6 @@ import Reset from "ui/icons/Reset";
 import { CustomLink } from "ui/shared/CustomLink/CustomLink";
 
 import { useStore } from "../../pages/FlowEditor/lib/store";
-import { rootFlowPath } from "../../routes-navi/utils";
 import AnalyticsDisabledBanner from "../AnalyticsDisabled/AnalyticsDisabledBanner";
 import { ConfirmationDialog } from "../ConfirmationDialog";
 import { SectionNavBar } from "./Sections/NavBar";
@@ -184,12 +182,14 @@ const TeamLogo: React.FC = () => {
 
 const Breadcrumbs: React.FC = () => {
   const params = useParams({ strict: false });
-  const [team, isStandalone] = useStore((state) => [
-    state.getTeam(),
-    state.previewEnvironment === "standalone",
-  ]);
-
+  const team = useStore((state) => state.getTeam());
+  const isStandalone = useStore(
+    (state) => state.previewEnvironment === "standalone",
+  );
+  const flowSlug = useStore((state) => state.flowSlug);
+  const flowName = useStore((state) => state.flowName);
   const flowStatus = useStore((state) => state.flowStatus);
+  const canUserEditTeam = useStore((state) => state.canUserEditTeam);
 
   return (
     <>
@@ -216,42 +216,46 @@ const Breadcrumbs: React.FC = () => {
             </BreadcrumbsLink>
           </>
         )}
-        {/*{params.flow && (
+        {params.flow && (
           <>
             {" / "}
-            <CustomLink
-              style={{
-                color: "#fff",
-                textDecoration: "none",
+            <BreadcrumbsLink
+              to="/$team/$flow"
+              params={{
+                team: team.slug,
+                flow: flowSlug,
               }}
+              {...(isStandalone && { target: "_blank" })}
               variant="body1"
-              to="/"
             >
-              {route.data.flow}
-            </CustomLink>
+              {flowName || flowSlug}
+            </BreadcrumbsLink>
           </>
-        )}*/}
+        )}
       </BreadcrumbsRoot>
-      {/*{route.data.flow && (
+      {params.flow && (
         <Box sx={(theme) => ({ color: theme.palette.text.primary })}>
-          {useStore.getState().canUserEditTeam(team.slug) ? (
-            <Button
-              variant="link"
-              href={`/${team.slug}/${route.data.flow}/settings`}
+          {canUserEditTeam(team.slug) ? (
+            <BreadcrumbsLink
+              to="/$team/$flow/settings"
+              params={{
+                team: team.slug,
+                flow: flowSlug,
+              }}
               title="Update service status"
               sx={{ textDecoration: "none" }}
             >
               <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
                 {flowStatus}
               </FlowTag>
-            </Button>
+            </BreadcrumbsLink>
           ) : (
             <FlowTag tagType={FlowTagType.Status} statusVariant={flowStatus}>
               {flowStatus}
             </FlowTag>
           )}
         </Box>
-      )}*/}
+      )}
     </>
   );
 };
@@ -404,7 +408,8 @@ const EditorToolbar: React.FC<{
     await axios.post(`${import.meta.env.VITE_APP_API_URL}/auth/logout`, null, {
       headers: authRequestHeader,
     });
-    navigate({ to: "/logout" });
+    //TODO: setup logout route
+    navigate({ to: "/" });
   };
 
   return (
@@ -498,7 +503,6 @@ const Toolbar: React.FC<ToolbarProps> = ({ headerRef }) => {
     path !== "draft" &&
     path !== "preview"
   ) {
-    console.log("Rendering EditorToolbar");
     return <EditorToolbar headerRef={headerRef}></EditorToolbar>;
   }
 
