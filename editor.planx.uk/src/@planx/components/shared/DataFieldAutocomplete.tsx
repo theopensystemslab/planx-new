@@ -16,6 +16,7 @@ interface Props {
   required?: boolean;
   disabled?: boolean;
   errorMessage?: string;
+  allowCustomValues?: boolean;
   "data-testid"?: string;
 }
 
@@ -41,11 +42,19 @@ const filter = createFilterOptions<string>();
 
 export const DataFieldAutocomplete: React.FC<Props> = (props) => {
   const defaultSchema = useStore().getFlowSchema()?.nodes || [];
-  const { value, schema: options = defaultSchema } = props;
+  const {
+    value,
+    schema: options = defaultSchema,
+    allowCustomValues = true,
+  } = props;
 
   const handleChange = (_event: React.SyntheticEvent, value: string | null) => {
     // Adding a new option via the "Add" button
-    if (typeof value === "string" && value.startsWith('Add "')) {
+    if (
+      allowCustomValues &&
+      typeof value === "string" &&
+      value.startsWith('Add "')
+    ) {
       const optionValue = value.split('"')[1];
       props.onChange(optionValue);
       return;
@@ -74,7 +83,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
             const { inputValue } = params;
             // Suggest the creation of a new value
             const isExisting = options.some((option) => inputValue === option);
-            if (inputValue !== "" && !isExisting) {
+            if (allowCustomValues && inputValue !== "" && !isExisting) {
               filtered.push(`Add "${inputValue}"`);
             }
             return filtered;
@@ -89,7 +98,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           }}
           renderOption={renderOptions}
           useDataFieldInput={true}
-          freeSolo
+          {...(allowCustomValues ? { freeSolo: true } : {})}
           selectOnFocus
           clearOnEscape
           handleHomeEndKeys

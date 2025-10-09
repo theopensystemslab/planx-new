@@ -179,17 +179,6 @@ describe("sections validation on diff", () => {
             message: "Your flow is not using Invite to Pay",
           },
           {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
@@ -253,17 +242,6 @@ describe("sections validation on diff", () => {
             message: "Your flow is not using Invite to Pay",
           },
           {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
             title: "Planning Constraints",
             status: "Not applicable",
             message: "Your flow is not using Planning Constraints",
@@ -313,20 +291,9 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
           },
           {
             title: "Planning Constraints",
@@ -388,20 +355,9 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
           },
           {
             title: "Planning Constraints",
@@ -459,20 +415,9 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
           },
           {
             title: "Planning Constraints",
@@ -532,20 +477,9 @@ describe("invite to pay validation on diff", () => {
             message: "Your flow has valid Pay using Set Fees",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
           },
           {
             title: "Planning Constraints",
@@ -598,215 +532,9 @@ describe("set fees validation on diff", () => {
             message: "Your flow has valid Invite to Pay",
           },
           {
-            title: "Project types",
-            status: "Pass",
-            message:
-              "Project types set via Checklists are all supported by the ODP Schema",
-          },
-          {
             title: "Sections",
             status: "Not applicable",
             message: "Your flow is not using Sections",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
-      });
-  });
-});
-
-describe("ODP Schema file type validation on diff", () => {
-  it("fails if any file data fields aren't supported by the ODP Schema", async () => {
-    const alteredFlow = {
-      ...mockFlowData,
-      fileUpload: {
-        type: 140,
-        data: {
-          color: "#EFEFEF",
-          fn: "roofPlan.existing",
-          title: "Roof plans",
-        },
-      },
-      fileUploadAndLabel: {
-        type: 145,
-        data: {
-          title: "Upload and label",
-          fileTypes: [
-            {
-              name: "Site plans",
-              fn: "sitePlanTypo",
-              rule: {
-                condition: "AlwaysRequired",
-              },
-            },
-            {
-              name: "Heritage statement",
-              fn: "heritageStatement",
-              rule: {
-                condition: "AlwaysRequired",
-              },
-            },
-          ],
-          hideDropZone: false,
-        },
-      },
-    };
-
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          data: alteredFlow,
-          slug: "altered-flow-name",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [{ data: alteredFlow }],
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(auth)
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "File types",
-            status: "Fail",
-            message:
-              "Your FileUpload or UploadAndLabel are setting data fields that are not supported by the current release of the ODP Schema: sitePlanTypo (1)",
-          },
-          {
-            title: "Sections",
-            status: "Pass",
-            message: "Your flow has valid Sections",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
-            title: "Planning Constraints",
-            status: "Not applicable",
-            message: "Your flow is not using Planning Constraints",
-          },
-          {
-            title: "Templated nodes",
-            status: "Not applicable",
-            message: "This is not a templated flow",
-          },
-        ]);
-      });
-  });
-
-  it("skips validation checks for UploadAndLabel components used in info-only mode with hidden dropzone", async () => {
-    const alteredFlow = {
-      ...mockFlowData,
-      fileUpload: {
-        type: 140,
-        data: {
-          color: "#EFEFEF",
-          fn: "roofPlan.existing",
-          title: "Roof plans",
-        },
-      },
-      fileUploadAndLabelInfoOnly: {
-        type: 145,
-        data: {
-          title: "Prepare these documents",
-          fileTypes: [
-            {
-              name: "Design and access statement",
-              fn: "designAndAccessTypo",
-              rule: {
-                condition: "AlwaysRequired",
-              },
-            },
-          ],
-          hideDropZone: true,
-        },
-      },
-    };
-
-    queryMock.mockQuery({
-      name: "GetFlowData",
-      matchOnVariables: false,
-      data: {
-        flow: {
-          data: alteredFlow,
-          slug: "altered-flow-name",
-          team_id: 1,
-          team: {
-            slug: "testing",
-          },
-          publishedFlows: [{ data: alteredFlow }],
-        },
-      },
-    });
-
-    await supertest(app)
-      .post("/flows/1/diff")
-      .set(auth)
-      .expect(200)
-      .then((res) => {
-        expect(res.body.message).toEqual("Changes queued to publish");
-        expect(res.body.validationChecks).toEqual([
-          {
-            title: "Sections",
-            status: "Pass",
-            message: "Your flow has valid Sections",
-          },
-          {
-            title: "File types",
-            status: "Pass",
-            message:
-              "Files collected via FileUpload or UploadAndLabel are all supported by the ODP Schema",
-          },
-          {
-            title: "Fees",
-            status: "Not applicable",
-            message: "Your flow is not using Pay",
-          },
-          {
-            title: "Invite to Pay",
-            status: "Not applicable",
-            message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
           {
             title: "Planning Constraints",
@@ -880,17 +608,6 @@ describe("planning constraints validation on diff", () => {
             message: "Your flow is not using Invite to Pay",
           },
           {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
-          {
             title: "Templated nodes",
             status: "Not applicable",
             message: "This is not a templated flow",
@@ -961,17 +678,6 @@ describe("planning constraints validation on diff", () => {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
           {
             title: "Templated nodes",
@@ -1067,17 +773,6 @@ describe("templated node requirements validation on diff", () => {
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
           },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
-          },
         ]);
       });
   });
@@ -1164,17 +859,6 @@ describe("templated node requirements validation on diff", () => {
             title: "Invite to Pay",
             status: "Not applicable",
             message: "Your flow is not using Invite to Pay",
-          },
-          {
-            title: "File types",
-            status: "Not applicable",
-            message: "Your flow is not using FileUpload or UploadAndLabel",
-          },
-          {
-            title: "Project types",
-            status: "Not applicable",
-            message:
-              'Your flow is not using Checklists which set "proposal.projectType"',
           },
         ]);
       });
