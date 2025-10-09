@@ -5,11 +5,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "@tanstack/react-router";
 import { logger } from "airbrake";
 import { isAxiosError } from "axios";
 import { Form, Formik, FormikConfig } from "formik";
 import React, { useState } from "react";
-import { useNavigation } from "react-navi";
 import { AddButton } from "ui/editor/AddButton";
 import ErrorWrapper from "ui/shared/ErrorWrapper";
 
@@ -18,7 +18,7 @@ import { BaseFormSection } from "./BaseFormSection";
 import { CreateFlow, validationSchema } from "./types";
 
 export const AddFlow: React.FC = () => {
-  const { navigate } = useNavigation();
+  const navigate = useNavigate();
   const {
     teamId,
     createFlow,
@@ -55,7 +55,10 @@ export const AddFlow: React.FC = () => {
           break;
       }
 
-      navigate(`/${teamSlug}/${flow.slug}`);
+      navigate({
+        to: "/$team/$flow",
+        params: { team: teamSlug, flow: flow.slug },
+      });
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error?.response?.data?.error;
