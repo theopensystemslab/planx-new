@@ -9,13 +9,12 @@ import ToggleButtonGroup, {
   toggleButtonGroupClasses,
 } from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
+import { useSearch } from "@tanstack/react-router";
 import { isEmpty, orderBy } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
-import { useCurrentRoute } from "react-navi";
 import Filters from "ui/editor/Filter/Filter";
 import { InfoChip } from "ui/editor/InfoChip";
 import { SortControl } from "ui/editor/SortControl/SortControl";
-import { getSortParams } from "ui/editor/SortControl/utils";
 import { SearchBox } from "ui/shared/SearchBox/SearchBox";
 
 import { useStore } from "../FlowEditor/lib/store";
@@ -94,7 +93,11 @@ const GetStarted: React.FC = () => (
   </DashboardList>
 );
 
-const Team: React.FC = () => {
+interface TeamProps {
+  flows: FlowSummary[];
+}
+
+const Team: React.FC<TeamProps> = ({ flows: initialFlows }) => {
   const [
     { id: teamId, slug },
     canUserEditTeam,
@@ -111,7 +114,7 @@ const Team: React.FC = () => {
     state.setFlowCardView,
   ]);
 
-  const [flows, setFlows] = useState<FlowSummary[] | null>(null);
+  const [flows, setFlows] = useState<FlowSummary[] | null>(initialFlows);
 
   const [filteredFlows, setFilteredFlows] = useState<FlowSummary[] | null>(
     null,
@@ -126,7 +129,7 @@ const Team: React.FC = () => {
 
   const [shouldClearFilters, setShouldClearFilters] = useState<boolean>(false);
 
-  const route = useCurrentRoute();
+  const searchParams = useSearch({ from: "/_authenticated/$team/" });
 
   const handleViewChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -147,11 +150,21 @@ const Team: React.FC = () => {
 
     // Sort the array at the start using the query params
     if (matchingFlows === null) {
-      const {
-        sortObject: { fieldName },
-        sortDirection,
-      } = getSortParams<FlowSummary>(route.url.query, sortOptions);
-      const sortedFlows = orderBy(diffFlows, fieldName, sortDirection);
+      const sortObject =
+        sortOptions.find(
+          (option) =>
+            option.displayName
+              .toLowerCase()
+              .replace(/[^\w\s-]/g, "")
+              .replace(/[\s_-]+/g, "-")
+              .replace(/^-+|-+$/g, "") === searchParams.sort,
+        ) || sortOptions[0];
+
+      const sortedFlows = orderBy(
+        diffFlows,
+        sortObject.fieldName,
+        searchParams.sortDirection,
+      );
       setMatchingflows(sortedFlows);
     }
 
@@ -160,7 +173,14 @@ const Team: React.FC = () => {
     if (shouldClearFilters) {
       setShouldClearFilters(false);
     }
-  }, [searchedFlows, filteredFlows, shouldClearFilters]);
+  }, [
+    searchedFlows,
+    filteredFlows,
+    shouldClearFilters,
+    matchingFlows,
+    searchParams.sort,
+    searchParams.sortDirection,
+  ]);
 
   const fetchFlows = useCallback(() => {
     getFlows(teamId).then((flows) => {
@@ -170,8 +190,10 @@ const Team: React.FC = () => {
   }, [teamId, setFlows, getFlows]);
 
   useEffect(() => {
-    fetchFlows();
-  }, [fetchFlows]);
+    if (initialFlows) {
+      setFlows(initialFlows);
+    }
+  }, [initialFlows]);
 
   const teamHasFlows = !isEmpty(flows) && flows;
   const showAddFlowButton = teamHasFlows && canUserEditTeam(slug);
