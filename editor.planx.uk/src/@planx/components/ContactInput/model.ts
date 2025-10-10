@@ -1,3 +1,4 @@
+import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
@@ -52,7 +53,7 @@ export interface ContactInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
-  autoAnswer?: Contact;
+  autoAnswer?: Value;
 }
 
 export const parseContactInput = (

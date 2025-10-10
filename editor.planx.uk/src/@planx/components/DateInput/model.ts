@@ -1,3 +1,4 @@
+import { Value } from "@opensystemslab/planx-core/types";
 import { isValid, parseISO } from "date-fns";
 import { richText } from "lib/yupExtensions";
 import { object, SchemaOf, string } from "yup";
@@ -18,7 +19,7 @@ export interface DateInput extends BaseNodeData {
   fn?: string;
   min?: string;
   max?: string;
-  autoAnswer?: UserData | null;
+  autoAnswer?: Value;
 }
 
 const isDateValid = (date: string) => isValid(parseISO(date));

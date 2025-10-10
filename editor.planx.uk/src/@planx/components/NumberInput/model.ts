@@ -1,3 +1,4 @@
+import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { boolean, number, object, string } from "yup";
 
@@ -15,7 +16,7 @@ export interface NumberInput extends BaseNodeData {
   units?: string;
   allowNegatives?: boolean;
   isInteger?: boolean;
-  autoAnswer?: UserData;
+  autoAnswer?: Value;
 }
 
 export type UserData = number;
