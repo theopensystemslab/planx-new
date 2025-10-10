@@ -348,7 +348,7 @@ export = async () => {
       }),
       container: {
         image: repo.buildAndPushImage({
-          context: "../../api.planx.uk",
+          context: "../../apps/api.planx.uk",
           target: "production",
         }),
         cpu: 2048,

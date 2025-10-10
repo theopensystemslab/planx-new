@@ -18,6 +18,7 @@ env:
   PULLREQUEST_ID: ${{ github.event.number }}
   EDITOR_DIRECTORY: editor.planx.uk
   LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
+  API_DIRECTORY: apps/api.planx.uk
 
 jobs:
   changes:
@@ -47,7 +48,7 @@ jobs:
         with:
           filters: |
             api:
-              - 'api.planx.uk/**'
+              - 'apps/api.planx.uk/**'
             e2e:
               - 'e2e/**'
             hasura:
@@ -80,7 +81,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY}}/.env.test, hasura.planx.uk/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
@@ -123,7 +124,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY}}/.env.test, hasura.planx.uk/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
@@ -137,10 +138,10 @@ jobs:
           cache-dependency-path: "**/pnpm-lock.yaml"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: api.planx.uk
+        working-directory: ${{ env.API_DIRECTORY }}
       - name: Run API Tests
         run: pnpm install --frozen-lockfile && pnpm check && pnpm test
-        working-directory: api.planx.uk
+        working-directory: ${{ env.API_DIRECTORY }}
 
   test_react:
     name: Run React Tests
@@ -161,7 +162,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, hasura.planx.uk/.env.test"
           fail: true
       - uses: pnpm/action-setup@v4.2.0
         with:

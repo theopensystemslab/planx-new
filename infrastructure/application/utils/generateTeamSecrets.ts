@@ -4,7 +4,7 @@ import * as awsx from "@pulumi/awsx";
 import { teams } from "../../common/teams";
 
 // Greedily match any non-word characters
-// XXX: Matches regex used in api.planx.uk/send.js
+// XXX: Matches regex used in apps/api.planx.uk/send.js
 const regex = new RegExp(/\W+/g);
 
 /**

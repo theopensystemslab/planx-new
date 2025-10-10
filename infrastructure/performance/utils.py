@@ -49,7 +49,7 @@ def get_mime_type_from_filename(filename: str) -> str:
   return MIME_TYPE_BY_FILE_EXT.get(file_ext, "application/octet-stream")
 
 
-# based on getS3KeyFromURL from api.planx.uk/modules/file/service/utils.ts
+# based on getS3KeyFromURL from apps/api.planx.uk/modules/file/service/utils.ts
 def get_s3_key_from_url(file_url: str) -> str:
   """
   Returns an S3 key in the "fileKey/fileName" format, based on a file's URL.

@@ -3,7 +3,7 @@
 ## Context 
 GovUK Notify emails can only be managed via the GOV.UK Notify platform, there is no programmatic API access available. This can make management and customisation tricky at times. In order to maintain consistency and make management simpler, we mirror the directory structure of GOV.UK Notify in our codebase.
 
-Templates are located in `api.planx.uk/lib/notify/templates`. Each template has "personalisations" (variables) that can be embedded in the template content ([docs](https://www.notifications.service.gov.uk/using-notify/personalisation)).
+Templates are located in `apps/api.planx.uk/lib/notify/templates`. Each template has "personalisations" (variables) that can be embedded in the template content ([docs](https://www.notifications.service.gov.uk/using-notify/personalisation)).
 
 ## Process
 
@@ -14,7 +14,7 @@ Templates are located in `api.planx.uk/lib/notify/templates`. Each template has 
    - Note the template ID and personalisation fields
 
 2. **Add to repository**
-   - Create a corresponding file in `api.planx.uk/lib/notify/templates` following the existing directory structure
+   - Create a corresponding file in `apps/api.planx.uk/lib/notify/templates` following the existing directory structure
    - Map all personalisation fields required by the template
 
 ```ts
@@ -37,7 +37,7 @@ export type Config = NotifyConfig<{
 ```
 
 3. **Update template registry**
-   - Add the new template to the template registry in `api.planx.uk/lib/notify/templates/index.ts`
+   - Add the new template to the template registry in `apps/api.planx.uk/lib/notify/templates/index.ts`
 
 ```ts
 export const templateRegistry = {
