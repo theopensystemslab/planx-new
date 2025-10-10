@@ -1,10 +1,10 @@
 import type {
+  Address,
   Flag,
   FlagSet,
   GovUKPayment,
   Node,
   NodeId,
-  Value,
 } from "@opensystemslab/planx-core/types";
 import {
   ComponentType,
@@ -63,6 +63,11 @@ interface CollectedFlags {
   [category: string]: Array<Flag["text"] | undefined>;
 }
 
+export interface AutoAnswerableInputMap {
+  [TYPES.AddressInput]: Address;
+  // TODO: other auto answer types:outputs here
+}
+
 export interface PreviewStore extends Store.Store {
   collectedFlags: () => CollectedFlags;
   currentCard: ({ id: NodeId } & Store.Node) | null;
@@ -100,7 +105,9 @@ export interface PreviewStore extends Store.Store {
   saveToEmail?: string;
   overrideAnswer: (fn: string) => void;
   requestedFiles: () => FileList;
-  autoAnswerableInputs: (id: NodeId) => Value | undefined;
+  autoAnswerableInputs: <T extends keyof AutoAnswerableInputMap>(
+    id: NodeId
+  ) => AutoAnswerableInputMap[T];
   autoAnswerableOptions: (id: NodeId) => Array<NodeId> | undefined;
   autoAnswerableFlag: (filterId: NodeId) => NodeId | undefined;
   hasAcknowledgedWarning: boolean;
