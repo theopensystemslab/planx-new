@@ -1,4 +1,4 @@
-import { Address, Value } from "@opensystemslab/planx-core/types";
+import { Address } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import type { SchemaOf } from "yup";
 import { object, string } from "yup";
@@ -23,7 +23,7 @@ export interface AddressInput extends BaseNodeData {
   title: string;
   description?: string;
   fn?: string;
-  autoAnswer?: Value;
+  autoAnswer?: Address;
 }
 
 export const parseAddressInput = (
@@ -38,7 +38,7 @@ export const parseAddressInput = (
 export const formatAsSingleLineAddress = (address: Address) =>
   Object.values(address).filter(Boolean).join(", ");
 
-export const validationSchema: SchemaOf<AddressInput> =
+export const editorValidationSchema: SchemaOf<AddressInput> =
   baseNodeDataValidationSchema.concat(
     object({
       title: string().required(),

@@ -1,4 +1,3 @@
-import { Value } from "@opensystemslab/planx-core/types";
 import { richText } from "lib/yupExtensions";
 import { mixed, object, string } from "yup";
 
@@ -126,7 +125,7 @@ export interface TextInput extends BaseNodeData {
   fn?: string;
   type?: TextInputType;
   customLength?: number;
-  autoAnswer?: Value;
+  autoAnswer?: UserData;
 }
 
 export const parseTextInput = (

@@ -30,7 +30,7 @@ export default function AddressInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: addressValidationSchema,
+    validationSchema: addressValidationSchema(),
   });
 
   // Auto-answered AddressInputs still set a breadcrumb even though they render null

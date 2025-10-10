@@ -34,7 +34,7 @@ export default function ContactInputComponent(props: Props): FCReturn {
     },
     validateOnBlur: false,
     validateOnChange: false,
-    validationSchema: contactValidationSchema,
+    validationSchema: contactValidationSchema(),
   });
 
   const formatUserData = (values: Contact) => {
