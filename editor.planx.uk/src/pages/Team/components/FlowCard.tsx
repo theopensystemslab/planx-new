@@ -139,8 +139,8 @@ const FlowCard: React.FC<FlowCardProps> = ({
   const handleArchive = async () => {
     try {
       await archiveFlow(flow);
-      refreshFlows();
       toast.success("Archived flow");
+      refreshFlows();
     } catch (error) {
       toast.error(
         "We are unable to archive this flow, refesh and try again or contact an admin",
