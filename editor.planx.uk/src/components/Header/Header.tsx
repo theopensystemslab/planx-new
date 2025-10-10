@@ -19,7 +19,6 @@ import MuiToolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLocation, useNavigate, useParams } from "@tanstack/react-router";
-import axios from "axios";
 import { clearLocalFlowIdb } from "lib/local.idb";
 import { capitalize } from "lodash";
 import { useAnalyticsTracking } from "pages/FlowEditor/lib/analytics/provider";
@@ -393,7 +392,7 @@ const EditorToolbar: React.FC<{
 }> = ({ headerRef }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [user, token] = useStore((state) => [state.getUser(), state.jwt]);
+  const [user] = useStore((state) => [state.getUser()]);
 
   const handleClose = () => {
     setOpen(false);
@@ -403,13 +402,8 @@ const EditorToolbar: React.FC<{
     setOpen(!open);
   };
 
-  const logout = async () => {
-    const authRequestHeader = { Authorization: `Bearer ${token}` };
-    await axios.post(`${import.meta.env.VITE_APP_API_URL}/auth/logout`, null, {
-      headers: authRequestHeader,
-    });
-    //TODO: setup logout route
-    navigate({ to: "/" });
+  const logout = () => {
+    navigate({ to: "/logout" });
   };
 
   return (
