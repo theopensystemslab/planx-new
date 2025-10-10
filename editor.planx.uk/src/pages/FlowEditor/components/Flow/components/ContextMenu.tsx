@@ -1,4 +1,3 @@
-import ContentCopy from "@mui/icons-material/ContentCopy";
 import ContentPaste from "@mui/icons-material/ContentPaste";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -9,6 +8,8 @@ import Paper from "@mui/material/Paper";
 import { ROOT_NODE_KEY } from "@planx/graph";
 import { useStore } from "pages/FlowEditor/lib/store";
 import * as React from "react";
+import CloneIcon from "ui/icons/Clone";
+import CopyIcon from "ui/icons/Copy";
 
 export type ContextMenuSource = "node" | "hanger" | null;
 
@@ -37,7 +38,7 @@ export const ContextMenu: React.FC = () => {
     cloneNode,
     pasteNode,
     pasteClonedNode,
-    getNode
+    getNode,
   ] = useStore((state) => [
     state.contextMenuSource,
     state.contextMenuPosition,
@@ -49,18 +50,24 @@ export const ContextMenu: React.FC = () => {
     state.cloneNode,
     state.pasteNode,
     state.pasteClonedNode,
-    state.getNode
+    state.getNode,
   ]);
 
   const handleCopy = () => {
-    if (!self) return alert("Unable to copy, missing value for relationship 'self' (nodeId)")
+    if (!self)
+      return alert(
+        "Unable to copy, missing value for relationship 'self' (nodeId)",
+      );
 
     copyNode(self);
     closeMenu();
   };
 
   const handleClone = () => {
-    if (!self) return alert("Unable to clone, missing value for relationship 'self' (nodeId)")
+    if (!self)
+      return alert(
+        "Unable to clone, missing value for relationship 'self' (nodeId)",
+      );
 
     cloneNode(self);
     closeMenu();
@@ -70,9 +77,8 @@ export const ContextMenu: React.FC = () => {
     if (copiedNode) {
       pasteNode(parent, before);
       return closeMenu();
-
     }
-    
+
     if (clonedNodeId) {
       pasteClonedNode(parent, before);
       return closeMenu();
@@ -94,14 +100,14 @@ export const ContextMenu: React.FC = () => {
         {
           id: "copy",
           label: "Copy",
-          icon: <ContentCopy fontSize="small" />,
+          icon: <CopyIcon fontSize="small" />,
           disabled: false,
           onClick: handleCopy,
         },
         {
           id: "clone",
           label: "Clone",
-          icon: <ContentCopy fontSize="small" />,
+          icon: <CloneIcon fontSize="small" />,
           disabled: false,
           onClick: handleClone,
         },
