@@ -16,7 +16,7 @@ nvm use 22.14.0
 2. Update `.nvmrc` file
 
 3. Update Dockerfiles -
-  - `api.planx.uk/Dockerfile`
+  - `apps/api.planx.uk/Dockerfile`
   - `apps/sharedb.planx.uk/Dockerfile`
 
 4. Update `@types/node` package across all projects ([npm](https://www.npmjs.com/package/@types/node)). Note: Only major.minor version need to match e.g. types version 22.10.7893 would be fine for Node 22.10.x ([docs](https://github.com/definitelytyped/definitelytyped#how-do-definitely-typed-package-versions-relate-to-versions-of-the-corresponding-library)).

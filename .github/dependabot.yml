@@ -147,7 +147,7 @@ updates:
 
   # API
   - package-ecosystem: "npm"
-    directory: "/api.planx.uk"
+    directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -166,7 +166,7 @@ updates:
           - "@vitest/ui"
 
   - package-ecosystem: "docker"
-    directory: "/api.planx.uk"
+    directory: "/apps/api.planx.uk"
     schedule:
       interval: "monthly"
     labels:

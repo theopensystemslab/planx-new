@@ -8,6 +8,10 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+env:
+  EDITOR_DIRECTORY: editor.planx.uk
+  API_DIRECTORY: apps/api.planx.uk
+
 jobs:
   build:
     name: Seed Database
@@ -33,7 +37,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, api.planx.uk/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, hasura.planx.uk/.env.test"
           fail: true
       - name: Run sync script
         run: | 
