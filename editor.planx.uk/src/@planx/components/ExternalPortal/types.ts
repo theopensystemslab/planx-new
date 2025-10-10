@@ -11,6 +11,6 @@ export type FlowAutocompleteListProps = AutocompleteProps<
   Flow,
   false,
   false,
-  true,
+  boolean,
   "div"
 >;

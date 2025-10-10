@@ -24,7 +24,7 @@ const renderOptions: AutocompleteProps<
   string,
   false,
   false,
-  true,
+  boolean,
   "div"
 >["renderOption"] = (props, option) => {
   return (
@@ -98,7 +98,7 @@ export const DataFieldAutocomplete: React.FC<Props> = (props) => {
           }}
           renderOption={renderOptions}
           useDataFieldInput={true}
-          {...(allowCustomValues ? { freeSolo: true } : {})}
+          freeSolo={allowCustomValues}
           selectOnFocus
           clearOnEscape
           handleHomeEndKeys
