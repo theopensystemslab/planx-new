@@ -7,10 +7,12 @@ import ApplicationsBanner from "@components/ApplicationsBanner.astro";
 import { ACTIONS } from "@stores/action";
 import { Image } from "astro:assets";
 import lpaMap from "/public/planx-lpa-map.svg";
+
+const title = "Find local planning services";
 ---
 
-<Layout>
-  <Masthead title="Find local planning services" size="large">
+<Layout title={title}>
+  <Masthead title={title} size="large">
     <p>
       Modern digital services to send planning applications, reports and notices
       directly to local planning authorities.

@@ -3,11 +3,14 @@ import Layout from "@layouts/Layout.astro";
 import Container from "@components/Container.astro";
 import Masthead from "@components/Masthead.astro";
 import { ApplicationsAuth } from "@components/applications/ApplicationsAuth";
+
+const title = "Your applications";
+const description = "View applications in progress, and download sent applications.";
 ---
 
-<Layout>
-  <Masthead title="Your applications">
-    <p>View applications in progress, and download sent applications.</p>
+<Layout title={title} description={description}>
+  <Masthead title={title}>
+    <p>{description}</p>
   </Masthead>
   <Container paddingY>
     <ApplicationsAuth client:only="react" />

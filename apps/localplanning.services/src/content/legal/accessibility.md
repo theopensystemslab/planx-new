@@ -1,6 +1,6 @@
 ---
 title: Accessibility
-subheading: How accessible is this website?
+description: How accessible is this website?
 lastModified: 2025-10-01
 ---
 This website is run by Open Systems Lab. We want as many people as possible to be able to use this website.

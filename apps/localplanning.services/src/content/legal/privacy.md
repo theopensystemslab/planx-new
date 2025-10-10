@@ -1,6 +1,6 @@
 ---
 title: Privacy
-subheading: How we collect, protect and use data about you
+description: How we collect, protect and use data about you
 lastModified: 2025-10-01
 ---
 

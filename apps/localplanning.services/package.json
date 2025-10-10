@@ -20,6 +20,7 @@
     "@types/react-dom": "^19.1.5",
     "astro": "^5.13.6",
     "astro-icon": "^1.1.5",
+    "astro-seo": "^0.8.4",
     "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
     "nanostores": "^1.0.1",

@@ -13,7 +13,10 @@ interface Props {
 const { title, description } = Astro.props;
 ---
 
-<Layout>
+<Layout
+  title={title} 
+  {...(description && { description: description })}
+>
   <Masthead title={title}>
     <p>{description}</p>
   </Masthead>
