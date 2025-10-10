@@ -1,4 +1,4 @@
-import Alert from "@mui/material/Alert";
+import Alert, { alertClasses } from "@mui/material/Alert";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import DelayedLoadingIndicator from "components/DelayedLoadingIndicator/DelayedLoadingIndicator";
@@ -31,10 +31,10 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
             fontSize: "1rem",
             padding: theme.spacing(1, 2),
             borderRadius: "4px",
-            "& .MuiAlert-icon": {
+            [`& .${alertClasses.icon}`]: {
               display: "none",
             },
-            "& .MuiAlert-message": {
+            [`& .${alertClasses.message}`]: {
               display: "flex",
               alignItems: "center",
               gap: theme.spacing(2),

@@ -1,4 +1,4 @@
-import Alert from "@mui/material/Alert";
+import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { useToast } from "hooks/useToast";
 import React from "react";
@@ -32,10 +32,10 @@ const Toast = ({ message, type = "success", id }: ToastProps) => {
           border: "2px solid currentColor",
           fontSize: "1rem",
           padding: theme.spacing(1, 2),
-          "& .MuiAlert-icon": {
+          [`& .${alertClasses.icon}`]: {
             fontSize: "1.5rem",
           },
-          "& .MuiAlert-action": {
+          [`& .${alertClasses.action}`]: {
             paddingTop: 0,
           },
         })}
