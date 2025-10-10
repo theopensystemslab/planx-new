@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import { FlowStatus } from "@opensystemslab/planx-core/types";
 import { logger } from "airbrake";
 import { AxiosError } from "axios";
+import LoadingOverlay from "components/LoadingOverlay";
+import { useToast } from "hooks/useToast";
 import { useStore } from "pages/FlowEditor/lib/store";
 import { formatLastPublishMessage } from "pages/FlowEditor/utils";
 import React, { useState } from "react";
@@ -27,6 +29,7 @@ export type TemplatedFlows = {
 export const CheckForChangesToPublishButton: React.FC<{
   previewURL: string;
 }> = ({ previewURL }) => {
+  const toast = useToast();
   const [
     flowId,
     publishFlow,
@@ -52,6 +55,7 @@ export const CheckForChangesToPublishButton: React.FC<{
   );
   const [isTemplatedFlowDueToPublish, setIsTemplatedFlowDueToPublish] =
     useState<boolean>(false);
+  const [isPublishing, setIsPublishing] = useState<boolean>(false);
 
   const [validationChecks, setValidationChecks] = useState<ValidationCheck[]>(
     [],
@@ -97,20 +101,29 @@ export const CheckForChangesToPublishButton: React.FC<{
   ) => {
     try {
       setDialogOpen(false);
+      setIsPublishing(true);
       setLastPublishedTitle("Publishing changes...");
+
       const { alteredNodes, message } = await publishFlow(
         flowId,
         summary,
         templatedFlowIds,
       );
+
       setLastPublishedTitle(
         alteredNodes
           ? `Successfully published changes`
           : `${message}` || "No new changes to publish",
       );
+
+      if (alteredNodes) {
+        toast?.success("Successfully published changes");
+      }
     } catch (error) {
       setLastPublishedTitle("Error trying to publish");
       alert(error);
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -193,6 +206,8 @@ export const CheckForChangesToPublishButton: React.FC<{
           <Typography variant="caption">{lastPublishedTitle}</Typography>
         </Box>
       </Box>
+
+      <LoadingOverlay open={isPublishing} message="Publishing changes..." />
     </Box>
   );
 };
