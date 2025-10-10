@@ -50,6 +50,7 @@ interface AddressSearchElement extends HTMLElement {
 }
 
 const AddressSearch: React.FC = () => {
+  console.debug("Test log")
   const addressSearchRef = useRef<AddressSearchElement>(null);
 
   const [address, setAddress] = useState<Address | null>(null);
