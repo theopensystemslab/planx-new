@@ -32,7 +32,7 @@ export const validate =
       return next();
     } catch (error) {
       console.error(error);
-      return res.status(400).json(error);
+      return res.status(400).json((error as Error).message);
     }
   };
 
