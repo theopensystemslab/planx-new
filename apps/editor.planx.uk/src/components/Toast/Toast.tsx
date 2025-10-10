@@ -26,19 +26,19 @@ const Toast = ({ message, type = "success", id }: ToastProps) => {
       <Alert
         onClose={handleCloseToast}
         severity={type}
-        sx={{
+        sx={(theme) => ({
           width: "100%",
           alignItems: "center",
           border: "2px solid currentColor",
           fontSize: "1rem",
-          padding: "12px 16px",
+          padding: theme.spacing(1, 2),
           "& .MuiAlert-icon": {
             fontSize: "1.5rem",
           },
           "& .MuiAlert-action": {
             paddingTop: 0,
           },
-        }}
+        })}
       >
         {message}
       </Alert>
