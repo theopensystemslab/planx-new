@@ -19,7 +19,7 @@ export default function AutocompleteInput<T>({
 
   return (
     <FormControl sx={{ display: "flex", flexDirection: "column" }}>
-      <StyledAutocomplete<T, false, false, true, "div">
+      <StyledAutocomplete<T, false, false, boolean, "div">
         role="status"
         aria-atomic={true}
         aria-live="polite"

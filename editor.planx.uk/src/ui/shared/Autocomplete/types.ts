@@ -1,12 +1,12 @@
 import { AutocompleteProps } from "@mui/material/Autocomplete";
 
 type RequiredAutocompleteProps<T> = Pick<
-  AutocompleteProps<T, false, false, true, "div">,
+  AutocompleteProps<T, false, false, boolean, "div">,
   "options" | "onChange"
 >;
 
 type OptionalAutocompleteProps<T> = Partial<
-  AutocompleteProps<T, false, false, true, "div">
+  AutocompleteProps<T, false, false, boolean, "div">
 > & { useDataFieldInput?: boolean };
 
 export type WithLabel<T> = {
