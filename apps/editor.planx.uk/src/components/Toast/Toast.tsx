@@ -17,8 +17,29 @@ const Toast = ({ message, type = "success", id }: ToastProps) => {
   };
 
   return (
-    <Snackbar onClose={handleCloseToast} autoHideDuration={6000} open={true}>
-      <Alert onClose={handleCloseToast} severity={type} sx={{ width: "100%" }}>
+    <Snackbar
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      autoHideDuration={6000}
+      onClose={handleCloseToast}
+      open={true}
+    >
+      <Alert
+        onClose={handleCloseToast}
+        severity={type}
+        sx={{
+          width: "100%",
+          alignItems: "center",
+          border: "2px solid currentColor",
+          fontSize: "1rem",
+          padding: "12px 16px",
+          "& .MuiAlert-icon": {
+            fontSize: "1.5rem",
+          },
+          "& .MuiAlert-action": {
+            paddingTop: 0,
+          },
+        }}
+      >
         {message}
       </Alert>
     </Snackbar>
