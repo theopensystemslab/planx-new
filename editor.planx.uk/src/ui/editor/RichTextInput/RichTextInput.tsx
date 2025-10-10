@@ -163,7 +163,7 @@ const RichTextInput: FC<Props> = (props) => {
     if (href !== initialUrlValue) {
       urlInputRef.current?.select();
     }
-  }, [isAddingLink, editor]);
+  }, [isAddingLink]);
 
   return (
     <ErrorWrapper id={props.name} error={props.errorMessage}>
