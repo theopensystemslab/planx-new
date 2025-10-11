@@ -6,6 +6,10 @@ import { ApolloProvider } from "@apollo/client";
 import CssBaseline from "@mui/material/CssBaseline";
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { MyMap } from "@opensystemslab/map";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query"
 import { ToastContextProvider } from "contexts/ToastContext";
 import { getCookie, setCookie } from "lib/cookie";
 import { initFeatureFlags } from "lib/featureFlags";
@@ -61,6 +65,8 @@ const hasJWT = (): boolean | void => {
   window.location.href = "/";
 };
 
+const queryClient = new QueryClient()
+
 const Layout: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -98,20 +104,22 @@ const Layout: React.FC<{
 
 root.render(
   <ToastContextProvider>
-    <ApolloProvider client={client}>
-      <AnalyticsProvider>
-        <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
-          <HelmetProvider>
-            <Layout>
-              <CssBaseline />
-              <Suspense fallback={null}>
-                <View />
-              </Suspense>
-            </Layout>
-          </HelmetProvider>
-        </Router>
-      </AnalyticsProvider>
-    </ApolloProvider>
+    <QueryClientProvider client={queryClient}>
+      <ApolloProvider client={client}>
+        <AnalyticsProvider>
+          <Router context={{ currentUser: hasJWT() }} navigation={navigation}>
+            <HelmetProvider>
+              <Layout>
+                <CssBaseline />
+                <Suspense fallback={null}>
+                  <View />
+                </Suspense>
+              </Layout>
+            </HelmetProvider>
+          </Router>
+        </AnalyticsProvider>
+      </ApolloProvider>
+    </QueryClientProvider>
     <ToastContainer icon={false} theme="colored" />
   </ToastContextProvider>,
 );
