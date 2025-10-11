@@ -1,5 +1,4 @@
 import { NotifyClient } from "notifications-node-client";
-import { softDeleteSession } from "../../modules/saveAndReturn/service/utils.js";
 import { $api, $public } from "../../client/index.js";
 import {
   templateRegistry,
@@ -28,11 +27,6 @@ const sendEmail: SendEmail = async (template, emailAddress, config) => {
       message: string;
       expiryDate?: string;
     } = { message: "Success" };
-
-    if (template === "expiry") {
-      const expiryConfig = config as TemplateRegistry["expiry"]["config"];
-      await softDeleteSession(expiryConfig.personalisation.sessionId);
-    }
 
     if (template === "save") {
       const saveConfig = config as TemplateRegistry["save"]["config"];

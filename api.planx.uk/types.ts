@@ -81,3 +81,5 @@ export interface LowCalSession {
   lockedAt?: string;
   paymentRequests?: Pick<PaymentRequest, "id" | "payeeEmail" | "payeeName">[];
 }
+
+export type IsoDateString = string;

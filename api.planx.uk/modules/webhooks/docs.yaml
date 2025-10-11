@@ -123,7 +123,7 @@ components:
           properties:
             paymentRequestId:
               type: string
-    CreateSessionEvent:
+    CreateSessionEmailEvent:
       type: object
       properties:
         createdAt:
@@ -139,6 +139,44 @@ components:
             email:
               type: string
               format: email
+    CreateSessionDeleteEvent:
+      oneOf:
+        - type: object
+          required: ["createdAt", "operation", "payload"]
+          properties:
+            operation:
+              type: string
+              enum: ["INSERT"]
+            createdAt:
+              type: string
+              format: date-time
+            payload:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+          additionalProperties: false
+        - type: object
+          required: ["lockedAt", "operation", "payload"]
+          properties:
+            operation:
+              type: string
+              enum: ["UPDATE"]
+            lockedAt:
+              type: string
+              format: date-time
+            payload:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+          additionalProperties: false
+    DeleteSessionPayload:
+      type: object
+      properties:
+        sessionId:
+          required: true
+          type: string
     UpdateTemplatedFlowEditsEvent:
       type: object
       properties:
@@ -362,7 +400,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateSessionEvent"
+              $ref: "#/components/schemas/CreateSessionEmailEvent"
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
@@ -379,10 +417,45 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateSessionEvent"
+              $ref: "#/components/schemas/CreateSessionEmailEvent"
       responses:
         "200":
           $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/create-delete-event:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Create session delete event
+      description: Setup a one-off event in Hasura which will trigger the given session to be soft deleted
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSessionDeleteEvent"
+      responses:
+        "200":
+          $ref: "#/components/responses/ScheduledEvent"
+        "500":
+          $ref: "#/components/responses/ErrorMessage"
+  /webhooks/hasura/delete-session:
+    post:
+      tags: ["webhooks"]
+      security:
+        - hasuraAuth: []
+      summary: Soft delete a session
+      description: Mark a session as deleted in the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteSessionPayload"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessMessage"
         "500":
           $ref: "#/components/responses/ErrorMessage"
   /webhooks/hasura/sanitise-application-data:
