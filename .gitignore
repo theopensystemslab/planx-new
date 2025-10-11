@@ -12,7 +12,7 @@ editor.planx.uk/.eslintcache
 .env.temp
 apps/api.planx.uk/.env.test
 editor.planx.uk/.env
-hasura.planx.uk/.env.test
+apps/hasura.planx.uk/.env.test
 
 # IDE
 .vscode
