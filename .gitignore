@@ -10,9 +10,9 @@ editor.planx.uk/.eslintcache
 .envrc
 .env.prod
 .env.temp
-api.planx.uk/.env.test
+apps/api.planx.uk/.env.test
 editor.planx.uk/.env
-hasura.planx.uk/.env.test
+apps/hasura.planx.uk/.env.test
 
 # IDE
 .vscode
