@@ -63,7 +63,7 @@ updates:
 
   # Hasura
   - package-ecosystem: "npm"
-    directory: "/hasura.planx.uk"
+    directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -76,7 +76,7 @@ updates:
         update-types: ["version-update:semver-patch", "version-update:semver-minor"]
 
   - package-ecosystem: "docker"
-    directory: "/hasura.planx.uk"
+    directory: "/apps/hasura.planx.uk"
     schedule:
       interval: "monthly"
     labels:
@@ -87,7 +87,7 @@ updates:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "docker"
-    directory: "/hasura.planx.uk/proxy"
+    directory: "/apps/hasura.planx.uk/proxy"
     schedule:
       interval: "monthly"
     labels:
@@ -99,7 +99,7 @@ updates:
       - "theopensystemslab/planx"
 
   - package-ecosystem: "npm"
-    directory: "/hasura.planx.uk/tests"
+    directory: "/apps/hasura.planx.uk/tests"
     schedule:
       interval: "monthly"
     labels:

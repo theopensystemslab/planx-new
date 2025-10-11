@@ -5,7 +5,7 @@ import { getAnalyzeSessionOperations } from "./operations.js";
 
 /**
  * Called by Hasura cron job `analyze_sessions` on a nightly basis
- * See hasura.planx.uk/metadata/cron_triggers.yaml
+ * See apps/hasura.planx.uk/metadata/cron_triggers.yaml
  */
 export const analyzeSessions = async () => {
   const operations = getAnalyzeSessionOperations();

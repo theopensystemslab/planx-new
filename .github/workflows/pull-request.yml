@@ -19,6 +19,7 @@ env:
   EDITOR_DIRECTORY: editor.planx.uk
   LOCALPLANNING_SERVICES_DIRECTORY: apps/localplanning.services
   API_DIRECTORY: apps/api.planx.uk
+  HASURA_DIRECTORY: apps/hasura.planx.uk
 
 jobs:
   changes:
@@ -52,7 +53,7 @@ jobs:
             e2e:
               - 'e2e/**'
             hasura:
-              - 'hasura.planx.uk/**'
+              - 'apps/hasura.planx.uk/**'
             infrastructure:
               - 'infrastructure/**'
             editor:
@@ -81,7 +82,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY}}/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
@@ -98,11 +99,11 @@ jobs:
       - name: Start test containers
         run: ./scripts/start-containers-for-tests.sh
       - name: Postgres Tests
-        run: ./hasura.planx.uk/run-postgres-tests.sh
+        run: ./${{ env.HASURA_DIRECTORY }}/run-postgres-tests.sh
       - run: pnpm i -g hasura-cli@2.36.1
       - name: Hasura Tests
         run: pnpm install --frozen-lockfile && pnpm test
-        working-directory: hasura.planx.uk/tests
+        working-directory: ${{ env.HASURA_DIRECTORY }}/tests
 
   api_tests:
     name: Run API Tests
@@ -124,7 +125,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY}}/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - name: Setup .gitconfig
         run: mv .gitconfig ~/.gitconfig
@@ -162,7 +163,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v2
         with:
-          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, hasura.planx.uk/.env.test"
+          files: ".env, .env.staging, ${{ env.API_DIRECTORY }}/.env.test, ${{ env.HASURA_DIRECTORY }}/.env.test"
           fail: true
       - uses: pnpm/action-setup@v4.2.0
         with:
@@ -335,7 +336,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           hasura_endpoint: https://hasura.${{ env.FULL_DOMAIN }}
-          project_dir: ./hasura.planx.uk
+          project_dir: ./${{ env.HASURA_DIRECTORY }}
       - uses: marocchino/sticky-pull-request-comment@v2
         if: ${{steps.hasura-change.outputs.change_html != ''}}
         with:
