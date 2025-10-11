@@ -5,7 +5,7 @@ echo "Running postgres tests…"
 set -e
 
 SCRIPT_DIR=$(dirname "$0")
-ROOT_DIR="${SCRIPT_DIR}/.."
+ROOT_DIR="${SCRIPT_DIR}/../.."
 
 # Load env vars
 . "${ROOT_DIR}/.env"
