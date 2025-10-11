@@ -1,0 +1,13 @@
+{
+  "name": "ml",
+  "main": "index.ts",
+  "devDependencies": {
+    "@types/node": "22.14.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@pulumi/aws": "^7.8.0",
+    "@pulumi/awsx": "^3.0.0",
+    "@pulumi/pulumi": "^3.201.0"
+  }
+}
